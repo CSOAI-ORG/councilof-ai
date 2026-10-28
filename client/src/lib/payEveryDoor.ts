@@ -243,11 +243,12 @@ export function unsettledReason(body: unknown): string {
  * retry can follow a settle that already moved the buyer's USDC. The art50 pane used to read
  * "Not paid: the paid retry answered HTTP 500" and /pay-all "NOT SETTLED." in exactly that case.
  * Anything but 2xx or 402 after sending is MAYBE-SETTLED: check the wallet before paying again.
+ * An explicit paid-undelivered header takes precedence over the HTTP status, including 2xx or 402.
  */
 export const MAYBE_SETTLED_LINE =
   "Payment may have settled: the signed payment was sent, and the door did not deliver. Check your wallet (or the transaction) before you pay again.";
 
-/** The refund path a door states in a non-2xx body (functions/api/art50/marking-evidence.ts `refund`), or null. */
+/** The refund path a door states in an undelivered body (functions/api/art50/marking-evidence.ts `refund`), or null. */
 export function refundLine(body: unknown): string | null {
   const b = body && typeof body === "object" ? (body as Record<string, unknown>) : null;
   const r = b?.refund && typeof b.refund === "object" ? (b.refund as Record<string, unknown>) : null;
@@ -269,10 +270,14 @@ export async function retryDoorWithPayment(
     method: door.method,
     headers: { accept: "application/json", "x-payment": paymentHeader },
   });
-  if (r.status === 402) {
+  const paidNotDelivered =
+    r.headers.get("x-csoai-delivery-state") === "PAID_NOT_DELIVERED" ||
+    r.headers.get("x-csoai-delivery-record-state") === "NOT_DELIVERED";
+
+  if (!paidNotDelivered && r.status === 402) {
     return { kind: "unsettled", http: 402, reason: unsettledReason(await readJson(r)) };
   }
-  if (r.status >= 200 && r.status < 300) {
+  if (!paidNotDelivered && r.status >= 200 && r.status < 300) {
     const paymentResponse = r.headers.get("x-payment-response");
     // KEEP WHAT WAS BOUGHT (2026-10-07). This used to return without reading the body, so a paid
     // door's deliverable (the signed art50 pack, the commission receipt) was dropped on the floor:
@@ -288,7 +293,9 @@ export async function retryDoorWithPayment(
   return {
     kind: "maybe-settled",
     http: r.status,
-    detail: `the paid retry answered HTTP ${r.status}${err ? `: ${err}` : ""}`,
+    detail: paidNotDelivered
+      ? `the paid retry reported an undelivered output at HTTP ${r.status}${err ? `: ${err}` : ""}`
+      : `the paid retry answered HTTP ${r.status}${err ? `: ${err}` : ""}`,
     paymentResponse,
     settlement: decodeSettlement(paymentResponse),
     body,
