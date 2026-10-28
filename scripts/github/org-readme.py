@@ -244,12 +244,22 @@ def derive() -> dict:
 
     c = raw["corrections"]
     entries = dig(c, "corrections", default=None)
+    # The corrections ledger is NOT sorted by date, so its last element is NOT its latest
+    # entry. Taking entries[-1] here silently published a stale "latest" for every reader of
+    # the page. Pick the newest by date, and break ties on id so the result is deterministic.
+    latest_id = latest_date = UNCHECKABLE
+    if isinstance(entries, list) and entries:
+        dated = [e for e in entries if isinstance(e, dict) and e.get("date")]
+        if dated:
+            newest = max(dated, key=lambda e: (str(e.get("date")), str(e.get("id"))))
+            latest_id = newest.get("id", UNCHECKABLE)
+            latest_date = newest.get("date", UNCHECKABLE)
     f["corrections"] = {
         "count": len(entries) if isinstance(entries, list) else None,
         "signature_state": dig(c, "signature_state", default=UNCHECKABLE),
         "license": dig(c, "license", default=UNCHECKABLE),
-        "latest_id": dig(entries, -1, "id", default=UNCHECKABLE) if isinstance(entries, list) and entries else UNCHECKABLE,
-        "latest_date": dig(entries, -1, "date", default=UNCHECKABLE) if isinstance(entries, list) and entries else UNCHECKABLE,
+        "latest_id": latest_id,
+        "latest_date": latest_date,
     }
 
     v = raw["revenue"]
