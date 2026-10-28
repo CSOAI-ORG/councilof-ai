@@ -51,6 +51,10 @@ on:
         description: "Read live truth, build the snapshot, decide — push nothing"
         type: boolean
         default: false
+      kaggle_approved_licence_change:
+        description: "OWNER approval to repair the Kaggle licence label, as two SPDX ids: FROM_SPDX TO_SPDX (e.g. 'CC0-1.0 CC-BY-4.0'). Empty = refuse, which is the default. This only relabels an existing dataset to the licence the board already declares; it does not establish rights."
+        type: string
+        default: ""
 
 concurrency:
   group: gspc-spray
@@ -87,7 +91,18 @@ jobs:
         # The same probe with the OAuth access_token as a Bearer returns HTTP 200 — which is
         # exactly why the Mac, holding a cached access_token, publishes fine. So: unpin, and
         # give the runner the token rather than the key.
-        run: pip install --quiet cryptography huggingface_hub pyarrow kaggle build twine
+        #
+        # The typed SDK IS pinned, to the pair the owner's metadata serializer was qualified
+        # against on 14 October 2026 (scripts/spray/gspc-spray.py KAGGLE_TYPED_READ_VERSIONS).
+        # An unpinned install drifts to kaggle 2.2.5 / kagglesdk 0.1.38, and the script then
+        # refuses with "metadata schema/serializer versions need owner qualification" — a
+        # refusal that costs a whole run, on a surface whose licence repair was already
+        # approved. Qualifying a new serializer is an owner act on its own evidence; pinning to
+        # the qualified pair is not, and it is what the publisher was actually tested against.
+        run: |
+          pip install --quiet cryptography huggingface_hub pyarrow build twine
+          pip install --quiet "kaggle==2.2.4" "kagglesdk==0.1.35"
+          python3 -c "import importlib.metadata as m; assert (m.version('kaggle'), m.version('kagglesdk')) == ('2.2.4','0.1.35'), 'the qualified Kaggle SDK pair is not what is installed'"
 
       # The kaggle CLI in the runner does not read KAGGLE_USERNAME/KAGGLE_KEY from the
       # environment (run 33971286898: it asked for `kaggle auth login` and the push FAILED
@@ -166,10 +181,24 @@ jobs:
           PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
           FORCE: ${{ inputs.force == true && '--force' || '' }}
           DRY: ${{ inputs.dry_run == true && '--dry-run' || '' }}
+          KAGGLE_LICENCE_CHANGE: ${{ inputs.kaggle_approved_licence_change }}
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/spray"
+          # The owner's licence approval is passed only when it is actually given, and only as two
+          # SPDX ids. Empty input means no approval, and the script refuses the label change — the
+          # refusal is recorded per surface, and the other surfaces still publish.
+          LICENCE_ARGS=()
+          if [ -n "${KAGGLE_LICENCE_CHANGE:-}" ]; then
+            set -- ${KAGGLE_LICENCE_CHANGE}
+            if [ "$#" -ne 2 ]; then
+              echo "::error title=gspc-spray::kaggle_approved_licence_change must be exactly two SPDX ids separated by a space"; exit 2
+            fi
+            LICENCE_ARGS=(--kaggle-approved-licence-change "$1" "$2")
+            echo "::notice title=gspc-spray::owner-approved Kaggle licence repair ${1} -> ${2}"
+          fi
           python3 scripts/spray/gspc-spray.py ${{ steps.choose.outputs.flags }} $FORCE $DRY \
+            "${LICENCE_ARGS[@]+"${LICENCE_ARGS[@]}"}" \
             --out "$RUNNER_TEMP/spray/snapshot" --report "$RUNNER_TEMP/spray/spray-report.json"
 
       - name: report

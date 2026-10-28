@@ -1,0 +1,27 @@
+{
+  "displayName": "Council of AI GSPC",
+  "shortDescription": "通过 MCP 读取实时 GSPC 榜单并验证签名测量卡。",
+  "longDescription": "Council of AI GSPC over MCP：52 tools (47 free, 5 x402-metered)。读取实时榜单，验证签名测量卡（VALID / INVALID / UNCHECKABLE）。仅供测量，不构成认证。",
+  "developerName": "CSOAI Ltd",
+  "tryPrompts": [
+    "读取实时 GSPC 榜单总数，并告诉我有多少个轴已被测量。",
+    "验证这张测量卡，并给出状态：VALID、INVALID 还是 UNCHECKABLE。",
+    "展示 governance 轴的行，包括 n、准确率与分离状态。"
+  ],
+  "mcpOverrides": {
+    "gspc": {
+      "displayName": "Council of AI GSPC",
+      "description": "Council of AI 的免费 MCP 入口：实时榜单、签名卡验证与公开测量语料。"
+    }
+  },
+  "skillOverrides": {
+    "gspc": {
+      "displayName": "Council of AI GSPC",
+      "description": "通过 Council of AI 免费 MCP 入口读取实时 GSPC 榜单并验证签名测量卡。"
+    },
+    "gspc-verify": {
+      "displayName": "GSPC 与 SAFE 证据验证",
+      "description": "以确定性的方式，离线或通过免费验证器，验证签名卡、测量胶囊或 SAFE 证据包。"
+    }
+  }
+}
