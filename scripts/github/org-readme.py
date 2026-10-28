@@ -515,7 +515,7 @@ LEAD_LINE = (
 
 WHO_WE_ARE = (
     f"**{WORDMARK} — Council of AI — is the public measurement service operated by CSOAI Ltd, "
-    "a company incorporated in England and Wales on 2 January 2026 (Companies House 16939677), founded by Nicholas Templeman.** "
+    "a company incorporated in England and Wales on 2 January 2026, founded by Nicholas Templeman.** "
     "We run AI systems and digital rails against published instruments, grade deterministically where the method permits it, "
     "publish signed evidence and corrections, and keep unmeasured or uncheckable states visible. Verification is free. "
     "We measure; we do not certify, accredit, issue legal-compliance determinations, sell a rank, or take money from anything we rank."
@@ -551,7 +551,7 @@ def contributing() -> str:
 
 
 def footer(f: dict) -> str:
-    return (f"<sub>{WORDMARK} · CSOAI Ltd · UK Companies House 16939677 · 3rd Floor 86-90 Paul Street, London EC2A 4NE · "
+    return (f"<sub>{WORDMARK} · CSOAI Ltd (Council of AI) · 3rd Floor 86-90 Paul Street, London EC2A 4NE · "
             f"nicholas@csoai.org · [councilof.ai](https://councilof.ai) · derived {f['derived']}</sub>")
 
 

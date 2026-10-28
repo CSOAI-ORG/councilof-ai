@@ -240,13 +240,8 @@ ${doctrineFooter()}
 emit("distribution/plugin/skills/gspc-verify/SKILL.md", `---
 name: gspc-verify
 description: Verify a CSOAI / GSPC evidence artifact (csoai.evidence-event/0.1, csoai.signed-run/0.1 batch, csoai.safe-evidence-pack/0.1 pack, or csoai.route-evidence/0.1) using the deterministic offline verifier. Preserves original artifact digests, state vocabulary, and limitations without asking the language model to guess cryptographic validity.
-compatibility:
-  agentskills_spec: "0.1"
-  python: ">=3.9"
-  network: "none (offline deterministic check)"
-allowed-tools:
-  - "Bash(python3 packages/evidence-fabric/portable_skill_verify.py:*)"
-  - "Read"
+compatibility: "Requires Python >=3.9 and the repository offline evidence verifier; no network access."
+allowed-tools: "Bash(python3 packages/evidence-fabric/portable_skill_verify.py:*) Read"
 ---
 
 # GSPC & OSAIA SAFE Portable Verification Procedure (\`gspc-verify\`)
@@ -284,7 +279,7 @@ python3 packages/evidence-fabric/portable_skill_verify.py --artifact <PATH> [--d
 
 ## Permission Boundary Note (\`allowed-tools\`)
 
-The Agent Skills \`allowed-tools\` frontmatter field is an experimental client declaration and **not** an execution grant. When running cross-client portability evaluations, pass \`--client-boundary-observation <STATE>\` (\`ENFORCED\`, \`PROMPTED_FOR_APPROVAL\`, \`REJECTED_ACTION\`, \`IGNORED_EXPERIMENTAL_DECLARATION\`, or \`UNMEASURED\`) to record how the host client treated the declared tool boundary.
+The Agent Skills \`allowed-tools\` frontmatter field is experimental and **not** an execution grant. The \`--client-boundary-observation\` option records a caller-supplied label; it does not observe or enforce the host. Leave it \`UNMEASURED\` unless a separate actual host execution and boundary receipt exists. Local fixture/profile runs do not establish host compatibility or permission enforcement.
 
 ${STANCE}
 
