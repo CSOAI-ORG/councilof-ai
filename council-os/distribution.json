@@ -149,6 +149,25 @@
       "flagged_org_affected": true
     },
     {
+      "id": "kimi-plugin",
+      "format": "Kimi plugin (kimi.plugin.json + shared skills/ + locales/, MCP declared inline)",
+      "output": [
+        "distribution/plugin/kimi.plugin.json",
+        "distribution/plugin/locales/en-US.json",
+        "distribution/plugin/locales/zh-CN.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/plugin/kimi.plugin.json"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "remote",
+      "listing_channel": "Kimi Code CLI `/plugins install <path>` (local directory or GitHub repo), or Kimi desktop's personal market via `kimi-daimon kimi-plugin register-personal`",
+      "owner_approval_needed": true,
+      "approver": "Nick — Kimi desktop personal-market registration and/or the CLI install",
+      "flagged_org_impact": "Same repo as claude-plugin; the Kimi desktop personal market is local, so no public repo is needed for the personal install.",
+      "flagged_org_affected": false
+    },
+    {
       "id": "antigravity-plugin",
       "format": "Google Antigravity IDE plugin (plugin.json + mcp_config.json + rules/AGENTS.md + skills/)",
       "output": [
@@ -811,6 +830,12 @@
       "id": "grok-plugin",
       "kind": "rendered-only",
       "row": "grok-plugin",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "kimi-plugin",
+      "kind": "rendered-only",
+      "row": "kimi-plugin",
       "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
     },
     {
