@@ -638,6 +638,7 @@ export async function buildReceipt(input: {
   module_id: string;
   challenge: HitlChallenge;
   at?: string;
+  signingKey?: string;
 }): Promise<HitlReceipt> {
   const receipt: HitlReceipt = {
     schema: HITL_RECEIPT_SCHEMA,
