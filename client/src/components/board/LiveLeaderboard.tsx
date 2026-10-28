@@ -113,11 +113,13 @@ export default function LiveLeaderboard({
         {error && (
           <div className="mt-8 rounded-2xl border border-rose-500/30 bg-rose-500/[0.07] p-6">
             <p className="text-lg font-black tracking-tight text-rose-700 dark:text-rose-200">
-              The board could not be read.
+              {data ? "The board refresh failed." : "The board could not be read."}
             </p>
             <p className="measure mt-2 text-sm leading-relaxed text-foreground/80">
-              <code className="font-mono">/api/gspc</code> did not answer — {error}. No figures are
-              shown, because none were read. Nothing on this page is standing in for the live board.
+              <code className="font-mono">/api/gspc</code> did not answer — {error}.{" "}
+              {data
+                ? "Showing the last successful board read. Its published measurement dates still apply."
+                : "No figures are shown, because none were read. Nothing on this page is standing in for the live board."}
             </p>
             <a
               href="/api/gspc"
@@ -136,7 +138,7 @@ export default function LiveLeaderboard({
           </div>
         )}
 
-        {data && !error && (
+        {data && (
           <>
             <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-card shadow-sm">
               <table className="w-full min-w-[46rem] text-sm">

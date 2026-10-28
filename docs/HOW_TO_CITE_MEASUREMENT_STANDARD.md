@@ -8,8 +8,8 @@
 ## The reference (copy-paste)
 
 > **Council of AI (CSOAI Ltd, UK #16939677).** *GSPC measurement standard — deterministic,
-> signed, stranger-verifiable.* Version 0.1, first published 2026. zenodo.org/doi/10.5281/zenodo.21973003
-> (methodology). Independent governance measurement — **measurement, not certification.**
+> signed, stranger-verifiable.* Version 0.1, first published 2026. DOI 10.5281/zenodo.21973003
+> (methodology; UNCHECKABLE: Zenodo record returns 410 (deleted, account blocked) since 29 Sep 2026; live methodology: https://councilof.ai/methodology/). Independent governance measurement — **measurement, not certification.**
 
 ## Version + the signed artifact each citation resolves to
 

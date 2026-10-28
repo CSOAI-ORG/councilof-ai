@@ -1,0 +1,164 @@
+{
+  "schema": "csoai.tui4-gap-register/0.1",
+  "description": "TUI-4 agent-economy discovery verification — seeded run",
+  "run_timestamp_utc": "2026-10-07T11:08:00Z",
+  "branch": "agents/discovery-consolidation-20260911",
+  "blocks": [
+    {
+      "block_id": "2026-10-07T11:08:00Z-seed",
+      "timestamp_utc": "2026-10-07T11:08:00Z",
+      "probes": {
+        "well_known_mcp_json": {
+          "url": "https://councilof.ai/.well-known/mcp.json",
+          "http_status": 200,
+          "state": "VERIFIED",
+          "server_version": "1.4.4",
+          "total_tools": 19,
+          "free_tools": 14,
+          "metered_tools": 5,
+          "registry_name": "ai.councilof/gspc",
+          "deprecated_alias": "io.github.CSOAI-ORG/gspc"
+        },
+        "well_known_agent_card_json": {
+          "url": "https://councilof.ai/.well-known/agent-card.json",
+          "http_status": 200,
+          "state": "VERIFIED",
+          "agent_card_version": "1.4.0",
+          "a2a_extensions_count": 3,
+          "extensions": [
+            "signed-receipts/v1 (DRAFT)",
+            "x402.json discovery",
+            "x402 Offer & Receipt extension v0.6"
+          ]
+        },
+        "well_known_x402_json": {
+          "url": "https://councilof.ai/.well-known/x402.json",
+          "http_status": 200,
+          "state": "VERIFIED",
+          "offer_count": 31,
+          "mode": "live",
+          "network": "eip155:8453",
+          "asset": "USDC",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31"
+        },
+        "llms_txt": {
+          "url": "https://councilof.ai/llms.txt",
+          "http_status": 200,
+          "state": "VERIFIED",
+          "duplicate_free_door_regression": false,
+          "free_door_references": 3,
+          "free_door_note": "3 distinct contexts (discovery, x402 check, paid artefact list) — no duplicates, PR #2854 fix holds"
+        },
+        "api_gspc": {
+          "url": "https://councilof.ai/api/gspc",
+          "http_status": 200,
+          "state": "VERIFIED",
+          "axes_total": 23,
+          "axes_measured": 23,
+          "unmeasured_axes": 0,
+          "comparison_axes": 14,
+          "separated_leads": 0,
+          "ties": 7,
+          "untested_separations": 7,
+          "fact_runs": 9
+        },
+        "api_x402": {
+          "url": "https://councilof.ai/api/x402",
+          "http_status": 200,
+          "state": "VERIFIED",
+          "schema": "csoai.x402-catalog/0.3",
+          "rail_mode": "live",
+          "facilitator_configured": true
+        },
+        "api_free_door": {
+          "url": "https://councilof.ai/api/free-door",
+          "http_status": 402,
+          "state": "VERIFIED",
+          "note": "Returns 402 with amount=0 as expected — x402 settlement rail active, free door functional"
+        },
+        "api_agui_gspc_state": {
+          "url": "https://councilof.ai/api/agui/gspc-state",
+          "http_status": 200,
+          "state": "VERIFIED",
+          "transport": "SSE STATE_DELTA",
+          "public_count": "23 axes · 23 measured"
+        },
+        "npm_csoai_gspc_mcp": {
+          "command": "npm view csoai-gspc-mcp version",
+          "state": "VERIFIED",
+          "version": "0.2.2",
+          "note": "Baseline 0.2.2 — matches expected. Package marked deprecated on npm; HTTP door recommended."
+        },
+        "mcp_registry": {
+          "search_url": "https://registry.modelcontextprotocol.io/v0/search?q=gspc",
+          "state": "INCOMPLETE",
+          "total_results": 0,
+          "note": "Search returns 0 results via /v0/search and /v0.1/search. Direct lookup at /v0/servers/ai.councilof/gspc returns 404 endpoint not found. Registry search endpoint appears to have changed or is non-functional for this query. mcp.json self-declares registry name ai.councilof/gspc v1.4.4 and deprecated alias io.github.CSOAI-ORG/gspc — but live verification via registry API was not possible this run."
+        },
+        "mcp_so": {
+          "url": "https://mcp.so/search?q=gspc",
+          "http_status": 200,
+          "state": "VERIFIED",
+          "total_results": 1,
+          "listing": {
+            "name": "CSOAI GSPC measurement",
+            "slug": "csoai-gspc-measurement",
+            "author": "CSOAI-ORG",
+            "verified": true,
+            "featured": true,
+            "added": "2026-08-19T21:52:36Z"
+          }
+        },
+        "glama": {
+          "url": "https://glama.ai/mcp/servers?query=council+of+ai+gspc",
+          "http_status": 200,
+          "state": "VERIFIED",
+          "primary_listing": {
+            "name": "Council of AI GSPC",
+            "url": "https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai",
+            "rating": 3.9,
+            "tools": 19,
+            "status": "healthy",
+            "registry_id": "ai.councilof/gspc"
+          },
+          "other_csoai_servers_visible": [
+            "ai.councilof/gspc-free",
+            "io.github.CSOAI-ORG/gspc (deprecated alias)"
+          ],
+          "note": "Flagship discovery listing present and healthy. Glama shows 3 CSOAI-ORG GSPC-related entries."
+        },
+        "smithery": {
+          "url_primary": "https://mcp.smithery.ai/nicholastempleman",
+          "url_legacy": "https://smithery.ai/server/CSOAI-ORG/gspc-mcp",
+          "state": "INCOMPLETE",
+          "primary_status": 405,
+          "primary_note": "Stateless mode: GET not supported — endpoint exists but requires POST",
+          "legacy_status": 404,
+          "legacy_note": "Old csoai/gspc entry returns 404; smithery.ai/servers/csoai/gspc-mcp from llms.txt may be stale"
+        },
+        "pulsemcp": {
+          "urls_tried": [
+            "https://www.pulsemcp.com/servers/council-of-ai",
+            "https://www.pulsemcp.com/servers/councilof-ai",
+            "https://www.pulsemcp.com/servers/csoai"
+          ],
+          "state": "BLOCKED",
+          "http_status": 403,
+          "note": "All URL patterns return 403. PulseMCP blocks non-browser requests. Regression cannot be confirmed or denied this run."
+        },
+        "awesome_mcp_servers": {
+          "url": "https://raw.githubusercontent.com/punkpeye/awesome-mcp-servers/main/README.md",
+          "state": "MISSING",
+          "note": "No CSOAI/gspc/council-of-ai entries found. Per memory, entries were removed by commit 3c301956 and PR is pending. Confirmed absent."
+        },
+        "agent_bazaar": {
+          "url": "https://bazaar.saylorinnovations.com",
+          "http_status": 200,
+          "state": "BLOCKED",
+          "listing_submit_result": "error code: 1101",
+          "note": "Site is up (200). Listing submission of x402.json returns Cloudflare error 1101 (Worker threw exception). Same CF error as previous runs. Cannot submit listing."
+        }
+      }
+    }
+  ]
+}

@@ -10,7 +10,6 @@ import {
   TEST_LINE,
   MCP_URL,
   MCP_METERED_URL,
-  STDIO_CMD,
   OPENAPI_URL,
   type PlatformCard,
   type ConfigBlock,
@@ -305,9 +304,7 @@ export default function ConnectGSPC() {
       <section className="max-w-6xl mx-auto px-6 py-12">
         <h2 className="text-2xl font-bold">MCP-native clients</h2>
         <p className="text-sm text-gray-600 mt-1">
-          The server speaks streamable-HTTP at <code className="font-mono">{MCP_URL}</code>, with a stdio fallback
-          (<code className="font-mono">{STDIO_CMD}</code>) whose published npm releases are marked deprecated on npm and
-          carry fewer tools, so prefer the URL. Every config below was checked against the client's current docs;
+          The server speaks streamable-HTTP at <code className="font-mono">{MCP_URL}</code>; paste the URL. Every config below was checked against the client's current docs;
           that is not a client test. Which clients were actually run is recorded in the client test register below.
         </p>
         <div className="grid md:grid-cols-2 gap-5 mt-6">

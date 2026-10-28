@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Historical public indexes — Council of AI</title>
+  <meta name="description" content="Currentness notice for two preserved Council of AI snapshots. Capture time is unknown and the original refresh producer is unverified.">
+  <link rel="canonical" href="https://councilof.ai/index-currentness/">
+  <style>
+    :root { color-scheme: light; font-family: system-ui, sans-serif; color: #122b23; background: #f4f8f5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.65; }
+    a { color: #095b40; text-underline-offset: .18em; }
+    a:focus-visible, summary:focus-visible { outline: 3px solid #9a5b00; outline-offset: 4px; }
+    nav, main, footer { width: min(100% - 2.5rem, 72rem); margin-inline: auto; }
+    nav { display: flex; flex-wrap: wrap; gap: 1.5rem; padding-block: 1.25rem; font-weight: 650; }
+    main { max-width: 54rem; background: #fff; border: 1px solid #d7e4db; border-radius: 1.2rem; padding: clamp(1.5rem, 5vw, 3rem); margin-block: 1rem 2rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.12; margin: .5rem 0 1.25rem; letter-spacing: -.035em; }
+    h2 { font-size: 1.35rem; margin-top: 2rem; line-height: 1.3; }
+    p, ul { max-width: 70ch; }
+    .eyebrow { font-size: .8rem; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; color: #35634f; }
+    .status { padding: 1rem 1rem 1rem 2.5rem; border-left: 4px solid #a46a12; background: #fff8e8; }
+    .status li + li { margin-top: .45rem; }
+    .snapshots { padding-left: 1.3rem; }
+    .snapshots li + li { margin-top: .7rem; }
+    details { padding: 1rem 1.25rem; margin-top: 1.5rem; border: 1px solid #d7e4db; border-radius: .6rem; }
+    summary { cursor: pointer; font-weight: 700; }
+    dt { font-weight: 700; margin-top: 1rem; }
+    dd { margin-left: 0; }
+    code { font-size: .86em; overflow-wrap: anywhere; }
+    footer { max-width: 54rem; padding-bottom: 2rem; color: #365546; font-size: .9rem; }
+    @media (forced-colors: active) { .status, main, details { border: 1px solid CanvasText; } }
+  </style>
+</head>
+<body>
+  <nav aria-label="Council of AI">
+    <a href="/">Council of AI</a>
+    <a href="/gspc-verify/">Free verification</a>
+  </nav>
+  <main>
+    <header>
+      <p class="eyebrow">Public evidence · currentness notice</p>
+      <h1>Historical public indexes</h1>
+      <p>These two files are preserved snapshots, not live dashboards. Neither snapshot records its capture time or identifies its original refresh producer.</p>
+    </header>
+
+    <ul class="status" aria-label="Snapshot currentness">
+      <li>Observation status: historical snapshot</li>
+      <li>Capture time: unknown; not recorded in the snapshot</li>
+      <li>Original producer: unverified; not identified in the snapshot</li>
+    </ul>
+
+    <h2>Read the original snapshots</h2>
+    <ul class="snapshots">
+      <li><a href="/progress-index.json">Public progress snapshot (JSON)</a></li>
+      <li><a href="/eat-flywheel.json">Public flywheel snapshot (JSON)</a></li>
+    </ul>
+    <p>Their observations and content IDs are preserved. A source revision identifies source content; it does not establish when the observations were captured. A file publication or modification date is also not a capture time.</p>
+
+    <h2>Settlement aggregates are a separate record</h2>
+    <p><a href="/api/revenue">Read the existing facilitator settlement aggregate</a>. Aggregate settlement counts do not by themselves identify a buyer, prove which response bytes were delivered, record customer acceptance, or establish an accepted repeat purchase. They should not be substituted into these historical snapshots as if they were the original observations.</p>
+
+    <details>
+      <summary>View the preserved snapshot bindings</summary>
+      <p>These content IDs bind the existing snapshot fields. A content ID does not establish freshness, a signature, delivery or customer acceptance.</p>
+      <dl>
+        <dt>Progress snapshot content ID</dt>
+        <dd><code>36e3938b99dec327d475d5d7d3f57bccc2d06bf13b715e0bc9de18ee7f17d964</code></dd>
+        <dt>Flywheel snapshot content ID</dt>
+        <dd><code>eb36ae8dc5171875ea28fcc968a2653eca4e135158dcfacaed0609e2a683d633</code></dd>
+        <dt>Source revision recorded in the snapshots</dt>
+        <dd><code>bd1563d27c265bd2409dca7c5175ae4fd66b814a</code></dd>
+        <dt>Recorded revenue-observation digest</dt>
+        <dd><code>07c2fbb99ef57558ea5076a16322b21a583b1115b9bc10f70df8adc8f53eb7b5</code></dd>
+      </dl>
+      <p>This notice supplies the currentness qualification outside the content-addressed snapshot bodies. It does not recover their missing capture time or original refresh provenance.</p>
+    </details>
+  </main>
+  <footer>We measure; we do not certify. Verification is free.</footer>
+</body>
+</html>

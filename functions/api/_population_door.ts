@@ -1,3 +1,4 @@
+import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * GET /api/pop/{population} — the population doors: one metered read-transform per measured
  * population the estate already publishes (registry: functions/api/_population.ts).
@@ -267,7 +268,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     } catch { /* never blocks a paid deliverable */ }
   }
 
-  return json(
+  return recordPaidResponse(json(
     {
       schema: SCHEMA,
       kind: "slice",
@@ -290,7 +291,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       "x-csoai-signed": leaf.sig_ed25519 ? "true" : "false",
       ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
     },
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. The path selects the population; body is ignored. */

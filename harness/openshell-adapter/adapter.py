@@ -54,14 +54,15 @@ ADAPTER_VERSION = "0.2.0"
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 # --------------------------------------------------------------------------- declared: documented constants
-# The release these constants were requalified against (requalify/v0.1.2/). A later release is not
+# The release these constants were requalified against (requalify/v0.1.4/; earlier: requalify/v0.1.2/). A later release is not
 # assumed to match: rerun the requalification diff before changing this pin.
 OPENSHELL_PIN = {
-    "release": "v0.1.2",
-    "tag_commit": "6648bd0c290efbc41ba131ee9831ee45cd431f94",
-    "previous_release": "v0.1.1",
-    "previous_tag_commit": "4ce767fc0cadad773c398e15109c0286f4b7aa30",
-    "sandbox_policy_rego_sha256": "4a17fe93b7bb7e7f8abbdda25dbfb76a2e43b48c5dc8fa6e5f063619bb6def41",
+    "release": "v0.1.4",
+    "tag_commit": "5a7728c304b5528e954e9ae900cf21f84e1a12b1",
+    "previous_release": "v0.1.2",
+    "previous_tag_commit": "6648bd0c290efbc41ba131ee9831ee45cd431f94",
+    "sandbox_policy_rego_sha256": "f60349dcfe8f42ff6c6957fd860cbfc1aef536c6f22740025c6771745f637c38",
+    "qualified_scope": "adapter input paths only (policy fields read, shorthand log, OCSF JSONL file, OCSF-JSON console, prover JSON schema 1)",
 }
 # Sources (OpenShell repo, tag v0.1.2 = 6648bd0c):
 #   docs/how-it-works/policies/schema.mdx, default-policy.mdx, network-rules.mdx,
@@ -434,6 +435,7 @@ _NET = re.compile(r"^(?P<action>ALLOWED|DENIED|BLOCKED)\s+(?P<proc>\S*?)\((?P<pi
 _HTTP = re.compile(r"^(?P<action>ALLOWED|DENIED|BLOCKED)\s+(?P<method>[A-Z_]+)\s+(?P<url>\S+)(?P<ctx>.*)$")
 _CTX_POLICY = re.compile(r"\[policy:(?P<policy>\S+)\s+engine:(?P<engine>[^\]\s]+)\]")
 _CTX_REASON = re.compile(r"\[reason:(?P<reason>.*)\]\s*$")
+_CONSOLE_JSON = re.compile(r"^\d{4}-\d\d-\d\dT[\d:.]+Z\s+OCSF-JSON\s+(?P<json>\{.*)$")
 _LL_BUILT = re.compile(r"Landlock ruleset built \[rules_applied:(?P<applied>\d+) skipped:(?P<skipped>\d+)\]")
 
 
@@ -539,6 +541,10 @@ def load_enforcer(paths: list[str]) -> tuple[list[dict], dict]:
                 stats["lines"] += 1
                 s = line.strip()
                 rec = None
+                # OpenShell >= v0.1.4 console sink: "<UTC ts> OCSF-JSON {json}" (OcsfJsonlLayer::with_console_format)
+                cm = _CONSOLE_JSON.match(s)
+                if cm:
+                    s = cm["json"]
                 if s.startswith("{"):
                     try:
                         rec = parse_ocsf_json(json.loads(s), os.path.basename(p), i, s)

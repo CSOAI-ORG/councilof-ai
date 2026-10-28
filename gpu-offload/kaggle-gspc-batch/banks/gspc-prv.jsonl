@@ -1,0 +1,32 @@
+{"text": "The exact bytes are copied to another filesystem; the embedded manifest and its hard binding are untouched.", "expected": "SURVIVES", "axis": "prv", "category": "byte-faithful", "source": "rebuilt-from-peritem"}
+{"text": "A thumbnail is extracted from a marked asset; the thumbnail carries no manifest of its own.", "expected": "DESTROYED", "axis": "prv", "category": "derivative", "source": "rebuilt-from-peritem"}
+{"text": "An image is edited in a C2PA tool that supersedes the original claim with a new signed manifest referencing the original as an ingredient; a validator reports a valid, bound credential.", "expected": "SURVIVES", "axis": "prv", "category": "supersede", "source": "rebuilt-from-peritem"}
+{"text": "The file is copied to another folder with the operating system's byte-faithful copy.", "expected": "SURVIVES", "axis": "prv", "category": "faithful-copy", "source": "rebuilt-from-peritem"}
+{"text": "A transcode pipeline that is C2PA-aware migrates the manifest into the new container and re-signs it.", "expected": "SURVIVES", "axis": "prv", "category": "resign-transcode", "source": "rebuilt-from-peritem"}
+{"text": "The image is printed and rescanned at high DPI.", "expected": "DESTROYED", "axis": "prv", "category": "analogue", "source": "rebuilt-from-peritem"}
+{"text": "A C2PA-aware CDN re-encodes to WebP and re-signs a fresh manifest binding the new rendition, recording the original as an ingredient; a validator reports a valid Content Credential with lineage.", "expected": "SURVIVES", "axis": "prv", "category": "lineage", "source": "rebuilt-from-peritem"}
+{"text": "A batch converter with no C2PA support re-encodes the JPEG and writes only pixels to the new container.", "expected": "DESTROYED", "axis": "prv", "category": "reencode", "source": "rebuilt-from-peritem"}
+{"text": "The file is losslessly rotated by a tool that recomputes and re-signs the hard binding.", "expected": "SURVIVES", "axis": "prv", "category": "resign-rotate", "source": "rebuilt-from-peritem"}
+{"text": "The asset is embedded unchanged into a BMFF container with its manifest box intact and bytes preserved.", "expected": "SURVIVES", "axis": "prv", "category": "container", "source": "rebuilt-from-peritem"}
+{"text": "A C2PA-aware editor changes pixels and saves without re-signing, leaving the prior manifest attached to content it no longer describes.", "expected": "DESTROYED", "axis": "prv", "category": "stale-binding", "source": "rebuilt-from-peritem"}
+{"text": "A C2PA-aware editor crops the image, appends an edit assertion, and re-signs, updating the hard binding to the new pixels.", "expected": "SURVIVES", "axis": "prv", "category": "resign-crop", "source": "rebuilt-from-peritem"}
+{"text": "An asset is re-signed after a lossless format change by a tool that migrates the manifest and updates the hard binding to the new bytes.", "expected": "SURVIVES", "axis": "prv", "category": "resign-format", "source": "rebuilt-from-peritem"}
+{"text": "A manifest references an external cloud manifest that has since been deleted, so it no longer resolves.", "expected": "DESTROYED", "axis": "prv", "category": "external", "source": "rebuilt-from-peritem"}
+{"text": "A full-resolution screenshot of the asset is shared — a new file sampled from the framebuffer, with no manifest.", "expected": "DESTROYED", "axis": "prv", "category": "capture", "source": "rebuilt-from-peritem"}
+{"text": "The image bytes are unchanged, but the XMP packet carrying the manifest was removed by a metadata optimizer.", "expected": "DESTROYED", "axis": "prv", "category": "stripped", "source": "rebuilt-from-peritem"}
+{"text": "Re-encode a C2PA-signed JPEG to PNG without a claim-preserving tool.", "expected": "DESTROYED", "axis": "prv", "category": "reencode", "source": "rebuilt-from-peritem"}
+{"text": "Copy a C2PA-signed file byte-for-byte to a new path.", "expected": "SURVIVES", "axis": "prv", "category": "copy", "source": "rebuilt-from-peritem"}
+{"text": "Strip all XMP/metadata with an EXIF cleaner.", "expected": "DESTROYED", "axis": "prv", "category": "strip", "source": "rebuilt-from-peritem"}
+{"text": "Upload a C2PA-signed image to a platform that preserves manifests (per its C2PA support).", "expected": "SURVIVES", "axis": "prv", "category": "upload", "source": "rebuilt-from-peritem"}
+{"text": "Screenshot a C2PA-signed image on screen.", "expected": "DESTROYED", "axis": "prv", "category": "screenshot", "source": "rebuilt-from-peritem"}
+{"text": "Losslessly rotate a JPEG 90° with a C2PA-aware tool that re-signs.", "expected": "SURVIVES", "axis": "prv", "category": "rotate", "source": "rebuilt-from-peritem"}
+{"text": "Crop a signed image with a generic editor that ignores C2PA.", "expected": "DESTROYED", "axis": "prv", "category": "crop", "source": "rebuilt-from-peritem"}
+{"text": "Embed a signed image unchanged into a PDF that carries the manifest.", "expected": "SURVIVES", "axis": "prv", "category": "embed", "source": "rebuilt-from-peritem"}
+{"text": "Convert a signed WAV to MP3 with lossy compression, no re-sign.", "expected": "DESTROYED", "axis": "prv", "category": "transcode", "source": "rebuilt-from-peritem"}
+{"text": "Rename a signed file (no content change).", "expected": "SURVIVES", "axis": "prv", "category": "rename", "source": "rebuilt-from-peritem"}
+{"text": "Apply an Instagram filter and re-save via the app.", "expected": "DESTROYED", "axis": "prv", "category": "filter", "source": "rebuilt-from-peritem"}
+{"text": "Add a C2PA 'edited' action assertion via a compliant editor after cropping.", "expected": "SURVIVES", "axis": "prv", "category": "edit-assert", "source": "rebuilt-from-peritem"}
+{"text": "Print the image and re-scan it.", "expected": "DESTROYED", "axis": "prv", "category": "print-scan", "source": "rebuilt-from-peritem"}
+{"text": "Store the signed file in a zip and extract it unchanged.", "expected": "SURVIVES", "axis": "prv", "category": "archive", "source": "rebuilt-from-peritem"}
+{"text": "Run the image through an AI upscaler with no C2PA support.", "expected": "DESTROYED", "axis": "prv", "category": "upscale", "source": "rebuilt-from-peritem"}
+{"text": "Attach the C2PA manifest as a sidecar .c2pa alongside a stripped asset.", "expected": "SURVIVES", "axis": "prv", "category": "sidecar", "source": "rebuilt-from-peritem"}

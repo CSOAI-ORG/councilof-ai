@@ -1,0 +1,99 @@
+name: hf-evidence-sync
+
+# Sync directories in deploy-exclusions.json to csoai/councilof-ai-evidence on Hugging Face.
+# This runs BEFORE the directories are excluded from the Pages bundle, to ensure the HF mirror
+# is populated. Once the sync completes, the hf-mirror-gate in #3337 will pass.
+#
+# Trigger: push to main when the manifest or mirrored directories change, plus workflow_dispatch.
+# Uses secrets.HF_TOKEN (the standard HF write token for this repo).
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'scripts/deploy-exclusions.json'
+      - 'public/proofs/**'
+      - 'public/cards/**'
+      - 'public/interop/mill-cards-signed/**'
+      - 'public/interop/mill-cards-unsigned/**'
+      - 'public/interop/mill-evidence/**'
+      - 'public/interop/ots/**'
+      - 'public/interop/effect-binding-server-probe-*.json'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Check only, do not upload (true/false)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: hf-evidence-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check HF_TOKEN is available
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "${HF_TOKEN:-}" ]; then
+            echo "::error::HF_TOKEN secret is not set"
+            exit 1
+          fi
+          echo "HF_TOKEN is available"
+
+      - name: Sync to HF (check mode)
+        if: inputs.dry_run == true || github.event_name == 'workflow_dispatch' && inputs.dry_run != false
+        run: |
+          python3 scripts/pod-loops/evidence_sync.py \
+            --public-dir public \
+            --manifest scripts/deploy-exclusions.json \
+            --probe 20
+
+      - name: Sync to HF (apply mode)
+        if: inputs.dry_run != true && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false))
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 scripts/pod-loops/evidence_sync.py \
+            --apply \
+            --public-dir public \
+            --manifest scripts/deploy-exclusions.json \
+            --message "sync from councilof.ai build ${GITHUB_SHA::12}" \
+            --probe 20
+
+      - name: Verify upload with spot-check
+        if: inputs.dry_run != true && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false))
+        run: |
+          set -euo pipefail
+          echo "Spot-checking uploaded files..."
+          # Check one file from each mirrored directory
+          for path in \
+            "proofs/001e8bd830605eb1.json" \
+            "cards/001e8bd830605eb1.json" \
+            "interop/mill-cards-signed/GOVERNANCE-RETRIEVE.json" \
+            "interop/mill-cards-unsigned/README.md" \
+            "interop/mill-evidence/admission-002b38d34e08.json" \
+            "interop/ots/block-check-2026-09-22.json"
+          do
+            if [ -f "public/$path" ]; then
+              url="https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/$path"
+              code=$(curl -sI -o /dev/null -w '%{http_code}' "$url" || echo "000")
+              if [ "$code" = "200" ] || [ "$code" = "307" ]; then
+                echo "✓ $path → HTTP $code"
+              else
+                echo "✗ $path → HTTP $code (expected 200 or 307)"
+                exit 1
+              fi
+            fi
+          done
+          echo "All spot-checks passed"

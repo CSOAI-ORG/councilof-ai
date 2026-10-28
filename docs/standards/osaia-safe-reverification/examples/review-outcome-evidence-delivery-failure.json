@@ -1,0 +1,23 @@
+{
+  "profile": "csoai.safe-review-outcome/0.1",
+  "record_id": "ro-2026-10-26-delivery-failure",
+  "incident_ref": null,
+  "issued_at": "2026-10-26T06:00:00Z",
+  "layer": "monitoring",
+  "expected_outcome": "Operators detected and interrupted unexpected behavior in real time.",
+  "evidence_delivery": {
+    "state": "NOT_DELIVERED",
+    "producer_established": true,
+    "delivery_obligation_established": true,
+    "observation_window": "2026-09-01T00:00:00Z/2026-09-30T00:00:00Z",
+    "collection_path_functioning": true,
+    "reason": "The expected producer existed, the delivery obligation was established, the observation window was closed and the collection path was functioning, so the absent evidence is a delivery failure. It is not evidence that the control failed."
+  },
+  "underlying_control_outcome": "INSUFFICIENT_EVIDENCE",
+  "attribution": "EVIDENCE_DELIVERY",
+  "reason": "The expected producer existed, the delivery obligation was established, the observation window was closed and the collection path was functioning, so the absent evidence is a delivery failure. It is not evidence that the control failed.",
+  "evidence": [],
+  "limits": [
+    "Synthetic record. No real incident, subject or system is named or implied."
+  ]
+}

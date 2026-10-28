@@ -16,8 +16,8 @@ describe("/gspc-verify two modes — estate card + signed public root", () => {
   it("keeps estate card verify and adds public-root inclusion", () => {
     expect(page).toContain('useState<"estate" | "public-root">');
     expect(page).toContain("PublicRootCatalogue");
-    expect(page).toContain("Estate card");
-    expect(page).toContain("Public-root catalogue");
+    expect(page).toContain("Check one record");
+    expect(page).toContain("Check collection membership");
     expect(page).toContain("RecordVerifyForm");
   });
 
@@ -56,16 +56,27 @@ describe("/gspc-verify two modes — estate card + signed public root", () => {
     expect(page).toContain("trusted reference hashes");
   });
 
+  it("shows the worked verification without turning VALID into certification", () => {
+    expect(page).toContain('data-testid="worked-verification"');
+    expect(page).toContain("6/6 checks passed");
+    expect(page).toContain("Card ID reproduced");
+    expect(page).toContain("Published key matched");
+    expect(page).toContain("Signature verified");
+    expect(page).toContain("Historical example");
+    expect(page).toContain("It is not certification, not a fresh measurement");
+    expect(page).toContain("Current board admission, present quotability and chain replay are not claimed");
+  });
+
   it("describes the paid commission as a receipt over existing evidence, not a fresh run", () => {
     expect(commission).toContain('fresh_run: "UNMEASURED"');
     expect(commission).toContain("corpus_as_of: reserve.as_of");
     expect(commission).toContain("signer: signerState(env)");
     // The paid block sits after the free verifier under its own heading (audit 2026-09-28 #22).
-    expect(page).toContain("Optional: a commission receipt");
-    expect(page.indexOf("Optional: a commission receipt")).toBeGreaterThan(page.indexOf("What this button does NOT do"));
+    expect(page).toContain("Optional paid service: a receipt for existing evidence");
+    expect(page.indexOf("Optional paid service: a receipt for existing evidence")).toBeGreaterThan(page.indexOf("What this button does NOT do"));
     expect(page).toContain("Commission receipt · existing evidence");
     expect(page).toContain("it does not run a new measurement");
-    expect(page).toContain("signer state, corpus date and cards available");
+    expect(page).toContain("signing status, evidence collection date and records available for your subject.");
     expect(page).toContain('href="/dashboard?tab=tools&tool=commission_card"');
     expect(page).toContain('href="/pay"');
     expect(page).not.toContain("Paid proof · commission");

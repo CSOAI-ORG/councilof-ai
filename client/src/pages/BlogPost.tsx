@@ -5,7 +5,8 @@
  * external links the article cites (omitted when it cites none), and BlogPosting +
  * BreadcrumbList JSON-LD derived from the post's own data (lib/blogSeo).
  *
- * NOT ROUTED. App.tsx routes /blog and /blog/:slug to ContentReviewNotice under the reviewed
+ * ROUTED ONLY for the slugs in client/src/data/blog-published.json (exact App.tsx routes, 2026-10-12).
+ * Otherwise: App.tsx routes /blog and /blog/:slug to ContentReviewNotice under the reviewed
  * publication manifest (client/src/data/publication-state.json, 2026-09-15) and
  * scripts/content-promise-gate.mjs holds the two in step. Restoring a post is a publication
  * decision: remove the pattern from withdrawn_routes AND point the route here in the same
@@ -24,9 +25,9 @@ import {
   ldJson,
 } from "@/lib/blogSeo";
 
-export default function BlogPost() {
+export default function BlogPost({ slug: fixedSlug }: { slug?: string } = {}) {
   const params = useParams();
-  const slug = String((params as { slug?: string })?.slug ?? "");
+  const slug = String(fixedSlug ?? (params as { slug?: string })?.slug ?? "");
   const entry = getBlogDataEntry(slug);
   const post = blogPostBySlug(slug);
 
@@ -57,7 +58,7 @@ export default function BlogPost() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson(blogPostingLd(post)) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson(blogBreadcrumbLd(post)) }} />
       <nav aria-label="Breadcrumb" className="text-sm text-slate-500">
-        <Link href="/">Home</Link> › <Link href="/blog">Blog</Link>
+        <Link href="/">Home</Link> › <span>Blog</span>
       </nav>
       <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">{post.headline}</h1>
       {(post.datePublished || post.author) && (
