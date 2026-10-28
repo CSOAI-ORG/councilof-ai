@@ -82,9 +82,9 @@ Every grant application in this directory cites these verifiable artefacts:
 
 | Artefact | Current value | Source file | Live endpoint |
 |---|---|---|---|
-| Public Merkle root | `47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d` | `public/root.json` → `merkle_root` | `GET /root.json` |
-| Root.json SHA256 | `f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e` | Computed over served bytes | `shasum -a 256 public/root.json` |
-| Cards under root | 319 | `public/root.json` → `card_count` | `GET /root.json` |
+| Public Merkle root | **read live** — `GET /root.json` → `.merkle_root` (read 2026-10-28: `a2620ac322c5…`) | `public/root.json` → `merkle_root` | `GET /root.json` |
+| Root.json SHA256 | **read live** — `shasum -a 256 public/root.json` (read 2026-10-28: `e9fb00e240b1…`, 25,925 B served) | Computed over served bytes | `shasum -a 256 public/root.json` |
+| Cards under root | **read live** — `GET /root.json` → `.card_count` (read 2026-10-28: 325) | `public/root.json` → `card_count` | `GET /root.json` |
 | Signed card corpus | 335 | `public/signed/card_index.json` → `n_cards` | `GET /api/state` → `signed_cards` |
 | Corpus relation | SEPARATE_CORPORA, identifier overlap 0 | `public/root.json` + `public/signed/card_index.json` | `GET /api/state` → `signed_cards.corpus_relation` |
 | Board | 23 axes / 23 measured | — | `GET /api/gspc` → `totals.public_count` |

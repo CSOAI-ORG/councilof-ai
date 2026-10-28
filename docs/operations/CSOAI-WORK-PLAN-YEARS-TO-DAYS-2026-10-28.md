@@ -36,6 +36,16 @@ generator bug is fixed; A12 is measured and the published Zenodo notice was wron
 hunt is alive again after 28 days dead; and the hunt's 1,219 measurements now have a ledger
 nobody had built. Detail in §6.
 
+**One correction to the register's own tiering.** A, in the gap register, means "closable by
+engineering with no owner input". That is true of A7, A18 and A19, which are closed. It is **not**
+true of A11, A14, A15, A16 and A17: each of those needs a signature, and a signature needs a
+bearer for `POST /api/board-sign` that no machine on this estate currently holds (B17). They are
+owner-gated in fact and engineering-gated only in the register. Two further rows were re-read
+rather than acted on: **A9 is a misreading** — the document it names is a worked example about a
+superseded signed freeze and already states the living board as the current authority — and
+**A12 needed measuring before it could be closed**, which is what showed the published notice was
+wrong in the other direction.
+
 ---
 
 ## 1. YEARS — what only time buys
@@ -159,15 +169,15 @@ shows it is not the subject's, on every published cell.
 
 | # | item | close test |
 |---|---|---|
-| D9 | A9: the SAFE contribution's board-count line | the upstream document states 33 axes · 23 measured · 10 declared, with the read date |
-| D10 | A19: supersede the three dated artefacts carrying "23 axes" | a dated `-SUPERSEDES` note beside each, indexed in `public/corrections/SUPERSESSIONS.md` — **dated evidence is not edited** |
-| D11 | A7: `docs/grants/README.md` and `docs/trust/ANCHOR-PREPARATION.md` pin the old root | both point at the live URL with a read date |
-| D12 | A16: the capsule index | see W2 |
-| D13 | A15: sign the HITL probe artefact | a signed HITL artefact exists — needs the control plane's key |
-| D14 | A17: sign the x402 discovery manifest, publish the signed copy under `public/.well-known/` | the manifest a reader is told to pin has a signature and a checked-in copy |
-| D15 | A18: negative control for the A2A directory census | see W4 |
-| D16 | A11: recompute the witness drift | see W3 |
-| D17 | A14: sign the 7 unsigned financial run artefacts | `totals.financial_run_attestations` reports 9 of 9 signed |
+| D9 | A9: the SAFE contribution's board-count line | **the register misread this one.** The document is a worked example about a *superseded signed freeze*: it quotes the freeze's own "23 axes · 23 measured", states the living board's "33 axes · 23 measured", and records the freeze as `SUPERSEDED_KNOWN_CLAIM_DEFECT` with the living board as `current_authority`. Nothing to change — the doc is already right |
+| D10 | A19: supersede the three dated artefacts carrying "23 axes" | **CLOSED 28 Oct** — three dated `-SUPERSEDES` notes written beside the originals (which keep their bytes), and three rows added to `public/corrections/SUPERSESSIONS.md` |
+| D11 | A7: `docs/grants/README.md` and `docs/trust/ANCHOR-PREPARATION.md` pin the old root | **CLOSED 28 Oct** — both now carry a live pointer plus the dated reading (root `a2620ac3…`, 325 cards, as_of 2026-10-27T21:20:49Z), following the house rule that a count is a pointer, never a typed integer |
+| D12 | A16: the capsule index | **KEY-CUSTODY-GATED** — `scripts/measurement_capsule_layout.py` consumes a *signed* index (it copies the `.signed.json` sidecar and the `.ots` proof), so a fresh capsule index needs a signed source index |
+| D13 | A15: sign the HITL probe artefact | **KEY-CUSTODY-GATED** — `POST /api/board-sign` accepts a GitHub OIDC JWT or the pod caller token (Pages secret `BOARD_SIGN_POD_TOKEN`); neither is on the pod, and the attestation seed is not either. Not an engineering task; it needs a credential (see B17) |
+| D14 | A17: sign the x402 discovery manifest, publish the signed copy under `public/.well-known/` | **KEY-CUSTODY-GATED** — same as D13; and `public/.well-known/x402.json` does not exist at all, so there is no signed copy to diff against |
+| D15 | A18: negative control for the A2A directory census | **CLOSED 28 Oct** — `a2a-directories-20260930T103424Z.controls.json`: three controls (a real directory, a not-a-directory, and the must-fail case drawn from the census's own rule — a row answered from `ours` is never evidence about a third party). The published census's own totals reproduce under that rule, and with the exclusion removed the must-fail case flips, so the counter can fail |
+| D16 | A11: recompute the witness drift | **KEY-CUSTODY-GATED, and it failed closed.** `scripts/root-witness-release-gate.py --phase live` reports "fresh live drift must be MATCH in live phase, got DRIFTED" and ~104 archive references with missing or invalid OTS proofs. Its own resolution: publish and independently verify one fresh schema-valid signed root plus its exact-byte sidecar, Rekor snapshot and OTS proof. That is a signing operation, not a recompute |
+| D17 | A14: sign the 7 unsigned financial run artefacts | **KEY-CUSTODY-GATED** — same as D13. 7 of 9 are `CONTENT_ADDRESSED_UNSIGNED`; the 2 that are signed show the exact shape (`signature.alg`, `signature.content_id`, `signature.sig`, `signature.pubkey`) |
 | D18 | The board's `doi_status` is stale in the other direction (today's finding) | the control plane re-signs the board payload with the observed DOI state |
 
 ### Open, and blocked on a named owner act
@@ -190,6 +200,7 @@ shows it is not the subject's, on every published cell.
 | B14 | The M4's data volume was at 99.8% and peer sessions are dying of ENOSPC | decide on the 48 GB game install | it is not work; only the owner can delete it |
 | B15 | `micro2`'s bulk volume is 95% full | S3 keys, then the same offload | a credential |
 | B16 | The RFC 5737 `example.com` citations, the `councilof.ai` vs `councilof-ai` naming split, and the four DORA/IIA shadowed-key copies | a naming + citation ruling | naming is a house decision |
+| B17 | **A bearer for `POST /api/board-sign`** — the GitHub OIDC path or the pod caller token (Pages secret `BOARD_SIGN_POD_TOKEN`) | provision one of them on the build pod | this is what stands between the estate and signing the 7 unsigned financial run artefacts, the HITL probe, the x402 manifest, a fresh witness root and a fresh capsule index — five register items the register had filed as engineering work |
 
 ---
 
