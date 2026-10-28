@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import { readAllTimeRevenue, type AllTimeRevenue } from "@/lib/revenueCoverage";
 
 type State = {
   root: { cards: number; asOf: string } | null;
-  revenue: { payers: number; settlements: number; atomic: number } | null;
+  revenue: AllTimeRevenue | null;
   commissions: { outside: number; excluded: number; unknown: number; count: number; queued: number; unfulfillable: number } | null;
   coverage: number | null;
   worker: string | null;
@@ -34,11 +35,8 @@ export default function Traction() {
         if (cards !== null && asOf) next.root = { cards, asOf }; else next.failed.push("root");
       } else next.failed.push("root");
       if (revenue.status === "fulfilled") {
-        const one = revenue.value?.one_number;
-        const payers = integer(one?.all_time), settlements = integer(one?.settlements);
-        const atomic = integer(revenue.value?.settled_usdc?.count ?? one?.settled_usdc_atomic);
-        if (one?.status === "MEASURED" && payers !== null && settlements !== null && atomic !== null) next.revenue = { payers, settlements, atomic };
-        else next.failed.push("revenue");
+        next.revenue = readAllTimeRevenue(revenue.value);
+        if (!next.revenue) next.failed.push("revenue");
       } else next.failed.push("revenue");
       if (commissions.status === "fulfilled") {
         // Outside commissions only: receipts are classified by payer (OUTSIDE / SELF_TEST / ZERO_VALUE / UNCHECKABLE).
@@ -77,10 +75,11 @@ export default function Traction() {
     <section className="mx-auto max-w-6xl px-5 py-12">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <LiveCard label="Admitted cards in current root" value={live.root?.cards} source="/root.json" detail={live.root ? `as of ${live.root.asOf}` : "UNCHECKABLE"} />
-        <LiveCard label="Distinct non-self payers" value={live.revenue?.payers} source="/api/revenue" detail={live.revenue ? `${live.revenue.settlements} outside settlement${live.revenue.settlements === 1 ? "" : "s"}` : "UNCHECKABLE"} />
-        <LiveCard label="Settled outside value" value={usdc} source="/api/revenue" detail="USDC · self and zero-value tests excluded" />
+        <LiveCard label="Distinct non-self payers (all time)" value={live.revenue?.payers} source="/api/revenue" detail={live.revenue ? `${live.revenue.settlements} outside settlement${live.revenue.settlements === 1 ? "" : "s"}` : "UNCHECKABLE"} />
+        <LiveCard label="Recorded non-self value (all time)" value={usdc} source="/api/revenue" detail="USDC · self and zero-value tests excluded" />
         <LiveCard label="Outside commissions" value={live.commissions?.outside} source="/api/commissions" detail={live.commissions ? `${live.commissions.excluded} self-paid or zero-value test${live.commissions.excluded === 1 ? "" : "s"} excluded${live.commissions.unknown ? ` · ${live.commissions.unknown} origin UNCHECKABLE` : ""}` : "UNCHECKABLE"} />
       </div>
+      {live.revenue ? <p className="mt-4 text-sm text-slate-300">All-time figures are this site's facilitator-record observations. They do not establish independent customers or accepted delivery.{live.revenue.state === "partial" ? " PARTIAL: timestamp coverage is incomplete; 30-day payer and repeat-payer counts remain UNMEASURED." : ""}</p> : null}
       {live.failed.length ? <p className="mt-4 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3 font-mono text-xs text-amber-200">UNCHECKABLE now: {live.failed.join(", ")}. No cached number substituted.</p> : null}
     </section>
 

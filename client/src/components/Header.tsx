@@ -47,6 +47,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
   };
 
   const handleMouseLeave = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setActiveDropdown(null), 150);
   };
 

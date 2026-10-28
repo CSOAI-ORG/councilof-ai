@@ -8,7 +8,7 @@ import LobbyComposer, {
   type ComposerTool,
 } from "@/components/lobby/LobbyComposer";
 import LobbyThread from "@/components/lobby/LobbyThread";
-import { openAsk } from "@/components/ask/askBus";
+import { askIsBusy, controlAsk, openAsk } from "@/components/ask/askBus";
 import TalkPanel, { type TalkPanelHandle } from "@/components/talk/TalkPanel";
 import GspcWorkspaceHome from "@/components/gspc/GspcWorkspaceHome";
 import {
@@ -41,36 +41,24 @@ export function paneForTool(name: string): string {
 }
 
 /**
- * The home composer's question goes to the AG-UI TalkPanel, which answers it on the start screen.
- *
- * 6 Oct 2026: askTalk used to record the question as a lobby chat turn first. That flipped
- * hasConversation, which swapped the home canvas (and the TalkPanel in it) for LobbyThread, and
- * TalkPanel's unmount effect aborted the POST /api/agui/run it had just started: the first question
- * typed on the start screen never got an answer. Two fixes met here and both are kept:
- * - #2834 (master): the question is still recorded in session history (`keepInChat`), but
- *   DashboardWorkspace sets talkOwnsHome before it does, so the turn never swaps the canvas.
- * - tools audit: the question is also kept in the workspace History as an "ask" activity entry.
- *
- * Returns true when the TalkPanel took the question; false sends it on to the lobby chat.
+ * Free questions stay in the workspace's stable AG-UI runner, including follow-up questions.
+ * A busy result is distinct from a navigation fallback, so the composer can keep its draft.
  */
 export function askOnHome(
   text: string,
   ctx: {
     activePane: boolean;
-    hasConversation: boolean;
-    talk: { ask: (question: string) => void } | null;
+    hasConversation?: boolean;
+    talk: { ask: (question: string) => boolean | void; isBusy?: () => boolean } | null;
     record?: typeof recordActivity;
-    /** Records the question in session history; runs before the TalkPanel is asked. */
-    keepInChat?: (question: string) => void;
   },
-): boolean {
-  if (ctx.activePane || ctx.hasConversation || !ctx.talk) return false;
+): boolean | "busy" {
+  if (ctx.activePane || !ctx.talk) return false;
   if (isExplicitNavigationCommand(text) && (matchTab(text) || matchRoute(text))) return false;
   const question = text.trim();
   if (!question) return false;
-  (ctx.record ?? recordActivity)({ kind: "ask", label: question });
-  ctx.keepInChat?.(question);
-  ctx.talk.ask(question);
+  if (ctx.talk.isBusy?.() || ctx.talk.ask(question) === false) return "busy";
+  ctx.record?.({ kind: "ask", label: question });
   return true;
 }
 
@@ -208,33 +196,38 @@ export default function DashboardWorkspace({
     [setLocation],
   );
 
-  // A question asked on the Get results home is answered by the home TalkPanel. It is still
-  // recorded in session history (so History/Chats can reach it), but it must not swap the home
-  // canvas for LobbyThread: that unmounted the TalkPanel and aborted its /api/agui/run ~8 ms
-  // after sending (6 Oct 2026, the first question never got an answer).
-  const [talkOwnsHome, setTalkOwnsHome] = useState(false);
-  const hasConversation = Boolean(chat.active?.turns.length) && !talkOwnsHome;
+  // The runner's home stays mounted when History or a tool pane is shown. Its answer snapshots
+  // belong to the originating question; selecting a thread changes only the view.
+  const [homeThreadId, setHomeThreadId] = useState<string | null>(null);
+  const hasConversation = Boolean(chat.active?.turns.length) && chat.activeId !== homeThreadId;
+  const homeView = useRef(true);
+  homeView.current = !activePane && !hasConversation;
   const talkRef = useRef<TalkPanelHandle>(null);
-  // On the home surface a typed question goes to the AG-UI TalkPanel (tool cards + citations).
-  // An explicit pane command ("show the board") still navigates through the lobby chat.
-  // The question is kept in History twice (see askOnHome): as an "ask" activity entry, and as a
-  // session-history turn that talkOwnsHome keeps from swapping the canvas and aborting the run.
+  const [talkBusy, setTalkBusy] = useState(false);
+  const viewChat = {
+    ...chat,
+    busy: chat.busy || talkBusy,
+    startThread: () => { homeView.current = true; setHomeThreadId(null); chat.startThread(); },
+    selectThread: (id: string) => { homeView.current = false; setHomeThreadId(null); chat.selectThread(id); },
+    talk: {
+      confirm: (run: import("@/lib/aguiTalk").TalkRun) => { if (!talkRef.current?.confirm(run)) controlAsk("confirm", run); },
+      cancel: (run: import("@/lib/aguiTalk").TalkRun) => { if (!talkRef.current?.cancel(run)) controlAsk("cancel", run); },
+      stop: (id: string) => { if (!talkRef.current?.stop(id)) controlAsk("stop", id); },
+    },
+  };
   const askTalk = useCallback(
-    (text: string) =>
-      askOnHome(text, {
-        activePane: Boolean(activePane),
-        hasConversation,
-        talk: talkRef.current,
-        // #2834: the question is also a turn in session history (Chats › History). talkOwnsHome is
-        // set first, in the same batch, so that turn never flips hasConversation and the home
-        // canvas (and the TalkPanel's run) stays mounted.
-        keepInChat: (question) => {
-          setTalkOwnsHome(true);
-          chat.recordUserMessage(question);
-        },
-      }),
-    [activePane, hasConversation, chat],
+    (text: string) => chat.isBusy() || askIsBusy() ? "busy" as const : askOnHome(text, {
+      activePane: Boolean(activePane), talk: talkRef.current,
+    }),
+    [activePane, chat],
   );
+  const startTalkHistory = useCallback((question: string) => {
+    recordActivity({ kind: "ask", label: question });
+    const origin = chat.recordUserMessage(question);
+    if (origin && homeView.current) setHomeThreadId(origin.threadId);
+    return origin;
+  }, [chat]);
+
   const activity = useActivity();
   // The side rail only exists when it has something to hold: a conversation that
   // continues beside a tool pane. An empty "Open a pane or start a task" column cost
@@ -296,7 +289,7 @@ export default function DashboardWorkspace({
                     <DialogDescription className="sr-only">
                       Review the current workspace, task activity and local chat threads.
                     </DialogDescription>
-                    <DashboardRightRail chat={chat} className="w-full border-l-0" />
+                    <DashboardRightRail chat={viewChat} className="w-full border-l-0" />
                   </DialogContent>
                 </Dialog>
               );
@@ -306,27 +299,31 @@ export default function DashboardWorkspace({
           : null}
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
           {activePane ? (
-            <div
-              className="min-h-0 flex-1 overflow-y-auto bg-background"
-              data-testid="dashboard-tool-canvas"
-            >
+            <div className="min-h-0 flex-1 overflow-y-auto bg-background" data-testid="dashboard-tool-canvas">
               {activePane}
             </div>
           ) : hasConversation ? (
-            <LobbyThread chat={chat} endRef={threadEndRef} />
-          ) : (
+            <LobbyThread chat={viewChat} endRef={threadEndRef} />
+          ) : null}
+          <div hidden={Boolean(activePane) || hasConversation} className={Boolean(activePane) || hasConversation ? "hidden" : "min-h-0 flex-1 flex flex-col"}>
             <GspcWorkspaceHome
-              onAsk={(q) => talkRef.current?.ask(q)}
+              onAsk={(question) => askTalk(question) === true}
               talk={({ onRunDone }) => (
                 <TalkPanel
                   ref={talkRef}
                   variant="dock"
-                  onRunDone={onRunDone}
+                  visibleThreadId={chat.activeId}
+                  onRunStart={startTalkHistory}
+                  onRunUpdate={chat.recordTalkRun}
+                  onRunSettled={onRunDone}
+                  onBusyChange={setTalkBusy}
+                  canStart={() => !chat.isBusy() && !askIsBusy()}
+                  blocked={chat.busy}
                   className="mt-4 rounded-3xl border border-emerald-950/10 bg-card p-4 shadow-[0_1px_2px_rgba(6,21,15,0.04)] sm:p-5"
                 />
               )}
             />
-          )}
+          </div>
         </div>
         {CANDIDATE_INTAKE_LIVE && candidate ? (
           <CandidateEvidenceTray
@@ -335,7 +332,7 @@ export default function DashboardWorkspace({
           />
         ) : null}
         <LobbyComposer
-          chat={chat}
+          chat={viewChat}
           onNavigate={navigate}
           onOpenRoute={openRoute}
           paneLabel={activeLabel || "Conversation"}
@@ -345,13 +342,17 @@ export default function DashboardWorkspace({
           seedPrompt={seedPrompt}
           seedNonce={search.length}
           onAsk={askTalk}
+          onStop={talkBusy ? () => { talkRef.current?.stop(); } : undefined}
           // On a pane (not the start screen), a free question is answered in the Ask side panel as a
           // result card, beside the pane, instead of as raw text in the chat thread.
           onFreeQuestion={
             activePane
-              ? (q) => {
-                  openAsk(q);
-                  return true;
+              ? (q, origin) => {
+                  if (talkRef.current?.isBusy()) return "busy";
+                  return openAsk(q, {
+                    origin,
+                    onUpdate: (run) => queueMicrotask(() => chat.recordTalkRun(run)),
+                  }) ? true : "busy";
                 }
               : undefined
           }
@@ -359,7 +360,7 @@ export default function DashboardWorkspace({
       </section>
       {railHasContent ? (
         <div className="hidden min-h-0 xl:block">
-          <DashboardRightRail chat={chat} />
+          <DashboardRightRail chat={viewChat} />
         </div>
       ) : null}
     </div>

@@ -101,7 +101,7 @@ export default function VerificationPath({
     ...checkHops,
     {
       key: "index",
-      label: "Listed in the signed card index (corpus 3)",
+      label: "Listed in the signed card index",
       mark: !cardId || !indexIds ? "not_run" : indexIds.has(cardId) ? "pass" : "fail",
       detail: !cardId
         ? "No card id to look up."

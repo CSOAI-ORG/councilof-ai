@@ -3,6 +3,7 @@ import { ArrowLeft, ExternalLink, X } from "lucide-react";
 import { Link } from "wouter";
 import { withEmbed } from "@/lib/embed";
 import { unframeableLanding } from "@/lib/unframeable";
+import { learningChallengeReturn } from "@/lib/learningChallenge";
 
 /**
  * One published page inside the Council OS centre pane.
@@ -19,6 +20,8 @@ export default function DashboardEmbeddedView({
   path: string;
   label: string;
 }) {
+  const learningReturn = learningChallengeReturn(path);
+  const closeHref = learningReturn?.href ?? "/dashboard?tab=explore";
   const frame = useRef<HTMLIFrameElement>(null);
   const [moved, setMoved] = useState<{ path: string; href: string } | null>(null);
 
@@ -52,10 +55,10 @@ export default function DashboardEmbeddedView({
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
               <Link
-                href="/dashboard?tab=explore"
+                href={closeHref}
                 className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-800 px-4 text-sm font-semibold text-white hover:bg-emerald-900"
               >
-                <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to Everything A–Z
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {learningReturn ? "Back to lesson" : "Back to Everything A–Z"}
               </Link>
               <a
                 href={moved.href}
@@ -69,6 +72,11 @@ export default function DashboardEmbeddedView({
       ) : (
         <>
           <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-sm backdrop-blur">
+            {learningReturn ? (
+              <span className="px-2 text-xs text-muted-foreground">
+                {learningReturn.axisId.replace(/-/g, " ")} · {learningReturn.stageId}
+              </span>
+            ) : null}
             <a
               href={path}
               target="_blank"
@@ -78,11 +86,11 @@ export default function DashboardEmbeddedView({
               Open page <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
             <Link
-              href="/dashboard?tab=explore"
-              aria-label="Close page and return to all tools"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"
+              href={closeHref}
+              aria-label={learningReturn ? "Close challenge banks and return to the lesson" : "Close page and return to all tools"}
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg px-2 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
             >
-              <X className="h-4 w-4" aria-hidden="true" />
+              {learningReturn ? <><ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to lesson</> : <X className="h-4 w-4" aria-hidden="true" />}
             </Link>
           </div>
           <iframe

@@ -37,8 +37,10 @@ if (!existsSync(FUNCTIONS_DIR)) {
   throw new Error("[redirects] functions/ is required to exclude Pages Function routes");
 }
 
+// /packs mixes physical evidence files with a maintained app page.
+// Native asset serving handles the files; a prefix rewrite masks the page.
 const STATIC_DIRS = ["/benchmarks", "/vendor", "/assets",
-                     "/.well-known", "/corpus-watch", "/flywheel", "/packs",
+                     "/.well-known", "/corpus-watch", "/flywheel",
                      "/datasets",
                      // /signed is the evidence tree IETF implementers are pointed at.
                      // Without this the SPA catch-all answers /signed/ with the app
@@ -55,6 +57,9 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
   .sort();
 
 const EXISTING = [
+  // Historical pricing bookmarks resolve to the current measured dashboard.
+  "/pricing-free           /dashboard/?tab=measured&task=pricing-overview 302",
+  "/pricing-free/          /dashboard/?tab=measured&task=pricing-overview 302",
   // The hand-authored /arena tree was a second, stale product surface. Keep
   // historical machine evidence in public/arena/*.json{,l}, but route every
   // former human page into the one Council OS play surface. Exact rules are

@@ -22,7 +22,7 @@ Start at /assess, or open Get measured in Council OS.` +
 const VERIFY_CARD =
   `Verification runs in your browser using the declared card-family rule. Canonicalisation and signature preimages differ between legacy families, so do not apply one generic recipe to every record. The canonical verifier selects a supported family, recomputes its hash, and checks Ed25519 against a key pinned for that family.
 
-No account and no fee are required to verify. The current public root has an OpenTimestamps proof in STAMPED_PENDING_BITCOIN state; that is not a confirmed Bitcoin timestamp.
+No account and no fee are required to verify. OpenTimestamps status belongs to a dated proof of specific root bytes. Check the proof's current verification result and this record's inclusion; a root timestamp does not establish that every published card is anchored.
 
 Open /gspc-verify.` +
   cite("the published verify FAQ");
