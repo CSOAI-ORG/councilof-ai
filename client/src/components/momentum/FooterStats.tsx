@@ -11,6 +11,7 @@
 import { useLocation } from "wouter";
 import { LiveDot } from "./MomentumStrip";
 import PypiLiveBadge from "./PypiLiveBadge";
+import NpmMcpLiveBadge from "./NpmMcpLiveBadge";
 import { fmtStamp, isExternal, pick, useMomentum, type MomentumRead } from "./momentum";
 
 export const FOOTER_IDS = ["hf_downloads_30d_other", "capsules", "signed_cards", "corrections"];
@@ -58,7 +59,10 @@ export default function FooterStats({ injected }: { injected?: MomentumRead }) {
           </li>
         ))}
       </ul>
-      <PypiLiveBadge className="mt-4" />
+      <div className="mt-4 space-y-2">
+        <PypiLiveBadge />
+        <NpmMcpLiveBadge />
+      </div>
       <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11.5px] text-muted-foreground">
         <LiveDot live={live} />
         <span>
