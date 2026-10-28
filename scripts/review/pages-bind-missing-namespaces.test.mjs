@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {planBindingAdditions,applyBindingAdditions,readNamedProject} from './pages-bind-missing-namespaces.mjs';
+import {planBindingAdditions,applyBindingAdditions,readNamedProject,readAccountNamespaceIds} from './pages-bind-missing-namespaces.mjs';
 
 const id='a'.repeat(32),other='b'.repeat(32),third='c'.repeat(32),acct='0'.repeat(32),token='secret-token-value';
 
@@ -12,16 +12,26 @@ const idFor=name=>name==='STORE'?id:name==='LEADS'?other:third;
 const config=(names)=>({name:'councilof-ai',kv_namespaces:names.map(name=>({binding:name,id:idFor(name)}))});
 const project=(names=[])=>({name:'councilof-ai',production_branch:'master',deployment_configs:{production:{kv_namespaces:Object.fromEntries(names.map(n=>[n,{namespace_id:idFor(n)}]))}}});
 
-// A fetcher that serves the current project and records every PATCH body.
-function harness(startNames,nextNames){
+// A fetcher that serves the current project and the account's namespace list, and
+// records every PATCH body.
+function harness(startNames,{owned,patchMutate,namespaceListFails}={}){
   const calls=[];let current=project(startNames);
+  const ownedIds=owned??[...new Set([...startNames])].map(idFor);
   const fetcher=async(url,options)=>{
     const method=options?.method??'GET';
     calls.push({url,method,body:options?.body?JSON.parse(options.body):null});
-    if(method==='GET')return Response.json({success:true,result:current});
+    if(method==='GET'){
+      if(url.includes('/storage/kv/namespaces')){
+        if(namespaceListFails)return new Response('denied',{status:403});
+        return Response.json({success:true,result:ownedIds.map(x=>({id:x}))});
+      }
+      return Response.json({success:true,result:current});
+    }
     if(method==='PATCH'){
       const body=JSON.parse(options.body);
-      current={...current,deployment_configs:{production:{kv_namespaces:body.deployment_configs.production.kv_namespaces}}};
+      let map=body.deployment_configs.production.kv_namespaces;
+      if(patchMutate)map=patchMutate(map);
+      current={...current,deployment_configs:{production:{kv_namespaces:map}}};
       return Response.json({success:true,result:current});
     }
     return new Response('unexpected',{status:500});
@@ -29,17 +39,17 @@ function harness(startNames,nextNames){
   return {calls,fetcher,read:()=>current};
 }
 
-test('adds a binding the production project lacks',()=>{
-  const h=harness(['STORE'],['STORE','HITL_KV']);
-  return applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher}).then(r=>{
-    assert.equal(r.changed,true);
-    assert.deepEqual(r.added,['HITL_KV']);
-    assert.equal(r.state,'BOUND');
-  });
+test('adds a binding the production project lacks',async()=>{
+  const h=harness(['STORE'],{owned:[id,idFor('HITL_KV')]});
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
+  assert.equal(r.changed,true);
+  assert.deepEqual(r.added,['HITL_KV']);
+  assert.equal(r.state,'BOUND');
+  assert.equal(r.readback,'VERIFIED');
 });
 
 test('never changes an existing binding id and never removes one the candidate does not declare',async()=>{
-  const h=harness(['STORE','LEGACY'],['STORE','LEGACY']);
+  const h=harness(['STORE','LEGACY'],{owned:[id,idFor('LEGACY')]});
   const r=await applyBindingAdditions({candidate:config(['STORE']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
   assert.equal(r.changed,false);
   assert.equal(r.state,'NO_CHANGE');
@@ -48,15 +58,15 @@ test('never changes an existing binding id and never removes one the candidate d
 });
 
 test('a binding present remotely with a different id is reported, never silently rebound',async()=>{
-  const h=harness(['STORE'],['STORE']);
-  const r=await applyBindingAdditions({candidate:{name:'councilof-ai',kv_namespaces:[{binding:'STORE',id:'c'.repeat(32)}]},project:h.read(),accountId:acct,token,fetcher:h.fetcher});
+  const h=harness(['STORE'],{owned:[id]});
+  const r=await applyBindingAdditions({candidate:{name:'councilof-ai',kv_namespaces:[{binding:'STORE',id:'f'.repeat(32)}]},project:h.read(),accountId:acct,token,fetcher:h.fetcher});
   assert.equal(r.changed,false);
   assert.deepEqual(r.conflicts,['STORE']);
   assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0);
 });
 
 test('the patch carries the complete merged map so no existing binding can be dropped',async()=>{
-  const h=harness(['STORE','LEADS'],['STORE','LEADS']);
+  const h=harness(['STORE','LEADS'],{owned:[id,other,third]});
   await applyBindingAdditions({candidate:config(['STORE','LEADS','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
   const patch=h.calls.find(c=>c.method==='PATCH');
   const sent=patch.body.deployment_configs.production.kv_namespaces;
@@ -64,53 +74,74 @@ test('the patch carries the complete merged map so no existing binding can be dr
   assert.equal(sent.STORE.namespace_id,id,'an existing binding must survive the patch with its own id');
 });
 
+test('a namespace id that is not on this account is refused and nothing is bound',async()=>{
+  const h=harness(['STORE'],{owned:[id]}); // HITL_KV's id is NOT on the account
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
+  assert.equal(r.changed,false);
+  assert.equal(r.state,'UNKNOWN_NAMESPACE');
+  assert.deepEqual(r.refused,['HITL_KV']);
+  assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0,'an unknown namespace must never be bound');
+});
+
+test('an unreadable account namespace list is uncheckable, not a silent pass',async()=>{
+  const h=harness(['STORE'],{namespaceListFails:true});
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
+  assert.equal(r.changed,false);
+  assert.equal(r.state,'UNCONFIRMED_NAMESPACE');
+  assert.deepEqual(r.refused,['HITL_KV']);
+  assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0);
+});
+
+test('the namespace list is read only when an addition is actually proposed',async()=>{
+  const h=harness(['STORE','LEADS'],{owned:[id,other]});
+  const r=await applyBindingAdditions({candidate:config(['STORE','LEADS']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
+  assert.equal(r.state,'NO_CHANGE');
+  assert.equal(h.calls.filter(c=>c.url.includes('/storage/kv/namespaces')).length,0,'a settled remote must not depend on a second API');
+});
+
+test('report-only mode reports the addition and writes nothing',async()=>{
+  const h=harness(['STORE'],{owned:[id,third]});
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher,report:true});
+  assert.equal(r.changed,false);
+  assert.equal(r.state,'WOULD_BIND');
+  assert.deepEqual(r.added,['HITL_KV']);
+  assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0);
+});
+
 test('a malformed candidate id is refused before any request is made',async()=>{
-  const h=harness(['STORE'],['STORE']);
+  const h=harness(['STORE']);
   await assert.rejects(applyBindingAdditions({candidate:{name:'councilof-ai',kv_namespaces:[{binding:'STORE',id:'NOT-HEX'}]},project:h.read(),accountId:acct,token,fetcher:h.fetcher}),/CANDIDATE_BINDING_ID_INVALID/);
   assert.equal(h.calls.length,0);
 });
 
 test('a duplicate candidate binding is refused',async()=>{
-  const h=harness(['STORE'],['STORE']);
+  const h=harness(['STORE']);
   await assert.rejects(applyBindingAdditions({candidate:{name:'councilof-ai',kv_namespaces:[{binding:'STORE',id},{binding:'STORE',id}]},project:h.read(),accountId:acct,token,fetcher:h.fetcher}),/CANDIDATE_BINDING_DUPLICATE/);
 });
 
 test('the wrong project or the wrong production branch is refused before any request',async()=>{
-  const h=harness(['STORE'],['STORE']);
+  const h=harness(['STORE']);
   await assert.rejects(applyBindingAdditions({candidate:config(['STORE']),project:{...h.read(),name:'other'},accountId:acct,token,fetcher:h.fetcher}),/TARGET_PROJECT_MISMATCH/);
   await assert.rejects(applyBindingAdditions({candidate:config(['STORE']),project:{...h.read(),production_branch:'main'},accountId:acct,token,fetcher:h.fetcher}),/TARGET_BRANCH_MISMATCH/);
   assert.equal(h.calls.length,0);
 });
 
 test('the readback fails closed when the binding did not take',async()=>{
-  const calls=[];
-  const fetcher=async(url,options)=>{
-    const method=options?.method??'GET';
-    calls.push({method});
-    if(method==='GET')return Response.json({success:true,result:project(['STORE'])});
-    return Response.json({success:true,result:project(['STORE'])});// the patch silently did nothing
-  };
-  await assert.rejects(applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:project(['STORE']),accountId:acct,token,fetcher}),/READBACK_/);
+  const h=harness(['STORE'],{owned:[id,third],patchMutate:()=>({STORE:{namespace_id:id}})});
+  await assert.rejects(applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher}),/READBACK_/);
 });
 
 test('the readback fails closed when an existing binding changed id',async()=>{
-  let current=project(['STORE','LEADS']);
-  const fetcher=async(url,options)=>{
-    const method=options?.method??'GET';
-    if(method==='GET')return Response.json({success:true,result:current});
-    const body=JSON.parse(options.body);
-    current={...current,deployment_configs:{production:{kv_namespaces:{...body.deployment_configs.production.kv_namespaces,LEADS:{namespace_id:'d'.repeat(32)}}}}};
-    return Response.json({success:true,result:current});
-  };
-  await assert.rejects(applyBindingAdditions({candidate:config(['STORE','LEADS','HITL_KV']),project:project(['STORE','LEADS']),accountId:acct,token,fetcher}),/READBACK_/);
+  const h=harness(['STORE','LEADS'],{owned:[id,other,third],patchMutate:(m)=>({...m,LEADS:{namespace_id:'d'.repeat(32)}})});
+  await assert.rejects(applyBindingAdditions({candidate:config(['STORE','LEADS','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher}),/READBACK_/);
 });
 
 test('never prints a namespace id',async()=>{
-  const h=harness(['STORE'],['STORE','HITL_KV']);
+  const h=harness(['STORE'],{owned:[id,third]});
   const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
   const s=JSON.stringify(r);
   assert.ok(!s.includes(id));
-  assert.ok(!s.includes('a'.repeat(32)));
+  assert.ok(!s.includes('c'.repeat(32)));
 });
 
 test('a denied project read is uncheckable, never a silent no-op',async()=>{
@@ -126,6 +157,13 @@ test('the reader uses one named GET and refuses redirect following',async()=>{
 
 test('an invalid credential shape sends no network request',async()=>{
   await assert.rejects(readNamedProject({accountId:'../x',token,fetcher:()=>{throw Error('network must not be reached');}}),/CREDENTIALS/);
+});
+
+test('the account namespace list is read from the account and nothing else',async()=>{
+  let called=0;
+  const ids=await readAccountNamespaceIds({accountId:acct,token,fetcher:async(url,options)=>{called++;assert.equal(url,'https://api.cloudflare.com/client/v4/accounts/'+acct+'/storage/kv/namespaces');assert.equal(options.method,'GET');assert.equal(options.redirect,'error');return Response.json({success:true,result:[{id:'a'.repeat(32)},{id:'b'.repeat(32)},{id:'not-hex'}]});}});
+  assert.equal(called,1);
+  assert.deepEqual(ids,['a'.repeat(32),'b'.repeat(32)],'a non-hex id is not a namespace id');
 });
 
 test('the plan names what would change without naming any namespace id',()=>{

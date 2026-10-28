@@ -64,25 +64,59 @@ export async function readNamedProject({accountId,token,fetcher=fetch}){
   return doc.result;
 }
 
-export async function applyBindingAdditions({candidate,project,accountId,token,fetcher=fetch}){
+/** Every KV namespace id this account owns. Proves a declared id is real and is ours.
+ *
+ * A namespace list that cannot be read is UNKNOWN, not an empty list of known ids.
+ * Treating "unknown" as "every id is fine" would let a typo straight through into
+ * production, which is the one thing this step exists to prevent.
+ */
+export async function readAccountNamespaceIds({accountId,token,fetcher=fetch}){
+  if(!finiteHex(accountId)||typeof token!=='string'||token.length<12)throw Error('CF_NAMESPACE_READ_CREDENTIALS_REQUIRED');
+  const endpoint='https://api.cloudflare.com/client/v4/accounts/'+accountId+'/storage/kv/namespaces';
+  const response=await fetcher(endpoint,{method:'GET',headers:{authorization:'Bearer '+token,accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(20000)});
+  if(!response.ok)throw Error('CF_NAMESPACE_READ_HTTP_'+response.status);
+  const doc=await response.json();
+  if(doc?.success!==true||!Array.isArray(doc.result))throw Error('CF_NAMESPACE_READ_UNCONFIRMED');
+  return doc.result.map(n=>n?.id).filter(finiteHex);
+}
+
+export async function applyBindingAdditions({candidate,project,accountId,token,fetcher=fetch,accountNamespaceIds,report=false}){
   const c=object(candidate);
   if(c?.name!==PROJECT)throw Error('TARGET_PROJECT_MISMATCH');
   if(project?.name!==PROJECT)throw Error('TARGET_PROJECT_MISMATCH');
   if(project?.production_branch!=='master')throw Error('TARGET_BRANCH_MISMATCH');
   const plan=planBindingAdditions(c,project);
   const remote=remoteBindings(project);
-  const report={schema:'csoai.pages-binding-additions/0.1',state:'NO_CHANGE',changed:false,added:[],conflicts:plan.conflicts,extra_remote:plan.extraRemote,readback:'NOT_REQUIRED'};
+  const summary={schema:'csoai.pages-binding-additions/0.1',state:'NO_CHANGE',changed:false,added:[],refused:[],conflicts:plan.conflicts,extra_remote:plan.extraRemote,readback:'NOT_REQUIRED'};
   // A remote that already diverges from the reviewed candidate is left exactly as it is:
   // that divergence is the preflight's to judge, not this step's to paper over.
-  if(plan.conflicts.length||plan.extraRemote.length)return report;
-  if(!plan.additions.length)return report;
+  if(plan.conflicts.length||plan.extraRemote.length)return summary;
+  if(!plan.additions.length)return summary;
+
+  const declared=Array.isArray(c.kv_namespaces)?c.kv_namespaces:[];
+  const wanted=new Map(declared.map(e=>[e.binding,e.id]));
+
+  // Prove the namespace exists on THIS account before it is bound to production. A
+  // namespace from another account, or a typo, would otherwise be published as a
+  // binding that can never be read.
+  let ids=accountNamespaceIds;
+  if(ids===undefined){
+    try{ids=await readAccountNamespaceIds({accountId,token,fetcher});}catch{ids=null;}
+  }
+  if(!Array.isArray(ids)){
+    return {...summary,state:'UNCONFIRMED_NAMESPACE',refused:plan.additions.map(a=>a.name),note:"the account's KV namespace list could not be read, so a declared namespace id cannot be confirmed; nothing was bound"};
+  }
+  const owned=new Set(ids);
+  const unknown=plan.additions.filter(a=>!owned.has(wanted.get(a.name)));
+  if(unknown.length){
+    return {...summary,state:'UNKNOWN_NAMESPACE',refused:unknown.map(a=>a.name),note:'no KV namespace with this id exists on this account; nothing was bound'};
+  }
+  if(report)return {...summary,state:'WOULD_BIND',added:plan.additions.map(a=>a.name),note:'report-only: nothing was written'};
 
   // The PATCH carries the COMPLETE merged map. A partial map could drop a binding
   // that is live in production, so the remote entries are copied through untouched.
   const merged={};
   for(const [name,value] of Object.entries(remote))merged[name]={namespace_id:value.namespace_id};
-  const declared=Array.isArray(c.kv_namespaces)?c.kv_namespaces:[];
-  const wanted=new Map(declared.map(e=>[e.binding,e.id]));
   for(const {name} of plan.additions)merged[name]={namespace_id:wanted.get(name)};
 
   const endpoint='https://api.cloudflare.com/client/v4/accounts/'+accountId+'/pages/projects/'+PROJECT;
@@ -98,20 +132,21 @@ export async function applyBindingAdditions({candidate,project,accountId,token,f
   for(const {name} of plan.additions)if(object(now?.[name])?.namespace_id!==wanted.get(name))throw Error('READBACK_BINDING_NOT_APPLIED');
   for(const [name,value] of Object.entries(remote))if(object(now?.[name])?.namespace_id!==value.namespace_id)throw Error('READBACK_BINDING_CHANGED_OR_DROPPED');
 
-  return {...report,state:'BOUND',changed:true,added:plan.additions.map(a=>a.name),readback:'VERIFIED'};
+  return {...summary,state:'BOUND',changed:true,added:plan.additions.map(a=>a.name),readback:'VERIFIED'};
 }
 
 async function main(){
   const args=process.argv.slice(2),value=k=>{const i=args.indexOf(k);return i<0?null:args[i+1];};
   const configPath=path.resolve(value('--config')??'wrangler.jsonc');
+  const report=args.includes('--report');
   const ts=await import('typescript');
   const parsed=ts.readConfigFile(configPath,ts.sys.readFile);
   if(parsed.error)throw Error('CANDIDATE_CONFIG_PARSE_FAILED');
   const accountId=process.env.CLOUDFLARE_ACCOUNT_ID,token=process.env.CLOUDFLARE_API_TOKEN;
   const project=await readNamedProject({accountId,token});
-  const result=await applyBindingAdditions({candidate:parsed.config,project,accountId,token});
+  const result=await applyBindingAdditions({candidate:parsed.config,project,accountId,token,report});
   console.log(JSON.stringify(result,null,2));
-  process.exitCode=result.changed||result.conflicts.length||result.extra_remote.length?0:0;
+  process.exitCode=(result.state==='BOUND'||result.state==='NO_CHANGE'||result.state==='WOULD_BIND')?0:2;
 }
 
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
