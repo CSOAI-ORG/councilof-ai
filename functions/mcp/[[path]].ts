@@ -360,14 +360,16 @@ export function discoveryHtml(
 :root{color-scheme:light dark;--fg:#111;--bg:#fff;--mut:#555;--line:#e5e5e5;--pre:#f6f6f6;--a:#047857}
 @media(prefers-color-scheme:dark){:root{--fg:#e9e9e9;--bg:#0f1115;--mut:#a2a2a2;--line:#262a31;--pre:#171a20;--a:#6ee7b7}}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:52rem;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+header{max-width:52rem;margin:0 auto;padding:1rem 1.25rem 0;border-bottom:1px solid var(--line);font-size:.95rem}
+header nav{padding-bottom:.75rem}
+main{max-width:52rem;margin:0 auto;padding:2rem 1.25rem 4rem}
 h1{font-size:1.9rem;line-height:1.2;margin:0 0 .4rem}h2{margin:2.2rem 0 .6rem;font-size:1.2rem;border-bottom:1px solid var(--line);padding-bottom:.35rem}
 a{color:var(--a);text-decoration:underline;text-underline-offset:2px}
 .lede{color:var(--mut)}p,li,dd{overflow-wrap:anywhere}
 dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.35rem 1rem}dt{color:var(--mut)}dd{margin:0;min-width:0}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:var(--pre);border-radius:4px;padding:0 .2em}
 footer{margin-top:3rem;color:var(--mut);font-size:.9rem;border-top:1px solid var(--line);padding-top:1rem}
-</style></head><body><main>
+</style></head><body><header><nav aria-label="Primary"><a href="/">Council of AI</a> · <a href="/benchmarks">Benchmarks</a> · <a href="/verify">Verify</a> · <a href="/mcp">MCP</a> · <a href="/api/gspc">Board JSON</a></nav></header><main>
 <h1>MCP server endpoint</h1>
 <p class="lede">This address is a Model Context Protocol server (<code>${escHtml(document.server_info.name)}</code> ${escHtml(document.server_info.version)}, Streamable HTTP). Add <code>${url}</code> to an MCP client; this page is what a browser sees.</p>
 <p>${escHtml(document.doctrine)}</p>
