@@ -194,28 +194,108 @@ def check_cobolbridge_consistency(surfaces: list[dict]) -> list[dict]:
     return findings
 
 
+# The window, in characters, around a promise of automatic re-measurement in which
+# a qualification of that promise must appear for the promise to be qualified.
+# A qualifier somewhere else on the page does not qualify the promise; a qualifier
+# in the next sentence does, because that is how a reader meets it.
+_PROMISE_QUALIFIER_WINDOW = 400
+
+# Words that make a re-measurement promise an AUTOMATIC one. "always" and
+# "automatic" are the two the estate actually uses.
+_AUTOMATIC_WORDS = ("always", "automatic", "automatically", "continuously")
+
+# Words that scope a re-measurement promise to a per-run arrangement, which is
+# what the estate does today. A promise carrying any of these is not a promise of
+# automatic re-measurement, so it cannot contradict a statement that automatic
+# re-attestation is not available.
+_SCOPING_WORDS = (
+    "run by run", "arranged", "not scheduled", "rather than scheduled",
+    "manually", "by hand", "one at a time", "not a monitoring",
+    "does not enrol", "no monitoring", "no subscription",
+)
+
+# The topics a statement can be about when it says re-attestation is unavailable.
+_UNAVAILABLE_TOPICS = (
+    "re-attestation", "reattestation", "auto re-measurement",
+    "automatic re-measurement", "scheduled re-measurement",
+)
+
+
+def _promises_automatic_remeasurement(text: str) -> bool:
+    """Does this text promise a re-measurement that happens by itself?
+
+    The old rule asked only whether the words "always" and "re-measurement"
+    appeared anywhere on a page. That is not a contradiction: "the answer is
+    always a re-measurement" is a statement about the FORM a valid resolution
+    takes, and "scheduled automatic re-attestation is not yet available" is a
+    statement about SCHEDULING. The two coexist, and flagging them together
+    trains readers to ignore the sweep.
+
+    So the promise has to be a promise of AUTOMATIC re-measurement, and a
+    promise that scopes itself to run-by-run is not that. The scoping list is
+    what makes the rule precise, and it is what keeps the rule alive: remove the
+    qualifier and the contradiction is back.
+
+    The scoping is read in a WINDOW around the promise, not across the whole
+    page. A page that promises automatic re-measurement in one place and
+    mentions "manually" in an unrelated footer is still promising automatic
+    re-measurement, and the rule must still fire on it.
+    """
+    for match in re.finditer(r"re-?measurement", text):
+        window = text[max(0, match.start() - 160): match.end() + _PROMISE_QUALIFIER_WINDOW]
+        if not any(word in window for word in _AUTOMATIC_WORDS):
+            continue
+        if any(word in window for word in _SCOPING_WORDS):
+            continue
+        return True
+    return False
+
+
+def _denies_automatic_remeasurement(text: str) -> bool:
+    """Does this text say that automatic re-measurement is not available?
+
+    The phrase must be "not yet available" AND it must be about re-attestation
+    or automatic re-measurement. A bare "not yet" is not enough: /pricing carries
+    "not yet due" in a claims-workflow table and never mentions re-attestation,
+    and matching that bare "not yet" produced a contradiction against a page
+    that says nothing of the kind.
+    """
+    if "not yet available" not in text:
+        return False
+    return any(topic in text for topic in _UNAVAILABLE_TOPICS)
+
+
 def check_remeeasurement_consistency(surfaces: list[dict]) -> list[dict]:
-    """Detect 'always re-measurement' vs 'not yet available' contradictions."""
+    """Detect a promise of automatic re-measurement vs a statement it is unavailable.
+
+    Two conditions, and they must be on DIFFERENT surfaces. One page carrying
+    both is a page that reconciles them, not a pair that contradicts: the
+    /dispute page naming the qualification and /about naming the limit is the
+    estate being precise, not the estate being inconsistent.
+    """
     findings = []
-    says_always = False
-    says_not_available = False
+    promises: list[dict] = []
+    denials: list[dict] = []
     for s in surfaces:
         text = strip_html(s["_html"]).lower()
-        if "always" in text and "re-measurement" in text:
-            says_always = True
-        if "re-attestation" in text and "not yet available" in text:
-            says_not_available = True
-        if "scheduled" in text and "not yet" in text and ("attest" in text or "measure" in text):
-            says_not_available = True
-    
-    if says_always and says_not_available:
-        findings.append({
-            "rule": "remeeasurement-contradiction",
-            "severity": "error",
-            "surface": "estate-wide",
-            "url": "multiple",
-            "detail": "'The answer is always a re-measurement' (/dispute) vs 'scheduled re-attestation is not yet available' (/about). Either ship re-measurement or soften the /dispute claim.",
-        })
+        if _promises_automatic_remeasurement(text):
+            promises.append(s)
+        if _denies_automatic_remeasurement(text):
+            denials.append(s)
+
+    for p in promises:
+        for d in denials:
+            if p.get("url") == d.get("url"):
+                continue  # one page stating both is a reconciliation, not a clash
+            findings.append({
+                "rule": "remeasurement-contradiction",
+                "severity": "error",
+                "surface": "estate-wide",
+                "url": "multiple",
+                "detail": (f"'{p.get('url')}' promises re-measurement happens automatically while "
+                           f"'{d.get('url')}' says scheduled re-attestation is not yet available. "
+                           f"Either ship automatic re-measurement or scope the promise."),
+            })
     return findings
 
 
@@ -265,12 +345,105 @@ ALL_RULES = [
 ]
 
 
+def _selftest() -> int:
+    """Prove the re-measurement rule can still go red.
+
+    A rule that has never fired proves nothing about the tree it passes. The
+    rule is compared against its own two cases: the pair that DOES contradict
+    (a page promising automatic re-measurement while another says it is not
+    available) must be caught, and the pair that does NOT (one page naming the
+    run-by-run qualification, another naming the limit) must not be.
+    """
+    def surf(url, html):
+        return {"url": url, "_html": html}
+
+    # The estate's own sentences, taken from the live pages on 26 Oct 2026 and from
+    # the fixed copy of /dispute in client/src/pages/Dispute.tsx. The rule is
+    # pinned by the estate's real text, not by strings written to suit the rule.
+    LIVE_DISPUTE = ("<p>It costs nothing, it is open to anyone with standing, and the answer "
+                    "is always a re-measurement or a re-reading of the source, never a defence. "
+                    "Re-measurement policy Every dispute is answered with a re-measurement on the "
+                    "frozen instrument.</p>")
+    FIXED_DISPUTE = ("<p>It costs nothing, it is open to anyone with standing, and the answer "
+                     "is always a re-measurement or a re-reading of the source, never a defence. "
+                     "Re-measurement is arranged run by run today rather than scheduled "
+                     "automatically, so a contest asks for a dated measurement.</p>")
+    LIVE_ABOUT = ("<p>Scheduled automatic re-attestation is not yet available : re-measurement "
+                  "is arranged run by run today, so do not read this as a monitoring "
+                  "subscription.</p>")
+    # /pricing carries a claims-workflow table with "not yet due" and "day-90 re-read".
+    # It never mentions re-attestation, and it is not a denial of anything.
+    LIVE_PRICING = ("<p>6 overdue &middot; 1 source not read &middot; 1 source changed &middot; "
+                    "3 not yet due. Last run 29 Sept 2026. Counted against today's date. "
+                    "day-90 re-read &middot; due. Priced at &pound;430.</p>")
+
+    # 1. The real live contradiction: /dispute promises it, /about says it is not
+    #    available. Two different surfaces. This must be caught.
+    contradicting = [surf("https://councilof.ai/dispute", LIVE_DISPUTE),
+                     surf("https://councilof.ai/about", LIVE_ABOUT)]
+    if not check_remeeasurement_consistency(contradicting):
+        print("  x SELFTEST FAILED: the estate's real live contradiction was NOT caught")
+        return 1
+    print("  ok  the estate's real live contradiction is caught")
+
+    # 2. The same /dispute page after the fix: the promise is scoped to run by run.
+    #    It must not be flagged against the /about limit any more.
+    reconciled = [surf("https://councilof.ai/dispute", FIXED_DISPUTE),
+                  surf("https://councilof.ai/about", LIVE_ABOUT)]
+    if check_remeeasurement_consistency(reconciled):
+        print("  x SELFTEST FAILED: the fixed /dispute page was flagged as a contradiction")
+        return 1
+    print("  ok  the fixed /dispute page is not flagged")
+
+    # 3. /pricing must not become a denial. It says "not yet due", about something else.
+    if _denies_automatic_remeasurement(strip_html(LIVE_PRICING).lower()):
+        print("  x SELFTEST FAILED: /pricing was read as a denial of automatic re-measurement")
+        return 1
+    print("  ok  /pricing 'not yet due' is not read as a denial")
+
+    # 4. /about is a denial and is not itself a promise.
+    about_text = strip_html(LIVE_ABOUT).lower()
+    if not _denies_automatic_remeasurement(about_text):
+        print("  x SELFTEST FAILED: /about was not read as a denial")
+        return 1
+    if _promises_automatic_remeasurement(about_text):
+        print("  x SELFTEST FAILED: /about was read as a promise of automatic re-measurement")
+        return 1
+    print("  ok  /about is a denial and not a promise")
+
+    # 5. A qualifier far away on the page does not qualify the promise. If it did,
+    #    a page could escape the rule by putting one word in its footer.
+    distant = [surf("https://councilof.ai/dispute",
+                    "<p>The answer is always a re-measurement, automatically.</p>"
+                    + "<p>" + ("filler " * 200) + "</p>"
+                    + "<p>Re-measurement is arranged manually by an operator.</p>"),
+                surf("https://councilof.ai/about", LIVE_ABOUT)]
+    if not check_remeeasurement_consistency(distant):
+        print("  x SELFTEST FAILED: a distant qualifier wrongly suppressed the promise")
+        return 1
+    print("  ok  a distant qualifier does not suppress the promise")
+
+    # 6. One page stating both is a reconciliation, not a clash.
+    one_page = [surf("https://councilof.ai/both",
+                     "<p>Re-measurement happens automatically. Scheduled re-attestation is not yet "
+                     "available.</p>")]
+    if check_remeeasurement_consistency(one_page):
+        print("  x SELFTEST FAILED: one page stating both was flagged as a clash")
+        return 1
+    print("  ok  one page stating both is a reconciliation, not a clash")
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser(description="ClaimGuard estate-wide contradiction sweep")
     parser.add_argument("--json", action="store_true", help="Output JSON report")
     parser.add_argument("--fail-on-warn", action="store_true", help="Exit 1 if any warnings")
     parser.add_argument("--fail-on-error", action="store_true", help="Exit 1 if any errors (default)")
+    parser.add_argument("--selftest", action="store_true", help="Prove the rules can fire; no network")
     args = parser.parse_args()
+
+    if args.selftest:
+        return _selftest()
 
     # Fetch all surfaces
     for s in SURFACES:

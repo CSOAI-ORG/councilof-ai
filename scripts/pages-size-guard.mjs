@@ -12,9 +12,14 @@
  * public/reports/, so the count is now printed every run and the build fails past the cap. The
  * count of `public/` is a floor for dist/client (which adds prerendered HTML and Vite assets), so
  * FILE_WARN flags the headroom before the deploy step is the one to discover it.
+ *
+ * 2026-10-18: exclusions are loaded from deploy-exclusions.json automatically. Entries with
+ * mirror_only=true are NOT excluded (they're synced to HF but kept in the bundle). The CLI flag
+ * is still honoured for backwards compatibility.
  */
-import { readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { projection } from "./retired-proof-archive.mjs";
 
 const LIMIT = 25 * 1024 * 1024;
@@ -27,17 +32,44 @@ const dist = process.argv[2] || "dist/client";
 // remove it from dist/). Counting it here would fail every build on a directory that never uploads.
 // 2026-09-28: cards/ too (`--exclude proofs,cards`), both served from HF csoai/councilof-ai-evidence.
 const exArg = process.argv.indexOf("--exclude");
-const EXCLUDE = new Set(exArg > 0 ? String(process.argv[exArg + 1] || "").split(",").filter(Boolean) : []);
+let EXCLUDE = exArg > 0 ? String(process.argv[exArg + 1] || "").split(",").filter(Boolean) : [];
+
+// Auto-load exclusions from deploy-exclusions.json (the single source of truth for what leaves the
+// Pages deploy). Entries with mirror_only=true are NOT excluded (synced to HF but kept in bundle).
+const root = dirname(fileURLToPath(import.meta.url));
+const manifestPath = resolve(root, "deploy-exclusions.json");
+if (existsSync(manifestPath)) {
+  try {
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    const manifestDirs = (manifest.entries || [])
+      .filter(e => e.kind === "dir" && !e.mirror_only)
+      .map(e => e.path);
+    EXCLUDE = [...new Set([...EXCLUDE, ...manifestDirs])];
+  } catch (e) {
+    console.warn(`pages-size-guard: failed to read deploy-exclusions.json: ${e.message}`);
+  }
+}
 const over = [];
 let files = 0;
 let bytes = 0;
 const byTop = {};
 
+// Check if a relative path matches any exclusion (supports nested paths like interop/mill-cards-signed)
+const isExcluded = (relPath) => EXCLUDE.some(ex => relPath === ex || relPath.startsWith(ex + "/"));
+const loggedExclusions = new Set();
+
 const walk = (d, top) => {
   for (const e of readdirSync(d, { withFileTypes: true })) {
     const p = join(d, e.name);
+    const relPath = relative(dist, p);
     const t = top ?? (e.isDirectory() ? e.name : ".");
-    if (top === undefined && e.isDirectory() && EXCLUDE.has(e.name)) { console.log(`pages-size-guard: excluding ${e.name}/ (not deployed)`); continue; }
+    if (e.isDirectory() && isExcluded(relPath)) {
+      if (!loggedExclusions.has(relPath)) {
+        console.log(`pages-size-guard: excluding ${relPath}/ (not deployed)`);
+        loggedExclusions.add(relPath);
+      }
+      continue;
+    }
     if (e.isDirectory()) walk(p, t);
     else {
       const { size } = statSync(p);

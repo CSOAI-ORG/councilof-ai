@@ -10,8 +10,11 @@ import {
   termsWeRefuse,
   termsWeUse,
 } from "./healthTerms";
+import { BOARD_COUNT_OBSERVED } from "./boardCount";
 
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
+// The leader count comes from the dated observation (scripts/refresh-board-observation.mjs), never a typed literal.
+const leaders = new RegExp(`${BOARD_COUNT_OBSERVED.public_leader_count} public leader scores`);
 
 describe("Health terms we can borrow", () => {
   it("uses chart language and refuses NEWS-style composites", () => {
@@ -27,9 +30,14 @@ describe("Health terms we can borrow", () => {
     });
     expect(liveVoice).toMatch(/22 of 22 systems examined/);
     expect(liveVoice).toMatch(/22 axis · 22 measured/);
-    expect(liveVoice).toMatch(/3 public leader scores/);
-    expect(HEALTH_VOICE).toMatch(/3 public leader scores/);
+    expect(liveVoice).toMatch(leaders);
+    expect(HEALTH_VOICE).toMatch(leaders);
     expect(liveVoice).toMatch(/No systems deferred/);
+    // Declared slots with no run are deferred, never counted as measured.
+    const withSlots = healthVoiceFromLive({ axes: 33, measured_axes: 23, unmeasured_axes: 10, public_count: "33 axes · 23 measured" });
+    expect(withSlots).toMatch(/23 of 33 systems examined/);
+    expect(withSlots).toMatch(/10 deferred/);
+    expect(withSlots).not.toMatch(/33 of 33|No systems deferred/);
     expect(liveVoice).not.toMatch(/Seven deferred|7 unmeasured|15 of 22/i);
     expect(GSPC_HEALTH_PITCH).toMatch(/open-source systems and AI models/);
     expect(GSPC_HEALTH_PITCH).toMatch(/never issue a clean bill of health/);
@@ -46,6 +54,15 @@ describe("Health terms we can borrow", () => {
   it("does not smuggle a fused grade or a sold rank", () => {
     const blob = JSON.stringify({ HEALTH_TERMS, HEALTH_TERMS_RULING, HEALTH_VOICE });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
-    expect(products).toContain("HealthTerms");
+    expect(products).not.toContain("HealthTerms");
   });
+  it("retains the four published offers", () => {
+    const offers = products.match(/export const SKUS = \[[\s\S]*?\n\](?: as const)?;/)?.[0];
+    expect(offers).toBeDefined();
+    expect(offers?.match(/id: "/g)).toHaveLength(4);
+    for (const id of ["verify", "run", "ledger", "data"]) {
+      expect(offers).toContain(`id: "${id}"`);
+    }
+  });
+
 });

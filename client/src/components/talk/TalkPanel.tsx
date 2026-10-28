@@ -16,7 +16,13 @@ import { plannedPageReply } from "@/lib/askNavigation";
  */
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { ArrowUp, Loader2, Mic, MicOff, ShieldAlert, Eye } from "lucide-react";
+import { useSearch } from "wouter";
+import CompanyCasePanel from "./CompanyCasePanel";
+import ConnectedCompanyCasePanel from "./ConnectedCompanyCasePanel";
+import { companyWorkspaceSelection, type CompanyCaseConnection } from "./companyCaseModel";
 import ResultCard from "@/components/talk/ResultCard";
+import ResultFollowUp from "@/components/talk/ResultFollowUp";
+import Inline from "@/components/talk/TalkInline";
 import { answerSections, checkedLine, chipFor, firstSentence, plainAnswer, statTiles, toolTitle, verifyLink } from "@/lib/resultCard";
 import { createTalkLifecycle, createTalkSession } from "@/lib/talkSession";
 import type { PageContext } from "../../../../functions/_lib/uiTools";
@@ -66,28 +72,6 @@ function StateLabel({ label }: { label?: string }) {
     >
       {label}
     </span>
-  );
-}
-
-/** Inline **bold**, `code` and _emphasis_, rendered as elements (never as HTML). */
-function Inline({ text }: { text: string }) {
-  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`|\b_[^_]+_\b)/g).filter(Boolean);
-  return (
-    <>
-      {parts.map((p, i) =>
-        p.startsWith("**") && p.endsWith("**") ? (
-          <strong key={i}>{p.slice(2, -2)}</strong>
-        ) : p.startsWith("`") && p.endsWith("`") ? (
-          <code key={i} className="rounded bg-muted px-1 font-mono text-[0.85em] break-all">
-            {p.slice(1, -1)}
-          </code>
-        ) : p.startsWith("_") && p.endsWith("_") && p.length > 2 ? (
-          <em key={i}>{p.slice(1, -1)}</em>
-        ) : (
-          <span key={i}>{p}</span>
-        ),
-      )}
-    </>
   );
 }
 
@@ -227,6 +211,7 @@ export function TalkRunView({
   busy = false,
   showQuestion = true,
   onEnableWatch,
+  onEdit,
 }: {
   run: TalkRun;
   onConfirm?: (run: TalkRun) => void;
@@ -235,6 +220,7 @@ export function TalkRunView({
   busy?: boolean;
   showQuestion?: boolean;
   onEnableWatch?: (run: TalkRun) => void;
+  onEdit?: (question: string) => void;
 }) {
   return (
     <article data-talk-key={run.id} data-run-id={run.runId} data-thread-id={run.threadId} data-message-id={run.messageId} className="scroll-mt-4 space-y-3" aria-label={`Question: ${run.question}`} data-testid="talk-run">
@@ -316,6 +302,7 @@ export function TalkRunView({
           <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> Asking the tools…
         </p>
       ) : null}
+      {run.status === "done" && run.tools.length > 0 && run.tools.every((tool) => tool.status === "done") && onEdit ? <ResultFollowUp run={run} onEdit={onEdit} /> : null}
       {run.status === "error" ? (
         <p className="rounded-lg border border-rose-700/30 bg-rose-50 p-3 text-sm text-rose-900 dark:border-rose-400/40 dark:bg-rose-950 dark:text-rose-100" role="alert">
           The run could not finish: {run.error}. Returned replies are kept above.
@@ -355,9 +342,11 @@ type Props = {
   listen?: boolean;
   /** Hide the built-in suggestions (the host shows its own). */
   hideSuggestions?: boolean;
+  /** Injected owner-authenticated company adapter; never a public-lookup fallback. */
+  company?: CompanyCaseConnection;
 };
 
-const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
+const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPanel(
   { variant = "standalone", labelledBy, className = "", page, declareUi, watch, onRunDone, onRunStart, onRunUpdate, onRunSettled, onBusyChange, canStart, blocked = false, visibleThreadId, onEnableWatch, listen, hideSuggestions },
   ref,
 ) {
@@ -440,7 +429,12 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
       {visibleRuns.length ? (
         <div className="space-y-6" data-testid="talk-transcript">
           {visibleRuns.map((r) => (
-            <TalkRunView key={r.id} run={r} onConfirm={session.confirm} onCancel={session.cancel} onStop={session.stop} busy={busy} onEnableWatch={onEnableWatch} />
+            <TalkRunView key={r.id} run={r} onConfirm={session.confirm} onCancel={session.cancel} onStop={session.stop} busy={busy} onEnableWatch={onEnableWatch}
+              onEdit={variant === "standalone" ? (question) => {
+                setQ(question);
+                setAnnounce("Question ready to edit. Nothing has been run.");
+                window.setTimeout(() => document.getElementById("talk-input")?.focus(), 0);
+              } : undefined} />
           ))}
         </div>
       ) : null}
@@ -528,6 +522,25 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
       </p>
     </section>
   );
+});
+
+/** The explicit company workspace selects a separate authorized request path and one composer. */
+const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(props, ref) {
+  const search = useSearch();
+  const company = companyWorkspaceSelection(search);
+  if (company.enabled) {
+    const companyProps = {
+      caseId: company.caseId,
+      invalidCase: company.invalidCase,
+      variant: props.variant,
+      labelledBy: props.labelledBy,
+      className: props.className,
+    };
+    return props.company
+      ? <CompanyCasePanel {...companyProps} ref={ref} connection={props.company} />
+      : <ConnectedCompanyCasePanel {...companyProps} ref={ref} />;
+  }
+  return <PublicTalkPanel {...props} ref={ref} />;
 });
 
 export default TalkPanel;

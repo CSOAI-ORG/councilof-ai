@@ -1,5 +1,5 @@
 /** Local email-draft preparation only. No fetch, storage, payment or send action. */
-import { CONTACT_MAILBOX } from '@/lib/buying';
+import { BUYING_ENQUIRIES, CONTACT_MAILBOX } from '@/lib/buying';
 
 export const ENQUIRY_EMAIL = CONTACT_MAILBOX;
 export const ENQUIRY_LIMITS = { name: 100, email: 254, subject: 160, message: 5000 } as const;
@@ -15,9 +15,62 @@ export const PILOT_MESSAGE = [
   'Please reply by email with a proposed scope. This is an enquiry, not a purchase.',
 ].join('\n');
 
+function wrapperContext(pair: string | null, asOf: string | null): { pair: string; asOf: string } | null {
+  if (!pair || pair.length > 96 || !/^[a-z0-9][a-z0-9._-]*:[a-z0-9][a-z0-9._-]*$/.test(pair)) return null;
+  if (!asOf || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(asOf)) return null;
+  if (!Number.isFinite(Date.parse(asOf)) || new Date(asOf).toISOString() !== asOf) return null;
+  return { pair, asOf };
+}
+
+/** Carry one selected public pair into the existing local email-draft flow. */
+export function wrapperEnquiryHref(pair: string, asOf: string): string {
+  if (!wrapperContext(pair, asOf)) return '/contact/?arm=ledger';
+  return `/contact/?${new URLSearchParams({ arm: 'ledger', pair, as_of: asOf })}`;
+}
+
 export function enquiryPreset(search: string): Pick<EnquiryFields, 'subject' | 'message'> | null {
-  const arm = new URLSearchParams(search).get('arm');
+  const params = new URLSearchParams(search);
+  const arm = params.get('arm');
+  if (arm === 'invoice') {
+    const product = BUYING_ENQUIRIES.find((p) => p.product === params.get('product'));
+    if (!product) return null;
+    return {
+      subject: `${product.label} — written scope and invoice enquiry`,
+      message: [
+        `Product: ${product.label}`,
+        'Public output URL or subject to check:',
+        'Date, period or history needed:',
+        'What will you use the evidence for?',
+        'Organisation:',
+        'Billing contact:',
+        'Existing invoice reference, if you have one:',
+        '',
+        'Please reply with the scope, available deliverable and invoice terms before I order.',
+        'This is an enquiry, not a purchase or a booked fresh measurement.',
+      ].join('\n'),
+    };
+  }
   if (arm === 'pilot') return { subject: PILOT_SUBJECT, message: PILOT_MESSAGE };
+  if (arm === 'ledger') {
+    const context = wrapperContext(params.get('pair'), params.get('as_of'));
+    if (context) return {
+      subject: `SovX evidence enquiry — ${context.pair}`,
+      message: [
+        `Pair: ${context.pair}`,
+        `Published record: https://councilof.ai/w/${encodeURIComponent(context.pair)}`,
+        `Ledger observation date to confirm: ${context.asOf}`,
+        'Required dates or history:',
+        'What will you use the evidence for?',
+        'Required output:',
+        'Organisation:',
+        'Preferred delivery date:',
+        '',
+        'Please reply with the available scope and delivery terms before I order.',
+        'This is an enquiry, not a purchase or a booked fresh measurement.',
+        'Checking a result stays free.',
+      ].join('\n'),
+    };
+  }
   const subjects: Record<string, string> = {
     ledger: 'Ledger enquiry', data: 'Data enquiry', run: 'Run / re-attest enquiry',
   };

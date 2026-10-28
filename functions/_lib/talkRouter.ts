@@ -35,6 +35,7 @@ import { PAID_TOOL_NAMES, paidToolResult } from "../mcp/_paid";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "../mcp/_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "../mcp/_route";
 import { ROUTER_READ_TOOLS, routerReadResult } from "./talkReads";
+import { BUY_INTENT, buyingAnswer } from "../api/_buying";
 
 type Json = Record<string, unknown>;
 
@@ -43,7 +44,7 @@ export type ToolCall = { tool: string; args: Json };
 export type Plan =
   | { kind: "tools"; intent: string; calls: ToolCall[] }
   | { kind: "needs_input"; intent: string; tool: string; missing: string; example: string }
-  | { kind: "help"; intent: "help" | "unknown" };
+  | { kind: "help"; intent: "help" | "unknown" | "buying" };
 
 export type Citation = { tool: string; record_id: string | null; url: string | null };
 
@@ -148,6 +149,14 @@ function firstJsonObject(text: string): string | null {
 
 const EVIDENCE_WORD = /\b(evidence|records?|cards?)\b/;
 
+/**
+ * A question asking what evidence EXISTS — "which signed evidence is there for DORA". Matched so a
+ * passing mention of an invoice cannot override it (issue #2980, acceptance 1). The issue's own
+ * invoice question carries no interrogative-before-evidence and no "is there", so it is unaffected.
+ */
+const EVIDENCE_QUESTION =
+  /\b(?:which|what)\b[^.?]{0,80}\b(?:evidence|records?|cards?)\b|\b(?:evidence|records?|cards?)\b[^.?]{0,60}\b(?:is there|are there|exists?)\b|\b(?:is|are) there\b[^.?]{0,60}\b(?:evidence|records?|cards?)\b/i;
+
 /** The evidence_bundle_preview obligation a question names (its schema enum), else null. */
 export function obligationOf(t: string): "article-50" | "article-53" | "dora" | "cra" | null {
   if (/\b(article[- ]?50|art\.?\s?50)\b/.test(t)) return "article-50";
@@ -181,6 +190,11 @@ export function routeIntent(raw: string): Plan {
     const axis = extractAxis(text);
     return { kind: "tools", intent: "commission a signed card", calls: [{ tool: "commission_card", args: { subject: subj, ...(axis ? { axis } : {}) } }] };
   }
+  // 2b. EXPLICIT procurement intent reaches the existing buying answer BEFORE topic-based
+  // measurement routing, so an invoice question about Article 50 is not swallowed by the evidence
+  // rule below (issue #2980). The guard is the other half of the acceptance test: a question that
+  // asks what evidence EXISTS stays an evidence question even when it also mentions an invoice.
+  if (BUY_INTENT.test(text) && !EVIDENCE_QUESTION.test(t)) return { kind: "help", intent: "buying" };
   // Signed evidence for ONE obligation (free): "which signed evidence is there for DORA",
   // "evidence for Article 50". Runs before the paid Article 50 rule, which keeps every question that
   // carries a URL ("article 50 marking evidence for https://…/image.png"): that one is about a file.
@@ -433,6 +447,12 @@ export async function executePlan(
   onEvent?: (e: { phase: "start" | "end"; call: ToolCall; outcome?: ToolOutcome; id: string }) => void | Promise<void>,
 ): Promise<TalkAnswer> {
   if (plan.kind === "help") {
+    // The buying answer is authored in _buying.ts (pinned to client/src/lib/buying.ts), never here.
+    // It already carries the product links, the written-scope requirement and the boundary that an
+    // enquiry purchases, books, pays for and delivers nothing.
+    if (plan.intent === "buying") {
+      return { kind: "help", intent: "buying", grounded: false, answer: buyingAnswer(), label: null, tool_calls: [], citations: [], answered_by: "deterministic router (buying answer, no tool called)" };
+    }
     return { kind: "help", intent: plan.intent, grounded: false, answer: (plan.intent === "unknown" ? "I could not match that question to a tool, so I have no grounded answer for it.\n\n" : "") + HELP_TEXT, label: null, tool_calls: [], citations: [], answered_by: "deterministic router (no tool matched)" };
   }
   if (plan.kind === "needs_input") {

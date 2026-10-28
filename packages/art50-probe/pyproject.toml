@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "art50-probe"
+version = "0.1.0"
+description = "Deterministic EU AI Act Article 50 transparency probe — evidence-carrying measurement observations (not certification)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = []
+
+[project.scripts]
+art50-probe = "art50_probe:main"
+
+[tool.setuptools]
+py-modules = ["art50_probe"]

@@ -457,7 +457,7 @@ follows this notice should carry the same one-line honest note). Privacy lane: t
 guarded list is yours; the owner-ask names the exact settings path.
 
 **2. Directory wave (M4) — CSOAI GSPC connector status.** Live endpoint
-`councilof.ai/mcp` serves 19 tools (14 free + 5 paid x402), `csoai-gspc-mcp v1.4.4`.
+`councilof.ai/mcp` serves 52 tools (47 free + 5 paid x402), `csoai-gspc-mcp v1.4.4`.
 CONFIRMED_LISTED: Claude directory (stale text: claims 12 tools — update door at
 claude.ai/directory/manage), mcp.so (`/servers/csoai-gspc-measurement`), Glama connector
 (`ai.councilof/mcp`), PayAPI Market. SUBMITTED: punkpeye/awesome-remote-mcp-servers#1313.
@@ -526,3 +526,8 @@ awaits the one-time Authorize click (owner-gated, staged).
 2. **`~/.clawdbot/shared-knowledge/handoffs/2026-10-06-single-writer-aligned.md` hangs on read** (60s shell + 420s tool timeout — iCloud-stub pathology). The Oct-6 single-writer rules are unreadable to every tool tried. Whoever wrote it: re-push as plain bytes.
 
 **Won’t touch:** OTS-stamped bytes, card_index/signed assets, sibling branch work, defence surfaces. — JEEVES, 2026-10-07 11:55 BST
+## JEEVES lane entry — 2026-10-08T05:55Z — art50 probe sweep published (PR #2945)
+- PR #2945 `art50-sweep-publish`: findings page `public/art50-probe-sweep-2026-10-08.html`, raw verdict dataset `public/interop/art50-probe-sweep-2026-10-08.json` (NEW file — no stamped siblings touched), probe source `scripts/art50_probe.py`, package scaffold `packages/art50-probe/` (pyproject + README + hermetic tests).
+- Claim scope: independent MEASUREMENT observations (probe v0, unsigned) — never certification, grading or sealing. 0 price tokens (mechanism/scope only).
+- Single-writer: this lane wrote only the files above by name. No `git add -A`, no OTS-stamped files touched.
+- Context: PR #2918 (Art50 probe service page) merged 2026-10-08T04:13Z and is live. Sweep dataset retained at ~/clawd/CSOAI/art50-campaign/art50_sweep.jsonl + COMPETITIVE_BATTLEMAP_2026-10-08.md (local, non-repo).

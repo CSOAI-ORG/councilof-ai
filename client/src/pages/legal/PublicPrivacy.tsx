@@ -12,8 +12,8 @@ const controller = {
 
 const rows: { data: string; where: string; basis: string; kept: string }[] = [
   {
-    data: "x402 payment records: the settlement transaction hash, the payer wallet address, network, amount, the resource paid for, and time.",
-    where: "functions/api/_x402.ts and _x402_receipt.ts write them to our Cloudflare KV store (settled:tx:*, receipts by transaction and by payer). /api/receipts?payer= is a public lookup: anyone who supplies a valid payer address can read the receipts indexed under it. It does not authenticate ownership of that address.",
+    data: "x402 payment and delivery records: the settlement transaction hash, the payer wallet address, network, amount, the resource URL paid for (including any query parameters), and time. When a delivery record is written, it also stores the response SHA-256 digest, byte count, content type, server timestamp and transaction-linked resource. The delivery record does not retain the response body.",
+    where: "functions/api/_x402.ts, _x402_receipt.ts and _x402_delivery_record.ts write these records to our Cloudflare KV store (settled:tx:*, receipts by transaction and by payer, and delivery:tx:*). /api/receipts?payer= is a public lookup: anyone who supplies a valid payer address can read the receipts indexed under it, with delivery metadata where joined. It does not authenticate ownership of that address. This unsigned delivery metadata does not show whether the buyer received or accepted the response.",
     basis: "Contract (supplying what was paid for); legal obligation (accounting records); legitimate interests (preventing a payment being replayed).",
     kept: "No automatic expiry. We keep records for the applicable contract, dispute and accounting period. UK company-tax records are normally kept for six years after the end of the accounting period and may need to be kept longer. An erasure request does not override a legal duty to retain a record.",
   },
@@ -52,7 +52,7 @@ export default function PublicPrivacy() {
     <section className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
       <article className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
-          Operative notice · version 1.3 · 27 September 2026
+          Operative notice · version 1.4 · 14 October 2026
         </p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">Privacy notice</h1>
         <p className="mt-5 leading-7 text-slate-700">

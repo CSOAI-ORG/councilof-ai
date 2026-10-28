@@ -4,7 +4,7 @@
 B07 PARTNERS-SHORTLIST.md: institutions ranked by evidence density — the query is
 the code (curl the live registries, count cards, take top 10).
 B08 OFFER-<sku>.md: one page per SKU derived from the live probes in
-docs/product/<sku>.md (deliverable status). Never types a price.
+docs/product/<sku>.md (recorded observations and scoped outputs). Never types a price.
 """
 
 from __future__ import annotations
@@ -25,6 +25,136 @@ def get(url: str) -> dict:
     req = urllib.request.Request(url, headers={"User-Agent": "CSOAI-partners/0.1"})
     with urllib.request.urlopen(req, timeout=20) as r:
         return json.loads(r.read())
+
+
+
+def product_facts(sku: str, text: str) -> dict | None:
+    """Read the queued H1 observation contract; never infer paid delivery."""
+    known = {
+        "commission-card", "evidence-bundle", "eu-ai-act-pack", "swift-bank-pack",
+        "xrpl-asset-evidence", "signed-data-feed", "provider-diff-feed",
+        "receipts-batch", "art50-marking-evidence",
+    }
+    if sku not in known:
+        return None
+    identities = re.findall(
+        r"^`([^`\n]+)` — endpoint observations recorded on [^\n]+; "
+        r"not a current-availability or delivery claim\.$", text, re.MULTILINE,
+    )
+    if identities != [sku]:
+        return None
+
+    def section(title: str) -> str | None:
+        matches = list(re.finditer(r"^## " + re.escape(title) + r"$", text, re.MULTILINE))
+        if len(matches) != 1:
+            return None
+        tail = text[matches[0].end():].lstrip("\n")
+        end = re.search(r"^## ", tail, re.MULTILINE)
+        return (tail[:end.start()] if end else tail).strip()
+
+    door = section("402 door")
+    observed = section("Unpaid preview or challenge observation")
+    scope = section("Buyer and paid output scope")
+    if door is None or observed is None or scope is None:
+        return None
+    resource = re.fullmatch(
+        r"`[^`\n]+` — observed status \*\*(None|[1-5][0-9]{2})\*\*\n"
+        r"\(([0-9]+) B\) — [^\n]+", door,
+    )
+    preview = re.fullmatch(
+        r"`[^`\n]+` — status \*\*(None|[1-5][0-9]{2})\*\*, "
+        r"\*\*([0-9]+) bytes\*\*, `sha256 [0-9a-f]{0,16}…`"
+        r"\n\n```json\n(.*?)\n```\n\n([^\n]+)", observed, re.DOTALL,
+    )
+    if resource is None or preview is None:
+        return None
+    # A fence or heading inside a raw sample must not become an offer fact.
+    if any(line.startswith("```") or line.startswith("## ") for line in preview.group(3).splitlines()):
+        return None
+    verdict = re.fullmatch(
+        r"\*\*(UNPAID RESPONSE OBSERVED\.|PAYMENT CHALLENGE OBSERVED\.|"
+        r"NOT ADVERTISED — 402 without a parseable accepts\[\]\.|UNVERIFIED\.)\*\*([^\n]*)",
+        preview.group(4),
+    )
+    if verdict is None:
+        return None
+    label = verdict.group(1)
+    if label == "UNPAID RESPONSE OBSERVED." and not (
+        preview.group(1) == "200" and int(preview.group(2)) > 0
+    ):
+        return None
+    if label in {"PAYMENT CHALLENGE OBSERVED.", "NOT ADVERTISED — 402 without a parseable accepts[]."} and preview.group(1) != "402":
+        return None
+    # Mirror the exact upstream verdict grammar; a known label alone is insufficient.
+    observed_verdict = preview.group(4)
+    if label == "UNPAID RESPONSE OBSERVED.":
+        if observed_verdict != (
+            "**UNPAID RESPONSE OBSERVED.** A non-empty response was recorded. "
+            "Advertised under the existing gate; paid delivery is not established."
+        ):
+            return None
+    elif label == "NOT ADVERTISED — 402 without a parseable accepts[].":
+        if observed_verdict != (
+            "**NOT ADVERTISED — 402 without a parseable accepts[].** The door answers 402 but the"
+            " body does not parse as an x402 challenge with payment options, so a buyer cannot"
+            " act on it."
+        ):
+            return None
+    elif label == "UNVERIFIED.":
+        if observed_verdict != (
+            f"**UNVERIFIED.** Status {preview.group(1)}, {preview.group(2)} bytes —"
+            " probe the door before this SKU is offered."
+        ):
+            return None
+    else:
+        challenge = re.fullmatch(
+            r"\*\*PAYMENT CHALLENGE OBSERVED\.\*\* Advertised under the existing gate\. "
+            r"The challenge parses as x402 v(None|[0-9]+) carrying ([1-9][0-9]*) accepts\[\] entr(y|ies)"
+            r" \(([1-9][0-9]*) bytes\)\. Parsing accepts\[\] establishes payment options only\. "
+            r"(?:An unpaid csoai\.preview object is present; its contents may be empty or uncheckable\. |"
+            r"No csoai\.preview object was identified by this parser\. )"
+            r"Neither observation establishes a paid artifact, a new measurement or buyer acceptance\.",
+            observed_verdict,
+        )
+        if challenge is None or challenge.group(4) != preview.group(2):
+            return None
+        if challenge.group(3) != ("y" if challenge.group(2) == "1" else "ies"):
+            return None
+    boundary = "Payment, returned artifact bytes, verification, receipt by the buyer and acceptance remain separate."
+    if "Source scope: [" not in scope or not scope.endswith(boundary):
+        return None
+    return {
+        "preview_status": preview.group(1), "preview_bytes": preview.group(2),
+        "resource_status": resource.group(1), "resource_bytes": resource.group(2),
+        "observation": preview.group(4), "scope": scope,
+    }
+
+
+def offer_doc(sku: str, text: str) -> str:
+    facts = product_facts(sku, text)
+    if facts is None:
+        facts = {
+            "preview_status": "UNVERIFIED", "preview_bytes": "UNVERIFIED",
+            "resource_status": "UNVERIFIED", "resource_bytes": "UNVERIFIED",
+            "observation": "**UNVERIFIED.** The source document does not match the supported recorded-observation contract.",
+            "scope": "No source-qualified output scope was carried into this offer. Inspect the source document and resolve its contract before requesting payment.",
+        }
+    return "\n".join([
+        f"# Offer — {sku}", "",
+        f"> Derived from recorded endpoint observations in docs/product/{sku}.md; this is not a current-availability or paid-delivery claim.",
+        "> Review payment terms in the actual challenge before any paid request.", "",
+        "| recorded fact | value |", "|---|---|",
+        f"| preview status | {facts['preview_status']} |",
+        f"| preview bytes | {facts['preview_bytes']} |",
+        f"| resource status | {facts['resource_status']} |",
+        f"| resource bytes | {facts['resource_bytes']} |", "",
+        facts["observation"], "",
+        "## Buyer and paid output scope", facts["scope"], "",
+        "## Verify and request",
+        f"Verification is free at {BASE}/gspc-verify. Check each record's supported format, signing status and stated limits; signature validity and root inclusion are separate.",
+        "Review the unpaid preview or challenge first. Payment options do not establish availability, paid delivery, a new measurement or buyer acceptance.",
+        "Owner approves any send; no mass-send.", "",
+    ])
 
 
 def main() -> None:
@@ -105,49 +235,9 @@ def main() -> None:
             print(f"  ! {sku}.md missing — skip")
             continue
         text = f.read_text()
-        # derived facts: status + bytes from the doc's preview line
-        m = re.search(r"status \*\*(\d+)\*\*, \*\*(\d+) bytes\*\*", text)
-        status, bytes_n = (m.group(1), m.group(2)) if m else ("?", "?")
-        mres = re.search(r"live status \*\*(\d+)\*\*", text)
-        res_status = mres.group(1) if mres else "?"
-        # ONE RULE, ONE PLACE. This used to recompute the verdict from the status it scraped, which
-        # meant the advertise rule lived in two producers and they drifted: the upstream one was
-        # fixed and this one would have overwritten it on the next run. The source doc already
-        # states the verdict in bold, decided by generate-h1-product-docs.py under the governor
-        # ruling of 06 Sep 2026 ("a parseable 402 with accepts[] is a door"). Mirror it.
-        # Match the VERDICT sentence, not the "status **402**, **4592 bytes**" line above it: the
-        # verdict always opens with one of the states generate-h1-product-docs.py can emit.
-        mver = re.search(r"\*\*((?:DELIVERABLE|NOT ADVERTISED|UNVERIFIED)[^*]*)\*\*([^\n]*)", text)
-        if mver:
-            deliverable = (mver.group(1) + mver.group(2)).strip()
-        elif status == "200" and bytes_n not in ("?", "0"):
-            deliverable = "FREE PREVIEW returns content; paid artefact at the 402"
-        else:
-            deliverable = f"UNKNOWN — the source doc states no verdict (status {status}); run generate-h1-product-docs.py"
-        offer = [
-            f"# Offer — {sku}",
-            "",
-            f"> One page. Derived from live probes ({BASE}); full description: docs/product/{sku}.md.",
-            "> Prices are quoted at the 402 door — never here.",
-            "",
-            "| fact | value |",
-            "|---|---|",
-            f"| free preview | HTTP {status} · {bytes_n} B |",
-            f"| paid door | HTTP {res_status} (settle unlocks) |",
-            f"| deliverable | {deliverable} |",
-            "",
-            "## What you receive",
-            f"The artefact described in docs/product/{sku}.md: signed cards, assembled server-side from",
-            "already-signed evidence — never a manufactured grade. Verification is free forever",
-            "((https://councilof.ai/gspc-verify); every leaf checks against the public root.",
-            "",
-            "## Ask",
-            f"Request the free preview now; the paid artefact follows at the 402 with the price in the",
-            "door. Owner approves the send; I do not mass-send.",
-            "",
-        ]
-        (OUT / f"OFFER-{sku}.md").write_text("\n".join(offer))
-        print(f"  ✓ OFFER-{sku}.md ({deliverable[:40]})")
+        offer = offer_doc(sku, text)
+        (OUT / f"OFFER-{sku}.md").write_text(offer)
+        print(f"  ✓ OFFER-{sku}.md (recorded observation; inspect source scope)")
 
 
 if __name__ == "__main__":

@@ -107,7 +107,9 @@ export function mirrorSourcePaths(repo) {
   let manifest;
   try { manifest = JSON.parse(readFileSync(join(repo, "scripts/deploy-exclusions.json"), "utf8")); }
   catch { return out; }
-  if (!manifest || manifest.schema !== "csoai.deploy-exclusions/0.1" || !Array.isArray(manifest.entries)) return out;
+  // 0.2 (2026-10-18) added the mirror_only flag to the manifest; the qualification rule this
+  // gate implements is unchanged, so 0.1 and 0.2 qualify the same retained source files.
+  if (!manifest || !/^csoai\.deploy-exclusions\/0\.[12]$/.test(manifest.schema) || !Array.isArray(manifest.entries)) return out;
   for (const entry of manifest.entries) {
     if (!entry || typeof entry !== "object" || Array.isArray(entry)) continue;
     const path = entry.path;

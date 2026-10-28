@@ -56,16 +56,60 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     catalog.x402_metered,
     paid.tools.map((tool) => tool.name),
   );
-  assert.equal(catalog.free.length, 14);
+  assert.equal(catalog.free.length, 47);
   assert.equal(catalog.x402_metered.length, 5);
+
+  // The prose count and the prose wording are held to the catalogue, so neither can drift.
+  // "the same N names" must be N = free + x402-metered, and the free-tool sentence must not
+  // name a hand-counted number: a published sentence that reads "all eight read/verification
+  // tools" while the door serves 47 free tools is a false claim, not a style question.
+  // BOTH copies are held: llms-install.md and public/llms-install.md are hand-maintained
+  // separately, and the published one is the one a reader opens.
+  const catalogTotal = catalog.free.length + catalog.x402_metered.length;
+  for (const [label, text] of [
+    ["llms-install.md", guide],
+    ["public/llms-install.md", await readFile(new URL("public/llms-install.md", root), "utf8")],
+  ]) {
+    const proseCount = text.match(/returns the same (\d+) names/);
+    assert.ok(proseCount, `${label} must state how many names the remote should return`);
+    assert.equal(
+      Number(proseCount[1]),
+      catalogTotal,
+      `${label}'s prose count must equal the catalogue it publishes`,
+    );
+    assert.doesNotMatch(
+      text,
+      /using all \w+ read\/verification tools is free/,
+      `${label}'s free-tool sentence must not name a hand-counted number`,
+    );
+    assert.match(text, /using every free read\/verification tool is free/);
+  }
 
   // The version the guide names is the source package's, read from package.json, never typed here.
   const v = packageJson.version.replace(/\./g, "\\.");
-  assert.match(guide, /Every stable release published to npm so far is marked deprecated on npm/);
-  // Stable releases and the separately tagged prerelease have different npm states.
-  assert.match(guide, /prerelease `next` tag points to `0\.2\.3-rc\.2`, which has no deprecation\s+flag/);
-  assert.match(guide, /That prerelease is not the stable source\s+version `0\.2\.3`/);
-  assert.match(guide, /npm view csoai-gspc-mcp@next version/);
+  // The published npm release is a DATED FACT about the published tarball, not
+  // about this repository, and it is recorded here so the guide cannot drift
+  // from it. Measured 2026-10-28: npm csoai-gspc-mcp@0.2.3 carries 19 tools
+  // (14 free + 5 metered) because it was published 39 minutes before the 33
+  // named axes merged. The prepared version must therefore DIFFER from the
+  // published one, and the published one must never claim the full fleet.
+  const PUBLISHED = {
+    version: "0.2.3",
+    tools: 19,
+    published_at: "2026-10-26T07:21:23.715Z",
+  };
+  assert.notEqual(
+    PUBLISHED.version,
+    packageJson.version,
+    "the prepared version must differ from the published one: a published version cannot be re-published",
+  );
+  assert.ok(
+    PUBLISHED.tools < catalogTotal,
+    "a published release must not be recorded as carrying the full fleet",
+  );
+  assert.match(guide, new RegExp("`" + PUBLISHED.version + "`"));
+  assert.match(guide, new RegExp(PUBLISHED.tools + " tools"));
+  assert.match(guide, new RegExp(PUBLISHED.published_at.replace(/\./g, "\\.")));
   assert.doesNotMatch(guide, /"args":\s*\[\s*"-y",\s*"csoai-gspc-mcp/);
   assert.match(
     guide,

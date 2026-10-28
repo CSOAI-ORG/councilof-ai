@@ -72,45 +72,30 @@ and metered tools are absent from the workflow's tool list.
 See NVIDIA's [MCP client configuration](https://docs.nvidia.com/nemo/agent-toolkit/latest/build-workflows/mcp-client.html)
 and [function-group workflow references](https://docs.nvidia.com/nemo/agent-toolkit/latest/build-workflows/functions-and-function-groups/function-groups.html).
 
-## Historical local stdio package
+## Optional local stdio package (not the contract; use the remote)
 
-For new connections, use the canonical remote configuration above.
+The package identity is `csoai-gspc-mcp` (not the stale scoped name previously
+shown here). Every release published to npm so far carries fewer tools than the
+remote, so this guide no longer gives a local configuration: use the remote above,
+or the free read-only door https://councilof.ai/mcp/free.
 
-The package identity is `csoai-gspc-mcp`. Every stable release published to npm so far is marked deprecated on npm
-(registry checked 2026-10-08); `latest` remains `0.2.2`. Read the current deprecation
-with `npm view csoai-gspc-mcp@latest deprecated`.
+The latest published release is `0.2.3` (published 2026-10-26T07:21:23.715Z), and
+it carries 19 tools (14 free + 5 metered) — measured from the published tarball on
+2026-10-28, not from this repository. It was published 39 minutes before the 33
+named axes merged, so it holds the fleet as it stood then. It is **not** marked
+deprecated on npm, which is why `npm view csoai-gspc-mcp@latest deprecated` prints
+nothing: deprecation is not the signal here, the tool count is.
 
-The npm package `csoai-gspc-mcp` version `0.2.2` was publicly available when checked on
-2026-10-03, but npm marks it **deprecated**. The publisher directs users to the
-measurement-only successor at `councilof.ai`. See the
-[exact version metadata](https://registry.npmjs.org/csoai-gspc-mcp/0.2.2).
-
-The published package describes eight free readers and four metered tools.
-That historical stdio package is a separate implementation from the reviewed
-remote catalog below. Publication and matching package integrity records do not
-establish catalog parity, current runtime support, or native-client compatibility.
-
-The earlier `0.2.1` installation examples were last publicly verified here on
-2026-09-09 and remain historical. This guide's current setup uses the canonical
-remote rather than installing a deprecated package.
-
-The repository currently prepares `0.2.3`, but that source version is **not a
-published npm release** (registry checked 2026-10-08). Check exact-version
-publication with `npm view csoai-gspc-mcp@0.2.3 version`; check the stable release's
-deprecation separately with `npm view csoai-gspc-mcp@latest deprecated`. Do not
-install or advertise `0.2.3` from npm before those independent checks.
-
-The separate prerelease `next` tag points to `0.2.3-rc.2`, which has no deprecation
-flag (registry checked 2026-10-08). Check its version with
-`npm view csoai-gspc-mcp@next version`. That prerelease is not the stable source
-version `0.2.3`; its publication does not establish tool parity, runtime support,
-or native-client compatibility. New connections should use the canonical remote
-configuration above.
+The repository currently prepares `0.2.4`, but that source version is **not a
+published npm release** until `npm view csoai-gspc-mcp@0.2.4 version` confirms that
+exact version AND the published tarball's own manifests carry the same names as
+the live door. Do not install or advertise any published release as the contract
+before that independent check.
 
 ## Exact reviewed tool catalog
 
 This list describes the reviewed source contract at this commit. Confirm that the
-deployed remote returns the catalog's declared names before treating it as the live contract.
+deployed remote returns the same 52 names before treating it as the live contract.
 Listing the catalog and using every free read/verification tool is free. In
 particular, `verify_card` checks a Council-issued signed measurement card without a
 payment. Its three possible verdict classes are `VALID`, `INVALID`, and
@@ -133,7 +118,40 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
     "verify_capsule",
     "server_evidence",
     "evidence_bundle_preview",
-    "route"
+    "route",
+    "axis_governance",
+    "axis_safety",
+    "axis_provenance",
+    "axis_continuity",
+    "axis_conformance",
+    "axis_openness",
+    "axis_machinery-conformity",
+    "axis_care",
+    "axis_cross-reality",
+    "axis_detector-interop",
+    "axis_art5-safeguard",
+    "axis_swarm",
+    "axis_affect",
+    "axis_jail",
+    "axis_effect-binding",
+    "axis_provenance-controls",
+    "axis_reserve-attestation",
+    "axis_regulatory-framework",
+    "axis_distribution-integrity",
+    "axis_custody-disclosure",
+    "axis_ai-adoption-components",
+    "axis_labour-components",
+    "axis_humanoid-labour-index",
+    "axis_lab-practice",
+    "axis_company-practice",
+    "axis_measurer-integrity",
+    "axis_harness-fidelity",
+    "axis_interop-conformance",
+    "axis_humanoid-deployment",
+    "axis_regulator-transparency",
+    "axis_interpretability-reproducibility",
+    "axis_claim-maintenance",
+    "axis_serving-fidelity"
   ],
   "x402_metered": [
     "commission_card",

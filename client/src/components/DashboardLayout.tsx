@@ -316,7 +316,7 @@ export default function DashboardLayout({
 
   // A saved start page applies only to a bare /dashboard; any explicit link wins.
   useEffect(() => {
-    if (hasTabParam || framed) return;
+    if (hasTabParam || params.getAll("workspace").includes("company") || framed) return;
     const saved = readStartTab();
     if (saved && saved !== "home") setLocation(`/dashboard?tab=${saved}`, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
