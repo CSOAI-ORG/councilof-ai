@@ -37,8 +37,8 @@ describe("public board lid parity", () => {
     expect(catalogue.lid).toBe(totals.lid);
     expect(badgeBody.lid).toBe(totals.lid);
     expect(await markdown.text()).toContain(`**Lid:** ${totals.lid}`);
-    expect(totals.measured_axes).toBe(23);
-    expect(totals.fact_runs).toBe(9);
+    expect(totals.measured_axes).toBe(27);
+    expect(totals.fact_runs).toBe(13);
     // The correction is descriptive only: the buyer's asset, network, pay-to,
     // and catalogue resources remain the existing x402 contract.
     expect(catalogue.rail).toMatchObject({
