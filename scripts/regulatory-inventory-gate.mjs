@@ -165,9 +165,15 @@ function validate(
   expect(inventory?.counts?.gspc_axes === axes.length, "inventory GSPC count does not derive from signed board");
 
   const jurisdictions = eastWest?.jurisdictions ?? [];
-  expect(jurisdictions.length === 4, `published east-west crosswalk has ${jurisdictions.length} regimes, expected 4`);
+  // A REGIME is a jurisdiction the published crosswalk maps (EU · UK · US-IL · CN). One regime may
+  // hold several instrument entries: the EU/EEA regime now carries six (the EU AI Act, GDPR, the
+  // Cyber Resilience Act, DORA, NIS2 and CSRD). The count is therefore the number of DISTINCT
+  // regimes, which is what the stamped inventory's published_crosswalk_regimes carries and what
+  // /api/counters publishes — counting entries would have called six EU instruments six regimes.
+  const regimes = new Set(jurisdictions.map((row) => row.regime));
+  expect(regimes.size === 4, `published east-west crosswalk has ${regimes.size} regimes, expected 4`);
   expect(
-    inventory?.counts?.published_crosswalk_regimes === jurisdictions.length,
+    inventory?.counts?.published_crosswalk_regimes === regimes.size,
     "published regime counter does not derive from east-west crosswalk",
   );
 
@@ -191,6 +197,7 @@ function selftest() {
   if (cleanErrors.length) throw new Error(`selftest fixture is invalid: ${cleanErrors.join("; ")}`);
   const broken = structuredClone(base);
   const brokenManifest = structuredClone(frozenManifest);
+  const brokenEastWest = structuredClone(eastWest);
   broken.counts.frozen_provision_counter = 418;
   broken.frozen_provisions.evidence_sha256 = "0".repeat(64);
   broken.authority_adapters[1].actor_type = "REGULATOR";
@@ -198,14 +205,16 @@ function selftest() {
   broken.crosswalk_assets[0].path = "public/interop/crosswalk/intoto/does-not-exist.json";
   const firstProvision = Object.keys(brokenManifest.anchors).sort()[0];
   brokenManifest.anchors[firstProvision] = "not-a-sha256";
+  // a fifth regime in the published crosswalk: the count must move with it, or the gate is blind
+  brokenEastWest.jurisdictions.push({ regime: "XX", instrument: "Example", rows: [] });
   const errors = validate(broken, {
     board,
     intotoIndex,
-    eastWest,
+    eastWest: brokenEastWest,
     frozenManifest: brokenManifest,
     frozenManifestBytes,
   });
-  if (errors.length < 7) throw new Error(`selftest expected at least 7 failures, got ${errors.length}`);
+  if (errors.length < 9) throw new Error(`selftest expected at least 9 failures, got ${errors.length}`);
   console.log(`regulatory-inventory-gate selftest: PASS (${errors.length} deliberate failures caught)`);
 }
 

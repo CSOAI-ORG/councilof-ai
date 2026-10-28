@@ -23,6 +23,7 @@ No network: the GitHub calls are a fake.
 from __future__ import annotations
 
 import importlib.util
+import json
 import os
 import sys
 import unittest
@@ -52,18 +53,32 @@ ALL_GREEN = {"gates": "success", "build": "success", "stamped-bytes": "success",
 REQUIRED = ["gates", "build", "stamped-bytes", "hold-guard"]
 
 
+def _denied(argv):
+    """What the promotion workflow's own GITHUB_TOKEN sees on the protection endpoint.
+
+    Measured 2026-10-26 in run 40322739137: reading branch protection needs admin permission
+    on the repository, and the workflow's token does not have it. The gate died there, at the
+    exact moment the candidate's gates had passed.
+    """
+    return 1, "", "gh: Resource not accessible by integration (HTTP 403)"
+
+
 class FakeGitHub:
-    def __init__(self, heads, runs, watch_results=None, contexts=None, required=None):
+    def __init__(self, heads, runs, watch_results=None, contexts=None, required=None,
+                 protection_readable=True, all_runs=None):
         self.heads = list(heads)          # consumed one per branch_head() call
         self.run_rows = runs              # list of run dicts
+        self.all_run_rows = all_runs      # every workflow's run on the branch
         self.watch_results = list(watch_results or [True])
         self.dispatched = []
         self.approved = []
+        self.reran = []
         self.merged = []
         self.watched = []
         # The status-check contexts the repo requires, and their conclusions on the head.
         self.required = list(required if required is not None else REQUIRED)
         self.contexts = dict(contexts if contexts is not None else ALL_GREEN)
+        self.protection_readable = protection_readable
 
     def branch_head(self, repo, branch):
         return self.heads.pop(0) if len(self.heads) > 1 else self.heads[0]
@@ -71,7 +86,13 @@ class FakeGitHub:
     def runs(self, repo, workflow, branch):
         return self.run_rows
 
-    def required_contexts(self, repo, branch="master"):
+    def all_runs(self, repo, branch):
+        return self.all_run_rows if self.all_run_rows is not None else self.run_rows
+
+    def required_contexts(self, repo, branch="master", log=None):
+        if not self.protection_readable:
+            # the real implementation, with the token the workflow actually has
+            return gate.GitHub(runner=_denied).required_contexts(repo, branch, log=log)
         return list(self.required)
 
     def context_conclusions(self, repo, head):
@@ -82,6 +103,10 @@ class FakeGitHub:
 
     def approve(self, repo, run_id):
         self.approved.append(run_id)
+        return True
+
+    def rerun(self, repo, run_id):
+        self.reran.append(run_id)
         return True
 
     def watch(self, repo, run_id):
@@ -243,6 +268,190 @@ class PromotionGateTest(unittest.TestCase):
         run_promote(fake)
         self.assertEqual(fake.watched, [32])
         self.assertNotIn(31, fake.watched)
+
+    # ---- the protection read must never be able to stop the gate -------------
+    #
+    # THE DEFECT THESE CASES SHIP WITH. The gate read the required contexts from the repo's
+    # branch protection. That endpoint needs admin permission on the repository, and the
+    # promotion workflow's GITHUB_TOKEN does not have it: on 2026-10-26 the gate raised
+    # "gh api repos/.../branches/master/protection/required_status_checks failed (1):
+    # Resource not accessible by integration (HTTP 403)" in run 40322739137 - at the exact
+    # moment the candidate's gates had PASSED and it was ready to merge. The gate died on the
+    # one call it made after the evidence it needed was already in hand.
+
+    def test_the_required_contexts_survive_a_protection_read_the_token_cannot_make(self):
+        gh = gate.GitHub(runner=_denied)
+        contexts = gh.required_contexts("CSOAI-ORG/councilof-ai")
+        self.assertEqual(sorted(contexts), sorted(gate.REQUIRED_CONTEXTS))
+
+    def test_a_protection_read_that_names_no_contexts_still_gates_on_the_recorded_four(self):
+        """A protection rule that names a context in `checks` but not in `contexts` reads back
+        as an EMPTY list, and a gate that checks an empty list checks nothing."""
+        gh = gate.GitHub(runner=lambda argv: (0, json.dumps({"contexts": [], "checks": []}), ""))
+        contexts = gh.required_contexts("CSOAI-ORG/councilof-ai")
+        self.assertEqual(sorted(contexts), sorted(gate.REQUIRED_CONTEXTS))
+
+    def test_a_live_protection_read_adds_to_the_recorded_floor_and_never_replaces_it(self):
+        gh = gate.GitHub(runner=lambda argv: (0, json.dumps({
+            "contexts": ["gates", "build", "stamped-bytes", "hold-guard", "brand-gate"],
+            "checks": [{"app_id": 15368, "context": "brand-gate"}],
+        }), ""))
+        contexts = gh.required_contexts("CSOAI-ORG/councilof-ai")
+        self.assertIn("brand-gate", contexts)
+        for name in gate.REQUIRED_CONTEXTS:
+            self.assertIn(name, contexts)
+
+    def test_a_live_protection_read_that_is_smaller_than_the_floor_cannot_weaken_it(self):
+        """The live read is ADDED to the floor. If the live read names fewer contexts than the
+        floor, the floor still applies - a shrinking read must never be able to shrink the gate."""
+        gh = gate.GitHub(runner=lambda argv: (0, json.dumps({
+            "contexts": ["gates"],
+            "checks": [{"app_id": 15368, "context": "gates"}],
+        }), ""))
+        contexts = gh.required_contexts("CSOAI-ORG/councilof-ai")
+        for name in gate.REQUIRED_CONTEXTS:
+            self.assertIn(name, contexts)
+
+    def test_a_context_named_only_in_checks_is_still_required(self):
+        """`checks` and `contexts` are two lists for the same rule. A context that appears in
+        only one of them is still required, and the one used here is deliberately NOT one of
+        the recorded four, so this case cannot pass on the floor alone."""
+        gh = gate.GitHub(runner=lambda argv: (0, json.dumps({
+            "contexts": [],
+            "checks": [{"app_id": 15368, "context": "brand-gate"}],
+        }), ""))
+        contexts = gh.required_contexts("CSOAI-ORG/councilof-ai")
+        self.assertIn("brand-gate", contexts)
+
+    def test_the_gate_merges_when_the_protection_read_is_denied_and_the_head_is_green(self):
+        """The regression this ships with: with the workflow's own token, the gate used to
+        raise and merge nothing. It must still merge the gated head."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 41, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "pull_request"}],
+            protection_readable=False,
+        )
+        verdict = run_promote(fake)
+        self.assertTrue(verdict.startswith("merged"))
+        self.assertEqual(fake.merged, [HEAD_NEW])
+
+    def test_the_gate_still_refuses_when_the_protection_read_is_denied_and_a_context_is_not_green(self):
+        """A denied protection read must not become an excuse to merge without the contexts."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 42, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "pull_request"}],
+            contexts={**ALL_GREEN, "hold-guard": "skipped"},
+            protection_readable=False,
+        )
+        verdict = run_promote(fake, max_cycles=3)
+        self.assertEqual(fake.merged, [])
+        self.assertIn("HALT", verdict)
+
+    # ---- every gated run for the bytes must be approved, not only the gate's own --
+    #
+    # THE DEFECT THESE CASES SHIP WITH. The gate approved only the pr-gates run it watched.
+    # The required `build` context is produced by the CI workflow, whose run ALSO arrives as
+    # action_required - and a run that has not been approved produces no check run at all, so
+    # `build` read as absent rather than as failed. On 2026-10-26 PR #3501 sat with a green
+    # pr-gates run, a `build` context that did not exist, and a merge refused with "the base
+    # branch policy prohibits the merge".
+
+    def test_a_gated_run_from_another_workflow_is_approved_too(self):
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 51, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "pull_request"}],
+            all_runs=[
+                {"databaseId": 51, "headSha": HEAD_NEW, "status": "completed",
+                 "conclusion": "success", "event": "pull_request", "workflowName": "pr-gates"},
+                {"databaseId": 52, "headSha": HEAD_NEW, "status": "completed",
+                 "conclusion": "action_required", "event": "pull_request", "workflowName": "CI"},
+            ],
+        )
+        run_promote(fake)
+        self.assertIn(52, fake.approved)
+
+    def test_a_gated_run_for_other_bytes_is_not_approved(self):
+        """Approval is for these bytes. A gated run on a different head is somebody else's."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 53, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "pull_request"}],
+            all_runs=[
+                {"databaseId": 53, "headSha": HEAD_NEW, "status": "completed",
+                 "conclusion": "success", "event": "pull_request", "workflowName": "pr-gates"},
+                {"databaseId": 54, "headSha": HEAD_OLD, "status": "completed",
+                 "conclusion": "action_required", "event": "pull_request", "workflowName": "CI"},
+            ],
+        )
+        run_promote(fake)
+        self.assertNotIn(54, fake.approved)
+
+    def test_the_gate_merges_when_another_workflow_starts_with_its_run_gated(self):
+        """The end-to-end shape of the defect: the gate's own run is green, the CI run needs
+        approval, and the merge must still happen - because the gate approves it."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 55, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "pull_request"}],
+            all_runs=[
+                {"databaseId": 55, "headSha": HEAD_NEW, "status": "completed",
+                 "conclusion": "success", "event": "pull_request", "workflowName": "pr-gates"},
+                {"databaseId": 56, "headSha": HEAD_NEW, "status": "completed",
+                 "conclusion": "action_required", "event": "pull_request", "workflowName": "CI"},
+            ],
+        )
+        verdict = run_promote(fake)
+        self.assertTrue(verdict.startswith("merged"))
+        self.assertEqual(fake.merged, [HEAD_NEW])
+        self.assertIn(56, fake.approved)
+
+    # ---- a cancelled run poisons the contexts, and only a re-run replaces them ----
+    #
+    # THE DEFECT THESE CASES SHIP WITH. Cancelling a workflow run does not remove the check
+    # runs it produced: it produces NEW ones with HIGHER ids and a cancelled conclusion, and
+    # branch protection reads the NEWEST check run per context. So a workflow_dispatch run
+    # that was cancelled after the pull_request run passed leaves `hold-guard` reading as
+    # cancelled, and no amount of waiting brings it back. Measured 2026-10-26 on PR #3511:
+    # three cancelled suites sat above the passing one, and the gate could not see a green
+    # context for bytes whose gates had all passed.
+
+    def test_a_poisoned_context_triggers_a_rerun_of_the_passing_pull_request_run(self):
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 61, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "pull_request"}],
+            contexts={**ALL_GREEN, "hold-guard": "cancelled"},
+        )
+        verdict = run_promote(fake, max_cycles=3)
+        self.assertTrue(fake.reran)
+        self.assertEqual(set(fake.reran), {61})
+        self.assertEqual(fake.merged, [])
+
+    def test_the_rerun_is_bounded(self):
+        """A gate that can re-run forever is a gate that never answers."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 62, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "pull_request"}],
+            contexts={**ALL_GREEN, "hold-guard": "cancelled"},
+        )
+        run_promote(fake, max_cycles=12)
+        self.assertLessEqual(len(fake.reran), gate.MAX_RERUNS)
+
+    def test_no_rerun_when_there_is_no_passing_pull_request_run(self):
+        """Only a run that PASSED can be re-run to replace poisoned check runs. Re-running a
+        run that did not pass would be re-gating bytes that never passed."""
+        fake = FakeGitHub(
+            heads=[HEAD_NEW],
+            runs=[{"databaseId": 63, "headSha": HEAD_NEW, "status": "completed",
+                   "conclusion": "success", "event": "workflow_dispatch"}],
+            contexts={**ALL_GREEN, "hold-guard": "cancelled"},
+        )
+        run_promote(fake, max_cycles=3)
+        self.assertEqual(fake.reran, [])
 
 
 if __name__ == "__main__":

@@ -54,6 +54,15 @@ describe("Health terms we can borrow", () => {
   it("does not smuggle a fused grade or a sold rank", () => {
     const blob = JSON.stringify({ HEALTH_TERMS, HEALTH_TERMS_RULING, HEALTH_VOICE });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
-    expect(products).toContain("HealthTerms");
+    expect(products).not.toContain("HealthTerms");
   });
+  it("retains the four published offers", () => {
+    const offers = products.match(/export const SKUS = \[[\s\S]*?\n\](?: as const)?;/)?.[0];
+    expect(offers).toBeDefined();
+    expect(offers?.match(/id: "/g)).toHaveLength(4);
+    for (const id of ["verify", "run", "ledger", "data"]) {
+      expect(offers).toContain(`id: "${id}"`);
+    }
+  });
+
 });
