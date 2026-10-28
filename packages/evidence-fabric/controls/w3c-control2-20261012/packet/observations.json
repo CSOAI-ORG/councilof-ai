@@ -1,0 +1,494 @@
+[
+  {
+    "case_id": "baseline--unrelaxed",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "baseline",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.baseline.artifact",
+      "did": "fixture_bytes_base64.baseline.did",
+      "signed": "fixture_bytes_base64.baseline.signed"
+    },
+    "native_return": [
+      "pass",
+      null
+    ],
+    "reason": null,
+    "relax": [],
+    "state": "pass"
+  },
+  {
+    "case_id": "baseline--payload-digest",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "baseline",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.baseline.artifact",
+      "did": "fixture_bytes_base64.baseline.did",
+      "signed": "fixture_bytes_base64.baseline.signed"
+    },
+    "native_return": [
+      "pass",
+      null
+    ],
+    "reason": null,
+    "relax": [
+      "payload-digest"
+    ],
+    "state": "pass"
+  },
+  {
+    "case_id": "baseline--artifact-digest",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "baseline",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.baseline.artifact",
+      "did": "fixture_bytes_base64.baseline.did",
+      "signed": "fixture_bytes_base64.baseline.signed"
+    },
+    "native_return": [
+      "pass",
+      null
+    ],
+    "reason": null,
+    "relax": [
+      "artifact-digest"
+    ],
+    "state": "pass"
+  },
+  {
+    "case_id": "baseline--ed25519-signature",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "baseline",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.baseline.artifact",
+      "did": "fixture_bytes_base64.baseline.did",
+      "signed": "fixture_bytes_base64.baseline.signed"
+    },
+    "native_return": [
+      "pass",
+      null
+    ],
+    "reason": null,
+    "relax": [
+      "ed25519-signature"
+    ],
+    "state": "pass"
+  },
+  {
+    "case_id": "unsigned-declared-payload-digest--unrelaxed",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "unsigned-declared-payload-digest",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.unsigned-declared-payload-digest.artifact",
+      "did": "fixture_bytes_base64.unsigned-declared-payload-digest.did",
+      "signed": "fixture_bytes_base64.unsigned-declared-payload-digest.signed"
+    },
+    "native_return": [
+      "fail",
+      "payload-digest"
+    ],
+    "reason": "payload-digest",
+    "relax": [],
+    "state": "fail"
+  },
+  {
+    "case_id": "unsigned-declared-payload-digest--payload-digest",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "unsigned-declared-payload-digest",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.unsigned-declared-payload-digest.artifact",
+      "did": "fixture_bytes_base64.unsigned-declared-payload-digest.did",
+      "signed": "fixture_bytes_base64.unsigned-declared-payload-digest.signed"
+    },
+    "native_return": [
+      "pass",
+      null
+    ],
+    "reason": null,
+    "relax": [
+      "payload-digest"
+    ],
+    "state": "pass"
+  },
+  {
+    "case_id": "unsigned-declared-payload-digest--artifact-digest",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "unsigned-declared-payload-digest",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.unsigned-declared-payload-digest.artifact",
+      "did": "fixture_bytes_base64.unsigned-declared-payload-digest.did",
+      "signed": "fixture_bytes_base64.unsigned-declared-payload-digest.signed"
+    },
+    "native_return": [
+      "fail",
+      "payload-digest"
+    ],
+    "reason": "payload-digest",
+    "relax": [
+      "artifact-digest"
+    ],
+    "state": "fail"
+  },
+  {
+    "case_id": "unsigned-declared-payload-digest--ed25519-signature",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "unsigned-declared-payload-digest",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.unsigned-declared-payload-digest.artifact",
+      "did": "fixture_bytes_base64.unsigned-declared-payload-digest.did",
+      "signed": "fixture_bytes_base64.unsigned-declared-payload-digest.signed"
+    },
+    "native_return": [
+      "fail",
+      "payload-digest"
+    ],
+    "reason": "payload-digest",
+    "relax": [
+      "ed25519-signature"
+    ],
+    "state": "fail"
+  },
+  {
+    "case_id": "artifact-newline--unrelaxed",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "artifact-newline",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.artifact-newline.artifact",
+      "did": "fixture_bytes_base64.artifact-newline.did",
+      "signed": "fixture_bytes_base64.artifact-newline.signed"
+    },
+    "native_return": [
+      "fail",
+      "artifact-digest"
+    ],
+    "reason": "artifact-digest",
+    "relax": [],
+    "state": "fail"
+  },
+  {
+    "case_id": "artifact-newline--payload-digest",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "artifact-newline",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.artifact-newline.artifact",
+      "did": "fixture_bytes_base64.artifact-newline.did",
+      "signed": "fixture_bytes_base64.artifact-newline.signed"
+    },
+    "native_return": [
+      "fail",
+      "artifact-digest"
+    ],
+    "reason": "artifact-digest",
+    "relax": [
+      "payload-digest"
+    ],
+    "state": "fail"
+  },
+  {
+    "case_id": "artifact-newline--artifact-digest",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "artifact-newline",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.artifact-newline.artifact",
+      "did": "fixture_bytes_base64.artifact-newline.did",
+      "signed": "fixture_bytes_base64.artifact-newline.signed"
+    },
+    "native_return": [
+      "pass",
+      null
+    ],
+    "reason": null,
+    "relax": [
+      "artifact-digest"
+    ],
+    "state": "pass"
+  },
+  {
+    "case_id": "artifact-newline--ed25519-signature",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "artifact-newline",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.artifact-newline.artifact",
+      "did": "fixture_bytes_base64.artifact-newline.did",
+      "signed": "fixture_bytes_base64.artifact-newline.signed"
+    },
+    "native_return": [
+      "fail",
+      "artifact-digest"
+    ],
+    "reason": "artifact-digest",
+    "relax": [
+      "ed25519-signature"
+    ],
+    "state": "fail"
+  },
+  {
+    "case_id": "signature-hex-nibble--unrelaxed",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "signature-hex-nibble",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.signature-hex-nibble.artifact",
+      "did": "fixture_bytes_base64.signature-hex-nibble.did",
+      "signed": "fixture_bytes_base64.signature-hex-nibble.signed"
+    },
+    "native_return": [
+      "fail",
+      "ed25519-signature"
+    ],
+    "reason": "ed25519-signature",
+    "relax": [],
+    "state": "fail"
+  },
+  {
+    "case_id": "signature-hex-nibble--payload-digest",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "signature-hex-nibble",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.signature-hex-nibble.artifact",
+      "did": "fixture_bytes_base64.signature-hex-nibble.did",
+      "signed": "fixture_bytes_base64.signature-hex-nibble.signed"
+    },
+    "native_return": [
+      "fail",
+      "ed25519-signature"
+    ],
+    "reason": "ed25519-signature",
+    "relax": [
+      "payload-digest"
+    ],
+    "state": "fail"
+  },
+  {
+    "case_id": "signature-hex-nibble--artifact-digest",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "signature-hex-nibble",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.signature-hex-nibble.artifact",
+      "did": "fixture_bytes_base64.signature-hex-nibble.did",
+      "signed": "fixture_bytes_base64.signature-hex-nibble.signed"
+    },
+    "native_return": [
+      "fail",
+      "ed25519-signature"
+    ],
+    "reason": "ed25519-signature",
+    "relax": [
+      "artifact-digest"
+    ],
+    "state": "fail"
+  },
+  {
+    "case_id": "signature-hex-nibble--ed25519-signature",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "signature-hex-nibble",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.signature-hex-nibble.artifact",
+      "did": "fixture_bytes_base64.signature-hex-nibble.did",
+      "signed": "fixture_bytes_base64.signature-hex-nibble.signed"
+    },
+    "native_return": [
+      "pass",
+      null
+    ],
+    "reason": null,
+    "relax": [
+      "ed25519-signature"
+    ],
+    "state": "pass"
+  },
+  {
+    "case_id": "original-signed-payload-multi-guard--unrelaxed",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "original-signed-payload-multi-guard",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.original-signed-payload-multi-guard.artifact",
+      "did": "fixture_bytes_base64.original-signed-payload-multi-guard.did",
+      "signed": "fixture_bytes_base64.original-signed-payload-multi-guard.signed"
+    },
+    "native_return": [
+      "fail",
+      "payload-digest"
+    ],
+    "reason": "payload-digest",
+    "relax": [],
+    "state": "fail"
+  },
+  {
+    "case_id": "original-signed-payload-multi-guard--payload-digest",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "original-signed-payload-multi-guard",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.original-signed-payload-multi-guard.artifact",
+      "did": "fixture_bytes_base64.original-signed-payload-multi-guard.did",
+      "signed": "fixture_bytes_base64.original-signed-payload-multi-guard.signed"
+    },
+    "native_return": [
+      "fail",
+      "artifact-digest"
+    ],
+    "reason": "artifact-digest",
+    "relax": [
+      "payload-digest"
+    ],
+    "state": "fail"
+  },
+  {
+    "case_id": "original-signed-payload-multi-guard--artifact-digest",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "original-signed-payload-multi-guard",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.original-signed-payload-multi-guard.artifact",
+      "did": "fixture_bytes_base64.original-signed-payload-multi-guard.did",
+      "signed": "fixture_bytes_base64.original-signed-payload-multi-guard.signed"
+    },
+    "native_return": [
+      "fail",
+      "payload-digest"
+    ],
+    "reason": "payload-digest",
+    "relax": [
+      "artifact-digest"
+    ],
+    "state": "fail"
+  },
+  {
+    "case_id": "original-signed-payload-multi-guard--ed25519-signature",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "original-signed-payload-multi-guard",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.original-signed-payload-multi-guard.artifact",
+      "did": "fixture_bytes_base64.original-signed-payload-multi-guard.did",
+      "signed": "fixture_bytes_base64.original-signed-payload-multi-guard.signed"
+    },
+    "native_return": [
+      "fail",
+      "payload-digest"
+    ],
+    "reason": "payload-digest",
+    "relax": [
+      "ed25519-signature"
+    ],
+    "state": "fail"
+  },
+  {
+    "case_id": "missing-key--unrelaxed",
+    "evidence_disposition": {
+      "artifact": "carried",
+      "did_document": "carried",
+      "native_result": "carried",
+      "signed_record": "carried"
+    },
+    "fixture_id": "missing-key",
+    "input_packet_refs": {
+      "artifact": "fixture_bytes_base64.missing-key.artifact",
+      "did": "fixture_bytes_base64.missing-key.did",
+      "signed": "fixture_bytes_base64.missing-key.signed"
+    },
+    "native_return": [
+      "inconclusive",
+      "key-not-in-did-document"
+    ],
+    "reason": "key-not-in-did-document",
+    "relax": [],
+    "state": "inconclusive"
+  }
+]
