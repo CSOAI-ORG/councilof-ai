@@ -93,6 +93,78 @@ def positive_claims(segments) -> list[str]:
     return sorted(set(hits))
 
 
+SCHEMA_BY_VERSION = {
+    "0.1": REPO / "public" / "schemas" / "csoai-evaluation-card-0.1.schema.json",
+    "0.2": REPO / "public" / "schemas" / "csoai-evaluation-card-0.2.schema.json",
+}
+
+
+def card_version(card: dict) -> str:
+    """Which schema this card claims. Read from the card's own $schema, not guessed."""
+    ref = str(card.get("schema", ""))
+    for v in SCHEMA_BY_VERSION:
+        if ref.endswith(f"csoai-evaluation-card-{v}.schema.json"):
+            return v
+    return "unknown"
+
+
+def v02_faults(card: dict) -> list[str]:
+    """The 0.2 invariants: the artifact-identity binding, the limitation taxonomy and
+    the safety-case sections. These are the ones that make a card bind a RESULT to
+    the bytes that produced it, and to say where the measurement is weak."""
+    faults: list[str] = []
+    ident = card.get("artifact_identity") or {}
+    bound = ident.get("weights_bound")
+    digest = ident.get("weights_sha256")
+    subject_kind = (card.get("subject") or {}).get("kind")
+    if bound is True:
+        if not digest:
+            faults.append("artifact_identity claims the weights are bound but carries no weights digest")
+        if subject_kind in ("service", "rule", "dataset", "human"):
+            faults.append(f"artifact_identity claims bound weights but the subject kind is {subject_kind!r}, "
+                          "which is not weight-identified")
+    elif bound is False:
+        if digest:
+            faults.append("artifact_identity does not claim bound weights but carries a weights digest")
+        if subject_kind == "model":
+            faults.append("a model subject must either bind its weights or say why it cannot")
+    else:
+        faults.append("artifact_identity does not state whether the weights are bound")
+    if not (ident.get("reason") or "").strip():
+        faults.append("artifact_identity carries no reason")
+
+    tax = card.get("limitation_taxonomy") or {}
+    classes = tax.get("classes") or []
+    if not classes:
+        faults.append("limitation_taxonomy names no class; 'no limitations' must be a stated position")
+    for c in classes:
+        if not (c.get("justification") or "").strip():
+            faults.append(f"limitation class {c.get('class')!r} carries no justification")
+    any_present = any(c.get("present") for c in classes)
+    if tax.get("none_asserted") is True and any_present:
+        faults.append("limitation_taxonomy claims none asserted while a class is marked present")
+    if tax.get("none_asserted") is False and not any_present:
+        faults.append("limitation_taxonomy claims a limitation is present while every class is not present")
+
+    sc = card.get("safety_case") or {}
+    for name in ("alignment", "isolation", "monitoring", "incident"):
+        # ONE rule for "the section is there and has a valid status", so that the
+        # absence case and the bad-status case are the SAME rule. They were two
+        # rules once, and two rules with one effect cannot both be proven
+        # load-bearing: removing the first left the second catching the card, and
+        # the selftest passed for the wrong reason. Merged, the absence case and
+        # the status case are caught by one rule and the notes rule is separate.
+        sec = sc.get(name)
+        if not isinstance(sec, dict) or sec.get("status") not in (
+                "ASSESSED", "NOT_APPLICABLE", "NOT_MEASURED"):
+            faults.append(f"safety_case section {name!r} must be an object with a valid status "
+                          "(ASSESSED, NOT_APPLICABLE, NOT_MEASURED); a section is never silently missing")
+            continue
+        if not (sec.get("notes") or "").strip():
+            faults.append(f"safety_case section {name!r} carries no notes")
+    return faults
+
+
 def schema_faults(card: dict) -> list[str]:
     """Shape, via the published JSON Schema. Reported as SCHEMA_UNCHECKED when
     the engine is absent — never as VALID, because an unchecked shape is not a
@@ -101,7 +173,11 @@ def schema_faults(card: dict) -> list[str]:
         import jsonschema
     except ImportError:
         return ["SCHEMA_UNCHECKED: the jsonschema package is absent; shape not verified"]
-    schema = json.loads(SCHEMA_PATH.read_text())
+    v = card_version(card)
+    path = SCHEMA_BY_VERSION.get(v)
+    if path is None:
+        return [f"SCHEMA_UNCHECKED: the card names an unknown schema version {v!r}"]
+    schema = json.loads(path.read_text())
     v = jsonschema.Draft202012Validator(schema)
     return [f"{'/'.join(str(p) for p in e.path) or '<root>'}: {e.message}"
             for e in v.iter_errors(card)]
@@ -177,6 +253,8 @@ def invariant_faults(card: dict) -> list[str]:
 
 def verify(card: dict) -> dict:
     faults = schema_faults(card) + invariant_faults(card)
+    if card_version(card) == "0.2":
+        faults += v02_faults(card)
     unchecked = [f for f in faults if f.startswith("SCHEMA_UNCHECKED")]
     if unchecked:
         return {"state": "UNCHECKABLE", "faults": faults}
@@ -209,6 +287,39 @@ def _card() -> dict:
                        "source_urls": ["https://example.com/x"]},
         "not_established": ["not a certification", "not a ranking"],
     }
+
+
+def _card_02() -> dict:
+    """A well-formed 0.2 card: the artifact identity bound, the taxonomy stated,
+    and the four safety-case sections each carrying notes."""
+    c = _card()
+    c["schema"] = "https://councilof.ai/schemas/csoai-evaluation-card-0.2.schema.json"
+    c["subject"]["kind"] = "model"
+    c["artifact_identity"] = {
+        "weights_bound": True,
+        "weights_sha256": "a" * 64,
+        "weights_revision": "example-rev",
+        "harness_version": "1",
+        "harness_sha256": "b" * 64,
+        "tokenizer": "example",
+        "reason": "the example binds a digest so the card says which weights produced the bytes",
+    }
+    c["limitation_taxonomy"] = {
+        "classes": [
+            {"class": "sample_size", "present": True,
+             "justification": "ten items, so the interval is wide"},
+            {"class": "contamination", "present": False,
+             "justification": "the example bank is public and was not withheld from anyone"},
+        ],
+        "none_asserted": False,
+    }
+    c["safety_case"] = {
+        "alignment": {"status": "ASSESSED", "notes": "the example assesses nothing; this sentence exists to satisfy the section"},
+        "isolation": {"status": "NOT_APPLICABLE", "notes": "the example subject is not isolated"},
+        "monitoring": {"status": "NOT_MEASURED", "notes": "the example has no monitoring to report"},
+        "incident": {"status": "NOT_APPLICABLE", "notes": "the example has no incidents"},
+    }
+    return c
 
 
 def selftest() -> int:
@@ -297,12 +408,75 @@ def selftest() -> int:
     if invariant_faults(negated):
         fails.append("a correctly negated claim word trips the rule")
 
+    # --- the 0.2 invariants ---
+    base02 = _card_02()
+    f02 = schema_faults(base02) + invariant_faults(base02) + v02_faults(base02)
+    if f02:
+        fails.append("a well-formed 0.2 card trips the invariants: " + "; ".join(f02))
+
+    def must_catch02(name, mutate):
+        c = _card_02()
+        mutate(c)
+        if not v02_faults(c):
+            fails.append(f"the 0.2 invariant did not catch: {name}")
+
+    def _bound_no_digest(c):
+        c["artifact_identity"]["weights_sha256"] = None
+    must_catch02("bound weights with no digest", _bound_no_digest)
+
+    def _unbound_with_digest(c):
+        # ISOLATED: the subject is a service (not weight-identified, so the model rule
+        # does not also fire) and a reason is present, so only the "unbound weights
+        # carrying a digest" rule can catch this card.
+        c["subject"]["kind"] = "service"
+        c["artifact_identity"]["weights_bound"] = False
+        c["artifact_identity"]["reason"] = "the example subject is a service, not weights"
+    must_catch02("unbound weights carrying a digest", _unbound_with_digest)
+
+    def _model_unbound(c):
+        c["artifact_identity"]["weights_bound"] = False
+        c["artifact_identity"]["weights_sha256"] = None
+        c["artifact_identity"]["reason"] = "the example cannot say"
+    must_catch02("a model subject that binds no weights and gives no reason", _model_unbound)
+
+    def _no_reason(c):
+        c["artifact_identity"]["reason"] = ""
+    must_catch02("an artifact identity with no reason", _no_reason)
+
+    def _no_class(c):
+        # ISOLATED: none_asserted is None, so neither "claims none asserted" rule
+        # can also fire; only the "names no class" rule can catch this card.
+        c["limitation_taxonomy"]["classes"] = []
+        c["limitation_taxonomy"]["none_asserted"] = None
+    must_catch02("a taxonomy naming no class", _no_class)
+
+    def _class_no_just(c):
+        c["limitation_taxonomy"]["classes"][0]["justification"] = ""
+    must_catch02("a limitation class with no justification", _class_no_just)
+
+    def _none_and_present(c):
+        c["limitation_taxonomy"]["none_asserted"] = True
+    must_catch02("a taxonomy claiming none asserted while a class is present", _none_and_present)
+
+    def _missing_section(c):
+        del c["safety_case"]["monitoring"]
+    must_catch02("a safety-case section silently missing", _missing_section)
+
+    def _section_no_notes(c):
+        c["safety_case"]["alignment"]["notes"] = ""
+    must_catch02("a safety-case section with no notes", _section_no_notes)
+
+    def _section_bad_status(c):
+        c["safety_case"]["incident"]["status"] = "FINE"
+    must_catch02("a safety-case section with an invalid status", _section_bad_status)
+
+
     if fails:
         for f in fails:
             print("  FAIL:", f)
         return 1
     print("  evaluation_card_verify selftest: OK "
-          "(9 invariants, each proven able to catch its own counterexample)")
+          "(9 v0.1 + 10 v0.2 rules, each proven able to catch its own counterexample)")
     return 0
 
 
