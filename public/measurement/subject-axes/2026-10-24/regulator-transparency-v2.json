@@ -1,0 +1,915 @@
+{
+  "schema": "csoai.subject-discovery/1.1",
+  "axis": "regulator-transparency",
+  "kind": "discovery-grid-v2",
+  "method": "regulator-presence-v1 (sha-pinned reader; not a certification)",
+  "observed_at": "2026-10-28T09:52:38.863442+00:00",
+  "authority_state": "measurement_only_not_a_certification",
+  "n_subjects": 46,
+  "n_reachable": 36,
+  "n_independent": 36,
+  "n_http_error": 7,
+  "n_valid_min": 30,
+  "meets_n30_gate": true,
+  "capture_limit_bytes": 3000000,
+  "presence_check_definitions": {
+    "guidance": "guidance|guideline|code of practice|policy framework|regulatory framework",
+    "registry": "registr(?:y|ation|er)|database|directory|public list",
+    "methodology": "methodolog|assessment method|evaluation method|regulatory approach|our approach",
+    "consultation": "consultat|call for evidence|public comment|have your say|stakeholder engagement",
+    "contact": "contact|report a concern|whistleblow|complaint|enquir|feedback"
+  },
+  "terms": [
+    "guidance",
+    "registry",
+    "methodology",
+    "consultation",
+    "contact"
+  ],
+  "rows": [
+    {
+      "subject": "UK ICO",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/",
+      "final_url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/",
+      "status": 200,
+      "error": "",
+      "bytes": 39819,
+      "sha256": "541aff28dc507b2fc5b69635ccfd9a44e7c9215e748165db40c6a83f354c5f68",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 403.4,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "UK FCA",
+      "url": "https://www.fca.org.uk/firms/artificial-intelligence",
+      "final_url": "https://www.fca.org.uk/firms/ai-financial-services",
+      "status": 200,
+      "error": "",
+      "bytes": 183651,
+      "sha256": "205ee4ed103f742d7f271c31e77d45395bc340aef3345b50e22a11c154363489",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 1382.1,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": true,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 5
+    },
+    {
+      "subject": "UK CMA",
+      "url": "https://www.gov.uk/government/organisations/competition-and-markets-authority",
+      "final_url": "https://www.gov.uk/government/organisations/competition-and-markets-authority",
+      "status": 200,
+      "error": "",
+      "bytes": 122030,
+      "sha256": "ce6600e8c6bd8ba26a4becbe826572621438d7dc792af4f0c484c0aef424ad51",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 465.8,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "Ofcom",
+      "url": "https://www.ofcom.org.uk/",
+      "final_url": "https://www.ofcom.org.uk/",
+      "status": 200,
+      "error": "",
+      "bytes": 121922,
+      "sha256": "67d68948b7b4d6c27c78ff37dd43b082e8b0fcddc991930cdc4d838798fd7d87",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 626.9,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "MHRA",
+      "url": "https://www.gov.uk/government/organisations/medicines-and-healthcare-products-regulatory-agency",
+      "final_url": "https://www.gov.uk/government/organisations/medicines-and-healthcare-products-regulatory-agency",
+      "status": 200,
+      "error": "",
+      "bytes": 118550,
+      "sha256": "7e92b8d72da5c52cac71bf014c38f59ef741233b4f04d1b4c63b0cd622e8502e",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 446.6,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "DSIT",
+      "url": "https://www.gov.uk/government/organisations/department-for-science-innovation-and-technology",
+      "final_url": "https://www.gov.uk/government/organisations/department-for-science-innovation-and-technology",
+      "status": 200,
+      "error": "",
+      "bytes": 107273,
+      "sha256": "9adff61962381802e41da6fa3cf13745a957c332c018ce7ea821839238fbebb8",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 443.5,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "Bank of England",
+      "url": "https://www.bankofengland.co.uk/",
+      "final_url": "https://www.bankofengland.co.uk/",
+      "status": 200,
+      "error": "",
+      "bytes": 91473,
+      "sha256": "e44e6f765c02ae77177f9aa34611c051101c03bcfc38b9af9461afb9d471092f",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 429.4,
+      "checks": {
+        "guidance": false,
+        "registry": true,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 2
+    },
+    {
+      "subject": "PRA",
+      "url": "https://www.bankofengland.co.uk/prudential-regulation",
+      "final_url": "https://www.bankofengland.co.uk/prudential-regulation",
+      "status": 200,
+      "error": "",
+      "bytes": 95035,
+      "sha256": "9f307c4fe3d01538fd3a00732153466432dd8ec5445888efaf6851eb9727f67d",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 341.0,
+      "checks": {
+        "guidance": false,
+        "registry": true,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "FRC",
+      "url": "https://www.frc.org.uk/",
+      "final_url": "https://www.frc.org.uk/",
+      "status": 200,
+      "error": "",
+      "bytes": 61007,
+      "sha256": "da329477bd43df6fb034504cccbf428d29e33224d9c2f46b1b099e886703f2bf",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 189.0,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": true,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 4
+    },
+    {
+      "subject": "US SEC",
+      "url": "https://www.sec.gov/",
+      "final_url": "https://www.sec.gov/",
+      "status": 403,
+      "error": "http_error",
+      "bytes": 1924,
+      "sha256": "ca85bf8a4998785db4c729a83978fda9fbed83efa6fa1e8c90cb9729611102b9",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 143.1,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "Ofgem",
+      "url": "https://www.ofgem.gov.uk/",
+      "final_url": "https://www.ofgem.gov.uk/",
+      "status": 200,
+      "error": "",
+      "bytes": 225563,
+      "sha256": "893fb80ed89b9fc2e8c350360c35d8f26d9eb8694b2a82ec727616323cd90624",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 174.4,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "US FDA",
+      "url": "https://www.fda.gov/",
+      "final_url": "https://www.fda.gov/",
+      "status": 200,
+      "error": "",
+      "bytes": 40642,
+      "sha256": "84a9de9d13b4b053ca0d7c1fa026f90e9b73b2b785317ec8160e5bdc57f3e9b6",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 249.4,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "CQC",
+      "url": "https://www.cqc.org.uk/",
+      "final_url": "https://www.cqc.org.uk/",
+      "status": 200,
+      "error": "",
+      "bytes": 97845,
+      "sha256": "c5ab6533ab89e96f210e9d489efed90aaada96d57b335ac053a39e9b79b02d02",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 169.5,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": true,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 4
+    },
+    {
+      "subject": "HSE",
+      "url": "https://www.hse.gov.uk/",
+      "final_url": "https://www.hse.gov.uk/",
+      "status": 200,
+      "error": "",
+      "bytes": 47480,
+      "sha256": "a1139118eb935c0cd06c4abda4c5020407dc983e8420facd3a42d3ff13fee65e",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 161.0,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "IPO",
+      "url": "https://www.gov.uk/government/organisations/intellectual-property-office",
+      "final_url": "https://www.gov.uk/government/organisations/intellectual-property-office",
+      "status": 200,
+      "error": "",
+      "bytes": 127936,
+      "sha256": "e75d271f172b351e5650465b4ab59ff397f3b65770415922fd9cb0127899fb15",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 578.9,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "NCSC",
+      "url": "https://www.ncsc.gov.uk/",
+      "final_url": "https://www.ncsc.gov.uk/",
+      "status": 200,
+      "error": "",
+      "bytes": 251491,
+      "sha256": "02d2be7217ae6fd773558e8731c9f2a3f737eece8346b661659c523b5d197cff",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 379.1,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 2
+    },
+    {
+      "subject": "UK AI Security Institute",
+      "url": "https://www.aisi.gov.uk/",
+      "final_url": "https://www.aisi.gov.uk/",
+      "status": 200,
+      "error": "",
+      "bytes": 29937,
+      "sha256": "77febcda7e4a7c8f5b54515485dbf823eaab8a803abea8a3fa3d9e2d05fd5d25",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 479.6,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 1
+    },
+    {
+      "subject": "EU AI Office",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/ai-office",
+      "final_url": "https://digital-strategy.ec.europa.eu/en/policies/ai-office",
+      "status": 200,
+      "error": "",
+      "bytes": 80031,
+      "sha256": "8d40721eb4ab256c996c3d688db8daab2e8024c958a79636cd2ec2f92cca9f8a",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 359.5,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": true,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 4
+    },
+    {
+      "subject": "EDPS",
+      "url": "https://www.edps.europa.eu/",
+      "final_url": "https://www.edps.europa.eu/_en",
+      "status": 200,
+      "error": "",
+      "bytes": 60487,
+      "sha256": "607541a936e90ff105bb0f4861f2fe350088b383522d01e5d1b09f7a2705a3e7",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 494.8,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 4
+    },
+    {
+      "subject": "EDPB",
+      "url": "https://www.edpb.europa.eu/",
+      "final_url": "https://www.edpb.europa.eu/home_en",
+      "status": 200,
+      "error": "",
+      "bytes": 48152,
+      "sha256": "0746c1f30f810a5629b5a32a74b2cfa0f0d9b0527267a80ba5ac2f315bfe124b",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 582.8,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "ENISA",
+      "url": "https://www.enisa.europa.eu/",
+      "final_url": "https://www.enisa.europa.eu/",
+      "status": 200,
+      "error": "",
+      "bytes": 64109,
+      "sha256": "6b01ae12950a5607795f3c9c88b90241eb529846c730349b2f78c81856a93285",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 633.0,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "ECB",
+      "url": "https://www.ecb.europa.eu/",
+      "final_url": "https://www.ecb.europa.eu/",
+      "status": 0,
+      "error": "URLError",
+      "bytes": 0,
+      "sha256": "",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 117.5,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "ESMA",
+      "url": "https://www.esma.europa.eu/",
+      "final_url": "https://www.esma.europa.eu/",
+      "status": 200,
+      "error": "",
+      "bytes": 95214,
+      "sha256": "b6c2958ff1418504f1cfc8e885cd5878a6c1f25215a313dd5670d693ecd6dd7e",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 240.7,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 4
+    },
+    {
+      "subject": "EBA",
+      "url": "https://www.eba.europa.eu/",
+      "final_url": "https://www.eba.europa.eu/homepage",
+      "status": 200,
+      "error": "",
+      "bytes": 82800,
+      "sha256": "74586a5953738c8ea6766871c08e8670e2ef2a9cda013e717d8ee13f8d09f699",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 494.4,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "EIOPA",
+      "url": "https://www.eiopa.europa.eu/",
+      "final_url": "https://www.eiopa.europa.eu/select-language?destination=/node/1",
+      "status": 200,
+      "error": "",
+      "bytes": 16998,
+      "sha256": "e0715e4d8c294691e55f7a78ebb58739d669218f4ee5ee6467d89f258cec0418",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 365.5,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "DG CNECT",
+      "url": "https://digital-strategy.ec.europa.eu/en",
+      "final_url": "https://digital-strategy.ec.europa.eu/en",
+      "status": 200,
+      "error": "",
+      "bytes": 53860,
+      "sha256": "30aeabea97757807795ff4f174aecf6d43240a39ed669029ad4d3fb2596d2beb",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 216.7,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 2
+    },
+    {
+      "subject": "OECD AI",
+      "url": "https://oecd.ai/",
+      "final_url": "https://oecd.ai/en/",
+      "status": 200,
+      "error": "",
+      "bytes": 120682,
+      "sha256": "42f6db51c8cab7cefb34963b73be8e9338687eca195c8337401cda138f040bc0",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 536.0,
+      "checks": {
+        "guidance": false,
+        "registry": true,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 1
+    },
+    {
+      "subject": "NIST",
+      "url": "https://www.nist.gov/artificial-intelligence",
+      "final_url": "https://www.nist.gov/super-intelligence",
+      "status": 200,
+      "error": "",
+      "bytes": 98791,
+      "sha256": "4229111aa4baa3add496242019aceba93ff3d9d2e39efdfb303bab1b3b23c003",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 935.9,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "US NTIA",
+      "url": "https://www.ntia.gov/",
+      "final_url": "https://www.ntia.gov/",
+      "status": 200,
+      "error": "",
+      "bytes": 88364,
+      "sha256": "e28e28a61bd3afed726c08982f49146a623b8442e0804ef5481d6ea79df4108c",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 660.6,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 2
+    },
+    {
+      "subject": "US CISA",
+      "url": "https://www.cisa.gov/ai",
+      "final_url": "https://www.cisa.gov/topics/cybersecurity-best-practices/super-intelligence",
+      "status": 200,
+      "error": "",
+      "bytes": 65832,
+      "sha256": "b5152241601e5ff2bf2c07c7a78b66323fa487712a9dc6aea1955ec54f3d20bb",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 312.0,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 2
+    },
+    {
+      "subject": "US FTC",
+      "url": "https://www.ftc.gov/",
+      "final_url": "https://www.ftc.gov/",
+      "status": 404,
+      "error": "http_error",
+      "bytes": 1301,
+      "sha256": "6cb6ddd1f7eefd58b6094bfb287c9fafa16b34eb1dfbf27416431220d9e45e5e",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 138.7,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "UK Ofwat",
+      "url": "https://www.ofwat.gov.uk/",
+      "final_url": "https://www.ofwat.gov.uk/",
+      "status": 403,
+      "error": "http_error",
+      "bytes": 200000,
+      "sha256": "a1b67f41b35dfe342be96bc9abc6d51593ca2ba284f6fd5aec802a535b1c65c2",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 151.2,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "EHRC",
+      "url": "https://www.equalityhumanrights.com/",
+      "final_url": "https://www.equalityhumanrights.com/",
+      "status": 403,
+      "error": "http_error",
+      "bytes": 200000,
+      "sha256": "7155fce71b9a531e955ce52251c51652cc7bddc5612f345f700c497d5c417986",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 138.0,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "Council of Europe AI",
+      "url": "https://www.coe.int/en/web/artificial-intelligence",
+      "final_url": "https://www.coe.int/en/web/artificial-intelligence",
+      "status": 403,
+      "error": "http_error",
+      "bytes": 5715,
+      "sha256": "015727b169dac6b77c13bff0dd2c71e6eb02d5c60f1468c1b2a97c47d156f522",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 68.0,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "UNESCO AI",
+      "url": "https://www.unesco.org/en/artificial-intelligence",
+      "final_url": "https://www.unesco.org/en/artificial-intelligence",
+      "status": 200,
+      "error": "",
+      "bytes": 296754,
+      "sha256": "5097c451d8163431a4b524fad4ab7d2b30f7ddcab8b73fe557383d802d9347c7",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 598.1,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": true,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "ISO AI",
+      "url": "https://www.iso.org/artificial-intelligence",
+      "final_url": "https://www.iso.org/artificial-intelligence",
+      "status": 403,
+      "error": "http_error",
+      "bytes": 5715,
+      "sha256": "bf77cf4fe64e3134f574a5792aadfeb130629eb7b07f14e039abe3ff8b307719",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 82.7,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "CNIL (France)",
+      "url": "https://www.cnil.fr/en/artificial-intelligence",
+      "final_url": "https://www.cnil.fr/en/artificial-intelligence",
+      "status": 404,
+      "error": "http_error",
+      "bytes": 53898,
+      "sha256": "8edd2f4442eefd058f3dc8bce2b21f03ae2dbf32ecfcb332e60e4f3f7d717484",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 1902.4,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "BfDI (Germany)",
+      "url": "https://www.bfdi.bund.de/EN/Home/home_node.html",
+      "final_url": "https://www.bfdi.bund.de/EN/Home/home_node.html",
+      "status": 200,
+      "error": "",
+      "bytes": 67376,
+      "sha256": "e0d563867e595ee01725ec2f9455df17ca63a8447abc1428f8dd686d67db1235",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 349.4,
+      "checks": {
+        "guidance": false,
+        "registry": true,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "AEPD (Spain)",
+      "url": "https://www.aepd.es/en",
+      "final_url": "https://www.aepd.es/en",
+      "status": 0,
+      "error": "URLError",
+      "bytes": 0,
+      "sha256": "",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 79.3,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "Garante Privacy (Italy)",
+      "url": "https://www.garanteprivacy.it/home_en",
+      "final_url": "https://www.garanteprivacy.it/web/garante-privacy-en/home_en",
+      "status": 200,
+      "error": "",
+      "bytes": 102853,
+      "sha256": "a03a7411691e489c32aa46669663b07e3aa3007c705b196a184de2af47269211",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 1114.7,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 3
+    },
+    {
+      "subject": "IMDA (Singapore)",
+      "url": "https://www.imda.gov.sg/",
+      "final_url": "https://www.imda.gov.sg/",
+      "status": 200,
+      "error": "",
+      "bytes": 601087,
+      "sha256": "40df258ca74769d8fc65e08659d93a7f2160a34fa11186fff0d37023decd33be",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 5081.6,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 4
+    },
+    {
+      "subject": "PDPC (Singapore)",
+      "url": "https://www.pdpc.gov.sg/",
+      "final_url": "https://www.pdpc.gov.sg/",
+      "status": 200,
+      "error": "",
+      "bytes": 64784,
+      "sha256": "6e02cab0d04e493bcc2a24cbbeb746f5b1a726e5790e3cfc4e342bda184664aa",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 1269.9,
+      "checks": {
+        "guidance": true,
+        "registry": true,
+        "methodology": false,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 4
+    },
+    {
+      "subject": "OPC (Canada)",
+      "url": "https://www.priv.gc.ca/en/",
+      "final_url": "https://www.priv.gc.ca/en/",
+      "status": 0,
+      "error": "URLError",
+      "bytes": 0,
+      "sha256": "",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 317.5,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": false
+      },
+      "checks_present": 0
+    },
+    {
+      "subject": "OAIC (Australia)",
+      "url": "https://www.oaic.gov.au/",
+      "final_url": "https://www.oaic.gov.au/",
+      "status": 200,
+      "error": "",
+      "bytes": 88651,
+      "sha256": "b100ab8413ab4f0395596fddee35a661b856fbe923b31f703fabedb9238a8cbc",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 1054.8,
+      "checks": {
+        "guidance": true,
+        "registry": false,
+        "methodology": true,
+        "consultation": true,
+        "contact": true
+      },
+      "checks_present": 4
+    },
+    {
+      "subject": "PPC (Japan)",
+      "url": "https://www.ppc.go.jp/en/",
+      "final_url": "https://www.ppc.go.jp/en/",
+      "status": 200,
+      "error": "",
+      "bytes": 31769,
+      "sha256": "50c8d15e1168d8da2497a59f15384d19d27a56971c06b17b6be33db58e06186b",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 1031.3,
+      "checks": {
+        "guidance": false,
+        "registry": true,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 2
+    },
+    {
+      "subject": "AISI Japan",
+      "url": "https://aisi.go.jp/",
+      "final_url": "https://aisi.go.jp/",
+      "status": 200,
+      "error": "",
+      "bytes": 18892,
+      "sha256": "e4472d837c1cc0cb36a5ec6dd5c76d4a2993eafcdb40cd77f7fd76ecc7e02f31",
+      "capture_limit_bytes": 3000000,
+      "latency_ms": 282.1,
+      "checks": {
+        "guidance": false,
+        "registry": false,
+        "methodology": false,
+        "consultation": false,
+        "contact": true
+      },
+      "checks_present": 1
+    }
+  ],
+  "supersedes": {
+    "artifact": "regulator-transparency.json",
+    "sha256": "eb7d23d861fc6151f7b6ebb77e173bc70e22d4d5d76f7f062fcd0d41106d8b23",
+    "reason": "The superseded run reused lab-oriented safety, evaluations, incidents and model-card checks instead of the declared regulator construct."
+  },
+  "limitations": [
+    "String presence in the first 3,000,000 response bytes is not evidence of quality, truth, compliance or regulatory performance.",
+    "Independent n counts distinct landed URLs among reachable rows; unreachable pages are not failures or zero scores.",
+    "A dated convenience frame, not a probability sample of all regulators."
+  ]
+}

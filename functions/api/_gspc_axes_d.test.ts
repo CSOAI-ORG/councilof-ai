@@ -3,9 +3,9 @@ import manifest from "../../public/measurement/subject-axes/2026-10-24/manifest.
 import { AXES_D } from "./_gspc_axes_d";
 
 const OBSERVED: Record<string, number> = {
-  "lab-practice": 38,
+  "lab-practice": 37,
   "measurer-integrity": 40,
-  "regulator-transparency": 38,
+  "regulator-transparency": 36,
   "claim-maintenance": 67,
 };
 const RUNS = new Map(manifest.axes.map((run) => [run.axis, run]));

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed validation for the four admitted 2026-10-24 subject observations.
+"""Fail-closed validation for the four admitted subject observation runs.
 
 This validates frozen bytes, reader identity, timestamps, independent observation
 counts and claim-wave controls. It does not assign a score, grade or certification.
@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "public/measurement/subject-axes/2026-10-24"
 MIN_N = 30
-EXPECTED_TOTAL = 183
+EXPECTED_TOTAL = 180
 
 AXES = {
     "lab-practice": {
@@ -25,25 +25,25 @@ AXES = {
         "reader_sha256": "6baad383eb97b0984ce23adbc11668074ae77410d72690029376da61b75bd6ea",
         "observed_at": "2026-10-24T04:25:38Z",
         "time_field": "checked_at",
-        "n": 38,
+        "n": 37,
     },
     "measurer-integrity": {
         "artifact": "measurer-integrity.json",
         "sha256": "7e176bbbdc3ed56041bd2ff499f5cd6e897d9b6762492745c3ac90419cc91820",
-        "reader": "build_all_10_subject_axes_and_wave1.py",
+        "reader": "measurer_integrity_reader.py",
         "reader_sha256": "abf75559b18fee62e1fa14522b1b3570d36b240710648686ac1d7ba9351171b1",
         "observed_at": "2026-10-24T06:25:37.853297+00:00",
         "time_field": "observed_at",
         "n": 40,
     },
     "regulator-transparency": {
-        "artifact": "regulator-transparency.json",
-        "sha256": "eb7d23d861fc6151f7b6ebb77e173bc70e22d4d5d76f7f062fcd0d41106d8b23",
-        "reader": "expand_regulator_and_company_grid.py",
-        "reader_sha256": "acd839bbb2cdc6744290a1fcb8231f9ec4f37a87129b6ae9f3c21ac42c835eda",
-        "observed_at": "2026-10-24T04:59:57Z",
-        "time_field": "checked_at",
-        "n": 38,
+        "artifact": "regulator-transparency-v2.json",
+        "sha256": "650bceea56c0f879ec624b5e035d7e4b779d4252e89d6e264e9fbd024268b3e1",
+        "reader": "regulator_transparency_reread.py",
+        "reader_sha256": "54cdc4bc5ae3e4913db1bb35473823c271faa76aed66ced24aeeaba2b0f96c85",
+        "observed_at": "2026-10-28T09:52:38.863442+00:00",
+        "time_field": "observed_at",
+        "n": 36,
     },
     "claim-maintenance": {
         "artifact": "claim-maintenance-wave-2.json",
@@ -194,13 +194,34 @@ def main() -> None:
         else:
             rows = document["rows"]
             if axis == "measurer-integrity":
-                admitted = [row for row in rows if row.get("reachable") is True and row.get("http_status") == 200]
+                raw_admitted = [row for row in rows if row.get("reachable") is True and row.get("http_status") == 200]
                 require(document.get("meets_n30_gate") is True, f"{axis}: n gate not met")
             else:
-                admitted = [row for row in rows if row.get("status") == 200 and not row.get("error")]
-            unique_urls(admitted, axis)
+                raw_admitted = [row for row in rows if row.get("status") == 200 and not row.get("error")]
+            unique_urls(raw_admitted, axis)
+            require(document.get("n_reachable") == len(raw_admitted), f"{axis}: reachable count mismatch")
+
+            # Requested URLs are not independent when redirects land on one page.
+            by_landed_url: dict[str, dict] = {}
+            for row in raw_admitted:
+                landed_url = row.get("final_url") or row.get("url")
+                require(valid_url(landed_url), f"{axis}: invalid landed URL")
+                by_landed_url.setdefault(landed_url, row)
+            admitted = list(by_landed_url.values())
             require(len(admitted) >= MIN_N, f"{axis}: below the independent n>=30 gate")
-            require(document.get("n_reachable") == len(admitted), f"{axis}: reachable count mismatch")
+
+            if axis == "regulator-transparency":
+                expected_checks = {"guidance", "registry", "methodology", "consultation", "contact"}
+                require(set(document.get("presence_check_definitions", {})) == expected_checks, "regulator construct checks do not match the declaration")
+                require(document.get("meets_n30_gate") is True, "regulator-transparency: n gate not met")
+                require(document.get("n_independent") == len(admitted), "regulator-transparency: independent count mismatch")
+                superseded = document.get("supersedes", {})
+                require(superseded.get("artifact") == "regulator-transparency.json", "regulator run does not identify its superseded raw record")
+                require(sha256(DATA / superseded["artifact"]) == superseded.get("sha256"), "superseded regulator record digest changed")
+                for row in admitted:
+                    require(set(row.get("checks", {})) == expected_checks, "regulator row is missing declared construct checks")
+                    require(all(type(value) is bool for value in row["checks"].values()), "regulator checks must be boolean")
+                    require(row.get("capture_limit_bytes") == 3_000_000, "regulator row has the wrong capture limit")
             n = len(admitted)
 
         require(n == spec["n"], f"{axis}: expected {spec['n']} independent observations, got {n}")
