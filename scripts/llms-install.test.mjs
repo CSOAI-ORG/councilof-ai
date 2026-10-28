@@ -83,7 +83,29 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
 
   // The version the guide names is the source package's, read from package.json, never typed here.
   const v = packageJson.version.replace(/\./g, "\\.");
-  assert.match(guide, /Every release published to npm so far is marked deprecated on npm/);
+  // The published npm release is a DATED FACT about the published tarball, not
+  // about this repository, and it is recorded here so the guide cannot drift
+  // from it. Measured 2026-10-28: npm csoai-gspc-mcp@0.2.3 carries 19 tools
+  // (14 free + 5 metered) because it was published 39 minutes before the 33
+  // named axes merged. The prepared version must therefore DIFFER from the
+  // published one, and the published one must never claim the full fleet.
+  const PUBLISHED = {
+    version: "0.2.3",
+    tools: 19,
+    published_at: "2026-10-26T07:21:23.715Z",
+  };
+  assert.notEqual(
+    PUBLISHED.version,
+    packageJson.version,
+    "the prepared version must differ from the published one: a published version cannot be re-published",
+  );
+  assert.ok(
+    PUBLISHED.tools < catalogTotal,
+    "a published release must not be recorded as carrying the full fleet",
+  );
+  assert.match(guide, new RegExp("`" + PUBLISHED.version + "`"));
+  assert.match(guide, new RegExp(PUBLISHED.tools + " tools"));
+  assert.match(guide, new RegExp(PUBLISHED.published_at.replace(/\./g, "\\.")));
   assert.doesNotMatch(guide, /"args":\s*\[\s*"-y",\s*"csoai-gspc-mcp/);
   assert.match(
     guide,
