@@ -14,7 +14,7 @@ const project=(names=[])=>({name:'councilof-ai',production_branch:'master',deplo
 
 // A fetcher that serves the current project and the account's namespace list, and
 // records every PATCH body.
-function harness(startNames,{owned,patchMutate,namespaceListFails}={}){
+function harness(startNames,{owned,patchMutate,namespaceListFails,directReadFails}={}){
   const calls=[];let current=project(startNames);
   const ownedIds=owned??[...new Set([...startNames])].map(idFor);
   const fetcher=async(url,options)=>{
@@ -22,8 +22,15 @@ function harness(startNames,{owned,patchMutate,namespaceListFails}={}){
     calls.push({url,method,body:options?.body?JSON.parse(options.body):null});
     if(method==='GET'){
       if(url.includes('/storage/kv/namespaces')){
-        if(namespaceListFails)return new Response('denied',{status:403});
-        return Response.json({success:true,result:ownedIds.map(x=>({id:x}))});
+        // The account-wide list and a single namespace are two different reads, and
+        // a token may be permitted for one and not the other. Serve them separately.
+        if(url.endsWith('/storage/kv/namespaces')){
+          if(namespaceListFails)return new Response('denied',{status:403});
+          return Response.json({success:true,result:ownedIds.map(x=>({id:x}))});
+        }
+        const nsId=url.slice(url.lastIndexOf('/')+1);
+        if(directReadFails||!ownedIds.includes(nsId))return new Response('denied',{status:403});
+        return Response.json({success:true,result:{id:nsId}});
       }
       return Response.json({success:true,result:current});
     }
@@ -90,6 +97,46 @@ test('an unreadable account namespace list is uncheckable, not a silent pass',as
   assert.equal(r.state,'UNCONFIRMED_NAMESPACE');
   assert.deepEqual(r.refused,['HITL_KV']);
   assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0);
+});
+
+test('a namespace list that cannot be read is confirmed by a direct namespace read',async()=>{
+  // The list endpoint and the single-namespace endpoint are two different reads. A
+  // token permitted for one and not the other must still be able to bind a real id,
+  // and the readback still proves the binding took.
+  const h=harness(['STORE'],{owned:[id,idFor('HITL_KV')],namespaceListFails:true});
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
+  assert.equal(r.state,'BOUND');
+  assert.deepEqual(r.added,['HITL_KV']);
+  assert.equal(r.readback,'VERIFIED');
+  assert.equal(r.namespace_confirmation,'direct-read');
+  assert.equal(h.calls.filter(c=>c.method==='PATCH').length,1);
+});
+
+test('the reason the namespace list could not be read is named, not swallowed',async()=>{
+  const h=harness(['STORE'],{owned:[id],namespaceListFails:true,directReadFails:true});
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
+  assert.equal(r.state,'UNCONFIRMED_NAMESPACE');
+  assert.equal(r.read_error,'CF_NAMESPACE_READ_HTTP_403');
+  assert.match(r.note,/CF_NAMESPACE_READ_HTTP_403/);
+  assert.match(r.note,/HITL_KV: CF_NAMESPACE_READ_HTTP_403/);
+  assert.equal(r.namespace_confirmation,'NONE');
+  assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0);
+});
+
+test('a namespace that neither read can confirm is never bound',async()=>{
+  const h=harness(['STORE'],{owned:[id],namespaceListFails:true});
+  const r=await applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher});
+  assert.equal(r.state,'UNCONFIRMED_NAMESPACE');
+  assert.equal(r.changed,false);
+  assert.deepEqual(r.refused,['HITL_KV']);
+  assert.equal(h.calls.filter(c=>c.method==='PATCH').length,0);
+});
+
+test('a namespace the direct read confirms is still proven by the readback',async()=>{
+  // The direct read only CONFIRMS the id exists. That the binding actually took,
+  // and that nothing else moved, is still proved by reading the project back.
+  const h=harness(['STORE'],{owned:[id,idFor('HITL_KV')],namespaceListFails:true,patchMutate:map=>{delete map.HITL_KV;return map;}});
+  await assert.rejects(applyBindingAdditions({candidate:config(['STORE','HITL_KV']),project:h.read(),accountId:acct,token,fetcher:h.fetcher}),/READBACK_BINDING_NOT_APPLIED/);
 });
 
 test('the namespace list is read only when an addition is actually proposed',async()=>{

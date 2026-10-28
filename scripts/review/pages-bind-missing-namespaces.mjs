@@ -80,6 +80,25 @@ export async function readAccountNamespaceIds({accountId,token,fetcher=fetch}){
   return doc.result.map(n=>n?.id).filter(finiteHex);
 }
 
+/** One KV namespace, by id.
+ *
+ * A narrower read than the account-wide list, and it answers the only question that
+ * matters here: does THIS id exist on THIS account? The list endpoint and the
+ * single-namespace endpoint are two different reads, and a token may be permitted for
+ * one and not the other. When the list cannot be read, this is the fallback that
+ * still refuses to bind an id it could not confirm.
+ */
+export async function readNamespaceById({accountId,namespaceId,token,fetcher=fetch}){
+  if(!finiteHex(accountId)||!finiteHex(namespaceId)||typeof token!=='string'||token.length<12)throw Error('CF_NAMESPACE_READ_CREDENTIALS_REQUIRED');
+  const endpoint='https://api.cloudflare.com/client/v4/accounts/'+accountId+'/storage/kv/namespaces/'+namespaceId;
+  const response=await fetcher(endpoint,{method:'GET',headers:{authorization:'Bearer '+token,accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(20000)});
+  if(!response.ok)throw Error('CF_NAMESPACE_READ_HTTP_'+response.status);
+  const doc=await response.json();
+  if(doc?.success!==true||!object(doc.result))throw Error('CF_NAMESPACE_READ_UNCONFIRMED');
+  if(doc.result.id!==namespaceId)throw Error('CF_NAMESPACE_READ_ID_MISMATCH');
+  return doc.result.id;
+}
+
 export async function applyBindingAdditions({candidate,project,accountId,token,fetcher=fetch,accountNamespaceIds,report=false}){
   const c=object(candidate);
   if(c?.name!==PROJECT)throw Error('TARGET_PROJECT_MISMATCH');
@@ -87,7 +106,7 @@ export async function applyBindingAdditions({candidate,project,accountId,token,f
   if(project?.production_branch!=='master')throw Error('TARGET_BRANCH_MISMATCH');
   const plan=planBindingAdditions(c,project);
   const remote=remoteBindings(project);
-  const summary={schema:'csoai.pages-binding-additions/0.1',state:'NO_CHANGE',changed:false,added:[],refused:[],conflicts:plan.conflicts,extra_remote:plan.extraRemote,readback:'NOT_REQUIRED'};
+  const summary={schema:'csoai.pages-binding-additions/0.1',state:'NO_CHANGE',changed:false,added:[],refused:[],conflicts:plan.conflicts,extra_remote:plan.extraRemote,readback:'NOT_REQUIRED',namespace_confirmation:'NOT_NEEDED'};
   // A remote that already diverges from the reviewed candidate is left exactly as it is:
   // that divergence is the preflight's to judge, not this step's to paper over.
   if(plan.conflicts.length||plan.extraRemote.length)return summary;
@@ -100,16 +119,32 @@ export async function applyBindingAdditions({candidate,project,accountId,token,f
   // namespace from another account, or a typo, would otherwise be published as a
   // binding that can never be read.
   let ids=accountNamespaceIds;
+  let readError=null,confirmedBy='account-list';
   if(ids===undefined){
-    try{ids=await readAccountNamespaceIds({accountId,token,fetcher});}catch{ids=null;}
+    try{ids=await readAccountNamespaceIds({accountId,token,fetcher});}catch(error){ids=null;readError=error?.message??'CF_NAMESPACE_READ_UNKNOWN';}
   }
   if(!Array.isArray(ids)){
-    return {...summary,state:'UNCONFIRMED_NAMESPACE',refused:plan.additions.map(a=>a.name),note:"the account's KV namespace list could not be read, so a declared namespace id cannot be confirmed; nothing was bound"};
+    // The account-wide list could not be read. That is NOT the same as "the namespace
+    // does not exist": the list endpoint and the single-namespace endpoint are two
+    // different reads, and a token can be permitted for one and not the other. So ask
+    // the narrower question directly - does THIS id exist on THIS account? - and keep
+    // the reason the wider read failed either way, because a refusal that cannot say
+    // why is a refusal nobody can act on.
+    const confirmed=[],failures=[];
+    for(const {name} of plan.additions){
+      try{await readNamespaceById({accountId,namespaceId:wanted.get(name),token,fetcher});confirmed.push(wanted.get(name));}
+      catch(error){failures.push(name+': '+(error?.message??'UNKNOWN'));}
+    }
+    if(failures.length){
+      return {...summary,state:'UNCONFIRMED_NAMESPACE',refused:plan.additions.map(a=>a.name),read_error:readError,namespace_confirmation:'NONE',note:"the account's KV namespace list could not be read ("+readError+"), and the namespace id(s) could not be confirmed directly either ("+failures.join('; ')+"); nothing was bound"};
+    }
+    ids=confirmed;
+    confirmedBy='direct-read';
   }
   const owned=new Set(ids);
   const unknown=plan.additions.filter(a=>!owned.has(wanted.get(a.name)));
   if(unknown.length){
-    return {...summary,state:'UNKNOWN_NAMESPACE',refused:unknown.map(a=>a.name),note:'no KV namespace with this id exists on this account; nothing was bound'};
+    return {...summary,state:'UNKNOWN_NAMESPACE',refused:unknown.map(a=>a.name),namespace_confirmation:confirmedBy,note:'no KV namespace with this id exists on this account; nothing was bound'};
   }
   if(report)return {...summary,state:'WOULD_BIND',added:plan.additions.map(a=>a.name),note:'report-only: nothing was written'};
 
@@ -132,7 +167,7 @@ export async function applyBindingAdditions({candidate,project,accountId,token,f
   for(const {name} of plan.additions)if(object(now?.[name])?.namespace_id!==wanted.get(name))throw Error('READBACK_BINDING_NOT_APPLIED');
   for(const [name,value] of Object.entries(remote))if(object(now?.[name])?.namespace_id!==value.namespace_id)throw Error('READBACK_BINDING_CHANGED_OR_DROPPED');
 
-  return {...summary,state:'BOUND',changed:true,added:plan.additions.map(a=>a.name),readback:'VERIFIED'};
+  return {...summary,state:'BOUND',changed:true,added:plan.additions.map(a=>a.name),readback:'VERIFIED',namespace_confirmation:confirmedBy};
 }
 
 async function main(){
