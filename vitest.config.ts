@@ -29,7 +29,10 @@ export const NODE_TEST_FILES = [
   'scripts/feed-delivery-kit.test.mjs',
   'scripts/harness-x/render.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
+  'scripts/review/first-ask-completion.test.mjs',
   'scripts/review/pages-release-target.test.mjs',
+  'scripts/sitemap-withdrawal.node-test.mjs',
+  'scripts/surface/axis-index-truth.node-test.mjs',
   'scripts/surface/facts-scope.test.mjs',
   'scripts/surface/prerender-io.test.mjs',
   'scripts/surface/render-board-reference.test.mjs',
@@ -39,6 +42,18 @@ export const NODE_TEST_FILES = [
 ];
 
 export default defineConfig({
+  // A clean unit-test checkout has no pod dist bundle. Resolve only this actual
+  // service import to its shared TypeScript bundle entry; execute the real core.
+  plugins: [{
+    name: 'route-service-source-core-for-tests',
+    enforce: 'pre',
+    resolveId(source, importer) {
+      if (source === './dist/route-core.mjs' &&
+          importer?.split('?')[0] === path.resolve(here, 'services/gspc-router/route_service.mjs')) {
+        return path.resolve(here, 'services/gspc-router/core.ts');
+      }
+    },
+  }],
   // Match the application's React transform. Several component tests render
   // TSX directly through Vitest rather than through client/vite.config.ts.
   esbuild: {

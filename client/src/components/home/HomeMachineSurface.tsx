@@ -138,8 +138,8 @@ export default function HomeMachineSurface({
             Reading this as software? Start here.
           </h3>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
-            Nothing needs to be guessed or scraped. Every surface below is published, stable and
-            answers today.
+            The addresses below describe the machine surface. Check each response and its
+            stated evidence limits before relying on it.
             {m ? (
               <>
                 {" "}

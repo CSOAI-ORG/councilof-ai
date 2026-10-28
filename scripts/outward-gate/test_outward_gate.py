@@ -9,6 +9,7 @@ import gzip
 import hashlib
 import json
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -237,6 +238,32 @@ class TestDoctrine(unittest.TestCase):
     def test_banned_word_only_in_script_or_negated_passes(self):
         t = g.visible_text('<script>var a="certified"</script><p>We measure; we never certify.</p>')
         self.assertEqual(Status.of(g.doctrine_checks(t), "doctrine.no_certify_language"), [g.PASS])
+
+    def test_js_lookbehind_with_unequal_alternatives_is_rewritten(self):
+        # brand-gate.mjs:299 as shipped. Python's re refuses it; the rewrite must keep its meaning.
+        src = r"(?<!\b(?:we|i|you|they)\s)\b(?:Do not (?:invent|ship)|planted key)\b"
+        with self.assertRaises(re.error):
+            re.compile(src, re.I)
+        rx = g._compile_js(src, re.I)
+        self.assertTrue(rx.search("Agents: do not invent scores."))
+        self.assertTrue(rx.search("a planted key was found"))
+        for kept in ("We do not invent scores.", "they do not ship unmeasured numbers", "I do not invent", "you do not ship"):
+            self.assertIsNone(rx.search(kept), kept)
+        self.assertEqual(g.js_to_py_regex(r"(?<=a(?:x|yy)b)c"), r"(?:(?<=axb)|(?<=ayyb))c")
+        self.assertEqual(g.js_to_py_regex(r"plain(?:a|b)"), r"plain(?:a|b)")
+
+    def test_brand_rules_load_whenever_node_and_the_rules_file_exist(self):
+        # The two brand tests below pass for the wrong reason if the loader is broken (one skips, one
+        # sees FAIL because nothing loaded). This is the control that says the loader works.
+        import shutil
+        if not shutil.which("node") or not os.path.exists(os.path.join(g.REPO, "scripts", "brand-gate.mjs")):
+            self.skipTest("node or scripts/brand-gate.mjs not available")
+        g._BRAND = None
+        rules = g.load_brand_rules()
+        self.assertTrue(rules, "brand-gate.mjs rules did not load; every artifact would score below 100%")
+        self.assertGreaterEqual(len(rules), 10)
+        t = g.visible_text("<p>Runs on the measurement engine.</p>")
+        self.assertEqual(Status.of(g.doctrine_checks(t), "doctrine.brand_gate"), [g.PASS])
 
     def test_brand_gate_codename_fails(self):
         if g.load_brand_rules() is False:

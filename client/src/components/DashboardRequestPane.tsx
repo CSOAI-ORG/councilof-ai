@@ -14,9 +14,12 @@ import { useSearch } from "wouter";
 import ToolRunner from "./ToolRunner";
 import { BUYING_LINES, CONTACT_MAILBOX } from "@/lib/buying";
 import ResultCard from "@/components/talk/ResultCard";
-import { FRESH_RUN_DOCTRINE } from "@/lib/resultCard";
 import { challengeOf, type Challenge } from "@/lib/aguiTalk";
 import { callTool } from "@/lib/sovTools";
+import { rasBookingFromCatalog, RAS_BOOKING_MAILTO, type RasBooking } from "@/lib/rasBooking";
+
+const COMMISSION_DOCTRINE =
+  "Commission a receipt for cards already on file. You can review a commission for a named subject: nothing is charged by asking. Payment buys a commission receipt and references to existing measurement cards where available, never a result. Signing is conditional; verify the returned signature. A fresh run remains UNMEASURED until a published measurement exists; no run date is promised.";
 
 const FOCUS =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -52,7 +55,7 @@ export function networkName(network: string | null | undefined): string | null {
 }
 
 /**
- * The plain card a stranger sees first: what a fresh run request is, what it buys, and that
+ * The plain card a stranger sees first: what a commission receipt is, what it buys, and that
  * nothing has been charged. "See the terms" asks commission_card on the MCP door WITHOUT a
  * payment: the tool fetches the same GET /api/request-attestation the page used to call, and
  * returns its 402 challenge (the terms) inside an ordinary 200 reply, so the browser does not log
@@ -82,18 +85,18 @@ function FreshRunCard({ initialSubject }: { initialSubject: string }) {
     <ResultCard
       as="div"
       testId="fresh-run-card"
-      title={named ? `A fresh run for ${named}` : "A fresh run"}
+      title={named ? `A commission for ${named}` : "A commission receipt"}
       tool={REQUEST_ATTESTATION_CONTRACT.tool}
       label={REQUEST_ATTESTATION_CONTRACT.requestState}
       tiles={[
         { key: "subject", label: "Subject", value: named || "Not named yet" },
-        { key: "deliverable", label: "What you get", value: "Signed receipt", hint: "and a place in the queue" },
+        { key: "deliverable", label: "What you get", value: "Commission receipt", hint: "existing card references where available" },
         { key: "charged", label: "Charged", value: "Nothing yet" },
       ]}
     >
       <div className="mt-4 space-y-3">
         <label className="block text-sm font-medium text-foreground" htmlFor="fresh-run-subject">
-          What should we test? A model, or a server address
+          Which subject should the receipt name? A model, or a server address
         </label>
         <input
           id="fresh-run-subject"
@@ -389,7 +392,7 @@ const STEPS = [
     number: "03",
     icon: FileCheck2,
     title: "Keep the receipt, then check",
-    body: "The reply carries your signed receipt. This browser does not save it for you yet, so copy its id: My results finds it by that id. A result counts only once it is published, and checking it is free.",
+    body: "Keep the returned commission receipt and check its signature. This browser does not save it for you yet, so copy its id: My results finds it by that id. A result counts only once it is published, and checking it is free.",
     hint: "Treat a receipt as delivered only when the response says DELIVERED, and as signed only when the returned card carries a verifiable signature.",
   },
 ] as const;
@@ -409,6 +412,16 @@ export default function DashboardRequestPane() {
     | { state: "ready"; jobs: ActualJob[] }
     | { state: "unavailable" }
   >({ state: "loading" });
+  // /assess, /assessment and /readiness-assessment all redirect here (App.tsx DashboardDoor,
+  // tab=measured), so the RAS booking button lives here too. Same guards as AssessTool:
+  // mailto until catalog ras-booking is live Paddle (lib/rasBooking.ts); no price printed.
+  const [ras, setRas] = useState<RasBooking>({ href: RAS_BOOKING_MAILTO, live: false });
+  useEffect(() => {
+    let on = true;
+    fetch("/catalog.json").then((r) => (r.ok ? r.json() : null)).catch(() => null)
+      .then((c) => { if (on) setRas(rasBookingFromCatalog(c)); });
+    return () => { on = false; };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -443,7 +456,7 @@ export default function DashboardRequestPane() {
             id="request-attestation-title"
             className="mt-2 text-3xl font-semibold tracking-tight"
           >
-            {isPricingOverview ? "How the free rail works" : "Request a fresh run"}
+            {isPricingOverview ? "How the free rail works" : "Request a commission receipt"}
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-emerald-50/90" data-testid="fresh-run-doctrine">
             {isPricingOverview ? (
@@ -456,9 +469,24 @@ export default function DashboardRequestPane() {
                 published run actually exists.
               </>
             ) : (
-              FRESH_RUN_DOCTRINE
+              COMMISSION_DOCTRINE
             )}
           </p>
+          {!isPricingOverview ? (
+            <div className="mt-4">
+              <a
+                href={ras.href}
+                data-testid="ras-booking-cta"
+                className={`inline-flex min-h-11 items-center rounded-xl bg-white px-4 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 ${FOCUS}`}
+              >
+                {ras.live ? "Book a RAS measurement" : "Request a RAS measurement booking by email"}
+              </a>
+              <p className="mt-2 text-xs text-emerald-50/80">
+                Measurement only, not certification. Terms are in{" "}
+                <a href="/catalog.json" className="underline">/catalog.json</a> (ras-booking).
+              </p>
+            </div>
+          ) : null}
           <Link href="/dashboard/?tab=art50" data-testid="request-pane-art50" className="mt-4 flex w-fit text-sm font-semibold text-emerald-200 underline underline-offset-4 hover:text-white">
             Looking for an Article 50 marking check? Check an AI output for a mark →
           </Link>
@@ -501,7 +529,7 @@ export default function DashboardRequestPane() {
           <div className="rounded-2xl border border-border bg-card p-4" data-testid="request-invoice">
             <p className="flex items-center gap-2 text-base font-bold text-foreground">
               <Mail className="h-4 w-4 text-emerald-800" aria-hidden="true" />
-              By invoice, on request
+              Fresh measurement enquiries
             </p>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
               There is no invoice form for a fresh run, and booking one by
@@ -715,7 +743,7 @@ export default function DashboardRequestPane() {
       </aside>
 
       <div className="mt-6 scroll-mt-4" id="request-attestation-runner">
-        <h2 className="text-lg font-bold text-foreground">Check the terms for your fresh run</h2>
+        <h2 className="text-lg font-bold text-foreground">Check the commission terms</h2>
         <p className="mb-3 mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">
           This form uses the same public interface agents use, so it shows
           technical names. Fill in the model (subject) and press “Check terms ·

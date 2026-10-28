@@ -11,7 +11,7 @@ Everything else rides in csoai.* attributes.
 """
 import json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from render import E, anchors, guard, measured_value, sig_summary, when  # noqa: E402
+from render import E, anchors, guard, measured_value, sig_summary, trace_context, when_otel  # noqa: E402
 
 EVENT_NAME = "gen_ai.evaluation.result"
 SCOPE = {"name": "csoai.evidence-fabric", "version": E.FABRIC_VERSION}
@@ -57,11 +57,13 @@ def attributes(ev):
 
 def log_record(ev):
     a = attributes(ev)
-    ns = str(int(when(ev).timestamp()) * 10**9)
-    return {"timeUnixNano": ns, "observedTimeUnixNano": ns, "eventName": EVENT_NAME,
-            "severityNumber": 9, "severityText": "INFO",
-            "attributes": [{"key": k, "value": _v(v if not isinstance(v, (list, dict)) else json.dumps(v, sort_keys=True, ensure_ascii=False))}
-                           for k, v in sorted(a.items())]}
+    time_ns, obs_ns = when_otel(ev)
+    rec = {"timeUnixNano": time_ns, "observedTimeUnixNano": obs_ns, "eventName": EVENT_NAME,
+           "severityNumber": 9, "severityText": "INFO",
+           "attributes": [{"key": k, "value": _v(v if not isinstance(v, (list, dict)) else json.dumps(v, sort_keys=True, ensure_ascii=False))}
+                          for k, v in sorted(a.items())]}
+    rec.update(trace_context(ev))
+    return rec
 
 
 def render_batch(events):

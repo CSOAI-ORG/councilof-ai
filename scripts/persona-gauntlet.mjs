@@ -24,7 +24,7 @@ const PERSONAS = [
       params: { tab: "measured", task: "pricing-overview" },
     },
   },
-  { who: "auditor",    path: "/honesty",                       must: ["council-oowm"] },
+  { who: "auditor",    path: "/honesty",                       must: ["What we publish against ourselves.", "An instrument that will say anything measures nothing"] },
   { who: "researcher", path: "/library",                       must: ["reference pages across"] },
   { who: "api-agent",  path: "/api/gspc",                      must: ['"measured_axes"', '"quotable_axes"', '"public_count"'] , json: true },
   { who: "a2a-agent",  path: "/.well-known/agent-card.json",   must: ['"doi"', "CSOAI Ltd"], json: true, forbid: [/MEOK AI Labs/, /\$\d+\/mo/] },
@@ -71,7 +71,7 @@ for (const p of PERSONAS) {
       // "<slots> axes · <measured> measured". This check used to require the
       // retired "<measured> measured of <quotable> quotable" form, which hid the
       // unmeasured slots entirely — the defect the sweep exists to correct.
-      const derived = `${t.axes} axis · ${t.measured_axes} measured`;
+      const derived = `${t.axes} ${t.axes === 1 ? "axis" : "axes"} · ${t.measured_axes} measured`;
       if (typeof t.public_count !== "string" || !String(t.public_count).startsWith(derived)) {
         fail(`${p.who}: public_count ${JSON.stringify(t.public_count)} does not derive from axes/measured_axes (want "${derived}")`);
         continue;

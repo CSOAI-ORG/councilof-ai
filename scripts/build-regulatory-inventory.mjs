@@ -163,6 +163,9 @@ export function resolveCurrent(out = DEFAULT_OUT) {
 export function pointerDocument(current, versions) {
   const ref = (v) => ({ index_url: URL_DIR + v.name, index_sha256: v.sha256, ots_url: `${URL_DIR}${v.name}.ots`,
     content_sha256: v.content_sha256, crosswalk_assets: v.doc.crosswalk_assets.length, versioned_at: v.doc.versioned_at ?? null });
+  // The scope names the count the pointer actually selects. It is derived here, never typed, so a
+  // new dated inventory cannot leave the pointer describing a count it does not carry.
+  const assets = current.doc.crosswalk_assets.length;
   return {
     schema: POINTER_SCHEMA,
     kind: "DISCOVERY_POINTER_ONLY",
@@ -170,14 +173,14 @@ export function pointerDocument(current, versions) {
     index_url: URL_DIR + current.name,
     index_sha256: current.sha256,
     content_sha256: current.content_sha256,
-    crosswalk_assets: current.doc.crosswalk_assets.length,
+    crosswalk_assets: assets,
     ots_url: `${URL_DIR}${current.name}.ots`,
     versions: versions.map(ref),
     scope: "This unsigned pointer selects the stamped regulatory inventory whose derived-statement rows match the in-toto crosswalk index " +
       "(public/interop/crosswalk/intoto/index.json) on this commit; scripts/build-regulatory-inventory.mjs derives it and " +
       "scripts/regulatory-inventory-gate.mjs checks it in every build. Every listed file is immutable and has its own OpenTimestamps proof; " +
       "earlier versions stay published as history and are not current. A proof file's existence is not a Bitcoin anchor: read its verified state. " +
-      "The inventory's own truth_boundaries still apply: 25 heterogeneous crosswalk assets are not 25 signed legal crosswalks.",
+      `The inventory's own truth_boundaries still apply: ${assets} heterogeneous crosswalk assets are not ${assets} signed legal crosswalks.`,
   };
 }
 

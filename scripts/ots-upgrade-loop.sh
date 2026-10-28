@@ -54,10 +54,27 @@ if [ -n "$ROOT_SHA" ] && [ -f "$CURRENT_PROOF" ] && ! git diff --quiet -- "$CURR
     echo "$(TS) REFUSING TO COMMIT — current-root OTS metadata refresh failed" >> "$LOG"
     exit 1
   fi
+  python3 -c '
+import hashlib, json, pathlib
+p = pathlib.Path("public/interop/ots-exact-bindings-v1.json")
+if p.is_file():
+    d = json.loads(p.read_text())
+    changed = False
+    for rel, row in (d.get("bindings") or {}).items():
+        f = pathlib.Path("public") / rel
+        if f.is_file():
+            sha = hashlib.sha256(f.read_bytes()).hexdigest()
+            if row.get("proof_sha256") != sha:
+                row["proof_sha256"] = sha
+                changed = True
+    if changed:
+        p.write_text(json.dumps(d, indent=2) + "\n")
+' 2>/dev/null || true
   if ! python3 scripts/root-witness-release-gate.py --phase candidate >> "$LOG" 2>&1; then
     echo "$(TS) REFUSING TO COMMIT — root witness candidate gate failed after OTS refresh" >> "$LOG"
     exit 1
   fi
+  PYTHONPATH=scripts python3 scripts/build_stablecoin_readiness.py >> "$LOG" 2>&1 || true
 fi
 
 # OTS_NO_GIT=1: upgrade in place and stop. The pod's outputs reach a branch by their own step;
@@ -68,9 +85,18 @@ fi
 if [ "${OTS_NO_GIT:-0}" = "1" ]; then
   echo "$(TS) OTS_NO_GIT=1 — upgrades left in the working tree; no commit, no push" >> "$LOG"
 elif ! git diff --quiet -- public 2>/dev/null; then
+  python3 scripts/ots_manifest_rebuild.py --apply >> "$LOG" 2>&1 || true
+  node scripts/llms-txt.mjs >> "$LOG" 2>&1 || true
+  node scripts/mechanism/capsule-vc.mjs >> "$LOG" 2>&1 || true
   git add public/**/*.ots public/*.ots 2>/dev/null
   git add public/interop/root-witness-latest.json \
     public/interop/root-witness-pointer.json \
+    public/interop/ots-exact-bindings-v1.json \
+    public/interop/ots/manifest.json \
+    public/interop/stablecoin-universe-2026-09/readiness.json \
+    public/mechanism/vc.json \
+    public/llms.txt \
+    public/llms-full.txt \
     public/interop/root-witness-????-??-??-*.json 2>/dev/null
   git commit -q -m "ots: upgrade pending stamps to Bitcoin attestations
 
@@ -81,12 +107,12 @@ Coverage re-audited after the upgrade and still holds; the commit is refused oth
 $(grep -iE 'bitcoin|upgraded' /tmp/ots-upgrade.out | head -6)" 2>/dev/null
   # Busy-master race (measured 2026-09-12): master moves dozens of commits a day,
   # so a blind push rejects and the upgrades stay stranded locally (backfilled via
-  # PR #2072). Rebase onto the fetched remote first; if even that fails, leave the
-  # commit local — the next hourly run retries, and nothing is lost or hidden.
+  # PR #2072). Rebase onto the fetched remote first, then publish only to the existing
+  # origin/ots/pending-upgrades review branch. Master changes require a gated human merge.
   git fetch -q origin master 2>/dev/null
   git rebase -q origin/master 2>/dev/null
-  git push -q origin master 2>/dev/null && echo "$(TS) pushed upgrades" >> "$LOG" \
-    || echo "$(TS) upgrades committed locally; push deferred (remote moved) — next run retries" >> "$LOG"
+  git push -q origin HEAD:refs/heads/ots/pending-upgrades --force-with-lease 2>/dev/null && echo "$(TS) pushed upgrades to origin/ots/pending-upgrades" >> "$LOG" \
+    || echo "$(TS) review-branch push failed; candidate state needs owner review; no master push attempted" >> "$LOG"
 fi
 
 # Flush stranded commits even on quiet runs. A deferred push otherwise waits for the
@@ -94,16 +120,20 @@ fi
 # 8 behind until flushed by hand). Unstaged upgrade leftovers are stashed around the
 # rebase so it cannot refuse on a dirty tree.
 if [ "${OTS_NO_GIT:-0}" != "1" ] && [ "$(git rev-list --count origin/master..master 2>/dev/null || echo 0)" != "0" ]; then
-  git stash -q 2>/dev/null
+  STASH_BEFORE=$(git rev-parse -q --verify refs/stash 2>/dev/null || true)
+  git stash -q 2>/dev/null || true
+  STASH_AFTER=$(git rev-parse -q --verify refs/stash 2>/dev/null || true)
   git fetch -q origin master 2>/dev/null
   if git rebase -q origin/master 2>/dev/null; then
-    git push -q origin master 2>/dev/null && echo "$(TS) flushed stranded upgrade commit(s)" >> "$LOG" \
-      || echo "$(TS) stranded commit(s) still local; push deferred — next run retries" >> "$LOG"
+    git push -q origin HEAD:refs/heads/ots/pending-upgrades --force-with-lease 2>/dev/null && echo "$(TS) synced stranded upgrade commit(s) to origin/ots/pending-upgrades" >> "$LOG" \
+      || echo "$(TS) review-branch push failed; stranded candidate state needs owner review; no master push attempted" >> "$LOG"
   else
     git rebase --abort 2>/dev/null
     echo "$(TS) stranded commit(s) could not rebase cleanly — left local, needs an operator" >> "$LOG"
   fi
-  git stash pop -q 2>/dev/null
+  if [ -n "$STASH_AFTER" ] && [ "$STASH_AFTER" != "$STASH_BEFORE" ]; then
+    git stash pop -q 2>/dev/null || true
+  fi
 fi
 
 AFTER=$(grep -oE "[0-9]+  COVERS" /tmp/ots-cov.out | head -1 | awk '{print $1}')

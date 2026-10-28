@@ -94,13 +94,14 @@ export default function FaqPage() {
       <header className="section-shell pt-8 pb-6 sm:pt-12 sm:pb-8">
         <h1 className="t-display text-foreground">Frequently asked questions</h1>
         <p className="t-lede measure mt-4 text-muted-foreground">
-          Definitions and pointers for Council of AI, the GSPC measurement board
-          and signed measurement cards. For live counts, fetch{" "}
+          What we measure, how to read the results and how to check a record.
+          For current measurements, visit the <a href="/board/" className="font-medium text-primary hover:underline">measurement board</a>.
+          Developers can read the same published data as{" "}
           <a
             href="https://councilof.ai/api/gspc"
             className="font-medium text-primary hover:underline"
           >
-            GET /api/gspc
+            JSON
           </a>
           .
         </p>

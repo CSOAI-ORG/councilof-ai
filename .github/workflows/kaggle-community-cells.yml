@@ -11,6 +11,8 @@ on:
         description: "Build and test only — do not kaggle kernels push"
         type: boolean
         default: false
+  # Dispatch only: an automatic post-deploy trigger re-ran identical cells on every deploy,
+  # burning GPU hours on repeats that are never signed (Measure ruling, 15 Oct).
 
 concurrency:
   group: kaggle-community-cells
@@ -22,10 +24,13 @@ permissions:
 
 jobs:
   push:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
 
       - uses: actions/setup-python@v5
         with:

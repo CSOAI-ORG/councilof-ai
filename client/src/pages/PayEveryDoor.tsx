@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearch } from "wouter";
 import { setPageMetadata } from "@/lib/utils";
-import { addMyResult, downloadText, paidResult, seedChecker, signedRecordOf, VERIFY_SEED_HREF } from "@/lib/myResults";
+import { downloadText, paidResult, saveMyResult, saveNote, seedChecker, signedRecordOf, VERIFY_SEED_HREF, type SaveOutcome } from "@/lib/myResults";
 import {
   chainIdFromNetwork,
   discoverEIP6963,
@@ -256,7 +256,7 @@ export function SettleCell({ settle, state, now }: { settle: SettleReading; stat
 }
 
 /** The three outcomes, plus the states on the way to them. */
-export function OutcomeLine({ state }: { state: DoorState }) {
+export function OutcomeLine({ state, saved }: { state: DoorState; saved?: SaveOutcome | null }) {
   switch (state.kind) {
     case "idle":
       return null;
@@ -308,7 +308,7 @@ export function OutcomeLine({ state }: { state: DoorState }) {
           <p className="mt-1 text-[11px] text-slate-600">
             The reference above is the facilitator's claim as the door relayed it, verified by nothing on this page.
           </p>
-          <DeliveredRecord body={state.body} />
+          <DeliveredRecord body={state.body} saved={saved} />
         </div>
       );
     }
@@ -376,7 +376,9 @@ export function OutcomeLine({ state }: { state: DoorState }) {
  * record's id, a download of exactly what the door returned, the free check, and My results (where
  * payOne has already saved it, in this browser only).
  */
-export function DeliveredRecord({ body }: { body: unknown }) {
+export function DeliveredRecord({ body, saved }: { body: unknown; saved?: SaveOutcome | null }) {
+  // What My results actually holds, from the save outcome (never a claimed "saved" by default).
+  const note = saveNote(saved);
   if (body === undefined) return null;
   const rec = signedRecordOf(body);
   const text = rec ? JSON.stringify(rec, null, 2) : null;
@@ -386,11 +388,19 @@ export function DeliveredRecord({ body }: { body: unknown }) {
       {rec ? (
         <p>
           <span className="font-semibold">What you bought:</span> a {rec.sig_ed25519 ? "signed" : "unsigned"} record, id{" "}
-          <code className="break-all font-mono">{rec.sha256}</code>. It is saved to My results in this browser only, so download it to keep it.
+          <code className="break-all font-mono">{rec.sha256}</code>.{" "}
+          <span data-testid="pay-save-note" data-saved={saved ? String(saved.saved && saved.recordKept) : undefined}>
+            {note ?? "Download it to keep it."}
+          </span>
         </p>
       ) : (
         <p>
           <span className="font-semibold">What you bought:</span> the door's answer, which carries no signed record to check. Download it to keep it.
+          {saved && !saved.saved ? (
+            <span className="block font-semibold text-amber-900" data-testid="pay-save-note" data-saved="false">
+              {note}
+            </span>
+          ) : null}
         </p>
       )}
       <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
@@ -420,6 +430,7 @@ export function DoorCard({
   now,
   busy,
   onPay,
+  saved,
 }: {
   door: Door;
   quote: QuoteOutcome | "reading" | undefined;
@@ -430,6 +441,7 @@ export function DoorCard({
   now: number;
   busy: boolean;
   onPay: () => void;
+  saved?: SaveOutcome | null;
 }) {
   const payable = quote !== undefined && quote !== "reading" && quote.kind === "challenge";
   const done = state.kind === "delivered";
@@ -508,7 +520,7 @@ export function DoorCard({
       </div>
 
       <div className="mt-3">
-        <OutcomeLine state={state} />
+        <OutcomeLine state={state} saved={saved} />
       </div>
     </li>
   );
@@ -529,6 +541,8 @@ export default function PayEveryDoor() {
   const [walking, setWalking] = useState<{ at: number; of: number } | null>(null);
   const [walkQueue, setWalkQueue] = useState<string[]>([]);
   const [walkNote, setWalkNote] = useState<string | null>(null);
+  /** What My results actually stored for each delivered door, read back from storage. */
+  const [saves, setSaves] = useState<Record<string, SaveOutcome | undefined>>({});
   const busyRef = useRef(false);
   const walletRef = useRef<EIP6963ProviderDetail | null>(null);
   const mountedRef = useRef(true);
@@ -673,7 +687,8 @@ export default function PayEveryDoor() {
       onPhase: (s) => setDoorState(door.url, s),
     });
     if (final.kind === "delivered") {
-      addMyResult(paidResult({ doorUrl: door.url, body: final.body, transaction: final.settlement?.transaction ?? null }));
+      const outcome = saveMyResult(paidResult({ doorUrl: door.url, body: final.body, transaction: final.settlement?.transaction ?? null }));
+      if (mountedRef.current) setSaves((prev) => ({ ...prev, [door.url]: outcome }));
     }
     setDoorState(door.url, final);
     return final;
@@ -847,6 +862,7 @@ export default function PayEveryDoor() {
             now={now}
             busy={walkingNow}
             onPay={() => void onPayOne(door)}
+            saved={saves[door.url]}
           />
         ))}
       </ul>

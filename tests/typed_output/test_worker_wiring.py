@@ -173,6 +173,105 @@ def test_cli_exposes_the_selector_and_defaults_to_the_baseline(worker):
     )
 
 
+# --------------------------------------------- the reasoning channel is wired
+
+
+def test_the_reasoning_flag_is_off_by_default_and_is_a_cli_choice(worker, config):
+    assert config.reasoning is False
+    args = worker.build_parser().parse_args(["--config", "/dev/null"])
+    assert args.reasoning is False
+    args = worker.build_parser().parse_args(["--config", "/dev/null", "--reasoning"])
+    assert args.reasoning is True
+
+
+def test_the_default_instrument_gains_no_reasoning_key(worker, config):
+    """A run that never measured the channel keeps the descriptor it had."""
+    descriptor = config.instrument_descriptor("f" * 64, "sha256:" + "a" * 64)
+    assert "reasoning" not in descriptor
+    assert descriptor["decode"]["think"] is False
+
+
+def test_the_reasoning_declaration_is_derivable_without_a_live_call(worker, config):
+    """`_latest_matching_run` rebuilds instrument_sha256 from the job's pins alone.
+
+    So the instrument may record WHICH channel was measured, but never a value
+    that only exists after Ollama has spoken. The declaration says what was
+    asked, where the answer comes back, and that it was not graded -- and
+    nothing else. There is no digest, no length and no model in it: those live
+    in the item rows, where a live value belongs.
+    """
+    chosen = dataclasses.replace(config, reasoning=True)
+    descriptor = chosen.instrument_descriptor("f" * 64, "sha256:" + "a" * 64)
+    assert descriptor["reasoning"] == {
+        "channel": "ollama-think",
+        "request_think": True,
+        "response_field": "thinking",
+        "graded": False,
+    }
+    blob = json.dumps(descriptor)
+    assert "manifest_digest" not in blob.replace("model_manifest_digest", "")
+    # The declaration itself names no model, no digest, no length and no time.
+    declaration = json.dumps(descriptor["reasoning"])
+    assert "gemma3" not in declaration
+    assert "sha256" not in declaration
+    assert "chars" not in declaration
+    assert "digest" not in declaration
+
+
+def test_the_reasoning_declaration_is_a_top_level_key_not_a_decode_key(worker, config):
+    """decode.think is pinned False by the intake gate: it means the graded text
+    is never decoded out of a thinking stream, and it has to keep meaning that.
+    So the channel is declared beside `decode`, never inside it."""
+    chosen = dataclasses.replace(config, reasoning=True)
+    descriptor = chosen.instrument_descriptor("f" * 64, "sha256:" + "a" * 64)
+    assert set(descriptor["decode"]) == {
+        "temperature",
+        "seed",
+        "max_tokens",
+        "stream",
+        "think",
+    }
+    assert descriptor["decode"]["think"] is False
+    assert "reasoning" not in descriptor["decode"]
+
+
+def test_measuring_the_channel_moves_the_instrument_hash(worker, config):
+    """The instrument is the "same instrument" key, so a different instrument is
+    a different hash -- loudly, not silently."""
+    chosen = dataclasses.replace(config, reasoning=True)
+    default_bytes = worker.canonical_json_bytes(
+        config.instrument_descriptor("f" * 64, "sha256:" + "a" * 64)
+    )
+    chosen_bytes = worker.canonical_json_bytes(
+        chosen.instrument_descriptor("f" * 64, "sha256:" + "a" * 64)
+    )
+    assert chosen_bytes != default_bytes
+    assert worker.sha256_bytes(chosen_bytes) != worker.sha256_bytes(default_bytes)
+
+
+def test_the_card_body_gains_nothing_from_the_reasoning_channel(worker):
+    """The card body has exactly twelve keys and its evidence is compared by
+    equality, so the channel is measured in the item rows and the instrument,
+    not in the signed preimage."""
+    config = dataclasses.replace(_minimal_config(worker), reasoning=True)
+    card = worker.stage_unsigned_card(
+        config=config,
+        run_id="20260922T000000.000000Z-deadbeef00",
+        bank_sha256="f" * 64,
+        model_manifest_digest="sha256:" + "a" * 64,
+        instrument_sha256="b" * 64,
+        evidence_sha256="c" * 64,
+        hits=20,
+        n=33,
+        parse_errors=3,
+        transport_errors=0,
+        reason="unsigned",
+    )
+    evidence = card["body"]["compute_evidence"]
+    assert "reasoning" not in evidence
+    assert len(card["body"]) == 12
+
+
 def test_a_malformed_parser_option_halts(worker):
     with pytest.raises(worker.WorkerError):
         worker._label_parser_options(["model"])
