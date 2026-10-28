@@ -565,58 +565,6 @@
       "payment": "free"
     },
     {
-      "id": "api-pals",
-      "protocols": [
-        "http"
-      ],
-      "title": "Staff registry (PALs)",
-      "description": "GET /api/pals — the staff registry. Every Council of AI staff member as a PAL record: identity (did:key), memory namespace, scope, objectives, guardrails, voice, model preference and face adapter. The house staff are the desks on /team expressed as PALs, and the desk definitions are DERIVED rather than copied, so this registry and the page cannot describe different people. Also serves GET /api/pals/<id> for one staff member, and states whether a language model is configured for this deployment, so a reader is never left guessing which of the two they are talking to.",
-      "endpoint": "/api/pals",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "both",
-      "payment": "free"
-    },
-    {
-      "id": "api-pals-post",
-      "protocols": [
-        "http"
-      ],
-      "title": "Staff registry (PALs, POST)",
-      "description": "POST /api/pals — the write door, described rather than 404'd. POST /api/pals/provision builds a staff member, and is refused rather than pretended when the PAL_MEMORY_KV store is unbound. POST /api/pals/<id>/chat asks one a question. Every reply carries its provenance: grounded when the published records answered and the model was never consulted, model when the model spoke on the records, ungrounded when no record answers, refused when a reply broke a standing rule.",
-      "endpoint": "/api/pals",
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "both",
-      "payment": "free"
-    },
-    {
-      "id": "api-hitl",
-      "protocols": [
-        "http"
-      ],
-      "title": "Human in the loop",
-      "description": "GET /api/hitl — the human-in-the-loop state. The policy line, whether a decision can be taken at all (an operator token must be configured for that), whether a decision would be signed (the board attestation key), whether decisions are persisted (a store binding), the queue waiting for a human, and the competency curriculum. The curriculum is DERIVED from the live board’s axis list on every request, so it cannot drift from what the Council publishes. Also serves GET /api/hitl/modules, GET /api/hitl/modules/<id>, GET /api/hitl/challenges and GET /api/hitl/record.",
-      "endpoint": "/api/hitl",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "both",
-      "payment": "free"
-    },
-    {
-      "id": "api-hitl-post",
-      "protocols": [
-        "http"
-      ],
-      "title": "Human in the loop (POST)",
-      "description": "POST /api/hitl — the write door, described rather than 404’d. POST /api/hitl/challenge raises a challenge for a human to decide. POST /api/hitl/modules answers a competency module, and the answer is checked against the live published record. POST /api/hitl/decision records a decision — APPROVED, HOLD or REJECTED — and is refused unless an operator token is configured, because an approval endpoint anyone can call is not a human in the loop. The receipt it returns uses the schema csoai.hitl-oversight-receipt/0.1, the same one the MEOK H.I.M. issues.",
-      "endpoint": "/api/hitl",
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "both",
-      "payment": "free"
-    },
-    {
       "id": "api-checkout-post",
       "protocols": [
         "http"
@@ -1371,6 +1319,110 @@
       "payment": "free"
     },
     {
+      "id": "api-hitl",
+      "protocols": [
+        "http"
+      ],
+      "title": "Human in the loop",
+      "description": "The operator token, from the header.",
+      "endpoint": "/api/hitl",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-hitl-challenge-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Hitl challenge (POST)",
+      "description": "POST /api/hitl/challenge — raise a challenge for a human to decide.",
+      "endpoint": "/api/hitl/challenge",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-hitl-challenges",
+      "protocols": [
+        "http"
+      ],
+      "title": "Hitl challenges",
+      "description": "GET /api/hitl/challenges — the review queue: the challenges waiting for a human, and the ones already decided.",
+      "endpoint": "/api/hitl/challenges",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-hitl-decision-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Hitl decision (POST)",
+      "description": "POST /api/hitl/decision — record a human decision: APPROVED, HOLD or REJECTED.",
+      "endpoint": "/api/hitl/decision",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-hitl-modules",
+      "protocols": [
+        "http"
+      ],
+      "title": "Hitl modules",
+      "description": "GET /api/hitl/modules — the competency curriculum, derived from the live board. POST /api/hitl/modules — answer one module; the answer is checked against the live record.",
+      "endpoint": "/api/hitl/modules",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-hitl-modules-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Hitl modules (POST)",
+      "description": "GET /api/hitl/modules — the competency curriculum, derived from the live board. POST /api/hitl/modules — answer one module; the answer is checked against the live record.",
+      "endpoint": "/api/hitl/modules",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-hitl-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Human in the loop (POST)",
+      "description": "The operator token, from the header.",
+      "endpoint": "/api/hitl",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-hitl-record",
+      "protocols": [
+        "http"
+      ],
+      "title": "Hitl record",
+      "description": "GET /api/hitl/record — the signed receipts: the decisions that were taken, and the receipts that prove them.",
+      "endpoint": "/api/hitl/record",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-hub-cards",
       "protocols": [
         "http"
@@ -1719,6 +1771,71 @@
       "method": "POST",
       "lifecycle": "RETIRED",
       "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-pals",
+      "protocols": [
+        "http"
+      ],
+      "title": "Staff registry (PALs)",
+      "description": "KV namespace for PAL memory. Optional: without it, PALs have no memory and say so.",
+      "endpoint": "/api/pals",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-pals-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Staff registry (PALs, POST)",
+      "description": "KV namespace for PAL memory. Optional: without it, PALs have no memory and say so.",
+      "endpoint": "/api/pals",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-pals-provision-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pals provision (POST)",
+      "description": "POST /api/pals/provision — build a staff member.",
+      "endpoint": "/api/pals/provision",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-plugin",
+      "protocols": [
+        "http"
+      ],
+      "title": "Agent plugin",
+      "description": "GET /api/plugin — the Council of AI agent plugin: what it is, how to install it, where it lives.",
+      "endpoint": "/api/plugin",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-plugin-platforms",
+      "protocols": [
+        "http"
+      ],
+      "title": "Agent plugin platforms",
+      "description": "GET /api/plugin/platforms — every AI platform family the Council of AI plugin ships for.",
+      "endpoint": "/api/plugin/platforms",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
       "payment": "free"
     },
     {
@@ -2229,6 +2346,19 @@
       "payment": "free"
     },
     {
+      "id": "api-reports",
+      "protocols": [
+        "http"
+      ],
+      "title": "Public reports",
+      "description": "GET /api/reports — the public report index, derived from the live board.",
+      "endpoint": "/api/reports",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
       "id": "api-request-attestation",
       "protocols": [
         "http"
@@ -2421,45 +2551,6 @@
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "agent",
-      "payment": "free"
-    },
-    {
-      "id": "api-plugin",
-      "protocols": [
-        "http"
-      ],
-      "title": "Agent plugin",
-      "description": "GET /api/plugin — the Council of AI agent plugin: what it is, how to install it on any AI platform family, and where it lives. Free, forever, for everyone. Not a certification and not a badge.",
-      "endpoint": "/api/plugin",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "both",
-      "payment": "free"
-    },
-    {
-      "id": "api-plugin-platforms",
-      "protocols": [
-        "http"
-      ],
-      "title": "Agent plugin platforms",
-      "description": "GET /api/plugin/platforms — every AI platform family the Council of AI plugin ships for, with its adapter, its install target and its state. A platform with no target is CATALOGUED, not LIVE; absence is an answer.",
-      "endpoint": "/api/plugin/platforms",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "both",
-      "payment": "free"
-    },
-    {
-      "id": "api-reports",
-      "protocols": [
-        "http"
-      ],
-      "title": "Public reports",
-      "description": "GET /api/reports — the public report index, derived from the live board at request time so it auto-updates and cannot fall out of step. Carries the board's own measured_on provenance. Asserts no measurement of its own.",
-      "endpoint": "/api/reports",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "both",
       "payment": "free"
     },
     {
