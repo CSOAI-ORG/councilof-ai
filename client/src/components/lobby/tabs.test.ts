@@ -97,6 +97,16 @@ describe("Council OS tabs", () => {
     expect(matchTab("get measured")?.id).toBe("measured");
   });
 
+  it("opens the actual staff and human-review pane by command and deep-link id", () => {
+    expect(tabById("staff").kind).toBe("native");
+    expect(tabById("staff").path).toBe("");
+    expect(matchTab("open staff and human review")?.id).toBe("staff");
+    expect(matchTab("show the human-in-the-loop review queue")?.id).toBe("staff");
+    expect(normalizeLobbyTabId("staff")).toBe("staff");
+    expect(dashboardNavGroupOf("staff")?.id).toBe("staff");
+    expect(menuTrail("staff")).toEqual(["Staff & human review"]);
+  });
+
   it("lands a dashboard command on the start screen, under the start screen's own title", () => {
     expect(matchTab("open the dashboard")?.id).toBe("software");
     expect(matchTab("go to dsh")?.id).toBe("software");
@@ -255,11 +265,9 @@ describe("Council OS tabs", () => {
     expect(matchRoute("show insurers")?.path).toBe("/insurers");
   });
 
-  it("gives the canonical dashboard the owner's six task sections, then two under More", () => {
-    // council-os-ui, 6 Oct 2026 (owner brief 1 Oct): Results-as-a-Service. The navigation reads
-    // Get results · My results · Check a result · Leaderboard · For developers · Learn; SovX and
-    // Corrections stay reachable under "More". Tools audit, 6 Oct 2026: the Connect section is
-    // labelled "For developers" (its id stays `connect`), and Evidence index moved into it.
+  it("gives the canonical dashboard its task sections and a visible human-review workflow", () => {
+    // Staff was already implemented and routed inside DashboardPane, but had no typed navigation
+    // destination. Keep it visible: a homepage claim about human oversight must open the real workflow.
     expect(DASHBOARD_NAV_GROUPS.map((g) => g.label)).toEqual([
       "Get results",
       "My results",
@@ -267,10 +275,11 @@ describe("Council OS tabs", () => {
       "Leaderboard",
       "For developers",
       "Learn",
+      "Staff & human review",
       "SovX",
       "Corrections",
     ]);
-    expect(DASHBOARD_NAV_GROUPS.length).toBeLessThanOrEqual(8);
+    expect(DASHBOARD_NAV_GROUPS.length).toBeLessThanOrEqual(9);
     for (const g of DASHBOARD_NAV_GROUPS) {
       expect(g.tabs.length, `${g.id} resolves every member`).toBeGreaterThan(0);
       expect(g.description.length).toBeGreaterThan(20);
@@ -301,6 +310,7 @@ describe("Council OS tabs", () => {
       "research",
       "space",
       "play",
+      "staff",
       "sovx",
       "corrections",
       "claims",
