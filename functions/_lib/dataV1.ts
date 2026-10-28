@@ -12,7 +12,12 @@ import { fetchStatic, type Fetched } from "./measurementCapsule";
 export const DATA_V1_ROOT = "/data/v1";
 export const DATA_V1_LATEST = `${DATA_V1_ROOT}/latest.json`;
 export const DATA_V1_CHANGELOG = `${DATA_V1_ROOT}/CHANGELOG.json`;
-const VERSION_RE = /^\d{4}-\d{2}-\d{2}$/;
+// A published version is the UTC date of the snapshot, plus a revision suffix when the same
+// day published more than once: scripts/publish_public_root.py writes `<YYYY-MM-DD>`, then
+// `<YYYY-MM-DD>.2`, `.3`, ... while a same-day snapshot directory already exists. The estate
+// publishes 2026-10-26.2, 2026-10-27.3 and so on, so a bare date would reject the version
+// latest.json itself points at.
+const VERSION_RE = /^\d{4}-\d{2}-\d{2}(?:\.\d+)?$/;
 const DOCTRINE = "measurement, not endorsement";
 
 type Json = Record<string, unknown>;

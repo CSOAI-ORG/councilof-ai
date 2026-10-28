@@ -1524,6 +1524,127 @@
       "source": "functions/api/chat.ts"
     },
     {
+      "audience": "both",
+      "description": "GET /api/pals — the staff registry. Every Council of AI staff member as a PAL record: identity (did:key), memory namespace, scope, objectives, guardrails, voice, model preference and face adapter. The house staff are the desks on /team expressed as PALs, and the desk definitions are DERIVED rather than copied, so this registry and the page cannot describe different people. Also serves GET /api/pals/<id> for one staff member, and states whether a language model is configured for this deployment, so a reader is never left guessing which of the two they are talking to.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pals",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "GET",
+      "name": "Staff registry (PALs)",
+      "path": "/api/pals",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/pals",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.pal/0.1"
+      ],
+      "source": "functions/api/pals.ts",
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "POST /api/pals — the write door, described rather than 404'd. POST /api/pals/provision builds a staff member, and is refused rather than pretended when the PAL_MEMORY_KV store is unbound. POST /api/pals/<id>/chat asks one a question. Every reply carries its provenance: grounded when the published records answered and the model was never consulted, model when the model spoke on the records, ungrounded when no record answers, refused when a reply broke a standing rule.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pals-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "POST",
+      "name": "Staff registry (PALs, POST)",
+      "path": "/api/pals",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pals",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "schema_refs": [
+        "csoai.pal/0.1"
+      ],
+      "source": "functions/api/pals.ts",
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/hitl — the human-in-the-loop state. The policy line, whether a decision can be taken at all (an operator token must be configured for that), whether a decision would be signed (the board attestation key), whether decisions are persisted (a store binding), the queue waiting for a human, and the competency curriculum. The curriculum is DERIVED from the live board’s axis list on every request, so it cannot drift from what the Council publishes. Also serves GET /api/hitl/modules, GET /api/hitl/modules/<id>, GET /api/hitl/challenges and GET /api/hitl/record.",
+      "description_state": "DOCUMENTED",
+      "id": "api-hitl",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "GET",
+      "name": "Human in the loop",
+      "path": "/api/hitl",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/hitl",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.hitl-companion-state/0.1",
+        "csoai.hitl-challenge/0.1",
+        "csoai.hitl-oversight-receipt/0.1"
+      ],
+      "source": "functions/api/hitl.ts",
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "POST /api/hitl — the write door, described rather than 404’d. POST /api/hitl/challenge raises a challenge for a human to decide. POST /api/hitl/modules answers a competency module, and the answer is checked against the live published record. POST /api/hitl/decision records a decision — APPROVED, HOLD or REJECTED — and is refused unless an operator token is configured, because an approval endpoint anyone can call is not a human in the loop. The receipt it returns uses the schema csoai.hitl-oversight-receipt/0.1, the same one the MEOK H.I.M. issues.",
+      "description_state": "DOCUMENTED",
+      "id": "api-hitl-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "POST",
+      "name": "Human in the loop (POST)",
+      "path": "/api/hitl",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/hitl",
+        "safe": false,
+        "unsafe_reason": "the door’s sub-paths write — a challenge, a module answer and a signed decision; the daily loop reads only"
+      },
+      "schema_refs": [
+        "csoai.hitl-oversight-receipt/0.1",
+        "csoai.hitl-challenge/0.1"
+      ],
+      "source": "functions/api/hitl.ts",
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
       "audience": "agent",
       "description": "POST /api/checkout — public door is closed.",
       "description_state": "DOCUMENTED",

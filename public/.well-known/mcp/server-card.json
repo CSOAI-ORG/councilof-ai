@@ -1374,7 +1374,7 @@
           "version": {
             "type": "string",
             "description": "Snapshot version, YYYY-MM-DD, or \"latest\" (default).",
-            "pattern": "^(latest|\\d{4}-\\d{2}-\\d{2})$"
+            "pattern": "^(latest|\\d{4}-\\d{2}-\\d{2}(?:\\.\\d+)?)$"
           }
         },
         "additionalProperties": false

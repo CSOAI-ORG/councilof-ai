@@ -228,5 +228,9 @@ export function markPaidUndeliveredResponse(response: Response, confirmedPaid: b
   if (!confirmedPaid) return response;
   const headers = deliveryHeaders(response, "NOT_DELIVERED", paymentResponse);
   headers.set("x-csoai-delivery-state", "PAID_NOT_DELIVERED");
+  if (!(headers.get("access-control-expose-headers") || "")
+    .split(",").some(name => name.trim().toLowerCase() === "x-csoai-delivery-state")) {
+    headers.append("access-control-expose-headers", "x-csoai-delivery-state");
+  }
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 }

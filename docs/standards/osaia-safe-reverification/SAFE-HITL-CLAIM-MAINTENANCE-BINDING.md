@@ -42,19 +42,35 @@ Signatures, transparency logs, SCITT-style receipts, Rekor inclusion, OpenTimest
 
 ## Conformance sequences
 
-| Case | Authority | Invocation | Effect | Verification | Maintained claim |
-| --- | --- | --- | --- | --- | --- |
-| Positive | APPROVE/current | EXECUTED | OBSERVED | VERIFIED | CURRENT |
-| Denied | DENY | REJECTED | NONE | NOT_RUN | unchanged or NOT_WATCHED |
-| Revoked before execution | REVOKE | NOT_INVOKED/REJECTED | NONE | NOT_RUN | RETEST_DUE if claim depended on authority |
-| Effect unknown | APPROVE/current | EXECUTED | UNKNOWN | UNCHECKABLE/NOT_RUN | UNMEASURED or RETEST_DUE |
-| Dependency drift | still separately evaluated | independent | independent | old result cannot silently stand | RETEST_DUE/STALE |
+Under **v0.2** (`hitl-authority-effect-v0.2.schema.json`, 27 October 2026). v0.1 permitted the
+"effect unknown" row below by leaving the binding to the consumer; v0.2 makes the first three
+rows checkable and keeps the last two writable as history.
+
+| Case | Authority | Invocation | Effect | Verification | Maintained claim | v0.2 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Positive | APPROVE/current | EXECUTED | OBSERVED | VERIFIED | CURRENT at decision and at invocation | accepted |
+| Denied | DENY | REJECTED | NONE | NOT_RUN | unchanged or NOT_WATCHED | accepted |
+| Revoked before execution | REVOKE | NOT_INVOKED/REJECTED | NONE | NOT_RUN | RETEST_DUE if claim depended on authority | accepted |
+| Effect unknown | APPROVE/current | EXECUTED | UNKNOWN | UNCHECKABLE/NOT_RUN | UNMEASURED or RETEST_DUE | **rejected** — the claim was not CURRENT at the invocation |
+| Dependency drift | still separately evaluated | independent | independent | old result cannot silently stand | RETEST_DUE/STALE | **rejected** while the release is ACTIVE; accepted once the release is marked no longer live |
+
+The last two rows are the change. A claim that is `STALE`, `RETEST_DUE`, `UNMEASURED` or
+`NOT_WATCHED` is non-authorizing: it cannot back an `APPROVE` decision, it cannot back an
+`EXECUTED` invocation, and it cannot stand under a live authority release. A historical
+execution whose claim has since gone stale stays writable — the release is marked no longer live
+and the record keeps the decision-time and invocation-time watch states that were true at the
+time.
 
 ## Source linkage
 
 - Public constitutional harness: `https://councilof.ai/.well-known/constitutional-harness.json`.
-- Candidate HITL schema: `hitl-authority-effect-v0.1.schema.json`.
+- Candidate HITL schema: `hitl-authority-effect-v0.2.schema.json` (v0.1 preserved as
+  `hitl-authority-effect-v0.1.schema.json`).
 - Candidate claim-maintenance schema: existing `safe-reverification-record-v0.1.schema.json`.
-- Candidate plugin binding: `csoai-alliance-control-plugin-v0.2.json`.
+- Candidate plugin binding: `csoai-alliance-control-plugin-v0.3.json` (v0.2 preserved as
+  `csoai-alliance-control-plugin-v0.2.json`).
+- Executable checks: `test_hitl_authority_effect_v0_2.py` (must-pass, must-fail, the v0.1
+  negative control, and the temporal gate), `test_hitl_authority_effect.py` (v0.1),
+  `test_approval_dependency_binding.py`, `validate_examples.py`.
 
 The design target is one control fabric, not one mandatory engine.

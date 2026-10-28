@@ -14,6 +14,7 @@ import os
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -170,12 +171,175 @@ class AaifPortabilitySuiteTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             OBR.evaluate_sandbox_boundary("task_01", cfg, obs_ok, claimed_summary="OpenSandbox is safe for all runs")
 
+    def assert_clients_unmeasured(self, bundle) -> None:
+        skill = bundle["skill_qualification"]
+        report = bundle["portability_report"]
+        self.assertIsNone(skill["qualified"])
+        self.assertEqual(skill["state"], "UNMEASURED")
+        self.assertIsNone(skill["client_execution_receipt"])
+        self.assertEqual(report["overall_state"], "UNMEASURED")
+        self.assertIsNone(report["clients_tested"])
+        self.assertIsNone(report["client_results"])
+        for profile in report["fixture_profile_results"]:
+            self.assertEqual(profile["execution_scope"], "LOCAL_FIXTURE_SIMULATION")
+            self.assertEqual(profile["client_execution_state"], "UNMEASURED")
+            self.assertIsNone(profile["client_execution_receipt"])
+            self.assertIsNone(profile["allowed_tools_boundary_observed"])
+            self.assertIsNone(profile["allowed_tools_boundary_receipt"])
+            self.assertFalse(profile["declaration_is_execution_grant"])
+
     def test_portability_report_three_public_outputs(self) -> None:
         bundle = PR.run_portability_comparison()
-        self.assertEqual(bundle["skill_qualification"]["state"], "CONSISTENT")
-        self.assertEqual(bundle["portability_report"]["overall_state"], "CONSISTENT")
-        self.assertEqual(bundle["portability_report"]["clients_tested"], 3)
-        self.assertGreaterEqual(len(bundle["compatibility_history"]["entries"]), 2)
+        self.assert_clients_unmeasured(bundle)
+        report = bundle["portability_report"]
+        self.assertEqual(report["local_fixture_state"], "CONSISTENT")
+        self.assertEqual(report["fixture_profiles_tested"], 3)
+        for profile in report["fixture_profile_results"]:
+            self.assertTrue(profile["local_evidence_properties_preserved"])
+            controls = profile["controls"]
+            for name in ("positive_valid_artifact", "adverse_altered_copy",
+                         "adverse_unsupported_mode", "adverse_unavailable_source"):
+                self.assertEqual(controls[name]["got"], controls[name]["expected"])
+            self.assertRegex(controls["positive_valid_artifact"]["artifact_sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(controls["positive_valid_artifact"]["preserved_limits"], self.events[0]["limits"])
+        history = bundle["compatibility_history"]
+        self.assertGreaterEqual(len(history["entries"]), 2)
+        self.assertEqual(history["client_retest_state"], "UNMEASURED")
+        self.assertIsNone(history["client_retest_receipt"])
+        for entry in history["entries"]:
+            self.assertIsNone(entry["prior_conclusions_require_recheck"])
+
+    def test_profile_and_permission_claims_cannot_qualify_a_host(self) -> None:
+        labels = ("ENFORCED", "PROMPTED_FOR_APPROVAL", "REJECTED_ACTION",
+                  "IGNORED_EXPERIMENTAL_DECLARATION", "ADMIN_APPROVED")
+        with mock.patch.object(PSV, "verify_artifact", wraps=PSV.verify_artifact) as local:
+            for label in labels:
+                with self.subTest(label=label):
+                    bundle = PR.run_portability_comparison(clients=[{
+                        "client_id": "synthetic-host",
+                        "boundary_observed": label,
+                        "qualified": True,
+                        "client_execution_receipt": {"source": "unobserved caller claim"},
+                        "allowed_tools_boundary_receipt": {"approval": "unobserved"},
+                    }])
+                    self.assert_clients_unmeasured(bundle)
+                    profile = bundle["portability_report"]["fixture_profile_results"][0]
+                    self.assertEqual(profile["declared_boundary_observation"], label)
+                    self.assertEqual(bundle["portability_report"]["local_fixture_state"], "CONSISTENT")
+            self.assertEqual(local.call_count, len(labels) * 4)
+            for invocation in local.call_args_list:
+                self.assertEqual(invocation.kwargs["client_id"], "local-fixture-runner")
+                self.assertEqual(invocation.kwargs["client_boundary_observation"], "UNMEASURED")
+
+    def test_declared_fixture_clock_is_not_an_observed_client_time(self) -> None:
+        actual_local_clock = "2026-10-25T02:00:00Z"
+        declared_fixture_clock = "2020-01-01T00:00:00Z"
+        with mock.patch.object(PR, "_now_utc", return_value=actual_local_clock):
+            bundle = PR.run_portability_comparison(as_of_utc=declared_fixture_clock)
+        for name in ("skill_qualification", "portability_report", "compatibility_history"):
+            output = bundle[name]
+            self.assertEqual(output["execution_scope"], "LOCAL_FIXTURE_SIMULATION")
+            self.assertEqual(output["generated_at_utc"], actual_local_clock)
+            self.assertEqual(output["declared_fixture_as_of_utc"], declared_fixture_clock)
+            self.assertIsNone(output["as_of_utc"])
+        self.assert_clients_unmeasured(bundle)
+
+    def test_no_profiles_is_not_a_local_pass_or_a_client_count(self) -> None:
+        bundle = PR.run_portability_comparison(clients=[])
+        self.assert_clients_unmeasured(bundle)
+        report = bundle["portability_report"]
+        self.assertEqual(report["fixture_profiles_tested"], 0)
+        self.assertEqual(report["fixture_profile_results"], [])
+        self.assertEqual(report["local_fixture_state"], "UNMEASURED")
+        self.assertEqual(bundle["skill_qualification"]["local_fixture_state"], "UNMEASURED")
+
+    def test_failed_local_control_stays_visible_without_host_qualification(self) -> None:
+        verify = PSV.verify_artifact
+
+        def fail_positive(artifact, **kwargs):
+            result = verify(artifact, **kwargs)
+            if Path(artifact).name == "valid_event.json" and kwargs["mode"] == "structure":
+                result["verdict_state"] = "INVALID"
+            return result
+
+        with mock.patch.object(PSV, "verify_artifact", side_effect=fail_positive):
+            bundle = PR.run_portability_comparison(clients=[{"client_id": "synthetic-host"}])
+        self.assert_clients_unmeasured(bundle)
+        self.assertEqual(bundle["portability_report"]["local_fixture_state"], "DIVERGENT")
+        self.assertEqual(bundle["skill_qualification"]["local_fixture_state"], "DIVERGENT")
+        controls = bundle["portability_report"]["fixture_profile_results"][0]["controls"]
+        self.assertEqual(controls["positive_valid_artifact"]["got"], "INVALID")
+
+    def test_open_responses_rejects_injected_supersedes_without_prior(self) -> None:
+        original = self.events[0]
+        self.assertIsNone(original.get("supersedes"))
+        envelope = ORS.event_to_open_response(original)
+        payload = json.loads(envelope["output"][1]["output"])
+        payload["supersedes"] = {"event_id": self.events[1]["event_id"]}
+        envelope["output"][1]["output"] = json.dumps(payload)
+        result = ORS.verify_open_response_survival(original, envelope)
+        self.assertEqual(result["verdict"], "DIVERGENT")
+        self.assertFalse(result["checks"]["unrelated_finding_not_closed"])
+
+    def test_open_responses_rejects_injected_same_endpoint_finding(self) -> None:
+        original = self.events[0]
+        prior = copy.deepcopy(self.events[1])
+        prior["subject"] = copy.deepcopy(original["subject"])
+        prior["method"] = copy.deepcopy(original["method"])
+        prior["event_id"] = E.compute_event_id(prior)
+        self.assertNotEqual(prior["event_id"], original["event_id"])
+        envelope = ORS.event_to_open_response(original)
+        payload = json.loads(envelope["output"][1]["output"])
+        payload["supersedes"] = {"event_id": prior["event_id"]}
+        envelope["output"][1]["output"] = json.dumps(payload)
+        result = ORS.verify_open_response_survival(
+            original, envelope, unrelated_prior_event=prior
+        )
+        self.assertEqual(result["verdict"], "DIVERGENT")
+        self.assertFalse(result["checks"]["unrelated_finding_not_closed"])
+        for name, holds in result["checks"].items():
+            if name != "unrelated_finding_not_closed":
+                self.assertTrue(holds, name)
+
+    def test_open_responses_preserves_legitimate_and_unasserted_lineage(self) -> None:
+        original = copy.deepcopy(self.events[0])
+        prior = copy.deepcopy(self.events[1])
+        prior["subject"] = copy.deepcopy(original["subject"])
+        prior["method"] = copy.deepcopy(original["method"])
+        prior["event_id"] = E.compute_event_id(prior)
+        original["supersedes"] = {"event_id": prior["event_id"]}
+        original["event_id"] = E.compute_event_id(original)
+        result = ORS.verify_open_response_survival(
+            original, ORS.event_to_open_response(original), unrelated_prior_event=prior
+        )
+        self.assertEqual(result["verdict"], "CONSISTENT")
+        self.assertTrue(result["checks"]["unrelated_finding_not_closed"])
+        # Existing envelopes emit null for an absent relation; removing that
+        # optional null must still mean no supersedes relation.
+        unasserted = copy.deepcopy(self.events[0])
+        unasserted.pop("supersedes", None)
+        unasserted["event_id"] = E.compute_event_id(unasserted)
+        envelope = ORS.event_to_open_response(unasserted)
+        self.assertEqual(ORS.verify_open_response_survival(unasserted, envelope)["verdict"], "CONSISTENT")
+        payload = json.loads(envelope["output"][1]["output"])
+        self.assertIsNone(payload.pop("supersedes"))
+        envelope["output"][1]["output"] = json.dumps(payload)
+        self.assertEqual(ORS.verify_open_response_survival(unasserted, envelope)["verdict"], "CONSISTENT")
+
+    def test_valid_passing_retest_cannot_close_an_unrelated_finding(self) -> None:
+        prior = self.events[1]
+        passing = copy.deepcopy(self.events[0])
+        passing["supersedes"] = {"event_id": prior["event_id"]}
+        passing["event_id"] = E.compute_event_id(passing)
+        envelope = ORS.event_to_open_response(passing)
+        result = ORS.verify_open_response_survival(
+            passing, envelope, unrelated_prior_event=prior
+        )
+        self.assertEqual(result["verdict"], "DIVERGENT")
+        self.assertFalse(result["checks"]["unrelated_finding_not_closed"])
+        for name, holds in result["checks"].items():
+            if name != "unrelated_finding_not_closed":
+                self.assertTrue(holds, name)
 
 
 if __name__ == "__main__":

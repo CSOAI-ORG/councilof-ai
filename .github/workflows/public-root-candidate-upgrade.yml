@@ -223,15 +223,22 @@ jobs:
             git push origin "HEAD:$BRANCH"
           fi
 
-      # Master's branch protection requires a pull request but no status check (read in repo
-      # settings on 6 Oct 2026: "Require status checks to pass before merging" is off). So the
-      # `gh pr merge --auto` this step used to run did not wait for pr-gates: on a pull request
-      # with nothing required it merges at once, ungated. A pull request opened with GITHUB_TOKEN
-      # also starts no pull_request workflow, so no check runs on it unless dispatched. Single
-      # writer means a GATED pull request, so the gate is made binding here: run pr-gates on THIS
-      # head commit, wait for it in this job, and merge only that commit and only on success.
+      # Master's branch protection DID require no status check when this step was written
+      # (read in repo settings on 6 Oct 2026: "Require status checks to pass before merging" was
+      # off). It no longer does. Measured 2026-10-26: strict=true, and the required contexts are
+      # gates, build, stamped-bytes and hold-guard - so `gh pr merge --auto` is not enough on its
+      # own and the merge has to wait for those four on the exact head. A pull request opened with
+      # GITHUB_TOKEN also starts no pull_request workflow, so no check runs on it unless dispatched.
+      # Single writer means a GATED pull request, so the gate is made binding here: run pr-gates on
+      # THIS head commit, wait for it in this job, and merge only that commit and only on success.
       # Waiting in-job matters: the refresh step above re-witnesses on every confirmed tick, so the
       # head moves between ticks and a pass recorded on an older commit must never merge a newer one.
+      #
+      # `build` comes from the CI workflow, not from pr-gates, and runs on this repo arrive as
+      # `action_required` until they are approved. An unapproved run produces NO check run, so its
+      # context reads as absent rather than failed, and the merge is refused with "the base branch
+      # policy prohibits the merge" while every gate that did run is green. The gate tool approves
+      # every gated run for these bytes, not only the one it watches.
       - name: Merge only after pr-gates passed on these exact bytes
         if: steps.ots.outputs.confirmed == 'true'
         timeout-minutes: 50
