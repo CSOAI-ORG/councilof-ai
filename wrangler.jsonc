@@ -53,6 +53,16 @@
     {
       "binding": "LEADS",
       "id": "8c460488aa6444c187890a579511bf93"
+    },
+    // HITL_KV - the human-in-the-loop store behind /api/hitl (functions/api/hitl.ts):
+    // raised challenges, the competency-module completions, and the signed receipts.
+    // The code degrades honestly without it (the store is null, nothing is persisted, and
+    // the competency gate still re-derives the answer against the live board at signing
+    // time) - but with it, a challenge and the receipt that answers it survive the
+    // request that raised them.
+    {
+      "binding": "HITL_KV",
+      "id": "76e668160bba4866b0d2926bbefdec07"
     }
     // WORKER_STATE_KV (functions/api/worker.ts, observability.ts, coverage-truth.ts) is NOT bound.
     // #2487 added it with the placeholder id "TBD_CREATE_NAMESPACE", which Cloudflare rejects
