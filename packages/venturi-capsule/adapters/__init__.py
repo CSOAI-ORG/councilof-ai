@@ -15,7 +15,8 @@ class PendingSource(Exception):
     """The adapter's source record does not exist yet; nothing is built and nothing is invented."""
 
 
-NAMES = ("mill_cross_runtime", "contract_parity", "a2a_card", "cross_ledger", "self_parity", "public_signals", "tool_drift")
+NAMES = ("mill_cross_runtime", "contract_parity", "a2a_card", "cross_ledger", "self_parity", "public_signals", "tool_drift",
+         "busabase", "meok")
 
 
 def get(name):
