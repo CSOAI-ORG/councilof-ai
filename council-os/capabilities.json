@@ -29,20 +29,8 @@
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-discover-chainlink-post",
-      "path": "/api/discover/chainlink",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-discover-ondo-ousg-post",
-      "path": "/api/discover/ondo-ousg",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-discover-ondo-post",
-      "path": "/api/discover/ondo",
+      "id": "api-signed-data-feed-post",
+      "path": "/api/signed-data-feed",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
@@ -137,24 +125,6 @@
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-ras-mcp-probe-post",
-      "path": "/api/ras/mcp-probe",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-ras-supply-post",
-      "path": "/api/ras/supply",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-ras-x402-check-post",
-      "path": "/api/ras/x402-check",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
       "id": "api-receipts-batch-post",
       "path": "/api/receipts/batch",
       "method": "POST",
@@ -173,14 +143,8 @@
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-signed-data-feed-post",
-      "path": "/api/signed-data-feed",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-wrapper-asset-dai-post",
-      "path": "/api/wrapper/asset/dai",
+      "id": "api-wrapper-post",
+      "path": "/api/wrapper",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
@@ -197,8 +161,26 @@
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-wrapper-post",
-      "path": "/api/wrapper",
+      "id": "api-wrapper-asset-dai-post",
+      "path": "/api/wrapper/asset/dai",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-ras-mcp-probe-post",
+      "path": "/api/ras/mcp-probe",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-ras-x402-check-post",
+      "path": "/api/ras/x402-check",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-ras-supply-post",
+      "path": "/api/ras/supply",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
@@ -231,6 +213,132 @@
       "path": "/.well-known/x402.json",
       "method": "GET",
       "reason": "a /.well-known document; the OpenAPI producer covers functions/api only"
+    },
+    {
+      "id": "api-discover-chainlink-post",
+      "path": "/api/discover/chainlink",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-discover-ondo-post",
+      "path": "/api/discover/ondo",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-discover-ondo-ousg-post",
+      "path": "/api/discover/ondo-ousg",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-atlas",
+      "path": "/api/atlas",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-atlas-post",
+      "path": "/api/atlas",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-certificate-schema",
+      "path": "/api/certificate-schema",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-checkout-post",
+      "path": "/api/checkout",
+      "method": "POST",
+      "reason": "withdrawn (DOOR_CLOSED): the handler still answers its fail-closed 404, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-files",
+      "path": "/api/files",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-files-post",
+      "path": "/api/files",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-fulfill",
+      "path": "/api/fulfill",
+      "method": "GET",
+      "reason": "withdrawn (DOOR_CLOSED): the handler still answers its fail-closed 404, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-growth-loops",
+      "path": "/api/growth-loops",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-memory",
+      "path": "/api/memory",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-memory-post",
+      "path": "/api/memory",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-operator",
+      "path": "/api/operator",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-operator-post",
+      "path": "/api/operator",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-paddle-webhook",
+      "path": "/api/paddle-webhook",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-paddle-webhook-post",
+      "path": "/api/paddle-webhook",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-prod-readiness",
+      "path": "/api/prod-readiness",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-sandbox",
+      "path": "/api/sandbox",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-sandbox-post",
+      "path": "/api/sandbox",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-synthesis",
+      "path": "/api/synthesis",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
     }
   ],
   "capabilities": [
@@ -1096,15 +1204,13 @@
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/atlas",
         "expect_status": [
           503
         ],
+        "method": "GET",
+        "request": "/api/atlas",
         "safe": true
       },
       "source": "functions/api/atlas.ts"
@@ -1123,15 +1229,13 @@
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "POST",
-        "request": "/api/atlas",
         "expect_status": [
           503
         ],
+        "method": "POST",
+        "request": "/api/atlas",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -1398,15 +1502,13 @@
         "csoai.completion-record/0.1",
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/certificate-schema",
         "expect_status": [
           503
         ],
+        "method": "GET",
+        "request": "/api/certificate-schema",
         "safe": true
       },
       "source": "functions/api/certificate-schema.ts"
@@ -1532,18 +1634,16 @@
       "description": "POST /api/checkout — public door is closed.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "LIVE",
+      "lifecycle": "DOOR_CLOSED",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
+        "expect_status": [
+          404
+        ],
         "method": "POST",
         "request": "/api/checkout",
-        "expect_status": [
-          200
-        ],
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -2812,20 +2912,18 @@
       "description": "files — retired until its response can be derived from current evidence.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/files",
         "expect_status": [
           503
         ],
+        "method": "GET",
+        "request": "/api/files",
         "safe": true
       },
       "source": "functions/api/files.ts"
@@ -2839,20 +2937,18 @@
       "description": "files — retired until its response can be derived from current evidence.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "POST",
-        "request": "/api/files",
         "expect_status": [
           503
         ],
+        "method": "POST",
+        "request": "/api/files",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -3010,15 +3106,13 @@
       "lifecycle": "DOOR_CLOSED",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/fulfill",
         "expect_status": [
           404
         ],
+        "method": "GET",
+        "request": "/api/fulfill",
         "safe": true
       },
       "source": "functions/api/fulfill.ts"
@@ -3037,15 +3131,13 @@
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/growth-loops",
         "expect_status": [
           503
         ],
+        "method": "GET",
+        "request": "/api/growth-loops",
         "safe": true
       },
       "source": "functions/api/growth-loops.ts"
@@ -3667,20 +3759,18 @@
       "description": "memory — retired until its response can be derived from current evidence.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/memory",
         "expect_status": [
           503
         ],
+        "method": "GET",
+        "request": "/api/memory",
         "safe": true
       },
       "source": "functions/api/memory.ts"
@@ -3694,20 +3784,18 @@
       "description": "memory — retired until its response can be derived from current evidence.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "POST",
-        "request": "/api/memory",
         "expect_status": [
           503
         ],
+        "method": "POST",
+        "request": "/api/memory",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -3876,20 +3964,18 @@
       "description": "operator — retired until its response can be derived from current evidence.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/operator",
         "expect_status": [
           503
         ],
+        "method": "GET",
+        "request": "/api/operator",
         "safe": true
       },
       "source": "functions/api/operator.ts"
@@ -3903,20 +3989,18 @@
       "description": "operator — retired until its response can be derived from current evidence.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "POST",
-        "request": "/api/operator",
         "expect_status": [
           503
         ],
+        "method": "POST",
+        "request": "/api/operator",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -4017,15 +4101,13 @@
         "csoai.completion-record/0.1",
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/paddle-webhook",
         "expect_status": [
           503
         ],
+        "method": "GET",
+        "request": "/api/paddle-webhook",
         "safe": true
       },
       "source": "functions/api/paddle-webhook.ts"
@@ -4046,15 +4128,13 @@
         "csoai.completion-record/0.1",
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "POST",
-        "request": "/api/paddle-webhook",
         "expect_status": [
           503
         ],
+        "method": "POST",
+        "request": "/api/paddle-webhook",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -4509,15 +4589,13 @@
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/prod-readiness",
         "expect_status": [
           503
         ],
+        "method": "GET",
+        "request": "/api/prod-readiness",
         "safe": true
       },
       "source": "functions/api/prod-readiness.ts"
@@ -5601,20 +5679,18 @@
       "description": "sandbox — retired until its response can be derived from current evidence.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/sandbox",
         "expect_status": [
           503
         ],
+        "method": "GET",
+        "request": "/api/sandbox",
         "safe": true
       },
       "source": "functions/api/sandbox.ts"
@@ -5628,20 +5704,18 @@
       "description": "sandbox — retired until its response can be derived from current evidence.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "POST",
-        "request": "/api/sandbox",
         "expect_status": [
           503
         ],
+        "method": "POST",
+        "request": "/api/sandbox",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -5985,15 +6059,13 @@
       "schema_refs": [
         "csoai.retired-endpoint/0.1"
       ],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
-        "method": "GET",
-        "request": "/api/synthesis",
         "expect_status": [
           503
         ],
+        "method": "GET",
+        "request": "/api/synthesis",
         "safe": true
       },
       "source": "functions/api/synthesis.ts"
