@@ -43,6 +43,24 @@ on:
   pull_request:
     branches: [master]
     types: [opened, synchronize, reopened, labeled, unlabeled, edited]
+  # 28 Oct 2026: the merge queue needs its own event. A merge queue groups a pull request with the
+  # LATEST base and runs the required checks on that combined commit — it is the only mechanism that
+  # stops a moving base from invalidating an already-green pull request. Measured on this repo: the
+  # base moved every 20-40 minutes (10:23, 10:47, 11:11, 11:40, 12:38, 13:17, 13:45, 14:11) while one
+  # cycle of this workflow takes about an hour, so "strict" up-to-dateness could not converge: four
+  # re-syncs were voided by the next merge before the checks finished. Without `merge_group` the
+  # queue has no checks to read and the merge fails with "the required status check will not be
+  # reported" (GitHub docs, "Managing a merge queue").
+  #
+  # Every job in this file is merge_group-safe, checked job by job:
+  #   - `gates` scopes from `github.event.pull_request.number`, which is empty on a merge_group, and
+  #     an empty PR means "run everything" — so the FULL suite runs on the merged tree, not a skip.
+  #   - `stamped-bytes` compares HEAD^1 (the base) to HEAD (the merge_group commit), which is the
+  #     same question it asks of a pull request.
+  #   - `hold-guard` is already scoped to `github.event_name == 'pull_request'`; on a merge_group it
+  #     reports skipped, and skipped counts as success for a required check.
+  #   - the remaining jobs read no pull_request context at all.
+  merge_group:
   workflow_dispatch:
     inputs:
       pr:
@@ -602,7 +620,8 @@ jobs:
           # Canary privacy, safe capture retention and verified PR proposal (offline only).
           python3 -B scripts/canary/test_canary.py
           python3 -B scripts/canary/test_canary_delivery.py
-          python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
+          python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py scripts/spray/test_gspc_spray_surfaces.py
+          python3 -m pytest -q scripts/surface/test_lm_eval_parity.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
           # The pre-send mail check: no address but the one being checked may ever be put to a mail server.
