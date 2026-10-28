@@ -53,6 +53,7 @@ export function Footer() {
     {
       title: 'Developer reference',
       links: [
+        { name: 'Connect a client — install', href: '/connect/' },
         { name: 'Board JSON — /api/gspc', href: '/api/gspc', external: true },
         { name: 'Tool surface — /mcp', href: '/mcp', external: true },
         { name: 'Agent card', href: '/.well-known/agent.json', external: true },
