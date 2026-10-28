@@ -64,7 +64,7 @@ oldest correction 24 days since first observation. Receipt:
 2. `scripts/watch_corrections.py` — fetch switched to curl, OUT renamed to current date.
 3. `public/interop/arc-circle-business-model-mapping-2026-09-18.md` — was a 474-byte
    truncated stub (network interruption 17 Sep); restored to the full 6,408-byte
-   version recovered from the stray path `/Users/nicholas/public/interop/` (written to
+   version recovered from a private recovery copy (written to
    the wrong root during the interruption). The stray copy is left in place (no rm per
    red lines); it can be trashed by the owner.
 

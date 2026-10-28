@@ -480,3 +480,135 @@ describe("MCP streaming input limits", () => {
     expect(network).not.toHaveBeenCalled();
   });
 });
+
+describe("opt-in MCP transport telemetry", () => {
+  let logs: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => { logs = vi.spyOn(console, "log").mockImplementation(() => {}); });
+  afterEach(() => { logs.mockRestore(); });
+
+  function spans() {
+    return logs.mock.calls.flatMap(([line]) => {
+      try {
+        const record = JSON.parse(String(line));
+        return record.resourceSpans?.[0]?.scopeSpans?.[0]?.spans ?? [];
+      } catch { return []; }
+    });
+  }
+  function traced(input: Input, env: Fields = { CSOAI_OTEL: true }) {
+    return dispatch(new Request(`${ORIGIN}/mcp`, {
+      method: "POST", headers: input.headers, body: JSON.stringify(input.body),
+    }), env);
+  }
+
+  it("waits for response headers and preserves the actual tool result", async () => {
+    let entered!: () => void;
+    let release!: () => void;
+    const enteredFetch = new Promise<void>((resolve) => { entered = resolve; });
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    network.mockImplementation(async () => {
+      entered();
+      await gate;
+      return Response.json({ kind: "test-root", card_count: 2, merkle_root: "a".repeat(64) });
+    });
+    const pending = traced(modern("tools/call", { name: "get_root", arguments: {} }));
+    let response!: Response;
+    try {
+      await Promise.race([
+        enteredFetch,
+        pending.then(() => { throw new Error("Request returned before the tool fetch"); }),
+      ]);
+      expect(spans()).toHaveLength(0);
+    } finally {
+      release();
+      response = await pending;
+    }
+    expect(spans()).toHaveLength(1);
+    expect(response.headers.get("x-otel-trace-id")).toBe(spans()[0].traceId);
+    expect(response.bodyUsed).toBe(false);
+    expect(await decode(response, "modern")).toMatchObject({
+      result: { structuredContent: { state: "VALID", card_count: 2 } },
+    });
+    expect(spans()[0].status.code).toBe(0);
+    expect(network).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps HTTP-200 tool errors unclassified and never captures payment inputs", async () => {
+    network.mockImplementation(async () => Response.json({
+      x402Version: 2, error: "Payment required",
+      accepts: [{ scheme: "exact", network: "eip155:8453", payTo: "private-recipient", amount: "1", asset: "private-asset" }],
+    }, { status: 402, headers: { "PAYMENT-REQUIRED": "e30=" } }));
+    const response = await traced(modern("tools/call", {
+      name: "commission_card",
+      arguments: { subject: "private-subject", x_payment: "private-token" },
+    }));
+    expect(response.status).toBe(200);
+    expect(await decode(response, "modern")).toMatchObject({ result: { isError: true } });
+    expect(spans()).toHaveLength(1);
+    expect(spans()[0].status.code).toBe(0);
+    const text = JSON.stringify(spans());
+    expect(text).not.toMatch(/private-subject|private-token|private-recipient|private-asset/);
+    expect(text).toContain("UNOBSERVED");
+  });
+
+  it("keeps unknown tool names out of telemetry", async () => {
+    const response = await traced(modern("tools/call", {
+      name: "private-caller-controlled-name", arguments: {},
+    }));
+    expect((await decode(response, "modern"))?.error).toBeDefined();
+    expect(spans()).toHaveLength(1);
+    expect(spans()[0].name).toBe("tools/call");
+    expect(JSON.stringify(spans())).not.toContain("private-caller-controlled-name");
+    expect(network).not.toHaveBeenCalled();
+  });
+
+  it("correlates the caught error response without recording private error text", async () => {
+    const input = modern("tools/call", { name: "get_root", arguments: {} });
+    const request = new Request(`${ORIGIN}/mcp`, {
+      method: "POST", headers: input.headers, body: JSON.stringify(input.body),
+    });
+    // Fault at the dispatch boundary, after validation and trace start.
+    Object.defineProperty(request, "signal", {
+      get() { throw new Error("private-runtime-detail"); },
+    });
+    const response = await dispatch(request, { CSOAI_OTEL: true });
+    expect(response.status).toBe(500);
+    expect((await decode(response, "modern"))?.error?.code).toBe(-32603);
+    expect(spans()).toHaveLength(1);
+    expect(response.headers.get("x-otel-trace-id")).toBe(spans()[0].traceId);
+    expect(spans()[0].status.code).toBe(2);
+    expect(JSON.stringify(spans())).not.toContain("private-runtime-detail");
+    expect(network).not.toHaveBeenCalled();
+  });
+
+  it("does not alter a successful response when logging throws", async () => {
+    mockRoot();
+    logs.mockImplementation(() => { throw new Error("sink unavailable"); });
+    const response = await traced(modern("tools/call", { name: "get_root", arguments: {} }));
+    expect(response.status).toBe(200);
+    expect(await decode(response, "modern")).toMatchObject({
+      result: { structuredContent: { state: "VALID", card_count: 2 } },
+    });
+    expect(network).toHaveBeenCalledTimes(1);
+  });
+
+  it("preserves legacy response bodies and leaves tool completion unobserved", async () => {
+    mockRoot();
+    const response = await traced(legacy("tools/call", { name: "get_root", arguments: {} }));
+    expect(response.bodyUsed).toBe(false);
+    expect(await decode(response, "legacy")).toMatchObject({
+      result: { structuredContent: { state: "VALID", card_count: 2 } },
+    });
+    expect(spans()).toHaveLength(1);
+    expect(spans()[0].status.code).toBe(0);
+  });
+
+  it("leaves default requests without a trace header or span", async () => {
+    mockRoot();
+    const response = await traced(modern("tools/call", { name: "get_root", arguments: {} }), {});
+    expect(response.headers.get("x-otel-trace-id")).toBeNull();
+    expect(spans()).toHaveLength(0);
+    expect(await decode(response, "modern")).toMatchObject({
+      result: { structuredContent: { state: "VALID", card_count: 2 } },
+    });
+  });
+});
