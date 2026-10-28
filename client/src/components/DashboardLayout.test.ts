@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { dashboardActiveLabel } from "./DashboardLayout";
 import { hasPane } from "./DashboardPane";
-import { tabById } from "./lobby/tabs";
+import { DASHBOARD_NAV_GROUPS, tabById } from "./lobby/tabs";
 import { NAV_ID } from "./lobby/LobbyPaneTabs";
 
 describe("dashboard consolidation details", () => {
@@ -43,9 +43,15 @@ describe("dashboard consolidation details", () => {
     expect(workspace).toContain("createPortal(trigger, actionsSlot)");
   });
 
-  it("renders the one site header, seven sections and no second tab strip", () => {
+  it("renders the one site header, eight sections with icons and no second tab strip", () => {
     const layout = readFileSync(resolve(__dirname, "./DashboardLayout.tsx"), "utf8");
     expect(layout).toMatch(/<Header inApp \/>/);
+    for (const group of DASHBOARD_NAV_GROUPS) {
+      // An absent Record key crashes the entire shell with React error #130.
+      expect(layout, `${group.id} has a navigation icon`).toMatch(
+        new RegExp(`^  ${group.id}: \\w+,$`, "m"),
+      );
+    }
     const workspace = readFileSync(
       resolve(__dirname, "./DashboardWorkspace.tsx"),
       "utf8",
