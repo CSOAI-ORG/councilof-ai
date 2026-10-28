@@ -40,6 +40,9 @@ MAX = 3072
 DID = "did:web:csoai.org#card-attestation-1"
 SCHEMA = "csoai.gspc-axes/0.5"
 
+# Set by main() when --dry-run is given. A dry run counts atoms but writes nothing.
+_DRY_RUN = False
+
 
 def curl(url: str, timeout: int = 30) -> tuple[int, str]:
     try:
@@ -94,6 +97,11 @@ def emit(kind: str, subject: dict, scope: dict, measurement: dict) -> int:
     QUEUE.mkdir(parents=True, exist_ok=True)
     stamp = int(time.time() * 1000)
     fname = f"t2-{kind}-{stamp}.jsonl"
+    if _DRY_RUN:
+        # A dry run must not touch the tracked corpus. It used to: emit() always wrote, and
+        # the flag only suppressed the "Queue dir:" line, so "previewing" the harvest silently
+        # added hundreds of files to scripts/badger/_queue/. Seen live 2026-10-27.
+        return 1
     with open(QUEUE / fname, "a") as f:
         f.write(blob + "\n")
     return 1
@@ -385,11 +393,13 @@ SOURCES = {
 
 
 def main():
+    global _DRY_RUN
     ap = argparse.ArgumentParser(description="CSOAI — Tier 2 harvest.")
     ap.add_argument("--source", choices=list(SOURCES.keys()) + ["all"],
                     default="all")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
+    _DRY_RUN = args.dry_run
 
     print(f"================================================================")
     print(f"  CSOAI — Tier 2 harvest (open, permissionless atoms)")
