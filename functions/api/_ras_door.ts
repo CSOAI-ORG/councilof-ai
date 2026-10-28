@@ -1,3 +1,4 @@
+import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * _ras_door — the settle-and-deliver sequence shared by the three self-serve RAS doors
  * (functions/api/ras/*.ts). It adds NO payment logic: the challenge is buildPaymentRequiredV2 +
@@ -18,7 +19,7 @@
  *      probe ran, and a paid probe that finds a failure is delivered as that failure.
  *   6. settle fails                 → the 402 again; the computed result is NOT released.
  * Nothing on this path writes to the GSPC board, the public root, or any card index: the only
- * write is the REVENUE_KV counter every metered door keeps.
+ * writes are its REVENUE_KV counter and the shared unsigned paid-delivery record.
  */
 import {
   verifyX402Payment,
@@ -204,7 +205,7 @@ export async function rasDoor(spec: RasDoorSpec): Promise<Response> {
     } catch { /* never blocks a paid deliverable */ }
   }
 
-  return rasJson(
+  return recordPaidResponse(rasJson(
     {
       schema: spec.schema,
       kind: "receipt",
@@ -224,7 +225,7 @@ export async function rasDoor(spec: RasDoorSpec): Promise<Response> {
       "x-csoai-signed": leaf.sig_ed25519 ? "true" : "false",
       ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
     },
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 }
 
 /** sha256 hex of UTF-8 text (WebCrypto). */

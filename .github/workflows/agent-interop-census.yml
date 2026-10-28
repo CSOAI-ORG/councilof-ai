@@ -37,7 +37,7 @@ concurrency:
 jobs:
   census:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 340   # GitHub-hosted job limit is 360
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       GH_TOKEN: ${{ github.token }}
@@ -49,8 +49,24 @@ jobs:
       - name: Install the Hugging Face CLI
         run: pip install --quiet "huggingface_hub[cli]"
 
+      - name: Restore MCP registry checkpoint
+        uses: actions/cache/restore@v4
+        with:
+          path: /tmp/mcp-registry-ckpt
+          key: mcp-registry-ckpt-${{ github.run_id }}
+          restore-keys: mcp-registry-ckpt-
+
       - name: Collect — official MCP registry (cursor-paginated, deduped, loop-detected)
+        timeout-minutes: 300
+        env: { MCP_CKPT: /tmp/mcp-registry-ckpt/state.json }
         run: python3 scripts/census/collect-mcp-registry.py
+
+      - name: Save MCP registry checkpoint
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: /tmp/mcp-registry-ckpt
+          key: mcp-registry-ckpt-${{ github.run_id }}
 
       - name: Collect — Hugging Face Spaces matching "mcp"
         run: python3 scripts/census/collect-hf-spaces.py

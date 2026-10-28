@@ -34,9 +34,9 @@ describe('RunPod public UX forward-port', () => {
   });
   it('gives Services a status region and explicit retry without inventing doors', () => {
     expect(services).toContain('role="status"');
-    expect(services).toContain('Retry manifest read');
+    expect(services).toContain('Reload catalogue');
     expect(services).toContain('[attempt]');
-    expect(services).toContain('This is not a claim that the');
+    expect(services).toContain('This does not establish whether the services themselves are available.');
   });
   it('hardens URL-derived lookup maps against inherited properties', () => {
     expect(tabs.match(/Object\.prototype\.hasOwnProperty\.call/g)?.length).toBeGreaterThanOrEqual(2);

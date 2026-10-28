@@ -12,11 +12,11 @@ page is a milestone index, not a trophy wall.
 | # | Listing | Operator | Verified | What it establishes | What it does NOT |
 |---|---------|----------|----------|---------------------|------------------|
 | 1 | [GSPC Governance Leaderboard — SAIL Awesome AI Leaderboard, Safety section](https://github.com/SAILResearch/awesome-ai-leaderboard#safety) | SAIL Research (Software Analysis and Intelligence Lab, Queen's University) | 2026-10-07 (public page retrieved; entries accepted upstream 23 Jul and 26 Aug 2026) | Accepted research-catalogue inclusion alongside GovBench. Entry names Council of AI and links the signed governance board, API and DOI, preserving "Measurement, not certification." | Not an independent reproduction, ranking award, endorsement, customer or revenue |
-| 2 | [Council of AI — Claude Connectors Directory](https://claude.ai/directory/councilof-ai) | Anthropic (Claude) | 2026-10-07 | Community connector listing: 12 tools advertised, read-only, free. Automated review completed. | Not Anthropic verification ("Community connectors have undergone automated reviews but aren't verified by Anthropic") |
+| 2 | [Council of AI — Claude Connectors Directory](https://claude.ai/directory/councilof-ai) | Anthropic (Claude) | 2026-10-07 | Community connector listing with read-only, free tooling. Automated review completed. (Its prose states an earlier tool count — the live count is whatever `tools/list` returns at [councilof.ai/mcp](https://councilof.ai/mcp) at read time.) | Not Anthropic verification ("Community connectors have undergone automated reviews but aren't verified by Anthropic") |
 | 3 | [csoai-gspc-measurement — MCP.so](https://mcp.so/servers/csoai-gspc-measurement) | MCP.so | 2026-10-07 | Public MCP server listing. | Listing only |
 | 4 | [CSOAI-ORG/councilof-ai — Glama](https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai) | Glama.ai | 2026-10-07 (badge + connector served, HTTP 200) | Auto-indexed MCP server record with quality badge; connector mirror at `ai.councilof/mcp`. | Auto-indexed from metadata; not a review |
 | 5 | [councilof-ai — PayAPI Market](https://payapi.market/api/councilof-ai) | PayAPI | 2026-10-07 (HTTP 200) | x402 marketplace presence. | Listing only |
-| 6 | [councilof.ai/mcp — live endpoint](https://councilof.ai/mcp) | CSOAI Ltd | live; `csoai-gspc-mcp v1.4.4`, 19 tools enumerated 2026-10-07 | Machine-readable measurement access: 14 free read-only tools + 5 paid (x402) tools. | Measurement, not certification |
+| 6 | [councilof.ai/mcp — live endpoint](https://councilof.ai/mcp) | CSOAI Ltd | live; `csoai-gspc-mcp v1.4.4`, tool count from `tools/list` at read time (free read-only tools plus x402-metered tools) | Machine-readable measurement access: free read-only tools plus paid (x402) tools. | Measurement, not certification |
 
 ## Submissions awaiting upstream review (not yet listings)
 
@@ -26,7 +26,7 @@ page is a milestone index, not a trophy wall.
 | CSOAI-ORG/councilof-ai entry (Security) | [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers/pull/15903) | 2026-10-07 | `submitted` — awaiting maintainer merge |
 | `io.github.CSOAI-ORG/csoai-gspc` | Official MCP Registry | 2026-10-07 | `staged` — descriptor validated, PyPI ownership line published (0.2.20261007.1); publication awaits one owner authorisation click |
 | Council of AI plugin (ChatGPT Apps + Codex directory) | OpenAI | 2026-10-07 | `prepped` — package built; owner identity-verification gate |
-| `csoai/council-of-ai` connector update (12 → current tool count) | Claude Connectors Directory | — | `prepared` — listing text is stale; update awaits the portal walkthrough |
+| `csoai/council-of-ai` connector update (listing text is stale) | Claude Connectors Directory | — | `prepared` — update awaits the portal walkthrough |
 
 ## Corrections
 

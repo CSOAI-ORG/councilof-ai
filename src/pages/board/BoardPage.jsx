@@ -31,7 +31,8 @@ export default function BoardPage() {
   if (loading) return <div style={{ padding: "2rem", color: "#e8f5ee" }}>Loading board…</div>;
 
   const totals = gspc?.totals || {};
-  const axes = gspc?.axes || [];
+  // Owner-gated rows stay in the API but are never rendered on public pages.
+  const axes = (gspc?.axes || []).filter((a) => a.public_pages !== "HIDDEN_PENDING_OWNER_GO");
 
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "1.5rem", color: "#e8f5ee", fontFamily: "system-ui, sans-serif" }}>
@@ -44,7 +45,7 @@ export default function BoardPage() {
 
       {/* Evidence State Summary */}
       <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
-        <StatCard label="Axes" value={totals.axes || 22} state="MEASURED" />
+        <StatCard label="Axes" value={totals.axes ?? "—"} state="MEASURED" />
         <StatCard label="Measured" value={totals.measured_axes || 22} state="MEASURED" />
         <StatCard label="Public Leaders" value={totals.public_leader_count || 3} state="MEASURED" />
         <StatCard label="Root Cards" value={root?.card_count || 169} state="ROOTED" />

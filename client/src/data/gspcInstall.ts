@@ -8,7 +8,6 @@
 // The asset (already live; client compatibility is recorded separately, not assumed):
 //   remote HTTP MCP : https://councilof.ai/mcp/free   (streamable-http, no auth, the free readers)
 //                     https://councilof.ai/mcp        (the same free readers + the x402-metered tools)
-//   stdio (npm)     : npx -y csoai-gspc-mcp   (published releases are deprecated on npm and carry fewer tools)
 //   universal REST  : GET https://councilof.ai/api/gspc  (+ ?axis=), GET /api/cards
 //   OpenAPI 3.1     : https://councilof.ai/openapi/gspc.json
 //   function tools  : https://councilof.ai/openapi/gspc-function-tools.json
@@ -30,7 +29,6 @@ export const CLAUDE_APP_WHERE: string =
   "Customize → Connectors → Add custom connector";
 export const MCP_METERED_URL = "https://councilof.ai/mcp";
 export const MCP_URL = MCP_FREE_URL;
-export const STDIO_CMD = "npx -y csoai-gspc-mcp";
 export const OPENAPI_URL = "https://councilof.ai/openapi/gspc.json";
 export const FN_TOOLS_URL = "https://councilof.ai/openapi/gspc-function-tools.json";
 
@@ -71,7 +69,6 @@ export const MCP_NATIVE: PlatformCard[] = [
     docUrl: "https://code.claude.com/docs/en/mcp",
     blocks: [
       { label: "Remote (recommended)", lang: "bash", code: `claude mcp add --transport http csoai-gspc ${MCP_URL}` },
-      { label: "stdio fallback (npm, deprecated; fewer tools)", lang: "bash", code: "claude mcp add --transport stdio csoai-gspc -- npx -y csoai-gspc-mcp" },
       { label: "Project .mcp.json", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": { "type": "http", "url": "${MCP_URL}" }
@@ -99,11 +96,6 @@ export const MCP_NATIVE: PlatformCard[] = [
     }
   }
 }` },
-      { label: "Pure stdio (no bridge)", lang: "json", code: `{
-  "mcpServers": {
-    "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
-  }
-}` },
     ],
     note: `The JSON config file is stdio-only, so remote needs the mcp-remote bridge. On Pro/Max/Team/Enterprise you can instead add the URL natively: ${CLAUDE_APP_WHERE}.`,
   },
@@ -121,11 +113,6 @@ export const MCP_NATIVE: PlatformCard[] = [
     "csoai-gspc": { "url": "${MCP_URL}" }
   }
 }` },
-      { label: "stdio (npm, deprecated; fewer tools)", lang: "json", code: `{
-  "mcpServers": {
-    "csoai-gspc": { "type": "stdio", "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
-  }
-}` },
     ],
     note: "Cursor auto-detects streamable-HTTP vs SSE from a bare url; no type field for remote.",
   },
@@ -141,11 +128,6 @@ export const MCP_NATIVE: PlatformCard[] = [
       { label: "Remote", lang: "json", code: `{
   "mcpServers": {
     "csoai-gspc": { "serverUrl": "${MCP_URL}" }
-  }
-}` },
-      { label: "stdio (npm, deprecated; fewer tools)", lang: "json", code: `{
-  "mcpServers": {
-    "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
   }
 }` },
     ],
@@ -170,11 +152,6 @@ export const MCP_NATIVE: PlatformCard[] = [
     }
   }
 }` },
-      { label: "stdio (npm, deprecated; fewer tools)", lang: "json", code: `{
-  "mcpServers": {
-    "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"], "disabled": false, "autoApprove": [] }
-  }
-}` },
     ],
     note: 'The type MUST be "streamableHttp" (camelCase, no hyphen) or Cline falls back to SSE.',
   },
@@ -190,11 +167,6 @@ export const MCP_NATIVE: PlatformCard[] = [
       { label: "Remote", lang: "json", code: `{
   "context_servers": {
     "csoai-gspc": { "url": "${MCP_URL}" }
-  }
-}` },
-      { label: "stdio (npm, deprecated; fewer tools)", lang: "json", code: `{
-  "context_servers": {
-    "csoai-gspc": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"], "env": {} }
   }
 }` },
     ],
@@ -213,13 +185,6 @@ export const MCP_NATIVE: PlatformCard[] = [
   - name: csoai-gspc
     type: streamable-http
     url: ${MCP_URL}` },
-      { label: "stdio (npm, deprecated; fewer tools)", lang: "yaml", code: `mcpServers:
-  - name: csoai-gspc
-    type: stdio
-    command: npx
-    args:
-      - "-y"
-      - "csoai-gspc-mcp"` },
     ],
     note: "Continue's mcpServers is an array of objects with a name field; remote type is hyphenated streamable-http.",
   },
@@ -235,11 +200,6 @@ export const MCP_NATIVE: PlatformCard[] = [
       { label: "Remote", lang: "json", code: `{
   "mcpServers": {
     "councilof": { "httpUrl": "${MCP_URL}" }
-  }
-}` },
-      { label: "stdio (npm, deprecated; fewer tools)", lang: "json", code: `{
-  "mcpServers": {
-    "councilof": { "command": "npx", "args": ["-y", "csoai-gspc-mcp"] }
   }
 }` },
     ],

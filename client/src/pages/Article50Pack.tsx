@@ -3,13 +3,12 @@ import { Link } from "wouter";
 import { verifyEd25519Detached, type Ed25519Result } from "@/lib/verify";
 
 /**
- * /packs/eu-article-50 — the EU AI Act Article 50 alternative-means evidence pack.
+ * /packs/eu-article-50 — scoped content-marking durability evidence.
  *
- * This page consumes the artifacts CSOAI measured and signed on a RunPod node:
- *   - provbench.json      — the C2PA transform-durability measurement
- *   - article50_oscal.json — the same finding as OSCAL 1.1.0 assessment-results
- * Both carry an Ed25519 signature. The page verifies that signature IN YOUR
- * BROWSER against the published public key — you don't have to trust us.
+ * This page attempts browser verification of each artifact's exact .body bytes
+ * and detached signature against the pinned public key. Findings are displayed
+ * only after supported verification succeeds; signature integrity is separate
+ * from measurement truth, signer identity, freshness and legal compliance.
  */
 
 const BASE = "/packs/eu-article-50";
@@ -38,22 +37,33 @@ async function loadAndVerify(name: string): Promise<{ sidecar: Sidecar; res: Ed2
     fetch(`${BASE}/${name}.body`),
     fetch(`${BASE}/${name}.sig.json`),
   ]);
+  if (!bodyRes.ok || !sideRes.ok) {
+    throw new Error(`${name}: body HTTP ${bodyRes.status}; signature HTTP ${sideRes.status}`);
+  }
   const body = await bodyRes.arrayBuffer();
   const sidecar: Sidecar = await sideRes.json();
+  if (
+    typeof sidecar?.alg !== "string" || sidecar.alg.toLowerCase() !== "ed25519" ||
+    typeof sidecar.sig_b64 !== "string" || typeof sidecar.pubkey_b64 !== "string" ||
+    typeof sidecar.body_sha256 !== "string" || !/^[0-9a-f]{64}$/.test(sidecar.body_sha256)
+  ) {
+    throw new Error(`${name}: unsupported or malformed signature sidecar`);
+  }
   // Pin verification to the PUBLISHED key shown on this page, not the sidecar's
   // self-declared key — a swapped sidecar keypair must fail, not verify green.
   const res = await verifyEd25519Detached(body, sidecar.sig_b64, sidecar.pubkey_b64, sidecar.body_sha256, PUBKEY);
   return { sidecar, res, body };
 }
 
-function VerifyBadge({ res }: { res: Ed25519Result | null }) {
+function VerifyBadge({ res, error }: { res: Ed25519Result | null; error?: string | null }) {
+  if (error) return <span className="text-amber-400 text-sm">⚠ evidence unavailable — see error</span>;
   if (!res) return <span className="text-zinc-400 text-sm">verifying…</span>;
   if (!res.supported)
     return <span className="text-amber-400 text-sm font-medium">⚠ can't check here — verify offline</span>;
   return res.ok ? (
-    <span className="text-emerald-400 text-sm font-semibold">✅ signature valid · unaltered</span>
+    <span className="text-emerald-400 text-sm font-semibold">✅ signature valid · body digest matches</span>
   ) : (
-    <span className="text-red-400 text-sm font-semibold">❌ signature INVALID</span>
+    <span className="text-red-400 text-sm font-semibold">❌ signature or integrity check failed</span>
   );
 }
 
@@ -61,24 +71,56 @@ export default function Article50Pack() {
   const [pb, setPb] = useState<{ sidecar: Sidecar; res: Ed25519Result; body: ArrayBuffer } | null>(null);
   const [oscal, setOscal] = useState<{ sidecar: Sidecar; res: Ed25519Result } | null>(null);
   const [cells, setCells] = useState<PooledCell[]>([]);
+  const [findingDataAdmitted, setFindingDataAdmitted] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [oscalErr, setOscalErr] = useState<string | null>(null);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const p = await loadAndVerify("provbench");
-        setPb(p);
-        // render the finding FROM the exact bytes we verified (what you see is what was signed)
-        const parsed = JSON.parse(new TextDecoder().decode(p.body));
-        setCells((parsed.pooled_by_check ?? []) as PooledCell[]);
-        const o = await loadAndVerify("article50_oscal");
-        setOscal({ sidecar: o.sidecar, res: o.res });
-      } catch (e) {
-        setErr(String((e as Error).message || e));
+    let active = true;
+    setFindingDataAdmitted(false);
+    loadAndVerify("provbench").then((p) => {
+      if (!active) return;
+      setPb(p);
+      if (!p.res.supported || !p.res.ok) {
+        setFindingDataAdmitted(false);
+        return;
       }
-    })();
+      // Parse/display findings only from bytes that passed the pinned-key check.
+      const parsed = JSON.parse(new TextDecoder().decode(p.body));
+      const rows: unknown = parsed?.pooled_by_check;
+      if (!Array.isArray(rows) || !rows.every((value: unknown) => {
+        if (!value || typeof value !== "object") return false;
+        const c = value as PooledCell;
+        return (c.config === "embedded_only" || c.config === "sidecar_oracle") &&
+          typeof c.check === "string" && c.check.length > 0 &&
+          Number.isInteger(c.survived) && c.survived >= 0 &&
+          Number.isInteger(c.n_measured) && c.n_measured > 0 && c.survived <= c.n_measured &&
+          Number.isFinite(c.rate) && c.rate >= 0 && c.rate <= 1 &&
+          (c.ci_clustered === undefined || (
+            Array.isArray(c.ci_clustered) && c.ci_clustered.length === 2 &&
+            c.ci_clustered.every((n) => Number.isFinite(n) && n >= 0 && n <= 1) &&
+            c.ci_clustered[0] <= c.ci_clustered[1]
+          ));
+      })) {
+        throw new Error("Unsupported per-check data in the verified ProvBench artifact");
+      }
+      setCells(rows as PooledCell[]);
+      setFindingDataAdmitted(true);
+    }).catch((e) => {
+      if (!active) return;
+      setCells([]);
+      setFindingDataAdmitted(false);
+      setErr(String((e as Error).message || e));
+    });
+    loadAndVerify("article50_oscal").then((o) => {
+      if (active) setOscal({ sidecar: o.sidecar, res: o.res });
+    }).catch((e) => {
+      if (active) setOscalErr(String((e as Error).message || e));
+    });
+    return () => { active = false; };
   }, []);
 
+  const findingVerified = findingDataAdmitted && pb?.res.supported === true && pb.res.ok === true && !err;
   const embedded = cells.filter((c) => c.config === "embedded_only");
   const sidecarCells = cells.filter((c) => c.config === "sidecar_oracle");
 
@@ -97,59 +139,52 @@ export default function Article50Pack() {
           EU AI Act Article 50 — content-marking durability evidence
         </h1>
         <p className="text-zinc-400 leading-relaxed mb-2">
-          Article 50 requires providers of generative AI to mark AI-generated content so it is
-          detectable. The endorsed technical rail is C2PA content credentials. <strong className="text-zinc-200">
-          We measured whether that marking actually survives ordinary handling</strong> — re-encoding,
-          resizing, cropping, screenshots, format conversion.
+          This pack examines specific content-marking durability checks relevant to Article 50.
+          C2PA credentials are the format tested here; this pack does not establish that they are
+          the exclusive means of meeting Article 50. Findings concern the recorded instrument,
+          assets and transforms, not every real-world handling operation.
         </p>
         <p className="text-zinc-500 text-sm mb-8">
-          The measurement and its signature were produced on an independent compute node. This page
-          re-checks the signature <em>in your browser</em> against the published public key — nothing
-          here depends on trusting CSOAI&apos;s server. This is the <strong>one C2PA durability
-          pack</strong> we publish — a measured finding, not an Art 50 certificate, and not a
-          watermark SKU. Extra watermark MCP forks are not products on this site.
+          This page fetches the published artifacts and attempts detached-signature verification
+          <em> in your browser</em> against the pinned public key below. A successful check establishes
+          integrity under that key for those bytes. It does not independently reproduce the run,
+          establish signer identity or freshness, or determine legal compliance.
         </p>
 
-        {err && (
+        {(err || oscalErr) && (
           <div className="rounded-lg border border-red-800 bg-red-950/40 p-4 mb-8 text-red-300 text-sm">
-            Could not load the evidence artifacts: {err}
+            {err && <p>ProvBench findings unavailable: {err}</p>}
+            {oscalErr && <p>OSCAL artifact unavailable: {oscalErr}</p>}
           </div>
         )}
 
-        {/* The headline finding */}
+        {/* Verification state; no finding is asserted before successful verification */}
         <section className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">The finding</h2>
-            <VerifyBadge res={pb?.res ?? null} />
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4 mb-4">
-            <div className="rounded-lg bg-zinc-950 border border-zinc-800 p-4">
-              <div className="text-3xl font-bold text-red-400">0%</div>
-              <div className="text-sm text-zinc-400 mt-1">
-                of embedded C2PA manifests survived <em>any</em> real transform
-              </div>
-            </div>
-            <div className="rounded-lg bg-zinc-950 border border-zinc-800 p-4">
-              <div className="text-3xl font-bold text-amber-400">valid ≠ bound</div>
-              <div className="text-sm text-zinc-400 mt-1">
-                detached sidecar: signature stays valid, but binding to the image and issuer
-                resolution both drop to 0%
-              </div>
-            </div>
+            <h2 className="text-lg font-semibold">Artifact verification</h2>
+            <VerifyBadge res={pb?.res ?? null} error={err} />
           </div>
           <p className="text-zinc-400 text-sm leading-relaxed">
-            Plain English: the marking Article 50 relies on mostly does not survive the things people
-            do to images every day. A provider cannot assume an embedded credential proves provenance
-            downstream — which is exactly what an <strong className="text-zinc-200">
-            &ldquo;adequate alternative means&rdquo;</strong> gap analysis must document.
+            {findingVerified
+              ? cells.length > 0
+                ? "The verified artifact's per-check rows are shown below. Read each check and its limits separately; no aggregate survival claim is made here."
+                : "The verified artifact contains no per-check rows."
+              : "Findings are withheld until the artifact loads and a supported signature and body-digest check succeeds against the pinned key."}
           </p>
         </section>
 
         {/* Per-check table, rendered from the verified bytes */}
-        {cells.length > 0 && (
+        {findingVerified && cells.length > 0 && (
           <section className="mb-8">
-            <h2 className="text-lg font-semibold mb-3">Survival by check</h2>
-            {[["Embedded credential", embedded], ["Detached sidecar", sidecarCells]].map(
+            <h2 className="text-lg font-semibold mb-3">Survival by check — recorded values</h2>
+            <p className="text-sm text-zinc-400 mb-4">
+              Counts, rates and clustered intervals are copied from the verified bytes; this page
+              does not rerun the instrument. The sidecar-oracle configuration supplies the manifest
+              directly, and issuer resolution depends on the test credential. Signature validity,
+              asset binding and issuer resolution are separate checks. Read the artifact&apos;s
+              corpus, transform and coverage caveats before generalising.
+            </p>
+            {[["Embedded credential", embedded], ["Detached sidecar (oracle-assisted)", sidecarCells]].map(
               ([label, rows]) => (
                 <div key={label as string} className="mb-5">
                   <div className="text-sm text-zinc-400 mb-2">{label as string}</div>
@@ -202,22 +237,22 @@ export default function Article50Pack() {
                   OSCAL 1.1.0 assessment-results · control EU-AI-ACT-50
                 </span>
               </div>
-              <VerifyBadge res={oscal?.res ?? null} />
+              <VerifyBadge res={oscal?.res ?? null} error={oscalErr} />
             </div>
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div>
                 <a href={`${BASE}/provbench.json`} download className="text-emerald-400 hover:underline font-medium">
                   provbench.json
                 </a>
-                <span className="text-zinc-500 ml-2">raw measurement · signed</span>
+                <span className="text-zinc-500 ml-2">measurement artifact · check signature status</span>
               </div>
-              <VerifyBadge res={pb?.res ?? null} />
+              <VerifyBadge res={pb?.res ?? null} error={err} />
             </div>
           </div>
           <p className="text-zinc-500 text-xs mt-4 leading-relaxed">
-            OSCAL is NIST's machine-readable compliance language (accepted in FedRAMP deliverables).
-            Per FedRAMP RFC-0024, OSCAL does not itself mandate cryptographic signatures — this pack
-            ships the Ed25519 signature <em>inside</em> the envelope, closing that gap.
+            The badges check each artifact&apos;s fetched .body bytes and detached signature sidecar.
+            They do not establish that a separately downloaded .json envelope matches those bytes,
+            or validate its regulatory mappings. Each artifact has its own verification state.
           </p>
         </section>
 
@@ -225,7 +260,8 @@ export default function Article50Pack() {
         <section className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 mb-8">
           <h2 className="text-lg font-semibold mb-2">Verify it yourself</h2>
           <p className="text-zinc-400 text-sm mb-3">
-            Signatures above are checked in your browser (WebCrypto Ed25519). To verify offline:
+            This page attempts WebCrypto Ed25519 verification. If unsupported, independently verify
+            the exact artifacts and pinned key before relying on any findings. The existing offline command:
           </p>
           <pre className="bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-xs overflow-x-auto text-zinc-300">
 python3 sign.py --verify provbench.json</pre>
@@ -244,20 +280,21 @@ python3 sign.py --verify provbench.json</pre>
         {/* Honest scope */}
         <section className="text-xs text-zinc-500 leading-relaxed border-t border-zinc-800 pt-6">
           <p className="mb-2">
-            <strong className="text-zinc-400">What is proven:</strong> the artifacts are unaltered and
-            were signed by the holder of the published key; the survival rates are recomputed from the
-            exact signed bytes.
+            <strong className="text-zinc-400">Integrity scope:</strong> only a supported, successful
+            badge establishes that the fetched .body bytes match the stated digest and verify under
+            the pinned public key. Displayed values are read from those bytes, not independently
+            remeasured or recomputed from the underlying trials.
           </p>
           <p className="mb-2">
-            <strong className="text-zinc-400">What is not (yet) proven here:</strong> that the signing
-            key belongs to CSOAI as a legal identity — that is a separate identity-binding step (a
-            published key page and, per the roadmap, an SSL.com / C2PA conformance certificate). This
-            page proves <em>integrity</em>, not attributed <em>identity</em>.
+            <strong className="text-zinc-400">Identity and freshness:</strong> this page does not
+            independently bind the signing key to CSOAI&apos;s legal identity or establish that the
+            record is current. A valid signature does not validate the artifact&apos;s narrative,
+            credential-trust statements, or legal interpretations.
           </p>
           <p>
-            CSOAI is an independent measurement body. We issue measurements and signed attestations,
-            never certificates of conformity. This evidence supports an Article 50 &ldquo;adequate
-            alternative means&rdquo; case; it is not legal advice.
+            CSOAI is an independent measurement body. This pack records specific content-marking
+            checks, not an assessment of all Article 50 obligations or a certificate of conformity.
+            It is evidence for review, not legal advice.
           </p>
         </section>
       </div>

@@ -103,7 +103,10 @@ export const onRequestGet: PagesFunction<{
         id: "free_door",
         name: "Free board + public-root discovery door",
         resource: u("/api/free-door"),
-        free_preview: u("/api/free-door"),
+        // A preview must answer 200. This pointed at the 402 door itself, so a client doing the obvious
+        // fetch(entry.free_preview) was handed a payment challenge — the opposite of a preview. The door's own
+        // `free_equivalents` already name /api/gspc and /root.json for the same bytes.
+        free_preview: u("/api/gspc"),
         deliverable: FREE_DOOR_DESCRIPTION,
         never: ["a paid artefact", "a grade", "a rank", "a certificate"],
       },
@@ -238,7 +241,7 @@ export const onRequestGet: PagesFunction<{
         free_preview_note: "count, span, root count and the sha256 of the exact batch bytes — no leaves",
         deliverable: RECEIPTS_BATCH_DESCRIPTION,
         recent_free: [u("/root.json"), u("/cards/<sha16>.json"), u("/api/proof?sha=<64-hex>"), u("/receipts/root-history.json")],
-        honesty: "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
+        honesty: "these are historical measurement leaves, not payment receipts; /api/receipts/latest reports aggregate receipt-store state when available; aggregate counts do not verify a particular payment, delivery or buyer acceptance",
         never: ["a conclusion about any leaf", "a grade", "a certificate", "a settlement-receipt claim"],
       },
       // Self-serve RAS doors — fresh computation. A computation that has not run cannot be previewed, so

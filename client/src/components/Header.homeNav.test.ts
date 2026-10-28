@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { HOME_NAV } from "./homeNav";
 
 describe("HOME_NAV", () => {
-  it("is five items: Board, Verify, OS, Pack, Company", () => {
-    expect(HOME_NAV.map((i) => i.name)).toEqual(["Board", "Verify", "OS", "Pack", "Company"]);
+  it("is five items: Board, Check a record, Workspace, Evidence pack, Company", () => {
+    expect(HOME_NAV.map((i) => i.name)).toEqual(["Board", "Check a record", "Workspace", "Evidence pack", "Company"]);
     expect(HOME_NAV).toHaveLength(5);
   });
 
@@ -14,7 +14,7 @@ describe("HOME_NAV", () => {
     expect(blob).not.toContain("chat");
   });
 
-  it("OS is a named lobby, not a raw /os iframe target", () => {
-    expect(HOME_NAV.find((i) => i.name === "OS")?.href).toBe("/dashboard?tab=home");
+  it("Workspace keeps the named lobby destination", () => {
+    expect(HOME_NAV.find((i) => i.name === "Workspace")?.href).toBe("/dashboard?tab=home");
   });
 });

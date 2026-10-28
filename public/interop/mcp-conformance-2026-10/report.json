@@ -1,0 +1,331 @@
+{
+ "cards_staged": 18,
+ "corpus": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/index.json",
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instruments": [
+  {
+   "channel": "stable",
+   "id": "stable-2025-11-25",
+   "spec_version": "2025-11-25",
+   "suite": "@modelcontextprotocol/conformance@0.1.16",
+   "suite_version": "0.1.16"
+  },
+  {
+   "channel": "alpha",
+   "id": "alpha-2026-07-28",
+   "spec_version": "2026-07-28",
+   "suite": "@modelcontextprotocol/conformance@0.2.0-alpha.12",
+   "suite_version": "0.2.0-alpha.12"
+  }
+ ],
+ "limitations": [
+  "one frozen-spec-version suite run per subject and instrument \u2014 a probe, never a grade",
+  "PROBED is not MEASURED; a completed run shows only that those checks ran once",
+  "the stable suite 0.1.16 does not know the 2026-07-28 spec release; that revision needs the alpha suite, so an alpha-channel result is not comparable with a stable-channel result",
+  "a subject with a loopback declared endpoint is unreachable by definition for any remote runner; that is a property of the record, not a defect of the subject",
+  "the registry sample is deterministic by id hash; population claims need the full census",
+  "the corpus files quote the suite's own error strings verbatim; they are observations recorded by the suite, not verdicts and not findings against any subject"
+ ],
+ "results": [
+  {
+   "check_counts": {
+    "FAILURE": 27,
+    "SUCCESS": 3,
+    "WARNING": 1
+   },
+   "checks_sha256": "f01cb8de52e681540b90192f78aacd0cd85a065a55f3f4f066915215c8d65f5d",
+   "instrument": "stable-2025-11-25",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 30,
+   "source": "first-party",
+   "spec_version": "2025-11-25",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "councilof.ai/mcp/free",
+   "url": "https://councilof.ai/mcp/free"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 19,
+    "INFO": 1,
+    "SUCCESS": 22
+   },
+   "checks_sha256": "59a0ac201a4d8da1441ff181ec8afc04aad4f053d5c7685f98bdc40177fb9902",
+   "instrument": "alpha-2026-07-28",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 20,
+   "source": "first-party",
+   "spec_version": "2026-07-28",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "councilof.ai/mcp/free",
+   "url": "https://councilof.ai/mcp/free"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 24,
+    "SUCCESS": 6,
+    "WARNING": 1
+   },
+   "checks_sha256": "578a4674f0dd5627354d44484deebc478426f1ad8c88e8f132a334b6f56e2a81",
+   "instrument": "stable-2025-11-25",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 30,
+   "source": "mcp-registry",
+   "spec_version": "2025-11-25",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "ae.genosys/genosys@1.2.0",
+   "url": "https://genosys.ae/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 39,
+    "INFO": 1
+   },
+   "checks_sha256": "da647f9e17190ef43479495f35ae4378955b8f6b60536d33966630abac3f4267",
+   "instrument": "alpha-2026-07-28",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 20,
+   "source": "mcp-registry",
+   "spec_version": "2026-07-28",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "ae.genosys/genosys@1.2.0",
+   "url": "https://genosys.ae/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 27,
+    "SUCCESS": 3,
+    "WARNING": 1
+   },
+   "checks_sha256": "467bfe10ba844c8897a17f55d4e64dd3a26e5dc769bc30ceb79f8f0adfffb404",
+   "instrument": "stable-2025-11-25",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 30,
+   "source": "mcp-registry",
+   "spec_version": "2025-11-25",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "ad.inside/inside-ads@1.0.0",
+   "url": "https://app.inside.ad/api/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 20,
+    "INFO": 1,
+    "SUCCESS": 21
+   },
+   "checks_sha256": "6e223801d13db13965782033eeeeb6fa3c8cca4fd27a74758a29951339a86d0c",
+   "instrument": "alpha-2026-07-28",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 20,
+   "source": "mcp-registry",
+   "spec_version": "2026-07-28",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "ad.inside/inside-ads@1.0.0",
+   "url": "https://app.inside.ad/api/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 25,
+    "SUCCESS": 5,
+    "WARNING": 1
+   },
+   "checks_sha256": "9f01d3b30ec6f0aa52a4b0bccb0eed330cc213ee00e131e1ffde1a6edc3015d0",
+   "instrument": "stable-2025-11-25",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 30,
+   "source": "mcp-registry",
+   "spec_version": "2025-11-25",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "agency.justidea/justidea-agency@1.1.0",
+   "url": "https://justidea.agency/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 20,
+    "INFO": 1,
+    "SUCCESS": 21
+   },
+   "checks_sha256": "16a1461deb11de4f35df5f93ef707c2f0ff3cbd0c7a791489d87d1c03a4b53f4",
+   "instrument": "alpha-2026-07-28",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 20,
+   "source": "mcp-registry",
+   "spec_version": "2026-07-28",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "agency.justidea/justidea-agency@1.1.0",
+   "url": "https://justidea.agency/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 28,
+    "SUCCESS": 3
+   },
+   "checks_sha256": "f421adcdf442bac5a3c012c821170ab5e605f65b349a8f6fdc264f43df5fd802",
+   "instrument": "stable-2025-11-25",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 30,
+   "source": "mcp-registry",
+   "spec_version": "2025-11-25",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "academy.apexai/apex-ai-academy@1.0.1",
+   "url": "https://apexai.academy/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 21,
+    "INFO": 1,
+    "SUCCESS": 18
+   },
+   "checks_sha256": "70c82726550baf2290545db33fba926664697c91971de784a0dbeefcd12a12af",
+   "instrument": "alpha-2026-07-28",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 20,
+   "source": "mcp-registry",
+   "spec_version": "2026-07-28",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "academy.apexai/apex-ai-academy@1.0.1",
+   "url": "https://apexai.academy/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 31
+   },
+   "checks_sha256": "5eb5c77f55b19ebde17172ba97b13d261b6290a925628e128fd43f8d1f8b9812",
+   "instrument": "stable-2025-11-25",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 30,
+   "source": "mcp-registry",
+   "spec_version": "2025-11-25",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "ai.1325/mcp@0.1.0",
+   "url": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 39,
+    "INFO": 1
+   },
+   "checks_sha256": "6b7c8161908af00521b09cc8e2a1f1a645f572dc0ca0689217e9cc3681f541ae",
+   "instrument": "alpha-2026-07-28",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 20,
+   "source": "mcp-registry",
+   "spec_version": "2026-07-28",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "ai.1325/mcp@0.1.0",
+   "url": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 29,
+    "SUCCESS": 2
+   },
+   "checks_sha256": "5953cbd2816c576058e13a6bdaa3af40a0d8d3457e7b648f85c1db1f4996b23c",
+   "instrument": "stable-2025-11-25",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 30,
+   "source": "mcp-registry",
+   "spec_version": "2025-11-25",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "ai.advisorsai/service-navigator@1.0.0",
+   "url": "https://advisorsai.ai/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 20,
+    "INFO": 1,
+    "SUCCESS": 19
+   },
+   "checks_sha256": "18978b91078992896bf8d66852f92bff496408ff1f37247df902ecff0a00c6b8",
+   "instrument": "alpha-2026-07-28",
+   "note": null,
+   "returncode": 1,
+   "scenarios": 20,
+   "source": "mcp-registry",
+   "spec_version": "2026-07-28",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "ai.advisorsai/service-navigator@1.0.0",
+   "url": "https://advisorsai.ai/mcp"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 31
+   },
+   "checks_sha256": "b4b522325a7f7a40692fe3951b647a98ae06ff8dedb9cef7f44f761dc1344498",
+   "instrument": "stable-2025-11-25",
+   "note": "declared endpoint is a loopback address; any reachability observed is a property of the measuring host, not of the published record",
+   "returncode": 1,
+   "scenarios": 30,
+   "source": "agntcy-directory",
+   "spec_version": "2025-11-25",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "agntcy:Hello World Agent",
+   "url": "http://localhost:9999/"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 21,
+    "SUCCESS": 18
+   },
+   "checks_sha256": "874fcfa1b4060319f49ce5039300c7f7c12e6c413964e4713fe2f5a1e95d55e8",
+   "instrument": "alpha-2026-07-28",
+   "note": "declared endpoint is a loopback address; any reachability observed is a property of the measuring host, not of the published record",
+   "returncode": 1,
+   "scenarios": 20,
+   "source": "agntcy-directory",
+   "spec_version": "2026-07-28",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "agntcy:Hello World Agent",
+   "url": "http://localhost:9999/"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 31
+   },
+   "checks_sha256": "8f8e3d9b827915c758d66514253545084691e9ca53e8e2be4aad9d58b1100ec3",
+   "instrument": "stable-2025-11-25",
+   "note": "declared endpoint is a loopback address; any reachability observed is a property of the measuring host, not of the published record",
+   "returncode": 1,
+   "scenarios": 30,
+   "source": "agntcy-directory",
+   "spec_version": "2025-11-25",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "agntcy:a2a-helloworld",
+   "url": "http://localhost:8080"
+  },
+  {
+   "check_counts": {
+    "FAILURE": 21,
+    "SUCCESS": 18
+   },
+   "checks_sha256": "d3b2f8cb4b57f1b9112dcc7c8e567a98cb24117d88f9111145e7471f6042d26a",
+   "instrument": "alpha-2026-07-28",
+   "note": "declared endpoint is a loopback address; any reachability observed is a property of the measuring host, not of the published record",
+   "returncode": 1,
+   "scenarios": 20,
+   "source": "agntcy-directory",
+   "spec_version": "2026-07-28",
+   "state": "RUN_DEVIATIONS",
+   "subject_id": "agntcy:a2a-helloworld",
+   "url": "http://localhost:8080"
+  }
+ ],
+ "runs": 18,
+ "schema": "csoai.mcp-conformance/0.1",
+ "state_counts": {
+  "RUN_DEVIATIONS": 18
+ },
+ "subjects_n": 9
+}

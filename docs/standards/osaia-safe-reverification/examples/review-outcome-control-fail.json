@@ -1,0 +1,23 @@
+{
+  "profile": "csoai.safe-review-outcome/0.1",
+  "record_id": "ro-2026-10-26-control-fail",
+  "incident_ref": null,
+  "issued_at": "2026-10-26T06:00:00Z",
+  "layer": "serving_path",
+  "expected_outcome": "The invoked model, runtime, gateway, cache, proxy and wrapper matched configurations and produced expected results.",
+  "evidence_delivery": {
+    "state": "DELIVERED",
+    "producer_established": true,
+    "delivery_obligation_established": true,
+    "observation_window": "2026-09-01T00:00:00Z/2026-09-30T00:00:00Z",
+    "collection_path_functioning": true,
+    "reason": "Evidence was delivered and the control was contradicted by it: the serving path did not match its declared configuration."
+  },
+  "underlying_control_outcome": "FAIL",
+  "attribution": "CONTROL",
+  "reason": "Evidence was delivered and the control was contradicted by it: the serving path did not match its declared configuration.",
+  "evidence": [],
+  "limits": [
+    "Synthetic record. No real incident, subject or system is named or implied."
+  ]
+}

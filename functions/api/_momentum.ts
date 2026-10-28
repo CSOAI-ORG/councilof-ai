@@ -367,7 +367,7 @@ export async function capsulesFigure(deps: Deps): Promise<Got<CapsuleRead>> {
   const asOf = isIsoDate(idx.value?.as_of) ? idx.value.as_of : null;
   if (!asOf) return { ok: false, reason: `${indexFile}: as_of unreadable` };
 
-  // The Bitcoin block that anchors the chain head (OpenTimestamps), and the Rekor log entries.
+  // The Bitcoin block that stamps the chain head (OpenTimestamps), and the Rekor log entries.
   const anchors: Anchor[] = [
     {
       id: "daily_index",
@@ -393,7 +393,7 @@ export async function capsulesFigure(deps: Deps): Promise<Got<CapsuleRead>> {
           label: "Bitcoin block (OpenTimestamps)",
           value: String(height),
           url: `https://mempool.space/block/${height}`,
-          detail: `anchors the chain head of ${h.value?.head_date ?? day}${h.value?.verification?.result ? ` · ${h.value.verification.result}` : ""}`,
+          detail: `the chain head of ${h.value?.head_date ?? day} is stamped in this block${h.value?.verification?.result ? ` · ${h.value.verification.result}` : ""}`,
           as_of: isIsoDate(h.value?.as_of) ? h.value.as_of : undefined,
         });
       }

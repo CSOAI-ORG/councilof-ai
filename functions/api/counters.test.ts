@@ -12,7 +12,7 @@ describe("public counters regulatory inventory", () => {
     expect(byId.frozen_provision_counter).toMatchObject({ count: 417, kind: "catalogued" });
     expect(byId.frozen_provision_counter.note).toContain("unresolved-row");
     expect(byId.regulator_authority_adapters).toMatchObject({ count: 17, kind: "catalogued" });
-    expect(byId.crosswalk_assets).toMatchObject({ count: 25, kind: "catalogued" });
+    expect(byId.crosswalk_assets).toMatchObject({ count: 26, kind: "catalogued" });
     expect(byId.published_crosswalk_regimes).toMatchObject({ count: 4, kind: "catalogued" });
     expect(byId.crosswalk_assets.note).toContain("not a count of equivalent signed legal crosswalks");
   });
