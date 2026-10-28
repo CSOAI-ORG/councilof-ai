@@ -25,8 +25,33 @@ verifier refuses it.
 | Artefact | What it is |
 |---|---|
 | `public/schemas/csoai-evaluation-card-0.1.schema.json` | the published shape (`csoai.evaluation-card/0.1`) |
+| `public/schemas/csoai-evaluation-card-0.2.schema.json` | `csoai.evaluation-card/0.2` — adds the artifact-identity binding, the limitation taxonomy and the safety-case sections |
 | `scripts/evaluation_card_verify.py` | the invariants a JSON Schema cannot check, plus its selftest |
-| `EXAMPLE-0.1.json` | a worked example. It is an EXAMPLE: it describes no real evaluation and establishes nothing |
+| `EXAMPLE-0.1.json`, `EXAMPLE-0.2.json` | worked examples. They are EXAMPLES: they describe no real evaluation and establish nothing |
+
+## Version 0.2 — what a score does not tell you
+
+A score does not identify the thing that produced it. The same model name can be served from different
+weights; two runs of the same weights under different harness versions are not comparable without
+saying so. So 0.2 adds three things.
+
+**The artifact-identity binding.** `artifact_identity` states whether the measured bytes came from
+weights the card identifies by digest, and binds `weights_sha256` and `harness_version` when they do.
+When they do not, the card says so *and says why* — a service, a rule cascade, a human. A **model**
+subject must either bind its weights or explain why it cannot; a card cannot answer a score without
+naming the artefact.
+
+**The limitation taxonomy.** A closed vocabulary — simulation-awareness, sample-size, lower-bound,
+non-comparability, external-validity, construct-validity, population-coverage, temporal-drift,
+contamination, measurement-error. Every class is marked present or not, and **every class carries a
+justification either way**, so that "no limitations" is a stated and checkable position rather than a
+shrug. A card cannot claim none asserted while marking a class present.
+
+**The safety-case sections.** Alignment, isolation, monitoring and incident, each either ASSESSED with
+notes or NOT_APPLICABLE / NOT_MEASURED with a reason. A section is never silently missing.
+
+The v0.1 shape still verifies: the verifier reads the version from the card's own `$schema` and applies
+that version's invariants.
 
 ## The invariants the schema cannot carry
 
@@ -46,6 +71,21 @@ the same word, and a card's `not_established` list is full of the first kind. Th
 scoped **per sentence** — a sentence that denies something may name the thing it denies; a sentence
 that does not deny anything may not name it. A character-window version of this rule was measured
 and found wrong: it let one list item's negation suppress a genuine claim in another.
+
+## The 0.2 invariants
+
+Ten more, on top of the nine above:
+
+1. bound weights carry a digest
+2. unbound weights carry no digest
+3. a model subject either binds its weights or says why it cannot
+4. the artifact identity carries a reason
+5. the taxonomy names at least one class
+6. every limitation class carries a justification
+7. a taxonomy cannot claim none asserted while a class is present (or present while none is)
+8. every safety-case section is an object with a valid status
+9. every safety-case section carries notes
+10. the version dispatch refuses an unknown schema version
 
 ## Use
 
