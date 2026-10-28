@@ -1,0 +1,1286 @@
+{
+ "schema": "csoai.gspc-paired-comparison/0.1",
+ "produced_at": null,
+ "axis": "governance",
+ "bank": {
+  "repo": "gspc-gov",
+  "url": "https://huggingface.co/datasets/csoai/gspc-gov/resolve/main/items.jsonl",
+  "sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
+  "items_total": 237
+ },
+ "what_this_is": "One measured arm of the governance axis, on the published frozen bank, graded by the estate's own grader, with the per-item ledger, and the board's own cell for the same axis beside it.",
+ "what_this_does_not_establish": [
+  "That any model is better than another. A score on one bank at one time is not a ranking.",
+  "That MEOK and a third-party model differ by the difference in these two numbers. MEOK's chat answers are UNMEASURED by MEOK's own contract, and the MEOK arm's route must be read before any difference is read as a model difference.",
+  "That the board's leader and this arm are comparable without saying which denominator each used. The board counts EVERY item; this record publishes both figures for every arm."
+ ],
+ "arms": [
+  {
+   "name": "openai/gpt-oss-120b",
+   "role": "third-party model",
+   "axis": "governance",
+   "bank_repo": "gspc-gov",
+   "bank_sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
+   "grader": "gspc-top100.mill_hub_queue.read_label",
+   "grader_source": "harness/gspc-top100/mill_hub_queue.py read_label() — imported, not copied",
+   "items_total": 237,
+   "items_graded": 235,
+   "items_unparsed": 2,
+   "correct": 144,
+   "accuracy_over_graded": 0.6128,
+   "accuracy_over_all_items": 0.6076,
+   "wilson_95_over_graded": [
+    0.5491,
+    0.6728
+   ],
+   "denominator_rule_of_this_figure": "graded items only - an unparsed answer leaves the denominator",
+   "per_item": {
+    "0": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "1": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "2": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "3": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "4": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "5": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "6": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "7": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "8": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "9": {
+     "expected": "MINIMAL_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": false
+    },
+    "10": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "11": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "12": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "13": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "14": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "15": {
+     "expected": "LIMITED_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": true
+    },
+    "16": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "17": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "18": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "19": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "20": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "21": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "22": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "23": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "24": {
+     "expected": "LIMITED_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": true
+    },
+    "25": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "26": {
+     "expected": "LIMITED_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": true
+    },
+    "27": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "28": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "29": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "30": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "31": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "32": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "33": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "34": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "35": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "36": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "37": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "38": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "39": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "40": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "41": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "42": {
+     "expected": "MINIMAL_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": false
+    },
+    "43": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "44": {
+     "expected": "MINIMAL_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": false
+    },
+    "45": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "46": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "47": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "48": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "49": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "50": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "51": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "52": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "53": {
+     "expected": "PROHIBITED",
+     "observed": "LIMITED_RISK",
+     "ok": false
+    },
+    "54": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "55": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "56": {
+     "expected": "HIGH_RISK",
+     "observed": "PROHIBITED",
+     "ok": false
+    },
+    "57": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "58": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "59": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "60": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "61": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "62": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "63": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "64": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "65": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "66": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "67": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "68": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "69": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "70": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "71": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "72": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "73": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "74": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "75": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "76": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "77": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "78": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "79": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "80": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "81": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "82": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "83": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "84": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "85": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "86": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "87": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "88": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "89": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "90": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "91": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "92": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "93": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "94": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "95": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "96": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "97": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "98": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "99": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "100": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "101": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "102": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "103": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "104": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "105": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "106": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "107": {
+     "expected": "LIMITED_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": true
+    },
+    "108": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "109": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "110": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "111": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "112": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "113": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "114": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "115": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "116": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "117": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "118": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "119": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "120": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "121": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "122": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "123": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "124": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "125": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "126": {
+     "expected": "MINIMAL_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": false
+    },
+    "127": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "128": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "129": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "130": {
+     "expected": "LIMITED_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": true
+    },
+    "131": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "132": {
+     "expected": "MINIMAL_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": false
+    },
+    "133": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "134": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "135": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "136": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "137": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "138": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "139": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "140": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "141": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "142": {
+     "expected": "MINIMAL_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": false
+    },
+    "143": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "144": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "145": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "146": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "147": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "148": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "149": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "150": {
+     "expected": "PROHIBITED",
+     "observed": null,
+     "ok": null
+    },
+    "151": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "152": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "153": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "154": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "155": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "156": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "157": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "158": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "159": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "160": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "161": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "162": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "163": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "164": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "165": {
+     "expected": "HIGH_RISK",
+     "observed": "PROHIBITED",
+     "ok": false
+    },
+    "166": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "167": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "168": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "169": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "170": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "171": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "172": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "173": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "174": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "175": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "176": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "177": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "178": {
+     "expected": "LIMITED_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": true
+    },
+    "179": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "180": {
+     "expected": "HIGH_RISK",
+     "observed": "PROHIBITED",
+     "ok": false
+    },
+    "181": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "182": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "183": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "184": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "185": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "186": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "187": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "188": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "189": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "190": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "191": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "192": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "193": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "194": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "195": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "196": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "197": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "198": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "199": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "200": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "201": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "202": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "203": {
+     "expected": "PROHIBITED",
+     "observed": "PROHIBITED",
+     "ok": true
+    },
+    "204": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "205": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "206": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "207": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "208": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "209": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "210": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "211": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "212": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "213": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "214": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "215": {
+     "expected": "LIMITED_RISK",
+     "observed": "LIMITED_RISK",
+     "ok": true
+    },
+    "216": {
+     "expected": "PROHIBITED",
+     "observed": "HIGH_RISK",
+     "ok": false
+    },
+    "217": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "218": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "219": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "220": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "221": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "222": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "223": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "224": {
+     "expected": "PROHIBITED",
+     "observed": null,
+     "ok": null
+    },
+    "225": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "226": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "227": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "228": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "229": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "230": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "231": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "232": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "233": {
+     "expected": "HIGH_RISK",
+     "observed": "HIGH_RISK",
+     "ok": true
+    },
+    "234": {
+     "expected": "LIMITED_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": false
+    },
+    "235": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    },
+    "236": {
+     "expected": "MINIMAL_RISK",
+     "observed": "MINIMAL_RISK",
+     "ok": true
+    }
+   },
+   "notes": [
+    "a bare model behind an OpenAI-compatible endpoint: there is no deterministic route in this arm, so every item that parsed was answered by the model itself"
+   ]
+  }
+ ],
+ "paired": null,
+ "arm_split_meok": null,
+ "board_cell": {
+  "axis": "governance",
+  "leader": "mistral:7b (base model)",
+  "accuracy": 0.5865,
+  "interval": [
+   0.523,
+   0.647
+  ],
+  "fleet_mean": 0.49,
+  "separation": "TIE",
+  "n": 237,
+  "evidence": {
+   "source": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361)",
+   "file": "peritem_gov.jsonl",
+   "file_sha256": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+   "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
+   "fleet": "6 base models; our own prompt overlays on stock base models removed before comparison",
+   "leader": {
+    "model": "mistral:7b",
+    "k": 139,
+    "n": 237,
+    "accuracy": 0.5865,
+    "wilson95": [
+     0.523,
+     0.647
+    ]
+   },
+   "next_best": {
+    "model": "deepseek-r1:8b",
+    "k": 128,
+    "n": 237,
+    "accuracy": 0.5401,
+    "wilson95": [
+     0.476,
+     0.602
+    ]
+   },
+   "paired_items": 237,
+   "discordant": {
+    "leader_only_correct": 70,
+    "next_best_only_correct": 59
+   },
+   "mcnemar_p": 0.3787,
+   "control": {
+    "what": "labels shuffled within items, same test re-run; share that came out SEPARATED",
+    "nperm": 1000,
+    "seed": 20260927,
+    "fixed_pair_rate": 0.044,
+    "reselect_rate": 0.001
+   },
+   "recompute": "python3 separation_test.py --rows rows --json out.json  (in the dataset; stdlib only; checks SHA256SUMS first)"
+  },
+  "note": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=237; p=0.3787). mistral:7b 139/237 vs deepseek-r1:8b 128/237, both read from the published per-item rows. A TIE is not a win: the point-estimate lead is not a measured advantage. leader shown from per-item rows; no signed per-model card yet for this run — the signed card for mistral:7b on this axis records a different measurement (accuracy 0.0), so it does not back the number shown."
+ },
+ "meok_arm_status": "The MEOK arm was NOT run over the full bank on 2026-10-28: the M2's runtime answers a trivial prompt in 169 seconds (956 MiB RAM, 163 MiB available) and the chat gateway's own header-wait timeout fires first, so 237 items would take hours. The MEOK arm's method is ready - the canonical BFF, a shim that speaks its exact {message, stream:false} contract, and the bench runner's own grader - and it is proven on the Kimi K3.1 Pro probe (24 items). What is missing is a host with memory for the runtime, and credit for the closed frontier arm."
+}

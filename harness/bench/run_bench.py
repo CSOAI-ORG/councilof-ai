@@ -191,7 +191,8 @@ def label_vocabulary(items: list[tuple[str, str]]) -> list[str]:
     return sorted({x.strip().upper() for x in raw if x.strip()})
 
 
-def ask(base_url: str, model: str, prompt: str, timeout: int, temperature: float = 0.0) -> str:
+def ask(base_url: str, model: str, prompt: str, timeout: int, temperature: float = 0.0,
+         max_tokens: int = 1024) -> str:
     """One OpenAI-compatible chat completion. Returns the assistant text."""
     url = base_url.rstrip("/") + "/chat/completions"
     body = json.dumps({
@@ -199,7 +200,7 @@ def ask(base_url: str, model: str, prompt: str, timeout: int, temperature: float
         "messages": [{"role": "user", "content": prompt}],
         "temperature": temperature,
         "stream": False,
-        "max_tokens": 256,
+        "max_tokens": max_tokens,
     }).encode()
     headers = {"Content-Type": "application/json", "User-Agent": "csoai-gspc-run-bench/1.0"}
     key = os.environ.get("GSPC_RUN_BENCH_API_KEY") or os.environ.get("OPENAI_API_KEY")
@@ -235,6 +236,13 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=0, help="score only the first N items (0 = all)")
     ap.add_argument("--timeout", type=int, default=120)
     ap.add_argument("--sleep", type=float, default=0.0, help="seconds between model calls")
+    ap.add_argument("--max-tokens", type=int, default=1024,
+                    help="completion budget per item. A REASONING model spends part of this on "
+                         "reasoning before the answer: gpt-oss-120b used 147 reasoning tokens on a "
+                         "single GSPC item, so the old fixed 256 truncated the answer and the item "
+                         "was scored UNPARSED. An unparsed item is not a wrong answer, but a "
+                         "truncated budget is our instrument, not the model, and it must not be "
+                         "recorded as the model's failure.")
     ap.add_argument("--list", action="store_true", help="list the banks and exit")
     args = ap.parse_args()
 
@@ -306,7 +314,7 @@ def main() -> int:
             return 2
         for i, prompt in enumerate(prompts):
             try:
-                answers[i] = ask(args.base_url, args.model, prompt, args.timeout)
+                answers[i] = ask(args.base_url, args.model, prompt, args.timeout, max_tokens=args.max_tokens)
             except (urllib.error.URLError, OSError, TimeoutError, json.JSONDecodeError,
                     KeyError, IndexError) as e:
                 answers[i] = ""
