@@ -1,0 +1,54 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-10-15T08:30:51Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "busabase",
+ "kind": "measurement.busabase_state",
+ "n_capsules": 8,
+ "states": {
+  "MEASURED": 8
+ },
+ "merkle_root": "b3d273e6cb723d22274a4632482db21206955040c27737dfdd803b3ad8d64ad5",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "canonicalisation": {
+  "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
+  "jcs_byte_equal": "8/8",
+  "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
+ },
+ "capsules_file": {
+  "path": "capsules.jsonl.gz",
+  "sha256": "d6c96556d01775a393a3f3689e82d3087543a674b00bb06854c00e3bb238651d",
+  "bytes": 1876,
+  "uncompressed_sha256": "c0a76c7306b9bf7ab1199cf7961d07a19b3481b0ffa41c6bec9a542ecd6620ee",
+  "uncompressed_bytes": 9623,
+  "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
+ },
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "what_this_is": "Busabase state: one capsule for the store (bases, records, commit and audit heads, dump sha256) and one per base (live record count and record-set digest), read daily from the build pod.",
+ "what_this_is_not": "Not the records themselves and not a review of their content; the dump stays on the pod.",
+ "source": {
+  "record": "/evac-bulk/busabase-snap/2026-10-15/record.json",
+  "record_sha256": "558fcdc7c620334188c15c2a1eed227fe697ed065c6ec59f169cb14398be5d1e",
+  "date": "2026-10-15",
+  "schema": "csoai.busabase-snapshot/0.1",
+  "snapshot_sha256": "47af64efcb88ad80989ff81c8832a172f19170f277d968d1249ab97a3595e097",
+  "n_bases": 7,
+  "n_records": 523,
+  "commit_head": {
+   "at": "2026-10-15T06:46:08.998Z",
+   "id": "cmtmv96dkkmmj0kpmo",
+   "n": 736
+  },
+  "audit_head": {
+   "at": "2026-10-15T06:46:09.024Z",
+   "id": "audmv96dklclc152ih",
+   "n": 340
+  },
+  "previous_record_sha256": null
+ },
+ "publication": {
+  "state": "PUBLIC",
+  "approved": "2026-09-26",
+  "note": "published daily by the owner's approval (recorded 2026-09-26); copies: HF csoai/evidence-index measurement-index/<date>/"
+ }
+}

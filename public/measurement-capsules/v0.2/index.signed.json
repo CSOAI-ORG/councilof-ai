@@ -5,15 +5,15 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/index/2026-10-01.json",
-   "sha256": "657ec68566de144fb22dc7bc8e9f7c8f74808ba718ac3d8c48450cfafa8d6851",
+   "path": "measurement-capsules/v0.2/index/2026-10-28.json",
+   "sha256": "241c5673d1afcd6a320e795facb8a7964dbfeda2c02af74705a1fa49d602d688",
    "schema": "csoai.measurement-capsule-index/0.3",
-   "as_of": "2026-10-01T08:11:31Z"
+   "as_of": "2026-10-28T08:30:40Z"
   },
-  "index_root": "9631cc00b91ce9d1e37e517851eab126be6ca1a4dc6b66a26d86352aada5b562",
-  "root_over_batch_merkle_roots": "15b7250af130c143180263045c9b1e95635cf6560a086e3141cea459ca8a7e6f",
-  "n_batches": 10,
-  "n_capsules_total": 10737,
+  "index_root": "bf58e87656139fe46ad5816930c1a1abb866477302e31f8c8c8f49067dd4de7d",
+  "root_over_batch_merkle_roots": "9d19ba7069c7305074dc870fa69be4470ef59afcad79cfbf2c55cbee2d3b7033",
+  "n_batches": 12,
+  "n_capsules_total": 11529,
   "batches": [
    [
     "a2a_card",
@@ -22,10 +22,16 @@
     "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6"
    ],
    [
+    "busabase",
+    8,
+    "b3d273e6cb723d22274a4632482db21206955040c27737dfdd803b3ad8d64ad5",
+    "c9dfb7b3a7bb33bd4a6feb068b82ce362cf539d1c99b24026491d9dfba85bd22"
+   ],
+   [
     "claim_watch",
     1,
-    "5e6440b6f9fbccdc2dca66aff3c79c02f649ccb56cd795d0f043b651dd50c32e",
-    "1647b07db74e3b3569367c4423d80fd7b42c52ae287fb0078786e7acc12f9ce2"
+    "5309370a2877655b5a8372c6e48cee47004d10ed11dfa9bd932dec8edcad6ef7",
+    "e29a804a9473ff279056e7c8b0e0828f974de41585023a0d0d27ae4d7517d3b4"
    ],
    [
     "contract_parity",
@@ -35,9 +41,15 @@
    ],
    [
     "cross_ledger",
-    383,
-    "7a51896104b0123d93e556a3c9196957e2d1258fff83a6ad4be4937facedd271",
-    "ca622361ef1e0e7b706d12f1986158ab8e1737086df0d68d53d065bdc143f504"
+    388,
+    "1185a9245626e0240f2ed689ea736f662e7be31b1849ae91bdd4622a07f7750f",
+    "56175163b5a5957ca6e584229597c9a0ee655897ee7b30c736f05123e013498e"
+   ],
+   [
+    "meok",
+    3,
+    "79f0afd38cae2c6bdb18ea95a77e95bfc46e336f9f439c407bb9548ac7f30124",
+    "7440da0251bdb956497067e4f5822b8cb4c05b244c526f50a64701c38aa37421"
    ],
    [
     "mill_cross_runtime",
@@ -53,35 +65,35 @@
    ],
    [
     "operations",
-    236,
-    "8d41a82a2651efc9c068a957b38d86782ca004f6f159668c32b7960fe91efadc",
-    "f599e7d9e37383a69f549b9f1ab5d61266841c957c644ef049b7b849223806b1"
+    1006,
+    "4e9f8c61ee90118f8ae3f8af1039e22498603faea703e9196972fe37f9df1d48",
+    "91114d37d85d2f16160bec985b4f6038504dc94fa30e954cedc74da790c83e2e"
    ],
    [
     "public_signals",
-    119,
-    "f11087f060aa4d61f5fd1c40537c0ae9c358ff17466fc205972c37ad1c145ec1",
-    "0c522265a7bc175851be38287deb507fca9e5ba4341476ec3403408b5c5a0d3d"
+    122,
+    "6786dd40b7bc0a4dda78d90cb04f08b61446c0b31f33fcc1ffdbf5a264106dbb",
+    "4d037cbbedbfa3ca7bc971d99e9deea6fb271c2a818328e1c0605a61747a4ccb"
    ],
    [
     "self_parity",
-    166,
-    "8a3d29edf648ca85401c8ec45dbf3a2793a48b0a41e3780b1fd9f840985ed6a9",
-    "33fa38ec7539a251f667a7d346466a19378356b792fff8a01bd3d2430f64810f"
+    170,
+    "9d49eccd500733a464f5ca003b3332bf8ba659e6d6c6ddfa9054d32a290ea69d",
+    "c2eaa667467e929ebfa7edb2493ed53a3801f97c6bbf59423c676a3a3bb617e2"
    ],
    [
     "tool_drift",
-    497,
-    "3d12f23d6a96689128717534436d69f4f6e21c475c5311a6c55eb4787969e655",
-    "c0ef83eeb2d00d058b5ab6f3ecd0ca7f670278fd39a996d202d42a20f19078c0"
+    496,
+    "3d9b8698ead5611d1b8246f76d4b53655ae8919b7a8993acb01bdba3b98a8f7e",
+    "5074ec35d880d5c927cc3c07df5e968c6858ad1ac2f1702e5cefa501ee353b0b"
    ]
   ],
   "chain": {
-   "date": "2026-10-01",
-   "chain_seq": 5,
-   "prev_date": "2026-09-30",
-   "prev_index_sha256": "c96b94b988df4ea029a6516ddc1fc7c65ed4e712b3833b475b20bee2e32277ef",
-   "prev_index_root": "6760518bfff7149f6f552075527640432f7200c2986476bf8b5f8685caf7b693",
+   "date": "2026-10-28",
+   "chain_seq": 23,
+   "prev_date": "2026-10-27",
+   "prev_index_sha256": "fa04a36e2f4fdfd90feeaa999716e5183aa20fc4b6ca5310b832da2952ed8923",
+   "prev_index_root": "bf58e87656139fe46ad5816930c1a1abb866477302e31f8c8c8f49067dd4de7d",
    "gap_days": 0,
    "supersedes_sha256": null
   }
@@ -89,9 +101,9 @@
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "1eef1eccaa76354d4c52c39a46499d8010ed999f29b66a6268abe5ef4db084f6f5e0a0b6790033bc2391332bc2f7e4e0b77edc24a1112b3d867b76de347ffa01",
-  "payload_sha256": "933a383963faf21207a21743785b5ec6aa1422631a3ed0b9bd8520314460e2f0",
-  "signed_at": "2026-10-01T08:11:32.035Z"
+  "sig_ed25519": "aaacc54eeb94c092e2f209631351f0b457aa40111391e47f1511d314962da403dcc3cf8ad2d3d55d78d6cd7a11326481f1f05ea414b1918c4429497d7d3e5c09",
+  "payload_sha256": "249fae68e2682eda234ce61172dc8f24274adb0e98d0fb0be0cf89d29e0c659b",
+  "signed_at": "2026-10-28T08:30:41.285Z"
  },
  "local_verification": {
   "result": "VERIFIES",

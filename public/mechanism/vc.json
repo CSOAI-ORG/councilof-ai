@@ -25,30 +25,30 @@
     "id": "did:web:csoai.org",
     "name": "Council of AI (CSOAI Ltd)"
   },
-  "validFrom": "2026-10-01T05:21:03Z",
-  "name": "Measurement capsule d12a13b4d552 (measurement.self_parity)",
+  "validFrom": "2026-10-25T05:19:30Z",
+  "name": "Measurement capsule 8e677dcb3604 (measurement.self_parity)",
   "description": "An unsigned W3C Verifiable Credential view of one signed measurement capsule. It has no proof of its own: the Ed25519 signature a verifier checks is the board signature on the capsule's batch, carried in evidence with the audit path from this capsule to the batch Merkle root. The capsule is the source of truth. A measurement, not a certification, endorsement or compliance statement.",
   "credentialSubject": {
     "type": "MeasurementCapsule",
-    "capsuleId": "d12a13b4d552a2e478dd64a36adc98e8163775f3d99b41bfbc1fcf53b9c5b468",
+    "capsuleId": "8e677dcb36043da25099bf6b26ea12d5dc02d0256d03662105e225bff0b458e9",
     "capsuleSchema": "csoai.measurement-capsule/0.2",
     "kind": "measurement.self_parity",
-    "subjectId": "own:well-known:mcp-server-card:version_pin:csoai-gspc-mcp",
+    "subjectId": "own:well-known:mcp-server-card:description.server_version",
     "measurementState": "CONSISTENT",
-    "observedAt": "2026-10-01T05:21:03Z",
+    "observedAt": "2026-10-25T05:19:30Z",
     "capsule": {
       "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
-      "capsule_id": "d12a13b4d552a2e478dd64a36adc98e8163775f3d99b41bfbc1fcf53b9c5b468",
+      "capsule_id": "8e677dcb36043da25099bf6b26ea12d5dc02d0256d03662105e225bff0b458e9",
       "claim": {
-        "field": "version_pin:csoai-gspc-mcp",
+        "field": "description.server_version",
         "statement": "our own surface declares what we serve live",
         "surface": "well-known:mcp-server-card"
       },
       "correction_pointer": null,
       "declared": {
-        "field": "version_pin:csoai-gspc-mcp",
+        "field": "description.server_version",
         "surface": "well-known:mcp-server-card",
-        "value": "0.2.2"
+        "value": "1.4.4"
       },
       "differential": {
         "note": null
@@ -60,18 +60,18 @@
       ],
       "measurement_state": "CONSISTENT",
       "observed": {
-        "field": "version_pin:csoai-gspc-mcp",
-        "value": "0.2.2"
+        "field": "description.server_version",
+        "value": "1.4.4"
       },
-      "observed_at": "2026-10-01T05:21:03Z",
+      "observed_at": "2026-10-25T05:19:30Z",
       "schema": "csoai.measurement-capsule/0.2",
       "sources": {
-        "catalog_sha256": "b6ef85bc0a85df3b61fc10d70fd33956d1676edae4f9e66e4d85276b30174f8a",
-        "fetch_log_sha256": "81761ccd575ff34ce3776a5e2132866ac5e5c02320ee2d42866daa3c5a0902e0",
-        "record_sha256": "2bd780cff6d47d3fa28105708940c475b6829d85bb1629415f46cdd311a98ff1",
-        "record_signature_payload_sha256": "9aa018cd34fafa7b71aeb710fe072cf47cfba268814165f8c2aafcc2c989a659"
+        "catalog_sha256": "820782208f77cb87fe512e3967a38cffae83debf19d2d65ede3d1866f7ee8e1c",
+        "fetch_log_sha256": "d12f877406b417dd4adb72c5193464e85d0753dc4173539ca9aad36c94e4f0bb",
+        "record_sha256": "53ed69d2ae491c7cd13164ace2bb19f9f89bb8482f69145331013a578296700c",
+        "record_signature_payload_sha256": "3130c84b90d6ffcd395debdf656786301bd1b2bbde4987c18ea0a8193af7c3b7"
       },
-      "subject_id": "own:well-known:mcp-server-card:version_pin:csoai-gspc-mcp"
+      "subject_id": "own:well-known:mcp-server-card:description.server_version"
     }
   },
   "evidence": [
@@ -83,39 +83,43 @@
       ],
       "batch": "self_parity",
       "batchRecord": "https://councilof.ai/measurement-capsules/v0.2/self_parity/record.json",
-      "batchRecordSha256": "33fa38ec7539a251f667a7d346466a19378356b792fff8a01bd3d2430f64810f",
+      "batchRecordSha256": "c2eaa667467e929ebfa7edb2493ed53a3801f97c6bbf59423c676a3a3bb617e2",
       "merkleRule": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
-      "merkleRoot": "8a3d29edf648ca85401c8ec45dbf3a2793a48b0a41e3780b1fd9f840985ed6a9",
-      "treeSize": 166,
-      "leafIndex": 142,
+      "merkleRoot": "9d49eccd500733a464f5ca003b3332bf8ba659e6d6c6ddfa9054d32a290ea69d",
+      "treeSize": 170,
+      "leafIndex": 90,
       "auditPath": [
         {
           "side": "R",
-          "hash": "8f333fa30a850e0c3f77f2482c69f434875304d7079c982f27a07a2a61af4995"
+          "hash": "59bc053d773142a8d0a8d167df9c1fcf926fbd4d97ebdbcc84288d081bab3160"
         },
         {
           "side": "L",
-          "hash": "2ab394b2cf86d93ef3bbc8a6d379a953c0dd0faf8e2e5f3e8baeba7d8c4b7d1b"
-        },
-        {
-          "side": "L",
-          "hash": "f6ff788a1c5aabbba8ad5039e915c3617b2d0b1c5558e81149425c1eee5f8df0"
-        },
-        {
-          "side": "L",
-          "hash": "cd582c2f3e374442a2c82a9a8429bf78ed22d66c6d56644ead54a1656ae65eb6"
+          "hash": "5de8c15b62adabc39fc4e5c14429f65f73ff6e0e482ed1e8ce8cfb7a1a1cbff7"
         },
         {
           "side": "R",
-          "hash": "0633e32f23d0129fd0028dd1ab6f72cb284f61beb3f32fed0674f98698d731ef"
-        },
-        {
-          "side": "R",
-          "hash": "8a387f72e88952c6e0ffb32ab3311907758bbd990c666a9ba567d7feb0f5ddcf"
+          "hash": "d6a6bea0767ebd559969298b71d9695b6f9f12150c5a40f7894b833d25e72a4f"
         },
         {
           "side": "L",
-          "hash": "32cd2f080b503335cdb53a3ef10d824699b7a359a661f891e9663bc05d02ea05"
+          "hash": "c775f34c7fef3584cca5f702ee7248389327cdaafc39c6f0cb91b021675b2ef8"
+        },
+        {
+          "side": "L",
+          "hash": "dc904489bc88beb2d1f0690ef90f6d7bbc53f1dc2c97ba3a3b93a6e400605356"
+        },
+        {
+          "side": "R",
+          "hash": "1931810900ef4e5329e15d979050b5fd010a952376aa65e4d0d103b411876aee"
+        },
+        {
+          "side": "L",
+          "hash": "c0c21640b9a61b3513fe8d967a002abf2851ea82e2fb374a0d292fb0b014b604"
+        },
+        {
+          "side": "R",
+          "hash": "dbe736c5948c8ded9dc63cf860054c0c7cbc73ea1554d56fe88bd4a3f7cb12ec"
         }
       ],
       "signedPayload": {
@@ -123,48 +127,48 @@
         "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
         "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
         "artifact": {
-          "path": "measurement-capsules/v0.2/2026-10-01/self_parity/record.json",
-          "sha256": "33fa38ec7539a251f667a7d346466a19378356b792fff8a01bd3d2430f64810f",
+          "path": "measurement-capsules/v0.2/2026-10-25/self_parity/record.json",
+          "sha256": "c2eaa667467e929ebfa7edb2493ed53a3801f97c6bbf59423c676a3a3bb617e2",
           "schema": "csoai.measurement-capsule-batch/0.2",
-          "as_of": "2026-10-01T08:07:31Z"
+          "as_of": "2026-10-25T08:30:14Z"
         },
-        "merkle_root": "8a3d29edf648ca85401c8ec45dbf3a2793a48b0a41e3780b1fd9f840985ed6a9",
-        "n_capsules": 166,
+        "merkle_root": "9d49eccd500733a464f5ca003b3332bf8ba659e6d6c6ddfa9054d32a290ea69d",
+        "n_capsules": 170,
         "states": {
-          "CONSISTENT": 41,
-          "INCONSISTENT": 11,
+          "CONSISTENT": 39,
+          "INCONSISTENT": 13,
           "NOT_DECLARED": 1,
-          "NOT_LISTED": 65,
-          "UNCHECKABLE": 48
+          "NOT_LISTED": 33,
+          "UNCHECKABLE": 84
         },
-        "capsules_sha256": "bf28bb927764dbcbcdfc0409e520a9fff7bcc12bc03e43059d2cf6ebe77e9350",
+        "capsules_sha256": "eb208f4961f6cae808395b2bdbef43d4041c1417eba48f87177a0f3ac0f79bb3",
         "adapter": "self_parity",
         "kind": "measurement.self_parity"
       },
       "signatureAlgorithm": "Ed25519",
-      "signatureValue": "5dd9454716776fdc61f0c8f4838b62eb01a389c2c2a8f1e5cec6a2a7cf5149b7ace40407358615965b39bc01a0fece6727c3f1c71d235daa182ab0f8893b6205",
+      "signatureValue": "178d7671a89f75276130ae7bc6b65722448bd02e63e8447bf9fa72e6405e6ac7ab576126c603ce20aaa4f205f90729c2f6526b7f45aacb5249479360135f8102",
       "signedPayloadCanonicalisation": "JSON with object keys sorted, no insignificant whitespace, UTF-8",
       "verificationMethod": "did:web:csoai.org#board-attestation-1",
-      "signedAt": "2026-10-01T08:07:35.538Z",
+      "signedAt": "2026-10-25T08:30:16.136Z",
       "timestampProof": "https://councilof.ai/measurement-capsules/v0.2/self_parity/record.json.ots"
     }
   ],
   "relatedResource": [
     {
       "id": "https://councilof.ai/measurement-capsules/v0.2/self_parity/record.json",
-      "digestSRI": "sha256-M/o47HU5olH2Z6fTRkZqGTeDVreS//igG9PSQw9kgQ8="
+      "digestSRI": "sha256-wuqmZ0Z+kp6/p+2yST7VOjgB+Xxrv1lCPGdqOju2F+I="
     },
     {
       "id": "https://councilof.ai/measurement-capsules/v0.2/self_parity/record.signed.json",
-      "digestSRI": "sha256-040gj49zZU+QDRhrXvkgHIKGb4gXm35tdx36ejf9oxg="
+      "digestSRI": "sha256-bcNQVWE6xbpMoL6ZGU3SMpIvDcZ8Qikz+3XsarLaMj8="
     },
     {
       "id": "https://councilof.ai/measurement-capsules/v0.2/self_parity/capsules.jsonl.gz",
-      "digestSRI": "sha256-vyi7kndk28vN/AQJ5SCp//e8wSvAPkMFnSz26+d+k1A="
+      "digestSRI": "sha256-6yCPSWH2yugIOVsr2+9D1AQcFBfrpI+HF3oPOsD3m7M="
     },
     {
       "id": "https://councilof.ai/measurement-capsules/v0.2/self_parity/record.json.ots",
-      "digestSRI": "sha256-zHR/DFuSnzCQiqwO3RmFlNe12h0R46WwEzUsyD6r6Is="
+      "digestSRI": "sha256-rKAHMGeZNV5zbJ78CfQZdLjIC33/zmUo1amKczQfM4w="
     }
   ]
 }

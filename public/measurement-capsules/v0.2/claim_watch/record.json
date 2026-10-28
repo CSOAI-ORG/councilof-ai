@@ -1,14 +1,14 @@
 {
  "schema": "csoai.measurement-capsule-batch/0.2",
- "as_of": "2026-10-01T08:10:18Z",
+ "as_of": "2026-10-25T08:30:27Z",
  "capsule_schema": "csoai.measurement-capsule/0.2",
  "adapter": "claim_watch",
  "kind": "measurement.claim_watch",
  "n_capsules": 1,
  "states": {
-  "QUARANTINED": 1
+  "UNCONFIRMED": 1
  },
- "merkle_root": "5e6440b6f9fbccdc2dca66aff3c79c02f649ccb56cd795d0f043b651dd50c32e",
+ "merkle_root": "5309370a2877655b5a8372c6e48cee47004d10ed11dfa9bd932dec8edcad6ef7",
  "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
  "canonicalisation": {
   "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
@@ -17,10 +17,10 @@
  },
  "capsules_file": {
   "path": "capsules.jsonl.gz",
-  "sha256": "70451eda2d8166b9a61084f5c01b8ff57210a7016d97ab0320b4c730f2b827ed",
-  "bytes": 1130,
-  "uncompressed_sha256": "851f589f50cf4408fbaa50b574de2ac20f83b842c4d46432a0da3a3e475fd692",
-  "uncompressed_bytes": 2027,
+  "sha256": "9debd4942cf745d695542b15a60ab8cbd556c9a00cbfde3d99ba837ed560968e",
+  "bytes": 1123,
+  "uncompressed_sha256": "e64e86568a5e513c60bb01f97bfe79073cf0cb67a06df82bc2d6f40083cd3807",
+  "uncompressed_bytes": 2014,
   "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
  },
  "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
@@ -30,10 +30,10 @@
   "receipts": [
    {
     "sealed_id": "4a31dd96e79dcf1b",
-    "date": "2026-10-01",
-    "receipt_sha256": "f4df2b1b5c14eb90298d32d4bd4720890d93587590a05dca7785d0d59e88e984",
-    "receipt_signature_payload_sha256": "10837086ac617fff0ac997cbd9d9f6dc3e59acfe88da18ab3f54753e576f5d5d",
-    "run_change_state": "QUARANTINED"
+    "date": "2026-10-25",
+    "receipt_sha256": "a29009ad9d06815a97117a06346e1f9846cd680035358856c5f2eb59ace24ca3",
+    "receipt_signature_payload_sha256": "c62344d654037e21e3c76716e4ee59ef65be4634b6e33eab502d315524f88814",
+    "run_change_state": "UNCONFIRMED"
    }
   ],
   "n_receipts": 1

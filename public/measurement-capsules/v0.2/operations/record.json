@@ -1,32 +1,32 @@
 {
  "schema": "csoai.measurement-capsule-batch/0.2",
- "as_of": "2026-10-01T08:09:15Z",
+ "as_of": "2026-10-07T08:25:42Z",
  "capsule_schema": "csoai.measurement-capsule/0.2",
  "adapter": "operations",
  "kind": "operations",
- "n_capsules": 236,
+ "n_capsules": 1006,
  "states": {
-  "BITCOIN_ATTESTED": 7,
+  "BITCOIN_ATTESTED": 10,
   "INCLUDED_PROOF_VERIFIES": 1,
-  "LANDED_NOT_SHIPPED": 54,
+  "LANDED_NOT_SHIPPED": 7,
   "PENDING_CALENDAR_COMMITMENT": 1,
-  "PRESENT_SHA256_UNRECORDED": 169,
-  "TIME_TO_CORRECT_UNMEASURED": 3,
+  "PRESENT_SHA256_UNRECORDED": 980,
+  "TIME_TO_CORRECT_UNMEASURED": 6,
   "UNCHECKABLE": 1
  },
- "merkle_root": "8d41a82a2651efc9c068a957b38d86782ca004f6f159668c32b7960fe91efadc",
+ "merkle_root": "4e9f8c61ee90118f8ae3f8af1039e22498603faea703e9196972fe37f9df1d48",
  "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
  "canonicalisation": {
   "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
-  "jcs_byte_equal": "236/236",
+  "jcs_byte_equal": "1006/1006",
   "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
  },
  "capsules_file": {
   "path": "capsules.jsonl.gz",
-  "sha256": "618b0e517d97f3cb2f0e1224549937a4773ca23404a750563e1fea8c1ccc5eee",
-  "bytes": 55774,
-  "uncompressed_sha256": "38f07f6bc0151ae2666c9e7fb5c1a82a757330d05bd9abc19d8a7844d1d82cda",
-  "uncompressed_bytes": 386986,
+  "sha256": "dd308c4f9981d59317141d11ec40067f54c76bd254b32a2ee42cfcceddcb4ebd",
+  "bytes": 216743,
+  "uncompressed_sha256": "dc2b5b764014767b13d448539c9d1ad7f32884d73ed389bc048d0076ab8ee554",
+  "uncompressed_bytes": 1637265,
   "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
  },
  "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
@@ -34,20 +34,20 @@
  "what_this_is_not": "Not a claim that the work is good, and not a grade. A private notice is recorded only as having been sent: no recipient, domain, address or message text.",
  "window": {
   "continues_from": {
-   "batch_dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-operations",
-   "index_date": "2026-09-30",
-   "record_sha256": "ceeb69de3df39518a53c2b955add283f0496169262ea9bafd0ad202916fc014d"
+   "batch_dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-03-operations",
+   "index_date": "2026-10-03",
+   "record_sha256": "44f3cef7bcfda92f4f0c068091454d93374a358439dbb73fc18abda7fce3cda1"
   },
-  "end": "2026-10-01T08:05:04Z",
+  "end": "2026-10-07T08:05:03Z",
   "rule": "starts where the newest operations batch named by a final daily index (dated before this day) ended; the first starts at 2026-09-26T00:00:00Z; ends at the harvest time",
-  "start": "2026-09-30T08:05:05Z"
+  "start": "2026-10-03T10:29:47Z"
  },
  "source": {
-  "harvest_dir": "/evac-bulk/operations/2026-10-01/20261001T080504Z",
-  "harvest_sha256": "21823c5b16c61819dee4f5317e25bf92232a74d1bfaa07bc81396aad0dcf3c5c",
-  "date": "2026-10-01",
+  "harvest_dir": "/evac-bulk/operations/2026-10-07/20261007T080503Z",
+  "harvest_sha256": "2d79a1876dfef8feee97c6ce743b6dcd553b82b1081048085866a1a0cd459d9b",
+  "date": "2026-10-07",
   "schema": "csoai.operations-harvest/0.1",
-  "harvested_at": "2026-10-01T08:05:04Z",
+  "harvested_at": "2026-10-07T08:05:03Z",
   "source_states": {
    "anchor": "READ",
    "correction": "READ",
@@ -57,11 +57,11 @@
    "publication": "READ"
   },
   "files_sha256": {
-   "anchors.json": "cee8666f7b1d98bcd3393744b62c953e8533a86f5896e34fec3007ac61437823",
-   "corrections.json": "1f07e524565e3a1baec636e68a5e6cf537aa336c5c505d38ec2c450ddcf7cef3",
-   "corrections.previous.json": "13c3c49a77b4fd4a1a544fabc2e54d4e383815b385126f4e7bd42ced0c7b3b11",
-   "hf-commits.json": "7e662caf847e46af4711674d817ee8cc13c6033643c1b396d643617133ef35b4",
-   "landings.json": "75d4172e7af45dd72e9d83047b9093c59e3d5f3d6f5dc42ae0bed51c0ca20d35",
+   "anchors.json": "2df5fe98c712a7bbec1381f4961840d17b21cbec0edc344d00ab403e72326c6c",
+   "corrections.json": "da0e1f7da7f44da1c67c98613fed5374bf3d6c155436732bf0d9506ced2a3434",
+   "corrections.previous.json": "067145f05be08134b4467d4418fd6613d0d21d44728562de35db129e9c53511f",
+   "hf-commits.json": "c5eff1a6f1375030e585dafce734b96c609dfb4db32b41707cf721e34d100e2e",
+   "landings.json": "c9bbfeb1fa56f1ab1261bc1b85733e489c9bcfcb78431e97455f9230861f1856",
    "notices.json": "5083afdc16b6c6e5c05854feec19f20d3569880ee91d7197d98609e2ab3d7863"
   }
  },
@@ -70,16 +70,16 @@
    "UNCHECKABLE": 1
   },
   "landing": {
-   "LANDED_NOT_SHIPPED": 54
+   "LANDED_NOT_SHIPPED": 7
   },
   "correction": {
-   "TIME_TO_CORRECT_UNMEASURED": 3
+   "TIME_TO_CORRECT_UNMEASURED": 6
   },
   "publication": {
-   "PRESENT_SHA256_UNRECORDED": 169
+   "PRESENT_SHA256_UNRECORDED": 980
   },
   "anchor": {
-   "BITCOIN_ATTESTED": 7,
+   "BITCOIN_ATTESTED": 10,
    "PENDING_CALENDAR_COMMITMENT": 1,
    "INCLUDED_PROOF_VERIFIES": 1
   },
@@ -93,34 +93,34 @@
    "complete": true
   },
   "landing": {
-   "first_parent_since": "a0a3f728f032c6a489d272bdedfb12fb0ff2d21c",
-   "head": "ad49be767213f5698a23a138bf5d237c96cf9972",
-   "n": 54,
-   "listed": 54,
-   "capsuled": 54,
+   "first_parent_since": "f339b01a95db7af16e288c2ec6892e6c00abfc48",
+   "head": "bbc9b1a8b520c2c8f339991cd3e844d16a6630c5",
+   "n": 7,
+   "listed": 7,
+   "capsuled": 7,
    "complete": true
   },
   "correction": {
-   "ledger_entries": 89,
-   "capsuled": 3,
+   "ledger_entries": 93,
+   "capsuled": 6,
    "rule": "all entries on the first harvest (BACKFILL); afterwards entries NEW or CHANGED since the harvest of the last indexed batch",
-   "listed": 3,
+   "listed": 6,
    "complete": true
   },
   "publication": {
-   "datasets_listed": 135,
-   "commits": 169,
+   "datasets_listed": 136,
+   "commits": 980,
    "errors": [],
-   "listed": 169,
-   "capsuled": 169,
+   "listed": 980,
+   "capsuled": 980,
    "complete": true
   },
   "anchor": {
-   "ots": 8,
+   "ots": 11,
    "rekor": 1,
    "base": 0,
-   "listed": 9,
-   "capsuled": 9,
+   "listed": 12,
+   "capsuled": 12,
    "complete": true
   },
   "notice": {

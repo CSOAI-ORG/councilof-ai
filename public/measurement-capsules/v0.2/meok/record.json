@@ -1,0 +1,44 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-10-15T08:30:56Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "meok",
+ "kind": "measurement.meok_state",
+ "n_capsules": 3,
+ "states": {
+  "MEASURED": 3
+ },
+ "merkle_root": "79f0afd38cae2c6bdb18ea95a77e95bfc46e336f9f439c407bb9548ac7f30124",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "canonicalisation": {
+  "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
+  "jcs_byte_equal": "3/3",
+  "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
+ },
+ "capsules_file": {
+  "path": "capsules.jsonl.gz",
+  "sha256": "a2dec93fe7daa624edd5b904f76176d4dbcc7b108e6eeca232069916898b9de1",
+  "bytes": 1053,
+  "uncompressed_sha256": "306d4a303b50ca54f9485db89adbd3eab4838625e88a9e252e5e6c517e7bb2b3",
+  "uncompressed_bytes": 3327,
+  "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
+ },
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "what_this_is": "MEOK state: the meok Busabase base, the MEOK gateway code and its fixtures on the build pod, by sha256.",
+ "what_this_is_not": "Not a test result and not a claim the gateway is deployed or healthy.",
+ "source": {
+  "record": "/evac-bulk/meok-snap/2026-10-15/record.json",
+  "record_sha256": "5796439091e2529ee1209e0aeefac8d126806beb5cd8daf3a8707ed3478281bf",
+  "date": "2026-10-15",
+  "schema": "csoai.meok-snapshot/0.1",
+  "gateway_tree_sha256": "7ac20ce6ab84990f5d40308391050fc8bfeae4b28cf53161586de4485acd4c4c",
+  "fixtures_tree_sha256": "312ce8fb2e0cf2aba97bc6ae266a6d7ba1e3b29b2b2aa0ac7192ffecef9c08dc",
+  "meok_base_records": 7,
+  "previous_record_sha256": null
+ },
+ "publication": {
+  "state": "PUBLIC",
+  "approved": "2026-09-26",
+  "note": "published daily by the owner's approval (recorded 2026-09-26); copies: HF csoai/evidence-index measurement-index/<date>/"
+ }
+}

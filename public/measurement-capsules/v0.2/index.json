@@ -1,6 +1,6 @@
 {
  "schema": "csoai.measurement-capsule-index/0.3",
- "as_of": "2026-10-01T08:11:31Z",
+ "as_of": "2026-10-28T08:30:40Z",
  "what_this_is": "One index over every signed measurement-capsule batch: each batch's own Merkle root, record sha256, signature and OTS state, and one root over all of them.",
  "what_this_is_not": "Not a grade, ranking, admission or approval of anything. The capsules measure declared vs observed; this index only binds them together.",
  "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
@@ -40,30 +40,70 @@
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-01-claim_watch",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-15-busabase",
+   "adapter": "busabase",
+   "kind": "measurement.busabase_state",
+   "n_capsules": 8,
+   "states": {
+    "MEASURED": 8
+   },
+   "merkle_root": "b3d273e6cb723d22274a4632482db21206955040c27737dfdd803b3ad8d64ad5",
+   "record_sha256": "c9dfb7b3a7bb33bd4a6feb068b82ce362cf539d1c99b24026491d9dfba85bd22",
+   "capsules_sha256": "d6c96556d01775a393a3f3689e82d3087543a674b00bb06854c00e3bb238651d",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-10-15T08:30:51.994Z",
+   "ots_state": "BITCOIN_ATTESTED",
+   "ots_attestations": {
+    "BitcoinBlockHeaderAttestation": 1,
+    "PendingAttestation": 3
+   },
+   "source": {
+    "record": "/evac-bulk/busabase-snap/2026-10-15/record.json",
+    "record_sha256": "558fcdc7c620334188c15c2a1eed227fe697ed065c6ec59f169cb14398be5d1e",
+    "date": "2026-10-15",
+    "schema": "csoai.busabase-snapshot/0.1",
+    "snapshot_sha256": "47af64efcb88ad80989ff81c8832a172f19170f277d968d1249ab97a3595e097",
+    "n_bases": 7,
+    "n_records": 523,
+    "commit_head": {
+     "at": "2026-10-15T06:46:08.998Z",
+     "id": "cmtmv96dkkmmj0kpmo",
+     "n": 736
+    },
+    "audit_head": {
+     "at": "2026-10-15T06:46:09.024Z",
+     "id": "audmv96dklclc152ih",
+     "n": 340
+    },
+    "previous_record_sha256": null
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-25-claim_watch",
    "adapter": "claim_watch",
    "kind": "measurement.claim_watch",
    "n_capsules": 1,
    "states": {
-    "QUARANTINED": 1
+    "UNCONFIRMED": 1
    },
-   "merkle_root": "5e6440b6f9fbccdc2dca66aff3c79c02f649ccb56cd795d0f043b651dd50c32e",
-   "record_sha256": "1647b07db74e3b3569367c4423d80fd7b42c52ae287fb0078786e7acc12f9ce2",
-   "capsules_sha256": "70451eda2d8166b9a61084f5c01b8ff57210a7016d97ab0320b4c730f2b827ed",
+   "merkle_root": "5309370a2877655b5a8372c6e48cee47004d10ed11dfa9bd932dec8edcad6ef7",
+   "record_sha256": "e29a804a9473ff279056e7c8b0e0828f974de41585023a0d0d27ae4d7517d3b4",
+   "capsules_sha256": "9debd4942cf745d695542b15a60ab8cbd556c9a00cbfde3d99ba837ed560968e",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-10-01T08:10:21.594Z",
-   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "signed_at": "2026-10-25T08:30:28.685Z",
+   "ots_state": "BITCOIN_ATTESTED",
    "ots_attestations": {
-    "PendingAttestation": 2
+    "BitcoinBlockHeaderAttestation": 1,
+    "PendingAttestation": 3
    },
    "source": {
     "receipts": [
      {
       "sealed_id": "4a31dd96e79dcf1b",
-      "date": "2026-10-01",
-      "receipt_sha256": "f4df2b1b5c14eb90298d32d4bd4720890d93587590a05dca7785d0d59e88e984",
-      "receipt_signature_payload_sha256": "10837086ac617fff0ac997cbd9d9f6dc3e59acfe88da18ab3f54753e576f5d5d",
-      "run_change_state": "QUARANTINED"
+      "date": "2026-10-25",
+      "receipt_sha256": "a29009ad9d06815a97117a06346e1f9846cd680035358856c5f2eb59ace24ca3",
+      "receipt_signature_payload_sha256": "c62344d654037e21e3c76716e4ee59ef65be4634b6e33eab502d315524f88814",
+      "run_change_state": "UNCONFIRMED"
      }
     ],
     "n_receipts": 1
@@ -104,32 +144,33 @@
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-01-cross_ledger",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-25-cross_ledger",
    "adapter": "cross_ledger",
    "kind": "measurement.cross_ledger_supply",
-   "n_capsules": 383,
+   "n_capsules": 388,
    "states": {
-    "CONSISTENT": 124,
-    "INCONSISTENT": 1,
+    "CONSISTENT": 123,
+    "INCONSISTENT": 2,
     "ISSUER_LIST_UNAVAILABLE": 2,
-    "LISTED_NOT_READ": 36,
-    "NOT_A_SUPPLY_CLAIM": 3,
-    "OPERATOR_API": 89,
+    "LISTED_NOT_READ": 39,
+    "NOT_A_SUPPLY_CLAIM": 4,
+    "OPERATOR_API": 90,
     "PERMISSIONED_NOT_READABLE": 6,
     "STATE_PROOF_RECORDED": 12,
-    "STATE_PROOF_VERIFIED": 58,
-    "TOTAL_COMPLETE": 15,
-    "TOTAL_PARTIAL": 5,
-    "UNCHECKABLE": 32
+    "STATE_PROOF_VERIFIED": 57,
+    "TOTAL_COMPLETE": 12,
+    "TOTAL_PARTIAL": 7,
+    "UNCHECKABLE": 34
    },
-   "merkle_root": "7a51896104b0123d93e556a3c9196957e2d1258fff83a6ad4be4937facedd271",
-   "record_sha256": "ca622361ef1e0e7b706d12f1986158ab8e1737086df0d68d53d065bdc143f504",
-   "capsules_sha256": "a0264a1b1d092c1cda4ab9faca44c166fa72eb30b9ea0a37b17673851ddf9894",
+   "merkle_root": "1185a9245626e0240f2ed689ea736f662e7be31b1849ae91bdd4622a07f7750f",
+   "record_sha256": "56175163b5a5957ca6e584229597c9a0ee655897ee7b30c736f05123e013498e",
+   "capsules_sha256": "91deec9721739528777368353e780eb76a9449d9a1f86721bacc706c11d286f3",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-10-01T08:08:15.931Z",
-   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "signed_at": "2026-10-25T08:30:23.199Z",
+   "ots_state": "BITCOIN_ATTESTED",
    "ots_attestations": {
-    "PendingAttestation": 2
+    "BitcoinBlockHeaderAttestation": 1,
+    "PendingAttestation": 3
    },
    "source": {
     "records": [
@@ -197,19 +238,48 @@
       "issuer_list_state": "READ"
      },
      {
-      "file": "/evac-bulk/xl-daily/2026-10-01/xl-daily-2026-10-01.json",
+      "file": "/evac-bulk/xl-daily/2026-10-25/xl-daily-2026-10-25.json",
       "asset": "xl-daily",
       "schema": "csoai.cross-ledger-xl-daily/0.1",
-      "sha256": "285293956cb7a41eba5fbfaf674a4c57010496b60b425cbfcabecb8b066798eb",
+      "sha256": "0515ab1a0147d86a9b19f162f93ceac5c811c4269f1815039fdb4ba9d731e518",
       "signature": "VERIFIES",
-      "signature_payload_sha256": "6bdb6bc9611f3c9c12ca9de1cced8ab8399e85d77a161677816bd1972ec8aa95",
-      "date": "2026-10-01",
+      "signature_payload_sha256": "d2db8cd73c6cf038aeea40b28e693133457cd508872b9352e5a0f19aab871e17",
+      "date": "2026-10-25",
       "assets": 23
      }
     ],
     "skipped_files": [
-     "institutional-evidence-links-2026-10-01.json"
+     "institutional-evidence-links-2026-10-25.json"
     ]
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-15-meok",
+   "adapter": "meok",
+   "kind": "measurement.meok_state",
+   "n_capsules": 3,
+   "states": {
+    "MEASURED": 3
+   },
+   "merkle_root": "79f0afd38cae2c6bdb18ea95a77e95bfc46e336f9f439c407bb9548ac7f30124",
+   "record_sha256": "7440da0251bdb956497067e4f5822b8cb4c05b244c526f50a64701c38aa37421",
+   "capsules_sha256": "a2dec93fe7daa624edd5b904f76176d4dbcc7b108e6eeca232069916898b9de1",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-10-15T08:30:56.809Z",
+   "ots_state": "BITCOIN_ATTESTED",
+   "ots_attestations": {
+    "BitcoinBlockHeaderAttestation": 1,
+    "PendingAttestation": 3
+   },
+   "source": {
+    "record": "/evac-bulk/meok-snap/2026-10-15/record.json",
+    "record_sha256": "5796439091e2529ee1209e0aeefac8d126806beb5cd8daf3a8707ed3478281bf",
+    "date": "2026-10-15",
+    "schema": "csoai.meok-snapshot/0.1",
+    "gateway_tree_sha256": "7ac20ce6ab84990f5d40308391050fc8bfeae4b28cf53161586de4485acd4c4c",
+    "fixtures_tree_sha256": "312ce8fb2e0cf2aba97bc6ae266a6d7ba1e3b29b2b2aa0ac7192ffecef9c08dc",
+    "meok_base_records": 7,
+    "previous_record_sha256": null
    }
   },
   {
@@ -421,34 +491,35 @@
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-01-operations",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-07-operations",
    "adapter": "operations",
    "kind": "operations",
-   "n_capsules": 236,
+   "n_capsules": 1006,
    "states": {
-    "BITCOIN_ATTESTED": 7,
+    "BITCOIN_ATTESTED": 10,
     "INCLUDED_PROOF_VERIFIES": 1,
-    "LANDED_NOT_SHIPPED": 54,
+    "LANDED_NOT_SHIPPED": 7,
     "PENDING_CALENDAR_COMMITMENT": 1,
-    "PRESENT_SHA256_UNRECORDED": 169,
-    "TIME_TO_CORRECT_UNMEASURED": 3,
+    "PRESENT_SHA256_UNRECORDED": 980,
+    "TIME_TO_CORRECT_UNMEASURED": 6,
     "UNCHECKABLE": 1
    },
-   "merkle_root": "8d41a82a2651efc9c068a957b38d86782ca004f6f159668c32b7960fe91efadc",
-   "record_sha256": "f599e7d9e37383a69f549b9f1ab5d61266841c957c644ef049b7b849223806b1",
-   "capsules_sha256": "618b0e517d97f3cb2f0e1224549937a4773ca23404a750563e1fea8c1ccc5eee",
+   "merkle_root": "4e9f8c61ee90118f8ae3f8af1039e22498603faea703e9196972fe37f9df1d48",
+   "record_sha256": "91114d37d85d2f16160bec985b4f6038504dc94fa30e954cedc74da790c83e2e",
+   "capsules_sha256": "dd308c4f9981d59317141d11ec40067f54c76bd254b32a2ee42cfcceddcb4ebd",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-10-01T08:09:18.828Z",
-   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "signed_at": "2026-10-07T08:25:43.978Z",
+   "ots_state": "BITCOIN_ATTESTED",
    "ots_attestations": {
-    "PendingAttestation": 2
+    "BitcoinBlockHeaderAttestation": 1,
+    "PendingAttestation": 3
    },
    "source": {
-    "harvest_dir": "/evac-bulk/operations/2026-10-01/20261001T080504Z",
-    "harvest_sha256": "21823c5b16c61819dee4f5317e25bf92232a74d1bfaa07bc81396aad0dcf3c5c",
-    "date": "2026-10-01",
+    "harvest_dir": "/evac-bulk/operations/2026-10-07/20261007T080503Z",
+    "harvest_sha256": "2d79a1876dfef8feee97c6ce743b6dcd553b82b1081048085866a1a0cd459d9b",
+    "date": "2026-10-07",
     "schema": "csoai.operations-harvest/0.1",
-    "harvested_at": "2026-10-01T08:05:04Z",
+    "harvested_at": "2026-10-07T08:05:03Z",
     "source_states": {
      "anchor": "READ",
      "correction": "READ",
@@ -458,93 +529,95 @@
      "publication": "READ"
     },
     "files_sha256": {
-     "anchors.json": "cee8666f7b1d98bcd3393744b62c953e8533a86f5896e34fec3007ac61437823",
-     "corrections.json": "1f07e524565e3a1baec636e68a5e6cf537aa336c5c505d38ec2c450ddcf7cef3",
-     "corrections.previous.json": "13c3c49a77b4fd4a1a544fabc2e54d4e383815b385126f4e7bd42ced0c7b3b11",
-     "hf-commits.json": "7e662caf847e46af4711674d817ee8cc13c6033643c1b396d643617133ef35b4",
-     "landings.json": "75d4172e7af45dd72e9d83047b9093c59e3d5f3d6f5dc42ae0bed51c0ca20d35",
+     "anchors.json": "2df5fe98c712a7bbec1381f4961840d17b21cbec0edc344d00ab403e72326c6c",
+     "corrections.json": "da0e1f7da7f44da1c67c98613fed5374bf3d6c155436732bf0d9506ced2a3434",
+     "corrections.previous.json": "067145f05be08134b4467d4418fd6613d0d21d44728562de35db129e9c53511f",
+     "hf-commits.json": "c5eff1a6f1375030e585dafce734b96c609dfb4db32b41707cf721e34d100e2e",
+     "landings.json": "c9bbfeb1fa56f1ab1261bc1b85733e489c9bcfcb78431e97455f9230861f1856",
      "notices.json": "5083afdc16b6c6e5c05854feec19f20d3569880ee91d7197d98609e2ab3d7863"
     }
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-01-public_signals",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-25-public_signals",
    "adapter": "public_signals",
    "kind": "measurement.public_signal",
-   "n_capsules": 119,
+   "n_capsules": 122,
    "states": {
-    "MEASURED": 101,
-    "PARTIAL": 2,
-    "UNCHECKABLE": 16
+    "MEASURED": 104,
+    "PARTIAL": 3,
+    "UNCHECKABLE": 15
    },
-   "merkle_root": "f11087f060aa4d61f5fd1c40537c0ae9c358ff17466fc205972c37ad1c145ec1",
-   "record_sha256": "0c522265a7bc175851be38287deb507fca9e5ba4341476ec3403408b5c5a0d3d",
-   "capsules_sha256": "850d32398b610a428509c8519f2ac9272e6706dfc87cfc712a21ac7c4f94c0fb",
+   "merkle_root": "6786dd40b7bc0a4dda78d90cb04f08b61446c0b31f33fcc1ffdbf5a264106dbb",
+   "record_sha256": "4d037cbbedbfa3ca7bc971d99e9deea6fb271c2a818328e1c0605a61747a4ccb",
+   "capsules_sha256": "ea6412e92287fb61abf04f036f4ff7a9a48598e80a217dfb28bdcb337bd39e12",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-10-01T05:53:12.739Z",
-   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "signed_at": "2026-10-25T05:51:59.619Z",
+   "ots_state": "BITCOIN_ATTESTED",
    "ots_attestations": {
+    "BitcoinBlockHeaderAttestation": 1,
     "PendingAttestation": 3
    },
    "source": {
-    "record": "/evac-bulk/public-signals/2026-10-01/record.json",
-    "record_sha256": "864c793ec44bcdcc1d1407cafae3dd69c18855b65ede88958edec1e6b047d6d2",
-    "date": "2026-10-01",
+    "record": "/evac-bulk/public-signals/2026-10-25/record.json",
+    "record_sha256": "cfef0bbee7dd7d2fd976a4d72753fc93d355bcf1c6a779511b0861e97a24ac9d",
+    "date": "2026-10-25",
     "schema": "csoai.public-signals/0.1",
     "record_signature": "VERIFIES",
-    "record_signature_payload_sha256": "e3fb3c0d644945c9ac15398932a93c4d84acbb2830dce7736c1fe7e0ccd80029",
-    "n_signals": 119,
-    "previous_record_sha256": "8300a830699d520fd94daebfeff556467bb1f056ba00dc0e1bbc17c2b6132378",
-    "changes_sha256": "2b3c1863e56423977f7d71ee5e5909803be16476ebc3b62eb9bbb1f14db2bef9"
+    "record_signature_payload_sha256": "7fa62696e829c7760b72501b9c6324c73357f395f52eaf3f382dcd4cb458638c",
+    "n_signals": 122,
+    "previous_record_sha256": "73e63ac41157b3552538682143b535c26319badcc86df89313d91cb984cf19a0",
+    "changes_sha256": "a398589cd9ccae6b92838c7877cbd316aa96622a3343e3c37e63622c64c2217c"
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-01-self_parity",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-25-self_parity",
    "adapter": "self_parity",
    "kind": "measurement.self_parity",
-   "n_capsules": 166,
+   "n_capsules": 170,
    "states": {
-    "CONSISTENT": 41,
-    "INCONSISTENT": 11,
+    "CONSISTENT": 39,
+    "INCONSISTENT": 13,
     "NOT_DECLARED": 1,
-    "NOT_LISTED": 65,
-    "UNCHECKABLE": 48
+    "NOT_LISTED": 33,
+    "UNCHECKABLE": 84
    },
-   "merkle_root": "8a3d29edf648ca85401c8ec45dbf3a2793a48b0a41e3780b1fd9f840985ed6a9",
-   "record_sha256": "33fa38ec7539a251f667a7d346466a19378356b792fff8a01bd3d2430f64810f",
-   "capsules_sha256": "bf28bb927764dbcbcdfc0409e520a9fff7bcc12bc03e43059d2cf6ebe77e9350",
+   "merkle_root": "9d49eccd500733a464f5ca003b3332bf8ba659e6d6c6ddfa9054d32a290ea69d",
+   "record_sha256": "c2eaa667467e929ebfa7edb2493ed53a3801f97c6bbf59423c676a3a3bb617e2",
+   "capsules_sha256": "eb208f4961f6cae808395b2bdbef43d4041c1417eba48f87177a0f3ac0f79bb3",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-10-01T08:07:35.538Z",
-   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "signed_at": "2026-10-25T08:30:16.136Z",
+   "ots_state": "BITCOIN_ATTESTED",
    "ots_attestations": {
-    "PendingAttestation": 2
+    "BitcoinBlockHeaderAttestation": 1,
+    "PendingAttestation": 3
    },
    "source": {
-    "record": "/evac-bulk/self-parity/2026-10-01/record.json",
-    "record_sha256": "2bd780cff6d47d3fa28105708940c475b6829d85bb1629415f46cdd311a98ff1",
+    "record": "/evac-bulk/self-parity/2026-10-25/record.json",
+    "record_sha256": "53ed69d2ae491c7cd13164ace2bb19f9f89bb8482f69145331013a578296700c",
     "record_signature": "VERIFIES",
-    "record_signature_payload_sha256": "9aa018cd34fafa7b71aeb710fe072cf47cfba268814165f8c2aafcc2c989a659",
-    "date": "2026-10-01",
+    "record_signature_payload_sha256": "3130c84b90d6ffcd395debdf656786301bd1b2bbde4987c18ea0a8193af7c3b7",
+    "date": "2026-10-25",
     "schema": "csoai.self-parity/0.1"
    }
   },
   {
-   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-tool_drift",
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-10-24-tool_drift",
    "adapter": "tool_drift",
    "kind": "measurement.tool_drift",
-   "n_capsules": 497,
+   "n_capsules": 496,
    "states": {
-    "TOOLS_ADDED": 17,
-    "TOOLS_ADDED+TOOLS_REMOVED": 3,
-    "TOOLS_REMOVED": 2,
-    "UNCHANGED_AT_NAME_GRANULARITY": 418,
-    "UNCHECKABLE": 57
+    "TOOLS_ADDED": 63,
+    "TOOLS_ADDED+TOOLS_REMOVED": 8,
+    "TOOLS_REMOVED": 3,
+    "UNCHANGED_AT_NAME_GRANULARITY": 346,
+    "UNCHECKABLE": 76
    },
-   "merkle_root": "3d12f23d6a96689128717534436d69f4f6e21c475c5311a6c55eb4787969e655",
-   "record_sha256": "c0ef83eeb2d00d058b5ab6f3ecd0ca7f670278fd39a996d202d42a20f19078c0",
-   "capsules_sha256": "d11db3e6b89d98c9577aff5c41c1aeb8674f94b37f34a95406fb7454a082e35a",
+   "merkle_root": "3d9b8698ead5611d1b8246f76d4b53655ae8919b7a8993acb01bdba3b98a8f7e",
+   "record_sha256": "5074ec35d880d5c927cc3c07df5e968c6858ad1ac2f1702e5cefa501ee353b0b",
+   "capsules_sha256": "03d3cd4d3788542fa443bf1243878fff7538f608b6517d657df8e4af53c08297",
    "signature_state": "VERIFIES",
-   "signed_at": "2026-09-30T08:16:26.359Z",
+   "signed_at": "2026-10-24T08:30:31.459Z",
    "ots_state": "BITCOIN_ATTESTED",
    "ots_attestations": {
     "BitcoinBlockHeaderAttestation": 1,
@@ -558,41 +631,72 @@
      "/evac-bulk/tool-drift/runs/2026-09-26/results.jsonl.gz": "b0aff3fd6a66707a2d41d048a1f9e0043ce116a2455bcca879881205386d2a92",
      "/evac-bulk/tool-drift/runs/2026-09-27/results.jsonl.gz": "a06f03fa4028cec4b264238fce926b494fc777ce7d18bb454c21cf6418ad0c0a",
      "/evac-bulk/tool-drift/runs/2026-09-28/results.jsonl.gz": "22891ab82c3314ed0d0e77c28177c12d876d9a6fc124619ba321f2c62fc23b0f",
-     "/evac-bulk/tool-drift/runs/2026-09-29/results.jsonl.gz": "384cb21b8993c45ffdd0879afc6c7857aebc5e722a46f7ac4af92f3bb4cab626"
+     "/evac-bulk/tool-drift/runs/2026-09-29/results.jsonl.gz": "384cb21b8993c45ffdd0879afc6c7857aebc5e722a46f7ac4af92f3bb4cab626",
+     "/evac-bulk/tool-drift/runs/2026-09-30/results.jsonl.gz": "3e95f46adddd937a68c007bca894b4abf03ef07daffc4e875ff08de9f0af7189",
+     "/evac-bulk/tool-drift/runs/2026-10-15/results.jsonl.gz": "ba001b07339a0b132e4c68e2a1ce4bdea3df53e5b902d1921df83e6c28ba29a9",
+     "/evac-bulk/tool-drift/runs/2026-10-16/results.jsonl.gz": "23e0bb0cdad3edba11f19b563e07f59e7d0b72ed7e54c660c9ad7bb3b098e65b",
+     "/evac-bulk/tool-drift/runs/2026-10-17/results.jsonl.gz": "a10faf8e4523f2a1bbe2ea23b7a1741a225e4b6d14b0b791ef536d9e4d3fee89",
+     "/evac-bulk/tool-drift/runs/2026-10-18/results.jsonl.gz": "aa370c765ee4f856cca4493f572dbf140c5e89886192f807247037ecf9f508f1",
+     "/evac-bulk/tool-drift/runs/2026-10-22/results.jsonl.gz": "17034fb70b0f8bbd8156feef16247549fb6508a7740bca81a7707710ef20ff75",
+     "/evac-bulk/tool-drift/runs/2026-10-23/results.jsonl.gz": "3f36cf5f6a611d177ee79dc6cf66eda380ef02ff2e91c17319d85671c21689d9"
     },
     "t2_files_sha256": {
-     "/evac-bulk/tool-drift/runs/2026-09-30/results.jsonl.gz": "3e95f46adddd937a68c007bca894b4abf03ef07daffc4e875ff08de9f0af7189"
+     "/evac-bulk/tool-drift/runs/2026-10-24/results.jsonl.gz": "99004a3ca469b9a35eedf054e264092cdee4678bd634152aba667a3361d1d97e"
     },
     "n_t1_endpoints": 21130,
-    "n_t2_endpoints": 497,
-    "n_join": 497,
-    "n_t1_only": 20633,
+    "n_t2_endpoints": 496,
+    "n_join": 496,
+    "n_t1_only": 20634,
     "n_t2_only": 0,
-    "t1_responded_absent_at_t2": 12520,
+    "t1_responded_absent_at_t2": 12351,
     "absent_at_t2_rule": "not capsuled and never counted as REMOVED: absence from an observation is UNCHECKABLE"
    }
   }
  ],
- "n_capsules_total": 10737,
- "index_root": "9631cc00b91ce9d1e37e517851eab126be6ca1a4dc6b66a26d86352aada5b562",
+ "n_capsules_total": 11529,
+ "index_root": "bf58e87656139fe46ad5816930c1a1abb866477302e31f8c8c8f49067dd4de7d",
  "index_root_rule": "the batch rule (merkle) over the sorted capsule_id leaves of ALL batches together",
  "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
  "capsule_schema": "csoai.measurement-capsule/0.2",
  "batch_schema": "csoai.measurement-capsule-batch/0.2",
- "root_over_batch_merkle_roots": "15b7250af130c143180263045c9b1e95635cf6560a086e3141cea459ca8a7e6f",
+ "root_over_batch_merkle_roots": "9d19ba7069c7305074dc870fa69be4470ef59afcad79cfbf2c55cbee2d3b7033",
  "pending_source": [
   {
+   "adapter": "self_parity_daily_source",
+   "why": "NOT_UPDATED: no source newer than the one in the 2026-10-25 batch at capsule time; the 2026-10-25 batch is carried"
+  },
+  {
    "adapter": "tool_drift_daily_source",
-   "why": "NOT_UPDATED: no source newer than the one in the 2026-09-30 batch at capsule time; the 2026-09-30 batch is carried"
+   "why": "NOT_UPDATED: no source newer than the one in the 2026-10-24 batch at capsule time; the 2026-10-24 batch is carried"
+  },
+  {
+   "adapter": "cross_ledger_daily_source",
+   "why": "NOT_UPDATED: no source newer than the one in the 2026-10-25 batch at capsule time; the 2026-10-25 batch is carried"
+  },
+  {
+   "adapter": "public_signals_daily_source",
+   "why": "NOT_UPDATED: no source newer than the one in the 2026-10-25 batch at capsule time; the 2026-10-25 batch is carried"
+  },
+  {
+   "adapter": "claim_watch_daily_source",
+   "why": "NOT_UPDATED: no source newer than the one in the 2026-10-25 batch at capsule time; the 2026-10-25 batch is carried"
+  },
+  {
+   "adapter": "busabase_daily_source",
+   "why": "NOT_UPDATED: no source newer than the one in the 2026-10-15 batch at capsule time; the 2026-10-15 batch is carried"
+  },
+  {
+   "adapter": "meok_daily_source",
+   "why": "NOT_UPDATED: no source newer than the one in the 2026-10-15 batch at capsule time; the 2026-10-15 batch is carried"
   }
  ],
  "verify": "for each batch: recompute every capsule_id and the batch Merkle root, check record sha256 and its board signature; then recompute index_root over the union of capsule ids; the index itself is signed (.signed.json) and OTS-stamped (.json.ots)",
- "date": "2026-10-01",
+ "date": "2026-10-28",
  "chain_rule": "each day's index names the FINAL version of the previous day's index on disk (measurement-index-v0.2-<prev_date>.json): prev_index_sha256 = sha256 of its bytes, prev_index_root = its index_root; gap_days = calendar days strictly between prev_date and date that have no index (0 = consecutive); a re-issue of a day names the version it replaces in supersedes; the first day (genesis) has prev = null",
- "chain_seq": 5,
- "prev_date": "2026-09-30",
- "prev_index_sha256": "c96b94b988df4ea029a6516ddc1fc7c65ed4e712b3833b475b20bee2e32277ef",
- "prev_index_root": "6760518bfff7149f6f552075527640432f7200c2986476bf8b5f8685caf7b693",
+ "chain_seq": 23,
+ "prev_date": "2026-10-27",
+ "prev_index_sha256": "fa04a36e2f4fdfd90feeaa999716e5183aa20fc4b6ca5310b832da2952ed8923",
+ "prev_index_root": "bf58e87656139fe46ad5816930c1a1abb866477302e31f8c8c8f49067dd4de7d",
  "gap_days": 0,
  "missing_dates": [],
  "genesis": null,
@@ -609,17 +713,25 @@
     "state": "CARRIED",
     "last_good_date": "2026-09-26"
    },
+   "busabase": {
+    "state": "CARRIED",
+    "last_good_date": "2026-10-15"
+   },
    "claim_watch": {
-    "state": "FRESH",
-    "last_good_date": "2026-10-01"
+    "state": "NOT_UPDATED",
+    "last_good_date": "2026-10-25"
    },
    "contract_parity": {
     "state": "CARRIED",
     "last_good_date": "2026-09-26"
    },
    "cross_ledger": {
-    "state": "FRESH",
-    "last_good_date": "2026-10-01"
+    "state": "NOT_UPDATED",
+    "last_good_date": "2026-10-25"
+   },
+   "meok": {
+    "state": "CARRIED",
+    "last_good_date": "2026-10-15"
    },
    "mill_cross_runtime": {
     "state": "CARRIED",
@@ -630,24 +742,28 @@
     "last_good_date": "2026-09-26"
    },
    "operations": {
-    "state": "FRESH",
-    "last_good_date": "2026-10-01"
+    "state": "CARRIED",
+    "last_good_date": "2026-10-07"
    },
    "public_signals": {
-    "state": "FRESH",
-    "last_good_date": "2026-10-01"
+    "state": "NOT_UPDATED",
+    "last_good_date": "2026-10-25"
    },
    "self_parity": {
-    "state": "FRESH",
-    "last_good_date": "2026-10-01"
+    "state": "NOT_UPDATED",
+    "last_good_date": "2026-10-25"
    },
    "tool_drift": {
     "state": "NOT_UPDATED",
-    "last_good_date": "2026-09-30"
+    "last_good_date": "2026-10-24"
    }
   },
   "not_updated": [
-   "tool_drift@2026-09-30"
+   "claim_watch@2026-10-25",
+   "cross_ledger@2026-10-25",
+   "public_signals@2026-10-25",
+   "self_parity@2026-10-25",
+   "tool_drift@2026-10-24"
   ]
  }
 }

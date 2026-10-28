@@ -33,7 +33,7 @@ export const DID_DOC = "public/.well-known/did.json";
 export const BOARD_KEY = "did:web:csoai.org#board-attestation-1";
 export const VOCAB = "https://councilof.ai/mechanism/vocab#";
 // The example the page links to. Chosen because it measures our own surface, not a third party's.
-export const EXAMPLE = { batch: "self_parity", subject_id: "own:well-known:mcp-server-card:version_pin:csoai-gspc-mcp" };
+export const EXAMPLE = { batch: "self_parity", subject_id: "own:well-known:mcp-server-card:description.server_version" };
 
 const fail = (m) => {
   throw new Error(`capsule-vc: ${m}`);
