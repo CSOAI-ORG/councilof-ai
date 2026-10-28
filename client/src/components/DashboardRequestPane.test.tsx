@@ -83,9 +83,12 @@ describe("request-attestation dashboard pane", () => {
         <DashboardRequestPane />
       </Router>,
     );
-    expect(html).toContain(">Request a fresh run</h1>");
+    expect(html).toContain(">Request a commission receipt</h1>");
     expect(html).not.toContain("Never mistake it for a fresh measurement");
-    expect(html).toContain("We can&#x27;t run a new test on demand.");
+    expect(html).toContain("Commission a receipt for cards already on file.");
+    expect(html).not.toContain("run a new test on demand");
+    // Still no fresh-run promise.
+    expect(html).toContain("A fresh run remains UNMEASURED until a published measurement exists; no run date is promised.");
     expect(html).toContain("nothing is charged by asking");
     expect(html).toContain("never a result");
     // The plain card comes before the developer details, and carries the three tiles.
@@ -214,5 +217,26 @@ describe("the fresh-run terms name the network in words", () => {
     const face = html.slice(html.indexOf('data-testid="fresh-run-card"'), html.indexOf("fresh-run-terms\""));
     expect(face).not.toMatch(/eip155:/);
     expect(face).not.toMatch(/smallest unit/);
+  });
+});
+
+describe("RAS booking CTA on the measured pane (/assess doors here)", () => {
+  const render = (q: string) =>
+    renderToStaticMarkup(
+      <Router ssrPath="/dashboard" ssrSearch={q}>
+        <DashboardRequestPane />
+      </Router>,
+    );
+  it("renders the booking link with the enquiry mailto; CTA and caption carry no price or stripe", () => {
+    const html = render("tab=measured");
+    expect(html).toContain('data-testid="ras-booking-cta"');
+    expect(html).toContain("mailto:nicholas@csoai.org?subject=RAS%20booking%20request%20(ras-booking)");
+    const start = html.lastIndexOf("<div", html.indexOf('data-testid="ras-booking-cta"'));
+    const block = html.slice(start, html.indexOf("</div>", start));
+    expect(block).toContain("Measurement only, not certification");
+    expect(block).not.toMatch(/[£$]|stripe/i);
+  });
+  it("is absent on the pricing overview", () => {
+    expect(render("tab=measured&task=pricing-overview")).not.toContain('data-testid="ras-booking-cta"');
   });
 });

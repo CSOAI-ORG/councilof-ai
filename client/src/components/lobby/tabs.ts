@@ -876,7 +876,7 @@ const DASHBOARD_NAV_DEFINITION: {
       "Type a model, server or record: see what is already measured, free, then request a fresh run or a monthly watch.",
     tabs: [
       { id: "home", label: "Get results" },
-      { id: "measured", label: "Request a fresh run" },
+      { id: "measured", label: "Request a commission receipt" },
       // Article 50(2): the one tool that answers "is my AI output marked?". It was filed out of
       // sight under Check a result, so the /article-50 buyer could not reach it (6 Oct 2026).
       { id: "art50", label: "Check an AI output (Art. 50)" },

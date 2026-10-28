@@ -1,0 +1,60 @@
+{
+ "generated_at": "2026-10-26T02:09:23Z",
+ "n_candidates": 601,
+ "n_valid": 303,
+ "not_a_grade": true,
+ "problems": [],
+ "publishers": [
+  {
+   "attestable": 0,
+   "candidates": 4,
+   "missing_pins": {
+    "harness.commit": 4,
+    "harness.version": 4
+   },
+   "publisher": "HELM benchmark output (Stanford CRFM public bucket)",
+   "sources": [
+    "https://storage.googleapis.com/crfm-helm-public/mmlu/benchmark_output/runs/v1.13.0/mmlu:subject=abstract_algebra,method=multiple_choice_joint,model=amazon_nova-lite-v1:0,eval_split=test,groups=mmlu_abstract_algebra/stats.json",
+    "https://storage.googleapis.com/crfm-helm-public/mmlu/benchmark_output/runs/v1.13.0/mmlu:subject=anatomy,method=multiple_choice_joint,model=amazon_nova-micro-v1:0,eval_split=test,groups=mmlu_anatomy/stats.json",
+    "https://storage.googleapis.com/crfm-helm-public/mmlu/benchmark_output/runs/v1.13.0/mmlu:subject=abstract_algebra,method=multiple_choice_joint,model=deepseek-ai_deepseek-v3,eval_split=test,groups=mmlu_abstract_algebra/stats.json",
+    "https://storage.googleapis.com/crfm-helm-public/mmlu/benchmark_output/runs/v1.13.0/mmlu:subject=anatomy,method=multiple_choice_joint,model=amazon_nova-pro-v1:0,eval_split=test,groups=mmlu_anatomy/stats.json"
+   ]
+  },
+  {
+   "attestable": 42,
+   "candidates": 57,
+   "missing_pins": {
+    "harness.commit": 15,
+    "harness.version": 15
+   },
+   "publisher": "SameedHussain (Hugging Face dataset)",
+   "sources": [
+    "https://huggingface.co/datasets/SameedHussain/lm-eval-results/resolve/main/davinci-002/results_2024-09-26T14-50-24.363423.json",
+    "https://huggingface.co/datasets/SameedHussain/lm-eval-results/resolve/main/davinci-002/results_2024-09-26T15-00-09.615208.json",
+    "https://huggingface.co/datasets/SameedHussain/lm-eval-results/resolve/main/davinci-002/results_2024-09-26T15-13-02.116608.json"
+   ]
+  },
+  {
+   "attestable": 261,
+   "candidates": 540,
+   "missing_pins": {
+    "harness.commit": 90,
+    "harness.version": 90,
+    "items.digest": 192,
+    "items.n": 18
+   },
+   "publisher": "nyu-dice-lab (Hugging Face dataset)",
+   "sources": [
+    "https://huggingface.co/datasets/nyu-dice-lab/lm-eval-results-Magpie-Align-Llama-3-8B-WildChat-private/resolve/main/Magpie-Align/Llama-3-8B-WildChat/results_2024-11-21T10-38-40.488451.json",
+    "https://huggingface.co/datasets/nyu-dice-lab/lm-eval-results-Magpie-Align-Llama-3-8B-WildChat-private/resolve/main/Magpie-Align/Llama-3-8B-WildChat/results_2024-11-22T19-36-28.059583.json",
+    "https://huggingface.co/datasets/nyu-dice-lab/lm-eval-results-Magpie-Align-Llama-3-8B-WildChat-private/resolve/main/Magpie-Align/Llama-3-8B-WildChat/results_2024-11-24T09-29-17.501697.json",
+    "https://huggingface.co/datasets/nyu-dice-lab/lm-eval-results-allenai-llama-3-tulu-2-dpo-8b-private/resolve/main/allenai/llama-3-tulu-2-dpo-8b/results_2024-11-21T13-42-41.964144.json",
+    "https://huggingface.co/datasets/nyu-dice-lab/lm-eval-results-allenai-llama-3-tulu-2-dpo-8b-private/resolve/main/allenai/llama-3-tulu-2-dpo-8b/results_2024-11-22T13-36-43.880104.json",
+    "https://huggingface.co/datasets/nyu-dice-lab/lm-eval-results-allenai-llama-3-tulu-2-dpo-8b-private/resolve/main/allenai/llama-3-tulu-2-dpo-8b/results_2024-11-22T17-45-32.444659.json"
+   ]
+  }
+ ],
+ "schema": "csoai.third-party-gaps/0.1",
+ "source_manifest": "third_party.sources.json",
+ "what_this_is": "Which required pins each publisher of third-party evaluation results does and does not publish. A candidate is attestable only when every required pin is present and resolved; a missing pin is recorded, never invented."
+}

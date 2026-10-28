@@ -11,7 +11,7 @@
 // Binds 127.0.0.1 only. No prompt or response bytes are stored: the task is hashed by the core.
 import http from "node:http";
 import fs from "node:fs";
-import { route, routeSummary, NOT_ENABLED, ardListingSource, ARD_LISTINGS } from "./dist/route-core.mjs";
+import { route, routeSummary, NOT_ENABLED, ardListingSource, ARD_LISTINGS, MAX_BOARD_BYTES, BOARD_READ_TIMEOUT_MS } from "./dist/route-core.mjs";
 
 const PORT = Number(process.env.ROUTE_PORT || 8790);
 const OLLAMA = process.env.OLLAMA_URL || "http://127.0.0.1:11434";
@@ -22,11 +22,23 @@ const CENSUS_FILE = process.env.CENSUS_FILE || "";
 const RECORDS = process.env.RECORDS_FILE || "";
 const MAX_BODY = 256 * 1024;
 
-async function fetchBoard() {
-  if (BOARD_FILE) return JSON.parse(fs.readFileSync(BOARD_FILE, "utf8"));
-  const r = await fetch(BOARD_URL, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(15000) });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  return r.json();
+export async function fetchBoard() {
+  if (BOARD_FILE) {
+    const fd = fs.openSync(BOARD_FILE, "r");
+    try {
+      const bytes = new Uint8Array(MAX_BOARD_BYTES + 1);
+      let size = 0;
+      while (size < bytes.byteLength) {
+        const n = fs.readSync(fd, bytes, size, bytes.byteLength - size, null);
+        if (n === 0) break;
+        size += n;
+      }
+      if (size > MAX_BOARD_BYTES) throw new Error("board exceeds byte limit");
+      return bytes.subarray(0, size);
+    } finally { fs.closeSync(fd); }
+  }
+  const r = await fetch(BOARD_URL, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(BOARD_READ_TIMEOUT_MS) });
+  return r;
 }
 
 /** The signed effect-binding census index the floor reads (functions/_lib/route/census.ts). */

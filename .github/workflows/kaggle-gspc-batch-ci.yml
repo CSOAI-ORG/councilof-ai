@@ -1,0 +1,37 @@
+# CI tests for the Kaggle GSPC batch infrastructure.
+# Runs on PRs touching gpu-offload/kaggle-gspc-batch/ to catch SHA mismatches
+# between runner.py constants (WORKER_SHA, GEN_SHA) and the actual files.
+#
+# This gate exists because PR #3336 changed the worker file without updating
+# WORKER_SHA, which would have made diagnostic runs use a different worker
+# than production runs. The gate must pass on the current branch and would
+# have failed on commit 21e58fac9.
+
+name: kaggle-gspc-batch-ci
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'gpu-offload/kaggle-gspc-batch/**'
+      - '.github/workflows/kaggle-gspc-batch-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            gpu-offload/kaggle-gspc-batch
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run kaggle-gspc-batch tests (includes WORKER_SHA and GEN_SHA verification)
+        working-directory: gpu-offload/kaggle-gspc-batch
+        run: python -m unittest test_kaggle_gspc_batch -v

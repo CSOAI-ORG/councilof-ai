@@ -121,6 +121,45 @@ export default function Doctrine() {
           .
         </p>
 
+        <section
+          aria-labelledby="body-heading"
+          className="mt-10 rounded-xl border border-emerald-600/20 bg-emerald-50/40 p-5"
+        >
+          <h2 id="body-heading" className="text-base font-extrabold text-gray-900">
+            What kind of body this is
+          </h2>
+          <ul className="mt-3 space-y-2 text-[15px] leading-relaxed text-gray-700">
+            <li>
+              <strong>RAS — receipts and evidence as a service.</strong> We issue signed records of what was
+              observed, when, and by which method. A record is not a grade.
+            </li>
+            <li>
+              <strong>A body, not a badge.</strong> A live board, signed cards, a corrections ledger and a public
+              root; every published number can be re-read and re-checked by a stranger without an account.
+            </li>
+            <li>
+              <strong>What compounds is the corpus.</strong> Each captured claim, re-read and correction makes the
+              next judgement cheaper. The ladder is read, reproduced, accepted, adopted — we never collapse it, and
+              a payment never moves us up it.
+            </li>
+            <li>
+              <strong>What is never sold.</strong> Verification is free forever; no grade, rank or certificate is for
+              sale. Paid work is a receipt, a maintained claim set or a report.
+            </li>
+          </ul>
+          <p className="mt-4 text-sm text-gray-600">
+            See{" "}
+            <Link href="/claim-maintenance" className="text-emerald-700 underline">
+              claim maintenance
+            </Link>{" "}
+            for the maintained record, and{" "}
+            <Link href="/services" className="text-emerald-700 underline">
+              services
+            </Link>{" "}
+            for engagements.
+          </p>
+        </section>
+
         <div className="mt-10 space-y-5">
           {POINTS.map((p) => (
             <section

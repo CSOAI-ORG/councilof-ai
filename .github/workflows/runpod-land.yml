@@ -18,6 +18,13 @@ on:
         description: "runpod-intake run id whose runpod-signing artifact to land"
         required: true
         type: string
+      supersede_scope:
+        description: "model-axis (default) or comparison-group — use comparison-group when landing a new comparison group so the run of record is never retired"
+        type: choice
+        options:
+          - model-axis
+          - comparison-group
+        default: model-axis
 
 permissions:
   contents: write
@@ -36,6 +43,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RUN_ID: ${{ github.event.inputs.intake_run_id || github.event.workflow_run.id }}
+      SUPERSEDE_SCOPE: ${{ github.event.inputs.supersede_scope || 'model-axis' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -84,8 +92,8 @@ jobs:
             git push origin "HEAD:$BR"
           fi
           # The signer refuses master and requires the numeric intake run id (its own guards).
-          gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=runpod -f intake_run_id="${RUN_ID}"
-          echo "dispatched hf-fin-shells-measure target=runpod intake_run_id=${RUN_ID} on $BR"
+          gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=runpod -f intake_run_id="${RUN_ID}" -f supersede_scope="${SUPERSEDE_SCOPE}"
+          echo "dispatched hf-fin-shells-measure target=runpod intake_run_id=${RUN_ID} supersede_scope=${SUPERSEDE_SCOPE} on $BR"
 
       - name: wait for the signer
         id: wait

@@ -4,6 +4,7 @@ import {
 } from "./_chatCanon";
 import { ART5, ART5_CUES, why } from "./_chatArt5";
 import { lobbyGround } from "./_chatLobby";
+import { recordsAnswer } from "./_chatRecords";
 import { executePlan, HELP_TEXT, routeIntent } from "../_lib/talkRouter";
 import { BUY_INTENT, buyingAnswer } from "./_buying";
 import { ACCEPTED_SHAPES, readAsk } from "../_lib/askInput";
@@ -19,11 +20,25 @@ const CORS: Record<string, string> = {
 export const onRequestOptions: PagesFunction = async () =>
   new Response(null, { status: 204, headers: CORS });
 
-async function grounded(q: string, origin: string): Promise<string | null> {
+/**
+ * The deterministic answerer: published records only, no model.
+ *
+ * EXPORTED (2026-10-26) so the PAL runtime can use it as its FIRST step. Before this, the only
+ * way to reach it was POST /api/chat, which meant a PAL could not consult the records without
+ * going through the chat surface's own framing. The answerer is unchanged; it is now callable.
+ *
+ * It returns null when no record answers — that is the signal for the caller to try the next
+ * step, not an error.
+ */
+export async function grounded(q: string, origin: string): Promise<string | null> {
   const t = q.toLowerCase().trim();
 
   const door = lobbyGround(q);
   if (door) return door;
+
+  // GSPC records (read-only MCP: search_records / get_record / get_report). Unmeasured stays UNMEASURED.
+  const rec = await recordsAnswer(q);
+  if (rec) return rec;
 
   for (const [k, rxs] of ART5_CUES) {
     if (rxs.every((rx) => rx.test(q))) {
@@ -295,14 +310,14 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   if (env.SOV_GATE_URL && env.SOV_GATE_TOKEN) {
     try {
-      const r = await fetch(env.SOV_GATE_URL.replace(/\/+$/, "") + "/api/chat", {
+      const r = await fetch(env.SOV_GATE_URL.replace(/\/+$/, "") + "/v1/chat/completions", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": "Bearer " + env.SOV_GATE_TOKEN },
         body: JSON.stringify({ model: runtimeModel, messages, stream: false, options: { temperature: 0, num_predict: 400 } }),
       });
       if (!r.ok) throw new Error("gate HTTP " + r.status);
       const data: any = await r.json();
-      const content = data?.message?.content ?? String(data?.response ?? "");
+      const content = String(data?.choices?.[0]?.message?.content ?? "");
       if (content.trim()) return reply(content, "upstream runtime response · unsigned", "model_response");
     } catch { /* fall through */ }
   }
