@@ -1,0 +1,259 @@
+{
+ "schema": "csoai.completion-audit/0.1",
+ "measured_at": "2026-10-28T04:10:07Z",
+ "note": "Every LIVE line was probed against the live surface and carries the measured value and the receipt URL. An item is LIVE only if a probe saw it. Owner-gated items are named as owner-gated, never as done. This is a measurement of completion, not a claim of a market outcome: 'unicorn status' is a trajectory, not a claim, and nothing here asserts it.",
+ "not_claimed": [
+  "a customer",
+  "a sale",
+  "a valuation",
+  "a partnership",
+  "a certification",
+  "any unicorn status",
+  "a conformance grade for any MCP server",
+  "an attestation for any third-party evaluation result",
+  "an endorsement by any person or institution quoted in a checklist"
+ ],
+ "counts": {
+  "total": 26,
+  "live": 11,
+  "open": 6,
+  "staged": 3,
+  "owner": 6
+ },
+ "items": [
+  {
+   "id": "U-1",
+   "item": "Product live end to end (discover -> identify -> pay -> verify)",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200",
+   "receipt": "https://councilof.ai/"
+  },
+  {
+   "id": "U-2",
+   "item": "Flagship public (claim maintenance)",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "GET / -> HTTP 200",
+   "receipt": "https://councilof.ai/"
+  },
+  {
+   "id": "U-3",
+   "item": "Heartbeat board public",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "GET /board/ -> HTTP 200",
+   "receipt": "https://councilof.ai/board/"
+  },
+  {
+   "id": "U-4",
+   "item": "Root advancing + axes + corrections counter",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "root as_of=2026-10-27T21:20:49Z, 325 leaves; board public_count=33 axes · 23 measured; corrections=93, signature_state=VALID",
+   "receipt": "https://councilof.ai/root.json"
+  },
+  {
+   "id": "U-13a",
+   "item": "Agent skills published (12 skills)",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "12 skill(s) in the published index",
+   "receipt": "https://councilof.ai/.well-known/agent-skills/index.json"
+  },
+  {
+   "id": "U-21",
+   "item": "OpenTimestamps: every published proof Bitcoin-attested",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "677/677 proofs Bitcoin-attested, 0 pending",
+   "receipt": "https://councilof.ai/interop/ots/manifest.json"
+  },
+  {
+   "id": "U-9a",
+   "item": "Corrections published and signed",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "40 verified, 5 blockers, 8 not_claimed; no unamended 'Public root stale' blocker",
+   "receipt": "https://councilof.ai/completion.json"
+  },
+  {
+   "id": "U-10a",
+   "item": "Namespace consolidation 4->1 in the published tree",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "0 public file(s) still carry the 'com.councilof.' namespace",
+   "receipt": "repo:public/ (measured at build time)"
+  },
+  {
+   "id": "U-14a",
+   "item": "OpenShell adapter built, with a witness capture",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "adapter present, witness capture present; capture receipt DIVERGENT {'DIVERGED': 1, 'HELD': 2}; issuer is still a placeholder (did:web:issuer.example)",
+   "receipt": "repo:harness/openshell-adapter/capture-2026-09-28/out/run-receipt.json"
+  },
+  {
+   "id": "U-14b",
+   "item": "Cedar policy set governing the GSPC route",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "5 Cedar policy file(s), 1 schema file(s)",
+   "receipt": "repo:functions/_lib/route/policy/"
+  },
+  {
+   "id": "U-15a",
+   "item": "Evaluation Cards schema published",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "1 Evaluation Card artefact(s)",
+   "receipt": "repo:docs/ public/"
+  },
+  {
+   "id": "U-5",
+   "item": "Signer ceremony + V-9 rotation",
+   "lane": "owner",
+   "closer": "a key and a named human at the ceremony",
+   "state": "OWNER",
+   "measured": "not probeable: it needs a human and a key",
+   "receipt": ""
+  },
+  {
+   "id": "U-6",
+   "item": "SCITT claim-card I-D on record",
+   "lane": "owner",
+   "closer": "the IETF submission itself",
+   "state": "OWNER",
+   "measured": "not probeable: filing is a human act",
+   "receipt": ""
+  },
+  {
+   "id": "U-7",
+   "item": "NIST TEVV comment + BoE pack + GENIUS + CFTC + Gold",
+   "lane": "owner",
+   "closer": "the sent record",
+   "state": "STAGED",
+   "measured": "not probeable: the send is a human act",
+   "receipt": ""
+  },
+  {
+   "id": "U-8",
+   "item": "Wave (33 targets) + whale dossiers sent",
+   "lane": "owner",
+   "closer": "the sent record",
+   "state": "STAGED",
+   "measured": "not probeable: the send is a human act",
+   "receipt": ""
+  },
+  {
+   "id": "U-10b",
+   "item": "www DNS + the numbers block",
+   "lane": "owner",
+   "closer": "a DNS record and a decision",
+   "state": "OWNER",
+   "measured": "not probeable: DNS and decisions are the owner's",
+   "receipt": ""
+  },
+  {
+   "id": "U-11",
+   "item": "First EXTERNAL verified delivery",
+   "lane": "owner",
+   "closer": "a stranger who pays and verifies",
+   "state": "OWNER",
+   "measured": "not probeable: it needs a customer, not a script",
+   "receipt": ""
+  },
+  {
+   "id": "U-12",
+   "item": "5 repeat payers",
+   "lane": "owner",
+   "closer": "five customers",
+   "state": "OWNER",
+   "measured": "not probeable: it needs customers",
+   "receipt": ""
+  },
+  {
+   "id": "U-16",
+   "item": "Grant entries (DeepRAP / SME / KTP / Manifund)",
+   "lane": "owner",
+   "closer": "the submitted applications",
+   "state": "STAGED",
+   "measured": "not probeable: a human writes and submits them",
+   "receipt": ""
+  },
+  {
+   "id": "U-17",
+   "item": "IP: marks filed, prior-art blockade",
+   "lane": "owner",
+   "closer": "the filed marks",
+   "state": "OWNER",
+   "measured": "not probeable: filing is a human act",
+   "receipt": ""
+  },
+  {
+   "id": "U-13",
+   "item": "Health Board daily habit + citation flywheel",
+   "lane": "agent",
+   "closer": "deploy+habit",
+   "state": "OPEN",
+   "measured": "not yet closed by a probe; the work is in the agent lane",
+   "receipt": ""
+  },
+  {
+   "id": "U-14",
+   "item": "OpenShell adapters + Cedar translator",
+   "lane": "agent",
+   "closer": "agent builds",
+   "state": "OPEN",
+   "measured": "not yet closed by a probe; the work is in the agent lane",
+   "receipt": ""
+  },
+  {
+   "id": "U-15",
+   "item": "Evaluation Cards schema adoption",
+   "lane": "agent",
+   "closer": "agent builds",
+   "state": "OPEN",
+   "measured": "not yet closed by a probe; the work is in the agent lane",
+   "receipt": ""
+  },
+  {
+   "id": "U-18",
+   "item": "The chained loop v0.1 (fixed grader)",
+   "lane": "agent",
+   "closer": "agent+pod, 2-week gate",
+   "state": "OPEN",
+   "measured": "not yet closed by a probe; the work is in the agent lane",
+   "receipt": ""
+  },
+  {
+   "id": "U-19",
+   "item": "Small-world lab T-1 league",
+   "lane": "agent",
+   "closer": "pod spike",
+   "state": "OPEN",
+   "measured": "not yet closed by a probe; the work is in the agent lane",
+   "receipt": ""
+  },
+  {
+   "id": "U-20",
+   "item": "1,050-move harvest deck + 1,000-move decks + 31-gate board",
+   "lane": "agent",
+   "closer": "execute continuously",
+   "state": "OPEN",
+   "measured": "not yet closed by a probe; the work is in the agent lane",
+   "receipt": ""
+  }
+ ]
+}
