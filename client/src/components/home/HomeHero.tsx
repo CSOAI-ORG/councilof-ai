@@ -122,6 +122,9 @@ export default function HomeHero() {
             {slide.title}
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-emerald-50/85 sm:text-lg" data-testid="hero-what-we-do">{slide.body}</p>
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-emerald-100/70">
+            We measure agents and the endpoints they call, and separate signed cards, unsigned evidence and untested work; corrections stay public.
+          </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link
               href={slide.href}
