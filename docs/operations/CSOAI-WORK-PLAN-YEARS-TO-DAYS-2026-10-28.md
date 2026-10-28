@@ -156,14 +156,15 @@ shows it is not the subject's, on every published cell.
 
 | # | item | close test | status |
 |---|---|---|---|
-| D1 | N-site presence ledger: 1,219 rows, each with the digest it pinned | `public/interop/nsite-presence-ledger.json` + Busabase base `nsite-presence` | **1,203 VERIFIED · 15 UNVERIFIABLE · 1 MISSING** |
+| D1 | N-site presence ledger: every row carries the digest it pinned, resolved against the bytes | `public/interop/nsite-presence-ledger.json` + Busabase base `nsite-presence` | **1,470 VERIFIED · 15 UNVERIFIABLE · 1 MISSING** of 1,486 |
 | D2 | A1–A8: every generated number on the README is live again | `scripts/github/org-readme.py --councilof README.md` | board 23→**33 axes** (10 slots shown UNMEASURED); root 319→**325**; Hub 411→**438**; buyers 2→**3** |
 | D3 | The generator's stale-latest bug | `org-readme.py` now picks the newest correction by date | README reads **C-2026-1006-13 (2026-10-06)**, was C-2026-0822-01 |
 | D4 | A12: the published Zenodo notice was wrong | `scripts/refresh-zenodo-status.mjs` + a dated observation | **2 of 39 DOIs resolve again**; 37 still 410; methodology DOI 21991104 → 302 → successor → 410 |
-| D5 | The N-site hunt, dead 28 days | the lane runs, self-refills, and says STALE when it stops | **97 → 1,219 onboarded · 66 → 856 joined** · 1,202 bundles |
+| D5 | The N-site hunt, dead 28 days | the lane runs, self-refills, and says STALE when it stops | **97 → 1,486 onboarded · 66 → 912 joined** · 1,471 bundles |
 | D6 | The site census + Busabase `sites` base | `tools/sites/sites_census.mjs` → `sites` (34 rows) | 34 sites probed; `UNREACHABLE` is a state, not a zero |
 | D7 | Kimi as a partner arm | attempted on the estate's frozen XRAIV bank | **FAILED**: Moonshot account suspended, 429 insufficient balance. Recorded as FAILED, not a score |
 | D8 | The Layer-0 seal | `csoai_sign` | **BLOCKED**: the MCP sends no credential, and the deployed service has no `/sign` route. Receipt bytes recorded; the board key was deliberately not used |
+| D19 | The hunt's own evidence store overwrote bundles **in place**, so 15 rows pinned bytes that no longer existed | a re-read lands on a new path, the earlier bytes survive, and a row resolves by content hash | **CLOSED 28 Oct** — evidence is now content-addressed, the rule the card signer already follows. 9 domains had been onboarded more than once (one four times); the 15 historical rows are not repairable and stay UNVERIFIABLE with both digests published |
 
 ### Open, and closable without an owner
 
@@ -212,8 +213,8 @@ shows it is not the subject's, on every published cell.
 | Public root | 325 leaves · `a2620ac3…` · as_of 2026-10-27T21:20:49Z | `GET /root.json` |
 | Corrections | 93 entries · latest `C-2026-1006-13` · VALID | `GET /api/corrections` |
 | Hub cells | 438 | `GET /api/hub-cards` |
-| N-site hunt | 1,219 onboarded · 856 joined · 1,202 evidence bundles · queue self-refilling | the lane's own counters |
-| Presence ledger | 1,219 rows · 1,203 VERIFIED · 15 UNVERIFIABLE · 1 MISSING · 7 duplicated event hashes | `public/interop/nsite-presence-ledger.json` |
+| N-site hunt | 1,486 onboarded · 912 joined · 1,471 evidence bundles · queue self-refilling | the lane's own counters |
+| Presence ledger | 1,486 rows over 1,471 domains · 1,470 VERIFIED · 15 UNVERIFIABLE · 1 MISSING · 7 duplicated event hashes | `public/interop/nsite-presence-ledger.json` |
 | Reachable compute | 3 of 15 declared hosts; 1 with a GPU | `tools/sites/sites_census.mjs` |
 | Main RunPod pod | 2 usable CPUs of 192 host threads · 1,133 GiB · no GPU · no systemd | the census + the estate's own heartbeat |
 | Busabase | 11 GB primary on one pod · 13 GB of sha256-pinned snapshots · reached by SSH tunnel | the pod + the M4 |
