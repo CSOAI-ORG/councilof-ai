@@ -1,0 +1,175 @@
+{
+ "schema": "https://councilof.ai/schemas/csoai-evaluation-card-0.2.schema.json",
+ "id": "example-evaluation-card-0.2",
+ "kind": "evaluation-card",
+ "title": "WORKED EXAMPLE 0.2 — artifact identity, limitation taxonomy and safety-case sections",
+ "description": "An example card, version 0.2. It describes no real evaluation, it establishes nothing, and it exists to show the shape of the artifact-identity binding, the limitation taxonomy and the four safety-case sections, and to prove the verifier's rules can be exercised against a well-formed card. The numbers are invented for the demonstration and are labelled as such.",
+ "subject": {
+  "id": "example/subject-model",
+  "kind": "model",
+  "version": "example-1",
+  "notes": "a fictional subject"
+ },
+ "instrument": {
+  "name": "example-grader",
+  "version": "1",
+  "kind": "grader",
+  "grader_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "rubric_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+ },
+ "suite": {
+  "id": "example-bank",
+  "version": "1",
+  "items_total": 10,
+  "items_held_out": 5,
+  "bank_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+ },
+ "arms": [
+  {
+   "id": "arm-model",
+   "kind": "model",
+   "items": 6,
+   "answered_by_model": 6,
+   "answered_by_rule": 0,
+   "model_id": "example/model",
+   "routed_model": "example/model",
+   "description": "a model answered these six items"
+  },
+  {
+   "id": "arm-rule",
+   "kind": "rule",
+   "items": 4,
+   "answered_by_model": 0,
+   "answered_by_rule": 4,
+   "description": "a deterministic rule cascade answered these four items"
+  }
+ ],
+ "item_ledger": {
+  "path": "docs/standards/evaluation-card/EXAMPLE-0.1.ledger.jsonl",
+  "sha256": "210895adae07cd2267ab1e0f9842336e8bacdb96cd332a1a8ca2a6fb23a8f0a3",
+  "items": 10
+ },
+ "result": {
+  "state": "MEASURED",
+  "value": 0.6,
+  "unit": "fraction",
+  "per_arm": [
+   {
+    "arm_id": "arm-model",
+    "items": 6,
+    "value": 0.6667,
+    "unit": "fraction",
+    "partition": "all-items"
+   },
+   {
+    "arm_id": "arm-rule",
+    "items": 4,
+    "value": 0.5,
+    "unit": "fraction",
+    "partition": "all-items"
+   }
+  ],
+  "p_value": null,
+  "separated": false,
+  "band": "the pooled number and the per-arm numbers differ; neither separates"
+ },
+ "claim_boundary": "This card does not establish that the subject is safe, correct, endorsed or certified, and it does not rank it against anything. The pooled value mixes two ways of answering and is therefore not a model score.",
+ "reproduction": {
+  "state": "REPRODUCIBLE",
+  "command": "python3 scripts/evaluation_card_verify.py docs/standards/evaluation-card/EXAMPLE-0.1.json",
+  "inputs": [
+   "docs/standards/evaluation-card/EXAMPLE-0.1.json"
+  ],
+  "environment": "python3 with jsonschema; the example is self-contained",
+  "reason": null
+ },
+ "provenance": {
+  "published_at": "2026-10-28T04:00:00Z",
+  "as_of": "2026-10-28T04:00:00Z",
+  "source_urls": [
+   "https://councilof.ai/schemas/csoai-evaluation-card-0.1.schema.json"
+  ],
+  "did": null,
+  "sig_ed25519": null
+ },
+ "limitations": [
+  "The example is invented; no run was performed and no artefact was measured.",
+  "The arm split is demonstrated with two arms; a real evaluation may have more."
+ ],
+ "corrections": null,
+ "every_eval_ever": {
+  "license": null,
+  "task": "example-task",
+  "dataset": "example-bank",
+  "model": "example/model",
+  "metrics": [
+   {
+    "name": "pass_rate",
+    "value": 0.6,
+    "unit": "fraction",
+    "higher_is_better": true
+   }
+  ],
+  "eval_type": "held-out",
+  "eval_date": "2026-10-28",
+  "not_applicable_reason": "The licence field does not apply to this example: the card describes no real evaluation and no artefact is redistributed by it."
+ },
+ "not_established": [
+  "not a certification",
+  "not a ranking or a leaderboard entry",
+  "not a claim that any real system was evaluated",
+  "not an endorsement by anyone"
+ ],
+ "artifact_identity": {
+  "weights_bound": true,
+  "weights_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "weights_revision": "example-rev",
+  "harness_version": "example-harness-1",
+  "harness_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "tokenizer": "example-tokenizer",
+  "reason": "the example binds a digest so the card says which weights produced the measured bytes; without it, a score does not identify the artefact that produced it"
+ },
+ "limitation_taxonomy": {
+  "classes": [
+   {
+    "class": "sample_size",
+    "present": true,
+    "justification": "ten items, so the interval around any rate is wide"
+   },
+   {
+    "class": "lower_bound",
+    "present": true,
+    "justification": "the example reports a single run, so every rate is a floor and not an estimate"
+   },
+   {
+    "class": "external_validity",
+    "present": false,
+    "justification": "the example bank is synthetic and is not evidence about any real system"
+   },
+   {
+    "class": "contamination",
+    "present": false,
+    "justification": "the example bank is public and was never withheld from anyone"
+   }
+  ],
+  "none_asserted": false
+ },
+ "safety_case": {
+  "alignment": {
+   "status": "ASSESSED",
+   "notes": "the example assesses nothing; this sentence exists to show the section is required and carries notes"
+  },
+  "isolation": {
+   "status": "NOT_APPLICABLE",
+   "notes": "the example subject is not an isolated component"
+  },
+  "monitoring": {
+   "status": "NOT_MEASURED",
+   "notes": "the example has no monitoring to report"
+  },
+  "incident": {
+   "status": "NOT_APPLICABLE",
+   "notes": "the example has no incidents to report"
+  }
+ }
+}

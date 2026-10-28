@@ -39,8 +39,8 @@ describe("Permissionless revenue — work, not rank", () => {
     const blob = JSON.stringify({ EARN_RULING, EARN_WEDGE, OPENINGS, OPEN_SDKS });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos|sov3/i);
     expect(blob).not.toMatch(/we (?:mine|mint) (?:XRP|SOV|GAT)/i);
-    // Operator notes live on the noindex /status/internal page, never on /products (6 Oct 2026).
-    expect(internal).toContain("<PermissionlessRevenue ");
+    // Operator modules are not mounted on public product or reference pages.
+    expect(internal).not.toContain("<PermissionlessRevenue ");
     expect(products).not.toContain("<PermissionlessRevenue");
   });
 });
