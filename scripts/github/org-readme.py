@@ -153,6 +153,27 @@ def n_or_unc(v):
     return UNCHECKABLE if v is None else str(v)
 
 
+def latest_correction(entries) -> dict:
+    """The NEWEST correction in the ledger — not the last one in the array.
+
+    The ledger is served NEWEST-FIRST: /api/corrections returns C-2026-1006-13 first and
+    C-2026-0822-01 last. This generator used to read `entries[-1]`, so it published the OLDEST
+    correction in the ledger as the latest one — on every profile, every README and every mirror,
+    with a correct count beside it and a correct signature_state. A stale number with a correct
+    number next to it is the worst kind of stale: plausible, and invisible to any check that
+    compares counts.
+
+    The selection is by (date, id), not by position, so it does not depend on the server's
+    ordering. An entry with no date is still a candidate; it simply never outranks a dated one.
+    """
+    if not isinstance(entries, list) or not entries:
+        return {}
+    dated = [e for e in entries if isinstance(e, dict) and e.get("date")]
+    if dated:
+        return max(dated, key=lambda e: (str(e.get("date")), str(e.get("id", ""))))
+    return entries[0] if isinstance(entries[0], dict) else {}
+
+
 # --------------------------------------------------------------------------- facts
 
 def probe_badges() -> list[dict]:
@@ -244,12 +265,15 @@ def derive() -> dict:
 
     c = raw["corrections"]
     entries = dig(c, "corrections", default=None)
+    # The latest correction is the NEWEST entry — see latest_correction() for why this is not
+    # `entries[-1]`, and why the bug survived a correct count and a correct signature_state.
+    latest = latest_correction(entries)
     f["corrections"] = {
         "count": len(entries) if isinstance(entries, list) else None,
         "signature_state": dig(c, "signature_state", default=UNCHECKABLE),
         "license": dig(c, "license", default=UNCHECKABLE),
-        "latest_id": dig(entries, -1, "id", default=UNCHECKABLE) if isinstance(entries, list) and entries else UNCHECKABLE,
-        "latest_date": dig(entries, -1, "date", default=UNCHECKABLE) if isinstance(entries, list) and entries else UNCHECKABLE,
+        "latest_id": dig(latest, "id", default=UNCHECKABLE) if latest else UNCHECKABLE,
+        "latest_date": dig(latest, "date", default=UNCHECKABLE) if latest else UNCHECKABLE,
     }
 
     v = raw["revenue"]
@@ -515,7 +539,12 @@ LEAD_LINE = (
 
 WHO_WE_ARE = (
     f"**{WORDMARK} — Council of AI — is the public measurement service operated by CSOAI Ltd, "
-    "a company incorporated in England and Wales on 2 January 2026, founded by Nicholas Templeman.** "
+    # The company number is a STABLE fact about the entity, not a live endpoint, so it lives HERE
+    # and not in a fetch. It was once added by hand to the emitted README, and the next daily
+    # regeneration wiped it — the claim lived in the artefact and not in the generator that emits
+    # it, which is the failure this whole script is written to avoid. A grant applicant reading
+    # the profile needs the number, so the generator carries it.
+    "a company incorporated in England and Wales on 2 January 2026 (Companies House 16939677), founded by Nicholas Templeman.** "
     "We run AI systems and digital rails against published instruments, grade deterministically where the method permits it, "
     "publish signed evidence and corrections, and keep unmeasured or uncheckable states visible. Verification is free. "
     "We measure; we do not certify, accredit, issue legal-compliance determinations, sell a rank, or take money from anything we rank."
@@ -822,7 +851,7 @@ def inventory_md(f: dict, readme_sizes: dict | None = None) -> str:
 
 # --------------------------------------------------------------------------- main
 
-def main() -> None:
+def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--profile", action="store_true", help="print the profile README to stdout")
     ap.add_argument("--personal", metavar="OUT.md", help="write the personal-profile draft (never pushed by a lane)")
@@ -831,7 +860,34 @@ def main() -> None:
     ap.add_argument("--readme-sizes", metavar="JSON", help="optional {repo: readme_bytes} map for the inventory")
     ap.add_argument("--json", action="store_true", help="dump derived facts as JSON")
     ap.add_argument("--product-index", default=None, help="path to docs/product/_INDEX.json (default: relative to this repo)")
+    ap.add_argument("--selftest", action="store_true", help="prove the corrections selection can go red")
     args = ap.parse_args()
+
+    if args.selftest:
+        # A FIXED LATE-DATED ENTRY AT THE END OF THE ARRAY IS THE CASE THAT BROKE IT.
+        # The ledger is served newest-first, so the buggy `entries[-1]` picked the oldest entry
+        # and published it as the latest. The fixture below is the live shape: the newest entry
+        # first, the oldest last, and the two with DIFFERENT dates so the wrong one is obvious.
+        fixture = [
+            {"id": "C-2026-1006-13", "date": "2026-10-06"},
+            {"id": "C-2026-1006-12", "date": "2026-10-06"},
+            {"id": "C-2026-0822-01", "date": "2026-08-22"},
+        ]
+        got = latest_correction(fixture)
+        if got.get("id") != "C-2026-1006-13":
+            print(f"✖ org-readme selftest: the newest correction was not selected (got {got.get('id')})")
+            return 1
+        # Prove the check can go red: the old selection must fail this same fixture.
+        if fixture[-1].get("id") == got.get("id"):
+            print("✖ org-readme selftest: the fixture does not distinguish the two selections")
+            return 1
+        # An undated ledger is reported as unknown, never guessed.
+        if latest_correction([{"id": "X"}]).get("date") is not None:
+            print("✖ org-readme selftest: an undated entry produced a date")
+            return 1
+        print("✓ org-readme selftest: the newest correction is selected, the oldest `entries[-1]` "
+              "would not be, and an undated ledger is not guessed — so this check can go red")
+        return 0
 
     here = Path(__file__).resolve()
     repo_root = here.parents[2]
@@ -862,4 +918,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)

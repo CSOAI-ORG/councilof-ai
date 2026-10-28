@@ -3,6 +3,7 @@
 
 | lane | owner | files/territory | state |
 |---|---|---|---|
+| `stranger-path-live-claims-20261028` | `fix/stranger-path-live-claims-20261028` | `mavis` | open | The stranger path published a stale Merkle root, a stale card count, a stale board size and the OLDEST correction in the ledger as the latest one. The generator read `entries[-1]` on a newest-first array, and the grants and trust docs pinned hashes without an `as_of`. Fixes the selection, dates the snapshot, and adds `org-readme.py --selftest`, which has been seen to fail. |
 | `hitl-kv-binding-20261027` | `feat/hitl-kv-binding-20261027` | `mavis` | open | Binds the HITL_KV namespace to the Pages project so /api/hitl can persist raised challenges, competency-module completions and signed receipts. |
 | `sov-gate-contract-20261027` | `feat/sov-gate-openai-contract-20261027` | `mavis` | merged | The Council's model path spoke the wrong contract: it called the gate's `/api/chat` (the SSE surface, which answers `{"error":"text required"}`) and read `message.content` instead of `choices[0].message.content`. It now calls the gate's OpenAI-shaped `/v1/chat/completions`. |
 | `pal-hitl-restore-20261027` | `restore/pal-hitl-gate-20261027` | `mavis` | open | Restores the PAL + human-in-the-loop work into master after a merge whose tree dropped it: `functions/api/{hitl,_hitl,pals,_palRuntime,_palRegistry,_palModel}.ts` and the client console on `/team` and the Council OS staff pane. |

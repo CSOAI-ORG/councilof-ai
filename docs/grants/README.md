@@ -78,19 +78,24 @@ See `grants.csv` for the full ledger. Highlights:
 
 ## Artifacts Common to All Applications
 
-Every grant application in this directory cites these verifiable artefacts:
+Every grant application in this directory cites these verifiable artefacts.
 
-| Artefact | Current value | Source file | Live endpoint |
+**These values are a dated snapshot, not a promise.** The public Merkle root re-roots every time
+new evidence is published — it moved twice inside the hour this table was last read — so a hash
+copied from here without its `as_of` beside it is a claim that has already expired. Read the live
+endpoint, record the date you read it, and cite that. The live endpoint is the source of truth;
+this table is a convenience for the reader who wants to know what it looked like on a given day.
+
+| Artefact | Value (read 2026-10-28T09:40Z) | Source file | Live endpoint |
 |---|---|---|---|
-| Public Merkle root | `47277a6f2034e80b6279fa969e832180b55837956773ee29339a815b74c2ba2d` | `public/root.json` → `merkle_root` | `GET /root.json` |
-| Root.json SHA256 | `f1913ecaae4ea18ac113d341c1b050318cec4c49dcda440dacbbadb89eca1b4e` | Computed over served bytes | `shasum -a 256 public/root.json` |
-| Cards under root | 319 | `public/root.json` → `card_count` | `GET /root.json` |
+| Public Merkle root | `a2620ac322c562b64f6b4935b283177d7cb7ada374eee100992f1b68c8539538` · as_of `2026-10-27T21:20:49Z` | `public/root.json` → `merkle_root` | `GET /root.json` |
+| Root.json SHA256 | `e9fb00e240b11c1d31f138ad1248c8c211b56267360a092550d448903d9ce7ea` (25,925 B — the hash of the bytes served at that read) | Computed over served bytes | `shasum -a 256 public/root.json` |
+| Cards under root | 325 (as_of `2026-10-27T21:20:49Z`) | `public/root.json` → `card_count` | `GET /root.json` |
 | Signed card corpus | 335 | `public/signed/card_index.json` → `n_cards` | `GET /api/state` → `signed_cards` |
 | Corpus relation | SEPARATE_CORPORA, identifier overlap 0 | `public/root.json` + `public/signed/card_index.json` | `GET /api/state` → `signed_cards.corpus_relation` |
-| Board | 23 axes / 23 measured | — | `GET /api/gspc` → `totals.public_count` |
-| Rekor logIndex | 3,012,420,819 | `public/interop/rekor-root-f1913eca.json` | `GET https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3012420819` |
-| OTS state | CONFIRMED_BITCOIN (blocks 969264, 969266, 969288, 969296) | `public/interop/root-f1913eca.json.ots` | `GET /interop/root-f1913eca.json.ots` |
-| Revenue (external only) | $0.03 USDC from 2 distinct non-self payers | — | `GET /api/revenue` → `one_number` |
+| Board | **33 slots · 23 measured** (10 declared-unmeasured subject slots) | — | `GET /api/gspc` → `totals.public_count` |
+| Rekor + OTS state | the witnessed root moves with the root — read the pointer, do not cite a logIndex from here | `public/interop/root-witness-pointer.json` | `GET /interop/root-witness-pointer.json` |
+| Revenue (publisher metric) | 3 distinct non-self payers all-time · 4 settlements | — | `GET /api/revenue` → `one_number` |
 | Company | CSOAI Ltd, UK 16939677 | `counters.json` | Companies House |
 | DID | `did:web:csoai.org#board-attestation-1` | `public/root.json` → `did_intended` | `GET /.well-known/did.json` |
 
