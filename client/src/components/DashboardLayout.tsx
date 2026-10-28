@@ -15,6 +15,7 @@ import {
   PlugZap,
   Scale,
   ShieldCheck,
+  UserRoundCheck,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -67,6 +68,7 @@ const SECTION_ICONS: Record<DashboardNavGroupId, typeof Gauge> = {
   verify: ShieldCheck,
   connect: PlugZap,
   learn: BookOpenCheck,
+  staff: UserRoundCheck,
   sovx: Coins,
   corrections: Scale,
 };

@@ -410,6 +410,19 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   opts.current = { page, declareUi, watch, onRunDone };
   useEffect(() => () => stopListening(), []);
 
+  // Abort ONLY a request that is still in flight.
+  //
+  // `abortRef` used to be left pointing at the last controller after the run finished, so the
+  // unmount cleanup (and the next `start`) called `abort()` on a request whose body had already
+  // been read to EOF. Chromium reports that as `requestfailed` / `net::ERR_ABORTED` even though
+  // the read completed cleanly — so the browser's own network verdict contradicted the
+  // application's evidence, and the qualification that compares the two could not accept a
+  // completion it had every reason to accept.
+  //
+  // The abort exists to stop a request that is STILL running when the pane goes away. Once the
+  // stream has ended there is nothing to stop, and aborting it is not merely useless: it makes
+  // the browser report a failure that did not happen. The controller is cleared when the run
+  // ends, so an abort is only ever sent to a live request.
   useEffect(() => () => abortRef.current?.abort(), []);
 
   const update = useCallback((id: string, fn: (r: TalkRun) => TalkRun) => {
@@ -466,6 +479,11 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
           const msg = e instanceof Error ? e.message : String(e);
           update(id, (r) => interruptRun(r, "interrupted", msg));
           if (id === "run-" + seq.current) setAnnounce("The answer stream was interrupted. Executor state is unknown.");
+        })
+        .finally(() => {
+          // The run has ended: the request is no longer in flight, so it must not be abortable.
+          // Only clear it if it is still THIS run's controller — a newer run may have taken over.
+          if (abortRef.current === ctl) abortRef.current = null;
         });
     },
     [update],
