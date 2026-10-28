@@ -114,9 +114,9 @@ const HOME_LD = {
 
 export default function HomeVerify() {
   useEffect(() => {
-    document.title = "Council of AI — independent measurement of AI systems, signed and free to re-check";
+    document.title = "UK AI measurement infrastructure — Council of AI";
     setMetaDescription(
-      "We measure how AI systems behave against frozen, published tests and publish checkable evidence. Issued measurement cards are signed; unsigned supporting runs are labelled. Read the live board and corrections ledger.",
+      "UK AI measurement infrastructure operated by CSOAI Ltd. Read current measurements, verify signed evidence for free and inspect the public corrections ledger.",
     );
   }, []);
 
@@ -149,8 +149,8 @@ export default function HomeVerify() {
       <section aria-label="Who runs Council of AI" className="surface-base border-t border-border" data-testid="home-company-strip">
         <div className="section-shell flex flex-col gap-3 py-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="home-accountable-entity">
-            Council of AI is operated by CSOAI Ltd (UK Companies House 16939677), founded by Nicholas Templeman. We
-            measure; we do not certify, and verification is free.
+            Council of AI is UK AI measurement infrastructure operated by CSOAI Ltd (UK Companies House 16939677),
+            founded by Nicholas Templeman. We measure; we do not certify, and verification is free.
           </p>
           <div className="flex flex-wrap gap-x-6 text-sm font-bold">
             <Link href="/about/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
