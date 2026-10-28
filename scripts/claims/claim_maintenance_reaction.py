@@ -48,14 +48,15 @@ def verify_feed(head: dict, raw: bytes, events: list[dict], lines: list[bytes]) 
 def reaction_for(ev: dict) -> tuple[str, str]:
     kind = ev.get("kind")
     change = ev.get("change_state")
-    if kind in NO_TRIGGER_KINDS:
+    if (kind in NO_TRIGGER_KINDS or ev.get("object_state") in {"FETCH_FAILED", "UNCONFIRMED"}
+            or change == "UNCONFIRMED"):
         return "OBSERVE_ONLY", "A source/read failure is not evidence that the claim changed."
-    if change in CONFIRMED:
-        return "NO_REMEASUREMENT", "Pinned observation reproduced; retain history and schedule the next bounded read."
-    if change:
+    if change and change not in CONFIRMED:
         return "BOUNDED_REMEASUREMENT", "A non-confirmed change state requires bounded remeasurement or owner review before any correction."
     if ev.get("checks_all_pass") is False:
         return "OWNER_REVIEW", "One or more declared checks did not reproduce; preserve the event and review the bounded measurement."
+    if change in CONFIRMED:
+        return "NO_REMEASUREMENT", "Pinned observation reproduced; retain history and schedule the next bounded read."
     return "OBSERVE_ONLY", "Observation contributes to the append-only evidence history without promoting a claim state."
 
 def public_subject(ev: dict) -> dict:
