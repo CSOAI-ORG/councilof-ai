@@ -156,12 +156,20 @@ def verify_open_response_survival(
     if not lineage_ok:
         issues.append("missing or mismatched request/provider/model/version metadata association")
 
-    retest_isolation_ok = True
+    # Translation must preserve the original lineage. Absent and null both
+    # mean no supersedes relation; an envelope cannot invent one, even when
+    # no prior event (or one at the same endpoint/method) was supplied.
+    retest_isolation_ok = parsed_output.get("supersedes") == original_event.get("supersedes")
+    if not retest_isolation_ok:
+        issues.append("supersedes lineage was changed during translation")
     if unrelated_prior_event is not None:
         # A passing/consistent result on `original_event` must NOT close `unrelated_prior_event`
-        # unless `original_event["supersedes"] == unrelated_prior_event["event_id"]` and subjects/methods match.
+        # unless the original supersedes.event_id names that prior event and subjects/methods match.
         sup = parsed_output.get("supersedes")
-        if sup == unrelated_prior_event.get("event_id"):
+        # The frozen event contract represents this relation as an object
+        # with event_id, or null; do not invent a new lineage representation.
+        superseded_id = sup.get("event_id") if isinstance(sup, dict) else None
+        if superseded_id == unrelated_prior_event.get("event_id"):
             if (
                 original_event["subject"]["locator"] != unrelated_prior_event["subject"]["locator"]
                 or original_event["method"]["id"] != unrelated_prior_event["method"]["id"]
