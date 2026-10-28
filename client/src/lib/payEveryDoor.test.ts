@@ -205,6 +205,142 @@ describe("the challenge is the one x402Wallet signs", () => {
 });
 
 describe("three outcomes and no fourth", () => {
+
+  const paidRefusalCases = [
+    { status: 200, header: "x-csoai-delivery-state", value: "PAID_NOT_DELIVERED" },
+    { status: 202, header: "x-csoai-delivery-state", value: "PAID_NOT_DELIVERED" },
+    { status: 402, header: "x-csoai-delivery-state", value: "PAID_NOT_DELIVERED" },
+    { status: 200, header: "x-csoai-delivery-record-state", value: "NOT_DELIVERED" },
+    { status: 202, header: "x-csoai-delivery-record-state", value: "NOT_DELIVERED" },
+    { status: 402, header: "x-csoai-delivery-record-state", value: "NOT_DELIVERED" },
+  ] as const;
+
+  it.each(paidRefusalCases)(
+    "retains a labelled HTTP $status refusal from $header without retrying",
+    async ({ status, header, value }) => {
+      const d = door();
+      const reportedSettlement = {
+        success: true,
+        transaction: `0x${"ef".repeat(32)}`,
+        network: "eip155:8453",
+        payer: SIGNER,
+      };
+      const echo = btoa(JSON.stringify(reportedSettlement));
+      const failureBody = {
+        error: "uncheckable",
+        state: "UNCHECKABLE",
+        refund: { how: "Retain this fixture reference for reconciliation." },
+      };
+      const fetchMock = vi.fn(async () => jsonResponse(status, failureBody, {
+        // An explicit failure wins even if bookkeeping also claims a stored record.
+        ...(header === "x-csoai-delivery-state"
+          ? { "x-csoai-delivery-record-state": "WRITTEN" } : {}),
+        [header]: value,
+        "x-payment-response": echo,
+      }));
+
+      const out = await retryDoorWithPayment(
+        d,
+        "fixture-payment",
+        fetchMock as unknown as typeof fetch,
+      );
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(d.url, {
+        method: d.method,
+        headers: { accept: "application/json", "x-payment": "fixture-payment" },
+      });
+      expect(out.kind).toBe("maybe-settled");
+      if (out.kind === "maybe-settled") {
+        expect(out.http).toBe(status);
+        expect(out.detail).toBe(
+          `the paid retry reported an undelivered output at HTTP ${status}: uncheckable`,
+        );
+        expect(out.paymentResponse).toBe(echo);
+        expect(out.settlement).toEqual(reportedSettlement);
+        expect(out.body).toEqual(failureBody);
+      }
+    },
+  );
+
+  it.each(paidRefusalCases.filter(testCase => testCase.status !== 402))(
+    "keeps HTTP $status/$header in recovery and excludes it from another walk",
+    async ({ status, header, value }) => {
+      const d = door();
+      const wallet = provider();
+      const reportedSettlement = {
+        success: true,
+        transaction: `0x${"ef".repeat(32)}`,
+        network: "eip155:8453",
+        payer: SIGNER,
+      };
+      const failureBody = {
+        error: "uncheckable",
+        state: "UNCHECKABLE",
+        refund: { how: "Retain this fixture reference for reconciliation." },
+      };
+      const fetchMock = vi.fn(async () => jsonResponse(status, failureBody, {
+        [header]: value,
+        "x-payment-response": btoa(JSON.stringify(reportedSettlement)),
+      }));
+      const phases: string[] = [];
+      const challenge = challengeFromPaymentRequired(PAYMENT_REQUIRED)!;
+
+      const state = await payDoor({
+        door: d,
+        challenge,
+        provider: wallet,
+        walletName: "fixture-wallet",
+        fetchImpl: fetchMock as unknown as typeof fetch,
+        onPhase: phase => phases.push(phase.kind),
+      });
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(wallet.calls.filter(call => call.method === "eth_signTypedData_v4"))
+        .toHaveLength(1);
+      expect(phases).toEqual(["signing", "paying"]);
+      expect(state.kind).toBe("maybe-settled");
+      if (state.kind === "maybe-settled") {
+        expect(state.detail).toBe(
+          `the paid retry reported an undelivered output at HTTP ${status}: uncheckable`,
+        );
+        expect(state.settlement).toEqual(reportedSettlement);
+        expect(state.refund).toBe(failureBody.refund.how);
+        expect(state.body).toEqual(failureBody);
+      }
+
+      const quotes = {
+        [d.url]: { kind: "challenge", http: 402, challenge, body: {} },
+      } as never;
+      expect(remainingDoors([d], quotes, { [d.url]: state })).toEqual([]);
+      expect(walkTally([d.url], { [d.url]: state }))
+        .toMatchObject({ queued: 1, delivered: 0, maybe_settled: 1, pending: 0 });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it("retains an opaque settlement echo without inventing decoded settlement", async () => {
+    const failureBody = { state: "UNCHECKABLE" };
+    const fetchMock = vi.fn(async () => jsonResponse(200, failureBody, {
+      "x-csoai-delivery-state": "PAID_NOT_DELIVERED",
+      "x-payment-response": "opaque-route-echo",
+    }));
+
+    const out = await retryDoorWithPayment(
+      door(),
+      "fixture-payment",
+      fetchMock as unknown as typeof fetch,
+    );
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(out.kind).toBe("maybe-settled");
+    if (out.kind === "maybe-settled") {
+      expect(out.paymentResponse).toBe("opaque-route-echo");
+      expect(out.settlement).toBeNull();
+      expect(out.body).toEqual(failureBody);
+    }
+  });
+
   it("DELIVERED carries the settle reference the door echoed, decoded from X-PAYMENT-RESPONSE", async () => {
     const receipt = { success: true, transaction: `0x${"cd".repeat(32)}`, network: "eip155:8453", payer: SIGNER };
     const fetchImpl = vi.fn(async (_u: unknown, init?: RequestInit) => {
