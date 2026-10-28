@@ -1,0 +1,74 @@
+{
+  "schema": "csoai.alliance-control-plugin/0.3",
+  "supersedes": "csoai.alliance-control-plugin/0.2",
+  "status": "CANDIDATE_SOURCE_ONLY_NOT_DEPLOYED",
+  "purpose": "Bind constitutional authority, HITL decision-to-effect evidence, continuous claim maintenance and protocol projections without making any one engine mandatory.",
+  "independence": {
+    "hitl_requires_gspc": false,
+    "hitl_requires_openshell": false,
+    "claim_maintenance_requires_gspc": false,
+    "measurement_grants_execution_authority": false,
+    "a_current_claim_grants_execution_authority": false
+  },
+  "normative_profiles": {
+    "constitutional_harness": "https://councilof.ai/.well-known/constitutional-harness.json",
+    "hitl_authority_effect": "hitl-authority-effect-v0.2.schema.json",
+    "hitl_authority_effect_v0_1": "hitl-authority-effect-v0.1.schema.json",
+    "claim_maintenance": "safe-reverification-record-v0.1.schema.json"
+  },
+  "optional_bindings": {
+    "measurement": ["https://councilof.ai/api/gspc", "https://councilof.ai/api/corrections"],
+    "tool_protocol": ["https://councilof.ai/mcp/"],
+    "agent_protocol": ["https://councilof.ai/.well-known/agent-card.json", "https://councilof.ai/api/a2a"],
+    "runtime_executor": ["OpenShell or another separately authorized executor"],
+    "physical_host_evidence": ["OpenBMC/Redfish where separately authorized"],
+    "project_security_observation": ["LFX/public project observations where permitted"]
+  },
+  "state_machine": [
+    "DISCOVERED",
+    "MEASURED",
+    "QUALIFIED",
+    "ROUTABLE",
+    "AUTHORIZED",
+    "EXECUTED",
+    "EFFECT_OBSERVED",
+    "VERIFIED",
+    "CLAIM_CURRENT"
+  ],
+  "separation_rules": [
+    "DISCOVERED is not MEASURED",
+    "MEASURED is not AUTHORIZED",
+    "AUTHORIZED is not EXECUTED",
+    "EXECUTED is not EFFECT_OBSERVED",
+    "EFFECT_OBSERVED is not VERIFIED",
+    "VERIFIED is not CERTIFIED",
+    "payment or signature never grants execution authority",
+    "a claim that is not CURRENT is not authority to act",
+    "an APPROVE is bound to a current external authority record, not to a chat, a ticket or a person present at the time",
+    "an unknown revocation state fails closed",
+    "an unknown watch state is not CURRENT"
+  ],
+  "interfaces": {
+    "MCP": "read/write capability boundary subject to separate authority",
+    "A2A": "delegation/evidence boundary subject to separate authority",
+    "AGUI": "interaction/state projection",
+    "A2UI": "presentation-only projection",
+    "HTTP": "machine-readable evidence and lifecycle state"
+  },
+  "release_gates": [
+    "schema validation and negative controls",
+    "source identity pinned",
+    "privacy/confidentiality review",
+    "no vendor endorsement language",
+    "protected source-owner merge",
+    "served anonymous readback",
+    "outside reproduction"
+  ],
+  "limits": [
+    "This manifest is a CSOAI candidate contract, not an Alliance standard.",
+    "OpenShell, OpenBMC, LFX and vendor profiles are optional adapters, not authorities.",
+    "Signatures, transparency receipts and timestamps establish scoped provenance/time properties only.",
+    "Version 0.3 supersedes 0.2 by pointing the HITL profile at hitl-authority-effect-v0.2. The 0.2 bytes and the v0.1 schema bytes are preserved unchanged; superseding is a new record, never an edit of history.",
+    "The v0.2 HITL schema binds a claim that is not CURRENT to no authorization, and binds an APPROVE to a current external authority record. It does not resolve that external record, authenticate the principal, or prove that the reviewed scope actually executed."
+  ]
+}

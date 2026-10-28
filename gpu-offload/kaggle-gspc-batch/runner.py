@@ -14,7 +14,7 @@ from __future__ import annotations
 import datetime, glob, hashlib, json, os, shutil, subprocess, sys, time, urllib.request, urllib.error
 
 KIT = os.environ.get("GSPC_KIT", os.path.dirname(os.path.abspath(__file__)))
-WORKER_SHA = "ea59a9de4cb92b80910a4efddc7ab592c4d0bd2dc2a184eec811183f6b584491"
+WORKER_SHA = "31c7e3f0fd617a5f099879054601f764149790fe0e8bf4e2b5fedc4e47f6887a"
 GEN_SHA = "132b85e4e938e0720d64e32a7bdaa9f23ceee55daebff09304bd04889a6468b5"
 OLLAMA_VERSION = "0.40.6"
 AXES = ["governance", "safety", "provenance", "continuity", "conformance", "openness", "care"]

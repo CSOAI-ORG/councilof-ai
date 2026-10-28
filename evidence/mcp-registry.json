@@ -4,7 +4,6 @@
   "probe_method": "JSON-RPC 2.0 over HTTPS POST: initialize -> tools/list, MCP protocolVersion 2024-11-05. A server counts as reachable only if initialize returned a JSON-RPC result.",
   "probe_host": "workstation",
   "targets_file": "scripts/mcp-targets.json",
-  "probe_scope": "PRE-DEPLOY STAND-IN: every https://councilof.ai/* target was answered by http://127.0.0.1:8799 (this branch's build, served locally or as a Pages preview), NOT by the live door; see `contacted` on each such server. Re-run scripts/mcp-probe.mjs without --door-origin after the deploy and commit the live observation.",
   "honesty_contract": [
     "last_probed is written ONLY by a probe that returned. If nothing answered it is null. No code path synthesises it.",
     "tools_count is derived from the length of the probed tools array. A catalogue's asserted tool count is never used as tools_count.",
@@ -28,8 +27,8 @@
         "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
       }
     ],
-    "started": "2026-10-26T03:46:26.457Z",
-    "finished": "2026-10-26T03:46:26.819Z"
+    "started": "2026-10-26T08:25:31.290Z",
+    "finished": "2026-10-26T08:25:32.636Z"
   },
   "servers": [
     {
@@ -40,7 +39,7 @@
       "role": "primary",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-10-26T03:46:26.487Z",
+      "last_probed": "2026-10-26T08:25:31.866Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
@@ -332,9 +331,7 @@
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.primary",
       "catalogue_source": null,
-      "catalogue_claim": null,
-      "contacted": "http://127.0.0.1:8799/mcp",
-      "stand_in_for": "https://councilof.ai/mcp"
+      "catalogue_claim": null
     },
     {
       "id": "csoai-gspc-mcp-fallback",
@@ -344,11 +341,11 @@
       "role": "fallback",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-10-26T03:46:26.770Z",
+      "last_probed": "2026-10-26T08:25:32.196Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 19,
+      "tools_count": 52,
       "tools": [
         {
           "name": "board_totals",
@@ -435,6 +432,171 @@
           "required_args": []
         },
         {
+          "name": "axis_governance",
+          "description": "The governance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_safety",
+          "description": "The safety axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_provenance",
+          "description": "The provenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_continuity",
+          "description": "The continuity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_conformance",
+          "description": "The conformance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_openness",
+          "description": "The openness axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_machinery-conformity",
+          "description": "The machinery-conformity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_care",
+          "description": "The care axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_cross-reality",
+          "description": "The cross-reality axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_detector-interop",
+          "description": "The detector-interop axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_art5-safeguard",
+          "description": "The art5-safeguard axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_swarm",
+          "description": "The swarm axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_affect",
+          "description": "The affect axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_jail",
+          "description": "The jail axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_effect-binding",
+          "description": "The effect-binding axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_provenance-controls",
+          "description": "The provenance-controls axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_reserve-attestation",
+          "description": "The reserve-attestation axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_regulatory-framework",
+          "description": "The regulatory-framework axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_distribution-integrity",
+          "description": "The distribution-integrity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_custody-disclosure",
+          "description": "The custody-disclosure axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_ai-adoption-components",
+          "description": "The ai-adoption-components axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_labour-components",
+          "description": "The labour-components axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_humanoid-labour-index",
+          "description": "The humanoid-labour-index axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_lab-practice",
+          "description": "The lab-practice axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_company-practice",
+          "description": "The company-practice axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_measurer-integrity",
+          "description": "The measurer-integrity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_harness-fidelity",
+          "description": "The harness-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_interop-conformance",
+          "description": "The interop-conformance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_humanoid-deployment",
+          "description": "The humanoid-deployment axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_regulator-transparency",
+          "description": "The regulator-transparency axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_interpretability-reproducibility",
+          "description": "The interpretability-reproducibility axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_claim-maintenance",
+          "description": "The claim-maintenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_serving-fidelity",
+          "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
           "name": "commission_card",
           "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
           "required_args": [
@@ -481,7 +643,7 @@
       "role": "alias",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-10-26T03:46:26.778Z",
+      "last_probed": "2026-10-26T08:25:32.382Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
@@ -773,9 +935,7 @@
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current",
       "catalogue_source": null,
-      "catalogue_claim": null,
-      "contacted": "http://127.0.0.1:8799/mcp",
-      "stand_in_for": "https://councilof.ai/mcp"
+      "catalogue_claim": null
     },
     {
       "id": "csoai-gspc-mcp-stdio",
@@ -785,7 +945,7 @@
       "role": "stdio",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-10-26T03:46:26.819Z",
+      "last_probed": "2026-10-26T08:25:32.636Z",
       "http_status": null,
       "protocol_version": "2024-11-05",
       "server_version": "0.2.3",

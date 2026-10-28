@@ -65,10 +65,10 @@ export const CANON = {
   },
   /** Heterogeneous crosswalk estate: statements, mappings, catalog, producer and views. */
   CROSSWALK_ASSETS: {
-    value: 25,
+    value: 26,
     source: "public/interop/regulatory-inventory-latest.json (current stamped version) · crosswalk_assets.length",
-    measuredAt: "2026-09-10",
-    note: "Not 25 equivalent signed legal crosswalks. See each asset_type and evidence_state in the manifest.",
+    measuredAt: "2026-10-26",
+    note: "Not 26 equivalent signed legal crosswalks. See each asset_type and evidence_state in the manifest.",
   },
   /** The signed GSPC board derives this count from its axis array. */
   GSPC_AXES: {
@@ -77,12 +77,12 @@ export const CANON = {
     measuredAt: "2026-08-26",
     note: "Dated measurements, not certification or a legal compliance verdict.",
   },
-  /** The public east-west mapping currently contains four jurisdiction rows. */
+  /** The public east-west mapping currently covers four regimes. */
   PUBLISHED_CROSSWALK_REGIMES: {
     value: 4,
-    source: "public/crosswalk/east-west-v1.json · jurisdictions.length",
-    measuredAt: "2026-08-29",
-    note: "Do not replace this with the 25-asset inventory count; they measure different things.",
+    source: "public/crosswalk/east-west-v1.json · distinct jurisdictions[].regime",
+    measuredAt: "2026-10-26",
+    note: "EU · UK · US-IL · CN. One regime may carry several instrument entries (the EU regime carries six), so this counts regimes, not entries. Do not replace this with the 26-asset inventory count; they measure different things.",
   },
   /** Sovereign network agent cards (csoai.org is the crown — not counted as an agent). */
   NETWORK_AGENTS: {
@@ -98,9 +98,9 @@ export const CANON = {
   /** Jurisdictions/regimes in the public east-west crosswalk. */
   FRAMEWORKS_CROSSWALKED: {
     value: 4,
-    source: "public/crosswalk/east-west-v1.json · jurisdictions.length",
-    measuredAt: "2026-08-29",
-    note: "EU · UK · US-IL · CN. The separate 26 count is an inventory of heterogeneous crosswalk assets, not 26 crosswalked legal regimes."
+    source: "public/crosswalk/east-west-v1.json · distinct jurisdictions[].regime",
+    measuredAt: "2026-10-26",
+    note: "EU · UK · US-IL · CN. The EU regime carries six instrument entries (EU AI Act, GDPR, Cyber Resilience Act, DORA, NIS2, CSRD) and is still one regime. The separate 26 count is an inventory of heterogeneous crosswalk assets, not 26 crosswalked legal regimes."
   },
   // ── camelCase entries for direct CANON.x.value access (NewHome-v2 FAQ,
   // TrustMarquee). Adding these fixed the 2026-08-01 P0: CANON.councilAgents

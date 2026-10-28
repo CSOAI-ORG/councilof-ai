@@ -1053,3 +1053,210 @@ class ReadLabelPortParityTests(unittest.TestCase):
                 got = intake.read_label_v1(text, labels)
                 want = parser.extract_label(text, labels)
                 self.assertEqual(got, (want.label, want.reason), (text, labels))
+
+
+class ReasoningChannelTests(unittest.TestCase):
+    """A run that MEASURED the reasoning channel, and the gate that keeps it honest.
+
+    The channel is measurement, never source text: the row carries a digest and
+    a length, and the instrument declares what was asked of Ollama and that it
+    was not graded. decode.think stays False in every instrument, because it
+    means "the graded text is never decoded out of a thinking stream" and it
+    has to keep meaning that.
+    """
+
+    THINKING = "Step 1: weigh it. Step 2: answer YES."
+
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name).resolve()
+        self.fixture = Fixture(self.root)
+        self.instrument_id: str | None = None
+
+    def tearDown(self) -> None:
+        self.temporary.cleanup()
+
+    def rebuild(self) -> None:
+        """Rebuild the bundle, keeping the instrument id the run declares.
+
+        `Fixture.rebuild` writes a fresh run record, so the declared id has to
+        be put back on it -- otherwise a tampered row would be rejected for the
+        wrong reason (a missing instrument id) instead of the one under test.
+        """
+        self.fixture.rebuild()
+        if self.instrument_id is not None:
+            self.fixture.run["instrument_id"] = self.instrument_id
+            self.fixture.write_run()
+
+    def make_reasoning(
+        self,
+        *,
+        present: bool = True,
+        thinking: str = THINKING,
+        instrument_id: str | None = "exact-label-t128",
+    ) -> None:
+        """Turn the default fixture into a run that measured the channel."""
+        f = self.fixture
+        self.instrument_id = instrument_id
+        f.instrument["decode"]["max_tokens"] = 128
+        f.instrument["reasoning"] = {
+            "channel": "ollama-think",
+            "request_think": True,
+            "response_field": "thinking",
+            "graded": False,
+        }
+        f.instrument_sha = intake.sha256_bytes(intake.canonical_json_bytes(f.instrument))
+        for row in f.rows:
+            row.update(
+                schema=intake.ITEM_SCHEMA_REASONED,
+                instrument_sha256=f.instrument_sha,
+                decode={"temperature": 0, "seed": 0, "max_tokens": 128},
+                reasoning={
+                    "present": present,
+                    "sha256": (
+                        intake.sha256_bytes(thinking.encode("utf-8")) if present else None
+                    ),
+                    "chars": len(thinking) if present else None,
+                    "field": "thinking",
+                },
+            )
+        self.rebuild()
+
+    def verify(self):
+        return intake.verify_to_quarantine(
+            self.fixture.source, self.fixture.allowlist, self.fixture.quarantine
+        )
+
+    def assert_rejects(self, code: str) -> None:
+        with self.assertRaises(intake.IntakeError) as caught:
+            self.verify()
+        self.assertEqual(caught.exception.code, code)
+
+    def test_a_reasoning_run_verifies(self) -> None:
+        self.make_reasoning()
+        _, verification = self.verify()
+        self.assertEqual(verification["state"], "VERIFIED_QUARANTINE")
+
+    def test_a_reasoning_run_keeps_its_own_row_schema(self) -> None:
+        self.make_reasoning()
+        self.verify()
+        for row in self.fixture.rows:
+            self.assertEqual(row["schema"], intake.ITEM_SCHEMA_REASONED)
+
+    def test_a_silent_channel_is_recorded_as_absent(self) -> None:
+        """A model that thought of nothing measured nothing -- and that is a value."""
+        self.make_reasoning(present=False)
+        self.verify()
+        row = self.fixture.rows[0]
+        self.assertFalse(row["reasoning"]["present"])
+        self.assertIsNone(row["reasoning"]["sha256"])
+        self.assertIsNone(row["reasoning"]["chars"])
+
+    def test_a_reasoning_key_on_a_default_row_is_unexpected(self) -> None:
+        """The row key set is compared EXACTLY, so a default row stays a default row."""
+        self.fixture.rows[0]["reasoning"] = {
+            "present": True,
+            "sha256": "a" * 64,
+            "chars": 12,
+            "field": "thinking",
+        }
+        self.rebuild()
+        self.assert_rejects("UNEXPECTED_FIELDS")
+
+    def test_a_reasoning_run_whose_row_lost_the_block_is_unexpected(self) -> None:
+        """A run that measured the channel says so on EVERY row."""
+        self.make_reasoning()
+        del self.fixture.rows[0]["reasoning"]
+        self.rebuild()
+        self.assert_rejects("UNEXPECTED_FIELDS")
+
+    def test_an_unknown_instrument_key_is_still_unexpected(self) -> None:
+        """Widening the instrument for `reasoning` did not widen it for anything else."""
+        self.make_reasoning()
+        self.fixture.instrument["reasoning_channel"] = "ollama-think"
+        self.fixture.instrument_sha = intake.sha256_bytes(
+            intake.canonical_json_bytes(self.fixture.instrument)
+        )
+        for row in self.fixture.rows:
+            row["instrument_sha256"] = self.fixture.instrument_sha
+        self.rebuild()
+        self.assert_rejects("UNEXPECTED_FIELDS")
+
+    def test_a_reasoning_run_with_no_instrument_id_is_rejected(self) -> None:
+        """The channel changed the instrument, so the run must say which one it used.
+
+        The request asked Ollama for the thinking stream, so the bytes that were
+        sent are not the bytes a plain run sent. A run whose instrument differs
+        from every pinned one must carry its instrument id, exactly like a
+        read-label run does.
+        """
+        self.make_reasoning(instrument_id=None)
+        self.assert_rejects("BAD_INSTRUMENT_ID")
+
+    def test_a_reasoning_run_with_think_true_in_decode_is_rejected(self) -> None:
+        """decode.think stays False: it means the graded text is never decoded
+        out of a thinking stream. A descriptor that says otherwise is a lie."""
+        self.make_reasoning()
+        self.fixture.instrument["decode"]["think"] = True
+        self.fixture.instrument_sha = intake.sha256_bytes(
+            intake.canonical_json_bytes(self.fixture.instrument)
+        )
+        for row in self.fixture.rows:
+            row["instrument_sha256"] = self.fixture.instrument_sha
+        self.rebuild()
+        self.assert_rejects("BAD_INSTRUMENT")
+
+    def test_a_reasoning_declaration_that_claims_it_was_graded_is_rejected(self) -> None:
+        self.make_reasoning()
+        self.fixture.instrument["reasoning"]["graded"] = True
+        self.fixture.instrument_sha = intake.sha256_bytes(
+            intake.canonical_json_bytes(self.fixture.instrument)
+        )
+        for row in self.fixture.rows:
+            row["instrument_sha256"] = self.fixture.instrument_sha
+        self.rebuild()
+        self.assert_rejects("BAD_INSTRUMENT")
+
+    def test_a_reasoning_declaration_that_claims_no_request_is_rejected(self) -> None:
+        """request_think says what was actually asked of Ollama."""
+        self.make_reasoning()
+        self.fixture.instrument["reasoning"]["request_think"] = False
+        self.fixture.instrument_sha = intake.sha256_bytes(
+            intake.canonical_json_bytes(self.fixture.instrument)
+        )
+        for row in self.fixture.rows:
+            row["instrument_sha256"] = self.fixture.instrument_sha
+        self.rebuild()
+        self.assert_rejects("BAD_INSTRUMENT")
+
+    def test_a_malformed_reasoning_record_is_rejected(self) -> None:
+        """The record is a digest and a length. A digest that is not a digest is
+        not a measurement."""
+        self.make_reasoning()
+        self.fixture.rows[0]["reasoning"]["sha256"] = "not-a-digest"
+        self.rebuild()
+        self.assert_rejects("BAD_REASONING")
+
+    def test_an_absent_channel_carrying_a_length_is_rejected(self) -> None:
+        """Absent is not zero: no channel means no digest and no length."""
+        self.make_reasoning(present=False)
+        self.fixture.rows[0]["reasoning"]["chars"] = 0
+        self.rebuild()
+        self.assert_rejects("BAD_REASONING")
+
+    def test_a_reasoning_record_naming_another_field_is_rejected(self) -> None:
+        self.make_reasoning()
+        self.fixture.rows[0]["reasoning"]["field"] = "response"
+        self.rebuild()
+        self.assert_rejects("BAD_REASONING")
+
+    def test_a_reasoning_instrument_is_never_the_legacy_t128(self) -> None:
+        """The legacy t128 identity is INFERRED from the decode alone.
+
+        A run that measured the channel sent different bytes, so inferring the
+        plain t128 identity from its decode would name an instrument nobody
+        measured. UNRULED_INSTRUMENT is the honest answer until a ruling exists.
+        """
+        self.make_reasoning(instrument_id=None)
+        run = self.fixture.run
+        self.assertIsNone(intake._ruled_instrument_id(run, run["instrument"], "exact"))
