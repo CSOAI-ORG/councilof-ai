@@ -445,6 +445,35 @@ export default function GSPCVerify() {
         )}
 
         {mode === "estate" && (
+        <section aria-labelledby="worked-check-h" className="overflow-hidden rounded-3xl border border-emerald-400/25 bg-emerald-500/[0.055]" data-testid="worked-verification">
+          <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1fr_0.85fr] lg:items-center">
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-400/80">Worked example · tested 28 Oct 2026</p>
+              <h2 id="worked-check-h" className="mt-3 text-2xl font-bold tracking-tight text-emerald-50">A real check. A clear result. Explicit limits.</h2>
+              <p className="mt-4 text-sm leading-relaxed text-emerald-100/75">
+                We chose <strong className="font-semibold text-emerald-100">Try a published card</strong>, then <strong className="font-semibold text-emerald-100">Verify this record</strong>. The browser returned VALID with 6/6 checks passed: the card ID reproduced, the published trust anchor matched, and the Ed25519 signature verified.
+              </p>
+              <p className="mt-3 text-[13px] leading-relaxed text-emerald-100/60">
+                Historical example: llama3.2:3b · care-refusal-protect · recorded 19 Aug 2026. Run the same flow above to check the currently published record again.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-emerald-300/25 bg-[#03110b] p-6 shadow-[0_24px_60px_-35px_rgba(52,211,153,0.45)]">
+              <p className="font-mono text-3xl font-black tracking-tight text-emerald-300">VALID</p>
+              <p className="mt-1 text-sm font-semibold text-emerald-50">6/6 checks passed</p>
+              <ul className="mt-5 space-y-2 text-[13px] text-emerald-100/75">
+                <li>✓ Card ID reproduced</li>
+                <li>✓ Published key matched</li>
+                <li>✓ Signature verified</li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-emerald-400/20 px-6 py-5 text-[13px] leading-relaxed text-emerald-100/70 sm:px-8">
+            <p><strong className="font-semibold text-emerald-100">VALID means record integrity and signature verification.</strong> It is not certification, not a fresh measurement, and not proof of model safety or legal compliance. Current board admission, present quotability and chain replay are not claimed by this example.</p>
+          </div>
+        </section>
+        )}
+
+        {mode === "estate" && (
         <section>
           <h2 className="text-2xl font-bold text-amber-200">Chain replay is not claimed</h2>
           <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-400/[0.06] p-6 text-sm leading-relaxed text-amber-100/85">
