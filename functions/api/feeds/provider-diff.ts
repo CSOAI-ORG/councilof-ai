@@ -1,3 +1,4 @@
+import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delivery_record";
 // functions/api/feeds/provider-diff.ts — the provider document diff feed.
 //
 //   free   GET /api/feeds/provider-diff                 → latest state per target + the recent diffs,
@@ -203,6 +204,28 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
     outputExample: { schema: "csoai.feeds.provider-diff/0.1", kind: "history", diffs: [], leaves: {}, root: {} },
   });
+  // DELTA SINCE THE LAST RECEIPT. Without this the paid batch was identical on every call —
+  // index, state, every leaf, root — so a subscriber who paid twice received the same bytes
+  // twice and had no reason to buy again. `since` is an ISO-8601 instant, matched against each
+  // diff's own fetched_at, which is the only time this feed records.
+  //
+  // Absent `since` returns the full batch, exactly as before. A malformed `since` is a 400 and
+  // never a silent full batch: quietly ignoring a cursor would bill for a delta and deliver
+  // everything, which is the failure a buyer cannot see.
+  const sinceRaw = (url.searchParams.get("since") || "").trim();
+  let since: number | null = null;
+  if (sinceRaw) {
+    const t = Date.parse(sinceRaw);
+    if (Number.isNaN(t)) {
+      return json(
+        { schema: "csoai.feeds.provider-diff/0.1", error: "bad_request",
+          reason: "since must be an ISO-8601 instant, e.g. since=2026-09-01T00:00:00Z" },
+        400,
+      );
+    }
+    since = t;
+  }
+
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   if (!payment.ok) {
@@ -240,27 +263,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     Record<string, unknown> & { leaf?: string | null; fetched_at?: string | null }
   >;
 
-  // DELTA SINCE THE LAST RECEIPT. Without this the paid batch was identical on every call —
-  // index, state, every leaf, root — so a subscriber who paid twice received the same bytes
-  // twice and had no reason to buy again. `since` is an ISO-8601 instant, matched against each
-  // diff's own fetched_at, which is the only time this feed records.
-  //
-  // Absent `since` returns the full batch, exactly as before. A malformed `since` is a 400 and
-  // never a silent full batch: quietly ignoring a cursor would bill for a delta and deliver
-  // everything, which is the failure a buyer cannot see.
-  const sinceRaw = (url.searchParams.get("since") || "").trim();
-  let since: number | null = null;
-  if (sinceRaw) {
-    const t = Date.parse(sinceRaw);
-    if (Number.isNaN(t)) {
-      return json(
-        { schema: "csoai.feeds.provider-diff/0.1", error: "bad_request",
-          reason: "since must be an ISO-8601 instant, e.g. since=2026-09-01T00:00:00Z" },
-        400,
-      );
-    }
-    since = t;
-  }
   const selected = since === null
     ? allDiffs
     : allDiffs.filter((d) => {
@@ -271,15 +273,18 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       });
 
   const leaves: Record<string, unknown> = {};
+  let leavesComplete = true;
   await Promise.all(
     selected.map(async (d) => {
-      if (!d.leaf) return;
+      if (!d.leaf) { leavesComplete = false; return; }
       const r = await getJson<Record<string, unknown>>(`${origin}${d.leaf}`);
       leaves[String(d.leaf)] = r.ok ? r.body : { unreadable: r.reason };
+      if (!r.ok) leavesComplete = false;
     }),
   );
 
-  if (env.REVENUE_KV) {
+  const assemblyComplete = idx.ok && state.ok && root.ok && leavesComplete;
+  if (assemblyComplete && env.REVENUE_KV) {
     try {
       const n = Number((await env.REVENUE_KV.get("count:provider_diff_history")) || "0") + 1;
       await env.REVENUE_KV.put("count:provider_diff_history", String(n));
@@ -288,7 +293,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  return json(
+  const prepared = json(
     {
       schema: "csoai.feeds.provider-diff/0.1",
       kind: "history",
@@ -315,6 +320,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     200,
     { "cache-control": "no-store", ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}) },
   );
+  if (!assemblyComplete) return markPaidUndeliveredResponse(prepared, payment.ok, payment.paymentResponse);
+  return recordPaidResponse(prepared, { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

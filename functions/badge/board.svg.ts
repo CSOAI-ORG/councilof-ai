@@ -94,7 +94,9 @@ export const readBoard = async (src: BoardSource, ctx: Ctx): Promise<{ board: Bo
   const rows: Row[] = axes.map((a) => {
     const r = (a ?? {}) as Record<string, unknown>;
     return {
-      axis: String(r.axis ?? "—"),
+      // A row marked public_pages HIDDEN_PENDING_OWNER_GO is counted (the slot exists in the API) but its
+      // name is never painted on a public surface until the owner's go.
+      axis: r.public_pages === "HIDDEN_PENDING_OWNER_GO" ? "held slot (owner-gated)" : String(r.axis ?? "—"),
       family: String(r.family ?? "—"),
       kind: typeof r.kind === "string" ? r.kind : undefined,
       status: typeof r.status === "string" ? r.status : "—",

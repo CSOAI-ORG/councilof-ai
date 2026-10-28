@@ -49,7 +49,7 @@ def build_jsonld(title: str, description: str, url: str) -> str:
                 "url": "https://csoai.org",
                 "logo": "https://councilof.ai/favicon.ico",
                 "description": "Independent AI-governance measurement body. Current GSPC counts and dated evidence are on the live board. Measurement, not certification.",
-                "foundingDate": "2025",
+                "foundingDate": "2026-01-02",
                 "areaServed": "Worldwide",
                 "sameAs": [
                     "https://huggingface.co/csoai",

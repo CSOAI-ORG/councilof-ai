@@ -45,12 +45,20 @@ describe("llms.txt derives the tool counts it publishes", () => {
     // Smithery's tools[] is its own snapshot; on 2026-09-28 csoai/gspc-mcp listed 12 names and
     // csoai/gspc 13 while tools/list served 16. The line must not claim a mirror it cannot keep.
     const out = R("public/llms.txt");
-    const words = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];
+    // The number word for a tool count. It was a 21-entry array and the fleet grew past it.
+    const ONES = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+    const TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+    const words = (n: number): string => {
+      if (n < 20) return ONES[n];
+      const t = TENS[Math.floor(n / 10)];
+      const o = n % 10;
+      return o ? `${t}-${ONES[o]}` : t;
+    };
     const line = out.split("\n").find((l) => l.startsWith("- Smithery: "));
     expect(line, "llms.txt no longer carries a Smithery line").toBeTruthy();
     expect(line).not.toMatch(/mirrors/);
     expect(line).toMatch(new RegExp(
-      `can lag the door[^\\n]+tools/list \\(${free + paid} tools: ${words[free]} free readers plus ${words[paid]} x402-metered evidence tools\\)`,
+      `can lag the door[^\\n]+tools/list \\(${free + paid} tools: ${words(free)} free readers plus ${words(paid)} x402-metered evidence tools\\)`,
     ));
   });
 

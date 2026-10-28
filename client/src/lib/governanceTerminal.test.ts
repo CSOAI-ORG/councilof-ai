@@ -24,9 +24,22 @@ describe("Governance terminal moat", () => {
     const blob = JSON.stringify({ TERMINAL_RULING, TERMINAL_PITCH, TERMINAL_ROWS });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
     expect(blob).toMatch(/Do not invent a receiver/);
-    // Operator notes live on the noindex /status/internal page, never on /products (6 Oct 2026).
-    expect(internal).toContain("<GovernanceTerminal ");
+    // Operator modules are not mounted on public product or reference pages.
+    expect(internal).not.toContain("<GovernanceTerminal ");
     expect(products).not.toContain("<GovernanceTerminal");
-    expect(products).toContain("HealthTerms");
+    expect(products).not.toContain("HealthTerms");
   });
+  it("keeps the withdrawn reference limited to public guidance", () => {
+    for (const component of [
+      "GovernanceTerminal", "HealthInventory", "PermissionlessRevenue", "PlaybookAudit",
+      "SignedAgentTravel", "SovExternalAudit", "TwoSpeed",
+    ]) {
+      expect(internal).not.toContain(component);
+    }
+    expect(internal).toContain("Reference withdrawn");
+    for (const href of ["/status", "/methodology", "/corrections"]) {
+      expect(internal).toContain(`href="${href}"`);
+    }
+  });
+
 });

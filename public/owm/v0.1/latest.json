@@ -425,7 +425,7 @@
    "reason": "3 fields agree across 2 surfaces",
    "last_change": "2026-09-30T14:49:03Z",
    "last_change_basis": "evidence changed between two cycles",
-   "evidence_sha256": "4539b9ac899685b92b0768c3df069105a8877aad6c80c7336903fa939b7c459a",
+   "evidence_sha256": "af9fecc5dd004cfba8e8da188f16a227613608dee6863a23f19b1c79c83adeaa",
    "next_check": "2026-10-01T00:19:00Z",
    "surfaces": [
     {
@@ -443,16 +443,17 @@
    ],
    "compared": {
     "api-gspc": {
-     "axes": 23,
+     "axes": 33,
      "measured_axes": 23,
-     "public_count": "23 axes · 23 measured"
+     "public_count": "33 axes · 23 measured"
     },
     "api-state": {
-     "axes": 23,
+     "axes": 33,
      "measured_axes": 23,
-     "public_count": "23 axes · 23 measured"
+     "public_count": "33 axes · 23 measured"
     }
-   }
+   },
+   "board_count_source": "derived from this commit's /api/gspc (functions/api/gspc.ts, computed offline by scripts/surface/commit-board.mjs; sha256 af9fecc5dd004cfba8e8da188f16a227613608dee6863a23f19b1c79c83adeaa) by scripts/surface/rebind-board-cites.mjs; the producer re-reads the live board on its next run"
   },
   {
    "id": "own:signed-card-index",

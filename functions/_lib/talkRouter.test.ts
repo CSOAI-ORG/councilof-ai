@@ -138,6 +138,46 @@ describe("routeIntent — deterministic keyword/entity routing onto the /mcp too
     }
   });
 
+  // issue #2980 — the Ask panel answered an invoice enquiry with the Article 50 evidence preview.
+  // Acceptance, in the issue's own words.
+  const INVOICE_Q = "How do I request a GBP invoice for the Article 50 pack, evidence bundle or provider-diff feed?";
+
+  it("acceptance 1: an explicit procurement enquiry reaches the buying answer BEFORE measurement routing", () => {
+    expect(routeIntent(INVOICE_Q)).toMatchObject({ kind: "help", intent: "buying" });
+    // other procurement wordings, not only this one sentence
+    for (const q of ["I want to buy the Article 50 pack", "can we get a quotation for the evidence bundle", "how do I pay by purchase order?"]) {
+      expect(routeIntent(q)).toMatchObject({ kind: "help", intent: "buying" });
+    }
+  });
+
+  it("acceptance 1b: merely mentioning an invoice does NOT override an evidence question", () => {
+    const p = routeIntent("Which signed evidence is there for Article 50, and does it come with an invoice?");
+    expect(p.kind === "tools" && p.calls[0]?.tool).toBe("evidence_bundle_preview");
+    expect(p.kind).not.toBe("help");
+  });
+
+  it("acceptance 2: an Article 50 evidence-only question still reaches the evidence preview", () => {
+    const p = routeIntent("Which signed evidence is there for Article 50?");
+    expect(p.kind === "tools" && p.calls[0]).toMatchObject({ tool: "evidence_bundle_preview", args: { obligation: "article-50" } });
+  });
+
+  it("acceptance 3: the buying answer shows the product routes and the written-scope requirement, and claims no purchase", async () => {
+    const a = await executePlan(routeIntent(INVOICE_Q), ORIGIN);
+    expect(a.intent).toBe("buying");
+    expect(a.grounded).toBe(false);          // a routing answer, never a tool measurement
+    expect(a.tool_calls).toEqual([]);        // nothing was called, so nothing could be paid for
+    expect(a.answered_by).toContain("no tool called");
+    for (const href of [
+      "/contact/?arm=invoice&product=art50",
+      "/contact/?arm=invoice&product=evidence-bundle",
+      "/contact/?arm=invoice&product=provider-diff",
+    ]) expect(a.answer).toContain(href);
+    expect(a.answer).toMatch(/Ask for a written scope before ordering/i);
+    // the boundary: an enquiry does not purchase, book, pay for or deliver anything
+    expect(a.answer).toMatch(/does not send, book or pay for work/i);
+    expect(a.answer).not.toMatch(/\b(your order (?:is|has been) confirmed|purchase completed|payment received)\b/i);
+  });
+
   // 6 Oct 2026: a server lookup used to add mcp_trust, so every lookup also printed a green VALID
   // census card about 500 other hosts. One server question is one call now; the census stays one
   // question away.

@@ -765,6 +765,8 @@ describe("every skill the card advertises is one the router will accept", () => 
  */
 describe("every advertised skill survives input validation, not just the allowlist", () => {
   it("no skill is refused as unsupported when called with an empty input", async () => {
+    // This checks input validation, not origin availability. Keep every source read offline.
+    stubBoard();
     const refused: string[] = [];
     for (const id of SKILL_IDS) {
       const res = await onRequestPost({

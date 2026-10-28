@@ -138,6 +138,9 @@ const RULES = [
     // name real funds (persona-tests.json carries the Norwegian Oil Fund); a gate that
     // forced those to be renamed would falsify domain vocabulary to satisfy a branding rule.
     nearAllow: /wealth\s+fund|oil\s+fund|\bSWF\b/i,
+    // /watchdog quotes third-party registry claims VERBATIM (subject's own words, shown as UNMEASURED/
+    // UNCHECKABLE); rewording them would falsify the evidence. Exempt by exact built path only.
+    allowOn: /^\/watchdog(?:\/index)?\.html$/,
     why: 'De-branded surface: "Sovereign" is not the product name. Use Council / Council Signal / the measurement engine.',
   },
   {
@@ -258,6 +261,9 @@ const RULES = [
     // or honest "no LLM-as-judge" methodology copy.
     pattern: /inspect[\s_-]?(?:ai\s+)?scorer|\binspect_ai\b.{0,24}scorer|model_graded_fact|llm[\s-]?as[\s-]?judge|model[\s-]?as[\s-]?judge/i,
     nearAllow: /no llm[\s-]?as[\s-]?judge|not llm[\s-]?as[\s-]?judge|not (?:an? )?inspect|not (?:a )?model[\s-]?as[\s-]?judge|do not wrap|harness is not inspect|no `?model_graded_fact|never .{0,20}llm[\s-]?as[\s-]?judge/i,
+    // /watchdog quotes third-party registry claims VERBATIM (subject's own words, shown as UNMEASURED/
+    // UNCHECKABLE); rewording them would falsify the evidence. Exempt by exact built path only.
+    allowOn: /^\/watchdog(?:\/index)?\.html$/,
     why: "GSPC grade is the estate harness + signed card, not Inspect / model-judge. Do not wrap a bank in Inspect model_graded_fact.",
   },
   {

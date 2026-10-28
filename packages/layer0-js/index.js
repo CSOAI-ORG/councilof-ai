@@ -31,17 +31,33 @@ export class Layer0 {
     return this._post("/api/gate", { action, identity: this.identity, inputsHash: sha256(inputs) });
   }
 
-  // The full governed wrapper: gate → run → attest. Throws on deny; surfaces escalation.
-  async governed(action, inputs, run) {
+  // The full governed wrapper: gate → run → attest.
+  // Throws on deny. On escalate it now REFUSES to run without an approval receipt: the previous version
+  // only attached `requiresHumanReview: true`, which is a hint the caller may ignore, not enforcement.
+  // A caller that deliberately runs without approval must say so, and receives a truthful status.
+  async governed(action, inputs, run, options = {}) {
     const decision = await this.gate(action, inputs);
     if (decision.state === "deny") throw new Error(`Sovereign Gate denied: ${decision.reason || action}`);
-    if (decision.state === "escalate") {
-      // control G — caller decides how to obtain human approval; we attach the marker.
-      const result = await run({ requiresHumanReview: true, decision });
-      return { result, decision, attestation: await this._attest(action, inputs, decision) };
+    const escalated = decision.state === "escalate";
+    const approval = options.approval ?? null;
+    if (escalated && approval === null) {
+      if (!options.allowUnapprovedEscalation) {
+        const err = new Error(`Sovereign Gate escalated ${action}: an approval receipt is required before execution`);
+        err.code = "ESCALATION_REQUIRED";
+        err.decision = decision;
+        throw err;
+      }
     }
-    const result = await run({ decision });
-    return { result, decision, attestation: await this._attest(action, inputs, decision) };
+    const result = await run({ requiresHumanReview: escalated, decision, approval });
+    const attestation = await this._attest(action, inputs, decision);
+    const attested = Boolean(attestation);
+    // Missing attestation is a distinct outcome, never a silent success.
+    const status = !attested
+      ? "executed_unattested"
+      : escalated && approval === null
+        ? "executed_unapproved"
+        : "attested";
+    return { result, decision, attestation, attested, status };
   }
 
   // §4 build + sign an A2A attestation envelope via the gateway
