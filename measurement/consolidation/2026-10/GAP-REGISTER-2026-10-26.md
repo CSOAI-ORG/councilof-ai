@@ -448,6 +448,71 @@ made later.
 | K11 | "Negative controls exist for every domain" | They do not. Domains with **no** negative control found: agent identity (sectoral cards), agentic payments (manifest and catalogue), AI registries (census), stablecoins (deployment index), security tooling (OWASP axis map, CRA note), regulatory filings (NIST draft), and the measurement capsules. This is stated as a gap (§3A18, §3C) rather than smoothed over |
 | K12 | "The Council's position is 'unicorn' status or market-leading" | No artefact carries a score, coverage figure, market position or ranking, and this document certifies nothing. The word is not used as a claim anywhere above |
 
+## 6. STATUS AS OF 28 OCTOBER 2026 — dated addendum
+
+The rows in §3A were written on 26 October 2026 and are **left unchanged above**. This section
+records, for each engineering-closable row, whether that specific contradiction still held when it
+was re-measured on 28 October 2026, and what the measurement was. It is an observation at a date,
+not a verdict on the artefact: **closed** means the contradiction named in the row no longer holds,
+and it never means the artefact is complete, signed, adopted, certified or reviewed by anyone.
+
+Every live figure below was read from the named endpoint on 28 October 2026 (03:0x–03:5x UTC).
+
+| Row | Status at 2026-10-28 | What was measured |
+|---|---|---|
+| A1 | **CLOSED** | `README.md` now says "the 33-axis GSPC board" (`:17`) and `totals.public_count` = **33 axes · 23 measured** (`:23`). The badge line carries the *measured* count, which is what it measures. Live board: **33 slots · 23 measured · 10 UNMEASURED**. |
+| A2 | **OPEN** | `README.md:84` still pins `ff8570aa7bed…` · **317** leaves · `as_of 2026-10-13T03:31:42Z`. Live `GET /root.json`: **325** leaves · `a2620ac322c562b6…` · `as_of 2026-10-27T21:20:49Z` · sha256 `e9fb00e240b1…` · 25,925 B. The same stale figure repeats at `README.md:92`. |
+| A3 | **OPEN** — count right, identifier stale | `README.md:86` says **93** entries, which matches the live ledger, but names the latest as `C-2026-0822-01`. The live ledger's newest entry is **`C-2026-1006-13`** (2026-10-06); `signature_state` = VALID. |
+| A4 | **CLOSED** | `README.md:88` says **438** cells. Live `GET /api/hub-cards` → `counts.cells` 438, `measured` 438, `unmeasured` 0, `complete` true. |
+| A5 | **OPEN** | `README.md:94` says **3** settlements. Live `GET /api/revenue` → `one_number.settlements` = **4**. |
+| A6 | **OPEN** | The Hugging Face row (`README.md:124`) still quotes 317 leaves · `ff8570aa7bed…` · `as_of 2026-10-13T03:31:42Z`. |
+| A7 | **IN FLIGHT** | Two repository documents pin the superseded root (`docs/grants/README.md:85`, `docs/trust/ANCHOR-PREPARATION.md:6`). Closure is being landed as its own change. |
+| A8 | **OPEN** | The two GitHub profile documents still claim **46** entries and latest `C-2026-0822-01`; the live ledger is **93** and `C-2026-1006-13`. |
+| A9 | **CLOSED** | The contribution document now states both numbers and distinguishes them: the signed board freeze "states **23 axes · 23 measured**" and "the **living board** … states **33 axes · 23 measured**" (`SAFE-v1.0-PORT-20261026.md:99-100`). It no longer presents 23 as the current board. |
+| A10 | **CLOSED as an engineering gap**, one owner-gated step remains | The patch is bound to the **approved** `SAFE.md` at pinned upstream commit `ba76bac74c251926cb3d14bc363e0443b5959007`, and the binding is executable: `verify-patch-applies.sh` checks the pinned digest and byte count, applies the patch, and requires it to be **rejected** both against the superseded draft and against a mutated anchor. The upstream pull request is still **not submitted** — it needs a co-author with a normal GitHub account, and that is the owner's to choose. |
+| A11 | **OPEN, restated precisely** | `public/interop/root-witness-pointer.json` now agrees with the live root in its `live_root` block (325 · `a2620ac322c562b6…` · `e9fb00e240b1…`), while its own `drift` block — written **two seconds later** (`checked_at 2026-10-27T23:47:33Z`) — reports `DRIFTED` against `live_root_sha256 3bab85baa5ef…`. One file, two dated statements about which bytes are live. Both are visible; a reader is left to work out which is current. |
+| A12 | **IN FLIGHT** | Measured truth table on 28 October: **38** Zenodo records answer HTTP 410, **2** answer HTTP 200 (`22293340`, `22344048`), and `doi.org` returns **403 even for a known-live DOI** — a publisher-side client rejection, not record absence, confirmed with a control. The published notice still reads "every CSOAI Zenodo record returns HTTP 410 … Status UNCHECKABLE" (`public/interop/zenodo-status.json`, `as_of 2026-09-29T16:46Z`). |
+| A13 | **OPEN** | The board publishes 33 axes against a `domains` array with one entry (`cross-border`, `SCAFFOLD`). |
+| A14 | **OPEN** | 7 of the 9 deterministic-facts run artefacts remain `CONTENT_ADDRESSED_UNSIGNED`; a content id is not a signer authorisation. |
+| A15 | **OPEN** | The human-in-the-loop probe artefact is `signed: false` and the instrument remains a pilot, not deployed and not on the board. |
+| A16 | **OPEN** | The measurement capsule index is `as_of 2026-10-01T08:11:31Z` against a root `as_of 2026-10-27T21:20:49Z` — **26 days** behind. |
+| A17 | **OPEN** | The x402 discovery manifest carries no signature and its generator lives in `functions/`, so no checked-in copy of the artefact a reader is told to pin exists in the repository. |
+| A18 | **OPEN** | The A2A directory census carries an OpenTimestamps sidecar but no published must-fail census. |
+| A19 | **IN FLIGHT** | Three dated artefacts still carry the "23 axes · 23 measured" frame; dated supersession notes are being landed beside each. |
+
+### 6.1 What is still open, in one list
+
+**Open and engineering-closable:** A2, A3, A5, A6, A8, A11, A13, A16, A17, A18.
+**In flight (closure being landed):** A7, A12, A19.
+**Closed:** A1, A4, A9, A10 (as an engineering gap).
+**Not closable by engineering — a named owner action, or not ours to close:** A14 and A15 need the
+signing and deployment paths, not a document edit; the upstream SAFE pull request under A10 needs a
+co-author with a normal GitHub account; the corrections ledger's signature re-issue after a ledger
+entry is added is owner-gated; and the registry, deployment, coverage and customer-count questions
+in §4 and §6's closing table are claims the estate does not make.
+
+### 6.2 Two corrections to our own published material, made visible
+
+1. **The negative control behind the SAFE v1.0 patch check was vacuous.** As first written it
+   placed the superseded draft *beside* the approved file and ran `git apply --check` in that
+   directory; `git apply` resolves its file from the patch header, so the control re-tested the
+   **approved** file and passed for the wrong reason. The patch was and is bound to the approved
+   `SAFE.md` — the instrument that claimed it was not. The control now places the draft's bytes
+   under the patch's own target file name, adds a second control that mutates one anchor line, and
+   carries the dated correction in the port document and in the pull request body.
+2. **The register's own A10 framing was wrong, twice.** It read as though the port still modified
+   the superseded RFC; the patch targets `SAFE.md`, and the gap was in our own verification
+   narrative rather than in the patch. Where this register and a live re-measurement disagree, the
+   live measurement is what is recorded above — and where the register was wrong, this section says
+   so rather than quietly editing the row above.
+
+### 6.3 What this section is not
+
+It is not a certification, an audit opinion, a conformity assessment, or a claim that any domain
+is complete. It is a dated list of which named contradictions were re-measured, what they now
+read, and which of them are still open. **A closure is a closure of the named contradiction, not of
+the domain.**
+
 ---
 
 *Council of AI — measurement, not certification. Verification of every artefact is free. A slot is a
