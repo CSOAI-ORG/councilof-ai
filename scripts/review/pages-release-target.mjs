@@ -22,8 +22,12 @@ export function inspectTarget(candidate,project,branch='master'){
  check('candidate does not introduce unreviewed environment overrides',!has(c?.env,'production')&&!has(c?.env,'preview'));
  const expected=Array.isArray(c?.kv_namespaces)?c.kv_namespaces:[];const remote=object(production?.kv_namespaces);const seen=new Set();const bindings=[];
  check('candidate namespace bindings present',expected.length>0);
- for(const entry of expected){const e=object(entry),name=e?.binding;const shape=typeof name==='string'&&/^[A-Z][A-Z0-9_]*$/.test(name)&&finiteHex(e?.id)&&!seen.has(name);seen.add(name);const match=shape&&object(remote?.[name])?.namespace_id===e.id;check('namespace '+(typeof name==='string'?name:'<invalid>'),match);bindings.push({name:typeof name==='string'?name:null,matches_candidate:match,preview_uses_same_namespace:match&&object(preview?.kv_namespaces?.[name])?.namespace_id===e.id});}
- check('production namespace set does not contain an unreviewed extra binding',!!remote&&Object.keys(remote).length===expected.length);
+ // A protected-branch candidate may add a binding through the gated Wrangler upload.
+ // Every existing production binding must still match exactly: replacements, removals,
+ // malformed additions and remote extras remain blocking. The upload applies additions;
+ // the normal preflight on every retry then requires the resulting exact configuration.
+ for(const entry of expected){const e=object(entry),name=e?.binding;const shape=typeof name==='string'&&/^[A-Z][A-Z0-9_]*$/.test(name)&&finiteHex(e?.id)&&!seen.has(name);seen.add(name);const current=object(remote?.[name]);const match=shape&&current?.namespace_id===e.id;const pendingAddition=shape&&!current;check('namespace '+(typeof name==='string'?name:'<invalid>'),match||pendingAddition);bindings.push({name:typeof name==='string'?name:null,matches_candidate:match,pending_reviewed_addition:pendingAddition,preview_uses_same_namespace:match&&object(preview?.kv_namespaces?.[name])?.namespace_id===e.id});}
+ check('production namespace set does not contain an unreviewed extra binding',!!remote&&Object.keys(remote).every(name=>seen.has(name)));
  const vars=object(c?.vars)??{},remoteVars=object(production?.env_vars);const variables=[];
  for(const [name,value] of Object.entries(vars)){const actual=object(remoteVars?.[name]);const match=actual?.type==='plain_text'&&actual.value===value;check('plain configuration variable '+name,match);variables.push({name,matches_candidate:match});}
  const source=object(p?.source),sourceConfig=object(source?.config);const automaticSource=source?sourceConfig?.deployments_enabled!==false&&sourceConfig?.production_deployments_enabled!==false:false;
