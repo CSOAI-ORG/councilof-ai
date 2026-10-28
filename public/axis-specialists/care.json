@@ -1,0 +1,235 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "care",
+  "specialist": {
+    "id": "meok-care-specialist",
+    "cluster_id": "meok-axis-care",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit care measurement for sample-size caveats, dignity-sensitive failure slices and separation grammar without turning care into a popularity ranking.",
+    "reviewer_role": "care and human-factors reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "independence caveats",
+    "vulnerable-context slices",
+    "harm handling",
+    "separation sample grammar"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "DAY",
+      "precision": "day",
+      "observed_on": "2026-08-12",
+      "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+      "source_field": "measured",
+      "note": "The source publishes day precision only. No midnight timestamp is invented."
+    },
+    "axis_row_sha256": "d47999be33bf6ad3d040410da3e013f84ba7dc88a78be8cc1304f0169781ba66",
+    "axis_row": {
+      "axis": "care",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "CareBench",
+      "task": "care-cost (protect × help) under paired conduct scenarios",
+      "n": 199,
+      "n_note": "200 bank records, one exact-duplicate pair → 199 unique scored texts (registry v2)",
+      "separation": "TIE",
+      "fleet_mean": 0.293,
+      "mean_harm": 0.707,
+      "cvar05_harm": 0.9895,
+      "status": "MEASURED",
+      "dataset": "csoai/gspc-care",
+      "colour": "#f472b6",
+      "hue": 330,
+      "method_status": "meets-rule",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "In the original run our own care specialist held the point lead, SEPARATED vs the best base (p=0.036) but NOT clear of the majority-class baseline. That is an in-lane result on our own model, not a public ranking, and it is not counted in totals.separated_leads (C-2026-0915-01). The fleet mean is 0.293 and the worst 5% of items carry harm 0.990 (CVaR, n=199): calibrated care is the fleet's weakest measured axis, and the tail is nearly total.",
+        "does_not_assert_current_public_fields": true
+      },
+      "leader": "qwen2.5:0.5b-instruct (base model)",
+      "accuracy": 0.405,
+      "interval": [
+        0.339,
+        0.474
+      ],
+      "separation_p": 0.427,
+      "separation_method": "Exact McNemar on the discordant items, leader vs the best base model, rule fixed 2026-08-13: p<0.05 is SEPARATED, anything else is a TIE. Wilson 95% intervals are annotation only. Computed by scripts/gspc_separation_from_rows.py from the published per-item rows with our own models removed from the fleet before comparison.",
+      "separation_sentence": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=200; p=0.427).",
+      "separation_evidence": {
+        "source": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361)",
+        "file": "peritem_care.jsonl",
+        "file_sha256": "888f230b58e5d78a8570244b9e8374c9740f24c3d6fd9f45d67b372db25f27b2",
+        "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
+        "fleet": "6 base models; our own prompt overlays on stock base models removed before comparison",
+        "leader": {
+          "model": "qwen2.5:0.5b-instruct",
+          "k": 81,
+          "n": 200,
+          "accuracy": 0.405,
+          "wilson95": [
+            0.339,
+            0.474
+          ]
+        },
+        "next_best": {
+          "model": "qwen2.5:3b",
+          "k": 74,
+          "n": 200,
+          "accuracy": 0.37,
+          "wilson95": [
+            0.306,
+            0.439
+          ]
+        },
+        "paired_items": 199,
+        "discordant": {
+          "leader_only_correct": 32,
+          "next_best_only_correct": 25
+        },
+        "mcnemar_p": 0.427,
+        "control": {
+          "what": "labels shuffled within items, same test re-run; share that came out SEPARATED",
+          "nperm": 1000,
+          "seed": 20260927,
+          "fixed_pair_rate": 0.035,
+          "reselect_rate": 0.001
+        },
+        "recompute": "python3 separation_test.py --rows rows --json out.json  (in the dataset; stdlib only; checks SHA256SUMS first)"
+      },
+      "separation_n_note": "The test counts 200 rows per model over 199 distinct paired items; the board's n (199) counts unique scored texts. The rows are published as frozen, duplicates included.",
+      "peritem_file_sha256": "888f230b58e5d78a8570244b9e8374c9740f24c3d6fd9f45d67b372db25f27b2",
+      "leader_source": "per-item rows",
+      "leader_card_state": "CARD_RECORDS_A_DIFFERENT_MEASUREMENT",
+      "leader_card_note": "leader shown from per-item rows; no signed per-model card yet for this run — the signed card for qwen2.5:0.5b-instruct on this axis records a different measurement (accuracy 0.0), so it does not back the number shown",
+      "leader_card": "45724650575f8f40363728b42c54c5683fffab59a10d65e2991b666ba4d4a813",
+      "leader_card_url": "/signed/cards/45724650575f8f40363728b42c54c5683fffab59a10d65e2991b666ba4d4a813.json",
+      "note": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=200; p=0.427). qwen2.5:0.5b-instruct 81/200 vs qwen2.5:3b 74/200, both read from the published per-item rows. A TIE is not a win: the point-estimate lead is not a measured advantage. leader shown from per-item rows; no signed per-model card yet for this run — the signed card for qwen2.5:0.5b-instruct on this axis records a different measurement (accuracy 0.0), so it does not back the number shown.",
+      "distinct_items": 199,
+      "distinct_items_source": "distinct item ids in the published per-item rows (peritem_care.jsonl)",
+      "mde": {
+        "value": 0.109,
+        "state": "MEASURED",
+        "unit": "accuracy difference (proportion), leader minus the best base model",
+        "alpha": 0.05,
+        "power": 0.8,
+        "test": "exact two-sided McNemar on the discordant items, leader vs the best base model (the board's separation test, rule fixed 2026-08-13)",
+        "paired_items": 199,
+        "discordance_rate": 0.2864,
+        "source": "functions/api/_gspc_rows_power.ts, generated by scripts/gspc_separation_from_rows.py --power from csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361, peritem_sha256 0d8dacfbe7384a5d…)"
+      },
+      "measurement_time": {
+        "state": "DAY",
+        "precision": "day",
+        "observed_on": "2026-08-12",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "note": "The source publishes day precision only. No midnight timestamp is invented."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-care"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist care audits only the care row",
+      "evidence": "care"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-care; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "MODEL_RUN_STATE",
+      "state": "PASS",
+      "detail": "measured model-comparison run with n=199"
+    },
+    {
+      "id": "FROZEN_BANK",
+      "state": "PASS",
+      "detail": "frozen bank URL is published",
+      "evidence": "https://huggingface.co/datasets/csoai/gspc-care"
+    },
+    {
+      "id": "ROW_LINEAGE",
+      "state": "PASS",
+      "detail": "published per-item rows are digest-bound"
+    },
+    {
+      "id": "LEADER_STATE",
+      "state": "PASS",
+      "detail": "leader evidence state is published"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "meets-rule"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 8,
+    "findings": 0,
+    "audit_state": "HUMAN_REVIEW_READY"
+  },
+  "negative_controls": [
+    {
+      "control": "drop n_note and require the independence audit to fail",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "aggregate away a high-harm care slice and require the slice guard to fail",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "care-proposal-1",
+      "proposal": "publish dignity and vulnerability slices with human-reviewed labels",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "care-proposal-2",
+      "proposal": "make dependence caveats visible beside every care accuracy figure",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_care",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/care",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "care and human-factors reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "9b3b24a08c1df8e3242a330cebb72d9467f8a257afd3d5faa2b6166835fa5d4a"
+}

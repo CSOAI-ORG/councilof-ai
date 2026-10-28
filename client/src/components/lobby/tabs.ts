@@ -54,6 +54,7 @@ export type LobbyTabId =
   | "attestations"
   | "evidence"
   | "evidence-delivery"
+  | "axis-specialists"
   | "embed"
   | "art50"
   | "standards"
@@ -366,6 +367,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(evidence delivery|deliver evidence|local evidence|unsigned draft|a2a handoff)\b/i,
+  },
+  {
+    id: "axis-specialists",
+    label: "Axis specialists",
+    blurb:
+      "Thirty-three bounded MEOK Hive specialists — one per GSPC axis — with individual audits, negative controls and recommendation-only improvements under MEOK H.I.M. HOLD gates. No proposal is applied.",
+    path: "",
+    kind: "native",
+    cues: /\b(axis specialists?|specialist hive|meok hive|axis audits?|axis improvements?)\b/i,
   },
   {
     id: "embed",
@@ -929,6 +939,7 @@ const DASHBOARD_NAV_DEFINITION: {
       { id: "verify", label: "Check a result" },
       { id: "evidence", label: "Evidence pack" },
       { id: "evidence-delivery", label: "Evidence delivery" },
+      { id: "axis-specialists", label: "Axis specialists" },
     ],
   },
   {

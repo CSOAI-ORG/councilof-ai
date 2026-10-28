@@ -1,7 +1,7 @@
 {
   "name": "Council of AI — Measurement Agent",
   "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "provider": {
     "organization": "CSOAI Ltd",
     "url": "https://councilof.ai"
@@ -255,6 +255,22 @@
       "outputModes": [
         "text/plain",
         "application/json"
+      ]
+    },
+    {
+      "id": "axis-specialist",
+      "name": "MEOK Hive axis specialist audits (free, unsigned)",
+      "description": "Read the bounded specialist audit for one exact GSPC axis, or the full index with an empty input. Every axis has its own logical MEOK Hive cluster, mission, evidence checks, negative controls, improvement proposals and human reviewer role. RSI is recommendation-only: no ASI claim, no self-modification, no spend, no deployment and no apply operation. Every proposal stays PROPOSED_NOT_APPLIED under a MEOK H.I.M.-compatible HOLD gate. The existing axis_<id> MCP tools remain the live measurement readers; these audits are unsigned analysis of a captured board, not new measurement or certification.",
+      "tags": [
+        "measurement",
+        "human-in-the-loop",
+        "meok",
+        "audit"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"axis-specialist\",\"input\":{}}",
+        "SendMessage with Part.data {\"skill\":\"axis-specialist\",\"input\":{\"axis\":\"governance\"}}",
+        "GET /api/axis-specialists/governance"
       ]
     }
   ],
