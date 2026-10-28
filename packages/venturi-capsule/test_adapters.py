@@ -133,6 +133,31 @@ ALL_FIXTURES = {
     "tool_drift": lambda: _td_caps(),
 }
 
+H64 = "b" * 64
+
+
+def _snap_caps(mod, rec):
+    """busabase / meok (15 Oct 2026): a synthetic snapshot record in a temp root, read the way capsule-daily reads it."""
+    import pathlib, tempfile
+    d = pathlib.Path(tempfile.mkdtemp()) / "2026-10-15"
+    d.mkdir()
+    (d / "record.json").write_text(json.dumps(rec))
+    return list(mod.capsules(str(d.parent), {}))
+
+
+_BB = {"schema": "csoai.busabase-snapshot/0.1", "date": "2026-10-15", "as_of": "2026-10-15T07:55:00Z", "origin": "http://127.0.0.1:15430",
+       "runtime": "Busabase 0.95.1", "n_bases": 2, "n_records": 3, "table_counts": {"records": 3},
+       "commit_head": {"id": "cmt1", "at": "t", "n": 1}, "audit_head": {"id": "aud1", "at": "t", "n": 1}, "change_requests_open": 0,
+       "snapshot": {"path": "x", "sha256": H64, "bytes": 1},
+       "bases": [{"id": "b1", "slug": "a", "n_records": 1, "n_fields": 2, "records_sha256": H64},
+                 {"id": "b2", "slug": "meok", "n_records": 2, "n_fields": 2, "records_sha256": H64}]}
+_MK = {"schema": "csoai.meok-snapshot/0.1", "date": "2026-10-15", "as_of": "2026-10-15T07:55:00Z", "busabase_snapshot_sha256": H64,
+       "meok_base": _BB["bases"][1], "meok_base_head": None,
+       "gateway": {"files": [{"path": "g.py", "sha256": H64, "bytes": 1}], "tree_sha256": H64},
+       "fixtures": {"files": [], "tree_sha256": H64}}
+ALL_FIXTURES["busabase"] = lambda: _snap_caps(__import__("adapters.busabase").busabase, _BB)
+ALL_FIXTURES["meok"] = lambda: _snap_caps(__import__("adapters.meok").meok, _MK)
+
 
 def _td_caps():
     from adapters import tool_drift as td
