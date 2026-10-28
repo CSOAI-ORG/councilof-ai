@@ -689,3 +689,17 @@ test("workspace navigation starts minimized and remains usable across layout bou
     expect(overflow, String(width)).toBeLessThanOrEqual(1);
   }
 });
+
+test("the home header carries a booking door to /assess/ within one click", async ({ page }) => {
+  await page.goto("/");
+  const desktop = page.locator('[data-testid="header-book-measurement"]');
+  const opener = page.getByRole("button", { name: "Open menu" });
+  if (await desktop.isVisible({ timeout: 30_000 }).catch(() => false)) {
+    await expect(desktop).toHaveAttribute("href", "/assess/");
+  } else {
+    await opener.click();
+    const mobile = page.locator('[data-testid="mobile-book-measurement"]');
+    await expect(mobile).toBeVisible();
+    await expect(mobile).toHaveAttribute("href", "/assess/");
+  }
+});

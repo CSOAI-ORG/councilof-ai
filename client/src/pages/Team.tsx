@@ -1,80 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AISystemNotice from "@/components/AISystemNotice";
+import PalAskPanel from "@/components/PalAskPanel";
+import HitlConsole from "@/components/HitlConsole";
 import { DESKS, DESK_IDS, deskDisclosure, type DeskId } from "../../../functions/api/_chatDesks";
 
 /**
  * /team — the people and the AI agents, on separate sections (the Griffin pattern: real humans
  * and named-by-role agents never mixed). People lists only who the About page names. Every agent
- * card is badged "AI agent", carries the Art. 50(1) disclosure, and its Ask opens the existing
- * Council chat (POST /api/chat) with a desk tag. No faces, no human bios, no fees.
+ * card is badged "AI agent", carries the Art. 50(1) disclosure, and its Ask opens the PAL
+ * runtime (POST /api/pals/<id>/chat). No faces, no human bios, no fees.
+ *
+ * THE ASK IS NOT THE OLD CHAT. The old Ask posted to /api/chat, which has no model in it: it
+ * matched patterns and, when no published record answered, returned a refusal. A reader could
+ * ask the Press desk a question and be told what to ask instead. The Ask now goes to the PAL
+ * runtime, which answers from the published records FIRST and consults the model only for
+ * conversation — and every reply says which of those happened, so the reader can tell.
+ *
+ * The cards are still built from DESKS, the same definitions the PAL registry is derived from.
+ * One vocabulary: the page and the door cannot describe different staff members. The Ask panel
+ * itself is the shared component the Council OS staff pane opens, so the two surfaces cannot
+ * drift apart either.
  */
 
-type Turn = { who: "you" | "agent"; text: string };
-
-function AskPanel({ desk, onClose }: { desk: DeskId; onClose: () => void }) {
-  const d = DESKS[desk];
-  const [q, setQ] = useState("");
-  const [turns, setTurns] = useState<Turn[]>([]);
-  const [busy, setBusy] = useState(false);
-
-  async function send() {
-    const message = q.trim();
-    if (!message || busy) return;
-    setTurns((t) => [...t, { who: "you", text: message }]);
-    setQ("");
-    setBusy(true);
-    try {
-      const r = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ message, desk }),
-      });
-      const j = await r.json();
-      setTurns((t) => [...t, { who: "agent", text: String(j?.answer ?? "UNMEASURED: no answer was returned.") }]);
-    } catch {
-      setTurns((t) => [...t, { who: "agent", text: "The chat could not be reached. Nothing was answered." }]);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  return (
-    <div role="dialog" aria-label={`Ask ${d.name}`} className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center">
-      <div className="w-full max-w-xl rounded-2xl border border-emerald-500/30 bg-[#06110c] p-5 text-emerald-50">
-        <div className="mb-3 flex items-center gap-2">
-          <h2 className="text-lg font-bold">Ask {d.name}</h2>
-          <span className="rounded-full border border-sky-400/50 px-2 py-0.5 text-[11px] text-sky-200">AI agent</span>
-          <button type="button" onClick={onClose} className="ml-auto text-sm underline">Close</button>
-        </div>
-        <p role="note" data-testid="chat-disclosure" className="mb-3 rounded-xl border border-sky-400/40 bg-sky-500/10 px-3 py-2 text-[13px]">
-          {deskDisclosure(d.name)}
-        </p>
-        <div className="mb-3 max-h-72 space-y-2 overflow-y-auto text-sm">
-          {turns.map((t, i) => (
-            <p key={i} className={t.who === "you" ? "text-right text-emerald-200" : "whitespace-pre-wrap text-emerald-50/90"}>
-              <span className="mr-1 text-[11px] uppercase text-emerald-100/50">{t.who === "you" ? "You" : `${d.name} (AI)`}</span>
-              {t.text}
-            </p>
-          ))}
-        </div>
-        <form onSubmit={(e) => { e.preventDefault(); void send(); }} className="flex gap-2">
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder={`Ask ${d.name} about ${d.role.toLowerCase()}`}
-            className="flex-1 rounded-lg border border-emerald-500/30 bg-black/40 px-3 py-2 text-sm"
-          />
-          <button type="submit" disabled={busy} className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold disabled:opacity-50">
-            {busy ? "…" : "Ask"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-}
+type PalRecord = { id: string; slug: string; name: string; did: string; signed: boolean };
 
 export default function Team() {
   const [open, setOpen] = useState<DeskId | null>(null);
+  const [registry, setRegistry] = useState<Record<string, PalRecord>>({});
+  const [modelConfigured, setModelConfigured] = useState<boolean | null>(null);
+  // A consequential act a staff member would not perform on its own arrives here as a challenge
+  // and waits for a human. It is not a chat message; it is a decision.
+  const [challenge, setChallenge] = useState<any>(null);
+
+  // The registry, not a second copy of it. The cards already read DESKS; this adds each staff
+  // member's identity — the did:key its answers can be signed with — and whether a language
+  // model is configured for this deployment, so a reader knows before asking which of the two
+  // they are about to get.
+  useEffect(() => {
+    let live = true;
+    void (async () => {
+      try {
+        const r = await fetch("/api/pals");
+        if (!r.ok) return;
+        const j = await r.json();
+        if (!live) return;
+        const byslug: Record<string, PalRecord> = {};
+        for (const s of (j?.staff ?? []) as PalRecord[]) byslug[s.slug] = s;
+        setRegistry(byslug);
+        setModelConfigured(Boolean(j?.model_configured));
+      } catch {
+        // The cards do not depend on the registry. If it cannot be read, the page still works
+        // and simply does not claim an identity it could not confirm.
+      }
+    })();
+    return () => {
+      live = false;
+    };
+  }, []);
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 text-emerald-50">
       <h1 className="mb-4 text-3xl font-bold sm:text-4xl">Team</h1>
@@ -97,12 +80,20 @@ export default function Team() {
 
       <section aria-labelledby="agents">
         <h2 id="agents" className="mb-2 text-2xl font-bold">AI agents</h2>
-        <p className="mb-6 text-gray-300">
-          Each desk is the same Council chat with a narrower scope. It answers from published records or says UNMEASURED.
+        <p className="mb-2 text-gray-300">
+          Each desk is the same Council staff with a narrower scope. It answers from published records, or says
+          UNMEASURED, or talks — and it tells you which of those it just did.
         </p>
+        {modelConfigured === false ? (
+          <p role="note" data-testid="team-model-state" className="mb-6 rounded-xl border border-amber-400/40 bg-amber-500/10 px-3 py-2 text-[13px] text-amber-100">
+            No language model is configured for this deployment, so these staff answer from published records only.
+            Nothing is invented to fill the gap.
+          </p>
+        ) : null}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {DESK_IDS.map((id) => {
             const d = DESKS[id];
+            const rec = registry[id];
             return (
               <article key={id} data-testid={`agent-${id}`} className="flex flex-col rounded-2xl border border-sky-400/30 bg-sky-500/5 p-5">
                 <div className="mb-1 flex items-center gap-2">
@@ -115,6 +106,15 @@ export default function Team() {
                 <p className="text-xs font-semibold uppercase text-amber-300">Can't answer</p>
                 <ul className="mb-3 list-disc pl-5 text-sm">{d.cannot.map((c) => <li key={c}>{c}</li>)}</ul>
                 <p role="note" className="mb-4 text-[12px] text-sky-100/80">{deskDisclosure(d.name)}</p>
+                {rec?.did ? (
+                  <p className="mb-3 break-all text-[11px] text-emerald-100/60" data-testid={`agent-did-${id}`}>
+                    did:key:{rec.did.replace(/^did:key:/, "").slice(0, 16)}…
+                  </p>
+                ) : (
+                  <p className="mb-3 text-[11px] text-emerald-100/60" data-testid={`agent-unsigned-${id}`}>
+                    No signing key yet — these answers cannot be attributed to a key.
+                  </p>
+                )}
                 <button type="button" onClick={() => setOpen(id)} className="mt-auto rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold">
                   Ask {d.name}
                 </button>
@@ -123,7 +123,9 @@ export default function Team() {
           })}
         </div>
       </section>
-      {open && <AskPanel desk={open} onClose={() => setOpen(null)} />}
+      {open && <PalAskPanel desk={open} onClose={() => setOpen(null)} onEscalation={setChallenge} />}
+
+      <HitlConsole challenge={challenge} />
     </div>
   );
 }

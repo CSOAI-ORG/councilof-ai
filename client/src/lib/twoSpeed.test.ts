@@ -39,8 +39,8 @@ describe("Two-speed GSPC", () => {
     expect(joinedPins().every((p) => p.write === "never-measured")).toBe(true);
     const blob = JSON.stringify({ TWO_SPEED_RULING, ATTACH_ROWS, REG_OBSERVE });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
-    // Internal strategy notes live on the noindex /status/internal page, never on /tools (6 Oct 2026).
-    expect(internal).toContain("<TwoSpeed />");
+    // Operator modules are not mounted on public product or reference pages.
+    expect(internal).not.toContain("<TwoSpeed />");
     expect(tools).not.toContain("<TwoSpeed");
   });
 });
