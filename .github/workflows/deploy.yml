@@ -336,7 +336,14 @@ jobs:
       # binding, a removed binding, project, branch, compatibility or plaintext
       # drift all still stop the deploy exactly as before.
       - name: Bind candidate KV namespaces missing from the production project (additive only)
-        env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
+        env:
+          CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
+          CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+          # A second credential, offered to the namespace-list READ only. The Pages read
+          # and the PATCH always use CLOUDFLARE_API_TOKEN. If this one can list the
+          # account's KV namespaces, the step proves the id live; if it cannot, the
+          # committed receipt stands in and the output says which proof was used.
+          CLOUDFLARE_KV_READ_TOKEN: '${{ secrets.CFAT_FP6RDKQJWFJ2QM7W0H83VD55YCDWCG7ERIRT1EG9706102AE }}'
         run: |
           node --test scripts/review/pages-bind-missing-namespaces.test.mjs
           node scripts/review/pages-bind-missing-namespaces.mjs --config wrangler.jsonc
