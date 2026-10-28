@@ -52,7 +52,8 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     catalog.x402_metered,
     paid.tools.map((tool) => tool.name),
   );
-  assert.equal(catalog.free.length, 47);
+  assert.equal(catalog.free.length, 48);
+  assert.equal(catalog.free.length, 48);
   assert.equal(catalog.x402_metered.length, 5);
 
   // The prose count and the prose wording are held to the catalogue, so neither can drift.

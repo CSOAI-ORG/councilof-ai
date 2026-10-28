@@ -24,6 +24,7 @@ describe("dashboard MCP inventory", () => {
       "server_evidence",
       "evidence_bundle_preview",
       "route",
+      "quote_dataset_version",
       "axis_governance",
       "axis_safety",
       "axis_provenance",
@@ -65,7 +66,7 @@ describe("dashboard MCP inventory", () => {
       "receipts_batch",
       "evidence_bundle",
     ]);
-    expect(PUBLISHED_TOOL_COUNT).toBe(52);
+    expect(PUBLISHED_TOOL_COUNT).toBe(53);
   });
 
   it("does not advertise the quarantined witness SKU", () => {

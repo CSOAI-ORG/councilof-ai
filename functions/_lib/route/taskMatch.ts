@@ -138,6 +138,10 @@ export const PURPOSE: Record<string, Pattern[]> = {
     { re: /\bobligations?\b|\bregulations?\b/, w: 1 },
     { re: /\bcomplian\w*|\bcomply\b|\bregulat\w*|\blegal(ly)?\b/, w: 2 },
   ],
+  quote_dataset_version: [
+    { re: /\bdata\/v1\b|\bdataset version\b|\bquote_dataset_version\b/, w: 6 },
+    { re: /\b(cite|citation|doi|cc-by-4\.0)\b.*\bdataset\b|\bdataset\b.*\b(cite|citation|doi|snapshot|manifest)\b/, w: 5 },
+  ],
   commission_card: [
     { re: /\b(commission|order|request|buy|purchase)\b.*\b(card|measurement|attestation|run|test)\b/, w: 5 },
     { re: /\bfresh run\b|\bnew measurement\b|\bmeasure my\b/, w: 3 },
