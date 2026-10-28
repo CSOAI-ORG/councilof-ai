@@ -1,7 +1,6 @@
 import { Link } from "wouter";
 import { toolSummary } from "@/lib/mcpTools";
 import EmptySlots from "@/components/EmptySlots";
-import HealthTerms from "@/components/HealthTerms";
 import ProductFill from "@/components/ProductFill";
 import { useBoardCount } from "@/lib/boardCount";
 
@@ -202,11 +201,7 @@ export default function Products() {
         </ul>
       </section>
 
-      {/* Operator notes (health inventory, governance terminal, revenue funnels, external audit,
-          playbook audit) moved to the noindex /status/internal page on 6 Oct 2026: they were
-          agent instructions and strategy notes, not product copy a buyer can act on. */}
       <ProductFill tone="dark" />
-      <HealthTerms tone="dark" />
       <EmptySlots tone="dark" />
 
       <section aria-labelledby="engine-h" className="mt-12">
