@@ -39,9 +39,13 @@ jobs:
               'packages/evidence-fabric/tests/test_safe_pack_verify.py',
               'docs/standards/osaia-safe-reverification/test_hitl_authority_effect.py',
               'docs/standards/osaia-safe-reverification/test_approval_dependency_binding.py',
+              'docs/standards/osaia-safe-reverification/test_hitl_authority_effect_v0_2.py',
               'docs/standards/osaia-safe-reverification/hitl-authority-effect-v0.1.schema.json',
               'docs/standards/osaia-safe-reverification/hitl-authority-effect.example.json',
+              'docs/standards/osaia-safe-reverification/hitl-authority-effect-v0.2.schema.json',
+              'docs/standards/osaia-safe-reverification/hitl-authority-effect-v0.2.example.json',
               'docs/standards/osaia-safe-reverification/csoai-alliance-control-plugin-v0.2.json',
+              'docs/standards/osaia-safe-reverification/csoai-alliance-control-plugin-v0.3.json',
               'docs/standards/osaia-safe-reverification/verify_safe_evidence.py',
               'docs/standards/osaia-safe-reverification/examples/example-pass-a2a-card-census-integrity.json',
               'packages/evidence-fabric/safe_freeze_v2.py',
@@ -76,6 +80,29 @@ jobs:
       - name: HITL schema cases, plugin assertions and added controls
         working-directory: docs/standards/osaia-safe-reverification
         run: python test_hitl_authority_effect.py
+      - name: HITL v0.2 — non-authorizing claim states and the bound authority record
+        working-directory: docs/standards/osaia-safe-reverification
+        run: |
+          python -B test_hitl_authority_effect_v0_2.py
+      - name: HITL v0.2 — the negative control still discriminates
+        working-directory: docs/standards/osaia-safe-reverification
+        run: |
+          python -B - <<'PY'
+          import subprocess, sys
+          out = subprocess.run([sys.executable, '-B', 'test_hitl_authority_effect_v0_2.py'],
+                               capture_output=True, text=True)
+          text = out.stdout + out.stderr
+          if out.returncode != 0:
+              raise SystemExit('v0.2 controls failed:\n' + text)
+          line = [l for l in text.splitlines() if l.startswith('PASS ')]
+          if not line:
+              raise SystemExit('v0.2 controls did not report a PASS line')
+          import re
+          m = re.search(r'(\d+) negative controls', line[0])
+          if not m or int(m.group(1)) < 4:
+              raise SystemExit('v0.2 negative control count too low: ' + line[0])
+          print(line[0])
+          PY
       - name: Approval byte-binding controls
         working-directory: docs/standards/osaia-safe-reverification
         run: |
