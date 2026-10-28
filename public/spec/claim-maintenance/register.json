@@ -1,7 +1,7 @@
 {
   "schema": "csoai.claim-maintenance.register/0.1",
   "title": "Claim maintenance register — the subjects Council of AI maintains public claims on",
-  "as_of": "2026-10-01T10:44:58Z",
+  "as_of": "2026-10-13T07:17:45Z",
   "specification": "https://councilof.ai/spec/claim-maintenance/v0.2/",
   "specification_licence": "CC0-1.0",
   "maintainer": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
@@ -36,8 +36,102 @@
       "UNCHECKABLE": 26
     },
     "claims_conforming_to_artifact_schema": 91,
-    "subjects_with_a_scheduled_next_read": 0,
-    "subjects_with_a_due_unrun_next_read": 26
+    "scheduled_checks": 11,
+    "scheduled_checks_after_as_of": 6,
+    "scheduled_checks_on_or_before_as_of": 5,
+    "subjects_with_a_scheduled_next_read": 28,
+    "subjects_with_due_execution_unverified": 26
+  },
+  "schedule": {
+    "rule": "For every LIVE registry: the read its own bytes name (scheduled-read, the earliest next_read_utc) and its created date + 7, 30 and 90 days (day-7, day-30, day-90). A check is due on its date.",
+    "scheduler": "scripts/claims/maintenance_due.py, once a day — the one scheduler. This list is the same rule applied to the same registry files; a test compares it with the scheduler's own plan.",
+    "dates_not_outcomes": "These are dates. This register is generated from the registry files and holds no record of any run, so a check dated on or before as_of is neither confirmed here nor reported missed here.",
+    "executed_checks": {
+      "authority": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/latest.json",
+      "also_at": "https://councilof.ai/api/state — ledgers.claim_maintenance, a snapshot of that file with its own run_at",
+      "holds": "which checks ran, when, and what each read found"
+    },
+    "position_is_relative_to": "as_of",
+    "after_the_last_check": "A registry has no planned re-read after its day-90 date until a revision of it names one.",
+    "checks": [
+      {
+        "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+        "check": "scheduled-read",
+        "due": "2026-09-28",
+        "basis": "earliest next_read_utc in the registry's own bytes",
+        "position": "ON_OR_BEFORE_AS_OF"
+      },
+      {
+        "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+        "check": "scheduled-read",
+        "due": "2026-10-01",
+        "basis": "earliest next_read_utc in the registry's own bytes",
+        "position": "ON_OR_BEFORE_AS_OF"
+      },
+      {
+        "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+        "check": "day-7",
+        "due": "2026-10-02",
+        "basis": "registry created 2026-09-25 + 7 days",
+        "position": "ON_OR_BEFORE_AS_OF"
+      },
+      {
+        "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+        "check": "day-7",
+        "due": "2026-10-02",
+        "basis": "registry created 2026-09-25 + 7 days",
+        "position": "ON_OR_BEFORE_AS_OF"
+      },
+      {
+        "registry_id": "claimreg-ondo-chainlink-maintenance-20260928T023900Z",
+        "check": "day-7",
+        "due": "2026-10-05",
+        "basis": "registry created 2026-09-28 + 7 days",
+        "position": "ON_OR_BEFORE_AS_OF"
+      },
+      {
+        "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days",
+        "position": "AFTER_AS_OF"
+      },
+      {
+        "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days",
+        "position": "AFTER_AS_OF"
+      },
+      {
+        "registry_id": "claimreg-ondo-chainlink-maintenance-20260928T023900Z",
+        "check": "day-30",
+        "due": "2026-10-28",
+        "basis": "registry created 2026-09-28 + 30 days",
+        "position": "AFTER_AS_OF"
+      },
+      {
+        "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+        "check": "day-90",
+        "due": "2026-12-24",
+        "basis": "registry created 2026-09-25 + 90 days",
+        "position": "AFTER_AS_OF"
+      },
+      {
+        "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+        "check": "day-90",
+        "due": "2026-12-24",
+        "basis": "registry created 2026-09-25 + 90 days",
+        "position": "AFTER_AS_OF"
+      },
+      {
+        "registry_id": "claimreg-ondo-chainlink-maintenance-20260928T023900Z",
+        "check": "day-90",
+        "due": "2026-12-27",
+        "basis": "registry created 2026-09-28 + 90 days",
+        "position": "AFTER_AS_OF"
+      }
+    ]
   },
   "disclosures": [
     {
@@ -67,14 +161,19 @@
       "last_read": "2026-09-25T05:31:06Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 2,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Arize AI",
@@ -94,14 +193,19 @@
       "last_read": "2026-09-25T05:31:04Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Armilla",
@@ -121,14 +225,19 @@
       "last_read": "2026-09-25T05:31:03Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 2,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Council of AI (CSOAI Ltd)",
@@ -148,14 +257,19 @@
       "last_read": "2026-09-25T05:31:07Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 4,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Credo AI",
@@ -175,14 +289,19 @@
       "last_read": "2026-09-25T05:31:02Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "European Central Bank (Pontes)",
@@ -202,14 +321,19 @@
       "last_read": "2026-09-25T05:31:07Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 4,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Galileo",
@@ -229,14 +353,19 @@
       "last_read": "2026-09-25T05:31:05Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 2,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Giskard",
@@ -256,14 +385,19 @@
       "last_read": "2026-09-23T04:36:01Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Guardrails AI",
@@ -283,14 +417,19 @@
       "last_read": "2026-09-23T04:36:01Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 2,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Helicone",
@@ -310,14 +449,19 @@
       "last_read": "2026-09-25T05:31:06Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Holistic AI",
@@ -337,14 +481,19 @@
       "last_read": "2026-09-25T05:31:03Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "InstaHuman",
@@ -364,14 +513,19 @@
       "last_read": "2026-09-25T05:31:23Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-10-01T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 4,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Invariant Guardrails",
@@ -391,14 +545,19 @@
       "last_read": "2026-09-23T04:36:01Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Invoke",
@@ -418,14 +577,19 @@
       "last_read": "2026-09-25T05:31:22Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-10-01T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 5,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Langfuse",
@@ -445,14 +609,19 @@
       "last_read": "2026-09-25T05:31:04Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 5,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Mistral AI",
@@ -472,14 +641,19 @@
       "last_read": "2026-09-25T05:31:06Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 2,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "NVIDIA NeMo Guardrails",
@@ -499,14 +673,19 @@
       "last_read": "2026-09-23T04:36:00Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 4,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Payman",
@@ -526,14 +705,19 @@
       "last_read": "2026-09-25T05:31:20Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-10-01T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 5,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Purple Llama",
@@ -553,14 +737,19 @@
       "last_read": "2026-09-23T04:36:01Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "PyRIT",
@@ -580,14 +769,19 @@
       "last_read": "2026-09-23T04:36:01Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 1,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "RentAHuman",
@@ -607,14 +801,19 @@
       "last_read": "2026-09-25T05:31:17Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-10-01T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 9,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Securities and Exchange Board of India (Demat 2.0)",
@@ -634,14 +833,19 @@
       "last_read": "2026-09-23T04:36:00Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Traceloop",
@@ -661,14 +865,19 @@
       "last_read": "2026-09-25T05:31:06Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "Vanta",
@@ -688,14 +897,19 @@
       "last_read": "2026-09-25T05:31:01Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 4,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "chainlink",
@@ -722,7 +936,12 @@
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 0,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-28",
+        "basis": "registry created 2026-09-28 + 30 days"
+      }
     },
     {
       "subject": "garak",
@@ -742,14 +961,19 @@
       "last_read": "2026-09-23T04:36:00Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-09-28T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "gotoHuman",
@@ -769,14 +993,19 @@
       "last_read": "2026-09-25T05:31:18Z",
       "last_read_basis": "artifact.access_date",
       "next_scheduled_read": "2026-10-01T09:20:00Z",
-      "next_scheduled_read_state": "DUE_NOT_RUN",
+      "next_scheduled_read_state": "DUE_EXECUTION_UNVERIFIED",
       "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
       "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
       "registry_schema": "csoai.claim-registry/0.3",
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24-rev2.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 6,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-25",
+        "basis": "registry created 2026-09-25 + 30 days"
+      }
     },
     {
       "subject": "ondo",
@@ -803,7 +1032,12 @@
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 0,
-      "claims_without_a_specification_state": 0
+      "claims_without_a_specification_state": 0,
+      "next_scheduled_check": {
+        "check": "day-30",
+        "due": "2026-10-28",
+        "basis": "registry created 2026-09-28 + 30 days"
+      }
     }
   ],
   "non_registry_files_in_claims_dir": [
@@ -939,9 +1173,10 @@
   "does_not_prove": [
     "that any claim listed here is false — this register makes no such statement about anyone",
     "that a claim in CLAIM_CAPTURED or UNMEASURED has been checked; it has not",
+    "that any scheduled check ran or will run — schedule.checks are dates, and the scheduler's own ledger records what ran",
     "that the subjects here are the only organisations making claims worth observing — this is what we maintain, not a survey",
     "that a superseded registry was wrong; it was replaced, its bytes are unchanged, and it is still served at its own URL",
     "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified"
   ],
-  "register_digest": "f8c1ce5f0cc7582e52f142f81f3910649f52572eda74106190c92d6c0a4a758c"
+  "register_digest": "0434d61930795b300fb7e32cb7f29eaebc33ddda5ad87ec355477486d681c734"
 }

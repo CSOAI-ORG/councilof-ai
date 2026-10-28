@@ -14,6 +14,15 @@
  *
  *   node scripts/claim-maintenance-register.mjs            # write the register
  *   node scripts/claim-maintenance-register.mjs --check    # CI: committed register must match disk
+ *   --as-of <UTC instant>   generate as at that instant (tests, reproduction); default is now
+ *   --claims-dir <dir>      read registries from here instead of public/claims (tests)
+ *   --out <file>            write or check this file instead of the committed register (tests)
+ *
+ * THE SCHEDULE. The register also prints every re-read the one scheduler has planned
+ * (scripts/claims/maintenance_due.py: the read a registry's own bytes name, and created + 7, 30
+ * and 90 days). Before 2026-10-13 it knew only the first of those four, so once that date passed
+ * it reported zero scheduled reads while the scheduler still held a day-30 and a day-90 read for
+ * every live registry. The dates are printed as dates: this file holds no record of any run.
  *
  * The register is published at:
  *   https://councilof.ai/spec/claim-maintenance/register.json   (static bytes)
@@ -25,8 +34,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CLAIMS_DIR = join(ROOT, "public/claims");
-const OUT = join(ROOT, "public/spec/claim-maintenance/register.json");
+const CLAIMS_DIR = flag("--claims-dir") ?? join(ROOT, "public/claims");
+const OUT = flag("--out") ?? join(ROOT, "public/spec/claim-maintenance/register.json");
 const CHECK = process.argv.includes("--check");
 const BASE = "https://councilof.ai";
 const STATES = ["CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"];
@@ -221,7 +230,86 @@ const superseded = registries.filter((r) => r.superseded_by);
 // registries would otherwise both claim the same as_of, and an archived snapshot could not be
 // told apart from the live document it no longer matches — one label over two byte-sets is the
 // defect this whole lane is about.
-const asOf = new Date().toISOString().replace(/\.\d+Z$/, "Z");
+//
+// --check does NOT read the clock. It regenerates as at the committed register's own as_of and
+// compares, so it answers one question only: do the committed bytes match the registries on
+// disk? Fields that compare a date with as_of used to be recomputed against today, which turned
+// the check red on the day a scheduled date passed with nothing on disk changed.
+const asOf = clock();
+
+/** One value-taking flag, or null. Hoisted, so the constants at the top of the file can use it. */
+function flag(name) {
+  const i = process.argv.indexOf(name);
+  if (i < 0) return null;
+  const v = process.argv[i + 1];
+  if (!v || v.startsWith("--")) throw new Error(`${name} requires a value`);
+  return v;
+}
+
+function clock() {
+  const asked = flag("--as-of");
+  if (asked) {
+    const t = iso(asked);
+    if (!t) throw new Error(`--as-of must be a UTC instant (YYYY-MM-DDTHH:MM:SSZ) or a date, got ${asked}`);
+    return t;
+  }
+  if (CHECK && existsSync(OUT)) {
+    try {
+      const committed = iso(JSON.parse(readFileSync(OUT, "utf8")).as_of);
+      if (committed) return committed;
+    } catch {
+      // An unparseable committed register is reported as DRIFT by the comparison below.
+    }
+  }
+  return new Date().toISOString().replace(/\.\d+Z$/, "Z");
+}
+
+// THE SCHEDULE — the same rule the one scheduler runs (scripts/claims/maintenance_due.py,
+// schedule()): for every LIVE registry, the read its own bytes name and created + 7, 30 and 90
+// days. Dates only. Whether a check ran is recorded by the scheduler in its own ledger and is
+// never inferred here; scripts/claim-maintenance-register.schedule.test.mjs compares this list
+// with the scheduler's own plan so the two cannot drift apart.
+const OFFSETS = [["day-7", 7], ["day-30", 30], ["day-90", 90]];
+const addDays = (date, days) => {
+  const [y, m, d] = date.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10);
+};
+const asOfDate = asOf.slice(0, 10);
+// The scheduler's order: due date, then registry, then check name.
+const inOrder = (a, b) => {
+  for (const k of ["due", "registry_id", "check"]) {
+    if (a[k] < b[k]) return -1;
+    if (a[k] > b[k]) return 1;
+  }
+  return 0;
+};
+const scheduledChecks = [];
+for (const r of live) {
+  r.nextCheck = null;
+  if (!r.created) continue;
+  const created = r.created.slice(0, 10);
+  const named = r.subjects.flatMap((s) => s.nexts).sort()[0] ?? null;
+  const rows = [];
+  if (named) {
+    rows.push({ check: "scheduled-read", due: named.slice(0, 10), basis: "earliest next_read_utc in the registry's own bytes" });
+  }
+  for (const [check, days] of OFFSETS) {
+    rows.push({ check, due: addDays(created, days), basis: `registry created ${created} + ${days} days` });
+  }
+  for (const c of rows) {
+    scheduledChecks.push({
+      registry_id: r.registry_id,
+      ...c,
+      // A check is due ON its date, so only a later date is still ahead of this register.
+      position: c.due > asOfDate ? "AFTER_AS_OF" : "ON_OR_BEFORE_AS_OF",
+    });
+  }
+}
+scheduledChecks.sort(inOrder);
+for (const r of live) {
+  const next = scheduledChecks.find((c) => c.registry_id === r.registry_id && c.position === "AFTER_AS_OF");
+  r.nextCheck = next ? { check: next.check, due: next.due, basis: next.basis } : null;
+}
 
 const subjectRows = [];
 for (const r of live) {
@@ -243,15 +331,16 @@ for (const r of live) {
       last_read: max(s.reads) || r.created,
       last_read_basis: s.reads.length ? "artifact.access_date" : "registry.created_utc",
       next_scheduled_read: min(s.nexts),
-      // A named date that is already before this register's as_of is not "SCHEDULED" — the
-      // weekly pod loop that owned those reads was retired 2026-09-28 and the dates passed
-      // without a completed run. DUE_NOT_RUN is the same word the one scheduler uses
-      // (scripts/claims/maintenance_due.py). This field is derived from (next, as_of) only;
-      // run outcomes stay in the checks ledger, never inferred here.
+      // A named date that is already before this register's as_of is not "SCHEDULED". It is not
+      // "DUE_NOT_RUN" either: that is the scheduler's word for a date no run completed, and this
+      // file holds no record of any run. Until 2026-10-13 it said DUE_NOT_RUN for 26 subjects
+      // while the scheduler's own ledger held a completed read of both their registries (29 Sep
+      // and 1 Oct). This field is derived from (next, as_of) only, so a passed date reads
+      // DUE_EXECUTION_UNVERIFIED: due, and not verified here. `schedule` names the ledger.
       next_scheduled_read_state: !s.nexts.length
         ? "UNSCHEDULED"
         : min(s.nexts) < asOf
-          ? "DUE_NOT_RUN"
+          ? "DUE_EXECUTION_UNVERIFIED"
           : "SCHEDULED",
       registry_id: r.registry_id,
       registry_url: r.registry_url,
@@ -263,6 +352,9 @@ for (const r of live) {
       timestamp_state: r.otsPresent ? "RECEIPT_PRESENT_UPGRADE_UNVERIFIED" : "NONE",
       conforming_artifacts: s.conforming,
       claims_without_a_specification_state: s.unknown,
+      // The earliest planned re-read of this subject's registry dated after as_of, from the whole
+      // rule above — not only the one date the registry's own bytes name. null when none is left.
+      next_scheduled_check: r.nextCheck,
     });
   }
 }
@@ -278,8 +370,16 @@ const totals = {
     STATES.map((st) => [st, subjectRows.reduce((n, s) => n + (s.states[st] || 0), 0)]),
   ),
   claims_conforming_to_artifact_schema: subjectRows.reduce((n, s) => n + s.conforming_artifacts, 0),
-  subjects_with_a_scheduled_next_read: subjectRows.filter((s) => s.next_scheduled_read_state === "SCHEDULED").length,
-  subjects_with_a_due_unrun_next_read: subjectRows.filter((s) => s.next_scheduled_read_state === "DUE_NOT_RUN").length,
+  scheduled_checks: scheduledChecks.length,
+  scheduled_checks_after_as_of: scheduledChecks.filter((c) => c.position === "AFTER_AS_OF").length,
+  scheduled_checks_on_or_before_as_of: scheduledChecks.filter((c) => c.position === "ON_OR_BEFORE_AS_OF").length,
+  // Counted over the whole rule. It used to count only a registry-named date still ahead, so it
+  // read 0 from the day the last such date passed, with a day-30 and a day-90 read still planned.
+  subjects_with_a_scheduled_next_read: subjectRows.filter(
+    (s) => s.next_scheduled_check || s.next_scheduled_read_state === "SCHEDULED",
+  ).length,
+  // Was subjects_with_a_due_unrun_next_read. "Unrun" is a run outcome, and this file has none.
+  subjects_with_due_execution_unverified: subjectRows.filter((s) => s.next_scheduled_read_state === "DUE_EXECUTION_UNVERIFIED").length,
 };
 
 /**
@@ -304,6 +404,33 @@ const disclosures = registries
       "anchoring for it: a receipt file is SUBMITTED until its upgrade has been run and its attestation " +
       "path verified. The receipt's state here is RECEIPT_PRESENT_UPGRADE_UNVERIFIED (spec 8.1-8.3).",
   }));
+
+/**
+ * The schedule, in the register's own bytes. Three things a reader could not get from this file
+ * before: every planned re-read (not only the one a registry names), which of them are still
+ * ahead, and where the record of what actually ran is kept. It carries no outcome of its own.
+ */
+const EXECUTED_CHECKS =
+  "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/latest.json";
+const schedule = {
+  rule:
+    "For every LIVE registry: the read its own bytes name (scheduled-read, the earliest next_read_utc) " +
+    "and its created date + 7, 30 and 90 days (day-7, day-30, day-90). A check is due on its date.",
+  scheduler:
+    "scripts/claims/maintenance_due.py, once a day — the one scheduler. This list is the same rule applied " +
+    "to the same registry files; a test compares it with the scheduler's own plan.",
+  dates_not_outcomes:
+    "These are dates. This register is generated from the registry files and holds no record of any run, " +
+    "so a check dated on or before as_of is neither confirmed here nor reported missed here.",
+  executed_checks: {
+    authority: EXECUTED_CHECKS,
+    also_at: `${BASE}/api/state — ledgers.claim_maintenance, a snapshot of that file with its own run_at`,
+    holds: "which checks ran, when, and what each read found",
+  },
+  position_is_relative_to: "as_of",
+  after_the_last_check: "A registry has no planned re-read after its day-90 date until a revision of it names one.",
+  checks: scheduledChecks,
+};
 
 const register = {
   schema: "csoai.claim-maintenance.register/0.1",
@@ -340,6 +467,7 @@ const register = {
     "A defect in any record here is a defect in this register. Report it to nicholas@csoai.org; corrections are published at " +
     `${BASE}/api/corrections.`,
   totals,
+  schedule,
   disclosures,
   subjects: subjectRows,
   non_registry_files_in_claims_dir: nonRegistryFiles,
@@ -369,6 +497,7 @@ const register = {
   does_not_prove: [
     "that any claim listed here is false — this register makes no such statement about anyone",
     "that a claim in CLAIM_CAPTURED or UNMEASURED has been checked; it has not",
+    "that any scheduled check ran or will run — schedule.checks are dates, and the scheduler's own ledger records what ran",
     "that the subjects here are the only organisations making claims worth observing — this is what we maintain, not a survey",
     "that a superseded registry was wrong; it was replaced, its bytes are unchanged, and it is still served at its own URL",
     "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified",
