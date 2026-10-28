@@ -115,7 +115,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes seven plainly named sections (no sov-* name) as direct /dashboard?tab= links", async ({
+test("sidebar exposes eight plainly named sections (no sov-* name) as direct /dashboard?tab= links", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -137,6 +137,7 @@ test("sidebar exposes seven plainly named sections (no sov-* name) as direct /da
     "/dashboard?tab=board",
     "/dashboard?tab=connect",
     "/dashboard?tab=learn",
+    "/dashboard?tab=staff",
     "/dashboard?tab=corrections",
   ]);
   // Surface inspection, 12 Oct 2026: no sov-* label in the public nav; the pane stays reachable by link.
@@ -196,18 +197,16 @@ test("the canonical dashboard accepts its optional trailing slash", async ({
   }
 });
 
-test("every sidebar tab renders its own pane inside the shell, error-free", async ({
+test("every published workspace pane renders its own pane inside the shell, error-free", async ({
   page,
   isMobile,
 }) => {
-  test.setTimeout(240_000);
+  test.setTimeout(480_000);
   await openTab(page, "board");
   const { pageErrors, consoleErrors } = await collectErrors(page);
-  // Loop through the known-good set of tab ids. We don't enumerate the
-  // sidebar links here because the sidebar also carries legacy aliases
-  // and auth-required routes that do NOT render in the shell (the
-  // rail sends workbench to /login when signed out, but on a static
-  // server there is no auth backend, so the test would hang).
+  // Every public canonical pane gets its own mount check. Normalized aliases
+  // and the auth-required workbench are covered separately: they must not be
+  // mistaken for additional public panes or tested against a missing backend.
   const ids = [
     "home",
     "mine",
@@ -215,6 +214,7 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "play",
     "explore",
     "board",
+    "staff",
     "swift",
     "models",
     "measured",
@@ -231,6 +231,19 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "space",
     "products",
     "library",
+    "connect",
+    "route",
+    "corrections",
+    "claims",
+    "sovx",
+    "embed",
+    "console",
+    "leaderboard",
+    "terminal",
+    "evidence-index",
+    "archive",
+    "xrpl",
+    "state",
   ];
   expect(ids).toContain("board");
   for (const id of ids) {
@@ -249,6 +262,12 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
       await expect(page.getByText("Account overview and recent measurements", { exact: true })).toHaveCount(0);
     } else {
       await expect(pane, `${id}: its own pane is mounted`).toHaveCount(1);
+      if (id === "staff") {
+        await expect(
+          page.getByTestId("hitl-console"),
+          "staff: the human-review workflow is mounted",
+        ).toBeVisible();
+      }
     }
   }
   expect(pageErrors, "no uncaught exceptions across the tabs").toEqual([]);
@@ -687,5 +706,19 @@ test("workspace navigation starts minimized and remains usable across layout bou
     await expect(page.getByTestId("ask-pane")).toHaveCount(0);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, String(width)).toBeLessThanOrEqual(1);
+  }
+});
+
+test("the home header carries a booking door to /assess/ within one click", async ({ page }) => {
+  await page.goto("/");
+  const desktop = page.locator('[data-testid="header-book-measurement"]');
+  const opener = page.getByRole("button", { name: "Open menu" });
+  if (await desktop.isVisible({ timeout: 30_000 }).catch(() => false)) {
+    await expect(desktop).toHaveAttribute("href", "/assess/");
+  } else {
+    await opener.click();
+    const mobile = page.locator('[data-testid="mobile-book-measurement"]');
+    await expect(mobile).toBeVisible();
+    await expect(mobile).toHaveAttribute("href", "/assess/");
   }
 });
