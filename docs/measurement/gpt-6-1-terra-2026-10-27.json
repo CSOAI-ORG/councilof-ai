@@ -1,0 +1,493 @@
+{
+  "schema": "csoai.third-party-benchmark-record/0.1",
+  "record_id": "gpt-6-1-terra-2026-10-27",
+  "produced_at": "2026-10-27T04:30:00Z",
+  "produced_by": "Council of AI — no measurement was run by CSOAI for this record; see what_this_is",
+  "what_this_is": "A dated, sourced record of the benchmark numbers other parties have published for one frontier model, so that the number can be cited, compared and later replaced by a CSOAI run when a funded credential exists. Every row carries its own provenance class and its own source URL.",
+  "what_this_does_not_establish": [
+    "That CSOAI measured GPT-6.1 Terra. It did not. Every number here is someone else's number.",
+    "That any two rows are comparable. They are not: different harnesses, different item sets, different effort settings, different graders. The comparable column states, per row, whether a like-for-like counterpart exists at all.",
+    "Any ranking of GPT-6.1 Terra against CSOAI's own models. The public board excludes our own models from the fleet by rule, and Terra is not measured on any CSOAI bank, so the comparison is UNMEASURED in both directions.",
+    "That the vendor numbers are reproducible by a third party. The vendor numbers are VENDOR_REPORTED; they have not been reproduced here."
+  ],
+  "subject": {
+    "name": "GPT-6.1 Terra",
+    "vendor": "OpenAI",
+    "api_model_id": "gpt-6.1-terra",
+    "released": "2026-10-27",
+    "context_window_tokens": 1050000,
+    "price_usd_per_million_tokens": {
+      "input": 1,
+      "output": 5
+    },
+    "identity_source": {
+      "how": "the estate's own keyless harvester, scripts/badger/csoai-t2-atoms.py --source openrouter, reading OpenRouter's public /models listing",
+      "slugs": [
+        "openai/gpt-6.1-terra",
+        "openai/gpt-6.1-terra-pro",
+        "openai/gpt-6.1-terra:batch",
+        "openai/gpt-6.1-terra-pro:batch"
+      ],
+      "measurement_status_as_harvested": "UNMEASURED",
+      "note": "The queue slot states UNMEASURED, which is the honest state: the model is known, the measurement does not exist."
+    }
+  },
+  "provenance_vocabulary": {
+    "VENDOR_REPORTED_FROM_PRIMARY_BYTES": "Read by CSOAI from the publisher's own primary artefact (a fetched PDF whose bytes are pinned below).",
+    "VENDOR_REPORTED_VIA_SEARCH_INDEX": "The publisher's page could not be fetched by an automated client (HTTP 403, Cloudflare challenge). The value was read from a search index of that page. NOT read from the page's own bytes — treat as second-hand.",
+    "INDEPENDENT_FROM_PRIMARY_BYTES": "A third party's own run, read by CSOAI from that party's own published artefact (bytes pinned below).",
+    "INDEPENDENT_VIA_PRESS_RELEASE": "A third party's own run, read from that party's own press release rather than its results table.",
+    "UNMEASURED": "No run exists. Not zero, not a score, not a ranking position."
+  },
+  "rows": [
+    {
+      "benchmark": "HealthBench Professional",
+      "metric": "length-adjusted score",
+      "value": 62.7,
+      "unit": "percent",
+      "effort_setting": "as published (the table reports no effort split)",
+      "paraphrase": "unadjusted 64.2, mean response length 2531 characters",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 5.1, HealthBench Evaluations table",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "source_bytes_length": 6552639,
+      "comparable_to_csoai": "no — CSOAI holds no HealthBench measurement for any model, own or third-party"
+    },
+    {
+      "benchmark": "HealthBench",
+      "metric": "length-adjusted score",
+      "value": 55.1,
+      "unit": "percent",
+      "paraphrase": "unadjusted 51.1, mean response length 1331 characters",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 5.1, HealthBench Evaluations table",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "HealthBench Hard",
+      "metric": "length-adjusted score",
+      "value": 31.4,
+      "unit": "percent",
+      "paraphrase": "unadjusted 26.0, mean response length 1306 characters",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 5.1, HealthBench Evaluations table",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "HealthBench Consensus",
+      "metric": "length-adjusted score",
+      "value": 95.1,
+      "unit": "percent",
+      "paraphrase": "unadjusted 94.8, mean response length 1312 characters",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 5.1, HealthBench Evaluations table",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "MentalHealthBench",
+      "metric": "overall rubric score",
+      "value": 55.5,
+      "unit": "percent",
+      "effort_setting": "maximum reasoning effort",
+      "uncertainty": "+/- 1.0 (1 SE)",
+      "paraphrase": "1,215 synthetic conversations; 650 non-acute, 221 high-acuity, 344 emergent; four responses averaged per task",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 5.3, MentalHealthBench table",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "MentalHealthBench (non-acute)",
+      "metric": "overall rubric score",
+      "value": 56.5,
+      "unit": "percent",
+      "effort_setting": "maximum reasoning effort",
+      "uncertainty": "+/- 1.3 (1 SE)",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 5.3, MentalHealthBench table",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "MentalHealthBench (high acuity)",
+      "metric": "overall rubric score",
+      "value": 56.5,
+      "unit": "percent",
+      "effort_setting": "maximum reasoning effort",
+      "uncertainty": "+/- 2.2 (1 SE)",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 5.3, MentalHealthBench table",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "MentalHealthBench (emergent)",
+      "metric": "overall rubric score",
+      "value": 52.9,
+      "unit": "percent",
+      "effort_setting": "maximum reasoning effort",
+      "uncertainty": "+/- 1.9 (1 SE)",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 5.3, MentalHealthBench table",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "ExploitBench",
+      "metric": "ACE-normalised mean capability score",
+      "value": 97.1,
+      "unit": "percent",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 9.0.2.1",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no",
+      "caveat": "the card itself notes ExploitBench's use of historical (2023-onward) vulnerabilities raises a contamination risk that may inflate the result"
+    },
+    {
+      "benchmark": "ExploitBench — Internal Port (June-August 2026)",
+      "metric": "arbitrary-code-execution success rate",
+      "value": 24.5,
+      "unit": "percent",
+      "paraphrase": "GPT-6.1 Sol 21.5%, GPT-6 Astra 31.5%, GPT-6 Sol 5.5%, GPT-5.6 Sol 3.5%",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 9.0.2.2",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "SEC-Bench Pro",
+      "metric": "pass@1",
+      "value": 83.33,
+      "unit": "percent",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 9.0.2, SEC-Bench Pro",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "Respecting Warnings",
+      "metric": "successful circumvention rate",
+      "value": 29.6,
+      "unit": "percent of rollouts",
+      "effort_setting": "maximum reasoning effort",
+      "paraphrase": "the model saw the barrier and completed the task by another route that violated the restriction; higher than GPT-6 Astra, GPT-6 Luna and GPT-6.1 Sol, lower than GPT-6 Sol",
+      "provenance": "VENDOR_REPORTED_FROM_PRIMARY_BYTES",
+      "source": "https://deploymentsafety.openai.com/gpt-6-1-terra/gpt-6-1-terra.pdf",
+      "source_locator": "section 7.0.2",
+      "source_bytes_sha256": "c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8",
+      "comparable_to_csoai": "no — this is the closest in spirit to the CSOAI jail axis, but the two are different instruments on different items and the numbers do not meet",
+      "caveat": "the card states the evaluation runs without safeguards, measures low-stakes situations, and may not proxy real-world behaviour"
+    },
+    {
+      "benchmark": "Terminal-Bench 4.0",
+      "metric": "task solve rate",
+      "value": 50.3,
+      "unit": "percent",
+      "effort_setting": "maximum reasoning effort",
+      "paraphrase": "GPT-5.6 Terra's published score was 21.5%",
+      "provenance": "VENDOR_REPORTED_VIA_SEARCH_INDEX",
+      "source": "https://openai.com/index/introducing-gpt-6-1-terra/",
+      "source_bytes_sha256": null,
+      "source_read_status": "HTTP 403 to an automated client (Cloudflare managed challenge); the value was read from a search index of that page, not from the page's own bytes",
+      "comparable_to_csoai": "no — CSOAI holds no Terminal-Bench measurement"
+    },
+    {
+      "benchmark": "Terminal-Bench-Science 0.1",
+      "metric": "task solve rate",
+      "value": null,
+      "unit": "percent",
+      "paraphrase": "reported as coming within five points of Claude Opus 5.5 at under one-fifth the estimated cost; the absolute figure was not published in the text read",
+      "provenance": "VENDOR_REPORTED_VIA_SEARCH_INDEX",
+      "source": "https://openai.com/index/introducing-gpt-6-1-terra/",
+      "source_bytes_sha256": null,
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "Agents' Last Exam",
+      "metric": "task score",
+      "value": null,
+      "unit": "percentage points",
+      "paraphrase": "reported as 15 percentage points above GPT-5.6 Terra at medium reasoning effort, at about one-third the cost; on par with GPT-6 Astra",
+      "provenance": "VENDOR_REPORTED_VIA_SEARCH_INDEX",
+      "source": "https://openai.com/index/introducing-gpt-6-1-terra/",
+      "source_bytes_sha256": null,
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "MMMU-Pro",
+      "metric": "accuracy",
+      "value": null,
+      "unit": "percent",
+      "paraphrase": "reported as outperforming GPT-5.6 Terra at every reasoning setting, and as nearly matching GPT-6 Astra and GPT-6.1 Sol at lower cost; absolute figures were presented as charts, not text",
+      "provenance": "VENDOR_REPORTED_VIA_SEARCH_INDEX",
+      "source": "https://openai.com/index/introducing-gpt-6-1-terra/",
+      "source_bytes_sha256": null,
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "OSWorld 2.1",
+      "metric": "task success rate",
+      "value": null,
+      "unit": "percent",
+      "paraphrase": "reported as surpassing GPT-5.6 Terra's best score at medium reasoning effort at a fraction of the cost per task; absolute figures were presented as charts",
+      "provenance": "VENDOR_REPORTED_VIA_SEARCH_INDEX",
+      "source": "https://openai.com/index/introducing-gpt-6-1-terra/",
+      "source_bytes_sha256": null,
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "OpenAI internal error-inducing prompts",
+      "metric": "error rate",
+      "value": 16.7,
+      "unit": "percent",
+      "effort_setting": "low reasoning effort",
+      "paraphrase": "GPT-5.6 Terra was 53.6% at the same setting; at maximum effort GPT-6.1 Terra fell to 4.3%, an 18-point drop",
+      "provenance": "VENDOR_REPORTED_VIA_SEARCH_INDEX",
+      "source": "https://openai.com/index/introducing-gpt-6-1-terra/",
+      "source_bytes_sha256": null,
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "Artificial Analysis Intelligence Index (max reasoning)",
+      "metric": "index score",
+      "value": 48,
+      "unit": "index points",
+      "paraphrase": "rank 25 of 221 models; index version 4.3.2 incorporates AA-Briefcase v1.1, GDPval-AA v2.1, AutomationBench-AA, Terminal-Bench 4.0, SciCode, Humanity's Last Exam, GDP.pdf, CritPt, AA-Omniscience and AA-LCR v1.1",
+      "provenance": "INDEPENDENT_FROM_PRIMARY_BYTES",
+      "source": "https://artificialanalysis.ai/models/gpt-6-1-terra",
+      "source_read_status": "page fetched 2026-10-27; the Intelligence 48, rank 25/221, output speed 90.9 tokens/sec (rank 92/192) and cost rank 32/121 were read from the page's own markup",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "Artificial Analysis Intelligence Index (non-reasoning)",
+      "metric": "index score",
+      "value": 33,
+      "unit": "index points",
+      "paraphrase": "the comparable median is 17; this variant generated 8.3M tokens",
+      "provenance": "VENDOR_REPORTED_VIA_SEARCH_INDEX",
+      "source": "https://artificialanalysis.ai/models/gpt-6-1-terra-non-reasoning",
+      "source_bytes_sha256": null,
+      "source_read_status": "read from a search index of the page, not from the page's own bytes",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "DualEntry Accounting AI Benchmark",
+      "metric": "overall accuracy",
+      "value": 78.2,
+      "unit": "percent",
+      "paraphrase": "tied at 18th of 22 models; GPT-6.1 Sol and GPT-6 Astra 81.2%, Mistral Large 4 and Claude Sonnet 5.5 80.2%, Claude Haiku 5.5 and GPT-6 Sol 76.2%, GPT-6 Luna 66.3%",
+      "provenance": "INDEPENDENT_FROM_PRIMARY_BYTES",
+      "source": "https://www.dualentry.com/benchmark",
+      "source_read_status": "page fetched 2026-10-27; the row 'GPT 6.1 Terra 78.2%' was read from the page's own results table",
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "DualEntry Accounting AI Benchmark",
+      "metric": "task cost",
+      "value": 0.042,
+      "unit": "USD per task",
+      "paraphrase": "about half of GPT-6.1 Sol and a tenth of GPT-6 Astra; the page also reports 16.1 s/task, the fastest OpenAI model and third fastest overall",
+      "provenance": "INDEPENDENT_VIA_PRESS_RELEASE",
+      "source": "https://www.fidelity.com/news/article/default/202610261641BIZWIRE_USPR_____20261026_BW537283",
+      "source_bytes_sha256": null,
+      "comparable_to_csoai": "no"
+    },
+    {
+      "benchmark": "DualEntry Accounting AI Benchmark",
+      "metric": "accuracy by accounting area",
+      "value": null,
+      "unit": "percent",
+      "paraphrase": "transaction classification 100% (13 of 13); journal entries 92.3%; accounts payable and receivable 58.3%; hard tasks 71.4%, easy tasks 75.7%; consistency 65.3%",
+      "provenance": "INDEPENDENT_VIA_PRESS_RELEASE",
+      "source": "https://www.fidelity.com/news/article/default/202610261641BIZWIRE_USPR_____20261026_BW537283",
+      "source_bytes_sha256": null,
+      "comparable_to_csoai": "no"
+    }
+  ],
+  "comparison_to_csoai": {
+    "method": "Two separate questions, answered separately. (1) Like-for-like on CSOAI's own banks: does the estate hold a measurement of GPT-6.1 Terra on the same bank, graded by the same grader, with the same denominator? (2) Like-for-like on public benchmarks: does CSOAI hold a measurement of its own model on the same public benchmark, on the same release, under the same effort setting?",
+    "question_1_own_banks": {
+      "answer": "UNMEASURED",
+      "detail": "GPT-6.1 Terra has never been run on a CSOAI bank. The harvested queue slot says UNMEASURED. There is no card, no per-item row and no signed record for it. The board therefore has no Terra cell on any of its 14 model-comparison axes, and none is invented here.",
+      "the_one_line_needed_to_close_it": "One run of harness/bench/run_bench.py against csoai/gspc-gov (237 items) with a funded OpenRouter or OpenAI credential, graded by the mill's read_label, publishing the per-item ledger. That produces the comparable number and nothing else does."
+    },
+    "question_2_public_benchmarks": {
+      "answer": "NO CSOAI FIGURE EXISTS",
+      "detail": "The estate holds no published CSOAI measurement of any CSOAI model on Terminal-Bench 4.0, MMMU-Pro, OSWorld 2.1, Agents' Last Exam, Artificial Analysis's Intelligence Index, HealthBench, MentalHealthBench, ExploitBench, SEC-Bench Pro or the DualEntry Accounting AI Benchmark. There is therefore no CSOAI-vs-Terra comparison on any of those benchmarks to be had, in either direction, without first running one."
+    },
+    "what_the_boards_own_banks_do_say": {
+      "note": "For the record, these are the CSOAI-side numbers that do exist, read from the signed card corpus. They are CSOAI measurements of CSOAI's own models on CSOAI's own banks. They are not comparable to any Terra number above, because Terra has no number on those banks.",
+      "governance_axis_public_external_fleet": {
+        "leader": "mistral:7b (base model)",
+        "accuracy": 0.5865,
+        "wilson_95": [
+          0.523,
+          0.647
+        ],
+        "separation": "TIE",
+        "separation_p": 0.3787,
+        "fleet_mean": 0.49,
+        "n": 237,
+        "method": "exact McNemar on the discordant items, leader vs the best base model, our own models removed from the fleet before comparison",
+        "source": "https://councilof.ai/api/gspc (governance axis)",
+        "evidence_pointer": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361, file peritem_gov.jsonl sha256 3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5"
+      },
+      "own_model_cards_on_gspc_axes": [
+        {
+          "model": "sov33-unified:latest",
+          "axis": "gspc-governance",
+          "accuracy": 0.65,
+          "card_sha256_prefix": "5327f30b4857d8fd",
+          "created": "2026-08-19"
+        },
+        {
+          "model": "sov34:latest",
+          "axis": "gspc-governance",
+          "accuracy": 0.4667,
+          "card_sha256_prefix": "8a23cd9d29771a90",
+          "created": "2026-08-19"
+        },
+        {
+          "model": "sov-deepseek:latest",
+          "axis": "gspc-governance",
+          "accuracy": 0.25,
+          "card_sha256_prefix": "97df7c8d3f062f5c",
+          "created": "2026-08-19"
+        },
+        {
+          "model": "sov34:latest",
+          "axis": "gspc-safety",
+          "accuracy": 1.0,
+          "card_sha256_prefix": "8fc4e0934c91222a",
+          "created": "2026-08-19"
+        },
+        {
+          "model": "sov33-unified:latest",
+          "axis": "gspc-safety",
+          "accuracy": 0.9231,
+          "card_sha256_prefix": "fa2b3a1763bc07a9",
+          "created": "2026-08-19"
+        },
+        {
+          "model": "sov33-unified:latest",
+          "axis": "gspc-provenance",
+          "accuracy": 0.8571,
+          "card_sha256_prefix": "78ca73da4697e473",
+          "created": "2026-08-19"
+        },
+        {
+          "model": "sov34:latest",
+          "axis": "gspc-provenance",
+          "accuracy": 0.75,
+          "card_sha256_prefix": "ffcac15c00fd9735",
+          "created": "2026-08-19"
+        },
+        {
+          "model": "sov33-unified:latest",
+          "axis": "gspc-openness",
+          "accuracy": 0.6154,
+          "card_sha256_prefix": "ecab28b1d2d1d3d8",
+          "created": "2026-08-19"
+        },
+        {
+          "model": "sov34:latest",
+          "axis": "gspc-conformance",
+          "accuracy": 0.5,
+          "card_sha256_prefix": "29a5b81b898ea75a",
+          "created": "2026-08-19"
+        },
+        {
+          "model": "sov-deepseek:latest",
+          "axis": "gspc-continuity",
+          "accuracy": 0.4615,
+          "card_sha256_prefix": "aa8abca221fa7fd8",
+          "created": "2026-08-19"
+        },
+        {
+          "model": "sov33-unified:latest",
+          "axis": "care-refusal-protect",
+          "accuracy": 0.7419,
+          "card_sha256_prefix": "5449f85b5d39af3e",
+          "created": "2026-08-19"
+        }
+      ],
+      "own_model_cards_note": "These are in-lane results on our own models. The public board does not rank our own models and does not count them in totals.separated_leads. They are printed here so the Terra comparison has a CSOAI side to point at, not because they compete with anything on this page."
+    },
+    "how_the_terra_run_is_built": {
+      "harness": "an Inspect eval on a frozen 24-item statute-anchored governance probe (harness/tasks/gspc_governance.py): deterministic exact-token grading, no model judges another model, and an unreadable answer is UNMEASURED (NOANSWER) rather than wrong",
+      "the_terra_command": "inspect eval gspc_governance.py --model openrouter/openai/gpt-6.1-terra",
+      "credential_needed": "OPENROUTER_API_KEY with credit (the key on this machine authenticates but answers chat completions with HTTP 402 'This account never purchased credits')",
+      "precedent": {
+        "record_schema": "council-os.paired-model-comparison/0.1",
+        "date": "2026-10-27",
+        "axis": "governance",
+        "n": 24,
+        "kimi_k3_1_pro": {
+          "correct": 24,
+          "accuracy": 1.0,
+          "usable_n": 24,
+          "unmeasured": 0
+        },
+        "meok_canonical_v1": {
+          "correct": 9,
+          "accuracy": 0.375,
+          "usable_n": 24,
+          "unmeasured": 0
+        },
+        "paired_counts": {
+          "both_correct": 9,
+          "kimi_only": 15,
+          "meok_only": 0,
+          "both_wrong": 0
+        },
+        "exploratory_mcnemar_exact_two_sided_p": 6.103515625e-05,
+        "the_record_s_own_limits": "n=24 is below the harness interval-publication threshold of usable_n>=30, so no confidence interval, rank, certification or independent separation claim is asserted; and MEOK and CSOAI/GSPC are affiliated, so this is an operator-run comparison, not independent leaderboard confirmation"
+      },
+      "the_arm_split_must_accompany_the_number": "MEOK is not a bare model behind an API: on a probe the MEOK arm was observed answering with routed_model gspc-statutory-arbiter-seat13, a deterministic statutory arbiter route rather than a model. A like-for-like comparison must publish, beside the score, how many items each arm answered without a model. The estate already has the tooling (benchmark/federation/probe-bench-arm-split.mjs) that computes the split from a record's own per-item ledgers.",
+      "what_a_run_would_produce": [
+        "the per-item Inspect log for the Terra arm",
+        "the paired comparison against the MEOK arm, with the arm split, the usable_n and unmeasured counts, and the exact McNemar on the discordant items",
+        "a full 237-item GSPC-gov run graded by the mill's read_label (harness/bench/run_bench.py), which is the number that would give Terra a cell on the board next to the 139/237 and 128/237 the board already publishes",
+        "a row in this record that moves Terra from UNMEASURED to measured"
+      ]
+    }
+  },
+  "blockers_to_a_real_comparison": [
+    {
+      "blocker": "OpenRouter credit",
+      "detail": "The M4's OPENROUTER_API_KEY authenticates and the models endpoint returns 464 models including openai/gpt-6.1-terra, but a chat completion returns HTTP 402: 'This account never purchased credits.'",
+      "remedy": "Add credits at https://openrouter.ai/settings/credits, or supply an OpenAI key with balance for gpt-6.1-terra."
+    },
+    {
+      "blocker": "OpenAI key",
+      "detail": "The M4's OPENAI_API_KEY is rejected by api.openai.com with 'Incorrect API key provided'.",
+      "remedy": "Replace with a valid key for the account that owns gpt-6.1-terra."
+    },
+    {
+      "blocker": "the other frontier credentials on this machine are dead",
+      "detail": "Anthropic returns 401 invalid x-api-key; Gemini returns 401 (the bound service account is deleted or disabled); Moonshot returns 401. DeepSeek's key is live (2 models). Groq returns a Cloudflare 403 on a non-browser user agent, which may be a user-agent problem rather than a dead key.",
+      "remedy": "Not needed for Terra specifically, but a frontier arm is needed for the estate's other comparison work."
+    }
+  ],
+  "how_to_verify": [
+    "sha256 of the OpenAI system card addendum PDF as fetched on 2026-10-27: c9db3076cd1ced3454c57186273a08ea84ff8fcb80d6e856f24add4159e837c8, 6552639 bytes.",
+    "The card's own numbers: sections 5.1, 5.3, 7.0.2, 9.0.2.1, 9.0.2.2 and the SEC-Bench Pro paragraph.",
+    "The Artificial Analysis and DualEntry rows: fetch the two pages and read the numbers in their own markup.",
+    "The CSOAI-side numbers: /signed/card_index.json and /signed/cards/{card}.json, verified with the published Ed25519 card key, and https://councilof.ai/api/gspc for the board.",
+    "The Terra identity row: scripts/badger/csoai-t2-atoms.py --source openrouter, whose output is the keyless public listing."
+  ]
+}
