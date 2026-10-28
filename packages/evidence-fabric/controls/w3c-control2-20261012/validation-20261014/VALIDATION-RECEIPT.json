@@ -1,0 +1,93 @@
+{
+  "baseline_config_digest": "07d791d1fb7ae96addc18a93904fcb6965b6663acd17857d835c9781e16c2595",
+  "checker_revision": "sha256:3ec9dded61cb085522e3b6dbc59fc1349fa4c4d3e5de88164d0e25f658d87f67",
+  "date": "2026-10-14",
+  "frozen_packet_before_after_identical": true,
+  "frozen_packet_file_count": 40,
+  "frozen_packet_manifest": {
+    "bytes": 7296,
+    "sha256": "7094c4a9db92da84a09ddfd4261b19846308af147ac57eef048e64405ec37b05"
+  },
+  "limitations": [
+    "Same checker and exposed expectations; not independent evaluation.",
+    "One hash seed only: 0. Two fresh portable replay executions in this validation, not a multi-seed study.",
+    "Python socket constructors blocked before checker import; not an operating-system network sandbox.",
+    "Original historical bytes remain frozen. Current wrapper records new execution separately.",
+    "No claim for September MCP control:nobind, the 165-report reader findings, full conformance, fresh DID authority, or W3C endorsement."
+  ],
+  "original_private_helper_packet_result_after": {
+    "packet.json": {
+      "bytes": 166034,
+      "sha256": "1cf7015d15b2e00a126aec9acdda606460fd2bc256f4af01a2579d3626024355"
+    },
+    "result.json": {
+      "bytes": 33044,
+      "sha256": "4589433ec00ebd410c9f7191986a968ea7326036c07af5720d06b9f5c0ca45c7"
+    },
+    "run_control2.py": {
+      "bytes": 15356,
+      "sha256": "af79c1d4b7817fbc9172d1540c8627b873af6e08659274cafd08bcb842c67884"
+    }
+  },
+  "original_private_helper_packet_result_before": {
+    "packet.json": {
+      "bytes": 166034,
+      "sha256": "1cf7015d15b2e00a126aec9acdda606460fd2bc256f4af01a2579d3626024355"
+    },
+    "result.json": {
+      "bytes": 33044,
+      "sha256": "4589433ec00ebd410c9f7191986a968ea7326036c07af5720d06b9f5c0ca45c7"
+    },
+    "run_control2.py": {
+      "bytes": 15356,
+      "sha256": "af79c1d4b7817fbc9172d1540c8627b873af6e08659274cafd08bcb842c67884"
+    }
+  },
+  "portable_helper": {
+    "bytes": 15429,
+    "sha256": "752d29eb4567bec31b776b180ecd3fad422a2b8c1f7d1c546c06328a08fef5af"
+  },
+  "portable_replays_this_validation": 2,
+  "previous_execution_note": "This is a fresh 14 October validation, not a claim of first portable execution; prior portable qualification remains separately retained.",
+  "public_metadata_redactions": "PUBLIC-RECORD-MODIFICATIONS.json; only execution-display records change. Raw result.json and packet.json are unmodified.",
+  "retained_replay": {
+    "checked_at": "2026-10-14T09:16:40.316384+00:00",
+    "criteria_passed": true,
+    "failures": [],
+    "native_checker_calls": 21,
+    "packet": {
+      "bytes": 165902,
+      "sha256": "31da32497f1799353b90f69aefd69a5244d9caf4b0d30bedb46e7623199fdb59"
+    },
+    "result": {
+      "bytes": 32835,
+      "sha256": "75f82a2b972e5999a925d3bfb4f09dfdb4552ed56c45e8dc347e4e84f6cb4f8a"
+    },
+    "state_recount": {
+      "fail": 13,
+      "inconclusive": 1,
+      "not-exercised": 0,
+      "pass": 7,
+      "void": 0
+    }
+  },
+  "retained_replay_comparison": {
+    "checker_revision_and_config_digest_exactly_equal_recorded": true,
+    "fixture_corpus_and_digests_exactly_equal_recorded": true,
+    "native_observations_exactly_equal_recorded": true,
+    "raw_packet_bytes_differ_from_original": true,
+    "raw_result_bytes_differ_from_original": true,
+    "selectors_exactly_equal_recorded": true,
+    "state_recount_and_case_recount_exactly_equal_recorded": true
+  },
+  "schema": "csoai.w3c-control2-validation/0.1",
+  "source_pin": "a730cd2f4ddc65ea72e53d44577d929db45f9e38",
+  "test_result": {
+    "errors": 0,
+    "exit_code": 0,
+    "failures": 0,
+    "skips": 0,
+    "tests": 18,
+    "transcript": "verification-tests.stderr.txt"
+  }
+}
