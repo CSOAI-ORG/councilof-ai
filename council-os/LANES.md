@@ -3,6 +3,7 @@
 
 | lane | owner | files/territory | state |
 |---|---|---|---|
+| `ask-abort-finished-request-20261028` | `fix/ask-abort-finished-request-20261028` | `mavis` | open | The Council OS aborted a run it had already finished reading, so Chromium reported `net::ERR_ABORTED` for a request that completed — the browser's verdict contradicting the application's own trace. Clears the controller when the run ends, and adds `TalkPanel.abort.test.tsx`, which has been seen to fail on the old code. |
 | `hitl-kv-binding-20261027` | `feat/hitl-kv-binding-20261027` | `mavis` | open | Binds the HITL_KV namespace to the Pages project so /api/hitl can persist raised challenges, competency-module completions and signed receipts. |
 | `sov-gate-contract-20261027` | `feat/sov-gate-openai-contract-20261027` | `mavis` | merged | The Council's model path spoke the wrong contract: it called the gate's `/api/chat` (the SSE surface, which answers `{"error":"text required"}`) and read `message.content` instead of `choices[0].message.content`. It now calls the gate's OpenAI-shaped `/v1/chat/completions`. |
 | `pal-hitl-restore-20261027` | `restore/pal-hitl-gate-20261027` | `mavis` | open | Restores the PAL + human-in-the-loop work into master after a merge whose tree dropped it: `functions/api/{hitl,_hitl,pals,_palRuntime,_palRegistry,_palModel}.ts` and the client console on `/team` and the Council OS staff pane. |
