@@ -955,7 +955,7 @@ was a number that had stopped being true. Count the rows.
 5. Grok plugin — source not publicly hosted while the GitHub organisation is unavailable
 6. Hermes integration — no public install package is currently advertised
 7. REST + curl — `curl https://councilof.ai/api/gspc`
-   Python's default urllib User-Agent (Python-urllib/x.y) is refused at our CDN with 403 'error code: 1010'. Send any User-Agent, e.g. urllib.request.Request(url, headers={'User-Agent': 'my-check/1'}).
+   If a public source refuses a request, retain its HTTP status and observation time. Report the source as unreachable for that request; do not substitute a cached value or work around an access restriction.
 
 The source-linked SOV World observatory is at https://councilof.ai/world/observatory/.
 It is a dated simulation archive; its source date and upstream signature-verification status are shown on the page.
@@ -1018,14 +1018,14 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-28T02:37:15Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-28T08:23:23Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
 - Detached OpenTimestamps proofs that actually deserialize: 678. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 673.
-- Still calendar-pending: 5. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 678.
+- Still calendar-pending: 0. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 73 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
