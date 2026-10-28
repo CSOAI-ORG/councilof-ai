@@ -357,6 +357,7 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
   try { rawText = await request.text(); body = JSON.parse(rawText); } catch { body = null; }
 
   const b = (body ?? {}) as Record<string, unknown>;
+  if (typeof b.record_url === "string") return verifyRecordUrl(b.record_url.trim(), origin);
   const raw = b.card ?? b.record ?? b.json ?? b.url ?? b.input ?? body;
   const { card, error } = await coerceCard(raw);
   if (error) {
