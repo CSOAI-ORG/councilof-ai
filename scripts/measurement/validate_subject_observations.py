@@ -46,11 +46,11 @@ AXES = {
         "n": 38,
     },
     "claim-maintenance": {
-        "artifact": "claim-maintenance-wave-1.json",
-        "sha256": "afaad35405597d06bb980963df27b6c99c6dad21f385b0902d75d5cf1398dbc3",
-        "reader": "build_all_10_subject_axes_and_wave1.py",
-        "reader_sha256": "abf75559b18fee62e1fa14522b1b3570d36b240710648686ac1d7ba9351171b1",
-        "observed_at": "2026-10-24T06:25:50.001696+00:00",
+        "artifact": "claim-maintenance-wave-2.json",
+        "sha256": "d289d060e6276762ce2198606b7362d59eac3a2584db3853cf0c419159578c99",
+        "reader": "claim_maintenance_reread.py",
+        "reader_sha256": "d777f8a022f8bf78f0f76a5508693923c2577a493209c2ed35a445f8b0a71269",
+        "observed_at": "2026-10-28T09:28:40.753966+00:00",
         "time_field": "observed_at",
         "n": 67,
     },
@@ -91,11 +91,29 @@ def parse_time(value: str) -> datetime:
 
 
 def validate_claim_wave(document: dict) -> int:
+    import importlib.util
+
+    capture_limit = 3_000_000
     baseline_path = DATA / "claim-maintenance-baseline.json"
     require(sha256(baseline_path) == BASELINE_SHA256, "claim baseline digest changed")
     baseline = load("claim-maintenance-baseline.json")
+    require(document.get("schema") == "csoai.claim-maintenance-wave/1.1", "unsupported claim-wave schema")
     require(document.get("baseline_sha256") == BASELINE_SHA256, "wave does not pin the frozen baseline")
+    require(document.get("baseline_reader_sha256") == AXES["lab-practice"]["reader_sha256"], "wave does not pin the baseline reader")
+    require(baseline.get("reader_sha256") == document.get("baseline_reader_sha256"), "baseline reader mismatch")
+    require(document.get("baseline_capture_limit_bytes") == capture_limit, "wrong baseline capture limit")
+    require(document.get("observed_capture_limit_bytes") == capture_limit, "wrong re-read capture limit")
     require(parse_time(baseline["captured_at"]) < parse_time(document["observed_at"]), "baseline must predate re-read")
+    superseded = document.get("supersedes", {})
+    require(superseded.get("artifact") == "claim-maintenance-wave-1.json", "claim wave does not identify its superseded raw record")
+    require(sha256(DATA / superseded["artifact"]) == superseded.get("sha256"), "superseded raw claim record digest changed")
+
+    reader_spec = importlib.util.spec_from_file_location("claim_maintenance_reread", DATA / AXES["claim-maintenance"]["reader"])
+    require(reader_spec is not None and reader_spec.loader is not None, "cannot load claim comparator")
+    reader = importlib.util.module_from_spec(reader_spec)
+    reader_spec.loader.exec_module(reader)
+    classify_claim = reader.classify_claim
+
     baseline_rows: dict[str, list[dict]] = {}
     for row in baseline["subjects"]:
         baseline_rows.setdefault(row["url"], []).append(row)
@@ -117,8 +135,7 @@ def validate_claim_wave(document: dict) -> int:
     )
 
     # One URL can occur under two subject labels. It is one independent observation.
-    # The duplicate AWS captures and re-reads have different raw digests, so only the
-    # outcome and transport status must agree; neither duplicate is counted twice.
+    # Duplicate rows must agree on outcome and transport status and are counted once.
     by_url: dict[str, dict] = {}
     comparison_fields = ("outcome", "http_status")
     for row in comparisons:
@@ -140,6 +157,9 @@ def validate_claim_wave(document: dict) -> int:
         outcome = row.get("outcome")
         require(outcome in {"unchanged", "changed", "withdrawn", "unreachable"}, f"unknown claim outcome: {outcome}")
         before, after = row.get("baseline_sha256"), row.get("observed_sha256")
+        require(row.get("baseline_capture_limit_bytes") == capture_limit, "admitted row has the wrong baseline capture limit")
+        require(row.get("observed_capture_limit_bytes") == capture_limit, "admitted row has the wrong re-read capture limit")
+        require(classify_claim(before, row.get("http_status"), after) == outcome, "claim outcome does not come from the pinned comparator")
         if outcome == "unchanged":
             require(before == after, "unchanged claim digests differ")
         elif outcome == "changed":
@@ -152,6 +172,9 @@ def validate_claim_wave(document: dict) -> int:
     require(control.get("result") == "DISCRIMINATING", "claim negative control did not discriminate")
     require(control.get("expected") == control.get("got") == "DIVERGENT", "claim negative-control expectation mismatch")
     require(control.get("original_sha256") != control.get("tampered_sha256"), "claim negative control did not change the digest")
+    control_outcome = classify_claim(control.get("baseline_sha256"), 200, control.get("tampered_sha256"))
+    require(control_outcome == "changed", "pinned comparator did not detect the tampered claim")
+    require(control.get("tampered_outcome") == control_outcome, "negative control bypassed the pinned comparator")
     return len(admitted)
 
 
