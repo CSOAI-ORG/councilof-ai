@@ -11,6 +11,7 @@ import EmailOff from './EmailOff';
 import { CONTACT_MAILBOX } from '@/lib/buying';
 import FooterVerifyStrip from './FooterVerifyStrip';
 import FooterStats from './momentum/FooterStats';
+import AuthoritySignals from './AuthoritySignals';
 import MembershipStrip from './MembershipStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
@@ -329,6 +330,10 @@ export function Footer() {
         {/* Live figures from GET /api/momentum: each links to its source and carries its date;
             a figure whose source failed is absent, never zero. */}
         <FooterStats />
+
+        {/* Standing, participation and official-source work — distinct relationships, each linked
+            to its evidence. Regulators are never presented as members, clients or endorsers. */}
+        <AuthoritySignals />
 
         {/* Find us / verify us — live platform logos + listings */}
         <FooterVerifyStrip />
