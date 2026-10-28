@@ -44,12 +44,12 @@ Switchboard framing: the estate densifies a recomputable signed record over time
 
 Do not freeze numbers in this file. Read the living board:
 GET https://councilof.ai/api/gspc
-Python's default urllib User-Agent (Python-urllib/x.y) is refused at our CDN with 403 'error code: 1010'. Send any User-Agent, e.g. urllib.request.Request(url, headers={'User-Agent': 'my-check/1'}).
+If a public source refuses a request, retain its HTTP status and observation time. Report the source as unreachable for that request; do not substitute a cached value or work around an access restriction.
 
 Public lock (language only — every count lives on the API, none is frozen here):
 Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO numbers and they always travel together: `totals.axes` counts SLOTS on the board, `totals.measured_axes` counts slots with a real run behind them, and `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone would claim measurements that do not exist — quote both, or quote the smaller. In-lane honesty probes are not board-quotable.
 
-Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the withheld model axes — their count is `totals.own_leaders_excluded` + `totals.uncarded_leaders_dropped`, read live):
+Measurement scope: a measured axis does not necessarily identify a separated public leader. Read the live exclusion and separation fields beside the measured count:
 {{LID}}
 Also quote `totals.public_leader_count` beside any "{{MEASURED}} measured" claim. Public point leaders are shown on safety (TIE), swarm (UNTESTED for separation), and jail (UNTESTED for separation). The 8 financial axes are fact runs, not leader scores. TIE is TIE; UNTESTED is not a win. Not a certificate.
 
@@ -138,7 +138,7 @@ notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; it is an over
 ## Census leftover (not a grade)
 
 CENSUS_3M: census + digest + queue + lock. Remainder UNMEASURED.
-Hub listings are DISCOVERED, not MEASURED. Do not mill 3,032,028 listings. Unique n stays 30 UNSIGNED. mill.sh stays dead.
+Hub listings are DISCOVERED, not MEASURED. The retained source note names 3,032,028 listings and a separate unsigned sample with unique n=30; these counts describe different populations and do not establish a GSPC measurement.
 
 - Census (n_measured=0, status_all=UNMEASURED): https://councilof.ai/signed/hub-census-baseline.json
 - Digest (sha256_jsonl, measured:false): 0a510a890fa336f099a516a503df86340a529c90b935f026d291e5dcd8e8f1e9 — coverage leftover, not a signed GSPC cell. Do not invent a 3M digest file.
@@ -201,7 +201,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Agent card: https://councilof.ai/.well-known/agent-card.json
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — {{MCP_TOOLS}} tools: {{MCP_FREE_WORD}} free readers plus {{MCP_PAID_WORD}} x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
 - MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the {{MCP_FREE_WORD}} free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
-- Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
+- Public root (https://councilof.ai/root.json): Merkle envelope. Read live `sig_ed25519` and the stated preimage fields (`kind`, `schema`, `as_of`, `merkle_root`, `card_count`, `did_intended`). Check the signature against a published pinned key; report an absent signature as unsigned and an unavailable check as UNCHECKABLE. Presence in the root does not by itself establish a GSPC measurement or grade. Verification is free.
 - Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending until an independent `ots verify` confirms a Bitcoin attestation; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
 {{DATED_MILL_ROOT_LINE}}
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same {{MCP_TOOLS}}-tool contract as the HTTP door. The published npm release is marked deprecated on npm and carries fewer tools than the HTTP door; until a newer release is published, use https://councilof.ai/mcp/free.
@@ -216,7 +216,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 
 ## Where it's published (distribution — not authority)
 
-Printers of the live board. Reach is distribution. Authority stays GET /api/gspc + lid + signed cards + free verify. Do not treat directory listings or download counters as grades. Never invent download numbers in this file; quote Hub live if needed.
+Distribution mirrors reproduce published evidence. The live board (GET /api/gspc), its stated measurement scope, signed records and free verification remain the authoritative references. Listings and download counters do not establish a measurement, grade or adoption.
 
 - Hugging Face org: https://huggingface.co/csoai
 - MCP flagship: POST https://councilof.ai/mcp — registry id ai.councilof/gspc (deprecated alias: io.github.CSOAI-ORG/gspc)
@@ -268,7 +268,7 @@ Lid (quote live `totals.lid`): {{LID}}
 
 Prefer the keyless board API and verify.
 Cite live `totals.public_count` — never freeze axis counts in prompts.
-Apex https://csoai.org/mcp may still require Infra secrets; prefer councilof.ai/mcp until apex is green.
+Primary public MCP service: councilof.ai/mcp. For requests to https://csoai.org/mcp retain the returned status and evidence state for that endpoint.
 
 ## AEO
 
