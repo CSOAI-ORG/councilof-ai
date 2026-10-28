@@ -130,6 +130,33 @@ function publicChallenge(c: HitlChallenge, decided: boolean): Record<string, unk
   };
 }
 
+/**
+ * THE PUBLISHED ENDPOINT MAP. Every path named here is a door a reader may walk up to, so every
+ * one of them must actually be routable — and it was not.
+ *
+ * WHY THIS MAP EXISTED WITHOUT THE DOORS. This file dispatched on the sub-path
+ * (`/^\/api\/hitl\/?/` stripped off the pathname, then "modules" / "challenge" / "decision" /
+ * "record"), and that dispatch was correct and complete. But a Cloudflare Pages Function is
+ * reached by its own FILE, not by its pathname pattern: `functions/api/hitl.ts` answers
+ * `/api/hitl` and nothing else. Every other path fell through to the platform's 404 before the
+ * dispatch ever ran. So the human-in-the-loop path published its own curriculum, its own
+ * endpoint map and its own decision machinery, and then 404'd on every one of them except the
+ * first. A reader could see that a challenge could be raised, and could not raise one.
+ *
+ * The doors are the thin route files under `functions/api/hitl/`, each of which re-exports these
+ * handlers. They are thin on purpose: the logic stays in one file, and the routing is what was
+ * missing. `_published-endpoint-routes.test.ts` is the ratchet — it fails if this map ever names
+ * a path with no route file behind it.
+ */
+export const HITL_ENDPOINTS = {
+  state: "GET /api/hitl",
+  modules: "GET /api/hitl/modules",
+  answer_module: "POST /api/hitl/modules",
+  challenge: "POST /api/hitl/challenge",
+  decision: "POST /api/hitl/decision",
+  record: "GET /api/hitl/record",
+} as const;
+
 export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
   const url = new URL(ctx.request.url);
   const path = url.pathname.replace(/^\/api\/hitl\/?/, "");
@@ -233,14 +260,7 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     modules: modules.map((m) => publicModule(m, completed.includes(m.id))),
     module_count: modules.length,
     completed_modules: completed,
-    endpoints: {
-      state: "GET /api/hitl",
-      modules: "GET /api/hitl/modules",
-      answer_module: "POST /api/hitl/modules",
-      challenge: "POST /api/hitl/challenge",
-      decision: "POST /api/hitl/decision",
-      record: "GET /api/hitl/record",
-    },
+    endpoints: HITL_ENDPOINTS,
     meok_note:
       "These are the MEOK H.I.M. shapes: the same receipt schema, the same decision vocabulary, the same competency gate. This surface does not call the MEOK H.I.M., because the MEOK H.I.M. runs on a private network this deployment cannot reach. The two are interoperable by shape.",
     never: ["certification", "a price", "an approval without a human", "a competence check that is not re-derived from the live record"],
