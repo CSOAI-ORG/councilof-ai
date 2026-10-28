@@ -35,8 +35,8 @@ describe("domination playbook audit", () => {
   it("does not publish seat prices or a sold rank", () => {
     const blob = JSON.stringify({ PLAYBOOK_CLAIMS, PLAYBOOK_PITCH, EMPTY_SLOTS, CENSUS_SITES });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
-    // Operator notes live on the noindex /status/internal page, never on /products (6 Oct 2026).
-    expect(internal).toContain("<PlaybookAudit ");
+    // Operator modules are not mounted on public product or reference pages.
+    expect(internal).not.toContain("<PlaybookAudit ");
     expect(products).not.toContain("<PlaybookAudit");
     expect(products).toContain("EmptySlots");
   });
