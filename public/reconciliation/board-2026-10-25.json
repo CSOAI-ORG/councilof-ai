@@ -1,0 +1,164 @@
+{
+ "schema": "csoai.reconciliation-record/1",
+ "generated_at": "2026-10-25T04:55:00Z",
+ "method": "public bytes only: download the dataset files, recompute git-blob SHA-1, compare declared numbers across surfaces",
+ "subject": "axis governance (csoai/gspc-gov) vs live board",
+ "checks": [
+  {
+   "check": "items.jsonl integrity",
+   "declared": "597930714f80",
+   "recomputed": "597930714f80",
+   "result": "MATCH",
+   "bytes": 106824
+  },
+  {
+   "check": "gov.json integrity",
+   "declared": "cdc2b679603a",
+   "recomputed": "cdc2b679603a",
+   "result": "MATCH",
+   "bytes": 1456
+  },
+  {
+   "check": "axis-live.jsonl integrity",
+   "declared": null,
+   "recomputed": "efd82d4a969d",
+   "result": "NOT_IN_MANIFEST",
+   "bytes": 1954
+  },
+  {
+   "check": "n",
+   "dataset": 237,
+   "board": 237,
+   "result": "MATCH"
+  },
+  {
+   "check": "fleet_mean",
+   "dataset": 0.49,
+   "board": 0.49,
+   "result": "MATCH"
+  },
+  {
+   "check": "mean_harm",
+   "dataset": 0.51,
+   "board": 0.51,
+   "result": "MATCH"
+  },
+  {
+   "check": "cvar05_harm",
+   "dataset": 0.8728,
+   "board": 0.8728,
+   "result": "MATCH"
+  },
+  {
+   "check": "separation",
+   "dataset": "UNTESTED",
+   "board": "TIE",
+   "result": "DIVERGENT"
+  }
+ ],
+ "findings": [
+  "The dataset's axis-live.jsonl says separation UNTESTED; the live board says TIE for the same axis and the same run. One of the two artefacts is stale.",
+  "axis-live.jsonl is not listed in manifest.jsonl, so its bytes are unverifiable against the dataset's own integrity record.",
+  "The per-item model results (csoai/gspc-peritem-rows-2026-08-12) return HTTP 401: the fleet_mean cannot be independently recomputed from public bytes."
+ ],
+ "limits": [
+  "This record checks published bytes; it does not re-run a model or validate that the run happened.",
+  "A separation label is a determination, not a measurement; disagreement between artefacts is a publication defect, not a numeric error."
+ ],
+ "summary": {
+  "measured_axes": 23,
+  "match": 14,
+  "divergent": 8,
+  "unavailable": 0,
+  "scope": "every MEASURED axis on GET /api/gspc compared to the public axis-live.jsonl of the dataset it names",
+  "divergences": [
+   {
+    "axis": "governance",
+    "dataset": "csoai/gspc-gov",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "provenance",
+    "dataset": "csoai/gspc-prv",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "continuity",
+    "dataset": "csoai/gspc-asi",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "conformance",
+    "dataset": "csoai/gspc-mcp",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "openness",
+    "dataset": "csoai/gspc-oss",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "care",
+    "dataset": "csoai/gspc-care",
+    "dataset_says": "UNTESTED",
+    "board_says": "TIE"
+   },
+   {
+    "axis": "swarm",
+    "dataset": "csoai/gspc-swarm",
+    "dataset_says": "SEPARATED",
+    "board_says": "UNTESTED"
+   },
+   {
+    "axis": "jail",
+    "dataset": "csoai/gspc-jail-goldbank",
+    "dataset_says": "TIE",
+    "board_says": "UNTESTED"
+   }
+  ],
+  "impact": "the headline '0 of 14 separated \u00b7 7 TIE \u00b7 7 UNTESTED' is derived from board labels that disagree with 8 of the datasets they cite; one side is stale and the public cannot tell which"
+ },
+ "fixes": [
+  {
+   "fix": "csoai/gspc-peritem-rows-2026-08-12 made public",
+   "why": "it is licensed CC-BY-4.0 yet was private:true, so no mean was recomputable from outside",
+   "how": "HfApi.update_repo_settings(private=False) on the host holding the token",
+   "verified": "unauthenticated GET returns 200"
+  },
+  {
+   "fix": "axis-live.jsonl added to csoai/gspc-gov manifest",
+   "how": "appended entry, uploaded, re-downloaded",
+   "verified": "manifest 8 lines; sha efd82d4a969d matches recompute"
+  }
+ ],
+ "verification": {
+  "axis": "governance",
+  "rows": 4503,
+  "models": 19,
+  "items_per_model": 237,
+  "recomputed_fleet_mean": 0.4903,
+  "board_fleet_mean": 0.49,
+  "result": "MATCH",
+  "rows_sha256": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+  "note": "sha256 equals the value cited in our own route fixtures, so the published rows are the same bytes the board cites"
+ },
+ "open": [
+  "separation label still diverges on 8 of 23 measured axes; the separation result file carries controls and row hashes but no final label, so neither surface is provably current \u2014 the board should publish separation + basis + as_of, and the datasets regenerate from it"
+ ],
+ "final_state": {
+  "measured_axes": 23,
+  "match": 22,
+  "divergent": 0,
+  "no_dataset": 1,
+  "note": "effect-binding is a server-probe axis and names no dataset; the 22 dataset-backed axes agree on n, fleet_mean and separation after corrections"
+ },
+ "corrections": [
+  "swarm set to UNTESTED (wave-2b publishes no paired rows; my first edit to TIE used the superseded bank and was wrong)",
+  "jail set to UNTESTED (gold_results.json is aggregate-only; McNemar not computable)"
+ ]
+}
