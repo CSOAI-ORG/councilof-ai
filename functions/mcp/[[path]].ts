@@ -20,7 +20,7 @@ import GSPC_TOOLS from "./gspc-tools.json";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
-import { withToolSpan, withTraceHeader } from "./_otel";
+import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
@@ -581,11 +581,15 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
     const tool = typeof params.name === "string" && KNOWN_TOOL_NAMES.has(params.name) ? params.name : "not-a-tool";
     recordUsage({ request, env, waitUntil }, "mcp_tool", tool);
   }
-  // OTel (opt-in): the span WRAPS the proxied call, so its duration and status are observed
-  // rather than assumed. See functions/mcp/_otel.ts for what the span does and does not
-  // observe (the tool's SSE result is not read at the edge; the span says so).
-  const spanToolName =
-    call.method === "tools/call" && typeof params.name === "string" ? params.name : null;
+  const trace =
+    call.method === "tools/call" && typeof params.name === "string"
+      ? startToolRequestSpan(
+          (env ?? {}) as Record<string, unknown>,
+          KNOWN_TOOL_NAMES.has(params.name) || (door === "full" && params.name === "verify")
+            ? params.name
+            : null,
+        )
+      : null;
   try {
     // Lenient Accept (MCP streamable HTTP): a client that sends only application/json, or no
     // Accept at all, gets a plain JSON answer instead of the SDK's 406. SSE stays when asked for.
@@ -598,23 +602,24 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       body,
       signal: request.signal,
     });
-    const { traceId, response } = await withToolSpan(
-      (env ?? {}) as Record<string, unknown>,
-      spanToolName,
-      () => (door === "free" ? mcpFree : mcp).fetch(boundedRequest),
+    const upstream = await (door === "free" ? mcpFree : mcp).fetch(boundedRequest);
+    const response = withTraceHeader(
+      withHeaders(wantsSse ? upstream : await sseToJson(upstream)),
+      trace?.traceId ?? null,
     );
-    return withTraceHeader(
-      withHeaders(wantsSse ? response : await sseToJson(response)),
-      traceId,
-    );
+    // fetch resolves at response headers. A 200, including an SSE response or
+    // JSON-RPC tool error, does not establish tool completion or an external effect.
+    trace?.responseHeaders(upstream.status);
+    return response;
   } catch {
-    return jsonError(
+    trace?.transportError();
+    return withTraceHeader(jsonError(
       500,
       -32603,
       door === "free"
         ? "MCP request failed. Nothing was written; retry later or report it to contact@csoai.org."
         : "MCP request failed. Delivery and settlement are unconfirmed; inspect receipts before retrying paid work.",
       id,
-    );
+    ), trace?.traceId ?? null);
   }
 };
