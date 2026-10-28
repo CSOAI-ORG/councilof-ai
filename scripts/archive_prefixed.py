@@ -54,6 +54,15 @@ SOURCES = [
 
 EXCLUDES = ["*.sock", "*.lock", "*.pyc", "__pycache__", "node_modules", ".venv", "venv",
             ".tmp", ".git",
+            # CREDENTIAL MATERIAL. The Hub refuses a commit whose files carry a
+            # valid Hugging Face secret, and it is right to: dsh/.env and its
+            # backups hold a live token, and the refusal named the offending
+            # paths. The archive is a copy of the WORK, never of the keys to it.
+            # This list was missing them and the upload of dsh failed loudly
+            # rather than silently - which is the only reason the fix is here.
+            ".env", ".env.*", "*.env", "**/.env", "**/.env.*",
+            "*credentials*", "*secret*", "*.pem", "*.key", "*_rsa", "*_ed25519",
+            "id_rsa*", "id_ed25519*", "*.p12", "*.pfx",
             # LIVE APP OUTPUT — written while we read it. Two separate runs of this
             # archive died with "Provided path: ... is not a file on the local file
             # system" on exactly these paths: a cron output file and a terminal
