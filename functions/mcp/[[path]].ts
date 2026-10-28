@@ -20,7 +20,7 @@ import GSPC_TOOLS from "./gspc-tools.json";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
-import { toolSpan, withTraceHeader } from "./_otel";
+import { withToolSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
@@ -209,6 +209,21 @@ function jsonError(
       headers: { ...CORS, "cache-control": "no-store" },
     },
   );
+}
+
+/** Collapse a single-message SSE answer into application/json for clients that did not ask for SSE. */
+export async function sseToJson(response: Response): Promise<Response> {
+  if (!(response.headers.get("content-type") ?? "").includes("text/event-stream")) return response;
+  const text = await response.text();
+  const messages = text
+    .split(/\r?\n\r?\n/)
+    .map((ev) => ev.split(/\r?\n/).filter((l) => l.startsWith("data:")).map((l) => l.slice(5).trimStart()).join("\n"))
+    .filter((d) => d.length > 0);
+  const headers = new Headers(response.headers);
+  headers.set("content-type", "application/json");
+  headers.delete("content-length");
+  const out = messages.length === 1 ? messages[0] : `[${messages.join(",")}]`;
+  return new Response(out, { status: response.status, statusText: response.statusText, headers });
 }
 
 function withHeaders(response: Response): Response {
@@ -566,23 +581,30 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
     const tool = typeof params.name === "string" && KNOWN_TOOL_NAMES.has(params.name) ? params.name : "not-a-tool";
     recordUsage({ request, env, waitUntil }, "mcp_tool", tool);
   }
-  const traceId =
-    call.method === "tools/call" && typeof params.name === "string"
-      ? toolSpan((env ?? {}) as Record<string, unknown>, params.name)
-      : null;
+  // OTel (opt-in): the span WRAPS the proxied call, so its duration and status are observed
+  // rather than assumed. See functions/mcp/_otel.ts for what the span does and does not
+  // observe (the tool's SSE result is not read at the edge; the span says so).
+  const spanToolName =
+    call.method === "tools/call" && typeof params.name === "string" ? params.name : null;
   try {
+    // Lenient Accept (MCP streamable HTTP): a client that sends only application/json, or no
+    // Accept at all, gets a plain JSON answer instead of the SDK's 406. SSE stays when asked for.
+    const wantsSse = (request.headers.get("accept") ?? "").includes("text/event-stream");
+    const forwardHeaders = new Headers(request.headers);
+    if (!wantsSse) forwardHeaders.set("accept", "application/json, text/event-stream");
     const boundedRequest = new Request(request.url, {
       method: "POST",
-      headers: request.headers,
+      headers: forwardHeaders,
       body,
       signal: request.signal,
     });
+    const { traceId, response } = await withToolSpan(
+      (env ?? {}) as Record<string, unknown>,
+      spanToolName,
+      () => (door === "free" ? mcpFree : mcp).fetch(boundedRequest),
+    );
     return withTraceHeader(
-      withHeaders(
-        await (door === "free" ? mcpFree : mcp).fetch(
-          boundedRequest,
-        ),
-      ),
+      withHeaders(wantsSse ? response : await sseToJson(response)),
       traceId,
     );
   } catch {

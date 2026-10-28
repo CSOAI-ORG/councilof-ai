@@ -95,7 +95,7 @@ jobs:
           pip install -q cryptography
           # Same landing as hub-queue-land: the card's run_id becomes "gha-<RUN_ID>" and the signer
           # is dispatched for exactly that id — never the whole legacy inbox (#1941 provenance gate).
-          python3 scripts/land_mill_cards.py --staged staged --run-id "$RUN_ID" --require-evidence --pr-body staged/PR-BODY.md --github-output "$GITHUB_OUTPUT"
+          python3 scripts/land_mill_cards.py --staged staged --run-id "$RUN_ID" --require-evidence --pr-body staged/PR-BODY.md --manifest "public/interop/mill-land-manifests/land-${{ github.run_id }}.json" --github-output "$GITHUB_OUTPUT"
           echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
 
       - name: branch, push, PR, dispatch the OIDC signer on the branch
@@ -110,18 +110,9 @@ jobs:
           git config user.name "csoai-mill-jobs-land"
           git config user.email "board@csoai.org"
           git checkout -b "$BR"
-          git add public/interop/mill-cards-unsigned public/interop/mill-evidence
+          git add public/interop/mill-cards-unsigned public/interop/mill-evidence public/interop/mill-land-manifests
           git commit -m "mill: land ${{ steps.land.outputs.landed }} UNSIGNED cards from HF Jobs (mill-jobs-land run ${{ github.run_id }}) — sign pending; nothing MEASURED"
           git push origin "HEAD:$BR"
-          python3 - <<'PY'
-          import pathlib
-          p = pathlib.Path("staged/PR-BODY.md")
-          if p.is_file():
-              body = p.read_text(encoding="utf-8")
-              if len(body) > 60000:
-                  suffix = "\n\n...(truncated to 60,000 chars for GitHub PR body limit; full report in staged/land-report.json)...\n"
-                  p.write_text(body[: 60000 - len(suffix)] + suffix, encoding="utf-8")
-          PY
           gh pr create --base master --head "$BR" \
             --title "mill: ${{ steps.land.outputs.landed }} cards from HF Jobs (run ${{ github.run_id }}) — OIDC sign pending, nothing MEASURED" \
             --body-file staged/PR-BODY.md
@@ -188,6 +179,29 @@ jobs:
           for n, v, w in rows: print(f"| `{n}` | {v} | {w} |")
           PY
           gh pr comment "$BR" --body-file verify.md
+
+      # The signer appends SUPERSEDED.jsonl rows on this branch, and land_mill_cards only treats a
+      # *quotable* signed card as closing a cell — so an UNMEASURED cell is legitimately re-run and
+      # superseded on every landing. Any evidence note citing such a card then fails
+      # evidence-notes.cards.test.ts, and one red unit test blocked four landing PRs (557 signed
+      # cards) on 2026-10-07. Signed bytes are never edited, so the citing side is refreshed here:
+      # the note names the replacing card beside the original, inside its own copy limits.
+      - name: refresh evidence-note citations so supersession cannot red-gate the landing
+        if: steps.land.outputs.landed != '0'
+        run: |
+          set -euo pipefail
+          BR="${{ steps.pr.outputs.branch }}"
+          git fetch origin "$BR" --quiet
+          git checkout -q -B "$BR" "origin/$BR"
+          if python3 scripts/refresh_evidence_note_citations.py --check; then
+            echo "every note already cites the card that currently replaces it"
+            exit 0
+          fi
+          python3 scripts/refresh_evidence_note_citations.py
+          git add client/src/data/evidence-notes.json
+          git -c user.name="csoai-mill-jobs-land" -c user.email="board@csoai.org" \
+            commit -m "notes: name the replacing card beside superseded citations (copy rule; nothing MEASURED)"
+          git push origin "HEAD:$BR"
 
       - name: upload the land report
         if: always()
