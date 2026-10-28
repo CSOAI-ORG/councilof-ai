@@ -349,6 +349,35 @@ describe("the board's cardinality is followed, not asserted", () => {
     if (boardAxesForTest) expect(boardAxesForTest(twentyThree)).not.toBeNull();
   });
 
+  it("accepts the current 33-axis board with declared subject axes", async () => {
+    const current = boardWith(33);
+    for (let index = 22; index < current.axes.length; index += 1) {
+      current.axes[index] = {
+        ...current.axes[index],
+        axis: index === 22 ? "lab-practice" : `subject-slot-${index}`,
+        family: "subject",
+        kind: "declared-slot",
+        status: "UNMEASURED",
+        n: 0,
+      };
+    }
+    stub({ board: current });
+    const { response, text } = await get(
+      "/api/learning-scenarios?axis=lab-practice",
+    );
+    expect(response.status).toBe(200);
+    expect(JSON.parse(text)).toMatchObject({
+      canonical_axis_count: 33,
+      scenario_count: 1,
+      scenarios: [
+        {
+          axis: "lab-practice",
+          board_measurement: { family: "subject", status: "UNMEASURED" },
+        },
+      ],
+    });
+  });
+
   it("a board whose totals disagree with its own rows is still rejected", async () => {
     const lying = boardWith(23);
     lying.totals.axes = 22; // the board contradicts itself

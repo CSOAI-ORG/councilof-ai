@@ -67,7 +67,7 @@ async function fetchObject(
 
 type BoardAxis = JsonObject & {
   axis: string;
-  family: "gspc" | "financial";
+  family: "gspc" | "financial" | "subject";
   kind: "model-comparison" | "deterministic-facts" | "declared-slot";
   status: string;
   bench: string;
@@ -78,7 +78,12 @@ type BoardAxis = JsonObject & {
 function validBoardAxis(value: unknown): value is BoardAxis {
   if (!isObject(value)) return false;
   if (!nonEmpty(value.axis) || !AXIS_ID.test(value.axis)) return false;
-  if (value.family !== "gspc" && value.family !== "financial") return false;
+  if (
+    value.family !== "gspc" &&
+    value.family !== "financial" &&
+    value.family !== "subject"
+  )
+    return false;
   if (
     value.kind !== "model-comparison" &&
     value.kind !== "deterministic-facts" &&

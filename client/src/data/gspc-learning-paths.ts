@@ -38,7 +38,7 @@ export type LearningStageState = "COMPLETE" | "AVAILABLE" | "LOCKED";
 export interface LearningAxisDefinition {
   /** Identity copied at build time from the canonical board row. */
   id: string;
-  family: "gspc" | "financial";
+  family: "gspc" | "financial" | "subject";
   kind: "model-comparison" | "deterministic-facts" | "declared-slot";
   bench: string;
   task: string;
@@ -121,7 +121,9 @@ function readCanonicalAxisRows(value: unknown): readonly CanonicalAxisRow[] {
       typeof candidate.axis !== "string" ||
       typeof candidate.bench !== "string" ||
       typeof candidate.task !== "string" ||
-      (candidate.family !== "gspc" && candidate.family !== "financial") ||
+      (candidate.family !== "gspc" &&
+        candidate.family !== "financial" &&
+        candidate.family !== "subject") ||
       (candidate.kind !== "model-comparison" &&
         candidate.kind !== "deterministic-facts" &&
         candidate.kind !== "declared-slot")
