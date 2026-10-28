@@ -38,6 +38,12 @@ For the optional Python client, include its printed result or error. Include any
 
 A returned report can establish a particular independent attempt and its outcome. It does not by itself establish production adoption, a sale, certification or acceptance by a directory maintainer.
 
+## Keep the result and scope any separate request
+
+Before closing or reloading, manually retain the original published card JSON and copy the verdict, reasons and check details, or error, with the checked time (UTC). The browser verifier does not save pasted records or results. A public-record link fetches current published bytes for a new check; it does not restore an earlier verdict.
+
+For a separate fresh-check or claim-maintenance need, review the [existing services](https://councilof.ai/services/) and use the enquiry path there. Name the subject, public source, required output, freshness and delivery date. Check the service's scope: a receipt for existing evidence is not a fresh measurement. This trial remains free; an enquiry is not an order, and returning your result requires no purchase.
+
 ## Recorded CSOAI reproduction
 
 On **11 October 2026**, CSOAI ran the original card and three modified copies through the free canonical MCP `verify_card` and web API. All four asserted outcomes passed on both interfaces. The web-API run completed at **01:49:38 UTC**.
