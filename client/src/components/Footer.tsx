@@ -56,6 +56,8 @@ export function Footer() {
         { name: 'Connect a client — install', href: '/connect/' },
         { name: 'Board JSON — /api/gspc', href: '/api/gspc', external: true },
         { name: 'Tool surface — /mcp', href: '/mcp', external: true },
+        { name: 'Python package — PyPI', href: 'https://pypi.org/project/csoai/', external: true },
+        { name: 'MCP package — npm', href: 'https://www.npmjs.com/package/csoai-gspc-mcp', external: true },
         { name: 'Agent card', href: '/.well-known/agent.json', external: true },
         { name: 'Paid services and free previews', href: '/.well-known/x402.json', external: true },
         { name: 'Our public keys', href: '/.well-known/did.json', external: true },
@@ -163,7 +165,7 @@ export function Footer() {
             <span className="text-xl font-bold">CSOAI</span>
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
-            We measure AI behaviour and publish records you can check. Measurement is not certification.
+            UK AI measurement infrastructure operated by CSOAI Ltd. We publish records you can check. Measurement is not certification.
           </p>
           <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
