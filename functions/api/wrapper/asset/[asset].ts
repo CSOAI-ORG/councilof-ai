@@ -1,3 +1,4 @@
+import { recordPaidResponse } from "../../_x402_delivery_record";
 /**
  * GET /api/wrapper/asset/<asset> — the per-asset wrapper doors (plan: asset_specific_x402_doors was 0).
  *
@@ -242,7 +243,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   if (!payment.ok) return challenge(payment.reason);
 
   const pack_sha256 = await sha256Hex(new TextEncoder().encode(cards.map((c) => String(c.sha256)).join("\n")));
-  return new Response(
+  return recordPaidResponse(new Response(
     JSON.stringify({ schema: PACK_SCHEMA, asset: door.symbol, as_of: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"), counts, cards, unmeasured_pairs: unmeasuredPairs, pack_sha256, pack_sha256_rule: "sha256 of the cards' sha256 values joined by \\n, in pair order" }, null, 2),
     {
       status: 200,
@@ -254,7 +255,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
       },
     },
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 export const onRequestPost = onRequestGet;

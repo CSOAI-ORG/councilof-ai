@@ -53,9 +53,9 @@ export const NAV_GROUPS: NavGroup[] = [
     question: "How do I check it?",
     lede: "Everything you need to disbelieve us.",
     links: [
-      { href: "/gspc-verify", label: "Verify a record", what: "paste one; your browser does the maths, nothing is sent to us" },
-      { href: "/signed/HOW-TO-VERIFY.md", label: "The rule, written out", what: "do it offline in your own language, without our code", raw: true },
-      { href: "/root.json", label: "The signed evidence root", what: "one signed fingerprint for its dated record list, separate from signed cards", raw: true },
+      { href: "/gspc-verify", label: "Verify a record", what: "check a supported record in your browser; public key metadata may be fetched" },
+      { href: "/signed/HOW-TO-VERIFY.md", label: "The rule, written out", what: "read the supported format's method; offline checks need original bytes and a pinned issuer key", raw: true },
+      { href: "/root.json", label: "The public evidence root", what: "its dated record list and stated signing status, separate from individual card verification", raw: true },
       { href: "/.well-known/did.json", label: "Our public key", what: "pin this first — a record that signs itself proves nothing", raw: true },
       { href: "/honesty", label: "What we hold back, and why", what: "the limits, stated by us before anyone else states them" },
     ],
@@ -140,13 +140,13 @@ export default function HomeNavigator() {
       data-testid="home-navigator"
     >
       <div className="section-shell">
-        <p className="t-kicker text-emerald-700 dark:text-emerald-300">Everything, one click away</p>
+        <p className="t-kicker text-emerald-700 dark:text-emerald-300">Find your next evidence check</p>
         <h2 id="navigate-h" className="t-band mt-4 max-w-3xl text-foreground">
-          Five questions. Every door behind them.
+          Five questions to choose a route.
         </h2>
         <p className="t-lede measure mt-5 text-muted-foreground">
-          Nothing on this estate is more than one click from here. If a link below did not open, it
-          would not be on this page.
+          Choose a route below by the question you want to answer. Read the conditions and
+          evidence limits on the destination page before relying on its result.
         </p>
         <div className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {NAV_GROUPS.map((g) => (

@@ -48,18 +48,30 @@ export async function hashPassword(pw: string, salt: string): Promise<string> {
   return hex(bits);
 }
 
+/**
+ * Make the outer token envelope ASCII-only before btoa. Every non-ASCII UTF-16
+ * code unit (including each half of a surrogate pair) becomes a JSON \\uXXXX
+ * escape. JSON.parse(atob(token)) restores the exact same payload string, so the
+ * signed canonical payload and the reader/schema 0.1 are unchanged. Envelopes
+ * that were already Latin-1 (e.g. legacy "José") keep verifying as before.
+ */
+export function asciiEnvelope(json: string): string {
+  return json.replace(/[^\x00-\x7f]/g, (c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"));
+}
+
 export async function issueToken(
   env: AuthEnv,
   user: { email: string; name: string },
 ): Promise<string | null> {
+  const issuedAt = Date.now();
   const body = {
     schema: "csoai.auth-token/0.1",
     iss: "https://councilof.ai",
     aud: "council-os",
     sub: user.email,
     name: user.name || "",
-    iat: Date.now(),
-    exp: Date.now() + TOKEN_TTL_MS,
+    iat: issuedAt,
+    exp: issuedAt + TOKEN_TTL_MS,
   };
   const payload = canonical(body);
   const b64 = env.ASSESS_SIGNING_KEY_PKCS8_B64;
@@ -68,7 +80,7 @@ export async function issueToken(
   const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, true, ["sign"]);
   const sigBytes = await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(payload));
   const sig = btoa(String.fromCharCode(...new Uint8Array(sigBytes)));
-  return btoa(JSON.stringify({ payload, sig }));
+  return btoa(asciiEnvelope(JSON.stringify({ payload, sig })));
 }
 
 export async function verifyToken(env: AuthEnv, token: string): Promise<{ sub: string; name: string } | null> {
@@ -123,11 +135,8 @@ export async function verifyToken(env: AuthEnv, token: string): Promise<{ sub: s
   }
 }
 
-export const DEMO_USER = {
-  email: "demo@csoai.com",
-  password: "demo123",
-  name: "Demo User",
-};
+/** Retired shared demo address: never a login, never registrable. */
+export const RESERVED_EMAILS: ReadonlySet<string> = new Set(["demo@csoai.com"]);
 
 export function userKey(email: string): string {
   return `auth:user:${String(email).toLowerCase()}`;

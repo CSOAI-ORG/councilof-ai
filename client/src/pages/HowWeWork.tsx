@@ -94,6 +94,41 @@ export default function HowWeWork() {
         </div>
       </section>
 
+      <section
+        aria-labelledby="constitutional-evidence-review"
+        className="surface-base section-y border-b border-border"
+      >
+        <div className="section-shell">
+          <p className="t-kicker text-muted-foreground">Constitutional harness</p>
+          <h2 id="constitutional-evidence-review" className="mt-4 text-2xl font-semibold sm:text-3xl">
+            Check the rules behind an agent workflow
+          </h2>
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
+            Our operational charter sets out boundaries for authority, execution, verification and
+            corrections. Read it alongside the evidence for the task you need reviewed.
+          </p>
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
+            To discuss a measurement run, describe one system or endpoint, the behaviour you want
+            examined, the evidence you need and your desired delivery date. Scope, availability and
+            terms must be agreed before an order.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
+            <a
+              href="/operational-charter/"
+              className="font-semibold text-primary underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+            >
+              Read the operational charter
+            </a>
+            <Link
+              href="/contact/?arm=run"
+              className="font-semibold text-primary underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+            >
+              Discuss a measurement run
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <HomeStrengths corrections={corrections} root={root} ots={doors["ots-proofs"]?.payload ?? null} />
       <HomeMachineSurface doors={doors} manifest={manifest} />
       <HomeReach state={estate} />

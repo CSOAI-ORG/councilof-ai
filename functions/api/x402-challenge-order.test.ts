@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { offlineEvmFetch } from "./__fixtures__/offline-evm-fetch";
 import { onRequestGet as catalogueGet } from "./x402";
 import { onRequestGet as manifestGet } from "../.well-known/x402.json";
-import { onRequest as fanOutGet } from "../.well-known/x402";
+import { onRequestGet as fanOutGet, onRequestHead as fanOutHead } from "../.well-known/x402";
 import * as x402 from "./_x402";
 
 /**
@@ -407,7 +407,7 @@ describe("a request that carries a payment header takes the path it always took"
   });
 });
 
-describe("GET /.well-known/x402 — the discovery fan-out x402scan reads", () => {
+describe("GET /.well-known/x402 — the discovery document at the extensionless path", () => {
   const FREE_SURFACES = [
     "/gspc-verify",
     "/api/gspc",
@@ -420,28 +420,28 @@ describe("GET /.well-known/x402 — the discovery fan-out x402scan reads", () =>
     "/receipts/root-history.json",
   ];
 
-  it("is a 200 JSON body {version:1, resources[]} — not a 308 to somewhere else", async () => {
+  it("is a 200 JSON body — not a 308 to somewhere else", async () => {
     const res = (await fanOutGet(ctx(new Request(`${ORIGIN}/.well-known/x402`))) as unknown) as Response;
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toMatch(/application\/json/);
-    const body = (await res.json()) as { version: number; resources: string[] };
-    expect(body.version).toBe(1);
+    const body = (await res.json()) as { resources: { url: string }[] };
     expect(Array.isArray(body.resources)).toBe(true);
     expect(body.resources.length).toBeGreaterThanOrEqual(30);
-    for (const u of body.resources) {
-      expect(u, `fan-out entry must be an absolute https URL: ${u}`).toMatch(/^https:\/\/councilof\.ai\//);
-      expect(u, `fan-out entry carries a placeholder: ${u}`).not.toContain("<");
-      expect(u, `fan-out advertises a free preview: ${u}`).not.toContain("preview=1");
+    for (const r of body.resources) {
+      const u = r.url;
+      expect(u, `discovery entry must be an absolute https URL: ${u}`).toMatch(/^https:\/\/councilof\.ai\//);
+      expect(u, `discovery entry carries a placeholder: ${u}`).not.toContain("<");
+      expect(u, `discovery advertises a free preview: ${u}`).not.toContain("preview=1");
     }
-    const paths = body.resources.map((u) => new URL(u).pathname);
+    const paths = body.resources.map((r) => new URL(r.url).pathname);
     for (const free of FREE_SURFACES)
-      expect(paths, `fan-out advertises the free surface ${free}`).not.toContain(free);
+      expect(paths, `discovery advertises the free surface ${free}`).not.toContain(free);
   });
 
   it("is a superset of every /api/x402 resource row — the two cannot drift", async () => {
     const res = (await fanOutGet(ctx(new Request(`${ORIGIN}/.well-known/x402`))) as unknown) as Response;
-    const fanOut = ((await res.json()) as { resources: string[] }).resources;
-    const paths = fanOut.map((u) => new URL(u).pathname);
+    const listed = ((await res.json()) as { resources: { url: string }[] }).resources;
+    const paths = listed.map((r) => new URL(r.url).pathname);
     const cat = (await (catalogueGet(ctx(new Request(`${ORIGIN}/api/x402`))) as Promise<Response>).then((r) => r.json())) as {
       resources: { id: string; resource: string }[];
       free_forever: string[];
@@ -455,7 +455,7 @@ describe("GET /.well-known/x402 — the discovery fan-out x402scan reads", () =>
       const covered = prefix.endsWith("/")
         ? paths.some((p) => p.startsWith(prefix))
         : paths.some((p) => p === prefix || p.startsWith(`${prefix}/`));
-      expect(covered, `fan-out is missing catalogue row ${r.id} (${r.resource})`).toBe(true);
+      expect(covered, `discovery is missing catalogue row ${r.id} (${r.resource})`).toBe(true);
     }
     // free_forever is a promise that these are NOT sold. A path that is ALSO a paid door
     // (/api/proof?bundle=1 sells, /api/proof?sha=… is free) is skipped: only surfaces with no
@@ -466,13 +466,13 @@ describe("GET /.well-known/x402 — the discovery fan-out x402scan reads", () =>
     for (const free of cat.free_forever) {
       const p = new URL(free).pathname;
       if (doorPaths.has(p)) continue;
-      expect(paths, `fan-out advertises the free surface ${free}`).not.toContain(p);
+      expect(paths, `discovery advertises the free surface ${free}`).not.toContain(p);
     }
   });
 
   it("HEAD keeps the headers and drops the body", async () => {
     const get = (await fanOutGet(ctx(new Request(`${ORIGIN}/.well-known/x402`))) as unknown) as Response;
-    const head = (await fanOutGet(ctx(new Request(`${ORIGIN}/.well-known/x402`, { method: "HEAD" }))) as unknown) as Response;
+    const head = (await fanOutHead(ctx(new Request(`${ORIGIN}/.well-known/x402`, { method: "HEAD" }))) as unknown) as Response;
     expect(head.status).toBe(200);
     expect([...head.headers]).toEqual([...get.headers]);
     expect(await head.text()).toBe("");

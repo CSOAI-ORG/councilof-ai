@@ -14,6 +14,7 @@
 import { spawn } from "node:child_process";
 import { createInterface } from "node:readline";
 import { generateKeyPairSync, sign as edSign, createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const ORIGIN = process.env.GSPC_ORIGIN || "https://councilof.ai";
@@ -74,22 +75,67 @@ notify("notifications/initialized");
 const list = await rpc("tools/list");
 const names = list.result.tools.map((t) => t.name);
 console.log(`tools: ${names.join(", ")}`);
-const thirteen = [
-  "board_totals",
-  "get_axis",
-  "verify_card",
-  "list_cards",
-  "get_root",
-  "get_card",
-  "verify_inclusion",
-  "x402_trust",
-  "mcp_trust",
-  "commission_card",
-  "art50_marking_evidence",
-  "rwa_evidence",
-  "receipts_batch",
-];
-expect("tools/list is the canonical thirteen names (9 free + 4 metered)", names.join(","), thirteen.join(","));
+
+/*
+ * The canonical tool list is DERIVED from the two manifests the server itself
+ * serves, not hardcoded here.
+ *
+ * WHY. This check used to carry its own third copy of the tool names — a
+ * literal list of thirteen. The published manifests declare fourteen free
+ * tools and five metered ones, nineteen in total, and the server has been
+ * serving nineteen. The hardcoded copy was therefore stale, and the drift
+ * surfaced only when the npm release ran this file: the release failed at
+ * "Verify package and live contract" with a FAIL on the tools/list line,
+ * while every other line of the same script printed PASS. A release gate must
+ * not block on a copy nobody maintains.
+ *
+ * What this still asserts, and it is the assertion worth having: the tools the
+ * server actually serves are exactly the tools the published manifests
+ * declare, in the published order. A tool added to a manifest and not served,
+ * or served and not declared, or served twice, fails here.
+ *
+ * The free/metered split is checked separately below: the paid tools are the
+ * ones that must answer with a 402 challenge rather than a deliverable.
+ */
+const firstExisting = (paths) => {
+  for (const p of paths) {
+    try {
+      readFileSync(p, "utf8");
+      return p;
+    } catch {
+      /* try the next one */
+    }
+  }
+  return null;
+};
+const freePath = firstExisting([
+  "../../functions/mcp/gspc-tools.json", // repo checkout: the canonical file
+  "./gspc-tools.json", // npm package: the byte-identical pack-time copy
+]);
+const paidPath = firstExisting([
+  "../../functions/mcp/paid-tools.json", // repo checkout: the canonical file
+  "./paid-tools.json", // npm package: the byte-identical pack-time copy
+]);
+if (!freePath) {
+  console.log("FAIL  gspc-tools.json not found — cannot derive the canonical tool list");
+  process.exitCode = 1;
+}
+const freeNames = freePath
+  ? JSON.parse(readFileSync(freePath, "utf8")).tools.map((t) => t.name)
+  : [];
+const paidNames = paidPath
+  ? JSON.parse(readFileSync(paidPath, "utf8")).tools.map((t) => t.name)
+  : [];
+const canonicalNames = [...freeNames, ...paidNames];
+expect(
+  `tools/list is exactly the declared manifests (${freeNames.length} free + ${paidNames.length} metered)`,
+  names.join(","),
+  canonicalNames.join(","),
+);
+const duplicates = names.filter((n, i) => names.indexOf(n) !== i);
+expect("tools/list carries no duplicate name", duplicates.join(","), "");
+const paidServedFree = paidNames.filter((n) => !names.includes(n));
+expect("every metered tool is served", paidServedFree.join(","), "");
 
 // ---- live tools ----
 const totals = await rpc("tools/call", { name: "board_totals", arguments: {} });

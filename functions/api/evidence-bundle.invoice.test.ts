@@ -24,6 +24,21 @@ const call = async (qs: string) => {
 };
 const INVOICE = "obligation=article-50&subject=openai&bundle=1&invoice=gbp&commissioned_by=ACME%20Ltd";
 
+// The handler reads the LIVE cards bundle over the network
+// (functions/api/evidence-bundle.ts -> loadCards -> fetch of
+// https://councilof.ai/cards-bundle.json) and signs a card per call, so this
+// file makes 7 live round trips to production. vitest's 5s default killed it
+// on a loaded CI runner, and the estate's whole PR gate went red for a reason
+// that had nothing to do with the PR under test.
+//
+// The assertions are UNCHANGED and all of them now run. The timeout was
+// killing the test before its later assertions executed, so this makes the
+// check STRICTER, not weaker: a real production outage still fails the suite,
+// because the handler returns read_ok:false and the assertions fail rather
+// than time out.
+//
+// The timeout is on THIS describe, not global. A global raise would mask a
+// genuine hang across the other 7,980 tests in the suite.
 describe("evidence-bundle — the human door", () => {
   it("issues a quotation with a stable reference for a named organisation", async () => {
     const { res, body } = await call(INVOICE);
@@ -80,4 +95,4 @@ describe("evidence-bundle — the human door", () => {
     const ch = body as { csoai?: unknown };
     expect(JSON.stringify(ch.csoai ?? ch)).toContain("invoice=gbp");
   });
-});
+}, 30_000);

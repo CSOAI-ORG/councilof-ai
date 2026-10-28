@@ -1,0 +1,130 @@
+{
+ "schema": "csoai.separation-recompute/1",
+ "generated_at": "2026-10-25T05:35:00Z",
+ "method": "exact McNemar on discordant pairs between the top two non-own models, per axis, computed from published rows/peritem_*.jsonl",
+ "results": [
+  {
+   "axis": "governance",
+   "rows": 4503,
+   "models": 19,
+   "top": "mistral:7b",
+   "top_acc": 0.597,
+   "second": "deepseek-r1:8b",
+   "second_acc": 0.5274,
+   "discordant": [
+    62,
+    48
+   ],
+   "p": 0.21498,
+   "determined": "TIE",
+   "board": "TIE"
+  },
+  {
+   "axis": "provenance",
+   "rows": 608,
+   "models": 19,
+   "top": "llama3.2:3b",
+   "top_acc": 0.7188,
+   "second": "gemma3:12b",
+   "second_acc": 0.6875,
+   "discordant": [
+    6,
+    5
+   ],
+   "p": 1.0,
+   "determined": "TIE",
+   "board": "TIE"
+  },
+  {
+   "axis": "continuity",
+   "rows": 627,
+   "models": 19,
+   "top": "deepseek-r1:8b",
+   "top_acc": 0.6667,
+   "second": "gemma3:12b",
+   "second_acc": 0.5833,
+   "discordant": [
+    2,
+    1
+   ],
+   "p": 1.0,
+   "determined": "TIE",
+   "board": "TIE"
+  },
+  {
+   "axis": "conformance",
+   "rows": 665,
+   "models": 19,
+   "top": "mistral:7b",
+   "top_acc": 0.7143,
+   "second": "llama3.2:3b",
+   "second_acc": 0.6571,
+   "discordant": [
+    3,
+    1
+   ],
+   "p": 0.625,
+   "determined": "TIE",
+   "board": "TIE"
+  },
+  {
+   "axis": "openness",
+   "rows": 608,
+   "models": 19,
+   "top": "gemma3:12b",
+   "top_acc": 0.8333,
+   "second": "mistral:7b",
+   "second_acc": 0.7,
+   "discordant": [
+    9,
+    5
+   ],
+   "p": 0.42395,
+   "determined": "TIE",
+   "board": "TIE"
+  },
+  {
+   "axis": "care",
+   "rows": 3800,
+   "models": 19,
+   "top": "qwen2.5:0.5b-instruct",
+   "top_acc": 0.407,
+   "second": "qwen2.5:3b",
+   "second_acc": 0.3719,
+   "discordant": [
+    32,
+    25
+   ],
+   "p": 0.42704,
+   "determined": "TIE",
+   "board": "TIE"
+  },
+  {
+   "axis": "swarm",
+   "rows": 760,
+   "models": 19,
+   "top": "gemma3:12b",
+   "top_acc": 1.0,
+   "second": "llama3.2:3b",
+   "second_acc": 1.0,
+   "discordant": [
+    0,
+    0
+   ],
+   "p": 1.0,
+   "determined": "TIE",
+   "board": "UNTESTED"
+  }
+ ],
+ "correction": {
+  "claim_retracted": "'swarm board label is wrong'",
+  "why": "peritem_swarm.jsonl is the superseded 40-item PROTOCOL bank (19 models x 760 rows). The live swarm axis uses the wave-2b bank (n=37), for which no paired rows are published. A recompute on the old bank cannot settle the new axis, so the board's UNTESTED is the honest label.",
+  "action": "dataset csoai/gspc-swarm corrected to UNTESTED with that basis; csoai/gspc-jail-goldbank corrected to UNTESTED because its results are aggregate confusion matrices only"
+ },
+ "final_state": {
+  "measured_axes": 23,
+  "dataset_board_match": 22,
+  "no_dataset": 1,
+  "divergent": 0
+ }
+}

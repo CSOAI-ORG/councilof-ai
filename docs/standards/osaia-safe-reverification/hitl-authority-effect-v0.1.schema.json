@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://councilof.ai/schemas/hitl-authority-effect-v0.1.json",
   "title": "HITL authority-to-effect record",
-  "description": "Vendor-neutral record binding a human or explicitly authorized principal decision to one scoped invocation, its observed effect, and separate verification. The record does not require GSPC, OpenShell, OpenBMC, LFX, or any specific runtime.",
+  "description": "Vendor-neutral record binding a human or explicitly authorized principal decision to one scoped invocation, its observed effect, and separate verification. The record does not require GSPC, OpenShell, OpenBMC, LFX, or any specific runtime. SUPERSEDED 27 October 2026 by hitl-authority-effect-v0.2.schema.json, which adds two bindings this version left to the consumer: a claim that is not CURRENT cannot authorize a consequential execution, and an APPROVE decision must be bound to a current external authority record carrying the operational baseline, scope, authority epoch, validity window, expiry and revocation state. These v0.1 bytes are preserved unchanged; superseding is a new record, never an edit of history.",
   "type": "object",
   "additionalProperties": false,
   "required": ["profile","record_id","issued_at","request","authority","invocation","effect","verification","limits"],

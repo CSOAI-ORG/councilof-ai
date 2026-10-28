@@ -12,6 +12,10 @@
 //     code edit. MEASURED carries n; UNMEASURED carries its reason. Nothing carries a grade.
 //   · one item for the regulation-findings index — from /signed/findings_index.json, counts
 //     read from the file, dated by its as_of.
+//   · one item for the mill card root — from /interop/card-root-latest.json, n_leaves and
+//     root_sha256 read from the pointer, dated by its as_of, placed directly after the board
+//     line. Its count is separate from card_index / root.json / api/gspc; the pointer's own
+//     scope wording is carried verbatim. Unreadable or malformed pointer: no item.
 // Newest first, capped at 50 derived items after the board line. The hand-typed history that
 // used to live here was retired with this change: no test read it, and a feed that is code
 // cannot be the durable record — /feeds/corrections.xml and /interop/** are.
@@ -99,12 +103,28 @@ export function findingsItem(fi: any, origin: string): (FeedItem & { sort: numbe
   };
 }
 
+export function millRootItem(ptr: any, origin: string): FeedItem | null {
+  if (!ptr || typeof ptr !== "object") return null;
+  const n = ptr.n_leaves;
+  const date = rfc822(ptr.as_of);
+  if (typeof n !== "number" || !Number.isFinite(n) || typeof ptr.root_url !== "string" || !ptr.root_url || !date) return null;
+  const scope = typeof ptr.scope === "string" && ptr.scope ? ptr.scope : "Its count is separate from /signed/card_index.json, /root.json and /api/gspc.";
+  return {
+    title: `Mill card root: ${n} leaves`,
+    link: new URL(ptr.root_url, origin).toString(),
+    date,
+    desc: `Mill card root sha256 ${ptr.root_sha256 ?? "?"} (${n} leaves, as_of ${ptr.as_of}). ${scope}`,
+  };
+}
+
 export async function deriveItems(origin: string): Promise<FeedItem[]> {
-  const [board, index, fi] = await Promise.all([
+  const [board, index, fi, ptr] = await Promise.all([
     fetchBoardItem(origin),
     fetchJson(origin, "/reports/index.json"),
     fetchJson(origin, "/signed/findings_index.json"),
+    fetchJson(origin, "/interop/card-root-latest.json"),
   ]);
+  const mill = millRootItem(ptr, origin);
   const derived = [...reportItems(index, origin)];
   const f = findingsItem(fi, origin);
   if (f) derived.push(f);
@@ -117,7 +137,7 @@ export async function deriveItems(origin: string): Promise<FeedItem[]> {
     });
   }
   derived.sort((a, b) => b.sort - a.sort || a.title.localeCompare(b.title));
-  return [board, ...derived.slice(0, CAP).map(({ sort: _s, ...i }) => i)];
+  return [board, ...(mill ? [mill] : []), ...derived.slice(0, CAP).map(({ sort: _s, ...i }) => i)];
 }
 
 export const onRequestGet: PagesFunction = async (ctx) => {

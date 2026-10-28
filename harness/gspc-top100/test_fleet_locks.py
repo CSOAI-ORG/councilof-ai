@@ -27,7 +27,22 @@ def test_hf2200_lock_is_a_real_queue() -> None:
         for m in lock["models"]
         if (m.get("status") or "UNMEASURED") in {"practice-mill", "MEASURED"}
     )
-    assert lock["n_measured"] == counted
+    # A practice-mill row is a transport probe, not a reproducible GSPC
+    # measurement. mill_lock_update.refresh_counts keeps the two apart and
+    # scripts/test_mill_truth.py::test_refresh_counts_repairs_legacy_asserted_total
+    # pins it: an n_measured carrying 405 practice rows is the LEGACY total it
+    # repairs to 0. Both fields must be derived from the rows below, never read
+    # back as a hardcoded pass integer.
+    counted_measured = sum(
+        1 for m in lock["models"] if (m.get("status") or "UNMEASURED") == "MEASURED"
+    )
+    counted_practice = sum(
+        1 for m in lock["models"] if (m.get("status") or "UNMEASURED") == "practice-mill"
+    )
+    assert lock["n_measured"] == counted_measured
+    assert lock["n_practice_probed"] == counted_practice
+    assert counted_practice == counted - counted_measured
+    assert counted_practice > 0, "practice-mill coverage must not vanish from the lock"
 
 
 def test_kaggle_lock_is_a_real_queue() -> None:
@@ -52,7 +67,7 @@ def test_workflow_surfaces_inference_fail_in_summary() -> None:
     assert "HF2200.lock.json" in yml
 
 
-def test_apply_mill_counts_practice_mill_into_n_measured() -> None:
+def test_apply_mill_counts_practice_mill_into_n_practice_probed() -> None:
     import sys
     sys.path.insert(0, str(ROOT / "scripts"))
     from mill_lock_update import apply_mill  # noqa: E402
@@ -65,7 +80,10 @@ def test_apply_mill_counts_practice_mill_into_n_measured() -> None:
     }
     mill = {"as_of": "2026-09-06T00:00:00Z", "rows": [{"slug": "a/x", "status": "practice-mill", "n": 1}]}
     out = apply_mill(lock, mill)
-    assert out["n_measured"] == 1
+    # A transport probe is coverage, not a measurement: it moves
+    # n_practice_probed and must leave n_measured alone.
+    assert out["n_measured"] == 0
+    assert out["n_practice_probed"] == 1
     assert out["models"][0]["status"] == "practice-mill"
     assert out["models"][1]["status"] == "UNMEASURED"
 
@@ -97,7 +115,10 @@ def test_uncheckable_is_not_n_measured_and_does_not_downgrade() -> None:
     assert out["models"][0]["status"] == "practice-mill"
     assert out["models"][1]["status"] == "UNCHECKABLE"
     assert out["models"][2]["status"] == "practice-mill"
-    assert out["n_measured"] == 2
+    # Two practice rows, zero MEASURED: the UNCHECKABLE 400s must neither
+    # downgrade them nor be counted as measurements.
+    assert out["n_measured"] == 0
+    assert out["n_practice_probed"] == 2
 
 
 def test_apply_mill_persists_route_kind_so_nonchat_retry_is_once() -> None:
@@ -180,7 +201,10 @@ def test_rebuild_keeps_practice_mill_and_prefers_chat() -> None:
     out = rebuild_provider_hosted_lock(lock, candidates, n=4)
     slugs = [m["slug"] for m in out["models"]]
     assert out["n_locked"] == 4
-    assert out["n_measured"] == 2
+    # Kept practice rows are coverage: they land in n_practice_probed, not
+    # n_measured (nothing here carries status MEASURED).
+    assert out["n_measured"] == 0
+    assert out["n_practice_probed"] == 2
     assert "a/ok" in slugs and "b/ok" in slugs
     assert slugs[2] == "chat/two"
     assert slugs[3] == "vlm/three"
@@ -210,7 +234,11 @@ def test_stamp_zero_provider_does_not_invent_n_measured() -> None:
         return ["featherless-ai"] if slug == "c/live" else []
 
     out = stamp_zero_providers(lock, fetch, "2026-09-06T18:00:00Z")
-    assert out["n_measured"] == 2
+    # Nothing in this lock is MEASURED — two practice probes must not be
+    # promoted into a measurement count, and an empty Hub mapping must not
+    # invent one either. This is the stricter reading of the test's own name.
+    assert out["n_measured"] == 0
+    assert out["n_practice_probed"] == 2
     assert out["models"][0]["status"] == "practice-mill"
     assert out["models"][1]["status"] == "practice-mill"
     assert out["models"][2]["unmeasured_reason"] == "no live Inference Provider"
@@ -257,7 +285,10 @@ def test_restore_original_membership_drops_injected_slugs() -> None:
     assert slugs == ["orig/a", "orig/b", "orig/c", "orig/d"]
     assert "injected/warm" not in slugs
     assert out["n_locked"] == 4
-    assert out["n_measured"] == 1
+    # The overlay's injected slug is dropped, and its practice row counts as
+    # coverage on the restored original membership — not as a measurement.
+    assert out["n_measured"] == 0
+    assert out["n_practice_probed"] == 1
     assert out["models"][0]["status"] == "practice-mill"
     assert out["models"][1]["status"] == "UNCHECKABLE"
     assert out["models"][2]["status"] == "UNMEASURED"
@@ -324,7 +355,7 @@ if __name__ == "__main__":
     test_hf2200_lock_is_a_real_queue()
     test_kaggle_lock_is_a_real_queue()
     test_workflow_surfaces_inference_fail_in_summary()
-    test_apply_mill_counts_practice_mill_into_n_measured()
+    test_apply_mill_counts_practice_mill_into_n_practice_probed()
     test_uncheckable_is_not_n_measured_and_does_not_downgrade()
     test_apply_mill_persists_route_kind_so_nonchat_retry_is_once()
     test_apply_mill_does_not_persist_429_as_uncheckable()

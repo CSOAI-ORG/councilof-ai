@@ -1,0 +1,266 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://councilof.ai/spec/safe-review-outcome/v0.1/schema.json",
+  "title": "csoai.safe-review-outcome/0.1",
+  "description": "A machine-readable review outcome for one control layer of one incident. Three things are kept apart that prose usually merges: the evidence-delivery state, the underlying control outcome, and the attribution of a failure to a layer. Missing evidence does not become a pass or a fail; it becomes insufficient_evidence, unless the expected producer, the delivery obligation, the observation window and a functioning collection path are all established, in which case a delivery failure is recorded as a delivery failure and not as a control failure. This is the executable form of the proposal in SAFE PR 64, carried against the approved SAFE v1.0 specification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "record_id",
+    "layer",
+    "expected_outcome",
+    "evidence_delivery",
+    "underlying_control_outcome",
+    "attribution",
+    "reason"
+  ],
+  "properties": {
+    "profile": {
+      "const": "csoai.safe-review-outcome/0.1"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "incident_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "issued_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "layer": {
+      "enum": [
+        "model",
+        "instructions",
+        "safeguards",
+        "tools",
+        "environment",
+        "monitoring",
+        "human_operations",
+        "supply_chain",
+        "serving_path",
+        "authorization_and_commitment",
+        "workflow_composition"
+      ],
+      "description": "The control layer under review. Tags the evidence without inference."
+    },
+    "expected_outcome": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "producer_established",
+        "delivery_obligation_established",
+        "collection_path_functioning",
+        "reason"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "DELIVERED",
+            "NOT_DELIVERED",
+            "PARTIAL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "producer_established": {
+          "type": "boolean"
+        },
+        "delivery_obligation_established": {
+          "type": "boolean"
+        },
+        "observation_window": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "ISO 8601 interval over which delivery was expected."
+        },
+        "collection_path_functioning": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "underlying_control_outcome": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INSUFFICIENT_EVIDENCE",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "attribution": {
+      "enum": [
+        "CONTROL",
+        "EVIDENCE_DELIVERY",
+        "INSTRUMENT",
+        "UNDETERMINED"
+      ],
+      "description": "Which layer the failure belongs to. CONTROL means the control itself did not hold. EVIDENCE_DELIVERY means the control may be fine and the evidence never arrived. INSTRUMENT means the check could not discriminate. UNDETERMINED means the available evidence does not settle it."
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/digest_ref"
+      }
+    },
+    "limits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "definitions": {
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alg",
+        "value"
+      ],
+      "properties": {
+        "alg": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "digest_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "evidence_delivery": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "NOT_DELIVERED",
+                  "PARTIAL"
+                ]
+              }
+            },
+            "required": [
+              "state"
+            ]
+          }
+        },
+        "required": [
+          "evidence_delivery"
+        ]
+      },
+      "then": {
+        "properties": {
+          "underlying_control_outcome": {
+            "enum": [
+              "INSUFFICIENT_EVIDENCE",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "attribution": {
+            "enum": [
+              "EVIDENCE_DELIVERY",
+              "INSTRUMENT",
+              "UNDETERMINED"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "evidence_delivery": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "NOT_DELIVERED",
+                  "PARTIAL"
+                ]
+              },
+              "producer_established": {
+                "const": true
+              },
+              "delivery_obligation_established": {
+                "const": true
+              },
+              "collection_path_functioning": {
+                "const": true
+              }
+            },
+            "required": [
+              "state",
+              "producer_established",
+              "delivery_obligation_established",
+              "collection_path_functioning"
+            ]
+          }
+        },
+        "required": [
+          "evidence_delivery"
+        ]
+      },
+      "then": {
+        "properties": {
+          "underlying_control_outcome": {
+            "const": "INSUFFICIENT_EVIDENCE"
+          },
+          "attribution": {
+            "const": "EVIDENCE_DELIVERY"
+          }
+        }
+      }
+    }
+  ]
+}

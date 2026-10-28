@@ -68,6 +68,27 @@ export const GROUPS: ServiceGroup[] = [
 /** Path → group. Ordered: the first matching prefix wins. */
 const ROUTES: ReadonlyArray<[string, GroupId]> = [
   ["/api/rwa/", "finance-rwa"],
+  ["/api/discover/chainlink", "finance-rwa"],
+  ["/api/discover/ondo-ousg", "finance-rwa"],
+  ["/api/discover/ondo", "finance-rwa"],
+  ["/api/wrapper/asset/", "finance-rwa"],
+  ["/api/wrapper/changes", "finance-rwa"],
+  ["/api/wrapper", "finance-rwa"],
+  ["/api/pop/stablecoins", "finance-rwa"],
+  ["/api/pop/xrpl", "finance-rwa"],
+  ["/api/pop/corrections", "compliance"],
+  ["/api/pop/claim-watch", "compliance"],
+  ["/api/measurement/fresh-capsule", "model-measurement"],
+  ["/api/signed-data-feed", "model-measurement"],
+  ["/api/pop/x402-bazaar", "agent-rails"],
+  ["/api/pop/mcp-registry", "agent-rails"],
+  ["/api/pop/a2a", "agent-rails"],
+  ["/api/pop/ots-proofs", "agent-rails"],
+  ["/api/pop/layer0", "agent-rails"],
+  ["/api/ras/mcp-probe", "agent-rails"],
+  ["/api/ras/x402-check", "agent-rails"],
+  ["/api/ras/supply", "agent-rails"],
+  ["/api/pop/swift", "legacy-systems"],
   ["/api/evidence-bundle", "compliance"],
   ["/api/art50/", "compliance"],
   ["/api/eunomia-data", "compliance"],
@@ -101,6 +122,7 @@ export interface ManifestResource {
   paid_for?: string | null;
   amount?: string | number | null;
   note?: string | null;
+  description?: string | null;
   free_preview?: string | null;
   indexed_in?: string | null;
 }
@@ -110,7 +132,7 @@ export interface ServiceCard {
   path: string;
   method: string;
   group: GroupId;
-  /** From the manifest's own paid_for/note — never written here. */
+  /** Published description, then legacy note/paid_for fallback; never invented here. */
   measures: string;
   freePreview: string | null;
   /** True only when the manifest itself says the amount is zero. */
@@ -127,7 +149,7 @@ export function toCard(r: ManifestResource, group: GroupId): ServiceCard {
     path: pathOf(r.url),
     method: r.method || "GET",
     group,
-    measures: r.note?.trim() || (r.paid_for ? `Paid for ${r.paid_for}.` : "Free forever."),
+    measures: (typeof r.description === "string" ? r.description.trim() : "") || r.note?.trim() || (r.paid_for ? `Paid for ${r.paid_for}.` : "Free forever."),
     freePreview: r.free_preview ?? null,
     freeForever: zero,
     payLine: zero ? "Free forever — it settles and charges nothing." : PAY_LINE,

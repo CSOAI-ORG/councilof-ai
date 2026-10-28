@@ -1,0 +1,17 @@
+# otelcol-contrib v0.162.0: OTLP/HTTP on loopback -> file exporter. Nothing leaves the machine.
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 127.0.0.1:14318
+exporters:
+  file:
+    path: ./out/readback.jsonl
+service:
+  telemetry:
+    metrics:
+      level: none
+  pipelines:
+    logs:
+      receivers: [otlp]
+      exporters: [file]
