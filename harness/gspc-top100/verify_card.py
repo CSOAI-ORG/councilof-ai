@@ -77,8 +77,14 @@ def verify_signed_card(blob: bytes, did_pubkey: bytes) -> tuple[str, str]:
     body = wrap.get("body") if isinstance(wrap.get("body"), dict) else None
     cid = wrap.get("id") or wrap.get("sha256")
     sig = wrap.get("signature") or wrap.get("sig_ed25519") or wrap.get("sig")
-    if not isinstance(body, dict) or not cid:
-        return "INVALID", "no body or id"
+    if not isinstance(body, dict):
+        return "INVALID", "no body"
+    if not cid:
+        # Body but no id: there is no digest to hash against and no signature to
+        # check, so this cannot be judged — only noted. Unstaged RunPod source
+        # records in mill-cards-unsigned/ land here. UNCHECKABLE, never INVALID:
+        # INVALID would assert a failed verification where none was attempted.
+        return "UNCHECKABLE", "no id: unstaged source record, not a signed card"
     rule = wrap.get("preimage_rule")
     pre = canonical_js_body_bytes(body) if rule == "sha256(canonical body)" else canonical_body_bytes(body)
     if hashlib.sha256(pre).hexdigest() != cid:

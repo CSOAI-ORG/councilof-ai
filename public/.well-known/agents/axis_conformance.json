@@ -1,0 +1,53 @@
+{
+  "name": "Council of AI \u2014 axis_conformance",
+  "description": "The conformance axis of the live GSPC board at https://councilof.ai/api/gspc \u2014 this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer \u2014 a declared slot with no run behind it, published so the gap is visible \u2014 never an error and never a zero. Never a certification.",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/llms.txt",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "axis_conformance",
+      "name": "axis_conformance",
+      "description": "The conformance axis of the live GSPC board at https://councilof.ai/api/gspc \u2014 this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer \u2014 a declared slot with no run behind it, published so the gap is visible \u2014 never an error and never a zero. Never a certification.",
+      "tags": [
+        "measurement",
+        "mcp"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"axis_conformance\",\"input\":{}}",
+        "POST https://councilof.ai/mcp"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment"
+  ],
+  "mcp_tool": "axis_conformance",
+  "paid": false,
+  "did": "did:web:councilof.ai:agents:axis_conformance"
+}

@@ -1,0 +1,201 @@
+{
+  "schema": "csoai.mcp-trust-index-lite/0.1",
+  "headline": "Measured, never certification.",
+  "as_of": "2026-10-09T03:47:42Z",
+  "doctrine": "Measurement, never certification. Verdicts are observations of public bytes at an instant; they are not certifications, endorsements, or warranties. UNMEASURED/UNCHECKABLE are first-class states and are never recorded as 0 or null. Counts are pointers with an as_of, not permanent totals. Corrections supersede with dated provenance.",
+  "sources": {
+    "registry_walk": {
+      "url": "https://registry.modelcontextprotocol.io/v0/servers?search=&limit=100",
+      "pagination": "cursor: metadata.nextCursor (URL-encoded, format name:version)",
+      "pages": 1399,
+      "rows": 139896,
+      "unique_names": 40922,
+      "row_key": "name:version",
+      "caveat": "The {name} direct shape (/v0/servers/{name}) 404s even for rows that exist in the list; a 404 there is NOT absence. The paginated list walk is the authoritative row source for this index."
+    },
+    "smithery_marketplace": {
+      "verified_url": "https://registry.smithery.ai/servers?pageSize=100&page=N&verified=true",
+      "verified_totalCount": 191,
+      "verified_rows_enumerated": 191,
+      "verified_unique_qualifiedNames": 183,
+      "listing_url": "https://registry.smithery.ai/servers?pageSize=100&page=N",
+      "listing_totalCount_at_as_of": 19156,
+      "unauth_listing_depth_cap_rows": 500,
+      "depth_cap_note": "Unauthenticated listing pagination is capped at 5 pages x 100 rows (500 rows reachable). FAIL for R2 requires an observed entry with verified:false inside reachable bytes; everything else stays UNCHECKABLE."
+    }
+  },
+  "framing": [
+    {
+      "figure": "Smithery listed servers",
+      "value": "15,482",
+      "source_url": "https://agentsindex.ai/smithery",
+      "source_note": "AgentsIndex, citing Smithery's own API (https://registry.smithery.ai/servers)",
+      "as_of": "2026-09-18"
+    },
+    {
+      "figure": "Smithery verified-badge holders",
+      "value": "191 of 15,482 (~1.2%)",
+      "source_url": "https://agentsindex.ai/smithery",
+      "as_of": "2026-09-18"
+    },
+    {
+      "figure": "Smithery verified-badge holders (our cross-check)",
+      "value": "191 verified of 19,156 listed",
+      "source_url": "https://registry.smithery.ai/servers?pageSize=100&page=N&verified=true",
+      "as_of": "2026-10-09T03:47:42Z"
+    },
+    {
+      "figure": "Arcade ToolBench grade-A rate",
+      "value": "0.5%",
+      "source_url": "https://www.forbes.com/sites/janakirammsv/2026/08/10/arcade-acquires-smithery-to-own-the-agent-tool-supply-chain",
+      "source_note": "Forbes, 10 Aug 2026; underlying study: https://www.arcade.dev/white-papers/state-of-mcp-tools (43,400+ servers, 219,069 tools)",
+      "as_of": "2026-08-10"
+    },
+    {
+      "figure": "PulseMCP directory size",
+      "value": "21,809",
+      "source_url": "https://www.pulsemcp.com/servers/",
+      "source_note": "figure as cited in the 2026-10-09 harvest framing; live counter read 22,280+ at retrieval 2026-10-09 - a count is a pointer with an as_of",
+      "as_of": "2026-10"
+    },
+    {
+      "figure": "Glama registry size",
+      "value": "93,733",
+      "source_url": "https://glama.ai/mcp/servers",
+      "source_note": "figure as cited in the 2026-10-09 harvest framing; live counter read 97,619 (page says 'Last indexed Oct 8, 2026') at retrieval 2026-10-09",
+      "as_of": "2026-10"
+    }
+  ],
+  "denominators": {
+    "rows_walked_name_version": 139896,
+    "unique_names": 40922,
+    "rows_with_public_https_endpoint": 62862,
+    "rows_declaring_tools_list": 759,
+    "rows_with_licence_bytes": 704,
+    "rows_with_readme_docs_or_repo_link": 115768,
+    "as_of": "2026-10-09T03:47:42Z"
+  },
+  "rules": {
+    "R1": {
+      "name": "io.github.* namespace ownership declared",
+      "semantics": "PASS if server.name or packages[].identifier matches ^io\\.github\\.[A-Za-z0-9-]+/[A-Za-z0-9._-]+$ (GitHub-account-anchored naming); FAIL if an identifier is declared outside that namespace; UNCHECKABLE if no identifier bytes exist."
+    },
+    "R2": {
+      "name": "marketplace verified badge known",
+      "semantics": "PASS if row joins (qualifiedName / io.github-derived owner/repo slug / normalized homepage or repository URL) to Smithery's complete verified set; FAIL if row joins to a Smithery entry fetched and observed with verified:false; UNCHECKABLE if badge state is not observable in reachable public bytes.",
+      "not_badges": "publisher self-declared verified_on / verified_via / namespaceVerification are evidence only and are never accepted as marketplace badges."
+    },
+    "R3": {
+      "name": "declared-vs-served tools/list",
+      "semantics": "declared = tool names in row bytes (publisher-provided.tools); served = JSON-RPC tools/list at the row's first public remote endpoint (stateless attempt, then initialize -> notifications/initialized -> tools/list; 8s/request). PASS if both sides exist and name-sets match; FAIL if both exist and differ; UNCHECKABLE otherwise with reason codes."
+    },
+    "R4": {
+      "name": "README/docs link present",
+      "semantics": "PASS if row bytes carry a non-empty readme*/docs*/documentation* field or a repository.url; FAIL otherwise. websiteUrl alone is a homepage, evidence only."
+    },
+    "R5": {
+      "name": "licence declared",
+      "semantics": "PASS if any key license/licence in the row bytes carries a non-empty string; FAIL otherwise (absence of declaration is checkable from the row bytes themselves)."
+    },
+    "R6": {
+      "name": "release date recency",
+      "semantics": "release date = _meta.io.modelcontextprotocol.registry/official.publishedAt, falling back to updatedAt, then statusChangedAt. PASS if <= 365 days before as_of (window pinned here); FAIL if older; UNCHECKABLE if no date bytes or unparseable."
+    }
+  },
+  "verdict_counts": {
+    "R1": {
+      "PASS": 102491,
+      "FAIL": 37405,
+      "UNCHECKABLE": 0
+    },
+    "R2": {
+      "PASS": 472,
+      "FAIL": 1331,
+      "UNCHECKABLE": 138093
+    },
+    "R3": {
+      "PASS": 146,
+      "FAIL": 128,
+      "UNCHECKABLE": 139622
+    },
+    "R4": {
+      "PASS": 115768,
+      "FAIL": 24128,
+      "UNCHECKABLE": 0
+    },
+    "R5": {
+      "PASS": 704,
+      "FAIL": 139192,
+      "UNCHECKABLE": 0
+    },
+    "R6": {
+      "PASS": 138856,
+      "FAIL": 1040,
+      "UNCHECKABLE": 0
+    }
+  },
+  "reason_legend": {
+    "": "default state per rule semantics (R3=U: row declares no tools list, comparison undefined; R2=U: badge state not observable; R6=U: no date bytes)",
+    "r3:no-ep": "tools declared but no public endpoint in row bytes",
+    "r3:denied": "endpoint answered but tools/list not obtainable",
+    "r3:unreach": "endpoint not reachable within budget",
+    "r3:probe:OK:n=N": "tools/list measured: N served tools",
+    "ev:*": "evidence-only probe of a row with no declared tools list (not verdict-bearing)",
+    "r6:age=Nd": "release date older than the 365-day window",
+    "r6:parse": "date bytes present but unparseable"
+  },
+  "probes": {
+    "protocol": "MCP streamable-http JSON-RPC tools/list; first remote endpoint per row only; no tool invocation and no execution of server code",
+    "targets": 1033,
+    "verdict_bearing_rows": 533,
+    "evidence_sample_rows": 500,
+    "evidence_sample_selection": "first 500 rows in walk order with a public endpoint and no declared tools list",
+    "status_counts": {
+      "OK": 555,
+      "DENIED": 448,
+      "UNREACHABLE": 30
+    },
+    "verdict_status_counts": {
+      "OK": 274,
+      "DENIED": 242,
+      "UNREACHABLE": 17
+    },
+    "evidence_status_counts": {
+      "OK": 281,
+      "DENIED": 206,
+      "UNREACHABLE": 13
+    },
+    "served_tool_counts_when_OK": {
+      "n": 555,
+      "min": 1,
+      "p50": 10,
+      "max": 184
+    }
+  },
+  "self_attested_signals_not_badges": {
+    "publisher_verified_on_rows": 9,
+    "namespace_verification_rows": 319
+  },
+  "csv": {
+    "columns": [
+      "name",
+      "version",
+      "r1",
+      "r2",
+      "r3",
+      "r4",
+      "r5",
+      "r6",
+      "reasons"
+    ],
+    "verdict_codes": {
+      "P": "PASS",
+      "F": "FAIL",
+      "U": "UNCHECKABLE"
+    },
+    "rows": 139896,
+    "bytes": 7243726,
+    "sha256": "1161ecaf6fab0d5b8b0c014531e6fed97eab0178506db34a73c1573d57677ee9"
+  },
+  "as_of_note": "Every figure in this file is a pointer valid at its stated as_of. Re-walk to re-measure."
+}

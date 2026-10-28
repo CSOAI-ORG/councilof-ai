@@ -7,6 +7,19 @@
 
 The Council of AI command line. Measurement, never certification.
 
+## Prerequisites and install
+
+- **Node.js 18 or newer** (`engines.node` is `>=18` in `package.json`).
+- **npm**, which ships with Node, to run or install the package.
+- **Network access**: `check` fetches live cards from `https://councilof.ai` (or the origin you
+  pass with `--base`). For checks with no network, see *Verify offline* below.
+- Nothing to download by hand, no key and no account.
+
+```bash
+npx -y @csoai/gspc-cli check <model>     # run without installing
+npm install -g @csoai/gspc-cli           # or install the `csoai` command
+```
+
 ## `csoai check <model>`
 
 Print the signed axis/staleness snapshot for any model on the public
@@ -33,6 +46,18 @@ is reported as itself, never upgraded to a pass. Exit codes: `0` all VALID ·
 
 Options: `--json` (machine-readable) · `--contains` (substring match) ·
 `--base <url>` (default `https://councilof.ai`).
+
+## A free task to try after install
+
+Look up a model on the public record, then check one card yourself, offline:
+
+```bash
+csoai check qwen3:0.6b          # exit 0 when every row is VALID
+```
+
+Then follow *A free task to try after install* in the
+[`gspc-verify` README](../gspc-card-verifier/README.md) to download the free example card
+`signed-governan-91857b0eb93f.json` and verify it with no network.
 
 ## What this is not
 

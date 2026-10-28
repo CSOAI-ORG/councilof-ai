@@ -1,0 +1,41 @@
+{
+  "schema": "csoai.agent-plugin/0.1",
+  "name": "council-of-ai",
+  "display_name": "Council of AI",
+  "version": "0.2.0",
+  "issuer": "CSOAI Ltd",
+  "registration": "CSOAI Ltd, UK Companies House 16939677",
+  "what": "Independent AI-behaviour measurement, packaged for AI platforms. Pull the live GSPC board, verify Ed25519 measurement cards offline, seal artifacts, and census the local harness.",
+  "not": "Not a certification, not a badge, not a ranking sold as a verdict. The board and verification are free, forever, for everyone.",
+  "repository": "https://github.com/CSOAI-ORG/csoai-agent-plugin",
+  "install_one_liner": "npx -y csoai-agent-plugin install",
+  "skills": ["gspc", "council", "council-os", "verify-card", "sign-artifact", "pack", "platform-measure"],
+  "mcp_servers": {
+    "gspc": {
+      "transport": "streamable-http",
+      "url": "https://councilof.ai/mcp",
+      "description": "Council of AI GSPC measurement board: live axes, signed card index, three-state verification, free forever."
+    },
+    "csoai-governance": {
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["-y", "csoai-governance-mcp"],
+      "description": "CSOAI Layer-0 governance: seal bytes with Ed25519 and verify the seal. A receipt, never a certificate."
+    }
+  },
+  "links": {
+    "board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/verify",
+    "mcp": "https://councilof.ai/mcp",
+    "platforms": "https://councilof.ai/api/plugin/platforms",
+    "reports": "https://councilof.ai/api/reports",
+    "openapi": "https://councilof.ai/openapi.json"
+  },
+  "doctrine": [
+    "Measurement, never certification.",
+    "MEASURED is a run behind a slot. UNMEASURED is an answer, never 0.",
+    "SEPARATED / TIE / UNTESTED are three states.",
+    "We never score our own products.",
+    "A count with no source is null, never 0."
+  ]
+}

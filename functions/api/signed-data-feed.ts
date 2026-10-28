@@ -28,8 +28,8 @@ import {
 } from "./_x402";
 import { railMode } from "./_x402_config";
 import { onRequestGet as finesGet } from "./fines";
-import { readFeedSource, expectedFeedDigest, missingFeedSources, feedBlocks, makeFeedManifest, requestRecord, feedPayloadEvidence, feedJson, EXPECTED_FEED_HEADER, type Reads } from "./_eunomia_delivery";
-import { buildDeliveryRecord, storeDeliveryRecord } from "./_x402_delivery_record";
+import { readFeedSource, expectedFeedDigest, missingFeedSources, feedBlocks, makeFeedManifest, requestRecord, feedJson, EXPECTED_FEED_HEADER, type Reads } from "./_eunomia_delivery";
+import { recordPaidResponse } from "./_x402_delivery_record";
 import { DATA_FEED_DESCRIPTION } from "./_x402_descriptions";
 
 type AssetFetcher = { fetch: (request: Request | string) => Promise<Response> };
@@ -85,7 +85,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     data_only: true,
     streams,
     free_for: ["regulators", "the public", "anyone verifying"],
-    sold: "assembly + cadence of the feed (one document, every block carrying its published signature) — never the facts, which stay free",
+    sold: "Assembly of source data into one feed document; this response does not establish recurring cadence or verify source signatures. The underlying facts remain free.",
     never: ["scores as a product", "ranking", "rating", "certificate"],
   };
 
@@ -154,7 +154,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     kind: "feed",
     lane: "commercial-data",
     data_only: true,
-    note: "Each block is the published bytes with its own signature/kid; verify every block offline. Nothing here is a score product.",
+    note: "Blocks are parsed source JSON. Any supplied signature/kid fields are preserved as data and require independent verification. Assembly does not verify source truth, signatures or freshness, and creates no new measurement or score.",
     blocks: feedBlocks(reads),
     delivery_manifest: manifest,
     request_record: targetRecord,
@@ -162,42 +162,15 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     settle: payment.settlement || null,
     verify: `${origin}/gspc-verify`,
   };
-  const deliveryEvidence = await feedPayloadEvidence(feedBody);
-  const transaction = payment.settlement?.transaction?.trim() || "";
-  let deliveryRecordState = transaction ? "UNRECORDED_NO_STORE" : "UNRECORDED_NO_TRANSACTION";
-  if (transaction) {
-    try {
-      const stored = await storeDeliveryRecord(
-        env.REVENUE_KV as unknown as Parameters<typeof storeDeliveryRecord>[0],
-        buildDeliveryRecord({
-          transaction,
-          resource: resourceUrl,
-          response_sha256: deliveryEvidence.response_sha256,
-          response_bytes: deliveryEvidence.response_bytes,
-          content_type: "application/json; charset=utf-8",
-        }),
-      );
-      deliveryRecordState = stored.stored
-        ? "WRITTEN"
-        : stored.conflict
-          ? "CONFLICT"
-          : stored.existing
-            ? "ALREADY_RECORDED"
-            : "UNRECORDED_NO_STORE";
-    } catch {
-      deliveryRecordState = "ERROR";
-    }
-  }
 
-  return feedJson(
+  return recordPaidResponse(await feedJson(
     feedBody,
     200,
     {
       "x-csoai-feed-sha256":manifest!.evidence.blocks_sha256,
-      "x-csoai-delivery-record-state": deliveryRecordState,
       ...(payment.paymentResponse ? {"x-payment-response":payment.paymentResponse} : {}),
     },
-  );
+  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

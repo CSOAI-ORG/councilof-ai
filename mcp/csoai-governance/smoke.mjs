@@ -1,7 +1,7 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
-const t = new StdioClientTransport({ command: "node", args: ["index.mjs"] });
+const t = new StdioClientTransport({ command: "node", args: ["index.mjs"], env: { ...process.env } });
 const c = new Client({ name: "smoke", version: "0.0.1" }, { capabilities: {} });
 await c.connect(t);
 const tools = await c.listTools();

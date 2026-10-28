@@ -7,6 +7,9 @@ on:
 jobs:
   canary:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
@@ -14,6 +17,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Run silent-route canary
+        id: capture
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -22,20 +26,28 @@ jobs:
           MOONSHOT_API_KEY: ${{ secrets.KIMI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_TOKEN }}
           XAI_API_KEY: ${{ secrets.GROK_TOKEN }}
-        run: python scripts/canary/canary_run.py
-      - name: Commit canary artifacts
+        run: python3 scripts/canary/canary_run.py --receipt "$RUNNER_TEMP/canary-capture-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT.json"
+      - name: Retain safe capture before publication
+        id: retain_capture
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: canary-capture-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/canary-capture-${{ github.run_id }}-${{ github.run_attempt }}.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Propose captured canary artifacts
+        id: proposal
+        if: ${{ success() && steps.capture.outcome == 'success' && steps.retain_capture.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.email "actions@github.com"
-          git config user.name "github-actions[bot]"
-          git add public/interop/silent-route-canary-2026-09/
-          git diff --cached --quiet || git commit -m "canary: daily capture $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          # Integrate concurrent master changes; protected branch hook requires PR
-          git pull --ff-only --no-edit origin master || true
-          # Push via PR branch (protected branch hook allows PRs to master)
-          branch="canary-push/$GITHUB_RUN_ID"
-          git checkout -b "$branch"
-          git push -u origin "$branch"
-          # Open a PR targeting master
-          gh pr create --repo "$GITHUB_REPOSITORY" --head "$branch" --base master --title "canary: daily capture $(date -u +%Y-%m-%dT%H:%M:%SZ)" --body "Automatic canary capture — see public/interop/silent-route-canary-2026-09/baseline.jsonl" || echo "PR creation failed (may already exist)"
+          python3 scripts/canary/canary_delivery.py --repository "$GITHUB_REPOSITORY" --run-id "$GITHUB_RUN_ID" --capture-artifact-id "${{ steps.retain_capture.outputs.artifact-id }}" --receipt "$RUNNER_TEMP/canary-delivery-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT.json"
+      - name: Retain safe delivery status
+        if: ${{ always() && steps.proposal.outcome != 'skipped' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: canary-delivery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/canary-delivery-${{ github.run_id }}-${{ github.run_attempt }}.json
+          if-no-files-found: error
+          retention-days: 7

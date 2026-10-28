@@ -156,11 +156,21 @@ export function useMomentum(injected?: MomentumRead): MomentumRead {
   return state;
 }
 
+/**
+ * PyPI download figures are never printed as numbers in HTML (surface inspection, 12 Oct 2026): a
+ * prerendered page freezes the count at build time. Pages show PypiLiveBadge instead, a live
+ * image the browser fetches on view. /api/momentum still carries the figure as JSON.
+ */
+export const isPypiFigureId = (id: string): boolean => /^pypi_/.test(id);
+
 /** Figures in the order asked for; an id with no figure (omitted upstream) is simply absent. */
 export function pick(p: MomentumPayload, ids?: string[]): MomentumFigure[] {
-  if (!ids) return p.figures;
+  if (!ids) return p.figures.filter((f) => !isPypiFigureId(f.id));
   const by = new Map(p.figures.map((f) => [f.id, f]));
-  return ids.map((id) => by.get(id)).filter((f): f is MomentumFigure => !!f);
+  return ids
+    .filter((id) => !isPypiFigureId(id))
+    .map((id) => by.get(id))
+    .filter((f): f is MomentumFigure => !!f);
 }
 
 const dayFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });

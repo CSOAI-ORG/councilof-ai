@@ -8,7 +8,7 @@ as the source in `mcp/gspc-server/`.
 
 ## Tools
 
-Fourteen free tools require no account, key or payment:
+Forty-seven free tools require no account, key or payment:
 
 - `board_totals` — read live board totals with their source kind and `as_of` date.
 - `get_axis` — read one axis row, including sample size, interval and MEASURED/UNMEASURED state.
@@ -24,6 +24,43 @@ Fourteen free tools require no account, key or payment:
 - `server_evidence` — every published capsule about one endpoint URL; an unknown URL is NOT_MEASURED.
 - `evidence_bundle_preview` — the already-signed cards relevant to one obligation; observations, never a determination.
 - `route` — GSPC Route, decide-only: your policy applied to published measurements; returns the chosen candidate and an unsigned route record. Routing is not ranking.
+
+One free tool per GSPC board axis, named for the axis it answers. Each returns the live
+board row for that axis, with the same fields `get_axis` returns:
+
+- `axis_governance` — the governance axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_safety` — the safety axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_provenance` — the provenance axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_continuity` — the continuity axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_conformance` — the conformance axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_openness` — the openness axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_machinery-conformity` — the machinery-conformity axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_care` — the care axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_cross-reality` — the cross-reality axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_detector-interop` — the detector-interop axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_art5-safeguard` — the art5-safeguard axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_swarm` — the swarm axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_affect` — the affect axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_jail` — the jail axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_effect-binding` — the effect-binding axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_provenance-controls` — the provenance-controls axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_reserve-attestation` — the reserve-attestation axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_regulatory-framework` — the regulatory-framework axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_distribution-integrity` — the distribution-integrity axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_custody-disclosure` — the custody-disclosure axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_ai-adoption-components` — the ai-adoption-components axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_labour-components` — the labour-components axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_humanoid-labour-index` — the humanoid-labour-index axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_lab-practice` — the lab-practice axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_company-practice` — the company-practice axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_measurer-integrity` — the measurer-integrity axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_harness-fidelity` — the harness-fidelity axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_interop-conformance` — the interop-conformance axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_humanoid-deployment` — the humanoid-deployment axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_regulator-transparency` — the regulator-transparency axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_interpretability-reproducibility` — the interpretability-reproducibility axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_claim-maintenance` — the claim-maintenance axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_serving-fidelity` — the serving-fidelity axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
 
 Five optional x402-metered evidence tools are also discoverable:
 

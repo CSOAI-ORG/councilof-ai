@@ -1,3 +1,4 @@
+import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * GET /api/proof — inclusion proofs for public-root leaves.
  *
@@ -199,7 +200,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         card_count: root.card_count ?? null,
       });
     }
-    return json(
+    return recordPaidResponse(json(
       {
         schema: "csoai.public-root-proof/0.1",
         kind: "bundle",
@@ -212,7 +213,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       200,
       // Echo settlement back per x402 when the facilitator returned one; omitted otherwise.
       payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-    );
+    ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
   }
 
   if (!/^[0-9a-f]{64}$/.test(sha)) {
