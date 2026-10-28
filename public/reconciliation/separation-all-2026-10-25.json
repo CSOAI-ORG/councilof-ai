@@ -1,0 +1,206 @@
+[
+ {
+  "axis": "affect",
+  "rows_file": "peritem_affect.jsonl",
+  "models": 19,
+  "items": 14,
+  "top": "qwen2.5:3b",
+  "top_acc": 0.5714,
+  "second": "gemma3:12b",
+  "second_acc": 0.4286,
+  "discordant": [
+   2,
+   0
+  ],
+  "p": 0.5,
+  "recomputed": "TIE",
+  "board": "UNTESTED"
+ },
+ {
+  "axis": "safety",
+  "rows_file": "peritem_agi.jsonl",
+  "models": 19,
+  "items": 36,
+  "top": "gemma3:12b",
+  "top_acc": 0.9444,
+  "second": "qwen2.5:3b",
+  "second_acc": 0.8889,
+  "discordant": [
+   4,
+   2
+  ],
+  "p": 0.6875,
+  "recomputed": "TIE",
+  "board": "TIE"
+ },
+ {
+  "axis": "provenance",
+  "rows_file": "peritem_prv.jsonl",
+  "models": 19,
+  "items": 32,
+  "top": "llama3.2:3b",
+  "top_acc": 0.7188,
+  "second": "gemma3:12b",
+  "second_acc": 0.6875,
+  "discordant": [
+   6,
+   5
+  ],
+  "p": 1.0,
+  "recomputed": "TIE",
+  "board": "TIE"
+ },
+ {
+  "axis": "continuity",
+  "rows_file": "peritem_asi.jsonl",
+  "models": 19,
+  "items": 12,
+  "top": "deepseek-r1:8b",
+  "top_acc": 0.6667,
+  "second": "gemma3:12b",
+  "second_acc": 0.5833,
+  "discordant": [
+   2,
+   1
+  ],
+  "p": 1.0,
+  "recomputed": "TIE",
+  "board": "TIE"
+ },
+ {
+  "axis": "conformance",
+  "rows_file": "peritem_mcp.jsonl",
+  "models": 19,
+  "items": 35,
+  "top": "mistral:7b",
+  "top_acc": 0.7143,
+  "second": "llama3.2:3b",
+  "second_acc": 0.6571,
+  "discordant": [
+   3,
+   1
+  ],
+  "p": 0.625,
+  "recomputed": "TIE",
+  "board": "TIE"
+ },
+ {
+  "axis": "openness",
+  "rows_file": "peritem_oss.jsonl",
+  "models": 19,
+  "items": 30,
+  "top": "gemma3:12b",
+  "top_acc": 0.8333,
+  "second": "mistral:7b",
+  "second_acc": 0.7,
+  "discordant": [
+   9,
+   5
+  ],
+  "p": 0.42395,
+  "recomputed": "TIE",
+  "board": "TIE"
+ },
+ {
+  "axis": "machinery-conformity",
+  "rows_file": "peritem_mach.jsonl",
+  "models": 19,
+  "items": 17,
+  "top": "llama3.2:3b",
+  "top_acc": 0.3529,
+  "second": "qwen2.5:0.5b-instruct",
+  "second_acc": 0.2941,
+  "discordant": [
+   5,
+   4
+  ],
+  "p": 1.0,
+  "recomputed": "TIE",
+  "board": "UNTESTED"
+ },
+ {
+  "axis": "care",
+  "rows_file": "peritem_care.jsonl",
+  "models": 19,
+  "items": 199,
+  "top": "qwen2.5:0.5b-instruct",
+  "top_acc": 0.407,
+  "second": "qwen2.5:3b",
+  "second_acc": 0.3719,
+  "discordant": [
+   32,
+   25
+  ],
+  "p": 0.42704,
+  "recomputed": "TIE",
+  "board": "TIE"
+ },
+ {
+  "axis": "cross-reality",
+  "rows_file": "peritem_xr.jsonl",
+  "models": 19,
+  "items": 19,
+  "top": "mistral:7b",
+  "top_acc": 0.7895,
+  "second": "llama3.2:3b",
+  "second_acc": 0.6316,
+  "discordant": [
+   5,
+   2
+  ],
+  "p": 0.45312,
+  "recomputed": "TIE",
+  "board": "UNTESTED"
+ },
+ {
+  "axis": "detector-interop",
+  "rows_file": "peritem_det.jsonl",
+  "models": 19,
+  "items": 2,
+  "top": "gemma3:12b",
+  "top_acc": 1.0,
+  "second": "llama3.2:3b",
+  "second_acc": 0.5,
+  "discordant": [
+   1,
+   0
+  ],
+  "p": 1.0,
+  "recomputed": "TIE",
+  "board": "UNTESTED"
+ },
+ {
+  "axis": "art5-safeguard",
+  "rows_file": "peritem_art5.jsonl",
+  "models": 19,
+  "items": 30,
+  "top": "gemma3:12b",
+  "top_acc": 0.9667,
+  "second": "mistral:7b",
+  "second_acc": 0.9333,
+  "discordant": [
+   1,
+   0
+  ],
+  "p": 1.0,
+  "recomputed": "TIE",
+  "board": "UNTESTED"
+ },
+ {
+  "axis": "governance",
+  "rows_file": "peritem_gov.jsonl",
+  "models": 19,
+  "items": 201,
+  "top": "mistral:7b",
+  "top_acc": 0.597,
+  "second": "deepseek-r1:8b",
+  "second_acc": 0.5274,
+  "discordant": [
+   62,
+   48
+  ],
+  "p": 0.21498,
+  "recomputed": "TIE",
+  "board": "TIE"
+ }
+]
