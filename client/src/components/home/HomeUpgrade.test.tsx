@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import HomeHero, { HERO_SLIDES } from "./HomeHero";
 import HomeProducts, { PRODUCTS } from "./HomeProducts";
 import HomeProofPoints, { PROOF_POINTS } from "./HomeProofPoints";
+import HomeHumanReview, { HUMAN_REVIEW_STEPS } from "./HomeHumanReview";
 import LiveBoardGlance from "./LiveBoardGlance";
 
 function render(node: React.ReactNode): string {
@@ -74,14 +75,34 @@ describe("image-led homepage upgrade", () => {
     }
   });
 
-  it("composes products, board and proof points without repeating the old story band", () => {
+  it("links the real human-review workflow and states its gates without overclaiming", () => {
+    expect(HUMAN_REVIEW_STEPS.map((step) => step.id)).toEqual([
+      "challenge",
+      "competency",
+      "decision",
+      "receipt",
+    ]);
+    const html = render(<HomeHumanReview />);
+    expect(html.match(/data-human-review-step=/g)).toHaveLength(4);
+    expect(html).toContain('href="/dashboard?tab=staff"');
+    expect(html).toContain("AI can propose. A named human decides.");
+    expect(html).toContain("configured operator authority");
+    expect(html).toContain("again before a decision");
+    expect(html).toContain("signed only when the signing key is configured");
+    expect(html).toContain("persisted only when the decision store is bound");
+    expect(html).toContain("does not certify that the decision was right");
+    expect(html).not.toMatch(UNSUPPORTED);
+  });
+
+  it("composes products, human review, board and proof points without repeating the old story band", () => {
     const home = readFileSync(resolve(__dirname, "../../pages/HomeVerify.tsx"), "utf8");
     expect(home).not.toContain("<HomeSteps");
-    for (const component of ["<HomeHero", "<HomeProducts", "<LiveBoardGlance", "<HomeProofPoints", "<HomeWaysIn"]) {
+    for (const component of ["<HomeHero", "<HomeProducts", "<HomeHumanReview", "<LiveBoardGlance", "<HomeProofPoints", "<HomeWaysIn"]) {
       expect(home).toContain(component);
     }
     expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<HomeProducts"));
-    expect(home.indexOf("<HomeProducts")).toBeLessThan(home.indexOf("<LiveBoardGlance"));
+    expect(home.indexOf("<HomeProducts")).toBeLessThan(home.indexOf("<HomeHumanReview"));
+    expect(home.indexOf("<HomeHumanReview")).toBeLessThan(home.indexOf("<LiveBoardGlance"));
     expect(home.indexOf("<LiveBoardGlance")).toBeLessThan(home.indexOf("<HomeProofPoints"));
   });
 });

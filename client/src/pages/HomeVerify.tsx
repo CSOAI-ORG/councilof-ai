@@ -9,14 +9,15 @@
  * THE ORDER IS THE ARGUMENT, and each figure is printed once:
  *   1. HomeHero         - six visual stories: measure, verify, work, connect, maintain, correct.
  *   2. HomeProducts     - nine concise routes into the working products and services.
- *   3. LiveBoardGlance  - the live GSPC board: every axis with its state, the count line with its
+ *   3. HomeHumanReview  - the actual escalation, competence, authority and receipt workflow.
+ *   4. LiveBoardGlance  - the live GSPC board: every axis with its state, the count line with its
  *                         separation line, and the model count (derived from the signed cards by
  *                         scripts/build-models-measured.mjs; list at /models-measured/).
- *   4. HomeProofPoints  - nine concrete safeguards, each linked to its public proof.
- *   5. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
+ *   5. HomeProofPoints  - nine concrete safeguards, each linked to its public proof.
+ *   6. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
  *                         the regulator and the agent.
- *   6. Proof strip      - four live figures from GET /api/momentum, then "More numbers".
- *   7. Company strip    - the accountable entity and "Who we are".
+ *   7. Proof strip      - four live figures from GET /api/momentum, then "More numbers".
+ *   8. Company strip    - the accountable entity and "Who we are".
  *
  * WHAT LEFT THE FRONT DOOR, AND WHERE IT WENT (align, do not delete): the full momentum band,
  * HomeProof, HomeCredibility, HomeWeakScore, the separation explanation, the memberships and the
@@ -33,6 +34,7 @@ import { Link } from "wouter";
 import HomeHero from "@/components/home/HomeHero";
 import LiveBoardGlance from "@/components/home/LiveBoardGlance";
 import HomeProducts from "@/components/home/HomeProducts";
+import HomeHumanReview from "@/components/home/HomeHumanReview";
 import HomeProofPoints from "@/components/home/HomeProofPoints";
 import HomeWaysIn from "@/components/home/HomeWaysIn";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
@@ -127,6 +129,7 @@ export default function HomeVerify() {
 
       <HomeHero />
       <HomeProducts />
+      <HomeHumanReview />
       <LiveBoardGlance />
       <HomeProofPoints />
       <HomeWaysIn />
