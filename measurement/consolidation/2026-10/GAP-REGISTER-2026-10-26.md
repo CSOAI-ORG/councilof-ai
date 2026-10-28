@@ -347,7 +347,7 @@ is complete today — §3 records what is missing.
 
 ### 5.9 Public evidence distribution
 1. `GET https://councilof.ai/root.json` → `sig_ed25519` verifies against `#board-attestation-1`; `card_count` = `len(card_sha256)` = 317.
-2. `GET https://councilof.ai/interop/root-witness-pointer.json` → `witnesses.rekor` = `WITNESSED`, `witnesses.ots` = `CONFIRMED_BITCOIN`, `conflict.status` = `NONE`; and `drift.checked_at` is **not older than** the pointer's own `as_of` (currently it is — see A11).
+2. `GET https://councilof.ai/interop/root-witness-pointer.json` → `witnesses.rekor` = `WITNESSED`, `witnesses.ots` = `CONFIRMED_BITCOIN`, `conflict.status` = `NONE`; and `drift.checked_at` is **not older than** the pointer's own `as_of` (closed 28 Oct 2026 — see A11).
 3. `GET https://councilof.ai/signed/card_index.json` → `verification.preimage_rule` is stated exactly; recompute one card's `id` = `sha256(preimage).hexdigest()` and confirm it matches.
 4. `GET https://councilof.ai/measurement-capsules/latest.json` → `as_of` is **not older than** the root's `as_of` (currently it is — see A16).
 5. `GET https://councilof.ai/interop/anchor.json` → the quarantine notice is present and accurate (currently `NOT_IMPLEMENTED`, `/api/anchor` probed 404).
@@ -470,7 +470,7 @@ Every live figure below was read from the named endpoint on 28 October 2026 (03:
 | A8 | **OPEN** | The two GitHub profile documents still claim **46** entries and latest `C-2026-0822-01`; the live ledger is **93** and `C-2026-1006-13`. |
 | A9 | **CLOSED** | The contribution document now states both numbers and distinguishes them: the signed board freeze "states **23 axes · 23 measured**" and "the **living board** … states **33 axes · 23 measured**" (`SAFE-v1.0-PORT-20261026.md:99-100`). It no longer presents 23 as the current board. |
 | A10 | **CLOSED as an engineering gap**, one owner-gated step remains | The patch is bound to the **approved** `SAFE.md` at pinned upstream commit `ba76bac74c251926cb3d14bc363e0443b5959007`, and the binding is executable: `verify-patch-applies.sh` checks the pinned digest and byte count, applies the patch, and requires it to be **rejected** both against the superseded draft and against a mutated anchor. The upstream pull request is still **not submitted** — it needs a co-author with a normal GitHub account, and that is the owner's to choose. |
-| A11 | **OPEN, restated precisely** | `public/interop/root-witness-pointer.json` now agrees with the live root in its `live_root` block (325 · `a2620ac322c562b6…` · `e9fb00e240b1…`), while its own `drift` block — written **two seconds later** (`checked_at 2026-10-27T23:47:33Z`) — reports `DRIFTED` against `live_root_sha256 3bab85baa5ef…`. One file, two dated statements about which bytes are live. Both are visible; a reader is left to work out which is current. |
+| A11 | **CLOSED 28 Oct 2026** | The pointer's `drift` block is recomputed against the live root and re-published: `drift.status MATCH`, `checked_at 2026-10-28T11:51:39Z`, `live_root_sha256 e9fb00e2…`, `live_root_merkle_root a2620ac3…`, `match_sha256 true`, `match_merkle_root true`, `conflict NONE` over 67 sidecars. The earlier `DRIFTED` observation (`checked_at 2026-10-27T23:47:33Z`, against `3bab85baa5ef…`) was **true when it was made** — at that instant the live root still was the previous root, because the newly witnessed candidate reached master six minutes later, at 23:53:31Z (commit `ef2fa5f2e`, PR #3545). The earlier observation is preserved verbatim in `public/corrections/root-witness-pointer-drift-2026-10-27-SUPERSEDES.md` and indexed in `public/corrections/SUPERSESSIONS.md`; the register id is the gap-register row rather than a corrections-ledger id, because the ledger signature covers the bytes of its entries and is re-issued by a separate owner-gated step, so no entry was added and no signed ledger byte was moved. |
 | A12 | **IN FLIGHT** | Measured truth table on 28 October: **38** Zenodo records answer HTTP 410, **2** answer HTTP 200 (`22293340`, `22344048`), and `doi.org` returns **403 even for a known-live DOI** — a publisher-side client rejection, not record absence, confirmed with a control. The published notice still reads "every CSOAI Zenodo record returns HTTP 410 … Status UNCHECKABLE" (`public/interop/zenodo-status.json`, `as_of 2026-09-29T16:46Z`). |
 | A13 | **OPEN** | The board publishes 33 axes against a `domains` array with one entry (`cross-border`, `SCAFFOLD`). |
 | A14 | **OPEN** | 7 of the 9 deterministic-facts run artefacts remain `CONTENT_ADDRESSED_UNSIGNED`; a content id is not a signer authorisation. |
@@ -482,9 +482,11 @@ Every live figure below was read from the named endpoint on 28 October 2026 (03:
 
 ### 6.1 What is still open, in one list
 
-**Open and engineering-closable:** A2, A3, A5, A6, A8, A11, A13, A16, A17, A18.
+**Open and engineering-closable:** A2, A3, A5, A6, A8, A13, A16, A17, A18.
 **In flight (closure being landed):** A7, A12, A19.
-**Closed:** A1, A4, A9, A10 (as an engineering gap).
+**Closed:** A1, A4, A9, A10 (as an engineering gap), A11 (28 Oct 2026 — the pointer's drift
+verdict is recomputed and re-published; the earlier observation is preserved in a dated
+note beside it).
 **Not closable by engineering — a named owner action, or not ours to close:** A14 and A15 need the
 signing and deployment paths, not a document edit; the upstream SAFE pull request under A10 needs a
 co-author with a normal GitHub account; the corrections ledger's signature re-issue after a ledger

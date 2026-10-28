@@ -20,11 +20,14 @@
 > This document's `sha256(root.json)`, byte count, card count, `as_of` and Merkle root describe the
 > root as it stood on **2026-09-11** (`62a1931b…`, 14,518 B, 167 cards). That root has since been
 > superseded. **Do not anchor these values.**
-> Current root, to attest instead: **read it live** from `https://councilof.ai/root.json` at
-> execution time and record what you read. The line below is a dated READING, not an authority,
-> and it is superseded the moment the root advances. Read 2026-10-28: `sha256 = e9fb00e240b11c1d31f138ad1248c8c211b56267360a092550d448903d9ce7ea`,
-> 25,925 B, 325 cards, merkle `a2620ac322c562b64f6b4935b283177d7cb7ada374eee100992f1b68c8539538`,
-> `as_of = 2026-10-27T21:20:49Z`.
+> Current root, to attest instead, as read on **2026-10-28T09:40Z**: `sha256 =
+> e9fb00e240b11c1d31f138ad1248c8c211b56267360a092550d448903d9ce7ea`, 25,925 B, 325 cards, merkle
+> `a2620ac322c562b64f6b4935b283177d7cb7ada374eee100992f1b68c8539538`, `as_of = 2026-10-27T21:20:49Z`.
+> **Read it live from `https://councilof.ai/root.json` at execution time and use what you read then.**
+> The public root re-roots whenever new evidence is published; it moved twice inside the hour these
+> lines were written, so this paragraph is a dated snapshot and not a value to copy. If the hash you
+> read is not the hash you anchor, you have anchored a superseded root — read again, immediately
+> before you sign.
 > Machine-readable current anchor state: `trust/anchor-state-20261007.json`.
 > The network/contract/cost sections below remain valid; only the *hash to anchor* is stale, and the
 > document already instructed re-fetching at execution time. No transaction has been signed or sent.

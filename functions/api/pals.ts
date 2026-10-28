@@ -105,6 +105,31 @@ function json(body: unknown, status = 200, extra: Record<string, string> = {}): 
   });
 }
 
+/**
+ * THE PUBLISHED ENDPOINT MAP — and the doors behind it, which did not exist.
+ *
+ * This file dispatched on the sub-path (`/^\/api\/pals\/?/` stripped off, then "provision",
+ * "<id>/chat", "<id>"), and the dispatch was correct. But a Cloudflare Pages Function is reached
+ * by its own FILE: `functions/api/pals.ts` answers `/api/pals` and nothing else. So the registry
+ * published a map naming three doors — `/api/pals/<id>`, `/api/pals/<id>/chat` and
+ * `/api/pals/provision` — and every one of them answered 404, from the platform, before this
+ * dispatch could run.
+ *
+ * That is the worst kind of defect for a measurement body: a reader who follows the map the
+ * registry publishes gets a 404 for a capability the registry insists exists. The staff list
+ * worked, which made the broken desks look talkable.
+ *
+ * The doors are the thin route files under `functions/api/pals/`. The logic stays here; only the
+ * routing was missing. `_published-endpoint-routes.test.ts` fails if this map ever names a path
+ * with no route file behind it.
+ */
+export const PAL_ENDPOINTS = {
+  list: "GET /api/pals",
+  one: "GET /api/pals/<id>",
+  chat: "POST /api/pals/<id>/chat",
+  provision: "POST /api/pals/provision",
+} as const;
+
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const url = new URL(ctx.request.url);
   const path = url.pathname.replace(/^\/api\/pals\/?/, "");
@@ -159,12 +184,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
       "rotating that key. One without a DID has no keypair provisioned, so its answers cannot " +
       "be attributed to a key — and this surface says so rather than publishing a DID-shaped " +
       "string that no key can sign with.",
-    endpoints: {
-      list: "GET /api/pals",
-      one: "GET /api/pals/<id>",
-      chat: "POST /api/pals/<id>/chat",
-      provision: "POST /api/pals/provision",
-    },
+    endpoints: PAL_ENDPOINTS,
     mcp_note:
       "These staff members are NOT on the /mcp door yet. The door's tool surface is locked " +
       "(functions/mcp/tool-fleet.lock.json) and adding a tool there is a separate lane with its " +
