@@ -28,6 +28,8 @@ export const DEFAULTS = Object.freeze({
   delayMs: 300,            // pacing between probes: a burst is answered with 404/429 noise
   retries: 3,               // a rate-limited host is retried, never reported as dead
   sample: 40,               // pins checked per run; the sample rotates by UTC hour
+  exemptionsPath: 'public/interop/published-pin-not-publicly-verifiable.json',
+  exemptionMaxAgeDays: 90,  // a recorded exemption older than this must be re-reviewed
 });
 
 /**
@@ -153,22 +155,126 @@ export function rotateSample(pins, n, seed) {
   return Array.from({ length: k }, (_, i) => pins[(start + i * step) % pins.length]);
 }
 
-/** Pure verdict. A pin that was not answered is NOT live: the check fails closed. */
-export function assessPins(checks, opts = DEFAULTS) {
+/**
+ * A pin can be recorded as not publicly verifiable. That is a different statement from "live",
+ * and the estate publishes it rather than hiding it: a reader is told, in the public record,
+ * that this particular address does not resolve for an anonymous reader and why.
+ *
+ * The record is a dated decision, not a pardon. Every entry must say when it was observed and
+ * why, and it expires: an exemption older than the review window puts the gate back in the
+ * red, so the list cannot become a place where dead pins go to be forgotten.
+ */
+export function exemptionKey(pin) {
+  return `${pin.host}|${pin.target}|${pin.revision}`;
+}
+
+/** Read the published record of pins that are recorded as not publicly verifiable. */
+export function loadExemptions(root, opts = DEFAULTS) {
+  const file = path.join(root, opts.exemptionsPath);
+  if (!fs.existsSync(file)) return { records: new Map(), file, asOf: null };
+  let doc;
+  try { doc = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return { records: new Map(), file, asOf: null, unreadable: true }; }
+  const records = new Map();
+  for (const r of doc.records || []) {
+    const key = `${r.host}|${r.target}|${r.revision}`;
+    records.set(key, r);
+  }
+  return { records, file, asOf: doc.as_of ?? null, doc };
+}
+
+/**
+ * The offline integrity of the published record. Deterministic, no network, fast.
+ *
+ * This is the half of the check that belongs in a blocking PR gate: it proves the record is
+ * well formed, that every entry is inside its review window, and that every entry still names
+ * a pin this tree actually publishes. A record for a pin we no longer publish is stale
+ * bookkeeping and has to be removed; an expired entry has to be re-reviewed; both are things a
+ * machine can decide without asking a host.
+ *
+ * The other half — does a pin still resolve — needs the network and belongs on a schedule, where
+ * a red result is a fact about production rather than a race with a rate limit.
+ */
+export function assessRecord(records, publishedKeys, now = Date.now(), opts = DEFAULTS) {
+  const out = [];
+  const entries = records?.records || [];
+  if (!entries.length) {
+    return [{ ok: true, msg: 'the published record of not-publicly-verifiable pins is empty (nothing recorded)' }];
+  }
+  const problems = [];
+  for (const r of entries) {
+    const who = `${r.target}@${String(r.revision || '').slice(0, 12)}`;
+    if (!r.host || !r.target || !r.revision) { problems.push(`${who}: missing host, target or revision`); continue; }
+    if (!r.reason || String(r.reason).length < 20) problems.push(`${who}: no usable reason recorded`);
+    if (!['PRIVATE_OR_GATED', 'REVISION_GONE'].includes(r.observed_status)) {
+      problems.push(`${who}: unknown observed_status ${r.observed_status}`);
+    }
+    const t = Date.parse(r.observed_on ?? '');
+    if (!Number.isFinite(t)) problems.push(`${who}: observed_on is not a date`);
+    else if ((now - t) / 86_400_000 > opts.exemptionMaxAgeDays) {
+      problems.push(`${who}: recorded ${r.observed_on}, past the ${opts.exemptionMaxAgeDays}-day review window — re-review it`);
+    }
+    if (!publishedKeys.has(`${r.host}|${r.target}|${r.revision}`)) {
+      problems.push(`${who}: recorded, but this tree no longer publishes that pin — remove the stale record`);
+    }
+  }
+  if (problems.length) {
+    out.push({ ok: false, msg: `the published record of not-publicly-verifiable pins has ${problems.length} problem(s): ${problems.slice(0, 6).join('; ')}${problems.length > 6 ? ' …' : ''}` });
+  } else {
+    out.push({ ok: true, msg: `the published record of not-publicly-verifiable pins is well formed: ${entries.length} entr(ies), every one observed inside the ${opts.exemptionMaxAgeDays}-day window and still naming a pin this tree publishes` });
+  }
+  return out;
+}
+
+/**
+ * Pure verdict. A pin that was not answered is NOT live: the check fails closed.
+ * A pin that IS answered but recorded as not publicly verifiable does not fail the gate —
+ * but it is reported, and a record that has aged out puts the gate back in the red.
+ */
+export function assessPins(checks, opts = DEFAULTS, exemptions = { records: new Map(), asOf: null }) {
   const out = [];
   const dead = checks.filter((c) => c.status === 'PRIVATE_OR_GATED' || c.status === 'REVISION_GONE');
   const unchecked = checks.filter((c) => !isConclusive(c.status));
-  if (dead.length) {
+  const recorded = [];
+  const unrecorded = [];
+  for (const c of dead) {
+    const rec = exemptions.records?.get(exemptionKey(c));
+    if (rec) recorded.push({ ...c, record: rec });
+    else unrecorded.push(c);
+  }
+  if (unrecorded.length) {
     const byKind = {};
-    for (const c of dead) byKind[c.status] = (byKind[c.status] ?? 0) + 1;
+    for (const c of unrecorded) byKind[c.status] = (byKind[c.status] ?? 0) + 1;
     out.push({
       ok: false,
-      msg: `${dead.length} published pin(s) do not resolve for an anonymous reader: ` +
+      msg: `${unrecorded.length} published pin(s) do not resolve for an anonymous reader and are NOT recorded as such: ` +
         Object.entries(byKind).map(([k, v]) => `${k} ${v}`).join(', '),
     });
-  } else if (unchecked.length) {
+  }
+  if (recorded.length) {
+    const stale = recorded.filter(({ record }) => {
+      const t = Date.parse(record.observed_on ?? '');
+      return !Number.isFinite(t) || (Date.now() - t) / 86_400_000 > opts.exemptionMaxAgeDays;
+    });
+    if (stale.length) {
+      out.push({
+        ok: false,
+        msg: `${stale.length} recorded exemption(s) have aged out (max ${opts.exemptionMaxAgeDays} days) and must be re-reviewed: ` +
+          stale.map((s) => `${s.target}@${s.revision.slice(0, 12)}`).join(', '),
+      });
+    } else {
+      const byKind = {};
+      for (const c of recorded) byKind[c.status] = (byKind[c.status] ?? 0) + 1;
+      out.push({
+        ok: true,
+        msg: `${recorded.length} published pin(s) are recorded as NOT publicly verifiable ` +
+          `(${Object.entries(byKind).map(([k, v]) => `${k} ${v}`).join(', ')}) — published in the public record, not hidden`,
+      });
+    }
+  }
+  if (unchecked.length) {
     out.push({ ok: false, msg: `${unchecked.length} pin(s) could not be checked (rate limited or host error) - failing closed` });
-  } else {
+  }
+  if (!unrecorded.length && !recorded.length && !unchecked.length) {
     out.push({ ok: true, msg: `all ${checks.length} checked pin(s) resolve for an anonymous reader` });
   }
   return out;
@@ -253,8 +359,25 @@ async function main() {
   const root = path.resolve(args.includes('--root') ? args[args.indexOf('--root') + 1] : '.');
   const opts = { ...DEFAULTS };
   if (args.includes('--max-age-days')) opts.maxAgeDays = Number(args[args.indexOf('--max-age-days') + 1]);
+  // The host's patience is a budget, not a constant. A burst of probes is answered with 429,
+  // which says nothing about a pin, so the pacing is settable rather than fixed.
+  if (args.includes('--delay-ms')) opts.delayMs = Number(args[args.indexOf('--delay-ms') + 1]);
+  if (args.includes('--retries')) opts.retries = Number(args[args.indexOf('--retries') + 1]);
 
   const { pins, carriers } = collectPins(root, opts);
+  const exemptions = loadExemptions(root, opts);
+
+  // --record-only: the offline half. No network, deterministic, safe to block a PR on.
+  if (args.includes('--record-only')) {
+    const publishedKeys = new Set(pins.map((p) => `${p.host}|${p.target}|${p.revision}`));
+    const verdict = assessRecord(exemptions.doc ?? { records: [] }, publishedKeys, Date.now(), opts);
+    for (const v of verdict) console.log(`${v.ok ? 'ok  ' : 'FAIL'}  ${v.msg}`);
+    if (!exemptions.file || !fs.existsSync(exemptions.file)) {
+      console.log('ok   no published record file in this tree (nothing recorded yet)');
+    }
+    return verdict.some((v) => !v.ok) ? 1 : 0;
+  }
+
   // One probe per REVISION, not per URL: the published manifest carries hundreds of addresses that
   // share one revision, and probing each of them would both waste the host's patience and bias
   // the sample. A revision is the unit that dies; a file is not.
@@ -288,16 +411,54 @@ async function main() {
     try { manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')); } catch { manifest = null; }
   }
 
-  const verdict = [...assessPins(checks, opts), ...assessManifest(manifest, Date.now(), opts)];
+  const verdict = [...assessPins(checks, opts, exemptions), ...assessManifest(manifest, Date.now(), opts)];
   for (const v of verdict) console.log(`${v.ok ? 'ok  ' : 'FAIL'}  ${v.msg}`);
   for (const c of checks.filter((x) => x.status !== 'LIVE')) {
-    console.log(`  ${c.status}  ${c.target}@${c.revision.slice(0, 12)}  (${c.urls.length} published address(es))`);
+    const rec = exemptions.records?.get(exemptionKey(c));
+    const tag = rec ? 'RECORDED_NOT_PUBLICLY_VERIFIABLE' : c.status;
+    console.log(`  ${tag}  ${c.target}@${c.revision.slice(0, 12)}  (${c.urls.length} published address(es))`);
+    if (rec) console.log(`      recorded ${rec.observed_on}: ${rec.reason}`);
     const files = new Set();
     for (const u of c.urls) for (const f of (carriers.get(u) ?? [])) files.add(f);
     console.log(`      carried by: ${[...files].slice(0, 4).join(', ')}`);
   }
   const live = checks.filter((c) => c.status === 'LIVE').length;
-  console.log(`\nchecked ${checks.length} of ${revisions.length} published revision(s) (${full ? 'full sweep' : `rotating sample, hour ${seed}`}); ${live} resolve for an anonymous reader.`);
+  const recordedCount = checks.filter((c) => c.status !== 'LIVE' && exemptions.records?.get(exemptionKey(c))).length;
+  console.log(`\nchecked ${checks.length} of ${revisions.length} published revision(s) (${full ? 'full sweep' : `rotating sample, hour ${seed}`}); ${live} resolve for an anonymous reader, ${recordedCount} recorded as not publicly verifiable.`);
+
+  // The machine-readable record of this run. A sweep that is not written down is a sweep nobody
+  // can re-check, and the exemption list has to be derived from one.
+  const jsonIdx = args.indexOf('--json-out');
+  if (jsonIdx >= 0) {
+    const out = {
+      schema: 'csoai.pin-liveness/0.1',
+      checked_at: new Date().toISOString(),
+      mode: full ? 'full' : 'sample',
+      sample_size: checks.length,
+      revisions_total: revisions.length,
+      opts: { delayMs: opts.delayMs, retries: opts.retries, maxAgeDays: opts.maxAgeDays, exemptionMaxAgeDays: opts.exemptionMaxAgeDays },
+      exemptions_file: path.relative(root, exemptions.file),
+      counts: {
+        live: live,
+        private_or_gated: checks.filter((c) => c.status === 'PRIVATE_OR_GATED').length,
+        revision_gone: checks.filter((c) => c.status === 'REVISION_GONE').length,
+        rate_limited: checks.filter((c) => c.status === 'RATE_LIMITED').length,
+        unanswered: checks.filter((c) => !isConclusive(c.status)).length,
+        recorded_not_publicly_verifiable: recordedCount,
+      },
+      checks: checks.map((c) => ({
+        host: c.host, target: c.target, revision: c.revision, status: c.status, http: c.http,
+        published_addresses: c.urls?.length ?? 0,
+        recorded: Boolean(exemptions.records?.get(exemptionKey(c))),
+        reason: exemptions.records?.get(exemptionKey(c))?.reason ?? null,
+        observed_on: exemptions.records?.get(exemptionKey(c))?.observed_on ?? null,
+      })),
+      manifest: manifest ? { as_of: manifest.as_of, age_days: (Date.now() - Date.parse(manifest.as_of)) / 86_400_000 } : null,
+      verdict: verdict.map((v) => ({ ok: v.ok, msg: v.msg })),
+    };
+    fs.writeFileSync(path.resolve(args[jsonIdx + 1]), `${JSON.stringify(out, null, 2)}\n`);
+    console.log(`json written: ${path.resolve(args[jsonIdx + 1])}`);
+  }
   const failed = verdict.some((v) => !v.ok);
   if (checks.some((c) => !isConclusive(c.status))) {
     console.error('CHECK INCOMPLETE — some pins could not be answered; failing closed.');

@@ -1,7 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {
-  findPins, classify, isConclusive, assessPins, assessManifest, rotateSample, probePin, DEFAULTS,
+  findPins, classify, isConclusive, assessPins, assessManifest, rotateSample, probePin,
+  loadExemptions, exemptionKey, assessRecord, DEFAULTS,
 } from './published-pins-liveness.mjs';
 
 const SAMPLE = [
@@ -77,4 +81,110 @@ test('a pin that never answers is UNANSWERED, never LIVE', async () => {
   const result = await probePin({ url: 'https://example.invalid/x', host: 'h', target: 't', revision: 'r' },
     { ...DEFAULTS, delayMs: 0, retries: 2 }, fake);
   assert.equal(result.status, 'UNANSWERED');
+});
+
+test('a recorded pin does not resolve and does not fail the gate, but is reported', () => {
+  const pin = { host: 'huggingface.co', target: 'datasets/csoai/x', revision: 'r'.repeat(40), status: 'PRIVATE_OR_GATED' };
+  const exemptions = {
+    records: new Map([[exemptionKey(pin), { observed_on: new Date().toISOString().slice(0, 10), reason: '401 to an anonymous reader' }]]),
+    asOf: '2026-10-29',
+  };
+  const verdict = assessPins([pin], DEFAULTS, exemptions);
+  assert.ok(verdict.every((v) => v.ok), 'a recorded pin is not a gate failure');
+  assert.ok(verdict.some((v) => /recorded as NOT publicly verifiable/.test(v.msg)), 'and it is reported, not hidden');
+});
+
+test('a pin that is dead and NOT recorded still fails the gate', () => {
+  const pin = { host: 'huggingface.co', target: 'datasets/csoai/y', revision: 'r'.repeat(40), status: 'PRIVATE_OR_GATED' };
+  const exemptions = { records: new Map(), asOf: null };
+  const verdict = assessPins([pin], DEFAULTS, exemptions);
+  assert.ok(verdict.some((v) => !v.ok));
+  assert.ok(verdict.some((v) => /NOT recorded as such/.test(v.msg)));
+});
+
+test('a recorded exemption that has aged out puts the gate back in the red', () => {
+  const pin = { host: 'huggingface.co', target: 'datasets/csoai/z', revision: 'r'.repeat(40), status: 'REVISION_GONE' };
+  const old = new Date(Date.now() - (DEFAULTS.exemptionMaxAgeDays + 10) * 86_400_000).toISOString().slice(0, 10);
+  const exemptions = { records: new Map([[exemptionKey(pin), { observed_on: old, reason: 'history rewritten' }]]), asOf: old };
+  const verdict = assessPins([pin], DEFAULTS, exemptions);
+  assert.ok(verdict.some((v) => !v.ok), 'an aged-out exemption must be re-reviewed, not forgotten');
+  assert.ok(verdict.some((v) => /aged out/.test(v.msg)));
+});
+
+test('the published record of not-publicly-verifiable pins is read from the tree', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'pin-exempt-'));
+  try {
+    const rel = DEFAULTS.exemptionsPath;
+    fs.mkdirSync(path.dirname(path.join(tmp, rel)), { recursive: true });
+    fs.writeFileSync(path.join(tmp, rel), JSON.stringify({
+      schema: 'csoai.pin-not-publicly-verifiable/0.1',
+      as_of: '2026-10-29',
+      records: [{ host: 'huggingface.co', target: 'datasets/csoai/a', revision: 'a'.repeat(40), observed_on: '2026-10-29', reason: 'x' }],
+    }));
+    const loaded = loadExemptions(tmp, DEFAULTS);
+    assert.equal(loaded.records.size, 1);
+    assert.equal(loaded.asOf, '2026-10-29');
+    assert.equal(loaded.records.get('huggingface.co|datasets/csoai/a|' + 'a'.repeat(40)).reason, 'x');
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+  assert.equal(loadExemptions(tmp, DEFAULTS).records.size, 0, 'no record file means no exemptions');
+});
+
+test('a well-formed record passes the offline integrity check', () => {
+  const key = 'huggingface.co|datasets/csoai/a|' + 'a'.repeat(40);
+  const doc = {
+    records: [{
+      host: 'huggingface.co', target: 'datasets/csoai/a', revision: 'a'.repeat(40),
+      observed_status: 'PRIVATE_OR_GATED', observed_on: new Date().toISOString().slice(0, 10),
+      reason: 'the dataset answers HTTP 401 to an anonymous reader and is private on the hub',
+    }],
+  };
+  const verdict = assessRecord(doc, new Set([key]), Date.now(), DEFAULTS);
+  assert.ok(verdict.every((v) => v.ok), JSON.stringify(verdict));
+});
+
+test('an expired record fails the offline integrity check', () => {
+  const old = new Date(Date.now() - (DEFAULTS.exemptionMaxAgeDays + 5) * 86_400_000).toISOString().slice(0, 10);
+  const doc = {
+    records: [{
+      host: 'huggingface.co', target: 'datasets/csoai/a', revision: 'a'.repeat(40),
+      observed_status: 'PRIVATE_OR_GATED', observed_on: old,
+      reason: 'the dataset answers HTTP 401 to an anonymous reader and is private on the hub',
+    }],
+  };
+  const key = 'huggingface.co|datasets/csoai/a|' + 'a'.repeat(40);
+  const verdict = assessRecord(doc, new Set([key]), Date.now(), DEFAULTS);
+  assert.ok(verdict.some((v) => !v.ok), 'an expired record must be re-reviewed');
+  assert.ok(verdict.some((v) => /review window/.test(v.msg)));
+});
+
+test('a record for a pin this tree no longer publishes fails the offline integrity check', () => {
+  const doc = {
+    records: [{
+      host: 'huggingface.co', target: 'datasets/csoai/gone', revision: 'b'.repeat(40),
+      observed_status: 'REVISION_GONE', observed_on: new Date().toISOString().slice(0, 10),
+      reason: 'the revision was rewritten away by the host and no longer resolves',
+    }],
+  };
+  const verdict = assessRecord(doc, new Set(), Date.now(), DEFAULTS);
+  assert.ok(verdict.some((v) => !v.ok));
+  assert.ok(verdict.some((v) => /no longer publishes/.test(v.msg)));
+});
+
+test('a record with no usable reason fails the offline integrity check', () => {
+  const doc = {
+    records: [{
+      host: 'huggingface.co', target: 'datasets/csoai/a', revision: 'a'.repeat(40),
+      observed_status: 'PRIVATE_OR_GATED', observed_on: new Date().toISOString().slice(0, 10),
+      reason: '',
+    }],
+  };
+  const key = 'huggingface.co|datasets/csoai/a|' + 'a'.repeat(40);
+  const verdict = assessRecord(doc, new Set([key]), Date.now(), DEFAULTS);
+  assert.ok(verdict.some((v) => !v.ok));
+});
+
+test('an empty record is not a failure', () => {
+  assert.ok(assessRecord({ records: [] }, new Set(), Date.now(), DEFAULTS).every((v) => v.ok));
 });
