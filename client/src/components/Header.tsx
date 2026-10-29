@@ -87,7 +87,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
 
   return (
     <header data-site-header="" className="sticky top-0 z-50 w-full shrink-0 border-b border-emerald-950/10 bg-white/[0.94] shadow-[0_10px_35px_rgba(6,21,15,0.06)] backdrop-blur-xl">
-      <nav id="navigation" className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+      <nav id="navigation" className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
         <div className="flex h-14 items-center justify-between gap-3 sm:h-16">
           <a href="/" className="flex shrink-0 items-center gap-3 hover:opacity-90 transition-opacity">
             <div className="relative h-9 w-9 shrink-0 sm:h-10 sm:w-10">
@@ -107,9 +107,9 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             <span className="whitespace-nowrap text-lg font-black tracking-tight text-emerald-800 sm:text-xl 2xl:text-2xl">Council of AI</span>
           </a>
 
-          <div className="hidden xl:flex items-center" ref={dropdownRef}>
+          <div className="hidden 2xl:flex items-center" ref={dropdownRef}>
             <div className="flex items-center gap-1 2xl:gap-3">
-              <div className="hidden xl:flex items-center gap-1 2xl:gap-3">
+              <div className="hidden 2xl:flex items-center gap-1 2xl:gap-3">
               {navigation.map((item) => (
                 <div
                   key={item.name}
@@ -194,7 +194,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             </div>
           </div>
 
-          <div className="hidden xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
+          <div className="hidden 2xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
             <Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-emerald-800 hover:bg-emerald-50 lg:inline-flex"><Link href="/dashboard?tab=verify">Verify</Link></Button>
             <button
               type="button"
@@ -245,7 +245,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             )}
           </div>
 
-          <div className="xl:hidden flex shrink-0 items-center gap-2">
+          <div className="2xl:hidden flex shrink-0 items-center gap-2">
             <button type="button" onClick={() => openAsk()} className="inline-flex min-h-10 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-emerald-900 hover:bg-muted" aria-label="Ask about the results" data-testid="ask-launcher-mobile"><MessageSquareText className="h-5 w-5" aria-hidden="true" /><span className="sr-only sm:not-sr-only">Ask</span></button>
             <button type="button" onClick={() => openPalette()} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label="Search pages and ask"><Search className="h-5 w-5" aria-hidden="true" /></button>
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}>
@@ -255,7 +255,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
         </div>
 
         {mobileMenuOpen && (
-          <div className="xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="2xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="space-y-1">
               <a href="/" className={`block px-4 py-3 rounded-lg font-medium ${
                 location === '/' ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
