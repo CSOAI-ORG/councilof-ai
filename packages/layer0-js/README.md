@@ -5,6 +5,15 @@
 [![license](https://img.shields.io/npm/l/%40csoai%2Flayer0)](https://councilof.ai/layer0/)
 
 
+> **Local adapter status: execution held.** `localConstitutionalPrecheck()` provides
+> input diagnostics only. `governedLocal()` does not invoke its callback and returns
+> `LOCAL_EXECUTOR_NOT_QUALIFIED` until a separately reviewed host executor and current
+> authority verifier are integrated. A receipt or per-call option cannot unlock it.
+> `verifyLocalReceipt()` checks byte consistency against the supplied public key;
+> it does not authenticate the signer or establish human authorization. This is
+> not a complete offline harness. The remote gateway design below has separate
+> availability and authority requirements.
+
 Make any tool, MCP server, package or plugin **Layer‑0‑governed + A2A‑ready** in ~15 lines.
 Every governed action passes the CSOAI **Sovereign Gate** (policy/identity/human‑in‑loop), then
 emits an **Ed25519‑signed attestation** you (or any auditor) can verify offline — and a signed
@@ -14,7 +23,7 @@ emits an **Ed25519‑signed attestation** you (or any auditor) can verify offlin
 > `@csoai/layer0` returns **HTTP 404** on the npm registry; `api.csoai.org` (the default
 > `CSOAI_API_BASE`) has **no DNS record**; and `https://councilof.ai` answers **404** on all three
 > paths this client calls (`/api/gate`, `/api/a2a/route`, `/api/a2a/verify`). The install line
-> below cannot work today, and every method needs a gateway that is not publicly served. The
+> below cannot work today, and the remote gateway methods need a gateway that is not publicly served. The
 > design below is unchanged; what is not real yet is that you can run it.
 >
 > ```
@@ -49,9 +58,21 @@ Conformance levels (see `CSOAI_Layer0_A2A_Protocol.md`): wrapping with `governed
 |---|---|
 | `gate(action, inputs)` | Sovereign Gate decision: allow / allow‑with‑conditions / deny / escalate |
 | `governed(action, inputs, run)` | gate → run → signed attestation (the common path) |
-| `verify(envelope, peerKey?)` | verify an inbound A2A envelope |
+| `verify(envelope, peerKey?)` | verify an inbound A2A envelope through the configured gateway |
+| `localConstitutionalPrecheck(action, inputs, context)` | input diagnostics; never execution authority |
+| `governedLocal(action, inputs, run, options)` | held; callback is not dispatched |
+| `verifyLocalReceipt(receipt)` | supplied-key signature/digest check; authority remains unverified |
 
 Backend: `api-server/` (Express) + `api-server/a2a.js` in the source repository; it is not served publicly. Home: https://councilof.ai/layer0/
+
+## Local admission regression checks
+
+```bash
+node --test packages/layer0-js/test.js
+```
+
+The existing package test entry includes the local hold controls. Tests use harmless
+callbacks and synthetic verifier fixtures; they do not qualify a production executor.
 
 ## Licence
 

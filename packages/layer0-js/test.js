@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import crypto from "node:crypto";
 import { Layer0 } from "./index.js";
 
 function makeMockFetch({ gateDecision, attestEnvelope, attestFails = false }) {
@@ -108,51 +109,55 @@ test("attestation failure returns status=executed_unattested and never claims at
   assert.equal(res.result, "work-done");
 });
 
-test("governedLocal: signs a verifiable Ed25519 constitutional effect receipt offline", async () => {
-  const l0 = new Layer0({ identity: "did:csoai:local-dev", tenantId: "t1", harnessId: "langgraph" });
-  const res = await l0.governedLocal("read_evidence", { query: "gspc-axes" }, async () => ({ rows: 33 }));
-  assert.equal(res.status, "attested");
-  assert.equal(res.attestation.schema, "csoai.constitutional-effect-receipt/0.1");
-  assert.equal(
-    res.attestation.charter_sha256,
-    "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e"
-  );
-  const v = l0.verifyLocalReceipt(res.attestation);
-  assert.equal(v.verdict, "VALID");
+for (const [label, action, options] of [
+  ['ordinary local read', 'read_evidence', {}],
+  ['unknown action', 'remove_fixture', {}],
+  ['consequential action', 'delete_fixture', {}],
+  ['empty approval object', 'delete_fixture', { approvalReceipt: {} }],
+  ['typed reviewer', 'delete_fixture', { approvalReceipt: { approver: 'synthetic-reviewer', receipt_id: 'fixture' } }],
+  ['legacy bypass', 'delete_fixture', { allowUnapprovedEscalation: true }],
+  ['claimed verified approval', 'delete_fixture', { approvalReceipt: { verified: true, decision: 'APPROVED' } }],
+  ['per-call verifier', 'delete_fixture', { verifyApproval: () => true, verifyLocalAuthority: () => true }],
+]) {
+  test(`unqualified local executor holds ${label} without dispatch or signing`, async () => {
+    let effects = 0;
+    let keyGenerations = 0;
+    let networkCalls = 0;
+    const l0 = new Layer0({ identity: 'synthetic-principal', fetchImpl: async () => { networkCalls++; throw new Error('unexpected network'); } });
+    l0._ensureKeyPair = () => { keyGenerations++; throw new Error('unexpected signing'); };
+    await assert.rejects(
+      l0.governedLocal(action, { fixture: true }, async () => { effects++; return 'fixture'; }, options),
+      { code: 'LOCAL_EXECUTOR_NOT_QUALIFIED' },
+    );
+    assert.equal(effects, 0);
+    assert.equal(keyGenerations, 0);
+    assert.equal(networkCalls, 0);
+  });
+}
 
-  // Tampering with the receipt produces INVALID
-  const tampered = { ...res.attestation, action: "tampered_action" };
-  assert.equal(l0.verifyLocalReceipt(tampered).verdict, "INVALID");
+test('secret minimization and regulatory diagnostics remain specific and non-executing', async () => {
+  let effects = 0;
+  const run = async () => { effects++; };
+  const l0 = new Layer0({ identity: 'synthetic-principal' });
+  await assert.rejects(l0.governedLocal('read_evidence', { api_key: 'synthetic-secret' }, run), /raw secret field/);
+  await assert.rejects(l0.governedLocal('certify_compliance', {}, run), /outside CSOAI constitutional boundary/);
+  assert.equal(effects, 0);
 });
 
-test("governedLocal: enforces CH-10 secret minimization and CH-13 regulatory refusal", async () => {
-  const l0 = new Layer0({ identity: "did:csoai:local-dev" });
-  await assert.rejects(
-    () => l0.governedLocal("read_evidence", { api_key: "sk-secret-123" }, async () => "ok"),
-    /CH-10: raw secret field 'api_key'/
-  );
-  await assert.rejects(
-    () => l0.governedLocal("certify_compliance", { model: "x" }, async () => "ok"),
-    /CH-13: action 'certify_compliance' is outside CSOAI constitutional boundary/
-  );
+test('a supplied-key signature establishes byte consistency, not trusted authority', () => {
+  const canonical = (value) => value === null || typeof value !== 'object' ? JSON.stringify(value)
+    : Array.isArray(value) ? '[' + value.map(canonical).join(',') + ']'
+    : '{' + Object.keys(value).sort().map((key) => JSON.stringify(key) + ':' + canonical(value[key])).join(',') + '}';
+  const body = { schema: 'synthetic-verifier-fixture', execution_authority_granted_by_charter: false };
+  const bytes = Buffer.from(canonical(body));
+  const { publicKey, privateKey } = crypto.generateKeyPairSync('ed25519');
+  const receipt = { ...body, public_key_jwk: publicKey.export({ format: 'jwk' }),
+    receipt_sha256: crypto.createHash('sha256').update(bytes).digest('hex'),
+    sig_ed25519: crypto.sign(null, bytes, privateKey).toString('base64url') };
+  const l0 = new Layer0({ identity: 'synthetic-principal' });
+  const result = l0.verifyLocalReceipt(receipt);
+  assert.equal(result.verdict, 'VALID');
+  assert.equal(result.verification_scope, 'SUPPLIED_KEY_SIGNATURE_ONLY');
+  assert.equal(result.authority_verified, false);
+  assert.equal(l0.verifyLocalReceipt({ ...receipt, schema: 'tampered' }).verdict, 'INVALID');
 });
-
-test("governedLocal: enforces CH-03/CH-04 HITL approval receipt on consequential execute_* actions", async () => {
-  const l0 = new Layer0({ identity: "did:csoai:local-dev" });
-  await assert.rejects(
-    () => l0.governedLocal("execute_order", { symbol: "ETH" }, async () => "done"),
-    /escalation requires an approval receipt/
-  );
-
-  const res = await l0.governedLocal(
-    "execute_order",
-    { symbol: "ETH" },
-    async () => "done",
-    { approvalReceipt: { approver: "nick@csoai.org", receipt_id: "hitl-rcpt-01" } }
-  );
-  assert.equal(res.status, "attested");
-  assert.equal(res.attestation.human_in_the_loop.required, true);
-  assert.equal(res.attestation.human_in_the_loop.approved, true);
-  assert.equal(res.attestation.human_in_the_loop.approver, "nick@csoai.org");
-});
-
