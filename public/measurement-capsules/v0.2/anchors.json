@@ -1,16 +1,16 @@
 {
  "schema": "csoai.measurement-anchors/0.1",
- "as_of": "2026-10-01T08:52:55Z",
- "date": "2026-10-01",
+ "as_of": "2026-10-28T08:53:00Z",
+ "date": "2026-10-28",
  "what_this_is": "Where the index's bytes are anchored, read from the anchor files themselves. Anchors show WHEN bytes existed; the signature shows who signed them; neither says what the capsules measured.",
  "index": {
-  "file": "measurement-index-v0.2-2026-10-01.json",
-  "sha256": "657ec68566de144fb22dc7bc8e9f7c8f74808ba718ac3d8c48450cfafa8d6851",
-  "index_root": "9631cc00b91ce9d1e37e517851eab126be6ca1a4dc6b66a26d86352aada5b562"
+  "file": "measurement-index-v0.2-2026-10-28.json",
+  "sha256": "241c5673d1afcd6a320e795facb8a7964dbfeda2c02af74705a1fa49d602d688",
+  "index_root": "bf58e87656139fe46ad5816930c1a1abb866477302e31f8c8c8f49067dd4de7d"
  },
  "opentimestamps": {
-  "file": "measurement-index-v0.2-2026-10-01.json.ots",
-  "proof_sha256": "1f8d2994895a74ff384a1a1331e398abdd98d4df8f59850c91436c823b350360",
+  "file": "measurement-index-v0.2-2026-10-28.json.ots",
+  "proof_sha256": "30e9826eb7ee35eac599c056f50fe77f27d14de58066c41384ad5ae9643940f2",
   "state": "PENDING_CALENDAR_COMMITMENT",
   "bitcoin_block_heights": [],
   "bitcoin": [],
@@ -19,15 +19,15 @@
  "rekor": [
   {
    "subject": "daily index",
-   "file": "measurement-index-v0.2-2026-10-01.json",
-   "subject_sha256": "657ec68566de144fb22dc7bc8e9f7c8f74808ba718ac3d8c48450cfafa8d6851",
-   "signed_payload_sha256": "933a383963faf21207a21743785b5ec6aa1422631a3ed0b9bd8520314460e2f0",
+   "file": "measurement-index-v0.2-2026-10-28.json",
+   "subject_sha256": "241c5673d1afcd6a320e795facb8a7964dbfeda2c02af74705a1fa49d602d688",
+   "signed_payload_sha256": "249fae68e2682eda234ce61172dc8f24274adb0e98d0fb0be0cf89d29e0c659b",
    "state": "INCLUDED (inclusion proof verifies)",
-   "logIndex": 3033118403,
-   "uuid": "108e9186e8c5677a6bee5ebdf0c4c3724f342d9792170c896c507407e23cecc46d29859461be4da9",
-   "integratedTime": 1790844616,
-   "entry_url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3033118403",
-   "search_url": "https://search.sigstore.dev/?logIndex=3033118403"
+   "logIndex": 3535235263,
+   "uuid": "108e9186e8c5677a04a27e3eccd949bcf99eb38681e2fb8fe6a4896f27f2a711c8b9e32786bc8e39",
+   "integratedTime": 1793176256,
+   "entry_url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3535235263",
+   "search_url": "https://search.sigstore.dev/?logIndex=3535235263"
   }
  ],
  "xrpl": {
@@ -41,6 +41,6 @@
   "erratum": null
  },
  "copies": {
-  "hf_dataset": "https://huggingface.co/datasets/csoai/evidence-index/tree/main/measurement-index/2026-10-01"
+  "hf_dataset": "https://huggingface.co/datasets/csoai/evidence-index/tree/main/measurement-index/2026-10-28"
  }
 }
