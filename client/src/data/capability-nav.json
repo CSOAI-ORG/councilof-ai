@@ -8,6 +8,7 @@
       "api-a2a-post",
       "api-arena-scoreboard",
       "api-art50-marking-evidence-post",
+      "api-axis-specialists",
       "api-board-sign-post",
       "api-claims-register",
       "api-claims-watch-request-post",
@@ -84,6 +85,17 @@
       "payment": "free",
       "path": "/api/art50/marking-evidence",
       "method": "POST"
+    },
+    {
+      "id": "api-axis-specialists",
+      "kind": "http",
+      "name": "MEOK Hive axis specialists",
+      "description": "GET /api/axis-specialists — unsigned MEOK Hive audit index for every GSPC axis. GET /api/axis-specialists/<axis> returns one exact audit. Each specialist has an isolated logical cluster, distinct checks and proposals, and a MEOK H.I.M.-compatible HOLD gate. No apply operation or new measurement.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/axis-specialists",
+      "method": "GET"
     },
     {
       "id": "api-board-sign-post",
