@@ -1,0 +1,325 @@
+{
+  "schema": "csoai.axis-specialist-registry/1.0",
+  "version": "1.0.0",
+  "purpose": "One bounded MEOK Hive specialist and one logical audit cluster per live GSPC axis. Specialists observe, test, explain and propose; people decide whether any change may be applied.",
+  "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+  "cluster_model": {
+    "isolation": "LOGICAL_PER_AXIS",
+    "state": "DECLARED_NOT_PROVISIONED",
+    "shared_write_access": false,
+    "cross_axis_credentials": false,
+    "note": "Thirty-three isolated execution and evidence namespaces are declared. No compute cluster, spend or autonomous agent is claimed by this registry."
+  },
+  "rsi_contract": {
+    "mode": "RECOMMENDATION_ONLY",
+    "asi_claimed": false,
+    "allowed": ["read published axis rows", "run deterministic audits", "emit signed-off-ready improvement proposals"],
+    "forbidden": ["modify source or frozen banks", "promote UNMEASURED", "change scores or counts", "approve or apply proposals", "create credentials", "spend", "deploy", "self-replicate"]
+  },
+  "human_gate": {
+    "implementation": "MEOK H.I.M.-compatible Council HITL challenge and receipt",
+    "initial_decision": "HOLD",
+    "required_for": ["bank changes", "method changes", "code changes", "publication", "signing", "deployment"],
+    "competency_from_live_axis": true,
+    "approval_may_be_inferred": false
+  },
+  "specialists": [
+    {
+      "axis": "governance",
+      "mission": "Audit whether governance answers are reproducible from the frozen bank, published rows and signed leader evidence without converting governance relevance into legal compliance.",
+      "reviewer_role": "governance measurement reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "separation_evidence", "leader_card_url", "measurement_time"],
+      "audit_focus": ["bank and row lineage", "leader-card agreement", "separation replay", "own-model neutrality"],
+      "negative_controls": ["remove the leader card and require the leader claim to be withheld", "alter one per-item row digest and require lineage failure"],
+      "improvements": ["publish a one-command governance separation replay with fixed inputs", "add per-leader card digest cross-checks to the release gate"]
+    },
+    {
+      "axis": "safety",
+      "mission": "Audit safety measurement beyond headline accuracy, preserving harm, tail-risk, macro-F1 and unparsed-output evidence and their distinct meanings.",
+      "reviewer_role": "safety evaluation reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "macro_f1", "unparsed_rate", "cvar05_harm", "mean_harm"],
+      "audit_focus": ["severity-weighted harm", "worst-five-percent tail", "class balance", "parse failures"],
+      "negative_controls": ["hide an unparsed response and require the parse-rate check to fail", "move tail harm into the mean and require the aggregate guard to reject it"],
+      "improvements": ["publish harm-slice tables beside every safety headline", "add a minimum-n explanation wherever CVaR is absent"]
+    },
+    {
+      "axis": "provenance",
+      "mission": "Audit whether provenance answers preserve source identity, citation lineage and the exact signed evidence behind the public leader.",
+      "reviewer_role": "provenance and evidence reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "leader_card_url", "separation_evidence", "measurement_time"],
+      "audit_focus": ["source identity", "citation completeness", "row digest lineage", "leader evidence"],
+      "negative_controls": ["substitute an untracked source URL and require rejection", "detach the signed leader card and require no leader assertion"],
+      "improvements": ["add source-by-source provenance confusion matrices", "publish citation-valid and citation-complete as separate replay outputs"]
+    },
+    {
+      "axis": "continuity",
+      "mission": "Audit continuity answers for persistence, recovery and state consistency without mistaking a plausible answer for demonstrated operational resilience.",
+      "reviewer_role": "continuity evaluation reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "separation_evidence", "measurement_time", "method_status"],
+      "audit_focus": ["state transitions", "recovery cases", "frozen-bank replay", "leader neutrality"],
+      "negative_controls": ["drop recovery items from replay and require coverage failure", "present a text-only result as an operational drill and require scope rejection"],
+      "improvements": ["publish separate continuity and recovery slices", "add an explicit non-operational-scope statement to every replay receipt"]
+    },
+    {
+      "axis": "conformance",
+      "mission": "Audit conformance responses against the frozen bank and published rows while keeping test conformance distinct from legal or standards certification.",
+      "reviewer_role": "conformance measurement reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "separation_evidence", "measurement_time", "method_status"],
+      "audit_focus": ["requirement-to-item mapping", "negative requirement cases", "replay determinism", "non-certification language"],
+      "negative_controls": ["map one item to a different requirement and require mapping failure", "emit certified language and require the claims guard to reject it"],
+      "improvements": ["publish requirement-level coverage and unmapped-item counts", "add negative requirement cases to the next frozen bank candidate"]
+    },
+    {
+      "axis": "openness",
+      "mission": "Audit openness responses with reproducible evidence for disclosure, access and licensing claims rather than treating availability as openness.",
+      "reviewer_role": "openness and licensing reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "separation_evidence", "measurement_time", "method_status"],
+      "audit_focus": ["licence precision", "access versus rights", "disclosure completeness", "row replay"],
+      "negative_controls": ["treat public availability as an open licence and require classification failure", "remove licence evidence and require the related slice to become UNCHECKABLE"],
+      "improvements": ["add licence-aware openness slices", "publish unknown and absent disclosure as separate states"]
+    },
+    {
+      "axis": "machinery-conformity",
+      "mission": "Audit machinery-conformity fleet evidence and close the missing signed per-model leader-card path without restoring an unverifiable leader.",
+      "reviewer_role": "machinery and conformity reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "public_leader_state", "separation_untested_reason_code", "measurement_time"],
+      "audit_focus": ["fleet-only aggregate", "uncarded leader exclusion", "physical-scope boundaries", "row lineage"],
+      "negative_controls": ["inject an uncarded leader and require public suppression", "describe a text bank as physical machine certification and require scope rejection"],
+      "improvements": ["produce signed per-model cards from the existing frozen rows", "add machinery-category coverage labels to the next bank candidate"]
+    },
+    {
+      "axis": "care",
+      "mission": "Audit care measurement for sample-size caveats, dignity-sensitive failure slices and separation grammar without turning care into a popularity ranking.",
+      "reviewer_role": "care and human-factors reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "n_note", "separation_n_note", "leader_card_url"],
+      "audit_focus": ["independence caveats", "vulnerable-context slices", "harm handling", "separation sample grammar"],
+      "negative_controls": ["drop n_note and require the independence audit to fail", "aggregate away a high-harm care slice and require the slice guard to fail"],
+      "improvements": ["publish dignity and vulnerability slices with human-reviewed labels", "make dependence caveats visible beside every care accuracy figure"]
+    },
+    {
+      "axis": "cross-reality",
+      "mission": "Audit cross-reality responses for evidence about physical, simulated and mediated contexts while preserving the current no-signed-leader state.",
+      "reviewer_role": "cross-reality evaluation reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "public_leader_state", "separation_untested_reason_code", "measurement_time"],
+      "audit_focus": ["reality-domain labels", "simulation-to-real scope", "uncarded leader exclusion", "fleet aggregates"],
+      "negative_controls": ["relabel simulation evidence as physical deployment and require scope failure", "restore an uncarded external leader and require suppression"],
+      "improvements": ["add domain-stratified replay for physical, simulated and mediated items", "sign per-model cards before any leader is reconsidered"]
+    },
+    {
+      "axis": "detector-interop",
+      "mission": "Audit detector interoperability across detector families and output formats, retaining absent evidence instead of inferring agreement.",
+      "reviewer_role": "detector interoperability reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "public_leader_state", "separation_untested_reason_code", "measurement_time"],
+      "audit_focus": ["detector-family coverage", "format interoperability", "disagreement cases", "leader evidence"],
+      "negative_controls": ["treat two detectors' agreement as truth and require the guard to reject the inference", "drop disagreement rows and require coverage failure"],
+      "improvements": ["publish pairwise detector disagreement matrices", "add signed per-model cards and detector-version lineage"]
+    },
+    {
+      "axis": "art5-safeguard",
+      "mission": "Audit Article 5 safeguard responses for prohibited-practice coverage and high-severity failures without declaring legal compliance.",
+      "reviewer_role": "fundamental-rights and safeguard reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "public_leader_state", "separation_untested_reason_code", "cvar05_harm"],
+      "audit_focus": ["prohibited-practice coverage", "severe failures", "legal-scope disclaimer", "own-model exclusion"],
+      "negative_controls": ["convert a test response into an Article 5 legal determination and require rejection", "hide a severe failure inside the mean and require the harm guard to fail"],
+      "improvements": ["publish safeguard-category harm slices", "add counsel-reviewed scope notes to the next bank proposal"]
+    },
+    {
+      "axis": "swarm",
+      "mission": "Audit swarm behavior with instance-versus-prompt counting and current bank lineage made explicit; retire the legacy bank-sha gap before promotion.",
+      "reviewer_role": "multi-agent systems reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "n_note", "method_status", "separation_basis"],
+      "audit_focus": ["instance and prompt denominators", "bank revision lineage", "emergent-failure cases", "legacy method gap"],
+      "negative_controls": ["use the retired bank digest and require lineage failure", "confuse instances with prompts and require denominator failure"],
+      "improvements": ["pin and publish the current swarm bank digest", "add multi-agent collusion and cascade-failure slices with distinct denominators"]
+    },
+    {
+      "axis": "affect",
+      "mission": "Audit affect responses for manipulation, dependency and emotional-safety failures without inferring human mental states or certifying wellbeing.",
+      "reviewer_role": "affect and human-factors reviewer",
+      "required_fields": ["dataset_url", "peritem_file_sha256", "public_leader_state", "cvar05_harm", "mean_harm"],
+      "audit_focus": ["manipulation slices", "dependency risk", "tail harm", "mental-state non-inference"],
+      "negative_controls": ["infer a user's diagnosis from an affect score and require scope rejection", "remove tail-harm data and require the audit to name the missing evidence"],
+      "improvements": ["publish manipulation and dependency failure slices separately", "add human-reviewed severity adjudication samples with disagreement retained"]
+    },
+    {
+      "axis": "jail",
+      "mission": "Audit jail and prompt-escape evidence with prompt-level denominators, null grammar and the legacy distinct-prompt gap kept visible.",
+      "reviewer_role": "adversarial evaluation reviewer",
+      "required_fields": ["dataset_url", "dataset_note", "null_grammar", "quotable_models", "method_status"],
+      "audit_focus": ["prompt independence", "null versus zero", "per-model quotability", "legacy sample gap"],
+      "negative_controls": ["convert null to zero and require grammar failure", "claim thirty distinct prompts without the underlying bank and require sample-lineage failure"],
+      "improvements": ["expand and freeze the distinct-prompt bank beyond the legacy threshold", "publish prompt-family and attack-technique coverage with per-model denominators"]
+    },
+    {
+      "axis": "effect-binding",
+      "mission": "Audit whether declared tool effects match observed server behavior, retaining read-only probing, coverage limits and the signed run artifact.",
+      "reviewer_role": "tool-effects and interoperability reviewer",
+      "required_fields": ["evidence_url", "facts_as_of", "run_attestation", "coverage", "n_unit"],
+      "audit_focus": ["declared versus observed effects", "read-only probe safety", "server coverage", "signed run lineage"],
+      "negative_controls": ["infer safety from a read-only declaration and require mismatch reporting", "treat unreachable as a failed effect and require UNREACHABLE to remain distinct"],
+      "improvements": ["expand effect-pair coverage with paced read-only probes", "publish per-server request and response digests for independent replay"]
+    },
+    {
+      "axis": "provenance-controls",
+      "mission": "Audit issuer provenance controls and their signed deterministic run while keeping partial coverage and carrier limits visible.",
+      "reviewer_role": "ledger provenance reviewer",
+      "required_fields": ["evidence_url", "facts_as_of", "facts_status", "run_attestation", "coverage", "carrier"],
+      "audit_focus": ["two-way provenance linkage", "signed run verification", "coverage denominator", "carrier limitations"],
+      "negative_controls": ["accept a one-way ledger link and require the control check to fail", "infer full issuer coverage from the covered subset and require denominator failure"],
+      "improvements": ["expand issuer coverage with explicit non-covered rows", "publish a stranger replay for each two-way provenance control"]
+    },
+    {
+      "axis": "reserve-attestation",
+      "mission": "Audit reserve-related deterministic facts without treating issuer flags or account data as proof of reserve adequacy.",
+      "reviewer_role": "reserve evidence reviewer",
+      "required_fields": ["evidence_url", "facts_as_of", "facts_status", "run_attestation", "n_unit"],
+      "audit_focus": ["source freshness", "attestation scope", "unsigned run state", "reserve adequacy non-inference"],
+      "negative_controls": ["describe account flags as reserve sufficiency and require scope rejection", "infer a signature from content_id and require attestation failure"],
+      "improvements": ["sign the next deterministic reserve run through the authorized lane", "add issuer-by-issuer evidence-age and scope labels"]
+    },
+    {
+      "axis": "regulatory-framework",
+      "mission": "Audit public regulatory-framework facts with source dates and jurisdiction boundaries, never converting a framework reference into a legal conclusion.",
+      "reviewer_role": "regulatory evidence reviewer",
+      "required_fields": ["evidence_url", "facts_as_of", "facts_status", "run_attestation", "n_unit"],
+      "audit_focus": ["jurisdiction labels", "source effective dates", "framework-to-subject mapping", "unsigned run state"],
+      "negative_controls": ["apply one jurisdiction's framework globally and require scope failure", "drop facts_as_of and require freshness to become UNCHECKABLE"],
+      "improvements": ["add jurisdiction and effective-date regression fixtures", "sign the next framework-facts run and publish source diffs"]
+    },
+    {
+      "axis": "distribution-integrity",
+      "mission": "Audit distribution metadata and artifact integrity while distinguishing a documented distribution channel from verified artifact provenance.",
+      "reviewer_role": "distribution and supply-chain reviewer",
+      "required_fields": ["evidence_url", "facts_as_of", "facts_status", "run_attestation", "n_unit"],
+      "audit_focus": ["artifact identity", "channel consistency", "unsigned run state", "provenance scope"],
+      "negative_controls": ["treat channel presence as artifact integrity and require scope failure", "change an artifact digest without changing the run and require replay failure"],
+      "improvements": ["bind distribution rows to immutable artifact digests", "sign the next run and add revoked-channel negative controls"]
+    },
+    {
+      "axis": "custody-disclosure",
+      "mission": "Audit custody disclosures for who controls assets or keys, preserving absent and ambiguous disclosures rather than inferring safety.",
+      "reviewer_role": "custody disclosure reviewer",
+      "required_fields": ["evidence_url", "facts_as_of", "facts_status", "run_attestation", "n_unit"],
+      "audit_focus": ["custodian identity", "key-control ambiguity", "disclosure freshness", "unsigned run state"],
+      "negative_controls": ["treat absent custody disclosure as self-custody and require classification failure", "collapse ambiguous and absent into one state and require vocabulary failure"],
+      "improvements": ["publish absent, ambiguous and explicit disclosure counts separately", "sign the next custody run with issuer-level source links"]
+    },
+    {
+      "axis": "ai-adoption-components",
+      "mission": "Audit the component series behind AI adoption facts, preserving the small component count and preventing revival of a retired composite index claim.",
+      "reviewer_role": "statistical-series reviewer",
+      "required_fields": ["dataset_url", "dataset_note", "evidence_url", "facts_as_of", "method_status"],
+      "audit_focus": ["component definitions", "series vintage", "small-n transparency", "retired-index non-claim"],
+      "negative_controls": ["reconstruct a composite index from components and require the retired-claim guard to fail", "mix series vintages silently and require lineage failure"],
+      "improvements": ["publish component-level definitions and vintage tables", "expand the frozen component set before any broader adoption claim is proposed"]
+    },
+    {
+      "axis": "labour-components",
+      "mission": "Audit labour component facts with denominator, population and series-vintage checks while keeping the retired composite index retired.",
+      "reviewer_role": "labour statistics reviewer",
+      "required_fields": ["dataset_url", "dataset_note", "evidence_url", "facts_as_of", "method_status"],
+      "audit_focus": ["population denominators", "component comparability", "series vintage", "retired-index non-claim"],
+      "negative_controls": ["compare incompatible populations without labels and require denominator failure", "publish a labour index score and require the retired-claim guard to fail"],
+      "improvements": ["publish denominator and population definitions per component", "add vintage-aligned replay before expanding the labour component set"]
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "mission": "Audit the named humanoid labour component facts without presenting their eight source facts as a validated composite labour index.",
+      "reviewer_role": "humanoid labour evidence reviewer",
+      "required_fields": ["dataset_url", "evidence_url", "facts_as_of", "facts_status", "run_attestation"],
+      "audit_focus": ["component source identity", "deployment versus labour claims", "small-n transparency", "unsigned run state"],
+      "negative_controls": ["convert component facts into an index score and require scope rejection", "treat a demo announcement as labour deployment and require evidence-class failure"],
+      "improvements": ["rename public presentation toward components unless a new index method is approved", "add deployment-stage and source-date labels to every component"]
+    },
+    {
+      "axis": "lab-practice",
+      "mission": "Design a frozen lab-practice instrument covering evaluations, safety frameworks and incident reporting without scoring the current five-check census.",
+      "reviewer_role": "AI laboratory practice reviewer",
+      "required_fields": ["applies_to", "method_status", "n", "status"],
+      "audit_focus": ["lab-only subject scope", "evaluation publication", "incident-report evidence", "frozen-bank absence"],
+      "negative_controls": ["promote census checks to MEASURED and require the n-floor gate to reject them", "include a non-lab company and require subject-scope failure"],
+      "improvements": ["propose at least thirty frozen lab subjects with evidence capture rules", "define incident-report and evaluation-publication rubrics with UNCHECKABLE states"]
+    },
+    {
+      "axis": "company-practice",
+      "mission": "Design a non-lab company-practice instrument that compares public claims with dated public artifacts without inferring actual internal conduct.",
+      "reviewer_role": "company disclosure reviewer",
+      "required_fields": ["applies_to", "method_status", "n", "status"],
+      "audit_focus": ["non-lab subject scope", "claim-to-artifact mapping", "dated evidence", "public-evidence limits"],
+      "negative_controls": ["infer internal practice from marketing copy and require scope rejection", "score fewer than thirty subjects and require the n-floor gate to fail"],
+      "improvements": ["create a claim and artifact taxonomy for non-lab companies", "propose a frozen thirty-subject bank with independent re-read instructions"]
+    },
+    {
+      "axis": "measurer-integrity",
+      "mission": "Design an evaluation-organisation instrument for method openness, conflicts, test-set handling and reproducibility, including CSOAI itself under the same rules.",
+      "reviewer_role": "measurement integrity reviewer",
+      "required_fields": ["applies_to", "method_status", "n", "status"],
+      "audit_focus": ["conflict disclosure", "test-set governance", "reproducibility", "self-measurement neutrality"],
+      "negative_controls": ["exempt CSOAI from a control and require neutrality failure", "treat a published method without reproducible results as full integrity and require rubric failure"],
+      "improvements": ["draft a conflict and reproducibility rubric applicable to CSOAI", "propose thirty evaluation organisations with frozen evidence captures"]
+    },
+    {
+      "axis": "harness-fidelity",
+      "mission": "Design a same-model, same-bank, cross-harness reproducibility method with transport, decoding and prompt-rendering differences isolated.",
+      "reviewer_role": "evaluation harness reviewer",
+      "required_fields": ["applies_to", "method_status", "n", "status"],
+      "audit_focus": ["model identity", "bank identity", "decoding controls", "transport and rendering parity"],
+      "negative_controls": ["change the bank between harnesses and require comparability failure", "attribute a transport error to model behavior and require error-class failure"],
+      "improvements": ["publish a two-harness reference replay before expanding the matrix", "define at least thirty valid paired runs with decoding and transport manifests"]
+    },
+    {
+      "axis": "interop-conformance",
+      "mission": "Design an interoperability-group instrument for specifications, public test suites and conformance records without treating membership as conformance.",
+      "reviewer_role": "interoperability standards reviewer",
+      "required_fields": ["applies_to", "method_status", "n", "status"],
+      "audit_focus": ["specification versioning", "test-suite availability", "conformance evidence", "membership non-inference"],
+      "negative_controls": ["treat standards-group membership as conformance and require classification failure", "accept an unversioned specification and require lineage failure"],
+      "improvements": ["define a specification and test-suite evidence rubric", "propose thirty groups with versioned artifacts and explicit missing-evidence states"]
+    },
+    {
+      "axis": "humanoid-deployment",
+      "mission": "Design a public-registry-backed humanoid deployment instrument that distinguishes demonstrations, pilots and production deployments.",
+      "reviewer_role": "humanoid deployment reviewer",
+      "required_fields": ["applies_to", "method_status", "n", "status"],
+      "audit_focus": ["deployment-stage definitions", "registry independence", "site and date evidence", "demo non-inference"],
+      "negative_controls": ["classify a demonstration as production and require stage failure", "use only the manufacturer's claim and require independent-evidence failure"],
+      "improvements": ["define demonstration, pilot and production evidence requirements", "propose a frozen thirty-deployment registry with site and date lineage"]
+    },
+    {
+      "axis": "regulator-transparency",
+      "mission": "Design factual regulator artifact-presence checks for guidance, registries, methods, consultations and contact routes without ratings or owner-gated publication bypass.",
+      "reviewer_role": "regulator transparency reviewer",
+      "required_fields": ["applies_to", "method_status", "public_pages", "n", "status"],
+      "audit_focus": ["artifact presence", "regulator-only scope", "contact-route checks", "owner-gated visibility"],
+      "negative_controls": ["convert artifact presence into a regulator rating and require scope rejection", "remove the owner gate and require publication policy failure"],
+      "improvements": ["freeze the five factual artifact checks with UNCHECKABLE semantics", "propose thirty regulators and retain the owner gate through human approval"]
+    },
+    {
+      "axis": "interpretability-reproducibility",
+      "mission": "Design an interpretability instrument that tests whether published artifacts can be independently reproduced, not merely whether explanatory prose exists.",
+      "reviewer_role": "interpretability and reproducibility reviewer",
+      "required_fields": ["applies_to", "method_status", "n", "status"],
+      "audit_focus": ["artifact completeness", "environment pinning", "independent replay", "result equivalence"],
+      "negative_controls": ["treat explanatory prose as reproduction and require evidence-class failure", "ignore environment drift and require replay-manifest failure"],
+      "improvements": ["define a reproduction manifest for code, data, environment and expected outputs", "propose thirty interpretability artifacts with independent replay outcomes"]
+    },
+    {
+      "axis": "claim-maintenance",
+      "mission": "Audit scheduled claim re-reads for unchanged, disclosed-change, silent-change, withdrawn and unreachable states without judging whether the original claim is true.",
+      "reviewer_role": "claim maintenance reviewer",
+      "required_fields": ["applies_to", "method_status", "n_note", "n", "status"],
+      "audit_focus": ["capture identity", "change classification", "disclosure detection", "truth non-inference"],
+      "negative_controls": ["label an unreachable claim withdrawn and require state-vocabulary failure", "interpret a silent change as falsehood and require scope rejection"],
+      "improvements": ["complete the gated re-read wave with at least thirty claims", "publish claim-state transition fixtures and disclosure-review samples"]
+    },
+    {
+      "axis": "serving-fidelity",
+      "mission": "Audit the reviewed serving-fidelity method for model identity and reference parity while preserving the free-credit hold and UNMEASURED state.",
+      "reviewer_role": "serving and inference fidelity reviewer",
+      "required_fields": ["applies_to", "method", "method_sha", "method_status", "n_note"],
+      "audit_focus": ["claimed model identity", "reference serving parity", "frozen prompts and decoding", "spend hold"],
+      "negative_controls": ["run paid inference without approval and require the spend gate to refuse", "treat a reviewed method as a completed run and require status failure"],
+      "improvements": ["complete free-credit reference replay with immutable request manifests", "replace the short method reference with a full content digest before any measurement run"]
+    }
+  ]
+}
