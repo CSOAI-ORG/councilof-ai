@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paper Cost Diagnostics</title><style>body{font:17px/1.6 system-ui;max-width:1150px;margin:40px auto;padding:20px}table{border-collapse:collapse;width:100%}td,th{padding:10px;text-align:right;border-bottom:1px solid #aaa}td:first-child,th:first-child{text-align:left}</style>
+<h1>Paper Cost Diagnostics</h1><p><b>Simulation only. No trades or wallet permissions.</b></p>
+<p>Data through 2026-09-20T01:09:33.016235+00:00; 11000 observations.</p>
+<p>Figures are virtual USD-equivalent, normalized to $10 per usable case. Each family has its own combined capital.</p>
+<table><tr><th>Family</th><th>Capital</th><th>Midprice component</th><th>Modeled costs</th><th>Net P/L</th><th>Fills</th></tr>
+<tr><td>cash_baseline</td><td>110.0000</td><td>0.0000</td><td>0.0000</td><td>0.0000</td><td>0</td></tr>
+<tr><td>buy_hold_paper</td><td>110.0000</td><td>-0.3625</td><td>0.0738</td><td>-0.4363</td><td>11</td></tr>
+<tr><td>momentum_paper</td><td>110.0000</td><td>-0.0378</td><td>3.3099</td><td>-3.3477</td><td>924</td></tr>
+<tr><td>reversion_paper</td><td>110.0000</td><td>-0.1797</td><td>3.7590</td><td>-3.9386</td><td>1057</td></tr>
+</table><p>Identity checked: midprice component minus modeled costs equals reported net P/L.</p>
+<p>Costs include fees, crossing the spread, assumed slippage and estimated closing costs for remaining positions.</p>
+<h2>Limits</h2>
+<p>Illustrative simulator costs, not actual exchange fees</p>
+<p>Midprice component uses the same simulated fills; not a no-cost strategy backtest</p>
+<p>Collector timestamps do not establish exchange quote simultaneity</p>
+<p>This explains historical paper results; it does not demonstrate a profitable strategy</p>
+</html>

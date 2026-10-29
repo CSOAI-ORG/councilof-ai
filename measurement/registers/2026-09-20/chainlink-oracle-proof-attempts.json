@@ -1,0 +1,30 @@
+{
+  "artifact": "measurement/registers/2026-09-20/chainlink-oracle-claims.jsonl",
+  "artifact_sha256": "879199fb5cec761050a2c2599995e624b48649efc5c37ca9dbfc53d33b19dcad",
+  "attempts": [
+    {
+      "layer": "csoai_layer_0_ed25519",
+      "reason": "Local signing is disabled in this pack; signing into the public root is the board signer's path, and no accepted canonical evidence object exists yet. Prior register (2026-09-19) recorded the governance signing gateway unreachable (405); not retried here.",
+      "state": "NOT_ATTEMPTED"
+    },
+    {
+      "layer": "rekor_sigstore",
+      "reason": "Requires a valid signature or supported signing identity over an accepted artifact; none exists. Goal 4 owns the Sigstore experiment on test artifacts.",
+      "state": "NOT_ATTEMPTED"
+    },
+    {
+      "layer": "open_timestamps",
+      "reason": "Deferred until an accepted canonical evidence object exists; a pending timestamp would add no checkable evidence to a candidate pack. Goal 4 owns the OTS experiment.",
+      "state": "NOT_ATTEMPTED"
+    },
+    {
+      "layer": "merkle_root",
+      "reason": "No local root minting; roots are published only through the estate's existing signed-root path.",
+      "state": "NOT_ATTEMPTED"
+    }
+  ],
+  "publication": "disabled",
+  "recorded_at": "2026-09-20T01:53:22.684426+00:00",
+  "schema": "csoai.chainlink-oracle-proof-attempts/0.1",
+  "signing": "disabled"
+}

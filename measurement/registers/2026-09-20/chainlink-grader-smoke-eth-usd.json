@@ -1,0 +1,42 @@
+{
+  "block": null,
+  "block_note": "readback taken at \"latest\" during collection; pinned-block replay is in chainlink-cross-rpc-replay.json",
+  "control_facts": [
+    {
+      "detail": "chainId=1 (expect 1); address match=True; description='ETH / USD' (registry name='ETH / USD')",
+      "row_id": "ob-identity-triple",
+      "verdict": "PASS"
+    },
+    {
+      "detail": "read decimals=8; registry decimals=8",
+      "row_id": "ob-decimals",
+      "verdict": "PASS"
+    },
+    {
+      "detail": "age=2067s; heartbeat=3600s + grace=300s",
+      "row_id": "ob-freshness",
+      "verdict": "PASS"
+    },
+    {
+      "detail": "answeredInRound=129127208515966895136 roundId=129127208515966895136 startedAt=1789866862 updatedAt=1789866875",
+      "row_id": "ob-round-metadata",
+      "verdict": "PASS"
+    },
+    {
+      "detail": "bank row is deduplicated by proxyAddress at parse time; read address resolves to exactly this row",
+      "row_id": "ob-registry-agreement",
+      "verdict": "PASS"
+    }
+  ],
+  "feed_id": "ethereum-mainnet/eth-usd",
+  "grader_file": "tools/grade_chainlink_oracle_boundary.py",
+  "grader_sha256": "dd3ba326cd241cf77c96b4e94ed38aae865a7f5e7e22b4c20e2a27429dcd4f8e",
+  "not_a_measurement_run": true,
+  "price_truth": "UNMEASURED",
+  "publication": "disabled",
+  "recorded_at": "2026-09-20T02:15:56.241828+00:00",
+  "risk_verdict_status": "UNMEASURED",
+  "schema": "csoai.chainlink-grader-smoke/0.1",
+  "signing": "disabled",
+  "smoke_test": true
+}

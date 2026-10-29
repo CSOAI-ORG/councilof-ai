@@ -1,0 +1,45 @@
+{
+  "content_id": "74bd17adeaffe4c7d8aed012a4b2c83b040cb422b36a6f97dc61b3d5ceaee66e",
+  "dependencies": [
+    {
+      "capability_id": "hub-cards",
+      "receipt": "/layer0/dependencies/hub-cards-csoai-hub-card-supersessions.json",
+      "receipt_sha256": "de115a1ed13093a1d4181a27101a197bc7db1828928b21d94364fa47fce5400c",
+      "scope_match_required": true,
+      "source_id": "csoai-hub-card-supersessions",
+      "source_scope": "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl",
+      "state": "VERIFIED_DIRECT_DEPENDENCY"
+    },
+    {
+      "capability_id": "hub-cards",
+      "receipt": "/layer0/dependencies/hub-cards-csoai-hub-card-withdrawals.json",
+      "receipt_sha256": "eb4338f1aedd79e0e97c0829d4d77a72279233c14067ee7b3810a6da0bb46997",
+      "scope_match_required": true,
+      "source_id": "csoai-hub-card-withdrawals",
+      "source_scope": "https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl",
+      "state": "VERIFIED_DIRECT_DEPENDENCY"
+    },
+    {
+      "capability_id": "hub-cards",
+      "receipt": "/layer0/dependencies/hub-cards-huggingface-datasets.json",
+      "receipt_sha256": "f383da7a9aa260f44591f2139f776b65acc123398bcb6e7b04849c8bc4088a4b",
+      "scope_match_required": true,
+      "source_id": "huggingface-datasets",
+      "source_scope": "csoai/gspc-hub-cards dataset tree + index JSONL",
+      "state": "VERIFIED_DIRECT_DEPENDENCY"
+    },
+    {
+      "capability_id": "specialists",
+      "receipt": "/layer0/dependencies/specialists-csoai-sovereign-specialists.json",
+      "receipt_sha256": "83fd4eb1dc5344a3360d754b6eed7f65f86ada2ed5e258019b0fa635878c8734",
+      "scope_match_required": true,
+      "source_id": "csoai-sovereign-specialists",
+      "source_scope": "https://csoai-sovereign.pages.dev/api/specialists.json",
+      "state": "VERIFIED_DIRECT_DEPENDENCY"
+    }
+  ],
+  "invalid_receipt_count": 0,
+  "law": "A direct edge exists only while its code-bound replay-stable receipt remains valid. This is dependency evidence, not GSPC measurement.",
+  "schema": "csoai.layer0-dependencies/0.1",
+  "verified_direct_dependency_count": 4
+}

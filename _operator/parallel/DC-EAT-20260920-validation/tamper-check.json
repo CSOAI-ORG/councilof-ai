@@ -1,0 +1,7 @@
+{
+  "at": "2026-09-20T01:52:10.035Z",
+  "scope": "one signature nibble changed locally",
+  "rejected": true,
+  "excerpt": "Estate record JSON\nVerify this record\n\n✗ NOT VERIFIED — see which check failed below; each failure is reported for what it is.\n\nInput SHA-256: 55f7adc9c1f2b6adc1b952569d050305b92710c031798f576fc6d9752b746c37\n\n✓\nPass:\nParse: Valid JSON.\n✓\nPass:\nFamily: gspc.measurement-card — Measurement card — a signed GSPC board card..\n✓\nPass:\nCard id: sha256 of the canonical body reproduces e9bc92b7b39be3dd…\n✓\nPass:\nTrust anchor: 9367cf59… is published as did:web:csoai.org#board-attestation-1 — matched against the anchor set pinned in this verifier's source, so no key was looked up at check time.\n○\nNot checked:\nLive anchor cross-check: The live did.json agrees with the pinned anchor set for this key. Cross-check only — the pinned set decided.\n✗\nFail:\nSignature: INVALID — the signature does not verify over the canonical body bytes under the key the card carries. The bytes and the signature disagree; this is not a statement about key publication.\n○\nNot checked:\nFraming: The card carries public_framing \"Measurement, not certification. Empty is not zero.\". A card is signed over its own bytes and cannot be re-signed, so this string is frozen — read the live count from GET /api/gspc, never from inside a card.\nAdd to public tally (opt-in — ✓/✗ only)\n\n117 verifications added to the public tally so far (1 matched · 116 did not) — a self-reported, opt-in signal, not a measurement.\n\n",
+  "public_tally_submitted": false
+}

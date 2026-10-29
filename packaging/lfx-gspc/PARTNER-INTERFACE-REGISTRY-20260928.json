@@ -1,0 +1,72 @@
+{
+  "schema": "csoai.partner-interface-registry/1.0",
+  "as_of": "2026-09-28",
+  "purpose": "Map public integration surfaces and authorization boundaries for a GSPC evidence adapter. This is not a partner, customer, steering-committee, endorsement, or production-integration claim.",
+  "shared_contract": {
+    "ingest": ["source_uri", "source_version_or_digest", "retrieved_at", "tenant_or_subject_scope", "purpose", "authority_reference"],
+    "result_states": ["OBSERVED", "UNMEASURED", "UNCHECKABLE", "AUTH_REQUIRED", "STALE", "CONTRADICTORY"],
+    "effects": "Read-only by default. Any write, containment, policy change, payment, deployment, or external submission requires a separately authorized capability and a distinct receipt.",
+    "receipt_fields": ["adapter_id", "operation", "scope", "input_digest", "output_digest", "status", "timestamp", "authority_reference"],
+    "trust_boundary": "A public API, MCP server, SDK, listing, or alliance relationship does not grant access to tenant data or imply vendor review or endorsement."
+  },
+  "organizations": [
+    {
+      "id": "crowdstrike",
+      "public_surfaces": [
+        {"name": "Falcon MCP Server", "url": "https://developer.crowdstrike.com/falcon-mcp/getting-started/quickstart/", "surface_type": "vendor MCP", "auth": "Tenant-created Falcon API client ID and secret; module scopes", "permissionless_actions": ["read public docs", "build a local adapter package"], "authorized_actions": ["connect to a tenant only after that tenant provisions credentials and scopes"]}
+      ],
+      "candidate_adapter": "Falcon MCP read-only tool allowlist -> evidence envelopes -> GSPC intake",
+      "status": "DOCUMENTED_SURFACE; NO TENANT CONNECTION OR LIVE ADAPTER TEST",
+      "safety_notes": ["Request only read scopes for the first integration", "Keep credentials in a secret store; never in evidence artifacts", "Keep write and response actions disabled"]
+    },
+    {
+      "id": "red-hat",
+      "public_surfaces": [
+        {"name": "Red Hat Enterprise Contract / Open Policy Agent", "url": "https://docs.redhat.com/en/documentation/red_hat_advanced_developer_suite_-_software_supply_chain/1.6/html/managing_compliance_with_enterprise_contract/", "surface_type": "policy-as-code and software supply-chain compliance", "auth": "Local OPA/Rego fixture evaluation is possible; organization policy and build records require owner-authorized access", "permissionless_actions": ["evaluate public or locally supplied policy fixtures", "publish a generic adapter"] , "authorized_actions": ["read organization policy or telemetry only with owner-provided access"]}
+      ],
+      "candidate_adapter": "OPA decision logs and policy fixtures -> normalized control/evidence record",
+      "status": "OPEN PROJECT SURFACE; GSPC ADAPTER NOT IMPLEMENTED OR TESTED",
+      "safety_notes": ["A policy decision is evidence of that evaluation only", "Do not describe OPA output as Red Hat review or certification"]
+    },
+    {
+      "id": "nvidia",
+      "public_surfaces": [
+        {"name": "OpenShell", "url": "https://docs.nvidia.com/openshell/latest/how-it-works/policies/overview", "surface_type": "open-source runtime and policy surface", "auth": "Local package use; gateway and workload configuration are operator-controlled", "permissionless_actions": ["review public source", "run isolated local policy fixtures"], "authorized_actions": ["install or enforce policy on a specific runtime only with its operator's approval"]}
+      ],
+      "candidate_adapter": "OpenShell policy/tool allowlist and runtime observations -> evidence envelopes",
+      "status": "LOCAL CANDIDATE; TOOL POLICY PROBED; CURRENT GATEWAY ENFORCEMENT NOT PROVEN",
+      "safety_notes": ["Require positive read test, paid/write denial, and default-deny egress tests", "Do not infer NVIDIA endorsement or production deployment"]
+    },
+    {
+      "id": "palantir",
+      "public_surfaces": [
+        {"name": "Foundry Ontology MCP", "url": "https://www.palantir.com/docs/foundry/ontology-mcp/", "surface_type": "tenant-managed MCP and OAuth API", "auth": "Foundry Developer Console OAuth; token scope and data permissions are tenant-controlled", "permissionless_actions": ["read public docs", "prepare an adapter interface"], "authorized_actions": ["connect only after a customer administrator enables the MCP and grants scoped OAuth"]}
+      ],
+      "candidate_adapter": "Ontology MCP read-only resource/tool adapter -> evidence envelopes",
+      "status": "DOCUMENTED_SURFACE; NO CUSTOMER TENANT OR OAUTH CONNECTION",
+      "safety_notes": ["Default to read-only and least privilege", "Do not expose customer ontology data in public indexes", "Foundry permissions remain authoritative"]
+    },
+    {
+      "id": "cisco-agntcy",
+      "public_surfaces": [
+        {"name": "AGNTCY Agent Directory Service", "url": "https://docs.agntcy.org/dir/overview/", "surface_type": "open agent discovery directory", "auth": "Public docs and discovery; publishing or federation follows directory rules and requires an explicit publish action", "permissionless_actions": ["inspect directory and public agent cards", "prepare a compliant public listing"], "authorized_actions": ["publish, claim, or federate a CSOAI listing only through the directory's current supported route"]}
+      ],
+      "candidate_adapter": "Agent-card discovery -> endpoint health observation -> GSPC evidence reference",
+      "status": "PUBLIC DISCOVERY SURFACE; CSOAI LISTING AND HEALTH CHECK NOT VERIFIED",
+      "safety_notes": ["Directory presence is discovery, not trust or performance evidence", "Verify ownership and endpoint health independently", "Do not imply Cisco sponsorship"]
+    }
+  ],
+  "alliance_boundary": {
+    "verified_public_relationship": "Linux Foundation materials identify CrowdStrike, Red Hat, NVIDIA, Palantir, and Cisco among Open Secure AI Alliance inaugural partners; the SAFE RFC announcement identifies initial proposal contributors including Cisco, CrowdStrike, NVIDIA, and Red Hat.",
+    "not_established": ["that all five are steering-committee members", "direct access to member systems", "vendor endorsement", "SAFE acceptance of CSOAI work", "production integration"],
+    "sources": ["https://www.linuxfoundation.org/blog/open-models-and-open-weights-are-foundational-to-secure-ai", "https://www.linuxfoundation.org/blog/proposing-the-safe-working-group-an-open-community-effort-to-improve-ai-security"]
+  },
+  "release_gates": [
+    "adapter code and fixtures reviewed",
+    "least-privilege read-only tests pass",
+    "negative tests prove writes and out-of-scope reads are denied",
+    "tenant owner authorization recorded where required",
+    "public documentation distinguishes local test, tenant test, upstream acceptance, and deployment",
+    "published artifacts read back anonymously and match exact digests"
+  ]
+}

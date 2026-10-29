@@ -1,0 +1,61 @@
+{
+  "schema": "csoai.chainlink-oracle-evidence-canary/0.1",
+  "as_of": "2026-09-20T00:00:00Z",
+  "purpose": "Chainlink oracle-boundary evidence-intake register (Goal 2). Measures what oracle evidence establishes and what it does not. This is a measurement register, not an endorsement, integration claim, partnership claim, canonical-oracle claim, price feed, or compliance conclusion.",
+  "status": "CANDIDATE_UNMEASURED",
+  "subjects": [
+    {
+      "subject_id": "feed:eth-usd-ethereum-mainnet",
+      "display_name": "Chainlink ETH/USD data feed, Ethereum mainnet",
+      "aggregator_address": "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+      "aggregator_address_state": "PENDING_DOCS_REGISTRY_AND_CHAIN_READBACK_AGREE",
+      "network": "Ethereum mainnet (chainId 1, pending eth_chainId readback)",
+      "source_families": ["Chainlink official documentation (docs.chain.link)", "data.chain.link feed UI", "Ethereum public chain state via read-only RPC"],
+      "measurement_contract": "oracle-boundary-evidence/v0.1",
+      "evidence_state": "COLLECTED_BANK_RUN_UNSIGNED",
+      "proof_state": {"canonical_sha256": "PENDING", "ed25519": "PENDING", "merkle_root": "PENDING", "rekor": "UNCHECKABLE", "ots": "UNCHECKABLE"},
+      "distribution_state": "LOCAL_DRAFT_ONLY"
+    },
+    {
+      "subject_id": "org:chainlink-docs",
+      "display_name": "Chainlink official documentation (concepts, update conditions, proof-of-reserves)",
+      "source_families": ["Chainlink official documentation"],
+      "measurement_contract": "oracle-boundary-evidence/v0.1",
+      "evidence_state": "PENDING_COLLECTION",
+      "proof_state": {"canonical_sha256": "PENDING", "ed25519": "PENDING", "merkle_root": "PENDING", "rekor": "UNCHECKABLE", "ots": "UNCHECKABLE"},
+      "distribution_state": "LOCAL_DRAFT_ONLY"
+    },
+    {
+      "subject_id": "org:chainlink-repo",
+      "display_name": "smartcontractkit/chainlink public repository (host-platform metadata)",
+      "source_families": ["GitHub public repository metadata"],
+      "measurement_contract": "oracle-boundary-evidence/v0.1",
+      "evidence_state": "PENDING_COLLECTION",
+      "proof_state": {"canonical_sha256": "PENDING", "ed25519": "PENDING", "merkle_root": "PENDING", "rekor": "UNCHECKABLE", "ots": "UNCHECKABLE"},
+      "distribution_state": "LOCAL_DRAFT_ONLY"
+    },
+    {
+      "subject_id": "org:chainlink-status",
+      "display_name": "Chainlink status / incident / correction surface",
+      "source_families": ["Chainlink self-published status page"],
+      "measurement_contract": "oracle-boundary-evidence/v0.1",
+      "evidence_state": "PENDING_COLLECTION",
+      "proof_state": {"canonical_sha256": "PENDING", "ed25519": "PENDING", "merkle_root": "PENDING", "rekor": "UNCHECKABLE", "ots": "UNCHECKABLE"},
+      "distribution_state": "LOCAL_DRAFT_ONLY"
+    }
+  ],
+  "boundary_axioms": [
+    "A valid signature (node, publisher, or CSOAI Ed25519) proves provenance of bytes, never price truth.",
+    "An on-chain aggregator read establishes what the contract reported at read time, not what any venue traded at.",
+    "Feed identity is the triple (chainId, aggregator address, description()); any one element alone is insufficient.",
+    "Staleness, missing round metadata, and wrong-chain reads are failure modes the instrument must detect, not average away.",
+    "Asset performance and price accuracy are not governance quality; no axis maps price level to operator quality."
+  ],
+  "promotion_rules": [
+    "No subject is signed until the canonical evidence object and its raw-source hashes are present.",
+    "No Rekor, OTS, SCITT, root, or distribution state may be inferred from a local file or planned command.",
+    "No public distribution occurs until served-byte readback succeeds.",
+    "No integration, partnership, or canonical-oracle claim without external confirmation.",
+    "Status remains CANDIDATE_UNMEASURED until the pinned instrument, grader, complete denominator, run output, and signed card all exist and reconcile."
+  ]
+}

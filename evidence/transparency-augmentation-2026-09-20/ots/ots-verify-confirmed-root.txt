@@ -1,0 +1,16 @@
+# OTS VERIFY: production root proof (expect CONFIRMED_BITCOIN per sidecar)
+retrieved_at=2026-09-20T01:58:22Z
+$ ots verify -f public/root.json public/interop/root-dedb49d0.json.ots
+Could not connect to Bitcoin node: Cookie file unusable ([Errno 2] No such file or directory: '/Users/nicholas/Library/Application Support/Bitcoin/.cookie') and rpcpassword not specified in the configuration file: '/Users/nicholas/Library/Application Support/Bitcoin/bitcoin.conf'
+exit=1
+
+$ ots info public/interop/root-dedb49d0.json.ots (attestation lines only)
+File sha256 hash: dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4
+    verify PendingAttestation('https://finney.calendar.eternitywall.com')
+    verify BitcoinBlockHeaderAttestation(967150)
+    verify PendingAttestation('https://btc.calendar.catallaxy.com')
+    verify BitcoinBlockHeaderAttestation(967098)
+    verify PendingAttestation('https://alice.btc.calendar.opentimestamps.org')
+    verify BitcoinBlockHeaderAttestation(967093)
+    verify PendingAttestation('https://bob.btc.calendar.opentimestamps.org')
+    verify BitcoinBlockHeaderAttestation(967093)

@@ -1,0 +1,436 @@
+{
+  "schema": "csoai.master-harness-index/0.1",
+  "generated_at": "2026-09-17T04:29:37.784735+00:00",
+  "title": "Master Measurement Harness \u2014 ONE Engine, Every Source, Every Goal",
+  "principle": "Every adapter outputs the same canonical object. Stop building bespoke integrations. Build an ingestion grammar for regulatory/assurance reality.",
+  "canonical_object": [
+    "subject",
+    "requirement",
+    "jurisdiction",
+    "source",
+    "source_version",
+    "effective_state",
+    "claim",
+    "observation",
+    "measurement",
+    "evidence",
+    "provenance",
+    "uncertainty",
+    "timestamp",
+    "valid_from",
+    "valid_until",
+    "supersedes",
+    "hash",
+    "signature",
+    "root"
+  ],
+  "goal_objects": [
+    "asset_classification",
+    "actor_identity",
+    "jurisdiction",
+    "disclosure",
+    "custody",
+    "transaction_integrity",
+    "market_integrity",
+    "customer_protection",
+    "reserves_collateral",
+    "settlement",
+    "agent_authority",
+    "provenance",
+    "assurance",
+    "change"
+  ],
+  "sources_bound_to_harness": [
+    {
+      "category": "regulatory",
+      "source": "CLARITY Act H.R. 3633",
+      "status": "PROPOSED_FAILED_PROCEDURAL",
+      "goal_objects": [
+        "asset_classification",
+        "actor_identity",
+        "jurisdiction",
+        "custody"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "SEC Regulation Crypto Assets (33-11434)",
+      "status": "OPEN_FOR_COMMENT_2026-10-20",
+      "goal_objects": [
+        "disclosure",
+        "assurance",
+        "provenance"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "SEC/CFTC Joint Crypto Interpretation 2026",
+      "status": "OPERATIVE",
+      "goal_objects": [
+        "asset_classification",
+        "disclosure",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "GENIUS Act P.L. 119-27",
+      "status": "ENACTED_2025-07-18",
+      "goal_objects": [
+        "asset_classification",
+        "reserves_collateral",
+        "custody",
+        "settlement"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "CFTC Innovation Task Force",
+      "status": "ACTIVE_PROGRAMME",
+      "goal_objects": [
+        "agent_authority",
+        "provenance",
+        "asset_classification"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "EU AI Act (Articles 5, 9-15, 50, 53)",
+      "status": "IN_FORCE",
+      "goal_objects": [
+        "care",
+        "conformance",
+        "continuity",
+        "safety"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "NIST AI RMF 1.0",
+      "status": "VOLUNTARY",
+      "goal_objects": [
+        "governance",
+        "provenance",
+        "conformance"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "OSAIA SAFE (RFC by 2026-09-21)",
+      "status": "DRAFT_READY",
+      "goal_objects": [
+        "assurance",
+        "provenance",
+        "change"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "UK DRCF",
+      "status": "VOLUNTARY",
+      "goal_objects": [
+        "governance",
+        "conformance"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "CA SB 942 (California)",
+      "status": "BINDING_LAW",
+      "goal_objects": [
+        "disclosure",
+        "provenance"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "DORA (EU/EEA Financial)",
+      "status": "BINDING_LAW",
+      "goal_objects": [
+        "transaction_integrity",
+        "settlement",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "infrastructure",
+      "source": "SWIFT Blockchain Ledger (17 banks live)",
+      "status": "LIVE_2026-07-09",
+      "goal_objects": [
+        "settlement",
+        "custody",
+        "transaction_integrity",
+        "agent_authority"
+      ]
+    },
+    {
+      "category": "infrastructure",
+      "source": "XRPL on-chain state (16 instruments)",
+      "status": "LIVE",
+      "goal_objects": [
+        "asset_classification",
+        "reserves_collateral",
+        "settlement"
+      ]
+    },
+    {
+      "category": "infrastructure",
+      "source": "XRPL two-way check (issuer registry \u2194 on-chain)",
+      "status": "MEASURED",
+      "goal_objects": [
+        "provenance",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "stablecoin",
+      "source": "Stablecoin universe (425 stablecoins)",
+      "status": "MEASURED_2026-09-16",
+      "goal_objects": [
+        "asset_classification",
+        "reserves_collateral",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "stablecoin",
+      "source": "Stablecoin deep corpus",
+      "status": "MEASURED",
+      "goal_objects": [
+        "reserves_collateral",
+        "custody",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "stablecoin",
+      "source": "Stablecoin on-chain supply",
+      "status": "MEASURED_2026-09-16",
+      "goal_objects": [
+        "settlement",
+        "reserves_collateral"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "a2a engine cards (12 engines)",
+      "status": "ENUMERATED",
+      "goal_objects": [
+        "agent_authority",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "TUI A \u2014 Agent enumeration (13 ENUMERATED)",
+      "status": "ENUMERATED_v0.1",
+      "goal_objects": [
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "TUI B \u2014 Agent measurement",
+      "status": "MEASURED_v0.1",
+      "goal_objects": [
+        "agent_authority",
+        "provenance"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "ERC-8004 trustless agent registry",
+      "status": "POINTER_ONLY",
+      "goal_objects": [
+        "actor_identity",
+        "provenance"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "x402 doors (catalogued 104)",
+      "status": "MEASURED",
+      "goal_objects": [
+        "agent_authority",
+        "settlement"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "MCP registry (1272 entries)",
+      "status": "REGISTRY_CATALOG",
+      "goal_objects": [
+        "agent_authority",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "A2A Mining Summary",
+      "status": "MEASURED_2026-09-16",
+      "goal_objects": [
+        "agent_authority"
+      ]
+    },
+    {
+      "category": "gspc_self",
+      "source": "GSPC measurement cards (3,998 across 14 axes \u00d7 165 models)",
+      "status": "MEASURED",
+      "goal_objects": [
+        "assurance",
+        "provenance"
+      ]
+    },
+    {
+      "category": "gspc_self",
+      "source": "GSPC white papers (1,051 .md files)",
+      "status": "INDEXED",
+      "goal_objects": [
+        "disclosure"
+      ]
+    },
+    {
+      "category": "gspc_self",
+      "source": "GSPC measurement-root (10 leaves, merkle)",
+      "status": "ROOTED_2026-09-16",
+      "goal_objects": [
+        "change",
+        "provenance"
+      ]
+    },
+    {
+      "category": "gspc_self",
+      "source": "GSPC board (22 axis slots, 21 measured, 1 unmeasured)",
+      "status": "ACTIVE",
+      "goal_objects": [
+        "governance",
+        "conformance"
+      ]
+    },
+    {
+      "category": "rwa",
+      "source": "RWA attestation cards (dcp, superstate_uscc, ondo_stk, etc.)",
+      "status": "ATTESTED",
+      "goal_objects": [
+        "reserves_collateral",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "rwa",
+      "source": "Benji on-chain supply (Aptos, Arbitrum, Avalanche, Base, BNB, Ethereum, Polygon, Solana, Stellar)",
+      "status": "MEASURED",
+      "goal_objects": [
+        "settlement",
+        "reserves_collateral"
+      ]
+    },
+    {
+      "category": "rwa",
+      "source": "Wrapped-asset parity checks",
+      "status": "MEASURED",
+      "goal_objects": [
+        "reserves_collateral",
+        "provenance"
+      ]
+    },
+    {
+      "category": "ai_lab",
+      "source": "AI labs (anthropic, openai, google, meta, mistral, nvidia, microsoft, huggingface, asi-evolve, oswao, gspc, council-os)",
+      "status": "ENUMERATED",
+      "goal_objects": [
+        "agent_authority"
+      ]
+    },
+    {
+      "category": "ai_lab",
+      "source": "Sovereign model reports (qwen2.5-*, mistral-7b, llama3.2-3b, deepseek-r1-8b, gemma3-12b, falcon3-7b, phi4-14b)",
+      "status": "MEASURED",
+      "goal_objects": [
+        "conformance",
+        "governance",
+        "openness",
+        "safety"
+      ]
+    },
+    {
+      "category": "goal_adapter",
+      "source": "Customer Protection Adapter v0.1",
+      "status": "ACTIVE",
+      "goal_objects": [
+        "customer_protection",
+        "disclosure"
+      ],
+      "fills_gap": true
+    },
+    {
+      "category": "goal_adapter",
+      "source": "Market Integrity Adapter v0.1",
+      "status": "ACTIVE",
+      "goal_objects": [
+        "market_integrity",
+        "transaction_integrity"
+      ],
+      "fills_gap": true
+    },
+    {
+      "category": "engine",
+      "source": "Continuous Churn Engine v0.1",
+      "status": "ACTIVE",
+      "goal_objects": [
+        "change",
+        "provenance"
+      ],
+      "adapters_count": 35
+    }
+  ],
+  "stats": {
+    "sources_bound": 36,
+    "regulatory_sources": 11,
+    "infrastructure_sources": 3,
+    "stablecoin_sources": 3,
+    "agent_sources": 7,
+    "gspc_self_sources": 4,
+    "rwa_sources": 3,
+    "ai_lab_sources": 2,
+    "distinct_goal_objects_covered": 20,
+    "all_goal_objects_covered": [
+      "actor_identity",
+      "agent_authority",
+      "asset_classification",
+      "assurance",
+      "care",
+      "change",
+      "conformance",
+      "continuity",
+      "custody",
+      "customer_protection",
+      "disclosure",
+      "governance",
+      "jurisdiction",
+      "market_integrity",
+      "openness",
+      "provenance",
+      "reserves_collateral",
+      "safety",
+      "settlement",
+      "transaction_integrity"
+    ],
+    "all_14_goals_covered": true,
+    "uncovered_goals": [],
+    "goal_adapter_sources": 2,
+    "engine_sources": 1
+  },
+  "binding_method": "Each source declares its goal-object mappings at adapter level. Each adapter outputs the canonical object. GSPC engine consumes the canonical objects and writes signed cards + OTS stamps + audit records.",
+  "honest_findings": [
+    "The estate already has 9 categories of sources bound to the goal-object ontology.",
+    "OTS calendar aggregator is currently degraded \u2014 1904 submissions received non-proof responses.",
+    "93 valid OTS proofs on origin (56 BTC-attested, 37 calendar-pending).",
+    "TUI A and TUI B establish the agent population boundary \u2014 TUI B measures against TUI A.",
+    "Master roll-up at /public/interop/master-consolidation-rollup-v0.1.json is the single index.",
+    "Strategic deliverables: digital-asset-regulatory-measurement-profile-v0.1, osaia-safe-evidence-adapter-v0.1, white-paper-index-v0.1, benchmark-index-v0.1.",
+    "scripts/hermes-align.sh: 8 ok / 0 FAIL on this M4."
+  ],
+  "sha256": "e902943ec446779b444e956931996dc9ed124b30540178e16056ee37f9f6b360",
+  "byte_size": 8056
+}

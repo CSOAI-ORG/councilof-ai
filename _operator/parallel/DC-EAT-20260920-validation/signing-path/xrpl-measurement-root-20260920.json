@@ -1,0 +1,881 @@
+{
+  "schema": "csoai.measurement-root/0.1",
+  "kind": "merkle-root-unsigned",
+  "as_of": "2026-09-20T03:28:59Z",
+  "merkle_root": "0c6ad5c1083c48639db1df4df36ca12cbf6aea31d5e9f814b29a62b34264226c",
+  "n_leaves": 31,
+  "leaf_rule": "sha256 of the file's exact bytes",
+  "tree_rule": "leaves sorted by their own hash; pairs hashed in order as sha256(left||right) over raw 32-byte digests; an odd node is carried up unchanged and never duplicated",
+  "all_inclusion_proofs_verify": true,
+  "signed": false,
+  "signature_state": "UNSIGNED \u2014 no Ed25519 signature exists over this root",
+  "rekor_state": "NOT_WITNESSED \u2014 the public-root witness uploads the preimage, its signature and the board public key; with no signature there is nothing to upload. Signing the root with any other key we hold would misrepresent who attested it.",
+  "what_inclusion_proves": "that these exact bytes were in this set when the root was stamped, and nothing else: not that a measurement is correct, not who produced it, and not that the set is complete",
+  "not_the_public_root": "public/root.json and the card roots commit to SIGNED artifacts. This root is a separate, unsigned commitment over deterministic-facts artifacts.",
+  "entries": [
+    {
+      "path": "xrpl-evidence-replay.json",
+      "bytes": 10594,
+      "leaf_sha256": "2b02fb15c80752d32cb0531fe25084019842fbe0b56ad2f68a705516c805b1a2",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "4293f4896ea0ea322f89d0a1744f947a3a96cb1e4aba0dc0c8d412aa5c200cb7"
+        },
+        {
+          "side": "right",
+          "hash": "19bca12edb000595719e2e5491b1bf9790bb951829d82221fdefec2884c8f9ae"
+        },
+        {
+          "side": "right",
+          "hash": "3bad3c0c358054366ee3e31799a25def88f3dfc5a535ee4585b082c652527a0c"
+        },
+        {
+          "side": "right",
+          "hash": "2d31eab5b6eb8d43c991a0afdb5fe5234bffb5545d364da88b9a4a75001d2bff"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/4293f4896ea0ea322f89d0a1744f947a3a96cb1e4aba0dc0c8d412aa5c200cb7.request.json",
+      "bytes": 184,
+      "leaf_sha256": "4293f4896ea0ea322f89d0a1744f947a3a96cb1e4aba0dc0c8d412aa5c200cb7",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "2b02fb15c80752d32cb0531fe25084019842fbe0b56ad2f68a705516c805b1a2"
+        },
+        {
+          "side": "right",
+          "hash": "19bca12edb000595719e2e5491b1bf9790bb951829d82221fdefec2884c8f9ae"
+        },
+        {
+          "side": "right",
+          "hash": "3bad3c0c358054366ee3e31799a25def88f3dfc5a535ee4585b082c652527a0c"
+        },
+        {
+          "side": "right",
+          "hash": "2d31eab5b6eb8d43c991a0afdb5fe5234bffb5545d364da88b9a4a75001d2bff"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/5d06c0182f59b0a9075cb087923cfec508f9408b69a6de86320fc97e7ddc9f8e.response.json",
+      "bytes": 280,
+      "leaf_sha256": "48f5a8e35619700870f20f8332a1701c8b37c8750881730dcf29abc132ffc410",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "4d753b2927e9085dfd877a82b3e9bc13c7acefd6c78c64b4b26b75a357e8c8a1"
+        },
+        {
+          "side": "left",
+          "hash": "fb6f3ccdc2f70ffa4eb1c093afaf4e2e97143c1f3fa9e5c594e11ec79fd2e27b"
+        },
+        {
+          "side": "right",
+          "hash": "3bad3c0c358054366ee3e31799a25def88f3dfc5a535ee4585b082c652527a0c"
+        },
+        {
+          "side": "right",
+          "hash": "2d31eab5b6eb8d43c991a0afdb5fe5234bffb5545d364da88b9a4a75001d2bff"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/4d753b2927e9085dfd877a82b3e9bc13c7acefd6c78c64b4b26b75a357e8c8a1.request.json",
+      "bytes": 184,
+      "leaf_sha256": "4d753b2927e9085dfd877a82b3e9bc13c7acefd6c78c64b4b26b75a357e8c8a1",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "48f5a8e35619700870f20f8332a1701c8b37c8750881730dcf29abc132ffc410"
+        },
+        {
+          "side": "left",
+          "hash": "fb6f3ccdc2f70ffa4eb1c093afaf4e2e97143c1f3fa9e5c594e11ec79fd2e27b"
+        },
+        {
+          "side": "right",
+          "hash": "3bad3c0c358054366ee3e31799a25def88f3dfc5a535ee4585b082c652527a0c"
+        },
+        {
+          "side": "right",
+          "hash": "2d31eab5b6eb8d43c991a0afdb5fe5234bffb5545d364da88b9a4a75001d2bff"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/d9d9e7c7e8fdc0c0d22fe34f9513278cb554d45cdbf515f82ef8a0ed6ea84bf9.response.json",
+      "bytes": 271,
+      "leaf_sha256": "5a97ec8895992dc433d7706c4bace0d43af66a175f0b481c6ba586eb8602dbdc",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "5c51a79e1944a58b348fbaf114481a663d1b39ce94d9995714b14885f11f6708"
+        },
+        {
+          "side": "right",
+          "hash": "a0d9739a36b9e86cf165a522dc5f26bf9f6f69ec857438ddb44d2d2c9b40811b"
+        },
+        {
+          "side": "left",
+          "hash": "090a9b6fecf6b2e2ee0304613aa836c70fdf40226dc7f0680ce29106f9250eff"
+        },
+        {
+          "side": "right",
+          "hash": "2d31eab5b6eb8d43c991a0afdb5fe5234bffb5545d364da88b9a4a75001d2bff"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/5c51a79e1944a58b348fbaf114481a663d1b39ce94d9995714b14885f11f6708.request.json",
+      "bytes": 184,
+      "leaf_sha256": "5c51a79e1944a58b348fbaf114481a663d1b39ce94d9995714b14885f11f6708",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "5a97ec8895992dc433d7706c4bace0d43af66a175f0b481c6ba586eb8602dbdc"
+        },
+        {
+          "side": "right",
+          "hash": "a0d9739a36b9e86cf165a522dc5f26bf9f6f69ec857438ddb44d2d2c9b40811b"
+        },
+        {
+          "side": "left",
+          "hash": "090a9b6fecf6b2e2ee0304613aa836c70fdf40226dc7f0680ce29106f9250eff"
+        },
+        {
+          "side": "right",
+          "hash": "2d31eab5b6eb8d43c991a0afdb5fe5234bffb5545d364da88b9a4a75001d2bff"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/5d06c0182f59b0a9075cb087923cfec508f9408b69a6de86320fc97e7ddc9f8e.request.json",
+      "bytes": 184,
+      "leaf_sha256": "5d06c0182f59b0a9075cb087923cfec508f9408b69a6de86320fc97e7ddc9f8e",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "635890d63df22f95fe0450b1f6428c2b1f704a88c208b4864334fdb9845518c2"
+        },
+        {
+          "side": "left",
+          "hash": "5bb197b8da47b1ce6c2aa4c058965d9d29af8d5138d9b667fa421523430eb723"
+        },
+        {
+          "side": "left",
+          "hash": "090a9b6fecf6b2e2ee0304613aa836c70fdf40226dc7f0680ce29106f9250eff"
+        },
+        {
+          "side": "right",
+          "hash": "2d31eab5b6eb8d43c991a0afdb5fe5234bffb5545d364da88b9a4a75001d2bff"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/635890d63df22f95fe0450b1f6428c2b1f704a88c208b4864334fdb9845518c2.request.json",
+      "bytes": 184,
+      "leaf_sha256": "635890d63df22f95fe0450b1f6428c2b1f704a88c208b4864334fdb9845518c2",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "5d06c0182f59b0a9075cb087923cfec508f9408b69a6de86320fc97e7ddc9f8e"
+        },
+        {
+          "side": "left",
+          "hash": "5bb197b8da47b1ce6c2aa4c058965d9d29af8d5138d9b667fa421523430eb723"
+        },
+        {
+          "side": "left",
+          "hash": "090a9b6fecf6b2e2ee0304613aa836c70fdf40226dc7f0680ce29106f9250eff"
+        },
+        {
+          "side": "right",
+          "hash": "2d31eab5b6eb8d43c991a0afdb5fe5234bffb5545d364da88b9a4a75001d2bff"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/c56b9a2bca071a9dcad08223cc420595dfd737199f6bdc4e2b5489a4d389005a.response.json",
+      "bytes": 280,
+      "leaf_sha256": "71131b470f858ec9e60afe58d7390604ebf7b3d76cc15d67990f01ed7e9d8ade",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "72009e7fac277b8e79b8a34ceb75d375cf9b46824955144ba1f57290ee89930f"
+        },
+        {
+          "side": "right",
+          "hash": "cac5284bef7b0b2bb8f7c0278b1a6f893f1e279196a5674ca1711ba43f0bf9ed"
+        },
+        {
+          "side": "right",
+          "hash": "b2bcb1139681d3f23f7998143c44dc307f4eeef0ca436577af4d57b09e8036b5"
+        },
+        {
+          "side": "left",
+          "hash": "1aac53fcba484009ed578accc0518dfde303771f1cc6f1b8d75f246e77d3013f"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/5c51a79e1944a58b348fbaf114481a663d1b39ce94d9995714b14885f11f6708.response.json",
+      "bytes": 923,
+      "leaf_sha256": "72009e7fac277b8e79b8a34ceb75d375cf9b46824955144ba1f57290ee89930f",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "71131b470f858ec9e60afe58d7390604ebf7b3d76cc15d67990f01ed7e9d8ade"
+        },
+        {
+          "side": "right",
+          "hash": "cac5284bef7b0b2bb8f7c0278b1a6f893f1e279196a5674ca1711ba43f0bf9ed"
+        },
+        {
+          "side": "right",
+          "hash": "b2bcb1139681d3f23f7998143c44dc307f4eeef0ca436577af4d57b09e8036b5"
+        },
+        {
+          "side": "left",
+          "hash": "1aac53fcba484009ed578accc0518dfde303771f1cc6f1b8d75f246e77d3013f"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/cb7d623fb482732fd09d1acee720fdc6d2358321be2bff6c9d373cfa76dc7c07.response.json",
+      "bytes": 280,
+      "leaf_sha256": "982702742c53be2a59d2d3693ebc77bd233a240efbcb6f0daa0f45e0b8580d08",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "98ae3e679ef64f37cb99406a689f47f33880880ae28d63739f405e6dfccdf74b"
+        },
+        {
+          "side": "left",
+          "hash": "c77dec3ec8d3102f5489cb9ac010a3fd31c4e47cde07ff223976f72c7cfdb831"
+        },
+        {
+          "side": "right",
+          "hash": "b2bcb1139681d3f23f7998143c44dc307f4eeef0ca436577af4d57b09e8036b5"
+        },
+        {
+          "side": "left",
+          "hash": "1aac53fcba484009ed578accc0518dfde303771f1cc6f1b8d75f246e77d3013f"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-supply-20260920.json",
+      "bytes": 10163,
+      "leaf_sha256": "98ae3e679ef64f37cb99406a689f47f33880880ae28d63739f405e6dfccdf74b",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "982702742c53be2a59d2d3693ebc77bd233a240efbcb6f0daa0f45e0b8580d08"
+        },
+        {
+          "side": "left",
+          "hash": "c77dec3ec8d3102f5489cb9ac010a3fd31c4e47cde07ff223976f72c7cfdb831"
+        },
+        {
+          "side": "right",
+          "hash": "b2bcb1139681d3f23f7998143c44dc307f4eeef0ca436577af4d57b09e8036b5"
+        },
+        {
+          "side": "left",
+          "hash": "1aac53fcba484009ed578accc0518dfde303771f1cc6f1b8d75f246e77d3013f"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-roster-20260920.json",
+      "bytes": 10177,
+      "leaf_sha256": "9b56eb4c48295618dbd0270a915024dbbf4c7e42c72b0db26b768ac74b6b852e",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "9bd8be4d246499bf759d588e554c4018004627e20bfe5e6014971bda51594443"
+        },
+        {
+          "side": "right",
+          "hash": "674c7fd71e419f3e6b3addded1d50c71279c3179f8bc2b08fefddc461e39b657"
+        },
+        {
+          "side": "left",
+          "hash": "92520ed6e456c27e7c895a5c3d1c08aa786b4c71bccb7a340f03fd2dd7b38911"
+        },
+        {
+          "side": "left",
+          "hash": "1aac53fcba484009ed578accc0518dfde303771f1cc6f1b8d75f246e77d3013f"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/635890d63df22f95fe0450b1f6428c2b1f704a88c208b4864334fdb9845518c2.response.json",
+      "bytes": 414,
+      "leaf_sha256": "9bd8be4d246499bf759d588e554c4018004627e20bfe5e6014971bda51594443",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "9b56eb4c48295618dbd0270a915024dbbf4c7e42c72b0db26b768ac74b6b852e"
+        },
+        {
+          "side": "right",
+          "hash": "674c7fd71e419f3e6b3addded1d50c71279c3179f8bc2b08fefddc461e39b657"
+        },
+        {
+          "side": "left",
+          "hash": "92520ed6e456c27e7c895a5c3d1c08aa786b4c71bccb7a340f03fd2dd7b38911"
+        },
+        {
+          "side": "left",
+          "hash": "1aac53fcba484009ed578accc0518dfde303771f1cc6f1b8d75f246e77d3013f"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/a1696ec0b3805f4647b5d0bfeb7651f8bad736da8386857f1cb915f470a0c7c9.request.json",
+      "bytes": 184,
+      "leaf_sha256": "a1696ec0b3805f4647b5d0bfeb7651f8bad736da8386857f1cb915f470a0c7c9",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "a794b14639b2d8abe14da8ee31f875157cba58a2d66125c24611f1437e452121"
+        },
+        {
+          "side": "left",
+          "hash": "28637e1d039599ee3800666149a74a1e8a4def7efb36f0f60c3bfba8e214d94f"
+        },
+        {
+          "side": "left",
+          "hash": "92520ed6e456c27e7c895a5c3d1c08aa786b4c71bccb7a340f03fd2dd7b38911"
+        },
+        {
+          "side": "left",
+          "hash": "1aac53fcba484009ed578accc0518dfde303771f1cc6f1b8d75f246e77d3013f"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/d9dcb6d635b1258a70f18ae46f3494895af0087cc54281674023de449c35743e.response.json",
+      "bytes": 242,
+      "leaf_sha256": "a794b14639b2d8abe14da8ee31f875157cba58a2d66125c24611f1437e452121",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "a1696ec0b3805f4647b5d0bfeb7651f8bad736da8386857f1cb915f470a0c7c9"
+        },
+        {
+          "side": "left",
+          "hash": "28637e1d039599ee3800666149a74a1e8a4def7efb36f0f60c3bfba8e214d94f"
+        },
+        {
+          "side": "left",
+          "hash": "92520ed6e456c27e7c895a5c3d1c08aa786b4c71bccb7a340f03fd2dd7b38911"
+        },
+        {
+          "side": "left",
+          "hash": "1aac53fcba484009ed578accc0518dfde303771f1cc6f1b8d75f246e77d3013f"
+        },
+        {
+          "side": "right",
+          "hash": "cce4241dfa97b780145ed211f4c666230415a405153d0cfbf560db4ce630207e"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/aec1e21f57c930c8cf85c8cc866eed7b972b66597505410b696f2222f2efec31.request.json",
+      "bytes": 183,
+      "leaf_sha256": "aec1e21f57c930c8cf85c8cc866eed7b972b66597505410b696f2222f2efec31",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "b51da6767deb3a7d7c5312c4dffe89c24498890c64bee699ad2a9038c1426c6e"
+        },
+        {
+          "side": "right",
+          "hash": "45968042a01803b93ff564501fba9a8d8d39eed4a62b72becd25c8b8b1510d43"
+        },
+        {
+          "side": "right",
+          "hash": "fed5e97f65d8b8b4ab038ff60d0dc208cd3638aaafd10f86660c3119988babbb"
+        },
+        {
+          "side": "right",
+          "hash": "dccf97f2a2004814158729b1651f4000b99357bdde48e2e3b0cb5284505733ca"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/b51da6767deb3a7d7c5312c4dffe89c24498890c64bee699ad2a9038c1426c6e.request.json",
+      "bytes": 184,
+      "leaf_sha256": "b51da6767deb3a7d7c5312c4dffe89c24498890c64bee699ad2a9038c1426c6e",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "aec1e21f57c930c8cf85c8cc866eed7b972b66597505410b696f2222f2efec31"
+        },
+        {
+          "side": "right",
+          "hash": "45968042a01803b93ff564501fba9a8d8d39eed4a62b72becd25c8b8b1510d43"
+        },
+        {
+          "side": "right",
+          "hash": "fed5e97f65d8b8b4ab038ff60d0dc208cd3638aaafd10f86660c3119988babbb"
+        },
+        {
+          "side": "right",
+          "hash": "dccf97f2a2004814158729b1651f4000b99357bdde48e2e3b0cb5284505733ca"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/b51da6767deb3a7d7c5312c4dffe89c24498890c64bee699ad2a9038c1426c6e.response.json",
+      "bytes": 231,
+      "leaf_sha256": "b591b498aaca912c053ced3c6c9f75ccc15ec6dd329e186960ffd16cc2683631",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "c056952f9fcfa9b1885bfb0c1808cb9cd3e8b2787ee2b96e70190fd61495a4e7"
+        },
+        {
+          "side": "left",
+          "hash": "6673430bd14a95c091890effad0dbffeb166d044b2b5bc56ed374c400a7284aa"
+        },
+        {
+          "side": "right",
+          "hash": "fed5e97f65d8b8b4ab038ff60d0dc208cd3638aaafd10f86660c3119988babbb"
+        },
+        {
+          "side": "right",
+          "hash": "dccf97f2a2004814158729b1651f4000b99357bdde48e2e3b0cb5284505733ca"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/4d753b2927e9085dfd877a82b3e9bc13c7acefd6c78c64b4b26b75a357e8c8a1.response.json",
+      "bytes": 280,
+      "leaf_sha256": "c056952f9fcfa9b1885bfb0c1808cb9cd3e8b2787ee2b96e70190fd61495a4e7",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "b591b498aaca912c053ced3c6c9f75ccc15ec6dd329e186960ffd16cc2683631"
+        },
+        {
+          "side": "left",
+          "hash": "6673430bd14a95c091890effad0dbffeb166d044b2b5bc56ed374c400a7284aa"
+        },
+        {
+          "side": "right",
+          "hash": "fed5e97f65d8b8b4ab038ff60d0dc208cd3638aaafd10f86660c3119988babbb"
+        },
+        {
+          "side": "right",
+          "hash": "dccf97f2a2004814158729b1651f4000b99357bdde48e2e3b0cb5284505733ca"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/4293f4896ea0ea322f89d0a1744f947a3a96cb1e4aba0dc0c8d412aa5c200cb7.response.json",
+      "bytes": 243,
+      "leaf_sha256": "c15f29960341b60022a7db8f1d4367b82f4d7c85d47dd3f2d15b213e9743cb35",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "c1601e87f1a6829e272b8df39dab106cd28ebf1303ec64ec09dbac5595b7d9c6"
+        },
+        {
+          "side": "right",
+          "hash": "f5c569d79724ae03b57283641ba7fd95d85d4a66d176a201bd83532876e2fd7d"
+        },
+        {
+          "side": "left",
+          "hash": "35bfd5d044689fa050a0c2bc8e18855cc1abd116a4f1372206cd75cebe351ca1"
+        },
+        {
+          "side": "right",
+          "hash": "dccf97f2a2004814158729b1651f4000b99357bdde48e2e3b0cb5284505733ca"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/c8b114d3f2a942bb5fa4b17d2f2f30469158878c8b143567a1a85996fac3a9ab.response.json",
+      "bytes": 323,
+      "leaf_sha256": "c1601e87f1a6829e272b8df39dab106cd28ebf1303ec64ec09dbac5595b7d9c6",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "c15f29960341b60022a7db8f1d4367b82f4d7c85d47dd3f2d15b213e9743cb35"
+        },
+        {
+          "side": "right",
+          "hash": "f5c569d79724ae03b57283641ba7fd95d85d4a66d176a201bd83532876e2fd7d"
+        },
+        {
+          "side": "left",
+          "hash": "35bfd5d044689fa050a0c2bc8e18855cc1abd116a4f1372206cd75cebe351ca1"
+        },
+        {
+          "side": "right",
+          "hash": "dccf97f2a2004814158729b1651f4000b99357bdde48e2e3b0cb5284505733ca"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/c56b9a2bca071a9dcad08223cc420595dfd737199f6bdc4e2b5489a4d389005a.request.json",
+      "bytes": 184,
+      "leaf_sha256": "c56b9a2bca071a9dcad08223cc420595dfd737199f6bdc4e2b5489a4d389005a",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "c8b114d3f2a942bb5fa4b17d2f2f30469158878c8b143567a1a85996fac3a9ab"
+        },
+        {
+          "side": "left",
+          "hash": "139274f4633dd7da0d1a4946a4b6e4ba21fff9a0ca4c9db4a6ddaa781ba9b68c"
+        },
+        {
+          "side": "left",
+          "hash": "35bfd5d044689fa050a0c2bc8e18855cc1abd116a4f1372206cd75cebe351ca1"
+        },
+        {
+          "side": "right",
+          "hash": "dccf97f2a2004814158729b1651f4000b99357bdde48e2e3b0cb5284505733ca"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/c8b114d3f2a942bb5fa4b17d2f2f30469158878c8b143567a1a85996fac3a9ab.request.json",
+      "bytes": 184,
+      "leaf_sha256": "c8b114d3f2a942bb5fa4b17d2f2f30469158878c8b143567a1a85996fac3a9ab",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "c56b9a2bca071a9dcad08223cc420595dfd737199f6bdc4e2b5489a4d389005a"
+        },
+        {
+          "side": "left",
+          "hash": "139274f4633dd7da0d1a4946a4b6e4ba21fff9a0ca4c9db4a6ddaa781ba9b68c"
+        },
+        {
+          "side": "left",
+          "hash": "35bfd5d044689fa050a0c2bc8e18855cc1abd116a4f1372206cd75cebe351ca1"
+        },
+        {
+          "side": "right",
+          "hash": "dccf97f2a2004814158729b1651f4000b99357bdde48e2e3b0cb5284505733ca"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/cb7d623fb482732fd09d1acee720fdc6d2358321be2bff6c9d373cfa76dc7c07.request.json",
+      "bytes": 184,
+      "leaf_sha256": "cb7d623fb482732fd09d1acee720fdc6d2358321be2bff6c9d373cfa76dc7c07",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "cbea00c7f4e79cd4d6427e7b287304eab0488a43e87138dc7d8dfead7cf65293"
+        },
+        {
+          "side": "right",
+          "hash": "10ec75d80df126e8d8d8e8d852baaafad21fa3cd8fdefb06024135f148dfd602"
+        },
+        {
+          "side": "right",
+          "hash": "e42794d00474eebf57c7675d15d142a70e4ea59c8392241a848ec2d2c8e52110"
+        },
+        {
+          "side": "left",
+          "hash": "64aec9de22b4c4bf39fdf9a1b4cda4c57a633f9de0b13cc0d284cd05704d3ed2"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl_supply_measure.py",
+      "bytes": 5352,
+      "leaf_sha256": "cbea00c7f4e79cd4d6427e7b287304eab0488a43e87138dc7d8dfead7cf65293",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "cb7d623fb482732fd09d1acee720fdc6d2358321be2bff6c9d373cfa76dc7c07"
+        },
+        {
+          "side": "right",
+          "hash": "10ec75d80df126e8d8d8e8d852baaafad21fa3cd8fdefb06024135f148dfd602"
+        },
+        {
+          "side": "right",
+          "hash": "e42794d00474eebf57c7675d15d142a70e4ea59c8392241a848ec2d2c8e52110"
+        },
+        {
+          "side": "left",
+          "hash": "64aec9de22b4c4bf39fdf9a1b4cda4c57a633f9de0b13cc0d284cd05704d3ed2"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/a1696ec0b3805f4647b5d0bfeb7651f8bad736da8386857f1cb915f470a0c7c9.response.json",
+      "bytes": 423,
+      "leaf_sha256": "d046ade610879ca101196186c422a130f69299409efc0cb1e438fbb235423bf8",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "d9d9e7c7e8fdc0c0d22fe34f9513278cb554d45cdbf515f82ef8a0ed6ea84bf9"
+        },
+        {
+          "side": "left",
+          "hash": "06a168387c57ee8e9e3a81c3a319e08080afd5f0dc22628461c87f8766c50592"
+        },
+        {
+          "side": "right",
+          "hash": "e42794d00474eebf57c7675d15d142a70e4ea59c8392241a848ec2d2c8e52110"
+        },
+        {
+          "side": "left",
+          "hash": "64aec9de22b4c4bf39fdf9a1b4cda4c57a633f9de0b13cc0d284cd05704d3ed2"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/d9d9e7c7e8fdc0c0d22fe34f9513278cb554d45cdbf515f82ef8a0ed6ea84bf9.request.json",
+      "bytes": 184,
+      "leaf_sha256": "d9d9e7c7e8fdc0c0d22fe34f9513278cb554d45cdbf515f82ef8a0ed6ea84bf9",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "d046ade610879ca101196186c422a130f69299409efc0cb1e438fbb235423bf8"
+        },
+        {
+          "side": "left",
+          "hash": "06a168387c57ee8e9e3a81c3a319e08080afd5f0dc22628461c87f8766c50592"
+        },
+        {
+          "side": "right",
+          "hash": "e42794d00474eebf57c7675d15d142a70e4ea59c8392241a848ec2d2c8e52110"
+        },
+        {
+          "side": "left",
+          "hash": "64aec9de22b4c4bf39fdf9a1b4cda4c57a633f9de0b13cc0d284cd05704d3ed2"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/d9dcb6d635b1258a70f18ae46f3494895af0087cc54281674023de449c35743e.request.json",
+      "bytes": 183,
+      "leaf_sha256": "d9dcb6d635b1258a70f18ae46f3494895af0087cc54281674023de449c35743e",
+      "inclusion_proof": [
+        {
+          "side": "right",
+          "hash": "efdd043189c4fa753204939c875afb6f26dd652aa8cd4c8c3f14a1433617f9a8"
+        },
+        {
+          "side": "right",
+          "hash": "f8fd2dd5a4561f794f75e1b87299d1877e366c64f1adfc86b8e5ed7e335ec802"
+        },
+        {
+          "side": "left",
+          "hash": "26ac0f497e070810cc6bab9fada274ac58817249800eefeb2768fc1abc49e869"
+        },
+        {
+          "side": "left",
+          "hash": "64aec9de22b4c4bf39fdf9a1b4cda4c57a633f9de0b13cc0d284cd05704d3ed2"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "retain_xrpl_evidence.py",
+      "bytes": 4403,
+      "leaf_sha256": "efdd043189c4fa753204939c875afb6f26dd652aa8cd4c8c3f14a1433617f9a8",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "d9dcb6d635b1258a70f18ae46f3494895af0087cc54281674023de449c35743e"
+        },
+        {
+          "side": "right",
+          "hash": "f8fd2dd5a4561f794f75e1b87299d1877e366c64f1adfc86b8e5ed7e335ec802"
+        },
+        {
+          "side": "left",
+          "hash": "26ac0f497e070810cc6bab9fada274ac58817249800eefeb2768fc1abc49e869"
+        },
+        {
+          "side": "left",
+          "hash": "64aec9de22b4c4bf39fdf9a1b4cda4c57a633f9de0b13cc0d284cd05704d3ed2"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    },
+    {
+      "path": "xrpl-source-evidence/aec1e21f57c930c8cf85c8cc866eed7b972b66597505410b696f2222f2efec31.response.json",
+      "bytes": 530,
+      "leaf_sha256": "f8fd2dd5a4561f794f75e1b87299d1877e366c64f1adfc86b8e5ed7e335ec802",
+      "inclusion_proof": [
+        {
+          "side": "left",
+          "hash": "7d1bfdbbb3c78728e2976f5d0161005a75bf689b6c64e1f7328800f680ec5351"
+        },
+        {
+          "side": "left",
+          "hash": "26ac0f497e070810cc6bab9fada274ac58817249800eefeb2768fc1abc49e869"
+        },
+        {
+          "side": "left",
+          "hash": "64aec9de22b4c4bf39fdf9a1b4cda4c57a633f9de0b13cc0d284cd05704d3ed2"
+        },
+        {
+          "side": "left",
+          "hash": "3910c45e0cf98136f9dc2235e0ebdc26c0ff58ff5282a8d89aba79ebc285a371"
+        }
+      ],
+      "proof_verifies": true
+    }
+  ]
+}

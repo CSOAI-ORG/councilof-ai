@@ -1,0 +1,18 @@
+# live readback: does the sidecar logIndex 2841551210 point at the same entry as the committed file?
+retrieved_at=2026-09-20T01:52:32Z
+
+$ curl -s "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2841551210" | jq "to_entries[0] | {uuid: .key, logIndex: .value.logIndex, integratedTime: .value.integratedTime}"
+{
+  "uuid": "108e9186e8c5677a330d12ba36c055849c6a11c64bd289723aee1d20794cfee847127e7c11cf6c04",
+  "logIndex": 2841551210,
+  "integratedTime": 1789456425
+}
+
+$ curl -s "https://rekor.sigstore.dev/api/v1/log/entries/108e9186e8c5677a330d12ba36c055849c6a11c64bd289723aee1d20794cfee847127e7c11cf6c04" | jq "to_entries[0].value | {logIndex, integratedTime}"
+{
+  "logIndex": 2841551210,
+  "integratedTime": 1789456425
+}
+
+$ jq "to_entries[0].value.logIndex" public/interop/rekor-root-dedb49d0.json
+2841551210
