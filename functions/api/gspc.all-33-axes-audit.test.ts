@@ -527,4 +527,26 @@ describe("GSPC all-33-axes full-depth audit & cross-surface parity", () => {
     }
     expect(s1.artifact_sha256).toMatch(/^[0-9a-f]{64}$/);
   });
+
+  it("constitutional-charter-gspc-layer0-crosswalk-v1.json bridges all 22 operational articles, 16 controls (CH-01..CH-16), 52 source articles, 33 GSPC axes, 20 GitHub Layer-0 targets, and 8 Newton reactions", () => {
+    const cwPath = new URL("../../public/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json", import.meta.url);
+    expect(existsSync(cwPath)).toBe(true);
+    const cw = JSON.parse(readFileSync(cwPath, "utf8")) as Record<string, any>;
+    expect(cw.schema).toBe("csoai.constitutional-charter-gspc-layer0-crosswalk/1.0");
+    expect(cw.pinned_charter_artifacts?.operational_charter_sha256).toBe(
+      "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e"
+    );
+    expect(cw.counts).toEqual({
+      outside_in_personas_inspected: 5,
+      operational_controls_mapped: 16,
+      operational_articles_mapped: 22,
+      source_charter_articles_indexed: 52,
+      distinct_gspc_axes_covered_by_charter: 33,
+      external_github_layer0_targets: 20,
+      first_principles_precedents: 7,
+      newtons_third_law_reactions: 8,
+    });
+    expect(cw.mapped_gspc_axes).toEqual([...CANONICAL_33_AXES].sort());
+    expect(cw.crosswalk_sha256).toMatch(/^[0-9a-f]{64}$/);
+  });
 });
