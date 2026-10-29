@@ -5369,6 +5369,36 @@
       "source": "functions/api/request-attestation.ts"
     },
     {
+      "id": "api-research-plan",
+      "kind": "http",
+      "path": "/api/research-plan",
+      "method": "GET",
+      "name": "Research plan",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.gspc-axes/0.5",
+        "csoai.gspc-research-plan/0.1",
+        "csoai.gspc-research-semantics/0.1",
+        "csoai.research-review-request/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/research-plan",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/research-plan.ts"
+    },
+    {
       "id": "api-revenue",
       "kind": "http",
       "path": "/api/revenue",
@@ -8861,7 +8891,7 @@
       "path": "/.well-known/x402",
       "method": "GET",
       "name": "X402",
-      "description": "GET /.well-known/x402 and /.well-known/x402/ — serve the discovery manifest at 200. Was a 308 to x402.json; strict indexers do not follow redirects (x402scan registerFromOrigin treats a redirect as noDiscovery; the IronBridge validator requires 200 application/json with no redirects). Same payload as x402.json.",
+      "description": "GET/HEAD /.well-known/x402 and /.well-known/x402/ — the suffix-less discovery aliases. Serves the canonical manifest at 200 (strict indexers — x402scan registerFromOrigin, the IronBridge validator — do not follow redirects). Per x402-alias-parity.test.ts: callable onRequestGet + onRequestHead, NO catch-all onRequest. `./x402/index` re-exports from here.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
       "lifecycle": "LIVE",
