@@ -17,7 +17,7 @@ import {
 // 30 Sep 2026 (council-os-watch): the old header search (a model call) is retired. ⌘K / Ctrl-K opens the palette
 // (components/ask/CommandPalette.tsx, loaded on first use) whose search falls through to Ask GSPC.
 import { openAsk, openPalette } from '@/components/ask/askBus';
-import { BOOK_MEASUREMENT_LINK, navigation } from '@/components/HeaderNav';
+import { BOOK_MEASUREMENT_LINK, PRIMARY_LINKS, navigation } from '@/components/HeaderNav';
 export { HOME_NAV, ARCHIVE_NAV } from '@/components/HeaderNav';
 
 // SPA hops keep this header mounted: it lives above the router in App.tsx.
