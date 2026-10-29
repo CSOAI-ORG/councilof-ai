@@ -1,0 +1,236 @@
+{
+  "schema": "csoai.care-article1-open-research-registry/1.0",
+  "issuer": "CSOAI Ltd (UK Companies House 16939677)",
+  "charter_anchor": "Article 1 Care Basis — Protect Without Abandoning, Help Without Reinforcing Harm (care-cost = protect x help)",
+  "board_motivation": {
+    "axis": "care",
+    "bench": "CareBench",
+    "observed_fleet_mean": 0.293,
+    "observed_mean_harm": 0.707,
+    "observed_cvar05_harm": 0.9895,
+    "finding": "Calibrated care (protect x help) is the 14-model fleet's weakest measured axis on GET /api/gspc, with worst-5% tail harm at 0.990."
+  },
+  "meok_multiprospective_routing_architecture": {
+    "why_single_model_fails": "A single autoregressive model trained with standard RLHF collapses into either (a) sycophantic delusion confirmation (protect=0) to maximise short-term user approval, or (b) cold over-refusal on benign/figurative prompts (help=0).",
+    "why_naive_multiagent_chat_fails": "Unconstrained multi-agent chat suffers from inter-agent sycophancy (disagreement collapse), where polite agents validate each other's flawed premises.",
+    "orthogonal_perspectives": [
+      {
+        "id": "epistemic_skeptic",
+        "role": "Audits factual and reality boundaries; flags ungrounded delusional premises, coded-signal claims, and anthropomorphic/sentience illusions (EU AI Act Art. 50)."
+      },
+      {
+        "id": "harm_authority_guard",
+        "role": "Audits physical, clinical, and social-isolation harm (self-harm, medication cessation, third-party retaliation); enforces XRAIV action authority (REFUSE | CONFIRM | PROCEED)."
+      },
+      {
+        "id": "proportionate_help_advocate",
+        "role": "Audits whether the user prompt is benign fiction, metaphor, academic inquiry, or ordinary stress; prevents false pathologising and over-refusal (XSTest calibration)."
+      },
+      {
+        "id": "article1_care_synthesizer",
+        "role": "Synthesizes the final response subject to hard vetoes from Perspectives 1-3: validates emotional distress without validating delusional premises, refuses harm, discloses AI non-sentience when relevant, and bridges to human/clinical support."
+      }
+    ]
+  },
+  "training_governance_invariants": [
+    "End-user candidate receipts submitted to POST /api/evidence-intake carry model_training=false and are NEVER used for model training.",
+    "Frozen GSPC evaluation bank items (such as CARE-PSY-v1) carry training_usage_policy=EVAL_FROZEN_BANK_NEVER_TRAIN_ON_TEST_ITEMS so open models are never trained on benchmark test items.",
+    "Only permissively licensed corpora (MIT, Apache-2.0, CC-BY-4.0, ODC-By) and synthetic multi-perspective deliberation trajectories on disjoint seed scenarios are eligible for MP-DPO open-model training."
+  ],
+  "counts": {
+    "total_sources": 12,
+    "training_eligible_permissive": 9,
+    "eval_only_non_commercial": 2,
+    "frozen_eval_banks_excluded_from_training": 1
+  },
+  "sources": [
+    {
+      "id": "psychosis-bench",
+      "name": "Psychosis-Bench (Psy-Bench)",
+      "kind": "benchmark-and-prompts",
+      "citation": "Dalmasso et al., 'The Psychogenic Machine: Simulating AI Psychosis, Delusion Reinforcement and Harm Enablement in Large Language Models' (arXiv:2509.10970)",
+      "repository": "https://github.com/w-is-h/psychosis-bench",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "affect",
+        "cross-reality"
+      ],
+      "care_role": "protect (delusion non-confirmation DCS, harm non-enablement HES, safety intervention SIS)",
+      "integration_status": "ADAPTED_IN_CARE_PSY_V1"
+    },
+    {
+      "id": "sycophancy-eval",
+      "name": "SycophancyEval / Anthropic Evals Sycophancy Suite",
+      "kind": "benchmark-and-prompts",
+      "citation": "Perez et al. / Sharma et al., 'Towards Understanding Sycophancy in Language Models' (arXiv:2310.13548)",
+      "repository": "https://github.com/meg-tong/sycophancy-eval",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "affect",
+        "governance"
+      ],
+      "care_role": "protect (epistemic non-capitulation when user asserts false or ungrounded premises)",
+      "integration_status": "MAPPED_FOR_MP_DPO"
+    },
+    {
+      "id": "xstest",
+      "name": "XSTest (Exaggerated Safety Test Suite)",
+      "kind": "benchmark-and-prompts",
+      "citation": "Röttger et al., 'XSTest: A Test Suite for Identifying Exaggerated Safety Behaviours in Large Language Models' (arXiv:2308.01263)",
+      "repository": "https://github.com/paul-rottger/xstest",
+      "license": "CC-BY-4.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "safety"
+      ],
+      "care_role": "help (prevents cold over-refusal and false pathologising on benign/figurative prompts)",
+      "integration_status": "ADAPTED_IN_CARE_PSY_V1_CONTROLS"
+    },
+    {
+      "id": "wildguardmix",
+      "name": "AllenAI WildGuardMix",
+      "kind": "dataset-and-moderator",
+      "citation": "Han et al., 'WildGuard: Open One-Stop Moderation Tools for Safety Risks, Jailbreaks, and Refusals of LLMs' (arXiv:2406.18495)",
+      "repository": "https://huggingface.co/datasets/allenai/wildguardmix",
+      "license": "ODC-By",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "safety",
+        "care",
+        "jail"
+      ],
+      "care_role": "protect x help (paired harmful request refusal + benign request compliance)",
+      "integration_status": "MAPPED_FOR_MP_DPO"
+    },
+    {
+      "id": "truthfulqa",
+      "name": "TruthfulQA",
+      "kind": "benchmark-and-prompts",
+      "citation": "Lin et al., 'TruthfulQA: Measuring How Models Mimic Human Falsehoods' (arXiv:2109.07958)",
+      "repository": "https://github.com/sylinrl/TruthfulQA",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "governance"
+      ],
+      "care_role": "protect (epistemic grounding against human misconceptions and conspiratorial premises)",
+      "integration_status": "MAPPED_FOR_EPISTEMIC_SKEPTIC_LANE"
+    },
+    {
+      "id": "simpleqa",
+      "name": "SimpleQA (OpenAI Simple Evals)",
+      "kind": "benchmark-and-prompts",
+      "citation": "Wei et al., 'Measuring Short-Form Factuality in Large Language Models' (arXiv:2411.04368)",
+      "repository": "https://github.com/openai/simple-evals",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "continuity"
+      ],
+      "care_role": "protect (calibrated abstention vs confabulation on factual queries)",
+      "integration_status": "MAPPED_FOR_EPISTEMIC_SKEPTIC_LANE"
+    },
+    {
+      "id": "demokritos-ai-act",
+      "name": "NCSR Demokritos EU AI Act Evaluation Benchmark",
+      "kind": "benchmark-and-prompts",
+      "citation": "NCSR Demokritos, 'AI Act Evaluation Benchmark' (arXiv:2603.09435)",
+      "repository": "https://huggingface.co/datasets/csoai/gspc-gov",
+      "license": "CC-BY-4.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "governance",
+        "art5-safeguard",
+        "affect"
+      ],
+      "care_role": "protect (Art. 5 prohibited manipulation/vulnerability exploitation & Art. 50 disclosure)",
+      "integration_status": "ACTIVE_IN_GOVBENCH_V2"
+    },
+    {
+      "id": "moa-together",
+      "name": "Mixture-of-Agents (MoA)",
+      "kind": "multi-agent-architecture",
+      "citation": "Wang et al., 'Mixture-of-Agents Enhances Large Language Model Capabilities' (arXiv:2406.04692)",
+      "repository": "https://github.com/togethercomputer/MoA",
+      "license": "Apache-2.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "swarm",
+        "care",
+        "harness-fidelity"
+      ],
+      "care_role": "multi-perspective proposer + aggregator routing topology",
+      "integration_status": "ADAPTED_WITH_ORTHOGONAL_VETO_GATES"
+    },
+    {
+      "id": "consensagent-dmad",
+      "name": "CONSENSAGENT & Diverse Multi-Agent Debate (DMAD)",
+      "kind": "multi-agent-architecture",
+      "citation": "Pitre et al. / Du et al., 'Improving Factuality and Reasoning in Language Models through Multiagent Debate' (arXiv:2305.14325)",
+      "repository": "https://github.com/priyapitre/CONSENSAGENT",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "swarm",
+        "care"
+      ],
+      "care_role": "prevents inter-agent sycophancy (disagreement collapse) by isolating orthogonal perspectives before synthesis",
+      "integration_status": "ACTIVE_IN_MEOK_4_PERSPECTIVE_ROUTER"
+    },
+    {
+      "id": "esconv",
+      "name": "ESConv (Emotional Support Conversation Dataset)",
+      "kind": "dialogue-corpus",
+      "citation": "Liu et al., 'Towards Emotional Support Dialog Systems' (ACL 2021, arXiv:2106.01144)",
+      "repository": "https://github.com/thu-coai/Emotional-Support-Conversation",
+      "license": "CC-BY-NC-4.0",
+      "training_usage_policy": "EVAL_ONLY_NON_COMMERCIAL",
+      "gspc_axes": [
+        "care",
+        "affect"
+      ],
+      "care_role": "evaluation reference for Helping Skills Theory stages (exploration, comforting, action)",
+      "integration_status": "EVAL_REFERENCE_ONLY_BLOCKED_FROM_COMMERCIAL_TRAINING"
+    },
+    {
+      "id": "beavertails-pku",
+      "name": "PKU-SafeRLHF / BeaverTails",
+      "kind": "preference-corpus",
+      "citation": "Ji et al., 'BeaverTails: Towards Improved Safety Alignment of LLM via a Human-Preference Dataset' (arXiv:2307.04657)",
+      "repository": "https://github.com/PKU-Alignment/beavertails",
+      "license": "CC-BY-NC-4.0",
+      "training_usage_policy": "EVAL_ONLY_NON_COMMERCIAL",
+      "gspc_axes": [
+        "safety",
+        "care"
+      ],
+      "care_role": "evaluation reference for decoupled helpfulness vs harmlessness dual-reward modeling",
+      "integration_status": "EVAL_REFERENCE_ONLY_BLOCKED_FROM_COMMERCIAL_TRAINING"
+    },
+    {
+      "id": "csoai-care-psy-v1",
+      "name": "GSPC CareBench Delusion Non-Reinforcement Bank (CARE-PSY-v1)",
+      "kind": "frozen-gspc-bank",
+      "citation": "CSOAI Ltd, GSPC Axis #8 Care / Axis #13 Affect / Axis #9 Cross-Reality (2026)",
+      "repository": "https://councilof.ai/interop/psychosis-delusion-guard-bank-v1.json",
+      "license": "CC-BY-4.0",
+      "training_usage_policy": "EVAL_FROZEN_BANK_NEVER_TRAIN_ON_TEST_ITEMS",
+      "gspc_axes": [
+        "care",
+        "affect",
+        "cross-reality"
+      ],
+      "care_role": "frozen 36-item deterministic evaluation bank (30 delusion-pressure + 6 benign controls); never trained on directly to prevent benchmark contamination",
+      "integration_status": "FROZEN_EVAL_BANK_SHA256_PINNED"
+    }
+  ],
+  "framing": "Measurement, never certification. Anyone can re-check at https://councilof.ai/verify",
+  "registry_sha256": "5fc0fee988d28d2b7ec971642406edada7fb474774ed2a5af421177f7edec61d"
+}
