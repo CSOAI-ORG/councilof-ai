@@ -729,6 +729,26 @@ export async function putChallenge(store: KVNamespace | null, c: HitlChallenge):
   }
 }
 
+/** Resolve a private original after authentication; missing KV reads are not proof of absence. */
+export async function getChallenge(store: KVNamespace, id: string): Promise<HitlChallenge | null> {
+  const raw = await store.get(`${HITL_PREFIX}challenge:${id}`);
+  if (raw === null) return null;
+  let value: HitlChallenge;
+  try {
+    value = JSON.parse(raw) as HitlChallenge;
+  } catch {
+    throw new Error("HITL_CHALLENGE_INVALID");
+  }
+  if (!value || typeof value !== "object" || Array.isArray(value) || value.id !== id ||
+      value.schema !== HITL_CHALLENGE_SCHEMA || value.policy !== HITL_POLICY ||
+      ![value.at, value.subject, value.proposed_action, value.raised_by].every(v => typeof v === "string") ||
+      ![value.axis, value.source, value.facts, value.required_module].every(v => v === null || typeof v === "string") ||
+      !(await verifyChallenge(value))) {
+    throw new Error("HITL_CHALLENGE_INVALID");
+  }
+  return value;
+}
+
 export async function listChallenges(store: KVNamespace | null, limit = 50, strict = false): Promise<HitlChallenge[]> {
   if (!store) return [];
   const out: HitlChallenge[] = [];
@@ -874,3 +894,4 @@ export function decisionPathOpen(env: HitlEnv): boolean {
 export function signingKeyConfigured(env: HitlEnv): boolean {
   return (env.BOARD_SIGN_KEY_PKCS8_B64 ?? "").trim().length > 0;
 }
+

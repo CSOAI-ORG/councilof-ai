@@ -44,6 +44,7 @@ import {
   decisionPathOpen,
   deriveModule,
   deriveModules,
+  getChallenge,
   handlesSensitiveData,
   hitlStore,
   listChallenges,
@@ -455,9 +456,43 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       );
     }
 
-    const challenge = body?.challenge as HitlChallenge | undefined;
-    if (!challenge || typeof challenge !== "object" || !challenge.id) {
+    const presented = body?.challenge as HitlChallenge | undefined;
+    if (!presented || typeof presented !== "object" || Array.isArray(presented) ||
+        typeof presented.id !== "string" || !/^chl_[a-f0-9]{16}$/.test(presented.id)) {
       return json({ ok: false, error: "challenge is required" }, 400);
+    }
+    let challenge = presented;
+    // A queue item deliberately omits private fields. Resolve the exact original only
+    // inside this authenticated boundary; never reconstruct its missing hash inputs or
+    // replace a malformed full challenge silently. An id alone is insufficient: bind
+    // every displayed action field so a substituted/stale view cannot be approved.
+    const isQueueProjection = !["schema", "policy", "source", "facts"].some(
+      key => Object.prototype.hasOwnProperty.call(presented, key),
+    );
+    if (isQueueProjection) {
+      let original: HitlChallenge | null;
+      try {
+        original = await getChallenge(store, presented.id);
+      } catch (error) {
+        const invalid = error instanceof Error && error.message === "HITL_CHALLENGE_INVALID";
+        return json({
+          ok: false, stored: false,
+          storage_state: invalid ? "CHALLENGE_INVALID" : "READ_FAILED",
+          error: invalid ? "the stored challenge does not verify" : "the original challenge could not be read",
+        }, invalid ? 422 : 503);
+      }
+      if (!original) {
+        return json({
+          ok: false, stored: false, storage_state: "CHALLENGE_UNAVAILABLE",
+          error: "the original challenge is not available in this read",
+          note: "The store is eventually consistent. No decision was recorded by this request; a missing read does not prove absence.",
+        }, 503);
+      }
+      const displayedFields = ["axis", "subject", "proposed_action", "raised_by", "at", "required_module"] as const;
+      if (displayedFields.some(key => !Object.prototype.hasOwnProperty.call(presented, key) || presented[key] !== original[key])) {
+        return json({ ok: false, error: "the displayed challenge does not match the stored original" }, 422);
+      }
+      challenge = original;
     }
     if (!(await verifyChallenge(challenge))) {
       return json(
@@ -519,7 +554,10 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       competency_verified: true,
       completed_modules: Array.from(new Set([...completed, checked.module.id])).sort(),
       module_id: checked.module.id,
-      challenge,
+      // Sign the public projection, with the original id still binding its full content.
+      // Do not disclose private context through the new decision or public history.
+      // Existing signed receipts remain byte-for-byte unchanged.
+      challenge: { ...challenge, source: null, facts: null },
       at: new Date().toISOString(),
       signingKey: ctx.env.BOARD_SIGN_KEY_PKCS8_B64,
     });
@@ -552,3 +590,4 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
 
 /** HEAD answers what GET answers, with no body (functions/api/_head.ts). */
 export const onRequestHead = headFromGet(onRequestGet);
+
