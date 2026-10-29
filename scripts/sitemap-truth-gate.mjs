@@ -96,12 +96,64 @@ function prerenderedPaths() {
   return out;
 }
 
+/** The slugs published ON PURPOSE. blog-published.json is the source of truth. */
+function publishedBlogSlugs() {
+  const out = new Set();
+  try {
+    const doc = JSON.parse(readFileSync(join(ROOT, "client/src/data/blog-published.json"), "utf8"));
+    for (const p of doc.published || []) if (p && typeof p.slug === "string" && p.slug) out.add(p.slug);
+  } catch {
+    /* the generator warns about this file too */
+  }
+  return out;
+}
+
+/** Slugs with an EXACT route to BlogPost in App.tsx — the published ones sit BEFORE /blog/:slug. */
+function exactBlogRoutes(app) {
+  const out = new Set();
+  for (const m of app.matchAll(/<Route\b[^>]*path="\/blog\/([a-z0-9-]+)"[^>]*>([\s\S]{0,600}?)<\/Route>/g)) {
+    if (/<BlogPost\b/.test(m[2]) && m[2].includes(`slug="${m[1]}"`)) out.add(m[1]);
+  }
+  return out;
+}
+
+/**
+ * Is a /blog/<slug> path one the edge SERVES?
+ *
+ * /blog and /blog/:slug are withdrawn (ContentReviewNotice), but a named set of posts is
+ * published deliberately: client/src/data/blog-published.json says each slug there "gets an
+ * exact App.tsx route to BlogPost, a prerender snapshot and a sitemap entry", and the edge
+ * serves them — measured live 2026-10-29, HTTP 200 with the article's own title.
+ *
+ * So the blanket "every /blog/ URL is a withdrawn article" rule flagged the PUBLISHED posts
+ * as unserved, and every master deploy failed at this gate from 2026-10-29T00:29Z. The
+ * rule now exempts a published slug, but ONLY when it is really served: an exact BlogPost
+ * route AND a prerender snapshot. A published slug that lost either is a broken publication
+ * and is REPORTED — never silently exempted.
+ *
+ * Returns a reason string, or null when the path is served.
+ */
+export function blogPathProblem(path, { blogWithdrawn, published, exactRoutes, prerendered }) {
+  const m = /^\/blog\/([^/]+)\/?$/.exec(path);
+  if (!m) return null;
+  const slug = m[1];
+  if (published.has(slug)) {
+    if (!exactRoutes.has(slug)) return `${path} is listed as published but has no exact BlogPost route`;
+    if (!prerendered.has(`/blog/${slug}`)) return `${path} is listed as published but has no prerender snapshot`;
+    return null;
+  }
+  if (blogWithdrawn) return `${path} is a withdrawn article, not indexable content`;
+  return null;
+}
+
 function problems() {
   const rules = redirectRules();
   const fns = functionRedirects();
   const prerendered = prerenderedPaths();
   const app = readFileSync(join(ROOT, "client/src/App.tsx"), "utf8");
   const blogWithdrawn = /<Route\b[^>]*\bpath="\/blog\/:slug"[^>]*\bcomponent=\{ContentReviewNotice\}/.test(app);
+  const published = publishedBlogSlugs();
+  const exactRoutes = exactBlogRoutes(app);
   const found = [];
   const listed = locs();
   const counts = new Map();
@@ -111,7 +163,8 @@ function problems() {
   }
   for (const url of listed) {
     const path = url.startsWith(ORIGIN) ? url.slice(ORIGIN.length) || "/" : url;
-    if (blogWithdrawn && /^\/blog\/[^/]+\/?$/.test(path)) found.push(`${path} is a withdrawn article, not indexable content`);
+    const blogProblem = blogPathProblem(path, { blogWithdrawn, published, exactRoutes, prerendered });
+    if (blogProblem) found.push(blogProblem);
     else if (NON_PAGE_EXT.test(path)) found.push(`${path} is an asset, not a page`);
     else if (fns.has(path)) found.push(`${path} is redirected by a Pages Function`);
     else if (rules.has(path)) found.push(`${path} has a _redirects rule -> ${rules.get(path)}`);
@@ -130,6 +183,11 @@ function problems() {
 if (process.argv.includes("--selftest")) {
   // The gate must be able to FAIL. A check that cannot fire is worse than no check, so prove
   // the predicate on the three shapes that were actually wrong, without touching the real file.
+  const appSrc = readFileSync(join(ROOT, "client/src/App.tsx"), "utf8");
+  const pub = publishedBlogSlugs();
+  const exact = exactBlogRoutes(appSrc);
+  const snaps = prerenderedPaths();
+  const ctx = { blogWithdrawn: true, published: pub, exactRoutes: exact, prerendered: snaps };
   const cases = [
     ["/stripe-checkout.js", NON_PAGE_EXT.test("/stripe-checkout.js"), "asset route"],
     ["/blog/x", NON_PAGE_EXT.test("/blog/x") === false, "a page path is not an asset"],
@@ -138,6 +196,15 @@ if (process.argv.includes("--selftest")) {
     ["/gspc-scoreboard", functionRedirects().has("/gspc-scoreboard"), "Response.redirect(...) form"],
     ["prerender set", prerenderedPaths().size > 30, "must derive the built blog paths, not zero"],
     ["duplicate predicate", new Set(["a", "a"]).size < ["a", "a"].length, "must detect repeated canonical URLs"],
+    // The published-post shape. The gate flagged the PUBLISHED posts as withdrawn and blocked
+    // every master deploy from 2026-10-29T00:29Z; these cases prove the exemption is real.
+    ["published set", pub.size > 0, "blog-published.json must name the published posts"],
+    ["every published post has an exact route", [...pub].every((s) => exact.has(s)), "a published post needs its own route"],
+    ["every published post has a snapshot", [...pub].every((s) => snaps.has(`/blog/${s}`)), "a published post needs a snapshot"],
+    ["a published post is served", blogPathProblem("/blog/how-to-verify-an-ai-measurement/", ctx) === null, "a published post must not be flagged as withdrawn"],
+    ["a withdrawn post is flagged", blogPathProblem("/blog/never-published/", ctx) !== null, "an unpublished /blog/ URL must still be flagged"],
+    ["a published post with no route is flagged", blogPathProblem("/blog/x/", { blogWithdrawn: true, published: new Set(["x"]), exactRoutes: new Set(), prerendered: snaps }) !== null, "an exemption without an exact route is a broken publication"],
+    ["a published post with no snapshot is flagged", blogPathProblem("/blog/x/", { blogWithdrawn: true, published: new Set(["x"]), exactRoutes: new Set(["x"]), prerendered: new Set() }) !== null, "an exemption without a snapshot is a broken publication"],
   ];
   let bad = 0;
   for (const [what, ok, why] of cases) {
