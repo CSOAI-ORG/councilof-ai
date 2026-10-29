@@ -29,6 +29,7 @@ export type AxisSpecialistAudit = {
   summary: {
     checks: number;
     passed: number;
+    declared: number;
     findings: number;
     audit_state: string;
   };
@@ -149,7 +150,7 @@ export default function CouncilAxisSpecialistPane() {
         <p className="t-kicker text-emerald-800">Council OS / MEOK Hive</p>
         <h2 className="mt-2 text-2xl font-black tracking-tight text-foreground">One bounded specialist for every GSPC axis</h2>
         <p className="mt-2 max-w-4xl text-sm leading-relaxed text-muted-foreground">
-          Read each axis’s own deterministic audit, evidence checks and improvement queue. These are unsigned audits of the captured board, not new measurements. Every proposal remains human-reviewed and unapplied.
+          Read each axis’s own deterministic audit, evidence checks and improvement queue. These are unsigned audits of the captured board, not new measurements. Every proposal requires human review and remains unapplied.
         </p>
         <div className="mt-5 flex flex-wrap items-end gap-3">
           <label className="min-w-0 flex-1 text-xs font-semibold text-foreground sm:max-w-md">
@@ -197,7 +198,7 @@ export default function CouncilAxisSpecialistPane() {
               <h3 id="specialist-mission" className="mt-4 text-lg font-bold text-foreground">{audit.specialist.id}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{audit.specialist.mission}</p>
               <dl className="mt-5 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-                <div><dt className="text-xs text-muted-foreground">Checks</dt><dd className="mt-1 font-mono font-bold">{audit.summary.passed}/{audit.summary.checks}</dd></div>
+                <div><dt className="text-xs text-muted-foreground">Passed / total</dt><dd className="mt-1 font-mono font-bold">{audit.summary.passed}/{audit.summary.checks}</dd><dd className="mt-1 text-xs text-slate-700">{audit.summary.declared} declared, unverified</dd></div>
                 <div><dt className="text-xs text-muted-foreground">Findings</dt><dd className="mt-1 font-mono font-bold">{audit.summary.findings}</dd></div>
                 <div><dt className="text-xs text-muted-foreground">Proposals</dt><dd className="mt-1 font-mono font-bold">{audit.improvement_proposals.length}</dd></div>
                 <div><dt className="text-xs text-muted-foreground">Observed n</dt><dd className="mt-1 font-mono font-bold">{audit.source.axis_row.n}</dd></div>
@@ -220,7 +221,7 @@ export default function CouncilAxisSpecialistPane() {
                   <li key={check.id} className="rounded-xl border border-border bg-card p-4">
                     <p className="flex flex-wrap items-center justify-between gap-2 text-xs">
                       <span className="font-mono font-bold">{check.id}</span>
-                      <span className={`rounded-full px-2 py-1 font-semibold ${check.state === "PASS" ? "bg-emerald-50 text-emerald-900" : "bg-amber-100 text-amber-950"}`}>{check.state}</span>
+                      <span className={`rounded-full px-2 py-1 font-semibold ${check.state === "PASS" ? "bg-emerald-50 text-emerald-900" : check.state === "DECLARED" ? "bg-slate-100 text-slate-700" : "bg-amber-100 text-amber-950"}`}>{check.state}</span>
                     </p>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{check.detail}</p>
                   </li>

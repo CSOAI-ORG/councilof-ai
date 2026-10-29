@@ -157,14 +157,14 @@
     },
     {
       "id": "FROZEN_BANK",
-      "state": "PASS",
-      "detail": "frozen bank URL is published",
+      "state": "DECLARED",
+      "detail": "bank URL is declared; bank bytes and freeze state were not verified",
       "evidence": "https://huggingface.co/datasets/csoai/gspc-gov"
     },
     {
       "id": "ROW_LINEAGE",
-      "state": "PASS",
-      "detail": "published per-item rows are digest-bound"
+      "state": "DECLARED",
+      "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
     },
     {
       "id": "LEADER_STATE",
@@ -179,7 +179,8 @@
   ],
   "summary": {
     "checks": 8,
-    "passed": 8,
+    "passed": 6,
+    "declared": 2,
     "findings": 0,
     "audit_state": "HUMAN_REVIEW_READY"
   },
@@ -229,5 +230,5 @@
     "not autonomous self-improvement",
     "not a provisioned compute cluster"
   ],
-  "audit_sha256": "ac86ab20164eeb9411e375fd29d5332f99de738088b561684bdb6f5aec7a8fdc"
+  "audit_sha256": "01d36f941f0d0e905e03e9c1e3678983ec1c98be8df4395381e402be629fe3cb"
 }
