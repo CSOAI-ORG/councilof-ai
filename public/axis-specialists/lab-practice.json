@@ -1,0 +1,140 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "lab-practice",
+  "specialist": {
+    "id": "meok-lab-practice-specialist",
+    "cluster_id": "meok-axis-lab-practice",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Design a frozen lab-practice instrument covering evaluations, safety frameworks and incident reporting without scoring the current five-check census.",
+    "reviewer_role": "AI laboratory practice reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "lab-only subject scope",
+    "evaluation publication",
+    "incident-report evidence",
+    "frozen-bank absence"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "UNCHECKABLE",
+      "precision": "unknown",
+      "source": "/api/gspc",
+      "source_field": "none",
+      "note": "No structured measurement time is available; CURRENT admission must fail closed."
+    },
+    "axis_row_sha256": "ae42b529e1c5b1d3d9a63062b264e1387999a1ed8515f4ce2943e80534419a94",
+    "axis_row": {
+      "axis": "lab-practice",
+      "family": "subject",
+      "kind": "declared-slot",
+      "applies_to": "ai-labs",
+      "bench": "pending frozen bank",
+      "task": "does an AI lab publish its evaluations, safety framework and incident reports",
+      "n": 0,
+      "status": "UNMEASURED",
+      "colour": "hsl(200 10% 55%)",
+      "hue": 200,
+      "note": "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score. Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid >= 30, passing the gate. Census checks are a DISCOVERED check grid, not scores on this axis.",
+      "method_status": "no-method: declared slot",
+      "measurement_time": {
+        "state": "UNCHECKABLE",
+        "precision": "unknown",
+        "source": "/api/gspc",
+        "source_field": "none",
+        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist lab-practice audits only the lab-practice row",
+      "evidence": "lab-practice"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-lab-practice; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "DECLARED_GAP",
+      "state": "PASS",
+      "detail": "UNMEASURED slot for ai-labs; n=0 is not a score"
+    },
+    {
+      "id": "NO_FABRICATED_SCORE",
+      "state": "PASS",
+      "detail": "declared slot has no leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "no-method: declared slot"
+    }
+  ],
+  "summary": {
+    "checks": 6,
+    "passed": 6,
+    "findings": 0,
+    "audit_state": "MEASUREMENT_GAP_VISIBLE"
+  },
+  "negative_controls": [
+    {
+      "control": "promote census checks to MEASURED and require the n-floor gate to reject them",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "include a non-lab company and require subject-scope failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "lab-practice-proposal-1",
+      "proposal": "propose at least thirty frozen lab subjects with evidence capture rules",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "lab-practice-proposal-2",
+      "proposal": "define incident-report and evaluation-publication rubrics with UNCHECKABLE states",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_lab-practice",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/lab-practice",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "AI laboratory practice reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "74ec57935471deb3a98c3528e8a055935103c9c3ae43bc87fda36ed0127e8d22"
+}
