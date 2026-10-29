@@ -1,20 +1,20 @@
 {
  "kind": "csoai.root-witness/v1",
- "as_of": "2026-10-29T09:44:42Z",
+ "as_of": "2026-10-29T12:59:19Z",
  "note": "Witnesses for the live signed public root — existence/time of these exact bytes. Not certification, not endorsement, not a rank sale. Never mint a token. ONE root anchor, never N leaves.",
  "artifact": {
   "url": "https://councilof.ai/root.json",
   "also": "https://councilof.ai/api/root",
-  "sha256": "f4f0a1de3950189fc21c85629a67734c9af62ae2d6d3e239bd0bb2061aa7be6c",
+  "sha256": "8d1df2d7001d70fa020f3e05ac1c69b1567c6af9efd88329e31aab864c687039",
   "bytes": 25997,
-  "merkle_root": "7bd83223baf71d040f411f4d23cc223c57fadba82c04ffe9fcdbe719d41c5231",
+  "merkle_root": "0e91ad36a7674e05084f487ba387572572f8a3dbb7d553705cf8ab186d9a0561",
   "card_count": 326,
-  "as_of": "2026-10-29T06:52:11Z"
+  "as_of": "2026-10-29T11:07:30Z"
  },
  "corpus_scope": {
   "relationship": "SEPARATE_CORPORA",
   "public_root_count": 326,
-  "public_root_sha256": "f4f0a1de3950189fc21c85629a67734c9af62ae2d6d3e239bd0bb2061aa7be6c",
+  "public_root_sha256": "8d1df2d7001d70fa020f3e05ac1c69b1567c6af9efd88329e31aab864c687039",
   "signed_card_count": 335,
   "signed_card_id_overlap": 0,
   "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
@@ -32,45 +32,45 @@
    "did_intended"
   ],
   "preimage_canonical": "JSON sorted keys, separators (',',':'), ensure_ascii=false, UTF-8",
-  "preimage_sha256": "2a06f999a6f7d00c79e15878bfb1d20f19aa5f46e6f6144c48a415a24470b091",
+  "preimage_sha256": "1b2031bee9f6586546ac5bd6c49a4b64a37ab8a00c6c1ee703bf6f6ca6ca4e82",
   "preimage_bytes": 274,
   "verified_against_did_json": true
  },
  "witnesses": {
   "rekor": {
    "status": "WITNESSED",
-   "uuid": "108e9186e8c5677aae27b30c8eb815e256a3dbe48b5aaa741735b3fea7f32f4ce547a22263ad5610",
-   "logIndex": 3560695840,
-   "integratedTime": 1793256734,
+   "uuid": "108e9186e8c5677a70f1fa0103303502cad97c4acdc62221278c99e8af86e88598899aa46a8ebd40",
+   "logIndex": 3565689158,
+   "integratedTime": 1793272054,
    "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
    "new": false,
-   "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3560695840",
+   "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=3565689158",
    "type": "rekord/x509 over the preimage bytes with the board signature",
-   "entry_file": "https://councilof.ai/interop/rekor-root-f4f0a1de.json"
+   "entry_file": "https://councilof.ai/interop/rekor-root-8d1df2d7.json"
   },
   "ots": {
-   "path": "public/interop/root-f4f0a1de.json.ots",
-   "url": "https://councilof.ai/interop/root-f4f0a1de.json.ots",
-   "proof_sha256": "ac4a6e512411dde5640a66942a34b4c3173bb755b1600c3cd1be80f129ef2413",
-   "subject_sha256": "f4f0a1de3950189fc21c85629a67734c9af62ae2d6d3e239bd0bb2061aa7be6c",
+   "path": "public/interop/root-8d1df2d7.json.ots",
+   "url": "https://councilof.ai/interop/root-8d1df2d7.json.ots",
+   "proof_sha256": "dd14e3c4b4b335c32ad41aba94c7bbd5df9859b4d1cb81da431813957ff2e5a6",
+   "subject_sha256": "8d1df2d7001d70fa020f3e05ac1c69b1567c6af9efd88329e31aab864c687039",
    "bitcoin_blocks": [
-    973658
+    973687
    ],
-   "observed_at": "2026-10-29T09:44:41Z",
+   "observed_at": "2026-10-29T12:59:15Z",
    "scope": "PUBLIC_ROOT_BYTES_ONLY",
    "status": "CONFIRMED_BITCOIN",
    "bitcoin_header": {
-    "height": 973658,
-    "block_hash": "00000000000000000001bd0ff39e662af35fa8687f2c1a09d21a38adfeb98059",
-    "hex": "0020a9225e1d1c860cc7be84d64cab64fd491aead07a9c0d0884000000000000000000001e2c288a002d5f456b6e14fc0a3c9ede68ade6daf691dcc6aaaa4c701deddec589f8e26a93000217788f1f3c",
-    "header_sha256": "2e9a62195c4f904c718c13af726a7127bca7a9ba79812063eeb9fb8ecebedf67",
-    "block_time_unix": 1793259657,
-    "block_time": "2026-10-29T07:40:57Z",
-    "verified_at": "2026-10-29T09:44:41Z",
+    "height": 973687,
+    "block_hash": "00000000000000000000684e5b331c52579de69cc2837ae0b322624883f0f1a6",
+    "hex": "00e00620aecc602f3ca2887dff5909c5e6047d566c90711515eb0000000000000000000034c05760ab59d8e5224848f46fd90682e18c4a887313a71d998c0897a33efa07df2ee36a930002172aeb1f7e",
+    "header_sha256": "7c6efa68fa04ede888f533db2d97224b520531c2cf7f4725295f927968137b5a",
+    "block_time_unix": 1793273567,
+    "block_time": "2026-10-29T11:32:47Z",
+    "verified_at": "2026-10-29T12:59:15Z",
     "source_agreement": "BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL",
     "sources": [
-     "https://blockstream.info/api/block/00000000000000000001bd0ff39e662af35fa8687f2c1a09d21a38adfeb98059/header",
-     "https://mempool.space/api/block/00000000000000000001bd0ff39e662af35fa8687f2c1a09d21a38adfeb98059/header"
+     "https://blockstream.info/api/block/00000000000000000000684e5b331c52579de69cc2837ae0b322624883f0f1a6/header",
+     "https://mempool.space/api/block/00000000000000000000684e5b331c52579de69cc2837ae0b322624883f0f1a6/header"
     ]
    },
    "note": "Status is derived from the proof bytes. The Bitcoin timestamp proves these exact root.json bytes existed no later than the named block; it does not prove correctness, completeness, compliance, certification, or coverage of the separate signed-card corpus."
@@ -91,9 +91,9 @@
  "conflict": {
   "status": "NONE",
   "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
-  "as_of": "2026-10-29T06:52:11Z",
-  "merkle_root": "7bd83223baf71d040f411f4d23cc223c57fadba82c04ffe9fcdbe719d41c5231",
-  "sidecars_scanned": 71,
+  "as_of": "2026-10-29T11:07:30Z",
+  "merkle_root": "0e91ad36a7674e05084f487ba387572572f8a3dbb7d553705cf8ab186d9a0561",
+  "sidecars_scanned": 72,
   "conflicts": [],
   "byte_variants": [],
   "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
