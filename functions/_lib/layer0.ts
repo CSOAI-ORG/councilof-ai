@@ -30,7 +30,14 @@
  * here is not a finding about a model.
  */
 
-export const L0_KID_DEFAULT = "did:csoai:meok-canonical-v1#ed25519-1";
+/**
+ * The kid names the key that signed an envelope, so it must resolve to a PUBLISHED place.
+ * did:web:csoai.org#layer0-attestation-1 is pinned in the DID document beside the six keys
+ * already published there, so a verifier reading an envelope from the public gateway has
+ * exactly one place to look for the key. The estate's internal router key is not published
+ * anywhere, so it cannot name a public signature.
+ */
+export const L0_KID_DEFAULT = "did:web:csoai.org#layer0-attestation-1";
 export const L0_SIG_ENV = "LAYER0_SIGN_KEY_PKCS8_B64";
 export const L0_KID_ENV = "LAYER0_SIGN_KID";
 export const L0_ANCHOR_ENV = "SOV_ANCHOR";
