@@ -117,6 +117,7 @@ function main() {
     canary_rows: 1,
     provenance: doc.provenance,
     gold_rule: doc.gold_rule,
+    boundary_rule: doc.boundary_rule,
     grader: "gspc-top100.mill_hub_queue.read_label",
     unparsed_rule:
       "an answer that is not one of the bank's labels leaves the denominator; it is never counted as wrong",
