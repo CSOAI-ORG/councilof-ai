@@ -8,7 +8,7 @@
   "not_a": "grade, rank, conformity mark, or legal determination. Measurement, not certification. Verification is free."
  },
  "generated_from": {
-  "slots": "functions/api/_gspc_axes_{a,b,c,fin}.ts — executed, the same modules GET /api/gspc imports",
+  "slots": "functions/api/_gspc_axes_{a,b,c,fin,d}.ts — executed, the same modules GET /api/gspc imports",
   "cards": "public/signed/card-matrix.json and the verified card file behind every cell",
   "crosswalk": "client/src/data/regulator-crosswalk.json (pointers + board_axis join)",
   "roots": "public/interop/card-root-*.json leaves",
@@ -17,10 +17,11 @@
  "as_of": "2026-08-19T09:24:39.174226+00:00",
  "as_of_field": "the newest body.created stamp across the cards — when the last card was measured, never when this file was generated",
  "counts": {
-  "axes": 23,
+  "axes": 33,
   "axes_by_kind": {
    "model-comparison": 14,
-   "deterministic-facts": 9
+   "deterministic-facts": 9,
+   "declared-slot": 10
   },
   "axes_with_subject_reports": 9,
   "subjects_in_corpus": 64,
@@ -870,6 +871,196 @@
    },
    "subject_reports": "none",
    "reason": "measures issuers, series or sources rather than model subjects; the signed card corpus holds no per-subject cell for this axis"
+  },
+  {
+   "axis": "lab-practice",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending frozen bank",
+   "task": "does an AI lab publish its evaluations, safety framework and incident reports",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "declared slot: nothing has been measured"
+  },
+  {
+   "axis": "company-practice",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending frozen bank",
+   "task": "does a non-lab AI company do what its public material says",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "declared slot: nothing has been measured"
+  },
+  {
+   "axis": "measurer-integrity",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending frozen bank",
+   "task": "does an evaluation organisation publish methods, test sets and reproducible results",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "declared slot: nothing has been measured"
+  },
+  {
+   "axis": "harness-fidelity",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending frozen method",
+   "task": "does the same model on the same bank score the same across evaluation harnesses",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "declared slot: nothing has been measured"
+  },
+  {
+   "axis": "interop-conformance",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending frozen bank",
+   "task": "does an interoperability/standards group publish specs, test suites and conformance records",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "declared slot: nothing has been measured"
+  },
+  {
+   "axis": "humanoid-deployment",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending frozen registry",
+   "task": "what a humanoid lab has publicly deployed, checked against a public registry",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "declared slot: nothing has been measured"
+  },
+  {
+   "axis": "regulator-transparency",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending frozen check bank",
+   "task": "factual presence checks on public artefacts (guidance, registry, methodology, consultation, contact route); no scores, no ratings",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "declared slot: nothing has been measured"
+  },
+  {
+   "axis": "interpretability-reproducibility",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending frozen bank",
+   "task": "what an interpretability group publishes and whether it can be reproduced",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "declared slot: nothing has been measured"
+  },
+  {
+   "axis": "claim-maintenance",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending gated re-read wave (>=30 claims)",
+   "task": "at each scheduled re-read, is a captured public claim still served unchanged, changed with disclosure, changed silently, withdrawn or unreachable; says nothing about whether the claim is true",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "Reported DISCOVERED-style as counts per subject class, never a ranking."
+  },
+  {
+   "axis": "serving-fidelity",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending frozen bank",
+   "task": "does an endpoint or serving configuration claiming model M behave like M's reference serving on a frozen bank",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "HELD for spend: free credit only."
   }
  ],
  "subjects": [
@@ -5334,6 +5525,6 @@
   }
  ],
  "canonical_rule": "canonical_sha256 = sha256(canonical JSON of this object minus generated_at and canonical_sha256; keys sorted, no whitespace)",
- "generated_at": "2026-10-07T12:09:39.232Z",
- "canonical_sha256": "e364199201736a97e2ded5e0cad830d57ed20241723db9b0fb0b04c2bfeb6d7c"
+ "generated_at": "2026-08-19T09:24:39.174226+00:00",
+ "canonical_sha256": "72e1aeed8a5983aa3157cd4233f94594030fda9b800d4b1bc2bd0e1e17b7eefd"
 }
