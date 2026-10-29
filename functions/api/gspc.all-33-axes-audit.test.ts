@@ -512,4 +512,19 @@ describe("GSPC all-33-axes full-depth audit & cross-surface parity", () => {
     expect(reg.meok_multiprospective_routing_architecture?.orthogonal_perspectives).toHaveLength(4);
     expect(reg.registry_sha256).toMatch(/^[0-9a-f]{64}$/);
   });
+
+  it("s1-ipo-measurement-readiness-v1.json maps all 33 canonical GSPC axes to public SEC S-1 / 10-K / 8-K risk factors without vendor permission", () => {
+    const s1Path = new URL("../../public/interop/s1-ipo-measurement-readiness-v1.json", import.meta.url);
+    expect(existsSync(s1Path)).toBe(true);
+    const s1 = JSON.parse(readFileSync(s1Path, "utf8")) as Record<string, any>;
+    expect(s1.schema).toBe("csoai.s1-ipo-measurement-readiness/1.0");
+    expect(s1.counts?.distinct_gspc_axes_referenced).toBe(33);
+    expect(s1.mapped_gspc_axes).toEqual([...CANONICAL_33_AXES].sort());
+    expect(s1.permissionless_signal_bulletins).toHaveLength(4);
+    for (const b of s1.permissionless_signal_bulletins) {
+      expect(b.permission_required).toBe(false);
+      expect(b.verify_command).toContain("curl -sS https://councilof.ai/");
+    }
+    expect(s1.artifact_sha256).toMatch(/^[0-9a-f]{64}$/);
+  });
 });
