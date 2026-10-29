@@ -191,6 +191,113 @@ async function proofGet(request) {
 export const NOT_FOUND_HINT =
   "Public API description: /openapi.json. Ask: GET /api/chat lists its skins. MCP server: /mcp/free (free, read-only). Board: /api/gspc. /api/mcp is a census of other MCP servers, not ours.";
 
+
+// ─── free preview routes: GET /api/<door>/preview ────────────────────────────────────────────
+// The agent-conversion surface for every priced endpoint (x402 REVENUE-NOW repair): the FULL
+// payload shape with live free data — the proven pattern the doors' own ?preview=1 slices and
+// free GETs already serve — plus a `buy` block naming the paid resource. It never charges, never
+// settles and never invents data: it serves the door's own free slice through one canonical URL
+// an agent can discover (PRICES.json preview_route), and where the door needs input it states the
+// requirement instead of failing. Amounts live only in the 402 at buy.resource.
+const PREVIEW_GATE_PARAMS = ["feed", "bundle", "history", "x402", "preview"];
+const PREVIEW_STATIC_DOORS = new Set([
+  "request-attestation",
+  "evidence-bundle",
+  "signed-data-feed",
+  "proof",
+  "rwa/evidence",
+  "wrapper",
+  "wrapper/changes",
+  "measurement/fresh-capsule",
+  "art50/marking-evidence",
+  "feeds/provider-diff",
+  "receipts/batch",
+  "ras/mcp-probe",
+  "ras/x402-check",
+  "ras/supply",
+]);
+const PREVIEW_NOTICE =
+  "Measurement artifacts, never grades. Verification is free forever.";
+
+function previewDoorBase(p) {
+  if (!p.endsWith("/preview")) return null;
+  const base = p.slice(0, -"/preview".length);
+  if (PREVIEW_STATIC_DOORS.has(base)) return base;
+  if (/^(pop|wrapper\/asset|discover)\/[^/]+$/.test(base)) return base;
+  return null;
+}
+
+async function previewResponse(request, isHead) {
+  const url = new URL(request.url);
+  const base = previewDoorBase(url.pathname.replace(/^\/api\//, ""));
+  if (!base) return null;
+  const buySearch = new URLSearchParams(url.searchParams);
+  const freeSearch = new URLSearchParams(url.searchParams);
+  for (const k of PREVIEW_GATE_PARAMS) freeSearch.delete(k);
+  freeSearch.set("preview", "1");
+  const buy = {
+    resource: `${url.origin}/api/${base}${buySearch.toString() ? "?" + buySearch.toString() : ""}`,
+    how: "GET the resource → 402 (accepts[] names the amount — the only place a price lives) → pay from your own wallet over x402 → retry with X-PAYMENT",
+    catalog: `${url.origin}/api/x402`,
+    prices:
+      "https://github.com/CSOAI-ORG/councilof-ai/blob/master/PRICES.json — price POINTS with basis; the 402 challenge is authoritative",
+    notice: PREVIEW_NOTICE,
+  };
+  let upstream = null;
+  try {
+    upstream = await fetch(`${url.origin}/api/${base}?${freeSearch.toString()}`, {
+      headers: { accept: "application/json" },
+    });
+  } catch {
+    upstream = null;
+  }
+  if (!upstream) {
+    return json({ kind: "preview", state: "UNAVAILABLE", upstream_status: null, buy }, 200);
+  }
+  const text = await upstream.text();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    data = { raw_excerpt: text.slice(0, 500) };
+  }
+  if (upstream.status === 200 && data && typeof data === "object" && !Array.isArray(data)) {
+    return json(
+      {
+        ...data,
+        kind: typeof data.kind === "string" ? data.kind : "preview",
+        preview_route: url.pathname,
+        buy: data.buy && typeof data.buy === "object" ? data.buy : buy,
+      },
+      200,
+    );
+  }
+  if (upstream.status === 402 && data && typeof data === "object") {
+    const csoai = data.csoai && typeof data.csoai === "object" ? data.csoai : {};
+    return json(
+      {
+        ...csoai,
+        kind: "preview",
+        state: "PREVIEW_FROM_CHALLENGE",
+        preview_route: url.pathname,
+        amount_note: "amounts live only in accepts[] at buy.resource — never in prose",
+        buy,
+      },
+      200,
+    );
+  }
+  return json(
+    {
+      kind: "preview",
+      state: upstream.status === 400 ? "INPUT_REQUIRED" : "UNAVAILABLE",
+      upstream_status: upstream.status,
+      upstream: data,
+      buy,
+    },
+    200,
+  );
+}
+
 export async function onRequest(context) {
   const p = context.params && Array.isArray(context.params.path)
     ? context.params.path.join("/")
@@ -205,6 +312,10 @@ export async function onRequest(context) {
   if ((request.method === "GET" || isHead) && (p === "root" || p === "proof")) {
     const res = await (p === "root" ? aliasRoot(asGet) : proofGet(asGet));
     return isHead ? bodiless(res) : res;
+  }
+  if (request.method === "GET" || isHead) {
+    const preview = await previewResponse(asGet, isHead);
+    if (preview) return isHead ? bodiless(preview) : preview;
   }
   return json(
     {
