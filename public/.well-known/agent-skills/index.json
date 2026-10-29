@@ -84,6 +84,20 @@
       "description": "GSPC Route (free, decide-only): applies the caller's Cedar policy (presets read-only, local-only, eu-only, no-unmeasured; forbid_providers; allow_kinds) and the fixed GSPC floor to candidates the caller declares, or to the GSPC MCP tools, reads the live board for the named quality axis, and returns the chosen candidate with an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). The same module as the free MCP tool route. Routing is not ranking: TIE and UNTESTED are stated as they are, and a caller tie_break decides an unseparated comparison. Nothing is executed or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
       "url": "/.well-known/agent-skills/gspc-route/SKILL.md",
       "digest": "sha256:f45e0106de736c8f3d965c98e9f3c4cc5238e23bd78b7e1a16035b619a26616b"
+    },
+    {
+      "name": "evidence-delivery",
+      "type": "skill-md",
+      "description": "Accept one csoai.local-evidence-draft/1.2 declaration whose digest fields differ, whose negative control is DIVERGENT, and whose named MEOK H.I.M. reviewer, decision, notes and local-only boundaries are present. Return a Message containing the declaration and explicit non-claims. Envelope checks only: source bytes are not received or re-hashed. No GSPC measurement, independent verification, certification, signature, anchoring, payment, Task or durable adapter storage is created.",
+      "url": "/.well-known/agent-skills/evidence-delivery/SKILL.md",
+      "digest": "sha256:4f5add8cfed10fee17f4547c19dc905216a7d141bd546dc7d277484806113583"
+    },
+    {
+      "name": "axis-specialist",
+      "type": "skill-md",
+      "description": "Read the bounded specialist audit for one exact GSPC axis, or the full index with an empty input. Every axis has its own logical MEOK Hive cluster, mission, evidence checks, negative controls, improvement proposals and human reviewer role. RSI is recommendation-only: no ASI claim, no self-modification, no spend, no deployment and no apply operation. Every proposal stays PROPOSED_NOT_APPLIED under a MEOK H.I.M.-compatible HOLD gate. The existing axis_<id> MCP tools remain the live measurement readers; these audits are unsigned analysis of a captured board, not new measurement or certification.",
+      "url": "/.well-known/agent-skills/axis-specialist/SKILL.md",
+      "digest": "sha256:a6be35810771b6a54d361aefe554149df11e6c48c81a7d9fd1f3adfd2fbe64ae"
     }
   ]
 }
