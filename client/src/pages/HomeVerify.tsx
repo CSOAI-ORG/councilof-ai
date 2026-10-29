@@ -15,6 +15,7 @@
  *                         re-check, correct. Four sections, four of our own images, no figures.
  *   4. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
  *                         the regulator and the agent.
+ *   4b. HomeLast30Days - dated list of merged changes, each linked to its PR. No typed counts.
  *   5. Proof strip      - four live figures from GET /api/momentum, then "More numbers".
  *   6. Company strip    - the accountable entity and "Who we are".
  *
@@ -34,6 +35,7 @@ import HomeHero from "@/components/home/HomeHero";
 import LiveBoardGlance from "@/components/home/LiveBoardGlance";
 import HomeSteps from "@/components/home/HomeSteps";
 import HomeWaysIn from "@/components/home/HomeWaysIn";
+import HomeLast30Days from "@/components/home/HomeLast30Days";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
@@ -128,6 +130,7 @@ export default function HomeVerify() {
       <LiveBoardGlance />
       <HomeSteps />
       <HomeWaysIn />
+      <HomeLast30Days />
 
       {/* Proof: four live figures a first-time visitor can open at the source. Everything else is
           behind "More numbers", on /about/#numbers. The board's own figures are in the board band
