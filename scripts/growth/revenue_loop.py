@@ -6,18 +6,19 @@ docs/growth/<date>/loop.json + loop.md and appends ONE EVOLVE section.
 
 Truth rules (cannot lie or drift):
   · every number in loop.md comes from loop.json; loop.json from endpoints/files
-  · --check fails if a past run's file drifted (D45 discipline)
+  · --check is an offline, read-only consistency check of today's retained pair
+    (not an authenticity, freshness or historical-byte-integrity assertion)
   · self-settlements shown as "self", never in growth lines; one_number printed as-is
   · no prices/tiers/processor names; new-door proposals name the measurement only
   · no outbound sends; owner-gated moves become OWNER-ASKS lines
 
 Usage:
   python3 scripts/growth/revenue_loop.py            # emit today's run
-  python3 scripts/growth/revenue_loop.py --check    # verify emitted files match the current run byte-for-byte
+  python3 scripts/growth/revenue_loop.py --check    # compare retained Markdown with its JSON; no fetches or writes
 """
 from __future__ import annotations
 
-import argparse, hashlib, json, pathlib, sys, time, urllib.request
+import argparse, json, pathlib, sys, time, urllib.request
 from datetime import datetime, timezone
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -61,6 +62,43 @@ def repeat_payer_evidence(one: dict) -> dict:
         "boundary": "Repeated wallets and transaction IDs do not prove buyer receipt, acceptance or an independent customer, and do not authorize another product.",
     }
 
+def render_markdown(loop: dict) -> str:
+    """Render only the retained record; do not fetch inputs or refresh timestamps."""
+    one, funnel, signals = loop["one_number"], loop["funnel_per_door"], loop["signals"]
+    repeat = one["repeat_nonself_payers"]
+    md = [f"# Growth loop — {loop['date']}", "",
+          f"- one_number: {one['value']} (last_30d {one.get('last_30d')}) · self {one.get('self_settlements')} · zero-value {one.get('zero_value_settlements')}",
+          f"- repeat non-self wallets: {repeat['all_time']} all time; {repeat['last_30d']} in 30 days · {repeat['status']} (not buyer acceptance)",
+          f"- receipts listed: {funnel['settlements_listed']} · distinct non-self payers: {funnel.get('distinct_nonself_payers')}",
+          f"- board lid: {signals.get('board_lid')}", "", "## Gates (verbatim)", ""]
+    gates = one.get("gate")
+    if isinstance(gates, dict):
+        md.extend(f"- {k}: {v}" for k, v in gates.items())
+    md += ["", "## Next moves (≤5, ranked)", ""]
+    for move in loop["next_moves"]:
+        md.append(f"- [{move['rank']}] {move['move']} — PROOF: {move['proof']}" + (" · owner" if move["owner"] else ""))
+    md += ["", "## Retro", ""]
+    for retro in loop["retro"]:
+        md.append(f"- one_number {retro['one_number_before']} → {retro['one_number_after']} · moved={retro['moved']}")
+    return "\n".join(md + [""])
+
+
+def check_retained_report(jp: pathlib.Path, mp: pathlib.Path, today: str) -> int:
+    """Check this renderer's retained pair without modifying either artifact."""
+    try:
+        loop = json.loads(jp.read_text(encoding="utf-8"))
+        if not isinstance(loop, dict) or loop.get("schema") != "csoai.growth-loop/0.1" or loop.get("date") != today:
+            raise ValueError("unexpected retained schema or date")
+        expected = render_markdown(loop).encode("utf-8")
+        if mp.read_bytes() != expected:
+            raise ValueError("retained Markdown differs from the current rendering of its JSON")
+    except (OSError, UnicodeError, ValueError, KeyError, TypeError, AttributeError) as exc:
+        print(f"check failed: {exc}", file=sys.stderr)
+        return 1
+    print(f"check ok: retained JSON/Markdown are consistent: {jp}; not freshness or authenticity verification")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
@@ -69,6 +107,9 @@ def main() -> int:
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     day_out = OUT / today
     jp, mp = day_out / "loop.json", day_out / "loop.md"
+
+    if args.check:
+        return check_retained_report(jp, mp, today)
 
     # ── inputs ────────────────────────────────────────────────────────────────
     revenue = getjson("https://councilof.ai/api/revenue")
@@ -148,11 +189,15 @@ def main() -> int:
 
     # Compare distinct payer counts for context and the retrospective. A new wallet
     # is not a repeat purchase and does not authorize another product.
-    prior_runs = sorted(p for p in OUT.glob("20*/loop.json")) if OUT.exists() else []
+    prior_runs = sorted(p for p in OUT.glob("20*/loop.json") if p.parent.name < today) if OUT.exists() else []
     previous_one = None
+    previous = None
     if prior_runs:
         try:
-            previous_one = (json.loads(prior_runs[-1].read_text()).get("one_number") or {}).get("value")
+            candidate = json.loads(prior_runs[-1].read_text())
+            if isinstance(candidate, dict) and isinstance(candidate.get("one_number"), dict):
+                previous = candidate
+                previous_one = previous["one_number"].get("value")
         except Exception:
             previous_one = None
 
@@ -164,9 +209,9 @@ def main() -> int:
                       "proof": f"one_number.all_time={onv!r}", "owner": False})
     elif onv == 0:
         issued = receipts.get("count", 0)
-        moves.append({"rank": 1, "move": "one_number=0 and settles exist → shape-or-price leak; do not add doors; run the index-presence row (402s not discovered)",
+        moves.append({"rank": 1, "move": "no qualifying non-self payer is recorded — inspect existing delivery and discovery evidence before diagnosing the cause",
                       "proof": f"settles={issued}; one_number={onv}", "owner": False})
-        moves.append({"rank": 2, "move": "index listing state probe (mcp_so/pulsemcp/glama/arcade = codes above) → row for any non-200",
+        moves.append({"rank": 2, "move": "directory reachability probes do not establish listing — inspect an actual resource record before claiming discovery",
                       "proof": json.dumps(loop["signals"]["index_probes"]), "owner": False})
     else:
         proof = (f"distinct wallets {previous_one!r} → {onv}; "
@@ -188,18 +233,18 @@ def main() -> int:
     if one.get("self_settlements"):
         moves.append({"rank": 3, "move": "self-settlements recorded — shown as self, never growth",
                       "proof": f"self={one.get('self_settlements')}", "owner": False})
-    # grants window (Monetisation map status column)
+    # Historical map wording is a research lead, not proof a grant is open today.
     mon = ROOT / "docs" / "grants" / "2026-09-06" / "MONETISATION-MAP.md"
     if mon.exists():
         open_now = [l for l in mon.read_text(errors="replace").splitlines() if "open" in l.lower()]
         if open_now:
-            moves.append({"rank": 4, "move": "open grant window on the map — TUI-5 pack row",
-                          "proof": f"{len(open_now)} line(s) say open", "owner": True})
+            moves.append({"rank": 4, "move": "historical grant-map wording needs current primary-source verification before any application decision",
+                          "proof": f"2026-09-06 map: {len(open_now)} line(s) contain 'open'; current status unverified", "owner": True})
     loop["next_moves"] = moves[:5]
 
     # ── retro: compare against the previous run's moves (evolve half) ─────────
-    if prior_runs:
-        prev = json.loads(prior_runs[-1].read_text())
+    if previous is not None:
+        prev = previous
         cur_onv = onv
         prev_onv = (prev.get("one_number") or {}).get("value")
         loop["retro"].append({
@@ -209,36 +254,13 @@ def main() -> int:
         })
 
     jp.parent.mkdir(parents=True, exist_ok=True)
-    jp.write_text(json.dumps(loop, indent=2))
+    jp.write_text(json.dumps(loop, indent=2), encoding="utf-8")
 
-    # ── loop.md (human section) + EVOLVE append ───────────────────────────────
-    md = [f"# Growth loop — {today}", "",
-          f"- one_number: {onv} (last_30d {one.get('last_30d')}) · self {one.get('self_settlements')} · zero-value {one.get('zero_value_settlements')}",
-          f"- repeat non-self wallets: {repeat['all_time']} all time; {repeat['last_30d']} in 30 days · {repeat['status']} (not buyer acceptance)",
-          f"- receipts listed: {receipts.get('count', 0)} · distinct non-self payers: {receipts.get('distinct_nonself_payers')}",
-          f"- board lid: {pub}", "", "## Gates (verbatim)", ""]
-    gates = one.get("gates")
-    if isinstance(gates, dict):
-        for k, v in gates.items():
-            md.append(f"- {k}: {v}")
-    md += ["", "## Next moves (≤5, ranked)", ""]
-    for m in loop["next_moves"]:
-        md.append(f"- [{m['rank']}] {m['move']} — PROOF: {m['proof']}" + (" · owner" if m["owner"] else ""))
-    md += ["", "## Retro", ""]
-    for r in loop["retro"]:
-        md.append(f"- one_number {r['one_number_before']} → {r['one_number_after']} · moved={r['moved']}")
-    md.append("")
-    mp.write_text("\n".join(md))
-
-    if args.check:
-        # byte-drift check: re-derive by diffing against a fresh minimal hash
-        h = hashlib.sha256(jp.read_bytes()).hexdigest()
-        print(f"check ok: {jp} sha256={h[:16]}")
-        return 0
+    mp.write_text(render_markdown(loop), encoding="utf-8")
 
     evolve = ROOT / "csoai-reach-pack-01Sep2026" / "EVOLVE-05Sep2026.md"
-    if evolve.exists():
-        with evolve.open("a") as f:
+    if evolve.exists() and f"## GROWTH LOOP {today} —" not in evolve.read_text(encoding="utf-8"):
+        with evolve.open("a", encoding="utf-8") as f:
             f.write(f"\n## GROWTH LOOP {today} — one_number={onv} · moves={len(loop['next_moves'])} (see docs/growth/{today}/loop.json)\n")
     print(f"emitted {jp} and {mp}")
     return 0

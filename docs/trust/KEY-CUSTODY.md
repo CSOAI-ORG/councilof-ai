@@ -176,4 +176,3 @@ sig_b64   = Ed25519 over canonical(body) bytes, base64-encoded
 7. Any key rotation is published in the DID document and noted at `/api/corrections`.
 8. Offline verification establishes validity as of the parameters held; it says nothing
    about the current state of the key (revocation is a present-tense fact).
-
