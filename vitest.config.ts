@@ -24,6 +24,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // every PR. They are named one by one, not globbed, and pr-gates.yml runs exactly this list under
 // `node --test` in its own step, so excluding them here removes no coverage.
 export const NODE_TEST_FILES = [
+  'scripts/build-axis-reports.slots.test.mjs',
   'scripts/build-models-measured.test.mjs',
   'scripts/contract-convergence.test.mjs',
   'scripts/feed-delivery-kit.test.mjs',

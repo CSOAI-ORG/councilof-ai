@@ -386,4 +386,34 @@ describe("the board's cardinality is followed, not asserted", () => {
     };
     if (boardAxesForTest) expect(boardAxesForTest(lying)).toBeNull();
   });
+
+  it("accepts the live board's declared subject family without weakening row or total checks", async () => {
+    const current = boardWith(33);
+    current.axes = current.axes.map((axis, index) => index < 22 ? axis : {
+      ...axis,
+      axis: `subject-slot-${index}`,
+      family: "subject",
+      kind: "declared-slot",
+      applies_to: "declared-subject-class",
+      status: "UNMEASURED",
+      n: 0,
+    });
+    current.totals = { axes: 33, measured_axes: 22 };
+    stub({ board: current });
+    const { response, text } = await get();
+    expect(response.status).toBe(200);
+    const body = JSON.parse(text);
+    expect(body.canonical_axis_count).toBe(33);
+    expect(body.scenario_count).toBe(33);
+    expect(body.scenarios[22].board_measurement).toMatchObject({
+      classification: "BOARD_MEASUREMENT_CONTEXT",
+      family: "subject",
+      kind: "declared-slot",
+      status: "UNMEASURED",
+      n: 0,
+    });
+    current.totals.axes = 32;
+    stub({ board: current });
+    expect((await get()).response.status).toBe(503);
+  });
 });
