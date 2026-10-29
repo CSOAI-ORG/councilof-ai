@@ -5,7 +5,7 @@
  * Exposes the CSOAI Sovereign's governance layer to ANY MCP client — Claude
  * Science, Claude Code, Cursor, or your own agent. Four tools:
  *   csoai_sign     — Ed25519-seal an artifact to CSOAI Layer 0 (auditable + reproducible)
- *   csoai_verify   — verify a seal offline against its public key
+ *   csoai_verify   — request verification through /api/verify against the supplied public key
  *   csoai_govern   — ask the CSOAI Sovereign a governance / cybersecurity question (role-guarded)
  *   csoai_catalog  — search the published governed CSOAI tools / MCPs
  *
@@ -63,7 +63,7 @@ const TOOLS = [
   },
   {
     name: "csoai_verify",
-    description: "Verify a CSOAI Layer-0 Ed25519 seal offline: confirm the signature matches the artifact and public key. Use to check provenance of anything previously sealed with csoai_sign.",
+    description: "Request verification through /api/verify: confirm whether the signature matches the artifact and supplied public key. This client uses a network request; signature validity alone does not establish issuer identity. Use to check provenance of anything previously sealed with csoai_sign.",
     inputSchema: {
       type: "object",
       properties: {
@@ -86,7 +86,7 @@ const TOOLS = [
   },
   {
     name: "csoai_catalog",
-    description: "Search the CSOAI catalog of published governed tools / MCPs (framework-compliance, cyber, evidence, identity, and more). Returns matching governed tools with their cluster and install hint.",
+    description: "Search the CSOAI catalog of published governed tools / MCPs (framework-compliance, cyber, evidence, identity, and more). Returns matching probed server-tool rows and their query total; inventory counts are separate.",
     inputSchema: {
       type: "object",
       properties: { query: { type: "string", description: "Optional keyword (e.g. 'eu ai act', 'nist', 'evidence')." } },
@@ -138,7 +138,9 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     }
     if (name === "csoai_catalog") {
       const r = await api("/tools?q=" + encodeURIComponent(String(a.query || "")));
-      if (!r.json) return err("catalog gateway unreachable (status " + r.status + ")");
+      // A non-OK status is an error even when the body parses as JSON: an error
+      // page must never be presented as a successful "0 matches" search.
+      if (!r.ok || !r.json) return err("catalog gateway unreachable (status " + r.status + ")");
       const j = r.json;
       const probed = Array.isArray(j.tools) ? j.tools : null;
       const raw = probed || j.matches || j.mcps || j.distinct_tools || j.tools || (Array.isArray(j) ? j : []);
