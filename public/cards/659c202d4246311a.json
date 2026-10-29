@@ -1,0 +1,98 @@
+{
+  "card": {
+    "as_of": "2026-10-28T21:00:26Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.ledger-head/0.1",
+      "ledger": "layer-o-presence",
+      "authority_for": "operational surfaces and their contracts (rollup)",
+      "served_url": "https://councilof.ai/.well-known/layer-o-presence.json",
+      "http_status": 200,
+      "not_a_grade": true,
+      "bytes_sha256": "3034aa61f35bce845fb9abf0f06e9f99b4ff20c695d14734ee877b8c9218eafd",
+      "n_bytes": 50354,
+      "entries": 159,
+      "surfaces_total_declared": 159,
+      "events": 492,
+      "head_digest": "9da78430ebf5963ed801ce209cb181ebdf3949712ed9f9285b9db076b380f963",
+      "last_update": "2026-09-30T06:10:51Z",
+      "counts_by_state": {
+        "DISCOVERED": 46,
+        "QUALIFIED": 51,
+        "READY": 0,
+        "AUTH_REQUIRED": 5,
+        "BUILDING": 0,
+        "CONNECTED": 0,
+        "PUBLISHED": 28,
+        "SUBMITTED": 2,
+        "UNDER_REVIEW": 1,
+        "ACCEPTED": 1,
+        "REJECTED": 0,
+        "BLOCKED": 0,
+        "STALE": 3,
+        "NEEDS_UPDATE": 1,
+        "UNSUPPORTED": 21
+      },
+      "state": "PROBED"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "659c202d4246311a56f9581603627b1eabf5e99bfa5fab35579fc4eaf0debeb3",
+    "sig_ed25519": "17149db595fa881379e33d66342af345be74929177291028e1c5aed469191497fea06bbc5bb4ad2cc2115729abc15cb844cb2565575a407fa5ae091adaea320f",
+    "source_urls": [
+      "https://councilof.ai/.well-known/layer-o-presence.json"
+    ],
+    "subject": "Ledger head: layer-o-presence (served bytes, digest and count at one read)",
+    "surface": "public.notice",
+    "tags": [
+      "ledger-head",
+      "layer-o-presence",
+      "ledger-heads-2026-09"
+    ],
+    "unmeasured": [
+      "whether any entry is correct; this atom commits to the served bytes and their head only"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "7afb0545aa6e6857a89802a4d0d717b20b793118130205ce8c5c8b627cf89f65",
+    "750b627dbf33ea5fc247d7fa1ae3dfae40caebe898fa22dac1945db957414a22",
+    "5840585ffcc5444bd00e77c1819d72ca7cc08f73b61423561304f6ff5edd27da",
+    "9bd69c211c9e0161bd9a6bf1d54ac48ae949523f97a3752fd9341d5fce9082e9",
+    "60b40f777b18ac17aa07c4dd76663f1f757a6516ca59914bad17e5c04cc5ce4a",
+    "bb0eef1e7419df7a2b39c3d258ce4d8cdb9181e4ad64740b38818659cb9e2a74",
+    "132d427982227ec04867bb5c1ec55b9e82ebc41c3d1c399cd2d0d7c8320ca8dc",
+    "201c65b10ba3a5f29aa16126faf2c6a15696ac0c1fd8e170a912b9f48ccef9f5",
+    "e2c0b30a71113cf3f7484af4e7abf223254833ab94eeacb0902a90847c1930d3"
+  ]
+}
