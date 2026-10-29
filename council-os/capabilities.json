@@ -5307,34 +5307,6 @@
       "source": "functions/api/reports.ts"
     },
     {
-      "audience": "agent",
-      "description": "GET /api/research-plan — read-only continuous research plans joined to the live measured GSPC axes. Research candidates remain UNMEASURED and unsigned; human review is required. This endpoint never trains, fixes, signs, submits evidence, or promotes a board measurement.",
-      "description_state": "DOCUMENTED",
-      "id": "api-research-plan",
-      "kind": "http",
-      "lifecycle": "LIVE",
-      "method": "GET",
-      "name": "GSPC continuous research plan",
-      "path": "/api/research-plan",
-      "payment": "free",
-      "probe": {
-        "expect_status": [
-          200
-        ],
-        "method": "GET",
-        "request": "/api/research-plan",
-        "safe": true
-      },
-      "schema_refs": [
-        "csoai.gspc-research-plan/0.1"
-      ],
-      "source": "functions/api/research-plan.ts",
-      "surfaces": [
-        "openapi",
-        "llms"
-      ]
-    },
-    {
       "id": "api-request-attestation",
       "kind": "http",
       "path": "/api/request-attestation",

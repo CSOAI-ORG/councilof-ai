@@ -1,0 +1,42 @@
+{
+  "schema": "csoai.kv-namespace-provenance/0.1",
+  "account_id": "52092e4dad74b51759a2f748c8cf2528",
+  "observed_at": "2026-10-28T15:36:04Z",
+  "observed_by": "wrangler 4.141.0 `kv namespace list` on the operator machine - an authenticated, read-only read of this account's KV namespace list (owner OAuth credential; no write was made).",
+  "method": "GET /accounts/52092e4dad74b51759a2f748c8cf2528/storage/kv/namespaces",
+  "reproduce": "wrangler kv namespace list  ->  the JSON array, mapped to {id,title} and sorted by id, serialised with 2-space indent and a trailing newline; sha256 = list_sha256 below.",
+  "list_sha256": "69822f5aaf2cb3731620409e0323e724ca5065c45b604fc8cbbde70067125d18",
+  "namespaces": {
+    "SOV_ARENA_STATE": {
+      "id": "00634697bf5744edba3625905a922e96",
+      "title": "SOV_ARENA_STATE"
+    },
+    "REVENUE_KV": {
+      "id": "91e1b7a78f2a4edbbe5f67459b2a79db",
+      "title": "revenue"
+    },
+    "WITNESS_KV": {
+      "id": "8244f80354c24a9ebadd227a8192a045",
+      "title": "witness"
+    },
+    "LEADS": {
+      "id": "8c460488aa6444c187890a579511bf93",
+      "title": "LEADS"
+    },
+    "HITL_KV": {
+      "id": "76e668160bba4866b0d2926bbefdec07",
+      "title": "HITL_KV"
+    }
+  },
+  "creation_evidence": {
+    "HITL_KV": {
+      "created_at": "2026-10-27T06:07:46Z",
+      "api_request": "POST https://api.cloudflare.com/client/v4/accounts/52092e4dad74b51759a2f748c8cf2528/storage/kv/namespaces",
+      "api_result": "200 OK",
+      "excerpt": "Creating namespace with title \"HITL_KV\" ... Success! ... { \"kv_namespaces\": [ { \"binding\": \"HITL_KV\", \"id\": \"76e668160bba4866b0d2926bbefdec07\" } ] }",
+      "wrangler_log": "~/.wrangler/logs/wrangler-2026-10-27_06-07-44_378.log",
+      "wrangler_log_sha256": "eb06743c84d7a9ef6657b6d55e361a321695c320d286446057f97165cd4c28d6"
+    }
+  },
+  "note": "A dated observation, not a standing truth. This receipt is consulted ONLY when no credential available to the run can read the account's KV namespace list; the bind step then names this receipt in its output, with observed_at, so a reader is never told a live read happened when it did not. Refresh it by re-running the list and updating observed_at, list_sha256 and namespaces. If a binding is added to wrangler.jsonc, this receipt must be refreshed before that binding can be bound: the step fails closed on a receipt that does not cover every declared id."
+}
