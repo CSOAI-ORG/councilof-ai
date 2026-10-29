@@ -1,6 +1,7 @@
 # Layer-0 approval and cancellation contract
 
-This package is a prototype client wrapper. Its tests use owned, in-process fixtures.
+This package is a prototype client wrapper. Its tests use owned fixtures, including
+a temporary-file effect read back independently of the callback's return value.
 They do not establish a live gateway, a human identity service, an isolated executor
 or an end-to-end MEOK approval journey.
 
@@ -35,7 +36,9 @@ fixture; it must not pass through this protected path as approved work.
 
 Pass an `AbortSignal` through `options.signal`. A pre-existing cancellation, or one
 received while awaiting the gate or approval verifier, prevents callback dispatch.
-The callback receives the signal. After dispatch, the executor must implement its
+The signal is captured when the call starts: later replacement or deletion of
+`options.signal` cannot detach that cancellation channel. The callback receives
+the captured signal. After dispatch, the executor must implement its
 own cancellation, lease revocation and effect-boundary check. A returned effect is
 retained even if cancellation was requested during execution; the return includes
 `cancellationRequested` instead of pretending that the effect was undone.
@@ -44,6 +47,27 @@ This is cooperative cancellation, not a durable stop latch, remote-provider shut
 cross-worker atomic revocation or rollback. Production needs an authenticated
 controller outside the model, persistent authority epochs, acknowledgements and
 explicit partial/unknown outcomes. Those capabilities are not implemented here.
+
+If the callback throws or rejects, `governed()` rejects with an exported
+`Layer0ExecutionError`: `code: "EXECUTION_OUTCOME_UNKNOWN"`,
+`status: "execution_outcome_unknown"`, `callbackStarted: true`, the original
+`action` and `inputsHash`, `cancellationRequested`, and the original rejection in
+`cause`. This intentionally changes the thrown error's identity; consumers that
+inspect executor errors must read `cause`. Callback entry does not prove an external
+request was sent. Neither a rejection nor cancellation proves that no effect occurred.
+The wrapper cannot distinguish failure before a write from a lost response after
+one. It does not retry, refund an approval lease or issue a success attestation for
+that rejected callback. These error fields are diagnostic metadata, not signed
+evidence or permission to resume.
+
+When the callback returns but attestation fails, its result is retained with
+`status: "executed_unattested"`. A returned result still needs independent effect
+verification. Attestation failures must not prompt another execution of the action.
+
+The host must retain the attempt ID and unknown state durably, query the executor
+or an independent observer for the actual effect, and reconcile it before any new
+authorization. This package does not create that store or observation service.
+Keep raw exception details private: `cause` may contain sensitive executor context.
 
 The input digest is captured before authorization. A change while authorization is
 pending rejects dispatch. The attestation request retains that original digest even
@@ -63,6 +87,17 @@ host integration with a forged receipt, wrong tenant, changed arguments, expired
 authority, revoked authority, duplicate invocation, resume after revocation and
 stop during dispatch. Retain evidence of the effect or its absence. Do not count
 client fixture tests as passing those deployment checks.
+
+For one operator acceptance, use the existing case identity and an owned, reversible
+operation. Enroll the actual operator through the existing custody process; do not
+let an agent create a replacement human identity. Retain the exact proposal and
+authenticated approve/reject decision, enforce its scope and one-use grant at the
+executor, then let a separate observer read the resulting state. Exercise a lost
+response after the effect: recovery must show unknown until readback resolves it
+and must not duplicate the action. Reopen the same evidence at the receiver without
+executing again. Record observed times and source pins; leave absent authentication,
+effect or receiver acceptance unproven. A synthetic approval callback cannot close
+this gate.
 
 This contract implements the direction of operational charter articles 2–5, 7,
 10, 18–20. It does not amend the frozen charter or claim that all its obligations

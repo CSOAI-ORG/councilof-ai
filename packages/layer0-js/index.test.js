@@ -1,5 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import crypto from "node:crypto";
+import { mkdtemp, writeFile, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { Layer0 } from "./index.js";
 
 class Stub extends Layer0 {
@@ -160,5 +164,121 @@ test("attestation retains the authorized input digest when the callback mutates 
   };
   await l0.governed("x", inputs, async () => { inputs.value = "after"; });
   assert.equal(attestedHash, checkedHash);
+});
+
+test("a real write followed by an error stays unknown and is never automatically retried", async (t) => {
+  const directory = await mkdtemp(join(tmpdir(), "csoai-layer0-effect-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const target = join(directory, "effect.txt");
+  const inputs = { target, content: "one authorized fixture write" };
+  const inputsHash = "sha256:" + crypto.createHash("sha256").update(JSON.stringify(inputs)).digest("hex");
+  const failure = new Error("response lost after effect");
+  const l0 = new Stub("allow");
+  let calls = 0;
+  let attestations = 0;
+  l0._attest = async () => { attestations++; return {}; };
+  let observedError;
+  try {
+    await l0.governed("fixture.write", inputs, async () => {
+      calls++;
+      await writeFile(target, inputs.content, { flag: "wx" });
+      inputs.content = "changed after dispatch";
+      throw failure;
+    });
+  } catch (error) { observedError = error; }
+  // Read the effect independently of the callback's return/error and before
+  // checking its classification; the retained error must not erase this write.
+  assert.equal(await readFile(target, "utf8"), "one authorized fixture write");
+  assert.equal(calls, 1);
+  assert.equal(attestations, 0);
+  assert.equal(observedError?.code, "EXECUTION_OUTCOME_UNKNOWN");
+  assert.equal(observedError.status, "execution_outcome_unknown");
+  assert.equal(observedError.callbackStarted, true);
+  assert.equal(observedError.action, "fixture.write");
+  assert.equal(observedError.inputsHash, inputsHash);
+  assert.equal(observedError.cause, failure);
+  assert.equal(observedError.cancellationRequested, false);
+});
+
+test("a callback error with no observed effect is also unknown to the wrapper", async () => {
+  const l0 = new Stub("allow");
+  const failure = new Error("failed before effect");
+  await assert.rejects(() => l0.governed("x", {}, async () => { throw failure; }),
+    (error) => error.code === "EXECUTION_OUTCOME_UNKNOWN" && error.cause === failure);
+});
+
+test("a non-Error callback rejection retains its cause and unknown outcome", async () => {
+  const l0 = new Stub("allow");
+  await assert.rejects(() => l0.governed("x", {}, async () => { throw "lost response"; }),
+    (error) => error.code === "EXECUTION_OUTCOME_UNKNOWN" && error.cause === "lost response");
+});
+
+test("post-dispatch cancellation and callback rejection do not imply rollback", async () => {
+  const controller = new AbortController();
+  const l0 = new Stub("allow");
+  await assert.rejects(() => l0.governed("x", {}, async () => {
+    controller.abort();
+    throw new Error("aborted with effect state unavailable");
+  }, { signal: controller.signal }),
+  (error) => error.code === "EXECUTION_OUTCOME_UNKNOWN" && error.cancellationRequested === true);
+});
+
+test("attestation failure cannot erase a returned callback result", async () => {
+  const l0 = new Stub("allow");
+  l0._attest = async () => { throw new Error("evidence gateway unavailable"); };
+  const out = await l0.governed("x", {}, async () => "retained result");
+  assert.equal(out.result, "retained result");
+  assert.equal(out.status, "executed_unattested");
+  assert.equal(out.attestation, null);
+  assert.equal(out.attested, false);
+});
+
+test("replacing options.signal while the gate waits cannot remove cancellation", async () => {
+  const controller = new AbortController();
+  const options = { signal: controller.signal };
+  const l0 = new Stub("allow");
+  l0.gate = async () => {
+    controller.abort();
+    options.signal = new AbortController().signal;
+    return { state: "allow" };
+  };
+  await assert.rejects(() => l0.governed("x", {}, async () => { l0.ran++; }, options),
+    { code: "EXECUTION_CANCELLED" });
+  assert.equal(l0.ran, 0);
+});
+
+test("replacing options.signal while approval waits cannot remove cancellation", async () => {
+  const controller = new AbortController();
+  const options = { signal: controller.signal, approval: { id: "fixture" } };
+  const l0 = new Stub("escalate", { verifyApproval: async () => {
+    controller.abort();
+    delete options.signal;
+    return true;
+  } });
+  await assert.rejects(() => l0.governed("x", {}, async () => { l0.ran++; }, options),
+    { code: "EXECUTION_CANCELLED" });
+  assert.equal(l0.ran, 0);
+});
+
+test("post-dispatch reporting uses the original cancellation signal", async () => {
+  const controller = new AbortController();
+  const options = { signal: controller.signal };
+  const l0 = new Stub("allow");
+  const out = await l0.governed("x", {}, async ({ signal }) => {
+    assert.equal(signal, controller.signal);
+    controller.abort();
+    delete options.signal;
+    return "result returned after cancellation";
+  }, options);
+  assert.equal(out.cancellationRequested, true);
+  assert.equal(out.result, "result returned after cancellation");
+});
+
+test("a missing callback fails before contacting the gate", async () => {
+  const l0 = new Stub("allow");
+  let gated = 0;
+  l0.gate = async () => { gated++; return { state: "allow" }; };
+  await assert.rejects(() => l0.governed("x", {}, null), TypeError);
+  assert.equal(gated, 0);
 });
 

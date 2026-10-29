@@ -1,17 +1,32 @@
-// @csoai/layer0 — drop-in Layer 0 + A2A adapter.
-// Wraps the CSOAI gateway (api-server) so any tool/MCP/package becomes governed:
-// Sovereign Gate policy check → run → Ed25519-signed attestation → A2A envelope.
+// @csoai/layer0 — prototype Layer 0 + A2A gateway client.
+// Gate check → callback → gateway attestation request. The host owns identity,
+// execution isolation, effect binding and independent evidence verification.
 //
 // Usage:
 //   import { Layer0 } from "@csoai/layer0";
 //   const l0 = new Layer0({ base: process.env.CSOAI_API_BASE, identity: "did:csoai:acme" });
 //   const { result, attestation } = await l0.governed("evidence.collect", inputs, () => doWork());
 //
-// Set CSOAI_API_BASE to your gateway (e.g. https://api.csoai.org). No secrets needed client-side.
+// Set CSOAI_API_BASE to a configured gateway. See APPROVAL-CONTRACT.md.
 
 import crypto from "node:crypto";
 
 const sha256 = (s) => "sha256:" + crypto.createHash("sha256").update(typeof s === "string" ? s : JSON.stringify(s)).digest("hex");
+
+// A rejected callback may already have produced an effect. The wrapper cannot
+// infer rollback or safe retry from its rejection. Preserve the original cause.
+export class Layer0ExecutionError extends Error {
+  constructor(cause, { action, inputsHash, signal }) {
+    super("Execution callback failed; reconcile the effect before retrying", { cause });
+    this.name = "Layer0ExecutionError";
+    this.code = "EXECUTION_OUTCOME_UNKNOWN";
+    this.status = "execution_outcome_unknown";
+    this.callbackStarted = true;
+    this.action = action;
+    this.inputsHash = inputsHash;
+    this.cancellationRequested = signal?.aborted === true;
+  }
+}
 
 export class Layer0 {
   constructor({ base = process.env.CSOAI_API_BASE || "https://api.csoai.org", identity, endpoint = "tool://local", verifyApproval } = {}) {
@@ -42,8 +57,12 @@ export class Layer0 {
   // cannot constrain an arbitrary callback's effects or an administrator of its host.
   // Cancellation is cooperative: once run() starts the executor must honour signal.
   async governed(action, inputs, run, options = {}) {
+    if (typeof run !== "function") throw new TypeError("run must be a function");
+    // Bind the cancellation channel at admission; mutating options while an
+    // authorization request is pending must not detach an existing cancellation.
+    const signal = options.signal;
     const stopIfAborted = () => {
-      if (options.signal?.aborted) {
+      if (signal?.aborted) {
         const err = new Error("Execution cancelled before dispatch");
         err.code = "EXECUTION_CANCELLED";
         throw err;
@@ -82,14 +101,23 @@ export class Layer0 {
       throw err;
     }
     stopIfAborted();
-    const result = await run({ requiresHumanReview: escalated, decision, approval, signal: options.signal });
-    const attestation = await this._attest(action, inputs, decision, inputsHash);
+    let result;
+    try {
+      result = await run({ requiresHumanReview: escalated, decision, approval, signal });
+    } catch (cause) {
+      throw new Layer0ExecutionError(cause, { action, inputsHash, signal });
+    }
+    // Evidence-service failure cannot erase a callback result already obtained.
+    // Preserve the same executed_unattested contract for custom transports too.
+    let attestation = null;
+    try { attestation = await this._attest(action, inputs, decision, inputsHash); }
+    catch { /* The effect is retained below; no automatic retry or attestation. */ }
     const attested = Boolean(attestation);
     // Missing attestation is a distinct outcome, never a silent success.
     // An abort after dispatch must not erase a possibly completed effect.
     const status = attested ? "attested" : "executed_unattested";
     return { result, decision, attestation, attested, status,
-      cancellationRequested: options.signal?.aborted === true };
+      cancellationRequested: signal?.aborted === true };
   }
 
   // §4 build + sign an A2A attestation envelope via the gateway
