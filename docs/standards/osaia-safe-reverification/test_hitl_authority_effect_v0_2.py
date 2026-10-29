@@ -217,9 +217,11 @@ def temporal_ok(record):
         problems.append('the operational baseline was observed after the decision')
     invoked_at = record['invocation'].get('invoked_at')
     if invoked_at:
+        if ts(invoked_at) < decided_at:
+            problems.append('invocation precedes the authority decision')
         if not (not_before <= ts(invoked_at) <= not_after):
             problems.append('invoked_at outside the validity window')
-        if ts(record['effect']['observed_at']) < ts(invoked_at):
+        if record['effect'].get('observed_at') and ts(record['effect']['observed_at']) < ts(invoked_at):
             problems.append('the effect was observed before the invocation')
     verified_at = record['verification'].get('verified_at')
     if verified_at and record['effect'].get('observed_at'):
@@ -256,6 +258,65 @@ else:
     counts['temporal'] += 1
     print(f'  ok  the temporal gate rejects it: {problems}')
 
+print('== stage-order regression controls ==')
+for label, changes, expected_problem in (
+    ('invocation before approval, both inside the validity window', (
+        (('authority', 'validity_window', 'not_before'), '2026-10-27T09:00:00Z'),
+        (('invocation', 'invoked_at'), '2026-10-27T09:09:45Z'),
+    ), 'invocation precedes the authority decision'),
+    ('future baseline', (
+        (('authority', 'operational_baseline', 'observed_at'), '2026-10-27T09:10:01Z'),
+    ), 'the operational baseline was observed after the decision'),
+    ('effect before invocation', (
+        (('effect', 'observed_at'), '2026-10-27T09:10:30Z'),
+    ), 'the effect was observed before the invocation'),
+    ('verification before effect', (
+        (('verification', 'verified_at'), '2026-10-27T09:11:05Z'),
+    ), 'verification precedes the observed effect'),
+):
+    record = copy.deepcopy(E2)
+    for path, value in changes:
+        mutate(record, path, value)
+    V2.validate(record)  # The schema alone accepts these records.
+    problems = temporal_ok(record)
+    if expected_problem not in problems:
+        failures.append(f'temporal gate did not reject {label}: {problems}')
+    else:
+        counts['temporal'] += 1
+        print(f'  ok  temporal rejection: {label}')
+
+for label, changes in (
+    ('same instant with a timezone offset', (
+        (('invocation', 'invoked_at'), '2026-10-27T10:11:00+01:00'),
+    )),
+    ('invocation at the approval instant', (
+        (('invocation', 'invoked_at'), '2026-10-27T09:10:00Z'),
+    )),
+):
+    record = copy.deepcopy(E2)
+    for path, value in changes:
+        mutate(record, path, value)
+    V2.validate(record)
+    problems = temporal_ok(record)
+    if problems:
+        failures.append(f'temporal gate rejected {label}: {problems}')
+    else:
+        counts['temporal'] += 1
+        print(f'  ok  temporal acceptance: {label}')
+
+# An invoked operation may have no observed effect yet. Preserve UNKNOWN; do not
+# crash while trying to parse a missing timestamp or manufacture an observation.
+unknown_effect = copy.deepcopy(E2)
+unknown_effect['effect'] = {'state': 'UNKNOWN', 'observed_at': None}
+unknown_effect['verification'] = {'state': 'NOT_RUN', 'evidence_refs': []}
+V2.validate(unknown_effect)
+problems = temporal_ok(unknown_effect)
+if problems:
+    failures.append(f'temporal gate rejected unknown effect: {problems}')
+else:
+    counts['temporal'] += 1
+    print('  ok  unknown effect remains unobserved')
+
 print('== summary ==')
 if failures:
     for f in failures:
@@ -266,3 +327,4 @@ total = sum(counts.values())
 print(f"PASS {counts['must_pass']} must-pass; {counts['must_fail']} must-fail; "
       f"{counts['negative_control']} negative controls (v0.1 accepted what v0.2 rejects); "
       f"{counts['temporal']} temporal checks ({total} total)")
+
