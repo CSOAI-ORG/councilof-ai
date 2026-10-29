@@ -1,13 +1,10 @@
-// @csoai/layer0 — drop-in Layer 0 + Constitutional Harness + A2A adapter.
-// Supports both:
-//   1. Gateway mode (`gate`, `governed`, `verify`) for remote CSOAI A2A gateways.
-//   2. Zero-dependency offline/local Constitutional Harness mode (`localConstitutionalPrecheck`,
-//      `governedLocal`, `verifyLocalReceipt`), pinned to `/.well-known/constitutional-harness.json`
-//      (v0.1.0 sha256: 3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e),
-//      enforcing Controls CH-01..CH-16, Human-in-the-Loop (HITL) approval receipts, secret
-//      minimization (CH-10), and Ed25519 effect-receipt signing (`node:crypto`).
-//
-// Doctrine: Measurement, never certification. Anyone can re-check at https://councilof.ai/verify
+// @csoai/layer0 — gateway adapter and experimental local diagnostics.
+// localConstitutionalPrecheck reports declared-input diagnostics, not authority.
+// governedLocal is held until a trusted host executor and current authority
+// verifier are integrated. A caller-supplied receipt or a self-generated key
+// cannot qualify that executor or authorize an effect.
+// verifyLocalReceipt checks covered bytes against the supplied key only.
+// Measurement, never certification.
 
 import crypto from "node:crypto";
 
@@ -122,12 +119,12 @@ export class Layer0 {
     });
   }
 
-  // Offline/local fail-closed Constitutional Harness precheck (Controls CH-01..CH-16, Articles 1..22)
+  // Local input diagnostics only. An allow result is not execution authority.
   localConstitutionalPrecheck(action, inputs = {}, context = {}) {
     const reasons = [];
     const controlsChecked = ["CH-01", "CH-02", "CH-03", "CH-04", "CH-10", "CH-13"];
 
-    // CH-01: Trusted identity binding (Article 3)
+    // Declared identity presence only; this does not authenticate a principal.
     if (!this.identity || typeof this.identity !== "string") {
       reasons.push("CH-01: missing subject identity");
     }
@@ -186,68 +183,19 @@ export class Layer0 {
     };
   }
 
-  // Offline/local governed wrapper: Constitutional Precheck -> HITL Gate -> Run -> Ed25519 Receipt
+  // Local diagnostics do not authorize an arbitrary callback. Keep this route
+  // held until a separately reviewed host integration supplies current identity,
+  // tenant/resource scope, expiry, replay, revocation, budget and effect controls.
+  // No per-call option, typed name or signature can bypass this admission hold.
   async governedLocal(action, inputs, run, options = {}) {
     const decision = this.localConstitutionalPrecheck(action, inputs, options);
     if (decision.state === "deny") {
       throw new Error(`Layer-0 Gate denied: ${decision.reason || action}`);
     }
-    let approval = null;
-    if (decision.state === "escalate") {
-      approval = options.approvalReceipt || null;
-      if (!approval && !options.allowUnapprovedEscalation) {
-        throw new Error(
-          `Layer-0 Gate escalation requires an approval receipt before execution: ${decision.reason || action}`
-        );
-      }
-    }
-
-    const result = await run({
-      requiresHumanReview: decision.state === "escalate",
-      decision,
-      approval,
-    });
-
-    const { publicKey, privateKey } = this._ensureKeyPair();
-    const pubJwk = publicKey.export({ format: "jwk" });
-    const body = {
-      schema: "csoai.constitutional-effect-receipt/0.1",
-      charter_sha256: CHARTER_V0_1_0_SHA256,
-      subject_id: this.identity,
-      tenant_id: this.tenantId,
-      harness_id: this.harnessId,
-      endpoint: this.endpoint,
-      action,
-      inputs_sha256: sha256(inputs),
-      observed_effect_sha256: sha256(result ?? null),
-      decision_state: decision.charter_decision_state,
-      human_in_the_loop:
-        decision.state === "escalate"
-          ? {
-              required: true,
-              approved: Boolean(approval),
-              approver: approval?.approver || null,
-              approval_receipt_id: approval?.receipt_id || null,
-            }
-          : { required: false, approved: false, approver: null, approval_receipt_id: null },
-      verification_state: "RECEIPT_SIGNED_EFFECT_AWAITING_INDEPENDENT_VERIFIER",
-      execution_authority_granted_by_charter: false,
-      not_a_certification: true,
-    };
-    const canonicalBytes = Buffer.from(canonicalJson(body), "utf8");
-    const receiptSha256 = crypto.createHash("sha256").update(canonicalBytes).digest("hex");
-    const sigBase64Url = crypto.sign(null, canonicalBytes, privateKey).toString("base64url");
-
-    const attestation = {
-      ...body,
-      receipt_sha256: receiptSha256,
-      public_key_jwk: pubJwk,
-      sig_ed25519: sigBase64Url,
-    };
-
-    const status =
-      decision.state === "escalate" && !approval ? "executed_unapproved" : "attested";
-    return { status, result, decision, approval, attestation };
+    const error = new Error("Local executor is not qualified; diagnostics and supplied receipts grant no execution authority");
+    error.code = "LOCAL_EXECUTOR_NOT_QUALIFIED";
+    error.decision = decision;
+    throw error;
   }
 
   // Verify a local Ed25519 constitutional effect receipt offline
@@ -277,7 +225,9 @@ export class Layer0 {
       }
       return {
         verdict: "VALID",
-        reason: "Ed25519 signature and canonical receipt_sha256 verified",
+        reason: "Ed25519 signature and canonical digest verified against the supplied key; signer trust and human authority were not checked",
+        verification_scope: "SUPPLIED_KEY_SIGNATURE_ONLY",
+        authority_verified: false,
         receipt_sha256: recomputedSha,
         charter_sha256: body.charter_sha256,
       };
@@ -341,3 +291,4 @@ export class Layer0 {
 }
 
 export default Layer0;
+
