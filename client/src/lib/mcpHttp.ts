@@ -115,6 +115,12 @@ export async function mcpRpc(
   params: JsonObject = {},
   options: McpHttpOptions = {},
 ): Promise<McpJsonRpcReply> {
+  if (
+    typeof window !== "undefined" &&
+    (window as Window & { __CSOAI_PRERENDER__?: boolean }).__CSOAI_PRERENDER__
+  ) {
+    throw new Error("MCP requests are disabled during prerender");
+  }
   const hostname =
     options.hostname ??
     (typeof window === "undefined" ? undefined : window.location.hostname);
