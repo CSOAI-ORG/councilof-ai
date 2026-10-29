@@ -1,6 +1,6 @@
 {
  "kind": "csoai.root-witness/v1",
- "as_of": "2026-10-29T00:28:42Z",
+ "as_of": "2026-10-29T00:54:46Z",
  "note": "Witnesses for the live signed public root — existence/time of these exact bytes. Not certification, not endorsement, not a rank sale. Never mint a token. ONE root anchor, never N leaves.",
  "artifact": {
   "url": "https://councilof.ai/root.json",
@@ -57,7 +57,7 @@
     973603,
     973607
    ],
-   "observed_at": "2026-10-29T00:28:41Z",
+   "observed_at": "2026-10-29T00:54:45Z",
    "scope": "PUBLIC_ROOT_BYTES_ONLY",
    "status": "CONFIRMED_BITCOIN",
    "bitcoin_header": {
@@ -67,7 +67,7 @@
     "header_sha256": "26c1bf551ea652d68d057028c4c8297a3b23b4eee4d10c0e08134737982bfddb",
     "block_time_unix": 1793225129,
     "block_time": "2026-10-28T22:05:29Z",
-    "verified_at": "2026-10-29T00:28:41Z",
+    "verified_at": "2026-10-29T00:54:45Z",
     "source_agreement": "BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL",
     "sources": [
      "https://blockstream.info/api/block/0000000000000000000030c0c091654edce8e67fe3e922e54bf05a015b4b37ff/header",
@@ -94,7 +94,7 @@
   "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
   "as_of": "2026-10-28T21:07:37Z",
   "merkle_root": "068123bd99028c2ad807d184e31fd7de1275e27da833f4823938ffc6b1c3bd1f",
-  "sidecars_scanned": 69,
+  "sidecars_scanned": 70,
   "conflicts": [],
   "byte_variants": [],
   "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
