@@ -1,6 +1,12 @@
 # Key Custody Documentation
 
-**Date:** 2026-09-11
+**Date:** 2026-09-11 · custody wording corrected 2026-10-29
+
+**Current custody record:** [`council-os/custody-ceremonies.json`](../../council-os/custody-ceremonies.json)
+records no performed split-custody ceremony. The dated correction
+[`C-2026-0925-01`](../corrections/2026-09-25-custody-wording.md) supersedes the
+original custody claims below. Key and artifact counts in this document describe
+the dated inventory; they are not a current production census.
 **Principle:** Private keys are NEVER exposed. This document describes public keys,
 their purposes, and custody constraints only.
 
@@ -70,11 +76,11 @@ DID: `did:web:csoai.org`
 | Type | JsonWebKey2020 (Ed25519) |
 | JWK `kid` | `gspc-board-22axis-2026` |
 | Public key (hex) | `d573a7219c0d645091e9f640cb5bbfe71429d43ac168568665a7a260d01e0d2c` |
-| Purpose | 3-party MPC key for `gspc-board.signed.json` freeze snapshot |
-| Held in | 3 shares on owner's Oracle tenancy (Coinbase cb-mpc Ed25519 additive) |
+| Purpose | Historical MPC-protocol key for `gspc-board.signed.json` freeze snapshot |
+| Held in | Three additive-share files in one directory on one host; one failure domain |
 | Role in DID | `assertionMethod` |
 | Signs | `public/signed/gspc-board.signed.json` |
-| Custody | Private scalar NEVER exists as a whole number; three MPC shares produce a stock RFC 8032 signature |
+| Custody | A single process uses all three shares. The helper's non-reconstruction property is an unaudited design claim; separated custody was never performed. |
 | Status | SUPERSEDED_KNOWN_CLAIM_DEFECT (integrity VERIFIED, claims have known defects) |
 
 ## Superseded Key
@@ -140,15 +146,23 @@ sig_b64   = Ed25519 over canonical(body) bytes, base64-encoded
 - Standard JCS-like canonicalization (no special float handling needed for this document)
 - Verifiable via `scripts/gspc-board-verify.mjs`
 
-## MPC Custody for gspc-board-22axis-2026
+## Historical MPC protocol and actual custody
 
-- **Protocol:** Coinbase cb-mpc Ed25519 additive
-- **Parties:** 3 shares on the owner's Oracle tenancy
-- **Threshold:** 2-of-3 (standard cb-mpc)
-- **Output:** Stock RFC 8032 Ed25519 signature (indistinguishable from single-key)
-- **Key property:** The private scalar NEVER exists as a whole number at any point
-- **Verification:** No MPC-specific code needed; any standard Ed25519 verifier works
-- **Anti-replay:** `content_id` binds the exact signed bytes; `sig_b64` is the signature
+- **Protocol:** Coinbase cb-mpc Ed25519 additive.
+- **Actual custody:** All three additive-share files were in one directory on one
+  host, used by one process. They did not provide independent holders or failure
+  domains.
+- **Signature:** A stock RFC 8032 Ed25519 signature can be checked with a standard
+  verifier. That check does not establish the signing protocol or separated custody.
+- **Unaudited property:** The helper is designed not to reconstruct a whole private
+  scalar. This is a design claim, not an audited custody guarantee.
+- **Current corrected freeze:** `public/signed/gspc-board.2026-09-25.signed.json`
+  is signed by the single `#board-attestation-1` key held in Cloudflare Pages.
+- **Planned:** A physical 2-of-3 split across separate holders/media has not been
+  performed. Update the ceremony registry only after execution, with a dated
+  ceremony record. Do not describe the plan as current custody.
+- **Replay limits:** A content digest binds bytes; it does not enforce freshness,
+  prevent reuse, or establish present authorization or revocation status.
 
 ## Security Invariants
 
@@ -156,8 +170,10 @@ sig_b64   = Ed25519 over canonical(body) bytes, base64-encoded
 2. DID document contains only public keys (JWK `x` parameter = public key bytes).
 3. PKCS8 private keys stay on their respective infrastructure (Pages, pod, Mac, Oracle).
 4. `#board-attestation-1` private half never leaves Cloudflare.
-5. `#gspc-board-22axis-2026` private scalar never exists as a whole number (MPC).
+5. The historical MPC protocol does not establish independent custody. The
+   ceremony registry and dated custody correction govern those claims.
 6. ML-DSA-65 (PQC) is roadmap only — no `#board-pqc-1` in the DID document.
 7. Any key rotation is published in the DID document and noted at `/api/corrections`.
 8. Offline verification establishes validity as of the parameters held; it says nothing
    about the current state of the key (revocation is a present-tense fact).
+

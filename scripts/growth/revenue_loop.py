@@ -38,6 +38,29 @@ def probe(url: str, timeout: int = 12):
     except Exception:
         return 0
 
+def repeat_payer_evidence(one: dict) -> dict:
+    """Read explicit repeat-wallet telemetry; never infer repeats from new wallets."""
+    raw = one.get("repeat_nonself_payers")
+    raw = raw if isinstance(raw, dict) else {}
+    def count(field):
+        value = raw.get(field)
+        # bool is an int subclass; neither it nor a numeric string is a count.
+        return value if one.get("status") == "MEASURED" and type(value) is int and value >= 0 else None
+    all_time, last_30d = count("all_time"), count("last_30d")
+    exceeds_payers = any(
+        value is not None and type(one.get(field)) is int and value > one[field]
+        for field, value in (("all_time", all_time), ("last_30d", last_30d))
+    )
+    if exceeds_payers or (all_time is not None and last_30d is not None and last_30d > all_time):
+        all_time = last_30d = None
+    return {
+        "all_time": all_time,
+        "last_30d": last_30d,
+        "status": "MEASURED" if all_time is not None and last_30d is not None else "UNMEASURED",
+        "source": "/api/revenue one_number.repeat_nonself_payers",
+        "boundary": "Repeated wallets and transaction IDs do not prove buyer receipt, acceptance or an independent customer, and do not authorize another product.",
+    }
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
@@ -68,6 +91,8 @@ def main() -> int:
             pass
 
     one = revenue.get("one_number", {}) if isinstance(revenue, dict) else {}
+    one = one if isinstance(one, dict) else {}
+    repeat = repeat_payer_evidence(one)
 
     loop = {
         "schema": "csoai.growth-loop/0.1",
@@ -78,7 +103,8 @@ def main() -> int:
             "settlements": one.get("settlements"), "self_settlements": one.get("self_settlements"),
             "zero_value_settlements": one.get("zero_value_settlements"),
             "status": one.get("status"),
-            "gate": revenue.get("gates") if isinstance(revenue, dict) else None,
+            "gate": one.get("gates"),
+            "repeat_nonself_payers": repeat,
         },
         "funnel_per_door": {
             "receipts_lookup_available": not receipts.get("err"),
@@ -120,9 +146,8 @@ def main() -> int:
         except Exception:
             loop["signals"]["pypi_downloads"][pkg] = None
 
-    # Compare the current payer count with the last committed run. A non-zero
-    # cumulative count is not movement by itself; only a real increase opens
-    # the next door.
+    # Compare distinct payer counts for context and the retrospective. A new wallet
+    # is not a repeat purchase and does not authorize another product.
     prior_runs = sorted(p for p in OUT.glob("20*/loop.json")) if OUT.exists() else []
     previous_one = None
     if prior_runs:
@@ -134,8 +159,8 @@ def main() -> int:
     # ── next moves: fixed rule set, ranked by signal ÷ cost, each with PROOF ──
     moves = []
     onv = one.get("all_time")
-    if onv is None:
-        moves.append({"rank": 1, "move": "no REVENUE_KV bound or no settlement recorded — confirm the rail's settlement path is recording (blocked-at-measurement)",
+    if type(onv) is not int or onv < 0 or one.get("status") != "MEASURED":
+        moves.append({"rank": 1, "move": "payer telemetry is unavailable or malformed — confirm settlement records before drawing a demand conclusion",
                       "proof": f"one_number.all_time={onv!r}", "owner": False})
     elif onv == 0:
         issued = receipts.get("count", 0)
@@ -143,12 +168,23 @@ def main() -> int:
                       "proof": f"settles={issued}; one_number={onv}", "owner": False})
         moves.append({"rank": 2, "move": "index listing state probe (mcp_so/pulsemcp/glama/arcade = codes above) → row for any non-200",
                       "proof": json.dumps(loop["signals"]["index_probes"]), "owner": False})
-    elif isinstance(previous_one, (int, float)) and onv > previous_one:
-        moves.append({"rank": 1, "move": "one_number moved → per gate '≥1 repeat → open the next door'",
-                      "proof": f"one_number {previous_one} → {onv}", "owner": False})
     else:
-        moves.append({"rank": 1, "move": "outside payer count is non-zero but has not increased — improve discovery and seek a repeat before opening another door",
-                      "proof": f"previous_one_number={previous_one!r}; current_one_number={onv}", "owner": False})
+        proof = (f"distinct wallets {previous_one!r} → {onv}; "
+                 f"repeat_nonself_payers.all_time={repeat['all_time']!r}; "
+                 f"last_30d={repeat['last_30d']!r}; status={repeat['status']}")
+        if repeat["status"] != "MEASURED":
+            move = "repeat-wallet evidence is unknown — recover explicit repeat telemetry; distinct-wallet growth is not a repeat"
+            owner = False
+        elif repeat["last_30d"] > 0:
+            move = "recent repeat-wallet evidence is recorded — review delivered bytes and buyer acceptance; this signal does not authorize another product"
+            owner = True
+        elif repeat["all_time"] > 0:
+            move = "historical repeat-wallet evidence only — seek accepted repeat delivery in the current 30-day window"
+            owner = False
+        else:
+            move = "no repeat-wallet evidence recorded — seek accepted repeat delivery; distinct-wallet growth is not a repeat"
+            owner = False
+        moves.append({"rank": 1, "move": move, "proof": proof, "owner": owner})
     if one.get("self_settlements"):
         moves.append({"rank": 3, "move": "self-settlements recorded — shown as self, never growth",
                       "proof": f"self={one.get('self_settlements')}", "owner": False})
@@ -178,10 +214,11 @@ def main() -> int:
     # ── loop.md (human section) + EVOLVE append ───────────────────────────────
     md = [f"# Growth loop — {today}", "",
           f"- one_number: {onv} (last_30d {one.get('last_30d')}) · self {one.get('self_settlements')} · zero-value {one.get('zero_value_settlements')}",
+          f"- repeat non-self wallets: {repeat['all_time']} all time; {repeat['last_30d']} in 30 days · {repeat['status']} (not buyer acceptance)",
           f"- receipts listed: {receipts.get('count', 0)} · distinct non-self payers: {receipts.get('distinct_nonself_payers')}",
           f"- board lid: {pub}", "", "## Gates (verbatim)", ""]
-    gates = revenue.get("gates") if isinstance(revenue, dict) else None
-    if gates:
+    gates = one.get("gates")
+    if isinstance(gates, dict):
         for k, v in gates.items():
             md.append(f"- {k}: {v}")
     md += ["", "## Next moves (≤5, ranked)", ""]
