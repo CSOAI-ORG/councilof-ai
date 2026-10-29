@@ -26,20 +26,11 @@ row in `council-os/distribution.json`, (b) `STEPS[id]` in the renderer, (c) a
 live in `scripts/harness-x/kimi-plugin.node-test.mjs` because Kimi's validator is
 inside the Kimi application and CI cannot run it.
 
-## HITL: distinguish the review console from execution authority
+## HITL: only the back end is built
 
-`scripts/hitl/hitl_probe.py` covers client-side elicitation: a server that elicits
-must stop when the human declines, and form mode must not request secrets.
-
-Public readback on 29 October 2026: `GET /api/hitl` answers 200 and reports a
-bound decision store, configured operator token and configured signing key.
-The public staff console is at `/dashboard?tab=staff`. This supersedes the earlier
-404 claim; it is a dated deployment observation, not a permanent
-assertion that every deployment has those bindings.
-
-Do not equate that status response, a competency reading check or a saved decision
-with authenticated human identity, permission to execute, or proof that a tool
-respected the decision. An end-to-end claim needs a decision bound to the exact
-proposed action, enforcement at dispatch, rejection/expiry/replay tests, and the
-retained observed effect. Agents must not manufacture a human decision to pass a test.
-
+`scripts/hitl/hitl_probe.py` is the client-side elicitation probe (a server that
+elicits must stop when the human declines; no secrets in form mode) and it passes
+its controls. The END-USER decision path — a human deciding on a raised challenge,
+gated by a competency module and returning a signed receipt — is NOT BUILT here:
+`/api/hitl` returns 404 live and `COUNCIL_HITL_DECIDE_TOKEN` appears nowhere in
+the repo. Do not describe it as working; it is a gap.
