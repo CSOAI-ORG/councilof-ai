@@ -1,11 +1,11 @@
 {
-  "schema": "csoai.zenodo-status/0.2",
+  "schema": "csoai.zenodo-status/0.1",
   "title": "Zenodo availability of CSOAI's DOIs",
-  "as_of": "2026-10-28T03:23:45Z",
-  "notice": "2 of 39 checkable DOIs resolve today; 37 still answer unavailable. The 29 September 2026 block is partially lifted.",
-  "event": "At 15:47Z on 29 Sep 2026 Zenodo blocked the account that held CSOAI's deposits as spam, after one of our own automated lanes bulk-published 54 datasets there at roughly 15-second intervals. Every record on the account began answering HTTP 410 ('User was blocked'), including records deposited weeks earlier. No appeal is on record; status UNCHECKABLE. We do not contact Zenodo from automation.",
-  "rule": "The DOIs are kept: they are the permanent names and may resolve again. No surface we publish links one as available. Each prints the identifier, this notice, and the artifact's other live copy where one exists. 'Same bytes' is claimed only where the served file's sha256 equals the digest the deposit itself recorded.",
-  "method": "For each DOI: anonymous GET https://doi.org/10.5281/zenodo.<id> following redirects; http_status is the final hop. Alternatives: anonymous GET, HTTP status and sha256 of the body.",
+  "as_of": "2026-10-28T12:13:53Z",
+  "notice": "Zenodo: 37 of 39 CSOAI deposits answered HTTP 410 (the account was blocked by Zenodo on 29 Sep 2026) when re-probed on 2026-10-28T12:13:53Z. 2 answered HTTP 200 and their bytes are live: 10.5281/zenodo.22293340, 10.5281/zenodo.22344048. A control record that is not ours (10.5281/zenodo.3234648) answered HTTP 200, so this is a reading of the deposits and not a reading of our own access. The methodology deposit (10.5281/zenodo.21991104) is among the gone, so the DOI on the board stays UNAVAILABLE. This is a point-in-time observation, not a standing all-clear.",
+  "event": "At 15:47Z on 29 Sep 2026 Zenodo blocked the account that held CSOAI's deposits as spam, after one of our own automated lanes bulk-published 54 datasets there at roughly 15-second intervals. Within the hour 37 of the 39 deposits we name were answering HTTP 410 ('User was blocked'), including records deposited weeks earlier. One record did not: 10.5281/zenodo.22293340, 10.5281/zenodo.22344048 answered 200 then and answers 200 now. The first notice said EVERY record, and that was already wrong on the day it was written - the same file's per-DOI states said so. No appeal to Zenodo is on record. We do not contact Zenodo from automation. Re-probed 2026-10-28T12:13:53Z.",
+  "rule": "The DOIs are kept: they are the permanent names and may resolve again. A deposit that answered 200 at the check of 2026-10-28T12:13:53Z is reported as RESOLVED_AT_CHECK with the date it was seen, and its other live copy is named beside it. That is a point-in-time reading, not a durable availability claim, and no surface we publish links a deposit as durable. 'Same bytes' is claimed only where the served file's sha256 equals the digest the deposit itself recorded.",
+  "method": "For each DOI: anonymous GET https://zenodo.org/api/records/<numeric id>, following redirects; http_status_at_check is the final hop. The numeric id is the DOI last segment minus the \"zenodo.\" prefix - /api/records/zenodo.21991104 is a malformed request and answers 404 even for a live record. doi.org is NOT used: it answers HTTP 403 for every DOI, including a control that is alive, which is a publisher-side client rejection and not record absence. A control record that is not ours is probed every run and MUST answer 200; if it does not, this file is not written.",
   "signed_files_not_edited": {
     "note": "These files embed a DOI inside signed bytes. They are not rewritten; this document is their dated superseding note. The A2A cards also carry an X-CSOAI-DOI-Status response header.",
     "files": [
@@ -24,7 +24,7 @@
   "dois": [
     {
       "doi": "10.5281/zenodo.21991104",
-      "kind": "record",
+      "kind": "concept",
       "what": "GSPC Methodology and the 417-Provision Frozen Corpus Anchor (methodology record; the DOI GET /api/gspc names)",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -42,16 +42,14 @@
         }
       ],
       "note": "The deposit held methodology.md, corpus_anchor.json and board_art5.signed.json (md5 9414340e…, 6879708…, ffbf81e9… per the Wayback capture of 2026-09-17). No byte-identical copy of those three files is served; none is claimed.",
-      "body_sha256": "4f9ce7f304b3e6f902dc62965aaab573e3a5145251df69ce60ecc86ea47074c7",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 407,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.21991105",
-      "kind": "record",
+      "kind": "version of 21991104",
       "what": "the published version of the methodology record",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -63,16 +61,14 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "4f9ce7f304b3e6f902dc62965aaab573e3a5145251df69ce60ecc86ea47074c7",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 407,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22901781",
-      "kind": "record",
+      "kind": "concept",
       "what": "Claim Maintenance specification, all versions",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -84,16 +80,14 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "d489e34f8aab101df0f3e3a91350b2ee5bfaa5deeaeb4eaf60da7f0e1695cfef",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 442,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22901908",
-      "kind": "record",
+      "kind": "version of 22901781",
       "what": "Claim Maintenance specification v0.1",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -107,16 +101,14 @@
           "sha256_matches_deposit": true
         }
       ],
-      "body_sha256": "d489e34f8aab101df0f3e3a91350b2ee5bfaa5deeaeb4eaf60da7f0e1695cfef",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 442,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22901782",
-      "kind": "record",
+      "kind": "superseded version of 22901781",
       "what": "first deposit of Claim Maintenance v0.1, superseded before it was served",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -129,16 +121,14 @@
         }
       ],
       "note": "Wayback capture of the landing page: http://web.archive.org/web/20260922164830/https://zenodo.org/records/22901782",
-      "body_sha256": "191fbdc2706f0a7baebb2ac38a17f18a8348b3427c0100bc3bde4950a71e87a9",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 442,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.23030504",
-      "kind": "record",
+      "kind": "version of 22901781",
       "what": "Claim Maintenance specification v0.2",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -152,16 +142,14 @@
           "sha256_matches_deposit": true
         }
       ],
-      "body_sha256": "6be6af7285a5818ee78ef2946025ae69b90f2a3df5b1618bac11f8f1a1be9225",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 442,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.23030507",
-      "kind": "record",
+      "kind": "concept",
       "what": "signed-receipts/v1, all versions",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -175,16 +163,14 @@
           "sha256_matches_deposit": true
         }
       ],
-      "body_sha256": "fbd45d5177974ca6dc3e56b3f5d2f1c04a9d742030278c9e3e8eba7371fc03ae",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 444,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.23030508",
-      "kind": "record",
+      "kind": "version of 23030507",
       "what": "signed-receipts/v1 draft 0.3 with conformance vectors and runners",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -227,16 +213,14 @@
         }
       ],
       "note": "signed-receipts-v1-draft-0.3-kit.zip (sha256 27e7925d…) has no same-bytes copy on councilof.ai.",
-      "body_sha256": "fbd45d5177974ca6dc3e56b3f5d2f1c04a9d742030278c9e3e8eba7371fc03ae",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 444,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.23030505",
-      "kind": "record",
+      "kind": "concept",
       "what": "measurement capsules v0.2 companion files",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -248,16 +232,14 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "3a645513168a0bc4d057d35055b6e6956e1c52741ebee4859b556f1aa4048a82",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 483,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.23030506",
-      "kind": "record",
+      "kind": "version of 23030505",
       "what": "measurement capsules v0.2 companion files for draft-templeman-scitt-measurement-capsule-00",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -269,18 +251,16 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "3a645513168a0bc4d057d35055b6e6956e1c52741ebee4859b556f1aa4048a82",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 483,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22293340",
-      "kind": "record",
+      "kind": "concept",
       "what": "GSPC board snapshots, all versions",
-      "state": "AVAILABLE",
+      "state": "RESOLVED_AT_CHECK",
       "http_status_at_check": 200,
       "final_url": "https://zenodo.org/api/records/22344048",
       "alternatives": [
@@ -296,16 +276,14 @@
         }
       ],
       "note_state": "Still answered 200 at this check although the account is blocked; other records on the account went 410 within the hour, so no surface links it as durable.",
-      "body_sha256": "f33ee17b022ffe67ac3af0ba24fe6a687a0ca47a76d13966fbe92838d87c396f",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "RESOLVED_AT_CHECK",
-      "http_status_at_2026_09_29": 200
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 8138,
+      "http_status_at_prior_check": 200,
+      "prior_state": "RESOLVED_AT_CHECK"
     },
     {
       "doi": "10.5281/zenodo.22293341",
-      "kind": "record",
+      "kind": "version of 22293340",
       "what": "GSPC board snapshot 2026-09-04",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -317,18 +295,16 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "cafe23b90f34b8e230b34a8bdd1830bb09d33d464ac8c7ce06fdff02ec076d19",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 434,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22344048",
-      "kind": "record",
+      "kind": "version of 22293340",
       "what": "GSPC board snapshot 2026-09-05",
-      "state": "AVAILABLE",
+      "state": "RESOLVED_AT_CHECK",
       "http_status_at_check": 200,
       "final_url": "https://zenodo.org/api/records/22344048",
       "alternatives": [
@@ -339,16 +315,14 @@
         }
       ],
       "note_state": "Still answered 200 at this check although the account is blocked; other records on the account went 410 within the hour, so no surface links it as durable.",
-      "body_sha256": "f33ee17b022ffe67ac3af0ba24fe6a687a0ca47a76d13966fbe92838d87c396f",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "RESOLVED_AT_CHECK",
-      "http_status_at_2026_09_29": 200
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 8138,
+      "http_status_at_prior_check": 200,
+      "prior_state": "RESOLVED_AT_CHECK"
     },
     {
       "doi": "10.5281/zenodo.22646341",
-      "kind": "record",
+      "kind": "version of 22293340",
       "what": "GSPC board snapshot",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -360,16 +334,14 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "e0170e296dbc8e52ac6bf2f0eb12491e6497ca3bd6882064f667ca001408d437",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 539,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22811459",
-      "kind": "record",
+      "kind": "version of 22293340",
       "what": "GSPC board snapshot 2026-09-15",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -381,16 +353,14 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "f5b5d5efa5c4083cf03a887760f8dd1c19305d5496fe3c3f82238d64477d67e4",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 539,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.23020634",
-      "kind": "record",
+      "kind": "version of 22293340",
       "what": "GSPC board snapshot 2026-09-28T07:32:07Z",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -402,16 +372,14 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "eb850c42a7f737b4ade68c362edd0de26f2bfe5ad5be30bd9e77033bdd188d8c",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 566,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.23030509",
-      "kind": "record",
+      "kind": "version of 22293340",
       "what": "GSPC board snapshot 2026-09-28 with the signed corrections ledger",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
@@ -428,12 +396,10 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "40be684c8c6905b1239c0c1320ac0fd64ddc8c7628995719f79d170b85c466f7",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 433,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22985467",
@@ -449,12 +415,10 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "5efc05b13b96932ae35c0d71ddeed635ad2feb8fa3b812adfd01417b18e45dcc",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 443,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22732100",
@@ -470,12 +434,10 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "7588f66ea79d1534021694c5faddfcffc701dcf2e7c04cda8956c25b9764efb1",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 539,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22806072",
@@ -491,12 +453,10 @@
           "http_status_at_check": 200
         }
       ],
-      "body_sha256": "6ee0e1de0eb309ae339a140acc4c8d74dd36b8676ffe0cc91f3c0227bea928c3",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 418,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22076930",
@@ -507,43 +467,37 @@
       "final_url": "https://zenodo.org/api/records/22076930",
       "alternatives": [],
       "note": "Cited inside the signed value ledger (public/signals/value-ledger.signed.json), whose bytes are not edited.",
-      "body_sha256": "1a25af3740a4a6a2b079df19f6ffb4d99b4cedee0bff67070fc98d41ab11f734",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 410,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.21755656",
-      "kind": "record",
+      "kind": "concept",
       "what": "stale EAT-benchmark dataset DOI carried by the dated 2026-08-05 six-axes snapshot",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
       "final_url": "https://zenodo.org/api/records/21755657",
       "alternatives": [],
       "note": "Already superseded by 21991104 before the block.",
-      "body_sha256": "f8f06acab1e2edbca59a2c311deabbbc1eca01803773f954093f727b00ac21b9",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 434,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.21755657",
-      "kind": "record",
+      "kind": "version of 21755656",
       "what": "as above",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
       "final_url": "https://zenodo.org/api/records/21755657",
       "alternatives": [],
-      "body_sha256": "f8f06acab1e2edbca59a2c311deabbbc1eca01803773f954093f727b00ac21b9",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 434,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22070699",
@@ -560,12 +514,10 @@
         }
       ],
       "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable.",
-      "body_sha256": "c61acaf0b236e7533b926fc09858f063cbd87ac4b371892d6c3a2e2519081ec6",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 415,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22070703",
@@ -582,12 +534,10 @@
         }
       ],
       "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable.",
-      "body_sha256": "f84904767d48e1876d8bd1e2e251e861ab7ef83ba334550afb4e928936174425",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 419,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22070706",
@@ -604,12 +554,10 @@
         }
       ],
       "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable.",
-      "body_sha256": "ebb4bf5a47ad1f0fbe6e7e38c07e09c8025b9c8834c94421843e81eb30064f61",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 421,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22070711",
@@ -626,12 +574,10 @@
         }
       ],
       "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable.",
-      "body_sha256": "0b8e2a0bdb32cc1b7784e188d999722399fe01cdc766d0350072ea56f6d2efd6",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 423,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22070713",
@@ -648,12 +594,10 @@
         }
       ],
       "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable.",
-      "body_sha256": "d909fa4287867650fd135baf61e04cc3db1a104b57856076982eb7016edd2524",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 419,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22070715",
@@ -670,12 +614,10 @@
         }
       ],
       "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable.",
-      "body_sha256": "17e746fdf7bfa6afdd51cc29ce9c83fa80798a9e797555ed29d700101b8d0c55",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 419,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22070718",
@@ -692,12 +634,10 @@
         }
       ],
       "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable.",
-      "body_sha256": "c23a15a264bed41c5bd42645a237f864fb035009f60890af9ca7616641cad086",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 417,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22070721",
@@ -714,12 +654,10 @@
         }
       ],
       "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable.",
-      "body_sha256": "ef3cec271f17fc124e2de64e7a8e666a2787273dca7ad54ac11d47b33fc02105",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 420,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22070723",
@@ -736,12 +674,10 @@
         }
       ],
       "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable.",
-      "body_sha256": "77fac4e8b5b4f14476753496552ee7d7fe5fd225df0a9d4976c336e8d871496d",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 415,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22070725",
@@ -758,27 +694,23 @@
         }
       ],
       "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable.",
-      "body_sha256": "08476cac171a6469e6661b39e70153938d86aef643d7e32c0ade6d1aef0393fc",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 420,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.17910664",
-      "kind": "record",
+      "kind": "concept",
       "what": "CSOAI deposit cited only in internal docs, queues or dated filings, not on a served surface",
       "state": "UNAVAILABLE",
       "http_status_at_check": 410,
       "final_url": "https://zenodo.org/api/records/17929847",
       "alternatives": [],
-      "body_sha256": "33cbd455791aaef7b43f50225dcba867cc24625849566a7ff081bcb8f5981409",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 528,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.17929847",
@@ -788,12 +720,10 @@
       "http_status_at_check": 410,
       "final_url": "https://zenodo.org/api/records/17929847",
       "alternatives": [],
-      "body_sha256": "33cbd455791aaef7b43f50225dcba867cc24625849566a7ff081bcb8f5981409",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 528,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.21973003",
@@ -803,12 +733,10 @@
       "http_status_at_check": 410,
       "final_url": "https://zenodo.org/api/records/21973003",
       "alternatives": [],
-      "body_sha256": "45543b56471143db14dedabb46c5a90124448c97121f519f788df8d0f68c6d67",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 384,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22011165",
@@ -818,12 +746,10 @@
       "http_status_at_check": 410,
       "final_url": "https://zenodo.org/api/records/22011165",
       "alternatives": [],
-      "body_sha256": "4e206779daf6aa3c90217921230703fe53baa6bceb4b89f30264a5157b7b084c",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 391,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22347020",
@@ -833,12 +759,10 @@
       "http_status_at_check": 410,
       "final_url": "https://zenodo.org/api/records/22347020",
       "alternatives": [],
-      "body_sha256": "80e5ed6d97eb9a2d1e78283ce938a9026dcf548c73e7929aafefd7688a65788e",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 539,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     },
     {
       "doi": "10.5281/zenodo.22987453",
@@ -848,37 +772,43 @@
       "http_status_at_check": 410,
       "final_url": "https://zenodo.org/api/records/22987453",
       "alternatives": [],
-      "body_sha256": "653714ba0c0956950a29b3d1c8d06c8f6fce183cf42afa07a5eebabac2ffccbc",
-      "resolver_state": "REFUSED_403",
-      "resolver_http_status": 403,
-      "checked_at": "2026-10-28T03:23:45Z",
-      "state_at_2026_09_29": "UNAVAILABLE",
-      "http_status_at_2026_09_29": 410
+      "observed_at": "2026-10-28T12:13:53Z",
+      "bytes_at_check": 566,
+      "http_status_at_prior_check": 410,
+      "prior_state": "UNAVAILABLE"
     }
   ],
-  "supersedes": {
-    "artefact": "public/interop/zenodo-status.json",
-    "as_of": "2026-09-29T16:46Z"
+  "superseded": {
+    "superseded_as_of": "2026-09-29T16:46Z",
+    "superseded_notice": "Zenodo record unavailable since 29 Sep 2026: every CSOAI Zenodo record returns HTTP 410 (account blocked by Zenodo). Status UNCHECKABLE.",
+    "superseded_method": "For each DOI: anonymous GET https://doi.org/10.5281/zenodo.<id> following redirects; http_status is the final hop. Alternatives: anonymous GET, HTTP status and sha256 of the body.",
+    "superseded_event": "At 15:47Z on 29 Sep 2026 Zenodo blocked the account that held CSOAI's deposits as spam, after one of our own automated lanes bulk-published 54 datasets there at roughly 15-second intervals. Every record on the account began answering HTTP 410 ('User was blocked'), including records deposited weeks earlier. No appeal is on record; status UNCHECKABLE. We do not contact Zenodo from automation.",
+    "superseded_rule": "The DOIs are kept: they are the permanent names and may resolve again. No surface we publish links one as available. Each prints the identifier, this notice, and the artifact's other live copy where one exists. 'Same bytes' is claimed only where the served file's sha256 equals the digest the deposit itself recorded.",
+    "note": "The notice above was published on the date in superseded_as_of and is kept verbatim. It said EVERY record returned HTTP 410; two names for one record were answering 200 at the time and still do. The event text above said the same thing about the hour after the block. The rule above said no surface we publish links a deposit as available, which the file's own rows contradicted. The per-DOI states in that same file were right - only the blanket sentences were wrong. No measurement, signature or ledger entry was changed by those sentences; only this notice, this event text and this rule were."
   },
-  "counts": {
-    "probed": 39,
-    "checkable": 39,
-    "UNAVAILABLE": 37,
-    "AVAILABLE": 2,
-    "changed_since_2026_09_29": 2,
-    "resolver_refused": 39
+  "control": {
+    "doi": "10.5281/zenodo.3234648",
+    "http_status_at_check": 200,
+    "final_url": "https://zenodo.org/api/records/3234648",
+    "why": "A Zenodo record that is alive and is not ours. If it does not answer 200, the probe cannot tell \"the deposits are gone\" from \"we cannot read Zenodo\", and nothing is written."
   },
-  "changed_since_2026_09_29": [
-    {
-      "doi": "10.5281/zenodo.22293340",
-      "was": "RESOLVED_AT_CHECK",
-      "now": "AVAILABLE"
-    },
-    {
-      "doi": "10.5281/zenodo.22344048",
-      "was": "RESOLVED_AT_CHECK",
-      "now": "AVAILABLE"
-    }
-  ],
-  "dated_observation": "public/interop/zenodo-status-2026-10-28.json"
+  "observation": {
+    "observed_at": "2026-10-28T12:13:53Z",
+    "total_dois": 39,
+    "answered_410": 37,
+    "answered_200": 2,
+    "answered_other": 0,
+    "live_records": [
+      {
+        "doi": "10.5281/zenodo.22293340",
+        "final_url": "https://zenodo.org/api/records/22344048",
+        "bytes": 8138
+      },
+      {
+        "doi": "10.5281/zenodo.22344048",
+        "final_url": "https://zenodo.org/api/records/22344048",
+        "bytes": 8138
+      }
+    ]
+  }
 }
