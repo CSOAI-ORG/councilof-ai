@@ -1,8 +1,9 @@
 # docs/github — the GitHub face of the estate
 
-Everything in this directory is **derived**, not typed. Regenerate with:
+Generated profiles and inventories in this directory come from the source generator. Regenerate with:
 
 ```bash
+python3 scripts/github/org-readme.py --account-profile > docs/github/ACCOUNT-PROFILE.md # concise account introduction; live metrics remain linked
 python3 scripts/github/org-readme.py --profile > docs/github/PROFILE-README.md       # account / org profile (also pushed to CSOAI-ORG/.github/profile)
 python3 scripts/github/org-readme.py --personal docs/github/PERSONAL-PROFILE-DRAFT.md  # draft for the repo named after the login — never pushed by a lane
 python3 scripts/github/org-readme.py --councilof README.md                           # top block of this repo's README (between the org-readme markers)

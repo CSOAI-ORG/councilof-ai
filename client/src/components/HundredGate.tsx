@@ -18,7 +18,7 @@ export default function HundredGate() {
     <section className="mt-16 space-y-8" data-testid="hundred-gate" aria-labelledby="hundred-gate-h">
       <div>
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-700">
-          Millions · 100/100 A+++ · then permissionless
+          Model discovery · evidence quality · publication review
         </p>
         <h2 id="hundred-gate-h" className="mt-2 text-2xl font-black tracking-tight text-slate-900">
           {HUNDRED_RULING}
@@ -27,8 +27,8 @@ export default function HundredGate() {
           Hugging Face lists more than two million model repos. Cover them with a
           Speed 0 census — Hub API metadata and LFS sha256, no weight download.
           Run only unique licence-eligible lineages. When one hundred of those are
-          done to the A+++ bar, N-sites becomes permissionless for flags, census
-          refresh and publisher discussions. A rank is never sold.
+          complete against the stated evidence requirements, publication candidates
+          can be reviewed for registry listings and census updates. A rank is never sold.
         </p>
         <p className="mt-3 text-sm text-slate-600">
           Public claim after a signed census: {MILLIONS_PUBLIC_CLAIM}
@@ -108,9 +108,9 @@ export default function HundredGate() {
       </div>
 
       <div>
-        <h3 className="text-lg font-bold text-slate-900">A+++ — the 100 must each pass</h3>
+        <h3 className="text-lg font-bold text-slate-900">Evidence requirements — each of the 100 must pass</h3>
         <p className="mt-1 text-[13px] text-slate-500">
-          A+++ is this gate’s quality bar. It is not a public grade for sale.
+          These are internal publication requirements, not a grade of an AI system.
         </p>
         <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-slate-800">
           {A_PLUS_PLUS_PLUS.map((row) => (
@@ -124,7 +124,7 @@ export default function HundredGate() {
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-5" data-testid="unlock-does">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-900">
-            After 100/100 · permissionless does
+            After the evidence review · publication scope
           </p>
           <ul className="mt-3 space-y-2 text-sm text-emerald-950">
             {PERMISSIONLESS_UNLOCKS.map((row) => (
@@ -136,7 +136,7 @@ export default function HundredGate() {
         </div>
         <div className="rounded-2xl border border-rose-200 bg-rose-50/70 p-5" data-testid="unlock-never">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-rose-900">
-            After 100/100 · still never
+            Excluded from publication approval
           </p>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-rose-950">
             {PERMISSIONLESS_NEVER.map((row) => (

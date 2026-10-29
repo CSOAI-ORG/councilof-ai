@@ -30,7 +30,7 @@ export const AGENT_TRAVEL_RULING =
   "Sign Council once. Plant the same agent everywhere. Do not auto-sign the subjects we discover.";
 
 export const AGENT_TRAVEL_AGREED =
-  "N-sites scale is permissionless for our signed receipts. Any host may add the MCP URL. We auto-walk listings as DISCOVERED and auto-drop the same flags. We do not auto-MEASURED.";
+  "Published receipts and the MCP address can be reused under their applicable terms. A directory listing records discovery; it does not establish a measurement, integration acceptance or customer adoption.";
 
 export const AGENT_TRAVEL_BETTER =
   "Bind /.well-known/agent-card.json and /.well-known/mcp.json to did:web:csoai.org so the agent itself verifies, the way a 3 KB card already does. Use a planted key. Do not mint a per-site agent.";

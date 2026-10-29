@@ -3,7 +3,8 @@
 councilof-ai/README.md, the personal-profile draft and the public repo inventory
 from LIVE endpoints.
 
-Nothing in the emitted markdown is typed. Every count is read at run time from:
+The compact --account-profile introduction links live evidence without copying counts.
+Other profile modes derive every count at run time from:
 
   https://councilof.ai/api/gspc                 totals.lid verbatim, the board (axis count derived at run time, never typed)
   https://councilof.ai/api/badge                the board image (200 image/svg+xml, or it is left out)
@@ -28,12 +29,13 @@ Nothing in the emitted markdown is typed. Every count is read at run time from:
   https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board                  Kaggle read-back
   https://raw.githubusercontent.com/CSOAI-ORG/gspc-board/main/SNAPSHOT.json              GitHub-mirror read-back
 
-A fetch that fails is printed as UNCHECKABLE — never a fabricated 0. Every output
+A fetch that fails is printed as UNCHECKABLE — never a fabricated 0. Every live-derived output
 carries a `derived <ISO-8601>` stamp. Before anything is written the rendered text is
 scanned for the words the estate does not use (certified, BFT, sovereign) and for a
 price; a hit aborts the run.
 
 Usage:
+  org-readme.py --account-profile    > docs/github/ACCOUNT-PROFILE.md (compact account introduction)
   org-readme.py --profile            > profile/README.md          (CSOAI-ORG/.github/profile — and the draft below)
   org-readme.py --personal OUT.md                                 (draft for the repo named after the login; never pushed by a lane)
   org-readme.py --councilof README.md                             (splice the top block in place)
@@ -649,6 +651,11 @@ def profile_md(f: dict, product_index: Path | None) -> str:
     return "\n".join(parts)
 
 
+def account_profile_md() -> str:
+    """Stable public introduction; mutable counts stay at their authoritative URLs."""
+    return "# Nicholas Templeman · Council of AI\n\nFounder of **[Council of AI](https://councilof.ai/about/)**, the public AI measurement service operated by **CSOAI Ltd** (England and Wales, company 16939677).\n\nWe measure how AI systems behave on published tests and make the results available for others to inspect. Our work includes frozen test banks, deterministic grading where the method permits it, signed measurement records, free verification and public corrections.\n\n## Inspect the work\n\n| What you need | Start here |\n| --- | --- |\n| Current results, coverage and limitations | [Measurement board](https://councilof.ai/board/) |\n| Test methods and grading rules | [Methodology](https://councilof.ai/methodology/) |\n| Check a supported signed record | [Free verifier](https://councilof.ai/gspc-verify/) |\n| Published corrections | [Corrections ledger](https://councilof.ai/corrections/) |\n| Read evidence from your software | [Connection guide](https://councilof.ai/connect/) |\n| Discuss a defined evidence requirement | [Services](https://councilof.ai/services/) · [Contact](https://councilof.ai/contact/) |\n\n[![Current measurement board; open the board for dates and limitations](https://councilof.ai/api/badge)](https://councilof.ai/api/gspc)\n\nCounts and measurement dates belong to the [live board data](https://councilof.ai/api/gspc). Coverage is distinct from model ranking: a tie remains a tie, an untested comparison remains untested, and a fact run does not rank models. Signed and unsigned records state their status separately.\n\n## Our role\n\nCouncil of AI measures and publishes evidence. It does not certify or accredit AI systems, issue legal-compliance determinations, or sell ranking positions. Verification is free. Paid evidence work has a defined scope and does not purchase a favourable result. Our own models are disclosed separately from public rankings.\n\n**MEOK is a CSOAI product.** Its [public workspace](https://meok.ai/) reads Council's public evidence and lets users retain a transcript. Product capabilities and availability must be checked on the current MEOK site; they are not endorsements or measurement results.\n\n## Source and contributions\n\nThe [Council source repository](https://github.com/CSOAI-ORG/councilof-ai) contains the site, public APIs and measurement tooling. The [board mirror](https://github.com/CSOAI-ORG/gspc-board) provides dated snapshots. The [Hugging Face profile](https://huggingface.co/csoai) links published datasets and tools.\n\nFor reproducible defects or measurement challenges, include the record identifier, method version and steps to reproduce. Use the [security reporting route](https://councilof.ai/security/) for sensitive findings.\n\nCSOAI Ltd · Founded by Nicholas Templeman · [councilof.ai](https://councilof.ai/) · [nicholas@csoai.org](mailto:nicholas@csoai.org)\n"
+
+
 def personal_md(f: dict, product_index: Path | None) -> str:
     note = ("<!-- DRAFT for CSOAI-ORG/csoai-org/README.md — the file github.com/CSOAI-ORG renders as the account profile\n"
             "     (the account is a GitHub user, and that repository is named after the login). No lane pushes it: it is the\n"
@@ -853,6 +860,7 @@ def inventory_md(f: dict, readme_sizes: dict | None = None) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--account-profile", action="store_true", help="print the compact account profile without fetching mutable metrics")
     ap.add_argument("--profile", action="store_true", help="print the profile README to stdout")
     ap.add_argument("--personal", metavar="OUT.md", help="write the personal-profile draft (never pushed by a lane)")
     ap.add_argument("--councilof", metavar="README", help="splice the generated top block into this councilof-ai README.md")
@@ -862,6 +870,12 @@ def main() -> int:
     ap.add_argument("--product-index", default=None, help="path to docs/product/_INDEX.json (default: relative to this repo)")
     ap.add_argument("--selftest", action="store_true", help="prove the corrections selection can go red")
     args = ap.parse_args()
+
+    if args.account_profile:
+        text = account_profile_md()
+        guard(text, "account profile")
+        sys.stdout.write(text)
+        return 0
 
     if args.selftest:
         # A FIXED LATE-DATED ENTRY AT THE END OF THE ARRAY IS THE CASE THAT BROKE IT.
