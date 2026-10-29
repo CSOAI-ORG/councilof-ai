@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-10-29T11:07:30Z",
+  "as_of": "2026-10-29T14:24:50Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -42,10 +42,10 @@
       "listing_state": "DISCOVERED",
       "n_measured": 0,
       "note": "Cited in publisher-health.json / status only. Not a card-v0 leaf. Not MEASURED. listings.jsonl is never committed.",
-      "as_of": "2026-10-28T11:08:34Z",
-      "n": 2860,
-      "n_unique_ids": 2860,
-      "sha256_jsonl": "ab9a065c227935b0134ed618c6621097f70962eb9940750d9640c56b89cbf720",
+      "as_of": "2026-10-29T11:02:09Z",
+      "n": 2290,
+      "n_unique_ids": 2290,
+      "sha256_jsonl": "83761f4df72d20981dda1acf88f1fbe10184cb0a4869d6fc9596b6fcd82d958f",
       "complete": true,
       "mode": "delta",
       "source": "public/signed/hub-census-delta.json"
@@ -477,51 +477,51 @@
     "chains": {
       "arbitrum": {
         "rpc": "arbitrum-one-rpc.publicnode.com",
-        "block": 519337184,
-        "block_hash": "0xaeaf1f67b2618909d90dcb84fde534c99bdf0f5fe50b6f3c761be52d5d870e50",
-        "block_time": "2026-10-29T11:03:04Z"
+        "block": 519381145,
+        "block_hash": "0x401012cfe04417f7f91b2c22c8f1fa69ba41e45b2dde96b374ceb761ffbb752d",
+        "block_time": "2026-10-29T14:18:31Z"
       },
       "avalanche": {
         "rpc": "api.avax.network",
-        "block": 98858138,
-        "block_hash": "0x91243b79576e9ed04a071bd9265df60732359259ffe55793d020a9be02475bc1",
-        "block_time": "2026-10-29T11:03:01Z"
+        "block": 98870051,
+        "block_hash": "0x917f2385a60953ebb53f8dc38b7e7805a1ff798f34e7ea3091075015aa76c461",
+        "block_time": "2026-10-29T14:18:29Z"
       },
       "base": {
         "rpc": "base-rpc.publicnode.com",
-        "block": 53241219,
-        "block_hash": "0x653980637bcc139d6852474784156d34a203cdea425865f10d24828aefbbd081",
-        "block_time": "2026-10-29T11:03:05Z"
+        "block": 53247082,
+        "block_hash": "0x288b5a2c9345976d1d785f1d0d44c88553762c0ac566bc84dccb76a536e93606",
+        "block_time": "2026-10-29T14:18:31Z"
       },
       "bsc": {
         "rpc": "bsc-rpc.publicnode.com",
-        "block": 130461814,
-        "block_hash": "0xddbb71cafc71c1021c38c94e225670e55588e2bd7feb6b5935f6b10f86e30918",
-        "block_time": "2026-10-29T11:03:05Z"
+        "block": 130487833,
+        "block_hash": "0x84687ed29ac08a828407956a131b068ea3124fd60a54d4e1e6b2a92ae951288e",
+        "block_time": "2026-10-29T14:18:32Z"
       },
       "ethereum": {
         "rpc": "ethereum-rpc.publicnode.com",
-        "block": 26297972,
-        "block_hash": "0x269714731f209702b3041a4969c6296660e67997cf5cbd900cb6fede313a2e5b",
-        "block_time": "2026-10-29T11:02:59Z"
+        "block": 26298945,
+        "block_hash": "0x707601fa60b9f8ca01a430742075c66982a0197a73d80afabaed8e29fd06d394",
+        "block_time": "2026-10-29T14:18:23Z"
       },
       "mantle": {
         "rpc": "mantle-rpc.publicnode.com",
-        "block": 102570737,
-        "block_hash": "0xf788e01ca091f0846492500debc86ff3ee6880a81eb454e25b9233ee49dde95b",
-        "block_time": "2026-10-29T11:03:06Z"
+        "block": 102576600,
+        "block_hash": "0xfc43bc460903ac92ea5e2f82805805474e4db9df23aa4fdc79f4e176393c9d5c",
+        "block_time": "2026-10-29T14:18:32Z"
       },
       "optimism": {
         "rpc": "optimism-rpc.publicnode.com",
-        "block": 158836504,
-        "block_hash": "0xcf70c9ed586caf2ef5501248e55a74a82f1d854c92590f6267c4337bf68cc25d",
-        "block_time": "2026-10-29T11:03:05Z"
+        "block": 158842368,
+        "block_hash": "0x3208a53a72af10ae0e80e3a9a5b09cc4e527d8181b8fbbde21b561a0a4607886",
+        "block_time": "2026-10-29T14:18:33Z"
       },
       "polygon": {
         "rpc": "polygon-bor-rpc.publicnode.com",
-        "block": 96377605,
-        "block_hash": "0xa41307d1ee58ae7a2812d3df8bd92ec2eba1f68c5ea19e210719be360097ad9a",
-        "block_time": "2026-10-29T11:03:07Z"
+        "block": 96385423,
+        "block_hash": "0x9ae8dcf76114a32a8d8adbd6c93592d1809c8ab95fa1d921b83044505fadef3b",
+        "block_time": "2026-10-29T14:18:34Z"
       }
     },
     "failures": [
@@ -534,11 +534,11 @@
         "reason": "no endpoint answered eth_getProof"
       },
       {
-        "subject": "evm:BENJI:arbitrum",
+        "subject": "evm:TBILL:bsc",
         "reason": "no endpoint answered eth_getProof"
       },
       {
-        "subject": "evm:TBILL:bsc",
+        "subject": "evm:TBILL:arbitrum",
         "reason": "no endpoint answered eth_getProof"
       },
       {
@@ -556,35 +556,35 @@
     "requests_used": 80,
     "chains": {
       "arbitrum": {
-        "block": 519337487,
+        "block": 519381586,
         "rpc": "arbitrum-one-rpc.publicnode.com"
       },
       "avalanche": {
-        "block": 98858219,
+        "block": 98870167,
         "rpc": "api.avax.network"
       },
       "base": {
-        "block": 53241260,
+        "block": 53247137,
         "rpc": "base-rpc.publicnode.com"
       },
       "bsc": {
-        "block": 130461999,
+        "block": 130488080,
         "rpc": "bsc-rpc.publicnode.com"
       },
       "ethereum": {
-        "block": 26297979,
+        "block": 26298954,
         "rpc": "ethereum-rpc.publicnode.com"
       },
       "mantle": {
-        "block": 102570778,
+        "block": 102576656,
         "rpc": "mantle-rpc.publicnode.com"
       },
       "optimism": {
-        "block": 158836546,
+        "block": 158842423,
         "rpc": "optimism-rpc.publicnode.com"
       },
       "polygon": {
-        "block": 96377661,
+        "block": 96385497,
         "rpc": "polygon-bor-rpc.publicnode.com"
       }
     },
@@ -702,8 +702,8 @@
   "xrpl_state_matrix": {
     "status": "UNCHANGED",
     "pack": "xrpl-16-state-matrix",
-    "matrix_sha256": "e9001a34794f05b73b3b62c7737c4ac7f85b30b57d3efbe9959ce14ed69aebe7",
-    "ledger_index": 107978720
+    "matrix_sha256": "aa74a961dcac743f46c49f5e11f2f2ca29677b7edb39783be807f62e1d8c7a31",
+    "ledger_index": 107981662
   },
   "rwa_reconciliation": {
     "status": "PROBED",
