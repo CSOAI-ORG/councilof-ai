@@ -1,0 +1,68 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Claim-maintenance wave 3: visible-text deltas over 77 public claim pages, wave 2 to wave 3",
+ "as_of": "2026-10-28T03:18:49.884Z",
+ "source_urls": [
+  "https://councilof.ai/interop/subject-axis-live-20261027/claim-maintenance.wave3-20261028.json",
+  "https://councilof.ai/interop/subject-axis-live-20261027/card-dryrun-claim-maintenance-wave3-20261028.json",
+  "https://councilof.ai/spec/claim-maintenance/v0.2/"
+ ],
+ "payload": {
+  "kind": "csoai.claim-maintenance.text-delta/0.1",
+  "state": "PROBED",
+  "axis": "claim-maintenance",
+  "wave": 3,
+  "run_id": "claim-maintenance-wave3-20261028",
+  "observed_at": "2026-10-28T03:18:49.884Z",
+  "authority_for": "a dated re-read of 77 public claim pages, comparing the sha256 of their visible text between two waves",
+  "n_subjects": 77,
+  "n_valid": 77,
+  "n_valid_min": 30,
+  "counts": {
+   "TEXT_CHANGED": 32,
+   "TEXT_UNCHANGED": 45
+  },
+  "baseline": {
+   "wave": 2,
+   "observed_at": "2026-10-27T08:09:16.700Z",
+   "text_digest_baseline": true
+  },
+  "negative_control": {
+   "kind": "text-digest recomputation",
+   "result": "DISCRIMINATING (see runner)"
+  },
+  "method_sha256": "0a0a89b502985b656ea455d22f2e4f9fb849b238d78ac761ab6cc40e9d73f1ff",
+  "extractor": "sha256 over the visible text of each page, capped at 400000 bytes, read twice 30s apart",
+  "transport_note": "Node fetch. councilof.ai answers 200 here and 403 to urllib under the Cloudflare rule `public-data: no BIC`; the estate's own urllib builders read as \"unreachable\" for that reason.",
+  "artefact": {
+   "url": "https://councilof.ai/interop/subject-axis-live-20261027/claim-maintenance.wave3-20261028.json",
+   "bytes_sha256": "8a64c885b1be145f07a7429c80c3bd5f33c8a56d6055e4aa1e2baf4115e75378",
+   "n_bytes": 50458
+  },
+  "dry_run_card": {
+   "url": "https://councilof.ai/interop/subject-axis-live-20261027/card-dryrun-claim-maintenance-wave3-20261028.json",
+   "content_id": "30acaa37a95efecd0418a2d39f29ea4afb17767f21003def604e98035575a09e",
+   "signature_state": "UNSIGNED_DRY_RUN"
+  },
+  "not_a_grade": true,
+  "what_this_does_not_establish": [
+   "Whether any claim is true. A re-read says what was served today, not what is correct.",
+   "Whether a change was material. A text change is a candidate material change; the adjudication is a human call.",
+   "Any promotion of the claim-maintenance axis. That axis is a declared slot with no run behind it and stays UNMEASURED.",
+   "A ranking, a grade, a status or an approval of any subject."
+  ]
+ },
+ "sha256": "f5dd659c7c8241edaf4ef4b164edc432f344b0aa2822b657a610f134b36a3382",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "whether any changed text is material; the adjudication is a human call and no third party is named from a delta",
+  "whether any claim is true"
+ ],
+ "tags": [
+  "claim-maintenance",
+  "wave-3",
+  "text-delta",
+  "claim-maintenance-2026-10"
+ ]
+}
