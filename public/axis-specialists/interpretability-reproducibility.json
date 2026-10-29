@@ -1,0 +1,140 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "interpretability-reproducibility",
+  "specialist": {
+    "id": "meok-interpretability-reproducibility-specialist",
+    "cluster_id": "meok-axis-interpretability-reproducibility",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Design an interpretability instrument that tests whether published artifacts can be independently reproduced, not merely whether explanatory prose exists.",
+    "reviewer_role": "interpretability and reproducibility reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "artifact completeness",
+    "environment pinning",
+    "independent replay",
+    "result equivalence"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "UNCHECKABLE",
+      "precision": "unknown",
+      "source": "/api/gspc",
+      "source_field": "none",
+      "note": "No structured measurement time is available; CURRENT admission must fail closed."
+    },
+    "axis_row_sha256": "015aa5bdab2d487d8692ca245de3ea25bda540789a2bc855862f486f7738ed4a",
+    "axis_row": {
+      "axis": "interpretability-reproducibility",
+      "family": "subject",
+      "kind": "declared-slot",
+      "applies_to": "interpretability-groups",
+      "bench": "pending frozen bank",
+      "task": "what an interpretability group publishes and whether it can be reproduced",
+      "n": 0,
+      "status": "UNMEASURED",
+      "colour": "hsl(280 10% 55%)",
+      "hue": 280,
+      "note": "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score. Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid >= 30, passing the gate. Census checks are a DISCOVERED check grid, not scores on this axis.",
+      "method_status": "no-method: declared slot",
+      "measurement_time": {
+        "state": "UNCHECKABLE",
+        "precision": "unknown",
+        "source": "/api/gspc",
+        "source_field": "none",
+        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist interpretability-reproducibility audits only the interpretability-reproducibility row",
+      "evidence": "interpretability-reproducibility"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-interpretability-reproducibility; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "DECLARED_GAP",
+      "state": "PASS",
+      "detail": "UNMEASURED slot for interpretability-groups; n=0 is not a score"
+    },
+    {
+      "id": "NO_FABRICATED_SCORE",
+      "state": "PASS",
+      "detail": "declared slot has no leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "no-method: declared slot"
+    }
+  ],
+  "summary": {
+    "checks": 6,
+    "passed": 6,
+    "findings": 0,
+    "audit_state": "MEASUREMENT_GAP_VISIBLE"
+  },
+  "negative_controls": [
+    {
+      "control": "treat explanatory prose as reproduction and require evidence-class failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "ignore environment drift and require replay-manifest failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "interpretability-reproducibility-proposal-1",
+      "proposal": "define a reproduction manifest for code, data, environment and expected outputs",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "interpretability-reproducibility-proposal-2",
+      "proposal": "propose thirty interpretability artifacts with independent replay outcomes",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_interpretability-reproducibility",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/interpretability-reproducibility",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "interpretability and reproducibility reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "fd35cd79398e1b2f16e3f808bedbe21709603fb96cdad044eccd706239c8f8c0"
+}
