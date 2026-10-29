@@ -63,6 +63,10 @@ Council of AI provides a [free verification path](https://councilof.ai/gspc-veri
 
 For a defined request, identify one system or public endpoint, the task or claim, evidence already available, the required output and the desired delivery date. [Discuss that scope with Council of AI](https://councilof.ai/contact/?arm=run). Scope, availability and terms must be agreed before an order. Existing public verification remains free; payment does not buy a grade, removal or certification.
 
+## A concrete contribution with a bounded acknowledgement
+
+On 28 October, QSAFP-Core acknowledged CSOAI’s requested refinements on SAFE issue #72 as closed at the profile/conformance level. The response identifies the separation between evidence state and operational authority, and preserves consumer requirements. This is external technical feedback on a defined contribution; it is not Alliance adoption, principal authentication or proof of what a deployed system executed. [4]
+
 ## How to use and cite this note
 
 Use the questions in a procurement review, an integration checklist or a reproducible experiment. Keep the proposed check distinct from the eventual observation. Record failures and unavailable evidence alongside successes. A later correction should identify what changed and preserve the original record.
@@ -76,3 +80,4 @@ CSOAI offers measurement and evidence services and therefore has a commercial in
 1. [Anthropic S-1, 26 October 2026](https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm). Sections reviewed: Risk Factors: evaluation limits and agent behaviour; Management’s Discussion and Analysis: Approach to Claude Diffusion. Reviewed 29 October 2026.
 2. [Cerebras S-1, 17 April 2026](https://www.sec.gov/Archives/edgar/data/2021728/000162828026025762/cerebras-sx1april2026.htm). Sections reviewed: Risk Factors: customer concentration and infrastructure commitments; Management’s Discussion and Analysis: cost of revenue. Reviewed 29 October 2026.
 3. [OpenAI confidential draft S-1 announcement, 8 June 2026](https://openai.com/index/openai-submits-confidential-s-1/). Sections reviewed: Company announcement. Reviewed 29 October 2026.
+4. [QSAFP-Core response on SAFE #72, 28 October 2026](https://github.com/OpenSecureAIAlliance/wg-safe/issues/72#issuecomment-6460676177). Retrieved through the GitHub comments API on 29 October 2026; the search-indexed page can lag this comment.
