@@ -126,10 +126,15 @@ function exactBlogRoutes(app) {
  * serves them — measured live 2026-10-29, HTTP 200 with the article's own title.
  *
  * So the blanket "every /blog/ URL is a withdrawn article" rule flagged the PUBLISHED posts
- * as unserved, and every master deploy failed at this gate from 2026-10-29T00:29Z. The
- * rule now exempts a published slug, but ONLY when it is really served: an exact BlogPost
- * route AND a prerender snapshot. A published slug that lost either is a broken publication
- * and is REPORTED — never silently exempted.
+ * as unserved, and every master deploy failed at this gate from 2026-10-29T00:29Z. The rule
+ * now exempts a published slug — but it does not exempt it on trust.
+ *
+ * A published slug is served if the edge can serve THE POST rather than the withdrawal
+ * notice, and it can do that two ways: an exact `BlogPost` route in App.tsx (the SPA serves
+ * the post) or a prerender snapshot at that path (the edge serves the static bytes). Either
+ * one is enough, so a legitimate publication is never blocked for having only one of them.
+ * A published slug with NEITHER would be served the withdrawal notice, which is not the
+ * published content — so it is REPORTED, never silently exempted.
  *
  * Returns a reason string, or null when the path is served.
  */
@@ -138,8 +143,8 @@ export function blogPathProblem(path, { blogWithdrawn, published, exactRoutes, p
   if (!m) return null;
   const slug = m[1];
   if (published.has(slug)) {
-    if (!exactRoutes.has(slug)) return `${path} is listed as published but has no exact BlogPost route`;
-    if (!prerendered.has(`/blog/${slug}`)) return `${path} is listed as published but has no prerender snapshot`;
+    const routable = exactRoutes.has(slug) || prerendered.has(`/blog/${slug}`);
+    if (!routable) return `${path} is listed as published but the edge would serve the withdrawal notice, not the post`;
     return null;
   }
   if (blogWithdrawn) return `${path} is a withdrawn article, not indexable content`;
@@ -203,8 +208,9 @@ if (process.argv.includes("--selftest")) {
     ["every published post has a snapshot", [...pub].every((s) => snaps.has(`/blog/${s}`)), "a published post needs a snapshot"],
     ["a published post is served", blogPathProblem("/blog/how-to-verify-an-ai-measurement/", ctx) === null, "a published post must not be flagged as withdrawn"],
     ["a withdrawn post is flagged", blogPathProblem("/blog/never-published/", ctx) !== null, "an unpublished /blog/ URL must still be flagged"],
-    ["a published post with no route is flagged", blogPathProblem("/blog/x/", { blogWithdrawn: true, published: new Set(["x"]), exactRoutes: new Set(), prerendered: snaps }) !== null, "an exemption without an exact route is a broken publication"],
-    ["a published post with no snapshot is flagged", blogPathProblem("/blog/x/", { blogWithdrawn: true, published: new Set(["x"]), exactRoutes: new Set(["x"]), prerendered: new Set() }) !== null, "an exemption without a snapshot is a broken publication"],
+    ["a published post with neither a route nor a snapshot is flagged", blogPathProblem("/blog/x/", { blogWithdrawn: true, published: new Set(["x"]), exactRoutes: new Set(), prerendered: new Set() }) !== null, "a published slug the edge cannot serve is a broken publication"],
+    ["a published post with only a route is served", blogPathProblem("/blog/x/", { blogWithdrawn: true, published: new Set(["x"]), exactRoutes: new Set(["x"]), prerendered: new Set() }) === null, "a legitimate publication must not be blocked for having no snapshot"],
+    ["a published post with only a snapshot is served", blogPathProblem("/blog/x/", { blogWithdrawn: true, published: new Set(["x"]), exactRoutes: new Set(), prerendered: new Set(["/blog/x"]) }) === null, "a legitimate publication must not be blocked for having no route"],
   ];
   let bad = 0;
   for (const [what, ok, why] of cases) {
