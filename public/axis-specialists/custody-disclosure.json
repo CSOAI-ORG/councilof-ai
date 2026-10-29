@@ -1,0 +1,158 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "custody-disclosure",
+  "specialist": {
+    "id": "meok-custody-disclosure-specialist",
+    "cluster_id": "meok-axis-custody-disclosure",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit custody disclosures for who controls assets or keys, preserving absent and ambiguous disclosures rather than inferring safety.",
+    "reviewer_role": "custody disclosure reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "custodian identity",
+    "key-control ambiguity",
+    "disclosure freshness",
+    "unsigned run state"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-09-17T12:58:11Z",
+      "source": "/interop/financial-measure-run-custody-disclosure.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "11d5c9190ba42415ae298c9f1b8fb7a9223f4b0192da2d72a78ecd99f7c30ce1",
+    "axis_row": {
+      "axis": "custody-disclosure",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-custody-disclosure",
+      "bench": "CustodyFacts",
+      "task": "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)",
+      "status": "MEASURED",
+      "evidence_url": "/interop/financial-measure-run-custody-disclosure.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "colour": "#fbbf24",
+      "hue": 43,
+      "note": "MEASURED v0.3 for named-string presence on retrieved pages, over the live XRPL reader-16: custodian 1 PASS / 6 FAIL / 9 UNCHECKABLE. Disclosure only — never custodian or auditor quality. Risk verdict UNMEASURED. Not a rating.",
+      "method_status": "legacy: n 16",
+      "facts_as_of": "2026-09-17T12:58:11Z",
+      "facts_status": "MEASURED",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "source": "/interop/financial-measure-run-custody-disclosure.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-custody-disclosure"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist custody-disclosure audits only the custody-disclosure row",
+      "evidence": "custody-disclosure"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-custody-disclosure; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "FACT_RUN_STATE",
+      "state": "PASS",
+      "detail": "deterministic-facts run with n=16 issuer accounts (not bank items)"
+    },
+    {
+      "id": "FACT_LINEAGE",
+      "state": "PASS",
+      "detail": "run artifact and fact timestamp are published"
+    },
+    {
+      "id": "RUN_ATTESTATION",
+      "state": "FINDING",
+      "detail": "run artifact is CONTENT_ADDRESSED_UNSIGNED; content identity is not a signature"
+    },
+    {
+      "id": "NO_MODEL_RANKING",
+      "state": "PASS",
+      "detail": "deterministic facts carry no model leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "FINDING",
+      "detail": "legacy: n 16"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 6,
+    "findings": 2,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "treat absent custody disclosure as self-custody and require classification failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "collapse ambiguous and absent into one state and require vocabulary failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "custody-disclosure-proposal-1",
+      "proposal": "publish absent, ambiguous and explicit disclosure counts separately",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "custody-disclosure-proposal-2",
+      "proposal": "sign the next custody run with issuer-level source links",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_custody-disclosure",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/custody-disclosure",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "custody disclosure reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "85511966718bcb5a728146a5e040269050066007029c48f3967da9c244f8ac12"
+}
