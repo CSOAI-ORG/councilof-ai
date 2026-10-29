@@ -14,6 +14,7 @@
 // No signature here: the gate's answer is a decision about a request, not an attestation. The
 // signed artefact is the A2A envelope, and that is /api/a2a/route.
 
+import { headFromGet } from "../_head";
 import { decideGate, kid, type L0Env } from "../_lib/layer0";
 
 interface Env extends L0Env {}
@@ -50,3 +51,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 /** A GET on a POST path is a method error, not a 404. */
 export const onRequestGet: PagesFunction<Env> = async () =>
   Response.json({ error: "use POST: { action, identity, inputsHash }" }, { status: 405, headers: { allow: "POST" } });
+
+/** Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405. */
+export const onRequestHead = headFromGet(onRequestGet);

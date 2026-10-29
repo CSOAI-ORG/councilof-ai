@@ -17,6 +17,7 @@
 //
 // A missing key is therefore a DEPLOYMENT state, not a bug, and the answer says so.
 
+import { headFromGet } from "../../_head";
 import { decideGate, anchor, kid, loadKey, makeEnvelope, type L0Env } from "../../_lib/layer0";
 
 interface Env extends L0Env {}
@@ -90,3 +91,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
 export const onRequestGet: PagesFunction<Env> = async () =>
   Response.json({ error: "use POST: { from, to, intent, action, payload, identity }" }, { status: 405, headers: { allow: "POST" } });
+
+/** Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405. */
+export const onRequestHead = headFromGet(onRequestGet);

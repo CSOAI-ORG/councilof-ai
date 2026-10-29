@@ -17,6 +17,7 @@
 // the holder of the key signed these bytes. It does not say the decision inside was correct, and
 // it is not a certification of the envelope's subject.
 
+import { headFromGet } from "../../_head";
 import { l0CanonBytes, loadKey, verifyBytes, type L0Env } from "../../_lib/layer0";
 
 interface Env extends L0Env {}
@@ -66,3 +67,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
 export const onRequestGet: PagesFunction<Env> = async () =>
   Response.json({ error: "use POST with the envelope to verify" }, { status: 405, headers: { allow: "POST" } });
+
+/** Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405. */
+export const onRequestHead = headFromGet(onRequestGet);

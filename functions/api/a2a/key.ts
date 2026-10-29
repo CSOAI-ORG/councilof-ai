@@ -9,6 +9,7 @@
 //
 // The public key is public. It is published on purpose and it is safe to publish.
 
+import { headFromGet } from "../_head";
 import { kid, loadKey, type L0Env } from "../../_lib/layer0";
 
 interface Env extends L0Env {}
@@ -39,3 +40,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     { headers: { "content-type": "application/json; charset=utf-8" } },
   );
 };
+
+/** Pages dispatches HEAD only to an onRequestHead export; the door exports GET. */
+export const onRequestHead = headFromGet(onRequestGet);
