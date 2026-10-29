@@ -68,6 +68,9 @@ const DashboardArenaPane = lazy(
 const DashboardLearningPane = lazy(
   () => import("@/components/DashboardLearningPane"),
 );
+const DashboardResearchPane = lazy(
+  () => import("@/components/DashboardResearchPane"),
+);
 const ConnectPane = lazy(() => import("@/components/gspc/ConnectPane"));
 const RoutePane = lazy(() => import("@/components/gspc/RoutePane"));
 const CorrectionsPane = lazy(() => import("@/components/gspc/CorrectionsPane"));
@@ -99,6 +102,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   measured: DashboardRequestPane,
   space: DashboardArenaPane,
   learn: DashboardLearningPane,
+  research: DashboardResearchPane,
   // software: signed-in dashboard at /dashboard, the layout redirects there
   play: LobbyPlay, // gold local-play gallery (local kind)
   art50: LobbyArt50Pane, // Article 50(2) marking check — native pane in Get results; linked as /dashboard/?tab=art50
