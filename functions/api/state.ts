@@ -1009,8 +1009,8 @@ export const onRequestGet: PagesFunction = async () => {
         (publicRoot as any).as_of ?? null,
         "as_of",
         corpusRelation.relationship === "SEPARATE_CORPORA"
-          ? `Leaves on the permissionless public-root. The validated corpus relation records ${corpusRelation.public_root_leaves} root leaves, ${corpusRelation.separately_indexed_signed_cards} separately indexed signed cards and zero overlap. The root OTS proof covers root.json bytes only, not the signed-card index or GSPC.`
-          : "Leaves on the permissionless public-root. Corpus separation is UNCHECKABLE because identifiers, declared counts, uniqueness, or overlap did not satisfy the validator.",
+          ? `Leaves in the published public root. The validated corpus relation records ${corpusRelation.public_root_leaves} root leaves, ${corpusRelation.separately_indexed_signed_cards} separately indexed signed cards and zero overlap. The root OTS proof covers root.json bytes only, not the signed-card index or GSPC.`
+          : "Leaves in the published public root. Corpus separation is UNCHECKABLE because identifiers, declared counts, uniqueness, or overlap did not satisfy the validator.",
       ),
       corpus_relation: corpusRelation,
       xrpl_asset_count_attempted: fact(

@@ -383,7 +383,7 @@
     {
       "name": "get_root",
       "title": "Public Merkle root",
-      "description": "GET the permissionless public-root at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, and UNMEASURED notes. Separate from GSPC. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable). Never a certificate.",
+      "description": "Read the published public-root metadata at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, kind and note. VALID means the JSON was retrieved; it does not verify a signature or a measurement. UNREACHABLE means the root response could not be read. Separate from GSPC measurement. Never a certificate.",
       "inputSchema": {
         "type": "object",
         "properties": {},
@@ -394,7 +394,7 @@
         "properties": {
           "state": {
             "type": "string",
-            "description": "VALID, UNREACHABLE or UNCHECKABLE"
+            "description": "VALID: JSON retrieved, not cryptographically verified. UNREACHABLE: the root response could not be read."
           },
           "merkle_root": {
             "type": [
