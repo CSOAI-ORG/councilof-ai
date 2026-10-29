@@ -8551,6 +8551,22 @@
         }
       }
     },
+    "/api/research-plan": {
+      "get": {
+        "description": "",
+        "operationId": "get__api_research-plan",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": ""
+      }
+    },
     "/api/revenue": {
       "get": {
         "description": "GET /api/revenue \u2014 the three-SKU revenue instrumentation (EXEC-A-REVENUE.md \u00a75).",
@@ -10874,7 +10890,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 134,
+    "public_operations": 135,
     "quarantined": [
       {
         "buyable": false,

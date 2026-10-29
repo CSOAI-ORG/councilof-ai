@@ -307,6 +307,7 @@ describe("Council OS tabs", () => {
       "swift",
       "evidence-index",
       "learn",
+      "research",
       "space",
       "play",
       "staff",
