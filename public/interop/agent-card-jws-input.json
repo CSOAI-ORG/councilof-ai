@@ -18,6 +18,6 @@
     "explicitly_not"
   ],
   "portability_warning": "These fields are not in specification/a2a.proto. A verifier that reconstructs the card through the proto will drop them, canonicalise a different object, and fail this signature. A JSON-native verifier canonicalising the served bytes will pass it. Remove them before signing if cross-binding verification matters.",
-  "state": "UNSIGNED",
-  "note": "UNSIGNED — awaiting the private half of did:web:csoai.org#card-attestation-2, which did.json records as held off-CI. The moment it is supplied: python3 scripts/adapters/agent_card_jws.py --sign --key-file <path>. The board key is never substituted."
+  "state": "SIGNED",
+  "note": "SIGNED — 1 AgentCardSignature(s). Verify independently: python3 scripts/verify_agent_card_jws.py"
 }
