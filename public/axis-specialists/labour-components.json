@@ -1,0 +1,159 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "labour-components",
+  "specialist": {
+    "id": "meok-labour-components-specialist",
+    "cluster_id": "meok-axis-labour-components",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit labour component facts with denominator, population and series-vintage checks while keeping the retired composite index retired.",
+    "reviewer_role": "labour statistics reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "population denominators",
+    "component comparability",
+    "series vintage",
+    "retired-index non-claim"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-09-17T12:58:11Z",
+      "source": "/interop/financial-measure-run-labour-components.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "0d4bdead51f1e5a2a82876166aa4ceed1fdf36e58cad9380ee9c424b5a0c52cd",
+    "axis_row": {
+      "axis": "labour-components",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-human-labour-index",
+      "dataset_note": "The Hub slug keeps the retired name gspc-human-labour-index so old links resolve; the live axis is labour-components and this is not an index (C-2026-0826-05). The card says so on its face.",
+      "bench": "Eurostat",
+      "task": "cited EU labour series (not an index)",
+      "n": 2,
+      "n_unit": "public series",
+      "status": "MEASURED",
+      "evidence_url": "/interop/financial-measure-run-labour-components.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "colour": "#fbbf24",
+      "hue": 43,
+      "note": "MEASURED as two Eurostat series, 2025: activity rate age 15-64 75.6% of population (lfsi_emp_a), unemployment rate age 15-74 6.0% of the labour force (une_rt_a). Supersedes a World Bank modelled-ILO pair that this row used to quote as Eurostat. Not an index. The MEASURED-INDEX-v0.1 sticker stays withdrawn (C-2026-0826-05). Former slot id human-labour-index.",
+      "method_status": "legacy: n 2",
+      "facts_as_of": "2026-09-17T12:58:11Z",
+      "facts_status": "MEASURED",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "source": "/interop/financial-measure-run-labour-components.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-human-labour-index"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist labour-components audits only the labour-components row",
+      "evidence": "labour-components"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-labour-components; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "FACT_RUN_STATE",
+      "state": "PASS",
+      "detail": "deterministic-facts run with n=2 public series"
+    },
+    {
+      "id": "FACT_LINEAGE",
+      "state": "PASS",
+      "detail": "run artifact and fact timestamp are published"
+    },
+    {
+      "id": "RUN_ATTESTATION",
+      "state": "FINDING",
+      "detail": "run artifact is CONTENT_ADDRESSED_UNSIGNED; content identity is not a signature"
+    },
+    {
+      "id": "NO_MODEL_RANKING",
+      "state": "PASS",
+      "detail": "deterministic facts carry no model leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "FINDING",
+      "detail": "legacy: n 2"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 6,
+    "findings": 2,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "compare incompatible populations without labels and require denominator failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "publish a labour index score and require the retired-claim guard to fail",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "labour-components-proposal-1",
+      "proposal": "publish denominator and population definitions per component",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "labour-components-proposal-2",
+      "proposal": "add vintage-aligned replay before expanding the labour component set",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_labour-components",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/labour-components",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "labour statistics reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "33f673445a8e11753593c3ec2df0ea7177af150a24de714470e6827ac1c22aeb"
+}
