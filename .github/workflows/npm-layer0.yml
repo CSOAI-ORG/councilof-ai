@@ -1,0 +1,93 @@
+name: Publish @csoai/layer0 (npm)
+
+# Manual and version-confirmed by design. Authentication is npm trusted publishing (GitHub OIDC),
+# never a long-lived NPM_TOKEN.
+#
+# This package is a CLIENT for a Layer 0 gateway. It is only worth publishing if the gateway it
+# calls is publicly served, so this workflow refuses to publish until it answers. The client's three
+# paths are /api/gate, /api/a2a/route and /api/a2a/verify; as of 29 October 2026 all three answer
+# 404 on the public site, while the gate does answer on the local canonical product. Publishing a
+# client whose every method 404s would put a broken install line in front of the world, so the
+# precondition below is part of the gate, not a comment.
+#
+# Required trusted publisher configuration on npm, for the @csoai scope:
+#     org:      CSOAI
+#     repo:     councilof-ai
+#     workflow: npm-layer0.yml
+#     environment: (leave empty - this workflow does not use a GitHub environment)
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Exact package version to publish (must match packages/layer0-js/package.json)"
+        required: true
+        type: string
+      gateway_base:
+        description: "Public base URL the client will call (default https://councilof.ai)"
+        required: false
+        default: "https://councilof.ai"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+
+      - name: Confirm version is exact and unused
+        id: ver
+        working-directory: packages/layer0-js
+        env:
+          EXPECTED_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          actual="$(node -p "require('./package.json').version")"
+          test "$actual" = "$EXPECTED_VERSION"
+          if npm view "@csoai/layer0@$actual" version >/dev/null 2>&1; then
+            echo "@csoai/layer0@$actual already exists; refusing to overwrite an immutable release"
+            exit 1
+          fi
+          echo "version $actual confirmed and not yet published"
+
+      - name: The gateway the client calls must be publicly served
+        working-directory: packages/layer0-js
+        env:
+          GATEWAY_BASE: ${{ inputs.gateway_base }}
+        run: |
+          set -euo pipefail
+          missing=""
+          for p in /api/gate /api/a2a/route /api/a2a/verify; do
+            code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 -X POST "$GATEWAY_BASE$p" || echo 000)"
+            echo "$GATEWAY_BASE$p -> $code"
+            if [ "$code" = "404" ] || [ "$code" = "000" ]; then missing="$missing $p($code)"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::The client calls these paths and the gateway does not answer them:$missing"
+            echo "::error::Publishing now would ship an install line that cannot work. Serve the gateway first, then re-run this workflow."
+            exit 1
+          fi
+
+      - name: Verify the package
+        working-directory: packages/layer0-js
+        run: |
+          set -euo pipefail
+          node --test index.test.js
+          npm pack --dry-run
+
+      - name: Publish through trusted OIDC with automatic provenance
+        working-directory: packages/layer0-js
+        run: npm publish --access public
