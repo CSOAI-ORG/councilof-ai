@@ -67,18 +67,10 @@ async function openTab(page: Page, id: string, trailingSlash = false) {
     .waitForLoadState("networkidle", { timeout: 15_000 })
     .catch(() => undefined);
   await page.waitForTimeout(400);
-  // These existing journeys exercise the inline workspace/composer. The entrypoint spec
-  // separately accepts the default Ask pane; close it intentionally before using the canvas.
+  // The page and inline composer remain usable until the reader explicitly opens Ask.
   if (id === "home") {
-    const entryAsk = page.getByTestId("ask-pane");
-    // 12 Oct 2026: mobile keeps Ask closed on entry; open it from the launcher, as a reader would.
-    if ((page.viewportSize()?.width ?? 1280) <= 640) {
-      await expect(entryAsk).toHaveCount(0);
-      await page.getByRole("button", { name: "Open Council of AI chat", exact: true }).click();
-    }
-    await expect(entryAsk).toBeVisible({ timeout: 30_000 });
-    await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
-    await expect(entryAsk).toBeHidden();
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Open Council of AI chat", exact: true })).toBeVisible();
   }
 }
 
@@ -123,7 +115,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes seven plainly named sections (no sov-* name) as direct /dashboard?tab= links", async ({
+test("sidebar exposes eight plainly named sections (no sov-* name) as direct /dashboard?tab= links", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -145,6 +137,7 @@ test("sidebar exposes seven plainly named sections (no sov-* name) as direct /da
     "/dashboard?tab=board",
     "/dashboard?tab=connect",
     "/dashboard?tab=learn",
+    "/dashboard?tab=staff",
     "/dashboard?tab=corrections",
   ]);
   // Surface inspection, 12 Oct 2026: no sov-* label in the public nav; the pane stays reachable by link.
@@ -204,18 +197,16 @@ test("the canonical dashboard accepts its optional trailing slash", async ({
   }
 });
 
-test("every sidebar tab renders its own pane inside the shell, error-free", async ({
+test("every published workspace pane renders its own pane inside the shell, error-free", async ({
   page,
   isMobile,
 }) => {
-  test.setTimeout(240_000);
+  test.setTimeout(480_000);
   await openTab(page, "board");
   const { pageErrors, consoleErrors } = await collectErrors(page);
-  // Loop through the known-good set of tab ids. We don't enumerate the
-  // sidebar links here because the sidebar also carries legacy aliases
-  // and auth-required routes that do NOT render in the shell (the
-  // rail sends workbench to /login when signed out, but on a static
-  // server there is no auth backend, so the test would hang).
+  // Every public canonical pane gets its own mount check. Normalized aliases
+  // and the auth-required workbench are covered separately: they must not be
+  // mistaken for additional public panes or tested against a missing backend.
   const ids = [
     "home",
     "mine",
@@ -223,6 +214,7 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "play",
     "explore",
     "board",
+    "staff",
     "swift",
     "models",
     "measured",
@@ -239,6 +231,19 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "space",
     "products",
     "library",
+    "connect",
+    "route",
+    "corrections",
+    "claims",
+    "sovx",
+    "embed",
+    "console",
+    "leaderboard",
+    "terminal",
+    "evidence-index",
+    "archive",
+    "xrpl",
+    "state",
   ];
   expect(ids).toContain("board");
   for (const id of ids) {
@@ -257,6 +262,12 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
       await expect(page.getByText("Account overview and recent measurements", { exact: true })).toHaveCount(0);
     } else {
       await expect(pane, `${id}: its own pane is mounted`).toHaveCount(1);
+      if (id === "staff") {
+        await expect(
+          page.getByTestId("hitl-console"),
+          "staff: the human-review workflow is mounted",
+        ).toBeVisible();
+      }
     }
   }
   expect(pageErrors, "no uncaught exceptions across the tabs").toEqual([]);
@@ -394,9 +405,9 @@ test("one workspace keeps the composer and account access while a tool pane is o
     page.getByLabel("Open Council OS"),
     "no legacy overlay launcher over the shell",
   ).toHaveCount(0);
+  // Account access remains available through Sections while navigation starts minimized.
+  await page.getByRole("button", { name: "Open workspace navigation", exact: true }).click();
   if (isMobile) {
-    await page.getByRole("button", { name: "Open workspace navigation" }).click();
-    // The account menu is in the mobile drawer, not the hidden desktop sidebar.
     await expect(
       page.getByRole("dialog", { name: "Council OS sections" })
         .getByLabel("Open account and workspace menu"),
@@ -653,6 +664,49 @@ test("a cold /assess door lands on the measured pane with the RAS booking link",
       (/^https:\/\//.test(href) && !/stripe/i.test(href)),
     href,
   ).toBe(true);
+});
+
+test("workspace navigation starts minimized and remains usable across layout boundaries", async ({ page }, info) => {
+  test.skip(info.project.name !== "desktop", "Exercise responsive widths with the existing desktop project");
+  test.setTimeout(180_000);
+  for (const width of [639, 640, 641, 767, 768]) {
+    await page.setViewportSize({ width, height: 900 });
+    await openTab(page, "board");
+    const trigger = page.getByTestId("workspace-sections-toggle");
+    const navigation = page.getByRole("navigation", { name: "Workspace destinations", exact: true });
+    await expect(trigger, String(width)).toBeVisible();
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(navigation).toBeHidden();
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+    await trigger.focus();
+    await trigger.press("Enter");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(navigation).toBeVisible();
+    await expect(trigger).toHaveAttribute("aria-controls", await navigation.getAttribute("id") || "");
+    await navigation.locator('a[href="/dashboard?tab=verify"]').click();
+    await expect(page).toHaveURL(/tab=verify/);
+    if (width >= 768) {
+      // Desktop expansion survives tab changes; mobile selection dismisses the drawer.
+      await expect(navigation).toBeVisible();
+      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    } else {
+      await expect(navigation).toBeHidden();
+      await trigger.click();
+      await expect(navigation).toBeVisible();
+    }
+    await navigation.locator("a").first().focus();
+    await page.keyboard.press("Escape");
+    await expect(navigation).toBeHidden();
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(trigger).toBeFocused();
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("dashboard-shell")).toBeVisible({ timeout: 60_000 });
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(navigation).toBeHidden();
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow, String(width)).toBeLessThanOrEqual(1);
+  }
 });
 
 test("the home header carries a booking door to /assess/ within one click", async ({ page }) => {

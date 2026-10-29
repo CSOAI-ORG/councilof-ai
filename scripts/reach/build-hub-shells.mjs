@@ -106,7 +106,8 @@ function shell(h) {
 <h1>${esc(h.h1)}</h1>
 <p class="lede">${esc(h.lede)}</p>
 <div class="box" role="note" aria-label="What these pages are"><p><strong>What these pages are.</strong> Measurements of what was declared against what was observed, each with its dates, evidence level and signed source. They say nothing about the security, quality or safety of anything listed. Not one of them is a certification, rating, ranking or endorsement. UNMEASURED and UNCHECKABLE are shown as such.</p></div>
-<form class="f" role="search" aria-label="Search and filter" onsubmit="return false">
+${h.path === "stablecoins/deployments" ? `<div class="box" role="note" aria-label="Coverage, honestly counted"><p><strong>Coverage, honestly counted (observed 2026-10-09, UTC).</strong> Financial index: <strong>430 stablecoins indexed</strong> · <strong>136 deep-measured</strong> at the primary deployment (unsigned) · <strong>2 attempted with published reasons</strong> (UNMEASURED) · <strong>292 metadata-only</strong> (INDEXED, not measured). Deep measurement covers <strong>99.9% of indexed supply ($314.4B of $314.8B)</strong>. Signed evidence packs for these measurements: <strong>0</strong> — a deep measurement is not a signature, and none of these counts is a certification. The four counts are kept separate on purpose; they always sum to the indexed total. Measurement, not certification.</p></div>
+` : ""}<form class="f" role="search" aria-label="Search and filter" onsubmit="return false">
 <label for="q">Search<input id="q" name="q" type="search" autocomplete="off" placeholder="host, asset or chain"></label>
 <span id="facets"></span>
 </form>
