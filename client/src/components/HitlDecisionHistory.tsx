@@ -115,7 +115,7 @@ export default function HitlDecisionHistory({
   return (
     <section
       aria-label="Past public decisions"
-      className="mt-5 rounded-xl border border-sky-400/30 bg-sky-500/5 p-4"
+      className="mt-5 rounded-xl border border-sky-400/30 bg-slate-950 p-4 text-sky-50"
     >
       <h3 className="text-sm font-semibold text-sky-50">
         Past public decisions
