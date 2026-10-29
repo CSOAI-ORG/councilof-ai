@@ -23,11 +23,12 @@ import {
 const tools = readFileSync(resolve(__dirname, "../pages/ToolsPage.tsx"), "utf8");
 const flags = readFileSync(resolve(__dirname, "./nSitesFlags.ts"), "utf8");
 
-describe("100/100 A+++ permissionless gate", () => {
+describe("Publication evidence gate", () => {
   it("covers millions by census and unlocks only after 100 unique lineages", () => {
     expect(HUNDRED_RULING).toMatch(/census/i);
     expect(HUNDRED_RULING).toMatch(/100 unique lineages/);
-    expect(HUNDRED_RULING).toMatch(/permissionless/);
+    expect(HUNDRED_RULING).toMatch(/Review publication candidates/);
+    expect(HUNDRED_RULING).not.toMatch(/permissionless/i);
     expect(HUNDRED_TARGET).toBe(100);
     expect(hundredResponses()).toBe(45_000);
     expect(HUNDRED_ENVELOPE.tokens_approx).toBe(29_250_000);
@@ -72,7 +73,7 @@ describe("100/100 A+++ permissionless gate", () => {
     );
   });
 
-  it("permissionless after 100 is flags and census, not a 2M sweep or a sold rank", () => {
+  it("publication after evidence review keeps discovery separate from measurement", () => {
     expect(PERMISSIONLESS_UNLOCKS.some((u) => u.id === "flags")).toBe(true);
     expect(PERMISSIONLESS_UNLOCKS.some((u) => u.id === "census-refresh")).toBe(true);
     expect(PERMISSIONLESS_NEVER.some((n) => /2-million-model inference/i.test(n))).toBe(true);
