@@ -327,6 +327,133 @@ class TestX402(unittest.TestCase):
         r = g.Resp("u", 402, {"payment-required": base64.b64encode(json.dumps(body).encode()).decode()}, b"")
         self.assertEqual(g.decode_402(r), body)
 
+    # ---- a door that declines to sell: resources[].no_sale (13 Oct 2026) -----------------------------
+    # The gate reported "4 mismatches over 27 paid resources (by field network, amount, asset, extra.name)".
+    # All four were one door, /api/wrapper?id=usdc.e:arbitrum, answering 200 while its chain read was
+    # UNMEASURED. The 200 below is that answer (read 07:05Z), trimmed to the fields it is judged on.
+    TERMS = {"network": "eip155:8453", "amount": "1", "asset": "0xA", "extra": {"name": "USD Coin"}}
+    NO_SALE = {"status": 200, "body": {"preview_only": True, "state": "UNMEASURED",
+                                       "payment": {"requested": False, "sent_to_facilitator": False, "settled": False}}}
+    LIVE_200 = {"schema": "csoai.wrapper-parity/0.1", "kind": "preview", "preview_only": True, "id": "usdc.e:arbitrum",
+                "state": "UNMEASURED",
+                "reason": "arbitrum: eth_call to 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8 failed on every endpoint "
+                          "(arbitrum.io: HTTP 429; 1rpc.io: RPC error: You've reached the usage limit for your current plan. "
+                          "[rest of that operator's message cut here]; drpc.org: HTTP 400; publicnode.com: HTTP 403)",
+                "payment": {"requested": False, "presented": False, "sent_to_facilitator": False, "settled": False}}
+    WRAPPER = "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
+
+    class DoorHttp:
+        """Each URL answers from a table: {url: (status, parsed JSON body or raw bytes)}."""
+
+        def __init__(self, table):
+            self.table = table
+
+        def get(self, url, headers=None, **k):
+            status, body = self.table[url]
+            return g.Resp(url, status, {}, body if isinstance(body, bytes) else json.dumps(body).encode())
+
+    def consistency(self, manifest, table):
+        ctx = g.Ctx(http=self.DoorHttp(table))
+        ctx.x402 = manifest
+        return [c for c in g.x402_artifact(ctx)["checks"] if c["check"] == "consistency.x402_manifest_vs_live_402"][0]
+
+    def two_doors(self, declare):
+        w = {"url": self.WRAPPER, "accepts": [self.TERMS]}
+        if declare:
+            w["no_sale"] = self.NO_SALE
+        man = {"resources": [{"url": "https://councilof.ai/api/proof?bundle=1", "accepts": [self.TERMS]}, w]}
+        table = {"https://councilof.ai/api/proof?bundle=1": (402, {"accepts": [self.TERMS]}), self.WRAPPER: (200, self.LIVE_200)}
+        return man, table
+
+    def test_undeclared_200_is_one_mismatch_not_four(self):
+        # must-fail control: the manifest as production served it on 13 Oct (no no_sale field).
+        r = self.consistency(*self.two_doors(declare=False))
+        self.assertEqual(r["status"], g.FAIL)
+        self.assertTrue(r["evidence"].startswith("1 mismatches over 2 paid resources (1 without a 402 challenge; by field {})"), r["evidence"])
+        self.assertIn("/api/wrapper: no 402 challenge (HTTP 200)", r["evidence"])
+
+    def test_declared_no_sale_is_not_a_mismatch_and_is_named(self):
+        r = self.consistency(*self.two_doors(declare=True))
+        self.assertEqual(r["status"], g.PASS, r["evidence"])
+        self.assertIn("2 paid resources: 1 answered 402", r["evidence"])
+        self.assertIn("1 gave the no-sale answer the manifest declares for it, nothing requested (/api/wrapper)", r["evidence"])
+
+    def test_declaration_does_not_excuse_a_different_answer(self):
+        res = {"url": self.WRAPPER, "accepts": [self.TERMS], "no_sale": self.NO_SALE}
+        self.assertTrue(g.x402_no_sale(res, 200, self.LIVE_200))
+        not_it = {
+            "requests payment": (200, dict(self.LIVE_200, payment={"requested": True, "sent_to_facilitator": False, "settled": False})),
+            "says nothing about payment": (200, {"preview_only": True, "state": "UNMEASURED"}),
+            "another state": (200, dict(self.LIVE_200, state="ESCROW_PARITY_READ")),
+            "not JSON": (200, None),
+            "an error status": (500, self.LIVE_200),
+            "a 402": (402, self.LIVE_200),
+            "carries payment terms": (200, dict(self.LIVE_200, accepts=[self.TERMS])),
+            "truthy, not true": (200, dict(self.LIVE_200, preview_only=1)),
+        }
+        for what, (status, body) in not_it.items():
+            self.assertFalse(g.x402_no_sale(res, status, body), what)
+        self.assertFalse(g.x402_no_sale(res, 200, self.LIVE_200, payment_required_header=True), "carries a PAYMENT-REQUIRED header")
+        # and through the artifact: each of them fails the check on a door that declares a no-sale answer
+        man, table = self.two_doors(declare=True)
+        for what, (status, body) in not_it.items():
+            if status == 402:
+                continue
+            table[self.WRAPPER] = (status, b"<html>" if body is None else body)
+            self.assertEqual(self.consistency(man, table)["status"], g.FAIL, what)
+
+    def test_blanket_declaration_excuses_nothing(self):
+        for decl in ({"status": 200, "body": {}}, {"status": 200}, {"status": 200, "body": {"payment": {"requested": True}}}, "yes", None):
+            res = {"url": self.WRAPPER, "accepts": [self.TERMS], "no_sale": decl}
+            self.assertFalse(g.x402_no_sale(res, 200, self.LIVE_200), decl)
+            self.assertFalse(g.x402_no_sale(res, 200, {}), decl)
+
+    def test_field_drift_on_a_402_still_fails_beside_a_declared_no_sale(self):
+        man, table = self.two_doors(declare=True)
+        table["https://councilof.ai/api/proof?bundle=1"] = (402, {"accepts": [dict(self.TERMS, network="base", extra={"name": "USDC"})]})
+        r = self.consistency(man, table)
+        self.assertEqual(r["status"], g.FAIL)
+        self.assertIn("'network': 1", r["evidence"])
+        self.assertIn("'extra.name': 1", r["evidence"])
+        self.assertIn("0 without a 402 challenge", r["evidence"])
+
+    def test_this_branch_manifest_against_the_answers_of_13_oct(self):
+        """The manifest this tree renders (the committed render build_openapi.py --check holds equal to
+        functions/.well-known/x402.json.ts), every paid door challenging on its own listed terms, and the
+        per-pair wrapper door answering the 200 it answered live: 0 mismatches. Drop the declaration, as
+        production served the manifest that morning, and the same answers are 1 mismatch."""
+        with open(os.path.join(g.REPO, "scripts", "fixtures", "x402scan", "well_known_x402.json")) as f:
+            man = json.load(f)
+        paid = [r for r in man["resources"] if str(r.get("amount", "")) != "0"]
+        self.assertIn(self.WRAPPER, [r["url"] for r in paid])
+        table = {r["url"]: (402, {"accepts": [r["accepts"][0]]}) for r in paid}
+        table[self.WRAPPER] = (200, self.LIVE_200)
+        r = self.consistency(man, table)
+        self.assertEqual(r["status"], g.PASS, r["evidence"])
+        self.assertIn(f"{len(paid)} paid resources: {len(paid) - 1} answered 402", r["evidence"])
+        self.assertIn("(/api/wrapper)", r["evidence"])
+        # every door that declares one may decline at once, and only those
+        declaring = [r for r in paid if r.get("no_sale")]
+        self.assertGreaterEqual(len(declaring), 2)
+        for d in declaring:
+            table[d["url"]] = (200, dict(self.LIVE_200, id=None))
+        self.assertEqual(self.consistency(man, table)["status"], g.PASS)
+        silent = [r for r in paid if not r.get("no_sale")][0]
+        table[silent["url"]] = (200, self.LIVE_200)
+        self.assertEqual(self.consistency(man, table)["status"], g.FAIL, "a door that declares nothing answered the no-sale 200")
+        # must-fail control: the same answers against the manifest without the declaration
+        table = {r["url"]: (402, {"accepts": [r["accepts"][0]]}) for r in paid}
+        table[self.WRAPPER] = (200, self.LIVE_200)
+        before = json.loads(json.dumps(man))
+        for res in before["resources"]:
+            res.pop("no_sale", None)
+        r = self.consistency(before, table)
+        self.assertEqual(r["status"], g.FAIL)
+        self.assertTrue(r["evidence"].startswith(f"1 mismatches over {len(paid)} paid resources (1 without a 402 challenge"), r["evidence"])
+        # the sentence that explains the field passes the gate's own doctrine checks
+        for c in g.doctrine_checks(man["no_sale_answers"], "/.well-known/x402.json", g.OWN_DEV):
+            self.assertEqual(c["status"], g.PASS, c)
+
 
 class TestNotices(unittest.TestCase):
     def test_channel_rules(self):
