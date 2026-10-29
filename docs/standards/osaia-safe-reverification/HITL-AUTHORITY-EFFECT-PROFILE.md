@@ -10,8 +10,11 @@ must-fail, 4 negative controls against v0.1, 3 temporal checks).
 **Reference-checker correction — 29 October 2026.** The checker now also rejects an
 invocation that predates its approval, even when both timestamps lie inside the authority
 window. It preserves an unknown effect without attempting to parse a missing observation
-time. The suite now has 46 checks: 3 must-pass, 29 must-fail, 4 v0.1 negative controls and
-10 temporal checks. Schema and historical example bytes are unchanged. This is a local
+time. The suite now has 47 checks: 3 must-pass, 29 must-fail, 4 v0.1 negative controls and
+11 temporal checks. Equivalent timezone offsets at the approval instant are accepted,
+and each stage-order negative isolates the intended rejection. This consolidates the
+timing cases also carried in PR #3599 while preserving unknown-effect handling.
+Schema and historical example bytes are unchanged. This is a local
 conformance-checker correction, not evidence of a deployed approval or stop service.
 
 1. **A claim that is not CURRENT does not authorize a consequential execution.** `STALE`,
@@ -70,5 +73,5 @@ Consumer requirements (not established by schema validation):
 - signatures/timestamps/transparency receipts prove origin/integrity/time claims only;
 - historical records are retained and superseded rather than rewritten.
 
-Consumer acceptance must independently resolve and hash the declared proposal, scope, invocation, effect and evidence artifacts; check their exact source pins and intended producer/consumer binding; and authenticate the relevant principal and assess authority epoch, expiry and current revocation. Invocation timing must fall within the declared approval interval, and stage times must be consistent. These are consumer requirements until an actual resolver and enforcement path implement them. A retained record or synthetic example does not establish those checks, live execution or verifier independence. An observed unauthorized effect must remain available as incident evidence and must not be promoted into a conformant current authorization claim.
+Consumer acceptance must independently resolve and hash the declared proposal, scope, invocation, effect and evidence artifacts; check their exact source pins and intended producer/consumer binding; and authenticate the relevant principal and assess authority epoch, expiry and current revocation. Invocation timing must fall within the declared approval interval and at or after the approval decision; stage times must be consistent. These are consumer requirements until an actual resolver and enforcement path implement them. A retained record or synthetic example does not establish those checks, live execution or verifier independence. An observed unauthorized effect must remain available as incident evidence and must not be promoted into a conformant current authorization claim.
 

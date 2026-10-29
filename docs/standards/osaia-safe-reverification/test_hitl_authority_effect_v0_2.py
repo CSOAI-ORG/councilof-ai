@@ -279,7 +279,7 @@ for label, changes, expected_problem in (
         mutate(record, path, value)
     V2.validate(record)  # The schema alone accepts these records.
     problems = temporal_ok(record)
-    if expected_problem not in problems:
+    if problems != [expected_problem]:
         failures.append(f'temporal gate did not reject {label}: {problems}')
     else:
         counts['temporal'] += 1
@@ -291,6 +291,9 @@ for label, changes in (
     )),
     ('invocation at the approval instant', (
         (('invocation', 'invoked_at'), '2026-10-27T09:10:00Z'),
+    )),
+    ('approval instant expressed with an equivalent timezone offset', (
+        (('invocation', 'invoked_at'), '2026-10-27T10:10:00+01:00'),
     )),
 ):
     record = copy.deepcopy(E2)
