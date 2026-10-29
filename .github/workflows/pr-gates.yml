@@ -374,6 +374,21 @@ jobs:
           npm run ts-ratchet:selftest
           npm run ts-ratchet
 
+      # A node:test file that vitest cannot collect is reported by vitest as a FAILED
+      # SUITE ("No test suite found in file ..."), even when every test in it passes. Two
+      # PRs were red on exactly this on 28 October 2026 — #3570 and #3573 — each costing
+      # a full CI cycle, and the message reads like a broken test rather than a missing
+      # registration. The registry is hand-maintained in vitest.config.ts, so this check
+      # reads that list and vitest's own exclude list out of the same file and fails when
+      # a node:test file is reachable by vitest and named in neither. It runs BEFORE the
+      # unit step so the failure names the cause instead of arriving as a vitest error.
+      # The selftest runs first: a gate that has never been seen failing is decoration.
+      - name: node:test registry — selftest, then the real registry
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/node-test-registry.mjs --selftest
+          node scripts/node-test-registry.mjs
+
       # `scripts` joined this line on 2026-09-06. It was absent, and EIGHT test files under
       # scripts/ had therefore never run in CI - 1007 assertions, including the vocabulary gate
       # over docs/PROVABLE-ARCHIVE-METHOD.md and the outreach drafts, the EAS attestation
