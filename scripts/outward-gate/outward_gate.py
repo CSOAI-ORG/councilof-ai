@@ -444,9 +444,21 @@ PRICE_CTX = re.compile(r"pric|cost|per\s+(?:call|request|card|query|month|year|s
 PRICE_OK = re.compile(r"penalt|\bfines?\b|turnover|market cap|supply|TVL|AUM|outstanding|reserve|raised|grant|settled|revenue|payers?\b|received", re.I)
 
 
-def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3):
+def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3, exempt=None):
+    """exempt(text, match) -> True means the match is not a claim at all.
+
+    This is NOT the negation escape. The negation escape says "we did not
+    certify"; this says the sentence's STRUCTURE makes the word the object
+    of a denial -- "distinguishes X from certification", "explicitly
+    excludes: ... certification". It is passed in by the caller, so the
+    public-notice path is unaffected: a notice that says "fails" is
+    telling a reader something, and the notice word list has no negation
+    escape BY DESIGN.
+    """
     hits = []
     for m in rx.finditer(text):
+        if exempt is not None and exempt(text, m):
+            continue
         w0 = text[max(0, m.start() - before): m.start()]
         w1 = text[m.end(): m.end() + after]
         if text[max(0, m.start() - 4): m.start()].lower().endswith(("non-", "non ")):
@@ -463,9 +475,9 @@ def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3):
     return hits
 
 
-def doctrine_checks(text, path="", owner=OWN_DOCTRINE, prices=False):
+def doctrine_checks(text, path="", owner=OWN_DOCTRINE, prices=False, exempt=None):
     out = []
-    h = _hits(text, CERT, before=140, after=80)
+    h = _hits(text, CERT, before=140, after=80, exempt=exempt)
     out.append(R("doctrine.no_certify_language", FAIL if h else PASS,
                  ("certify/compliant/accredited/endorsed used without negation: " + " | ".join(h)) if h else "none found", owner))
     if prices:
