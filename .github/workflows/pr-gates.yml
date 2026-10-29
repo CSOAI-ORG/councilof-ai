@@ -444,6 +444,17 @@ jobs:
           node scripts/review/layer0-parity.mjs --selftest
           node --test scripts/review/layer0-gateway.test.mjs
 
+      # The published record of pins that do not resolve for an anonymous reader. Offline and
+      # deterministic, so it can block a PR without racing a host's rate limit: every entry must
+      # be well formed, inside its review window, and still name a pin this tree publishes. The
+      # networked half - does a pin still resolve - runs on the schedule, where a red result is a
+      # fact about production rather than a race with a hub.
+      - name: Published-pin record integrity — offline, blocking
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/review/published-pins-liveness.mjs --selftest
+          node scripts/review/published-pins-liveness.mjs --root . --record-only
+
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
