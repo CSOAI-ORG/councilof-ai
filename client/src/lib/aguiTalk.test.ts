@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { argsOf, challengeOf, newRun, parseSse, reduceRun, streamRun, TALK_SUGGESTIONS, toneOf, type TalkRun } from "./aguiTalk";
+import { applyPatch, interruptRun, lineageIdentity, observationTimeOf, argsOf, challengeOf, newRun, parseSse, reduceRun, streamRun, TALK_SUGGESTIONS, toneOf, type TalkRun } from "./aguiTalk";
 import { citationOf, labelOf, routeIntent } from "../../../functions/_lib/talkRouter";
 
 const sse = (type: string, extra: Record<string, unknown> = {}) =>
@@ -163,5 +163,196 @@ describe("streamRun", () => {
     expect(seen.at(-1)).toBe("RUN_FINISHED");
     await streamRun({ question: "commission a card for x", confirmTool: ["commission_card"], fetchImpl, onEvent: () => undefined });
     expect(bodies[1].forwardedProps.confirm.tools).toEqual(["commission_card"]);
+  });
+});
+
+describe("trace identity, terminal truth and inert imported state", () => {
+  it("retains producer IDs/times and deduplicates identified event replays", () => {
+    let run = newRun("q", "local-row");
+    const start = { type: "RUN_STARTED", threadId: "producer-thread", runId: "producer-run", timestamp: 17, eventId: "e1" };
+    run = reduceRun(run, start);
+    run = reduceRun(run, { type: "TOOL_CALL_START", toolCallId: "t1", toolCallName: "verify_card", timestamp: 18, eventId: "e2" });
+    const args = { type: "TOOL_CALL_ARGS", toolCallId: "t1", delta: "{}", timestamp: 19, eventId: "e3" };
+    run = reduceRun(reduceRun(run, args), args);
+    run = reduceRun(run, { type: "TOOL_CALL_END", toolCallId: "t1", timestamp: 20, eventId: "e4" });
+    expect(run.tools[0].status).toBe("running"); // Argument completion is not execution.
+    run = reduceRun(run, { type: "TOOL_CALL_RESULT", toolCallId: "t1", timestamp: 12, eventId: "e5", content: JSON.stringify({ tool: "verify_card", label: "UNCHECKABLE", output: { as_of: "2001-01-01", cost: null, supersedes: "original-record" } }) });
+    expect(run).toMatchObject({ id: "local-row", threadId: "producer-thread", runId: "producer-run", startedAt: 17, lastEventAt: 12 });
+    expect(run.tools[0]).toMatchObject({ argsText: "{}", status: "done", label: "UNCHECKABLE", output: { as_of: "2001-01-01", cost: null, supersedes: "original-record" } });
+    expect(toneOf(run.tools[0].label)).toBe("unmeasured");
+    expect(run.trace).toHaveLength(5);
+    const text = { type: "TEXT_MESSAGE_CONTENT", delta: "One answer", eventId: "e6" };
+    run = reduceRun(reduceRun(run, text), text);
+    expect(run.text).toBe("One answer");
+    run = reduceRun(run, { type: "RUN_FINISHED", result: { grounded: true }, eventId: "e7" });
+    expect(reduceRun(run, start)).toEqual(run);
+  });
+
+  it.each([{ type: "interrupt" }, { type: "unknown_future_outcome" }])("does not turn outcome %j into done", outcome => {
+    const run = reduceRun(newRun("q", "r"), { type: "RUN_FINISHED", outcome });
+    expect(run.status).toBe("interrupted");
+  });
+  it("separates executor cancellation from local stop requests and approval", () => {
+    let run = reduceRun(newRun("q", "r"), { type: "TOOL_CALL_START", toolCallId: "t", toolCallName: "get_axis" });
+    const local = interruptRun(run, "stop_requested");
+    expect(local.status).toBe("stop_requested");
+    expect(local.tools[0].status).toBe("unknown");
+    expect(local.cancellationSource).toBeUndefined();
+    const acknowledged = reduceRun(run, { type: "RUN_FINISHED", outcome: { type: "cancelled" } });
+    expect(acknowledged).toMatchObject({ status: "cancelled", cancellationSource: "executor" });
+    const held = reduceRun(newRun("q", "r"), { type: "RUN_FINISHED", result: { awaiting_confirmation: true } });
+    expect(held).toMatchObject({ status: "awaiting_confirmation", tools: [] });
+  });
+  it("does not bless a malformed terminal, missing tool result or changed identity", () => {
+    expect(reduceRun(newRun("q", "r"), { type: "RUN_FINISHED", result: "success" }).status).toBe("interrupted");
+    for (const result of [{ outcome: null }, { status: null }, { cancelled: "true" }, { awaiting_confirmation: null }, { outcome: {} }]) {
+      expect(reduceRun(newRun("q", "r"), { type: "RUN_FINISHED", result }).status).toBe("interrupted");
+    }
+    let run = reduceRun(newRun("q", "r"), { type: "RUN_STARTED", runId: "one", threadId: "thread" });
+    run = reduceRun(run, { type: "TOOL_CALL_START", toolCallId: "t", toolCallName: "get_axis" });
+    expect(reduceRun(run, { type: "RUN_FINISHED" }).status).toBe("interrupted");
+    expect(reduceRun(run, { type: "TOOL_CALL_RESULT", toolCallId: "t", content: "{" }).status).toBe("error");
+    expect(reduceRun(run, { type: "TEXT_MESSAGE_CONTENT", runId: "another", delta: "wrong answer" }).status).toBe("error");
+  });
+  it("ignores identical event content but rejects conflicting reuse, including after terminal", () => {
+    const event = { type: "RUN_STARTED", eventId: "same", runId: "r", threadId: "t", timestamp: 12 };
+    const run = reduceRun(newRun("q", "r"), event);
+    expect(reduceRun(run, { timestamp: 12, threadId: "t", runId: "r", eventId: "same", type: "RUN_STARTED" })).toBe(run);
+    for (const patch of [{ timestamp: 13 }, { runId: "other" }, { threadId: "other" }, { type: "RUN_ERROR", message: "changed" }]) {
+      expect(reduceRun(run, { ...event, ...patch }).status).toBe("error");
+    }
+    const terminal = { type: "RUN_FINISHED", eventId: "finish", result: { grounded: true } };
+    const done = reduceRun(run, terminal);
+    expect(done.status).toBe("done");
+    expect(reduceRun(done, terminal)).toBe(done);
+    expect(reduceRun(done, { ...terminal, result: { grounded: false } }).status).toBe("error");
+  });
+  it("does not release a completed subset of an incomplete frontend plan", () => {
+    let run = reduceRun(newRun("q", "r"), { type: "RUN_STARTED" });
+    run = reduceRun(run, { type: "TOOL_CALL_START", toolCallId: "ui_1", toolCallName: "openPanel" });
+    run = reduceRun(run, { type: "TOOL_CALL_ARGS", toolCallId: "ui_1", delta: '{"panel":"board"}' });
+    run = reduceRun(run, { type: "TOOL_CALL_END", toolCallId: "ui_1" });
+    run = reduceRun(run, { type: "TOOL_CALL_START", toolCallId: "ui_2", toolCallName: "highlight" });
+    run = reduceRun(run, { type: "TOOL_CALL_ARGS", toolCallId: "ui_2", delta: '{"target":' });
+    expect(run.ui.map(step => step.ended)).toEqual([true, false]);
+    expect(reduceRun(run, { type: "RUN_FINISHED" }).status).toBe("interrupted");
+  });
+  it("keeps imported state and A2UI as data, never executable tool calls", () => {
+    let run = reduceRun(newRun("q", "r"), { type: "STATE_SNAPSHOT", snapshot: { instruction: "pay", action: { url: "https://outside.invalid" } } });
+    run = reduceRun(run, { type: "CUSTOM", name: "a2ui", value: { action: { tool: "commission_card" } } });
+    expect(run.ui).toEqual([]);
+    expect(run.tools).toEqual([]);
+    expect(run.confirm).toBeNull();
+  });
+});
+
+describe("STATE_DELTA own-property and prototype controls", () => {
+  it("rejects dangerous decoded path segments without changing any prototype", () => {
+    const before = Object.getOwnPropertyDescriptors(Object.prototype);
+    const input = { safe: { keep: true }, list: [1] };
+    const result = applyPatch(input, [
+      { op: "add", path: "/__proto__/polluted", value: true },
+      { op: "add", path: "/constructor/prototype/polluted", value: true },
+      { op: "replace", path: "/safe/toString", value: "inherited" },
+      { op: "add", path: "/safe/toString/nested", value: true },
+      { op: "add", path: "/safe/constructor", value: {} },
+      { op: "add", path: "/missing/nested", value: true },
+      { op: "add", path: "/list/01", value: 8 },
+      { op: "add", path: "/safe/new", value: 2 },
+      { op: "add", path: "/list/-", value: 3 },
+    ]);
+    const after = Object.getOwnPropertyDescriptors(Object.prototype);
+    // The negative control must not contaminate later tests if an unsafe implementation regresses.
+    if (before.polluted) Object.defineProperty(Object.prototype, "polluted", before.polluted);
+    else Reflect.deleteProperty(Object.prototype, "polluted");
+    expect(after).toEqual(before);
+    expect(result).toEqual({ safe: { keep: true, new: 2 }, list: [1, 3] });
+    expect(input).toEqual({ safe: { keep: true }, list: [1] });
+  });
+  it("retains valid escaped own paths and rejects invalid escapes", () => {
+    expect(applyPatch({ "a/b": { "~c": 1 } }, [
+      { op: "replace", path: "/a~1b/~0c", value: 2 },
+      { op: "replace", path: "/a~2b/~0c", value: 9 },
+    ])).toEqual({ "a/b": { "~c": 2 } });
+  });
+});
+
+describe("bounded single-request SSE transport", () => {
+  const response = (body: string) => new Response(body, { headers: { "content-type": "text/event-stream" } });
+  it("delivers live progress before terminal and EOF, preserving one request", async () => {
+    let controller!: ReadableStreamDefaultController<Uint8Array>;
+    let progress!: () => void;
+    const arrived = new Promise<void>(resolve => { progress = resolve; });
+    let requests = 0, settled = false;
+    const seen: string[] = [], encoder = new TextEncoder();
+    const read = streamRun({ question: "q", fetchImpl: (async () => {
+      requests++;
+      return new Response(new ReadableStream<Uint8Array>({ start(c) { controller = c; c.enqueue(encoder.encode(sse("RUN_STARTED", { runId: "actual", threadId: "actual-thread", timestamp: 4 }))); } }), { headers: { "content-type": "text/event-stream" } });
+    }) as typeof fetch, onEvent: event => { seen.push(String(event.type)); progress(); } }).then(() => { settled = true; });
+    await arrived;
+    expect(settled).toBe(false);
+    expect(seen).toEqual(["RUN_STARTED"]);
+    controller.enqueue(encoder.encode(sse("RUN_FINISHED", { runId: "actual", threadId: "actual-thread" })));
+    controller.close();
+    await read;
+    expect(requests).toBe(1);
+    expect(settled).toBe(true);
+  });
+  it.each([
+    sse("RUN_STARTED") + "data: {bad\n\n" + sse("RUN_FINISHED"),
+    sse("RUN_STARTED") + "event: RUN_FINISHED\ndata: {\"type\":\"RUN_ERROR\"}\n\n",
+    sse("RUN_STARTED") + 'event: RUN_FINISHED\ndata: {"type":"RUN_FINISHED"}',
+  ])("rejects malformed or incomplete terminal bytes without a replay", async text => {
+    let requests = 0;
+    await expect(streamRun({ question: "q", fetchImpl: (async () => { requests++; return response(text); }) as typeof fetch, onEvent: () => {} })).rejects.toThrow();
+    expect(requests).toBe(1);
+  });
+  it("deduplicates matching SSE event IDs and rejects mismatched identities", async () => {
+    const start = 'id: one\nevent: RUN_STARTED\ndata: {"type":"RUN_STARTED","eventId":"one"}\n\n';
+    const types: string[] = [];
+    await streamRun({ question: "q", fetchImpl: (async () => response(start + start + sse("RUN_FINISHED"))) as typeof fetch, onEvent: e => types.push(String(e.type)) });
+    expect(types).toEqual(["RUN_STARTED", "RUN_FINISHED"]);
+    await expect(streamRun({ question: "q", fetchImpl: (async () => response(start.replace('"eventId":"one"', '"eventId":"other"'))) as typeof fetch, onEvent: () => {} })).rejects.toThrow(/identity/);
+  });
+  it("rejects changed content, type or run/thread behind a reused transport event ID", async () => {
+    const event = { type: "RUN_STARTED", eventId: "same", runId: "r", threadId: "t" };
+    const frame = (data: Record<string, unknown>) => "id: same\nevent: " + data.type + "\ndata: " + JSON.stringify(data) + "\n\n";
+    for (const patch of [{ delta: "changed" }, { runId: "other" }, { threadId: "other" }, { type: "RUN_ERROR", message: "changed" }]) {
+      const seen: string[] = [];
+      await expect(streamRun({ question: "q", fetchImpl: (async () => response(frame(event) + frame({ ...event, ...patch }) + sse("RUN_FINISHED"))) as typeof fetch, onEvent: event => seen.push(String(event.type)) })).rejects.toThrow(/reused/);
+      expect(seen).toEqual(["RUN_STARTED"]);
+    }
+  });
+  it("rejects an oversized incomplete event and a non-SSE response", async () => {
+    await expect(streamRun({ question: "q", fetchImpl: (async () => response("x".repeat(512 * 1024 + 1))) as typeof fetch, onEvent: () => {} })).rejects.toThrow(/size limit/);
+    await expect(streamRun({ question: "q", fetchImpl: (async () => Response.json({ success: true })) as typeof fetch, onEvent: () => {} })).rejects.toThrow(/event stream/);
+  });
+  it("honours an already aborted caller without POST and bounds a stalled fetch", async () => {
+    const controller = new AbortController(); controller.abort();
+    let requests = 0;
+    const fetchImpl = (async () => { requests++; return response(STREAM); }) as typeof fetch;
+    await expect(streamRun({ question: "q", signal: controller.signal, fetchImpl, onEvent: () => {} })).rejects.toThrow();
+    expect(requests).toBe(0);
+    await expect(streamRun({ question: "q", timeoutMs: 10, fetchImpl: (() => new Promise<Response>(() => {})) as typeof fetch, onEvent: () => {} })).rejects.toThrow(/timed out/);
+  });
+});
+
+describe("source evidence time and relation projection", () => {
+  it("keeps canonical day, exact and upper-bound source time distinct", () => {
+    expect(observationTimeOf({ measurement_time: { state: "DAY", precision: "day", observed_on: "1999-12-31" }, as_of: "2026-10-25" })).toBe("1999-12-31 (day precision)");
+    expect(observationTimeOf({ measurement_time: { state: "EXACT", precision: "instant", observed_at: "2026-10-23T12:34:56+01:00" } })).toBe("2026-10-23T12:34:56+01:00 (exact source time)");
+    expect(observationTimeOf({ measurement_time: { state: "NOT_AFTER", precision: "instant-upper-bound", not_after: "2026-10-23T12:34:56Z" } })).toBe("Not after 2026-10-23T12:34:56Z (upper bound)");
+  });
+  it("does not let a malformed structured field mask labelled fallback or manufacture time", () => {
+    expect(observationTimeOf({ observed_at: {}, measurement_time: { state: "DAY", precision: "day", observed_on: "1999-02-31" }, facts_as_of: "2026-10-20" })).toBe("facts_as_of: 2026-10-20");
+    expect(observationTimeOf({ measurement_time: { state: "UNCHECKABLE", precision: "unknown" }, as_of: "2026-10-21" })).toBe("as_of: 2026-10-21");
+    expect(observationTimeOf({ measurement_time: { state: "DAY", observed_on: null } })).toBeNull();
+    expect(observationTimeOf(null)).toBeNull();
+  });
+  it("projects only the named canonical relation identity and keeps null or malformed objects unknown", () => {
+    const id = "sha256:" + "a".repeat(64);
+    expect(lineageIdentity({ event_id: id, sha256: "b".repeat(64), private: "never-project" })).toBe(id);
+    expect(lineageIdentity("original-finding")).toBe("original-finding");
+    for (const value of [null, {}, { event_id: 42 }, { event_id: "not-a-canonical-id" }, { secret: id }, Object.create({ event_id: id })]) expect(lineageIdentity(value)).toBeNull();
   });
 });
