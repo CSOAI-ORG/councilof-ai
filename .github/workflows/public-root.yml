@@ -28,6 +28,7 @@ on:
       - "public/interop/stablecoin-cohort-2026-09/**"
       - "public/interop/mcp-conformance-2026-10/**"
       - "public/interop/art50-recheck-schedule-2026-10/**"
+      - "public/interop/claim-maintenance-2026-10/**"
       - "scripts/adapters/staged_leaves.py"
   repository_dispatch:
     types: [xrpl-tick, notice-tick, census-tick, heal]
@@ -108,6 +109,13 @@ jobs:
           # The release gate runs after publish, so its verdict is recorded on the NEXT tick's atom
           # only when a durable verdict exists; UNRUN is the honest default here.
           python3 scripts/readers/layer0_liveness_reader.py --stage public/interop/layer0-liveness-2026-09 --gate-result UNRUN || echo "layer0 reader failed — the root ticks without the atom (never a fake read)"
+      - name: Ledger heads atoms (PROBED public readback of every append-only ledger; signed into this root)
+        run: |
+          set -euo pipefail
+          # Stage one unsigned card-v0 atom per public ledger (corrections, fix receipts, withdrawals,
+          # claim-maintenance register/re-checks, corrections-watch, Layer O presence, receipt chain)
+          # into public/interop/ledger-heads-2026-09/ so publish_public_root.py commits their heads.
+          python3 scripts/readers/ledger_heads_reader.py --stage public/interop/ledger-heads-2026-09 || echo "ledger heads reader failed — the root ticks without the atoms (never a fake read)"
       - name: publish public root
         id: run
         env:
@@ -131,6 +139,7 @@ jobs:
             python scripts/publish_public_root.py --dry-run
           else
             python scripts/publish_public_root.py
+            python3 scripts/readers/ledger_heads_reader.py --resolve-root public/interop/ledger-heads-2026-09 || echo "ledger heads resolve-root failed"
           fi
       - name: witness the ONE root (Rekor rekord + OpenTimestamps; public bytes only, no key)
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
@@ -271,6 +280,12 @@ jobs:
           # XRPL 16-identity state matrix + mirrors (adapter refreshes on change)
           if [ -d public/interop/xrpl-16-state-matrix ]; then
             git add -- public/interop/xrpl-16-state-matrix
+          fi
+          if [ -d public/interop/ledger-heads-2026-09 ]; then
+            git add -- public/interop/ledger-heads-2026-09
+          fi
+          if [ -d public/interop/layer0-liveness-2026-09 ]; then
+            git add -- public/interop/layer0-liveness-2026-09
           fi
           if [ -f public/interop/eas-root-attestations.json ]; then
             git add -- public/interop/eas-root-attestations.json
