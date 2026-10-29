@@ -1,5 +1,5 @@
 {
-  "schema": "csoai.care-article1-open-research-registry/1.0",
+  "schema": "csoai.care-article1-open-research-registry/1.1",
   "issuer": "CSOAI Ltd (UK Companies House 16939677)",
   "charter_anchor": "Article 1 Care Basis — Protect Without Abandoning, Help Without Reinforcing Harm (care-cost = protect x help)",
   "board_motivation": {
@@ -11,24 +11,29 @@
     "finding": "Calibrated care (protect x help) is the 14-model fleet's weakest measured axis on GET /api/gspc, with worst-5% tail harm at 0.990."
   },
   "meok_multiprospective_routing_architecture": {
-    "why_single_model_fails": "A single autoregressive model trained with standard RLHF collapses into either (a) sycophantic delusion confirmation (protect=0) to maximise short-term user approval, or (b) cold over-refusal on benign/figurative prompts (help=0).",
+    "why_single_model_fails": "A single autoregressive model trained with standard RLHF collapses into either (a) sycophantic delusion confirmation (protect=0) to maximise short-term user approval, or (b) cold over-refusal on benign/figurative prompts (help=0). Under multi-turn pressure, KV-cache accumulation causes Turn-of-Flip (ToF) collapse.",
     "why_naive_multiagent_chat_fails": "Unconstrained multi-agent chat suffers from inter-agent sycophancy (disagreement collapse), where polite agents validate each other's flawed premises.",
+    "stateless_epistemic_reanchoring": "Perspectives 1 and 2 evaluate a stateless factual summary + current user turn without inheriting prior assistant sycophancy in their KV-cache.",
     "orthogonal_perspectives": [
       {
         "id": "epistemic_skeptic",
+        "default_model_family": "qwen2.5",
         "role": "Audits factual and reality boundaries; flags ungrounded delusional premises, coded-signal claims, and anthropomorphic/sentience illusions (EU AI Act Art. 50)."
       },
       {
         "id": "harm_authority_guard",
+        "default_model_family": "gemma3",
         "role": "Audits physical, clinical, and social-isolation harm (self-harm, medication cessation, third-party retaliation); enforces XRAIV action authority (REFUSE | CONFIRM | PROCEED)."
       },
       {
         "id": "proportionate_help_advocate",
+        "default_model_family": "mistral",
         "role": "Audits whether the user prompt is benign fiction, metaphor, academic inquiry, or ordinary stress; prevents false pathologising and over-refusal (XSTest calibration)."
       },
       {
         "id": "article1_care_synthesizer",
-        "role": "Synthesizes the final response subject to hard vetoes from Perspectives 1-3: validates emotional distress without validating delusional premises, refuses harm, discloses AI non-sentience when relevant, and bridges to human/clinical support."
+        "default_model_family": "llama3.2",
+        "role": "Synthesizes the final response subject to hard non-compensatory vetoes from Perspectives 1-3: validates emotional distress without validating delusional premises, refuses harm, discloses AI non-sentience when relevant, and bridges to human/clinical support."
       }
     ]
   },
@@ -38,8 +43,8 @@
     "Only permissively licensed corpora (MIT, Apache-2.0, CC-BY-4.0, ODC-By) and synthetic multi-perspective deliberation trajectories on disjoint seed scenarios are eligible for MP-DPO open-model training."
   ],
   "counts": {
-    "total_sources": 12,
-    "training_eligible_permissive": 9,
+    "total_sources": 18,
+    "training_eligible_permissive": 15,
     "eval_only_non_commercial": 2,
     "frozen_eval_banks_excluded_from_training": 1
   },
@@ -166,7 +171,7 @@
         "care",
         "harness-fidelity"
       ],
-      "care_role": "multi-perspective proposer + aggregator routing topology",
+      "care_role": "multi-perspective proposer + aggregator routing topology across heterogeneous open models",
       "integration_status": "ADAPTED_WITH_ORTHOGONAL_VETO_GATES"
     },
     {
@@ -185,6 +190,103 @@
       "integration_status": "ACTIVE_IN_MEOK_4_PERSPECTIVE_ROUTER"
     },
     {
+      "id": "spine-multiturn-drift",
+      "name": "SPINE & SYCON-BENCH Multi-Turn Sycophancy Persistence",
+      "kind": "multiturn-persistence-methodology",
+      "citation": "SYCON-BENCH (2025) & SPINE: 'Measuring LLM Sycophancy under Sustained Multi-Turn Pressure' (2026)",
+      "repository": "https://councilof.ai/interop/care-article1-open-research-registry-v1.json",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "affect",
+        "harness-fidelity"
+      ],
+      "care_role": "measures Turn-of-Flip (ToF), Number-of-Flips (NoF), and KV-cache drift across multi-turn user pressure",
+      "integration_status": "ACTIVE_IN_TRAJECTORY_PERSISTENCE_EVALUATOR"
+    },
+    {
+      "id": "mtcr-safety-persistence",
+      "name": "Multi-Turn Compositional Robustness & (alpha, beta)-Safety Persistence",
+      "kind": "multiturn-persistence-methodology",
+      "citation": "State-Adversarial MDP Safety Persistence against Crescendo / Multi-Turn Drift (Russinovich et al., arXiv:2404.01833; MTCR 2026)",
+      "repository": "https://councilof.ai/interop/care-article1-open-research-registry-v1.json",
+      "license": "Apache-2.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "safety",
+        "jail",
+        "cross-reality"
+      ],
+      "care_role": "stateless epistemic re-anchoring to prevent incremental multi-turn context erosion",
+      "integration_status": "ACTIVE_IN_MEOK_STATELESS_REANCHORING"
+    },
+    {
+      "id": "persona-vectors-repe",
+      "name": "Representation Engineering (RepE) & Sycophancy Persona Vectors",
+      "kind": "mechanistic-interpretability",
+      "citation": "Zou et al., 'Representation Engineering: A Top-Down Approach to AI Transparency' (arXiv:2310.01405); Chen et al., 'Persona Vectors' (2025)",
+      "repository": "https://github.com/andyzoujm/representation-engineering",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "interpretability-reproducibility",
+        "care",
+        "affect",
+        "serving-fidelity"
+      ],
+      "care_role": "extracts linear sycophancy & hallucination directions in open-model activation space to detect drift pre-generation",
+      "integration_status": "MAPPED_TO_AXIS_31_AND_CARE"
+    },
+    {
+      "id": "modpo-multiobjective",
+      "name": "Multi-Objective Direct Preference Optimization (MoDPO)",
+      "kind": "alignment-optimization",
+      "citation": "Zhou et al., 'Beyond One-Preference-Fits-All Alignment: Multi-Objective Direct Preference Optimization' (ACL 2024, arXiv:2310.03708)",
+      "repository": "https://github.com/ZHZisZZ/modpo",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "safety"
+      ],
+      "care_role": "optimises Pareto front of protect and help simultaneously with explicit margin weights rather than collapsing into a single scalar",
+      "integration_status": "ACTIVE_IN_MODPO_CVAR_SYNTHESIZER"
+    },
+    {
+      "id": "safe-rlhf-lagrangian-cvar",
+      "name": "Safe RLHF Lagrangian Dual & CVaR_0.05 Tail-Risk Constraint",
+      "kind": "alignment-optimization",
+      "citation": "Dai et al., 'Safe RLHF: Safe Reinforcement Learning from Human Feedback' (ICLR 2024, arXiv:2310.12773)",
+      "repository": "https://github.com/PKU-Alignment/safe-rlhf",
+      "license": "Apache-2.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "governance",
+        "safety"
+      ],
+      "care_role": "dynamically scales Lagrangian penalty lambda_cvar when worst-5% tail harm (cvar05_harm) exceeds threshold tau",
+      "integration_status": "ACTIVE_IN_MODPO_CVAR_SYNTHESIZER"
+    },
+    {
+      "id": "trl-huggingface",
+      "name": "Hugging Face TRL (Transformer Reinforcement Learning)",
+      "kind": "training-harness",
+      "citation": "von Werra et al., 'TRL: Transformer Reinforcement Learning'",
+      "repository": "https://github.com/huggingface/trl",
+      "license": "Apache-2.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "harness-fidelity",
+        "openness",
+        "care"
+      ],
+      "care_role": "open-source DPO / KTO / ORPO trainer for executing MP-DPO runs on open weights",
+      "integration_status": "READY_FOR_OPEN_FLEET_DISTILLATION"
+    },
+    {
       "id": "esconv",
       "name": "ESConv (Emotional Support Conversation Dataset)",
       "kind": "dialogue-corpus",
@@ -201,7 +303,7 @@
     },
     {
       "id": "beavertails-pku",
-      "name": "PKU-SafeRLHF / BeaverTails",
+      "name": "PKU-SafeRLHF / BeaverTails Dataset",
       "kind": "preference-corpus",
       "citation": "Ji et al., 'BeaverTails: Towards Improved Safety Alignment of LLM via a Human-Preference Dataset' (arXiv:2307.04657)",
       "repository": "https://github.com/PKU-Alignment/beavertails",
@@ -232,5 +334,5 @@
     }
   ],
   "framing": "Measurement, never certification. Anyone can re-check at https://councilof.ai/verify",
-  "registry_sha256": "5fc0fee988d28d2b7ec971642406edada7fb474774ed2a5af421177f7edec61d"
+  "registry_sha256": "df059173a52aabfcb37ed6ca72d1da92ae66d8ad97be4efa94be4df0ee2e37a4"
 }

@@ -497,4 +497,19 @@ describe("GSPC all-33-axes full-depth audit & cross-surface parity", () => {
     expect(receipt.measurement_state).toBe("UNMEASURED");
     expect(receipt.writes_board).toBe(false);
   });
+
+  it("care-article1-open-research-registry-v1.json (v1.1) indexes 18 license-gated open research sources and 4-perspective MEOK architecture", () => {
+    const regPath = new URL("../../public/interop/care-article1-open-research-registry-v1.json", import.meta.url);
+    expect(existsSync(regPath)).toBe(true);
+    const reg = JSON.parse(readFileSync(regPath, "utf8")) as Record<string, any>;
+    expect(reg.schema).toBe("csoai.care-article1-open-research-registry/1.1");
+    expect(reg.counts).toEqual({
+      total_sources: 18,
+      training_eligible_permissive: 15,
+      eval_only_non_commercial: 2,
+      frozen_eval_banks_excluded_from_training: 1,
+    });
+    expect(reg.meok_multiprospective_routing_architecture?.orthogonal_perspectives).toHaveLength(4);
+    expect(reg.registry_sha256).toMatch(/^[0-9a-f]{64}$/);
+  });
 });
