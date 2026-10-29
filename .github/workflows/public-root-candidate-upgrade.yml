@@ -213,10 +213,23 @@ jobs:
           # llms.txt, so the candidate could not pass the gate and could not merge.
           # Regenerate the views from the manifest just written.
           node scripts/llms-txt.mjs
+          # public/reports/* and the SBOM are DERIVED from the tree as well, and
+          # both are registered in docs/operations/PRODUCERS.json, so pr-gates'
+          # producers-check compares their committed output against their producer
+          # and fails closed when the bytes move without a rebuild. The candidate
+          # rebuilt the proof bytes, so these two disagreed with their producers
+          # and the candidate could not pass the gate. Measured on head 33c16eea,
+          # before the new leaf existed: "axis-reports --check: 2 stale path(s)
+          # under public/reports". Regenerate them from the bytes in this commit,
+          # the same way the manifest and the llms views are regenerated.
+          node scripts/build-axis-reports.mjs
+          python3 scripts/gen_sbom.py
           git add public/interop/ots
           git add public/interop/root-*.json.ots
           git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json
           git add public/llms.txt public/llms-full.txt
+          git add public/reports
+          git add public/interop/sbom-councilof-ai.json
           git add public/interop/stablecoin-universe-2026-09/readiness.json public/archive/index.json
           if ! git diff --cached --quiet; then
             git commit -m "public-root: upgrade exact candidate to Bitcoin-confirmed"
