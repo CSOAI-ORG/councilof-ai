@@ -5,6 +5,11 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  # 28 Oct 2026: `build` is one of the four required contexts, so the merge queue needs this
+  # workflow to run on the merge_group commit as well — the queue reads the checks of the merged
+  # tree, not of the pull request head. The job reads no pull_request context beyond CANDIDATE_HEAD,
+  # which falls back to github.sha (the merge_group commit) when there is no pull request.
+  merge_group:
 
 permissions:
   contents: read
