@@ -26,6 +26,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITEMAP = join(ROOT, "public/sitemap.xml");
 const ORIGIN = "https://councilof.ai";
 const FUNCTIONS_DIR = join(ROOT, "functions");
+const publishedBlog = new Set((JSON.parse(readFileSync(join(ROOT, "client/src/data/blog-published.json"), "utf8")).published || []).map((entry) => entry && entry.slug).filter(Boolean));
 
 if (!existsSync(FUNCTIONS_DIR)) {
   throw new Error("sitemap-truth-gate: functions/ is required to inspect Pages Function redirects");
@@ -111,7 +112,7 @@ function problems() {
   }
   for (const url of listed) {
     const path = url.startsWith(ORIGIN) ? url.slice(ORIGIN.length) || "/" : url;
-    if (blogWithdrawn && /^\/blog\/[^/]+\/?$/.test(path)) found.push(`${path} is a withdrawn article, not indexable content`);
+    if (blogWithdrawn && /^\/blog\/[^/]+\/?$/.test(path) && !publishedBlog.has(path.split("/")[2])) found.push(`${path} is a withdrawn, unpublished article, not indexable content`);
     else if (NON_PAGE_EXT.test(path)) found.push(`${path} is an asset, not a page`);
     else if (fns.has(path)) found.push(`${path} is redirected by a Pages Function`);
     else if (rules.has(path)) found.push(`${path} has a _redirects rule -> ${rules.get(path)}`);
@@ -138,6 +139,8 @@ if (process.argv.includes("--selftest")) {
     ["/gspc-scoreboard", functionRedirects().has("/gspc-scoreboard"), "Response.redirect(...) form"],
     ["prerender set", prerenderedPaths().size > 30, "must derive the built blog paths, not zero"],
     ["duplicate predicate", new Set(["a", "a"]).size < ["a", "a"].length, "must detect repeated canonical URLs"],
+    ["reviewed publication manifest", publishedBlog.has("how-to-verify-an-ai-measurement"), "the generator's reviewed articles must remain indexable"],
+    ["unpublished withdrawal", !publishedBlog.has("withdrawn-unreviewed-article"), "unreviewed withdrawals must remain excluded"],
   ];
   let bad = 0;
   for (const [what, ok, why] of cases) {
