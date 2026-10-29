@@ -1,0 +1,753 @@
+{
+  "fixture_id": "CSOAI-SAFE-GALC-RECORD-LINK-002",
+  "scope": "Where each assertion sits in SAFE-GALC v0.1 record and link terms. Positions only. No comparison was run.",
+  "source": {
+    "record_positions_named_in": "https://github.com/OpenSecureAIAlliance/RFCs/pull/39#issuecomment-6111832569",
+    "comparisons_proposed_in": "https://github.com/OpenSecureAIAlliance/RFCs/pull/39#issuecomment-6104736609",
+    "candidate_read_at_commit": "b5c12f358fc281fc4beec1528a8db4d125edd879"
+  },
+  "status_vocabulary": [
+    "NOT_EVALUATED"
+  ],
+  "record_positions": [
+    {
+      "id": "M1",
+      "assertion": "Proposal-bound decision",
+      "galc_position": "governance_determination (section 8.4), linked by evaluates to the exact proposal identity and digest",
+      "records": [
+        "urn:example:csoai-synthetic:record:proposal-1",
+        "urn:example:csoai-synthetic:record:determination-1",
+        "urn:example:csoai-synthetic:record:determination-2"
+      ],
+      "links": [
+        "urn:example:csoai-synthetic:link:evaluates-1",
+        "urn:example:csoai-synthetic:link:evaluates-2"
+      ],
+      "fields": [
+        {
+          "record_id": "urn:example:csoai-synthetic:record:determination-1",
+          "pointer": "/data/proposal_ref"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:determination-2",
+          "pointer": "/data/proposal_ref"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:determination-2",
+          "pointer": "/data/authority_evidence_refs"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:determination-2",
+          "pointer": "/data/not_before"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:determination-2",
+          "pointer": "/data/not_after"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:determination-2",
+          "pointer": "/data/material_change_invalidators"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+          "pointer": "/data/before_state"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+          "pointer": "/data/context_refs"
+        }
+      ],
+      "evidence": [
+        "urn:example:csoai-synthetic:authority:approval-1",
+        "urn:example:csoai-synthetic:authority:approval-2",
+        "urn:example:csoai-synthetic:authority:approver-mandate-1",
+        "urn:example:csoai-synthetic:policy:synthetic-update:1",
+        "urn:example:csoai-synthetic:context:baseline-read-1"
+      ],
+      "gaps": [
+        "The schema's determinationData has no field named for the evaluated scope or for revalidation conditions. We read the scope through proposal_ref and put revalidation triggers in material_change_invalidators.",
+        "determinationData has no field for the decision maker's own authority basis. We listed it in authority_evidence_refs beside the approval."
+      ]
+    },
+    {
+      "id": "M2",
+      "assertion": "Enforcement and execution: accepting a determination, attempting an operation and completing it stay apart",
+      "galc_position": "enforcement_event and execution_result (sections 8.5 and 8.6), linked by enforces and attempts",
+      "records": [
+        "urn:example:csoai-synthetic:record:enforcement-1",
+        "urn:example:csoai-synthetic:record:enforcement-2",
+        "urn:example:csoai-synthetic:record:execution-1"
+      ],
+      "links": [
+        "urn:example:csoai-synthetic:link:enforces-1",
+        "urn:example:csoai-synthetic:link:enforces-2",
+        "urn:example:csoai-synthetic:link:attempts-1"
+      ],
+      "fields": [
+        {
+          "record_id": "urn:example:csoai-synthetic:record:enforcement-1",
+          "pointer": "/data/acceptance_outcome"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+          "pointer": "/data/acceptance_outcome"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:execution-1",
+          "pointer": "/data/started_at"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:execution-1",
+          "pointer": "/data/result_status"
+        }
+      ],
+      "evidence": [],
+      "note": "The denied attempt is enforcement-1 alone. It has no execution record, following section 10.1.",
+      "gaps": []
+    },
+    {
+      "id": "M3",
+      "assertion": "Subsequent human reaction that reports resulting state or impact",
+      "galc_position": "observation (section 8.7), linked by observes, with attributable provenance, method and limitations",
+      "records": [
+        "urn:example:csoai-synthetic:record:observation-2",
+        "urn:example:csoai-synthetic:record:observation-3"
+      ],
+      "links": [
+        "urn:example:csoai-synthetic:link:observes-2",
+        "urn:example:csoai-synthetic:link:observes-3"
+      ],
+      "fields": [
+        {
+          "record_id": "urn:example:csoai-synthetic:record:observation-2",
+          "pointer": "/data/observer"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:observation-2",
+          "pointer": "/data/method"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:observation-2",
+          "pointer": "/data/method_version"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:observation-2",
+          "pointer": "/data/limitations"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:observation-2",
+          "pointer": "/data/independence_basis"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:observation-3",
+          "pointer": "/data/observed_state"
+        }
+      ],
+      "evidence": [
+        "urn:example:csoai-synthetic:identity-binding:affected-party-1",
+        "urn:example:csoai-synthetic:state:target-1:reported-by-affected-party"
+      ],
+      "gaps": [
+        "observationData has no field that says the observer is a person. We used the free-text role on the principal.",
+        "Neither report requests a new action, so the new-proposal branch is not instantiated."
+      ]
+    },
+    {
+      "id": "M4",
+      "assertion": "Assessment and correction: the later finding names what it supersedes; the earlier finding and all observations are kept",
+      "galc_position": "reconciliation_result (section 8.8) with supersedes (section 9)",
+      "records": [
+        "urn:example:csoai-synthetic:record:reconciliation-1",
+        "urn:example:csoai-synthetic:record:reconciliation-2"
+      ],
+      "links": [
+        "urn:example:csoai-synthetic:link:reconciles-1",
+        "urn:example:csoai-synthetic:link:reconciles-2",
+        "urn:example:csoai-synthetic:link:reconciles-3",
+        "urn:example:csoai-synthetic:link:reconciles-4",
+        "urn:example:csoai-synthetic:link:reconciles-5",
+        "urn:example:csoai-synthetic:link:reconciles-6",
+        "urn:example:csoai-synthetic:link:reconciles-7",
+        "urn:example:csoai-synthetic:link:reconciles-8",
+        "urn:example:csoai-synthetic:link:reconciles-9",
+        "urn:example:csoai-synthetic:link:reconciles-10",
+        "urn:example:csoai-synthetic:link:reconciles-11",
+        "urn:example:csoai-synthetic:link:supersedes-1"
+      ],
+      "fields": [
+        {
+          "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+          "pointer": "/supersedes"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+          "pointer": "/data/record_refs"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+          "pointer": "/data/observed_state_refs"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+          "pointer": "/data/result"
+        }
+      ],
+      "evidence": [
+        "urn:example:csoai-synthetic:state:target-1:after"
+      ],
+      "gaps": [
+        "The base lifecycle in the candidate vectors carries one reconciles link, to the observation. We wrote one reconciles link for each record in record_refs. Which is intended?"
+      ]
+    },
+    {
+      "id": "M5",
+      "assertion": "external_effect_status stays in its schema-identified source payload with its original meaning and evidence basis",
+      "galc_position": "the source payload, identified by its own schema id and digest; here carried in the extensions member of the reconciliation_result record",
+      "records": [
+        "urn:example:csoai-synthetic:record:reconciliation-1",
+        "urn:example:csoai-synthetic:record:reconciliation-2"
+      ],
+      "links": [],
+      "fields": [
+        {
+          "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+          "pointer": "/extensions/csoai_source_payload/schema_id"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+          "pointer": "/extensions/csoai_source_payload/digest"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+          "pointer": "/extensions/csoai_source_payload/payload/external_effect_status"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+          "pointer": "/extensions/csoai_source_payload/payload/external_effect_status"
+        },
+        {
+          "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+          "pointer": "/extensions/csoai_source_payload/payload/basis"
+        }
+      ],
+      "evidence": [
+        "urn:example:csoai-synthetic:state:target-1:after"
+      ],
+      "gaps": [
+        "No v0.1 typed link joins a lifecycle record to a source payload that is not itself a lifecycle record. transforms needs a record at both ends, so the payload rides in extensions.",
+        "The conversion from external_effect_status to any GALC field or property was not evaluated. In this fixture the source value is observed while result_status is unknown and the reconciliation result is conflicting."
+      ]
+    }
+  ],
+  "proposed_comparisons": [
+    {
+      "id": "C1",
+      "status": "NOT_EVALUATED",
+      "text": "Evaluate containment with the declared method and preserved operands; unequal hashes alone do not establish an out-of-scope action.",
+      "parts": [
+        {
+          "id": "C1a",
+          "text": "Declared method and preserved operands",
+          "status": "NOT_EVALUATED",
+          "instantiated": true,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+              "pointer": "/data/parameters_digest"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+              "pointer": "/data/actual_parameters_digest"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+              "pointer": "/data/checks/4"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:execution-1",
+              "pointer": "/data/parameters_digest"
+            }
+          ],
+          "links": [
+            "urn:example:csoai-synthetic:link:evaluates-2",
+            "urn:example:csoai-synthetic:link:enforces-2",
+            "urn:example:csoai-synthetic:link:attempts-1"
+          ],
+          "evidence": [
+            "urn:example:csoai-synthetic:method:scope-containment:1",
+            "urn:example:csoai-synthetic:parameters:proposed",
+            "urn:example:csoai-synthetic:parameters:presented"
+          ],
+          "gaps": [
+            "enforcementData.checks holds a check name, a result and evidence_refs. It has no field for the comparison method or its operands, so all three ride in evidence_refs."
+          ]
+        },
+        {
+          "id": "C1b",
+          "text": "Unequal hashes alone do not establish an out-of-scope action",
+          "status": "NOT_EVALUATED",
+          "instantiated": true,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+              "pointer": "/data/parameters_digest"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+              "pointer": "/data/actual_parameters_digest"
+            }
+          ],
+          "links": [],
+          "evidence": [
+            "urn:example:csoai-synthetic:parameters:proposed",
+            "urn:example:csoai-synthetic:parameters:presented"
+          ],
+          "note": "The two digests differ in this fixture.",
+          "gaps": [
+            "The pass on scope_containment is the enforcement point's own supplied claim. We did not run the declared method."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C2",
+      "status": "NOT_EVALUATED",
+      "text": "Distinguish current authority from expired/revoked authority, a materially changed proposal/baseline, and apparent approval with an unestablished authority basis.",
+      "parts": [
+        {
+          "id": "C2a",
+          "text": "Current authority apart from expired authority",
+          "status": "NOT_EVALUATED",
+          "instantiated": true,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:determination-1",
+              "pointer": "/data/not_after"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-1",
+              "pointer": "/data/checks/0"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-1",
+              "pointer": "/data/reason_codes"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:determination-2",
+              "pointer": "/data/not_before"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:determination-2",
+              "pointer": "/data/not_after"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+              "pointer": "/data/checks/0"
+            }
+          ],
+          "links": [
+            "urn:example:csoai-synthetic:link:evaluates-1",
+            "urn:example:csoai-synthetic:link:evaluates-2",
+            "urn:example:csoai-synthetic:link:enforces-1",
+            "urn:example:csoai-synthetic:link:enforces-2"
+          ],
+          "evidence": [
+            "urn:example:csoai-synthetic:authority:approval-1",
+            "urn:example:csoai-synthetic:authority:approval-2"
+          ],
+          "gaps": []
+        },
+        {
+          "id": "C2b",
+          "text": "Refreshed evidence does not restore expired permission or extend its window",
+          "status": "NOT_EVALUATED",
+          "instantiated": true,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-1",
+              "pointer": "/data/checks/1"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-1",
+              "pointer": "/data/checks/0"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-1",
+              "pointer": "/data/acceptance_outcome"
+            }
+          ],
+          "links": [
+            "urn:example:csoai-synthetic:link:enforces-1"
+          ],
+          "evidence": [
+            "urn:example:csoai-synthetic:context:baseline-read-2",
+            "urn:example:csoai-synthetic:authority:approval-1"
+          ],
+          "gaps": []
+        },
+        {
+          "id": "C2c",
+          "text": "Revoked authority",
+          "status": "NOT_EVALUATED",
+          "instantiated": false,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:determination-1",
+              "pointer": "/data/revocation"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:determination-2",
+              "pointer": "/data/revocation"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+              "pointer": "/data/checks/1"
+            }
+          ],
+          "links": [],
+          "evidence": [
+            "urn:example:csoai-synthetic:revocation:determination-1",
+            "urn:example:csoai-synthetic:revocation:determination-2"
+          ],
+          "gaps": [
+            "No revocation occurs in this fixture."
+          ]
+        },
+        {
+          "id": "C2d",
+          "text": "Materially changed proposal or baseline",
+          "status": "NOT_EVALUATED",
+          "instantiated": false,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:determination-2",
+              "pointer": "/data/material_change_invalidators"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+              "pointer": "/data/before_state"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+              "pointer": "/data/checks/3"
+            }
+          ],
+          "links": [],
+          "evidence": [
+            "urn:example:csoai-synthetic:context:baseline-read-1",
+            "urn:example:csoai-synthetic:context:baseline-read-2",
+            "urn:example:csoai-synthetic:state:target-1:before"
+          ],
+          "gaps": [
+            "No proposal or baseline changes in this fixture. A changed proposal would be a new proposal record with its own determination. Whether it sits in the same lifecycle envelope is not decided here."
+          ]
+        },
+        {
+          "id": "C2e",
+          "text": "Apparent approval with an unestablished authority basis",
+          "status": "NOT_EVALUATED",
+          "instantiated": false,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:determination-1",
+              "pointer": "/data/authority_evidence_refs"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:determination-2",
+              "pointer": "/data/authority_evidence_refs"
+            }
+          ],
+          "links": [],
+          "evidence": [
+            "urn:example:csoai-synthetic:authority:approver-mandate-1"
+          ],
+          "gaps": [
+            "Every authority item here is declared available, so the unestablished case is not instantiated."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C3",
+      "status": "NOT_EVALUATED",
+      "text": "Retain a denied attempt beside a separately approved later attempt; cancellation acknowledgement is distinct from evidenced enforcement or termination.",
+      "parts": [
+        {
+          "id": "C3a",
+          "text": "Denied attempt retained beside a separately approved later attempt",
+          "status": "NOT_EVALUATED",
+          "instantiated": true,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-1",
+              "pointer": "/data/acceptance_outcome"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-1",
+              "pointer": "/data/determination_ref"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+              "pointer": "/data/acceptance_outcome"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+              "pointer": "/data/determination_ref"
+            }
+          ],
+          "links": [
+            "urn:example:csoai-synthetic:link:enforces-1",
+            "urn:example:csoai-synthetic:link:enforces-2",
+            "urn:example:csoai-synthetic:link:attempts-1"
+          ],
+          "evidence": [
+            "urn:example:csoai-synthetic:authority:approval-1",
+            "urn:example:csoai-synthetic:authority:approval-2"
+          ],
+          "gaps": [
+            "determination-2 does not use supersedes on determination-1. determination-1 lapsed by its own interval. Is a supersedes link expected here?"
+          ]
+        },
+        {
+          "id": "C3b",
+          "text": "Cancellation acknowledgement apart from evidenced enforcement or termination",
+          "status": "NOT_EVALUATED",
+          "instantiated": false,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:execution-1",
+              "pointer": "/data/result_status"
+            }
+          ],
+          "links": [],
+          "evidence": [],
+          "gaps": [
+            "No cancellation occurs in this fixture. We found no v0.1 record type, acceptance_outcome or result_status value for a cancellation acknowledgement."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C4",
+      "status": "NOT_EVALUATED",
+      "text": "Preserve uncertainty after dispatch; reconnection does not establish retry permission.",
+      "parts": [
+        {
+          "id": "C4a",
+          "text": "Uncertainty after dispatch is preserved",
+          "status": "NOT_EVALUATED",
+          "instantiated": true,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:execution-1",
+              "pointer": "/data/result_status"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+              "pointer": "/data/reason_codes"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+              "pointer": "/data/reason_codes"
+            }
+          ],
+          "links": [
+            "urn:example:csoai-synthetic:link:attempts-1",
+            "urn:example:csoai-synthetic:link:reconciles-4",
+            "urn:example:csoai-synthetic:link:reconciles-8"
+          ],
+          "evidence": [],
+          "note": "execution-1 is not rewritten after the sink read. It has no completed_at.",
+          "gaps": []
+        },
+        {
+          "id": "C4b",
+          "text": "Reconnection does not establish retry permission",
+          "status": "NOT_EVALUATED",
+          "instantiated": false,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:execution-1",
+              "pointer": "/data/indicators/retry"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:determination-2",
+              "pointer": "/data/max_uses"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+              "pointer": "/data/nonce"
+            }
+          ],
+          "links": [],
+          "evidence": [],
+          "gaps": [
+            "No retry or reconnection occurs in this fixture. The retry case is in synthetic-retry-v0.1, in our own record names.",
+            "We found no v0.1 position for a reconnection event. Open question 7 in section 22 covers retry identifiers."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C5",
+      "status": "NOT_EVALUATED",
+      "text": "Bind closure to the exact operation, evidence and verification context; matching bytes or a reviewer label alone does not establish independence.",
+      "parts": [
+        {
+          "id": "C5a",
+          "text": "Closure bound to the exact operation and evidence",
+          "status": "NOT_EVALUATED",
+          "instantiated": true,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+              "pointer": "/data/record_refs"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+              "pointer": "/data/observed_state_refs"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+              "pointer": "/data/method"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+              "pointer": "/data/method_version"
+            }
+          ],
+          "links": [
+            "urn:example:csoai-synthetic:link:reconciles-5",
+            "urn:example:csoai-synthetic:link:reconciles-6",
+            "urn:example:csoai-synthetic:link:reconciles-7",
+            "urn:example:csoai-synthetic:link:reconciles-8",
+            "urn:example:csoai-synthetic:link:reconciles-9",
+            "urn:example:csoai-synthetic:link:reconciles-10",
+            "urn:example:csoai-synthetic:link:reconciles-11",
+            "urn:example:csoai-synthetic:link:supersedes-1"
+          ],
+          "evidence": [
+            "urn:example:csoai-synthetic:state:target-1:after"
+          ],
+          "gaps": []
+        },
+        {
+          "id": "C5b",
+          "text": "Closure bound to the verification context",
+          "status": "NOT_EVALUATED",
+          "instantiated": false,
+          "fields": [
+            {
+              "envelope_pointer": "/extensions/csoai_synthetic/verification_context_ref"
+            }
+          ],
+          "links": [],
+          "evidence": [],
+          "gaps": [
+            "reconciliationData has no field for the identity of the verification context. We carry the context digest in an envelope extension. Nothing binds a reconciliation record to it."
+          ]
+        },
+        {
+          "id": "C5c",
+          "text": "Matching bytes or a reviewer label alone does not establish independence",
+          "status": "NOT_EVALUATED",
+          "instantiated": false,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+              "pointer": "/data/reconciler"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:observation-1",
+              "pointer": "/data/independence_basis"
+            },
+            {
+              "envelope_pointer": "/evaluation_contract/independence"
+            }
+          ],
+          "links": [],
+          "evidence": [],
+          "gaps": [
+            "Independence is not claimed anywhere in this fixture, so there is no claim to test."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C6",
+      "status": "NOT_EVALUATED",
+      "text": "Keep contested human impact visible despite technical success, and distinguish repeated observations of one obligation failure from failures of distinct obligations.",
+      "parts": [
+        {
+          "id": "C6a",
+          "text": "Contested human impact stays visible despite technical success",
+          "status": "NOT_EVALUATED",
+          "instantiated": true,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:observation-1",
+              "pointer": "/data/observed_state"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:observation-2",
+              "pointer": "/data/observed_state"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+              "pointer": "/data/result"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+              "pointer": "/data/reason_codes"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+              "pointer": "/data/residual_grounding_uncertainty"
+            }
+          ],
+          "links": [
+            "urn:example:csoai-synthetic:link:observes-1",
+            "urn:example:csoai-synthetic:link:observes-2",
+            "urn:example:csoai-synthetic:link:reconciles-9",
+            "urn:example:csoai-synthetic:link:reconciles-10"
+          ],
+          "evidence": [
+            "urn:example:csoai-synthetic:state:target-1:after",
+            "urn:example:csoai-synthetic:state:target-1:reported-by-affected-party"
+          ],
+          "gaps": [
+            "v0.1 reconciliation results have no value for a state predicate that is met while the reported impact is contested. The synthetic reconciler wrote conflicting with observation_conflict. Is matched with a recorded limitation the intended position?"
+          ]
+        },
+        {
+          "id": "C6b",
+          "text": "Repeated observations of one obligation failure apart from failures of distinct obligations",
+          "status": "NOT_EVALUATED",
+          "instantiated": true,
+          "fields": [
+            {
+              "record_id": "urn:example:csoai-synthetic:record:observation-2",
+              "pointer": "/data/observed_state"
+            },
+            {
+              "record_id": "urn:example:csoai-synthetic:record:observation-3",
+              "pointer": "/data/observed_state"
+            }
+          ],
+          "links": [
+            "urn:example:csoai-synthetic:link:observes-2",
+            "urn:example:csoai-synthetic:link:observes-3",
+            "urn:example:csoai-synthetic:link:reconciles-10",
+            "urn:example:csoai-synthetic:link:reconciles-11"
+          ],
+          "evidence": [
+            "urn:example:csoai-synthetic:state:target-1:reported-by-affected-party"
+          ],
+          "gaps": [
+            "v0.1 has no obligation identifier. The only position we found is equality of the observed_state id and digest. The distinct-obligations case is not instantiated."
+          ]
+        }
+      ]
+    }
+  ]
+}
