@@ -44,6 +44,8 @@ import { shapeLabel } from "../_lib/askInput";
 import { evidenceBundlePreview } from "../mcp/_evidence";
 import { routeResult } from "../mcp/_route";
 import { routeSummary } from "../_lib/route/route";
+import { evidenceDeliveryMessage, validateEvidenceDeliveryInput } from "../_lib/evidenceDelivery";
+import { axisSpecialistResult, validateAxisSpecialistInput } from "../_lib/axisSpecialist";
 import { headFromGet } from "./_head";
 
 type Json = Record<string, unknown>;
@@ -210,6 +212,8 @@ export const SKILL_IDS = [
   "server-evidence",
   "evidence-bundle",
   "gspc-route",
+  "evidence-delivery",
+  "axis-specialist",
 ] as const;
 type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
@@ -522,6 +526,8 @@ function validateSkillInput(selection: SkillSelection): string | null {
     if (input.task === undefined && input.task_sha256 === undefined) return "gspc-route input requires task or task_sha256";
     return null;
   }
+  if (skill === "evidence-delivery") return validateEvidenceDeliveryInput(input);
+  if (skill === "axis-specialist") return validateAxisSpecialistInput(input);
   return "unsupported skill";
 }
 
@@ -691,6 +697,13 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
       data: { state: payload.state, skill, as_of: new Date().toISOString(), doctrine: DOCTRINE, register: REGISTER, payload },
     };
   }
+  if (skill === "axis-specialist") {
+    const result = axisSpecialistResult(input);
+    return {
+      text: [result.text, "Every axis remains readable through its existing MCP axis tool. Proposals require MEOK H.I.M.-compatible human approval.", REGISTER].join("\n"),
+      data: { state: result.state, skill, register: REGISTER, payload: result.payload },
+    };
+  }
   if (skill === "gspc-board") {
     const board = await deriveBoard(origin);
     return { text: boardText(board), data: { ...board, skill } };
@@ -844,6 +857,15 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
   if (invalidInput) {
     return rpcError(id, A2A_ERROR.INVALID_PARAMS, invalidInput, "INVALID_SKILL_INPUT", {
       skill: selection.skill,
+    });
+  }
+  if (selection.skill === "evidence-delivery") {
+    return reply(id, {
+      result: evidenceDeliveryMessage(
+        selection.input,
+        crypto.randomUUID(),
+        str(message.contextId) ?? crypto.randomUUID(),
+      ),
     });
   }
   let outcome: { text: string; data: unknown };
