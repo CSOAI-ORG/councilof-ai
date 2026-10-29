@@ -26,11 +26,24 @@ row in `council-os/distribution.json`, (b) `STEPS[id]` in the renderer, (c) a
 live in `scripts/harness-x/kimi-plugin.node-test.mjs` because Kimi's validator is
 inside the Kimi application and CI cannot run it.
 
-## HITL: only the back end is built
+## HITL: distinguish deployed state from end-to-end acceptance
 
-`scripts/hitl/hitl_probe.py` is the client-side elicitation probe (a server that
-elicits must stop when the human declines; no secrets in form mode) and it passes
-its controls. The END-USER decision path — a human deciding on a raised challenge,
-gated by a competency module and returning a signed receipt — is NOT BUILT here:
-`/api/hitl` returns 404 live and `COUNCIL_HITL_DECIDE_TOKEN` appears nowhere in
-the repo. Do not describe it as working; it is a gap.
+The decision path has source in `functions/api/hitl.ts`,
+`functions/api/_hitl.ts` and `client/src/components/HitlConsole.tsx`.
+The configured operator-token binding is `HITL_DECIDE_TOKEN`.
+Do not repeat the historical claim that the end-user path is absent or that
+`/api/hitl` always returns 404.
+
+Read-only observation on 2026-10-29: `/api/hitl` reported a bound store, an open
+decision path, configured operator token and signing key, and two approved
+records. `/api/hitl/record` returned those records with competency and signature
+fields. This observation did not independently verify their signatures or run
+a new challenge, human decision and protected action end to end.
+
+Keep those evidence levels separate. A configured shared operator token is not
+proof of a named person's enterprise identity; a recorded competency answer is
+not a general competence credential. Before claiming an integration enforces
+human authority, test approval, decline, expiry, revocation, changed action
+bytes and duplicate/resumed execution against that exact host version.
+`scripts/hitl/hitl_probe.py` covers client-side elicitation controls; its results
+do not by themselves establish those wider properties.
