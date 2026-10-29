@@ -719,16 +719,17 @@ export const HITL_SIGNING_DID = BOARD_ATTESTATION_DID;
 // STORE HELPERS
 // ---------------------------------------------------------------------------
 
-export async function putChallenge(store: KVNamespace | null, c: HitlChallenge): Promise<void> {
-  if (!store) return;
+export async function putChallenge(store: KVNamespace | null, c: HitlChallenge): Promise<boolean> {
+  if (!store) return false;
   try {
     await store.put(`${HITL_PREFIX}challenge:${c.id}`, JSON.stringify(c));
+    return true;
   } catch {
-    /* a store that refuses the write leaves the path stateless, not broken */
+    return false;
   }
 }
 
-export async function listChallenges(store: KVNamespace | null, limit = 50): Promise<HitlChallenge[]> {
+export async function listChallenges(store: KVNamespace | null, limit = 50, strict = false): Promise<HitlChallenge[]> {
   if (!store) return [];
   const out: HitlChallenge[] = [];
   try {
@@ -744,21 +745,26 @@ export async function listChallenges(store: KVNamespace | null, limit = 50): Pro
       }
     }
   } catch {
-    /* an unreachable store yields no challenges */
+    if (strict) throw new Error("HITL_STORE_READ_FAILED");
   }
   return out;
 }
 
-export async function putReceipt(store: KVNamespace | null, r: HitlReceipt): Promise<void> {
-  if (!store) return;
+export async function putReceipt(store: KVNamespace | null, r: HitlReceipt): Promise<boolean> {
+  if (!store) return false;
   try {
-    await store.put(`${HITL_PREFIX}receipt:${r.challenge.id}`, JSON.stringify(r));
+    // Preserve distinct decisions and their exact signature state. Legacy challenge-only
+    // keys remain readable. This is content addressing, not WORM storage, atomic approval
+    // consumption or proof of named-human identity. KV reads remain eventually consistent.
+    const digest = await sha256Hex(canonicalBytes(r));
+    await store.put(`${HITL_PREFIX}receipt:${r.challenge.id}:${digest}`, JSON.stringify(r));
+    return true;
   } catch {
-    /* same rule as above */
+    return false;
   }
 }
 
-export async function listReceipts(store: KVNamespace | null, limit = 50): Promise<HitlReceipt[]> {
+export async function listReceipts(store: KVNamespace | null, limit = 50, strict = false): Promise<HitlReceipt[]> {
   if (!store) return [];
   const out: HitlReceipt[] = [];
   try {
@@ -774,7 +780,7 @@ export async function listReceipts(store: KVNamespace | null, limit = 50): Promi
       }
     }
   } catch {
-    /* an unreachable store yields no receipts */
+    if (strict) throw new Error("HITL_STORE_READ_FAILED");
   }
   return out;
 }
