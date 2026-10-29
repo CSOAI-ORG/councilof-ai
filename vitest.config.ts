@@ -33,6 +33,7 @@ export const NODE_TEST_FILES = [
   'scripts/review/deploy-target-wiring.test.mjs',
   'scripts/review/first-ask-completion.test.mjs',
   'scripts/review/pages-bind-missing-namespaces.test.mjs',
+  'scripts/review/layer0-gateway.test.mjs',
   'scripts/review/pages-release-target.test.mjs',
   'scripts/sitemap-withdrawal.node-test.mjs',
   'scripts/surface/axis-index-truth.node-test.mjs',

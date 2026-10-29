@@ -433,6 +433,17 @@ jobs:
         uses: actions/setup-node@v4
         with: { node-version: 20 }
 
+# The public Layer-0 gateway re-expresses the estate's policy rule so a reader anywhere can
+      # reach it. A re-expression is a fork, so the fork is checked against the canonical source.
+      # The full comparison needs the canonical product, which is not in this repository, so CI
+      # runs the part that can be checked here: the comparator proves it can SEE a disagreement,
+      # and the gateway's own crypto, canonical form and refusal paths are exercised.
+      - name: Layer-0 gateway — the comparator can fail, and the gateway's own rules hold
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/review/layer0-parity.mjs --selftest
+          node --test scripts/review/layer0-gateway.test.mjs
+
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
