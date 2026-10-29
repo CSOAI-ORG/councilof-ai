@@ -536,7 +536,13 @@ async function readyAsk(page: Page) {
 
 /** MCP route discovery is a read-only POST, separate from invoking an Ask/tool/payment. */
 function isMcpDiscovery(request: Request, localOrigin: string): boolean {
-  if (request.method() !== "POST" || !new Set([`${localOrigin}/mcp`, "https://councilof.ai/mcp"]).has(request.url())) return false;
+  const discoveryUrls = new Set([
+    `${localOrigin}/mcp`,
+    `${localOrigin}/mcp/free`,
+    "https://councilof.ai/mcp",
+    "https://councilof.ai/mcp/free",
+  ]);
+  if (request.method() !== "POST" || !discoveryUrls.has(request.url())) return false;
   try {
     const body = request.postDataJSON();
     return body !== null && typeof body === "object" && !Array.isArray(body) &&
