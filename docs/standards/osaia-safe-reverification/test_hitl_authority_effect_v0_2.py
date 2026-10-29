@@ -217,6 +217,8 @@ def temporal_ok(record):
         problems.append('the operational baseline was observed after the decision')
     invoked_at = record['invocation'].get('invoked_at')
     if invoked_at:
+        if ts(invoked_at) < decided_at:
+            problems.append('invocation precedes the approval decision')
         if not (not_before <= ts(invoked_at) <= not_after):
             problems.append('invoked_at outside the validity window')
         if ts(record['effect']['observed_at']) < ts(invoked_at):
@@ -255,6 +257,32 @@ if not problems:
 else:
     counts['temporal'] += 1
     print(f'  ok  the temporal gate rejects it: {problems}')
+
+# Every timestamp is inside the validity window: only causal order is wrong.
+before_decision = copy.deepcopy(E2)
+mutate(before_decision, ('authority', 'decided_at'), '2026-10-27T09:40:00Z')
+mutate(before_decision, ('invocation', 'invoked_at'), '2026-10-27T09:25:00Z')
+mutate(before_decision, ('effect', 'observed_at'), '2026-10-27T09:55:00Z')
+mutate(before_decision, ('verification', 'verified_at'), '2026-10-27T09:58:00Z')
+V2.validate(before_decision)  # Structural validation alone must not be mistaken for this check.
+problems = temporal_ok(before_decision)
+if problems != ['invocation precedes the approval decision']:
+    failures.append(f'temporal gate did not isolate the pre-approval invocation: {problems}')
+else:
+    counts['temporal'] += 1
+    print('  ok  invocation before approval is rejected within an otherwise valid window')
+
+# The interval is inclusive. Compare instants, including equivalent timezone offsets.
+for invocation_time in ('2026-10-27T09:10:00Z', '2026-10-27T10:10:00+01:00'):
+    at_decision = copy.deepcopy(E2)
+    mutate(at_decision, ('invocation', 'invoked_at'), invocation_time)
+    V2.validate(at_decision)
+    problems = temporal_ok(at_decision)
+    if problems:
+        failures.append(f'temporal gate rejected invocation at the decision instant: {problems}')
+    else:
+        counts['temporal'] += 1
+        print(f'  ok  invocation at the decision instant is accepted: {invocation_time}')
 
 print('== summary ==')
 if failures:
