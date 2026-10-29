@@ -1,0 +1,88 @@
+name: Pages deployments — prune superseded (dry run by default)
+
+# WHY. Every production deploy leaves the one before it live at its own hash URL
+# (https://<8 hex>.councilof-ai.pages.dev), and deploy.yml prints those URLs in public logs.
+# An old deployment keeps running the code and the secrets it was built with. Narrowing or
+# removing a signing route on councilof.ai changes nothing on those URLs. Deleting the
+# superseded deployments is what makes a signer change real.
+#
+# WHAT IT DOES. Lists the production-environment deployments of the Pages project councilof-ai
+# and prints the ones created before the current production deployment. Ids and dates only.
+#
+# IT DELETES NOTHING unless BOTH are true:
+#   - dry_run is unticked;
+#   - confirm_keep is the id a dry run printed as the current production deployment.
+# A delete run that names the wrong id, or none, stops and deletes nothing.
+#
+# IT NEVER DELETES the current production deployment, the newest successful one, anything
+# created after them, anything an alias points at, or any preview-environment deployment.
+# It never asks Cloudflare to force a delete. It never deploys, signs or changes a setting.
+#
+# A deleted deployment cannot be restored. Site rollback is a revert PR and a deploy.
+#
+# BEFORE THE FIRST DELETE RUN. The owner's ruling on deleting old deployments must be in
+# OWNER-DECISIONS. And if production was ever rolled back in the Cloudflare dashboard, deploy
+# first: this tool takes the project's canonical_deployment as current production, and that has
+# not been compared with a rolled-back project.
+#
+# The job installs nothing: the script and its tests use Node built-ins only, so no third-party
+# package runs in the job that holds the Cloudflare token.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: print what would be deleted and delete nothing. Untick to delete."
+        type: boolean
+        default: true
+      confirm_keep:
+        description: "Needed only to delete: the 8-character id a dry run printed as the current production deployment."
+        type: string
+        required: false
+        default: ""
+      max_delete:
+        description: "The most deployments one run may delete (1 to 1000)."
+        type: string
+        required: false
+        default: "200"
+
+# Its own group. In site-deploy a waiting prune would displace a waiting deploy.
+concurrency: { group: pages-prune-deployments, cancel-in-progress: false }
+
+permissions:
+  contents: read
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Master only
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/master" ]; then
+            echo "::error::This workflow runs on master only. It was dispatched on another ref and did nothing."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            scripts/review
+            .github/workflows
+
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+
+      - name: The tool's own tests — no network, no credential
+        run: node --test scripts/review/pages-prune-deployments.test.mjs
+
+      - name: List superseded production deployments; delete only when asked
+        env:
+          CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
+          CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+          PRUNE_DRY_RUN: '${{ inputs.dry_run }}'
+          PRUNE_CONFIRM_KEEP: '${{ inputs.confirm_keep }}'
+          PRUNE_MAX_DELETE: '${{ inputs.max_delete }}'
+        run: node scripts/review/pages-prune-deployments.mjs
