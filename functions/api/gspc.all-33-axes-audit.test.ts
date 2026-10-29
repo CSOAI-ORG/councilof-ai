@@ -8,6 +8,11 @@ import { onRequestGet as getState } from "./state";
 import { FINANCIAL_FACTS_AS_OF } from "./_gspc_fin_as_of";
 import axisAliases from "../mcp/axis-aliases.json";
 import reportsIndex from "../../public/reports/index.json";
+import { AXES as OS_AXES } from "../../client/src/lib/gspcAxes";
+import { onRequestGet as getPluginPlatforms } from "./plugin/platforms";
+import { verifyCandidateForIntake, onRequestPost as postIntake } from "./evidence-intake";
+import { buildSignedCandidateObservation } from "../../public/agent-plugin/canonical/scripts/gspc-harvest.mjs";
+import psychosisBank from "../../public/interop/psychosis-delusion-guard-bank-v1.json";
 
 const invokeGspc = async () => {
   if (!("caches" in globalThis)) {
@@ -407,5 +412,89 @@ describe("GSPC all-33-axes full-depth audit & cross-surface parity", () => {
       expect(Array.isArray(doc.axes[axis])).toBe(true);
       expect(doc.axes[axis]).toContain(`gspc-${axis}`);
     }
+  });
+
+  it("Council OS client/src/lib/gspcAxes.ts AXES snapshot carries all 33 canonical axes with zero own-model scores", () => {
+    expect(OS_AXES.map((a) => a.axis)).toEqual([...CANONICAL_33_AXES]);
+    for (const row of OS_AXES) {
+      expect(row.seat).toBeTruthy();
+      expect(row.seat).not.toBe("—");
+      expect(row.instrument).toBeTruthy();
+      expect(row.instrument).not.toBe("—");
+      expect(row.separation).not.toBe("SEPARATED");
+      expect(row.note || "").not.toMatch(/SEPARATED/);
+      expect([0.7, 0.781, 0.535, 0.972, 0.878]).not.toContain(row.accuracy);
+    }
+  });
+
+  it("CARE-PSY-v1 AI psychosis & delusion non-reinforcement bank has n=36 (>=30) and pinned SHA-256", () => {
+    expect(psychosisBank.schema).toBe("csoai.gspc-psychosis-delusion-bank/1.0");
+    expect(psychosisBank.instrument_id).toBe("CARE-PSY-v1");
+    expect(psychosisBank.n_total).toBe(36);
+    expect(psychosisBank.n_delusion_pressure).toBe(30);
+    expect(psychosisBank.n_benign_control).toBe(6);
+    expect(psychosisBank.items).toHaveLength(36);
+    expect(psychosisBank.bank_sha256).toBe(
+      "bb420eacb612582d079f04513566fe36bb1b92306cab81345f2c0cbbcff6e12e",
+    );
+  });
+
+  it("GET /api/plugin/platforms includes all 25 AI platform families including antigravity, deepseek, and council-os-web", async () => {
+    const res = await (getPluginPlatforms as unknown as (ctx: unknown) => Promise<Response>)({
+      request: new Request("https://councilof.ai/api/plugin/platforms"),
+      env: {},
+    });
+    const body = (await res.json()) as Record<string, any>;
+    expect(body.totals.platform_families).toBe(25);
+    const ids = (body.platforms as Array<{ id: string }>).map((p) => p.id);
+    expect(ids).toContain("antigravity");
+    expect(ids).toContain("deepseek");
+    expect(ids).toContain("council-os-web");
+  });
+
+  it("gspc-harvest.mjs signs a valid csoai.evidence-observation/0.1 candidate accepted by POST /api/evidence-intake", async () => {
+    const built = await buildSignedCandidateObservation({
+      instrumentId: "CARE-PSY-v1",
+      instrumentVersion: "1.0.0",
+      instrumentDigest: psychosisBank.bank_sha256,
+      n: 36,
+      correct: 36,
+      answered: 36,
+      unparsed: 0,
+    });
+    expect(built.byteLength).toBeLessThanOrEqual(3072);
+
+    const verified = await verifyCandidateForIntake(built.candidate);
+    expect(verified).toEqual({ ok: true, sha256: built.candidateSha256 });
+
+    const kvStore = new Map<string, string>();
+    const postRes = await (postIntake as unknown as (ctx: unknown) => Promise<Response>)({
+      request: new Request("https://councilof.ai/api/evidence-intake", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          origin: "https://councilof.ai",
+          authorization: "Bearer test-intake-writer-secret",
+        },
+        body: JSON.stringify(built.intakeRequest),
+      }),
+      env: {
+        EVIDENCE_INTAKE_WRITER_SECRET: "test-intake-writer-secret",
+        LEADS: {
+          get: async (k: string) => kvStore.get(k) ?? null,
+          put: async (k: string, v: string) => {
+            kvStore.set(k, v);
+          },
+        },
+      },
+    });
+    expect(postRes.status).toBe(202);
+    const receipt = (await postRes.json()) as Record<string, any>;
+    expect(receipt.schema).toBe("csoai.measurement-intake-receipt/0.1");
+    expect(receipt.candidate_signature_verified).toBe(true);
+    expect(receipt.stored).toBe(true);
+    expect(receipt.state).toBe("AWAITING_OPERATOR_REVIEW");
+    expect(receipt.measurement_state).toBe("UNMEASURED");
+    expect(receipt.writes_board).toBe(false);
   });
 });
