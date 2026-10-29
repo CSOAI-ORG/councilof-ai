@@ -6607,6 +6607,7 @@
         "method": "GET",
         "request": "/api/wrapper?id=usdc.e:arbitrum",
         "expect_status": [
+          200,
           402
         ],
         "safe": true
@@ -6615,14 +6616,15 @@
       "free_preview": "/api/wrapper?id=<wrapped-symbol:chain>&preview=1",
       "paid_for": "issuance",
       "probe_override": {
-        "expect_status": [
-          402,
-          200
-        ],
-        "method": "GET",
-        "note": "200 is the preview-only answer when the read is UNMEASURED; never sold",
-        "request": "/api/wrapper?id=usdc.e:arbitrum",
-        "safe": true
+        "observed_at": "2026-10-29",
+        "observed_on": "https://councilof.ai",
+        "probe": {
+          "expect_status": [
+            200,
+            402
+          ]
+        },
+        "why": "A readable pair offers a 402 challenge. An unavailable upstream read returns 200 with UNMEASURED and preview-only no-sale behavior, as documented in functions/api/wrapper.ts and observed on 29 October. HTTP 200 does not establish delivery or measurement."
       }
     },
     {
@@ -8875,20 +8877,20 @@
         "method": "GET",
         "request": "/.well-known/x402",
         "expect_status": [
-          308
+          200
         ],
         "safe": true
       },
       "source": "functions/.well-known/x402.ts",
       "probe_override": {
-        "observed_at": "2026-09-22",
+        "observed_at": "2026-10-29",
         "observed_on": "https://councilof.ai",
         "probe": {
           "expect_status": [
-            308
+            200
           ]
         },
-        "why": "GET /.well-known/x402 is a redirect shim: 308 to /.well-known/x402.json, observed 2026-09-22 on https://councilof.ai. A door that moved is not a door that is gone."
+        "why": "GET /.well-known/x402 serves the canonical manifest at 200 without a redirect. Matches the current onRequestGet re-export and the 29 October public readback; supersedes the 22 September 308 expectation."
       }
     },
     {
