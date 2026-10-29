@@ -31,6 +31,9 @@ STAGED_DIRS = (
     "x402-door-conformance-2026-09",
     "agent-interop-canonical-2026-09",
     "mcp-liveness-2026-09",
+    # Claim-maintenance text-delta lane (2026-10-29): one PROBED atom per wave-3
+    # text-delta measurement, from the wave-4 probe. Admission/signing unchanged.
+    "claim-maintenance-2026-10",
     # Wrapper-economy lane (2026-09-13): wrapped-asset parity atoms from
     # scripts/readers/wrapped-asset-parity-reader.mjs --stage. PROBED / UNMEASURED only;
     # the read state lives in payload.parity_state. Admission/signing unchanged.
