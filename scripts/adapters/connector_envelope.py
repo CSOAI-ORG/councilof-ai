@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -173,8 +174,12 @@ def validate(env: Any) -> list[str]:
         else:
             errs += _extra(meas, MEASUREMENT_KEYS, "measurement")
             v = meas.get("value")
-            if "value" not in meas or v is None or not isinstance(v, (int, float, str, bool)):
-                errs.append("measurement.value: required scalar")
+            if (
+                "value" not in meas or v is None
+                or not isinstance(v, (int, float, str, bool))
+                or (isinstance(v, float) and not math.isfinite(v))
+            ):
+                errs.append("measurement.value: required scalar; numeric values must be finite")
             if "n" in meas and not (_is_int(meas["n"]) and meas["n"] >= 1):
                 errs.append("measurement.n: positive integer")
             if "unit" in meas and not _is_str(meas["unit"]):
