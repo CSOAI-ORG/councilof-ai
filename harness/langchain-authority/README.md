@@ -9,6 +9,12 @@ The existing generated `langchain-csoai` tools read GSPC boards and verify cards
 They remain useful and unchanged. This harness exercises the separate permission
 boundary before a tool creates an effect; a measurement does not grant permission.
 
+The common binding, canonical scope and host verification checks now live in
+`harness/authority_adapters/core.py`, shared with the Strands and OpenAI adapters.
+Keep the repository tree together and run from its root; copying this middleware
+file alone no longer supplies its dependencies. The same 43 acceptance checks
+pass after this extraction.
+
 ## Run the acceptance checks
 
 From the repository root, in a separate Python 3.12 virtual environment:
