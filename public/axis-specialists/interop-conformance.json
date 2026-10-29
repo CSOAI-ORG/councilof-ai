@@ -1,0 +1,140 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "interop-conformance",
+  "specialist": {
+    "id": "meok-interop-conformance-specialist",
+    "cluster_id": "meok-axis-interop-conformance",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Design an interoperability-group instrument for specifications, public test suites and conformance records without treating membership as conformance.",
+    "reviewer_role": "interoperability standards reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "specification versioning",
+    "test-suite availability",
+    "conformance evidence",
+    "membership non-inference"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "UNCHECKABLE",
+      "precision": "unknown",
+      "source": "/api/gspc",
+      "source_field": "none",
+      "note": "No structured measurement time is available; CURRENT admission must fail closed."
+    },
+    "axis_row_sha256": "9a00d612e0aa665a5950fd05e45769a11bcd50034dd888b77a0bac7ec95ab50b",
+    "axis_row": {
+      "axis": "interop-conformance",
+      "family": "subject",
+      "kind": "declared-slot",
+      "applies_to": "interop-standards-groups",
+      "bench": "pending frozen bank",
+      "task": "does an interoperability/standards group publish specs, test suites and conformance records",
+      "n": 0,
+      "status": "UNMEASURED",
+      "colour": "hsl(250 10% 55%)",
+      "hue": 250,
+      "note": "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score. Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid >= 30, passing the gate. Census checks are a DISCOVERED check grid, not scores on this axis.",
+      "method_status": "no-method: declared slot",
+      "measurement_time": {
+        "state": "UNCHECKABLE",
+        "precision": "unknown",
+        "source": "/api/gspc",
+        "source_field": "none",
+        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist interop-conformance audits only the interop-conformance row",
+      "evidence": "interop-conformance"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-interop-conformance; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "DECLARED_GAP",
+      "state": "PASS",
+      "detail": "UNMEASURED slot for interop-standards-groups; n=0 is not a score"
+    },
+    {
+      "id": "NO_FABRICATED_SCORE",
+      "state": "PASS",
+      "detail": "declared slot has no leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "no-method: declared slot"
+    }
+  ],
+  "summary": {
+    "checks": 6,
+    "passed": 6,
+    "findings": 0,
+    "audit_state": "MEASUREMENT_GAP_VISIBLE"
+  },
+  "negative_controls": [
+    {
+      "control": "treat standards-group membership as conformance and require classification failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "accept an unversioned specification and require lineage failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "interop-conformance-proposal-1",
+      "proposal": "define a specification and test-suite evidence rubric",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "interop-conformance-proposal-2",
+      "proposal": "propose thirty groups with versioned artifacts and explicit missing-evidence states",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_interop-conformance",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/interop-conformance",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "interoperability standards reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "9eec51b43e47f3a88a65cdd91a8ca2354eaf5897d58d8b24ab8582851d7b89b1"
+}
