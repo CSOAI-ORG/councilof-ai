@@ -202,11 +202,27 @@ export function derive(sourceBytes, io) {
   }
 
   const ew = readJson(S.east_west);
-  const ewRows = new Map(); // regime -> rows
-  for (const j of ew.jurisdictions) ewRows.set(j.regime, j);
+  // The published crosswalk holds one entry per regime-and-instrument: several EU instruments
+  // (EU AI Act, GDPR, Cyber Resilience Act, DORA, NIS2, CSRD) all sit in the same EU/EEA regime,
+  // so an entry is keyed by its INSTRUMENT, not by its regime — two entries may share a regime.
+  // The regime is still checked: every instrument must name a regime the crosswalk actually maps,
+  // and no entry may be claimed by two instruments.
+  const ewEntries = ew.jurisdictions ?? [];
+  const ewByInstrument = new Map(); // instrument name -> entry
+  for (const j of ewEntries) ewByInstrument.set(j.instrument, j);
+  const ewRegimes = new Set(ewEntries.map((j) => j.regime));
+  const ewClaimed = new Set();
+  for (const i of src.instruments) {
+    if (!i.east_west_entry) continue;
+    if (ewClaimed.has(i.east_west_entry)) fail(`east-west entry "${i.east_west_entry}" is claimed by two instruments`);
+    ewClaimed.add(i.east_west_entry);
+  }
   for (const i of src.instruments) {
     if (!i.east_west_regime) continue;
-    const j = ewRows.get(i.east_west_regime) || fail(`east-west has no regime ${i.east_west_regime}`);
+    if (!ewRegimes.has(i.east_west_regime)) fail(`east-west has no regime ${i.east_west_regime}`);
+    const j = i.east_west_entry
+      ? ewByInstrument.get(i.east_west_entry) || fail(`east-west has no instrument "${i.east_west_entry}"`)
+      : fail(`${i.name}: east_west_regime is set but east_west_entry is not`);
     for (const row of j.rows) {
       const { articles } = articlesIn(row.ref);
       for (const a of articles) {
@@ -346,7 +362,7 @@ export function derive(sourceBytes, io) {
       seenCodes.add(c);
     }
     for (const r of j.east_west) {
-      if (!ewRows.has(r)) fail(`jurisdiction ${j.id}: east-west has no regime ${r}`);
+      if (!ewRegimes.has(r)) fail(`jurisdiction ${j.id}: east-west has no regime ${r}`);
       seenRegimes.add(r);
     }
     const inst = instruments.filter((i) => i.jurisdiction === j.id);
@@ -358,7 +374,7 @@ export function derive(sourceBytes, io) {
     const provisions = inst.reduce((n, i) => n + i.provisions, 0);
     const predicates = inst.reduce((n, i) => n + i.by_status.PREDICATE, 0);
     const related = inst.reduce((n, i) => n + i.by_status.RELATED_MEASURE, 0);
-    const ewr = j.east_west.reduce((n, r) => n + ewRows.get(r).rows.length, 0);
+    const ewr = j.east_west.reduce((n, r) => n + ewEntries.filter((e) => e.regime === r).reduce((m, e) => m + e.rows.length, 0), 0);
     const state = provisions
       ? "IN_FROZEN_CORPUS"
       : records.length
@@ -382,7 +398,7 @@ export function derive(sourceBytes, io) {
     };
   });
   for (const c of invCodes) if (!seenCodes.has(c)) fail(`inventory jurisdiction ${c} is not in the jurisdiction list`);
-  for (const r of ewRows.keys()) if (!seenRegimes.has(r)) fail(`east-west regime ${r} is not in the jurisdiction list`);
+  for (const r of ewRegimes) if (!seenRegimes.has(r)) fail(`east-west regime ${r} is not in the jurisdiction list`);
 
   const frameworks = src.frameworks_outside_corpus.map((f) => {
     const reg = crosswalkRegs.regulators.find((r) => r.id === f.crosswalk_regulator) || fail(`no regulator ${f.crosswalk_regulator}`);

@@ -1,0 +1,744 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schemas/csoai-evaluation-card-0.2.schema.json",
+  "title": "csoai.evaluation-card/0.2",
+  "description": "One evaluation, described so that a stranger can either reproduce it or find the exact reason they cannot. A card says: what was evaluated, with which instrument, over which suite, on WHICH ARMS, what the result was, and what the result does not establish. It is free, it is not a certification, and it is not a leaderboard entry. THE ARM SPLIT IS REQUIRED: a card that reports one score without saying how many items were answered by a model is a card that cannot be compared to anything, because the two numbers were produced by different means. VERSION 0.2 ADDS THE ARTIFACT IDENTITY BINDING. A score does not identify the thing that produced it: two runs of the same model name can come from different weights. So 0.2 requires an artifact_identity that binds the weights digest and the harness version where the subject IS weight-identified, and requires a card to say WHY when it is not (a service, a rule cascade, a human). It also adds the LIMITATION TAXONOMY - a closed vocabulary of the ways a measurement can be weak, so that 'limitations: none' is a stated, checkable position rather than a shrug - and the SAFETY CASE sections (alignment, isolation, monitoring, incident) that a measurement card carries when it speaks to a safety claim. The Every-Eval-Ever profile is carried in the every_eval_ever object; where a field of that profile is not applicable, it is stated as null with a reason, never silently omitted.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "kind",
+    "title",
+    "description",
+    "subject",
+    "instrument",
+    "suite",
+    "arms",
+    "result",
+    "claim_boundary",
+    "reproduction",
+    "provenance",
+    "not_established",
+    "artifact_identity",
+    "limitation_taxonomy",
+    "safety_case"
+  ],
+  "properties": {
+    "schema": {
+      "const": "https://councilof.ai/schemas/csoai-evaluation-card-0.2.schema.json"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "description": "Stable identifier of this card. Content-addressed or slugged; it is not a URL and is not a claim of permanence."
+    },
+    "kind": {
+      "const": "evaluation-card"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "subject": {
+      "type": "object",
+      "description": "What was evaluated. The subject names the artefact under test; it is never a person.",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "model",
+            "instrument",
+            "service",
+            "dataset",
+            "system",
+            "human"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      }
+    },
+    "instrument": {
+      "type": "object",
+      "description": "The thing that produced the measurement. A card without a named instrument is an anecdote.",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "kind"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "grader",
+            "rubric",
+            "harness",
+            "probe",
+            "reviewer",
+            "committee"
+          ]
+        },
+        "grader_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "Digest of the grading code. Two runs of the same model against the same bank are only comparable when this digest matches."
+        },
+        "parser_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "rubric_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "suite": {
+      "type": "object",
+      "description": "The item set. `items_held_out` is the count of items that were not seen while the instrument was built.",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "items_total",
+        "items_held_out"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "items_total": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "items_held_out": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bank_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "arms": {
+      "type": "array",
+      "description": "The ARM SPLIT: how the items were partitioned across the ways of answering that actually ran. This is the field that makes two cards comparable. An arm is one way of answering (a model, a deterministic rule cascade, a human, a baseline), and its `items` counts must sum to `suite.items_total`.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "items",
+          "answered_by_model",
+          "answered_by_rule",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "model",
+              "rule",
+              "human",
+              "baseline",
+              "mixed"
+            ]
+          },
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "answered_by_model": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Items on this arm that a model actually answered. A reported zero is a reported zero, not an unknown."
+          },
+          "answered_by_rule": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Items on this arm answered without a model (a classifier, a lookup, a template)."
+          },
+          "model_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "routed_model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 300,
+            "description": "The model that actually served the item, when a router chose it. A record that does not name this cannot claim a model lead."
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        }
+      }
+    },
+    "item_ledger": {
+      "type": "object",
+      "description": "Where the per-item record lives. The card carries the pointer and the digest, not the items.",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "items": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "description": "What the run measured. `state` is the state of the MEASUREMENT, never a grade of the subject.",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "MEASURED",
+            "UNMEASURED",
+            "NOT_REPRODUCIBLE",
+            "INCONCLUSIVE"
+          ],
+          "description": "MEASURED = the run happened and produced a value. UNMEASURED = the slot exists with no run behind it. NOT_REPRODUCIBLE = a run exists and a stranger could not reproduce it. INCONCLUSIVE = the run happened and the result does not support a comparison."
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Null when the state carries no value. A reported zero is 0, not null."
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 60
+        },
+        "per_arm": {
+          "type": "array",
+          "description": "The result broken out per arm, and per like-for-like partition. Required in practice whenever more than one arm exists, because a single pooled number hides the split.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "arm_id",
+              "items",
+              "value"
+            ],
+            "properties": {
+              "arm_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "unit": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 60
+              },
+              "partition": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "The like-for-like partition this number belongs to, e.g. 'model-answered-items-only'."
+              }
+            }
+          }
+        },
+        "p_value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "The separation p-value when a comparison was made. Null means no comparison was made, not that the difference was zero."
+        },
+        "separated": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "True only when the comparison separated at the stated threshold. TIE and UNTESTED are not false."
+        },
+        "band": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200,
+          "description": "Where the result sits inside a measured range, when run-to-run variance means a single number would overstate the precision."
+        }
+      }
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "What this card does NOT establish. Required, and it is a sentence, not a disclaimer."
+    },
+    "reproduction": {
+      "type": "object",
+      "description": "How a stranger reproduces it, or why they cannot.",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "REPRODUCIBLE",
+            "PARTIALLY_REPRODUCIBLE",
+            "NOT_REPRODUCIBLE",
+            "NOT_PUBLISHED"
+          ]
+        },
+        "command": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1000
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 2048
+          }
+        },
+        "environment": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1000,
+          "description": "Required when the state is not REPRODUCIBLE. A card that cannot be reproduced says why."
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "published_at",
+        "as_of",
+        "source_urls"
+      ],
+      "properties": {
+        "published_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the measurement was taken. Distinct from published_at on purpose: a card published today may carry a measurement from months ago, and the two must not be conflated."
+        },
+        "source_urls": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          }
+        },
+        "did": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        },
+        "sig_ed25519": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 256
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "description": "Known limits of THIS measurement, in the measurement's own words.",
+      "items": {
+        "type": "string",
+        "maxLength": 1000
+      }
+    },
+    "not_established": {
+      "type": "array",
+      "description": "The things a reader must not conclude from this card. This list is part of the card's meaning, not metadata: a card without it is a card that invites the conclusion it has not earned.",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 300
+      }
+    },
+    "corrections": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2048,
+      "description": "Pointer to the corrections ledger entry that governs this card, if it has been corrected."
+    },
+    "every_eval_ever": {
+      "type": "object",
+      "description": "The Every-Eval-Ever compatibility block. A field that does not apply is null WITH a stated reason, never omitted.",
+      "additionalProperties": false,
+      "properties": {
+        "license": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "task": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        },
+        "dataset": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "value"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "unit": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 60
+              },
+              "higher_is_better": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "eval_type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        },
+        "eval_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 40
+        },
+        "not_applicable_reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500,
+          "description": "Required when any field above is null, stating why it does not apply."
+        }
+      }
+    },
+    "artifact_identity": {
+      "type": "object",
+      "description": "What produced the measured bytes. A score does not identify the artefact: the same model name can be served from different weights. Where the subject IS weight-identified, the weights digest and the harness version are bound. Where it is NOT, the card says so and says why — never a placeholder digest.",
+      "additionalProperties": false,
+      "required": [
+        "weights_bound",
+        "harness_version",
+        "reason"
+      ],
+      "properties": {
+        "weights_bound": {
+          "type": "boolean",
+          "description": "True when the measured bytes came from weights this card identifies by digest."
+        },
+        "weights_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The digest of the exact weights served. Null only when weights_bound is false."
+        },
+        "weights_revision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "harness_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "The version of the harness that produced the run. Two runs of the same weights under different harness versions are not comparable without saying so."
+        },
+        "harness_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "tokenizer": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000,
+          "description": "Why the subject is or is not weight-identified. Required either way: a card that binds weights says which, and a card that does not says what the subject is instead."
+        }
+      }
+    },
+    "limitation_taxonomy": {
+      "type": "object",
+      "description": "A closed vocabulary of the ways a measurement can be weak, so that 'no limitations' is a stated and checkable position. Every class marked present carries a justification that names the specific effect on the result.",
+      "additionalProperties": false,
+      "required": [
+        "classes"
+      ],
+      "properties": {
+        "classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "class",
+              "present",
+              "justification"
+            ],
+            "properties": {
+              "class": {
+                "type": "string",
+                "enum": [
+                  "simulation_awareness",
+                  "sample_size",
+                  "lower_bound",
+                  "non_comparability",
+                  "external_validity",
+                  "construct_validity",
+                  "population_coverage",
+                  "temporal_drift",
+                  "contamination",
+                  "measurement_error"
+                ]
+              },
+              "present": {
+                "type": "boolean"
+              },
+              "justification": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000,
+                "description": "What this class does to the result. Required in BOTH cases: a class marked not present still says why it is not present."
+              }
+            }
+          }
+        },
+        "none_asserted": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "True only when every class above is marked not present. A card cannot claim no limitations and mark a class present."
+        }
+      }
+    },
+    "safety_case": {
+      "type": "object",
+      "description": "The four standard sections a measurement card carries when it speaks to a safety claim: alignment, isolation, monitoring, incident. Each is either ASSESSED with notes, or NOT_APPLICABLE with a reason. A section is never silently absent.",
+      "additionalProperties": false,
+      "required": [
+        "alignment",
+        "isolation",
+        "monitoring",
+        "incident"
+      ],
+      "properties": {
+        "alignment": {
+          "$ref": "#/$defs/safety_section"
+        },
+        "isolation": {
+          "$ref": "#/$defs/safety_section"
+        },
+        "monitoring": {
+          "$ref": "#/$defs/safety_section"
+        },
+        "incident": {
+          "$ref": "#/$defs/safety_section"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "safety_section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "notes"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "ASSESSED",
+            "NOT_APPLICABLE",
+            "NOT_MEASURED"
+          ]
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "What was assessed, or why the section does not apply. Required in every case."
+        }
+      }
+    }
+  }
+}
