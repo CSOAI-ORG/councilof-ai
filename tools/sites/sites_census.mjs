@@ -33,21 +33,21 @@ const NOW = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
 
 // ---------------------------------------------------------------- compute sites
 const SSH_HOSTS = [
-  { host: 'm2', label: 'M2 MacBook Air (LAN)' },
-  { host: 'oracle-micro-2', label: 'Oracle micro — sov33-owem-micro2' },
-  { host: 'rp-3090-now', label: 'RunPod pod — rp-3090-now (main engine)' },
-  { host: 'meok-backend', label: 'meok-backend' },
-  { host: 'sov-brain-2', label: 'sov-brain-2' },
-  { host: 'redblue-pod', label: 'redblue-pod' },
-  { host: 'sovos-light-a100', label: 'sovos-light-a100' },
-  { host: 'sovos-agent-vm', label: 'sovos-agent-vm' },
-  { host: 'csoai-backend-vm', label: 'csoai-backend-vm' },
-  { host: 'sovos-volume-sink', label: 'sovos-volume-sink' },
-  { host: 'sov-r4090-a', label: 'sov-r4090-a' },
-  { host: 'sov-r4090-b', label: 'sov-r4090-b' },
-  { host: 'sov-r4090-c', label: 'sov-r4090-c' },
-  { host: '0i7oa4ptfow4jj.runpod.io', label: 'RunPod (named host)' },
-  { host: '4gjzysaeqfy3j9.runpod.io', label: 'RunPod (named host)' },
+  { host: 'm2', role: 'owner-lan-workstation', label: 'Owner workstation on the LAN' },
+  { host: 'oracle-micro-2', role: 'oracle-micro-control', label: 'Oracle micro instance (control lane)' },
+  { host: 'rp-3090-now', role: 'runpod-main-engine', label: 'RunPod pod (main engine)' },
+  { host: 'meok-backend', role: 'runpod-meok-backend', label: 'RunPod pod (MEOK backend)' },
+  { host: 'sov-brain-2', role: 'sovereign-node-brain-2', label: 'Sovereign node (brain 2)' },
+  { host: 'redblue-pod', role: 'sovereign-node-redblue', label: 'Sovereign node (red/blue)' },
+  { host: 'sovos-light-a100', role: 'sovereign-node-light-a100', label: 'Sovereign node (light A100)' },
+  { host: 'sovos-agent-vm', role: 'sovereign-node-agent-vm', label: 'Sovereign node (agent VM)' },
+  { host: 'csoai-backend-vm', role: 'sovereign-node-csoai-backend', label: 'Sovereign node (CSOAI backend)' },
+  { host: 'sovos-volume-sink', role: 'sovereign-node-volume-sink', label: 'Sovereign node (volume sink)' },
+  { host: 'sov-r4090-a', role: 'sovereign-node-r4090-a', label: 'Sovereign node (r4090 a)' },
+  { host: 'sov-r4090-b', role: 'sovereign-node-r4090-b', label: 'Sovereign node (r4090 b)' },
+  { host: 'sov-r4090-c', role: 'sovereign-node-r4090-c', label: 'Sovereign node (r4090 c)' },
+  { host: '0i7oa4ptfow4jj.runpod.io', role: 'runpod-named-host-a', label: 'RunPod named host A' },
+  { host: '4gjzysaeqfy3j9.runpod.io', role: 'runpod-named-host-b', label: 'RunPod named host B' },
 ];
 
 // One POSIX-sh probe that works on Linux pods AND macOS edge boxes.
@@ -86,15 +86,19 @@ function ssh(host, cmd, timeoutMs = 9000) {
 async function probeCompute(site) {
   const raw = await ssh(site.host, REMOTE_PROBE);
   if (!raw) {
-    return { id: `compute:${site.host}`, class: 'compute', name: site.label, state: 'UNREACHABLE', probe: `ssh ${site.host}`, detail: 'no ssh session' };
+    return { id: `compute:${site.role}`, class: 'compute', name: site.label, state: 'UNREACHABLE', probe: `ssh ${site.role}`, detail: 'no ssh session' };
   }
-  const [hostname, cpus, hostcpus, ram, gpu, cpuModel, uptime] = raw.split('|');
+  // The remote's OWN hostname is deliberately NOT recorded: on this estate it carries the
+  // machine name ("...MacBook-Air.local"), and the estate's served-json guard forbids a
+  // machine hostname on a served surface. The environment class is the identifier; the
+  // host mapping stays in this file, which is code and is not served.
+  const [, cpus, hostcpus, ram, gpu, cpuModel, uptime] = raw.split('|');
   return {
-    id: `compute:${site.host}`,
+    id: `compute:${site.role}`,
     class: 'compute',
     name: site.label,
     state: 'REACHABLE',
-    endpoint: site.host,
+    endpoint: site.role,
     cpu_model: cpuModel || 'unknown',
     cpu_cores: Number(cpus) || 0,
     cpu_host_cores: Number(hostcpus) || 0,
@@ -102,7 +106,7 @@ async function probeCompute(site) {
     ram_gib: Number(ram) || 0,
     gpu: gpu && gpu !== 'none' ? gpu : null,
     uptime_s: Number(uptime) || 0,
-    probe: `ssh ${site.host} → hostname|cpu|host|ram|gpu|model|uptime`,
+    probe: `ssh ${site.role} → cpu|host|ram|gpu|model|uptime`,
     detail: gpu && gpu !== 'none' ? 'GPU present' : 'no GPU visible',
   };
 }
@@ -193,7 +197,7 @@ async function probeNsiteLane() {
   return {
     id: 'n_site:onboard-lane', class: 'n_site', name: 'N-site onboard lane (Oracle micro)',
     state: live ? 'LIVE' : 'STALLED',
-    endpoint: 'ssh oracle-micro-2:~/lanes/nsite-onboard',
+    endpoint: 'ssh oracle-micro-control:~/lanes/nsite-onboard',
     population: done, joined, listed: Number(kv.LISTED) || 0,
     queue_remaining: queue, evidence_bundles: Number(kv.EVIDENCE) || 0,
     registry_rows: Number(kv.REGISTRY) || 0, log_age_hours: logAgeH,
@@ -212,7 +216,7 @@ async function probeEdge() {
   const mem = Number(run('sysctl -n hw.memsize')) || 0;
   const gpuCores = run('system_profiler SPDisplaysDataType 2>/dev/null | grep "Total Number of Cores" | head -1 | grep -oE "[0-9]+"');
   return {
-    id: 'edge:this-mac', class: 'edge', name: 'This Mac (session host)', state: 'REACHABLE',
+    id: 'edge:owner-workstation', class: 'edge', name: 'Owner workstation (session host)', state: 'REACHABLE',
     endpoint: 'local', cpu_model: brand, cpu_cores: ncpu,
     ram_gib: mem ? Math.round(mem / 1073741824) : 0,
     gpu: gpuCores ? `Apple unified GPU (${gpuCores} cores, Metal)` : 'Apple unified GPU',
