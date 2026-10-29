@@ -5,32 +5,32 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/2026-10-01/operations/record.json",
-   "sha256": "f599e7d9e37383a69f549b9f1ab5d61266841c957c644ef049b7b849223806b1",
+   "path": "measurement-capsules/v0.2/2026-10-07/operations/record.json",
+   "sha256": "91114d37d85d2f16160bec985b4f6038504dc94fa30e954cedc74da790c83e2e",
    "schema": "csoai.measurement-capsule-batch/0.2",
-   "as_of": "2026-10-01T08:09:15Z"
+   "as_of": "2026-10-07T08:25:42Z"
   },
-  "merkle_root": "8d41a82a2651efc9c068a957b38d86782ca004f6f159668c32b7960fe91efadc",
-  "n_capsules": 236,
+  "merkle_root": "4e9f8c61ee90118f8ae3f8af1039e22498603faea703e9196972fe37f9df1d48",
+  "n_capsules": 1006,
   "states": {
-   "BITCOIN_ATTESTED": 7,
+   "BITCOIN_ATTESTED": 10,
    "INCLUDED_PROOF_VERIFIES": 1,
-   "LANDED_NOT_SHIPPED": 54,
+   "LANDED_NOT_SHIPPED": 7,
    "PENDING_CALENDAR_COMMITMENT": 1,
-   "PRESENT_SHA256_UNRECORDED": 169,
-   "TIME_TO_CORRECT_UNMEASURED": 3,
+   "PRESENT_SHA256_UNRECORDED": 980,
+   "TIME_TO_CORRECT_UNMEASURED": 6,
    "UNCHECKABLE": 1
   },
-  "capsules_sha256": "618b0e517d97f3cb2f0e1224549937a4773ca23404a750563e1fea8c1ccc5eee",
+  "capsules_sha256": "dd308c4f9981d59317141d11ec40067f54c76bd254b32a2ee42cfcceddcb4ebd",
   "adapter": "operations",
   "kind": "operations"
  },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "e06ced5f5ea6ed05b36a4ede783f77326ac8c34af5b385396e3c7bd463281c573b5bc0e42e8e06c693cbc70750d60d40749423179ece9fd50c5096259383080b",
-  "payload_sha256": "3a459f3b5353e910c6d2c364f53ab76967840253a86035dcf74250e0e0cbfe59",
-  "signed_at": "2026-10-01T08:09:18.828Z"
+  "sig_ed25519": "f5c9b97a073a7941d083e3c3bfc596285ff9c9dee2713e59c78c0c7437bb570b6c7c90ea6618723b76fc2712270dcf87d35eb5f452268d65b8ea7b65da029f0f",
+  "payload_sha256": "b217dc213d764dd1709afae0a720b94d03d817d248b7c38f8d3056863a36b289",
+  "signed_at": "2026-10-07T08:25:43.978Z"
  },
  "local_verification": {
   "result": "VERIFIES",
