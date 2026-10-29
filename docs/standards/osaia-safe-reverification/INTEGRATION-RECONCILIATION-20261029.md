@@ -6,12 +6,15 @@ measurement, package release or claim of vendor adoption. Inspected base:
 Read current public source, retained fixtures, the distribution declaration and
 selected open PRs; searched the organisation for the four requested frameworks.
 Search absence is not proof of absence across every branch, archive or private host.
+Continuation reconciled the later master `ad350c6d` and open PRs #3596, #3598,
+#3602 and #3604. This inventory is scoped source evidence, not a clean bill for
+the entire organisation or a statement that pending PRs are deployed.
 
 ## What already exists
 
 | Area | Existing source and evidence | Actual scope | What remains |
 | --- | --- | --- | --- |
-| LangChain | `distribution/python/langchain-csoai/langchain_csoai/tools.py`; `scripts/harness-x/test_py_adapters.py`; declared in `council-os/distribution.json` | `GSPCBoardTool` and `VerifyCardTool`; PyPI index returned 0.1.3 during this review; seven existing offline adapter tests pass across LangChain, LlamaIndex and CrewAI | Exact reviewed-arguments binding through LangChain HITL interrupt/resume is a separate integration. Existing reader tools do not implement that boundary. |
+| LangChain | `distribution/python/langchain-csoai/langchain_csoai/tools.py`; `scripts/harness-x/test_py_adapters.py`; declared in `council-os/distribution.json`; new `harness/langchain-authority/` | Existing reader package plus experimental host-authority middleware; 43 checks exercise real SDK interrupt/resume, host verification, a harmless write and independent file readback | Connect real authenticated human authority and durable replay/revocation, then qualify the deployed executor. The generated reader package is unchanged. |
 | LangGraph examples | [mcp-servers example](https://github.com/CSOAI-ORG/mcp-servers/blob/5708bb4c884552627d495eff820bc26987ee9d78/examples/python/langgraph_agent.py) and [meok-ai orchestration source](https://github.com/CSOAI-ORG/meok-ai/blob/628c3cb159e08c524668b8665d8d0c2d15f00718/langgraph/agent_orchestrator.py) surfaced by code search | Earlier example/orchestration code exists outside the canonical generated distribution | These search matches were not exercised here. Reconcile useful logic into the canonical producer; do not create another release authority. |
 | Strands | No `BeforeToolCallEvent` implementation found in the bounded organisation code search | Upstream hooks are an opportunity, not a verified local adapter | Bind the final selected tool and arguments, cancellations, retry attempts and observed results. Pin and exercise the actual SDK. |
 | OpenAI Agents SDK | Existing OpenAI app/plugin/MCP distribution entries; candidate authority-effect profile | Distribution to a client and approval of a consequential SDK tool are different capabilities | No dedicated `needs_approval` SDK adapter was established by the inspected source. Test supported function tools, resume and guardrails explicitly; do not infer hosted-tool coverage. |
@@ -31,12 +34,15 @@ a published digest alone does not make it an installable or exercised integratio
 
 ## Changes completed in this contribution
 
-1. **Approval causal order:** the v0.2 reference checker previously accepted an
-   invocation at 09:25 and an approval at 09:40 when both were within the validity
-   window. Added the missing comparison and a regression that failed first. Equality
-   at the decision instant, including equivalent timezone offsets, remains accepted.
-   The suite now reports 42 checks. This is reference-record checking, not deployment
-   of a runtime authorization gateway. Frozen schema/example bytes are unchanged.
+1. **Approval correction consolidated into its existing owner:** the initial
+   contribution reproduced invocation before approval and added a 42-check fix.
+   [PR #3598](https://github.com/CSOAI-ORG/councilof-ai/pull/3598) independently added
+   broader stage-order controls and correct handling of a schema-valid UNKNOWN
+   effect. At `0fb6f55`, its checker passes 47 checks in our separate local readback.
+   Removed our overlapping edits to the profile and checker; compose that correction
+   from #3598. Our unchanged base still reports 39 checks and retains the known gap
+   until #3598 lands. Passing that older suite does not close the issue. Frozen
+   schema/example bytes remain unchanged.
 2. **Policy provenance export:** `render/openshell_otel.py` extends the existing
    renderer with an explicit input-policy hash, source-report hash and export profile.
    It rejects bad/missing binding fields or a tampered event before writing a batch.
@@ -48,9 +54,18 @@ a published digest alone does not make it an installable or exercised integratio
    malformed input and batch rejection. A scanner's `is_safe` flag never becomes our
    measurement or permission. This is an offline importer; no scanner execution,
    paid analyzer, remote tool call or Cisco endorsement is claimed.
+4. **Actual LangChain runtime seam:** `harness/langchain-authority/authority.py`
+   requires strict host verification and one-use consumption for the exact selected
+   tool/version, canonical arguments and host scope immediately before dispatch.
+   The 43-check suite uses pinned LangChain 1.4.7 / LangGraph 1.2.18, real checkpoint
+   interrupts/resume and an owned file tool. Both review modes and sync/async happy
+   paths run; rejection, edits, scope mismatch, expiry, revocation, cancellation,
+   changed review predicates, mutation and duplicate attempts are exercised. The
+   model and host authority registry are synthetic; effect readback is a real local
+   file inspection. No real human credential or production host is implied.
 
 Validation on the isolated source slice: 79 tests passed across the new handoffs and
-existing event/doctrine checks; 42 v0.2 profile checks; 38 v0.1 checks; 11 approval
+existing event/doctrine checks; 43 new LangChain checks; 38 v0.1 checks; 11 approval
 dependency tests; the discriminating-power script passed. Existing Python adapters:
 7 tests passed. OpenShell adapter: 24 passed including Python/JavaScript receipt
 agreement. Declared/observed suite: 13 passed, with its one live-prover test skipped
@@ -59,6 +74,8 @@ reproduced all three records and its documented input/readback digests. The exis
 OTel golden is byte-identical. These are scoped checks, not a full monorepo audit.
 The path-scoped `evidence-handoff-checks` workflow reruns the focused Python checks on
 changes to these source areas; it has read-only repository permission and no secrets.
+It now has a separate pinned-SDK LangChain job. The 47-check corrected temporal
+suite belongs to #3598; this PR deliberately does not carry a competing implementation.
 
 ## What to reuse from the three reference organisations
 
@@ -100,14 +117,16 @@ belong to the host; GSPC evidence cannot grant permission.
 
 | Seam | Implement at | Acceptance evidence still required |
 | --- | --- | --- |
-| LangChain / LangGraph | [human-review middleware](https://github.com/langchain-ai/langchain/blob/master/libs/langchain_v1/langchain/agents/middleware/human_in_the_loop.py) and resumed tool execution | Reviewed args are the executed args; reject prevents execution; edited args trigger the intended fresh decision; approval cannot be skipped because a predicate changed during resume. Human-supplied responses remain distinct from tool effects. |
+| LangChain / LangGraph | [human-review middleware](https://github.com/langchain-ai/langchain/blob/350568952c4b65d1310081d45a2536b6449712f0/libs/langchain_v1/langchain/agents/middleware/human_in_the_loop.py) and new `harness/langchain-authority/` | SDK wiring and fixture controls now pass. A real host must authenticate and record the latest decision, revoke prior leases before resuming a rejection, atomically consume exact scope, and enforce it at the downstream effect. See the harness README for middleware order and dynamic-predicate limits. |
 | Strands | [BeforeToolCallEvent / AfterToolCallEvent](https://github.com/strands-agents/harness-sdk/blob/main/strands-py/src/strands/hooks/events.py) | Capture the final tool and arguments after mutating hooks; cancellation prevents dispatch; each retry is a separate attempt under current authority; no duplicate external effect after recovery. |
 | OpenAI Agents SDK | [FunctionTool approval and guardrail contract](https://github.com/openai/openai-agents-python/blob/main/src/agents/tool.py) | Pause, authenticate the approver, bind exact arguments, revalidate after resume and record effect separately. State supported tool classes and guardrail order; test edited, expired and rejected approvals. |
 | OpenShell | Existing local adapter and [upstream policy example](https://github.com/NVIDIA/OpenShell/blob/main/examples/sandbox-policy-quickstart/policy.yaml) | Record both authored and effective installed policy, including provider-added grants; execute one allowed and one denied harmless action with external observation; revoke authority and show subsequent action blocked. |
 
 Upstream links using a branch name identify discovery seams, not install pins. Freeze
 the compatible SDK release/commit and its licence in each adapter's acceptance record
-before claiming support. No framework adapter is declared complete by this table.
+before claiming support. LangChain is now qualified as a bounded experimental
+harness, not a production integration. No framework adapter is declared deployed
+or generally complete by this table.
 
 ## Package one understandable business workflow
 
@@ -137,8 +156,9 @@ from observed results. Missing response stays unknown; activity volume is not de
    existing packaging lane. Do not merge overlapping sitemap or other lane fixes here.
 2. Run the new OpenShell export through a current local collector and retain readback;
    capture effective policy with one harmless runtime allow/deny/revoke sequence.
-3. Implement one framework adapter against a pinned SDK, starting with LangChain's
-   existing distribution. Run the approval/argument/expiry/replay controls above.
+3. The pinned LangChain SDK harness and fixture controls are implemented. Connect
+   the actual host authority service and enrolled approver next, retain its deployed
+   controls, then propose any package change through the existing generator.
 4. Give one receiver a reproducible evidence pack. Record their actual reproduction
    separately from our fixture checks and any public listing.
 5. Extend Strands and OpenAI support only after the shared host contract is demonstrated.
@@ -147,3 +167,21 @@ Do not weaken frozen graders, rewrite signed historical evidence, broaden a benc
 score into authority, or call the whole estate clean on the strength of this bounded
 review. No production deploy, package publish, upstream submission, paid run, new
 credential or new human approver was performed by this contribution.
+
+## Consolidated ownership and next decisions
+
+| Work | Current owner/source | Completion boundary |
+| --- | --- | --- |
+| Frozen operational charter | Existing 22-article charter and amendment process | No new competing charter; mappings must identify version and evidence |
+| Approval contract and temporal corrections | #3598, inspected at `0fb6f55` | Retain its broader checker/UNKNOWN handling; owner reviews client compatibility change |
+| Workflow packaging and entry navigation | #3596 | Browser acceptance and protected release remain separate |
+| User evidence capsule save/reopen | #3602 | Preserve that lane's candidate and its existing tests; no duplicate implementation |
+| Demand and signing-custody claim corrections | #3604 | Readiness statements need observed evidence, not listings or plans |
+| Cisco / OpenShell evidence handoffs and LangChain runtime harness | This contribution, #3599 | Hosted focused tests, then actual receiver/runtime acceptance |
+
+The immediate deliverable is one reproducible workflow: proposal, authenticated
+decision, bounded execution, independently observed effect, attached measurement,
+and an explicit correction/expiry condition. Charter commitments, permission,
+measurement, signature authenticity and successful customer use remain separately
+testable. That separation is how existing work can be composed without inflating
+claims or rewriting frozen history.
