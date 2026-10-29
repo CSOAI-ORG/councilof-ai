@@ -35,6 +35,7 @@ scanned for the words the estate does not use (certified, BFT, sovereign) and fo
 price; a hit aborts the run.
 
 Usage:
+  org-readme.py --repository-profile NAME > docs/github/NAME-README.md (reviewed, count-free repository introduction)
   org-readme.py --account-profile    > docs/github/ACCOUNT-PROFILE.md (compact account introduction)
   org-readme.py --profile            > profile/README.md          (CSOAI-ORG/.github/profile — and the draft below)
   org-readme.py --personal OUT.md                                 (draft for the repo named after the login; never pushed by a lane)
@@ -656,6 +657,46 @@ def account_profile_md() -> str:
     return "# Nicholas Templeman · Council of AI\n\nFounder of **[Council of AI](https://councilof.ai/about/)**, the public AI measurement service operated by **CSOAI Ltd** (England and Wales, company 16939677).\n\nWe measure how AI systems behave on published tests and make the results available for others to inspect. Our work includes frozen test banks, deterministic grading where the method permits it, signed measurement records, free verification and public corrections.\n\n## Inspect the work\n\n| What you need | Start here |\n| --- | --- |\n| Current results, coverage and limitations | [Measurement board](https://councilof.ai/board/) |\n| Test methods and grading rules | [Methodology](https://councilof.ai/methodology/) |\n| Check a supported signed record | [Free verifier](https://councilof.ai/gspc-verify/) |\n| Published corrections | [Corrections ledger](https://councilof.ai/corrections/) |\n| Read evidence from your software | [Connection guide](https://councilof.ai/connect/) |\n| Discuss a defined evidence requirement | [Services](https://councilof.ai/services/) · [Contact](https://councilof.ai/contact/) |\n\n[![Current measurement board; open the board for dates and limitations](https://councilof.ai/api/badge)](https://councilof.ai/api/gspc)\n\nCounts and measurement dates belong to the [live board data](https://councilof.ai/api/gspc). Coverage is distinct from model ranking: a tie remains a tie, an untested comparison remains untested, and a fact run does not rank models. Signed and unsigned records state their status separately.\n\n## Our role\n\nCouncil of AI measures and publishes evidence. It does not certify or accredit AI systems, issue legal-compliance determinations, or sell ranking positions. Verification is free. Paid evidence work has a defined scope and does not purchase a favourable result. Our own models are disclosed separately from public rankings.\n\n**MEOK is a CSOAI product.** Its [public workspace](https://meok.ai/) reads Council's public evidence and lets users retain a transcript. Product capabilities and availability must be checked on the current MEOK site; they are not endorsements or measurement results.\n\n## Source and contributions\n\nThe [Council source repository](https://github.com/CSOAI-ORG/councilof-ai) contains the site, public APIs and measurement tooling. The [board mirror](https://github.com/CSOAI-ORG/gspc-board) provides dated snapshots. The [Hugging Face profile](https://huggingface.co/csoai) links published datasets and tools.\n\nFor reproducible defects or measurement challenges, include the record identifier, method version and steps to reproduce. Use the [security reporting route](https://councilof.ai/security/) for sensitive findings.\n\nCSOAI Ltd · Founded by Nicholas Templeman · [councilof.ai](https://councilof.ai/) · [nicholas@csoai.org](mailto:nicholas@csoai.org)\n"
 
 
+REPOSITORY_PROFILES = {
+    "sovereign-wiki": """# AI governance source catalogue
+
+This repository contains a public catalogue of AI governance sources, measurement tools and data interfaces maintained by **CSOAI Ltd**. Current Council of AI measurements, methods and verification are published at **[councilof.ai](https://councilof.ai/)**.
+
+## Inspect current work
+
+- [Measurement board](https://councilof.ai/board/) — coverage, dates and limitations.
+- [Published methods](https://councilof.ai/methodology/) — what is tested and how results are produced.
+- [Free verification](https://councilof.ai/gspc-verify/) — check supported signed records.
+- [Connection guide](https://councilof.ai/connect/) — current integration guidance.
+- [Source repository](https://github.com/CSOAI-ORG/councilof-ai) — implementation and reviewable changes.
+
+## Catalogue scope
+
+The [catalogue source](index.html), [data-interface pages](x402/index.html) and [tool catalogue](crown-jewels/index.html) retain their existing paths. Their historical labels, counts and availability statements require source-level review; use each linked project's current documentation before relying on an interface. Inclusion in this catalogue does not establish that a tool is deployed, measured or independently validated.
+
+Current counts belong to the [board data](https://councilof.ai/api/gspc) and the relevant dated source. A repository listing, retrieved root or signature is not itself a measurement result. Paid interfaces define their own scope and terms; verification of supported records remains free.
+
+Council of AI measures and publishes evidence. It does not certify or accredit AI systems, issue legal-compliance determinations, or sell ranking positions.
+
+For a defined evidence requirement, use [How we work](https://councilof.ai/how-we-work/) or [Contact](https://councilof.ai/contact/). Report sensitive findings through the [security reporting route](https://councilof.ai/security/).
+
+<!-- Generated by scripts/github/org-readme.py in the Council source repository. Edit the producer, then regenerate. -->
+""",
+    "csoai-org-v2": """# CSOAI website source — earlier version
+
+This repository retains an earlier CSOAI website implementation. The current **Council of AI** measurement service, published methods and free verification are at **[councilof.ai](https://councilof.ai/)**, operated by **CSOAI Ltd**.
+
+Start with the [measurement board](https://councilof.ai/board/), [methodology](https://councilof.ai/methodology/), [free verifier](https://councilof.ai/gspc-verify/) and [current source repository](https://github.com/CSOAI-ORG/councilof-ai).
+
+Earlier pages in this repository may contain historical terminology or superseded product claims. They do not establish the current service's capabilities, deployment state or institutional status. Council of AI publishes measurement evidence; it does not certify or accredit AI systems or issue legal-compliance determinations.
+
+For current evidence services, see [How we work](https://councilof.ai/how-we-work/) and [Contact](https://councilof.ai/contact/).
+
+<!-- Generated by scripts/github/org-readme.py in the Council source repository. Edit the producer, then regenerate. -->
+""",
+}
+
+
 def personal_md(f: dict, product_index: Path | None) -> str:
     note = ("<!-- DRAFT for CSOAI-ORG/csoai-org/README.md — the file github.com/CSOAI-ORG renders as the account profile\n"
             "     (the account is a GitHub user, and that repository is named after the login). No lane pushes it: it is the\n"
@@ -861,6 +902,7 @@ def inventory_md(f: dict, readme_sizes: dict | None = None) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--account-profile", action="store_true", help="print the compact account profile without fetching mutable metrics")
+    ap.add_argument("--repository-profile", choices=sorted(REPOSITORY_PROFILES), help="print a reviewed repository introduction without fetching mutable metrics")
     ap.add_argument("--profile", action="store_true", help="print the profile README to stdout")
     ap.add_argument("--personal", metavar="OUT.md", help="write the personal-profile draft (never pushed by a lane)")
     ap.add_argument("--councilof", metavar="README", help="splice the generated top block into this councilof-ai README.md")
@@ -870,6 +912,12 @@ def main() -> int:
     ap.add_argument("--product-index", default=None, help="path to docs/product/_INDEX.json (default: relative to this repo)")
     ap.add_argument("--selftest", action="store_true", help="prove the corrections selection can go red")
     args = ap.parse_args()
+
+    if args.repository_profile:
+        text = REPOSITORY_PROFILES[args.repository_profile]
+        guard(text, "repository profile")
+        sys.stdout.write(text)
+        return 0
 
     if args.account_profile:
         text = account_profile_md()

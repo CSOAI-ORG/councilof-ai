@@ -3,6 +3,8 @@
 Generated profiles and inventories in this directory come from the source generator. Regenerate with:
 
 ```bash
+python3 scripts/github/org-readme.py --repository-profile sovereign-wiki > docs/github/sovereign-wiki-README.md
+python3 scripts/github/org-readme.py --repository-profile csoai-org-v2 > docs/github/csoai-org-v2-README.md
 python3 scripts/github/org-readme.py --account-profile > docs/github/ACCOUNT-PROFILE.md # concise account introduction; live metrics remain linked
 python3 scripts/github/org-readme.py --profile > docs/github/PROFILE-README.md       # account / org profile (also pushed to CSOAI-ORG/.github/profile)
 python3 scripts/github/org-readme.py --personal docs/github/PERSONAL-PROFILE-DRAFT.md  # draft for the repo named after the login — never pushed by a lane
@@ -16,6 +18,22 @@ Brand, in the owner's words (2026-09-05): *branded CSOAI, not tacky*. White grou
 `CS<strong>O</strong>AI`, one badge row that links only to things that exist, tables derived from live endpoints, plain sentences.
 No animated anything, no trophies, no gradients, no emoji storms. The generator refuses to emit a page that carries
 "certified", "BFT", "sovereign" or a price.
+
+## Apply a reviewed description scope
+
+For wording changes, use the description-only path instead of the legacy bulk apply mode:
+
+```bash
+python3 scripts/github/repo-metadata.py --apply-descriptions plan.json --repos councilof-ai sovereign-wiki csoai-org-v2
+```
+
+The plan must identify `CSOAI-ORG`, include each explicitly selected repository once, and record its before/after description and archived state. Review the plan first. The command validates the entire selected scope and reads current descriptions before its first write; it rechecks each repository immediately before editing and reads it back afterwards. Unknown or stale values abort. Already-correct descriptions and archived repositories are left alone. It sends only a description field, even if the plan also contains topic or licence proposals.
+
+This is a best-effort preflight and readback, not an atomic GitHub compare-and-swap. A failure after a write can leave a partial result; inspect the live state before retrying. The legacy `--apply` path still includes other metadata operations and should not be used for a wording-only task. New plans no longer infer MIT from a missing manifest declaration; compound and unsupported declarations require explicit review. No existing licence is changed by this source update.
+
+The three reviewed descriptions are kept in the generator's `HAND` table. They link current measurement evidence without embedding a mutable board count. Their README bodies remain separate surfaces to reconcile through their producers.
+
+Offline control suite: `python3 -I -B scripts/github/test_repo_metadata.py`. The path-scoped workflow has read-only repository permissions and exercises mocked API calls; it never applies a metadata plan.
 
 ## A fact that changes what renders where
 

@@ -70,6 +70,22 @@ This register incorporates the existing human-operations, evidence-operating and
 Lead with dated published methods, measurements, limits, corrections and verification. Keep declared scope separate from observed operation; retrieved metadata separate from cryptographic checks; synthetic journeys separate from customer acceptance; recorded approval separate from execution; and revenue bookkeeping separate from repeat demand. These distinctions make the institutional and commercial description stronger because a visitor can inspect what each claim means.
 
 
+## Continued producer and identity review — 29 October 2026
+
+The official [Companies House overview](https://find-and-update.company-information.service.gov.uk/company/16939677) identifies CSOAI LTD (16939677) as an active private limited company incorporated on 2 January 2026. This agrees with the operator identity on Council's About page; it does not confer accreditation or a statutory measurement role.
+
+Existing [PR #2975](https://github.com/CSOAI-ORG/councilof-ai/pull/2975) at `7d3b4afb7ade307cdddfe1fba38e698838e4264e` already owns the broader public-page/rights/metadata/accessibility work. Its description reports 738 HTTP observations, 908 restricted renders across 454 first-party entries, 96 targeted candidate renders and 78 focused JavaScript tests plus 13 Kaggle and six envelope checks. These are that contribution's reported results, not tests rerun by this wording pass. Incorporate its source and release acceptance once instead of recreating its page edits.
+
+This contribution now also repairs the metadata producer: three reviewed descriptions are count-free, description-only application requires an explicit repository allowlist and current-value checks, and its PATCH body contains only `description`. It validates the full selected scope before writes, rechecks before each write and reads back afterwards. These checks are best-effort; GitHub's description update is not an atomic compare-and-swap, and a later failure can leave a partial result. New licence plans require explicit supported declarations instead of defaulting missing/compound declarations to MIT. The legacy bulk apply path still needs independent review and is not used here.
+
+Fourteen offline tests exercise stale plans, changes after preflight, wrong repository identity, read failures, failed readback, explicit scope, archived repositories, idempotent reruns and licence-selection boundaries. A separate path-scoped CI workflow uses a pinned checkout and read-only permissions. No live metadata batch, topic change or licence-file mutation was performed by this continuation.
+
+All four required hosted checks passed on `08238da1483feb243c03b1e7489a2f429882aaa5`. The metadata follow-up must pass on its own head. Current MEOK serving-source access and account-profile write access remain unresolved; no private record is published and no production release is claimed.
+
+
+The same profile producer now emits reviewed introductions for the two legacy repository READMEs. They remove promotional catalogue wording, stale availability/count claims and certificate-authority wording while linking current measurements and evidence services. Historical paths are retained; catalogue/page bodies still need their own producer review. Publishing those mirrors requires a successful exact-blob write and readback; preparation alone is not a live correction.
+
+
 ## Acceptance register
 
 “Prepared” means a source edit or replacement is ready, not live. “Verified sample” applies only to the stated sample. “Inventoried” means enumerated, not audited. “Open” is not completed. Owners are recommended roles, not assigned people. Close a control only with a dated URL, commit, test receipt or administrative evidence.
@@ -78,7 +94,7 @@ Lead with dated published methods, measurements, limits, corrections and verific
 | --- | --- | --- | --- | --- | --- | --- |
 | H001 | Identity | P0 | Prepared | Publish a stable account profile | Founder, legal operator, current evidence and contact links are clear; stale counts removed | Communications |
 | H002 | Identity | P1 | Verified sample | State who operates Council of AI | Homepage and about page identify CSOAI Ltd and link the work | Communications |
-| H003 | Identity | P1 | Open | Verify corporate identifiers at the official register | Legal name, company number and registered details match current official records | Operations |
+| H003 | Identity | P1 | Verified sample | Verify corporate identifiers at the official register | Official Companies House overview read 29 Oct: CSOAI LTD, company 16939677, active private limited company, incorporated 2 Jan 2026; identity agrees with Council About. This is a register match, not accreditation. | Operations |
 | H004 | Identity | P1 | Prepared | Describe an operating measurement body in plain language | Lead with published tests, methods, results and verification; no implied statutory appointment | Communications |
 | H005 | Identity | P1 | Open | Unify brand architecture | Council of AI is the measurement service; MEOK is a CSOAI product; legacy names have explicit roles | Communications |
 | H006 | Identity | P1 | Open | Review logos, wordmarks and social avatars | Owned profiles use approved assets with readable mobile and small-size variants | Design |
@@ -87,7 +103,7 @@ Lead with dated published methods, measurements, limits, corrections and verific
 | H009 | Claims | P0 | Prepared | Replace permissionless institutional slogans | Current descriptive copy explains published coverage and public verification | Editorial |
 | H010 | Claims | P0 | Prepared | Block black-swan and goldmine variants in rendered copy | Guard self-tests catch singular, plural and hyphenated variants | Engineering |
 | H011 | Claims | P0 | Open | Replace crown-jewel and internal-code marketing | Current titles, snippets, navigation and package summaries use descriptive names | Editorial |
-| H012 | Claims | P0 | Open | Audit positive certification and accreditation claims | Every positive claim has applicable evidence; negations and historical quotes retain their meaning | Editorial |
+| H012 | Claims | P0 | Related PR | Audit positive certification and accreditation claims | Existing PR 2975 corrects unsupported institutional, framework, ROI and protection claims across public pages. Its candidate tests do not establish production adoption. | Editorial |
 | H013 | Claims | P0 | Prepared | Separate coverage, measurement and ranking | Every count names its population; ties, untested rows and fact runs remain distinct | Measurement |
 | H014 | Claims | P0 | Partial | Classify every capability by availability | Existing human-operations review retained 312 declarations and 172 safe GET observations. Availability is endpoint-specific; declared capability is not tested execution. | Product |
 | H015 | Claims | P0 | Open | Check independence and commercial boundaries | Payment and ownership disclosures are accurate; favourable results cannot be bought | Measurement |
@@ -97,13 +113,13 @@ Lead with dated published methods, measurements, limits, corrections and verific
 | H019 | Claims | P1 | Open | Review quantified scale and performance claims | Totals are reproducible and benchmarks state population, hardware and evaluation method | Measurement |
 | H020 | Claims | P1 | Open | Check research and membership language | Publication, listing or membership does not imply endorsement or accreditation | Editorial |
 | H021 | GitHub | P1 | Inventoried | Inventory the public account repositories | 767 public repository metadata records captured with URLs, descriptions and flags | Engineering |
-| H022 | GitHub | P0 | Open | Triage the flagged repository descriptions | Review the candidate list manually; negations are not false positive claims | Editorial |
+| H022 | GitHub | P0 | Partial | Triage the flagged repository descriptions | Three high-visibility descriptions reconciled in the canonical metadata generator. Two were changed live earlier; the main repository already matches. Remaining flagged repositories need individual review. | Editorial |
 | H023 | GitHub | P1 | Changed live | Clean sovereign-wiki repository description | Public readback uses catalogue, tools and methods language without inflated counts | Engineering |
 | H024 | GitHub | P0 | Partial | Correct the csoai-org-v2 certificate-authority wording | Repository description corrected; README and legacy page content still require review | Editorial |
-| H025 | GitHub | P1 | Open | Review every active repository README | Purpose, status, quickstart, limits, licence, security and canonical links are present | Maintainers |
+| H025 | GitHub | P1 | Partial | Review every active repository README | Count-free replacement introductions for two legacy repositories are generated from org-readme.py and prepared for their existing READMEs. All other active repository bodies still need review. | Maintainers |
 | H026 | GitHub | P1 | Open | Categorise legacy and experimental repositories | Current entry points explain status without deleting history or breaking consumers | Maintainers |
 | H027 | GitHub | P1 | Open | Curate pinned repositories and account bio | Pins lead to maintained evidence, verifier, methods and useful tools | Communications |
-| H028 | GitHub | P1 | Open | Review homepage URLs and topics | Links resolve to canonical owned pages; topics accurately describe scope | Maintainers |
+| H028 | GitHub | P1 | Partial | Review homepage URLs and topics | Description-only writer added with explicit repository scope, stale-plan checks and readback; topics/homepage fields untouched. No new bulk metadata application performed. | Maintainers |
 | H029 | GitHub | P0 | Partial | Verify default-branch protection | Branch response reports protected master and required checks; full admin policy still needs access | Security |
 | H030 | GitHub | P0 | Open | Verify account access and recovery | MFA, least privilege, recovery ownership and inactive collaborators are reviewed privately | Security |
 | H031 | GitHub | P0 | Open | Review application and deploy-key access | Each integration has a documented purpose, owner and minimum permissions | Security |
@@ -113,7 +129,7 @@ Lead with dated published methods, measurements, limits, corrections and verific
 | H035 | GitHub | P1 | Open | Check package and release provenance | Published artifacts map to source commits, immutable versions and attestations where supported | Engineering |
 | H036 | GitHub | P1 | Open | Verify community-health files per active repo | Security policy, contribution guidance, licence and issue templates resolve correctly | Maintainers |
 | H037 | SEO | P1 | Verified sample | Inspect raw homepage and key-page metadata | Sampled Council pages expose descriptive titles, descriptions and canonicals in returned HTML | Web |
-| H038 | SEO | P1 | Open | Audit all sitemap URLs | Every intended canonical URL returns useful indexable content without soft errors | Web |
+| H038 | SEO | P1 | Related audit | Audit all sitemap URLs | PR 2975 reports 738 HTTP observations from a 472-entry sitemap and discovered links. Failures and release readbacks remain scoped to that audit; not all routes are closed. | Web |
 | H039 | SEO | P1 | Open | Check sitemap freshness and lastmod accuracy | Only substantive changes update lastmod; canonical routes are complete | Web |
 | H040 | SEO | P1 | Open | Review robots directives across hostnames | Search crawlers can reach intended public pages; restricted content uses access control | Web |
 | H041 | SEO | P1 | Open | Resolve canonical and alias consistency | Apex, www, trailing slash, mirrors and old routes converge intentionally | Web |
@@ -127,11 +143,11 @@ Lead with dated published methods, measurements, limits, corrections and verific
 | H049 | SEO | P1 | Open | Review branded search-result snippets | Dated query, engine, locale and result URL are captured; snippets are not presumed controllable | Growth |
 | H050 | SEO | P1 | Open | Correct third-party directory summaries | Owned upstream metadata is fixed and directory correction requests are tracked | Communications |
 | H051 | SEO | P1 | Open | Measure field performance on priority routes | Mobile field data where available and repeatable lab results establish a baseline | Web |
-| H052 | SEO | P1 | Open | Review accessible page structure | Heading order, keyboard focus, labels, contrast and screen-reader names pass manual checks | Design |
+| H052 | SEO | P1 | Related PR | Review accessible page structure | PR 2975 reports 908 restricted renders across 454 first-party entries and 96 targeted candidate renders, including named form controls. Broader manual assistive-technology acceptance remains open. | Design |
 | H053 | SEO | P2 | Open | Build evidence-led content clusters | Methods, use cases, examples and limitations answer real search intent with original evidence | Growth |
 | H054 | SEO | P2 | Open | Check multilingual and regional declarations | Language tags and hreflang only describe actual maintained equivalents | Web |
 | H055 | MEOK | P0 | Verified sample | Record current public product boundaries | Homepage distinguishes public evidence workspace from unavailable private staff and voice | Product |
-| H056 | MEOK | P0 | Partial | Identify the deployed MEOK source and release owner | Two older deployment-artifact copies agree on stale docs but differ from live homepage bytes. Current serving source and release owner are still unconfirmed; no deployment performed. | Engineering |
+| H056 | MEOK | P0 | Access blocked | Identify the deployed MEOK source and release owner | Retained release context identifies a private website repository; current connector returns 404 and inspected local artifacts do not establish today's serving commit. Candidate ready; current owner adoption remains open. | Engineering |
 | H057 | MEOK | P0 | Open | Align privacy wording with the current product | Storage, export, network processing, retention and deletion match tested behaviour | Product |
 | H058 | MEOK | P0 | Open | Align terms and product vocabulary | Legacy character and playground terms match the actual current service or are scoped historically | Product |
 | H059 | MEOK | P1 | Verified sample | Test Ask and transcript export end to end | Retained 29 Oct human-operations review: public Ask, save and reopen preserved the answer without an extra Ask request; tampered digest rejected. PR 3602 records the earlier live journey. Not rerun by this consolidation. | QA |
@@ -155,7 +171,7 @@ Lead with dated published methods, measurements, limits, corrections and verific
 | H077 | Security | P1 | Open | Exercise incident and recovery procedures | Named owners, backup restoration and signing-key compromise scenarios have dated results | Operations |
 | H078 | Security | P1 | Open | Review personal data collection and consent | Forms, analytics, logs and third parties match current notices and configured consent | Product |
 | H079 | Security | P1 | Open | Check production logging and monitoring | Errors and incidents are detectable without logging keys or unnecessary personal data | Operations |
-| H080 | Security | P1 | Open | Review software supply chain and licences | Dependencies, downloaded code, SBOM and redistribution obligations are inventoried | Security |
+| H080 | Security | P1 | Partial | Review software supply chain and licences | Metadata planner no longer infers MIT from absent or compound licence declarations. Description-only mode writes no licences. Existing dependency, SBOM, rights and legacy licence audits remain open. | Security |
 | H081 | Commercial | P1 | Prepared | Replace internal revenue slogans with service scope | Public wording explains evidence assembly, licensing and delivery without selling outcomes | Product |
 | H082 | Commercial | P1 | Related PR | Define buyer-specific service pages | PR 3596 owns task-based buyer navigation and connection guidance; PR 3603 retains service wording. Production visitor acceptance remains open. | Commercial |
 | H083 | Commercial | P1 | Related PR | Show representative deliverables | PR 3602 adds original capsule/check export and public decision history; PR 3598 extends a clearly synthetic example. Neither proves customer adoption. | Commercial |
@@ -172,7 +188,7 @@ Lead with dated published methods, measurements, limits, corrections and verific
 | H094 | Distribution | P1 | Open | Review research dataset and model cards | Methods, licence, provenance, limits and current status are explicit | Measurement |
 | H095 | Distribution | P1 | Open | Review social and professional public profiles | Biographies, links and claims follow the same approved evidence-led positioning | Communications |
 | H096 | Release | P0 | Published PR | Publish source changes through the governed PR route | Public PR 3603 contains explicitly selected source and generated assets. Production release remains governed by DEPLOY-LOCK.md. | Engineering |
-| H097 | Release | P0 | In progress | Run required build and release checks | Previous head 1c5014a passed the main gate and release checks. Follow-up head must pass independently; previous green checks are not clearance for new changes. | Release owner |
+| H097 | Release | P0 | In progress | Run required build and release checks | All four required checks passed on 08238da. Metadata-control follow-up requires its own hosted checks; no prior-head clearance transfers. | Release owner |
 | H098 | Release | P0 | Open | Verify production after deployment | Apex and production alias agree; delayed anti-clobber check preserves the same release | Release owner |
 | H099 | Release | P1 | Partial | Maintain a public completion ledger | This master register links live repository metadata changes and source PRs. Check statuses distinguish prepared, bounded validation and deployed work; production acceptance remains open. | Operations |
 | H100 | Release | P1 | Open | Recheck drift and search visibility | Scheduled review has an owner; Google changes are confirmed by observation, not promised | Operations |
