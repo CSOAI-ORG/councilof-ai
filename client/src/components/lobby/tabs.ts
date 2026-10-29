@@ -68,6 +68,7 @@ export type LobbyTabId =
   | "software"
   | "learn"
   | "staff"
+  | "research"
   | "play"
   | "connect"
   | "route"
@@ -155,6 +156,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(staff|human review|human[- ]in[- ]the[- ]loop|hitl|h\.i\.m\.|competency (?:check|module)|review queue|operator decision)\b/i,
+  },
+  {
+    id: "research",
+    label: "Continuous research",
+    blurb:
+      "Every measured GSPC axis with its authoritative watch sources, missing runtime, safe automation and required human review.",
+    path: "",
+    kind: "native",
+    cues: /\b(continuous research|research plan|research registry|source watch|re-?measure|remeasurement)\b/i,
   },
   {
     id: "explore",
@@ -939,9 +949,10 @@ const DASHBOARD_NAV_DEFINITION: {
     id: "learn",
     label: "Learn",
     description:
-      "Learn how each test works, replay recorded model rounds, and practise.",
+      "Learn how each test works, replay recorded model rounds, practise, and inspect continuous research.",
     tabs: [
       { id: "learn", label: "Learning" },
+      { id: "research", label: "Continuous research" },
       { id: "space", label: "Model arena" },
       { id: "play", label: "Games" },
     ],

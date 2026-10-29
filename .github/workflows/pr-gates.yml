@@ -452,7 +452,7 @@ jobs:
       - name: Council OS first question — desktop and mobile
         id: council_os_first_question
         if: steps.scope.outputs.gated == 'true'
-        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries'
 
       - name: Retain Council OS first-question premerge evidence
         if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
@@ -462,6 +462,7 @@ jobs:
           path: |
             test-results/**/trace.zip
             test-results/**/agui-request-lifecycle.json
+            test-results/**/agui-local-trace.json
             test-results/**/*.png
           retention-days: 3
           if-no-files-found: warn
@@ -727,6 +728,9 @@ jobs:
           # The outward gate itself. Its tests were not in CI: from the day brand-gate.mjs gained a look-behind
           # that Python cannot read, the gate could score nothing at 100% and one of these tests sat red unseen.
           python3 -m pytest -q scripts/outward-gate/test_outward_gate.py scripts/outward-gate/test_gate_draft.py
+          # The daily scorecard workflow (outward-gate-daily.yml): it only reads, a low score never turns it
+          # red, and a run that could not measure never stays green. Its two inline scripts are run here.
+          python3 -m pytest -q scripts/outward-gate/test_daily_workflow.py
           # C-2026-0914-01: a one-option exact-label menu is refused, and every signed card
           # graded by one is in WITHDRAWN.jsonl (derived from the bound bank bytes).
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
