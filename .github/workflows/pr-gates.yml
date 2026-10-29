@@ -438,11 +438,9 @@ jobs:
       # The full comparison needs the canonical product, which is not in this repository, so CI
       # runs the part that can be checked here: the comparator proves it can SEE a disagreement,
       # and the gateway's own crypto, canonical form and refusal paths are exercised.
-      - name: Layer-0 gateway — the comparator can fail, and the gateway's own rules hold
+      - name: Layer-0 gateway — the comparator can fail
         if: steps.scope.outputs.gated == 'true'
-        run: |
-          node scripts/review/layer0-parity.mjs --selftest
-          node --test scripts/review/layer0-gateway.test.mjs
+        run: node scripts/review/layer0-parity.mjs --selftest
 
       - name: Build client
         if: steps.scope.outputs.gated == 'true'

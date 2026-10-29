@@ -129,10 +129,24 @@ return { decide: l0DecideGate, denySet: L0_DENY_ACTIONS, escalateSet: L0_ESCALAT
   return { decide, denySet, escalateSet };
 }
 
-/** The Pages implementation, imported from the same module the function serves. */
+/**
+ * The Pages implementation, imported from the same module the function serves.
+ *
+ * The module is TypeScript, so this needs a runtime that can load it: Node 22.18+ strips the
+ * types, and vitest transforms it. Node 20 - which is what the gates job runs - cannot, and
+ * says so with a bare ERR_UNKNOWN_FILE_EXTENSION. The error below names the cause and the two
+ * ways to run the comparison, instead of leaving a stack trace to be read.
+ */
 export async function loadPages() {
-  const mod = await import(path.join(ROOT, 'functions', '_lib', 'layer0.ts'));
-  return mod;
+  try {
+    return await import(path.join(ROOT, 'functions', '_lib', 'layer0.ts'));
+  } catch (e) {
+    throw new Error(
+      `the public rule in functions/_lib/layer0.ts could not be loaded by this runtime (${e && e.message}). ` +
+      'Run the comparison on Node 22.18+ (which strips TypeScript types) or through vitest; ' +
+      'the gateway\'s own rules are exercised by functions/_lib/layer0.test.ts.',
+    );
+  }
 }
 
 /** Compare two decisions field by field. Returns a list of differences. */
