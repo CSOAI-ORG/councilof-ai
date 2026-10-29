@@ -123,7 +123,9 @@ export default function HitlDecisionHistory({
       <p className="mt-2 text-xs text-sky-100/80">
         Find a recorded decision, inspect the proposed action, and keep a copy.
         These are public Council records, not private MEOK tasks. A recorded
-        approval does not prove that an action ran.
+        approval does not prove that an action ran. Only returned records are
+        searched. History may be limited or delayed; a missing match does not
+        establish that a decision was not recorded.
       </p>
       <div className="my-3 flex flex-wrap items-center gap-3 text-sm">
         <button

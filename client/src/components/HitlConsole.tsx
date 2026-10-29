@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import HitlDecisionHistory from "./HitlDecisionHistory";
+import { requestHitlJson } from "../lib/hitlRequest";
+import { parseHitlReceipt, type PublicHitlReceipt } from "../lib/hitlRecord";
 
 /**
  * The human-in-the-loop console.
@@ -103,9 +105,17 @@ export default function HitlConsole({
   const [token, setToken] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [receipt, setReceipt] = useState<any>(null);
+  const [receipt, setReceipt] = useState<PublicHitlReceipt | null>(null);
+  const [acknowledgedId, setAcknowledgedId] = useState<string | null>(null);
+  const submitting = useRef(false);
+  const loadGeneration = useRef(0);
+  const loadController = useRef<AbortController | null>(null);
 
   const load = useCallback(async () => {
+    const current = ++loadGeneration.current;
+    loadController.current?.abort();
+    const controller = new AbortController();
+    loadController.current = controller;
     setSnapshotState("loading");
     setQueueState("loading");
     setSnap(null);
@@ -113,28 +123,47 @@ export default function HitlConsole({
     await Promise.all([
       (async () => {
         try {
-          const r = await fetch("/api/hitl");
+          const { response: r, body: j } = await requestHitlJson("/api/hitl", {
+            signal: controller.signal,
+          });
+          if (current !== loadGeneration.current) return;
           if (!r.ok) throw new Error("State unavailable");
-          const j = await r.json();
           if (
             j?.schema !== "csoai.hitl-companion-state/0.1" ||
             !["open", "locked"].includes(j.decision_path) ||
             typeof j.signing_key_configured !== "boolean" ||
-            typeof j.store_bound !== "boolean"
+            typeof j.store_bound !== "boolean" ||
+            !Array.isArray(j.modules) ||
+            !j.modules.every(
+              (m: any) =>
+                m &&
+                ["id", "axis", "title", "briefing", "question"].every(
+                  (k) => typeof m[k] === "string",
+                ) &&
+                Array.isArray(m.options) &&
+                m.options.length > 0 &&
+                m.options.every(
+                  (o: any) =>
+                    o && typeof o.id === "string" && typeof o.text === "string",
+                ),
+            )
           ) {
             throw new Error("State unreadable");
           }
           setSnap(j as HitlSnapshot);
           setSnapshotState("ready");
         } catch {
-          setSnapshotState("error");
+          if (current === loadGeneration.current) setSnapshotState("error");
         }
       })(),
       (async () => {
         try {
-          const r = await fetch("/api/hitl/challenges");
+          const { response: r, body: j } = await requestHitlJson(
+            "/api/hitl/challenges",
+            { signal: controller.signal },
+          );
+          if (current !== loadGeneration.current) return;
           if (!r.ok) throw new Error("Queue unavailable");
-          const j = await r.json();
           if (
             j?.schema !== "csoai.hitl-companion-state/0.1" ||
             !Array.isArray(j.challenges) ||
@@ -153,7 +182,7 @@ export default function HitlConsole({
           setQueued(j.challenges);
           setQueueState("ready");
         } catch {
-          setQueueState("error");
+          if (current === loadGeneration.current) setQueueState("error");
         }
       })(),
     ]);
@@ -161,6 +190,10 @@ export default function HitlConsole({
 
   useEffect(() => {
     void load();
+    return () => {
+      ++loadGeneration.current;
+      loadController.current?.abort();
+    };
   }, [load]);
 
   const pending = incoming ?? queued.find((c) => c.state === "PENDING") ?? null;
@@ -183,56 +216,77 @@ export default function HitlConsole({
   const locked = snap?.decision_path !== "open";
 
   async function submitModule() {
-    if (!module || !picked) return;
+    if (!module || !picked || submitting.current) return;
+    submitting.current = true;
     setBusy(true);
     setError(null);
     try {
-      const r = await fetch("/api/hitl/modules", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ module_id: module.id, answer: picked }),
-      });
-      const j = await r.json();
+      const { response: r, body: j } = await requestHitlJson(
+        "/api/hitl/modules",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ module_id: module.id, answer: picked }),
+        },
+      );
       if (!r.ok) {
         setError(
           String(j?.reason ?? j?.error ?? "The module could not be checked."),
         );
         return;
       }
+      if (
+        j?.ok !== true ||
+        typeof j.correct !== "boolean" ||
+        j.module_id !== module.id
+      )
+        throw new Error("Module result unreadable");
       setModuleResult({
-        correct: Boolean(j.correct),
+        correct: j.correct,
         explanation: j.explanation,
       });
     } catch {
       setError(
-        "The competence check could not be reached, so the decision stays open.",
+        "The competence result could not be confirmed. The decision endpoint will check the current record again.",
       );
     } finally {
+      submitting.current = false;
       setBusy(false);
     }
   }
 
   async function decide(decision: string) {
-    if (!pending || locked || outcomeUnknown || busy) return;
+    if (
+      !pending ||
+      locked ||
+      outcomeUnknown ||
+      submitting.current ||
+      acknowledgedId === pending.id
+    )
+      return;
+    submitting.current = true;
     setBusy(true);
     setError(null);
+    setReceipt(null);
     try {
-      const r = await fetch("/api/hitl/decision", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          ...(token.trim() ? { "x-hitl-token": token.trim() } : {}),
+      const { response: r, body: j } = await requestHitlJson(
+        "/api/hitl/decision",
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            ...(token.trim() ? { "x-hitl-token": token.trim() } : {}),
+          },
+          body: JSON.stringify({
+            challenge: pending,
+            decision,
+            operator: operator.trim(),
+            note: note.trim(),
+            module_id: module?.id ?? "",
+            answer: picked ?? "",
+          }),
         },
-        body: JSON.stringify({
-          challenge: pending,
-          decision,
-          operator: operator.trim(),
-          note: note.trim(),
-          module_id: module?.id ?? "",
-          answer: picked ?? "",
-        }),
-      });
-      const j = await r.json();
+      );
       if (!r.ok) {
         if (r.status >= 500) throw new Error("Decision outcome unknown");
         setError(
@@ -245,10 +299,25 @@ export default function HitlConsole({
       }
       if (j?.ok !== true || !j.receipt)
         throw new Error("Decision outcome unknown");
-      setReceipt(j.receipt);
+      const accepted = parseHitlReceipt(j.receipt);
+      if (
+        accepted.challenge.id !== pending.id ||
+        accepted.challenge.subject !== pending.subject ||
+        accepted.challenge.proposed_action !== pending.proposed_action ||
+        accepted.decision !== decision
+      )
+        throw new Error("Receipt does not match this decision");
+      setReceipt(accepted);
+      setAcknowledgedId(pending.id);
       setRecordRevision((n) => n + 1);
-      onReceipt?.(j?.receipt ?? null);
       void load();
+      try {
+        onReceipt?.(j.receipt);
+      } catch {
+        setError(
+          "A matching receipt was returned, but the surrounding view could not refresh. Keep the receipt and inspect the public record.",
+        );
+      }
     } catch {
       setOutcomeUnknown(true);
       setRecordRevision((n) => n + 1);
@@ -256,6 +325,7 @@ export default function HitlConsole({
         "The decision outcome is unknown. Check Past public decisions before any retry; the request may have been recorded. Further decisions are paused in this session.",
       );
     } finally {
+      submitting.current = false;
       setBusy(false);
     }
   }
@@ -263,7 +333,7 @@ export default function HitlConsole({
   return (
     <section
       data-testid="hitl-console"
-      className="mt-8 rounded-2xl border border-amber-400/30 bg-amber-500/5 p-5"
+      className="mt-8 rounded-2xl border border-amber-400/30 bg-slate-950 p-5 text-amber-50"
     >
       <div className="mb-1 flex flex-wrap items-center gap-2">
         <h2 className="text-xl font-bold text-amber-50">Human in the loop</h2>
@@ -295,7 +365,7 @@ export default function HitlConsole({
           {snapshotState !== "ready"
             ? "unknown — status has not been confirmed"
             : locked
-              ? "locked — no operator token"
+              ? "locked — decision requirements are not met"
               : "open — an operator token is required"}
         </div>
         <div
@@ -317,7 +387,7 @@ export default function HitlConsole({
           {snapshotState !== "ready"
             ? "unknown — status has not been confirmed"
             : snap?.store_bound
-              ? "persisted"
+              ? "store configured — each write needs acknowledgement"
               : "not persisted — no store bound"}
         </div>
       </div>
@@ -328,10 +398,9 @@ export default function HitlConsole({
           data-testid="hitl-locked-note"
           className="mb-5 rounded-xl border border-rose-400/40 bg-rose-500/10 px-3 py-2 text-[13px] text-rose-100"
         >
-          No decision can be taken on this deployment until an operator token is
-          configured. That is deliberate: an approval endpoint anyone can call
-          is not a human in the loop. Everything else here — the record, the
-          curriculum, the challenge — works without it.
+          {typeof snap?.decision_path_note === "string"
+            ? snap.decision_path_note
+            : "The decision path is locked. Check this deployment’s operator and storage requirements."}
         </p>
       ) : null}
 
@@ -492,7 +561,13 @@ export default function HitlConsole({
               key={d}
               type="button"
               data-testid={`hitl-decide-${d}`}
-              disabled={busy || locked || !pending || outcomeUnknown}
+              disabled={
+                busy ||
+                locked ||
+                !pending ||
+                outcomeUnknown ||
+                acknowledgedId === pending?.id
+              }
               onClick={() => void decide(d)}
               className={`rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-40 ${
                 d === "APPROVED"
@@ -506,6 +581,13 @@ export default function HitlConsole({
             </button>
           ))}
         </div>
+        {acknowledgedId && acknowledgedId === pending?.id ? (
+          <p role="status" className="mt-2 text-xs text-emerald-100/80">
+            A matching receipt was returned for this challenge. Further
+            submissions for it are paused in this view. Inspect the public
+            record; this does not prove execution.
+          </p>
+        ) : null}
         {!pending ? (
           <p className="mt-2 text-[12px] text-emerald-100/60">
             No challenge is selected for a decision.
@@ -533,7 +615,7 @@ export default function HitlConsole({
             </p>
             <p className="mt-1 text-[12px] text-emerald-100/70">
               {receipt.signature?.value_hex
-                ? `Signed under ${receipt.signature.did}. sha256 ${receipt.signature.sha256}`
+                ? `Signature present; not verified here. Declared signer: ${receipt.signature.did ?? "not supplied"}.`
                 : `UNSIGNED: ${receipt.signature?.unsigned_reason ?? "no signing key"}`}
             </p>
           </div>
@@ -545,8 +627,9 @@ export default function HitlConsole({
       <p className="mt-4 text-[11px] text-amber-100/55">
         The receipt schema is csoai.hitl-oversight-receipt/0.1 and the decision
         vocabulary is APPROVED, HOLD, REJECTED — the same ones the MEOK H.I.M.
-        uses. A machine signature proves the bytes came from this deployment; it
-        never proves the human was right, and it never certifies anything.
+        uses. A valid signature can authenticate receipt bytes when checked
+        against a trusted key. This view does not verify signatures, human
+        identity or execution, and a receipt never certifies anything.
       </p>
     </section>
   );

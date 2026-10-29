@@ -61,6 +61,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   container.remove();
+  vi.useRealTimers();
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
@@ -227,4 +228,164 @@ describe("console uncertainty", () => {
       ).toHaveLength(2);
     },
   );
+});
+
+describe("bounded human review requests and matched receipts", () => {
+  function consoleFetch(post: (init: RequestInit) => unknown) {
+    return useFetch((url, init) =>
+      init?.method === "POST"
+        ? post(init)
+        : response(
+            url === "/api/hitl"
+              ? state
+              : url.endsWith("challenges")
+                ? queue
+                : record,
+          ),
+    );
+  }
+  function approve() {
+    return container.querySelector(
+      '[data-testid="hitl-decide-APPROVED"]',
+    ) as HTMLButtonElement;
+  }
+  it.each(["headers", "body"])(
+    "ends a stalled %s read with an honest retry path",
+    async (phase) => {
+      vi.useFakeTimers();
+      useFetch(() =>
+        phase === "headers"
+          ? new Promise(() => {})
+          : {
+              ...response(state),
+              json: () => new Promise(() => {}),
+              text: () => new Promise(() => {}),
+            },
+      );
+      await render(<HitlConsole />);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(15001);
+      });
+      expect(container.textContent).toContain(
+        "review queue could not be checked",
+      );
+      expect(button("Retry status read")).toBeTruthy();
+      expect(approve().disabled).toBe(true);
+    },
+  );
+  it("a timed-out decision stays unknown and is never automatically retried", async () => {
+    vi.useFakeTimers();
+    const f = consoleFetch(() => new Promise(() => {}));
+    await render(<HitlConsole />);
+    await act(async () => approve().click());
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(15001);
+    });
+    expect(container.textContent).toContain("decision outcome is unknown");
+    expect(approve().disabled).toBe(true);
+    expect(f.mock.calls.filter((c) => c[1]?.method === "POST")).toHaveLength(1);
+  });
+  it.each(["empty", "other challenge", "changed action", "other decision"])(
+    "does not accept a %s receipt as this decision",
+    async (kind) => {
+      const receipt =
+        kind === "empty"
+          ? {}
+          : {
+              ...entry,
+              decision: kind === "other decision" ? "REJECTED" : "APPROVED",
+              challenge: {
+                ...entry.challenge,
+                id:
+                  kind === "other challenge"
+                    ? "another-id"
+                    : entry.challenge.id,
+                proposed_action:
+                  kind === "changed action"
+                    ? "Different action"
+                    : entry.challenge.proposed_action,
+              },
+            };
+      consoleFetch(() => response({ ok: true, receipt }));
+      await render(<HitlConsole />);
+      await act(async () => approve().click());
+      expect(container.textContent).toContain("decision outcome is unknown");
+      expect(
+        container.querySelector('[data-testid="hitl-receipt"]'),
+      ).toBeNull();
+      expect(approve().disabled).toBe(true);
+    },
+  );
+  it("keeps a matched receipt and prevents repeat submission when a stale queue or parent callback remains", async () => {
+    const receipt = { ...entry, decision: "APPROVED" };
+    const f = consoleFetch(() => response({ ok: true, receipt }));
+    await render(
+      <HitlConsole
+        onReceipt={() => {
+          throw new Error("parent refresh failed");
+        }}
+      />,
+    );
+    await act(async () => approve().click());
+    expect(
+      container.querySelector('[data-testid="hitl-receipt"]')?.textContent,
+    ).toContain("APPROVED");
+    expect(container.textContent).toContain(
+      "Signature present; not verified here",
+    );
+    expect(container.textContent).not.toContain("decision outcome is unknown");
+    expect(approve().disabled).toBe(true);
+    await act(async () => approve().click());
+    expect(f.mock.calls.filter((c) => c[1]?.method === "POST")).toHaveLength(1);
+  });
+  it("does not misdiagnose a missing store as a missing operator token", async () => {
+    useFetch((url) =>
+      response(
+        url === "/api/hitl"
+          ? {
+              ...state,
+              decision_path: "locked",
+              store_bound: false,
+              operator_token_configured: true,
+              decision_path_note:
+                "No decision store is bound, so a decision cannot be recorded.",
+            }
+          : url.endsWith("challenges")
+            ? queue
+            : record,
+      ),
+    );
+    await render(<HitlConsole />);
+    expect(container.textContent).toContain("No decision store is bound");
+    expect(container.textContent).not.toContain("locked — no operator token");
+    expect(approve().disabled).toBe(true);
+  });
+  it("rejects a malformed module without crashing the console", async () => {
+    useFetch((url) =>
+      response(
+        url === "/api/hitl"
+          ? {
+              ...state,
+              modules: [{ id: "broken", options: null }],
+            }
+          : url.endsWith("challenges")
+            ? queue
+            : record,
+      ),
+    );
+    await render(<HitlConsole />);
+    expect(
+      container.querySelector('[data-testid="hitl-gate-decision"]')
+        ?.textContent,
+    ).toContain("unknown");
+    expect(approve().disabled).toBe(true);
+  });
+  it("states that missing results in the bounded history cannot disprove a decision", async () => {
+    useFetch();
+    await render(<HitlDecisionHistory />);
+    expect(container.textContent).toContain(
+      "Only returned records are searched",
+    );
+    expect(container.textContent).toContain("missing match does not establish");
+  });
 });

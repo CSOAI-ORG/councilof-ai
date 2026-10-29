@@ -36,38 +36,42 @@ export function parseHitlRecord(text: string): PublicHitlRecord {
       "The decision record is incomplete or has an unsupported format.",
     );
   }
-  for (const r of value.receipts) {
-    if (
-      !object(r) ||
-      r.schema !== "csoai.hitl-oversight-receipt/0.1" ||
-      !["APPROVED", "HOLD", "REJECTED"].includes(String(r.decision)) ||
-      typeof r.at !== "string" ||
-      !Number.isFinite(Date.parse(r.at)) ||
-      typeof r.operator !== "string" ||
-      typeof r.note !== "string" ||
-      !(r.axis === null || typeof r.axis === "string") ||
-      !object(r.challenge) ||
-      typeof r.challenge.id !== "string" ||
-      !r.challenge.id ||
-      typeof r.challenge.subject !== "string" ||
-      typeof r.challenge.proposed_action !== "string" ||
-      !object(r.signature) ||
-      !(
-        r.signature.value_hex === null ||
-        typeof r.signature.value_hex === "string"
-      ) ||
-      !(r.signature.did == null || typeof r.signature.did === "string") ||
-      !(
-        r.signature.unsigned_reason == null ||
-        typeof r.signature.unsigned_reason === "string"
-      )
-    ) {
-      throw new Error(
-        "A decision entry is unreadable. No entries have been silently omitted.",
-      );
-    }
-  }
+  value.receipts.forEach(parseHitlReceipt);
   return value as unknown as PublicHitlRecord;
+}
+
+/** Shape validation only; not signature verification or execution permission. */
+export function parseHitlReceipt(r: unknown): PublicHitlReceipt {
+  if (
+    !object(r) ||
+    r.schema !== "csoai.hitl-oversight-receipt/0.1" ||
+    !["APPROVED", "HOLD", "REJECTED"].includes(String(r.decision)) ||
+    typeof r.at !== "string" ||
+    !Number.isFinite(Date.parse(r.at)) ||
+    typeof r.operator !== "string" ||
+    typeof r.note !== "string" ||
+    !(r.axis === null || typeof r.axis === "string") ||
+    !object(r.challenge) ||
+    typeof r.challenge.id !== "string" ||
+    !r.challenge.id ||
+    typeof r.challenge.subject !== "string" ||
+    typeof r.challenge.proposed_action !== "string" ||
+    !object(r.signature) ||
+    !(
+      r.signature.value_hex === null ||
+      typeof r.signature.value_hex === "string"
+    ) ||
+    !(r.signature.did == null || typeof r.signature.did === "string") ||
+    !(
+      r.signature.unsigned_reason == null ||
+      typeof r.signature.unsigned_reason === "string"
+    )
+  ) {
+    throw new Error(
+      "A decision entry is unreadable. No entries have been silently omitted.",
+    );
+  }
+  return r as PublicHitlReceipt;
 }
 
 export function filterHitlReceipts(
