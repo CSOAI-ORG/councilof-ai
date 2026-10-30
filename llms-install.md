@@ -22,7 +22,7 @@ npm package, API key, or OAuth:
 }
 ```
 
-Reconnect and confirm that Cline's server panel discovers the exact 12 names below
+Reconnect and confirm that Cline's server panel discovers the reviewed tool names below
 (`tools/list` at the protocol level) before relying on the integration. The remote
 is the canonical service; it is also suitable for MCP clients that support remote
 Streamable HTTP configuration. This is not a claim of support for every AI platform
@@ -42,8 +42,8 @@ named axes merged, so it holds the fleet as it stood then. It is **not** marked
 deprecated on npm, which is why `npm view csoai-gspc-mcp@latest deprecated` prints
 nothing: deprecation is not the signal here, the tool count is.
 
-The repository currently prepares `0.2.4`, but that source version is **not a
-published npm release** until `npm view csoai-gspc-mcp@0.2.4 version` confirms that
+The repository currently prepares `0.2.5`, but that source version is **not a
+published npm release** until `npm view csoai-gspc-mcp@0.2.5 version` confirms that
 exact version AND the published tarball's own manifests carry the same names as
 the live door. Do not install or advertise any published release as the contract
 before that independent check.
