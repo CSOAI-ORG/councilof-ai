@@ -1240,7 +1240,7 @@ def kaggle_metadata_drift(info: dict, subtitle: str, description: str,
                 reasons.append("licence differs from the approved metadata")
         except (Refused, IndexError, KeyError, TypeError):
             reasons.append("licence differs from the approved metadata")
-    for field in ("title", "isPrivate", "collaborators", "keywords", "resources", "userSpecifiedSources", "expectedUpdateFrequency"):
+    for field in ("title", "isPrivate", "collaborators", "keywords", "resources", "data", "userSpecifiedSources", "expectedUpdateFrequency"):
         if expected_metadata is not None and field in expected_metadata and (
             type(info.get(field)) is not type(expected_metadata[field]) or info.get(field) != expected_metadata[field]
         ):

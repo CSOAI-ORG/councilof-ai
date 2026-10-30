@@ -35,6 +35,7 @@ def settings(licence="CC-BY-4.0"):
     return dict(title="Existing title", subtitle="old", description="old", isPrivate=True,
                 collaborators=[dict(username="owner", role="admin")], keywords=["a","b","c","d","e","f"],
                 resources=[dict(path="board.json", description="original")],
+                data=[dict(name="gspc-axes.csv",description="original",columns=[dict(name="axis",description="original")])],
                 userSpecifiedSources=["original"], expectedUpdateFrequency="daily",
                 licenses=[dict(name=licence)])
 
@@ -66,7 +67,7 @@ class KaggleGuards(unittest.TestCase):
     def test_metadata_retains_settings_and_original(self):
         info = settings(); before = copy.deepcopy(info)
         new = self.api.kaggle_metadata_payload(info, "new subtitle", "new description", info["licenses"])
-        for key in ("title","isPrivate","collaborators","keywords","resources","userSpecifiedSources","expectedUpdateFrequency"):
+        for key in ("title","isPrivate","collaborators","keywords","resources","data","userSpecifiedSources","expectedUpdateFrequency"):
             self.assertEqual(new[key], info[key])
         self.assertEqual(info,before)
 
@@ -86,7 +87,7 @@ class KaggleGuards(unittest.TestCase):
         info=settings()
         self.assertIsNone(self.api.kaggle_metadata_drift(info,"old","old",[dict(name="CC BY 4.0")],info))
         for field,value in (("description","wrong"),("licenses",[dict(name="CC0-1.0")]),("isPrivate",False),
-                            ("collaborators",[]),("keywords",[]),("title","wrong")):
+                            ("collaborators",[]),("keywords",[]),("data",[]),("title","wrong")):
             changed=copy.deepcopy(info); changed[field]=value
             with self.subTest(field=field):
                 self.assertIsNotNone(self.api.kaggle_metadata_drift(changed,"old","old",[dict(name="CC BY 4.0")],info))
