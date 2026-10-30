@@ -300,7 +300,8 @@ describe("no in-page anchor on the front door points at nothing", () => {
     "HomeVerify.tsx",
     "../components/home/HomeHero.tsx",
     "../components/home/LiveBoardGlance.tsx",
-    "../components/home/HomeSteps.tsx",
+    "../components/home/HomeProducts.tsx",
+    "../components/home/HomeProofPoints.tsx",
     "../components/home/HomeWaysIn.tsx",
   ].map((f) => readFileSync(resolve(here, f), "utf8"));
   const joined = mounted.join("\n");
