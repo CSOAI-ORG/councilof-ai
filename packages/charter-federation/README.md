@@ -76,6 +76,8 @@ python3 -B -m unittest -v test_register
 python3 -B mcp_server.py
 ```
 
+The dedicated `charter-federation` CI workflow runs the integrity and read-only MCP tests on Python 3.12, rebuilds from the canonical inputs, and requires byte-identical generated files. It has read-only repository permissions and no deployment steps.
+
 Open `tracker.html` or `discussion.html` directly for the local prototype. The generated register records exact input hashes; source captures are marked as scraped Markdown, not publisher-original bytes or independent attestations. Test receipts distinguish this run from earlier suites and from other lanes.
 
 ## Release sequence

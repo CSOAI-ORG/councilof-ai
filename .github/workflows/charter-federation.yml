@@ -1,0 +1,43 @@
+name: charter-federation
+
+on:
+  pull_request:
+    paths:
+      - "packages/charter-federation/**"
+      - "public/.well-known/constitutional-harness.json"
+      - "public/interop/frozen-provision-hashes.json"
+      - "public/mechanism/coverage.json"
+      - ".github/workflows/charter-federation.yml"
+  push:
+    branches: [master]
+    paths:
+      - "packages/charter-federation/**"
+      - "public/.well-known/constitutional-harness.json"
+      - "public/interop/frozen-provision-hashes.json"
+      - "public/mechanism/coverage.json"
+      - ".github/workflows/charter-federation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: packages/charter-federation
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify register and read-only MCP contracts
+        run: python3 -B -m unittest -v test_register
+      - name: Rebuild from canonical inputs and require identical generated files
+        run: |
+          python3 -B build.py --root ../.. --groups inputs/working-groups.snapshot.json
+          git diff --exit-code -- register.json tracker.html discussion.html build-receipt.json
