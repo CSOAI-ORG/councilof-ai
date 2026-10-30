@@ -115,5 +115,10 @@ fact table, so the published corpus stops being a lossy 19-model subset of a 57-
   Kimi K3.1 Pro (24/24 vs MEOK's 9/24, paired exact McNemar p = 6.10 × 10⁻⁵). The only missing
   thing is a balance: the OpenRouter key authenticates, lists `openai/gpt-6.1-terra` among 464
   models, and then answers chat completions with HTTP 402.
+  - *Corrected 2026-10-29:* that harness is the sibling Kimi regeneration repo's 24-item probe
+    (`inspect_tasks/gspc_governance.py`), not a path in this repository, and the comparison's schema
+    `council-os.paired-model-comparison/0.1` is registered nowhere in this estate — so neither is
+    verifiable from councilof.ai. What runs **here** is `harness/bench/run_bench.py --axis
+    governance` over the 237-item `csoai/gspc-gov` bank, graded by the mill's `read_label`.
 - **A doctrine that a slot's absence is a result, not a gap** is already in place and is why the
   board can say "10 declared, 0 measured" and mean it.

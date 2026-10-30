@@ -53,6 +53,8 @@ export type LobbyTabId =
   | "archive"
   | "attestations"
   | "evidence"
+  | "evidence-delivery"
+  | "axis-specialists"
   | "embed"
   | "art50"
   | "standards"
@@ -68,6 +70,7 @@ export type LobbyTabId =
   | "software"
   | "learn"
   | "staff"
+  | "research"
   | "play"
   | "connect"
   | "route"
@@ -155,6 +158,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(staff|human review|human[- ]in[- ]the[- ]loop|hitl|h\.i\.m\.|competency (?:check|module)|review queue|operator decision)\b/i,
+  },
+  {
+    id: "research",
+    label: "Continuous research",
+    blurb:
+      "Every measured GSPC axis with its authoritative watch sources, missing runtime, safe automation and required human review.",
+    path: "",
+    kind: "native",
+    cues: /\b(continuous research|research plan|research registry|source watch|re-?measure|remeasurement)\b/i,
   },
   {
     id: "explore",
@@ -346,6 +358,24 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(gpai evidence pack|evidence index|evidence pack|gpai evidence|gpai)\b/i,
+  },
+  {
+    id: "evidence-delivery",
+    label: "Evidence delivery",
+    blurb:
+      "Prepare a local evidence draft with MEOK H.I.M. review, then explicitly submit it for an unsigned Council A2A Message. No GSPC measurement, signature, anchor or durable storage.",
+    path: "",
+    kind: "native",
+    cues: /\b(evidence delivery|deliver evidence|local evidence|unsigned draft|a2a handoff)\b/i,
+  },
+  {
+    id: "axis-specialists",
+    label: "Axis specialists",
+    blurb:
+      "Thirty-three bounded MEOK Hive specialists — one per GSPC axis — with individual audits, negative controls and recommendation-only improvements under MEOK H.I.M. HOLD gates. No proposal is applied.",
+    path: "",
+    kind: "native",
+    cues: /\b(axis specialists?|specialist hive|meok hive|axis audits?|axis improvements?)\b/i,
   },
   {
     id: "embed",
@@ -908,6 +938,8 @@ const DASHBOARD_NAV_DEFINITION: {
     tabs: [
       { id: "verify", label: "Check a result" },
       { id: "evidence", label: "Evidence pack" },
+      { id: "evidence-delivery", label: "Evidence delivery" },
+      { id: "axis-specialists", label: "Axis specialists" },
     ],
   },
   {
@@ -939,9 +971,10 @@ const DASHBOARD_NAV_DEFINITION: {
     id: "learn",
     label: "Learn",
     description:
-      "Learn how each test works, replay recorded model rounds, and practise.",
+      "Learn how each test works, replay recorded model rounds, practise, and inspect continuous research.",
     tabs: [
       { id: "learn", label: "Learning" },
+      { id: "research", label: "Continuous research" },
       { id: "space", label: "Model arena" },
       { id: "play", label: "Games" },
     ],

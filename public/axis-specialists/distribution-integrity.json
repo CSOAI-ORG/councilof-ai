@@ -1,0 +1,158 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "distribution-integrity",
+  "specialist": {
+    "id": "meok-distribution-integrity-specialist",
+    "cluster_id": "meok-axis-distribution-integrity",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit distribution metadata and artifact integrity while distinguishing a documented distribution channel from verified artifact provenance.",
+    "reviewer_role": "distribution and supply-chain reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "artifact identity",
+    "channel consistency",
+    "unsigned run state",
+    "provenance scope"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-09-17T12:58:11Z",
+      "source": "/interop/financial-measure-run-distribution-integrity.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "7fd8d619f2b9164e998e7184210a6886cf478582382cd71261e564c0d48cfe9f",
+    "axis_row": {
+      "axis": "distribution-integrity",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-distribution-integrity",
+      "bench": "DistributionFacts",
+      "task": "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)",
+      "status": "MEASURED",
+      "evidence_url": "/interop/financial-measure-run-distribution-integrity.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "colour": "#fbbf24",
+      "hue": 43,
+      "note": "MEASURED v0.3 from GET /api/xrpl (writes_board=false) over all 16 reader rows: 16 PASS on distributed classification. represented>>distributed stays UNCHECKABLE (no RWA.xyz key; no same-unit pair). EURQ/USDQ reader sig_ed25519=null stays flagged. Risk verdict UNMEASURED. Not a rating.",
+      "method_status": "legacy: n 16",
+      "facts_as_of": "2026-09-17T12:58:11Z",
+      "facts_status": "MEASURED",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "source": "/interop/financial-measure-run-distribution-integrity.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-distribution-integrity"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist distribution-integrity audits only the distribution-integrity row",
+      "evidence": "distribution-integrity"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-distribution-integrity; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "FACT_RUN_STATE",
+      "state": "PASS",
+      "detail": "deterministic-facts run with n=16 issuer accounts (not bank items)"
+    },
+    {
+      "id": "FACT_LINEAGE",
+      "state": "PASS",
+      "detail": "run artifact and fact timestamp are published"
+    },
+    {
+      "id": "RUN_ATTESTATION",
+      "state": "FINDING",
+      "detail": "run artifact is CONTENT_ADDRESSED_UNSIGNED; content identity is not a signature"
+    },
+    {
+      "id": "NO_MODEL_RANKING",
+      "state": "PASS",
+      "detail": "deterministic facts carry no model leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "FINDING",
+      "detail": "legacy: n 16"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 6,
+    "findings": 2,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "treat channel presence as artifact integrity and require scope failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "change an artifact digest without changing the run and require replay failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "distribution-integrity-proposal-1",
+      "proposal": "bind distribution rows to immutable artifact digests",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "distribution-integrity-proposal-2",
+      "proposal": "sign the next run and add revoked-channel negative controls",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_distribution-integrity",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/distribution-integrity",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "distribution and supply-chain reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "4ab6e8652102d13d394c5d1e71a941244edc27348f9812d6cf6ef0fb35344669"
+}
