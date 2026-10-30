@@ -89,6 +89,8 @@ def comparable_rows(frontier: dict, meok: dict) -> tuple[dict, dict]:
             elif not isinstance(observed, str) or type(ok) is not bool or ok != (observed == row["expected"]):
                 raise ValueError(f"comparison refused: {name} has an inconsistent correctness flag")
             mapped[index] = row
+        if set(mapped) != set(range(total)):
+            raise ValueError(f"comparison refused: {name} indices do not cover the complete bank")
         maps.append(mapped)
     left, right = maps
     if set(left) != set(right):

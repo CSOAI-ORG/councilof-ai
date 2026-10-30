@@ -53,6 +53,14 @@ def test_order_does_not_change_the_matching():
     assert left_map == right_map
 
 
+def test_matching_but_shifted_indices_are_not_full_bank_coverage():
+    left,right=result(),result()
+    for data in (left,right):
+        for row in data['rows']:row['index']+=2
+    with pytest.raises(ValueError,match='complete bank'):
+        paired.comparable_rows(left,right)
+
+
 def test_refused_cli_writes_no_comparison(tmp_path, monkeypatch):
     left, right = result(), result(); right["bank_sha256"] = "c" * 64
     for name, data in [("left", left), ("right", right)]:
