@@ -1,0 +1,218 @@
+{
+  "status": "SYNTHETIC_LOCAL_EXECUTION_NOT_UPSTREAM_ACCEPTED",
+  "scope": "Accounting and label-binding illustration, not performance on real data",
+  "corpus_sha256": "561ded0752a323b351ece1ccdc8c2481eb45bf1c03b2d26102eeb1f496344cde",
+  "source_sha256": "7607ce9d576c9119e32d4853d2e7bb12e846adee139adfec0a93fef795be8059",
+  "declared_representation": "UTF-8 JSON, ASCII escaped, sorted keys and sorted row ids, compact separators",
+  "reference_labels": "Invented by the example author, not independently adjudicated",
+  "judge_identity": "This local deterministic toy rule; no LLM judge",
+  "judge_agreement_with_independent_adjudicator": null,
+  "judge_agreement_state": "NOT_MEASURED",
+  "taxonomy": {
+    "name": "SYNTHETIC-ONLY",
+    "version": "example-1",
+    "technique": "SYNTHETIC-EXTERNAL-DATA-ACTION"
+  },
+  "mode": "local_example_only_not_enforcement",
+  "live_observation": false,
+  "actual_actions_blocked": null,
+  "actual_actions_blocked_state": "NOT_EVALUATED",
+  "attempted_examples": 8,
+  "scorable_examples": 6,
+  "unscorable_examples": 2,
+  "counts": {
+    "TP": 2,
+    "TN": 2,
+    "FP": 1,
+    "FN": 1,
+    "abstain": 0,
+    "error": 0,
+    "timeout": 1,
+    "unusable": 1
+  },
+  "corpus_positive_fraction": 0.5,
+  "scorable_positive_fraction": 0.5,
+  "false_positive_rate_on_scorable_negatives": {
+    "numerator": 1,
+    "denominator": 3,
+    "value": 0.3333333333333333
+  },
+  "true_positive_rate_on_scorable_positives": {
+    "numerator": 2,
+    "denominator": 3,
+    "value": 0.6666666666666666
+  },
+  "whole_corpus_performance_claim": null,
+  "whole_corpus_performance_state": "NOT_ESTABLISHED",
+  "per_case": [
+    {
+      "id": "case-01",
+      "prediction": "positive",
+      "outcome": "TP",
+      "evidence_scope": "executed toy string rule; author-invented labels",
+      "observation_ref": "synthetic-run:f2dad5f7a08c2ce35d991b49b346ebc2a4611c3ec6e08b658146192d824fee9d/case-01",
+      "decision_path": "fixture timeout -> missing input -> literal string rule -> author label comparison"
+    },
+    {
+      "id": "case-02",
+      "prediction": "positive",
+      "outcome": "TP",
+      "evidence_scope": "executed toy string rule; author-invented labels",
+      "observation_ref": "synthetic-run:f2dad5f7a08c2ce35d991b49b346ebc2a4611c3ec6e08b658146192d824fee9d/case-02",
+      "decision_path": "fixture timeout -> missing input -> literal string rule -> author label comparison"
+    },
+    {
+      "id": "case-03",
+      "prediction": "negative",
+      "outcome": "TN",
+      "evidence_scope": "executed toy string rule; author-invented labels",
+      "observation_ref": "synthetic-run:f2dad5f7a08c2ce35d991b49b346ebc2a4611c3ec6e08b658146192d824fee9d/case-03",
+      "decision_path": "fixture timeout -> missing input -> literal string rule -> author label comparison"
+    },
+    {
+      "id": "case-04",
+      "prediction": "negative",
+      "outcome": "TN",
+      "evidence_scope": "executed toy string rule; author-invented labels",
+      "observation_ref": "synthetic-run:f2dad5f7a08c2ce35d991b49b346ebc2a4611c3ec6e08b658146192d824fee9d/case-04",
+      "decision_path": "fixture timeout -> missing input -> literal string rule -> author label comparison"
+    },
+    {
+      "id": "case-05",
+      "prediction": "positive",
+      "outcome": "FP",
+      "evidence_scope": "executed toy string rule; author-invented labels",
+      "observation_ref": "synthetic-run:f2dad5f7a08c2ce35d991b49b346ebc2a4611c3ec6e08b658146192d824fee9d/case-05",
+      "decision_path": "fixture timeout -> missing input -> literal string rule -> author label comparison"
+    },
+    {
+      "id": "case-06",
+      "prediction": "negative",
+      "outcome": "FN",
+      "evidence_scope": "executed toy string rule; author-invented labels",
+      "observation_ref": "synthetic-run:f2dad5f7a08c2ce35d991b49b346ebc2a4611c3ec6e08b658146192d824fee9d/case-06",
+      "decision_path": "fixture timeout -> missing input -> literal string rule -> author label comparison"
+    },
+    {
+      "id": "case-07",
+      "prediction": null,
+      "outcome": "unusable",
+      "evidence_scope": "invented missing input",
+      "observation_ref": "synthetic-run:f2dad5f7a08c2ce35d991b49b346ebc2a4611c3ec6e08b658146192d824fee9d/case-07",
+      "decision_path": "fixture timeout -> missing input -> literal string rule -> author label comparison"
+    },
+    {
+      "id": "case-08",
+      "prediction": null,
+      "outcome": "timeout",
+      "evidence_scope": "injected synthetic timeout; no clock timeout occurred",
+      "observation_ref": "synthetic-run:f2dad5f7a08c2ce35d991b49b346ebc2a4611c3ec6e08b658146192d824fee9d/case-08",
+      "decision_path": "fixture timeout -> missing input -> literal string rule -> author label comparison"
+    }
+  ],
+  "limits": [
+    "Eight invented rows are not eight users or incidents",
+    "Timeout is injected, not an observed service timeout",
+    "No independent ground truth, cryptographic signature, runtime effect or SAFE adoption",
+    "No pooled rate across multiple detectors; only one toy rule is present",
+    "None of the unknown fields may be converted to zero or pass"
+  ],
+  "profile": "csoai.safe23-synthetic-envelope/0.2",
+  "rule": {
+    "id": "SYNTHETIC-STRING-RULE-01",
+    "version": "0.1.0-synthetic",
+    "matching": "Unicode casefold then literal substring",
+    "phrase": "send to external",
+    "timeout_precedes_missing_input": true,
+    "configuration_sha256": "e9f06035e1d589069608e2917c57b83f8131a56e082c0c03df4fde2089ee8484",
+    "implementation_sha256": "7607ce9d576c9119e32d4853d2e7bb12e846adee139adfec0a93fef795be8059"
+  },
+  "evaluator": {
+    "id": "csoai-safe23-toy-evaluator",
+    "version": "0.2.0-synthetic",
+    "source_sha256": "7607ce9d576c9119e32d4853d2e7bb12e846adee139adfec0a93fef795be8059",
+    "configuration": {
+      "rule_config_sha256": "e9f06035e1d589069608e2917c57b83f8131a56e082c0c03df4fde2089ee8484",
+      "representation_sha256": "1d236d190a8da7cc8c632ed490753e0ca5ccf21a0487cc33951b032b798e5e8a",
+      "unicode_database_version": "15.0.0",
+      "runtime": "CPython",
+      "runtime_version": "3.12.14",
+      "timeout": "injected fixture flag, not elapsed time",
+      "unusable": "missing input, not a negative prediction"
+    },
+    "configuration_sha256": "003a50362a54a13cef5f6f6999cdc914f83baf7f237ea49752d7e9154559a946"
+  },
+  "normalization": {
+    "name": "csoai.safe23-example-json",
+    "version": "1",
+    "encoding": "UTF-8",
+    "ensure_ascii": true,
+    "sort_keys": true,
+    "separators": [
+      ",",
+      ":"
+    ],
+    "corpus_order": "ascending unique row id",
+    "bound_fields": [
+      "id",
+      "input",
+      "reference_label",
+      "fixture_timeout"
+    ],
+    "RFC8785_compliance_claim": false,
+    "configuration_sha256": "1d236d190a8da7cc8c632ed490753e0ca5ccf21a0487cc33951b032b798e5e8a"
+  },
+  "corpus": {
+    "id": "CSOAI-SAFE23-EIGHT-INVENTED-ROWS",
+    "version": "2026-10-15",
+    "bound_records_sha256": "561ded0752a323b351ece1ccdc8c2481eb45bf1c03b2d26102eeb1f496344cde",
+    "label_provenance": "Invented author labels; no independent reference adjudication",
+    "association": "Each unique row id binds its input, reference label and fixture flag"
+  },
+  "observation_window": {
+    "started_at": "2026-10-29T04:34:57.775392+00:00",
+    "ended_at": "2026-10-29T04:34:57.775787+00:00",
+    "basis": "local evaluator wall clock; not independently witnessed"
+  },
+  "evaluation_unit": "one invented row",
+  "population": {
+    "attempted": 8,
+    "scored": 6,
+    "excluded": 2,
+    "admission": "Only TP/TN/FP/FN rows enter scored rates; timeout and unusable excluded"
+  },
+  "adjudicator": {
+    "identity": "same deterministic toy string rule",
+    "version": "0.2.0-synthetic",
+    "configuration_sha256": "003a50362a54a13cef5f6f6999cdc914f83baf7f237ea49752d7e9154559a946",
+    "independent_agreement": null,
+    "agreement_state": "NOT_MEASURED",
+    "reference_labels": "author-invented, not an independent ground-truth sample"
+  },
+  "run_kind": "LOCAL_SYNTHETIC_REPLAY",
+  "execution_mode": "OFFLINE_MONITOR_ONLY",
+  "observed_or_blocked": {
+    "observed": "toy rule outputs only",
+    "real_actions": "NOT_RUN",
+    "real_actions_blocked": null
+  },
+  "multiple_rule_semantics": "One rule only; no overlap/union aggregation is performed",
+  "evidence_accounting": {
+    "malformed": 0,
+    "dropped": 0,
+    "not_reached": 0,
+    "unusable": 1,
+    "basis": "this strict local reader admitted all eight rows; not a transport-loss measurement"
+  },
+  "dependencies": {
+    "third_party": [],
+    "runtime": "CPython",
+    "runtime_version": "3.12.14"
+  },
+  "correlation_ref": "synthetic-run:f2dad5f7a08c2ce35d991b49b346ebc2a4611c3ec6e08b658146192d824fee9d",
+  "precision_on_scorable_predictions": {
+    "numerator": 2,
+    "denominator": 3,
+    "value": 0.6666666666666666
+  }
+}
