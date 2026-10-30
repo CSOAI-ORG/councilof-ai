@@ -1,0 +1,250 @@
+{
+  "schema": "csoai.subject-axis-evidence-audit/0.1",
+  "generated_at": "2026-10-30T05:08:33.964Z",
+  "scope": "Reconcile historical discovery with one corrected claim reread. No new axis score, signature or public admission.",
+  "source_files": [
+    {
+      "file": "functions/api/_gspc_axes_d.ts",
+      "sha256": "6d3751978181ff066f9ed650bba2889c04f97d0284c62a7dcd2ea78b80b5a782"
+    },
+    {
+      "file": "public/interop/subject-axis-live-20261027/subject-axis-live-run-20261027.json",
+      "sha256": "41483e01e05b66a5aceb77b35400dabc87eb180b4d9666b5e038195aca5ccd41"
+    },
+    {
+      "file": "public/interop/subject-axis-live-20261027/subject-axis-live-run.mjs",
+      "sha256": "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7"
+    },
+    {
+      "file": "public/interop/subject-axis-live-20261027/sampling-frames-10-subject-axes-20261028.json",
+      "sha256": "02b485ef60a232f5fb604f9a2701a28086459349cda18ebe2b7c49dd0cf9d485"
+    }
+  ],
+  "rows": [
+    {
+      "axis": "claim-maintenance",
+      "state": "CORRECTED_REREAD_REPLAYED_NOT_AXIS_ADMITTED",
+      "public_axis_n": 0,
+      "evidence": {
+        "file": "public/interop/claim-maintenance-wave-2026-10-30.json",
+        "sha256": "660315bedb8e2908b5928d682bdf310963fa7f474f1a41d6d0e705cd6f857097"
+      },
+      "generated_at": "2026-10-30T05:03:22.782Z",
+      "registry_rows": 182,
+      "active_registry_rows": 91,
+      "unique_claims": 91,
+      "selected_claims": 91,
+      "rejected_claims": 0,
+      "superseded_registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+        "claimreg-hiring-platforms-2026-09-24.json"
+      ],
+      "distinct_sources": 37,
+      "comparable_claims": 87,
+      "comparable_sources": 35,
+      "CHANGED": 61,
+      "UNCHANGED": 26,
+      "UNREACHABLE": 4,
+      "input_sha256": "825245659b672120d2ddab3047b2f70971f230d861aaab2317f5b5488d470c90",
+      "admission_eligible": false,
+      "completion_requirement": "Review source-edit disclosure and withdrawal criteria, source clustering and sampling; bind independent review and authorized admission to the exact retained wave."
+    },
+    {
+      "axis": "company-practice",
+      "state": "DISCOVERY_AUDITED_NOT_AXIS_MEASUREMENT",
+      "public_axis_n": 0,
+      "evidence": {
+        "file": "public/interop/subject-axis-live-20261027/bank-company-practice-live-20261027.json",
+        "sha256": "23ba58453183dc1804cdb00e0e5b3445ddc53fa038782a9ecf0684566b185b34"
+      },
+      "generated_at": "2026-10-28T04:25:30.845Z",
+      "discovery_items": 40,
+      "reported_discovery_valid": 40,
+      "payloads": 40,
+      "payload_digest_matches": 40,
+      "altered_payloads_rejected": 40,
+      "responses_at_reader_byte_cap": 20,
+      "bank_method_matches_retained_source": true,
+      "posthoc_threshold": true,
+      "admission_eligible": false,
+      "completion_requirement": "Bind each advertised capability to a scoped observed outcome or independent source; a company's own description is not evidence that it does what it says.",
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+    },
+    {
+      "axis": "harness-fidelity",
+      "state": "DISCOVERY_AUDITED_NOT_AXIS_MEASUREMENT",
+      "public_axis_n": 0,
+      "evidence": {
+        "file": "public/interop/subject-axis-live-20261027/bank-harness-fidelity-live-20261027.json",
+        "sha256": "3439adba3fb46991d9b74e886ee7e6f1e53ae675e8b5ebfbc6331247469c0c33"
+      },
+      "generated_at": "2026-10-28T04:25:30.845Z",
+      "discovery_items": 38,
+      "reported_discovery_valid": 38,
+      "payloads": 38,
+      "payload_digest_matches": 38,
+      "altered_payloads_rejected": 38,
+      "responses_at_reader_byte_cap": 17,
+      "bank_method_matches_retained_source": true,
+      "posthoc_threshold": true,
+      "admission_eligible": false,
+      "completion_requirement": "Run the same model digest and frozen bank through at least two pinned harnesses with the canonical grader; freeze parity tolerances before paired runs.",
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+    },
+    {
+      "axis": "humanoid-deployment",
+      "state": "DISCOVERY_AUDITED_NOT_AXIS_MEASUREMENT",
+      "public_axis_n": 0,
+      "evidence": {
+        "file": "public/interop/subject-axis-live-20261027/bank-humanoid-deployment-live-20261027.json",
+        "sha256": "edda7ffcf81d3ea863741aeb275304f581aa1f55792a68df7a9cb65b2a29b0ed"
+      },
+      "generated_at": "2026-10-28T04:25:30.845Z",
+      "discovery_items": 35,
+      "reported_discovery_valid": 35,
+      "payloads": 35,
+      "payload_digest_matches": 35,
+      "altered_payloads_rejected": 35,
+      "responses_at_reader_byte_cap": 4,
+      "bank_method_matches_retained_source": true,
+      "posthoc_threshold": true,
+      "admission_eligible": false,
+      "completion_requirement": "Resolve deployment identities against a named public registry with dates and independent corroboration; a robotics repository is not a deployment record.",
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+    },
+    {
+      "axis": "interop-conformance",
+      "state": "DISCOVERY_AUDITED_NOT_AXIS_MEASUREMENT",
+      "public_axis_n": 0,
+      "evidence": {
+        "file": "public/interop/subject-axis-live-20261027/bank-interop-conformance-live-20261027.json",
+        "sha256": "d751a0373a7f6ec58c85b8b6f2ea24de7c73a240ed9ba081ce0086142d9aed0c"
+      },
+      "generated_at": "2026-10-28T04:25:30.845Z",
+      "discovery_items": 34,
+      "reported_discovery_valid": 34,
+      "payloads": 34,
+      "payload_digest_matches": 34,
+      "altered_payloads_rejected": 34,
+      "responses_at_reader_byte_cap": 2,
+      "bank_method_matches_retained_source": true,
+      "posthoc_threshold": true,
+      "admission_eligible": false,
+      "completion_requirement": "Check linked versioned specifications, actual test-suite artifacts and conformance records; distinguish publication presence from implementation conformance.",
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+    },
+    {
+      "axis": "interpretability-reproducibility",
+      "state": "DISCOVERY_AUDITED_NOT_AXIS_MEASUREMENT",
+      "public_axis_n": 0,
+      "evidence": {
+        "file": "public/interop/subject-axis-live-20261027/bank-interpretability-reproducibility-live-20261027.json",
+        "sha256": "d72980fd27f31ff6a2fa63287b4b018219b91785ba03078d8f841b8e581bdd2d"
+      },
+      "generated_at": "2026-10-28T04:25:30.845Z",
+      "discovery_items": 33,
+      "reported_discovery_valid": 33,
+      "payloads": 33,
+      "payload_digest_matches": 33,
+      "altered_payloads_rejected": 33,
+      "responses_at_reader_byte_cap": 6,
+      "bank_method_matches_retained_source": true,
+      "posthoc_threshold": true,
+      "admission_eligible": false,
+      "completion_requirement": "Select licensed runnable work, pin code/model/data/environment and reproduce a stated result with predeclared tolerance; repository text is only discovery.",
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+    },
+    {
+      "axis": "lab-practice",
+      "state": "DISCOVERY_AUDITED_NOT_AXIS_MEASUREMENT",
+      "public_axis_n": 0,
+      "evidence": {
+        "file": "public/interop/subject-axis-live-20261027/bank-lab-practice-live-20261027.json",
+        "sha256": "b96d0879876f0e405a27a350dde8e0f5d2737e9b69876c4b3287951a69c37ec9"
+      },
+      "generated_at": "2026-10-28T04:25:30.845Z",
+      "discovery_items": 37,
+      "reported_discovery_valid": 37,
+      "payloads": 37,
+      "payload_digest_matches": 37,
+      "altered_payloads_rejected": 37,
+      "responses_at_reader_byte_cap": 12,
+      "bank_method_matches_retained_source": true,
+      "posthoc_threshold": true,
+      "admission_eligible": false,
+      "completion_requirement": "Freeze artifact-level criteria for evaluations, safety frameworks and incident reports; verify the named documents and dates rather than matching words on a landing page.",
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+    },
+    {
+      "axis": "measurer-integrity",
+      "state": "DISCOVERY_AUDITED_NOT_AXIS_MEASUREMENT",
+      "public_axis_n": 0,
+      "evidence": {
+        "file": "public/interop/subject-axis-live-20261027/bank-measurer-integrity-live-20261027.json",
+        "sha256": "138a216a54e77949b582804e6179ab752ae7873bf3e67a7650f688a2b54253e3"
+      },
+      "generated_at": "2026-10-28T04:25:30.845Z",
+      "discovery_items": 40,
+      "reported_discovery_valid": 40,
+      "payloads": 40,
+      "payload_digest_matches": 40,
+      "altered_payloads_rejected": 40,
+      "responses_at_reader_byte_cap": 13,
+      "bank_method_matches_retained_source": true,
+      "posthoc_threshold": true,
+      "admission_eligible": false,
+      "completion_requirement": "Pin actual methods, test-set availability/licensing and replayable result artifacts; run a disclosed reproduction and record access restrictions separately.",
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+    },
+    {
+      "axis": "regulator-transparency",
+      "state": "DISCOVERY_AUDITED_NOT_AXIS_MEASUREMENT",
+      "public_axis_n": 0,
+      "evidence": {
+        "file": "public/interop/subject-axis-live-20261027/bank-regulator-transparency-live-20261027.json",
+        "sha256": "1a8667ca10ab9486b75daf460a680c12d2b4823ad3bbb9cfd6697143f882f6d5"
+      },
+      "generated_at": "2026-10-28T04:25:30.845Z",
+      "discovery_items": 41,
+      "reported_discovery_valid": 41,
+      "payloads": 41,
+      "payload_digest_matches": 41,
+      "altered_payloads_rejected": 41,
+      "responses_at_reader_byte_cap": 2,
+      "bank_method_matches_retained_source": true,
+      "posthoc_threshold": true,
+      "admission_eligible": false,
+      "completion_requirement": "Freeze factual artifact-presence checks and dated source references without a composite score or rating; public pages retain the existing owner hold.",
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+    },
+    {
+      "axis": "serving-fidelity",
+      "state": "DISCOVERY_AUDITED_NOT_AXIS_MEASUREMENT",
+      "public_axis_n": 0,
+      "evidence": {
+        "file": "public/interop/subject-axis-live-20261027/bank-serving-fidelity-live-20261027.json",
+        "sha256": "68826b5e1c0b4539130aaef2113a3901147eec7bb908e263dc02361f589d2c3e"
+      },
+      "generated_at": "2026-10-28T04:25:30.845Z",
+      "discovery_items": 38,
+      "reported_discovery_valid": 38,
+      "payloads": 38,
+      "payload_digest_matches": 38,
+      "altered_payloads_rejected": 38,
+      "responses_at_reader_byte_cap": 20,
+      "bank_method_matches_retained_source": true,
+      "posthoc_threshold": true,
+      "admission_eligible": false,
+      "completion_requirement": "Locate the reviewed 60-item private bank and BFCL gold by their full hashes, pin model and serving configurations, then run qualified reference/target pairs within the existing resource authorization.",
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+    }
+  ],
+  "axes_audited": 10,
+  "axes_promoted": 0,
+  "exclusions": [
+    "Formula-generated candidate metrics from the 25 October bank builder are not observations.",
+    "Posthoc 3-of-5 keyword thresholds cannot qualify the declared behavioral or artifact-level constructs.",
+    "Script-produced materiality labels do not prove human adjudication.",
+    "Private replay bytes are retained on the execution host; public digests alone do not provide external reproduction."
+  ]
+}
