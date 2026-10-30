@@ -3,22 +3,22 @@
   "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
   "source_snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
   "coverage": {
-    "specialists": 33,
-    "clusters": 33,
-    "mcp_connections": 33,
-    "a2a_connections": 33,
-    "api_connections": 33,
-    "human_gates": 33
+    "specialists": 34,
+    "clusters": 34,
+    "mcp_connections": 34,
+    "a2a_connections": 34,
+    "api_connections": 34,
+    "human_gates": 34
   },
   "findings": 24,
-  "proposals": 66,
+  "proposals": 68,
   "applied_proposals": 0,
   "cluster_model": {
     "isolation": "LOGICAL_PER_AXIS",
     "state": "DECLARED_NOT_PROVISIONED",
     "shared_write_access": false,
     "cross_axis_credentials": false,
-    "note": "Thirty-three isolated execution and evidence namespaces are declared. No compute cluster, spend or autonomous agent is claimed by this registry."
+    "note": "Thirty-four isolated execution and evidence namespaces are declared. No compute cluster, spend or autonomous agent is claimed by this registry."
   },
   "rsi_contract": {
     "mode": "RECOMMENDATION_ONLY",
@@ -699,8 +699,28 @@
       "api": "/api/axis-specialists/serving-fidelity",
       "audit_sha256": "09b3d548a5f23e931e5d734d023528e3f7a19c2110b6a4dfb842843d29838094",
       "path": "/axis-specialists/serving-fidelity.json"
+    },
+    {
+      "axis": "watchdog-ingest",
+      "specialist_id": "meok-watchdog-ingest-specialist",
+      "cluster_id": "meok-axis-watchdog-ingest",
+      "cluster_state": "DECLARED_NOT_PROVISIONED",
+      "measurement_status": "UNMEASURED",
+      "family": "subject",
+      "kind": "declared-slot",
+      "audit_state": "MEASUREMENT_GAP_VISIBLE",
+      "checks": 6,
+      "findings": 0,
+      "proposals": 2,
+      "human_decision": "HOLD",
+      "may_apply": false,
+      "mcp_read_tool": "axis_watchdog-ingest",
+      "a2a_skill": "axis-specialist",
+      "api": "/api/axis-specialists/watchdog-ingest",
+      "audit_sha256": "380d54db3cf454579cc1d9c3ba87b166bff831870783ad12518fd3cae2936a41",
+      "path": "/axis-specialists/watchdog-ingest.json"
     }
   ],
-  "bundle_sha256": "5cf7708b54740447a2df56a2bcad96b1c0f447829b4cbd736085d342c76453d4",
+  "bundle_sha256": "37b883ba0c51d59474e324d3a0c0d5e94d46919260c5cea7c59cff74f733d8f7",
   "note": "Counts are derived from the specialist array. This is an unsigned deterministic audit and proposal queue, not a new measurement or certification."
 }
