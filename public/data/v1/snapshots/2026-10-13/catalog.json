@@ -1,0 +1,120 @@
+{
+  "schema": "csoai.storefront/0.1",
+  "name": "Council of AI — Product Catalog",
+  "register": "measurement, not certification — assessed, not certified",
+  "updated": "2026-10-05",
+  "board": {
+    "note": "The live measurement board lives at /api/gspc and /arena-scoreboard. No count is frozen here: cite totals.public_count, which carries the slot count and the measured count together — a slot with no run behind it is published UNMEASURED and is never counted as a measurement. Jail is MEASURED with separation TIE. Slot-15 / human-vs-ai are measured in-lane only — not board-quotable."
+  },
+  "products": [
+    {
+      "id": "claimguard",
+      "name": "ClaimGuard",
+      "status": "live",
+      "href": "/claimguard",
+      "payment": null,
+      "note": "measurement not certification — deterministic claim-vs-signed-artifact checking"
+    },
+    {
+      "id": "gspc-mcp",
+      "name": "GSPC MCP Tools",
+      "status": "live",
+      "href": "/.well-known/mcp.json",
+      "payment": null,
+      "note": "measurement not certification — the current tool list is owned by /.well-known/mcp.json and POST /mcp tools/list; this catalogue does not duplicate it"
+    },
+    {
+      "id": "east-west",
+      "name": "East-West (measured trust gauge)",
+      "status": "live",
+      "href": "/api/east-west-bench",
+      "payment": null,
+      "note": "measurement not certification — East-vs-West pair-gap context rail, not a grade"
+    },
+    {
+      "id": "gspc-verify",
+      "name": "GSPC Verify",
+      "status": "live",
+      "href": "/gspc-verify",
+      "payment": null,
+      "note": "measurement not certification — signed measurement verification"
+    },
+    {
+      "id": "gspc-arena",
+      "name": "GSPC Arena",
+      "status": "live",
+      "href": "/gspc-arena",
+      "payment": null,
+      "note": "measurement not certification — live measurement scoreboard"
+    },
+    {
+      "id": "arena-scoreboard",
+      "name": "Signed Per-Axis Leaderboard",
+      "status": "live",
+      "href": "/arena-scoreboard",
+      "payment": null,
+      "note": "measurement not certification — signed per-axis rankings"
+    },
+    {
+      "id": "article-50-pack",
+      "name": "Article 50 Evidence Pack",
+      "status": "live",
+      "href": "/packs/eu-article-50",
+      "payment": null,
+      "note": "measurement not certification — signed C2PA durability attestation"
+    },
+    {
+      "id": "benchmarks",
+      "name": "GSPC Benchmarks",
+      "status": "live",
+      "href": "/benchmarks",
+      "payment": null,
+      "note": "measurement not certification — deterministic predicate benchmarks"
+    },
+    {
+      "id": "mcp-fleet",
+      "name": "MCP Fleet",
+      "status": "draft",
+      "href": "/mcp-fleet",
+      "payment": null,
+      "note": "in build — apex /mcp-fleet is Evidence review; catalog does not invent a live fleet. measurement not certification."
+    },
+    {
+      "id": "ras-booking",
+      "name": "RAS Booking Desk",
+      "status": "draft",
+      "href": "/ras",
+      "payment": {
+        "rail": "paddle",
+        "status": "paddle_pending",
+        "stripe": "never",
+        "checkout_url": null
+      },
+      "note": "measurement booking only — never a certificate, never a grade; verify stays free; not purchasable until Paddle KYC passes"
+    },
+    {
+      "id": "cobol-bridge",
+      "name": "COBOL Bridge",
+      "status": "live",
+      "href": "/cobol",
+      "payment": null,
+      "note": "CobolBridge Layer-0 on /cobol — verify free; no public prices; we do not certify."
+    }
+  ],
+  "payment_rails": {
+    "x402": {
+      "status": "live",
+      "note": "pay-as-you-go at the 402; verify stays free"
+    },
+    "human_booking": {
+      "status": "paddle_pending",
+      "rail": "paddle",
+      "note": "Paddle rail (humans only); not purchasable until Paddle KYC/live verification passes; never Stripe"
+    }
+  },
+  "verify": {
+    "href": "/gspc-verify",
+    "status": "free",
+    "note": "Verification is always free. Cite live totals.public_count — no count is frozen in this catalogue."
+  }
+}

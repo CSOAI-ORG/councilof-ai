@@ -74,7 +74,7 @@ const TOOLS: Tool[] = [
     ticks: [
       "Board, verify, get measured and the evidence pack in one window.",
       "No second tab and no second login.",
-      "Every pane is a real page you can open today.",
+      "Open a view and read its stated conditions and evidence limits.",
     ],
     image: "/images/band/hardened.webp",
     alt: "A field of pale solids joined by a lattice of green light",
@@ -102,12 +102,12 @@ const TOOLS: Tool[] = [
     family: "Free forever",
     name: "Verify a card",
     what:
-      "Paste a signed measurement record and your own browser recomputes its hash and checks the signature. Nothing is sent to us, and nothing needs our permission.",
+      "Check a supported signed measurement record in your browser and read VALID, INVALID or UNCHECKABLE. The browser path may fetch public key metadata; signature integrity does not establish truth or freshness.",
     pain:
       "Otherwise checking somebody's AI claim means trusting the company that made the claim.",
     ticks: [
-      "Your browser recomputes the hash and checks Ed25519.",
-      "Nothing is sent to us. Nothing needs our permission.",
+      "Checks the declared payload and signature for supported formats.",
+      "Public key metadata may be fetched; offline checks need original bytes and a pinned issuer key.",
       "Three states only: VALID · INVALID · UNCHECKABLE.",
     ],
     note: "No account and no fee, permanently.",
@@ -331,19 +331,19 @@ export default function ToolStack() {
   return (
     <section id="what-we-fix" aria-labelledby="what-we-fix-title" className="surface-sunken section-y-lg">
       <div className="section-shell">
-        <p className="t-kicker text-center text-emerald-700 dark:text-emerald-300">Nine products</p>
+        <p className="t-kicker text-center text-emerald-700 dark:text-emerald-300">Nine ways to work with evidence</p>
         <h2 id="what-we-fix-title" className="t-section mt-4 text-center text-foreground">
-          Nine doors. Each one opens today.
+          Nine routes into the evidence.
         </h2>
         <p className="t-lede measure measure-center mt-5 text-center text-muted-foreground">
-          Independent measurement body. We run AI systems against frozen published tests, sign the
-          result, and leave empty cells empty. Nine doors, each a real page.
+          Independent measurement and evidence. Read each record's instrument, signing status
+          and stated gaps. Empty cells stay empty. Choose a route and read its conditions.
         </p>
         <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/60 px-5 py-4">
           <HomeUnderstand
             title="Why these nine, and not a catalogue"
             items={[
-              "Each tile opens a page that exists today. A tool with no destination is not on this band.",
+              "Each tile names a route and its purpose. Read the conditions shown on the tile.",
               "Empty cells stay empty. We do not invent a figure to fill a gap.",
               { kind: "usp", text: "We measure. We do not sell a rank, a certificate, or a placement." },
             ]}

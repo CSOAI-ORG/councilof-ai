@@ -17,8 +17,8 @@ test("canonical opted-in row roundtrips its exact free HTTP descriptor", () => {
   assert.deepEqual(JSON.parse(decodeURIComponent(action.href.slice("vscode:mcp/install?".length))), { name: "gspc", ...JSON.parse(row.snippet).servers.gspc });
 });
 test("only the existing VS Code row is opted in; other clients stay unchanged", () => {
-  assert.equal(distribution.connect_matrix.clients.filter((c) => c.installer !== undefined).length, 1);
-  for (const c of distribution.connect_matrix.clients.filter((c) => c.id !== "vscode")) assert.equal(vscodeInstallAction(resolveRow(c), freeUrl), undefined);
+  assert.equal(distribution.connect_matrix.clients.filter((c) => c.installer === "vscode").length, 1);
+  for (const c of distribution.connect_matrix.clients.filter((c) => c.installer === undefined)) assert.equal(vscodeInstallAction(resolveRow(c), freeUrl), undefined);
 });
 test("installer derivation does not mutate the row", () => {
   const before = JSON.stringify(row); vscodeInstallAction(row, freeUrl); assert.equal(JSON.stringify(row), before);

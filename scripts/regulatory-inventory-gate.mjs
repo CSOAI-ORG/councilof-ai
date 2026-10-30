@@ -138,7 +138,10 @@ function validate(
   }
 
   const assets = inventory?.crosswalk_assets ?? [];
-  expect(assets.length === 25, `crosswalk asset manifest has ${assets.length}, expected 25`);
+  // 25 -> 26 with the tool-parity statement: the card corpus grew an axis, so the
+  // inventory carries one more crosswalk asset. The count moves only with a new
+  // dated inventory and its own proof — stamped bytes are never edited.
+  expect(assets.length === 26, `crosswalk asset manifest has ${assets.length}, expected 26`);
   expect(inventory?.counts?.crosswalk_assets === assets.length, "crosswalk counter does not derive from manifest");
   expect(new Set(assets.map((row) => row.id)).size === assets.length, "crosswalk asset ids must be unique");
   expect(new Set(assets.map((row) => row.path)).size === assets.length, "crosswalk asset paths must be unique");
@@ -147,7 +150,8 @@ function validate(
   }
 
   const derived = assets.filter((row) => row.asset_type === "DERIVED_MEASUREMENT_STATEMENT");
-  expect(derived.length === 14, `measurement-derived statement count is ${derived.length}, expected 14`);
+  // 14 -> 15: one derived measurement statement per axis, and tool-parity is the fifteenth.
+  expect(derived.length === 15, `measurement-derived statement count is ${derived.length}, expected 15`);
   const indexedFiles = new Set((intotoIndex?.statements ?? []).map((row) => row.file));
   for (const row of derived) {
     expect(indexedFiles.has(path.basename(row.path)), `${row.id}: statement is absent from the in-toto index`);
@@ -161,9 +165,15 @@ function validate(
   expect(inventory?.counts?.gspc_axes === axes.length, "inventory GSPC count does not derive from signed board");
 
   const jurisdictions = eastWest?.jurisdictions ?? [];
-  expect(jurisdictions.length === 4, `published east-west crosswalk has ${jurisdictions.length} regimes, expected 4`);
+  // A REGIME is a jurisdiction the published crosswalk maps (EU · UK · US-IL · CN). One regime may
+  // hold several instrument entries: the EU/EEA regime now carries six (the EU AI Act, GDPR, the
+  // Cyber Resilience Act, DORA, NIS2 and CSRD). The count is therefore the number of DISTINCT
+  // regimes, which is what the stamped inventory's published_crosswalk_regimes carries and what
+  // /api/counters publishes — counting entries would have called six EU instruments six regimes.
+  const regimes = new Set(jurisdictions.map((row) => row.regime));
+  expect(regimes.size === 4, `published east-west crosswalk has ${regimes.size} regimes, expected 4`);
   expect(
-    inventory?.counts?.published_crosswalk_regimes === jurisdictions.length,
+    inventory?.counts?.published_crosswalk_regimes === regimes.size,
     "published regime counter does not derive from east-west crosswalk",
   );
 
@@ -187,6 +197,7 @@ function selftest() {
   if (cleanErrors.length) throw new Error(`selftest fixture is invalid: ${cleanErrors.join("; ")}`);
   const broken = structuredClone(base);
   const brokenManifest = structuredClone(frozenManifest);
+  const brokenEastWest = structuredClone(eastWest);
   broken.counts.frozen_provision_counter = 418;
   broken.frozen_provisions.evidence_sha256 = "0".repeat(64);
   broken.authority_adapters[1].actor_type = "REGULATOR";
@@ -194,14 +205,16 @@ function selftest() {
   broken.crosswalk_assets[0].path = "public/interop/crosswalk/intoto/does-not-exist.json";
   const firstProvision = Object.keys(brokenManifest.anchors).sort()[0];
   brokenManifest.anchors[firstProvision] = "not-a-sha256";
+  // a fifth regime in the published crosswalk: the count must move with it, or the gate is blind
+  brokenEastWest.jurisdictions.push({ regime: "XX", instrument: "Example", rows: [] });
   const errors = validate(broken, {
     board,
     intotoIndex,
-    eastWest,
+    eastWest: brokenEastWest,
     frozenManifest: brokenManifest,
     frozenManifestBytes,
   });
-  if (errors.length < 7) throw new Error(`selftest expected at least 7 failures, got ${errors.length}`);
+  if (errors.length < 9) throw new Error(`selftest expected at least 9 failures, got ${errors.length}`);
   console.log(`regulatory-inventory-gate selftest: PASS (${errors.length} deliberate failures caught)`);
 }
 
@@ -228,5 +241,5 @@ if (process.argv.includes("--selftest")) {
     for (const error of errors) console.error(`regulatory-inventory-gate: ${error}`);
     process.exit(1);
   }
-  console.log(`regulatory-inventory-gate: PASS (${current.name}, proof commits to its bytes) — 417 provision hashes + reproducible root · 17 authority adapters · 25 crosswalk assets · 22 GSPC axes · 4 published regimes`);
+  console.log(`regulatory-inventory-gate: PASS (${current.name}, proof commits to its bytes) — 417 provision hashes + reproducible root · 17 authority adapters · 26 crosswalk assets · 22 GSPC axes · 4 published regimes`);
 }

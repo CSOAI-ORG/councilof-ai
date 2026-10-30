@@ -63,16 +63,34 @@ import fs from "fs";
 import { createHash } from "node:crypto";
 import path from "path";
 import { fileURLToPath } from "url";
+import { isPlaceholderLink } from "./internal-links-check.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CHECK = process.argv.includes("--check");
-const BOARD = process.env.CSOAI_BOARD_URL || "https://councilof.ai/api/gspc";
+// The board is THIS commit's own /api/gspc, computed offline by the same commitBoard() the
+// prerender (and deploy) uses. Reading production here meant a PR that changes the board could
+// never regenerate these files to match itself (#3266, Measure ruling 16 Oct 2026: derive the
+// count from the data, fix the generator). CSOAI_BOARD_URL still selects a fetched board.
+const BOARD = process.env.CSOAI_BOARD_URL || "commit:functions/api/gspc.ts";
 const p = (...a) => path.join(REPO, ...a);
 const readJSON = (f) => JSON.parse(fs.readFileSync(p(f), "utf8"));
 
 // The door's own tool definitions — the same two files functions/mcp/[[path]].ts serves from.
-const WORDS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];
-const numWord = (n) => WORDS[n] ?? String(n);
+// The number word for a count the published prose carries. It was a 21-entry array and the
+// fleet grew past it: the array ran out and the generator fell back to digits, so a sentence
+// that read "fourteen free readers" silently became "47 free readers". Same words, no ceiling.
+const WORD_ONES = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+const WORD_TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+const numWord = (n) => {
+  if (n < 0 || !Number.isInteger(n)) return String(n);
+  if (n < 20) return WORD_ONES[n];
+  if (n < 100) {
+    const t = WORD_TENS[Math.floor(n / 10)];
+    const o = n % 10;
+    return o ? `${t}-${WORD_ONES[o]}` : t;
+  }
+  return String(n);
+};
 const mcpCounts = () => {
   const free = readJSON("functions/mcp/gspc-tools.json").tools.length;
   const paid = readJSON("functions/mcp/paid-tools.json").tools.length;
@@ -80,6 +98,12 @@ const mcpCounts = () => {
 };
 
 async function board() {
+  if (!process.env.CSOAI_BOARD_URL) {
+    const { commitBoard } = await import("./surface/commit-board.mjs");
+    const c = await commitBoard(REPO);
+    if (c.status !== 200) throw new Error(`${BOARD} -> HTTP ${c.status}`);
+    return JSON.parse(c.raw.toString("utf8"));
+  }
   const r = await fetch(BOARD, { headers: { accept: "application/json" } });
   if (!r.ok) throw new Error(`${BOARD} -> HTTP ${r.status}`);
   return r.json();
@@ -191,7 +215,16 @@ function paidDoorsSection() {
   if (!doors.length) throw new Error("council-os/capabilities.json declares no paid door — absent is not zero");
   const lines = doors.map((c) => {
     const req = c.probe?.request ?? c.path;
-    const preview = c.free_preview ? ` · free preview: ${SITE}${c.free_preview}` : "";
+    // A TEMPLATE IS NOT A LINK. Three declared previews carry a <slot> (…?id=<wrapped-symbol:chain>…).
+    // Printed after the origin they were URLs a reader follows: the outward gate fetched them on
+    // 2026-10-13 and got a 400. So a preview with a slot is printed as code text with no origin, and
+    // only a concrete preview is printed as an address. The door's own link, built from the request
+    // the probe really makes, must be concrete — a slot there is a declaration error, said out loud.
+    if (isPlaceholderLink(req)) throw new Error(`${c.id}: the door's request "${req}" carries a template slot — a link must be an address that answers`);
+    const previewPath = c.free_preview?.startsWith(SITE) ? c.free_preview.slice(SITE.length) : c.free_preview;
+    const preview = !previewPath ? ""
+      : isPlaceholderLink(previewPath) ? ` · free preview, as a pattern (replace the <…> part; not a link): \`GET ${previewPath}\``
+      : ` · free preview: ${SITE}${previewPath}`;
     // llms.txt spec form is `[Title](url)`: an agent crawler extracts a bare `https://…` as text, not
     // as a link, so the paid doors were listed but not linkable. The URL stays verbatim inside the
     // parens — `x402-descriptions.test.ts` checks `llms.includes(canonical text)` and the free-door
@@ -443,6 +476,10 @@ try {
   }
   throw e;
 }
+// Owner-gated rows (public_pages HIDDEN_PENDING_OWNER_GO) stay in GET /api/gspc but get no row,
+// door or deep entry in these public files until the owner's go — the same filter renderAll()
+// applies to the axis pages. Totals are left exactly as served.
+b = { ...b, axes: (Array.isArray(b.axes) ? b.axes : []).filter((a) => a?.public_pages !== "HIDDEN_PENDING_OWNER_GO") };
 // Do NOT mutate b.totals: the snapshot below must be a faithful copy of what the endpoint
 // returns. Writing doi into totals would put a key there that /api/gspc does not carry.
 const t = { ...(b.totals || {}), doi: b.doi ?? b.totals?.doi ?? null };

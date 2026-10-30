@@ -1,0 +1,121 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 31
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ai.1325_mcp_0.1.0__stable-2025-11-25.json",
+      "checks_sha256": "5eb5c77f55b19ebde17172ba97b13d261b6290a925628e128fd43f8d1f8b9812",
+      "deviation_checks": [
+        "CompletionComplete",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "ElicitationSEP1034General",
+        "ElicitationSEP1330General",
+        "LoggingSetLevel",
+        "Ping",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesSubscribe",
+        "ResourcesTemplateRead",
+        "ResourcesUnsubscribe",
+        "ServerInitialize",
+        "ServerSSEMultipleStreamsTest",
+        "ToolsCallAudio",
+        "ToolsCallElicitation",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSampling",
+        "ToolsCallSimpleText",
+        "ToolsCallWithLogging",
+        "ToolsCallWithProgress",
+        "ToolsList"
+      ],
+      "instrument": "stable-2025-11-25",
+      "instrument_channel": "stable",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 30,
+      "spec_version": "2025-11-25",
+      "state": "PROBED",
+      "subject_id": "ai.1325/mcp@0.1.0",
+      "suite_version": "0.1.16"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "565491fa6bfd410f6db462e75a35565087cad7001f5e06c7800a3b9a3dbaf399",
+    "sig_ed25519": "12ea5ac3c3a785108cdd798eb4599752e4ef0a3e5c4253f725215f784d65ae9892e5f44bf428c1dfee9be461050731bab17f02f23e8ae6fff37efd5b52e6b70e",
+    "source_urls": [
+      "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ai.1325_mcp_0.1.0__stable-2025-11-25.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run stable-2025-11-25 for ai.1325/mcp@0.1.0",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "e6df2953ce177c7541e1bb251d2b29828dcb59c0b87427c77f18312f35b4eb75",
+    "c1dc50d515fbaabd3c23e72b42353d35cd055572bbd921afb62e104202582fe6",
+    "b0d5009d95779476b610824bf1c7806ac7a25c5349a2c2003a02c5f4ad247349",
+    "8b389d68b4d2d09fb27aaf836b6910d8dea38bf08127970a96713332bac89510",
+    "3420678806bfaf27183196a32ad62e57bb35281525f345218fa16249fb179667",
+    "b1c00ad489ff12025aaca4fc16083f327a7b43c188d4f7e915f2b7e7d94fe7b6",
+    "df944dfbf3487e5184f437451ee3b9d23fcc6fa0a3975b7c15261fff6424d8f0",
+    "ff708ff7bf83d96c86df85b06d41712d851cba69f638617a3678f259a60838e3",
+    "86487c54dae2565694ffeb434a144be4559a446a0e02b9b88467202e35411652"
+  ]
+}

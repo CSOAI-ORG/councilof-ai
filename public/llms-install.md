@@ -28,25 +28,31 @@ is the canonical service; it is also suitable for MCP clients that support remot
 Streamable HTTP configuration. This is not a claim of support for every AI platform
 or client.
 
-## Optional local stdio package (deprecated on npm)
+## Optional local stdio package (not the contract; use the remote)
 
 The package identity is `csoai-gspc-mcp` (not the stale scoped name previously
-shown here). Every release published to npm so far is marked deprecated on npm and
-carries fewer tools than the remote, so this guide no longer gives a local
-configuration: use the remote above, or the free read-only door
-https://councilof.ai/mcp/free. Read the deprecation yourself with
-`npm view csoai-gspc-mcp@latest deprecated`.
+shown here). Every release published to npm so far carries fewer tools than the
+remote, so this guide no longer gives a local configuration: use the remote above,
+or the free read-only door https://councilof.ai/mcp/free.
 
-The repository currently prepares `0.2.3`, but that source version is **not a
-published npm release** until `npm view csoai-gspc-mcp@0.2.3 version` confirms that
-exact version and `npm view csoai-gspc-mcp@latest deprecated` prints nothing. Do not
-install or advertise `0.2.3` from npm before that independent check.
+The latest published release is `0.2.3` (published 2026-10-26T07:21:23.715Z), and
+it carries 19 tools (14 free + 5 metered) — measured from the published tarball on
+2026-10-28, not from this repository. It was published 39 minutes before the 33
+named axes merged, so it holds the fleet as it stood then. It is **not** marked
+deprecated on npm, which is why `npm view csoai-gspc-mcp@latest deprecated` prints
+nothing: deprecation is not the signal here, the tool count is.
+
+The repository currently prepares `0.2.4`, but that source version is **not a
+published npm release** until `npm view csoai-gspc-mcp@0.2.4 version` confirms that
+exact version AND the published tarball's own manifests carry the same names as
+the live door. Do not install or advertise any published release as the contract
+before that independent check.
 
 ## Exact reviewed tool catalog
 
 This list describes the reviewed source contract at this commit. Confirm that the
-deployed remote returns the same 12 names before treating it as the live contract.
-Listing the catalog and using all eight read/verification tools is free. In
+deployed remote returns the same 52 names before treating it as the live contract.
+Listing the catalog and using every free read/verification tool is free. In
 particular, `verify_card` checks a Council-issued signed measurement card without a
 payment. Its three possible verdict classes are `VALID`, `INVALID`, and
 `UNCHECKABLE`; signature validity is not certification of the subject.
@@ -68,7 +74,40 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
     "verify_capsule",
     "server_evidence",
     "evidence_bundle_preview",
-    "route"
+    "route",
+    "axis_governance",
+    "axis_safety",
+    "axis_provenance",
+    "axis_continuity",
+    "axis_conformance",
+    "axis_openness",
+    "axis_machinery-conformity",
+    "axis_care",
+    "axis_cross-reality",
+    "axis_detector-interop",
+    "axis_art5-safeguard",
+    "axis_swarm",
+    "axis_affect",
+    "axis_jail",
+    "axis_effect-binding",
+    "axis_provenance-controls",
+    "axis_reserve-attestation",
+    "axis_regulatory-framework",
+    "axis_distribution-integrity",
+    "axis_custody-disclosure",
+    "axis_ai-adoption-components",
+    "axis_labour-components",
+    "axis_humanoid-labour-index",
+    "axis_lab-practice",
+    "axis_company-practice",
+    "axis_measurer-integrity",
+    "axis_harness-fidelity",
+    "axis_interop-conformance",
+    "axis_humanoid-deployment",
+    "axis_regulator-transparency",
+    "axis_interpretability-reproducibility",
+    "axis_claim-maintenance",
+    "axis_serving-fidelity"
   ],
   "x402_metered": [
     "commission_card",

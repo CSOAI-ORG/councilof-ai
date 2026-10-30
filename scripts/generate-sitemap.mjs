@@ -571,8 +571,9 @@ const MACHINE_PATHS = [
   ["/feeds/records.json", "daily", "0.5"],
   ["/notes/daily/", "daily", "0.6"],
   // Machine-readable records previously served only by an out-of-band release (27 Sep); now in public/.
-  ["/progress-index.json", "daily", "0.5"],
-  ["/eat-flywheel.json", "daily", "0.5"],
+  // Historical snapshots have no verified refresh schedule; omit their changefreq.
+  ["/progress-index.json", null, "0.5"],
+  ["/eat-flywheel.json", null, "0.5"],
   ["/layer0-distribution.json", "daily", "0.5"],
   ["/layer0-drive-through.json", "daily", "0.5"],
   // signed-receipts/v1 conformance kit (28 Sep): the golden vectors a third-party verifier is run against.
@@ -757,7 +758,7 @@ const urls = finalPaths
     return [
       "  <url>",
       `    <loc>${loc}</loc>`,
-      `    <changefreq>${cf}</changefreq>`,
+      ...(cf === null ? [] : [`    <changefreq>${cf}</changefreq>`]),
       `    <priority>${pr}</priority>`,
       "  </url>",
     ].join("\n");

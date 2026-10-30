@@ -1,0 +1,15 @@
+name: gspc-one guard test
+on:
+  pull_request:
+    paths: ["public/interop/gspc-one.json", "scripts/gspc-one/**", ".github/workflows/gspc-one-*.yml"]
+permissions: {contents: read}
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: python3 -m unittest discover -s scripts/gspc-one -p 'test_check_export.py' -v
+      - run: python3 scripts/gspc-one/check_export.py public/interop/gspc-one.json
