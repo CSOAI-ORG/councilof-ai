@@ -641,6 +641,33 @@
       "approver": "Nick - directory identity (federation needs a merged agntcy/dir-staging PR) and the push itself",
       "flagged_org_impact": "None.",
       "flagged_org_affected": false
+    },
+    {
+      "id": "working-group-resources",
+      "format": "Public tracker resources: website, HF static Space candidate, offline Kaggle notebook and local stdio configuration template",
+      "output": [
+        "public/working-groups/catalog.json",
+        "public/working-groups/index.html",
+        "distribution/working-groups/hf/index.html",
+        "distribution/working-groups/hf/catalog.json",
+        "distribution/working-groups/hf/README.md",
+        "distribution/working-groups/kaggle/working-groups.ipynb",
+        "distribution/working-groups/kaggle/kernel-metadata.template.json",
+        "distribution/working-groups/mcp-client.template.json",
+        "distribution/working-groups/LICENSE",
+        "distribution/working-groups/hf/LICENSE",
+        "distribution/working-groups/README.md",
+        "distribution/working-groups/manifest.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/working-groups/README.md"
+      ],
+      "licence": "MIT (repository code and original proposal text); source references retain their own licences",
+      "version_source": "dated-catalog",
+      "listing_channel": "Candidate resource kit; not registered or published",
+      "owner_approval_needed": true,
+      "approver": "Existing release owner for destinations and human review",
+      "flagged_org_affected": false
     }
   ],
   "published_channels_note": "Every place a Layer 0 artifact is, or is declared to be, live. scripts/harness-x/parity_live.py reads each one (daily, scripts/pod-loops/harness-x-parity.sh). kind rendered-only = rendered here and not yet listed: reported UNCHECKABLE, never CONSISTENT. kinds smithery / a2a-registry = third-party directories that copy the door or the agent card (compared, never edited from here); listing-unreadable = a directory that lists us but cannot be read without a key we do not hold: UNCHECKABLE.",
@@ -917,6 +944,12 @@
       "kind": "rendered-only",
       "row": "dify-plugin",
       "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "working-group-resources-candidate",
+      "kind": "rendered-only",
+      "row": "working-group-resources",
+      "why": "Candidate resources only. No public HF/Kaggle upload, marketplace listing or live MCP tool change."
     }
   ],
   "connect_matrix": {

@@ -60,6 +60,10 @@ Run the included check script from a downloaded `snapshot/` directory after insp
 - Results are scoped to the recorded system, method, items and date. They do not establish general safety, legal compliance or permission to execute.
 - Check signatures where provided, bound intake receipts, admission and the [current corrections register](https://councilof.ai/corrections/) before quoting a card. A signature alone is insufficient.
 
+## Contribute a review
+
+Use the [Public Watchdog working groups and document tracker](https://councilof.ai/working-groups/) to find a bounded review task, inspect its evidence and prepare a contribution. Independent researchers, practitioners and affected people are welcome. Groups are forming; proposals and forum posts do not change measurements or grant authority.
+
 ## Licence and citation
 
 Board export: **CC-BY-4.0**, attributed to **Council of AI / CSOAI Ltd**. Linked datasets and third-party source material retain their own licences.
