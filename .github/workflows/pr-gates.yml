@@ -277,6 +277,12 @@ jobs:
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
 
+      - name: Dependency security regressions — sanitizer, quoting and proxy trust
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npm ci --prefix api-server --ignore-scripts --no-audit --no-fund
+          node --test scripts/dependency-security.node-test.mjs
+
       - name: Offline uploader regressions — isolated network namespace
         if: steps.scope.outputs.gated == 'true'
         timeout-minutes: 10
