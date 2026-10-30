@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { renderAll, renderAxesIndex, staleOwnedFiles } from "./build-axis-pages.mjs";
+import { loadBoard, renderAll, renderAxesIndex, staleOwnedFiles } from "./build-axis-pages.mjs";
 
 const OWNER_GATED = "HIDDEN_PENDING_OWNER_GO";
 
@@ -120,6 +120,32 @@ test("the axes index page says 32 where the board serves 33, because one slot is
   assert.match(out["axes.html"], /<h1>All 32 GSPC axes<\/h1>/);
   // The lid is the board's own totals, left as served.
   assert.match(out["axes.html"], /33 axes · 23 measured/);
+});
+
+test("the commit board renders exactly its public canonical axes without promoting the owner-held slot", async () => {
+  const live = await loadBoard();
+  const allIds = live.axes.map((row) => row.axis);
+  assert.equal(allIds.length, 33);
+  assert.equal(new Set(allIds).size, 33);
+  assert.ok(allIds.includes("regulator-transparency"));
+
+  const publicIds = live.axes
+    .filter((row) => row.public_pages !== OWNER_GATED)
+    .map((row) => row.axis)
+    .sort();
+  assert.equal(publicIds.length, 32);
+  assert.ok(!publicIds.includes("regulator-transparency"));
+
+  const out = renderAll(live);
+  const renderedIds = Object.keys(out)
+    .filter((path) => path.startsWith("axis/"))
+    .map((path) => path.slice("axis/".length, -".html".length))
+    .sort();
+  assert.deepEqual(renderedIds, publicIds);
+  assert.equal(out["axis/regulator-transparency.html"], undefined);
+  assert.match(out["axes.html"], /<h1>All 32 GSPC axes<\/h1>/);
+  assert.match(out["axes.html"], /<h2>9 declared subject slots<\/h2>/);
+  assert.doesNotMatch(out["axes.html"], /data-axis="regulator-transparency"/);
 });
 
 test("a declared slot's own page offers no separation machinery", () => {
