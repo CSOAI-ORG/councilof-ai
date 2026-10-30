@@ -162,14 +162,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-gov"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -184,7 +184,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -234,7 +235,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "ac86ab20164eeb9411e375fd29d5332f99de738088b561684bdb6f5aec7a8fdc"
+      "audit_sha256": "01d36f941f0d0e905e03e9c1e3678983ec1c98be8df4395381e402be629fe3cb"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -392,14 +393,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-agi"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -414,7 +415,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 7,
+        "passed": 5,
+        "declared": 2,
         "findings": 1,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -464,7 +466,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "5427fd11aa4c8d53252fb7b1556dc66f312c2be47e29eec0544a03371194a12b"
+      "audit_sha256": "16940a10ca6da5d895b24eb7781143cb3e174a7f2b1f1317ac24a70669249f0d"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -625,14 +627,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-prv"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -647,7 +649,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -697,7 +700,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "e01c89f070e51493f4bea63b8e75d4f9e3dd35c5e6f540514dcc3e31d34c38af"
+      "audit_sha256": "747c77ebcedc656be666847955d0c1d4d36bedb6c8c52b492a4f709b76fa08e9"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -857,14 +860,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-asi"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -879,7 +882,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -929,7 +933,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "8fa4be6d86b05c8a8906584ad9704cda5093e49dd1d0622f1720ecc5b5ad9e54"
+      "audit_sha256": "8caa8d649dcbb49d5ee8c4e8eb108b46aa81709522b811405b75147df02cc3e6"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -1089,14 +1093,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-mcp"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -1111,7 +1115,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -1161,7 +1166,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "9afeeb9165d0e3b15f4c03532d3908995824dc6561e3827378494c3b4bf6e8e4"
+      "audit_sha256": "25fec80ee2b62c44eefb407418d4ec4db28ba782dd57f8562a5aa772b01b263b"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -1320,14 +1325,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-oss"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -1342,7 +1347,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -1392,7 +1398,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "3f5bfdef4d2509af1450540c5a2400d5a18e82bc39e55529b9317ba6477a77dd"
+      "audit_sha256": "1e2cb3b858f3a1445829266fbc34bc21020a485df01edbe237a0e14a34386bb9"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -1503,14 +1509,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-mach"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -1525,7 +1531,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -1575,7 +1582,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "eff182cbfd4293f21a8bbbc0b190c7ebfa5b5590e179449e3a34c03d350bb74d"
+      "audit_sha256": "1dff12ee6038115f9f2d0d0efa251d9b4173a35131e8144b5fcff286e376be59"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -1738,14 +1745,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-care"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -1760,7 +1767,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -1810,7 +1818,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "9b3b24a08c1df8e3242a330cebb72d9467f8a257afd3d5faa2b6166835fa5d4a"
+      "audit_sha256": "ac62a2a7429a6ea5973212c29c6faf38311f873db7b21f1b74634c5fbbca3312"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -1921,14 +1929,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-xr"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -1943,7 +1951,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -1993,7 +2002,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "030d4e6f60ffa57d0abe6d9236a80ccca206a6bc81404a60747e472bf0e74d06"
+      "audit_sha256": "e1ed95b110013e91b32e82433fc0aa2467254af760b218802608a05eb2338612"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -2105,14 +2114,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-det"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -2127,7 +2136,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -2177,7 +2187,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "f4f87cf8d217921d7e12542bab5c8fad0fdfa47b7df7845df6ce39bbde3b4ea0"
+      "audit_sha256": "c1179029cd9674ce224e30a90e9b37ec50b2bf13aa8358f2a3eb2e8d59c77642"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -2290,14 +2300,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-art5"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -2312,7 +2322,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 7,
+        "passed": 5,
+        "declared": 2,
         "findings": 1,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -2362,7 +2373,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "c6af63dc972db560052007c8aac74ab2b437db7df4770f32d72a0c3faa921809"
+      "audit_sha256": "06628a0689238f4500064e30d51b1c9151e1e197e49bb828e5d15480d7c22222"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -2466,14 +2477,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-swarm"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -2488,7 +2499,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 6,
+        "passed": 4,
+        "declared": 2,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -2538,7 +2550,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "f68ca53b57bed0c4d6775508f110264edc4eac8e389d3c0b52c4dffe2e6d3efd"
+      "audit_sha256": "3aba3d5ace724a7e19fd99c44449ef3ba93b2a8cba5e0d96160315150f0988af"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -2650,14 +2662,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-affect"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -2672,7 +2684,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 7,
+        "passed": 5,
+        "declared": 2,
         "findings": 1,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -2722,7 +2735,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "46bc0392ea43bd299c11563697635862d20b213cfa211f07134a6336da498475"
+      "audit_sha256": "65d55a9737174ca8358f2c8353bda85bed863a5a59a4c5d700e5c666cd823f76"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -2978,14 +2991,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-jail-goldbank"
         },
         {
           "id": "ROW_LINEAGE",
           "state": "FINDING",
-          "detail": "per-item row digest is not published on this row"
+          "detail": "per-item row digest is absent or is not a SHA-256 digest"
         },
         {
           "id": "LEADER_STATE",
@@ -3000,7 +3013,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 5,
+        "passed": 4,
+        "declared": 1,
         "findings": 3,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3050,7 +3064,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "bdcffe754fe727e0a05c3e32df9230d82566f151629f0e58028c8ae2a94e2a3c"
+      "audit_sha256": "ccc7d8c5f9260234ab5885d4751248397ee75ff83e77aa960d5a72b7a79f58da"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3159,6 +3173,7 @@
       "summary": {
         "checks": 8,
         "passed": 7,
+        "declared": 0,
         "findings": 1,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3208,7 +3223,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "f787b2956115219e7b35ba3968423c6d5fe4dcfdb861c96be95299b070d47361"
+      "audit_sha256": "9bca6037b8dbc8d57d497e49356ff9ff13d6c3d6fe5767e5449c8b3a8fe6deba"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3321,6 +3336,7 @@
       "summary": {
         "checks": 8,
         "passed": 7,
+        "declared": 0,
         "findings": 1,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3370,7 +3386,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "6455acf76ab03694321ba309be30c7f7a88e1841cb3e42abc990d9a7e62de218"
+      "audit_sha256": "6eefe4492d86bc37d635ad547cd1a805d1b71658bf51558f149885ebb44d53bb"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3480,6 +3496,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3529,7 +3546,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "6efde660b1340e86bbf4149e54b84e27c5ac5a1c30b3531fff82bd224568e23e"
+      "audit_sha256": "c961d16fbaab3f3ca50b55edb2c3962eecc80d141ad83fb8f46a07d2bb59c2df"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3638,6 +3655,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3687,7 +3705,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "a3984781505974f4dc57420282c4c49fec2f5e071526b1c49489525b24f90a57"
+      "audit_sha256": "0e69e7fede6f0935ddcbc6e76d16db8d8cce4719995e57d361d14d0cfcac5e18"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3796,6 +3814,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3845,7 +3864,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "4ab6e8652102d13d394c5d1e71a941244edc27348f9812d6cf6ef0fb35344669"
+      "audit_sha256": "ba977e2161cdee9fec12968cb92bad2826823b33237ce240c4612e470aa9d94a"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3954,6 +3973,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -4003,7 +4023,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "85511966718bcb5a728146a5e040269050066007029c48f3967da9c244f8ac12"
+      "audit_sha256": "66c718719347ccfa0e5e86f5f84ed2ebc3f29d409a96cb5b23587fda08bcb290"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4113,6 +4133,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -4162,7 +4183,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "7d773a8affc9161ff435c80db7c7636ee46888ecb6a8e6ed00b2ae377c11bb62"
+      "audit_sha256": "299cc461f79806263e8b84b4795f5d3e95c4498656e0843ac8658e5e7a77f4aa"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4272,6 +4293,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -4321,7 +4343,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "33f673445a8e11753593c3ec2df0ea7177af150a24de714470e6827ac1c22aeb"
+      "audit_sha256": "0aa8ec52bf3baae2a566dabb41305fa2674bb28a8f68b0bffb698620af13629f"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4430,6 +4452,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -4479,7 +4502,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "992eb9a279fb531e1a879f3456b55dba3498f0b1cb8657ca22191819ae3bcf31"
+      "audit_sha256": "72c07a248c1ee5ee11c2f8e293944271c5490b719b71ffdfd653fcd74ea21f8a"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4570,6 +4593,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -4619,7 +4643,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "74ec57935471deb3a98c3528e8a055935103c9c3ae43bc87fda36ed0127e8d22"
+      "audit_sha256": "f5a1f5dc6f939555b88b5f31a9ea33f5fe97bd5be469bc517ffe5973b41cdeb7"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4710,6 +4734,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -4759,7 +4784,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "16181238866e33f5367b89d9316b1ab8f044b36ee78c2c353a0618864455de94"
+      "audit_sha256": "44947e8933cb5df2c415004a3b4d110062182fc653a78010ed217ac2254c0db5"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4850,6 +4875,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -4899,7 +4925,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "3f787ea0c04bdf060686cbb0d699bc0df70d7ad1874c50c88e1d4a0603755abc"
+      "audit_sha256": "be62a7bf52fd5656551220249f22929c40ba3d4dc2414ea3be0db5fdc24fa858"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4990,6 +5016,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5039,7 +5066,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "1e6dfdbde644588f31344ea8f899ca5bd673834fa0d776a60e1a3971bfdbeaad"
+      "audit_sha256": "35b5759968a69de10e070d877b983b8746b539c5be87f42e67189c1d66c9322d"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5130,6 +5157,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5179,7 +5207,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "9eec51b43e47f3a88a65cdd91a8ca2354eaf5897d58d8b24ab8582851d7b89b1"
+      "audit_sha256": "c40118179a66a3bfcf4febc6f593f737dd3879e31cfeba57e7b935cf43dc780c"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5270,6 +5298,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5319,7 +5348,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "528274eafd29b62ff18fa915e52de9b5c5f12c28f6d70d6bba19c0f1cb4fc59e"
+      "audit_sha256": "d25863e4efa4493b86b17d2cac530cd856043aee9fe7ad75d02db329dff8a52f"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5411,6 +5440,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5460,7 +5490,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "4e7270c7754759db766fc7c5b1e8827a4c3db0036b96a29ad69600cc4e463742"
+      "audit_sha256": "5f2983a72c2ac19cf5250b674168271feb0e3d816b0820390cc407ab42fb9f60"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5551,6 +5581,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5600,7 +5631,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "fd35cd79398e1b2f16e3f808bedbe21709603fb96cdad044eccd706239c8f8c0"
+      "audit_sha256": "fcf6807c79721b01dedce246eeb8749620323b0ca01af98d077877088b1cdcf0"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5692,6 +5723,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5741,7 +5773,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "07bb8c659b9082ce102aee0795faac33d4cc8a1dde01d0f69838f53130fb95b0"
+      "audit_sha256": "62e90130b6bbbe675bf94bc1d677fc2d24247d881c3457991b3afa7b5ccc1353"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5835,6 +5867,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5884,8 +5917,8 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "09b3d548a5f23e931e5d734d023528e3f7a19c2110b6a4dfb842843d29838094"
+      "audit_sha256": "c654e91b0bfc7a193272136bcb2280d31c0d4d4831b3b40fb6a9c9c3c1027988"
     }
   ],
-  "bundle_sha256": "5cf7708b54740447a2df56a2bcad96b1c0f447829b4cbd736085d342c76453d4"
+  "bundle_sha256": "f31bd8e08c9bc7a1af7973ba8f8960314d8c494502b861ec10855eb06222169a"
 }
