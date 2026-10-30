@@ -1,14 +1,35 @@
 {
   "name": "@csoai/layer0",
   "version": "0.2.0",
-  "description": "Client for a CSOAI Layer 0 gateway: gate, run, then an Ed25519-signed A2A attestation envelope. Needs CSOAI_API_BASE pointing at a Layer 0 gateway; none is publicly served today.",
+  "description": "Client for a CSOAI Layer 0 gateway: gate, run, then an Ed25519-signed A2A attestation envelope. The default gateway is https://councilof.ai; set CSOAI_API_BASE to point elsewhere.",
   "type": "module",
   "main": "index.js",
-  "exports": { ".": "./index.js" },
-  "engines": { "node": ">=18" },
-  "files": ["index.js", "README.md", "LICENSE", "NOTICE", "CHANGELOG.md"],
-  "keywords": ["csoai", "layer0", "ai-governance", "a2a", "ed25519", "attestation", "eu-ai-act", "sovereign-gate"],
+  "exports": {
+    ".": "./index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "CHANGELOG.md"
+  ],
+  "keywords": [
+    "csoai",
+    "layer0",
+    "ai-governance",
+    "a2a",
+    "ed25519",
+    "attestation",
+    "eu-ai-act",
+    "sovereign-gate"
+  ],
   "license": "Apache-2.0",
   "homepage": "https://councilof.ai/layer0/",
-  "bugs": { "url": "https://councilof.ai/contact/" }
+  "bugs": {
+    "url": "https://councilof.ai/contact/"
+  }
 }
