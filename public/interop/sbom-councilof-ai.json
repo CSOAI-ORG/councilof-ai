@@ -1,10 +1,10 @@
 {
  "bomFormat": "CycloneDX",
  "specVersion": "1.5",
- "serialNumber": "urn:uuid:07569564-dcf5-41dd-b96e-959b8bf63a81",
+ "serialNumber": "urn:uuid:fa23c2d0-bb00-4618-b61b-a9bbbed95e7a",
  "version": 1,
  "metadata": {
-  "timestamp": "2026-10-29T08:57:34.414802+00:00",
+  "timestamp": "2026-10-30T06:41:30.436409+00:00",
   "lifecycles": [
    {
     "phase": "pre-build"
@@ -20,7 +20,7 @@
    "type": "application",
    "name": "csoai-platform",
    "version": "1.0.0",
-   "bom-ref": "source:1371ba5013ae78f4b2fec731f17e107c10b6af14"
+   "bom-ref": "source:0d47f7506a07304e415c70c93f35c40a3cbc68f1"
   },
   "properties": [
    {
@@ -29,15 +29,15 @@
    },
    {
     "name": "commit",
-    "value": "1371ba5013ae78f4b2fec731f17e107c10b6af14"
+    "value": "0d47f7506a07304e415c70c93f35c40a3cbc68f1"
    },
    {
     "name": "package.json:sha256",
-    "value": "e693af6bed4e8b21cf71b73930b8c795c7639ff746eb251da3e4d7a5c9458eda"
+    "value": "1ac2ac3aa99bf9b8f55246da04eb7c1faae68f87604ff38c1af7d9953f628f26"
    },
    {
     "name": "package-lock.json:sha256",
-    "value": "79389dc6c86003185c6a7e9b23bb72110ff33265654bba871a7997b119dd80e2"
+    "value": "3ac475acd909d9302e7b76eda2998a89647250332a0f7972899f8cffa08d0f8f"
    },
    {
     "name": "csoai:lockfile:version",
@@ -14745,6 +14745,47 @@
     {
      "license": {
       "name": "MIT"
+     }
+    }
+   ]
+  },
+  {
+   "type": "library",
+   "bom-ref": "npm-lock:61071b57be71beecbdfff219c8c8d76ddd2efd9e58a96e8606558ba2b32c8a3c",
+   "name": "axe-core",
+   "version": "4.14.0",
+   "purl": "pkg:npm/axe-core@4.14.0",
+   "scope": "required",
+   "properties": [
+    {
+     "name": "csoai:lockfile:path",
+     "value": "node_modules/axe-core"
+    },
+    {
+     "name": "csoai:lockfile:development-only",
+     "value": "true"
+    },
+    {
+     "name": "csoai:lockfile:optional",
+     "value": "false"
+    },
+    {
+     "name": "csoai:version:evidence",
+     "value": "committed npm package-lock.json declaration; not installed/deployed observation"
+    },
+    {
+     "name": "csoai:license:evidence",
+     "value": "lockfile declaration only; text, authority and obligations not verified"
+    },
+    {
+     "name": "csoai:lockfile:integrity-declaration",
+     "value": "sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ=="
+    }
+   ],
+   "licenses": [
+    {
+     "license": {
+      "name": "MPL-2.0"
      }
     }
    ]
