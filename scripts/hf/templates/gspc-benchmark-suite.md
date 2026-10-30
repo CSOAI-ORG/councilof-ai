@@ -2,6 +2,8 @@
 
 This repository collects GSPC evaluation banks, candidate subject-family banks and integration drafts. Use it to inspect the measurement inputs and reproduce a supported model evaluation. Current admitted results are published on the [GSPC board](https://councilof.ai/api/gspc).
 
+Browse the [Files](https://huggingface.co/datasets/csoai/gspc-benchmark-suite/tree/main) tab for the bundle. Its banks and registry manifests have different schemas, so the automatic tabular viewer is disabled; it previously displayed one registry manifest as a one-row test dataset.
+
 ## Start with the supported runner
 
 The maintained runner and its grader live together in the [Council of AI source repository](https://github.com/CSOAI-ORG/councilof-ai/tree/master/harness/bench). It imports the canonical grader; it does not substitute a generic exact-match scorer.

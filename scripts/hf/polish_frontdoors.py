@@ -45,6 +45,14 @@ def render_card(target: str, current: str, snapshot: dict | None = None) -> str:
                 raise ValueError(f"Published README and snapshot disagree: {key}")
         body = template.replace("{{PROVENANCE}}", found[0])
     elif target == "benchmark-suite":
+        # This repository is a multi-schema bundle. Automatic conversion was
+        # displaying one registry manifest as a one-row test dataset.
+        if re.search(r"(?m)^viewer:", fm):
+            fm, count = re.subn(r"(?m)^viewer:.*$", "viewer: false", fm)
+            if count != 1:
+                raise ValueError("Expected a unique viewer setting")
+        else:
+            fm += "\nviewer: false"
         body = template
     else:
         desired_fm, body = front_matter(template)

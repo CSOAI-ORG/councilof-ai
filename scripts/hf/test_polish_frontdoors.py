@@ -35,6 +35,13 @@ class FrontdoorGuards(unittest.TestCase):
             with self.subTest(after=after), self.assertRaises(ValueError):
                 assert_unchanged_files(before, after, {'README.md'})
 
+    def test_bundle_viewer_is_disabled_without_changing_other_metadata(self):
+        current = self.card()
+        new = render_card('benchmark-suite', current)
+        self.assertEqual(front_matter(new)[0], front_matter(current)[0] + '\nviewer: false')
+        self.assertEqual(render_card('benchmark-suite', new), new)
+        self.assertIn('one-row test dataset', new)
+
 
 if __name__ == '__main__':
     unittest.main()
