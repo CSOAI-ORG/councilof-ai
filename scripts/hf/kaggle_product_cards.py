@@ -118,6 +118,9 @@ def render(row):
     # Kaggle removes HTML comments during metadata updates. Render the same
     # visible text before review so exact readback remains meaningful.
     result = re.sub(r'<!--.*?-->', '', result, flags=re.S)
+    # An older 19,000-character export also cut one announcement marker itself.
+    # Remove that trailing marker fragment only; never discard following prose.
+    result = re.sub(r'<!-- csoai-[^\n]*\n?\Z', '', result)
     # The metadata endpoint treats angle-bracket autolinks as HTML and can
     # discard the remaining document. Use ordinary Markdown links instead.
     result = re.sub(r'<(https?://[^\s<>]+)>', lambda m: f'[{m[1]}]({m[1]})', result)

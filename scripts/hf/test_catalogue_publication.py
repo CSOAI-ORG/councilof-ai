@@ -26,6 +26,14 @@ def test_kaggle_render_keeps_mirror_and_is_idempotent():
     assert render({**row,'metadata':{**row['metadata'],'description':result}})==result
 
 
+def test_truncated_trailing_announcement_marker_does_not_reach_kaggle():
+    row=dict(ref='owner/example',files_complete=True,files=[dict(name='items.jsonl',bytes=8)],
+             metadata=dict(isPrivate=False,description='Unique method.\n<!-- csoai-smithery-conn',title='Sample'))
+    result=render(row)
+    assert 'Unique method.' in result
+    assert '<!--' not in result
+
+
 @pytest.mark.parametrize('field,value',[('isPrivate',True),('isPrivate',None)])
 def test_kaggle_private_refused(field,value):
     with pytest.raises(ValueError):
