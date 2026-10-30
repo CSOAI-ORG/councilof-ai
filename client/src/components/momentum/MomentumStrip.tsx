@@ -12,6 +12,7 @@
  *           with the subset of figures that page is about.
  */
 import { TrendingUp } from "lucide-react";
+import PypiLiveBadge from "./PypiLiveBadge";
 import {
   fmtDay,
   fmtStamp,
@@ -23,7 +24,7 @@ import {
   type MomentumRead,
 } from "./momentum";
 
-export const HOME_HEADLINE = ["pypi_csoai_all_time", "hf_downloads_30d_other", "capsules", "census_rows"];
+export const HOME_HEADLINE = ["hf_downloads_30d_other", "capsules", "census_rows"];
 export const HOME_SECOND = ["board", "signed_cards", "corrections", "mcp_tools", "x402_doors", "hf_datasets"];
 
 export function LiveDot({ live }: { live: boolean }) {
@@ -178,6 +179,7 @@ export default function MomentumStrip({
                 <FigureCell key={f.id} f={f} size="xl" />
               ))}
             </ul>
+            <PypiLiveBadge className="mt-6" />
             <ul
               className="mt-10 grid list-none grid-cols-2 gap-x-5 gap-y-8 border-t border-[var(--ink-border)] p-0 pt-9 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-6"
               data-testid="momentum-second"

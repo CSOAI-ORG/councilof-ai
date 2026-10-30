@@ -52,8 +52,10 @@ export default function HumanVsAiPanel({
       {error && (
         <p className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
           The board endpoint <code className="font-mono">/api/gspc</code> could not be reached
-          ({error}). Nothing is shown here because nothing was read — no placeholder stands in for a
-          figure we do not have.
+          ({error}).{" "}
+          {data
+            ? "Showing the last successful board read with its original measurement dates."
+            : "Nothing is shown here because nothing was read — no placeholder stands in for a figure we do not have."}
         </p>
       )}
       {loading && !error && <p className="mt-4 text-sm text-gray-500">Reading the live board…</p>}

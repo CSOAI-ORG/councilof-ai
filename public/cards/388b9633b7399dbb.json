@@ -1,0 +1,116 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 24,
+        "SUCCESS": 6,
+        "WARNING": 1
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ae.genosys_genosys_1.2.0__stable-2025-11-25.json",
+      "checks_sha256": "578a4674f0dd5627354d44484deebc478426f1ad8c88e8f132a334b6f56e2a81",
+      "deviation_checks": [
+        "CompletionComplete",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "ElicitationSEP1034General",
+        "ElicitationSEP1330General",
+        "LoggingSetLevel",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesSubscribe",
+        "ResourcesTemplateRead",
+        "ResourcesUnsubscribe",
+        "ToolsCallAudio",
+        "ToolsCallElicitation",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSampling",
+        "ToolsCallWithLogging",
+        "ToolsCallWithProgress"
+      ],
+      "instrument": "stable-2025-11-25",
+      "instrument_channel": "stable",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 30,
+      "spec_version": "2025-11-25",
+      "state": "PROBED",
+      "subject_id": "ae.genosys/genosys@1.2.0",
+      "suite_version": "0.1.16"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "388b9633b7399dbbb6945fc222fa5951f6276d75cbdbd2754546640846385e4b",
+    "sig_ed25519": "5e9fffc4f8f6cbdbf61cc7dbab3c7f2c0fccf3cc95f96dc590d423e0417fdcf1e73eef7e3c3e6dd041a3c65c2bd6fd694e35b3723494137d547858f3b693f706",
+    "source_urls": [
+      "https://genosys.ae/mcp",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ae.genosys_genosys_1.2.0__stable-2025-11-25.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run stable-2025-11-25 for ae.genosys/genosys@1.2.0",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "f412660c7cb01a6117347ae67f212479ee4a1bd94899ae79166dea4d25a96eea",
+    "1839b825f018324253b1adf38db8aa19b61d14510db7b4142df90e7897455d72",
+    "de2c0817538eda99a92d2044eb6811442c3763062548a24a51cb31095de22f64",
+    "40b5618f5a4a62a2aa971e153411fcf756cd7a8dbca9a8f5fc110e13efd269a1",
+    "60b40f777b18ac17aa07c4dd76663f1f757a6516ca59914bad17e5c04cc5ce4a",
+    "bb0eef1e7419df7a2b39c3d258ce4d8cdb9181e4ad64740b38818659cb9e2a74",
+    "132d427982227ec04867bb5c1ec55b9e82ebc41c3d1c399cd2d0d7c8320ca8dc",
+    "201c65b10ba3a5f29aa16126faf2c6a15696ac0c1fd8e170a912b9f48ccef9f5",
+    "e2c0b30a71113cf3f7484af4e7abf223254833ab94eeacb0902a90847c1930d3"
+  ]
+}

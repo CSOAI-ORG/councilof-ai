@@ -256,41 +256,246 @@ def parse_mcp(r):
 
 # --------------------------------------------------------------------------------------- DOCTRINE
 _BRAND = None
+_LEDGER = None  # brand-gate.mjs CORRECTIONS_LEDGER_PAGE, compiled; False when it could not be read
+
+
+_LOOKBEHIND = re.compile(r"\(\?<[=!]")
+
+
+def _group_end(src, start):
+    """Index of the ')' that closes the group opening at src[start]."""
+    depth, i, in_class = 0, start, False
+    while i < len(src):
+        c = src[i]
+        if c == "\\":
+            i += 2
+            continue
+        if in_class:
+            in_class = c != "]"
+        elif c == "[":
+            in_class = True
+        elif c == "(":
+            depth += 1
+        elif c == ")":
+            depth -= 1
+            if depth == 0:
+                return i
+        i += 1
+    raise ValueError("unbalanced group in pattern")
+
+
+def _split_top(src):
+    """Split on '|' at nesting depth 0, leaving escapes, groups and character classes whole."""
+    parts, cur, depth, i, in_class = [], [], 0, 0, False
+    while i < len(src):
+        c = src[i]
+        if c == "\\" and i + 1 < len(src):
+            cur.append(src[i:i + 2])
+            i += 2
+            continue
+        if in_class:
+            in_class = c != "]"
+        elif c == "[":
+            in_class = True
+        elif c == "(":
+            depth += 1
+        elif c == ")":
+            depth -= 1
+        elif c == "|" and depth == 0:
+            parts.append("".join(cur))
+            cur = []
+            i += 1
+            continue
+        cur.append(c)
+        i += 1
+    parts.append("".join(cur))
+    return parts
+
+
+def _expand_alternatives(body, limit=64):
+    """Every fixed string of alternatives a look-behind body can take: `a(?:x|yy)b` -> [`axb`, `ayyb`]."""
+    out = []
+    for alt in _split_top(body):
+        i = alt.find("(?:")
+        while i > 0 and alt[i - 1] == "\\":
+            i = alt.find("(?:", i + 1)
+        if i < 0:
+            out.append(alt)
+            continue
+        end = _group_end(alt, i)
+        if alt[end + 1:end + 2] in ("?", "*", "+", "{"):
+            out.append(alt)  # a quantified group has no fixed expansion; left for re.compile to refuse
+            continue
+        for inner in _expand_alternatives(alt[i + 3:end], limit):
+            out.extend(_expand_alternatives(alt[:i] + inner + alt[end + 1:], limit))
+        if len(out) > limit:
+            raise ValueError("look-behind expands to too many alternatives")
+    return out
+
+
+def js_to_py_regex(src):
+    """JavaScript accepts a look-behind whose alternatives differ in width; Python's re does not.
+
+    `(?<!A(?:x|yy)B)` becomes `(?<!AxB)(?<!AyyB)` and `(?<=A(?:x|yy)B)` becomes `(?:(?<=AxB)|(?<=AyyB))`.
+    The meaning is unchanged. A look-behind this cannot make fixed-width still fails to compile, and the
+    gate then fails closed as before."""
+    out, i = [], 0
+    while True:
+        m = _LOOKBEHIND.search(src, i)
+        if not m:
+            out.append(src[i:])
+            return "".join(out)
+        end = _group_end(src, m.start())
+        alts = _expand_alternatives(src[m.end():end])
+        out.append(src[i:m.start()])
+        if src[m.start() + 3] == "!":
+            out.append("".join("(?<!%s)" % a for a in alts))
+        else:
+            out.append("(?:" + "|".join("(?<=%s)" % a for a in alts) + ")")
+        i = end + 1
+
+
+def _compile_js(src, flags):
+    try:
+        return re.compile(src, flags)
+    except re.error:
+        return re.compile(js_to_py_regex(src), flags)
+
+
+def _js_flags(f):
+    return (re.I if "i" in f else 0) | (re.S if "s" in f else 0) | (re.M if "m" in f else 0)
 
 
 def load_brand_rules(repo=REPO):
-    """The banned display strings come from the repo's scripts/brand-gate.mjs, never a copy of it."""
-    global _BRAND
+    """The banned display strings come from the repo's scripts/brand-gate.mjs, never a copy of it.
+
+    Each rule keeps what scanRendered() reads off it: the pattern, `allowOn`, `nearAllow` and `held`. A rule
+    marked `held: true` REPORTS and never fails the deploy until the owner rules on it; this loader used to
+    drop that mark, so the one held rule (certificate_term) failed every page it only reports on."""
+    global _BRAND, _LEDGER
     if _BRAND is not None:
         return _BRAND
     p = os.path.join(repo, "scripts", "brand-gate.mjs")
     js = ("const fs=require('fs');const s=fs.readFileSync(process.argv[1],'utf8');"
           "const a=s.indexOf('const RULES = [');const b=s.indexOf('\\n];',a);"
           "if(a<0||b<0){process.exit(3)};const RULES=eval(s.slice(a+'const RULES = '.length,b+2));"
-          "console.log(JSON.stringify(RULES.map(r=>({id:r.id,p:r.pattern.source,f:r.pattern.flags,"
-          "allowOn:r.allowOn?r.allowOn.source:null,nearAllow:r.nearAllow?r.nearAllow.source:null}))))")
+          "const rx=x=>x?{s:x.source,f:x.flags}:null;"
+          "const lm=s.match(/^const CORRECTIONS_LEDGER_PAGE = (\\/.+\\/[a-z]*);$/m);"
+          "let ledger=null;try{ledger=lm?rx(eval(lm[1])):null}catch(e){}"
+          "console.log(JSON.stringify({ledger,rules:RULES.map(r=>({id:r.id,p:r.pattern.source,held:!!r.held,"
+          "allowOn:rx(r.allowOn),nearAllow:rx(r.nearAllow)}))}))")
+    rid = None
     try:
         out = subprocess.run(["node", "-e", js, p], capture_output=True, text=True, timeout=30)
-        rules = json.loads(out.stdout)
+        doc = json.loads(out.stdout)
         comp = []
-        for r in rules:
-            fl = re.I if "i" in r["f"] else 0
-            comp.append({"id": r["id"], "re": re.compile(r["p"], fl),
-                         "allowOn": re.compile(r["allowOn"], re.I) if r["allowOn"] else None,
-                         "nearAllow": re.compile(r["nearAllow"], re.I) if r["nearAllow"] else None})
+        for r in doc["rules"]:
+            rid = r["id"]
+            # scanRendered() rebuilds every pattern as new RegExp(source, "gi"); allowOn and nearAllow are
+            # tested as written, with their own flags (the ledger path is case-sensitive).
+            comp.append({"id": rid, "re": _compile_js(r["p"], re.I), "held": bool(r["held"]),
+                         "allowOn": _compile_js(r["allowOn"]["s"], _js_flags(r["allowOn"]["f"])) if r["allowOn"] else None,
+                         "nearAllow": _compile_js(r["nearAllow"]["s"], _js_flags(r["nearAllow"]["f"])) if r["nearAllow"] else None})
         _BRAND = comp if comp else False
+        rid = "CORRECTIONS_LEDGER_PAGE"
+        _LEDGER = _compile_js(doc["ledger"]["s"], _js_flags(doc["ledger"]["f"])) if (comp and doc.get("ledger")) else False
     except Exception as e:
-        sys.stderr.write(f"brand-gate rules not loadable: {e}\n")
+        # One rule Python cannot read used to take every rule down with no name attached: from the day
+        # brand-gate.mjs gained a variable-width look-behind, no artifact could score 100%.
+        sys.stderr.write(f"brand-gate rules not loadable (rule {rid}): {e}\n")
         _BRAND = False
+        _LEDGER = False
     return _BRAND
 
 
+def ledger_page():
+    """brand-gate.mjs CORRECTIONS_LEDGER_PAGE: the one built path whose entries quote withdrawn copy.
+    None when it cannot be read from the file; nothing is exempt then."""
+    load_brand_rules()
+    return _LEDGER or None
+
+
+def quotes_withdrawn_copy(path):
+    """True on the corrections ledger page only, by its exact built path as brand-gate.mjs names it."""
+    rx = ledger_page()
+    return bool(rx is not None and rx.search(path or ""))
+
+
+_PAGE_FILE = re.compile(r"\.(?:html?|txt|svg|json|xml)$", re.I)
+
+
+def built_path(url_path):
+    """The path scripts/brand-gate.mjs judges a served page under. prerender writes dist/<route>/index.html
+    and the edge serves it at /<route>/ (the bare /<route> answers 308), so /corrections and /corrections/
+    are both /corrections/index.html there. A path that already names a file (/llms.txt) is unchanged.
+    Every exact `allowOn` in brand-gate.mjs is written against the built path, so a URL path never matches one."""
+    p = "/" + (url_path or "").split("?", 1)[0].split("#", 1)[0].lstrip("/")
+    if p.endswith("/"):
+        return p + "index.html"
+    if _PAGE_FILE.search(p.rsplit("/", 1)[-1]):
+        return p
+    return p + "/index.html"
+
+
+_ENTITY_REF = re.compile(r"&(#[0-9]+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*)(;?)")
+
+
+def _decode_entities_once(s):
+    def one(m):
+        whole = m.group(0)
+        d = html.unescape(whole)
+        if d != whole:
+            return d
+        # a name nothing decodes: a space when it carries its semicolon, as brand-gate.mjs does; "R&D" is left alone
+        return " " if (m.group(2) and m.group(1)[0] != "#") else whole
+    return _ENTITY_REF.sub(one, s)
+
+
+def decode_entities(s):
+    """brand-gate.mjs decodeEntities(): character references decoded to a fixed point, at most 4 passes, so
+    a doubly escaped "&amp;pound;499/mo" reads "£499/mo" as it does on the rendered page. One pass (the old
+    html.unescape) left it as "&pound;499/mo", which no price rule matches."""
+    if not isinstance(s, str) or "&" not in s:
+        return s
+    for _ in range(4):
+        n = _decode_entities_once(s)
+        if n == s:
+            return s
+        s = n
+    return s
+
+
 def visible_text(h):
-    """The brand-gate's own reading of a page (scripts/styles/tags stripped), with entities decoded."""
+    """The brand-gate's own reading of a page: visibleText() in scripts/brand-gate.mjs. Scripts, styles and
+    tags are stripped, then entities are decoded (after the tags are gone), then whitespace is collapsed."""
     t = re.sub(r"<script\b[^>]*>[\s\S]*?</script>", " ", h, flags=re.I)
     t = re.sub(r"<style\b[^>]*>[\s\S]*?</style>", " ", t, flags=re.I)
     t = re.sub(r"<[^>]+>", " ", t)
-    return re.sub(r"\s+", " ", html.unescape(t))
+    return re.sub(r"[\s\ufeff]+", " ", decode_entities(t))  # JS \s counts U+FEFF as whitespace; Python does not
+
+
+def brand_scan(text, path=""):
+    """scanRendered(rel, text) in scripts/brand-gate.mjs, rule for rule. `path` is the BUILT path with its
+    leading slash (see built_path); `text` is what a reader sees. A rule is skipped where its `allowOn`
+    matches the path; every occurrence is tried, and one with a `nearAllow` marker within 90 characters is a
+    disclosure, not a claim. At most one hit per rule, each carrying the rule's `held` mark.
+    Returns None when the rules could not be loaded."""
+    rules = load_brand_rules()
+    if rules is False:
+        return None
+    text = decode_entities(text)  # the page walk, the .txt walk and the JSON sweep all decode before any rule
+    hits = []
+    for r in rules:
+        if r["allowOn"] is not None and r["allowOn"].search(path or ""):
+            continue
+        for m in r["re"].finditer(text):
+            w = text[max(0, m.start() - 90): m.end() + 90]
+            if r["nearAllow"] is not None and r["nearAllow"].search(w):
+                continue
+            hits.append({"rule": r["id"], "held": r["held"], "hit": m.group(0),
+                         "ctx": clip(text[max(0, m.start() - 40): m.end() + 40], 110)})
+            break
+    return hits
 
 
 def md_text(md):
@@ -357,12 +562,33 @@ def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3):
     return hits
 
 
+LEDGER_NA = ("not applied: this is the corrections ledger page (brand-gate.mjs CORRECTIONS_LEDGER_PAGE); its entries quote "
+             "the withdrawn copy they correct. The brand-gate rules that are not exempt there still run (doctrine.brand_gate)")
+
+
+def brand_enforce_held():
+    """brand-gate.mjs's own switch: with BRAND_GATE_ENFORCE_HELD=1 a held rule fails instead of reporting."""
+    return os.environ.get("BRAND_GATE_ENFORCE_HELD") == "1"
+
+
 def doctrine_checks(text, path="", owner=OWN_DOCTRINE, prices=False):
+    """`path` is the BUILT path of the artifact (built_path() for a served page), as brand-gate.mjs sees it."""
     out = []
-    h = _hits(text, CERT, before=140, after=80)
-    out.append(R("doctrine.no_certify_language", FAIL if h else PASS,
-                 ("certify/compliant/accredited/endorsed used without negation: " + " | ".join(h)) if h else "none found", owner))
-    if prices:
+    # The corrections ledger states what we published and got wrong, so an entry has to quote it
+    # ("Some pages offered or implied certification ...", "Two priced strings ($0.005/card ...)").
+    # brand-gate.mjs exempts exactly that one built path from the rules its entries quote; the two word
+    # checks below are this gate's own and had no such exemption, so the ledger could never score 100%
+    # without deleting a correction.
+    quoted = quotes_withdrawn_copy(path)
+    if quoted:
+        out.append(R("doctrine.no_certify_language", NA, LEDGER_NA))
+    else:
+        h = _hits(text, CERT, before=140, after=80)
+        out.append(R("doctrine.no_certify_language", FAIL if h else PASS,
+                     ("certify/compliant/accredited/endorsed used without negation: " + " | ".join(h)) if h else "none found", owner))
+    if prices and quoted:
+        out.append(R("doctrine.no_public_prices", NA, LEDGER_NA))
+    elif prices:
         hp = []
         for m in PRICE.finditer(text):
             w = text[max(0, m.start() - 60): m.end() + 60]
@@ -376,22 +602,23 @@ def doctrine_checks(text, path="", owner=OWN_DOCTRINE, prices=False):
     out.append(R("doctrine.no_lf_membership_label", FAIL if h else PASS, " | ".join(h) if h else "none found", owner))
     h = [x for x in _hits(text, STAT, before=120, after=60, n=20) if SELF_CLAIM.search(x)][:3]
     out.append(R("doctrine.no_statutory_verifier_claim", FAIL if h else PASS, " | ".join(h) if h else "none found", owner))
-    rules = load_brand_rules()
-    if rules is False:
+    hits = brand_scan(text, path)
+    if hits is None:
         out.append(R("doctrine.brand_gate", FAIL, "scripts/brand-gate.mjs rules could not be loaded; gate fails closed", owner))
     else:
-        bad = []
-        for r in rules:
-            if r["allowOn"] is not None and r["allowOn"].search(path or ""):
-                continue
-            for m in r["re"].finditer(text):
-                w = text[max(0, m.start() - 90): m.end() + 90]
-                if r["nearAllow"] is not None and r["nearAllow"].search(w):
-                    continue
-                bad.append(f"{r['id']}: {clip(text[max(0, m.start() - 40): m.end() + 40], 110)}")
-                break
-        out.append(R("doctrine.brand_gate", FAIL if bad else PASS,
-                     ("brand-gate.mjs rules hit: " + " | ".join(bad[:4])) if bad else f"{len(rules)} brand-gate rules, none hit", owner))
+        # Same verdict as the deploy gate: a held rule reports, an enforced rule fails.
+        enforce = brand_enforce_held()
+        bad = [f"{x['rule']}: {x['ctx']}" for x in hits if enforce or not x["held"]]
+        held = [f"{x['rule']}: {x['ctx']}" for x in hits if x["held"] and not enforce]
+        n = len(load_brand_rules())
+        if bad:
+            ev = "brand-gate.mjs rules hit: " + " | ".join(bad[:4])
+        elif held:
+            ev = (f"{n} brand-gate rules, none enforced hit. HELD in brand-gate.mjs (reported, not enforced, owner ruling "
+                  "pending): " + " | ".join(held[:3]))
+        else:
+            ev = f"{n} brand-gate rules, none hit"
+        out.append(R("doctrine.brand_gate", FAIL if bad else PASS, ev, owner))
     return out
 
 
@@ -747,7 +974,9 @@ def page_artifact(ctx, path, lc):
     links = internal_links(raw)
     checks.append(links_check(links, lc, OWN_DOCTRINE))
     checks += accountability_checks(raw, text, OWN_DOCTRINE, links)
-    checks += doctrine_checks(text, urllib.parse.urlsplit(r.url).path, OWN_DOCTRINE, prices=True)
+    # brand-gate.mjs judges the BUILT path (/corrections/index.html); the URL path (/corrections/) never
+    # matched an exact allowOn, so the ledger failed three rules the deploy gate exempts it from.
+    checks += doctrine_checks(text, built_path(urllib.parse.urlsplit(r.url).path), OWN_DOCTRINE, prices=True)
     checks.append(currency_numbers(text, ctx.live, OWN_DOCTRINE))
     return {"id": f"site:{path}", "kind": "site_page", "url": url, "checks": checks}
 
@@ -962,6 +1191,35 @@ def x402_compare(manifest, challenges):
     return bad, n
 
 
+def _contains(got, want):
+    """Every field of `want` is in `got` with the same value, at any depth. Lists and scalars compare whole."""
+    if isinstance(want, dict):
+        return isinstance(got, dict) and all(k in got and _contains(got[k], v) for k, v in want.items())
+    return type(got) is type(want) and got == want
+
+
+def x402_no_sale(res, status, body, payment_required_header=False):
+    """Is this non-402 answer the no-sale answer the manifest entry declares (resources[].no_sale)?
+
+    A door that reads live state before it offers has two honest unpaid answers: the 402, and a
+    declared answer that requests nothing (the wrapper doors answer 200 preview-only while a chain
+    read is UNMEASURED). On 13 Oct 2026 this gate read that 200 as a paid door with four wrong
+    fields. It is neither four mismatches nor a pass by default: it passes only when the manifest
+    declares it and the live body carries every declared field. A declaration that does not say
+    payment.requested is false is not a no-sale declaration and excuses nothing.
+    """
+    d = res.get("no_sale")
+    if not isinstance(d, dict) or not isinstance(d.get("body"), dict):
+        return False
+    if (d["body"].get("payment") or {}).get("requested") is not False:
+        return False
+    if status == 402 or status != d.get("status") or not isinstance(body, dict):
+        return False
+    if "accepts" in body or payment_required_header:
+        return False
+    return _contains(body, d["body"])
+
+
 def x402_artifact(ctx):
     h, m = ctx.http, ctx.x402
     c = []
@@ -970,19 +1228,36 @@ def x402_artifact(ctx):
                 "checks": [R("hygiene.resolves", FAIL, "x402.json not served as JSON", OWN_DEV)]}
     c.append(R("hygiene.resolves", PASS, f"{len(m.get('resources', []))} resources"))
     paid = [res for res in m.get("resources", []) if str(res.get("amount", "")) != "0"]
-    chal = {}
+    # One unpaid GET per paid resource. Three outcomes, kept apart: a 402 (its four fields are compared
+    # below), the no-sale answer the manifest declares for that resource, or neither — ONE mismatch,
+    # named for what it is, not four invented field differences against a challenge that never came.
+    chal, declined, unanswered = {}, [], []
     for res in paid:
         if res.get("method", "GET") != "GET":
             continue
         r = h.get(res["url"], max_bytes=400_000, cache=False)
-        chal[res["url"]] = decode_402(r) if r.status == 402 else None
-        if r.status != 402:
-            chal[res["url"]] = {"accepts": [{"network": f"<HTTP {r.status or r.error}>"}]}
+        if r.status == 402:
+            chal[res["url"]] = decode_402(r)
+            continue
+        path = urllib.parse.urlsplit(res["url"]).path
+        try:
+            body = r.json()
+        except Exception:
+            body = None
+        if x402_no_sale(res, r.status, body, bool(r.headers.get("payment-required"))):
+            declined.append(path)
+        else:
+            unanswered.append(f"{path}: no 402 challenge (HTTP {r.status or r.error}) and not a no-sale answer the manifest declares")
     bad, n = x402_compare(m, chal)
     fields = collections.Counter(b.split(": ", 1)[1].split(" ")[0] for b in bad if ": " in b)
+    bad = unanswered + bad
+    seen = len(chal) + len(unanswered) + len(declined)
+    said_no = (f"; {len(declined)} gave the no-sale answer the manifest declares for it, nothing requested "
+               f"({', '.join(declined)})") if declined else ""
     c.append(R("consistency.x402_manifest_vs_live_402", FAIL if bad else PASS,
-               (f"{len(bad)} mismatches over {n} paid resources (by field {dict(fields)}); e.g. " + "; ".join(bad[:4])) if bad
-               else f"network/amount/asset/extra.name equal on all {n} paid resources", OWN_DEV))
+               (f"{len(bad)} mismatches over {seen} paid resources ({len(unanswered)} without a 402 challenge; "
+                f"by field {dict(fields)}){said_no}; e.g. " + "; ".join(bad[:4])) if bad
+               else f"{seen} paid resources: {n} answered 402 with network/amount/asset/extra.name equal to the manifest{said_no}", OWN_DEV))
     # MCP lists in the manifest vs live tools/list
     mm = m.get("mcp") or {}
     if ctx.tools is not None and (mm.get("free_tools") or mm.get("paid_tools")):
@@ -1094,6 +1369,31 @@ def did_artifact(ctx):
     return {"id": "did:web:csoai.org", "kind": "did", "url": DID_URL, "checks": c}
 
 
+def axis_count_line(axes, measured):
+    """The board's one count line as its producer composes it (functions/api/_boardCounts.ts, axisCountLine):
+    plural by grammar, "1 axis" and "23 axes". The API said "23 axis" until 30 Sep 2026; this gate went on
+    demanding that spelling and failed the corrected line."""
+    return f"{axes} {'axis' if axes == 1 else 'axes'} · {measured} measured"
+
+
+def gspc_totals_problems(g):
+    """Every way GET /api/gspc `totals` fails to derive from its own `axes` array. Empty list: it derives."""
+    t, axes = g.get("totals", {}), g.get("axes", [])
+    st = collections.Counter(str(a.get("status") or a.get("state") or "").upper() for a in axes)
+    meas = sum(v for k, v in st.items() if k.startswith("MEASURED"))
+    pc = axis_count_line(t.get("axes"), t.get("measured_axes"))
+    probs = []
+    if t.get("axes") != len(axes):
+        probs.append(f"totals.axes {t.get('axes')} != len(axes) {len(axes)}")
+    if t.get("measured_axes") != meas:
+        probs.append(f"measured_axes {t.get('measured_axes')} != axes with status MEASURED {meas} ({dict(st)})")
+    if t.get("unmeasured_axes") != len(axes) - meas:
+        probs.append(f"unmeasured_axes {t.get('unmeasured_axes')} != {len(axes) - meas}")
+    if t.get("public_count") != pc:
+        probs.append(f"public_count '{t.get('public_count')}' != '{pc}'")
+    return probs
+
+
 def api_artifacts(ctx):
     arts = []
     g, c = ctx.gspc, []
@@ -1101,19 +1401,8 @@ def api_artifacts(ctx):
         c.append(R("hygiene.resolves", FAIL, "/api/gspc not JSON", OWN_DEV))
     else:
         c.append(R("hygiene.resolves", PASS, "200 JSON"))
-        t, axes = g.get("totals", {}), g.get("axes", [])
-        st = collections.Counter(str(a.get("status") or a.get("state") or "").upper() for a in axes)
-        meas = sum(v for k, v in st.items() if k.startswith("MEASURED"))
-        pc = f"{t.get('axes')} axis · {t.get('measured_axes')} measured"
-        probs = []
-        if t.get("axes") != len(axes):
-            probs.append(f"totals.axes {t.get('axes')} != len(axes) {len(axes)}")
-        if t.get("measured_axes") != meas:
-            probs.append(f"measured_axes {t.get('measured_axes')} != axes with status MEASURED {meas} ({dict(st)})")
-        if t.get("unmeasured_axes") != len(axes) - meas:
-            probs.append(f"unmeasured_axes {t.get('unmeasured_axes')} != {len(axes) - meas}")
-        if t.get("public_count") != pc:
-            probs.append(f"public_count '{t.get('public_count')}' != '{pc}'")
+        t = g.get("totals", {})
+        probs = gspc_totals_problems(g)
         c.append(R("currency.totals_derive_from_axes", FAIL if probs else PASS, "; ".join(probs) if probs else
                    f"{t.get('axes')}/{t.get('measured_axes')}/{t.get('unmeasured_axes')} derive from the axis array", OWN_DEV))
         c += doctrine_checks(json_strings({k: g.get(k) for k in ("note", "limitations", "doi_note", "bank_note", "state_enum")}), "/api/gspc", OWN_DEV)

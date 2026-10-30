@@ -14,6 +14,13 @@ the default parser and once with `read-label`, and compares what lands on disk.
   non-default  every one of those moves, visibly, and the run record names the
             parser that made it happen.
 
+  reasoning  the same contract, one level down: the reasoning channel is a
+            measurement of a side channel, so it is OFF by default and a
+            default run is byte-identical to the one that predates it. The
+            three hashes below were MEASURED on 2026-10-26 from the worker as
+            it stood before the channel existed; they are frozen here so that
+            "the default changed nothing" is a claim the suite can fail on.
+
 The stub's answers are drawn from the shapes the real mill produced: a bare
 label, a label after a preamble, a menu echo, and a prose refusal.
 """
@@ -34,6 +41,25 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 
 DIGEST = "sha256:" + "a" * 64
+
+# The reasoning channel's prose. It is never stored, so the only trace of it in
+# the evidence is a digest and a length.
+THINKING = "Step 1: weigh the options. Step 2: answer."
+
+# Measured 2026-10-26 from scripts/runpod_gspc_worker.py as it stood BEFORE the
+# reasoning channel existed, with the clock and the run id pinned so that
+# items_sha256 and the card id are comparable at all (both carry the run id and
+# the timestamps). A default run must reproduce them exactly.
+BASELINE_INSTRUMENT_SHA256 = (
+    "2d7bc2a89a40fd79668ea608757e42cc992f37ae0e31809ee5405d763949ca7a"
+)
+BASELINE_ITEMS_SHA256 = (
+    "6d6430ed4d113214f4e99c30f428a5e0abe4d8f3c4589fc22f09358b8be3eba1"
+)
+BASELINE_CARD_ID = (
+    "c595d91cae6cc3114c6803c05f17d89c5f73a589c06272d2a4abde7cddaf6bb9"
+)
+PINNED_RUN_ID = "20260922T000000.000000Z-deadbeef00"
 
 ANSWERS = [
     "COMPLY",  # exact, read by every parser
@@ -57,7 +83,7 @@ def worker():
     return module
 
 
-def _stub_client(worker):
+def _stub_client(worker, reasoning: bool = False):
     class StubClient:
         """Deterministic, offline, and it answers in the order the bank asks."""
 
@@ -81,12 +107,24 @@ def _stub_client(worker):
                 load_duration_ns=0,
                 prompt_eval_count=1,
                 eval_count=1,
+                reasoning_present=reasoning,
+                reasoning_sha256=(
+                    hashlib.sha256(THINKING.encode()).hexdigest() if reasoning else None
+                ),
+                reasoning_chars=len(THINKING) if reasoning else None,
             )
 
     return StubClient()
 
 
-def _run(worker, tmp_path: Path, label_parser: str) -> dict:
+def _run(
+    worker,
+    tmp_path: Path,
+    label_parser: str,
+    *,
+    name: str | None = None,
+    reasoning: bool = False,
+) -> dict:
     bank = [
         {"id": f"item-{i:03d}", "prompt": f"Scenario {i}.", "expected": expected}
         for i, expected in enumerate(EXPECTED, start=1)
@@ -95,13 +133,14 @@ def _run(worker, tmp_path: Path, label_parser: str) -> dict:
     bank_path = tmp_path / f"bank-{label_parser}.jsonl"
     bank_path.write_bytes(raw)
 
+    label = name or label_parser
     config = worker.WorkerConfig(
         workspace_root=tmp_path,
         axis="safety",
         model="stub:1b",
         bank_path=bank_path,
         expected_bank_sha256=hashlib.sha256(raw).hexdigest(),
-        output_dir=tmp_path / label_parser,
+        output_dir=tmp_path / label,
         ollama_url="http://127.0.0.1:11434",
         expected_model_manifest_digest=DIGEST,
         model_manifest_path=None,
@@ -112,12 +151,13 @@ def _run(worker, tmp_path: Path, label_parser: str) -> dict:
         max_tokens=128,
         seed=0,
         label_parser=label_parser,
+        reasoning=reasoning,
     )
-    health = worker.HealthSink(tmp_path / f"health-{label_parser}.json")
+    health = worker.HealthSink(tmp_path / f"health-{label}.json")
     outcome = worker.run_once(
         config,
         health,
-        client=_stub_client(worker),
+        client=_stub_client(worker, reasoning=reasoning),
         stop_event=threading.Event(),
     )
     assert outcome.detail_code == "COMPLETE_UNSIGNED", outcome
@@ -131,6 +171,30 @@ def _run(worker, tmp_path: Path, label_parser: str) -> dict:
         ],
         "card": json.loads((run_dir / "card-unsigned.json").read_text()),
     }
+
+
+class _PinnedClock:
+    """A monotonic clock that only moves when the worker asks it to."""
+
+    def __init__(self) -> None:
+        self.now = 1000.0
+
+    def monotonic(self) -> float:
+        self.now += 1.5
+        return self.now
+
+
+def _run_pinned(worker, tmp_path: Path, label_parser: str, monkeypatch, **kwargs) -> dict:
+    """A run with the clock and the run id pinned.
+
+    items_sha256 and the card id both carry the run id and the timestamps, so
+    without a pinned clock they differ on every run and cannot be compared
+    against a frozen baseline. With it they are a measurement.
+    """
+    monkeypatch.setattr(worker, "_run_id", lambda: PINNED_RUN_ID)
+    monkeypatch.setattr(worker, "utc_now", lambda: "2026-09-22T00:00:00Z")
+    monkeypatch.setattr(worker, "time", _PinnedClock())
+    return _run(worker, tmp_path, label_parser, **kwargs)
 
 
 @pytest.fixture(scope="module")
@@ -280,3 +344,139 @@ def test_grading_never_saw_the_expected_label(worker, forgiving):
     assert echo["expected"] == "COMPLY"
     assert echo["parsed_label"] is None
     assert echo["grade"] is False
+
+
+# ------------------------------------------ the reasoning channel is inert too
+
+
+def test_the_default_run_is_byte_identical_to_the_worker_that_predates_the_channel(
+    worker, tmp_path, monkeypatch
+):
+    """The proof, not the assurance.
+
+    The three hashes below were measured on 2026-10-26 from the worker as it
+    stood BEFORE the reasoning channel existed. A default run must reproduce
+    them exactly: same instrument, same evidence, same card. If any of them
+    moves, the change is not inert and this suite says so.
+    """
+    run = _run_pinned(
+        worker, tmp_path, "exact-label", monkeypatch=monkeypatch, name="default"
+    )
+    assert run["run"]["instrument_sha256"] == BASELINE_INSTRUMENT_SHA256
+    assert run["run"]["items_sha256"] == BASELINE_ITEMS_SHA256
+    assert run["card"]["id"] == BASELINE_CARD_ID
+
+
+def test_a_default_run_carries_no_reasoning_key_anywhere(worker, tmp_path, monkeypatch):
+    """The channel is OFF by default, so nothing about it reaches the evidence."""
+    run = _run_pinned(
+        worker, tmp_path, "exact-label", monkeypatch=monkeypatch, name="default"
+    )
+    for row in run["items"]:
+        assert row["schema"] == worker.ITEM_SCHEMA
+        assert "reasoning" not in row
+    assert "reasoning" not in run["run"]["instrument"]
+    assert run["run"]["instrument"]["decode"]["think"] is False
+
+
+def test_a_reasoning_run_moves_every_hash_it_should(worker, tmp_path, monkeypatch):
+    """Turning the channel on is loud: the instrument, the evidence and the card
+    all move, and the row says which schema it is speaking."""
+    run = _run_pinned(
+        worker,
+        tmp_path,
+        "exact-label",
+        monkeypatch=monkeypatch,
+        name="reasoning",
+        reasoning=True,
+    )
+    assert run["run"]["instrument_sha256"] != BASELINE_INSTRUMENT_SHA256
+    assert run["run"]["items_sha256"] != BASELINE_ITEMS_SHA256
+    assert run["card"]["id"] != BASELINE_CARD_ID
+    for row in run["items"]:
+        assert row["schema"] == worker.ITEM_SCHEMA_REASONED
+        assert row["reasoning"]["field"] == "thinking"
+
+
+def test_the_reasoning_channel_is_measured_and_never_stored(worker, tmp_path, monkeypatch):
+    """A digest and a length, and never the prose.
+
+    The house rule is that thinking is never graded and never stored
+    (scripts/anthropic_gspc_worker.py). So the row says how much the model
+    thought and what it hashed to, and the words themselves are nowhere in the
+    evidence.
+    """
+    run = _run_pinned(
+        worker,
+        tmp_path,
+        "exact-label",
+        monkeypatch=monkeypatch,
+        name="reasoning",
+        reasoning=True,
+    )
+    for row in run["items"]:
+        block = row["reasoning"]
+        assert block["present"] is True
+        assert block["sha256"] == hashlib.sha256(THINKING.encode()).hexdigest()
+        assert block["chars"] == len(THINKING)
+        assert THINKING not in json.dumps(row)
+
+
+def test_the_reasoning_channel_did_not_change_a_single_grade(
+    worker, tmp_path, monkeypatch
+):
+    """Measuring a channel must not be able to move a grade.
+
+    The channel is a side measurement: the graded text is the response and
+    nothing else, so the same answers produce the same labels, the same
+    counts and the same accuracy with the channel on and with it off.
+    """
+    off = _run_pinned(
+        worker, tmp_path, "exact-label", monkeypatch=monkeypatch, name="off"
+    )
+    on = _run_pinned(
+        worker,
+        tmp_path,
+        "exact-label",
+        monkeypatch=monkeypatch,
+        name="on",
+        reasoning=True,
+    )
+    assert [row["parsed_label"] for row in off["items"]] == [
+        row["parsed_label"] for row in on["items"]
+    ]
+    assert [row["grade"] for row in off["items"]] == [
+        row["grade"] for row in on["items"]
+    ]
+    assert [row["raw_output"] for row in off["items"]] == [
+        row["raw_output"] for row in on["items"]
+    ]
+    assert off["run"]["counts"] == on["run"]["counts"]
+    assert off["card"]["body"]["accuracy"] == on["card"]["body"]["accuracy"]
+
+
+def test_the_reasoning_declaration_says_the_channel_was_not_graded(
+    worker, tmp_path, monkeypatch
+):
+    """decode.think stays False even with the channel on.
+
+    It means "the graded text is never decoded out of a thinking stream", and
+    it has to keep meaning that. What was asked of Ollama is declared beside
+    it, not inside it.
+    """
+    run = _run_pinned(
+        worker,
+        tmp_path,
+        "exact-label",
+        monkeypatch=monkeypatch,
+        name="reasoning",
+        reasoning=True,
+    )
+    instrument = run["run"]["instrument"]
+    assert instrument["decode"]["think"] is False
+    assert instrument["reasoning"] == {
+        "channel": "ollama-think",
+        "request_think": True,
+        "response_field": "thinking",
+        "graded": False,
+    }

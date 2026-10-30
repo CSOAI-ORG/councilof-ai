@@ -5,10 +5,14 @@
  *
  * A page that owns ⌘K itself (DemoOS, marked data-own-cmdk) keeps it. If the viewer already
  * granted agent consent in this tab, the in-page agent bridge (window.councilUi) is installed.
+ *
+ * Entry routes show the page first on every width. A compact launcher opens Ask deliberately;
+ * hydration and navigation never open it. Closing keeps the mounted conversation available.
  */
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useLocation, useSearch } from "wouter";
-import { ASK_OPEN, PALETTE_OPEN, recordRecent, type AskOpenDetail } from "@/components/ask/askBus";
+import { MessageSquareText } from "lucide-react";
+import { ASK_MOBILE_QUERY, ASK_OPEN, PALETTE_OPEN, isAskEntryRoute, recordRecent, shouldAutoOpenAsk, type AskOpenDetail } from "@/components/ask/askBus";
 
 const AskPane = lazy(() => import("@/components/ask/AskPane"));
 const CommandPalette = lazy(() => import("@/components/ask/CommandPalette"));
@@ -20,6 +24,25 @@ export default function AskHost() {
   const [askMounted, setAskMounted] = useState(false);
   const [askOpen, setAskOpen] = useState(false);
   const [question, setQuestion] = useState<{ text: string; n: number } | null>(null);
+  const [entryRoute, setEntryRoute] = useState(false);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const enteredRoute = useRef<string | null>(null);
+
+  // The launcher follows entry routes; opening remains user-initiated and never submits a
+  // question or changes Watch, voice or agent consent.
+  useEffect(() => {
+    if ((window as Window & { __CSOAI_PRERENDER__?: boolean }).__CSOAI_PRERENDER__) return;
+    const route = location + "?" + search;
+    if (enteredRoute.current === route) return;
+    enteredRoute.current = route;
+    const mobile = Boolean(window.matchMedia?.(ASK_MOBILE_QUERY).matches);
+    setEntryRoute(isAskEntryRoute(location, search));
+    if (shouldAutoOpenAsk(location, search, mobile)) {
+      setAskMounted(true);
+      setAskOpen(true);
+    }
+  }, [location, search]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -30,6 +53,9 @@ export default function AskHost() {
     };
     const onPalette = () => setPalette(true);
     const onAsk = (e: Event) => {
+      if (!returnFocusRef.current && document.activeElement instanceof HTMLElement && document.activeElement !== document.body) {
+        returnFocusRef.current = document.activeElement;
+      }
       const q = (e as CustomEvent<AskOpenDetail>).detail?.question;
       setAskMounted(true);
       setAskOpen(true);
@@ -76,8 +102,37 @@ export default function AskHost() {
       ) : null}
       {askMounted ? (
         <Suspense fallback={null}>
-          <AskPane open={askOpen} onClose={() => setAskOpen(false)} question={question} />
+          <AskPane
+            open={askOpen}
+            onClose={() => {
+              setAskOpen(false);
+              const trigger = returnFocusRef.current;
+              returnFocusRef.current = null;
+              window.requestAnimationFrame(() => {
+                if (trigger?.isConnected) trigger.focus();
+                else launcherRef.current?.focus();
+              });
+            }}
+            question={question}
+          />
         </Suspense>
+      ) : null}
+      {entryRoute && !askOpen ? (
+        <button
+          ref={launcherRef}
+          type="button"
+          onClick={(event) => {
+            returnFocusRef.current = event.currentTarget;
+            setAskMounted(true);
+            setAskOpen(true);
+          }}
+          aria-label="Open Council of AI chat"
+          title="Open Council of AI chat"
+          data-testid="ask-fab"
+          className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-[70] inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-800 text-white shadow-lg hover:bg-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+        >
+          <MessageSquareText className="h-6 w-6" aria-hidden="true" />
+        </button>
       ) : null}
     </>
   );

@@ -14,7 +14,7 @@ import type { CallerPolicy } from "./policy";
 import { CEDAR_SCHEMA, FLOOR_CEDAR, renderCedar } from "./policy";
 import type { Decision } from "./decide";
 import type { CensusRead } from "./census";
-import type { Candidate, Objective, Task } from "./types";
+import type { BoardSummary, Candidate, Objective, Task } from "./types";
 import type { DiscoveryRead } from "./discovery";
 
 export const DISCOVERY_LIMIT =
@@ -24,7 +24,7 @@ export const DISCOVERY_LIMIT =
 
 export const EVENT_SCHEMA = "csoai.evidence-event/0.1";
 export const ROUTE_PROFILE = "csoai.route-evidence/0.1";
-export const ROUTE_METHOD_VERSION = "0.1.0";
+export const ROUTE_METHOD_VERSION = "0.1.1";
 
 /** RFC 8785 JCS. JSON.stringify already writes strings and numbers the way JCS requires. */
 export function jcs(v: unknown): string {
@@ -84,7 +84,7 @@ export type RecordInput = {
   objective: Objective;
   candidates: Candidate[];
   decision: Decision;
-  board: { state: string; source: string | null; board_separation: string | null };
+  board: BoardSummary;
   census?: CensusRead;
   discovery?: DiscoveryRead;
   locator: string;

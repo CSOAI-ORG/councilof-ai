@@ -1,0 +1,113 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 21,
+        "INFO": 1,
+        "SUCCESS": 18
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/academy.apexai_apex-ai-academy_1.0.1__alpha-2026-07-28.json",
+      "checks_sha256": "70c82726550baf2290545db33fba926664697c91971de784a0dbeefcd12a12af",
+      "deviation_checks": [
+        "CompletionComplete",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesTemplateRead",
+        "ServerAcceptsMultiplePostStreams",
+        "ToolsCallAudio",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSimpleText",
+        "ToolsCallWithProgress",
+        "ToolsList"
+      ],
+      "instrument": "alpha-2026-07-28",
+      "instrument_channel": "alpha",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 20,
+      "spec_version": "2026-07-28",
+      "state": "PROBED",
+      "subject_id": "academy.apexai/apex-ai-academy@1.0.1",
+      "suite_version": "0.2.0-alpha.12"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c234cee81df3b352a07f794e816a4388794cb55ae875388a10f42f5a57fa182c",
+    "sig_ed25519": "8b09a247732e1f8e6e982bd6e96143151058a8a4b0310dd84b938c05096a4a8ef873e7471d833d8314e208e3fb33fadf7fc278b6f853b893bb8a591a252a8b0d",
+    "source_urls": [
+      "https://apexai.academy/mcp",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/academy.apexai_apex-ai-academy_1.0.1__alpha-2026-07-28.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run alpha-2026-07-28 for academy.apexai/apex-ai-academy@1.0.1",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "f0b65a7ed549aa7a9923668e5466892ae7f3bacd29d8efec2203730c44939cdf",
+    "15b4206b6b5fc27086659a327bc54154ce81a9e05f67a6dda5620592b1435bf6",
+    "5840585ffcc5444bd00e77c1819d72ca7cc08f73b61423561304f6ff5edd27da",
+    "9bd69c211c9e0161bd9a6bf1d54ac48ae949523f97a3752fd9341d5fce9082e9",
+    "60b40f777b18ac17aa07c4dd76663f1f757a6516ca59914bad17e5c04cc5ce4a",
+    "bb0eef1e7419df7a2b39c3d258ce4d8cdb9181e4ad64740b38818659cb9e2a74",
+    "132d427982227ec04867bb5c1ec55b9e82ebc41c3d1c399cd2d0d7c8320ca8dc",
+    "201c65b10ba3a5f29aa16126faf2c6a15696ac0c1fd8e170a912b9f48ccef9f5",
+    "e2c0b30a71113cf3f7484af4e7abf223254833ab94eeacb0902a90847c1930d3"
+  ]
+}

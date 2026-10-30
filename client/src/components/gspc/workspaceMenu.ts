@@ -8,9 +8,15 @@ import type { DashboardNavGroupId } from "@/components/lobby/tabs";
 export const MENU_GROUPS: { heading: string | null; sections: DashboardNavGroupId[] }[] = [
   // Owner brief (1 Oct 2026): task-named, in this order. Get results · My results · Check a result ·
   // Leaderboard · Connect · Learn. Everything else sits under "More".
-  { heading: null, sections: ["ask", "mine", "verify", "board", "connect", "learn"] },
-  { heading: "More", sections: ["sovx", "corrections"] },
+  { heading: null, sections: ["ask", "mine", "verify", "board", "connect", "learn", "staff"] },
+  // Surface inspection, 12 Oct 2026: no sov-* name in the public left nav. SovX stays a section
+  // (so /dashboard?tab=sovx, /sovx and the /sovx -> /sovx/ redirect keep working); it is only
+  // left out of this menu. See UNLISTED_SECTIONS.
+  { heading: "More", sections: ["corrections"] },
 ];
+
+/** Sections that stay reachable by link but are not listed in the public left nav or drawer. */
+export const UNLISTED_SECTIONS: DashboardNavGroupId[] = ["sovx"];
 
 /**
  * Support and resources: pages and machine files, never a section. Every href is served.

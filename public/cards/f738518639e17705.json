@@ -1,0 +1,113 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 39,
+        "INFO": 1
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ae.genosys_genosys_1.2.0__alpha-2026-07-28.json",
+      "checks_sha256": "da647f9e17190ef43479495f35ae4378955b8f6b60536d33966630abac3f4267",
+      "deviation_checks": [
+        "CompletionComplete",
+        "WireSchemaValid",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesTemplateRead",
+        "ServerAcceptsMultiplePostStreams",
+        "ToolsCallAudio",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSimpleText",
+        "ToolsCallWithProgress",
+        "ToolsList"
+      ],
+      "instrument": "alpha-2026-07-28",
+      "instrument_channel": "alpha",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 20,
+      "spec_version": "2026-07-28",
+      "state": "PROBED",
+      "subject_id": "ae.genosys/genosys@1.2.0",
+      "suite_version": "0.2.0-alpha.12"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f738518639e17705e07e711cb5676896a406cbaac8377d5d84d92b0bb8ab2897",
+    "sig_ed25519": "de1c98315249fd31816943b19ac2c72376acced0010ba1f4686e8ef72d9d16e7c58337280970d03d259763c6e1fb3b29c10e17ace5873f4348783dfcb6954906",
+    "source_urls": [
+      "https://genosys.ae/mcp",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/ae.genosys_genosys_1.2.0__alpha-2026-07-28.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run alpha-2026-07-28 for ae.genosys/genosys@1.2.0",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "29344f8870b837dc770524b65534da3e6fd37ebbf6f5d36497c7831c937abf37",
+    "d065c23f2db3ce0f4e8d495c8b8798643a196353b42d2ba3bee83cf25da13461",
+    "55039646c2d137381ca6052b4b0e53dbab3ccddc177691ca1811cbe7e1eee8b8",
+    "40b5618f5a4a62a2aa971e153411fcf756cd7a8dbca9a8f5fc110e13efd269a1",
+    "60b40f777b18ac17aa07c4dd76663f1f757a6516ca59914bad17e5c04cc5ce4a",
+    "bb0eef1e7419df7a2b39c3d258ce4d8cdb9181e4ad64740b38818659cb9e2a74",
+    "132d427982227ec04867bb5c1ec55b9e82ebc41c3d1c399cd2d0d7c8320ca8dc",
+    "201c65b10ba3a5f29aa16126faf2c6a15696ac0c1fd8e170a912b9f48ccef9f5",
+    "e2c0b30a71113cf3f7484af4e7abf223254833ab94eeacb0902a90847c1930d3"
+  ]
+}

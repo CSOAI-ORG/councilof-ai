@@ -160,6 +160,29 @@ class StablecoinReadinessTruthTest(unittest.TestCase):
         self.assertGreaterEqual(len(usdb), 2)
         self.assertTrue(all(row["measurement"]["state"] == "UNMEASURED" for row in usdb))
 
+    def test_same_symbol_on_another_chain_does_not_invalidate_xrpl_measurement(self) -> None:
+        changed = copy.deepcopy(self.document)
+        measured = next(row for row in changed["assets"] if row["measurement"]["state"] == "MEASURED")
+        peer = next(
+            row for row in changed["assets"]
+            if row["measurement"]["state"] == "UNMEASURED" and "XRPL" not in row["chains"]
+        )
+        peer["symbol"] = measured["symbol"].lower()
+        validate(changed)
+        self.assertEqual("UNMEASURED", peer["measurement"]["state"])
+        self.assertEqual("NO_ASSET_MEASUREMENT_SIGNATURE", peer["signature_state"])
+
+    def test_two_xrpl_rows_with_the_same_symbol_fail_validation(self) -> None:
+        changed = copy.deepcopy(self.document)
+        measured = next(row for row in changed["assets"] if row["measurement"]["state"] == "MEASURED")
+        peer = next(
+            row for row in changed["assets"]
+            if row["measurement"]["state"] == "UNMEASURED" and "XRPL" in row["chains"]
+        )
+        peer["symbol"] = measured["symbol"].lower()
+        with self.assertRaises(AssertionError):
+            validate(changed)
+
     def test_no_amount_is_typed_on_the_public_surface(self) -> None:
         rendered = json.dumps(self.document)
         self.assertNotIn("campaign_amount", rendered)

@@ -35,13 +35,13 @@ export const WAYS_IN: { testid: string; href: string; verb: string; title: strin
 export const READERS: { who: string; line: string; href: string; cta: string; external?: boolean }[] = [
   {
     who: "Buying or deploying AI",
-    line: "See how the models you are choosing between did, axis by axis, on the same frozen questions, each result signed.",
+    line: "Compare dated results on the same frozen questions. Each record shows its attestation state; a tie does not establish a winner.",
     href: "/board/models",
     cta: "Models, axis by axis",
   },
   {
     who: "Publishing AI-generated content",
-    line: "Paste the link to an image, video, audio file or PDF your AI made and see whether a machine-readable mark is detected, as Article 50(2) of the EU AI Act asks. Free preview.",
+    line: "Check an image, video, audio file or PDF for a machine-readable mark. Open the evidence and its limits in the free preview.",
     href: "/dashboard/?tab=art50",
     cta: "Check an output for a mark",
   },
@@ -53,7 +53,7 @@ export const READERS: { who: string; line: string; href: string; cta: string; ex
   },
   {
     who: "Regulating or auditing",
-    line: "Every result names its test, its date and its signature, and what we could not measure is listed as such.",
+    line: "Inspect the test, measurement date, source and attestation state behind a result. Gaps and corrections stay visible.",
     href: "/regulators",
     cta: "For regulators",
   },

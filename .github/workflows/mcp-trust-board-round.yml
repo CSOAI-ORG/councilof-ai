@@ -35,7 +35,7 @@ jobs:
             --out-dir public/interop/mcp-trust
       - name: land the artefact (via PR — master is GH006-protected)
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
         run: |
           set -euo pipefail
           git config user.name "csoai-mcp-trust"

@@ -114,7 +114,7 @@ export default function HowWeWork() {
           </p>
           <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
             <a
-              href="/charter"
+              href="/operational-charter/"
               className="font-semibold text-primary underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
             >
               Read the operational charter
