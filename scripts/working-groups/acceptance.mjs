@@ -2,7 +2,7 @@
 import { createServer } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { chromium, expect } from "@playwright/test";
+import { chromium, expect as playwrightExpect } from "@playwright/test";
 import { createServer as httpServer } from "node:http";
 import { mkdtemp, writeFile, readFile, rm, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -12,6 +12,7 @@ import { once } from "node:events";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { parseArgs } from "node:util";
+const expect=playwrightExpect.configure({timeout:30000});
 const {values}=parseArgs({options:{output:{type:"string"},chromium:{type:"string"}}});
 if(!values.output||!path.isAbsolute(values.output))throw Error("--output requires an absolute path");
 const repo=process.cwd(),root=await mkdtemp(path.join(tmpdir(),"council-wg-infra-"));

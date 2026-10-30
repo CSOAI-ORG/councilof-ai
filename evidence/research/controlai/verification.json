@@ -1,0 +1,185 @@
+{
+  "checked_at": "2026-10-30T08:19:18.052Z",
+  "checks": [
+    "native tracker finds ControlAI and links its evidence packet",
+    "real Watchdog search, axis filter, authoritative empty state and recovery",
+    "review focus, safe literal text, pinned download and stale-download invalidation",
+    "native tracker automated WCAG-tagged checks",
+    "320px and 390px layout, keyboard order and reduced-motion rendering",
+    "portable static tracker automated WCAG-tagged checks",
+    "portable export is readable without JavaScript at 320px",
+    "ControlAI research packet automated WCAG-tagged checks",
+    "ControlAI packet renders, exposes correction and synthetic status, downloads exact data and reads at 320px without JavaScript",
+    "SQLite lab persists comments, escapes markup, records moderation and exports original events",
+    "local discussion lab automated WCAG-tagged checks",
+    "local discussion lab mobile layout"
+  ],
+  "passed": 12,
+  "axe_violations": [],
+  "errors": [],
+  "external_requests": [],
+  "sources": [
+    {
+      "path": "council-os/working-groups/research/controlai.json",
+      "sha256": "e89cb70666391114ba1fa3de75c2e06b6b6a25843e4ea42beae668a2ee6da5c9"
+    },
+    {
+      "path": "council-os/working-groups/research.mjs",
+      "sha256": "b6097847d9fdf3157dc9da1f67bed1233c3dad9ed3f7e1ad4a1a42bf91587450"
+    },
+    {
+      "path": "scripts/working-groups/render-research.mjs",
+      "sha256": "f3cc1dcb4df5db28b1b38b986a0e5f1a60c598a8f71cef8fe73ef2e336e42991"
+    },
+    {
+      "path": "public/working-groups/controlai.html",
+      "sha256": "1d706676bd7d5352737097eb70db1c62d684a8d559119ed296ff2ddb762eac1b"
+    },
+    {
+      "path": "public/working-groups/controlai.json",
+      "sha256": "e89cb70666391114ba1fa3de75c2e06b6b6a25843e4ea42beae668a2ee6da5c9"
+    },
+    {
+      "path": "council-os/working-groups.json",
+      "sha256": "7c74712ad0f7d7c62375c3063a9ba67ef7b2ea792012c29c3f5ea33a1a3cfce8"
+    },
+    {
+      "path": "council-os/working-group-tracker.json",
+      "sha256": "be6a2383950fd8160b161f4a2b80a858ff017a4f53b57c83abba9da19728bdec"
+    },
+    {
+      "path": "council-os/working-groups/core.mjs",
+      "sha256": "521dc7ef6fd1eb8a683276c72e4357b36b969eb87f6cf5046ed820c7ce7ff25e"
+    },
+    {
+      "path": "client/src/components/WorkingGroups.tsx",
+      "sha256": "58b69584ecc5a004feda3ea4758a8eaf637cf5c7811598d10dd8c4b1a0b66303"
+    },
+    {
+      "path": "client/src/components/WorkingGroupTracker.tsx",
+      "sha256": "f58f4b1671e0b4335cd26939544fa688589a7c500b2ca423a31a5d4e13cac485"
+    },
+    {
+      "path": "client/src/pages/Watchdog.tsx",
+      "sha256": "56020d8ae27055139084356aba5fea02d48c4ec523411a671d460120b1797426"
+    },
+    {
+      "path": "client/src/styles/index.css",
+      "sha256": "006441bbf99d2bfc8d4c38364e5a9820ac805f23818b5210b3780f633fd60af6"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "3ac475acd909d9302e7b76eda2998a89647250332a0f7972899f8cffa08d0f8f"
+    },
+    {
+      "path": "scripts/working-groups/render-kit.mjs",
+      "sha256": "209306f002bec52f065b5e7266f1f9a5dbc2481b8cc1e382a978ea5a98895591"
+    },
+    {
+      "path": "scripts/working-groups/acceptance.mjs",
+      "sha256": "ec11dd0d8aa95de00761ca5d46a7502f02478ed4e50dcb2f85e8bb52cf0bf1f6"
+    },
+    {
+      "path": "public/working-groups/index.html",
+      "sha256": "a98b16ac96a57577e16a8a868598ba993d52bfd47fc87c4a238c1f7ddbb35a7e"
+    },
+    {
+      "path": "public/working-groups/catalog.json",
+      "sha256": "32288ee6c8268e6d6b7ad6406902fa97bcff2b20099ab1026ef4f6911348c335"
+    },
+    {
+      "path": "tools/working-group-lab/server.py",
+      "sha256": "3032342e4017939f8358ec117cd1daa19b1d979d759c08c9bb4ebb4ab20d3cbf"
+    },
+    {
+      "path": "tools/working-group-lab/app.js",
+      "sha256": "2cf750baec735fde5324ae977360073ee071e751f6a004ad2a1d0d171d621726"
+    },
+    {
+      "path": "tools/working-group-lab/index.html",
+      "sha256": "ff629a5049b1f12d65358a969dab55c24af3a88e06da1d7f63514d76a449f4ba"
+    }
+  ],
+  "scope": "Local real components, static export and synthetic SQLite lab. Automated WCAG-tagged checks are not full accessibility certification or representative human usability testing. No publishing, invitations, private cases or authority actions.",
+  "schema": "csoai.controlai-integration-verification/1",
+  "unit_tests": {
+    "passed": 31,
+    "failed": 0,
+    "command": "node --test scripts/working-groups/core.node-test.mjs scripts/working-groups/research.node-test.mjs"
+  },
+  "usability_check": {
+    "schema": "csoai.research-usability-result/1",
+    "pack": "controlai-20261030",
+    "asOf": "2026-10-30",
+    "authorityGranted": false,
+    "results": [
+      {
+        "id": "CL01",
+        "outcome": "READY_FOR_HUMAN_REVIEW",
+        "asOf": "2026-10-30",
+        "reasons": [
+          "Usability check only: no truth verification, certification, human acceptance or execution permission."
+        ],
+        "limitations": "Recheck the parliamentary record before reliance. The organisation draft and parliamentary versions are separate.",
+        "authorityGranted": false
+      },
+      {
+        "id": "CL02",
+        "outcome": "READY_FOR_HUMAN_REVIEW",
+        "asOf": "2026-10-30",
+        "reasons": [
+          "Usability check only: no truth verification, certification, human acceptance or execution permission."
+        ],
+        "limitations": "Organiser and participant reports. This does not establish a current invitation, partnership or acceptance of Council work.",
+        "authorityGranted": false
+      },
+      {
+        "id": "CL03",
+        "outcome": "READY_FOR_HUMAN_REVIEW",
+        "asOf": "2026-10-30",
+        "reasons": [
+          "Usability check only: no truth verification, certification, human acceptance or execution permission."
+        ],
+        "limitations": "One local Node process and owned-file effects; no production fleet, human identity, remote shutdown or ASI-control result.",
+        "authorityGranted": false
+      },
+      {
+        "id": "CL04",
+        "outcome": "SYNTHETIC_FIXTURE",
+        "asOf": "2026-10-30",
+        "reasons": [
+          "Never treat this record as real-world evidence.",
+          "Usability check only: no truth verification, certification, human acceptance or execution permission."
+        ],
+        "limitations": "Deliberately false/unsupported test input; never publish as an authentic endorsement.",
+        "authorityGranted": false
+      },
+      {
+        "id": "CL05",
+        "outcome": "SUPERSEDED",
+        "asOf": "2026-10-30",
+        "reasons": [
+          "Use correction CL06; retain the old record.",
+          "Usability check only: no truth verification, certification, human acceptance or execution permission."
+        ],
+        "limitations": "Retained stale-name example. The privacy notice wording is not the current company-register name.",
+        "authorityGranted": false
+      },
+      {
+        "id": "CL06",
+        "outcome": "READY_FOR_HUMAN_REVIEW",
+        "asOf": "2026-10-30",
+        "reasons": [
+          "Usability check only: no truth verification, certification, human acceptance or execution permission."
+        ],
+        "limitations": "Registry publication is not an audit of filed facts. The date and company number identify this record.",
+        "authorityGranted": false
+      }
+    ]
+  },
+  "release_status": "CANDIDATE_NOT_DEPLOYED",
+  "independent_human_acceptance": null,
+  "dependency": "https://github.com/CSOAI-ORG/councilof-ai/pull/3641",
+  "reproduce": "docs/governance/controlai-evidence-integration.md",
+  "runtime_artifact_sha256": "eb59acd3145ce0fb07e1ba3037af3a3f77e6e25f81bdbfb2f3c6eada50c139af"
+}
