@@ -885,6 +885,10 @@ def hubcard(repo: str, d: dict, push: bool, out: Path, kind: str = "dataset") ->
     if axis:
         body = splice(body, live_row_block(axis), LIVE_ROW_OPEN, LIVE_ROW_CLOSE, before=HUB_OPEN)
     new = cite_apply(join_front_matter(fm, body), repo)
+    # Keep audited archive/table recipes when this general card producer reruns.
+    from hf_card_metadata import VIEWER_REPAIRS, render as render_metadata
+    if repo in VIEWER_REPAIRS:
+        new = render_metadata(repo, new, VIEWER_REPAIRS[repo], None)
     (dest / "README.md").write_text(new, encoding="utf-8")
     uploads.append((dest / "README.md", "README.md"))
     p, n, fails = score_card(kind, new, sorted(have | {"manifest.jsonl"}), True)
