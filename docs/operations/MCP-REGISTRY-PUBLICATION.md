@@ -67,3 +67,7 @@ API and namespace contracts were checked against the official
 [registry API](https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/api/official-registry-api.md),
 [live OpenAPI](https://registry.modelcontextprotocol.io/openapi.yaml) and
 [publisher commands](https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/cli/commands.md).
+
+## Release closeout — 30 October 2026
+
+PR #3608 is merged as `0580fd0ddec80a0fcc3b783d2da22cffafa47334`. The master publisher check and deployment 41042619207 passed. Immediate and delayed apex/production-alias readbacks passed on 30 October. See [the dated checklist and next-week plan](REGISTRY-FRIDAY-CLOSEOUT-2026-10-30.md) for exact scope, evidence and remaining registry dependencies. This resolves the publisher repair's release status; it does not assert corrected external listings or paid fulfilment.
