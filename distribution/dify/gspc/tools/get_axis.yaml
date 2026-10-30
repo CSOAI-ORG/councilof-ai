@@ -5,8 +5,8 @@ identity:
     en_US: "One GSPC board axis"
 description:
   human:
-    en_US: "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates."
-  llm: "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification."
+    en_US: "Read one live board dimension by its axis id."
+  llm: "Read one live board dimension by its axis id. Prefer this when a dimension is supplied or selected at runtime; axis_* tools select one fixed dimension with no arguments. Use board_totals for the overview. Returns applicable metrics, original evidence dates and links; a leader is named only when SEPARATED. UNMEASURED is not zero or pass/fail; BAD_INPUT, NOT_ON_BOARD and UNREACHABLE remain distinct. Check the referenced method before comparing results. Measurement, not certification or permission."
 parameters:
   - name: axis
     type: string

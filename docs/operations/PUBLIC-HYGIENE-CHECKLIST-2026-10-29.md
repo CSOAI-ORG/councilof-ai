@@ -180,8 +180,8 @@ Close each control with the evidence named in its row. Keep source-tested, relea
 | H089 | Commercial | P2 | Related PR | Establish a traffic and conversion baseline | PR 3604 corrects repeat-demand interpretation and read-only consistency checks. A reliable organic-traffic and qualified-conversion baseline remains outstanding. | Growth |
 | H090 | Commercial | P2 | Open | Prioritise experiments by evidence | One clear hypothesis per change; report observed results without promised ranking gains | Growth |
 | H091 | Distribution | P0 | Partial | Map every public publishing destination to its producer | Root metadata traced through canonical MCP manifest, package prepack, capability registry, distribution renderer and handwritten A2A card. Other publishers/registries remain to map. | Engineering |
-| H092 | Distribution | P0 | Prepared | Regenerate MCP tool descriptions at their source | get_root description corrected at canonical source; package/capability/distribution mirrors regenerated and deterministic checks passed. Retrieval does not imply signature or measurement verification. Registry releases not published. | Engineering |
-| H093 | Distribution | P1 | Open | Review package READMEs and registry descriptions | Install instructions, supported versions, limits and canonical links match released code | Maintainers |
+| H092 | Distribution | P0 | Locally tested continuation | Regenerate MCP tool descriptions at their source | Existing get_root clarification retained; board_totals/get_axis selection guidance and runtime parity corrected locally on 30 Oct. Schemas/names unchanged; package, capability and distribution copies regenerated. Hosted gates and registry publication remain separate. | Engineering |
+| H093 | Distribution | P1 | Partial | Review package READMEs and registry descriptions | 30 Oct local tests reproduce and repair stdio summary/leader/date drift and invalid generated Dify class names. Eight renderer tests and 63 focused tests pass. New release versions, installation and wider package review remain outstanding. | Maintainers |
 | H094 | Distribution | P1 | Open | Review research dataset and model cards | Methods, licence, provenance, limits and current status are explicit | Measurement |
 | H095 | Distribution | P1 | Open | Review social and professional public profiles | Biographies, links and claims follow the same approved evidence-led positioning | Communications |
 | H096 | Release | P0 | Published PR | Publish source changes through the governed PR route | Public PR 3603 contains explicitly selected source and generated assets. Production release remains governed by DEPLOY-LOCK.md. | Engineering |
@@ -189,3 +189,61 @@ Close each control with the evidence named in its row. Keep source-tested, relea
 | H098 | Release | P0 | Open | Verify production after deployment | Apex and production alias agree; delayed anti-clobber check preserves the same release | Release owner |
 | H099 | Release | P1 | Partial | Maintain a public completion ledger | The same 100-control register now links the recovered 3630 correction, current public source contributions and six dependency-ordered completion gates. No aggregate all-complete percentage or duplicated product plan. | Operations |
 | H100 | Release | P1 | Open | Recheck drift and search visibility | Scheduled review has an owner; Google changes are confirmed by observation, not promised | Operations |
+
+
+## MCP usability implementation — 30 October 2026
+
+This continuation is prepared on the existing public-positioning lane, reconciled with
+`9c7bbec2d6daedd725507c19edc1d8f5582f0080`. It does not replace the navigation,
+claim-maintenance, buyer-delivery or private appraisal work listed above. At this dated
+checkpoint the new source is locally tested, not pushed, merged, deployed or published to a registry.
+
+### Problems reproduced and corrected
+
+- The stdio `board_totals` implementation ignored `detail` and returned the full provenance
+  block without the compact separation summary its shared definition advertised. It now follows
+  the existing HTTP handler: summary by default and the legacy full data via `detail: "full"`.
+- The stdio `get_axis` copied a model into `leader` even on a tied or untested comparison and
+  omitted the HTTP reader's per-axis evidence dates. It now follows the same separation rule,
+  keeps `top_observed_not_separated` distinct and preserves `facts_as_of` and `measurement_time`.
+  No new statistical method, grading rule or measurement result is introduced.
+- The generated Dify package placed hyphens from MCP tool names into Python class identifiers.
+  The producer now normalizes only class identifiers and rejects invalid or colliding names.
+  Protocol tool names and archive member paths are unchanged. Python parsing is not a completed
+  Dify marketplace installation or an end-user runtime acceptance test.
+- `board_totals` and `get_axis` descriptions now explain when to select them instead of neighbouring
+  tools, while retaining explicit missing/unreachable/unmeasured states. All input/output schemas,
+  annotations and tool names are unchanged. This is clearer selection guidance, not measured
+  improvement in an agent's tool-choice accuracy.
+
+### Completed local checks
+
+The new stdio regression suite initially reported 17 failures and four passes against the
+unmodified implementation/wording. After correction, all 21 cases pass through a real stdio
+JSON-RPC process against a synthetic loopback fixture and the existing HTTP handlers. Together
+with the existing doctrine, alias, annotation, root-retrieval and package-list suites, 63 tests
+pass. The new file is under `functions/mcp/`, so the existing required unit-test command collects it.
+
+The existing registered distribution-renderer suite now has eight passing tests. Its two new
+product checks failed on the former generated Python. A separate positive/negative syntax
+control proves the rejected example fails for its identifier, not for a broken test harness.
+The renderer is byte-identical on repeat; its 180 outputs across 24 configured targets match.
+The full offline distribution check reports 149 PASS, zero FAIL and 11 SKIPPED; skipped
+external comparisons are not counted as passes or new deployment evidence.
+
+Signed or timestamped records, frozen banks, scoring logic, payment paths and package versions
+are untouched. The package and integration artefacts are generated by their existing producers.
+Changing source bytes does not change any previously published package version.
+
+### Release and compatibility acceptance
+
+1. The existing source/release owner must run the normal complete gates on the composed head;
+   local focused checks are not a substitute. Keep this continuation on PR #3603 rather than
+   create a second competing public-positioning PR.
+2. Existing stdio callers needing the full board provenance use `detail: "full"`. Callers that
+   treated any nonempty `leader` as a win must respect the existing SEPARATED/TIE/UNTESTED distinction.
+3. A future package publication needs a new immutable version and the usual version-reference
+   alignment. Do not re-upload altered bytes under the existing version.
+4. Require the released archive's actual stdio response and a Dify install/use readback before
+   describing these repairs as available to registry users. Do not turn offline compilation,
+   source publication or a generated catalogue into adoption.
