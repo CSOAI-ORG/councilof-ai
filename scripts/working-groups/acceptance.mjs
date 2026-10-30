@@ -94,6 +94,14 @@ try{
   checks.push("320px and 390px layout, keyboard order and reduced-motion rendering");
   await page.setViewportSize({width:1280,height:900});await page.goto(staticOrigin);
   await page.locator("#search").fill("effect-binding");await expect(page.locator("#count")).toHaveText("1 documents shown");
+  await page.getByText("Use with an AI client", {exact:true}).click();
+  await expect(page.locator("#ai-client code")).toHaveText("working_group_review");
+  await expect(page.locator("#ai-client a")).toHaveAttribute("href","https://councilof.ai/mcp/free");
+  await page.setViewportSize({width:320,height:900});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  await expect(page.locator("#ai-client")).toContainText("unsent review");
+  checks.push("expanded AI-client instructions, canonical endpoint and 320px layout");
+  await page.setViewportSize({width:1280,height:900});
   await audit(page,"portable static tracker");await capture(page,"static-tracker-desktop");
   const offline=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:900}});
   const plain=await offline.newPage();await plain.goto(staticOrigin);await expect(plain.locator("#documents>li")).toHaveCount(7);
