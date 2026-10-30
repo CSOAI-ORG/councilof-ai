@@ -82,6 +82,14 @@ gateway and therefore is not a standalone offline verifier.
 
 ## Acceptance before production
 
+The focused `charter-contract-checks` workflow runs this package's regression suite
+on Node 22 and 24, verifies that this contract is packaged, and runs the unchanged
+authority-effect profile and synthetic evidence checks on Python 3.12. It runs for
+relevant pull requests and master changes, merge groups and manual requests. Logs
+are retained even on failure; no package publication, signing or provider call is
+part of the workflow. A workflow definition does not itself make a check required
+by branch protection; the release owner must include its results in acceptance.
+
 Run the package tests and the authority-effect profile checks, then test the real
 host integration with a forged receipt, wrong tenant, changed arguments, expired
 authority, revoked authority, duplicate invocation, resume after revocation and
