@@ -2,7 +2,7 @@
 import { createServer } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { chromium, expect } from "@playwright/test";
+import { chromium, expect as playwrightExpect } from "@playwright/test";
 import { createServer as httpServer } from "node:http";
 import { mkdtemp, writeFile, readFile, rm, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -12,6 +12,7 @@ import { once } from "node:events";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { parseArgs } from "node:util";
+const expect=playwrightExpect.configure({timeout:30000});
 const {values}=parseArgs({options:{output:{type:"string"},chromium:{type:"string"}}});
 if(!values.output||!path.isAbsolute(values.output))throw Error("--output requires an absolute path");
 const repo=process.cwd(),root=await mkdtemp(path.join(tmpdir(),"council-wg-infra-"));
@@ -34,7 +35,7 @@ try{
   vite=await createServer({configFile:false,root,plugins:[react(),tailwindcss()],resolve:{alias:{"@":path.join(repo,"client/src"),react:path.join(repo,"node_modules/react"),"react-dom":path.join(repo,"node_modules/react-dom")}},server:{host:"127.0.0.1",port:0,fs:{allow:[root,repo]}},logLevel:"error"});
   await vite.listen();const origin="http://127.0.0.1:"+vite.httpServer.address().port;
   staticServer=httpServer(async(req,res)=>{
-    const file={"/":"index.html","/catalog.json":"catalog.json"}[req.url];
+    const file={"/":"index.html","/catalog.json":"catalog.json","/controlai.html":"controlai.html","/controlai.json":"controlai.json"}[req.url];
     if(!file){res.writeHead(404);return res.end();}
     res.setHeader("Content-Type",file.endsWith("json")?"application/json":"text/html; charset=utf-8");
     res.end(await readFile(path.join(repo,"public/working-groups",file)));
@@ -63,6 +64,11 @@ try{
   await page.getByRole("button",{name:"Track documents",exact:true}).click();
   expect(new URL(page.url()).searchParams.get("groupview")).toBe("tracker");
   await expect(tracker.getByRole("status")).toHaveText("7 documents shown");
+  await page.locator("#wg-query").fill("ControlAI");
+  await expect(tracker.getByRole("status")).toHaveText("1 document shown");
+  await tracker.locator("summary").click();
+  await expect(tracker.getByRole("link",{name:"Read ControlAI evidence packet",exact:true})).toHaveAttribute("href","/working-groups/controlai.html");
+  checks.push("native tracker finds ControlAI and links its evidence packet");
   await page.locator("#wg-query").fill("effect-binding");
   await expect(tracker.getByRole("status")).toHaveText("1 document shown");
   await expect(tracker.getByRole("heading",{name:"Measure delegation revocation and halt latency"})).toBeVisible();
@@ -99,6 +105,25 @@ try{
   const plain=await offline.newPage();await plain.goto(staticOrigin);await expect(plain.locator("#documents>li")).toHaveCount(7);
   expect(await plain.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   await offline.close();checks.push("portable export is readable without JavaScript at 320px");
+  await page.goto(staticOrigin+"/controlai.html");
+  await expect(page.getByRole("heading",{name:"ControlAI research and evidence review",exact:true})).toBeVisible();
+  await expect(page.locator("#CL04")).toContainText("SYNTHETIC_FIXTURE");
+  await expect(page.locator("#CL05")).toContainText("SUPERSEDED");
+  await page.locator('#CL05 a[href="#CL06"]').click();
+  expect(new URL(page.url()).hash).toBe("#CL06");
+  const researchDownload=page.waitForEvent("download");
+  await page.getByRole("link",{name:"Download full evidence pack (JSON)"}).click();
+  const downloadedResearch=await researchDownload;
+  const pack=JSON.parse(await readFile(await downloadedResearch.path(),"utf8"));
+  expect(pack.sources).toHaveLength(40);expect(pack.authorityGranted).toBe(false);
+  await audit(page,"ControlAI research packet");
+  await page.evaluate(()=>scrollTo(0,0));await capture(page,"controlai-desktop");
+  const noScript=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:900}});
+  const small=await noScript.newPage();await small.goto(staticOrigin+"/controlai.html");
+  await expect(small.locator("#claims article")).toHaveCount(6);
+  expect(await small.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  await capture(small,"controlai-mobile");await noScript.close();
+  checks.push("ControlAI packet renders, exposes correction and synthetic status, downloads exact data and reads at 320px without JavaScript");
   await page.goto(labInfo.url);await expect(page.locator("#status")).toContainText("Ready");
   await page.locator("#document").selectOption("COAI-WG-002");
   await page.locator("#body").fill("Synthetic late effect. <img src=x onerror=alert(1)>");
@@ -119,7 +144,7 @@ try{
   await page.setViewportSize({width:320,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   await page.evaluate(()=>scrollTo(0,0));await capture(page,"lab-mobile");checks.push("local discussion lab mobile layout");
   expect(errors).toEqual([]);expect(external).toEqual([]);
-  const sourcePaths=["council-os/working-groups.json","council-os/working-group-tracker.json","council-os/working-groups/core.mjs","client/src/components/WorkingGroups.tsx","client/src/components/WorkingGroupTracker.tsx","client/src/pages/Watchdog.tsx","client/src/styles/index.css","package-lock.json","scripts/working-groups/render-kit.mjs","scripts/working-groups/acceptance.mjs","public/working-groups/index.html","public/working-groups/catalog.json","tools/working-group-lab/server.py","tools/working-group-lab/app.js","tools/working-group-lab/index.html"];
+  const sourcePaths=["council-os/working-groups/research/controlai.json","council-os/working-groups/research.mjs","scripts/working-groups/render-research.mjs","public/working-groups/controlai.html","public/working-groups/controlai.json","council-os/working-groups.json","council-os/working-group-tracker.json","council-os/working-groups/core.mjs","client/src/components/WorkingGroups.tsx","client/src/components/WorkingGroupTracker.tsx","client/src/pages/Watchdog.tsx","client/src/styles/index.css","package-lock.json","scripts/working-groups/render-kit.mjs","scripts/working-groups/acceptance.mjs","public/working-groups/index.html","public/working-groups/catalog.json","tools/working-group-lab/server.py","tools/working-group-lab/app.js","tools/working-group-lab/index.html"];
   const sources=[];for(const file of sourcePaths)sources.push({path:file,sha256:createHash("sha256").update(await readFile(path.join(repo,file))).digest("hex")});
   await writeFile(values.output,JSON.stringify({checked_at:new Date().toISOString(),checks,passed:checks.length,axe_violations:violations,errors,external_requests:external,screenshots:captures,sources,scope:"Local real components, static export and synthetic SQLite lab. Automated WCAG-tagged checks are not full accessibility certification or representative human usability testing. No publishing, invitations, private cases or authority actions."},null,2)+"\n");
   console.log(JSON.stringify({passed:checks.length,axe_violations:violations.length,output:values.output}));

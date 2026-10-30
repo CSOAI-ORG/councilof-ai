@@ -44,6 +44,7 @@ export default function WorkingGroupTracker() {
         <p className="mt-2">{doc.summary}</p>
         <details className="mt-3"><summary className="min-h-11 cursor-pointer font-medium focus-visible:outline focus-visible:outline-2">Evidence, history and review status</summary>
           <p className="mt-2"><a className={LINK} href={sourceUrl(doc)}>Read pinned source</a></p>
+          {(doc.resources ?? []).map(resource=><p className="mt-2" key={resource.url}><a className={LINK} href={resource.url}>{resource.title}</a></p>)}
           <p className="mt-2">Editor: {doc.editor ?? "not appointed"}. Reviewers: {doc.reviewers.length ? doc.reviewers.join(", ") : "none accepted"}. Decision: {doc.decision ? "see decision record" : "none recorded"}.</p>
           <ul className="mt-2 list-disc pl-5">{doc.deliverables.map(item=><li key={item}>{item}</li>)}</ul>
           <ol className="mt-3 list-decimal pl-5">{doc.history.map(h=><li key={h.version}>{h.date} · v{h.version} · {h.event} Prepared by {h.actorKind}.</li>)}</ol>

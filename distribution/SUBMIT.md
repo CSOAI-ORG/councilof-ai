@@ -268,7 +268,7 @@ CONSISTENT / INCONSISTENT (quoting source and live) / UNCHECKABLE (staged daily:
 
 ## `working-group-resources`
 
-- Output: `public/working-groups/catalog.json`, `public/working-groups/index.html`, `distribution/working-groups/hf/index.html`, `distribution/working-groups/hf/catalog.json`, `distribution/working-groups/hf/README.md`, `distribution/working-groups/kaggle/working-groups.ipynb`, `distribution/working-groups/kaggle/kernel-metadata.template.json`, `distribution/working-groups/mcp-client.template.json`, `distribution/working-groups/LICENSE`, `distribution/working-groups/hf/LICENSE`, `distribution/working-groups/README.md`, `distribution/working-groups/manifest.json`
+- Output: `public/working-groups/catalog.json`, `public/working-groups/index.html`, `distribution/working-groups/hf/index.html`, `distribution/working-groups/hf/catalog.json`, `distribution/working-groups/hf/README.md`, `distribution/working-groups/kaggle/working-groups.ipynb`, `distribution/working-groups/kaggle/kernel-metadata.template.json`, `distribution/working-groups/mcp-client.template.json`, `distribution/working-groups/LICENSE`, `distribution/working-groups/hf/LICENSE`, `distribution/working-groups/README.md`, `distribution/working-groups/manifest.json`, `public/working-groups/controlai.html`, `public/working-groups/controlai.json`, `distribution/working-groups/hf/controlai.html`, `distribution/working-groups/hf/controlai.json`
 - Version source: `undefined`
 - Flagged-org impact: undefined
 

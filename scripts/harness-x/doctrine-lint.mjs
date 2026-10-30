@@ -87,13 +87,24 @@ export function doctrineViolations(raw, where = "text") {
   return out;
 }
 
+// An exact external publication title paired with its canonical URL denotes a
+// citation, not a status granted by Council. Only those two exact string values
+// are exempt; other fields and any modified title/URL remain subject to the lint.
+const THIRD_PARTY_CITATIONS = new Map([
+  ["https://controlai.org/artificial-guarantees", "Artificial Guarantees"],
+]);
+
 export function jsonViolations(node, where, underNegation = false, out = []) {
   if (typeof node === "string") {
     if (!underNegation) out.push(...doctrineViolations(node, where));
   } else if (Array.isArray(node)) {
     node.forEach((v, i) => jsonViolations(v, `${where}[${i}]`, underNegation, out));
   } else if (node && typeof node === "object") {
-    for (const [k, v] of Object.entries(node)) jsonViolations(v, `${where}.${k}`, underNegation || NEGATION_KEYS.test(k), out);
+    const isExactCitation = THIRD_PARTY_CITATIONS.has(node.url) && THIRD_PARTY_CITATIONS.get(node.url) === node.title;
+    for (const [k, v] of Object.entries(node)) {
+      if (isExactCitation && (k === "url" || k === "title")) continue;
+      jsonViolations(v, `${where}.${k}`, underNegation || NEGATION_KEYS.test(k), out);
+    }
   }
   return out;
 }
