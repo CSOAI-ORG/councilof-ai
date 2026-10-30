@@ -27,6 +27,15 @@ describe("dashboard consolidation details", () => {
     expect(source).toMatch(/results:\s*HomeGspcBoard/);
   });
 
+  it("registers Evidence Delivery as a native pane with explicit host submission", () => {
+    expect(tabById("evidence-delivery")).toMatchObject({ kind: "native", path: "" });
+    expect(hasPane("evidence-delivery")).toBe(true);
+    const source = readFileSync(resolve(__dirname, "./gspc/CouncilEvidenceDeliveryPane.tsx"), "utf8");
+    expect(source).toContain("Submit unsigned draft to Council A2A");
+    expect(source).toContain('fetcher("/api/a2a"');
+    expect(source).not.toContain("fetcher(handoff.transport");
+  });
+
   it("pins embedded page controls to the canvas corner — no floating Workspace button to clear", () => {
     // 27 Sep 2026: the floating mobile "Workspace" button left the canvas; the History
     // control now lives in the section bar, so the controls no longer need a top-16 offset.

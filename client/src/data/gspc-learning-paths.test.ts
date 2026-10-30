@@ -177,7 +177,7 @@ describe("GSPC canonical learning paths", () => {
   it("builds one path per row of a live board reply, including axes the freeze lacks", () => {
     const extra = {
       axis: "example-new-axis",
-      family: "gspc",
+      family: "subject",
       kind: "declared-slot",
       bench: "ExampleBench",
       task: "an axis added to the live board after the freeze",
