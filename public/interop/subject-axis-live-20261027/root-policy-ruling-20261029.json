@@ -1,0 +1,80 @@
+{
+ "schema": "csoai.root-policy-ruling/0.1",
+ "ruled_at": "2026-10-29T06:10:00Z",
+ "subject": "the public root",
+ "ruling": "The public root stays a deduplicated current-state set with sticky card membership. It is not an append-only log, and the public copy must stop implying that it is. The append-only property belongs to the signed card index and the corrections ledger, which are separate corpora; the root is the snapshot those corpora are summarised into.",
+ "implementation": {
+  "state": "ALREADY_BEHAVES_THIS_WAY",
+  "code_change_required": false,
+  "code_change_made": false,
+  "gap": "never in the code; it was in how the structure was described"
+ },
+ "where_the_append_only_property_lives": [
+  "the signed card index",
+  "the corrections ledger"
+ ],
+ "evidence": [
+  {
+   "n": 1,
+   "claim": "the builder says so in its own words",
+   "detail": "the root builder states that the root is a coverage SNAPSHOT, not an append-only log; the leaf-union builder assembles it with RFC 6962 domain separation over the leaves it selects — a Merkle tree over the current membership set, not a chain of history"
+  },
+  {
+   "n": 2,
+   "claim": "the root's own history loses members",
+   "detail": "across the 69-entry root history card_count moves in both directions: -2, -1, -3, -4, -6",
+   "implication": "an append-only structure cannot lose members; a set can"
+  },
+  {
+   "n": 3,
+   "claim": "master and live disagreed on membership at equal size",
+   "detail": "the repository root and the live root carried the same count but 67 different leaves",
+   "implication": "a recomputed membership set, not an appended history: if it were append-only, the live root would be a superset of the repository root, not a different set of the same size"
+  },
+  {
+   "n": 4,
+   "claim": "sticky cards are the mechanism that stops measurement loss",
+   "detail": "the builder's retention logic keeps a card's membership sticky so that a measurement already published is not silently dropped when the current set is recomputed",
+   "implication": "coverage without false accumulation — the correct trade for a snapshot"
+  },
+  {
+   "n": 5,
+   "claim": "the append-only surfaces exist, and they are elsewhere",
+   "detail": "the corrections ledger carries 58 withdrawn and 1,682 superseded entries, both confirmed against live sources",
+   "implication": "the root summarises; the ledger remembers"
+  }
+ ],
+ "counts_at_ruling": {
+  "measured_at": "2026-10-29T06:10:00Z",
+  "public_root_catalogued_leaves": 324,
+  "signed_card_index_declared": 335,
+  "signed_card_index_rows": 335,
+  "root_history_entries": 69,
+  "note": "the two corpora have no id in common; neither is a subset of the other by construction, and neither may be presented as the other"
+ },
+ "counts_after": {
+  "measured_at": "2026-10-29T09:52:51Z",
+  "public_root_catalogued_leaves": 326,
+  "note": "the Bitcoin-confirmed candidate merged into master at 09:52:51Z, so the root moved from 324 to 326 catalogued leaves after this ruling was made. The ruling is about the SHAPE of the structure and is unchanged by the count."
+ },
+ "obliges": [
+  "the public copy stops implying append-only: where the root is described as an append-only ledger or an ever-growing log, that wording is wrong and must be corrected",
+  "the two corpora stay named separately",
+  "the card index's count and the root's count are not a defect to be reconciled by fiat — two different corpora with two different membership rules"
+ ],
+ "does_not": [
+  "convert the root into an append-only log",
+  "change any count, merkle root, signature or leaf",
+  "move any axis to MEASURED",
+  "confer any status on any subject"
+ ],
+ "open_gap": {
+  "path": "/state-of-claim-maintenance/",
+  "state": "NOT_SERVED",
+  "observed": 404,
+  "against": "the live register claims 92.86% coverage with due_unrun_next_read 26",
+  "note": "a published claim about a page that is not served — a separate open defect, unaffected by this ruling, and it stays on the docket"
+ },
+ "source_document": "docs/GSPC-ROOT-POLICY-RULING-2026-10-29.md",
+ "not_a_certification": "This ruling describes the shape of a published structure. It decides nothing about whether any measured claim is true, and it grants no status to any subject."
+}
