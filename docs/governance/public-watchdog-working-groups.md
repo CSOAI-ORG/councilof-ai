@@ -27,6 +27,9 @@ Proposed case states: INTAKE, TRIAGED, EVIDENCE_READY, IN_REVIEW, CHANGES_REQUES
 The existing Council OS review workspace is the implementation starting point. Operational release depends on authenticated reviewer identity, competence/conflict enforcement, durable case history, revision-bound approvals, revocation and executor-side authority checks. Until validated, do not advertise guaranteed staffed review or autonomous execution.
 
 ## First joint experiment: revocation and halt latency
+
+A [versioned local protocol and runnable controls](revocation-latency-trial.md) are available for independent review. They measure owned synthetic fixtures only; production halt latency remains unmeasured.
+
 Blocking the next call does not establish that in-flight work stopped. Record revocation issued and acknowledged with clock origin and uncertainty; revocation observed at each enforcement point; new calls rejected and reasons; last in-flight action settled including external effects; and quiescence confirmed by the observer, or timeout/unknown.
 
 Measure issue-to-last-action and issue-to-confirmed-quiescence separately from propagation and rejection delay. Last action can precede revocation: report that explicitly and use zero post-revocation activity rather than a misleading negative duration. No-action cases and unobserved external effects need explicit outcomes. Cancellation cannot undo an already committed external effect.
