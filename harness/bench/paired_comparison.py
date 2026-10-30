@@ -21,6 +21,8 @@ import argparse
 import collections
 import json
 import math
+import re
+import sys
 import urllib.request
 from pathlib import Path
 
@@ -47,6 +49,55 @@ def exact_mcnemar(b: int, c: int) -> float:
 
 def load(path: Path) -> dict:
     return json.loads(path.read_text())
+
+
+def comparable_rows(frontier: dict, meok: dict) -> tuple[dict, dict]:
+    """Refuse a statistical comparison unless the complete evaluated frame matches.
+
+    Row numbers alone are not item identities. In particular, two different banks
+    can both have rows 0..N and yield a convincing but meaningless p-value.
+    """
+    for field in ("axis", "bank_repo", "bank_sha256", "grader", "grader_source", "grader_source_sha256"):
+        if not frontier.get(field) or frontier.get(field) != meok.get(field):
+            raise ValueError(f"comparison refused: {field} is missing or differs")
+    if not re.fullmatch(r"[0-9a-f]{64}", str(frontier["bank_sha256"])):
+        raise ValueError("comparison refused: bank_sha256 is not a SHA-256 digest")
+    if not re.fullmatch(r"[0-9a-f]{64}", str(frontier["grader_source_sha256"])):
+        raise ValueError("comparison refused: grader_source_sha256 is not a SHA-256 digest")
+    maps = []
+    for name, result in (("frontier", frontier), ("meok", meok)):
+        rows, total = result.get("rows"), result.get("items_total")
+        if type(total) is not int or total <= 0 or not isinstance(rows, list) or len(rows) != total:
+            raise ValueError(f"comparison refused: {name} has an incomplete item ledger")
+        if type(result.get("bank_items_total")) is not int or result["bank_items_total"] != total:
+            raise ValueError(f"comparison refused: {name} is partial or lacks full-bank coverage evidence")
+        mapped = {}
+        for row in rows:
+            if not isinstance(row, dict):
+                raise ValueError(f"comparison refused: {name} has an invalid item row")
+            index = row.get("index")
+            if type(index) is not int or index < 0 or index in mapped:
+                raise ValueError(f"comparison refused: {name} has duplicate or invalid item indices")
+            if not isinstance(row.get("expected"), str) or not row["expected"]:
+                raise ValueError(f"comparison refused: {name} lacks an expected label")
+            if not re.fullmatch(r"[0-9a-f]{64}", str(row.get("prompt_sha256", ""))):
+                raise ValueError(f"comparison refused: {name} lacks a prompt digest")
+            observed, ok = row.get("observed"), row.get("ok")
+            if observed is None:
+                if ok is not None:
+                    raise ValueError(f"comparison refused: {name} scores an unparsed answer")
+            elif not isinstance(observed, str) or type(ok) is not bool or ok != (observed == row["expected"]):
+                raise ValueError(f"comparison refused: {name} has an inconsistent correctness flag")
+            mapped[index] = row
+        maps.append(mapped)
+    left, right = maps
+    if set(left) != set(right):
+        raise ValueError("comparison refused: the evaluated item sets differ")
+    for index in left:
+        for field in ("expected", "prompt_sha256"):
+            if left[index][field] != right[index][field]:
+                raise ValueError(f"comparison refused: item {index} {field} differs")
+    return left, right
 
 
 def board_axis(axis: str) -> dict | None:
@@ -77,6 +128,8 @@ def arm_record(name: str, res: dict, role: str, notes: list[str]) -> dict:
         "bank_sha256": res.get("bank_sha256"),
         "grader": res.get("grader"),
         "grader_source": res.get("grader_source"),
+        "grader_source_sha256": res.get("grader_source_sha256"),
+        "bank_items_total": res.get("bank_items_total"),
         "items_total": total,
         "items_graded": len(graded),
         "items_unparsed": unparsed,
@@ -102,23 +155,28 @@ def main() -> int:
     a = ap.parse_args()
 
     frontier = load(a.frontier)
+    meok = load(a.meok) if a.meok and a.meok.exists() else None
+    if a.meok and meok is None:
+        print("comparison refused: requested MEOK result file is missing", file=sys.stderr)
+        return 2
+    if meok is not None:
+        try:
+            f_map, m_map = comparable_rows(frontier, meok)
+        except ValueError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
     arms = [arm_record(frontier.get("model", "frontier"), frontier, "third-party model", [
         "a bare model behind an OpenAI-compatible endpoint: there is no deterministic route in this arm, "
         "so every item that parsed was answered by the model itself",
     ])]
 
     paired = None
-    if a.meok and a.meok.exists():
-        meok = load(a.meok)
+    if meok is not None:
         arms.append(arm_record(meok.get("model", "meok"), meok, "our own product", [
             "MEOK's own canonical contract declares a chat answer UNMEASURED_CHAT. A paired comparison "
             "against a measured model therefore compares a measurement with a non-measurement, and the "
             "difference between the two numbers is not a difference between two models.",
         ]))
-        f_rows = frontier.get("rows") or []
-        m_rows = meok.get("rows") or []
-        f_map = {r.get("index"): r for r in f_rows}
-        m_map = {r.get("index"): r for r in m_rows}
         shared = sorted(set(f_map) & set(m_map))
         both_correct = f_only = m_only = both_wrong = unpaired = 0
         for i in shared:
@@ -137,16 +195,18 @@ def main() -> int:
                 both_wrong += 1
         p = exact_mcnemar(f_only, m_only)
         paired = {
-            "items_paired": len(shared),
+            "items_in_matched_frame": len(shared),
+            "items_paired": len(shared) - unpaired,
             "items_where_an_arm_did_not_parse": unpaired,
             "both_correct": both_correct,
             "frontier_only_correct": f_only,
             "meok_only_correct": m_only,
             "both_wrong": both_wrong,
             "discordant": f_only + m_only,
-            "exact_mcnemar_two_sided_p": round(p, 8),
-            "separation_rule": "p < 0.05 is SEPARATED; anything else is a TIE",
-            "verdict": "SEPARATED" if p < 0.05 else "TIE",
+            "exact_mcnemar_two_sided_p": round(p, 8) if len(shared) > unpaired else None,
+            "separation_rule": "No parsed pairs is UNTESTED; otherwise p < 0.05 is SEPARATED and p >= 0.05 is TIE",
+            "verdict": ("UNTESTED" if len(shared) == unpaired else "SEPARATED" if p < 0.05 else "TIE"),
+            "comparison_scope": "same bank and grader bytes, expected labels, prompt digests and complete bank item ledger; not automatic board admission",
         }
 
     split = None
@@ -184,7 +244,7 @@ def main() -> int:
 
     doc = {
         "schema": "csoai.gspc-paired-comparison/0.1",
-        "produced_at": frontier.get("produced_at"),
+        "produced_at": frontier.get("produced_at") or frontier.get("generated_utc"),
         "axis": axis,
         "bank": {
             "repo": frontier.get("bank_repo"),
@@ -206,7 +266,7 @@ def main() -> int:
         "paired": paired,
         "arm_split_meok": split,
         "board_cell": board_cell,
-        "meok_arm_status": a.meok_note or "the MEOK arm was not run for this record",
+        "meok_arm_status": a.meok_note or ("comparable result supplied; inspect route and measurement scope" if meok is not None else "the MEOK arm was not run for this record"),
     }
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")

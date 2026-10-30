@@ -18,6 +18,7 @@ TARGETS = {
     "organisation": ("csoai/README", "space", "spaces/README/README.md"),
     "dataset": ("csoai/gspc-board", "dataset", "scripts/hf/templates/gspc-board.md"),
     "board-space": ("csoai/gspc-board", "space", "spaces/gspc-board/README.md"),
+    "benchmark-suite": ("csoai/gspc-benchmark-suite", "dataset", "scripts/hf/templates/gspc-benchmark-suite.md"),
 }
 
 
@@ -43,6 +44,8 @@ def render_card(target: str, current: str, snapshot: dict | None = None) -> str:
             if not snapshot.get(key) or f"`{snapshot[key]}`" not in found[0]:
                 raise ValueError(f"Published README and snapshot disagree: {key}")
         body = template.replace("{{PROVENANCE}}", found[0])
+    elif target == "benchmark-suite":
+        body = template
     else:
         desired_fm, body = front_matter(template)
         for key in ("title", "short_description"):
