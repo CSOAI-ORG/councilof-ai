@@ -469,6 +469,24 @@ jobs:
           npx playwright install --with-deps chromium
           npm run prerender:dashboard
 
+      - name: Axis specialists — charter and human review journey
+        id: axis_specialist_journey
+        if: steps.scope.outputs.gated == 'true'
+        env:
+          EAT_BROWSER_OUTPUT: ${{ runner.temp }}/axis-specialist-eat
+        run: |
+          node scripts/axis-specialists.mjs --check
+          node scripts/axis-specialists.browser.mjs
+
+      - name: Retain axis specialist journey evidence
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.axis_specialist_journey.outcome == 'success' || steps.axis_specialist_journey.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: axis-specialist-journey-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/axis-specialist-eat/*.json
+          retention-days: 3
+          if-no-files-found: warn
+
       - name: Council OS first question — desktop and mobile
         id: council_os_first_question
         if: steps.scope.outputs.gated == 'true'
