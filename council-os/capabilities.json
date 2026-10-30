@@ -6741,6 +6741,7 @@
         "method": "GET",
         "request": "/api/wrapper?id=usdc.e:arbitrum",
         "expect_status": [
+          200,
           402
         ],
         "safe": true
@@ -6749,14 +6750,15 @@
       "free_preview": "/api/wrapper?id=<wrapped-symbol:chain>&preview=1",
       "paid_for": "issuance",
       "probe_override": {
-        "expect_status": [
-          402,
-          200
-        ],
-        "method": "GET",
-        "note": "200 is the preview-only answer when the read is UNMEASURED; never sold",
-        "request": "/api/wrapper?id=usdc.e:arbitrum",
-        "safe": true
+        "observed_at": "2026-10-29",
+        "observed_on": "https://councilof.ai",
+        "probe": {
+          "expect_status": [
+            200,
+            402
+          ]
+        },
+        "why": "A readable pair offers a 402 challenge. An unavailable upstream read returns 200 with UNMEASURED and preview-only no-sale behavior, as documented in functions/api/wrapper.ts and observed on 29 October. HTTP 200 does not establish delivery or measurement."
       }
     },
     {
