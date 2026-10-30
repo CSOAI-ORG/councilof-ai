@@ -252,14 +252,14 @@
     },
     {
       "id": "FROZEN_BANK",
-      "state": "PASS",
-      "detail": "frozen bank URL is published",
+      "state": "DECLARED",
+      "detail": "bank URL is declared; bank bytes and freeze state were not verified",
       "evidence": "https://huggingface.co/datasets/csoai/gspc-jail-goldbank"
     },
     {
       "id": "ROW_LINEAGE",
       "state": "FINDING",
-      "detail": "per-item row digest is not published on this row"
+      "detail": "per-item row digest is absent or is not a SHA-256 digest"
     },
     {
       "id": "LEADER_STATE",
@@ -274,7 +274,8 @@
   ],
   "summary": {
     "checks": 8,
-    "passed": 5,
+    "passed": 4,
+    "declared": 1,
     "findings": 3,
     "audit_state": "IMPROVEMENT_REQUIRED"
   },
@@ -324,5 +325,5 @@
     "not autonomous self-improvement",
     "not a provisioned compute cluster"
   ],
-  "audit_sha256": "bdcffe754fe727e0a05c3e32df9230d82566f151629f0e58028c8ae2a94e2a3c"
+  "audit_sha256": "ccc7d8c5f9260234ab5885d4751248397ee75ff83e77aa960d5a72b7a79f58da"
 }
