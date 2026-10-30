@@ -1,0 +1,50 @@
+name: working-group-infrastructure
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'council-os/working-groups/**'
+      - 'council-os/working-groups.json'
+      - 'council-os/working-group-tracker.json'
+      - 'council-os/distribution.json'
+      - 'client/src/components/WorkingGroup*.tsx'
+      - 'scripts/working-groups/**'
+      - 'scripts/harness-x/render.mjs'
+      - 'mcp/working-groups-preview/**'
+      - 'tools/working-group-lab/**'
+      - 'distribution/working-groups/**'
+      - 'public/working-groups/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/working-group-infrastructure.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  working-group-infrastructure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: node scripts/harness-x/render.mjs --check
+      - run: node --test scripts/working-groups/core.node-test.mjs
+      - run: python3 tools/working-group-lab/test_lab.py
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/working-groups/acceptance.mjs --output "$RUNNER_TEMP/working-group-acceptance.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: working-group-acceptance
+          path: |
+            ${{ runner.temp }}/working-group-acceptance.json
+            ${{ runner.temp }}/tracker-*.png
+            ${{ runner.temp }}/static-tracker-desktop.png
+            ${{ runner.temp }}/lab-*.png
