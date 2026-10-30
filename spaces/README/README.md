@@ -33,6 +33,10 @@ We publish scoped AI measurements with their methods, evidence and limitations. 
 | Understand the method | [Methodology and limits](https://councilof.ai/methodology/) |
 | Find a particular model | [Search the board](https://huggingface.co/spaces/csoai/gspc-board) |
 
+## Contribute a review
+
+Independent researchers, practitioners and affected people can explore the [Public Watchdog working groups and document tracker](https://councilof.ai/working-groups/). Read a task brief, inspect its evidence and prepare a contribution through the public forum or email route. Groups are forming; a contribution is not an appointment or permission to execute.
+
 ## Read the results accurately
 
 - **MEASURED** means evidence is available for that axis. It does not mean a model won.
