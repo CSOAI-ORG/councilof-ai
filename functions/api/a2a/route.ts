@@ -17,7 +17,7 @@
 //
 // A missing key is therefore a DEPLOYMENT state, not a bug, and the answer says so.
 
-import { headFromGet } from "../../_head";
+import { headFromGet } from "../_head";
 import { decideGate, anchor, kid, loadKey, makeEnvelope, type L0Env } from "../../_lib/layer0";
 
 interface Env extends L0Env {}
