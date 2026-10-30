@@ -5,8 +5,8 @@ import { PersonaToggle, usePersona } from "@/components/PersonaToggle";
 /**
  * /gspc-gap-map — the coverage gap map.
  *
- * 349 enumerated provisions × 4 axes (G, S, P, C) + care_cost lens = 1,312 cells.
- * The finding: 1,301 of them (99.2%) have no measurement in any known benchmark.
+ * Historical coverage frame: 328 provisions × 4 axes = 1,312 core cells.
+ * The care_cost lens is reported separately, without changing that denominator.
  *
  * This is the blind spot the instrument exists to make visible.
  */
@@ -25,7 +25,7 @@ export const GAP_BY_AXIS: Record<string, { evidenced: number; blind: number }> =
 };
 
 const GAP_REASONS = [
-  { code: "no_benchmark", label: "No benchmark", description: "No instrument exists in the field for this cell.", count: 847 },
+  { code: "no_benchmark", label: "No benchmark in reviewed set", description: "No instrument was identified for this cell in the reviewed benchmark set.", count: 847 },
   { code: "wrong_granularity", label: "Wrong granularity", description: "Field benchmarks exist but at category, not provision, granularity.", count: 312 },
   { code: "speaker_only", label: "Speaker only", description: "Benchmark asks 'would the model answer compliantly?' — not 'would it act compliantly?'", count: 89 },
   { code: "bare_model_only", label: "Bare model only", description: "Benchmark scores a base model, not a deployed agent.", count: 42 },
@@ -101,16 +101,17 @@ export default function GSPCGapMap() {
           </div>
           <h1 className="text-4xl font-bold mb-4">The coverage gap map</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            349 enumerated provisions × 4 axes (G, S, P, C) + care_cost lens ={" "}
-            <strong className="text-foreground">{TOTAL_CELLS.toLocaleString()}</strong> cells. The finding: the field has measured
-            almost none of them.
+            A historical coverage frame of 328 provisions × 4 axes (G, S, P, C) ={" "}
+            <strong className="text-foreground">{TOTAL_CELLS.toLocaleString()}</strong> core cells.
+            The care_cost lens is reported separately. These figures describe the reviewed frame,
+            not all benchmarks or every legal obligation.
           </p>
         </header>
 
         {/* HEADLINE STAT */}
         <section className="text-center py-12 border-t border-b border-border">
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
-            Field coverage — the headline
+            Coverage in the reviewed frame
           </p>
           <p className="text-6xl font-bold text-destructive leading-none mb-4">
             {FIELD_BLIND_CELLS.toLocaleString()}
@@ -118,7 +119,7 @@ export default function GSPCGapMap() {
             {TOTAL_CELLS.toLocaleString()}
           </p>
           <p className="text-lg text-muted-foreground">
-            cells have <strong className="text-foreground">no measurement in any known benchmark</strong>
+            cells have <strong className="text-foreground">no measurement recorded in this coverage frame</strong>
           </p>
           <div className="flex justify-center gap-8 mt-6">
             <div className="text-center">
@@ -285,14 +286,15 @@ export default function GSPCGapMap() {
                 <h3 className="text-xl font-bold">For Investors & VCs</h3>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                The 99.2% blind spot is the moat. Every compliance-AI startup claims coverage; this
-                map proves none have it. We are the only ones mapping the actual obligation space.
+                The gap map records coverage in the benchmark set and obligation frame it inspected.
+                A cell without evidence in that frame is a research gap, not proof of a competitor’s
+                capabilities or of market demand. Inspect the method and sources before drawing a conclusion.
               </p>
               <ul className="text-sm space-y-2 text-muted-foreground">
-                <li className="flex gap-2"><span className="text-primary">→</span> 1,301 unmeasured cells = addressable market</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> 99.2% blind = competitive vacuum</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> Deterministic predicates, never a model judge = defensible</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> Published refutations = trust signal</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> Defined frame and dated source observations</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> Missing evidence stated explicitly</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> Published predicates available for inspection</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> Refutations and corrections available for diligence</li>
               </ul>
             </div>
 
@@ -326,7 +328,7 @@ export default function GSPCGapMap() {
               </p>
               <ul className="text-sm space-y-2 text-muted-foreground">
                 <li className="flex gap-2"><span className="text-primary">→</span> Chain integrity verified (DR-0032, DR-0033)</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> 9 refutations published (honest corrections)</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> Dated refutations in the public ledger</li>
                 <li className="flex gap-2"><span className="text-primary">→</span> Sample sizes labelled (n&lt;20 = lower bound)</li>
                 <li className="flex gap-2"><span className="text-primary">→</span> Methodology open (predicates are deterministic)</li>
               </ul>
@@ -339,32 +341,33 @@ export default function GSPCGapMap() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className="font-semibold mb-2 flex items-center gap-2">
-                <span className="text-lg">🔒</span> IP defensibility
+                <span className="text-lg">🔒</span> Inspectable assets and rights
               </h3>
               <p className="text-sm text-muted-foreground">
-                The novelty is not the rule set — the rule set is public. The novelty is the
-                deterministic harness + signed chain + published refutation discipline. That
-                combination cannot be reverse-engineered from a competitor demo.
+                Inspect the published harness, evidence chain and correction history as separate
+                assets. Their versions and reuse terms matter. Publication and a signature do not
+                establish exclusive ownership, patentability or an IP valuation.
+                <Link href="/licensing-agreement/#rights" className="ml-1 text-primary underline">Read the reuse terms.</Link>
               </p>
             </div>
             <div>
               <h3 className="font-semibold mb-2 flex items-center gap-2">
-                <span className="text-lg">📋</span> Regulatory admissibility
+                <span className="text-lg">📋</span> Evidence for review
               </h3>
               <p className="text-sm text-muted-foreground">
-                Each &quot;[MEASURED]&quot; tag carries a chain link. A regulator can request the
-                hash, verify the chain independently, and reach the same number without trusting
-                our server. This is the BAR for admissibility under EU AI Act Art 12.
+                Inspect the source, method, timestamp and verification path for each record.
+                A reproducible observation can support a review within its scope. Whether a
+                regulator accepts a specific record depends on the requirement and the recipient’s decision.
               </p>
             </div>
             <div>
               <h3 className="font-semibold mb-2 flex items-center gap-2">
-                <span className="text-lg">💼</span> Diligence-ready
+                <span className="text-lg">💼</span> Public diligence trail
               </h3>
               <p className="text-sm text-muted-foreground">
-                The 9 refutations are the diligence asset. A founder who publishes what killed
-                their own bets is a founder who cannot surprise an LP with a hidden failure.
-                This is the moat that ships with the team.
+                The refutation ledger records findings that changed or withdrew earlier claims.
+                Read that history alongside current measurements and unresolved questions;
+                a public correction trail supports inspection without guaranteeing the absence of hidden failures.
               </p>
             </div>
           </div>

@@ -42,7 +42,7 @@ export default function GovernancePulse() {
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Governance Pulse</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Every regulation, guidance and enforcement move worldwide — as it happens. Streamed from the CSOAI intelligence agent and surfaced live in the OS.</p>
           <div className="mt-6 max-w-md">
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search jurisdiction, framework, topic…" className="w-full rounded-xl border border-emerald-300/30 bg-white/[0.06] px-4 py-3 text-sm text-white placeholder-emerald-200/50 focus:border-emerald-300 focus:outline-none" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search governance updates" placeholder="Search jurisdiction, framework, topic…" className="w-full rounded-xl border border-emerald-300/30 bg-white/[0.06] px-4 py-3 text-sm text-white placeholder-emerald-200/50 focus:border-emerald-300 focus:outline-none" />
           </div>
         </div>
       </section>
