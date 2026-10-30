@@ -17,7 +17,7 @@
 // the holder of the key signed these bytes. It does not say the decision inside was correct, and
 // it is not a certification of the envelope's subject.
 
-import { headFromGet } from "../../_head";
+import { headFromGet } from "../_head";
 import { l0CanonBytes, loadKey, verifyBytes, type L0Env } from "../../_lib/layer0";
 
 interface Env extends L0Env {}

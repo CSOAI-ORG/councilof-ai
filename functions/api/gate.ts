@@ -14,7 +14,7 @@
 // No signature here: the gate's answer is a decision about a request, not an attestation. The
 // signed artefact is the A2A envelope, and that is /api/a2a/route.
 
-import { headFromGet } from "../_head";
+import { headFromGet } from "./_head";
 import { decideGate, kid, type L0Env } from "../_lib/layer0";
 
 interface Env extends L0Env {}
