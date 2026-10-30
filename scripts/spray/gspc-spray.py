@@ -778,7 +778,7 @@ def byte_parity_reason(built: dict[str, bytes], remote: dict[str, bytes]) -> str
 VIEWER_COLUMNS = ("axis", "family", "kind", "status", "n", "separation", "leader", "dataset")
 
 
-def hf_viewer_files(tr: dict) -> dict[str, bytes]:
+def hf_viewer_files(tr: dict, *, existing_parquet: bytes | None = None) -> dict[str, bytes]:
     """Derive the dataset's default viewer from the *same* captured board as snapshot/board.json.
 
     Keep the historical eight-column schema. This is a projection, not a new measurement,
@@ -814,8 +814,21 @@ def hf_viewer_files(tr: dict) -> dict[str, bytes]:
     table = pa.Table.from_pylist(rows, schema=schema)
     parquet = io.BytesIO()
     pq.write_table(table, parquet)
+    parquet_bytes = parquet.getvalue()
+    if existing_parquet is not None:
+        # Parquet writer versions can encode the same table differently (observed
+        # with Arrow 25 and 26). Preserve the pinned mirror bytes only after checking
+        # every row, column, type and schema metadata against this captured board.
+        # This exception is for the derived viewer only; signed source and snapshot
+        # parity remain byte-strict. Corrupt or changed viewers are regenerated.
+        try:
+            previous = pq.read_table(io.BytesIO(existing_parquet))
+            if previous.equals(table, check_metadata=True):
+                parquet_bytes = existing_parquet
+        except (pa.ArrowException, OSError, ValueError):
+            pass
     jsonl = "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows).encode("utf-8")
-    return {"board.parquet": parquet.getvalue(), "board.jsonl": jsonl}
+    return {"board.parquet": parquet_bytes, "board.jsonl": jsonl}
 
 
 def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dict[str, bytes]) -> dict[str, bytes]:
@@ -991,7 +1004,12 @@ def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
             remote = json.loads(fetch_ok(f"{pinned}/{HF_PATH_IN_REPO}/SNAPSHOT.json?download=true"))
             if remote.get("as_of", "") > tr["as_of"]:
                 raise Refused(f"HF dataset carries newer as_of {remote['as_of']} than captured root {tr['as_of']}")
-            viewer = hf_viewer_files(tr)
+            try:
+                existing_parquet = fetch_ok(f"{pinned}/board.parquet?download=true")
+            except (Refused, Exception):
+                # Optional reuse must not prevent recovery of a missing viewer.
+                existing_parquet = None
+            viewer = hf_viewer_files(tr, existing_parquet=existing_parquet)
             if built.get("board.json") != tr["board_bytes"]:
                 raise Refused("built snapshot board bytes differ from the captured live GET")
             changed = {f"{HF_PATH_IN_REPO}/{path}": data for path, data in built.items()}
