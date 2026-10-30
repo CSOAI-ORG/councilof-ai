@@ -1,0 +1,715 @@
+{
+ "checks_sha256": "f421adcdf442bac5a3c012c821170ab5e605f65b349a8f6fdc264f43df5fd802",
+ "deviation_checks": [
+  "CompletionComplete",
+  "DNSRebindingRejected",
+  "LocalhostHostAccepted",
+  "ElicitationSEP1034General",
+  "ElicitationSEP1330General",
+  "LoggingSetLevel",
+  "PromptsGetEmbeddedResource",
+  "PromptsGetSimple",
+  "PromptsGetWithArgs",
+  "PromptsGetWithImage",
+  "PromptsList",
+  "ResourcesList",
+  "ResourcesReadBinary",
+  "ResourcesReadText",
+  "ResourcesSubscribe",
+  "ResourcesTemplateRead",
+  "ResourcesUnsubscribe",
+  "ServerSSEMultipleStreamsTest",
+  "ToolsCallAudio",
+  "ToolsCallElicitation",
+  "ToolsCallEmbeddedResource",
+  "ToolsCallError",
+  "ToolsCallImage",
+  "ToolsCallMixedContent",
+  "ToolsCallSampling",
+  "ToolsCallSimpleText",
+  "ToolsCallWithLogging",
+  "ToolsCallWithProgress"
+ ],
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instrument": "stable-2025-11-25",
+ "instrument_channel": "stable",
+ "not_a_grade": true,
+ "note": "",
+ "scenarios": [
+  {
+   "checks": [
+    {
+     "check": "CompletionComplete",
+     "description": "Server responds to completion requests",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "completion-complete",
+     "specReferences": [
+      {
+       "id": "MCP-Completion",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "0e9221b15dc3ecdb7ad0f305b54a1740d66813cf3eeb0ed904d2e075802358f3",
+   "scenario": "completion-complete",
+   "scenario_run_id": "server-completion-complete-2026-10-26T02-13-14-667Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "DNSRebindingRejected",
+     "description": "Server rejects requests with non-localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://apexai.academy/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-rebinding-rejected",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    },
+    {
+     "check": "LocalhostHostAccepted",
+     "description": "Server accepts requests with valid localhost Host/Origin headers",
+     "details": {
+      "reason": "non-localhost-url",
+      "serverUrl": "https://apexai.academy/mcp"
+     },
+     "errorMessage": "DNS rebinding tests require a localhost server URL (localhost, 127.0.0.1, or [::1])",
+     "id": "localhost-host-valid-accepted",
+     "specReferences": [
+      {
+       "id": "MCP-DNS-Rebinding-Protection",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices#local-mcp-server-compromise"
+      },
+      {
+       "id": "MCP-Transport-Security",
+       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#security-warning"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "7e71e459001df94c673379a091c4bde7bf7e62e2f57daa8e7c578bc41691bc2c",
+   "scenario": "dns-rebinding-protection",
+   "scenario_run_id": "server-dns-rebinding-protection-2026-10-26T02-13-20-965Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ElicitationSEP1034General",
+     "description": "Server requests elicitation with default values",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":1,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "elicitation-sep1034-general",
+     "specReferences": [
+      {
+       "id": "SEP-1034",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1034"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "eb29f9e02c53eaa3eb080b50873c3fdfbf017eced4279a3b428f2e73848d2fa5",
+   "scenario": "elicitation-sep1034-defaults",
+   "scenario_run_id": "server-elicitation-sep1034-defaults-2026-10-26T02-13-19-273Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ElicitationSEP1330General",
+     "description": "Server requests elicitation with enum schemas",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "elicitation-sep1330-general",
+     "specReferences": [
+      {
+       "id": "SEP-1330",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1330"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "ce16a39ffe7fd92b6207fcb8350693bf37675dd1f5b58bca9b2c97a413d0d96f",
+   "scenario": "elicitation-sep1330-enums",
+   "scenario_run_id": "server-elicitation-sep1330-enums-2026-10-26T02-13-19-694Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "LoggingSetLevel",
+     "description": "Server accepts logging level setting",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "logging-set-level",
+     "specReferences": [
+      {
+       "id": "MCP-Logging",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/logging"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "5333adc7faa1c29b8a3f6559938615a185256940c3bcb4256a9d4b05ecf824e1",
+   "scenario": "logging-set-level",
+   "scenario_run_id": "server-logging-set-level-2026-10-26T02-13-13-831Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "Ping",
+     "description": "Server responds to ping requests",
+     "details": {
+      "result": {}
+     },
+     "id": "ping",
+     "specReferences": [
+      {
+       "id": "MCP-Ping",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/utilities/ping"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "5f4106ec295ef451f84724a43180450895ef28273f1e5c813745927e4b25386c",
+   "scenario": "ping",
+   "scenario_run_id": "server-ping-2026-10-26T02-13-14-352Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetEmbeddedResource",
+     "description": "Get prompt with embedded resource",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "prompts-get-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Embedded-Resources",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#embedded-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "0637b51218a03682c542c73bc125618e10deb214111ba57893be0105d391393f",
+   "scenario": "prompts-get-embedded-resource",
+   "scenario_run_id": "server-prompts-get-embedded-resource-2026-10-26T02-13-20-752Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetSimple",
+     "description": "Get simple prompt successfully",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "prompts-get-simple",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "301f7a2f5132f8adf401e6c4808fe9ac0e4ccfc2d1f60c9486c8d6ba05717851",
+   "scenario": "prompts-get-simple",
+   "scenario_run_id": "server-prompts-get-simple-2026-10-26T02-13-20-542Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithArgs",
+     "description": "Get parameterized prompt with argument substitution",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "prompts-get-with-args",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Get",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#getting-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "24d0ce098181da65949e974379e97bba5e6387a9d950e96a111a470ff7c98bc8",
+   "scenario": "prompts-get-with-args",
+   "scenario_run_id": "server-prompts-get-with-args-2026-10-26T02-13-20-645Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsGetWithImage",
+     "description": "Get prompt with image content",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "prompts-get-with-image",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-Image",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#image-content"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "d599d52194d50409da67950e2231a7adb4ec5c1cad06728fa05f581ced170822",
+   "scenario": "prompts-get-with-image",
+   "scenario_run_id": "server-prompts-get-with-image-2026-10-26T02-13-20-858Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "PromptsList",
+     "description": "Server lists available prompts with valid structure",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "prompts-list",
+     "specReferences": [
+      {
+       "id": "MCP-Prompts-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts#listing-prompts"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "52d950741b6629ecb1cb576ad80c7f156d092e68f7a37e41aa2a24274ffb94e0",
+   "scenario": "prompts-list",
+   "scenario_run_id": "server-prompts-list-2026-10-26T02-13-20-437Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesList",
+     "description": "Server lists available resources with valid structure",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "resources-list",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#listing-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "a83198f7b62aa438dc0fc5a7ddc0364523acebfe7000909a0d744634f59c8a2f",
+   "scenario": "resources-list",
+   "scenario_run_id": "server-resources-list-2026-10-26T02-13-19-798Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadBinary",
+     "description": "Read binary resource successfully",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "resources-read-binary",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "481fb8ea7058a0e926578d392e8653b42db2aca741edd2d6c8b9876637334b4c",
+   "scenario": "resources-read-binary",
+   "scenario_run_id": "server-resources-read-binary-2026-10-26T02-13-20-010Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesReadText",
+     "description": "Read text resource successfully",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "resources-read-text",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Read",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#reading-resources"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "03e4270db0cf7285a4f489ab2f6232cbc19c935f17fc59b90656103feaf1c9b6",
+   "scenario": "resources-read-text",
+   "scenario_run_id": "server-resources-read-text-2026-10-26T02-13-19-903Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesSubscribe",
+     "description": "Subscribe to resource successfully",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "resources-subscribe",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Subscribe",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-subscriptions"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "9af2ce02b0df838b3df79bde951520339326529cbeed5a74153f68452f6cd1dd",
+   "scenario": "resources-subscribe",
+   "scenario_run_id": "server-resources-subscribe-2026-10-26T02-13-20-232Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesTemplateRead",
+     "description": "Read resource from template with parameter substitution",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "resources-templates-read",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Templates",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-templates"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "2395742aa38dd2b8bc851dcc160c27802eed843fe0ef3747c3bd02ba9659dd6a",
+   "scenario": "resources-templates-read",
+   "scenario_run_id": "server-resources-templates-read-2026-10-26T02-13-20-118Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ResourcesUnsubscribe",
+     "description": "Unsubscribe from resource successfully",
+     "errorMessage": "Failed: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "resources-unsubscribe",
+     "specReferences": [
+      {
+       "id": "MCP-Resources-Subscribe",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/resources#resource-subscriptions"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "6a71d0c8c669837f2a66dd78716e4527a086121ff70eac3a4e8fcc38f9baf221",
+   "scenario": "resources-unsubscribe",
+   "scenario_run_id": "server-resources-unsubscribe-2026-10-26T02-13-20-335Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerInitialize",
+     "description": "Server responds to initialize request with valid structure",
+     "details": {
+      "connected": true,
+      "serverUrl": "https://apexai.academy/mcp"
+     },
+     "id": "server-initialize",
+     "specReferences": [
+      {
+       "id": "MCP-Initialize",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle#initialization"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "b1db7e055d83ea2f52f49100f12a661a4a3c0b5a7025b5993223859209d8cf78",
+   "scenario": "server-initialize",
+   "scenario_run_id": "server-server-initialize-2026-10-26T02-13-12-645Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ServerSSEMultipleStreamsTest",
+     "description": "Test server multiple SSE streams behavior",
+     "errorMessage": "Error: Streamable HTTP error: Error POSTing to endpoint: {\"jsonrpc\":\"2.0\",\"id\":0,\"error\":{\"code\":-32029,\"message\":\"Rate limit exceeded\"}}",
+     "id": "server-sse-multiple-streams-error",
+     "specReferences": [
+      {
+       "id": "SEP-1699",
+       "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/issues/1699"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "5366cf34280d686fd189e22a9623ee02df4a9bd11c1e00992af721bc0c35ff13",
+   "scenario": "server-sse-multiple-streams",
+   "scenario_run_id": "server-server-sse-multiple-streams-2026-10-26T02-13-19-591Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallAudio",
+     "description": "Tool returns audio content",
+     "errorMessage": "Failed: MCP error -32601: Unknown tool: test_audio_content. Call tools/list for the available tools.",
+     "id": "tools-call-audio",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "b35f61a50f60e7e52498a2bf60151e54b552eae34c76f7dab3a5444e24a95eb1",
+   "scenario": "tools-call-audio",
+   "scenario_run_id": "server-tools-call-audio-2026-10-26T02-13-16-643Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallElicitation",
+     "description": "Tool requests user input from client",
+     "errorMessage": "Failed: MCP error -32601: Unknown tool: test_elicitation. Call tools/list for the available tools.",
+     "id": "tools-call-elicitation",
+     "specReferences": [
+      {
+       "id": "MCP-Elicitation",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/elicitation"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "1aedef6fef0b6801eea50527eab8c669badaca99d5d64f966b2515fa85ecd856",
+   "scenario": "tools-call-elicitation",
+   "scenario_run_id": "server-tools-call-elicitation-2026-10-26T02-13-18-962Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallEmbeddedResource",
+     "description": "Tool returns embedded resource content",
+     "errorMessage": "Failed: MCP error -32601: Unknown tool: test_embedded_resource. Call tools/list for the available tools.",
+     "id": "tools-call-embedded-resource",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "420837fde20379559db94bf0f34958daba4a0727d934e160f4cd65b29600b410",
+   "scenario": "tools-call-embedded-resource",
+   "scenario_run_id": "server-tools-call-embedded-resource-2026-10-26T02-13-16-972Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallError",
+     "description": "Tool returns error correctly",
+     "errorMessage": "Failed: MCP error -32601: Unknown tool: test_error_handling. Call tools/list for the available tools.",
+     "id": "tools-call-error",
+     "specReferences": [
+      {
+       "id": "MCP-Error-Handling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "1c1e2d42e88c63e804483fff7d251640bea86ff5ead5d46c8ebec91d7bdbf190",
+   "scenario": "tools-call-error",
+   "scenario_run_id": "server-tools-call-error-2026-10-26T02-13-18-024Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallImage",
+     "description": "Tool returns image content",
+     "errorMessage": "Failed: MCP error -32601: Unknown tool: test_image_content. Call tools/list for the available tools.",
+     "id": "tools-call-image",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "2b6799b163b334fd835730504cde1a24e1e75aaad9674869302f1d1e897d19b4",
+   "scenario": "tools-call-image",
+   "scenario_run_id": "server-tools-call-image-2026-10-26T02-13-15-749Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallMixedContent",
+     "description": "Tool returns multiple content types",
+     "errorMessage": "Failed: MCP error -32601: Unknown tool: test_multiple_content_types. Call tools/list for the available tools.",
+     "id": "tools-call-mixed-content",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "e260b54423f465ecd83df9ac38b961b069df8180631954c39cdc2012dfe9ade2",
+   "scenario": "tools-call-mixed-content",
+   "scenario_run_id": "server-tools-call-mixed-content-2026-10-26T02-13-17-298Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSampling",
+     "description": "Tool requests LLM sampling from client",
+     "errorMessage": "Failed: MCP error -32601: Unknown tool: test_sampling. Call tools/list for the available tools.",
+     "id": "tools-call-sampling",
+     "specReferences": [
+      {
+       "id": "MCP-Sampling",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/sampling"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "31cf2dc512097144fcbc5c3f8e8403637a9e83933709cdefb30c06e759b64bda",
+   "scenario": "tools-call-sampling",
+   "scenario_run_id": "server-tools-call-sampling-2026-10-26T02-13-18-651Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallSimpleText",
+     "description": "Tool returns simple text content",
+     "errorMessage": "Failed: MCP error -32601: Unknown tool: test_simple_text. Call tools/list for the available tools.",
+     "id": "tools-call-simple-text",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-Call",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#calling-tools"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "fe801f30fd8d4a7a634f2bb35fff2a5b189ce10521232e881473f7b64038c81d",
+   "scenario": "tools-call-simple-text",
+   "scenario_run_id": "server-tools-call-simple-text-2026-10-26T02-13-15-437Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithLogging",
+     "description": "Tool sends log messages during execution",
+     "errorMessage": "Failed: MCP error -32601: Method not found",
+     "id": "tools-call-with-logging",
+     "specReferences": [
+      {
+       "id": "MCP-Logging",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/logging"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "5e5db3835088c1d183b2b1e813141578c65e63adacbd2e618a081ad27bd954ca",
+   "scenario": "tools-call-with-logging",
+   "scenario_run_id": "server-tools-call-with-logging-2026-10-26T02-13-17-699Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsCallWithProgress",
+     "description": "Tool reports progress notifications",
+     "errorMessage": "Failed: MCP error -32601: Unknown tool: test_tool_with_progress. Call tools/list for the available tools.",
+     "id": "tools-call-with-progress",
+     "specReferences": [
+      {
+       "id": "MCP-Progress",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/progress"
+      }
+     ],
+     "status": "FAILURE"
+    }
+   ],
+   "checks_sha256": "6549c0b17643640c8db4b3f47ad17fc354f4dd3352b37a9dac71aa4556dc24c4",
+   "scenario": "tools-call-with-progress",
+   "scenario_run_id": "server-tools-call-with-progress-2026-10-26T02-13-18-332Z"
+  },
+  {
+   "checks": [
+    {
+     "check": "ToolsList",
+     "description": "Server lists available tools with valid structure",
+     "details": {
+      "toolCount": 30,
+      "tools": [
+       "list_courses",
+       "list_lessons",
+       "get_lesson",
+       "search",
+       "latest_news",
+       "list_deep_dives",
+       "get_resources",
+       "get_pricing",
+       "subscribe_link",
+       "get_premium_lesson",
+       "get_progress",
+       "mark_lesson_complete",
+       "forum_search",
+       "forum_read",
+       "forum_post",
+       "forum_hello",
+       "forum_reply",
+       "forum_category_create",
+       "agent_handoff",
+       "agent_notes_get",
+       "agent_notes_set",
+       "forum_edit",
+       "pair_agent",
+       "forum_polls_list",
+       "forum_poll_vote",
+       "agent_signup",
+       "agent_me",
+       "agent_progress",
+       "agent_quiz_answer",
+       "agent_delete_account"
+      ]
+     },
+     "id": "tools-list",
+     "specReferences": [
+      {
+       "id": "MCP-Tools-List",
+       "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools#listing-tools"
+      }
+     ],
+     "status": "SUCCESS"
+    }
+   ],
+   "checks_sha256": "338fd696961b3ba4d059ad7f82cbe43cd4760a55f1fd373241a6361e4a6ef408",
+   "scenario": "tools-list",
+   "scenario_run_id": "server-tools-list-2026-10-26T02-13-15-074Z"
+  }
+ ],
+ "schema": "csoai.mcp-conformance-run/0.1",
+ "source": "mcp-registry",
+ "spec_version": "2025-11-25",
+ "subject_id": "academy.apexai/apex-ai-academy@1.0.1",
+ "subject_record_url": "https://apexai.academy/mcp",
+ "subject_url": "https://apexai.academy/mcp",
+ "suite_version": "0.1.16"
+}

@@ -7,16 +7,17 @@
  * totals.model_fleets, a count of model-comparison AXES).
  *
  * THE ORDER IS THE ARGUMENT, and each figure is printed once:
- *   1. HomeHero         - what we do, in one sentence, over one image. No figures.
- *   2. LiveBoardGlance  - the live GSPC board: every axis with its state, the count line with its
+ *   1. HomeHero         - six visual stories: measure, verify, work, connect, maintain, correct.
+ *   2. HomeProducts     - nine concise routes into the working products and services.
+ *   3. HomeHumanReview  - the actual escalation, competence, authority and receipt workflow.
+ *   4. LiveBoardGlance  - the live GSPC board: every axis with its state, the count line with its
  *                         separation line, and the model count (derived from the signed cards by
  *                         scripts/build-models-measured.mjs; list at /models-measured/).
- *   3. HomeSteps        - how it works, which is also what makes it different: measure, sign,
- *                         re-check, correct. Four sections, four of our own images, no figures.
- *   4. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
+ *   5. HomeProofPoints  - nine concrete safeguards, each linked to its public proof.
+ *   6. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
  *                         the regulator and the agent.
- *   5. Proof strip      - four live figures from GET /api/momentum, then "More numbers".
- *   6. Company strip    - the accountable entity and "Who we are".
+ *   7. Proof strip      - four live figures from GET /api/momentum, then "More numbers".
+ *   8. Company strip    - the accountable entity and "Who we are".
  *
  * WHAT LEFT THE FRONT DOOR, AND WHERE IT WENT (align, do not delete): the full momentum band,
  * HomeProof, HomeCredibility, HomeWeakScore, the separation explanation, the memberships and the
@@ -32,7 +33,9 @@ import { useEffect } from "react";
 import { Link } from "wouter";
 import HomeHero from "@/components/home/HomeHero";
 import LiveBoardGlance from "@/components/home/LiveBoardGlance";
-import HomeSteps from "@/components/home/HomeSteps";
+import HomeProducts from "@/components/home/HomeProducts";
+import HomeHumanReview from "@/components/home/HomeHumanReview";
+import HomeProofPoints from "@/components/home/HomeProofPoints";
 import HomeWaysIn from "@/components/home/HomeWaysIn";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
@@ -114,9 +117,9 @@ const HOME_LD = {
 
 export default function HomeVerify() {
   useEffect(() => {
-    document.title = "Council of AI — independent measurement of AI systems, signed and free to re-check";
+    document.title = "UK AI measurement infrastructure — Council of AI";
     setMetaDescription(
-      "We measure how AI systems behave against frozen, published tests and publish checkable evidence. Issued measurement cards are signed; unsigned supporting runs are labelled. Read the live board and corrections ledger.",
+      "UK AI measurement infrastructure operated by CSOAI Ltd. Read current measurements, verify signed evidence for free and inspect the public corrections ledger.",
     );
   }, []);
 
@@ -125,8 +128,10 @@ export default function HomeVerify() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
 
       <HomeHero />
+      <HomeProducts />
+      <HomeHumanReview />
       <LiveBoardGlance />
-      <HomeSteps />
+      <HomeProofPoints />
       <HomeWaysIn />
 
       {/* Proof: four live figures a first-time visitor can open at the source. Everything else is
@@ -149,8 +154,8 @@ export default function HomeVerify() {
       <section aria-label="Who runs Council of AI" className="surface-base border-t border-border" data-testid="home-company-strip">
         <div className="section-shell flex flex-col gap-3 py-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="home-accountable-entity">
-            Council of AI is operated by CSOAI Ltd (UK Companies House 16939677), founded by Nicholas Templeman. We
-            measure; we do not certify, and verification is free.
+            Council of AI is UK AI measurement infrastructure operated by CSOAI Ltd (UK Companies House 16939677),
+            founded by Nicholas Templeman. We measure; we do not certify, and verification is free.
           </p>
           <div className="flex flex-wrap gap-x-6 text-sm font-bold">
             <Link href="/about/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">

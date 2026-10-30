@@ -1,3 +1,4 @@
+import { recordPaidResponse, markPaidUndeliveredResponse } from "./_x402_delivery_record";
 /**
  * GET /api/proof — inclusion proofs for public-root leaves.
  *
@@ -124,7 +125,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   const rootRes = await fetch(u("/root.json"));
   if (!rootRes.ok) {
-    return json(
+    return markPaidUndeliveredResponse(json(
       {
         schema: "csoai.public-root-proof/0.1",
         error: "not_found",
@@ -133,7 +134,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         reason: `static /root.json HTTP ${rootRes.status}`,
       },
       404,
-    );
+    ), payment.ok, payment.paymentResponse);
   }
   const root = (await rootRes.json()) as {
     merkle_root?: string;
@@ -147,7 +148,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // the root admits a second leaf set (see tree_caveat in root.json) and no proof cut
   // from it means anything. Fail closed rather than issue a proof we cannot bound.
   if (typeof root.card_count === "number" && root.card_count !== hashes.length) {
-    return json(
+    return markPaidUndeliveredResponse(json(
       {
         schema: "csoai.public-root-proof/0.1",
         error: "root_count_mismatch",
@@ -159,7 +160,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
           "The signed count is what makes this tree unambiguous, so no inclusion proof is issued.",
       },
       503,
-    );
+    ), payment.ok, payment.paymentResponse);
   }
 
   if (bundle && paid) {
@@ -171,7 +172,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     // all regardless of card count.
     const bundleRes = await fetch(u("/cards-bundle.json"));
     if (!bundleRes.ok) {
-      return json(
+      return markPaidUndeliveredResponse(json(
         {
           schema: "csoai.public-root-proof/0.1",
           error: "not_found",
@@ -180,7 +181,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
           reason: `static /cards-bundle.json HTTP ${bundleRes.status}`,
         },
         404,
-      );
+      ), payment.ok, payment.paymentResponse);
     }
     const cbundle = (await bundleRes.json()) as {
       cards?: Record<string, { proof?: unknown[] } | undefined>;
@@ -199,7 +200,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         card_count: root.card_count ?? null,
       });
     }
-    return json(
+    return recordPaidResponse(json(
       {
         schema: "csoai.public-root-proof/0.1",
         kind: "bundle",
@@ -212,7 +213,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       200,
       // Echo settlement back per x402 when the facilitator returned one; omitted otherwise.
       payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-    );
+    ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
   }
 
   if (!/^[0-9a-f]{64}$/.test(sha)) {

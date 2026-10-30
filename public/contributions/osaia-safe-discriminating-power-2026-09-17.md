@@ -3,7 +3,7 @@
 **Contribution to the Shared AI Findings Exchange (SAFE) request for comments**
 Open Secure AI Alliance, Linux Foundation
 
-CSOAI Ltd (Council of AI), Companies House 16939677, 3rd Floor, 86-90 Paul Street, London EC2A 4NE
+CSOAI Ltd (Council of AI), 3rd Floor, 86-90 Paul Street, London EC2A 4NE
 17 September 2026 · nicholas@csoai.org · https://councilof.ai
 
 This document is the citable form of our contribution. It is published here because our GitHub
@@ -39,13 +39,14 @@ wrong.
 
 The defect was upstream of the method. In one grader configuration, each prompt offered a single
 permitted answer. The grader therefore could not mark anything wrong, and all 44 results read an
-accuracy of 1. Twenty-six of them had been published as measurements at a sample size of 30.
+accuracy of 1. Twenty-six of them had been signed as MEASURED results at a sample size of 30, and
+none of the 44 carried a public URL — so none had been published as a measurement anyone could read.
 
 The instrument was not failing open. It was not systematically mislabelling. It was working exactly
 as specified, against items whose answer space made a negative outcome impossible.
 
 Withdrawal ledger: https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl
-Correction C-2026-0914-01, in a public record of 56 entries: https://councilof.ai/api/corrections
+Correction C-2026-0914-01, in a public record of 93 entries: https://councilof.ai/api/corrections
 
 ## The proposed requirement
 
@@ -94,8 +95,9 @@ our name on it.
 The instance above is our error, not someone else's. It ran for a period before we caught it, the
 26 published measurements were wrong for that period, and we found it ourselves rather than being
 told. The withdrawn files remain online, unedited, beside a ledger row naming each one, because we
-do not edit a signed record: we supersede or withdraw it and keep both. That record currently holds
-953 supersessions and 44 withdrawals.
+do not edit a signed record: we supersede or withdraw it and keep both. That record now holds 93
+corrections — read from the signed public corrections ledger on 26 October 2026, whose signature
+verified on that request — and the 44 withdrawals of the 14 September batch this document describes.
 
 If the alliance would find a walk through the rows useful, we will provide it, and we would rather
 the case be used than the credit.
@@ -104,3 +106,12 @@ the case be used than the credit.
 
 *Figures in this document were read from the live endpoints cited beside them on 17 September 2026.
 Each can be re-read at those addresses.*
+
+*Corrections to this document, made visible rather than silently: on 26 October 2026 the company
+registration number was removed from the identity line above, at the company's request — our
+correspondence carries the name, not the number; the figure "953 supersessions" was replaced with
+the current ledger count of 93 corrections, read from the signed corrections ledger on that date;
+and the sentence that said twenty-six of the withdrawn results "had been published as
+measurements" was corrected — twenty-six had been *signed* as MEASURED results, and none of the 44
+carried a public URL. No other content was changed, and the 17 September 2026 figures above stand
+as read on that date.*

@@ -96,12 +96,22 @@ function prerenderedPaths() {
   return out;
 }
 
+function isUnpublishedWithdrawnBlog(path, blogWithdrawn, publishedBlog) {
+  const match = path.match(/^\/blog\/([^/]+)\/?$/);
+  return Boolean(blogWithdrawn && match && !publishedBlog.has(match[1]));
+}
+
 function problems() {
   const rules = redirectRules();
   const fns = functionRedirects();
   const prerendered = prerenderedPaths();
   const app = readFileSync(join(ROOT, "client/src/App.tsx"), "utf8");
   const blogWithdrawn = /<Route\b[^>]*\bpath="\/blog\/:slug"[^>]*\bcomponent=\{ContentReviewNotice\}/.test(app);
+  const publishedBlog = new Set(
+    (JSON.parse(readFileSync(join(ROOT, "client/src/data/blog-published.json"), "utf8")).published || [])
+      .map((p) => p && p.slug)
+      .filter(Boolean),
+  );
   const found = [];
   const listed = locs();
   const counts = new Map();
@@ -111,7 +121,7 @@ function problems() {
   }
   for (const url of listed) {
     const path = url.startsWith(ORIGIN) ? url.slice(ORIGIN.length) || "/" : url;
-    if (blogWithdrawn && /^\/blog\/[^/]+\/?$/.test(path)) found.push(`${path} is a withdrawn article, not indexable content`);
+    if (isUnpublishedWithdrawnBlog(path, blogWithdrawn, publishedBlog)) found.push(`${path} is a withdrawn article, not indexable content`);
     else if (NON_PAGE_EXT.test(path)) found.push(`${path} is an asset, not a page`);
     else if (fns.has(path)) found.push(`${path} is redirected by a Pages Function`);
     else if (rules.has(path)) found.push(`${path} has a _redirects rule -> ${rules.get(path)}`);
@@ -133,8 +143,10 @@ if (process.argv.includes("--selftest")) {
   const cases = [
     ["/stripe-checkout.js", NON_PAGE_EXT.test("/stripe-checkout.js"), "asset route"],
     ["/blog/x", NON_PAGE_EXT.test("/blog/x") === false, "a page path is not an asset"],
+    ["reviewed blog restoration", !isUnpublishedWithdrawnBlog("/blog/restored/", true, new Set(["restored"])), "published manifest entry must remain listable"],
+    ["unreviewed withdrawn blog", isUnpublishedWithdrawnBlog("/blog/withdrawn/", true, new Set(["restored"])), "unlisted withdrawn entry must still fail"],
     ["/about-credential", functionRedirects().has("/about-credential"), "function-backed 308"],
-    ["/watchdog/", functionRedirects().has("/watchdog/"), "index.ts serves the slash form too"],
+    ["/advisory/", functionRedirects().has("/advisory/"), "index.ts serves the slash form too"],
     ["/gspc-scoreboard", functionRedirects().has("/gspc-scoreboard"), "Response.redirect(...) form"],
     ["prerender set", prerenderedPaths().size > 30, "must derive the built blog paths, not zero"],
     ["duplicate predicate", new Set(["a", "a"]).size < ["a", "a"].length, "must detect repeated canonical URLs"],

@@ -53,6 +53,8 @@ export type LobbyTabId =
   | "archive"
   | "attestations"
   | "evidence"
+  | "evidence-delivery"
+  | "axis-specialists"
   | "embed"
   | "art50"
   | "standards"
@@ -67,6 +69,8 @@ export type LobbyTabId =
   | "workbench"
   | "software"
   | "learn"
+  | "staff"
+  | "research"
   | "play"
   | "connect"
   | "route"
@@ -145,6 +149,24 @@ export const LOBBY_TABS: LobbyTab[] = [
     kind: "native",
     accent: "gold",
     cues: /\b(learn|learning|training arena|mooc|coach|learning path|fix lab)\b/i,
+  },
+  {
+    id: "staff",
+    label: "Staff & human review",
+    blurb:
+      "Ask the AI staff, inspect escalations, complete the live-record competency check, and see exactly whether human decisions are unlocked, signed and persisted.",
+    path: "",
+    kind: "native",
+    cues: /\b(staff|human review|human[- ]in[- ]the[- ]loop|hitl|h\.i\.m\.|competency (?:check|module)|review queue|operator decision)\b/i,
+  },
+  {
+    id: "research",
+    label: "Continuous research",
+    blurb:
+      "Every measured GSPC axis with its authoritative watch sources, missing runtime, safe automation and required human review.",
+    path: "",
+    kind: "native",
+    cues: /\b(continuous research|research plan|research registry|source watch|re-?measure|remeasurement)\b/i,
   },
   {
     id: "explore",
@@ -336,6 +358,24 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(gpai evidence pack|evidence index|evidence pack|gpai evidence|gpai)\b/i,
+  },
+  {
+    id: "evidence-delivery",
+    label: "Evidence delivery",
+    blurb:
+      "Prepare a local evidence draft with MEOK H.I.M. review, then explicitly submit it for an unsigned Council A2A Message. No GSPC measurement, signature, anchor or durable storage.",
+    path: "",
+    kind: "native",
+    cues: /\b(evidence delivery|deliver evidence|local evidence|unsigned draft|a2a handoff)\b/i,
+  },
+  {
+    id: "axis-specialists",
+    label: "Axis specialists",
+    blurb:
+      "Thirty-three bounded MEOK Hive specialists — one per GSPC axis — with individual audits, negative controls and recommendation-only improvements under MEOK H.I.M. HOLD gates. No proposal is applied.",
+    path: "",
+    kind: "native",
+    cues: /\b(axis specialists?|specialist hive|meok hive|axis audits?|axis improvements?)\b/i,
   },
   {
     id: "embed",
@@ -824,7 +864,7 @@ export function routesIn(group: LobbyRouteGroup): LobbyRoute[] {
  * of five more modes above the composer, and an empty right rail. A first-time reader
  * could not tell which of the three was the real one. Now:
  *
- *  - the sidebar lists SECTIONS, never more than seven;
+ *  - the sidebar lists a small set of plainly named SECTIONS;
  *  - a section with several panes shows them as a sub-tab row at the top of the canvas,
  *    so Verify + Evidence pack + Evidence index are one place: "Verify & evidence";
  *  - every pane id is unchanged, so every `/dashboard?tab=<id>` link, old door and chat
@@ -840,6 +880,7 @@ export type DashboardNavGroupId =
   | "verify"
   | "connect"
   | "learn"
+  | "staff"
   | "sovx"
   | "corrections";
 
@@ -876,7 +917,7 @@ const DASHBOARD_NAV_DEFINITION: {
       "Type a model, server or record: see what is already measured, free, then request a fresh run or a monthly watch.",
     tabs: [
       { id: "home", label: "Get results" },
-      { id: "measured", label: "Request a fresh run" },
+      { id: "measured", label: "Request a commission receipt" },
       // Article 50(2): the one tool that answers "is my AI output marked?". It was filed out of
       // sight under Check a result, so the /article-50 buyer could not reach it (6 Oct 2026).
       { id: "art50", label: "Check an AI output (Art. 50)" },
@@ -897,6 +938,8 @@ const DASHBOARD_NAV_DEFINITION: {
     tabs: [
       { id: "verify", label: "Check a result" },
       { id: "evidence", label: "Evidence pack" },
+      { id: "evidence-delivery", label: "Evidence delivery" },
+      { id: "axis-specialists", label: "Axis specialists" },
     ],
   },
   {
@@ -928,12 +971,20 @@ const DASHBOARD_NAV_DEFINITION: {
     id: "learn",
     label: "Learn",
     description:
-      "Learn how each test works, replay recorded model rounds, and practise.",
+      "Learn how each test works, replay recorded model rounds, practise, and inspect continuous research.",
     tabs: [
       { id: "learn", label: "Learning" },
+      { id: "research", label: "Continuous research" },
       { id: "space", label: "Model arena" },
       { id: "play", label: "Games" },
     ],
+  },
+  {
+    id: "staff",
+    label: "Staff & human review",
+    description:
+      "Escalate an AI staff proposal to a named human, check competence against the live record, and inspect decision, signing and persistence gates.",
+    tabs: [{ id: "staff", label: "Staff & human review" }],
   },
   {
     id: "sovx",

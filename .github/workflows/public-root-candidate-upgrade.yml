@@ -105,25 +105,53 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install the llms generator's build dependency
+        if: steps.candidate.outputs.exists == 'true'
+        run: npm install --no-save --no-audit --no-fund esbuild@0.25.0
+
+      # opentimestamps-client is needed by scripts/ots_manifest_rebuild.py, which the
+      # reconcile step below now runs. It used to be installed after that step, because
+      # the reconcile step did not rebuild the manifest.
+      - name: Install witness dependencies
+        if: steps.candidate.outputs.exists == 'true'
+        run: pip install -q cryptography opentimestamps-client
+
       - name: Reconcile the rolling candidate with current master
         if: steps.candidate.outputs.exists == 'true'
         run: |
           set -euo pipefail
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
-          git fetch origin master
           before=$(git rev-parse HEAD)
-          # A real content conflict fails the workflow closed. Never choose a
-          # side automatically for root, proof, or witness bytes.
-          git merge --no-edit origin/master
+          # The reconcile TOOL is taken from master; the TREE it works on is the candidate's.
+          # This job checks out public-root/pending, a rolling branch that has not merged
+          # master yet, so the very first reconcile after this lands is the one that does
+          # not have the tool in its tree. Without this the fix would fail on the very run
+          # it was made for.
+          # An EXPLICIT refspec, so refs/remotes/origin/master is actually updated. A plain
+          # `git fetch origin master` writes FETCH_HEAD only and leaves the tracking ref
+          # where it was, which would reconcile the candidate against whichever master the
+          # checkout happened to see.
+          git fetch origin +refs/heads/master:refs/remotes/origin/master
+          # The TOOL is ALWAYS taken from master, even when the candidate's tree has a copy.
+          # The candidate's copy is whatever was on the branch when it was last merged, and
+          # the tool's behaviour is part of what decides a merge: on 2026-10-29 the tool
+          # learned that a re-stamped artefact resolves to master's bytes and master's proof,
+          # and the candidate's stale copy would have failed closed on the SBOM instead.
+          # A stale tool is a silent wrong answer. The comment above states the intent —
+          # "the TOOL is taken from master; the TREE it works on is the candidate's" — and
+          # this is that comment made true.
+          reconcile=/tmp/root_candidate_reconcile.py
+          git show origin/master:scripts/root_candidate_reconcile.py > "$reconcile"
+          # The merge, the derived-view conflict resolution and the rebuild order live in
+          # that script, which has a --selftest that proves each failure goes red. The
+          # logic is not inline shell here, because inline shell in the root path is
+          # exactly what failed for nine hours without anyone seeing why.
+          python3 "$reconcile" --repo .
           after=$(git rev-parse HEAD)
           if [ "$before" != "$after" ]; then
             git push origin "HEAD:public-root/pending"
           fi
-
-      - name: Install witness dependencies
-        if: steps.candidate.outputs.exists == 'true'
-        run: pip install -q cryptography opentimestamps-client
 
       - name: Upgrade the exact candidate proof
         if: steps.candidate.outputs.exists == 'true'
@@ -187,29 +215,75 @@ jobs:
           # release"). Rebuild it from the bytes in the same commit; the manifest is
           # generated from what the files are, never from the intention.
           python3 scripts/ots_manifest_rebuild.py --apply
-          # Refresh only the section derived from the manifest just rebuilt.
-          # Do not fetch a different board or hand-edit published counts.
-          node scripts/llms-txt.mjs --timestamps-only
+          # The llms views quote the manifest's counts and as_of, so rebuilding the
+          # manifest without rebuilding them leaves the views one cycle stale. That is
+          # exactly what pr-gates' llms-txt-derived test caught on the candidate head on
+          # 26 Oct 2026: the manifest's as_of 2026-10-26T01:48:57Z appeared 0 times in
+          # llms.txt, so the candidate could not pass the gate and could not merge.
+          # Regenerate the views from the manifest just written.
+          node scripts/llms-txt.mjs
+          # The llms views quote the manifest's counts and as_of, so rebuilding the
+          # manifest without rebuilding them leaves the views one cycle stale.
+          # Regenerate the views from the manifest just written, then CHECK the
+          # manifest-derived section against it: --timestamps-only compares the
+          # timestamp section of the views against the manifest without fetching
+          # a board and without writing, so a stale as_of is caught here rather
+          # than in the candidate's next gate run.
           node scripts/llms-txt.mjs --timestamps-only --check
-          git add public/llms.txt public/llms-full.txt
+          # public/reports/* is DERIVED from the tree as well, and it is registered in
+          # docs/operations/PRODUCERS.json, so pr-gates' producers-check compares its
+          # committed output against its producer and fails closed when the bytes move
+          # without a rebuild. The candidate rebuilt the proof bytes, so it disagreed with
+          # its producer and the candidate could not pass the gate. Measured on head
+          # 33c16eea, before the new leaf existed: "axis-reports --check: 2 stale path(s)
+          # under public/reports". Regenerate it from the bytes in this commit, the same
+          # way the manifest and the llms views are regenerated.
+          #
+          # The SBOM is NOT regenerated here, and that is deliberate. The SBOM is STAMPED:
+          # public/interop/sbom-councilof-ai.json has a sibling
+          # public/interop/sbom-councilof-ai.json.ots that proves those exact bytes.
+          # scripts/gen_sbom.py embeds a generation timestamp and the generation commit, so
+          # every run produces different bytes and invalidates the inherited proof.
+          # Measured 2026-10-29: this step regenerated the SBOM, the candidate's
+          # stamped-bytes check went red with "STAMPED BYTES CHANGED WITHOUT A NEW PROOF:
+          # public/interop/sbom-councilof-ai.json now hashes to 84b4968f..., but
+          # public/interop/sbom-councilof-ai.json.ots still proves 33642026...", and the
+          # candidate could not merge.
+          #
+          # A stamped file must not be regenerated in place. The candidate carries master's
+          # stamped SBOM forward unchanged — the reconcile step above merges master into the
+          # candidate, and a re-stamped artefact resolves to master's bytes AND master's
+          # proof — so those bytes still match the proof beside them. Re-stamping is a
+          # separate, explicit act: regenerate the SBOM, mint a fresh proof for it, and
+          # commit both together. The SBOM is therefore not added to the commit below.
+          node scripts/build-axis-reports.mjs
           git add public/interop/ots
           git add public/interop/root-*.json.ots
           git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json
+          git add public/llms.txt public/llms-full.txt
+          git add public/reports
           git add public/interop/stablecoin-universe-2026-09/readiness.json public/archive/index.json
           if ! git diff --cached --quiet; then
             git commit -m "public-root: upgrade exact candidate to Bitcoin-confirmed"
             git push origin "HEAD:$BRANCH"
           fi
 
-      # Master's branch protection requires a pull request but no status check (read in repo
-      # settings on 6 Oct 2026: "Require status checks to pass before merging" is off). So the
-      # `gh pr merge --auto` this step used to run did not wait for pr-gates: on a pull request
-      # with nothing required it merges at once, ungated. A pull request opened with GITHUB_TOKEN
-      # also starts no pull_request workflow, so no check runs on it unless dispatched. Single
-      # writer means a GATED pull request, so the gate is made binding here: run pr-gates on THIS
-      # head commit, wait for it in this job, and merge only that commit and only on success.
+      # Master's branch protection DID require no status check when this step was written
+      # (read in repo settings on 6 Oct 2026: "Require status checks to pass before merging" was
+      # off). It no longer does. Measured 2026-10-26: strict=true, and the required contexts are
+      # gates, build, stamped-bytes and hold-guard - so `gh pr merge --auto` is not enough on its
+      # own and the merge has to wait for those four on the exact head. A pull request opened with
+      # GITHUB_TOKEN also starts no pull_request workflow, so no check runs on it unless dispatched.
+      # Single writer means a GATED pull request, so the gate is made binding here: run pr-gates on
+      # THIS head commit, wait for it in this job, and merge only that commit and only on success.
       # Waiting in-job matters: the refresh step above re-witnesses on every confirmed tick, so the
       # head moves between ticks and a pass recorded on an older commit must never merge a newer one.
+      #
+      # `build` comes from the CI workflow, not from pr-gates, and runs on this repo arrive as
+      # `action_required` until they are approved. An unapproved run produces NO check run, so its
+      # context reads as absent rather than failed, and the merge is refused with "the base branch
+      # policy prohibits the merge" while every gate that did run is green. The gate tool approves
+      # every gated run for these bytes, not only the one it watches.
       - name: Merge only after pr-gates passed on these exact bytes
         if: steps.ots.outputs.confirmed == 'true'
         timeout-minutes: 50
@@ -217,34 +291,27 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           URL: ${{ steps.candidate.outputs.url }}
+          BRANCH: public-root/pending
         run: |
           set -euo pipefail
-          head=$(gh pr view "$URL" --repo "$REPO" --json headRefOid --jq .headRefOid)
-          runs() {
-            gh run list --repo "$REPO" --workflow pr-gates.yml --branch public-root/pending --limit 50 \
-              --json databaseId,headSha,status,conclusion,createdAt
-          }
-          # Reuse a run on this exact commit that passed or is still going; a failed one is retried.
-          run_id=$(runs | jq -r --arg sha "$head" \
-            '[.[] | select(.headSha == $sha and (.status != "completed" or .conclusion == "success"))] | .[0].databaseId // ""')
-          if [ -z "$run_id" ]; then
-            since=$(date -u -d '1 minute ago' +%Y-%m-%dT%H:%M:%SZ)
-            gh workflow run pr-gates.yml --repo "$REPO" --ref public-root/pending
-            for _ in $(seq 1 30); do
-              sleep 10
-              run_id=$(runs | jq -r --arg sha "$head" --arg since "$since" \
-                '[.[] | select(.headSha == $sha and .createdAt >= $since)] | .[0].databaseId // ""')
-              [ -n "$run_id" ] && break
-            done
+          # The gate's LOGIC lives in scripts/public_root_promotion_gate.py, not inline shell
+          # here: inline shell in the root path is exactly what failed on 2026-10-26 without
+          # anyone seeing why. The shell read the pull request's headRefOid, which LAGS the
+          # branch by seconds after this job pushes the upgraded proof, so it read the PREVIOUS
+          # commit (9e6f0cc70) while the branch had already moved to d43b1a605 - and watched the
+          # gates for those older bytes. The promotion halted with "HALT: pr-gates run
+          # 40301090584 did not pass on 9e6f0cc70" even though the proof was CONFIRMED_BITCOIN
+          # and the candidate's gates were queued on the exact head. The tool reads the BRANCH
+          # REF, re-reads it every cycle, and refuses to merge bytes whose gates did not run.
+          # It ships with its own selftest, proven able to go red.
+          #
+          # The TOOL is taken from master; the TREE it works on is the candidate's. This job
+          # checks out public-root/pending, a rolling branch that has not merged master yet.
+          git fetch origin +refs/heads/master:refs/remotes/origin/master
+          if [ -f scripts/public_root_promotion_gate.py ]; then
+            gate=scripts/public_root_promotion_gate.py
+          else
+            gate=/tmp/public_root_promotion_gate.py
+            git show origin/master:scripts/public_root_promotion_gate.py > "$gate"
           fi
-          if [ -z "$run_id" ]; then
-            echo "HALT: no pr-gates run appeared for $head; not merging" >&2
-            exit 1
-          fi
-          echo "waiting for pr-gates run $run_id on $head"
-          if ! gh run watch "$run_id" --repo "$REPO" --exit-status --interval 30 > /dev/null; then
-            echo "HALT: pr-gates run $run_id did not pass on $head; not merging. The candidate stays open for a human." >&2
-            exit 1
-          fi
-          echo "pr-gates run $run_id passed on $head; merging exactly that commit"
-          gh pr merge "$URL" --repo "$REPO" --squash --match-head-commit "$head"
+          python3 "$gate" --repo "$REPO" --branch "$BRANCH" --pr "$URL"

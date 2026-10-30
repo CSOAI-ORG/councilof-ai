@@ -16,9 +16,10 @@ import { BUYING_LINES, CONTACT_MAILBOX } from "@/lib/buying";
 import ResultCard from "@/components/talk/ResultCard";
 import { challengeOf, type Challenge } from "@/lib/aguiTalk";
 import { callTool } from "@/lib/sovTools";
+import { rasBookingFromCatalog, RAS_BOOKING_MAILTO, type RasBooking } from "@/lib/rasBooking";
 
 const COMMISSION_DOCTRINE =
-  "We can't run a new test on demand. You can review a commission for a named subject: nothing is charged by asking. Payment buys a commission receipt and references to existing measurement cards where available, never a result. Signing is conditional; verify the returned signature. A fresh run remains UNMEASURED until a published measurement exists; no run date is promised.";
+  "Commission a receipt for cards already on file. You can review a commission for a named subject: nothing is charged by asking. Payment buys a commission receipt and references to existing measurement cards where available, never a result. Signing is conditional; verify the returned signature. A fresh run remains UNMEASURED until a published measurement exists; no run date is promised.";
 
 const FOCUS =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -411,6 +412,16 @@ export default function DashboardRequestPane() {
     | { state: "ready"; jobs: ActualJob[] }
     | { state: "unavailable" }
   >({ state: "loading" });
+  // /assess, /assessment and /readiness-assessment all redirect here (App.tsx DashboardDoor,
+  // tab=measured), so the RAS booking button lives here too. Same guards as AssessTool:
+  // mailto until catalog ras-booking is live Paddle (lib/rasBooking.ts); no price printed.
+  const [ras, setRas] = useState<RasBooking>({ href: RAS_BOOKING_MAILTO, live: false });
+  useEffect(() => {
+    let on = true;
+    fetch("/catalog.json").then((r) => (r.ok ? r.json() : null)).catch(() => null)
+      .then((c) => { if (on) setRas(rasBookingFromCatalog(c)); });
+    return () => { on = false; };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -461,6 +472,21 @@ export default function DashboardRequestPane() {
               COMMISSION_DOCTRINE
             )}
           </p>
+          {!isPricingOverview ? (
+            <div className="mt-4">
+              <a
+                href={ras.href}
+                data-testid="ras-booking-cta"
+                className={`inline-flex min-h-11 items-center rounded-xl bg-white px-4 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 ${FOCUS}`}
+              >
+                {ras.live ? "Book a RAS measurement" : "Request a RAS measurement booking by email"}
+              </a>
+              <p className="mt-2 text-xs text-emerald-50/80">
+                Measurement only, not certification. Terms are in{" "}
+                <a href="/catalog.json" className="underline">/catalog.json</a> (ras-booking).
+              </p>
+            </div>
+          ) : null}
           <Link href="/dashboard/?tab=art50" data-testid="request-pane-art50" className="mt-4 flex w-fit text-sm font-semibold text-emerald-200 underline underline-offset-4 hover:text-white">
             Looking for an Article 50 marking check? Check an AI output for a mark →
           </Link>

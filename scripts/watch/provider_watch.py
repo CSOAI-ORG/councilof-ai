@@ -512,17 +512,86 @@ def empty_state() -> dict[str, Any]:
 
 
 def load_state(path: Path) -> dict[str, Any]:
-    if not path.is_file():
+    if path.is_symlink():
+        raise ValueError(f"Refusing symlink provider state: {path}")
+    if not path.exists():
         return empty_state()
-    try:
-        st = json.loads(path.read_text(encoding="utf-8"))
-        if st.get("schema") == STATE_SCHEMA:
-            st.setdefault("targets", {})
-            st.setdefault("runs", [])
-            return st
-    except Exception:
-        pass
-    return empty_state()
+    # A failed read is not a first capture. Never replace retained history with
+    # an empty state after corruption, an unsupported schema or a read failure.
+    st = json.loads(path.read_text(encoding="utf-8"))
+    validate_state(st)
+    return st
+
+
+def validate_state(st: Any) -> None:
+    """Validate retained input before any request or output write (no repair)."""
+    if not isinstance(st, dict) or st.get("schema") != STATE_SCHEMA or st.get("normaliser") != NORMALISER:
+        raise ValueError("Unknown provider state schema or normaliser")
+    if not isinstance(st.get("targets"), dict) or not isinstance(st.get("runs"), list):
+        raise ValueError("Provider state must retain targets and runs")
+
+    def timestamp(value: Any) -> str:
+        if not isinstance(value, str):
+            raise ValueError("Provider state timestamp is missing")
+        datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+        return value
+
+    created, updated = timestamp(st.get("created_at")), timestamp(st.get("updated_at"))
+    if created > updated:
+        raise ValueError("Provider state clock goes backwards")
+    previous = ""
+    for run in st["runs"]:
+        if not isinstance(run, dict):
+            raise ValueError("Malformed provider run")
+        at = timestamp(run.get("run_at"))
+        if at < previous or at > updated or not isinstance(run.get("leaves"), list):
+            raise ValueError("Malformed provider run order or leaves")
+        previous = at
+    for tid, entry in st["targets"].items():
+        if not isinstance(tid, str) or not tid or not isinstance(entry, dict):
+            raise ValueError("Malformed provider target")
+        if any(not isinstance(entry.get(k), str) or not entry[k] for k in ("provider", "surface", "url")):
+            raise ValueError(f"Provider target identity missing: {tid}")
+        if not isinstance(entry.get("history"), list) or type(entry.get("n_runs")) is not int or entry["n_runs"] < 0:
+            raise ValueError(f"Provider target history missing: {tid}")
+        if "n_changed" in entry and (type(entry["n_changed"]) is not int or entry["n_changed"] < 0):
+            raise ValueError(f"Invalid change count: {tid}")
+        previous = ""
+        for event in entry["history"]:
+            if not isinstance(event, dict):
+                raise ValueError(f"Malformed provider history: {tid}")
+            at = timestamp(event.get("at"))
+            if at < previous or at > updated:
+                raise ValueError(f"Provider history clock goes backwards: {tid}")
+            previous = at
+        for key in ("latest", "last_ok"):
+            capture = entry.get(key)
+            if capture is not None:
+                if not isinstance(capture, dict) or timestamp(capture.get("fetched_at")) > updated:
+                    raise ValueError(f"Malformed provider {key}: {tid}")
+                # last_ok intentionally stores no state field.
+                capture_state = STATE_OK if key == "last_ok" else capture.get("state")
+                if capture_state not in (STATE_OK, STATE_UNKNOWN, STATE_UNCHECKABLE):
+                    raise ValueError(f"Unknown provider capture state: {tid}")
+                for field in ("bytes_sha256", "norm_sha256"):
+                    digest = capture.get(field)
+                    if capture_state == STATE_OK and digest is None:
+                        raise ValueError(f"Missing successful provider digest: {tid}/{field}")
+                    if digest is not None and (not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)):
+                        raise ValueError(f"Malformed provider digest: {tid}")
+                byte_length = capture.get("byte_length")
+                if capture_state == STATE_OK and type(byte_length) is not int:
+                    raise ValueError(f"Missing successful provider byte length: {tid}")
+                if byte_length is not None and (type(byte_length) is not int or byte_length < 0):
+                    raise ValueError(f"Invalid provider byte length: {tid}")
+        pending = entry.get("pending")
+        if pending is not None:
+            if not isinstance(pending, dict) or timestamp(pending.get("first_seen_at")) > updated:
+                raise ValueError(f"Malformed pending confirmation: {tid}")
+            if type(pending.get("n_seen")) is not int or pending["n_seen"] < 1:
+                raise ValueError(f"Invalid pending confirmation count: {tid}")
+            if any(not isinstance(pending.get(k), str) or not re.fullmatch(r"[0-9a-f]{64}", pending[k]) for k in ("bytes_sha256", "norm_sha256")):
+                raise ValueError(f"Invalid pending confirmation digest: {tid}")
 
 
 def _event(kind: str, cap: dict[str, Any], prev_ok: dict[str, Any] | None, leaf: str | None) -> dict[str, Any]:

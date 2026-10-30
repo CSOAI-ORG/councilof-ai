@@ -19,6 +19,7 @@ import { Link } from "wouter";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import { boardRunDates } from "@/lib/boardRunDates";
 import ModelCountKey from "@/components/ModelCountKey";
+import { isOwnerGated } from "@/lib/ownerGated";
 
 export interface SeparationRead {
   comparison: number;
@@ -53,7 +54,7 @@ export interface Tile {
 export function boardTiles(data: GspcPayload | null): Tile[] {
   const axes: GspcAxis[] = Array.isArray(data?.axes) ? (data!.axes as GspcAxis[]) : [];
   return axes
-    .filter((a) => typeof a?.axis === "string" && a.axis)
+    .filter((a) => typeof a?.axis === "string" && a.axis && !isOwnerGated(a))
     .map((a) => {
       const comparison = a.kind === "model-comparison";
       const measured = a.status === "MEASURED";
@@ -68,7 +69,7 @@ export function boardTiles(data: GspcPayload | null): Tile[] {
         bench: typeof a.bench === "string" && a.bench ? a.bench : null,
         group: comparison ? "comparison" : "facts",
         state,
-        n: typeof a.n === "number" && Number.isFinite(a.n) ? a.n : null,
+        n: measured && typeof a.n === "number" && Number.isFinite(a.n) ? a.n : null,
       };
     });
 }
@@ -138,9 +139,21 @@ function TileItem({ t }: { t: Tile }) {
       data-state={t.state}
     >
       <span className="block min-w-0">
-        <span className="block truncate text-[13px] font-bold leading-tight text-foreground" title={t.axis}>
+        {/* DEEP LINK, CONTEXT PRESERVED. Grafana's rule: linked views must carry the
+            reader's context with them — "if a click forces re-picking variables, the
+            dashboard set has a hole". The tile used to be inert: a reader who saw
+            "governance · Tie · n 237" on the front door had no way to reach that axis's
+            own view, and the board's only exit was "Open the full board", which drops
+            the reader back into the whole board and makes them find the row again.
+            The axis name now links straight to that axis, keeping the axis with it. */}
+        <a
+          href={`/gspc/${encodeURIComponent(t.axis)}/`}
+          className="block truncate text-[13px] font-bold leading-tight text-foreground underline-offset-2 hover:underline"
+          title={t.axis}
+          data-axis-link={t.axis}
+        >
           {t.axis}
-        </span>
+        </a>
         {t.bench ? <span className="mt-0.5 block truncate text-xs leading-tight text-muted-foreground">{t.bench}</span> : null}
       </span>
       <span className="flex items-center justify-between gap-2">
@@ -171,8 +184,9 @@ export default function LiveBoardGlance({
   const sep = separationRead(data);
   const count = typeof data?.totals?.public_count === "string" ? data.totals.public_count : null;
   const stamp = boardRunDates(data as Parameters<typeof boardRunDates>[0]);
-  const comparison = tiles.filter((t) => t.group === "comparison");
-  const facts = tiles.filter((t) => t.group === "facts");
+  const comparison = tiles.filter((t) => t.group === "comparison" && t.state !== "UNMEASURED");
+  const facts = tiles.filter((t) => t.state === "FACT_RUN");
+  const unmeasured = tiles.filter((t) => t.state === "UNMEASURED");
 
   return (
     <section
@@ -190,8 +204,21 @@ export default function LiveBoardGlance({
           Live now
         </p>
         <h2 id="home-board-h" className="t-band mt-3 max-w-3xl text-foreground">
-          The living board
+          The living board, in plain English.
         </h2>
+        <p className="t-lede mt-4 max-w-3xl text-muted-foreground">
+          See which AI behaviours have been measured, what the runs found and where the evidence is still missing. Every figure below is read live from its public source.
+        </p>
+        <div className="mt-7 rounded-2xl border border-emerald-700/20 bg-emerald-500/[0.055] p-5 sm:p-6" data-testid="board-reading-guide">
+          <h3 className="text-sm font-black text-foreground">How to read the board</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Measured is not the same as separated. A completed run can still produce a tie or leave a separation untested.</p>
+          <dl className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div><dt className="text-sm font-bold text-foreground">Separated</dt><dd className="mt-1 text-[13px] leading-relaxed text-muted-foreground">The published comparison found a measured advantage under its stated rule.</dd></div>
+            <div><dt className="text-sm font-bold text-foreground">Tie</dt><dd className="mt-1 text-[13px] leading-relaxed text-muted-foreground">The run did not establish a winner. A tie is not rounded up into one.</dd></div>
+            <div><dt className="text-sm font-bold text-foreground">Fact run</dt><dd className="mt-1 text-[13px] leading-relaxed text-muted-foreground">A rule read a public record. This is not a model ranking.</dd></div>
+            <div><dt className="text-sm font-bold text-foreground">Untested / Unmeasured</dt><dd className="mt-1 text-[13px] leading-relaxed text-muted-foreground">The comparison was not tested, or no published run exists. Neither means zero.</dd></div>
+          </dl>
+        </div>
 
         {error ? (
           <p className="mt-6 max-w-3xl rounded-2xl border border-amber-500/50 bg-amber-50 px-5 py-4 text-sm text-amber-950 dark:bg-amber-950/40 dark:text-amber-100">
@@ -209,6 +236,11 @@ export default function LiveBoardGlance({
                 <dd className="order-first min-h-[1.2em] font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="board-public-count">
                   {count ?? "—"}
                 </dd>
+                {count && stamp ? (
+                  <dd className="text-[13px] text-muted-foreground" data-testid="board-public-count-measured-on">
+                    measured on {stamp}
+                  </dd>
+                ) : null}
               </div>
               <div className="flex flex-col">
                 <dt className="text-[13px] font-semibold text-muted-foreground">
@@ -236,7 +268,7 @@ export default function LiveBoardGlance({
                 <h3 className="mt-9 text-sm font-bold text-foreground">
                   Model comparisons <span className="font-normal text-muted-foreground">· {comparison.length} axes · models answer the same frozen questions</span>
                 </h3>
-                <ul className="mt-3 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7" aria-label="Model-comparison axes and their state">
+                <ul className="mt-3 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="Model-comparison axes and their state">
                   {comparison.map((t) => (
                     <TileItem key={t.axis} t={t} />
                   ))}
@@ -248,8 +280,20 @@ export default function LiveBoardGlance({
                 <h3 className="mt-7 text-sm font-bold text-foreground">
                   Fact runs <span className="font-normal text-muted-foreground">· {facts.length} · a rule reads a public record; no model, no ranking</span>
                 </h3>
-                <ul className="mt-3 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7" aria-label="Fact-run axes and their state">
+                <ul className="mt-3 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="Fact-run axes and their state">
                   {facts.map((t) => (
+                    <TileItem key={t.axis} t={t} />
+                  ))}
+                </ul>
+              </>
+            ) : null}
+            {unmeasured.length > 0 ? (
+              <>
+                <h3 className="mt-7 text-sm font-bold text-foreground">
+                  Unmeasured slots <span className="font-normal text-muted-foreground">· {unmeasured.length} · no published run yet</span>
+                </h3>
+                <ul className="mt-3 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="Unmeasured axes awaiting a run">
+                  {unmeasured.map((t) => (
                     <TileItem key={t.axis} t={t} />
                   ))}
                 </ul>

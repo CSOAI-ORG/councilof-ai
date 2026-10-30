@@ -1,0 +1,410 @@
+{
+  "schema": "csoai.plugin-platform-matrix/0.1",
+  "what": "Every AI platform family Council of AI publishes a plugin for, how to install it there, and where its MCP servers go. One canonical source; this matrix is the only list. The factory renders it; MEOK routes from it; the capability registry declares it.",
+  "canonical": {
+    "name": "council-of-ai",
+    "display_name": "Council of AI",
+    "version": "0.2.0",
+    "source": "canonical/",
+    "mcp_servers": {
+      "gspc": {
+        "transport": "streamable-http",
+        "url": "https://councilof.ai/mcp",
+        "description": "Council of AI GSPC measurement board: live axes, signed card index, three-state verification, free forever.",
+        "timeout_ms": 30000
+      },
+      "csoai-governance": {
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "csoai-governance-mcp"
+        ],
+        "description": "CSOAI Layer-0 governance: seal bytes with Ed25519 and verify the seal. A receipt, never a certificate.",
+        "timeout_ms": 30000
+      }
+    }
+  },
+  "adapters": {
+    "skill-plugin": {
+      "what": "A full plugin tree: skills/, agents/, hooks/, scripts/ and a manifest. The host discovers skills by directory.",
+      "skills": "copy-tree",
+      "agents": "copy-tree",
+      "hooks": "copy-tree"
+    },
+    "rules-md": {
+      "what": "One markdown file per skill, frontmatter preserved, dropped into the host's rules directory.",
+      "skills": "rules-md"
+    },
+    "agent-file": {
+      "what": "A single instruction file the host reads every session, carrying every skill inline.",
+      "skills": "agent-file"
+    },
+    "mcp-only": {
+      "what": "MCP servers only. The host already knows how to read the skills; it just needs the tools.",
+      "skills": "none"
+    }
+  },
+  "platforms": [
+    {
+      "id": "minimax",
+      "label": "MiniMax Code (Mavis)",
+      "family": "skill-plugin",
+      "state": "present",
+      "mcp": {
+        "format": "json",
+        "file": "~/.minimax/mcp.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "copy-tree",
+        "to": "~/.minimax/plugins/council-of-ai"
+      },
+      "note": "MiniMax Code 3.1.4 prunes a local plugin directory that it has not registered. Install the tree, then register it through the desktop local API (POST /minimax-desktop/api/v1/plugins/:plugin_name/install). See README."
+    },
+    {
+      "id": "claude",
+      "label": "Claude Code",
+      "family": "skill-plugin",
+      "state": "present",
+      "mcp": {
+        "format": "json",
+        "file": "~/.claude.json",
+        "key": "mcpServers",
+        "merge": true,
+        "scope_note": "Claude Code global MCP lives in ~/.claude.json under mcpServers; use `claude mcp add -s user` for a durable install."
+      },
+      "install": {
+        "type": "copy-tree",
+        "to": "~/.claude/plugins/council-of-ai"
+      },
+      "note": "A 0.1.1 build already exists under ~/.claude/plugins/cache/council-of-ai/. This renders 0.2.0 with the Council OS skill, the two subagents and the hook set."
+    },
+    {
+      "id": "grok",
+      "label": "Grok / xAI CLI",
+      "family": "skill-plugin",
+      "state": "own-build",
+      "mcp": {
+        "format": "json",
+        "file": "~/.grok/settings.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "none"
+      },
+      "note": "Grok has its OWN richer build (CSOAI-ORG/councilof-ai-grok lineage): 9 skills including evidence-intake and verify-attachment, plus signed-catalog-indexer, ots-stamper and verifier tools. The factory does NOT overwrite it. Two skills it carries (platform-measure, platform-measurer) have no published upstream, so they are the one place the canonical build is still ahead of it."
+    },
+    {
+      "id": "cursor",
+      "label": "Cursor",
+      "family": "rules-md",
+      "state": "present",
+      "mcp": {
+        "format": "json",
+        "file": "~/.cursor/mcp.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.cursor/rules/council-of-ai"
+      },
+      "note": "Cursor supports the plugin format as well as rules (a plugin cache exists at ~/.cursor/plugins/cache/council-of-ai). Rules are installed because they are guaranteed to load in every Cursor surface; the plugin form can be added on top."
+    },
+    {
+      "id": "codex",
+      "label": "OpenAI Codex CLI",
+      "family": "agent-file",
+      "state": "present",
+      "mcp": {
+        "format": "toml",
+        "file": "~/.codex/config.toml",
+        "key": "mcp_servers",
+        "merge": true
+      },
+      "install": {
+        "type": "agent-file",
+        "to": "~/.codex/AGENTS.md"
+      },
+      "note": "Codex reads AGENTS.md. MCP in config.toml as [mcp_servers.name]."
+    },
+    {
+      "id": "gemini",
+      "label": "Gemini CLI",
+      "family": "agent-file",
+      "state": "present",
+      "mcp": {
+        "format": "json",
+        "file": "~/.gemini/settings.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "agent-file",
+        "to": "~/.gemini/GEMINI.md"
+      }
+    },
+    {
+      "id": "kilocode",
+      "label": "Kilo Code",
+      "family": "rules-md",
+      "state": "present",
+      "mcp": {
+        "format": "json",
+        "file": "~/.kilo/mcp_settings.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.kilocode/rules/council-of-ai"
+      }
+    },
+    {
+      "id": "opencode",
+      "label": "OpenCode",
+      "family": "agent-file",
+      "state": "present",
+      "mcp": {
+        "format": "json",
+        "file": "~/.config/opencode/opencode.json",
+        "key": "mcp",
+        "merge": true,
+        "remote_shape": true
+      },
+      "install": {
+        "type": "agent-file",
+        "to": "~/.config/opencode/AGENTS.md"
+      },
+      "note": "OpenCode's mcp map uses {type: remote, url, enabled} for http and {type: local, command, args, enabled} for stdio."
+    },
+    {
+      "id": "qwen",
+      "label": "Qwen Code",
+      "family": "agent-file",
+      "state": "present",
+      "mcp": {
+        "format": "json",
+        "file": "~/.qwen/settings.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "agent-file",
+        "to": "~/.qwen/QWEN.md"
+      }
+    },
+    {
+      "id": "openclaw",
+      "label": "OpenClaw",
+      "family": "agent-file",
+      "state": "present",
+      "mcp": {
+        "format": "json",
+        "file": "~/.openclaw/mcp.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "agent-file",
+        "to": "~/.openclaw/AGENTS.md"
+      }
+    },
+    {
+      "id": "hermes",
+      "label": "Hermes",
+      "family": "mcp-only",
+      "state": "present",
+      "mcp": {
+        "format": "yaml",
+        "file": "~/.hermes/config.yaml",
+        "key": "mcp_servers",
+        "merge": true
+      },
+      "install": {
+        "type": "none"
+      },
+      "note": "Hermes already runs mcp_servers.busabase. The two Council servers sit beside it in the same map."
+    },
+    {
+      "id": "windsurf",
+      "label": "Windsurf",
+      "family": "rules-md",
+      "state": "absent",
+      "mcp": {
+        "format": "json",
+        "file": "~/.codeium/windsurf/mcp_config.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.codeium/windsurf/rules/council-of-ai"
+      }
+    },
+    {
+      "id": "continue",
+      "label": "Continue",
+      "family": "rules-md",
+      "state": "absent",
+      "mcp": {
+        "format": "yaml",
+        "file": "~/.continue/config.yaml",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.continue/rules/council-of-ai"
+      }
+    },
+    {
+      "id": "cline",
+      "label": "Cline",
+      "family": "rules-md",
+      "state": "absent",
+      "mcp": {
+        "format": "json",
+        "file": "~/.cline/mcp_settings.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.clinerules/council-of-ai"
+      }
+    },
+    {
+      "id": "roo",
+      "label": "Roo Code",
+      "family": "rules-md",
+      "state": "absent",
+      "mcp": {
+        "format": "json",
+        "file": "~/.roo/mcp_settings.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.roo/rules/council-of-ai"
+      }
+    },
+    {
+      "id": "zed",
+      "label": "Zed",
+      "family": "rules-md",
+      "state": "absent",
+      "mcp": {
+        "format": "json",
+        "file": "~/.config/zed/settings.json",
+        "key": "context_servers",
+        "merge": true
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.config/zed/rules/council-of-ai"
+      }
+    },
+    {
+      "id": "goose",
+      "label": "Goose",
+      "family": "agent-file",
+      "state": "absent",
+      "mcp": {
+        "format": "yaml",
+        "file": "~/.config/goose/config.yaml",
+        "key": "extensions",
+        "merge": true
+      },
+      "install": {
+        "type": "agent-file",
+        "to": "~/.config/goose/.goosehints"
+      }
+    },
+    {
+      "id": "amazonq",
+      "label": "Amazon Q Developer",
+      "family": "rules-md",
+      "state": "absent",
+      "mcp": {
+        "format": "json",
+        "file": "~/.aws/amazonq/mcp.json",
+        "key": "mcpServers",
+        "merge": true
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.aws/amazonq/rules/council-of-ai"
+      }
+    },
+    {
+      "id": "aider",
+      "label": "Aider",
+      "family": "agent-file",
+      "state": "absent",
+      "mcp": {
+        "format": "none"
+      },
+      "install": {
+        "type": "agent-file",
+        "to": "~/CONVENTIONS.md"
+      }
+    },
+    {
+      "id": "warp",
+      "label": "Warp",
+      "family": "rules-md",
+      "state": "absent",
+      "mcp": {
+        "format": "none"
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.warp/rules/council-of-ai"
+      }
+    },
+    {
+      "id": "openhands",
+      "label": "OpenHands",
+      "family": "rules-md",
+      "state": "absent",
+      "mcp": {
+        "format": "none"
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.openhands/microagents/council-of-ai"
+      }
+    },
+    {
+      "id": "trae",
+      "label": "Trae",
+      "family": "rules-md",
+      "state": "absent",
+      "mcp": {
+        "format": "none"
+      },
+      "install": {
+        "type": "rules-md",
+        "to": "~/.trae/rules/council-of-ai"
+      }
+    }
+  ],
+  "surface": {
+    "public_matrix_url": "https://councilof.ai/api/plugin/platforms",
+    "public_install_url": "https://councilof.ai/api/plugin",
+    "board_url": "https://councilof.ai/api/gspc",
+    "verify_url": "https://councilof.ai/verify",
+    "mcp_url": "https://councilof.ai/mcp"
+  },
+  "doctrine": [
+    "The board and verification stay free, forever, for everyone.",
+    "We measure; we never certify. No public prices on any surface.",
+    "A plugin that cannot be measured is an unmeasured plugin, not a working one.",
+    "Absence is an answer: a platform with no install target is CATALOGUED, not LIVE."
+  ]
+}

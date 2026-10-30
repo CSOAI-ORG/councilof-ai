@@ -1,0 +1,153 @@
+{
+  "schema": "csoai.tui3-eat-action-queue/0.1",
+  "tui": 3,
+  "branch": "models/verified-expansion-20260911",
+  "wave": 1,
+  "date": "2026-10-07",
+  "operator_signal": "EAT",
+
+  "auto_fired_during_eat_mode": [
+    {
+      "id": "A1",
+      "what": "Proved the money gate was already OPEN — the standing blocker '689 UNMEASURED needs HF Job launch authority' was wrong.",
+      "evidence": "hf-jobs-mill-launch.yml is scheduled '29 */6 * * *'; run 37580271321 (2026-10-07T06:12:35Z, success) shows HF_TOKEN + HF_INFERENCE_TOKEN present, 'provider keys present: 1', 'running or pending jobs in csoai: 0', DRY=false, job 6ac5e2e2404719ba3766532e started on flavor cpu-basic for governance+safety.",
+      "cost": 0.0
+    },
+    {
+      "id": "A2",
+      "what": "Proved the mill produces cards end-to-end: landing run 37550410818 (2026-10-07T00:08:51Z) landed cards and the signer returned {'VALID': 176} under the live DID.",
+      "evidence": "gh run view 37550410818 --log → 'Signer result on this branch: {'VALID': 176}' and artifact mill-jobs-landed-37550410818 uploaded (16,196 B).",
+      "cost": 0.0
+    },
+    {
+      "id": "A3",
+      "what": "Located the REAL gate: one unit test, evidence-notes.cards.test.ts, blocked four landing PRs with 'expected [Array(1)] to deeply equal []'.",
+      "evidence": "493 signed cards sat in #2846(176) + #2843(176) + #2815(141); #2802(64) was the only one that merged. pr-gates job 'gates' FAILED on #2815 and #2802 while 6,431 other tests passed.",
+      "cost": 0.0
+    },
+    {
+      "id": "A4",
+      "what": "Traced root cause to design, not accident: land_mill_cards only treats a *quotable* signed card as closing a cell, so UNMEASURED cells are re-run and superseded every landing, breaking any note that cites them.",
+      "evidence": "scripts/land_mill_cards.py:53 admitted_quotable_signed_cells — 'Cells already closed by a current, reproducible, quotable signed card'. Branch 37442847693 carried 140 supersession rows master did not (1542 vs 1402).",
+      "cost": 0.0
+    },
+    {
+      "id": "A5",
+      "what": "Identified the exact violating note and proved the replacement was semantically identical (so citing it is honest, not a rewrite).",
+      "evidence": "note honest-unmeasured-n12 cites signed-safety-5de28cfe94db.json; branch current = signed-safety-6477fa7db2f2.json. Both: model mistralai/Mistral-7B-Instruct-v0.2, axis safety, status UNMEASURED, n=12, accuracy 0.9167, unmeasured ['n<30 unquotable'] — only run_id differs (gha-34944647635 → gha-37442847693).",
+      "cost": 0.0
+    },
+    {
+      "id": "A6",
+      "what": "Built the durable fix: scripts/refresh_evidence_note_citations.py (idempotent, --check for CI, refuses to exceed copy limits) + 11 tests.",
+      "evidence": "Verified across all four landing branch states: staleness violations 1 → 0 on three, 0 → 0 on one; 0 copy-limit breaches; master already clean (30 notes). Two bugs in the refresher were caught by its own tests (an artifact-count guard refused body-only edits; chain dedupe compared a filename to sentence strings) and fixed before commit.",
+      "cost": 0.0
+    },
+    {
+      "id": "A7",
+      "what": "Wired the refresher into mill-jobs-land.yml immediately after the signer, where SUPERSEDED.jsonl actually updates, so the next landing cannot reproduce the outage.",
+      "evidence": "Step 8 of 9 in jobs.land.steps, YAML-validated. Takes --check first and no-ops when every note already cites the replacing card.",
+      "cost": 0.0
+    },
+    {
+      "id": "A8",
+      "what": "Built the honest coverage matrix replacing the misleading '689 UNMEASURED of 1024'.",
+      "evidence": "models/coverage-matrix-canon.json via scripts/build_coverage_matrix.py: index 335/1024 (32.71%), mill 1427/2324 (61.40%), combined 1762/3348 (52.63%), 1586 uncovered. The 689 counts only the frozen card_index population and omits 2,868 mill cards.",
+      "cost": 0.0
+    },
+    {
+      "id": "A9",
+      "what": "Found the mill→card-root promotion path and corrected my own earlier STAGED claim about PR#1888.",
+      "evidence": "models/mill-promotion-pipeline-20261007.json: hub-queue-mill.yml → land_mill_cards.py → sign_mill_cards.py → card_root.py → --stamp. card-root-2026-10-01 = 1466 live + 1402 superseded = 2868, every signed card exactly once. PR#1888's 36 are SUPERSEDED (34/36 replacements live leaves), not 'stuck staged'.",
+      "cost": 0.0
+    },
+    {
+      "id": "A10",
+      "what": "Found a one-cell-one-card violation and cleared it of any truth impact.",
+      "evidence": "39 live cells carry two signed cards each (39 redundant leaves) in card-root-2026-10-01; all 39 have IDENTICAL values, value_conflicts=0, so no incompatible claim is published. Guarded by test_duplicate_live_cards_never_disagree.",
+      "cost": 0.0
+    },
+    {
+      "id": "A11",
+      "what": "Reverted the merge conflict my own note edit introduced on three landing branches, leaving each no worse than found.",
+      "evidence": "Branches 37550410818 → 44b3713ee, 37521823171 → 40b3e5cae, 37442847693 → 2d48724a7, each a clean revert commit. Before reverting, merge-tree showed my edit adding a second conflict (evidence-notes.json) on top of the SUPERSEDED.jsonl conflict that pre-dated me.",
+      "cost": 0.0
+    }
+  ],
+
+  "owner_gated_for_sir_nick_wake_up": [
+    {
+      "id": "G1",
+      "what": "17-key SEMANTIC conflict between master and the landing branches in SUPERSEDED.jsonl — the same superseded card maps to a DIFFERENT replacement on each side.",
+      "why_owner": "Deciding which replacement is current for 17 cells decides which card is authoritative. That is a TUI-1/TUI-5 ledger ruling, not an agent merge. I stopped rather than pick.",
+      "evidence": "master rows 1466, branch rows 1577, shared 1419, DISAGREE 17, master-only 47, branch-only 158. Example: signed-governan-00d0722dc38d.json → master signed-governan-3e90c6754bbd.json vs branch signed-governan-497feea6eaa5.json.",
+      "action": "Have TUI-1 rule on the winner per cell, or land a deterministic tie-break (e.g. the row whose by_file is itself not superseded).",
+      "cost": 0.0
+    },
+    {
+      "id": "G2",
+      "what": "493 signed cards were closed unmerged (#2846 176, #2843 176, #2815 141).",
+      "why_owner": "PRs were closed by another lane at ~07:4x–08:1xZ. Merging or reopening is the human gate that land_mill_cards.py documents.",
+      "evidence": "PR states read back live: #2846 CLOSED/CONFLICTING, #2843 CLOSED/CONFLICTING, #2815 CLOSED, #2802 MERGED. Master signed cards went 2868 → 2932 (+64 = exactly #2802).",
+      "action": "Next mill-jobs-land run (cron 43 2,8,14,20) re-lands the same cells from staging — or reopen the three PRs after G1 is ruled.",
+      "cost": 0.0
+    },
+    {
+      "id": "G3",
+      "what": "raw_response_ref resolves through hf-bucket://csoai/jobs-artifacts, which is PRIVATE (HTTP 401 on naive HTTPS resolution).",
+      "why_owner": "Making a Hugging Face repository public is a publication decision.",
+      "evidence": "sample ref: hf-bucket://csoai/jobs-artifacts/gspc-raw/hfjobs-2026-09-11-050011-8/affect/affect-92ab9d01091f.jsonl; no public mirror exists under public/interop (hf-census is a census, not raw responses).",
+      "action": "huggingface-cli repo upload --repo-type dataset to make it public, OR accept that raw rows are owner-only and say so in HOW-TO-VERIFY.",
+      "cost": 0.0
+    },
+    {
+      "id": "G4",
+      "what": "Merge models/verified-expansion-20260911 (4 commits, 19 files, 265 tests green).",
+      "why_owner": "The brief forbids pushing protected master; review is the owner's.",
+      "evidence": "status=ahead, ahead_by=4, behind_by=0, rebased on master 05f098401.",
+      "action": "Review + merge, or say the word and I will open the PR.",
+      "cost": 0.0
+    }
+  ],
+
+  "blockers_still_open": [
+    "G1 — 17-key SUPERSEDED.jsonl disagreement between master and landing branches (incompatible-claim risk; not mine to resolve)",
+    "G2 — 493 signed cards in closed PRs awaiting a controller ruling or the next landing run",
+    "G3 — raw_response_ref unreachable without making csoai/jobs-artifacts public (owner publication call)",
+    "Deep measurement of the 64 clan-* models (index population, 689 cells) — NOT blocked on money (proven, A1); blocked on those models not being present in local ollama (5 models installed) or a queued HF round"
+  ],
+
+  "exact_counts": {
+    "branch_commits": 4,
+    "files_changed": 19,
+    "tests_passed": 265,
+    "subtests_passed": 21,
+    "tests_failed": 0,
+    "signed_cards_on_master": 2932,
+    "signed_cards_before_session": 2868,
+    "mill_live_leaves": 1466,
+    "mill_superseded_excluded": 1402,
+    "coverage_cells_total": 3348,
+    "coverage_cells_measured": 1762,
+    "coverage_cells_unmeasured": 1586,
+    "duplicate_live_cells": 39,
+    "duplicate_value_conflicts": 0,
+    "prs_unblocked_this_wave": 0,
+    "prs_reverted_this_wave": 3
+  },
+
+  "costs": {
+    "actual_spend_usd": 0.0,
+    "revenue_usd": 0.0,
+    "classification": "INTERNAL_SELF_FUNDED",
+    "note": "No HF job was launched by this TUI — the scheduler already runs 4x/day under the owner's standing configuration. This wave wrote files and ran tests only."
+  },
+
+  "claims_not_made": [
+    "Never reported INDEXED, DISCOVERED, STAGED or UNMEASURED as MEASURED.",
+    "Never called OpenTimestamps Bitcoin-confirmed; the card-root OTS sidecar state was not touched.",
+    "Never described model behaviour as a safety certification.",
+    "Never counted an internal purchase as revenue.",
+    "Did not claim to have unblocked any PR: three reverts were pushed and the PRs ended up CLOSED by another lane."
+  ]
+}

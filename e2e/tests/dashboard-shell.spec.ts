@@ -67,6 +67,11 @@ async function openTab(page: Page, id: string, trailingSlash = false) {
     .waitForLoadState("networkidle", { timeout: 15_000 })
     .catch(() => undefined);
   await page.waitForTimeout(400);
+  // The page and inline composer remain usable until the reader explicitly opens Ask.
+  if (id === "home") {
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Open Council of AI chat", exact: true })).toBeVisible();
+  }
 }
 
 async function expectColdDoor(page: Page, path: string, tab: string) {
@@ -110,7 +115,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes eight plainly named sections as direct /dashboard?tab= links", async ({
+test("sidebar exposes eight plainly named sections (no sov-* name) as direct /dashboard?tab= links", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -132,9 +137,11 @@ test("sidebar exposes eight plainly named sections as direct /dashboard?tab= lin
     "/dashboard?tab=board",
     "/dashboard?tab=connect",
     "/dashboard?tab=learn",
-    "/dashboard?tab=sovx",
+    "/dashboard?tab=staff",
     "/dashboard?tab=corrections",
   ]);
+  // Surface inspection, 12 Oct 2026: no sov-* label in the public nav; the pane stays reachable by link.
+  expect(await navigation.innerText()).not.toMatch(/sov/i);
   for (const h of hrefs) expect(h).toMatch(/^\/dashboard\?tab=[a-z0-9-]+$/);
   // "Check a result" section contains two panes: Check a result and Evidence pack. Evidence index
   // moved to "For developers" (tools audit, 6 Oct 2026): it is an API coverage index, not a check.
@@ -190,18 +197,16 @@ test("the canonical dashboard accepts its optional trailing slash", async ({
   }
 });
 
-test("every sidebar tab renders its own pane inside the shell, error-free", async ({
+test("every published workspace pane renders its own pane inside the shell, error-free", async ({
   page,
   isMobile,
 }) => {
-  test.setTimeout(240_000);
+  test.setTimeout(480_000);
   await openTab(page, "board");
   const { pageErrors, consoleErrors } = await collectErrors(page);
-  // Loop through the known-good set of tab ids. We don't enumerate the
-  // sidebar links here because the sidebar also carries legacy aliases
-  // and auth-required routes that do NOT render in the shell (the
-  // rail sends workbench to /login when signed out, but on a static
-  // server there is no auth backend, so the test would hang).
+  // Every public canonical pane gets its own mount check. Normalized aliases
+  // and the auth-required workbench are covered separately: they must not be
+  // mistaken for additional public panes or tested against a missing backend.
   const ids = [
     "home",
     "mine",
@@ -209,6 +214,7 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "play",
     "explore",
     "board",
+    "staff",
     "swift",
     "models",
     "measured",
@@ -225,6 +231,19 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "space",
     "products",
     "library",
+    "connect",
+    "route",
+    "corrections",
+    "claims",
+    "sovx",
+    "embed",
+    "console",
+    "leaderboard",
+    "terminal",
+    "evidence-index",
+    "archive",
+    "xrpl",
+    "state",
   ];
   expect(ids).toContain("board");
   for (const id of ids) {
@@ -243,6 +262,12 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
       await expect(page.getByText("Account overview and recent measurements", { exact: true })).toHaveCount(0);
     } else {
       await expect(pane, `${id}: its own pane is mounted`).toHaveCount(1);
+      if (id === "staff") {
+        await expect(
+          page.getByTestId("hitl-console"),
+          "staff: the human-review workflow is mounted",
+        ).toBeVisible();
+      }
     }
   }
   expect(pageErrors, "no uncaught exceptions across the tabs").toEqual([]);
@@ -380,9 +405,9 @@ test("one workspace keeps the composer and account access while a tool pane is o
     page.getByLabel("Open Council OS"),
     "no legacy overlay launcher over the shell",
   ).toHaveCount(0);
+  // Account access remains available through Sections while navigation starts minimized.
+  await page.getByRole("button", { name: "Open workspace navigation", exact: true }).click();
   if (isMobile) {
-    await page.getByRole("button", { name: "Open workspace navigation" }).click();
-    // The account menu is in the mobile drawer, not the hidden desktop sidebar.
     await expect(
       page.getByRole("dialog", { name: "Council OS sections" })
         .getByLabel("Open account and workspace menu"),
@@ -627,4 +652,73 @@ test("the 22-axis learning arena keeps coaching, practice and human review in on
     /How did the governance test measure\?/i,
   );
   await expect(page).toHaveURL(/tab=learn/);
+});
+
+test("a cold /assess door lands on the measured pane with the RAS booking link", async ({ page }) => {
+  await expectColdDoor(page, "/assess/", "measured");
+  const cta = page.locator('[data-testid="ras-booking-cta"]');
+  await expect(cta).toBeVisible({ timeout: 30_000 });
+  const href = (await cta.getAttribute("href")) || "";
+  expect(
+    href.startsWith("mailto:nicholas@csoai.org?subject=RAS%20booking%20request") ||
+      (/^https:\/\//.test(href) && !/stripe/i.test(href)),
+    href,
+  ).toBe(true);
+});
+
+test("workspace navigation starts minimized and remains usable across layout boundaries", async ({ page }, info) => {
+  test.skip(info.project.name !== "desktop", "Exercise responsive widths with the existing desktop project");
+  test.setTimeout(180_000);
+  for (const width of [639, 640, 641, 767, 768]) {
+    await page.setViewportSize({ width, height: 900 });
+    await openTab(page, "board");
+    const trigger = page.getByTestId("workspace-sections-toggle");
+    const navigation = page.getByRole("navigation", { name: "Workspace destinations", exact: true });
+    await expect(trigger, String(width)).toBeVisible();
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(navigation).toBeHidden();
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+    await trigger.focus();
+    await trigger.press("Enter");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(navigation).toBeVisible();
+    await expect(trigger).toHaveAttribute("aria-controls", await navigation.getAttribute("id") || "");
+    await navigation.locator('a[href="/dashboard?tab=verify"]').click();
+    await expect(page).toHaveURL(/tab=verify/);
+    if (width >= 768) {
+      // Desktop expansion survives tab changes; mobile selection dismisses the drawer.
+      await expect(navigation).toBeVisible();
+      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    } else {
+      await expect(navigation).toBeHidden();
+      await trigger.click();
+      await expect(navigation).toBeVisible();
+    }
+    await navigation.locator("a").first().focus();
+    await page.keyboard.press("Escape");
+    await expect(navigation).toBeHidden();
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(trigger).toBeFocused();
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("dashboard-shell")).toBeVisible({ timeout: 60_000 });
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(navigation).toBeHidden();
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow, String(width)).toBeLessThanOrEqual(1);
+  }
+});
+
+test("the home header carries a booking door to /assess/ within one click", async ({ page }) => {
+  await page.goto("/");
+  const desktop = page.locator('[data-testid="header-book-measurement"]');
+  const opener = page.getByRole("button", { name: "Open menu" });
+  if (await desktop.isVisible({ timeout: 30_000 }).catch(() => false)) {
+    await expect(desktop).toHaveAttribute("href", "/assess/");
+  } else {
+    await opener.click();
+    const mobile = page.locator('[data-testid="mobile-book-measurement"]');
+    await expect(mobile).toBeVisible();
+    await expect(mobile).toHaveAttribute("href", "/assess/");
+  }
 });
