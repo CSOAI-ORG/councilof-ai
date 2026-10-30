@@ -16,9 +16,11 @@ emits an **Ed25519‑signed attestation** you (or any auditor) can verify offlin
 > release this package until all three answer, so an install line that cannot work is never
 > published.
 >
-> `/api/a2a/route` signs its envelopes with the deployment's Layer-0 key. Until that key is
-> configured the route answers **503** and says so: an unsigned artefact is honest and a
-> fabricated signature is not. The gate and the verify path work regardless.
+> `/api/a2a/route` signs its envelopes with the deployment's Layer-0 key, whose public half is
+> published at `GET /api/a2a/key` and pinned in the estate's DID document as
+> `did:web:csoai.org#layer0-attestation-1`. If that key is ever absent the route answers **503**
+> and says so: an unsigned artefact is honest and a fabricated signature is not. The gate and the
+> verify path work regardless.
 >
 > ```
 > curl -s -o /dev/null -w '%{http_code}\n' -X POST https://councilof.ai/api/gate -d '{}'   # 200
