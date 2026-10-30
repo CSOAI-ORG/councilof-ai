@@ -1,12 +1,12 @@
 # Council of AI charter federation and working-group lab
 
-This package joins existing records without changing the constitutional charter, frozen hashes, authority service, GSPC grader or public deployment. It provides a validated source register, two local participation prototypes, and three read-only stdio MCP tools. It is a review candidate, not a staffed or deployed working-group service.
+This package connects the existing constitutional charter and frozen hashes to canonical working-group documents. It provides a validated source register, two public participation views, generated website/HF/Kaggle resources, and three read-only stdio MCP tools. Deployment receipts are separate from source acceptance; staffed operations and authenticated human decisions require genuine participants.
 
 ## What already exists
 
 The input charter has 22 articles. The frozen manifest has 417 identifiers across six instruments. The existing coverage report records 1 predicate, 12 related measures, 38 crosswalk-only records and 366 hash-only records. Original normalized legal-text bytes remain unresolved, including for records with related measurements. NIST AI RMF, ISO/IEC 42001 and OWASP are separately listed outside that frozen corpus. Do not describe this as all laws or all frameworks implemented.
 
-The separate working-group lane already defines seven forming groups and first tasks; no chairs or accepted members are inferred. The watchdog intake lane already produces a human-routing queue. This package consumes the former as a pinned input and complements the latter. Neither a source count nor a routing count is GSPC's measured sample size.
+The canonical working-group registry defines seven forming groups and first tasks; no chairs or accepted members are inferred. The watchdog intake lane already produces a human-routing queue. This package consumes the former as a pinned input and complements the latter. Neither a source count nor a routing count is GSPC's measured sample size.
 
 ## Frozen commitments, live evidence, reviewed change
 
@@ -25,7 +25,8 @@ The new draft tool binds the exact register and charter revision and rejects sta
 | --- | --- | --- |
 | Existing Council OS / Public Watchdog | Group directory, case entry, evidence links, corrections | Preferred canonical home. Reconcile current merged source and qualify authenticated case decisions. |
 | IETF process / Datatracker | Stable draft revisions, milestones, chair decisions, issue history | Borrow the workflow. Full Datatracker deployment adds IETF-specific operations; defer unless required. |
-| Discourse | Forum, categories, moderation, subscriptions | Best forum candidate for a staffed community. Requires sign-in mapping, privacy boundaries, moderators, PostgreSQL/Redis, backup and upgrade ownership. Not installed here. |
+| Existing GitHub Discussions | Public discussion, maintained revision links and email alternative | First-release forum. Public discussion is separate from private reports and formal decisions. |
+| Discourse | Forum, categories, moderation, subscriptions | Optional later service if community need justifies it. Requires sign-in mapping, privacy boundaries, moderators, PostgreSQL/Redis, backup and upgrade ownership. Not installed here. |
 | Decidim | Public consultation and participatory processes | Consider for a sustained citizen assembly. More operational weight than the immediate need. Not installed here. |
 | OSCAL | Catalog, profile, implementation and assessment separation | Best control-data model to map toward. This JSON is not an OSCAL-valid export yet. |
 | Croissant | Dataset discovery and loading metadata | Generate descriptors for approved public evidence datasets; licence and privacy checks precede HF/Kaggle export. |
@@ -62,7 +63,7 @@ Shared operations still require a case/document state machine; reviewer identiti
 
 One monorepo source should generate website projections, plugin formats, MCP descriptors and evidence exports. Preserve the existing `scripts/harness-x/render.mjs` and distribution registry. Do not hand-edit parallel platform manifests.
 
-HF and Kaggle receive only approved public dataset snapshots, dataset cards, source licences, dates, digests and Croissant descriptors where supported. N-sites receive the same immutable public release plus a current-revision pointer; private case content stays private. Every receiving platform needs its own validation. This batch publishes to none of these channels.
+HF and Kaggle receive only approved public dataset snapshots, dataset cards, source licences, dates, digests and Croissant descriptors where supported. N-sites receive the same immutable public release plus a current-revision pointer; private case content stays private. Every receiving platform needs its own validation. Generated outputs and receiving-host publication/readback are distinct evidence stages.
 
 The local MCP server supports protocol **2025-06-18** only, over stdio. Tools: `charter_sources`, `charter_provision`, `charter_prepare_change`. It performs no network calls and exposes no write, approval, signing or execution tools. It is not registered in the user's global client configuration.
 
@@ -71,8 +72,8 @@ The local MCP server supports protocol **2025-06-18** only, over stdio. Tools: `
 From this package on M4:
 
 ```sh
-python3 build.py --root ../.. --groups inputs/working-groups.snapshot.json
-python3 -B -m unittest -v test_register
+python3 build.py --root ../..
+python3 -B -m unittest -v test_register test_participation
 python3 -B mcp_server.py
 ```
 
@@ -80,13 +81,14 @@ The dedicated `charter-federation` CI workflow runs the integrity and read-only 
 
 Open `tracker.html` or `discussion.html` directly for the local prototype. The generated register records exact input hashes; source captures are marked as scraped Markdown, not publisher-original bytes or independent attestations. Test receipts distinguish this run from earlier suites and from other lanes.
 
-## Release sequence
+## Release and operation
 
-1. Review this package alongside the existing working-group and authenticated-review lanes.
-2. Recover frozen source bytes or explicitly version replacement captures; qualify scoped mappings without changing historical roots.
-3. Select and staff the forum/case operations, including privacy and independent appeal.
-4. Qualify one real end-to-end workflow with a genuine operator and independent effect readback.
-5. Integrate the chosen view and read-only tools through existing renderers; run receiving-client and accessibility acceptance.
-6. Release through protected master/GitHub Actions and verify public readback. Do not announce complete legal coverage, universal platform support or a fully staffed council from this package.
+The ordered plan in `docs/governance/charter-working-groups-completion.md` separates source integration, qualification, protected release, destination readback, genuine human operation and historical source recovery. Public reference tools can ship before all historical texts are recovered because unresolved states stay explicit. Do not announce complete legal coverage, universal platform support or a fully staffed council from this package.
 
-The groups snapshot is a build fixture copied from the separate working-group candidate, not a second live roster. Its original content digest is in register.json. When that lane merges, use its canonical file as the input.
+## Integrated completion path
+
+The canonical group registry and document tracker now supply review destinations. Drafts bind both the charter register and tracker input digest, retain the document ID/version, and point to the existing public forum and email participation route. A browser route or downloaded draft does not submit a review. The original group snapshot remains historical fixture evidence and is no longer the default build input.
+
+`scripts/harness-x/render.mjs` generates `/charter-register/`, the HF static kit, the offline Kaggle notebook, and local MCP configuration from the same validated package. Do not hand-edit those projections. Each external destination requires its own publication/readback receipt. The existing GitHub Discussions forum is the first-release choice; Discourse is an optional later replacement if staffing and need justify it.
+
+See `docs/governance/charter-working-groups-completion.md` and `council-os/charter-completion-plan.json` for the ordered delivery plan, dependencies, acceptance criteria and human operating requirements.

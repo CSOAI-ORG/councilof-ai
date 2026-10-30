@@ -18,8 +18,12 @@
         "sha256": "3825776722f2145ec326a34be1605b86e4e1c4b4e5b4e15ab5014a6c9889de50"
       },
       "groups": {
-        "path": "candidate:council-os/working-groups.json",
+        "path": "council-os/working-groups.json",
         "sha256": "7c74712ad0f7d7c62375c3063a9ba67ef7b2ea792012c29c3f5ea33a1a3cfce8"
+      },
+      "tracker": {
+        "path": "council-os/working-group-tracker.json",
+        "sha256": "fd33839f710e175213ce3b1bc9bc3b24a95b7c653df0df024f4d07c42cbe5d9a"
       }
     },
     "frozen_corpus": {
@@ -5381,6 +5385,283 @@
       }
     ],
     "group_scope": "Organisational coverage proposal only. No appointments, operating service, measurement state or regulator endorsement is asserted.",
+    "working_group_tracker": {
+      "schema": "csoai.working-group-tracker/1",
+      "asOf": "2026-10-30",
+      "publication": "candidate",
+      "scope": "Public work proposals. No adopted standard, accepted reviewer or execution authority is asserted.",
+      "forum": "https://github.com/CSOAI-ORG/councilof-ai/discussions",
+      "documents": [
+        {
+          "id": "COAI-WG-001",
+          "groupId": "governance",
+          "title": "Review a public Council claim",
+          "version": 1,
+          "status": "draft",
+          "summary": "Review one Council self-claim and produce a dated correction or a reasoned no-change record.",
+          "editor": null,
+          "reviewers": [],
+          "decision": null,
+          "discussionUrl": null,
+          "source": {
+            "commit": "95d87beaf299562edca685759c2430b9d259bf04",
+            "path": "council-os/working-groups.json"
+          },
+          "deliverables": [
+            "Exact claim, source URL and capture date.",
+            "Evidence for a correction or a reasoned no-change outcome.",
+            "Scope, unresolved questions and proposed public wording."
+          ],
+          "history": [
+            {
+              "version": 1,
+              "date": "2026-10-30",
+              "event": "Draft registered for recruitment and review; not adopted.",
+              "actorKind": "automation"
+            }
+          ]
+        },
+        {
+          "id": "COAI-WG-002",
+          "groupId": "agent-control",
+          "title": "Measure delegation revocation and halt latency",
+          "version": 1,
+          "status": "draft",
+          "summary": "Replay four local revocation controls and challenge how issue, last-action and quiescence timestamps are interpreted.",
+          "editor": null,
+          "reviewers": [],
+          "decision": null,
+          "discussionUrl": null,
+          "source": {
+            "commit": "19ccbd406714f6c2b9e11e9f25fb14aafc478fba",
+            "path": "docs/governance/revocation-latency-trial.md"
+          },
+          "deliverables": [
+            "Exact source commit, Node version and retained raw JSON with its digest.",
+            "Expected versus observed outcomes for all four controls, including failures and unknowns.",
+            "One challenged assumption or altered trace, with its result and limits."
+          ],
+          "history": [
+            {
+              "version": 1,
+              "date": "2026-10-30",
+              "event": "Draft registered for recruitment and review; not adopted.",
+              "actorKind": "automation"
+            }
+          ]
+        },
+        {
+          "id": "COAI-WG-003",
+          "groupId": "evaluation",
+          "title": "Reproduce a published measurement",
+          "version": 1,
+          "status": "draft",
+          "summary": "Reproduce one published result from its exact source revision and record any missing inputs.",
+          "editor": null,
+          "reviewers": [],
+          "decision": null,
+          "discussionUrl": null,
+          "source": {
+            "commit": "95d87beaf299562edca685759c2430b9d259bf04",
+            "path": "council-os/working-groups.json"
+          },
+          "deliverables": [
+            "Published result, exact revision, inputs and replay command.",
+            "Observed versus published result, with raw output or missing inputs.",
+            "Reproduction limits and a correction or reasoned no-change recommendation."
+          ],
+          "history": [
+            {
+              "version": 1,
+              "date": "2026-10-30",
+              "event": "Draft registered for recruitment and review; not adopted.",
+              "actorKind": "automation"
+            }
+          ]
+        },
+        {
+          "id": "COAI-WG-004",
+          "groupId": "provenance",
+          "title": "Trace a claim to its evidence",
+          "version": 1,
+          "status": "draft",
+          "summary": "Trace one public claim from source capture through its signed record and verification result.",
+          "editor": null,
+          "reviewers": [],
+          "decision": null,
+          "discussionUrl": null,
+          "source": {
+            "commit": "95d87beaf299562edca685759c2430b9d259bf04",
+            "path": "council-os/working-groups.json"
+          },
+          "deliverables": [
+            "Claim URL and the source-to-record evidence chain.",
+            "Verification procedure, key or digest references, and observed output.",
+            "Missing links, licence limits and what verification does not establish."
+          ],
+          "history": [
+            {
+              "version": 1,
+              "date": "2026-10-30",
+              "event": "Draft registered for recruitment and review; not adopted.",
+              "actorKind": "automation"
+            }
+          ]
+        },
+        {
+          "id": "COAI-WG-005",
+          "groupId": "runtime",
+          "title": "Compare a tool contract with execution",
+          "version": 1,
+          "status": "draft",
+          "summary": "Compare a declared tool contract with one bounded execution trace and its refusal paths.",
+          "editor": null,
+          "reviewers": [],
+          "decision": null,
+          "discussionUrl": null,
+          "source": {
+            "commit": "95d87beaf299562edca685759c2430b9d259bf04",
+            "path": "council-os/working-groups.json"
+          },
+          "deliverables": [
+            "Declared tool contract and exact implementation revision.",
+            "One permitted local trace plus a refusal or failure control.",
+            "Differences between declared and observed behaviour, including unknown effects."
+          ],
+          "history": [
+            {
+              "version": 1,
+              "date": "2026-10-30",
+              "event": "Draft registered for recruitment and review; not adopted.",
+              "actorKind": "automation"
+            }
+          ]
+        },
+        {
+          "id": "COAI-WG-006",
+          "groupId": "human-impact",
+          "title": "Review a synthetic care scenario",
+          "version": 1,
+          "status": "draft",
+          "summary": "Review one synthetic care scenario with a domain specialist and an affected-user representative.",
+          "editor": null,
+          "reviewers": [],
+          "decision": null,
+          "discussionUrl": null,
+          "source": {
+            "commit": "95d87beaf299562edca685759c2430b9d259bf04",
+            "path": "council-os/working-groups.json"
+          },
+          "deliverables": [
+            "A synthetic scenario, affected people and relevant domain boundaries.",
+            "Domain-specialist and affected-user observations, attributed with permission.",
+            "Accessibility concerns, disagreements and changes needed before any real use."
+          ],
+          "history": [
+            {
+              "version": 1,
+              "date": "2026-10-30",
+              "event": "Draft registered for recruitment and review; not adopted.",
+              "actorKind": "automation"
+            }
+          ]
+        },
+        {
+          "id": "COAI-WG-007",
+          "groupId": "economy",
+          "title": "Audit a labour or reserve observation",
+          "version": 1,
+          "status": "draft",
+          "summary": "Audit the provenance, date and limitations of one published labour or reserve observation.",
+          "editor": null,
+          "reviewers": [],
+          "decision": null,
+          "discussionUrl": null,
+          "source": {
+            "commit": "95d87beaf299562edca685759c2430b9d259bf04",
+            "path": "council-os/working-groups.json"
+          },
+          "deliverables": [
+            "Observation URL, source date, population and method.",
+            "A check of one denominator, transformation or source-to-indicator step.",
+            "Uncertainty, excluded populations and limits on financial or labour interpretation."
+          ],
+          "history": [
+            {
+              "version": 1,
+              "date": "2026-10-30",
+              "event": "Draft registered for recruitment and review; not adopted.",
+              "actorKind": "automation"
+            }
+          ]
+        }
+      ]
+    },
+    "review_routes": [
+      {
+        "group_id": "governance",
+        "document_id": "COAI-WG-001",
+        "document_version": 1,
+        "pinned_source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/95d87beaf299562edca685759c2430b9d259bf04/council-os/working-groups.json",
+        "review_email_url": "https://councilof.ai/contact/?arm=working-group&group=governance&stage=review",
+        "forum_url": "https://github.com/CSOAI-ORG/councilof-ai/discussions",
+        "tracker_url": "https://councilof.ai/working-groups/"
+      },
+      {
+        "group_id": "agent-control",
+        "document_id": "COAI-WG-002",
+        "document_version": 1,
+        "pinned_source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/19ccbd406714f6c2b9e11e9f25fb14aafc478fba/docs/governance/revocation-latency-trial.md",
+        "review_email_url": "https://councilof.ai/contact/?arm=working-group&group=agent-control&stage=review",
+        "forum_url": "https://github.com/CSOAI-ORG/councilof-ai/discussions",
+        "tracker_url": "https://councilof.ai/working-groups/"
+      },
+      {
+        "group_id": "evaluation",
+        "document_id": "COAI-WG-003",
+        "document_version": 1,
+        "pinned_source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/95d87beaf299562edca685759c2430b9d259bf04/council-os/working-groups.json",
+        "review_email_url": "https://councilof.ai/contact/?arm=working-group&group=evaluation&stage=review",
+        "forum_url": "https://github.com/CSOAI-ORG/councilof-ai/discussions",
+        "tracker_url": "https://councilof.ai/working-groups/"
+      },
+      {
+        "group_id": "provenance",
+        "document_id": "COAI-WG-004",
+        "document_version": 1,
+        "pinned_source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/95d87beaf299562edca685759c2430b9d259bf04/council-os/working-groups.json",
+        "review_email_url": "https://councilof.ai/contact/?arm=working-group&group=provenance&stage=review",
+        "forum_url": "https://github.com/CSOAI-ORG/councilof-ai/discussions",
+        "tracker_url": "https://councilof.ai/working-groups/"
+      },
+      {
+        "group_id": "runtime",
+        "document_id": "COAI-WG-005",
+        "document_version": 1,
+        "pinned_source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/95d87beaf299562edca685759c2430b9d259bf04/council-os/working-groups.json",
+        "review_email_url": "https://councilof.ai/contact/?arm=working-group&group=runtime&stage=review",
+        "forum_url": "https://github.com/CSOAI-ORG/councilof-ai/discussions",
+        "tracker_url": "https://councilof.ai/working-groups/"
+      },
+      {
+        "group_id": "human-impact",
+        "document_id": "COAI-WG-006",
+        "document_version": 1,
+        "pinned_source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/95d87beaf299562edca685759c2430b9d259bf04/council-os/working-groups.json",
+        "review_email_url": "https://councilof.ai/contact/?arm=working-group&group=human-impact&stage=review",
+        "forum_url": "https://github.com/CSOAI-ORG/councilof-ai/discussions",
+        "tracker_url": "https://councilof.ai/working-groups/"
+      },
+      {
+        "group_id": "economy",
+        "document_id": "COAI-WG-007",
+        "document_version": 1,
+        "pinned_source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/95d87beaf299562edca685759c2430b9d259bf04/council-os/working-groups.json",
+        "review_email_url": "https://councilof.ai/contact/?arm=working-group&group=economy&stage=review",
+        "forum_url": "https://github.com/CSOAI-ORG/councilof-ai/discussions",
+        "tracker_url": "https://councilof.ai/working-groups/"
+      }
+    ],
     "limits": [
       "Not an exhaustive catalogue of law or charters.",
       "Source-text recovery, applicability review and adoption remain distinct.",
@@ -5388,5 +5669,5 @@
       "No production forum, authentication or execution authority is created."
     ]
   },
-  "sha256": "2726f720802cb8d04e5438a0af8bc0a3814b95d658b3111a44451adc8d1b9f61"
+  "sha256": "b782b6736a06408c00e9405a47cdeb376c750b2fe89a948e4135ed6aaff134e6"
 }

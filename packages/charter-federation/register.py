@@ -3,6 +3,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from participation import review_routes
 
 
 def canonical(value):
@@ -18,6 +19,8 @@ def validate(data):
         raise ValueError('Unsupported register schema')
     if data.get('grants_authority') is not False:
         raise ValueError('A register cannot grant authority')
+    if data.get('review_routes') != review_routes(data['groups'], data['working_group_tracker']):
+        raise ValueError('Review routes do not match the canonical group documents')
     for kind in ('sources', 'provisions', 'groups'):
         ids = [r['id'] for r in data[kind]]
         if len(ids) != len(set(ids)):
@@ -86,6 +89,8 @@ def propose(data, source_id, expected_register_sha256, rationale):
             'source_url': source['url'], 'register_sha256': digest(data),
             'charter_sha256': data['charter_sha256'], 'rationale': rationale.strip(),
             'candidate_articles': source['candidate_articles'], 'state': 'DRAFT_NOT_SUBMITTED',
+            'tracker_sha256': data['inputs']['tracker']['sha256'],
+            'review_routes': [r for r in data['review_routes'] if r['group_id'] in source['groups']],
             'required_reviews': ['source_and_licence', 'scope_and_applicability', 'conflicts_and_affected_people', 'authorized_human_adoption'],
             'human_approval': False, 'may_execute': False, 'changes_live_policy': False}
     return {'proposal': body, 'sha256': digest(body)}

@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - "packages/charter-federation/**"
+      - "scripts/charter-federation/**"
+      - "council-os/working-groups.json"
+      - "council-os/working-group-tracker.json"
       - "public/.well-known/constitutional-harness.json"
       - "public/interop/frozen-provision-hashes.json"
       - "public/mechanism/coverage.json"
@@ -12,6 +15,9 @@ on:
     branches: [master]
     paths:
       - "packages/charter-federation/**"
+      - "scripts/charter-federation/**"
+      - "council-os/working-groups.json"
+      - "council-os/working-group-tracker.json"
       - "public/.well-known/constitutional-harness.json"
       - "public/interop/frozen-provision-hashes.json"
       - "public/mechanism/coverage.json"
@@ -24,7 +30,7 @@ permissions:
 jobs:
   integrity:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: packages/charter-federation
@@ -36,8 +42,21 @@ jobs:
         with:
           python-version: "3.12"
       - name: Verify register and read-only MCP contracts
-        run: python3 -B -m unittest -v test_register
+        run: python3 -B -m unittest -v test_register test_participation
       - name: Rebuild from canonical inputs and require identical generated files
         run: |
-          python3 -B build.py --root ../.. --groups inputs/working-groups.snapshot.json
+          python3 -B build.py --root ../..
           git diff --exit-code -- register.json tracker.html discussion.html build-receipt.json
+      - name: Verify public export parity and stale-source refusals
+        working-directory: .
+        run: node --test scripts/charter-federation/render-kit.node-test.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install locked client SDK dependencies without lifecycle scripts
+        working-directory: .
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Qualify the charter stdio server through the real MCP client SDK
+        working-directory: .
+        run: node --test scripts/charter-federation/mcp-sdk.node-test.mjs

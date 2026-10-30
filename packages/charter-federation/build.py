@@ -3,8 +3,10 @@ import argparse
 import collections
 import hashlib
 import json
+import html
 from pathlib import Path
 from register import canonical, digest, validate
+from participation import review_routes
 
 HERE = Path(__file__).resolve().parent
 
@@ -19,6 +21,7 @@ def build(root, groups_path):
         'frozen': 'public/interop/frozen-provision-hashes.json',
         'coverage': 'public/mechanism/coverage.json'}.items()}
     paths['groups'] = groups_path
+    paths['tracker'] = root / 'council-os/working-group-tracker.json'
     docs = {k: json.loads(p.read_text()) for k, p in paths.items()}
     manifest, coverage = docs['frozen'], docs['coverage']
     mapped = {p['provision_id']: p for p in coverage['provisions_touched']}
@@ -39,10 +42,12 @@ def build(root, groups_path):
     sources = json.loads((HERE / 'sources.json').read_text())
     data = {'schema': 'council.charter-federation/0.1', 'as_of': '2026-10-30',
             'grants_authority': False, 'charter_sha256': sha(paths['charter']),
-            'inputs': {k: {'path': 'candidate:council-os/working-groups.json' if k == 'groups' else str(p.relative_to(root)), 'sha256': sha(p)} for k, p in paths.items()},
+            'inputs': {k: {'path': str(p.relative_to(root)), 'sha256': sha(p)} for k, p in paths.items()},
             'frozen_corpus': {'root': manifest['corpus_root'], 'count': len(rows), 'source_bytes': 'UNRESOLVED', 'coverage': counts},
             'articles': [{'article': a['article'], 'title': a['title'].replace('SovSpace', 'Dependency graph')} for a in docs['charter']['articles']], 'provisions': rows, 'sources': sources,
             'groups': docs['groups']['groups'], 'group_scope': docs['groups']['note'],
+            'working_group_tracker': docs['tracker'],
+            'review_routes': review_routes(docs['groups']['groups'], docs['tracker']),
             'limits': ['Not an exhaustive catalogue of law or charters.', 'Source-text recovery, applicability review and adoption remain distinct.',
                        'Working-group roles are forming and unappointed.', 'No production forum, authentication or execution authority is created.']}
     validate(data)
@@ -51,9 +56,12 @@ def build(root, groups_path):
     template = (HERE / 'preview.template.html').read_text()
     safe_data = canonical(envelope).replace('<', '\\u003c').replace('\u2028', '\\u2028').replace('\u2029', '\\u2029')
     script = (HERE / 'preview.js').read_text()
+    fallback = '<noscript><section class="corpus"><h2>Read sources without JavaScript</h2><p>All sources are references requiring human review. Interactive search and local drafts need JavaScript.</p><ul>' + ''.join(
+        '<li><a href="' + html.escape(s['url'], quote=True) + '">' + html.escape(s['name']) + '</a> — ' + html.escape(s['learn']) + '<p>' + html.escape(s['licence']) + '</p></li>' for s in sources
+    ) + '</ul></section></noscript>'
     for mode in ('tracker', 'discussion'):
-        html = template.replace('@@MODE@@', mode).replace('@@REGISTER@@', safe_data).replace('@@SCRIPT@@', script)
-        (HERE / (mode + '.html')).write_text(html)
+        rendered = template.replace('@@MODE@@', mode).replace('@@REGISTER@@', safe_data).replace('@@SCRIPT@@', script).replace('@@NOJS@@', fallback)
+        (HERE / (mode + '.html')).write_text(rendered)
     receipt = {'schema': 'council.charter-federation-build/0.1', 'register_sha256': envelope['sha256'],
                'sources': len(sources), 'provisions': len(rows), 'articles': len(data['articles']),
                'groups': len(data['groups']), 'coverage': counts,
@@ -65,6 +73,6 @@ def build(root, groups_path):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--root', type=Path, required=True)
-    ap.add_argument('--groups', type=Path, required=True)
+    ap.add_argument('--groups', type=Path)
     args = ap.parse_args()
-    build(args.root.resolve(), args.groups.resolve())
+    build(args.root.resolve(), args.groups.resolve() if args.groups else args.root.resolve() / 'council-os/working-groups.json')

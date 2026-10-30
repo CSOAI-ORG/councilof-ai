@@ -1,58 +1,10 @@
 {
-  "state": "LOCAL_M4_PROTOTYPES_AND_READ_ONLY_MCP_ACCEPTED",
-  "observed_at": "2026-10-30T06:18:22.043Z",
-  "base_commit": "0177ad369a059361f89672966c2347132880d916",
-  "tests": {
-    "methods": 12,
-    "host": "M4",
-    "log_sha256": "cb65b9686e02c239eb443a70898409db65ffd25ef691be0b392fa9875e4fd5d7"
-  },
-  "browser": {
-    "passed": true,
-    "observed_at": "2026-10-30T06:18:22.043Z",
-    "host": "M4",
-    "browser": "Chrome via Playwright",
-    "scenarios": [
-      "tracker:inventory-and-mode",
-      "tracker:search-and-open",
-      "tracker:filters-and-empty",
-      "tracker:note-reload",
-      "tracker:bound-draft-download",
-      "tracker:keyboard-provision-lookup",
-      "tracker:validation-error",
-      "tracker:responsive-and-large-text",
-      "discussion:inventory-and-mode",
-      "discussion:search-and-open",
-      "discussion:filters-and-empty",
-      "discussion:note-reload",
-      "discussion:bound-draft-download",
-      "discussion:keyboard-provision-lookup",
-      "discussion:validation-error",
-      "discussion:responsive-and-large-text",
-      "blocked-storage-explicit-recovery"
-    ],
-    "scenario_count": 17,
-    "viewports": [
-      1440,
-      390,
-      320
-    ],
-    "large_text_px": 32,
-    "page_errors": [],
-    "external_requests": 0,
-    "post_requests": 0,
-    "register_unchanged": true,
-    "register_file_sha256": "9998f11a9e0829f2b25e34dd2380f3d461324ffc7b8ba667489415741c1547d4",
-    "scope": "Two local prototype journeys, not representative-user, screen-reader, WCAG-conformance or deployed forum acceptance."
-  },
-  "visual_inspection": {
-    "tracker_desktop": "READ_AND_INSPECTED",
-    "discussion_mobile": "READ_AND_INSPECTED",
-    "screenshots_exported": false
-  },
+  "state": "INTEGRATED_SOURCE_ACCEPTED_FOR_PROTECTED_RELEASE",
+  "observed_at": "2026-10-30T08:32:43.628122+00:00",
+  "combined_base_commit": "22d340475d356fa6f3f38080011fb220727f8e69",
   "source_receipt": {
     "schema": "council.charter-federation-build/0.1",
-    "register_sha256": "2726f720802cb8d04e5438a0af8bc0a3814b95d658b3111a44451adc8d1b9f61",
+    "register_sha256": "b782b6736a06408c00e9405a47cdeb376c750b2fe89a948e4135ed6aaff134e6",
     "sources": 16,
     "provisions": 417,
     "articles": 22,
@@ -64,24 +16,97 @@
       "PREDICATE": 1
     },
     "generated": {
-      "register.json": "9998f11a9e0829f2b25e34dd2380f3d461324ffc7b8ba667489415741c1547d4",
-      "tracker.html": "7b66de0130343b92ed9cd066825d3b60c455a9f409ac476124ad205710ce43a7",
-      "discussion.html": "d84684ed9c85b47856b26002cfef0e591808d1a72dd6c2efb5f23a8b730b4ec7"
+      "register.json": "81dbcb8469baad3f4e8b99ce606a6a61ae537d09430910f1d3f0f115db3a3b78",
+      "tracker.html": "d7f344ab32ebcae353187794ea75c07d3eabcb1ddf43e691608fe2830f6b48dc",
+      "discussion.html": "c76983edd9b629d5aa3ca689567c598c593f96e87b755fee333b4efb4ff7fdfa"
     }
   },
-  "deployed_publicly": false,
-  "production_forum_installed": false,
-  "human_appointments_created": 0,
-  "external_messages_sent": 0,
-  "model_requests": 0,
-  "browser_runner_exit_code": 0,
   "reproducibility": {
     "passed": true,
+    "observed_at": "2026-10-30T08:32:43.626889+00:00",
     "generated_bytes_identical": {
-      "register.json": "9998f11a9e0829f2b25e34dd2380f3d461324ffc7b8ba667489415741c1547d4",
-      "tracker.html": "7b66de0130343b92ed9cd066825d3b60c455a9f409ac476124ad205710ce43a7",
-      "discussion.html": "d84684ed9c85b47856b26002cfef0e591808d1a72dd6c2efb5f23a8b730b4ec7"
+      "register.json": "81dbcb8469baad3f4e8b99ce606a6a61ae537d09430910f1d3f0f115db3a3b78",
+      "tracker.html": "d7f344ab32ebcae353187794ea75c07d3eabcb1ddf43e691608fe2830f6b48dc",
+      "discussion.html": "c76983edd9b629d5aa3ca689567c598c593f96e87b755fee333b4efb4ff7fdfa",
+      "build-receipt.json": "b90dc44a5a7105e45335849c853d79156542b8c74d79e9a840efe0263b0aceff"
     },
-    "input": "inputs/working-groups.snapshot.json"
-  }
+    "inputs": [
+      "council-os/working-groups.json",
+      "council-os/working-group-tracker.json"
+    ],
+    "command": "python3 -B build.py --root ../.."
+  },
+  "browser": {
+    "passed": true,
+    "observed_at": "2026-10-30T08:23:27.774Z",
+    "host": "M4",
+    "browser": "Chrome via Playwright",
+    "scenarios": [
+      "tracker:inventory-and-mode",
+      "tracker:search-and-open",
+      "tracker:filters-and-empty",
+      "tracker:note-reload",
+      "tracker:bound-draft-download",
+      "tracker:revision-bound-working-group-handoff",
+      "tracker:keyboard-provision-lookup",
+      "tracker:validation-error",
+      "tracker:automated-accessibility",
+      "tracker:responsive-and-large-text",
+      "discussion:inventory-and-mode",
+      "discussion:search-and-open",
+      "discussion:filters-and-empty",
+      "discussion:note-reload",
+      "discussion:bound-draft-download",
+      "discussion:revision-bound-working-group-handoff",
+      "discussion:keyboard-provision-lookup",
+      "discussion:validation-error",
+      "discussion:automated-accessibility",
+      "discussion:responsive-and-large-text",
+      "blocked-storage-explicit-recovery",
+      "all-sources-readable-without-javascript"
+    ],
+    "scenario_count": 22,
+    "viewports": [
+      1440,
+      390,
+      320
+    ],
+    "large_text_px": 32,
+    "page_errors": [],
+    "axe_violations": [],
+    "external_requests": 0,
+    "post_requests": 0,
+    "register_unchanged": true,
+    "register_file_sha256": "81dbcb8469baad3f4e8b99ce606a6a61ae537d09430910f1d3f0f115db3a3b78",
+    "preview_source": "public/charter-register",
+    "scope": "Generated public views and participation handoff, not representative-user, screen-reader, WCAG-conformance or deployed forum acceptance."
+  },
+  "tests": {
+    "python_methods": 18,
+    "exporter_node_tests": 4,
+    "real_mcp_sdk_tests": 1,
+    "working_group_core_tests": 9,
+    "counts_are_separate_and_must_not_be_summed": true
+  },
+  "logs": {
+    "python.log": "c4386eb212b4a3ac5b3441d3f488dbfa0fcb2858bde0f9f53d9c2fa096b7a7a1",
+    "export.log": "3005cc607e71678302fbc005e34c0777ab6bd695d33d5ffc696980919cf1c5db",
+    "mcp-sdk.log": "d109a7f12b3c769c20cc1b6cdbbfc155b8ada3df45c8437e1c5f6e81b3af37c7",
+    "wg-core.log": "d50f2c2494a5f00b9c6ffa0a5c9ff84a43b02df8fb9d11cbfa5803ce702cbbee",
+    "render-check.log": "12b2d15b83531bb37f1e2d84d28cac887b3e1379308bbad4460cbcb8d934dbeb"
+  },
+  "additional_receipts": [
+    "receipts/completion-20261030/working-groups-browser.json",
+    "receipts/completion-20261030/contributors-browser.json",
+    "receipts/completion-20261030/notebook-replay.json"
+  ],
+  "visual_inspection": {
+    "tracker_desktop": "READ_AND_INSPECTED",
+    "discussion_mobile": "READ_AND_INSPECTED",
+    "screenshots_exported": false
+  },
+  "public_release": "Not asserted by source-acceptance receipt; requires protected release and hosted readback.",
+  "human_appointments_created": 0,
+  "external_messages_sent": 0,
+  "model_requests": 0
 }
