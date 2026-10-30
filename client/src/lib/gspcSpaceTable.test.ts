@@ -37,8 +37,8 @@ describe("gspc-board Space is CSOAI-GSPC", () => {
     expect(js).toContain("Measured floor");
     expect(js).toContain("per_model");
     expect(js).toContain("data-pillar");
-    expect(readme).toContain("CSOAI-GSPC");
-    expect(readme).toContain("A rank is never sold");
+    expect(readme).toContain("GSPC | Council of AI");
+    expect(readme).toContain("Payment cannot buy a favourable result or rank");
   });
 
   it("keeps the published-record depth, not a thinner stub", () => {
@@ -64,13 +64,13 @@ describe("gspc-board Space is CSOAI-GSPC", () => {
   it("reads current populations without freezing stale queue or measurement counts", () => {
     expect(blob).toContain("CSOAI-GSPC measures AI health");
     expect(blob).toContain("signed snapshot");
-    expect(blob).toContain("3,032,028");
+    expect(readme).toContain("Listing a model in a census is discovery, not measurement");
     expect(js).toContain("that census graded none");
     expect(js).toContain("census-manifest.json");
     expect(js).toContain("Published measured cells");
     expect(js).toContain("Third-party models");
     expect(blob).toContain("It is not the Council fleet");
-    expect(readme).toContain("Do not freeze their counts");
+    expect(readme).toContain("Current counts come from those responses, not a number frozen in this card");
     expect(blob).not.toContain("2,410");
     expect(blob).not.toContain("Fifteen axes");
     expect(blob).not.toContain("Seven slots");
