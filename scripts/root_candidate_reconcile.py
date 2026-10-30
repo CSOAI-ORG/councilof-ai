@@ -18,6 +18,16 @@ so the ONE public root had not advanced for over nine hours. Two faults, both he
      2026-10-26T01:48:57Z appeared 0 times in llms.txt, and the candidate could not pass the
      gate and could not merge. Here the order is manifest first, views second, always.
 
+  3. A STAMPED ARTEFACT CONFLICTED WITH MASTER AND FAILED CLOSED. public/interop/
+     sbom-councilof-ai.json is STAMPED: it has a sibling public/interop/sbom-councilof-ai.json.ots
+     that proves those exact bytes. On 2026-10-29 master re-stamped it (#3614) while the
+     candidate was parked holding its own regenerated copy, so the merge died on that ONE path
+     and the candidate could not reconcile at all. The rule below resolves it: when master
+     carries a proof for a path, master's bytes AND master's proof win, as a pair. The candidate
+     cannot hold a valid proof for its own bytes - a proof is minted against the exact bytes it
+     proves, and the candidate does not mint proofs. So the candidate's copy of a re-stamped
+     artefact is stale, and its copy of the proof is stale with it.
+
     python3 scripts/root_candidate_reconcile.py --selftest   # proves each failure goes red
     python3 scripts/root_candidate_reconcile.py               # reconcile the checked-out candidate
 
@@ -40,6 +50,11 @@ DERIVED_VIEWS = (
     "public/llms.txt",
     "public/llms-full.txt",
 )
+
+# A stamped artefact is a file with a sibling OpenTimestamps proof. For a derived view the
+# GENERATOR decides the bytes; for a stamped artefact the PROOF decides them, and the only
+# proof that exists for master's bytes is the one that sits beside them on master.
+STAMPED_SUFFIX = ".ots"
 
 # The manifest is generated from the .ots files in the tree; the views quote it. This order is
 # the whole point of the second fault above, so it is asserted rather than assumed.
@@ -70,6 +85,11 @@ def unmerged_paths(repo: Path) -> list[str]:
 
 def is_derived(path: str) -> bool:
     return path in DERIVED_VIEWS
+
+
+def has_path(repo: Path, ref: str, path: str) -> bool:
+    """Whether `path` exists in `ref`'s tree. A path that is not there is False, not an error."""
+    return git(repo, "cat-file", "-e", f"{ref}:{path}", check=False).returncode == 0
 
 
 def rebuild_derived_views(repo: Path, builder: list[str], generator: list[str]) -> list[str]:
@@ -126,14 +146,42 @@ def reconcile(
                 "merge failed without a conflict to resolve: "
                 f"{merge.stderr.strip() or merge.stdout.strip()}")
         conflicted = unmerged_paths(repo)
-        real = [p for p in conflicted if not is_derived(p)]
+        master_ref = f"{remote}/{branch}"
+        # A stamped artefact resolves to MASTER's bytes and MASTER's proof, as a pair.
+        #
+        # The candidate cannot hold a valid proof for its own bytes: a proof is minted
+        # against the exact bytes it proves, and the candidate does not mint proofs. So
+        # when master carries a proof for a path, the candidate's copy of that path is
+        # stale, and its copy of the proof is stale with it. Measured 2026-10-29: master
+        # re-stamped the SBOM while the candidate was parked, and the merge died on
+        # public/interop/sbom-councilof-ai.json — one path — with the candidate unable to
+        # reconcile at all.
+        #
+        # This is not "choose a side". For a derived view the generator decides the bytes,
+        # so either side will do. For a stamped artefact the proof decides, and the proof
+        # that exists is the one beside master's bytes.
+        stamped = [p for p in conflicted if has_path(repo, master_ref, p + STAMPED_SUFFIX)]
+        real = [p for p in conflicted if not is_derived(p) and p not in stamped]
         if real:
             raise RealConflict(
-                "REAL CONFLICT outside the derived views; failing closed: " + ", ".join(real))
+                "REAL CONFLICT outside the derived views and the stamped artefacts; "
+                "failing closed: " + ", ".join(real))
         for path in conflicted:
-            checkout = git(repo, "checkout", "--ours", "--", path, check=False)
-            if checkout.returncode != 0:
-                git(repo, "rm", "--quiet", "--", path)
+            if path in stamped:
+                checkout = git(repo, "checkout", "--theirs", "--", path, check=False)
+                if checkout.returncode != 0:
+                    git(repo, "rm", "--quiet", "--", path)
+                # The proof comes with the bytes it proves. If the proof itself conflicted,
+                # master's proof is the one that matches master's bytes.
+                proof = path + STAMPED_SUFFIX
+                if proof in conflicted:
+                    git(repo, "checkout", "--theirs", "--", proof, check=False)
+                    git(repo, "add", "--", proof)
+            else:
+                # a derived view: the generator decides the bytes, so either side will do
+                checkout = git(repo, "checkout", "--ours", "--", path, check=False)
+                if checkout.returncode != 0:
+                    git(repo, "rm", "--quiet", "--", path)
             git(repo, "add", "--", path)
         git(repo, "commit", "--no-edit")
 
@@ -196,6 +244,52 @@ def _make_repo(tmp: Path, *, master_changes_root: bool, candidate_changes_root: 
     git(repo, "commit", "-q", "-m", "candidate")
 
     # a second remote so the merge has somewhere to come from
+    remote = tmp / "remote.git"
+    subprocess.run(["git", "clone", "-q", "--bare", str(repo), str(remote)], check=True)
+    git(repo, "remote", "add", "origin", str(remote))
+    git(repo, "fetch", "-q", "origin")
+    git(repo, "checkout", "-q", "candidate")
+    return repo
+
+
+def _make_stamped_repo(tmp: Path) -> Path:
+    """A candidate repo where MASTER re-stamps an artefact and the CANDIDATE holds a
+    different copy of the same artefact, with the OLD proof.
+
+    This is the 2026-10-29 situation exactly: master re-stamped
+    public/interop/sbom-councilof-ai.json (#3614) while the candidate was parked with its
+    own regenerated copy. The merge must not fail closed on that path, and the tree it
+    leaves must carry master's bytes AND master's proof, because a proof is minted against
+    the exact bytes it proves.
+    """
+    repo = tmp / "repo"
+    repo.mkdir(parents=True)
+    git(repo, "init", "-q")
+    git(repo, "config", "user.email", "root@csoai.org")
+    git(repo, "config", "user.name", "csoai-public-root")
+    empty_hooks = repo / ".no-hooks"
+    empty_hooks.mkdir(exist_ok=True)
+    git(repo, "config", "core.hooksPath", str(empty_hooks))
+    for view in DERIVED_VIEWS:
+        _write(repo / view, "base\n")
+    _write(repo / "public/interop/stamped.json", "base artefact\n")
+    _write(repo / "public/interop/stamped.json.ots", "base proof\n")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", "base")
+    git(repo, "branch", "-M", "master")
+
+    # master re-stamps: new bytes AND a new proof beside them
+    _write(repo / "public/interop/stamped.json", "master artefact\n")
+    _write(repo / "public/interop/stamped.json.ots", "master proof\n")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", "master re-stamps")
+
+    # the candidate holds its own regenerated copy, and the inherited proof
+    git(repo, "checkout", "-q", "-b", "candidate", "HEAD~1")
+    _write(repo / "public/interop/stamped.json", "candidate artefact\n")
+    git(repo, "add", "-A")
+    git(repo, "commit", "-q", "-m", "candidate regenerates")
+
     remote = tmp / "remote.git"
     subprocess.run(["git", "clone", "-q", "--bare", str(repo), str(remote)], check=True)
     git(repo, "remote", "add", "origin", str(remote))
@@ -344,10 +438,29 @@ def run_selftest() -> int:
               f"{detail} | order {order}")
         failures += not ok
 
+    # 7. A re-stamped artefact: the merge must survive it, and the tree it leaves must carry
+    #    MASTER's bytes and MASTER's proof. A candidate that kept its own copy would carry a
+    #    proof that no longer proves what sits next to it.
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = _make_stamped_repo(Path(tmp))
+        log = Path(tmp) / "order.log"
+        builder, generator = _stubs(repo, log)
+        try:
+            reconcile(repo, builder=builder, generator=generator)
+            artefact = git(repo, "cat-file", "-p", "HEAD:public/interop/stamped.json").stdout.strip()
+            proof = git(repo, "cat-file", "-p", "HEAD:public/interop/stamped.json.ots").stdout.strip()
+            ok = artefact == "master artefact" and proof == "master proof"
+            detail = f"artefact {artefact!r} proof {proof!r}"
+        except (RealConflict, Uncheckable) as exc:
+            ok = False
+            detail = str(exc)[:100]
+        print(f"  {'ok ' if ok else 'BAD'} a re-stamped artefact takes master's bytes and master's proof: {detail}")
+        failures += not ok
+
     if failures:
         print(f"root-candidate-reconcile selftest: FAIL ({failures} case(s))", file=sys.stderr)
         return 1
-    print("root-candidate-reconcile selftest: PASS (6 cases)")
+    print("root-candidate-reconcile selftest: PASS (7 cases)")
     return 0
 
 
