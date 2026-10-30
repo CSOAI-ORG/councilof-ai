@@ -5,8 +5,9 @@ name: Publish @csoai/layer0 (npm)
 #
 # This package is a CLIENT for a Layer 0 gateway. It is only worth publishing if the gateway it
 # calls is publicly served, so this workflow refuses to publish until it answers. The client's three
-# paths are /api/gate, /api/a2a/route and /api/a2a/verify; as of 29 October 2026 all three answer
-# 404 on the public site, while the gate does answer on the local canonical product. Publishing a
+# paths are /api/gate, /api/a2a/route and /api/a2a/verify. They did NOT answer on the public site
+# until 30 October 2026, when the Layer 0 gateway was deployed; they now answer, and the
+# precondition below checks that on every run rather than trusting this comment. Publishing a
 # client whose every method 404s would put a broken install line in front of the world, so the
 # precondition below is part of the gate, not a comment.
 #
