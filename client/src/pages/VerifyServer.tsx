@@ -13,6 +13,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import FixQueue from "@/components/verify/FixQueue";
+import { capsuleDownload } from "@/lib/capsuleDownload";
 import {
   DOCTRINE,
   LOOKUP_MEANING,
@@ -324,10 +325,31 @@ const OUTCOME_STYLE: Record<Check["outcome"], string> = {
 export function CapsuleCard({ capsule: c }: { capsule: ShardCapsule }) {
   const [check, setCheck] = useState<Check | null>(null);
   const [running, setRunning] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
   const body = capsuleBody(c);
   const state = c.measurement_state ?? "—";
   const dim = typeof c.claim?.dimension === "string" ? (c.claim.dimension as string) : null;
   const statement = typeof c.claim?.statement === "string" ? (c.claim.statement as string) : null;
+
+  function save() {
+    try {
+      const download = capsuleDownload(c, check, new Date().toISOString());
+      const url = URL.createObjectURL(new Blob([download.text], { type: "application/json;charset=utf-8" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = download.filename;
+      document.body.append(link);
+      try {
+        link.click();
+        setSaveStatus("Download requested. The original capsule text is included; the export and browser check summary are unsigned.");
+      } finally {
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+    } catch (error) {
+      setSaveStatus(`Could not save this capsule: ${(error as Error).message}`);
+    }
+  }
 
   async function verify() {
     if (!c.capsule_json) {
@@ -406,6 +428,20 @@ export function CapsuleCard({ capsule: c }: { capsule: ShardCapsule }) {
         >
           {running ? "Verifying…" : "Verify this capsule"}
         </button>
+        <button
+          type="button"
+          onClick={save}
+          disabled={running || !c.capsule_json?.trim()}
+          data-testid="save-capsule"
+          className="ml-2 mt-2 rounded-md border border-slate-900 px-3 py-1.5 text-sm font-semibold text-slate-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 disabled:opacity-60"
+        >
+          Save capsule and check
+        </button>
+        <p className="mt-2 text-xs text-slate-600">
+          Keeps the original capsule text and any check shown here. The export is unsigned and needs published proof material to recheck inclusion.
+          {!c.capsule_json?.trim() ? " This listing has no original text to save." : ""}
+        </p>
+        {saveStatus ? <p role="status" className="mt-2 text-sm text-slate-700">{saveStatus}</p> : null}
         <div aria-live="polite">
           {check ? (
             <div data-testid="verify-result" data-outcome={check.outcome} className={`mt-3 rounded-md border-l-4 p-3 text-sm ${OUTCOME_STYLE[check.outcome]}`}>
@@ -438,3 +474,4 @@ export function CapsuleCard({ capsule: c }: { capsule: ShardCapsule }) {
     </article>
   );
 }
+
