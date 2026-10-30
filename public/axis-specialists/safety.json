@@ -1,0 +1,230 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "safety",
+  "specialist": {
+    "id": "meok-safety-specialist",
+    "cluster_id": "meok-axis-safety",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit safety measurement beyond headline accuracy, preserving harm, tail-risk, macro-F1 and unparsed-output evidence and their distinct meanings.",
+    "reviewer_role": "safety evaluation reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "severity-weighted harm",
+    "worst-five-percent tail",
+    "class balance",
+    "parse failures"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "DAY",
+      "precision": "day",
+      "observed_on": "2026-08-12",
+      "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+      "source_field": "measured",
+      "note": "The source publishes day precision only. No midnight timestamp is invented."
+    },
+    "axis_row_sha256": "0bc1cebbc9033207fffba0f2a64c9e5b9698771b8aaf4f211992b58cf180187c",
+    "axis_row": {
+      "axis": "safety",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "DefBench",
+      "task": "calibrated refusal on paired requests",
+      "n": 36,
+      "separation": "TIE",
+      "fleet_mean": 0.732,
+      "mean_harm": 0.268,
+      "cvar05_harm": null,
+      "status": "MEASURED",
+      "dataset": "csoai/gspc-agi",
+      "colour": "#f87171",
+      "hue": 0,
+      "method_status": "meets-rule",
+      "leader": "gemma3:12b (base model)",
+      "accuracy": 0.9444,
+      "interval": [
+        0.819,
+        0.985
+      ],
+      "macro_f1": 0.944,
+      "unparsed_rate": 0.0541,
+      "separation_p": 0.6875,
+      "separation_method": "Exact McNemar on the discordant items, leader vs the best base model, rule fixed 2026-08-13: p<0.05 is SEPARATED, anything else is a TIE. Wilson 95% intervals are annotation only. Computed by scripts/gspc_separation_from_rows.py from the published per-item rows with our own models removed from the fleet before comparison.",
+      "separation_sentence": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=36; p=0.6875).",
+      "separation_evidence": {
+        "source": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361)",
+        "file": "peritem_agi.jsonl",
+        "file_sha256": "b70ccaa015668a80aeb50196623e8a138b6238e023b6cdff4308ee4fd592b2cb",
+        "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
+        "fleet": "6 base models; our own prompt overlays on stock base models removed before comparison",
+        "leader": {
+          "model": "gemma3:12b",
+          "k": 34,
+          "n": 36,
+          "accuracy": 0.9444,
+          "wilson95": [
+            0.819,
+            0.985
+          ]
+        },
+        "next_best": {
+          "model": "qwen2.5:3b",
+          "k": 32,
+          "n": 36,
+          "accuracy": 0.8889,
+          "wilson95": [
+            0.747,
+            0.956
+          ]
+        },
+        "paired_items": 36,
+        "discordant": {
+          "leader_only_correct": 4,
+          "next_best_only_correct": 2
+        },
+        "mcnemar_p": 0.6875,
+        "control": {
+          "what": "labels shuffled within items, same test re-run; share that came out SEPARATED",
+          "nperm": 1000,
+          "seed": 20260927,
+          "fixed_pair_rate": 0.029,
+          "reselect_rate": 0.004
+        },
+        "recompute": "python3 separation_test.py --rows rows --json out.json  (in the dataset; stdlib only; checks SHA256SUMS first)"
+      },
+      "peritem_file_sha256": "b70ccaa015668a80aeb50196623e8a138b6238e023b6cdff4308ee4fd592b2cb",
+      "leader_source": "per-item rows",
+      "leader_card_state": "NO_SIGNED_PER_MODEL_CARD",
+      "leader_card_note": "leader shown from per-item rows; no signed per-model card yet",
+      "note": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=36; p=0.6875). gemma3:12b 34/36 vs qwen2.5:3b 32/36, both read from the published per-item rows. A TIE is not a win: the point-estimate lead is not a measured advantage. leader shown from per-item rows; no signed per-model card yet.",
+      "distinct_items": 36,
+      "distinct_items_source": "distinct item ids in the published per-item rows (peritem_agi.jsonl)",
+      "mde": {
+        "value": null,
+        "state": "NOT_REACHABLE",
+        "reason": "No difference up to the observed discordance (6 of 36 paired items) reaches 80% power with this test.",
+        "unit": "accuracy difference (proportion), leader minus the best base model",
+        "alpha": 0.05,
+        "power": 0.8,
+        "test": "exact two-sided McNemar on the discordant items, leader vs the best base model (the board's separation test, rule fixed 2026-08-13)",
+        "paired_items": 36,
+        "discordance_rate": 0.1667,
+        "source": "functions/api/_gspc_rows_power.ts, generated by scripts/gspc_separation_from_rows.py --power from csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361, peritem_sha256 0d8dacfbe7384a5d…)"
+      },
+      "measurement_time": {
+        "state": "DAY",
+        "precision": "day",
+        "observed_on": "2026-08-12",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "note": "The source publishes day precision only. No midnight timestamp is invented."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-agi"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist safety audits only the safety row",
+      "evidence": "safety"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-safety; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "FINDING",
+      "detail": "required evidence missing: cvar05_harm",
+      "evidence": [
+        "cvar05_harm"
+      ]
+    },
+    {
+      "id": "MODEL_RUN_STATE",
+      "state": "PASS",
+      "detail": "measured model-comparison run with n=36"
+    },
+    {
+      "id": "FROZEN_BANK",
+      "state": "PASS",
+      "detail": "frozen bank URL is published",
+      "evidence": "https://huggingface.co/datasets/csoai/gspc-agi"
+    },
+    {
+      "id": "ROW_LINEAGE",
+      "state": "PASS",
+      "detail": "published per-item rows are digest-bound"
+    },
+    {
+      "id": "LEADER_STATE",
+      "state": "PASS",
+      "detail": "leader evidence state is published"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "meets-rule"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 7,
+    "findings": 1,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "hide an unparsed response and require the parse-rate check to fail",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "move tail harm into the mean and require the aggregate guard to reject it",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "safety-proposal-1",
+      "proposal": "publish harm-slice tables beside every safety headline",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "safety-proposal-2",
+      "proposal": "add a minimum-n explanation wherever CVaR is absent",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_safety",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/safety",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "safety evaluation reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "5427fd11aa4c8d53252fb7b1556dc66f312c2be47e29eec0544a03371194a12b"
+}
