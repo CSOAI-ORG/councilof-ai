@@ -6978,6 +6978,35 @@
       "paid_for": "assembly"
     },
     {
+      "id": "api-wrapper-changes-post",
+      "kind": "http",
+      "path": "/api/wrapper/changes",
+      "method": "POST",
+      "name": "Wrapper changes (POST)",
+      "description": "POST /api/wrapper/changes — the unpaid probe a directory validator sends (POST {}, no payment header). Answers this door's own 402 challenge before any id validation, because x402scan's discovery spec treats \"Expected 402, got 404 from request validation running before payment challenge\" as a disqualifying failure. A POST that carries a payment header keeps the /api catch-all 404 it has always answered: this door has never served POST.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "x402",
+      "schema_refs": [
+        "csoai.wrapper.changes/0.1"
+      ],
+      "surfaces": [
+        "llms",
+        "nav"
+      ],
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "POST",
+        "request": "/api/wrapper/changes",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "source": "functions/api/wrapper/changes.ts"
+    },
+    {
       "id": "api-wrapper-index-json",
       "kind": "http",
       "path": "/api/wrapper/index.json",
