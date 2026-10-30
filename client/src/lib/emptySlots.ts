@@ -5,7 +5,15 @@
  * Seven empty / empty-slot chrome as if current UNMEASURED. Live financial ids:
  * ai-adoption-components, labour-components (not retired ai-economy-index /
  * human-labour-index labels).
+ *
+ * 2026-10-06 (Inspector scope2 K1): the ruling line used to be TYPED and said
+ * "since ADR-002 … it is: one declared slot, effect-binding, with no run behind
+ * it" while the live board read unmeasured_axes 0 (effect-binding MEASURED since
+ * 2026-09-22). The line is now DERIVED from a BoardCount (live GET /api/gspc via
+ * useBoardCount, or the dated facts.json observation until the fetch lands), so
+ * it can only say what the totals say.
  */
+import { BOARD_COUNT_OBSERVED, BOARD_OBSERVED_AT, type BoardCount } from "./boardCount";
 
 export type SlotFill = {
   id: string;
@@ -14,9 +22,26 @@ export type SlotFill = {
   never: string;
 };
 
-/** Prefer live GET; this static line is only a last-observation fallback. */
-export const BOARD_LIVE_RULING =
-  "Live board: GET /api/gspc — quote totals.public_count, never type the count here. Empty-as-finding only when unmeasured_axes > 0, which since ADR-002 (16 Sep 2026) it is: one declared slot, effect-binding, with no run behind it. A slot stays UNMEASURED until a signed cell exists — never fill with 0.";
+/**
+ * The board-honesty ruling, derived from the board's own totals — never typed.
+ * Pass the live BoardCount (useBoardCount). With the recorded observation
+ * (live: false) the line names the observation date and says the live GET wins.
+ */
+export function boardRulingFrom(count: BoardCount): string {
+  const source = count.live
+    ? "Live board (GET /api/gspc)"
+    : `Board as last observed${BOARD_OBSERVED_AT ? ` on ${BOARD_OBSERVED_AT}` : ""} (GET /api/gspc supersedes this)`;
+  const head = `${source}: ${count.public_count}.`;
+  const rule = "A slot stays UNMEASURED until a signed cell exists — never fill with 0.";
+  if (count.unmeasured_axes > 0) {
+    const slots = count.unmeasured_axes === 1 ? "1 declared slot has" : `${count.unmeasured_axes} declared slots have`;
+    return `${head} Empty-as-finding applies: ${slots} no run behind it (totals.unmeasured_axes = ${count.unmeasured_axes}). ${rule}`;
+  }
+  return `${head} totals.unmeasured_axes = 0: every declared slot carries a measurement, so no slot is shown empty. Empty-as-finding applies only when unmeasured_axes > 0. ${rule}`;
+}
+
+/** Last-observation fallback (dated). Surfaces should render boardRulingFrom(useBoardCount()). */
+export const BOARD_LIVE_RULING = boardRulingFrom(BOARD_COUNT_OBSERVED);
 
 /** @deprecated name kept for imports; no longer claims seven UNMEASURED slots. */
 export const EMPTY_SLOT_RULING = BOARD_LIVE_RULING;

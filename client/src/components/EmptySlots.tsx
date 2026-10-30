@@ -1,4 +1,5 @@
-import { BOARD_LIVE_RULING, CENSUS_SITES, EMPTY_SLOTS } from "@/lib/emptySlots";
+import { useBoardCount } from "@/lib/boardCount";
+import { boardRulingFrom, CENSUS_SITES, EMPTY_SLOTS } from "@/lib/emptySlots";
 
 /**
  * /products board-honesty panel. Component name EmptySlots kept for imports.
@@ -6,6 +7,8 @@ import { BOARD_LIVE_RULING, CENSUS_SITES, EMPTY_SLOTS } from "@/lib/emptySlots";
  * notes with live axis ids (data-testid axis-note-*), never empty-slot-*.
  */
 export default function EmptySlots({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  // Derived from GET /api/gspc totals (recorded observation until the fetch lands) — never typed.
+  const board = useBoardCount();
   const dark = tone === "dark";
   const panel = dark
     ? "rounded-2xl border border-emerald-400/20 bg-emerald-950/40 p-4"
@@ -22,7 +25,7 @@ export default function EmptySlots({ tone = "dark" }: { tone?: "dark" | "light" 
           Board honesty · live GET · Hub 1191+
         </p>
         <h2 id="board-honesty-h" className={`mt-2 text-xl font-bold ${head}`}>
-          {BOARD_LIVE_RULING}
+          {boardRulingFrom(board)}
         </h2>
         <p className={`mt-3 text-sm ${body}`}>
           Board counts are derived live on GET /api/gspc (quote totals.public_count). Notes below are MEASURED

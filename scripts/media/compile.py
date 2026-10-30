@@ -238,7 +238,13 @@ def ots_state(raw, proof, sidecar, upgrade=True):
                         sub.merge(RemoteCalendar(a.uri).get_timestamp(sub.msg, timeout=15))
                         upgraded = True
                     except Exception as e:  # noqa: BLE001 - pending is the normal answer
-                        errors[a.uri] = type(e).__name__
+                        # The calendar's own words, not just the class name. "Timestamped
+                        # by transaction <txid>; waiting for 6 confirmations" is the
+                        # difference between a commitment Bitcoin already holds and one
+                        # it has never seen; the class name alone cannot tell them apart.
+                        reason = getattr(e, "reason", None)
+                        detail = reason.strip() if isinstance(reason, str) and reason.strip() else str(e).strip()
+                        errors[a.uri] = f"{type(e).__name__}: {detail}" if detail else type(e).__name__
         atts = [a for _, a in dtf.timestamp.all_attestations()]
     btc_pairs = [(msg, a) for msg, a in dtf.timestamp.all_attestations() if isinstance(a, BitcoinBlockHeaderAttestation)]
     btc = sorted({a.height for _, a in btc_pairs})
