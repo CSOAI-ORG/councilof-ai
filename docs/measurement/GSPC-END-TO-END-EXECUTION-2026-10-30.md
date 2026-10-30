@@ -55,6 +55,9 @@ It records intent before the request, retains the original checkpoint across a
 lost response, and normalizes Kaggle's display licence names on readback. Every
 other setting and the paginated file inventory must match. A changed version,
 visibility, identity, unknown licence or conflicting declaration stops the run.
+Checkpoint replacement is atomic, intent is flushed to disk, and a write is
+refused with less than 32 MiB free. A disk failure after an accepted update is
+reconciled by readback before any further write.
 
 ```bash
 python scripts/hf/publish_kaggle_licences.py \

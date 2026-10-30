@@ -11,8 +11,11 @@ from datetime import datetime, timezone
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import re
+import shutil
+import tempfile
 import time
 
 from publish_kaggle_cards import settings
@@ -119,7 +122,18 @@ def checked_review(entry, root):
 
 
 def save(path, value):
-    path.write_text(json.dumps(value, indent=2) + '\n')
+    # A full disk must not truncate the last usable checkpoint.
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', dir=path.parent, delete=False) as stream:
+            temporary = Path(stream.name)
+            stream.write(json.dumps(value, indent=2) + '\n')
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(path)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def event(path, **value):
@@ -127,6 +141,7 @@ def event(path, **value):
     with path.open('a') as stream:
         stream.write(json.dumps(value) + '\n')
         stream.flush()
+        os.fsync(stream.fileno())
     print(json.dumps(value), flush=True)
     return value
 
@@ -162,6 +177,9 @@ def publish_one(client, entry, pair, reviewed, output, publish):
         return event(receipt, ref=ref, status='PREVIEW', changed=changed,
                      fresh_settings_retained=rebased)
     if changed:
+        # Reserve ample room for this small metadata receipt before any remote effect.
+        if shutil.disk_usage(folder).free < 32 * 1024 * 1024:
+            raise OSError('less than 32 MiB free for publication checkpoints')
         # Read again immediately before mutation; never overwrite a concurrent edit.
         immediate = client.metadata(ref)
         validate_identity(immediate, ref)

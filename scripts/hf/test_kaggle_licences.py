@@ -1,6 +1,7 @@
 """Failure controls for the explicitly approved licence-only publisher."""
 from copy import deepcopy
 import json
+from types import SimpleNamespace
 
 import pytest
 
@@ -144,6 +145,37 @@ def test_preview_does_not_write_and_later_checkpoint_drift_stops(tmp_path):
     with pytest.raises(ValueError, match='checkpoint drift'):
         pub.publish_one(client, dict(ref=REF), PAIR, metadata(), tmp_path, True)
     assert client.updates == 0
+
+
+def test_low_disk_space_refuses_before_remote_write(tmp_path, monkeypatch):
+    client = FakeClient()
+    monkeypatch.setattr(pub.shutil, 'disk_usage', lambda path: SimpleNamespace(free=1024))
+    with pytest.raises(OSError, match='32 MiB'):
+        pub.publish_one(client, dict(ref=REF), PAIR, metadata(), tmp_path, True)
+    assert client.updates == 0
+
+
+def test_receipt_disk_failure_after_write_recovers_without_second_write(tmp_path, monkeypatch):
+    client = FakeClient(); real_save = pub.save
+    def fail_after(path, value):
+        if path.name == 'after.json': raise OSError('disk full during readback save')
+        real_save(path, value)
+    monkeypatch.setattr(pub, 'save', fail_after)
+    with pytest.raises(OSError):
+        pub.publish_one(client, dict(ref=REF), PAIR, metadata(), tmp_path, True)
+    monkeypatch.setattr(pub, 'save', real_save)
+    result = pub.publish_one(client, dict(ref=REF), PAIR, metadata(), tmp_path, True)
+    assert result['status'] == 'ALREADY_PRESENT_VERIFIED'
+    assert client.updates == 1
+
+
+def test_failed_atomic_save_preserves_previous_checkpoint(tmp_path, monkeypatch):
+    path = tmp_path / 'before.json'; pub.save(path, {'original': True})
+    def fail_sync(fd): raise OSError('disk full')
+    monkeypatch.setattr(pub.os, 'fsync', fail_sync)
+    with pytest.raises(OSError): pub.save(path, {'overwritten': True})
+    assert json.loads(path.read_text()) == {'original': True}
+    assert list(tmp_path.iterdir()) == [path]
 
 
 def test_retained_review_and_source_are_hash_bound(tmp_path):
