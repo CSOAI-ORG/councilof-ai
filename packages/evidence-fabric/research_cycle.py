@@ -26,6 +26,10 @@ VERSION='0.1.0'
 HERE=Path(__file__).resolve().parent
 FILES={'catalogue.json','observations.json','binding.json','events.jsonl','summary.json','evaluation.otlp.json','evidence.sarif.json'}
 MAX_BYTES=8_000_000
+# Bound the complete download separately from each of its seven payload files.
+MAX_PACKET_BYTES=128_000_000
+# Explicitly requalified historical reader: only I/O and packet-size guards changed.
+LEGACY_READER_SHA256='02193825afd8703cfeb6ea127e8636be29dc8b976ce0d1109a6e09321c252a75'
 PIN=re.compile(r'^[0-9a-f]{40}$')
 DIGEST=re.compile(r'^[0-9a-f]{64}$')
 REPO=re.compile(r'^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$')
@@ -41,8 +45,8 @@ class CycleError(ValueError): pass
 
 def sha(raw): return hashlib.sha256(raw).hexdigest()
 def encoded(value): return E.jcs(value)+b'\n'
-def parse(raw):
- if len(raw)>MAX_BYTES: raise CycleError('input exceeds byte limit')
+def parse(raw,max_bytes=MAX_BYTES):
+ if len(raw)>max_bytes: raise CycleError('input exceeds byte limit')
  def pairs(items):
   out={}
   for k,v in items:
@@ -84,7 +88,8 @@ def derive(cat_raw,obs_raw,binding):
  cat=parse(cat_raw); selected,others=records(cat);observations=parse(obs_raw)
  asof=timestamp(binding['as_of']);hours=binding['max_age_hours']
  if type(hours)!=int or not 1<=hours<=168:raise CycleError('age window must be an integer from 1 to 168 hours')
- if binding.get('implementation_pins')!=source_pins():raise CycleError('trusted reader revision differs; requalify instead of importing bundle code')
+ current_pins=source_pins()
+ if binding.get('implementation_pins') not in (current_pins,current_pins|{'research_cycle.py':LEGACY_READER_SHA256}):raise CycleError('trusted reader revision differs; requalify instead of importing bundle code')
  if not isinstance(observations,list) or len(observations)>2000:raise CycleError('bounded observation list required')
  lookup={};known={r['repo'] for r in selected}
  for row in observations:
@@ -130,7 +135,7 @@ def read_regular(root,name):
  if root.is_symlink():raise CycleError('symlink bundle root rejected')
  fd=os.open(root,os.O_RDONLY|os.O_DIRECTORY|getattr(os,'O_NOFOLLOW',0))
  try:
-  f=os.open(name,os.O_RDONLY|getattr(os,'O_NOFOLLOW',0),dir_fd=fd)
+  f=os.open(name,os.O_RDONLY|os.O_NONBLOCK|getattr(os,'O_NOFOLLOW',0),dir_fd=fd)
   with os.fdopen(f,'rb') as stream:
    info=os.fstat(stream.fileno())
    if not stat.S_ISREG(info.st_mode) or info.st_size>MAX_BYTES:raise CycleError('bounded regular bundle file required')
@@ -177,6 +182,8 @@ def build(catalogue,observations,store,as_of,max_age_hours=24,previous=None,expe
  cid=sha(encoded({'catalogue':sha(cat_raw),'observations':sha(obs_raw),'binding':binding}))
  manifest={'schema':SCHEMA,'cycle_id':cid,'previous_manifest_sha256':expected_previous,'files':{name:{'sha256':sha(raw),'bytes':len(raw)} for name,raw in sorted(payload.items())}}
  manifest_raw=encoded(manifest);digest=sha(manifest_raw)
+ # Every newly accepted cycle must fit the same portable receiver limit.
+ download_packet(payload,manifest_raw.decode('utf-8'))
  root=Path(store)
  if root.is_symlink():raise CycleError('symlink output store rejected')
  root.mkdir(parents=True,exist_ok=True);destination=root/cid
@@ -208,13 +215,18 @@ def verify_chain(root,expected,previous,expected_previous):
  if binding['previous_event_ids']!=expected_ids:raise CycleError('predecessor event links differ')
  return current|{'prior_chain':'SELECTED_PARENT_VERIFIED','prior_manifest_sha256':expected_previous,'prior_event_links':len(expected_ids)}
 
+def download_packet(payload,manifest_text):
+ obj={'schema':'csoai.research-cycle-download/0.1','manifest_text':manifest_text,
+      'files':{name:payload[name].decode('utf-8') for name in sorted(FILES)}}
+ if len(encoded(obj))>MAX_PACKET_BYTES:raise CycleError('aggregate packet exceeds byte limit')
+ return obj
+
 def packet(root,expected):
  verify(root,expected)
- return {'schema':'csoai.research-cycle-download/0.1','manifest_text':read_regular(root,'manifest.json').decode('utf-8'),
-         'files':{name:read_regular(root,name).decode('utf-8') for name in sorted(FILES)}}
+ return download_packet({name:read_regular(root,name) for name in FILES},read_regular(root,'manifest.json').decode('utf-8'))
 
 def verify_packet(raw,expected):
- obj=parse(raw)
+ obj=parse(raw,MAX_PACKET_BYTES)
  if not isinstance(obj,dict) or set(obj)!={'schema','manifest_text','files'} or obj['schema']!='csoai.research-cycle-download/0.1':raise CycleError('unsupported download packet')
  if not isinstance(obj['manifest_text'],str) or not isinstance(obj['files'],dict) or set(obj['files'])!=FILES or not all(isinstance(v,str) for v in obj['files'].values()):raise CycleError('invalid packet file inventory')
  with tempfile.TemporaryDirectory(prefix='csoai-research-reader-') as d:

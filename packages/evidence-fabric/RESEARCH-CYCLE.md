@@ -84,11 +84,17 @@ and no action permission is granted.
 
 Each content-addressed directory contains two source inputs, a binding record,
 native events, summary, OTel and SARIF. The manifest covers every payload byte.
-Inputs and output files are bounded. The receiver only accepts its known file
+Each payload file is bounded to 8 MB; the complete portable packet is bounded to 128 MB in both Python and the browser. Creation checks the aggregate bound before retaining a new cycle. The receiver only accepts its known file
 names, rejects symlinks, never runs received code and rederives accounting even
 when an attacker recomputes a manifest. Readers and writers use the same pinned
 adapter/event/renderer sources. A different implementation requires explicit
-requalification; it is not automatically imported from a received packet.
+requalification; it is not automatically imported from a received packet. This
+reader explicitly requalifies the initial adapter hash
+`02193825afd8703cfeb6ea127e8636be29dc8b976ce0d1109a6e09321c252a75`
+with unchanged event/renderer pins. The compatibility tests preserve its events
+while applying current nonblocking-file and aggregate-size checks. Unknown reader
+revisions remain rejected. Special files, including FIFOs, are opened nonblocking
+and rejected before reading.
 
 Creation uses a local process lock, staged files, fsync and rename. A corrupted
 existing cycle is rejected, not overwritten. This is a local filesystem
@@ -102,7 +108,7 @@ No daemon, cron entry, provider dispatch or public deployment is installed.
 
 ```sh
 python3 -m unittest discover -s packages/evidence-fabric/tests \
-  -p test_research_cycle.py -v
+  -p 'test_research_cycle*.py' -v
 ```
 
 The focused cases cover comparison states, missing/stale/future observations,
