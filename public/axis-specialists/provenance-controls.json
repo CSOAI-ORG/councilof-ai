@@ -1,0 +1,162 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "provenance-controls",
+  "specialist": {
+    "id": "meok-provenance-controls-specialist",
+    "cluster_id": "meok-axis-provenance-controls",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit issuer provenance controls and their signed deterministic run while keeping partial coverage and carrier limits visible.",
+    "reviewer_role": "ledger provenance reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "two-way provenance linkage",
+    "signed run verification",
+    "coverage denominator",
+    "carrier limitations"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-09-17T12:58:11Z",
+      "source": "/interop/financial-measure-run-v2.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "f4c1d530153beea69a6b391d10125744008fc0fa43b24ed6c82e39c4d49c0f16",
+    "axis_row": {
+      "axis": "provenance-controls",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-provenance-controls",
+      "bench": "ChainFacts",
+      "task": "on-chain issuer control facts (allowlisting / freeze capability / identity domain)",
+      "n": 6,
+      "n_unit": "issuer accounts (not bank items)",
+      "n_note": "6 tokenised instruments read directly from their mainnet issuer accounts. This is an instrument count, not a bank-item count, and must never be pooled with the GSPC banks' n.",
+      "status": "MEASURED",
+      "evidence_url": "/interop/financial-measure-run-v2.json",
+      "run_attestation": "ED25519_SIGNED",
+      "coverage": "6 of the 16 instruments named in the registry",
+      "coverage_note": "The registry NAMES 16 instruments and this axis COVERS 6. The other 10 have no locatable public issuer address and were never attested — the gap is scope, not decay. Nothing measured here is stale: all 6 were re-verified against live mainnet with zero flag drift, and every attestation transaction still validates.",
+      "carrier": "attestation carrier is DEVNET; the facts are read from MAINNET. Mainnet attestation is PLANNED, not live.",
+      "colour": "#fbbf24",
+      "hue": 43,
+      "note": "MEASURED for on-chain control facts only, and only those — one axis family over six instruments. Deterministic: the rubric reads account-root flags (RequireAuth, NoFreeze, GlobalFreeze) and the declared Domain off the public ledger and decodes them; there is no model, no judgement, no score and no ranking. Measured 2026-08-25 across 6 issuers (RLUSD, Ondo OUSG, OpenEden TBILL, Archax abrdn MMF, Braza USDB, Braza BBRL); a stranger re-runs the fetch and compares. Signed run v0.2, content_id 29369542cb537f38. Findings: 3 of 6 enforce allowlisting, 6 of 6 retain issuer freeze capability, 6 of 6 declare an identity domain. TWO BOUNDARIES THAT ARE PART OF THE MEASUREMENT, NOT CAVEATS ON IT. First, the facts are read from mainnet but the attestations are carried on DEVNET — mainnet attestation is PLANNED and not live, and nothing is attested on any Ethereum chain. Second, THE RISK VERDICT IS UNMEASURED: what these facts imply about an instrument's safety, solvency or creditworthiness needs counsel and is not measured here. This is not a rating, not advice, not a ranking, and not an endorsement of any named instrument. Supersedes the v0.1 run.",
+      "method_status": "legacy: n 6",
+      "facts_as_of": "2026-09-17T12:58:11Z",
+      "facts_status": "MEASURED",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "source": "/interop/financial-measure-run-v2.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-provenance-controls"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist provenance-controls audits only the provenance-controls row",
+      "evidence": "provenance-controls"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-provenance-controls; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "FACT_RUN_STATE",
+      "state": "PASS",
+      "detail": "deterministic-facts run with n=6 issuer accounts (not bank items)"
+    },
+    {
+      "id": "FACT_LINEAGE",
+      "state": "PASS",
+      "detail": "run artifact and fact timestamp are published"
+    },
+    {
+      "id": "RUN_ATTESTATION",
+      "state": "PASS",
+      "detail": "run artifact is declared Ed25519-signed"
+    },
+    {
+      "id": "NO_MODEL_RANKING",
+      "state": "PASS",
+      "detail": "deterministic facts carry no model leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "FINDING",
+      "detail": "legacy: n 6"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 7,
+    "findings": 1,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "accept a one-way ledger link and require the control check to fail",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "infer full issuer coverage from the covered subset and require denominator failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "provenance-controls-proposal-1",
+      "proposal": "expand issuer coverage with explicit non-covered rows",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "provenance-controls-proposal-2",
+      "proposal": "publish a stranger replay for each two-way provenance control",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_provenance-controls",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/provenance-controls",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "ledger provenance reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "6455acf76ab03694321ba309be30c7f7a88e1841cb3e42abc990d9a7e62de218"
+}
