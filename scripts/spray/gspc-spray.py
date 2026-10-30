@@ -1107,6 +1107,10 @@ print(axes.groupby(["kind", "status"], dropna=False).size())
 - Results apply to the recorded system, method, items and date. They do not establish general safety, certification, legal compliance or permission to execute.
 - Check signatures where provided, bound intake receipts, admission and current withdrawal status before quoting a card. A valid signature alone is insufficient; derived rows are not individually signed measurements.
 
+### Contribute a review
+
+Explore the [Public Watchdog working groups and document tracker](https://councilof.ai/working-groups/) to find a bounded review task and prepare a contribution. Independent researchers, practitioners and affected people are welcome. Groups are forming; proposals and forum posts do not change measurements or grant authority.
+
 ### Verify and cite
 
 Use the [free verifier]({VERIFY_URL}) and [verification instructions]({HOWTO_URL}). Keys resolve via `did:web:csoai.org`: [DID document]({DID_URL}). Check the [corrections register](https://councilof.ai/corrections/) for later withdrawals or corrections.
