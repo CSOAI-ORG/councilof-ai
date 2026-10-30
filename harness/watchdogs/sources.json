@@ -1,0 +1,179 @@
+{
+ "schema": "csoai.gspc-watchdog-corpus/0.1",
+ "what_this_is": "The authored corpus of PUBLIC watchdog, advisory, incident and registry sources the estate watches, and the deterministic question asked of each one. This is stimuli, like the psychogenicity bank: the corpus declares what to read and how to count it; the runner reads the bytes and grades them. Nothing here is a score, a rank or a certification.",
+ "what_this_does_not_establish": "Nothing here says a source is safe, complete or correct. A source that answered is REACHED, not trusted. A source that did not answer is UNREACHABLE, not absent from the world. A corpus entry is a promise to look, not a claim that looking is enough.",
+ "why_this_exists": "The question 'are we measuring all the public watchdogs and incident databases?' has to be answered with bytes, not with a feeling. This corpus is the answer's denominator: every source we have heard of, each with the feed we would read and the field we would count. The runner then produces the numerator, and the gap between the two is published as the gap.",
+ "grader": "deterministic, from the HTTP answer and the shape of the bytes. No model judges another model, and no judgement call is smuggled in as a grade.",
+ "grades": {
+  "INGESTED": "the feed answered 2xx and carried the field this corpus declares, so its records can be counted",
+  "REACHABLE_UNSHAPED": "the feed answered 2xx but did not carry the declared field, so it cannot be counted as declared",
+  "CREDENTIAL_REQUIRED": "the feed answered 401 or 403: it wants a credential we do not hold",
+  "NO_SUCH_SOURCE": "the feed answered 404 or 410: the declared URL is not there",
+  "UNREACHABLE": "the feed did not answer at all"
+ },
+ "absence_rule": "A source that did not answer leaves the denominator. It is never counted as zero records and never counted as an empty result: an unread source is an unread source.",
+ "sources": [
+  {
+   "id": "cisa-advisories",
+   "name": "CISA cybersecurity advisories (all)",
+   "kind": "advisory-feed",
+   "url": "https://www.cisa.gov/cybersecurity-advisories/all.xml",
+   "method": "GET",
+   "records_path": "rss.channel.item",
+   "records_kind": "xml",
+   "date_path": "rss.channel.item[0].pubDate",
+   "signal": "every advisory CISA has published, with its date",
+   "why_it_matters": "the regulator's own advisory stream, which is not the same list as the exploited catalog"
+  },
+  {
+   "id": "cisa-kev",
+   "name": "CISA Known Exploited Vulnerabilities catalog",
+   "kind": "known-exploited",
+   "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+   "method": "GET",
+   "records_path": "vulnerabilities",
+   "records_kind": "array",
+   "date_path": "vulnerabilities[0].dateAdded",
+   "signal": "which vulnerabilities have been exploited in the wild, by CISA's own catalogue",
+   "why_it_matters": "the only public list of exploits observed in the wild, maintained by a government, updated by hand"
+  },
+  {
+   "id": "cve-services",
+   "name": "MITRE CVE Services",
+   "kind": "vuln-advisory",
+   "url": "https://cveawg.mitre.org/api/cve/CVE-2021-44228",
+   "method": "GET",
+   "records_path": "cveMetadata",
+   "records_kind": "object",
+   "date_path": "cveMetadata.datePublished",
+   "signal": "one named CVE record with its own publication date",
+   "why_it_matters": "the record behind a single identifier, which is what a citation has to resolve to"
+  },
+  {
+   "id": "deps-dev",
+   "name": "deps.dev package version facts",
+   "kind": "dependency-fact",
+   "url": "https://api.deps.dev/v3alpha/systems/npm/packages/left-pad/versions/1.3.0",
+   "method": "GET",
+   "records_path": "versionKey",
+   "records_kind": "object",
+   "date_path": "publishedAt",
+   "signal": "the publication date and licence of one package version",
+   "why_it_matters": "a dependency's own publication date and licence are the facts a supply-chain claim rests on"
+  },
+  {
+   "id": "github-advisory",
+   "name": "GitHub Advisory Database (REST)",
+   "kind": "vuln-advisory",
+   "url": "https://api.github.com/advisories?per_page=100",
+   "method": "GET",
+   "records_path": "$",
+   "records_kind": "array",
+   "date_path": "$[0].published_at",
+   "signal": "GitHub's own advisory stream, including the ecosystems its packages live in",
+   "why_it_matters": "the advisory stream behind the repositories the estate's own tooling runs on"
+  },
+  {
+   "id": "haveibeenpwned",
+   "name": "Have I Been Pwned breached-domain API",
+   "kind": "breach",
+   "url": "https://haveibeenpwned.com/api/v3/breacheddomain/example.com",
+   "method": "GET",
+   "records_path": "$",
+   "records_kind": "array",
+   "date_path": "$[0].breachDate",
+   "signal": "breach records for one named domain",
+   "why_it_matters": "the one public breach database, and it is credential-gated: that fact is itself a measurement"
+  },
+  {
+   "id": "huggingface",
+   "name": "Hugging Face Hub dataset registry",
+   "kind": "registry",
+   "url": "https://huggingface.co/api/datasets?limit=100",
+   "method": "GET",
+   "records_path": "$",
+   "records_kind": "array",
+   "date_path": "$[0].lastModified",
+   "signal": "the datasets on the Hub the estate publishes to and reads from",
+   "why_it_matters": "the Hub is where the estate's banks live, so the registry is part of the estate's own supply chain"
+  },
+  {
+   "id": "nvd-api",
+   "name": "NIST National Vulnerability Database API 2.0",
+   "kind": "vuln-advisory",
+   "url": "https://services.nvd.nist.gov/rest/json/cves/2.0?resultsPerPage=1",
+   "method": "GET",
+   "records_path": "totalResults",
+   "records_kind": "number",
+   "date_path": "vulnerabilities[0].published",
+   "signal": "the published CVE count and each CVE's publication date",
+   "why_it_matters": "the CVE record of record, and the denominator every other advisory list is compared against"
+  },
+  {
+   "id": "nvd-bulk",
+   "name": "NIST NVD CVE feeds (bulk, year-qualified)",
+   "kind": "vuln-advisory",
+   "url": "https://nvd.nist.gov/feeds/xml/cve/misc/nvd-rss-analyzed.xml",
+   "method": "GET",
+   "records_path": "item",
+   "records_kind": "array",
+   "date_path": "",
+   "signal": "the bulk CVE feed, which is what a full ingest would use",
+   "why_it_matters": "declared here so that its absence is a published gap rather than an unasked question"
+  },
+  {
+   "id": "osv-query",
+   "name": "Open Source Vulnerabilities (OSV) query API",
+   "kind": "vuln-advisory",
+   "url": "https://api.osv.dev/v1/query",
+   "method": "POST",
+   "body": {
+    "package": {
+     "name": "torch",
+     "ecosystem": "PyPI"
+    }
+   },
+   "records_path": "vulns",
+   "records_kind": "array",
+   "date_path": "vulns[0].modified",
+   "signal": "advisories affecting one named package, which is how a model supply chain actually breaks",
+   "why_it_matters": "per-package advisory lookup is what a model and its dependencies are actually exposed to"
+  },
+  {
+   "id": "owasp-agentic",
+   "name": "OWASP Top 10 for Agentic Applications",
+   "kind": "standard",
+   "url": "https://owasp.org/www-project-top-10-for-agentic-applications/",
+   "method": "GET",
+   "records_path": "owasp-top-10-for-agentic-applications",
+   "records_kind": "marker",
+   "date_path": "",
+   "signal": "whether the OWASP agentic Top 10 standard page is published and names itself",
+   "why_it_matters": "the estate already links this standard in 2 places, and the link is stale; a gap that is declared is a gap that is visible"
+  },
+  {
+   "id": "owasp-llm-top10",
+   "name": "OWASP Top 10 for Large Language Model Applications",
+   "kind": "standard",
+   "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+   "method": "GET",
+   "records_path": "owasp-top-10-for-large-language-model-applications",
+   "records_kind": "marker",
+   "date_path": "",
+   "signal": "whether the OWASP LLM Top 10 standard page is published and names itself",
+   "why_it_matters": "the risk taxonomy an AI measurement body is measured against, and the one the estate already reads 94 times"
+  },
+  {
+   "id": "scorecard",
+   "name": "OpenSSF Scorecard",
+   "kind": "supply-chain",
+   "url": "https://api.securityscorecards.dev/projects/github.com/torvalds/linux",
+   "method": "GET",
+   "records_path": "score",
+   "records_kind": "number",
+   "date_path": "date",
+   "signal": "a scored supply-chain posture for one project, with its date",
+   "why_it_matters": "a supply-chain signal that is a number with a date, not a claim"
+  }
+ ]
+}
