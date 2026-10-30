@@ -1,8 +1,19 @@
+import { useState } from "react";
 import { WORKING_GROUPS, WORKING_GROUPS_AS_OF, WORKING_GROUPS_CHARTER, REVOCATION_REVIEW_PROTOCOL, workingGroupBrief, workingGroupEnquiryHref } from "@/lib/workingGroups";
+
+import WorkingGroupTracker from "./WorkingGroupTracker";
 
 const LINK = "underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4";
 
 export default function WorkingGroups() {
+  const [view, setView] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("groupview") === "tracker" ? "tracker" : "tasks");
+  function changeView(next: string) {
+    setView(next);
+    const url = new URL(window.location.href);
+    if (next === "tracker") url.searchParams.set("groupview", "tracker");
+    else url.searchParams.delete("groupview");
+    window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+  }
   return (
     <section aria-labelledby="working-groups-heading" className="mt-8 space-y-6">
       <div>
@@ -10,6 +21,10 @@ export default function WorkingGroups() {
         <p className="mt-2 text-muted-foreground">Forming · proposal dated {WORKING_GROUPS_AS_OF}. Independent researchers, practitioners and people affected by AI are welcome to propose a contribution. Chairs and reviewer appointments are not yet confirmed.</p>
         <p className="mt-2 text-muted-foreground">Choose a bounded first task below. The groups cover the axes in our dated GSPC snapshot; coverage does not mean every axis is measured or staffed. See the <a className={LINK} href="/board/">live board</a> for measurement state.</p>
       </div>
+      <nav aria-label="Working group views" className="flex flex-wrap gap-3">
+        <button type="button" aria-pressed={view === "tasks"} className="min-h-11 rounded-md border border-border px-4 font-medium aria-pressed:bg-foreground aria-pressed:text-background" onClick={() => changeView("tasks")}>Start a task</button>
+        <button type="button" aria-pressed={view === "tracker"} className="min-h-11 rounded-md border border-border px-4 font-medium aria-pressed:bg-foreground aria-pressed:text-background" onClick={() => changeView("tracker")}>Track documents</button>
+      </nav>
       <div className="rounded-xl border border-border p-5" aria-labelledby="contribution-steps">
         <h3 id="contribution-steps" className="font-semibold">Make your first contribution</h3>
         <ol className="mt-3 list-decimal space-y-2 pl-5">
@@ -26,7 +41,7 @@ export default function WorkingGroups() {
         <p className="mt-2">Council of AI is an evidence and measurement project. Participation in another working group is not its endorsement. These groups do not certify compliance or speak for regulators.</p>
         <p className="mt-3"><a className={LINK} href={WORKING_GROUPS_CHARTER}>Read the full draft charter</a></p>
       </div>
-      <div className="grid gap-4 md:grid-cols-2">
+      {view === "tracker" ? <WorkingGroupTracker /> : <div className="grid gap-4 md:grid-cols-2">
         {WORKING_GROUPS.map(group => (
           <article key={group.id} id={group.id} className="rounded-xl border border-border p-5">
             <h3 className="text-lg font-semibold">{group.name}</h3>
@@ -47,7 +62,7 @@ export default function WorkingGroups() {
             </div>
           </article>
         ))}
-      </div>
+      </div>}
       <p className="text-sm text-muted-foreground">The contact page prepares an email for you to review and send. It does not submit an application or create membership. Share public work first; agree a private channel before sharing confidential evidence.</p>
       <nav aria-label="Human review and challenges" className="flex flex-wrap gap-5">
         <a className={LINK} href="/dashboard?tab=staff">Council OS review workspace (authorised staff)</a>
