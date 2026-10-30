@@ -1,7 +1,7 @@
 {
-  "schema": "csoai.subject-axis-evidence-audit/0.1",
-  "generated_at": "2026-10-30T05:08:33.964Z",
-  "scope": "Reconcile historical discovery with one corrected claim reread. No new axis score, signature or public admission.",
+  "schema": "csoai.subject-axis-evidence-audit/0.2",
+  "generated_at": "2026-10-30T06:00:16.434Z",
+  "scope": "Reconcile historical discovery, corrected claim reread and optional pinned source artifacts. No new axis score, signature or public admission.",
   "source_files": [
     {
       "file": "functions/api/_gspc_axes_d.ts",
@@ -66,6 +66,26 @@
       "responses_at_reader_byte_cap": 20,
       "bank_method_matches_retained_source": true,
       "posthoc_threshold": true,
+      "original_frame_rows": 50,
+      "original_frame_rows_omitted_from_bank": 10,
+      "exact_url_duplicates": [],
+      "admission_rejection_reasons": [
+        "KEYWORD_DISCOVERY_DOES_NOT_ESTABLISH_DECLARED_CONSTRUCT",
+        "SUBJECT_IDENTITY_AND_APPLICABILITY_NOT_REVIEWED",
+        "INDEPENDENT_REVIEW_NOT_EVIDENCED",
+        "THRESHOLD_SELECTED_AFTER_OBSERVATION",
+        "RESPONSE_BYTES_AT_OLD_READER_CAP",
+        "PRIOR_UNREACHABLE_FRAME_MEMBERS_OMITTED_FROM_BANK"
+      ],
+      "artifact_inventory": {
+        "source_records": 50,
+        "original_frame_memberships": 50,
+        "pinned_repository_sources": 0,
+        "verified_file_artifacts": 0,
+        "retained_web_sources": 39,
+        "unavailable_sources": 11,
+        "interpretation": "These are source and artifact counts, not valid subjects or completed measurement cases. Semantic, identity and applicability review remains open."
+      },
       "admission_eligible": false,
       "completion_requirement": "Bind each advertised capability to a scoped observed outcome or independent source; a company's own description is not evidence that it does what it says.",
       "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
@@ -87,6 +107,25 @@
       "responses_at_reader_byte_cap": 17,
       "bank_method_matches_retained_source": true,
       "posthoc_threshold": true,
+      "original_frame_rows": 38,
+      "original_frame_rows_omitted_from_bank": 0,
+      "exact_url_duplicates": [],
+      "admission_rejection_reasons": [
+        "KEYWORD_DISCOVERY_DOES_NOT_ESTABLISH_DECLARED_CONSTRUCT",
+        "SUBJECT_IDENTITY_AND_APPLICABILITY_NOT_REVIEWED",
+        "INDEPENDENT_REVIEW_NOT_EVIDENCED",
+        "THRESHOLD_SELECTED_AFTER_OBSERVATION",
+        "RESPONSE_BYTES_AT_OLD_READER_CAP"
+      ],
+      "artifact_inventory": {
+        "source_records": 38,
+        "original_frame_memberships": 38,
+        "pinned_repository_sources": 37,
+        "verified_file_artifacts": 174,
+        "retained_web_sources": 0,
+        "unavailable_sources": 1,
+        "interpretation": "These are source and artifact counts, not valid subjects or completed measurement cases. Semantic, identity and applicability review remains open."
+      },
       "admission_eligible": false,
       "completion_requirement": "Run the same model digest and frozen bank through at least two pinned harnesses with the canonical grader; freeze parity tolerances before paired runs.",
       "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
@@ -108,9 +147,45 @@
       "responses_at_reader_byte_cap": 4,
       "bank_method_matches_retained_source": true,
       "posthoc_threshold": true,
+      "original_frame_rows": 37,
+      "original_frame_rows_omitted_from_bank": 2,
+      "exact_url_duplicates": [],
+      "admission_rejection_reasons": [
+        "KEYWORD_DISCOVERY_DOES_NOT_ESTABLISH_DECLARED_CONSTRUCT",
+        "SUBJECT_IDENTITY_AND_APPLICABILITY_NOT_REVIEWED",
+        "INDEPENDENT_REVIEW_NOT_EVIDENCED",
+        "THRESHOLD_SELECTED_AFTER_OBSERVATION",
+        "RESPONSE_BYTES_AT_OLD_READER_CAP",
+        "PRIOR_UNREACHABLE_FRAME_MEMBERS_OMITTED_FROM_BANK"
+      ],
+      "artifact_inventory": {
+        "source_records": 37,
+        "original_frame_memberships": 37,
+        "pinned_repository_sources": 19,
+        "verified_file_artifacts": 57,
+        "retained_web_sources": 16,
+        "unavailable_sources": 2,
+        "interpretation": "These are source and artifact counts, not valid subjects or completed measurement cases. Semantic, identity and applicability review remains open."
+      },
       "admission_eligible": false,
-      "completion_requirement": "Resolve deployment identities against a named public registry with dates and independent corroboration; a robotics repository is not a deployment record.",
-      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+      "completion_requirement": "Review and refresh the recovered 30-program named registry against its distinct source URLs; resolve lab, operator, site and lifecycle identities, and separate announcements/pilots from deployed units before considering a deployment-axis method.",
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct.",
+      "recovered_registry": {
+        "file": "public/interop/humanoid-registry-unsigned.json",
+        "sha256": "4c110602a71263ea88acca471b9c1170bf70d7a2e4372b12a9282170522bfba4",
+        "published_at": "2026-08-31T16:10:00Z",
+        "original_axis": "humanoid-labour-index",
+        "named_program_rows": 30,
+        "historical_status_counts": {
+          "announced": 13,
+          "pilot": 13,
+          "deployed": 4
+        },
+        "distinct_evidence_urls": 20,
+        "missing_site_or_region": 10,
+        "use": "Recovered candidate registry for deployment review. Announced and pilot programs are not deployed units; historical source-status labels are not freshly verified deployments. The labour index and deployment axis are different constructs.",
+        "admission_eligible": false
+      }
     },
     {
       "axis": "interop-conformance",
@@ -129,6 +204,26 @@
       "responses_at_reader_byte_cap": 2,
       "bank_method_matches_retained_source": true,
       "posthoc_threshold": true,
+      "original_frame_rows": 38,
+      "original_frame_rows_omitted_from_bank": 4,
+      "exact_url_duplicates": [],
+      "admission_rejection_reasons": [
+        "KEYWORD_DISCOVERY_DOES_NOT_ESTABLISH_DECLARED_CONSTRUCT",
+        "SUBJECT_IDENTITY_AND_APPLICABILITY_NOT_REVIEWED",
+        "INDEPENDENT_REVIEW_NOT_EVIDENCED",
+        "THRESHOLD_SELECTED_AFTER_OBSERVATION",
+        "RESPONSE_BYTES_AT_OLD_READER_CAP",
+        "PRIOR_UNREACHABLE_FRAME_MEMBERS_OMITTED_FROM_BANK"
+      ],
+      "artifact_inventory": {
+        "source_records": 38,
+        "original_frame_memberships": 38,
+        "pinned_repository_sources": 24,
+        "verified_file_artifacts": 96,
+        "retained_web_sources": 12,
+        "unavailable_sources": 2,
+        "interpretation": "These are source and artifact counts, not valid subjects or completed measurement cases. Semantic, identity and applicability review remains open."
+      },
       "admission_eligible": false,
       "completion_requirement": "Check linked versioned specifications, actual test-suite artifacts and conformance records; distinguish publication presence from implementation conformance.",
       "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
@@ -150,6 +245,43 @@
       "responses_at_reader_byte_cap": 6,
       "bank_method_matches_retained_source": true,
       "posthoc_threshold": true,
+      "original_frame_rows": 35,
+      "original_frame_rows_omitted_from_bank": 2,
+      "exact_url_duplicates": [],
+      "admission_rejection_reasons": [
+        "KEYWORD_DISCOVERY_DOES_NOT_ESTABLISH_DECLARED_CONSTRUCT",
+        "SUBJECT_IDENTITY_AND_APPLICABILITY_NOT_REVIEWED",
+        "INDEPENDENT_REVIEW_NOT_EVIDENCED",
+        "THRESHOLD_SELECTED_AFTER_OBSERVATION",
+        "RESPONSE_BYTES_AT_OLD_READER_CAP",
+        "PRIOR_UNREACHABLE_FRAME_MEMBERS_OMITTED_FROM_BANK"
+      ],
+      "artifact_inventory": {
+        "source_records": 35,
+        "original_frame_memberships": 35,
+        "pinned_repository_sources": 30,
+        "verified_file_artifacts": 116,
+        "retained_web_sources": 3,
+        "unavailable_sources": 2,
+        "interpretation": "These are source and artifact counts, not valid subjects or completed measurement cases. Semantic, identity and applicability review remains open."
+      },
+      "scoped_reproduction": {
+        "result_sha256": "31e810d2bd976ecea46c2bb9a07c7456dbec700d5ff7751abccddf7260fa45cb",
+        "status": "EXAMPLE_REPRODUCED",
+        "counts": {
+          "cases": 39,
+          "exact_reverse_cases": 39,
+          "non_discriminating_identity_cases": 15,
+          "wrong_identity_cases_rejected": 24
+        },
+        "source_url": "https://github.com/google-deepmind/tracr/blob/9ce2b8c82b6ba10e62e86cf6f390e7536d4fd2cd/README.md",
+        "input_sha256": "436affdb63494da8fd00caa0b7fa78031767b9cf41084721b20285568c7c47d2",
+        "scope": "Published README reverse example on all 39 length-1-to-3 inputs over {1,2,3}; a convenience finite domain, not a population estimate.",
+        "limit": "One published example, one implementation and one machine. No paper-wide result, cross-harness fidelity, external endpoint identity, population claim or axis admission.",
+        "review_state": "AWAITING_INDEPENDENT_REVIEW",
+        "report": "tracr-example-20261030/result.json",
+        "admission_eligible": false
+      },
       "admission_eligible": false,
       "completion_requirement": "Select licensed runnable work, pin code/model/data/environment and reproduce a stated result with predeclared tolerance; repository text is only discovery.",
       "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
@@ -171,6 +303,26 @@
       "responses_at_reader_byte_cap": 12,
       "bank_method_matches_retained_source": true,
       "posthoc_threshold": true,
+      "original_frame_rows": 40,
+      "original_frame_rows_omitted_from_bank": 3,
+      "exact_url_duplicates": [],
+      "admission_rejection_reasons": [
+        "KEYWORD_DISCOVERY_DOES_NOT_ESTABLISH_DECLARED_CONSTRUCT",
+        "SUBJECT_IDENTITY_AND_APPLICABILITY_NOT_REVIEWED",
+        "INDEPENDENT_REVIEW_NOT_EVIDENCED",
+        "THRESHOLD_SELECTED_AFTER_OBSERVATION",
+        "RESPONSE_BYTES_AT_OLD_READER_CAP",
+        "PRIOR_UNREACHABLE_FRAME_MEMBERS_OMITTED_FROM_BANK"
+      ],
+      "artifact_inventory": {
+        "source_records": 40,
+        "original_frame_memberships": 40,
+        "pinned_repository_sources": 0,
+        "verified_file_artifacts": 0,
+        "retained_web_sources": 37,
+        "unavailable_sources": 3,
+        "interpretation": "These are source and artifact counts, not valid subjects or completed measurement cases. Semantic, identity and applicability review remains open."
+      },
       "admission_eligible": false,
       "completion_requirement": "Freeze artifact-level criteria for evaluations, safety frameworks and incident reports; verify the named documents and dates rather than matching words on a landing page.",
       "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
@@ -192,6 +344,25 @@
       "responses_at_reader_byte_cap": 13,
       "bank_method_matches_retained_source": true,
       "posthoc_threshold": true,
+      "original_frame_rows": 40,
+      "original_frame_rows_omitted_from_bank": 0,
+      "exact_url_duplicates": [],
+      "admission_rejection_reasons": [
+        "KEYWORD_DISCOVERY_DOES_NOT_ESTABLISH_DECLARED_CONSTRUCT",
+        "SUBJECT_IDENTITY_AND_APPLICABILITY_NOT_REVIEWED",
+        "INDEPENDENT_REVIEW_NOT_EVIDENCED",
+        "THRESHOLD_SELECTED_AFTER_OBSERVATION",
+        "RESPONSE_BYTES_AT_OLD_READER_CAP"
+      ],
+      "artifact_inventory": {
+        "source_records": 40,
+        "original_frame_memberships": 40,
+        "pinned_repository_sources": 37,
+        "verified_file_artifacts": 151,
+        "retained_web_sources": 3,
+        "unavailable_sources": 0,
+        "interpretation": "These are source and artifact counts, not valid subjects or completed measurement cases. Semantic, identity and applicability review remains open."
+      },
       "admission_eligible": false,
       "completion_requirement": "Pin actual methods, test-set availability/licensing and replayable result artifacts; run a disclosed reproduction and record access restrictions separately.",
       "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
@@ -213,9 +384,38 @@
       "responses_at_reader_byte_cap": 2,
       "bank_method_matches_retained_source": true,
       "posthoc_threshold": true,
+      "original_frame_rows": 46,
+      "original_frame_rows_omitted_from_bank": 5,
+      "exact_url_duplicates": [],
+      "admission_rejection_reasons": [
+        "KEYWORD_DISCOVERY_DOES_NOT_ESTABLISH_DECLARED_CONSTRUCT",
+        "SUBJECT_IDENTITY_AND_APPLICABILITY_NOT_REVIEWED",
+        "INDEPENDENT_REVIEW_NOT_EVIDENCED",
+        "THRESHOLD_SELECTED_AFTER_OBSERVATION",
+        "RESPONSE_BYTES_AT_OLD_READER_CAP",
+        "PRIOR_UNREACHABLE_FRAME_MEMBERS_OMITTED_FROM_BANK",
+        "COMPOSITE_SCORE_FORBIDDEN_FOR_REGULATOR_AXIS"
+      ],
+      "artifact_inventory": {
+        "source_records": 46,
+        "original_frame_memberships": 46,
+        "pinned_repository_sources": 0,
+        "verified_file_artifacts": 0,
+        "retained_web_sources": 39,
+        "unavailable_sources": 7,
+        "interpretation": "These are source and artifact counts, not valid subjects or completed measurement cases. Semantic, identity and applicability review remains open."
+      },
       "admission_eligible": false,
       "completion_requirement": "Freeze factual artifact-presence checks and dated source references without a composite score or rating; public pages retain the existing owner hold.",
-      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
+      "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct.",
+      "recovered_census": {
+        "file": "public/interop/regulator-census.json",
+        "sha256": "63ef7ea0b310403e5ce28763b17cd0843009fc25f61b75a225032884795d16dc",
+        "as_of": "2026-09-06T04:21:32Z",
+        "target_records": 6,
+        "use": "The old plan counted 126 text lines. This artifact contains six targets, not 126 regulators or completed checks. Applicability and actual artifact types still need review.",
+        "admission_eligible": false
+      }
     },
     {
       "axis": "serving-fidelity",
@@ -234,6 +434,25 @@
       "responses_at_reader_byte_cap": 20,
       "bank_method_matches_retained_source": true,
       "posthoc_threshold": true,
+      "original_frame_rows": 38,
+      "original_frame_rows_omitted_from_bank": 0,
+      "exact_url_duplicates": [],
+      "admission_rejection_reasons": [
+        "KEYWORD_DISCOVERY_DOES_NOT_ESTABLISH_DECLARED_CONSTRUCT",
+        "SUBJECT_IDENTITY_AND_APPLICABILITY_NOT_REVIEWED",
+        "INDEPENDENT_REVIEW_NOT_EVIDENCED",
+        "THRESHOLD_SELECTED_AFTER_OBSERVATION",
+        "RESPONSE_BYTES_AT_OLD_READER_CAP"
+      ],
+      "artifact_inventory": {
+        "source_records": 38,
+        "original_frame_memberships": 38,
+        "pinned_repository_sources": 38,
+        "verified_file_artifacts": 156,
+        "retained_web_sources": 0,
+        "unavailable_sources": 0,
+        "interpretation": "These are source and artifact counts, not valid subjects or completed measurement cases. Semantic, identity and applicability review remains open."
+      },
       "admission_eligible": false,
       "completion_requirement": "Locate the reviewed 60-item private bank and BFCL gold by their full hashes, pin model and serving configurations, then run qualified reference/target pairs within the existing resource authorization.",
       "control_limit": "Digest controls check consistency of the authored payload. They do not validate the subject claim, keywords or measured construct."
@@ -241,6 +460,41 @@
   ],
   "axes_audited": 10,
   "axes_promoted": 0,
+  "recovered_registries": {
+    "humanoid": {
+      "file": "public/interop/humanoid-registry-unsigned.json",
+      "sha256": "4c110602a71263ea88acca471b9c1170bf70d7a2e4372b12a9282170522bfba4",
+      "published_at": "2026-08-31T16:10:00Z",
+      "original_axis": "humanoid-labour-index",
+      "named_program_rows": 30,
+      "historical_status_counts": {
+        "announced": 13,
+        "pilot": 13,
+        "deployed": 4
+      },
+      "distinct_evidence_urls": 20,
+      "missing_site_or_region": 10,
+      "use": "Recovered candidate registry for deployment review. Announced and pilot programs are not deployed units; historical source-status labels are not freshly verified deployments. The labour index and deployment axis are different constructs.",
+      "admission_eligible": false
+    },
+    "regulator": {
+      "file": "public/interop/regulator-census.json",
+      "sha256": "63ef7ea0b310403e5ce28763b17cd0843009fc25f61b75a225032884795d16dc",
+      "as_of": "2026-09-06T04:21:32Z",
+      "target_records": 6,
+      "use": "The old plan counted 126 text lines. This artifact contains six targets, not 126 regulators or completed checks. Applicability and actual artifact types still need review.",
+      "admission_eligible": false
+    }
+  },
+  "artifact_inventory": {
+    "sha256": "aa17b9803ae3b7018acac013df5ed4bd02ea5b29c67a4b9cb5ef78e0e000c927",
+    "input_sha256": "eb6efc78e67610c84aff0c3636f8650bf4f05f530591fdf6a132f93d6742f718",
+    "frame_rows": 362,
+    "sources": 349,
+    "verified_artifacts": 700,
+    "review_state": "AWAITING_CONSTRUCT_AND_SUBJECT_REVIEW",
+    "report": "TEN-AXIS-ARTIFACT-EVIDENCE-2026-10-30.json"
+  },
   "exclusions": [
     "Formula-generated candidate metrics from the 25 October bank builder are not observations.",
     "Posthoc 3-of-5 keyword thresholds cannot qualify the declared behavioral or artifact-level constructs.",
