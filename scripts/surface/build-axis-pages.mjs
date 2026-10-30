@@ -247,9 +247,15 @@ export function renderAxesIndex(board) {
   const cmp = axes.filter((a) => a?.kind === "model-comparison");
   const facts = axes.filter(isFacts);
   const slots = axes.filter((a) => a?.kind === "declared-slot");
+  // A MEASURED subject axis (first of its kind, 2026-10-29) is measured, so it is not a
+  // declared slot and must not be filed as one: its n is a real count over a frozen
+  // sha-pinned bank. It still has no model fleet, so no separation test applies to it.
+  const measuredSubjects = axes.filter((a) => a?.kind === "measured-subject");
   // Any axis whose kind the board did not name is shown, but never counted into a
   // group whose prose would misdescribe it.
-  const unclassified = axes.filter((a) => !cmp.includes(a) && !facts.includes(a) && !slots.includes(a));
+  const unclassified = axes.filter(
+    (a) => !cmp.includes(a) && !facts.includes(a) && !slots.includes(a) && !measuredSubjects.includes(a),
+  );
   const tr = (a, leadCol) => {
     const lead = !hasSeparation(a)
       ? "—"
@@ -281,7 +287,10 @@ ${table(facts)}
 ${slots.length ? `
   <h2>${slots.length} declared subject slots</h2>
   <p class="muted">A declared slot with no run behind it yet. No model fleet answers it, so no separation test applies to it either: n 0 is the literal truth, never a score. It becomes MEASURED only with a frozen sha-pinned bank, n_valid at least 30, passing the gate.</p>
-${table(slots, false)}` : ""}${unclassified.length ? `
+${table(slots, false)}` : ""}${measuredSubjects.length ? `
+  <h2>${measuredSubjects.length} measured subject axes</h2>
+  <p class="muted">A frozen, sha-pinned method or bank measured the subject class this axis names, over at least 30 valid items. No model fleet answers it, so no separation test applies and it joins no leader or mean — but unlike a declared slot its n is a real count, not a zero.</p>
+${table(measuredSubjects, false)}` : ""}${unclassified.length ? `
   <h2>${unclassified.length} axes of an unnamed kind</h2>
   <p class="muted">The board does not name a kind for these, so this page does not guess what they measure. It shows the state the board serves and nothing more.</p>
 ${table(unclassified, false)}` : ""}

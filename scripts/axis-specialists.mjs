@@ -16,7 +16,7 @@ import { loadSlots } from "./build-axis-reports.mjs";
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const REPO = join(HERE, "..");
 const REGISTRY_PATH = join(REPO, "council-os/axis-specialists/registry.json");
-const SNAPSHOT_PATH = join(REPO, "council-os/axis-specialists/board-2026-10-28.snapshot.json");
+const SNAPSHOT_PATH = join(REPO, "council-os/axis-specialists/board-2026-10-29.snapshot.json");
 const MCP_TOOLS_PATH = join(REPO, "functions/mcp/gspc-tools.json");
 const OUT = join(REPO, "public/axis-specialists");
 const AUDIT_SCHEMA = "csoai.axis-specialist-audit/1.0";
@@ -135,7 +135,7 @@ export function auditSpecialist(spec, row, registry) {
     audit_focus: spec.audit_focus,
     source: {
       schema: "csoai.gspc-axes/0.5",
-      snapshot: "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+      snapshot: "council-os/axis-specialists/board-2026-10-29.snapshot.json",
       measurement_time: row.measurement_time ?? null,
       axis_row_sha256: sha256(row),
       axis_row: row,
@@ -211,7 +211,7 @@ export function buildTree({ registry, sourceSlots, snapshot, mcpTools } = {}) {
   const bundle = {
     schema: "csoai.axis-specialist-bundle/1.0",
     policy: registry.policy,
-    source_snapshot: "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    source_snapshot: "council-os/axis-specialists/board-2026-10-29.snapshot.json",
     specialists: audits,
   };
   const { bundle_sha256: _omitBundleHash, ...bundleBody } = bundle;

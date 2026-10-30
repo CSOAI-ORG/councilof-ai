@@ -29,6 +29,13 @@ describe("declared-slot method_status", () => {
         expect(a.method_status).toBe("reviewed, not run");
         expect(a.method).toBe("serving-fidelity v0.2");
         expect(a.method_sha).toBe("18206f71");
+      } else if (a.axis === "claim-maintenance") {
+        // PROMOTED 2026-10-29 (owner ruling, option 3): the first MEASURED subject axis. It
+        // has a frozen, sha-pinned method and bank and n_valid >= 30, so it is no longer a
+        // declared slot and must not claim to be one.
+        expect(a.method_status).toBe("meets-rule");
+        expect(a.kind).toBe("measured-subject");
+        expect(a.status).toBe("MEASURED");
       } else expect(a.method_status, a.axis).toBe("no-method: declared slot");
     }
     expect(AXES_D).toHaveLength(10);
