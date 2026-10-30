@@ -1,0 +1,290 @@
+{
+  "schema": "csoai.pin-not-publicly-verifiable/0.1",
+  "as_of": "2026-10-29",
+  "decided_by": "estate",
+  "note": "Published pins that do not resolve for an anonymous reader. This is a record, not an exemption from measurement: the pin-liveness gate reads it, reports every entry, and goes red again when an entry ages past its review window. It exists so the public record says plainly which addresses a reader cannot open, instead of leaving them to look live.",
+  "how_it_was_measured": {
+    "gate": "scripts/review/published-pins-liveness.mjs",
+    "mode": "full",
+    "checked_at": "2026-10-29T12:41:33.108Z",
+    "revisions_total": 169,
+    "revisions_checked": 169,
+    "live": 142,
+    "not_publicly_verifiable": 27,
+    "sweep_record_sha256": "9e69a57677a11174302bbdf7403691026211b00ebb97647c73510860bfb5b4aa",
+    "probe": "one probe per REVISION, at the canonical revision address, paced; a 429 or a host error is retried and never reported as a dead pin"
+  },
+  "review_window_days": 90,
+  "records": [
+    {
+      "host": "huggingface.co",
+      "target": "csoai/attestation-network-2026-09-14",
+      "revision": "33a6ce5bd9145c1a2bcccf6e94f29e555155108e",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/cinematic-world-stills",
+      "revision": "08f7cd6ec3737f78ca5667a1a2310d7c4a6d4a1f",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/clan-csoai-plain",
+      "revision": "f5cacc92afb734dee56d253c1c1f14538bcb3505",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/council-safe",
+      "revision": "28d654461ef3a4d62cd0497f867145406c19b6eb",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/councilof-ai-mirror",
+      "revision": "733edd5dae2cededf2e8ae432ec558886029c698",
+      "observed_status": "REVISION_GONE",
+      "observed_http": 404,
+      "observed_on": "2026-10-29",
+      "reason": "the revision answers HTTP 404: the host no longer serves this revision. The address was published and resolved, and the repository's history has since been rewritten past it. The revision cannot be recovered at this address, so it is recorded as not publicly verifiable.",
+      "published_addresses": 1
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/councilof-ai-mirror",
+      "revision": "a781fa67c12581324c2fa2eb29639fff63259c46",
+      "observed_status": "REVISION_GONE",
+      "observed_http": 404,
+      "observed_on": "2026-10-29",
+      "reason": "the revision answers HTTP 404: the host no longer serves this revision. The address was published and resolved, and the repository's history has since been rewritten past it. The revision cannot be recovered at this address, so it is recorded as not publicly verifiable.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/councilof-ai-mirror",
+      "revision": "c6021da678f886bf3c4eeb74a8b096661a03dfc0",
+      "observed_status": "REVISION_GONE",
+      "observed_http": 404,
+      "observed_on": "2026-10-29",
+      "reason": "the revision answers HTTP 404: the host no longer serves this revision. The address was published and resolved, and the repository's history has since been rewritten past it. The revision cannot be recovered at this address, so it is recorded as not publicly verifiable.",
+      "published_addresses": 532
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/councilof-ai-source",
+      "revision": "20ab4259884e0a030b6b3ab0ddff64279e4e5748",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 1
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/councilof-ai-source",
+      "revision": "9021aec0c1459b17f5fa90e734917e20fced970a",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 1
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/councilof-ai-source",
+      "revision": "96bf3a07d4f944e9a9ed577e329ef10e20d38dfc",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 1
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/councilof-ai-source",
+      "revision": "c6ec5c545301430c046cf0609cb8081986310538",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/east-west",
+      "revision": "20d54397cb9489129889adc6a9793ddcd9fb8a13",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/eldorado-data-listing",
+      "revision": "20bc36b1587ba339a5b9f93defd1f68fe53a270f",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/eldorado-eval-results",
+      "revision": "97b0a5b43040e9f208762ce03b28c5b9e16ec73e",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/faq",
+      "revision": "16d88a285e94844ff8e689399b18d6db1ef14d12",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/games-catalog",
+      "revision": "73f16331b071c4e0d44ff78b0c531ae28d763928",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/gspc-signed-boards",
+      "revision": "73b681ea484f7eaa8dad236bf3676197fbc2bbfe",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/jail-floor",
+      "revision": "d8aa0e55b7ab5a4083490f7e8f8207b766fd1fed",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/labour-economy-unmeasured",
+      "revision": "5dec57cf1adfdde9080cf5bdeaec5e5326096010",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/living-gspc-board-2026-09-14",
+      "revision": "bde45b3729f74592172a3804afd3e6f27f0016c8",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/mcp-fabric",
+      "revision": "2d800e962f393bc32eb5bd5547f09a89f9cb2fc2",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/revenue-history",
+      "revision": "733ad14db6f2d4e2c89c16a4548f082b4ff670fc",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/rwa-testnet-unmeasured",
+      "revision": "5c0930808118c0fee55200c6f1f123536eec8872",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/swift-17",
+      "revision": "72c70175b63f0fe9a53011f25877abe2ba3ab32d",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/unified-evidence-factory-2026-09-19",
+      "revision": "fe7e9ca9d1680fe12da459830cf002852132e389",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/x402-free-discovery-2026-09-14",
+      "revision": "1b54a617be9ee5870050ece1fea9e893b5e0e908",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    },
+    {
+      "host": "huggingface.co",
+      "target": "csoai/xrpl-16-reader",
+      "revision": "879f4642b3fb4b45ad1370fffcb50ba30fecda31",
+      "observed_status": "PRIVATE_OR_GATED",
+      "observed_http": 401,
+      "observed_on": "2026-10-29",
+      "reason": "the dataset answers HTTP 401 to an anonymous reader: it is private or gated on huggingface.co. The bytes are still addressed by this revision; they are not open to a reader who does not hold the access. Recorded as not publicly verifiable rather than left to look live.",
+      "published_addresses": 2
+    }
+  ]
+}
