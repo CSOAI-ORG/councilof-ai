@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Council of AI: scoped AI measurements, open datasets, published methods and free verification.">
+  <title>Council of AI · GSPC</title>
+  <style>
+    .council-home{box-sizing:border-box;background:#f7faf8;color:#183328;font:16px/1.65 system-ui,-apple-system,sans-serif;padding:clamp(20px,5vw,52px);max-width:1100px;margin:auto;border-radius:16px;color-scheme:light}
+    .council-home *{box-sizing:border-box}
+    .council-home h1,.council-home h2,.council-home h3,.council-home p{color:inherit}
+    .council-home h1{font-size:clamp(36px,7vw,68px);line-height:1.05;letter-spacing:-.045em;margin:16px 0 24px}
+    .council-home h2{font-size:26px;line-height:1.25;margin:0 0 12px}
+    .council-home h3{font-size:21px;line-height:1.3;margin:12px 0}
+    .council-home p{margin:12px 0 20px;max-width:760px}
+    .council-home a{color:#155b3a;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+    .council-home a:focus-visible{outline:3px solid #b45309;outline-offset:5px}
+    .council-home .eyebrow{font-size:12px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;color:#38664d}
+    .council-home .lead{font-size:20px;line-height:1.5}
+    .council-home .actions{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0 36px}
+    .council-home .button{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;min-height:48px;border:1px solid #155b3a;border-radius:8px;background:#155b3a;color:#fff;font-weight:650;text-decoration:none}
+    .council-home .secondary{color:#155b3a;background:#fff}
+    .council-home .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:28px 0}
+    .council-home .card{background:#fff;border:1px solid #cbdad0;border-radius:12px;padding:24px}
+    .council-home .note{background:#e8f1eb;border-left:4px solid #397953;padding:24px;border-radius:0 10px 10px 0;margin:32px 0}
+    .council-home ul{padding-left:22px}
+    .council-home li{margin:10px 0}
+    .council-home footer{font-size:14px;color:#405e4d;border-top:1px solid #cbdad0;padding-top:22px;margin-top:32px}
+    @media(prefers-color-scheme:dark){.council-home{background:#10251c;color:#edf6ef;color-scheme:dark}.council-home a,.council-home .eyebrow{color:#a4e4b9}.council-home .card{background:#183026;border-color:#456451}.council-home .note{background:#1e3b2c;border-color:#8fd1a4}.council-home .secondary{background:#183026;color:#b9edc9;border-color:#8fd1a4}.council-home footer{color:#c2d6c9;border-color:#456451}}
+  </style>
+</head>
+<body style="margin:0">
+<main class="council-home">
+  <header>
+    <div class="eyebrow">Open measurements · Published limitations · Free verification</div>
+    <h1>Council of AI</h1>
+    <p class="lead">Council for the Safety of Artificial Intelligence</p>
+    <p>Explore scoped AI measurements and the evidence behind them. GSPC brings the published results, methods and coverage gaps into one public board.</p>
+    <nav class="actions" aria-label="Start here">
+      <a class="button" href="https://huggingface.co/spaces/csoai/gspc-board">Explore the board</a>
+      <a class="button secondary" href="https://huggingface.co/datasets/csoai/gspc-board">Get the dataset</a>
+      <a class="button secondary" href="https://councilof.ai/gspc-verify">Verify a record — free</a>
+    </nav>
+  </header>
+  <section class="cards" aria-label="Ways to use GSPC">
+    <article class="card"><div class="eyebrow">Research</div><h2>Inspect the evidence</h2><p>Open a dated dataset, read its schema and run the Python quickstart. Pin the revision when reproducing a result.</p><a href="https://huggingface.co/datasets/csoai/gspc-board">Dataset and quickstart</a></article>
+    <article class="card"><div class="eyebrow">Notebooks</div><h2>Work in Kaggle</h2><p>Download the same snapshot as CSV and JSON, with its source hashes and a local verification script.</p><a href="https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board">Open the Kaggle dataset</a></article>
+    <article class="card"><div class="eyebrow">Understanding</div><h2>Read the method</h2><p>Understand what each measurement supports, where coverage is missing and why a tie is not a winner.</p><a href="https://councilof.ai/methodology/">Methods and limitations</a></article>
+  </section>
+  <section class="note" aria-labelledby="reading-results"><h2 id="reading-results">What a result means</h2><ul><li><strong>MEASURED</strong> means evidence exists for an axis; it does not establish a winner.</li><li><strong>TIE</strong> means no separated lead was established. <strong>UNTESTED</strong> means separation was not established by a test.</li><li><strong>UNMEASURED</strong> is a coverage gap. Missing information is never zero.</li></ul><p>Model comparisons and deterministic source facts are different evidence types. Check scope, intake and withdrawal status before quoting a card.</p><a href="https://councilof.ai/api/gspc">See current counts, dates and states in the source JSON</a></section>
+  <section aria-labelledby="build"><h2 id="build">Build with the evidence</h2><p>Connect through the <a href="https://councilof.ai/openapi.json">public API</a> or <a href="https://councilof.ai/mcp">MCP</a>, inspect the <a href="https://github.com/CSOAI-ORG/councilof-ai">source code</a>, or find a model in the <a href="https://huggingface.co/spaces/csoai/gspc-board">board search</a>.</p></section>
+  <footer>Operated by CSOAI Ltd. Measurement is not certification, accreditation or permission to execute. This page runs no evaluations. Board data: CC-BY-4.0; other material retains its stated terms. <a href="https://councilof.ai/corrections/">Corrections register</a>.</footer>
+</main>
+</body>
+</html>
