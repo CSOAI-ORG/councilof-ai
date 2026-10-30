@@ -61,3 +61,30 @@ test("claim-maintenance is a MEASURED subject axis with a frozen, sha-pinned ban
   assert.match(slot.note, /disclosure split/i);
   assert.match(slot.note, /NOT part of this measurement/i);
 });
+
+test("the promoted axis's time and digest are read back out of the wave's own bytes", async () => {
+  // The axis row carries facts_as_of and bank_sha256. Both must equal what the wave file
+  // actually says, or a reader who re-reads the bank finds a different date or a different
+  // digest than the board published.
+  const { createHash } = await import("node:crypto");
+  const { readFileSync } = await import("node:fs");
+  const slots = await loadSlots();
+  const slot = slots.find((candidate) => candidate.axis === "claim-maintenance");
+  assert.ok(slot);
+  const wavePath = new URL("../public/interop/claim-maintenance-wave-2026-10-28.json", import.meta.url);
+  const bytes = readFileSync(wavePath);
+  const wave = JSON.parse(bytes.toString("utf8"));
+  assert.equal(slot.facts_as_of, wave.observed_at, "the axis time must be the wave's observed_at");
+  assert.equal(
+    slot.bank_sha256,
+    createHash("sha256").update(bytes).digest("hex"),
+    "the axis digest must be the sha256 of the wave's bytes",
+  );
+  assert.equal(slot.n, wave.thresholds.n_valid, "the axis n must be the wave's n_valid");
+  assert.deepEqual(slot.per_outcome, {
+    UNCHANGED: wave.counts.UNCHANGED,
+    CHANGED: wave.counts.CHANGED,
+    WITHDRAWN: wave.counts.WITHDRAWN,
+    UNREACHABLE: wave.counts.UNREACHABLE,
+  });
+});

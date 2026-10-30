@@ -70,6 +70,10 @@ export const AXES_D: AxisScore[] = [
     method_sha: "32470d102112154b14a4d5530d71d7a30ecc2acdc5cd8c906c21f672b1deeef7",
     bank: "public/interop/claim-maintenance-wave-2026-10-28.json",
     bank_sha256: "a62b017a9081b817613c03887c3c6690597a2016ea175f9d95c211d593db0877",
+    // The producer's own as_of, copied from the wave's observed_at field. A test reads both
+    // back out of the wave's bytes and fails if they ever drift.
+    facts_as_of: "2026-10-28T06:05:00Z",
+    evidence_url: "/interop/claim-maintenance-wave-2026-10-28.json",
     per_outcome: { UNCHANGED: 12, CHANGED: 110, WITHDRAWN: 52, UNREACHABLE: 8 },
     colour: "hsl(290 10% 55%)", hue: 290,
     n_note: "Reported DISCOVERED-style as counts per subject class, never a ranking.",

@@ -5625,13 +5625,14 @@
         "schema": "csoai.gspc-axes/0.5",
         "snapshot": "council-os/axis-specialists/board-2026-10-29.snapshot.json",
         "measurement_time": {
-          "state": "UNCHECKABLE",
-          "precision": "unknown",
-          "source": "/api/gspc",
-          "source_field": "none",
-          "note": "No structured measurement time is available; CURRENT admission must fail closed."
+          "state": "EXACT",
+          "precision": "instant",
+          "observed_at": "2026-10-28T06:05:00Z",
+          "source": "/interop/claim-maintenance-wave-2026-10-28.json",
+          "source_field": "facts_as_of",
+          "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
         },
-        "axis_row_sha256": "d8811d6a261875a815ab826b6670161116cab877e1d5fc82a410a38938cab5ff",
+        "axis_row_sha256": "68a24306e899492c0c6a41057c4f1c71137277c673b9af748bd789fd3f9d7cf7",
         "axis_row": {
           "axis": "claim-maintenance",
           "family": "subject",
@@ -5646,6 +5647,8 @@
           "method_sha": "32470d102112154b14a4d5530d71d7a30ecc2acdc5cd8c906c21f672b1deeef7",
           "bank": "public/interop/claim-maintenance-wave-2026-10-28.json",
           "bank_sha256": "a62b017a9081b817613c03887c3c6690597a2016ea175f9d95c211d593db0877",
+          "facts_as_of": "2026-10-28T06:05:00Z",
+          "evidence_url": "/interop/claim-maintenance-wave-2026-10-28.json",
           "per_outcome": {
             "UNCHANGED": 12,
             "CHANGED": 110,
@@ -5657,11 +5660,12 @@
           "n_note": "Reported DISCOVERED-style as counts per subject class, never a ranking.",
           "note": "n_valid 174 of 182 captured claims, re-read 2026-10-28 with the spec's own visible-text extractor. Counts per outcome, never a ranking, and never a statement that a claim is true. The disclosure split ('changed with disclosure' vs 'changed silently') is NOT part of this measurement: the published spec defines disclosure at the artefact level and not for a source's own edit, so those claims are recorded as CHANGED_DISCLOSURE_NOT_DECIDABLE.",
           "measurement_time": {
-            "state": "UNCHECKABLE",
-            "precision": "unknown",
-            "source": "/api/gspc",
-            "source_field": "none",
-            "note": "No structured measurement time is available; CURRENT admission must fail closed."
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-10-28T06:05:00Z",
+            "source": "/interop/claim-maintenance-wave-2026-10-28.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
           }
         }
       },
@@ -5746,7 +5750,7 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "95da09fbfd71b6721379d6bc1311d9144eeeb71dcacd68e4840577676cfe47a8"
+      "audit_sha256": "bc2e32ed2be2bf90106725f23a3fcbec41faf4c4c2e894dedea8d85caf8dcba5"
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5892,5 +5896,5 @@
       "audit_sha256": "1ceae1c84988c84226dfd420f45e8a7335bd882c8a202c07cf359f5bacdfd53a"
     }
   ],
-  "bundle_sha256": "219641ced4e1212cf122b6afa8fa56144904a208f7bea3db7e1419864e7162ec"
+  "bundle_sha256": "5bbeae66e6676780962b96589235f43049d8957b46bae86e228d6ecf2a88128b"
 }

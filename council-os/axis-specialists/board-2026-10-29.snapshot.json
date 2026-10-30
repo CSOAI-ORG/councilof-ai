@@ -321,7 +321,8 @@
         "custody-disclosure",
         "ai-adoption-components",
         "labour-components",
-        "humanoid-labour-index"
+        "humanoid-labour-index",
+        "claim-maintenance"
       ],
       "DAY": [
         "governance",
@@ -349,7 +350,6 @@
         "humanoid-deployment",
         "regulator-transparency",
         "interpretability-reproducibility",
-        "claim-maintenance",
         "serving-fidelity"
       ]
     }
@@ -2006,6 +2006,8 @@
       "method_sha": "32470d102112154b14a4d5530d71d7a30ecc2acdc5cd8c906c21f672b1deeef7",
       "bank": "public/interop/claim-maintenance-wave-2026-10-28.json",
       "bank_sha256": "a62b017a9081b817613c03887c3c6690597a2016ea175f9d95c211d593db0877",
+      "facts_as_of": "2026-10-28T06:05:00Z",
+      "evidence_url": "/interop/claim-maintenance-wave-2026-10-28.json",
       "per_outcome": {
         "UNCHANGED": 12,
         "CHANGED": 110,
@@ -2017,11 +2019,12 @@
       "n_note": "Reported DISCOVERED-style as counts per subject class, never a ranking.",
       "note": "n_valid 174 of 182 captured claims, re-read 2026-10-28 with the spec's own visible-text extractor. Counts per outcome, never a ranking, and never a statement that a claim is true. The disclosure split ('changed with disclosure' vs 'changed silently') is NOT part of this measurement: the published spec defines disclosure at the artefact level and not for a source's own edit, so those claims are recorded as CHANGED_DISCLOSURE_NOT_DECIDABLE.",
       "measurement_time": {
-        "state": "UNCHECKABLE",
-        "precision": "unknown",
-        "source": "/api/gspc",
-        "source_field": "none",
-        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-10-28T06:05:00Z",
+        "source": "/interop/claim-maintenance-wave-2026-10-28.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
       }
     },
     {
