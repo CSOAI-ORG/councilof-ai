@@ -1,0 +1,158 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "effect-binding",
+  "specialist": {
+    "id": "meok-effect-binding-specialist",
+    "cluster_id": "meok-axis-effect-binding",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit whether declared tool effects match observed server behavior, retaining read-only probing, coverage limits and the signed run artifact.",
+    "reviewer_role": "tool-effects and interoperability reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "declared versus observed effects",
+    "read-only probe safety",
+    "server coverage",
+    "signed run lineage"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-09-22T05:43:05Z",
+      "source": "/interop/effect-binding-server-probe-2026-09-22.signed.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "87e041f281a5c1a8238e2394b586115ab2b1ad4c982e702b815270bb407b39c3",
+    "axis_row": {
+      "axis": "effect-binding",
+      "family": "gspc",
+      "kind": "deterministic-facts",
+      "bench": "EffectBench v0.1 (server probe)",
+      "task": "does authorization bind to the request the server executes, or only to the tool call the agent declared",
+      "n": 261,
+      "n_unit": "tool-call servers probed",
+      "n_note": "261 third-party MCP servers received a verdict (BINDS 0 · PARTIAL 23 · DOES_NOT_BIND 238) out of 600 tried from a frozen shuffled slice (seed 20260922) of the 20,992 third-party servers with a remote URL in the public MCP registry on 2026-09-22. 230 UNCHECKABLE (141 behind an auth wall), 78 UNREACHABLE, 30 with no read-only tool and 1 with no tools are recorded and never counted. A server count, never pooled with bank-item n.",
+      "status": "MEASURED",
+      "facts_as_of": "2026-09-22T05:43:05Z",
+      "evidence_url": "/interop/effect-binding-server-probe-2026-09-22.signed.json",
+      "run_attestation": "ED25519_SIGNED",
+      "coverage": "261 of 600 servers tried, from a population of 20,992 third-party servers",
+      "coverage_note": "The verdict population is biased toward servers that answer anonymous callers: every server that demanded credentials is UNCHECKABLE by rule, never probed and never FAIL. Our own 41 registry entries are tabled separately in the artifact and are not in n.",
+      "colour": "#a1a1aa",
+      "hue": 240,
+      "note": "MEASURED 2026-09-22 (council-os/ADR-002-axis-23-effect-binding.md, ruling appended the same day). Deterministic: for each server one in-scope read-only call carrying an unauthorised extra argument (P2), a declared-binding-field read (P1), a replay where a nonce field exists (P3, not applicable on this slice) and a check for returned evidence (P4). Controls ran first and the grader was proven able to fail. Not a grade, not a security claim about any vendor: 'DOES_NOT_BIND' means the unauthorised argument was not refused at the boundary, not that the backend used it — the run sees the boundary, not the backend. One operating point, one day. The signed companion pins the run artifact by sha256; the artifact's own signed:false field is superseded, not edited. Quote totals.public_count and never this row's n as a bank size.",
+      "method_status": "legacy: no method sha published",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-09-22T05:43:05Z",
+        "source": "/interop/effect-binding-server-probe-2026-09-22.signed.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist effect-binding audits only the effect-binding row",
+      "evidence": "effect-binding"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-effect-binding; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "FACT_RUN_STATE",
+      "state": "PASS",
+      "detail": "deterministic-facts run with n=261 tool-call servers probed"
+    },
+    {
+      "id": "FACT_LINEAGE",
+      "state": "PASS",
+      "detail": "run artifact and fact timestamp are published"
+    },
+    {
+      "id": "RUN_ATTESTATION",
+      "state": "PASS",
+      "detail": "run artifact is declared Ed25519-signed"
+    },
+    {
+      "id": "NO_MODEL_RANKING",
+      "state": "PASS",
+      "detail": "deterministic facts carry no model leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "FINDING",
+      "detail": "legacy: no method sha published"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 7,
+    "findings": 1,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "infer safety from a read-only declaration and require mismatch reporting",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "treat unreachable as a failed effect and require UNREACHABLE to remain distinct",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "effect-binding-proposal-1",
+      "proposal": "expand effect-pair coverage with paced read-only probes",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "effect-binding-proposal-2",
+      "proposal": "publish per-server request and response digests for independent replay",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_effect-binding",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/effect-binding",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "tool-effects and interoperability reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "f787b2956115219e7b35ba3968423c6d5fe4dcfdb861c96be95299b070d47361"
+}
