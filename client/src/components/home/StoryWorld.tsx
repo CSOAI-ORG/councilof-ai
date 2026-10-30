@@ -21,8 +21,8 @@ import { fetchAxes } from "@/lib/gspcAxes";
 export const STORY: Slide[] = [
   {
     // 01 HERO — H1 is locked. Hero video sits above the headline, over the arena.
-    kicker: "Council of AI — the unsolicited, permissionless measurement body for AI behaviour",
-    body: "We measure how your AI actually behaves on published, frozen tests — invited or not — then hand you a signed result anyone can re-check without our permission: a small card, not a slide deck. When your model or the law changes, we measure again. That is measurement, not certification.",
+    kicker: "Council of AI — published measurements of AI behaviour",
+    body: "We measure AI behaviour using published, frozen tests and make the results available for review. Supported signed records can be checked with our free verifier. Each result states its scope and date; corrections remain public. Measurement does not establish certification or legal compliance.",
     bg: { src: "/images/coliseum_hero_arena.jpg", alt: "Clay figures and green verification seals gathered in a marble arena" },
   },
   {

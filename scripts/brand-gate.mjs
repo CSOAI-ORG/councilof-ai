@@ -198,7 +198,7 @@ const RULES = [
   },
   {
     id: "internal_strategy_codename",
-    pattern: /crown[\s-]?jewels?|goldmines|black swans|\bOWEM\b|\bSIGIL\b/i,
+    pattern: /crown[\s-]?jewels?|goldmines?|black[\s-]+swans?|\bOWEM\b|\bSIGIL\b/i,
     why: "Internal strategy / codename was never for the public surface.",
   },
   {
@@ -452,6 +452,9 @@ function jsonDisplayHits(obj, rel) {
 if (SELFTEST) {
   const CASES = [
     // [rule id, text that MUST be caught, text that MUST be allowed]
+    ["internal_strategy_codename", "Black Swan Predictor", null],
+    ["internal_strategy_codename", "black-swan strategy", null],
+    ["internal_strategy_codename", "goldmine opportunity", null],
     ["retracted_fault_tolerance", "the 33-agent BFT council", "the retraction of the BFT claim is in the refutation ledger"],
     ["sovereign_brand", "Project: Sovereign Signed-Card Anchor", null],
     ["internal_codenames", "PixiJS + SOV3 substrate", null],

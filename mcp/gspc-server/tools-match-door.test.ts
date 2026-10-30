@@ -126,3 +126,14 @@ describe("the npm README describes the server without typed counts", () => {
     expect(readFileSync(resolve(__dirname, "pack.mjs"), "utf8")).toContain("functions/mcp/axis-aliases.json");
   });
 });
+
+
+it("ships the already-declared licence text from the existing canonical source", () => {
+  const pkg = J(resolve(__dirname, "package.json"));
+  expect(pkg.license).toBe("Apache-2.0");
+  expect(pkg.files).toContain("LICENSE");
+  const source = "scripts/spray/pypi/csoai-gspc/LICENSE";
+  expect(readFileSync(resolve(__dirname, "pack.mjs"), "utf8")).toContain(source);
+  expect(readFileSync(resolve(__dirname, "LICENSE"), "utf8"))
+    .toBe(readFileSync(resolve(ROOT, source), "utf8"));
+});

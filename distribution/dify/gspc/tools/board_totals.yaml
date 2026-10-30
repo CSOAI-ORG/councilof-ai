@@ -5,8 +5,8 @@ identity:
     en_US: "Live GSPC board totals"
 description:
   human:
-    en_US: "Live GSPC board totals from https://councilof.ai/api/gspc."
-  llm: "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live."
+    en_US: "Read the live GSPC board overview."
+  llm: "Read the live GSPC board overview. Use this for declared, measured and unmeasured counts; use get_axis for one dimension and verify_card for one signed record. The default summary includes distinct count kinds, separation (TIE and UNTESTED are not wins) and source dates. detail=\"full\" adds count grammar, family totals and the full measured_on block, preserving the legacy full payload. Fetch failure is UNREACHABLE, never a cached live result. Measurement, not certification or authority to act."
 parameters:
   - name: detail
     type: select

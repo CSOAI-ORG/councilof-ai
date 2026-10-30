@@ -1,6 +1,6 @@
 {
   "name": "Council of AI \u2014 get_root",
-  "description": "GET the permissionless public-root at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, and UNMEASURED notes. Separate from GSPC. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable). Never a certificate.",
+  "description": "Read the published public-root metadata at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, kind and note. VALID means the JSON was retrieved; it does not verify a signature or a measurement. UNREACHABLE means the root response could not be read. Separate from GSPC measurement. Never a certificate.",
   "version": "1.0.0",
   "provider": {
     "organization": "CSOAI Ltd",
@@ -31,7 +31,7 @@
     {
       "id": "get_root",
       "name": "get_root",
-      "description": "GET the permissionless public-root at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, and UNMEASURED notes. Separate from GSPC. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable). Never a certificate.",
+      "description": "Read the published public-root metadata at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, kind and note. VALID means the JSON was retrieved; it does not verify a signature or a measurement. UNREACHABLE means the root response could not be read. Separate from GSPC measurement. Never a certificate.",
       "tags": [
         "measurement",
         "mcp"

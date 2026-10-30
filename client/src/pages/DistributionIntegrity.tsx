@@ -338,7 +338,7 @@ export default function DistributionIntegrity() {
                   no issuer opt-in, no issuer payment.
                 </li>
                 <li>
-                  <strong>Unsolicited and permissionless.</strong> The coverage layer accounts for
+                  <strong>Published coverage.</strong> The coverage layer accounts for
                   the instrument universe whether or not any issuer participates.
                 </li>
                 <li>

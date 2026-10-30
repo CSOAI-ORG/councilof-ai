@@ -1,0 +1,28 @@
+name: Repository description controls
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/github/repo-metadata.py'
+      - 'scripts/github/test_repo_metadata.py'
+      - '.github/workflows/repo-description-check.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'scripts/github/repo-metadata.py'
+      - 'scripts/github/test_repo_metadata.py'
+      - '.github/workflows/repo-description-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  description-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Exercise description-only writes with offline fixtures
+        run: python3 -I -B scripts/github/test_repo_metadata.py
