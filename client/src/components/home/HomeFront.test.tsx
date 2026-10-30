@@ -102,14 +102,17 @@ const boardWithAxes: GspcPayload = {
 const models = { third_party_models: 123, own_models_excluded: 7 };
 
 describe("HomeHero", () => {
-  it("says what the business is in one plain sentence, with no figure and no banned string", () => {
+  it("opens on a plain measurement proposition, with no figure and no banned string", () => {
     const html = render(<HomeHero />);
-    expect(html).toContain("We measure how AI systems behave");
-    expect(html).toContain("agents and the endpoints they call");
-    expect(html).toContain("signed cards, unsigned evidence and untested work");
-    expect(html).toContain("corrections stay public");
+    expect(html).toContain("See how AI behaves. Check the evidence yourself.");
+    expect(html).toContain("Published tasks, fixed grading rules");
+    expect(html).toContain("ties, gaps and untested work visible");
+    expect(html).toContain("Measurement, not certification.");
+    expect(html).toContain('aria-roledescription="carousel"');
+    expect(html.match(/data-hero-dot=/g)).toHaveLength(6);
+    expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html).not.toContain("Every result is signed");
-    expect(html).not.toMatch(/model fleets tested/i);
+    expect(html).not.toMatch(/model fleets tested|first in market|most advanced/i);
     expect(html).not.toContain("home-accountable-entity");
     for (const re of BANNED) expect(html).not.toMatch(re);
   });
