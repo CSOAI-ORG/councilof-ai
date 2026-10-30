@@ -433,6 +433,26 @@ jobs:
         uses: actions/setup-node@v4
         with: { node-version: 20 }
 
+# The public Layer-0 gateway re-expresses the estate's policy rule so a reader anywhere can
+      # reach it. A re-expression is a fork, so the fork is checked against the canonical source.
+      # The full comparison needs the canonical product, which is not in this repository, so CI
+      # runs the part that can be checked here: the comparator proves it can SEE a disagreement,
+      # and the gateway's own crypto, canonical form and refusal paths are exercised.
+      - name: Layer-0 gateway — the comparator can fail
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/review/layer0-parity.mjs --selftest
+
+# The published record of pins that do not resolve for an anonymous reader. Offline and
+      # deterministic, so it can block a PR without racing a host's rate limit: every entry must
+      # be well formed, inside its review window, and still name a pin this tree publishes. The
+      # networked half - does a pin still resolve - runs on the schedule, where a red result is a
+      # fact about production rather than a race with a hub.
+      - name: Published-pin record integrity — offline, blocking
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/review/published-pins-liveness.mjs --selftest
+          node scripts/review/published-pins-liveness.mjs --root . --record-only
+
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
