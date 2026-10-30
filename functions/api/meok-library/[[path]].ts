@@ -173,7 +173,7 @@ export async function relayCompanyCase(request: Request, env: Env): Promise<Resp
       signal: controller.signal,
       // A fixed TypedArray lets Workers calculate Content-Length. Do not stream
       // an unknown-length body to the canonical receiver's strict HTTP parser.
-      ...(body ? { body } : {}),
+      ...(body ? { body: body.slice() as Uint8Array<ArrayBuffer> } : {}),
     }).then(response => {
       if (stopped) {
         // An uncooperative fetch may return after the deadline. Do not retain
@@ -202,7 +202,7 @@ export async function relayCompanyCase(request: Request, env: Env): Promise<Resp
     active();
     // Receipt digests depend on original JSON bytes. Do not reserialize, rewrite
     // status, promote awaiting-review to saved, or forward Set-Cookie/Location.
-    return new Response(raw, { status: upstream.status, headers: safeHeaders() });
+    return new Response(raw.slice() as Uint8Array<ArrayBuffer>, { status: upstream.status, headers: safeHeaders() });
   };
   try {
     if (request.signal.aborted) halt();
