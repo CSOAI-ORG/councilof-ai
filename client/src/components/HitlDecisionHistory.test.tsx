@@ -389,3 +389,140 @@ describe("bounded human review requests and matched receipts", () => {
     expect(container.textContent).toContain("missing match does not establish");
   });
 });
+describe("choosing a returned review case", () => {
+  const second = {
+    ...queue.challenges[0],
+    id: "second-challenge",
+    subject: "Second fixture",
+    proposed_action: "Review the second fixture",
+    axis: "quality",
+  };
+  const mod = (axis: string) => ({
+    id: "module-" + axis,
+    axis,
+    title: axis,
+    briefing: "Read " + axis,
+    question: "Question for " + axis,
+    options: [{ id: "A", text: "Answer for " + axis }],
+  });
+  const two = { ...queue, challenges: [queue.challenges[0], second] };
+  function select() {
+    return container.querySelector(
+      '[data-testid="hitl-select-challenge"]',
+    ) as HTMLSelectElement;
+  }
+  async function choose(id: string) {
+    await act(async () => {
+      select().value = id;
+      select().dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  }
+  function fixtures(post?: (url: string, init: RequestInit) => unknown) {
+    return useFetch((url, init) => {
+      if (init?.method === "POST")
+        return (
+          post?.(url, init) ??
+          response({ ok: true, correct: true, module_id: "module-governance" })
+        );
+      return response(
+        url === "/api/hitl"
+          ? { ...state, modules: [mod("governance"), mod("quality")] }
+          : url.endsWith("challenges")
+            ? two
+            : record,
+      );
+    });
+  }
+  it("lets a reviewer choose another case, clears the earlier answer and posts the chosen action", async () => {
+    let posted: any;
+    fixtures((url, init) => {
+      if (url.endsWith("modules"))
+        return response({
+          ok: true,
+          correct: true,
+          module_id: "module-governance",
+        });
+      posted = JSON.parse(String(init.body));
+      return response({
+        ok: true,
+        receipt: {
+          ...entry,
+          decision: "HOLD",
+          challenge: second,
+          axis: "quality",
+        },
+      });
+    });
+    await render(<HitlConsole />);
+    expect(select().options).toHaveLength(2);
+    await act(async () => {
+      (
+        container.querySelector(
+          '[data-testid="hitl-option-A"] input',
+        ) as HTMLInputElement
+      ).click();
+    });
+    await act(async () => button("Check my answer against the record").click());
+    expect(
+      container.querySelector('[data-testid="hitl-module-result"]')
+        ?.textContent,
+    ).toContain("Correct");
+    await choose(second.id);
+    expect(
+      container.querySelector('[data-testid="hitl-challenge"]')?.textContent,
+    ).toContain(second.proposed_action);
+    expect(
+      container.querySelector('[data-testid="hitl-module-question"]')
+        ?.textContent,
+    ).toContain("quality");
+    expect(
+      container.querySelector('[data-testid="hitl-module-result"]'),
+    ).toBeNull();
+    expect(container.querySelector('input[type="radio"]:checked')).toBeNull();
+    await act(async () => {
+      (
+        container.querySelector(
+          '[data-testid="hitl-option-A"] input',
+        ) as HTMLInputElement
+      ).click();
+    });
+    await act(async () => button("HOLD").click());
+    expect(posted.challenge.id).toBe(second.id);
+    expect(posted.module_id).toBe("module-quality");
+    expect(
+      container.querySelector('[data-testid="hitl-receipt"]')?.textContent,
+    ).toContain(second.id);
+  });
+  it("prevents changing the case while a decision response is unresolved", async () => {
+    vi.useFakeTimers();
+    fixtures(() => new Promise(() => {}));
+    await render(<HitlConsole />);
+    await act(async () => button("HOLD").click());
+    expect(select().disabled).toBe(true);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(15001);
+    });
+  });
+  it("refuses duplicate queue identifiers rather than showing an ambiguous selection", async () => {
+    useFetch((url) =>
+      response(
+        url === "/api/hitl"
+          ? state
+          : url.endsWith("challenges")
+            ? {
+                ...queue,
+                challenges: [
+                  queue.challenges[0],
+                  { ...second, id: queue.challenges[0].id },
+                ],
+              }
+            : record,
+      ),
+    );
+    await render(<HitlConsole />);
+    expect(container.textContent).toContain(
+      "review queue could not be checked",
+    );
+    expect(button("APPROVED").disabled).toBe(true);
+  });
+});

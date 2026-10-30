@@ -95,6 +95,7 @@ export default function HitlConsole({
   const [recordRevision, setRecordRevision] = useState(0);
   const [outcomeUnknown, setOutcomeUnknown] = useState(false);
   const [queued, setQueued] = useState<HitlChallengeView[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
   const [moduleResult, setModuleResult] = useState<{
     correct: boolean;
@@ -167,9 +168,13 @@ export default function HitlConsole({
           if (
             j?.schema !== "csoai.hitl-companion-state/0.1" ||
             !Array.isArray(j.challenges) ||
+            new Set(j.challenges.map((c: any) => c?.id)).size !==
+              j.challenges.length ||
             !j.challenges.every(
               (c: any) =>
                 c &&
+                typeof c.id === "string" &&
+                c.id.length > 0 &&
                 ["id", "subject", "proposed_action", "raised_by", "at"].every(
                   (k) => typeof c[k] === "string",
                 ) &&
@@ -196,7 +201,12 @@ export default function HitlConsole({
     };
   }, [load]);
 
-  const pending = incoming ?? queued.find((c) => c.state === "PENDING") ?? null;
+  const pendingCases = queued.filter((c) => c.state === "PENDING");
+  const pending =
+    incoming ??
+    pendingCases.find((c) => c.id === selectedId) ??
+    pendingCases[0] ??
+    null;
 
   // The module for the axis under review. It comes from the live board, never from a copy.
   const module: HitlModuleView | null = useMemo(() => {
@@ -212,6 +222,12 @@ export default function HitlConsole({
     }
     return mods[0] ?? null;
   }, [snap, pending]);
+
+  useEffect(() => {
+    setPicked(null);
+    setModuleResult(null);
+    setNote("");
+  }, [pending?.id, module?.id]);
 
   const locked = snap?.decision_path !== "open";
 
@@ -419,6 +435,32 @@ export default function HitlConsole({
         <h3 className="mb-2 text-sm font-semibold text-amber-50">
           Under review
         </h3>
+        {!incoming && pendingCases.length > 1 ? (
+          <label className="mb-3 block text-xs text-amber-100/80">
+            Choose a pending challenge
+            <select
+              data-testid="hitl-select-challenge"
+              value={pending?.id ?? ""}
+              disabled={busy || outcomeUnknown}
+              onChange={(event) => {
+                if (busy || outcomeUnknown) return;
+                setSelectedId(event.currentTarget.value);
+                setError(null);
+              }}
+              className="mt-1 block w-full min-w-0 rounded-lg border border-amber-400/40 bg-slate-950 px-3 py-2 text-sm"
+            >
+              {pendingCases.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.subject} · {c.id}
+                </option>
+              ))}
+            </select>
+            <span className="mt-1 block">
+              Choose from the returned queue. Other pending work may not be
+              included in this response.
+            </span>
+          </label>
+        ) : null}
         {pending ? (
           <div data-testid="hitl-challenge">
             <p className="text-sm text-amber-50/90">
@@ -607,6 +649,9 @@ export default function HitlConsole({
             data-testid="hitl-receipt"
             className="mt-3 rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-3 py-2 text-[13px] text-emerald-50"
           >
+            <p className="mb-1 break-all text-xs">
+              Most recent returned receipt · challenge {receipt.challenge.id}
+            </p>
             <p className="font-semibold">
               {receipt.decision} · {receipt.axis} · {receipt.at}
             </p>
