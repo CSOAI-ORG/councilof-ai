@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>State of Claim Maintenance — report #1 | Council of AI</title>
+<meta name="description" content="A dated reading of the claim-maintenance register: subjects, claims, their states, and the scheduling position, read from the exact register bytes named below.">
+<link rel="canonical" href="https://councilof.ai/spec/claim-maintenance/report-1/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="State of Claim Maintenance — report #1">
+<meta property="og:description" content="A dated reading of the claim-maintenance register, published so the register's own state can be read without running the register.">
+<meta property="og:url" content="https://councilof.ai/spec/claim-maintenance/report-1/">
+<meta property="og:image" content="https://councilof.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{color-scheme:light dark;--fg:#0f172a;--muted:#475569;--line:#cbd5e1;--bg:#ffffff}
+@media (prefers-colorcheme:dark){:root{--fg:#e2e8f0;--muted:#94a3b8;--line:#334155;--bg:#0b1220}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:56rem;margin:0 auto;padding:2.5rem 1rem 4rem}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 .5rem}
+h2{font-size:1.2rem;margin:2.2rem 0 .6rem}
+p.lede{color:var(--muted);margin:0 0 2rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:.6rem .5rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+code{font-size:.8rem;word-break:break-all}
+nav{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;font-size:.9rem}
+a{color:inherit}
+.note{margin-top:2rem;color:var(--muted);font-size:.9rem}
+ul{padding-left:1.2rem}
+</style></head>
+<body><main>
+<nav><a href="/">Council of AI</a><a href="/claim-maintenance">Claim maintenance</a><a href="/spec/claim-maintenance/">Specification</a><a href="/api/claims/register">Register (JSON)</a><a href="/spec/claim-maintenance/report-1/index.json">This report as JSON</a></nav>
+<h1>State of Claim Maintenance — report #1</h1>
+<p class="lede">A dated reading of the claim-maintenance register. Every number on this page is read from the exact register bytes named below — nothing is derived, interpolated or estimated.</p>
+
+<h2>What this is</h2>
+<p>A dated reading of the claim-maintenance register, published so the register's own state can be read without running the register and without trusting this page. It is reproducible: the sha256 of the register bytes is given, and the report's JSON carries it too.</p>
+
+<h2>What this is not</h2>
+<ul>
+<li>Not a certification, a rank, a grade or a score.</li>
+<li>Not a statement that the claim-maintenance axis is <strong>MEASURED</strong>. The axis carries its own status; this report neither moves it nor pre-empts the decision that moves it.</li>
+<li>Not a claim that any individual captured claim is true. It reports how many claims the register holds and in which states the register places them.</li>
+<li>Not a measurement of any model, system or vendor.</li>
+</ul>
+
+<h2>The register this was read from</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>
+<tr><td>URL</td><td><code>https://councilof.ai/spec/claim-maintenance/register.json</code></td></tr>
+<tr><td>HTTP</td><td><strong>200</strong></td></tr>
+<tr><td>Bytes</td><td>69740</td></tr>
+<tr><td>sha256</td><td><code>434c9258bf4ee0b7d894c66c224f91963b8c9dab18e19187bd646bdd3e848214</code></td></tr>
+<tr><td>register <code>as_of</code></td><td><strong>2026-10-08T05:40:55Z</strong></td></tr>
+<tr><td>report published</td><td>2026-10-30T05:07:49.965Z</td></tr>
+</tbody></table>
+
+<h2>Totals</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>
+<tr><td>Registries</td><td><strong>3</strong></td></tr>
+<tr><td>Registry files on disk</td><td>7</td></tr>
+<tr><td>Registries superseded</td><td>4</td></tr>
+<tr><td>Subjects</td><td><strong>28</strong></td></tr>
+<tr><td>Claims</td><td><strong>99</strong></td></tr>
+<tr><td>Claims conforming to the artifact schema</td><td>91</td></tr>
+</tbody></table>
+
+<h2>Claims by state</h2>
+<table><thead><tr><th>State</th><th>Claims</th></tr></thead><tbody>
+<tr><td>CLAIM_CAPTURED</td><td><strong>1</strong></td></tr>
+<tr><td>CLAIM_MEASURED</td><td><strong>33</strong></td></tr>
+<tr><td>UNMEASURED</td><td><strong>39</strong></td></tr>
+<tr><td>UNCHECKABLE</td><td><strong>26</strong></td></tr>
+</tbody></table>
+<p class="note">These are the register's own states. <strong>UNMEASURED</strong> is a declared position with no run behind it. <strong>UNCHECKABLE</strong> is a cell the method could not settle. Neither is a zero, and a refusal is never converted to a zero.</p>
+
+<h2>Scheduling</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>
+<tr><td>Subjects with a scheduled next read</td><td><strong>0</strong></td></tr>
+<tr><td>Subjects with a due but unrun next read</td><td><strong>0</strong></td></tr>
+<tr><td>Subjects with a completed scheduled read</td><td><strong>21</strong></td></tr>
+<tr><td>Subjects with a retry required</td><td>0</td></tr>
+<tr><td>Subjects with a due execution unverified</td><td><strong>5</strong></td></tr>
+</tbody></table>
+
+<h2>A correction carried here</h2>
+<p>A 30 September working note recorded <em>"subjects with scheduled next read: 26"</em> and <em>"scheduled subject coverage: 92.86%"</em> — 26 of 28 subjects — derived from the register version then live. The register today reads <strong>0</strong> scheduled, <strong>0</strong> due-unrun, <strong>21</strong> completed. The 92.86% figure is <strong>superseded</strong> by this reading. The note received a dated correction on 2026-10-30: a dated record is not rewritten, and the error is kept visible.</p>
+
+<p class="note">This report counts rows in a register. It decides nothing about whether any measured claim is true, and it grants no status to any subject. The register is at <a href="https://councilof.ai/spec/claim-maintenance/register.json">/spec/claim-maintenance/register.json</a>; the specification is at <a href="https://councilof.ai/spec/claim-maintenance/">/spec/claim-maintenance/</a>.</p>
+</main>  <script src="/council-workspace-launcher.js" defer></script>
+</body></html>
