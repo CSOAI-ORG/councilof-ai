@@ -92,6 +92,26 @@ def render(row):
         if not mirror or not source:
             raise ValueError('reviewed historical mirror provenance is missing')
         body = mirror[0] + '\n\n' + EDITORIAL[row['ref']] + f'\n[Complete source README at the mirrored revision](https://huggingface.co/datasets/{source[1]}/blob/{source[2]}/README.md).\n'
+    elif row['ref'] == 'nicktempleman/gspc-one':
+        body = '''## GSPC One — measurements and evidence by subject and axis
+
+`gspc-one.json` is a complete JSON document. Its `rows` array holds the observations; the surrounding fields contain the schema, rules, planned classes and axis manifest.
+
+```python
+import json
+from pathlib import Path
+document = json.loads(Path("dataset/gspc-one.json").read_text(encoding="utf-8"))
+rows = document["rows"]
+print(document["rules"])
+print(rows[0]["subject"], rows[0]["axis"], rows[0]["evidence_url"])
+```
+
+Each row includes `subject_class`, `subject`, `axis`, `result`, `lane`, `group`, `evidence_url` and `as_of`. Some rows also carry `n`, `distinct_items`, `wilson95` and `kind`; absent values are not zero.
+
+Keep comparison groups separate. Signed and unsigned lanes, model comparisons, deterministic facts and census states must not be pooled into a single ranking. Census grids have no population totals or ordering. Read the original document's `rules`, `planned_classes`, `axes_manifest` and `no_aggregate` fields before analysis.
+
+The file's observation dates remain authoritative for this snapshot. The related [Hugging Face GSPC One repository](https://huggingface.co/datasets/csoai/gspc-one) has a configured table view. A page or viewer repair does not create a new measurement or signature.
+'''
     else:
         cleaned, _ = clean_body(current)
         body = remove_shared_sections(cleaned)

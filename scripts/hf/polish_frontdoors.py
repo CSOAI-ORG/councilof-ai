@@ -19,7 +19,9 @@ TARGETS = {
     "dataset": ("csoai/gspc-board", "dataset", "scripts/hf/templates/gspc-board.md"),
     "board-space": ("csoai/gspc-board", "space", "spaces/gspc-board/README.md"),
     "benchmark-suite": ("csoai/gspc-benchmark-suite", "dataset", "scripts/hf/templates/gspc-benchmark-suite.md"),
+    "gspc-one": ("csoai/gspc-one", "dataset", "scripts/hf/templates/gspc-one.md"),
 }
+GSPC_ONE_CONFIG = "configs:\n- config_name: default\n  data_files:\n  - split: train\n    path: gspc-one.json\n  field: rows"
 
 
 def front_matter(text: str) -> tuple[str, str]:
@@ -44,6 +46,13 @@ def render_card(target: str, current: str, snapshot: dict | None = None) -> str:
             if not snapshot.get(key) or f"`{snapshot[key]}`" not in found[0]:
                 raise ValueError(f"Published README and snapshot disagree: {key}")
         body = template.replace("{{PROVENANCE}}", found[0])
+    elif target == "gspc-one":
+        if re.search(r"(?m)^configs:", fm):
+            if not fm.endswith(GSPC_ONE_CONFIG):
+                raise ValueError("Unexpected GSPC One configuration; review before replacing")
+        else:
+            fm += "\n" + GSPC_ONE_CONFIG
+        body = template
     elif target == "benchmark-suite":
         # This repository is a multi-schema bundle. Automatic conversion was
         # displaying one registry manifest as a one-row test dataset.

@@ -1,6 +1,6 @@
 """Protect dataset provenance and non-presentation bytes during card maintenance."""
 import unittest
-from polish_frontdoors import assert_unchanged_files, front_matter, render_card
+from polish_frontdoors import assert_unchanged_files, front_matter, render_card, GSPC_ONE_CONFIG
 
 
 class FrontdoorGuards(unittest.TestCase):
@@ -41,6 +41,13 @@ class FrontdoorGuards(unittest.TestCase):
         self.assertEqual(front_matter(new)[0], front_matter(current)[0] + '\nviewer: false')
         self.assertEqual(render_card('benchmark-suite', new), new)
         self.assertIn('one-row test dataset', new)
+
+    def test_nested_export_selects_rows_and_preserves_licence(self):
+        current='---\nlicense: cc-by-4.0\npretty_name: GSPC one (Council of AI)\n---\nOriginal'
+        new=render_card('gspc-one',current)
+        self.assertEqual(front_matter(new)[0],front_matter(current)[0]+'\n'+GSPC_ONE_CONFIG)
+        self.assertEqual(render_card('gspc-one',new),new)
+        with self.assertRaises(ValueError):render_card('gspc-one',self.card())
 
 
 if __name__ == '__main__':
