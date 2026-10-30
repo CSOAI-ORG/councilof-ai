@@ -133,6 +133,48 @@ use, remote MCP, nested agent tools, handoffs and streaming recovery need separa
 acceptance. Argument-edit tests at the direct callback boundary are distinct from
 serialized SDK resume tests; no paused-proposal editing UI is claimed.
 
+## Receiver verification of a retained qualification
+
+From a trusted repository checkout, with `jsonschema` available, a receiver can
+check the existing bundle without installing an agent SDK, calling a provider or
+executing code supplied in the evidence:
+
+```sh
+python packages/evidence-fabric/verify_qualification.py \
+  harness/authority_adapters/receipts/2026-10-29 \
+  --expected-manifest-sha256 fa013956862c27a4c645cc156a8aee44296dad9a223703e5aaedbeac9b275b46 \
+  --source-root .
+```
+
+Choose the expected digest independently, for example from a reviewed commit or
+a separately authenticated handover. Taking a digest from the same untrusted
+bundle checks self-consistency only. The command checks the manifest, log and
+JUnit bytes, individual case identities, 45-case/two-SDK inventory, negative
+controls, reported effect readbacks, observation window, source pins and existing
+event/schema binding. With `--source-root`, it also compares the listed source
+bytes and the described core mutation. It does not import received source.
+
+The output is a diagnostic summary, not another receipt schema. Exit 0 and
+`MATCHED_EXPECTATION` mean the retained accounting matches the selected manifest.
+Read `qualification_state` separately: an internally consistent failure record
+is still a failure record. Missing expectations or unreadable evidence return
+`UNCHECKABLE` (exit 2); contradictory bytes/accounting return `MISMATCH` (exit 1).
+Signatures remain `NOT_VERIFIED`, and human authority and production acceptance
+remain `NOT_ESTABLISHED`. It does not rerun the producer, prove producer honesty,
+verify current revocation, or establish a SLSA level. Only listed source files are
+covered; extra files and installed dependencies are outside that comparison.
+
+Use a stable local copy; concurrently writable hostile directories are not a
+supported trust boundary. Evidence sizes are bounded, duplicate JSON keys and
+JUnit identities are rejected, and source paths cannot traverse outside the
+chosen root or use symlinks. A changed test selection or SDK pin needs a new
+qualification method version; historical v0.1.0 evidence is never rewritten.
+
+This applies the consumer-expectation principle in
+[SLSA verification guidance](https://slsa.dev/spec/v1.2/verifying-artifacts/)
+to the existing Council evidence format. It neither emits SLSA provenance nor
+claims SLSA conformance.
+
 ## Charter, GSPC and release boundary
 
 This follows default deny and exact authority (articles 2–5), separate research and

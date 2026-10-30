@@ -77,6 +77,23 @@ a published digest alone does not make it an installable or exercised integratio
    retains JUnit/log/source hashes and uses the existing evidence-event builder and
    full schema. `receipts/2026-10-29/` contains the resulting unsigned record,
    with `value: null`. This is SDK-control evidence, not a GSPC model or board score.
+7. **Receiver-side verification of that same evidence:**
+   `packages/evidence-fabric/verify_qualification.py` checks the retained SDK bundle
+   against a receiver-selected manifest digest, without SDK installation, network
+   access or execution of received code. It binds log/JUnit bytes, individual cases,
+   runtime/source inventory, negative-control accounting and the existing event.
+   Its 36 checks include altered/resealed evidence, omitted cases, false control
+   detection, path escapes and encoded XML declarations. Two deliberate verifier
+   defects separately disabled the expected digest and JUnit case binding; the
+   corresponding tests each failed on the incorrect positive result. These are
+   receiver-verifier controls, separate from the two retained SDK bypass controls.
+   The original seven evidence files and frozen schemas remain unchanged.
+
+The receiver extension passes 115 focused offline tests (36 new and 79 existing).
+CI runs those tests and checks the historical bundle against its explicit expected
+digest and listed source bytes. `MATCHED_EXPECTATION` means integrity/accounting
+matches that expectation; read `qualification_state` separately. It does not
+authenticate a signer, establish human approval or qualify a production executor.
 
 Validation on the isolated source slice: 79 tests passed across the new handoffs and
 existing event/doctrine checks; 43 new LangChain checks; 38 v0.1 checks; 11 approval
@@ -131,6 +148,27 @@ invent four unrelated receipt formats. The host must bind the canonical request,
 principal, tenant, audience, tool/version, policy revision, authority epoch, expiry
 and one-use invocation identity. Authentication, revocation and replay enforcement
 belong to the host; GSPC evidence cannot grant permission.
+
+### Consolidate the planning contracts before adding another format
+
+When a plan proposes a new authority/effect envelope, first map its fields into
+the existing contracts below. A versioned amendment needs a demonstrated missing
+requirement; a new label alone is not a reason to fork the schema or frozen charter.
+
+| Question | Canonical implementation or owner | Distinct acceptance test |
+| --- | --- | --- |
+| What commitments do we make? | Existing 22-article operational charter | Map each commitment to an owner, executable control and retained limit |
+| May this exact action execute? | Authority-effect v0.2; temporal corrections owned by #3598 | Authenticated decision, exact arguments, current scope, one-use consumption and observed effect |
+| What did a test actually report? | Existing `csoai.evidence-event/0.1` and `retain_checks.py` | Retained run, source/version pins, failed-control discrimination and `value: null` where no measurement exists |
+| Does this SDK test bundle match the receiver's expectation? | This PR's `verify_qualification.py` | Independently selected digest, byte/case binding, explicit integrity and qualification results |
+| Can a recipient reopen the public card/bundle? | Existing recipient workflow in #3610; save/reopen work in #3602 | Actual delivered artifact, current verification and receiver readback; SDK-test integrity alone does not close it |
+| Can a GSPC label be admitted? | Existing canonical `harness/gspc-top100/mill_hub_queue.py:read_label` | Run its existing predicate against qualifying evidence; do not duplicate or weaken the grader |
+| Has WG-SAFE or a customer accepted this? | Actual review and receiver outcome | Retain their observed response separately from our submission, fixture success or listing |
+
+This keeps one decision chain and one evidence chain while allowing adapters,
+renderers and recipient workflows to share them. The receiver check applies the
+[SLSA consumer-expectation principle](https://slsa.dev/spec/v1.2/verifying-artifacts/)
+to our existing format; it is not a SLSA attestation or conformance claim.
 
 | Seam | Implement at | Acceptance evidence still required |
 | --- | --- | --- |

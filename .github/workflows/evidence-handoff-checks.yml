@@ -90,6 +90,13 @@ jobs:
           packages/evidence-fabric/tests/test_openshell_otel.py
           packages/evidence-fabric/tests/test_doctrine.py
           packages/evidence-fabric/tests/test_event.py
+          packages/evidence-fabric/tests/test_verify_qualification.py
+      - name: Check retained SDK evidence from the receiver side
+        run: >-
+          python packages/evidence-fabric/verify_qualification.py
+          harness/authority_adapters/receipts/2026-10-29
+          --expected-manifest-sha256 fa013956862c27a4c645cc156a8aee44296dad9a223703e5aaedbeac9b275b46
+          --source-root .
       - name: Approval and discriminating controls
         working-directory: docs/standards/osaia-safe-reverification
         run: |
