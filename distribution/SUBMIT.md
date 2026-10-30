@@ -267,10 +267,12 @@ CONSISTENT / INCONSISTENT (quoting source and live) / UNCHECKABLE (staged daily:
 
 ## Owner decisions (not taken in this lane)
 
-1. **Licences.** `councilof-mcp` (PyPI, 1.0.1) and `@csoai/layer0` (`packages/layer0-js`, 0.2.0) are MIT against the
-   Apache-2.0 default. Not changed here. `@csoai/layer0` is also not on npm, so the TS adapters take it as an optional peer.
-2. **Layer0 gateway.** `@csoai/layer0` defaults to https://api.csoai.org, which did not answer on 2026-09-25; the TS adapters
-   therefore call https://councilof.ai/mcp directly and use Layer0 only when a caller passes an instance.
+1. **Licences.** `councilof-mcp` (PyPI, 1.0.1) is MIT against the Apache-2.0 default. Not changed here.
+   `@csoai/layer0` (`packages/layer0-js`, 0.2.1) is Apache-2.0 from 0.2.0 and has been on npm since 2026-10-30,
+   so the TS adapters can take it as an ordinary dependency.
+2. **Layer0 gateway.** `@csoai/layer0` defaults to https://councilof.ai, where the public Layer 0 gateway is served
+   (re-probed 2026-10-30: /api/gate 200, /api/a2a/route 200 with a signed envelope, /api/a2a/verify 400 on an empty
+   body). The TS adapters call https://councilof.ai/mcp directly and use Layer0 only when a caller passes an instance.
 3. **Doctrine text.** `docs/DOCTRINE.md` rule 4 types a board grammar ("22 · 15 · 7") that the live board no longer prints.
    Outputs carry only the hash, so nothing stale is copied; fix the text, then `render.mjs --pin-doctrine`.
 4. **Second registry name** (`ai.councilof/gspc`) — keep both names or one.

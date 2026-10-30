@@ -861,7 +861,7 @@ ${usage}
 \`\`\`
 
 Optional Layer 0 wrapping: pass \`{ layer0: new Layer0({...}) }\` from \`@csoai/layer0\` (${layer0Version}) and every call runs
-through \`Layer0.governed()\` (gate → run → attest). \`@csoai/layer0\` is an optional peer and is not yet on npm.
+through \`Layer0.governed()\` (gate → run → attest). \`@csoai/layer0\` is an optional peer and has been on npm since 2026-10-30.
 
 States: \`LIVE\`, \`ERROR\` (the door answered with a JSON-RPC error), \`UNREACHABLE\` (no number is returned).
 ${STANCE}
@@ -1803,10 +1803,12 @@ ${STEPS[r.id].map((s, i) => `${i + 1}. ${s}`).join("\n")}
 `).join("\n")}
 ## Owner decisions (not taken in this lane)
 
-1. **Licences.** \`councilof-mcp\` (PyPI, 1.0.1) and \`@csoai/layer0\` (\`packages/layer0-js\`, ${layer0Version}) are MIT against the
-   Apache-2.0 default. Not changed here. \`@csoai/layer0\` is also not on npm, so the TS adapters take it as an optional peer.
-2. **Layer0 gateway.** \`@csoai/layer0\` defaults to https://api.csoai.org, which did not answer on 2026-09-25; the TS adapters
-   therefore call ${ID.door} directly and use Layer0 only when a caller passes an instance.
+1. **Licences.** \`councilof-mcp\` (PyPI, 1.0.1) is MIT against the Apache-2.0 default. Not changed here.
+   \`@csoai/layer0\` (\`packages/layer0-js\`, ${layer0Version}) is Apache-2.0 from 0.2.0 and has been on npm since 2026-10-30,
+   so the TS adapters can take it as an ordinary dependency.
+2. **Layer0 gateway.** \`@csoai/layer0\` defaults to https://councilof.ai, where the public Layer 0 gateway is served
+   (re-probed 2026-10-30: /api/gate 200, /api/a2a/route 200 with a signed envelope, /api/a2a/verify 400 on an empty
+   body). The TS adapters call ${ID.door} directly and use Layer0 only when a caller passes an instance.
 3. **Doctrine text.** \`docs/DOCTRINE.md\` rule 4 types a board grammar ("22 · 15 · 7") that the live board no longer prints.
    Outputs carry only the hash, so nothing stale is copied; fix the text, then \`render.mjs --pin-doctrine\`.
 4. **Second registry name** (\`${dist.registry_names.domain}\`) — keep both names or one.
