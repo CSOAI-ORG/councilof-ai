@@ -1,7 +1,23 @@
 {
- "schema": "csoai.outreach-receipts/0.1",
+ "schema": "csoai.outreach-receipts/0.2",
  "sent_at": "2026-10-29T03:42:47.817Z",
+ "supersedes": "csoai.outreach-receipts/0.1 (the unredacted copy; published nowhere)",
+ "redacted_at": "2026-10-29T09:50:00Z",
  "what_this_is": "A send record with real transport receipts. It is not a reply log, not a pipeline, and not evidence of a conversion.",
+ "redaction": {
+  "state": "REDACTED_BEFORE_PUBLICATION",
+  "what": "Third-party mailboxes, organisation names, one subject line and one reason were withheld from this copy before it was published. Every withheld item carries a stable token, and the tokens are the same in both published copies of this record.",
+  "why": "This file is served from public paths. The estate removed a third party's contact details from its tree on 6 Oct 2026 for the same reason and keeps a guard that fails if such identifiers come back.",
+  "tokens": {
+   "withheld-address-N": "a third party's mailbox (N = 1..9)",
+   "withheld-name-N": "a third party's organisation (N = 1..8)",
+   "withheld-subject-4": "the subject line of a live commercial thread",
+   "withheld-reason-1": "a reason that described a private commercial negotiation between the estate and a third party; the token records that a reason exists and was withheld, not that the reason was empty"
+  },
+  "kept": "The structure, the schema fields, the claim corrections, the transport receipts, CSOAI's own message ids, the send timestamps, and every other reason. The receipt still says what was prepared, whether it was sent, what the transport answered, and why each line was or was not sent.",
+  "the_unredacted_copy": "Held by the owner. Not published, and not in this repository.",
+  "not_a_repair": "This copy does not assert that the send succeeded, that a reply was received, or that any of these messages reached anyone. Every send in this record failed at the transport, and the record says so."
+ },
  "claims_corrected_before_sending": [
   {
    "claim": "23 published measurement axes",
@@ -25,9 +41,9 @@
  "sent": [
   {
    "id": "naic",
-   "to": "SSobel@naic.org",
-   "cc": "MARomero@naic.org",
-   "subject": "Re: Planning for the NAIC Big Data and AI Working Group Meeting on Oct 8",
+   "to": "withheld-address-1",
+   "cc": "withheld-address-2",
+   "subject": "Re: Planning for the withheld-name-1 Big Data and AI Working Group Meeting on Oct 8",
    "why": "US insurance regulators’ Big Data and AI Working Group. We asked for the meeting materials and whether a written follow-up to our consultation comments would still be useful; this is that follow-up, carrying the evidence artefact rather than an opinion about their process.",
    "message_id": "<20261029T034224.fec4a40015a9057b@csoai.org>",
    "sent": false,
@@ -38,7 +54,7 @@
   },
   {
    "id": "brownejacobson",
-   "to": "richard.nicholas@brownejacobson.com",
+   "to": "withheld-address-3",
    "cc": null,
    "subject": "Re: One AI vendor claim to scope",
    "why": "The firm’s own August article raised continuous monitoring for AI evidence, and our opening question asked whether one dated, source-linked observation would help a current vendor-review decision. This is the answer to that question, with the evidence pack attached as text.",
@@ -51,7 +67,7 @@
   },
   {
    "id": "glama",
-   "to": "frank@glama.ai",
+   "to": "withheld-address-4",
    "cc": null,
    "subject": "Re: Council of AI GSPC — existing records and evidence-integration contact",
    "why": "Enterprise AI infrastructure, and an open thread about evidence integration. The enterprise-assurance material is what an infrastructure provider’s own enterprise customers ask for, so it is the piece of our material that answers their question.",
@@ -65,27 +81,27 @@
  ],
  "not_sent": [
   {
-   "to": "comercial@risckcomply.com",
-   "subject": "Re: Strategic AI governance acquisition opportunity — RISCK COMPLY × CSOAI",
-   "reason": "Their overview and PDF are with the owner for his own review, and he told them on 12 October that he would come back with specific questions after checking it. An agent sending marketing material on an acquisition discussion the owner is handling personally would put words in his mouth."
+   "to": "withheld-address-5",
+   "subject": "withheld-subject-4",
+   "reason": "withheld-reason-1"
   },
   {
-   "to": "p@launchfluxcloud.com",
+   "to": "withheld-address-6",
    "subject": "Re: Layer 0 AI compliance",
    "reason": "A marketing agency pitching placement. We already told them that \"watchdog certificates\" or a compliance guarantee would misrepresent the work. Sending the assurance one-pager to a sponsored-content pitch would contradict that."
   },
   {
-   "to": "Assurance@aiverify.sg",
+   "to": "withheld-address-7",
    "subject": "RE: RE: Expression of Interest - Global AI Assurance Sandbox",
-   "reason": "We told AI Verify we would return once we can document completed paid testing engagements and a delivery track record. We have no completed paid engagements, so there is nothing to send that would answer their criteria."
+   "reason": "We told withheld-name-6 we would return once we can document completed paid testing engagements and a delivery track record. We have no completed paid engagements, so there is nothing to send that would answer their criteria."
   },
   {
-   "to": "ai-measurement@npl.co.uk",
+   "to": "withheld-address-8",
    "subject": "Call for Evidence (AI testing, evaluation and assurance)",
    "reason": "A standards evidence submission already answered in full on 30 September, with a supplement. Not an enterprise-assurance outreach target, and re-sending would duplicate our own response."
   },
   {
-   "to": "zack@usesparktools.co",
+   "to": "withheld-address-9",
    "subject": "Re: Certifications",
    "reason": "They pitched us a certification package and we explicitly declined to commission it and asked them not to spend. A pitch back would be wrong."
   },
