@@ -89,9 +89,9 @@ limitations under the License.
 
 # --------------------------------------------------------------------------- hand-written (read by a person on 2026-09-05)
 HAND: dict[str, str] = {
-    "councilof-ai": "CSOAI Ltd — Council of AI. GSPC AI-behaviour measurement, signed evidence and free verification. Evidence bundles and provider-change feeds. Measurement, not certification.",
-    "sovereign-wiki": "Public catalogue of AI governance sources, measurement tools and data interfaces maintained by CSOAI Ltd. See Council of AI for current measurements, methods and verification.",
-    "csoai-org-v2": "CSOAI website source and documentation. Current Council of AI measurements, published methods and free verification: councilof.ai.",
+    "councilof-ai": "Council of AI — AI-behaviour measurements, published methods, signed evidence and free verification. Operated by CSOAI Ltd. Evidence services; measurement, not certification.",
+    "sovereign-wiki": "Council of AI source catalogue: AI governance references, measurement tools and data interfaces. Operated by CSOAI Ltd. Current measurements and verification: councilof.ai.",
+    "csoai-org-v2": "Earlier Council of AI website source (CSOAI Ltd). Current measurements, methods and free verification: councilof.ai.",
     "gspc-board": "🪞 Mirrors GET councilof.ai/api/gspc as dated JSON/parquet snapshots — every count derived from the axes array, every card Ed25519-verifiable without an account. CC0 data.",
     "a2a-signed-receipts": "🧾 Extends A2A with signed-receipts/v1 — did:web key-trust for §8.4 AgentCard signing plus Ed25519-signed task-outcome receipts. Evidence of what was claimed, not a certification.",
     "inspect-receipts": "🔏 Signs every Inspect AI eval run with an Ed25519, hash-chained, offline-verifiable measurement receipt. Evidence of what was claimed and when — not certification.",

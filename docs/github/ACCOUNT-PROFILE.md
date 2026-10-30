@@ -1,6 +1,6 @@
 # Nicholas Templeman · Council of AI
 
-Founder of **[Council of AI](https://councilof.ai/about/)**, the public AI measurement service operated by **CSOAI Ltd** (England and Wales, company 16939677).
+Founder of **[Council of AI](https://councilof.ai/about/) — Council for the Safety of Artificial Intelligence**, an AI measurement body operated by **CSOAI Ltd** (England and Wales, company 16939677).
 
 We measure how AI systems behave on published tests and make the results available for others to inspect. Our work includes frozen test banks, deterministic grading where the method permits it, signed measurement records, free verification and public corrections.
 

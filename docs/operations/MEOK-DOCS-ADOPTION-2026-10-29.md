@@ -1,4 +1,6 @@
-# MEOK public documentation replacement — review candidate
+# MEOK documentation reference — superseded adoption route
+
+Status reconciled 30 October 2026: the existing MEOK website work now records a six-file documentation/discovery contribution at its canonical source. This standalone candidate is retained as a historical review reference and must not be adopted as a second website implementation. That source status is reported by the existing execution record; the private repository remains unreadable through this connection, and no production release is established here.
 
 This HTML is a proposed replacement for `https://meok.ai/docs`, not a production asset of Council of AI. It must not be copied into Council's public directory or deployed over an unverified MEOK build.
 
@@ -11,7 +13,7 @@ Two local deployment-artifact copies contain the same stale 5,332-byte docs file
 ## Adoption sequence
 
 1. The existing MEOK release owner identifies the serving repository, commit and build configuration from a current deployment receipt.
-2. Apply the candidate's content to that source's existing documentation component. Preserve the current design and build conventions; this standalone HTML retains the older page's visual tokens only as a review aid.
+2. Review the existing canonical website contribution against the acceptance points below. Reuse any useful wording from this reference only through that source and its owner; preserve the current design and build conventions. Do not deploy the standalone HTML or recreate the six-file contribution.
 3. Verify the exact labels, Ask → export → reopen flow, source links, digest rejection, cancellation and narrow mobile layout against the release candidate. Confirm transcript and network handling before changing privacy/terms.
 4. Keep `/docs#status` and the historical anchors `#overlay`, `#keys`, `#mcp`, `#verify`, `#boundary` working. The candidate preserves them without repeating stale endpoint or availability claims.
 5. Use the existing governed MEOK release path. Record the serving commit and live `/docs#status` readback. Update the master checklist only after that evidence exists.

@@ -1,6 +1,6 @@
-# AI governance source catalogue
+# Council of AI — governance source catalogue
 
-This repository contains a public catalogue of AI governance sources, measurement tools and data interfaces maintained by **CSOAI Ltd**. Current Council of AI measurements, methods and verification are published at **[councilof.ai](https://councilof.ai/)**.
+**Council of AI — Council for the Safety of Artificial Intelligence** publishes AI measurements, methods and verification at **[councilof.ai](https://councilof.ai/)**. This repository contains its public catalogue of AI governance sources, measurement tools and data interfaces. The legal operator is **CSOAI Ltd**.
 
 ## Inspect current work
 

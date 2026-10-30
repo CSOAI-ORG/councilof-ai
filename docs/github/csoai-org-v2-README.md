@@ -1,6 +1,6 @@
-# CSOAI website source — earlier version
+# Council of AI — earlier CSOAI website source
 
-This repository retains an earlier CSOAI website implementation. The current **Council of AI** measurement service, published methods and free verification are at **[councilof.ai](https://councilof.ai/)**, operated by **CSOAI Ltd**.
+This repository retains an earlier CSOAI website implementation. The current **Council of AI — Council for the Safety of Artificial Intelligence** measurement service, published methods and free verification are at **[councilof.ai](https://councilof.ai/)**, operated by **CSOAI Ltd**.
 
 Start with the [measurement board](https://councilof.ai/board/), [methodology](https://councilof.ai/methodology/), [free verifier](https://councilof.ai/gspc-verify/) and [current source repository](https://github.com/CSOAI-ORG/councilof-ai).
 
