@@ -1,0 +1,44 @@
+name: GSPC product qualification
+
+on:
+  pull_request:
+    paths:
+      - 'harness/bench/**'
+      - 'harness/gspc-top100/mill_hub_queue.py'
+      - 'scripts/hf/**'
+      - 'scripts/pubbus/publish-fleet-status.py'
+      - 'fleet/publish_fleet_status.py'
+      - '.github/workflows/gspc-product-qualification.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'harness/bench/**'
+      - 'scripts/hf/**'
+      - '.github/workflows/gspc-product-qualification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  offline-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned framework
+        run: python -m pip install -r harness/bench/requirements-inspect.txt pytest==8.4.2 pyyaml
+      - name: Public product and actual framework controls
+        run: >-
+          python -m pytest -q
+          harness/bench/test_inspect_task.py
+          harness/bench/test_run_bench.py
+          harness/bench/test_comparison_integrity.py
+          harness/bench/test_paired_comparison.py
+          scripts/hf/test_dataset_access.py
+          scripts/hf/test_cite_block.py
+          scripts/hf/test_catalogue_publication.py

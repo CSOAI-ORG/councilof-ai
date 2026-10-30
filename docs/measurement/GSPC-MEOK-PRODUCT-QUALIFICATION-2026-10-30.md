@@ -57,7 +57,7 @@ Before offering an external adapter:
 4. Save a clean-environment installation/replay receipt and keep it in CI.
 5. Publish results only after a real run. The Hub's verified badge requires its supported verification flow; never synthesize a verification token or relabel a Council signature as that badge.
 
-The existing Inspect/Lighteval/registry files remain experimental until these checks pass. No paid evaluation jobs, external leaderboard submissions or new measurements are performed by this patch.
+The older Inspect/Lighteval/registry files bundled on Hugging Face remain experimental. The canonical `harness/bench/inspect_task.py` now has a pinned Inspect AI 0.3.259 integration, exercised in an isolated Python environment using original-log readback and synthetic correct, wrong, malformed, empty and zero-parsed replies. It imports the canonical loader, prompt builder and grader, refuses changed bank bytes and unsound menus, and reports both denominators. This qualifies that software path, not a model result or external registration. No paid evaluation jobs, external leaderboard submissions or new measurements are performed by this patch.
 
 ## MEOK completion gates
 
