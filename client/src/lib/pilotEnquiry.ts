@@ -32,7 +32,7 @@ export function wrapperEnquiryHref(pair: string, asOf: string): string {
 export function enquiryPreset(search: string): Pick<EnquiryFields, 'subject' | 'message'> | null {
   const params = new URLSearchParams(search);
   const arm = params.get('arm');
-  if (arm === 'working-group') return workingGroupEnquiry(params.get('group'));
+  if (arm === 'working-group') return workingGroupEnquiry(params.get('group'), params.get('stage'));
   if (arm === 'invoice') {
     const product = BUYING_ENQUIRIES.find((p) => p.product === params.get('product'));
     if (!product) return null;

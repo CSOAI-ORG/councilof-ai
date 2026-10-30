@@ -20,7 +20,12 @@
       "firstTask": "Review one Council self-claim and produce a dated correction or a reasoned no-change record.",
       "status": "forming",
       "chair": null,
-      "acceptedMembers": []
+      "acceptedMembers": [],
+      "reviewOutputs": [
+        "Exact claim, source URL and capture date.",
+        "Evidence for a correction or a reasoned no-change outcome.",
+        "Scope, unresolved questions and proposed public wording."
+      ]
     },
     {
       "id": "agent-control",
@@ -33,10 +38,15 @@
         "custody-disclosure"
       ],
       "purpose": "Test delegated authority, revocation and the limits of in-flight cancellation.",
-      "firstTask": "Specify a revocation trial with issue, propagation, rejection, last-action and quiescence timestamps.",
+      "firstTask": "Replay four local revocation controls and challenge how issue, last-action and quiescence timestamps are interpreted.",
       "status": "forming",
       "chair": null,
-      "acceptedMembers": []
+      "acceptedMembers": [],
+      "reviewOutputs": [
+        "Exact source commit, Node version and retained raw JSON with its digest.",
+        "Expected versus observed outcomes for all four controls, including failures and unknowns.",
+        "One challenged assumption or altered trace, with its result and limits."
+      ]
     },
     {
       "id": "evaluation",
@@ -51,7 +61,12 @@
       "firstTask": "Reproduce one published result from its exact source revision and record any missing inputs.",
       "status": "forming",
       "chair": null,
-      "acceptedMembers": []
+      "acceptedMembers": [],
+      "reviewOutputs": [
+        "Published result, exact revision, inputs and replay command.",
+        "Observed versus published result, with raw output or missing inputs.",
+        "Reproduction limits and a correction or reasoned no-change recommendation."
+      ]
     },
     {
       "id": "provenance",
@@ -67,7 +82,12 @@
       "firstTask": "Trace one public claim from source capture through its signed record and verification result.",
       "status": "forming",
       "chair": null,
-      "acceptedMembers": []
+      "acceptedMembers": [],
+      "reviewOutputs": [
+        "Claim URL and the source-to-record evidence chain.",
+        "Verification procedure, key or digest references, and observed output.",
+        "Missing links, licence limits and what verification does not establish."
+      ]
     },
     {
       "id": "runtime",
@@ -82,7 +102,12 @@
       "firstTask": "Compare a declared tool contract with one bounded execution trace and its refusal paths.",
       "status": "forming",
       "chair": null,
-      "acceptedMembers": []
+      "acceptedMembers": [],
+      "reviewOutputs": [
+        "Declared tool contract and exact implementation revision.",
+        "One permitted local trace plus a refusal or failure control.",
+        "Differences between declared and observed behaviour, including unknown effects."
+      ]
     },
     {
       "id": "human-impact",
@@ -98,7 +123,12 @@
       "firstTask": "Review one synthetic care scenario with a domain specialist and an affected-user representative.",
       "status": "forming",
       "chair": null,
-      "acceptedMembers": []
+      "acceptedMembers": [],
+      "reviewOutputs": [
+        "A synthetic scenario, affected people and relevant domain boundaries.",
+        "Domain-specialist and affected-user observations, attributed with permission.",
+        "Accessibility concerns, disagreements and changes needed before any real use."
+      ]
     },
     {
       "id": "economy",
@@ -113,7 +143,12 @@
       "firstTask": "Audit the provenance, date and limitations of one published labour or reserve observation.",
       "status": "forming",
       "chair": null,
-      "acceptedMembers": []
+      "acceptedMembers": [],
+      "reviewOutputs": [
+        "Observation URL, source date, population and method.",
+        "A check of one denominator, transformation or source-to-indicator step.",
+        "Uncertainty, excluded populations and limits on financial or labour interpretation."
+      ]
     }
   ]
 }

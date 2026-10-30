@@ -40,7 +40,25 @@ Test nested delegation, queued work, retries, network partitions and non-cancell
 Existing public routes: [disputes](https://councilof.ai/dispute/) and [corrections](https://councilof.ai/corrections/). The current dispute page describes owner review; an independent appeals panel remains a recruitment and governance task. The future panel must record conflicts, reasons, minority views and a correction or no-change outcome.
 
 ## Participation today
-Choose a proposed group at [Public Watchdog](https://councilof.ai/watchdog/?view=groups) and prepare a participation enquiry. The current contact flow opens a draft in the contributor's email client or allows copying it; it does not submit an application, create a membership record or grant case access. Agree one public, reproducible first task before committing to a continuing role.
+Choose a proposed group at [Public Watchdog](https://councilof.ai/watchdog/?view=groups), download its task brief and prepare a participation enquiry. Briefs are generated from the same registry as the group page and contain the required evidence, review notes, confidentiality boundary and return route. The agent-authority brief links to a commit-pinned protocol with runnable positive, negative and unknown-effect controls.
+
+Agree one public, reproducible task, time, attribution, conflicts and any funding before starting. Use the separate contribution-email route to return the agreed public evidence, source revision, observed result, missing evidence and disagreement. Keep a copy. The coordinator must acknowledge receipt and agree the next step; a response time is not promised. A contested or consequential conclusion still needs a separate competent, unconflicted reviewer who has accepted the task.
+
+Both contact routes prepare a draft in the contributor's email client or allow copying it. Neither submits an application, uploads evidence, creates membership, records a Council OS decision nor grants case access. Downloaded briefs also make this boundary explicit. A draft, sent email and accepted task are distinct states.
+
+## Implementation and acceptance
+The group registry is the sole source for group names, axis coverage, first tasks and required review outputs. `client/src/lib/workingGroups.ts` derives both downloaded briefs and the two Contact presets from it. Query parameters may select a registered group and the contribution stage; they cannot choose a recipient or supply an accepted-role status.
+
+The existing Council OS staff pane owns the human-review console. Its UI, decision/history handlers and execution-authority work remain separate controls; the contribution path does not create a second decision store or confer authority. Preserve both the working-group tab and the claim/challenge journey when integrating other Watchdog changes.
+
+Reproduce the contributor acceptance locally with existing repository dependencies and Chromium:
+
+```sh
+node scripts/hitl/working-group-acceptance.mjs --output /absolute/path/contributor-acceptance.json
+node scripts/hitl/ui-acceptance.mjs --output /absolute/path/human-review-acceptance.json
+```
+
+The first checks actual downloads, all seven contribution handoffs, copy recovery, keyboard expansion, navigation, mobile layout and invalid query parameters with external requests blocked. The second uses the real review UI and handlers with synthetic cases, an in-memory store and an ephemeral signer. These checks are distinct from live deployment, email delivery, authenticated named-human identity, operational staffing or execution-authority acceptance. Neither sends a recruitment message or makes a real case decision.
 
 ## Release boundary
 This charter and registry may be reviewed and amended through the source repository. Public names, staffed-service claims and authority changes require their own supporting evidence. Ship website changes through the protected master release workflow; do not bypass deployment ownership.
