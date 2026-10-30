@@ -305,7 +305,7 @@ def _truth():
 def test_kaggle_page_text_is_derived_from_the_truth_only():
     subtitle, description = spray.kaggle_page_text(_truth())
     assert "2026-09-14T03:12:56Z" in subtitle
-    assert description.startswith("22 axes measured · not a certificate.")
+    assert "\n22 axes measured · not a certificate.\n" in description
     assert description.endswith("spray-fingerprint: " + "9" * 64)
     assert not spray.BANNED.search(description)
 
