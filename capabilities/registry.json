@@ -4099,6 +4099,97 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
+    },
+    {
+      "id": "api-layer0-gate",
+      "protocols": [
+        "http"
+      ],
+      "title": "Layer 0 Sovereign Gate",
+      "description": "POST /api/gate - the CSOAI Layer-0 Sovereign Gate decision. Answers one question: what does the estate's policy say about the action that was asked about? A policy decision, not a certification, not a ranking, and not a statement that anything was executed. Identity is required; the G-block floor G >= 0.50 is non-derogable; EU AI Act Article 5 practices and the AILuminate hazards are denied; Annex III domains escalate to a human.",
+      "endpoint": "/api/gate",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-layer0-gate-get",
+      "protocols": [
+        "http"
+      ],
+      "title": "Layer 0 Sovereign Gate (GET)",
+      "description": "GET is not allowed on /api/gate; the decision is a POST.",
+      "endpoint": "/api/gate",
+      "method": "GET",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-layer0-a2a-route",
+      "protocols": [
+        "http"
+      ],
+      "title": "Layer 0 A2A envelope",
+      "description": "POST /api/a2a/route - builds and signs a csoai.a2a/0.1 attestation envelope: an Ed25519 signature over the canonical envelope (without its sig field), a policy block carrying the gate's decision, and an episode hash over the exchange. A denied action is refused with 403 and no envelope. When this deployment has no signing key the route answers 503 and says so: an unsigned artefact is honest and a fabricated signature is not.",
+      "endpoint": "/api/a2a/route",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-layer0-a2a-route-get",
+      "protocols": [
+        "http"
+      ],
+      "title": "Layer 0 A2A envelope (GET)",
+      "description": "GET is not allowed on /api/a2a/route; the envelope is built by a POST.",
+      "endpoint": "/api/a2a/route",
+      "method": "GET",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-layer0-a2a-verify",
+      "protocols": [
+        "http"
+      ],
+      "title": "Layer 0 A2A envelope verification",
+      "description": "POST /api/a2a/verify - verifies an inbound A2A envelope. It rebuilds the canonical form of the envelope with its sig field removed and checks the Ed25519 signature against the peer key the caller supplies, or against this deployment's own published key. It answers valid true or false and never true for an envelope it could not check. A valid signature says who signed the bytes; it says nothing about whether the decision inside was right.",
+      "endpoint": "/api/a2a/verify",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-layer0-a2a-verify-get",
+      "protocols": [
+        "http"
+      ],
+      "title": "Layer 0 A2A envelope verification (GET)",
+      "description": "GET is not allowed on /api/a2a/verify; an envelope is verified by a POST.",
+      "endpoint": "/api/a2a/verify",
+      "method": "GET",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-layer0-a2a-key",
+      "protocols": [
+        "http"
+      ],
+      "title": "Layer 0 signing public key",
+      "description": "GET /api/a2a/key - the public half of this deployment's Layer-0 signing key: the kid that names it, and the key itself. The public key is DERIVED from the same secret the signer uses, so the two cannot drift apart. When no signing key is configured the endpoint answers 404 and says so; it never publishes a placeholder that would fail verification in a confusing way.",
+      "endpoint": "/api/a2a/key",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
     }
   ]
 }
