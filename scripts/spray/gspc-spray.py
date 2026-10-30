@@ -1052,27 +1052,70 @@ def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
 
 
 def kaggle_page_text(tr: dict) -> tuple[str, str]:
-    """The Kaggle page's subtitle and description, derived from the captured truth only.
-
-    Nothing here is typed: as_of, read_at, lid, issuer and fingerprint all come from `tr`.
-    A hand-added line (a Hub triple, a lane note) is exactly what this text is compared against."""
-    subtitle = f"Snapshot of GET councilof.ai/api/gspc · as_of {tr['as_of']}"
+    """Readable page copy; all snapshot claims come from the captured truth."""
+    subtitle = f"AI measurement axes, evidence and limits · {tr['as_of']} snapshot"
     assert 20 <= len(subtitle) <= 80, f"Kaggle subtitle must be 20–80 chars, got {len(subtitle)}"
-    description = (
-        f"{tr['lid']}\n\n"
-        f"AUTHORITY: GET {BOARD_URL}. This Kaggle copy is a snapshot read at {tr['read_at']}, aligned to the transparency "
-        f"root published at {tr['as_of']}. If the live GET and these files disagree, the live GET wins. A fetch that fails "
-        "is UNCHECKABLE, never a fabricated 0.\n\n"
-        "FILES: board.json (the whole GET, unmodified) · root.json (the transparency root, unmodified) · SNAPSHOT.json "
-        "(digests, derived counts, bank rows) · gspc-axes.csv / .jsonl (one row per slot) · check-board.sh (re-derive the "
-        "totals and the Merkle root yourself) · README.md (the axes, the counts, how to verify).\n\n"
-        f"VERIFY: {VERIFY_URL} (free, no account) · {HOWTO_URL} · pip install \"csoai-gspc[verify]\" then csoai-gspc verify "
-        f"CARD_ID · keys resolve via did:web:csoai.org: [DID document]({DID_URL}).\n\n"
-        "Not a certification, not a rating, not an endorsement, not legal advice. Measurement, not certification.\n\n"
-        f"Methodology DOI: https://doi.org/{ZENODO_METHODOLOGY_DOI} · snapshot series: https://doi.org/10.5281/zenodo.{ZENODO_CONCEPT}\n"
-        f"Issuer: {tr['board'].get('issuer', 'CSOAI Ltd')}.\n\n"
-        f"spray-fingerprint: {tr['fingerprint']}"
-    )
+    description = f"""## About this dataset
+
+A dated export of the Council of AI public GSPC measurement board. Each row describes one declared axis: what was measured, the evidence type, the published result and its limitations. Use it to explore coverage and inspect evidence in a notebook.
+
+[Explore the interactive board](https://huggingface.co/spaces/csoai/gspc-board) · [Live source JSON]({BOARD_URL}) · [Verify a signed record — free]({VERIFY_URL}) · [Methodology](https://councilof.ai/methodology/)
+
+### This release
+
+{tr['lid']}
+
+This snapshot was read at {tr['read_at']}, with the transparency root published at {tr['as_of']}. The capture time is not a new measurement. For current state, use the live source; retain this release for historical analysis.
+
+### Start with the CSV
+
+Download and extract the dataset, then run this beside `gspc-axes.csv` with pandas installed. In a Kaggle notebook, add this dataset and set `csv_path` to its mounted CSV path shown in the Input panel.
+
+```python
+from pathlib import Path
+import pandas as pd
+
+csv_path = Path("gspc-axes.csv")
+axes = pd.read_csv(csv_path)
+print(axes[["axis", "kind", "status", "n", "separation"]].to_string(index=False))
+print(axes.groupby(["kind", "status"], dropna=False).size())
+```
+
+### Files
+
+| File | Purpose |
+| --- | --- |
+| `gspc-axes.csv`, `gspc-axes.jsonl` | One row per declared axis, with result and source-bank fields |
+| `board.json` | Captured source board, unmodified |
+| `root.json` | Captured transparency root, unmodified |
+| `SNAPSHOT.json` | Capture dates, source hashes, counts and bank observations |
+| `check-board.sh` | Recheck the downloaded snapshot locally after inspecting the script |
+| `README.md` | Release context and verification instructions |
+
+### Reading the columns
+
+`axis` identifies the measurement question; `family` groups related axes; `kind` distinguishes model comparisons, deterministic facts and declared slots. `status` records whether an axis has evidence. `n` is its published count: inspect the method before comparing counts across axes.
+
+`separation` describes statistical separation when applicable. `public_leader_state` explains whether a leader can be shown; `leader` is a displayable field, not proof of a win. `accuracy` and `fleet_mean` apply only where the source provides them. `dataset`, `dataset_url`, `bank_state` and `bank_rows` describe the evidence source. `bench` and `task` retain the source context. Empty or inapplicable values are not zero.
+
+### Interpretation and limitations
+
+- MEASURED means evidence exists; it does not mean a model won.
+- TIE does not establish a separated lead. UNTESTED does not establish separation.
+- UNMEASURED marks a coverage gap. Failed retrieval is UNCHECKABLE, never a fabricated zero.
+- Do not pool model comparisons and deterministic source facts into one accuracy score.
+- Results apply to the recorded system, method, items and date. They do not establish general safety, certification, legal compliance or permission to execute.
+- Check signatures where provided, bound intake receipts, admission and current withdrawal status before quoting a card. A valid signature alone is insufficient; derived rows are not individually signed measurements.
+
+### Verify and cite
+
+Use the [free verifier]({VERIFY_URL}) and [verification instructions]({HOWTO_URL}). Keys resolve via `did:web:csoai.org`: [DID document]({DID_URL}). Check the [corrections register](https://councilof.ai/corrections/) for later withdrawals or corrections.
+
+Attribute the board export to Council of AI / CSOAI Ltd under CC-BY-4.0. Linked datasets and third-party material retain their own licences. Cite the dataset URL, Kaggle version, capture time and source hashes from `SNAPSHOT.json`.
+
+Issuer: {tr['board'].get('issuer', 'CSOAI Ltd')}.
+
+spray-fingerprint: {tr['fingerprint']}"""
     return subtitle, description
 
 

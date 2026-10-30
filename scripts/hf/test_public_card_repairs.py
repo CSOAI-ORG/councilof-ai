@@ -21,7 +21,7 @@ def selected(path, names, extra=None):
 
 def kaggle():
     return selected(ROOT / "scripts/spray/gspc-spray.py",
-        {"KAGGLE_ID", "KAGGLE_LICENCE_NAMES", "KAGGLE_TYPED_READ_VERSIONS", "Refused", "kaggle_licences", "kaggle_read_metadata", "kaggle_metadata_payload",
+        {"KAGGLE_ID", "KAGGLE_LICENCE_NAMES", "KAGGLE_LICENCE_WRITE_NAMES", "KAGGLE_TYPED_READ_VERSIONS", "Refused", "kaggle_licences", "kaggle_read_metadata", "kaggle_metadata_payload",
          "kaggle_metadata_drift", "kaggle_page_text", "spray_kaggle", "BANNED", "BOARD_URL", "DID_URL",
          "VERIFY_URL", "HOWTO_URL", "ZENODO_METHODOLOGY_DOI", "ZENODO_CONCEPT"})
 
@@ -44,14 +44,14 @@ class KaggleGuards(unittest.TestCase):
         self.board = dict(totals=dict(license="CC-BY-4.0"))
 
     def test_known_matching_licence(self):
-        self.assertEqual(self.api.kaggle_licences(self.board, settings()), [dict(name="CC-BY-4.0")])
+        self.assertEqual(self.api.kaggle_licences(self.board, settings()), [dict(name="CC BY 4.0")])
 
     def test_conflict_needs_exact_owner_pair_and_never_mutates(self):
         info = settings("CC0-1.0"); before = copy.deepcopy(info)
         for approval in (None, ("CC-BY-4.0", "CC0-1.0"), ("other", "CC-BY-4.0")):
             with self.subTest(approval=approval), self.assertRaises(self.api.Refused):
                 self.api.kaggle_licences(self.board, info, approval)
-        self.assertEqual(self.api.kaggle_licences(self.board, info, ("CC0-1.0","CC-BY-4.0")), [dict(name="CC-BY-4.0")])
+        self.assertEqual(self.api.kaggle_licences(self.board, info, ("CC0-1.0","CC-BY-4.0")), [dict(name="CC BY 4.0")])
         self.assertEqual(info, before)
 
     def test_unknown_missing_multiple_conflicting_licences_refuse(self):
@@ -74,22 +74,22 @@ class KaggleGuards(unittest.TestCase):
         for field in ("title","isPrivate","collaborators"):
             info=settings(); del info[field]
             with self.subTest(field=field), self.assertRaises(self.api.Refused):
-                self.api.kaggle_metadata_payload(info,"sub","desc",[dict(name="CC-BY-4.0")])
+                self.api.kaggle_metadata_payload(info,"sub","desc",[dict(name="CC BY 4.0")])
 
     def test_malformed_privacy_or_collaborators_refuse(self):
         for field,value in (("isPrivate",None),("isPrivate",1),("collaborators",None),("collaborators",[{"username":"owner"}])):
             info=settings(); info[field]=value
             with self.subTest(field=field,value=value),self.assertRaises(self.api.Refused):
-                self.api.kaggle_metadata_payload(info,"sub","desc",[dict(name="CC-BY-4.0")])
+                self.api.kaggle_metadata_payload(info,"sub","desc",[dict(name="CC BY 4.0")])
 
     def test_readback_rejects_protected_changes(self):
         info=settings()
-        self.assertIsNone(self.api.kaggle_metadata_drift(info,"old","old",info["licenses"],info))
+        self.assertIsNone(self.api.kaggle_metadata_drift(info,"old","old",[dict(name="CC BY 4.0")],info))
         for field,value in (("description","wrong"),("licenses",[dict(name="CC0-1.0")]),("isPrivate",False),
                             ("collaborators",[]),("keywords",[]),("title","wrong")):
             changed=copy.deepcopy(info); changed[field]=value
             with self.subTest(field=field):
-                self.assertIsNotNone(self.api.kaggle_metadata_drift(changed,"old","old",info["licenses"],info))
+                self.assertIsNotNone(self.api.kaggle_metadata_drift(changed,"old","old",[dict(name="CC BY 4.0")],info))
 
     def test_did_link_and_original_capture_time(self):
         _,desc=self.api.kaggle_page_text(dict(as_of="2026-10-13T03:31:42Z",read_at="2026-10-13T17:08:02Z",
