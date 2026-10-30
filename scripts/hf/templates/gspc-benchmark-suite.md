@@ -25,6 +25,14 @@ This mode makes no model calls. The runner downloads the selected published bank
 
 ## What is included
 
+### Qualified Inspect task
+
+The canonical source now includes an optional [Inspect task](https://github.com/CSOAI-ORG/councilof-ai/blob/master/harness/bench/inspect_task.py), qualified with Inspect AI 0.3.259. It imports the canonical grader, requires a local bank and its SHA-256, and retains original replies, parsed coverage and both accuracy denominators. Follow the [installation and run instructions](https://github.com/CSOAI-ORG/councilof-ai/tree/master/harness/bench#inspect-integration).
+
+The qualification executes the actual framework in an isolated environment with synthetic control replies. It checks correct, wrong, malformed, empty and zero-parsed responses, plus refusal of changed banks and unsound label menus. These controls establish software behaviour; they are not model measurements, benchmark registration or leaderboard admission. The older bundled draft below remains historical and is not the maintained task.
+
+### Bundle files
+
 | Path | Purpose |
 | --- | --- |
 | `banks/` | Suite definitions and candidate subject-family banks; inspect each file's scope and status. |

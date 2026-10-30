@@ -50,3 +50,34 @@ python3 -m pytest -q harness/bench/test_comparison_integrity.py \
 These are software checks, not new model measurements. To run the separate live public-bank loading check, use `python3 harness/bench/test_run_bench.py`; it reports unavailable banks as failures.
 
 See [the product and benchmark qualification guide](../../docs/measurement/GSPC-MEOK-PRODUCT-QUALIFICATION-2026-10-30.md) for holdouts, external benchmark tracks and product acceptance.
+
+## Inspect integration
+
+The optional adapter imports the same canonical loader, prompt builder and grader.
+Install its qualified dependency in an isolated environment:
+
+```bash
+python -m pip install -r harness/bench/requirements-inspect.txt
+python -m pytest -q harness/bench/test_inspect_task.py
+```
+
+Download the intended bank at a fixed Hub commit, retain its original JSONL bytes,
+and record their SHA-256. Supply both to Inspect:
+
+```bash
+inspect eval harness/bench/inspect_task.py@gspc \
+  -T axis=governance -T bank_path=/absolute/path/items.jsonl \
+  -T bank_sha256=THE_RECORDED_64_CHARACTER_SHA256 --model YOUR_CONFIGURED_MODEL
+```
+
+This command performs model calls under the selected provider configuration.
+The adapter refuses changed bytes and unsound label menus. It reports accuracy
+over all completed items, parsed coverage, and accuracy among parsed replies
+(undefined when none parse). The original reply and its digest remain in each
+Inspect log sample. Check the completed sample IDs against `bank_items_total`: an
+Inspect `--limit`, error or interruption does not qualify as full-bank coverage.
+
+Tests run the actual Inspect framework with synthetic local replies, including
+correct, wrong, malformed, empty and zero-parsed cases. These are integration
+checks, not measured model performance or external leaderboard acceptance.
+The older draft adapter bundled on HF remains historical; use this canonical path.
