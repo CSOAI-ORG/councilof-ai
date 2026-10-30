@@ -77,7 +77,7 @@ Proofs, run on the build pod on 2026-09-28:
 | D4 | §12: the source URL and commit (HF `csoai/evidence-index`, commit `10094094`) | Re-check that they resolve on posting day |
 | D5 | One phrase in §2 (the REJECTED ladder label) and one in §11 (what a signature does not show) use words on the outward gate's NOTICE_BANNED list | Reworded in the skeleton: "an identity check did not pass" and "that the subject agrees with the measurement" |
 | D6 | The full RFC 7942 boilerplate has a sentence on what a listing does not imply for the IETF, and its wording is also on the NOTICE_BANNED list | Shortened to a one-sentence RFC 7942 pointer. RFC 7942 suggests that text but does not mandate it |
-| D7 | The a2a_card_signature kind has a state token spelled F-A-I-L-E-D, which NOTICE_BANNED matches wherever Appendix B prints it. The title of normative reference RFC 9162 also begins with a word on that list, and a title cannot be changed | **Owner decision** (§3 ask 3). Until then the rendered -01 scores 5 of 6 on the gate, and its only hit is the RFC 9162 title |
+| D7 | The a2a_card_signature kind had a state token spelled F-A-I-L-E-D, which NOTICE_BANNED matched wherever Appendix B printed it. The title of normative reference RFC 9162 also begins with a word on that list, and a title cannot be changed | **Resolved 2026-10-26, without an owner decision.** Measured on the current skeleton: the draft contains 0 occurrences of F-A-I-L-E-D, and its only NOTICE_BANNED hit was the word "Certificate" inside RFC 9162's own title in the reference list. A cited document's title is not the drafter's claim, so `scripts/outward-gate/gate_draft.py` now exempts it — only inside a `<reference>` that anchors a real RFC, only in a file that is an Internet-Draft (v2 or v3), only for the words inside that title — with must-fail controls that keep the same word failing in the body, in a reference that anchors no RFC, and outside an I-D. The rendered -01 now scores 100% on the gate |
 
 ### E. Open issues from -00 §13, and what -01 does with each
 
@@ -132,10 +132,10 @@ If A5 or B slips, -01 still ships A1–A4, C and D, with §6.2 and §7 saying pl
    - (b) A self-hosted service, labelled self-operated.
    - (c) No Receipt in -01.
 2. **COSE signing.** Either approve a Sig_structure mode on the signer, or a separate COSE key in the DID document (K3).
-3. **Two tokens against the outward gate.**
-   - The state token F-A-I-L-E-D: either rename it in capsule schema 0.3 through a correction batch, or allow a documented exception.
-   - The RFC 9162 reference title: this can only be handled by an exception.
-   - An exception would cover vocabulary tokens and cited titles in the I-D only.
+3. **One token against the outward gate — CLOSED 2026-10-26.**
+   - The state token F-A-I-L-E-D no longer appears in the draft: measured 0 occurrences.
+   - The RFC 9162 reference title cannot be changed without falsifying a normative reference, so an exception was the only route. That exception now exists, narrowly and with tests (`scripts/outward-gate/gate_draft.py`, `scripts/outward-gate/test_gate_draft.py`): a cited RFC's own title is not read as a certification claim, and nothing else is exempt. The draft reaches 100% on the gate.
+   - **This ask no longer needs the owner.** Asks 1, 2 and 4 still do.
 4. **Upload** -01 on the Datatracker by 2026-10-31.
 
 ## 4. Not in scope for -01

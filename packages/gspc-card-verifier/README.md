@@ -65,6 +65,22 @@ conclude is yours.
 
 ---
 
+## Prerequisites
+
+Check these before the Quickstart. Each one comes from this package or the commands below.
+
+- **Node.js 19 or newer** (`engines.node` is `>=19` in `package.json`). The check uses WebCrypto
+  Ed25519; on Node 20 it prints an `ExperimentalWarning`, which is harmless. Deno or Bun with
+  WebCrypto Ed25519 also work.
+- **`curl`**, to fetch the files.
+- **`python3`**, just for the step that picks a card name out of `card_index.json`.
+- **Network access** for the download steps; nothing else needs it. Checking works offline once the files are held.
+- **What to download:** the one-file verifier (`/verifier/gspc-verify.mjs`), the DID document
+  that publishes the keys (`https://csoai.org/.well-known/did.json`), and the cards you want to
+  check. No package manager, no clone and no account are needed.
+- **Optional, from npm:** `npx -p gspc-card-verifier gspc-verify <files>` runs the same verifier
+  without downloading the single file.
+
 ## Quickstart, from an empty directory
 
 Nothing but `curl` and a runtime. No package manager, no clone, no account.
@@ -77,7 +93,7 @@ BASE=https://councilof.ai
 curl -sSfO "$BASE/verifier/gspc-verify.mjs"
 
 # 2. The key you are going to pin, from the DID document. Fetch it ONCE, keep the copy.
-curl -sSf "$BASE/.well-known/did.json" -o did.json
+curl -sSf https://csoai.org/.well-known/did.json -o did.json
 
 # 3. Some cards, the index, and the chain manifest.
 curl -sSf "$BASE/signed/card_index.json" -o card_index.json
@@ -117,6 +133,35 @@ a secondary role key, or disagreement with the held card blocks exit 0.
 Everything after step 3 works with the network unplugged. That is the point: **evidence you hold
 must be checkable by you, with the records and nothing else.** If verification needed our server
 to answer, we could stop answering, and the proof would evaporate. It does not need us.
+
+### A free task to try after install: check the example card
+
+One free, public card from the G2 comparison group. These cards are signed under
+`did:web:csoai.org#board-attestation-1`, so name that key with `--key-id`:
+
+```bash
+curl -sSfO https://councilof.ai/verifier/gspc-verify.mjs
+curl -sSf https://csoai.org/.well-known/did.json -o did.json
+curl -sSO https://councilof.ai/interop/mill-cards-signed/signed-governan-91857b0eb93f.json
+node gspc-verify.mjs signed-governan-91857b0eb93f.json --did-document did.json \
+  --key-id 'did:web:csoai.org#board-attestation-1'
+```
+
+Expected output (exit 0):
+
+```
+pinned key 9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170  (did:web:csoai.org#board-attestation-1)
+VALID 1 · INVALID 0 · UNCHECKABLE 0
+```
+
+The npm package gives the same result:
+`npx -y -p gspc-card-verifier gspc-verify signed-governan-91857b0eb93f.json --did-document did.json --key-id 'did:web:csoai.org#board-attestation-1'`.
+
+G2 cards are signed with the board key. Run `gspc-verify.mjs` with
+`--key-id 'did:web:csoai.org#board-attestation-1'`; it reports VALID (exit 0). Without the flag
+it reports `UNCHECKABLE KEY_NOT_PINNED` (exit 2), because its default pin is `#card-attestation-1`.
+Running with the bundled profile `csoai-gspc-1.json` still stops with `OUT_OF_PROFILE_DOMAIN`,
+so don't use that profile for G2 cards.
 
 ### Exit codes
 

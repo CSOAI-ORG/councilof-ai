@@ -1,0 +1,20 @@
+name: gspc-reconciliation
+
+# The board must not disagree with the datasets it cites. This runs weekly and on demand; a divergence turns the
+# check red instead of waiting for someone to notice.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 5 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconcile board against public datasets
+        run: python3 scripts/reconcile_board_datasets.py

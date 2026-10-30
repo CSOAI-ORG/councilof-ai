@@ -1,0 +1,67 @@
+{
+  "schema": "csoai.third-party-sources/0.1",
+  "note": "Pinned third-party publications of evaluation results, and the harness each one was produced by. Every source is fetched over the network and its bytes are hashed at read time; the sha256 of the bytes read is recorded on every record converted from it. A source whose bytes change changes the corpus, and the change is visible. Adding a source is a reviewable diff. Nothing here is signed, and nothing here is a grade.",
+  "harness": {
+    "name": "lm-evaluation-harness",
+    "repo": "EleutherAI/lm-evaluation-harness"
+  },
+  "sources": [
+    {
+      "id": "hf-nyu-magpie-align-llama3-wildchat",
+      "publisher": "nyu-dice-lab (Hugging Face dataset)",
+      "reader": "hf_dataset",
+      "repo": "nyu-dice-lab/lm-eval-results-Magpie-Align-Llama-3-8B-WildChat-private",
+      "path_prefix": "Magpie-Align/Llama-3-8B-WildChat/",
+      "match": "/results_[^/]+\\.json$",
+      "max_files": 3,
+      "harness": {
+        "name": "lm-evaluation-harness",
+        "repo": "EleutherAI/lm-evaluation-harness"
+      }
+    },
+    {
+      "id": "hf-nyu-tulu2-dpo-8b",
+      "publisher": "nyu-dice-lab (Hugging Face dataset)",
+      "reader": "hf_dataset",
+      "repo": "nyu-dice-lab/lm-eval-results-allenai-llama-3-tulu-2-dpo-8b-private",
+      "path_prefix": "allenai/llama-3-tulu-2-dpo-8b/",
+      "match": "/results_[^/]+\\.json$",
+      "max_files": 3,
+      "harness": {
+        "name": "lm-evaluation-harness",
+        "repo": "EleutherAI/lm-evaluation-harness"
+      }
+    },
+    {
+      "id": "hf-sameedhussain-davinci-002",
+      "publisher": "SameedHussain (Hugging Face dataset)",
+      "reader": "hf_dataset",
+      "repo": "SameedHussain/lm-eval-results",
+      "path_prefix": "davinci-002/",
+      "match": "/results_[^/]+\\.json$",
+      "max_files": 3,
+      "harness": {
+        "name": "lm-evaluation-harness",
+        "repo": "EleutherAI/lm-evaluation-harness"
+      }
+    },
+    {
+      "id": "gcs-helm-mmlu-v1-13-0",
+      "publisher": "HELM benchmark output (Stanford CRFM public bucket)",
+      "reader": "gcs_run",
+      "bucket": "crfm-helm-public",
+      "bucket_base": "https://storage.googleapis.com/crfm-helm-public",
+      "prefix": "mmlu/benchmark_output/runs/v1.13.0",
+      "runs": [
+        "mmlu:subject=abstract_algebra,method=multiple_choice_joint,model=amazon_nova-lite-v1:0,eval_split=test,groups=mmlu_abstract_algebra",
+        "mmlu:subject=anatomy,method=multiple_choice_joint,model=amazon_nova-micro-v1:0,eval_split=test,groups=mmlu_anatomy",
+        "mmlu:subject=abstract_algebra,method=multiple_choice_joint,model=deepseek-ai_deepseek-v3,eval_split=test,groups=mmlu_abstract_algebra",
+        "mmlu:subject=anatomy,method=multiple_choice_joint,model=amazon_nova-pro-v1:0,eval_split=test,groups=mmlu_anatomy"
+      ],
+      "harness": {
+        "name": "helm",
+        "repo": "stanford-crfm/helm"
+      }
+    }
+  ]
+}

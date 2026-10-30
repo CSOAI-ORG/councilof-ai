@@ -252,12 +252,27 @@
     "properties": {
      "negative_control": {
       "properties": {
+       "id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "expected": {
+        "type": "string",
+        "minLength": 1
+       },
        "got": {
+        "type": "string",
+        "minLength": 1,
         "not": {
          "const": "NOT_RUN"
         }
        }
-      }
+      },
+      "required": [
+       "id",
+       "expected",
+       "got"
+      ]
      }
     }
    }

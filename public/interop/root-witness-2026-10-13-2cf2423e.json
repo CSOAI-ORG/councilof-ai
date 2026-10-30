@@ -1,6 +1,6 @@
 {
  "kind": "csoai.root-witness/v1",
- "as_of": "2026-10-13T03:32:38Z",
+ "as_of": "2026-10-14T12:21:55Z",
  "note": "Witnesses for the live signed public root — existence/time of these exact bytes. Not certification, not endorsement, not a rank sale. Never mint a token. ONE root anchor, never N leaves.",
  "artifact": {
   "url": "https://councilof.ai/root.json",
@@ -51,13 +51,30 @@
   "ots": {
    "path": "public/interop/root-2cf2423e.json.ots",
    "url": "https://councilof.ai/interop/root-2cf2423e.json.ots",
-   "proof_sha256": "7a8b729bc0f7384b33f8dba648530010feac7822adad77c017282f0c454cad07",
+   "proof_sha256": "37a28e2e92a50b82da497ba51f793d55de564c8b3089201ea3a0c43b0651357d",
    "subject_sha256": "2cf2423e60ee0a2f04dee3189f2dcee7a321613f38247f36603b23f4b026407b",
-   "bitcoin_blocks": [],
-   "observed_at": "2026-10-13T03:31:47Z",
+   "bitcoin_blocks": [
+    971188,
+    971222
+   ],
+   "observed_at": "2026-10-14T12:21:55Z",
    "scope": "PUBLIC_ROOT_BYTES_ONLY",
-   "status": "STAMPED_PENDING_BITCOIN",
-   "note": "Status is derived from the proof bytes. Pending is not a Bitcoin timestamp."
+   "status": "CONFIRMED_BITCOIN",
+   "bitcoin_header": {
+    "height": 971188,
+    "block_hash": "00000000000000000000cec96d0357ef97fd4ac0bb907c256c5e092398b1484f",
+    "hex": "00a0db222583806d44f619325cfaff3593d539f0ac4d0643f5750100000000000000000098c04c72ef116702ebda87584c033af892040e87a08cd6a358032a01cc76f9f9d4aecd6af01e02173d18ca50",
+    "header_sha256": "78de05459a87232ec84cc7cb233751ab0b25ce6630921b0b5c99ba27aa857de6",
+    "block_time_unix": 1791864532,
+    "block_time": "2026-10-13T04:08:52Z",
+    "verified_at": "2026-10-14T12:21:55Z",
+    "source_agreement": "BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL",
+    "sources": [
+     "https://blockstream.info/api/block/00000000000000000000cec96d0357ef97fd4ac0bb907c256c5e092398b1484f/header",
+     "https://mempool.space/api/block/00000000000000000000cec96d0357ef97fd4ac0bb907c256c5e092398b1484f/header"
+    ]
+   },
+   "note": "Status is derived from the proof bytes. The Bitcoin timestamp proves these exact root.json bytes existed no later than the named block; it does not prove correctness, completeness, compliance, certification, or coverage of the separate signed-card corpus."
   },
   "eas_base": {
    "status": "NOT_YET",

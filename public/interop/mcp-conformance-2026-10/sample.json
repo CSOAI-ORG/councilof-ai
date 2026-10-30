@@ -1,0 +1,72 @@
+{
+ "agntcy_api": "https://ai-catalog.outshift.io/v1/agents",
+ "generated_at": "2026-10-26T02:12:31Z",
+ "instruments": [
+  {
+   "channel": "stable",
+   "id": "stable-2025-11-25",
+   "spec_version": "2025-11-25",
+   "suite": "@modelcontextprotocol/conformance@0.1.16",
+   "suite_version": "0.1.16"
+  },
+  {
+   "channel": "alpha",
+   "id": "alpha-2026-07-28",
+   "spec_version": "2026-07-28",
+   "suite": "@modelcontextprotocol/conformance@0.2.0-alpha.12",
+   "suite_version": "0.2.0-alpha.12"
+  }
+ ],
+ "n": 9,
+ "registry_api": "https://registry.modelcontextprotocol.io/v0/servers?limit=100",
+ "registry_population_sampled": 96,
+ "schema": "csoai.mcp-conformance-sample/0.1",
+ "selection_rule": "first-party door + 6 remote-exposing registry identities by sha256(id) + every directory record whose declared endpoint is a loopback address \u2014 deterministic, reproducible",
+ "subjects": [
+  {
+   "id": "councilof.ai/mcp/free",
+   "source": "first-party",
+   "url": "https://councilof.ai/mcp/free"
+  },
+  {
+   "id": "ae.genosys/genosys@1.2.0",
+   "source": "mcp-registry",
+   "url": "https://genosys.ae/mcp"
+  },
+  {
+   "id": "ad.inside/inside-ads@1.0.0",
+   "source": "mcp-registry",
+   "url": "https://app.inside.ad/api/mcp"
+  },
+  {
+   "id": "agency.justidea/justidea-agency@1.1.0",
+   "source": "mcp-registry",
+   "url": "https://justidea.agency/mcp"
+  },
+  {
+   "id": "academy.apexai/apex-ai-academy@1.0.1",
+   "source": "mcp-registry",
+   "url": "https://apexai.academy/mcp"
+  },
+  {
+   "id": "ai.1325/mcp@0.1.0",
+   "source": "mcp-registry",
+   "url": "https://agoclnqfyinwjxdmjnns.supabase.co/functions/v1/mcp"
+  },
+  {
+   "id": "ai.advisorsai/service-navigator@1.0.0",
+   "source": "mcp-registry",
+   "url": "https://advisorsai.ai/mcp"
+  },
+  {
+   "id": "agntcy:Hello World Agent",
+   "source": "agntcy-directory",
+   "url": "http://localhost:9999/"
+  },
+  {
+   "id": "agntcy:a2a-helloworld",
+   "source": "agntcy-directory",
+   "url": "http://localhost:8080"
+  }
+ ]
+}

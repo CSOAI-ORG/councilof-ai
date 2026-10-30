@@ -13,8 +13,8 @@
     }
   },
   "tool_counts": {
-    "free": 14,
-    "full": 19,
+    "free": 47,
+    "full": 52,
     "note": "array lengths of functions/mcp/gspc-tools.json and paid-tools.json at render time"
   },
   "live_check": "distribution/connect/connect-live-check.json (scripts/harness-x/connect-live.mjs)",
@@ -81,6 +81,7 @@
     },
     {
       "id": "cursor",
+      "installer": "cursor",
       "platform": "Cursor",
       "group": "Coding agents",
       "door": "free",
@@ -88,7 +89,11 @@
       "kind": "json",
       "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
       "docs": "https://cursor.com/docs/context/mcp",
-      "url": "https://councilof.ai/mcp/free"
+      "url": "https://councilof.ai/mcp/free",
+      "install_action": {
+        "kind": "cursor",
+        "href": "cursor://anysphere.cursor-deeplink/mcp/install?name=gspc&config=eyJ1cmwiOiJodHRwczovL2NvdW5jaWxvZi5haS9tY3AvZnJlZSJ9"
+      }
     },
     {
       "id": "vscode",
@@ -96,7 +101,7 @@
       "platform": "VS Code (GitHub Copilot agent mode)",
       "group": "Coding agents",
       "door": "free",
-      "where": ".vscode/mcp.json",
+      "where": ".vscode/mcp.json (legacy VS Code format; still read)",
       "kind": "json",
       "snippet": "{\n  \"servers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
       "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
@@ -105,6 +110,17 @@
         "kind": "vscode",
         "href": "vscode:mcp/install?%7B%22name%22%3A%22gspc%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fcouncilof.ai%2Fmcp%2Ffree%22%7D"
       }
+    },
+    {
+      "id": "vscode-portable",
+      "platform": "VS Code (portable .mcp.json)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": ".mcp.json at the project root (portable format; VS Code and other compatible tools read it)",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
+      "url": "https://councilof.ai/mcp/free"
     },
     {
       "id": "windsurf",
@@ -126,6 +142,127 @@
       "kind": "json",
       "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"httpUrl\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
       "docs": "https://geminicli.com/docs/tools/mcp-server/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "antigravity",
+      "platform": "Google Antigravity",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.gemini/antigravity/mcp_config.json (or ~/.gemini/config/plugins/csoai-gspc/mcp_config.json)",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"serverUrl\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://antigravity.google/docs/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "minimax",
+      "platform": "MiniMax (Agent / Coding CLI)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.minimax/mcp_config.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://platform.minimaxi.com/document/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "deepseek",
+      "platform": "DeepSeek (CLI / Agent Harness)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.dsh/mcp.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://api-docs.deepseek.com/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "kimi-code",
+      "platform": "Kimi Code (Moonshot AI)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.kimi/mcp.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://platform.moonshot.ai/docs",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "qwen-cli",
+      "platform": "Qwen Code / Qwen-Agent",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.qwen/settings.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"httpUrl\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://github.com/QwenLM/qwen-code",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "openclaw-hermes",
+      "platform": "OpenClaw / Hermes Agent",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.hermes/mcp.json (or ~/.openclaw/mcp.json)",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://github.com/NousResearch/hermes-agent",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "opencode",
+      "platform": "OpenCode",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.config/opencode/opencode.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcp\": {\n    \"gspc\": { \"type\": \"remote\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://opencode.ai/docs/mcp-servers/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "trae",
+      "platform": "ByteDance Trae IDE",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.trae/mcp.json (or Settings → MCP → Add Server)",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://docs.trae.ai/ide/model-context-protocol",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "cline",
+      "platform": "Cline / Roo Code (VS Code Open-Source Agent)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "cline_mcp_settings.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamableHttp\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://docs.cline.bot/mcp/configuring-mcp-servers",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "continue-dev",
+      "platform": "Continue.dev (Open-Source IDE Agent)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.continue/config.json",
+      "kind": "json",
+      "snippet": "{\n  \"experimental\": {\n    \"modelContextProtocolServers\": [\n      { \"transport\": { \"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" } }\n    ]\n  }\n}",
+      "docs": "https://docs.continue.dev/customize/deep-dives/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "goose",
+      "platform": "Block Goose (AAIF / Linux Foundation Open-Source Agent)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "goose configure → Add Extension → Remote HTTP (Streamable HTTP)",
+      "kind": "json",
+      "snippet": "{\n  \"extensions\": {\n    \"gspc\": { \"type\": \"streamable_http\", \"uri\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://block.github.io/goose/docs/getting-started/using-extensions",
       "url": "https://councilof.ai/mcp/free"
     },
     {
@@ -162,6 +299,17 @@
       "url": "https://councilof.ai/mcp/free"
     },
     {
+      "id": "openai-responses-free",
+      "platform": "OpenAI Responses API (free door)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "tools[] of a Responses API request",
+      "kind": "json",
+      "snippet": "{\n  \"type\": \"mcp\",\n  \"server_label\": \"gspc\",\n  \"server_url\": \"https://councilof.ai/mcp/free\",\n  \"require_approval\": \"always\"\n}",
+      "docs": "https://platform.openai.com/docs/guides/tools-remote-mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
       "id": "openai-responses",
       "platform": "OpenAI Responses API",
       "group": "Agent frameworks and APIs",
@@ -184,6 +332,116 @@
       "url": "https://councilof.ai/mcp/free"
     },
     {
+      "id": "nvidia-nat",
+      "platform": "NVIDIA NeMo Agent Toolkit (NAT / AgentIQ)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "NeMo Agent Toolkit MCP client configuration",
+      "kind": "json",
+      "snippet": "{\n  \"function_groups\": {\n    \"gspc\": {\n      \"_type\": \"mcp_client\",\n      \"server\": { \"transport\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n    }\n  }\n}",
+      "docs": "https://docs.nvidia.com/nemo/agent-toolkit/latest/workflows/mcp/mcp-client.html",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "nvidia-nim-guardrails",
+      "platform": "NVIDIA NeMo Guardrails (MCP Actions)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "config.json MCP action servers",
+      "kind": "json",
+      "snippet": "{\n  \"mcp_servers\": {\n    \"gspc\": { \"transport\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://docs.nvidia.com/nemo/guardrails/latest/index.html",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "zhipu-glm",
+      "platform": "Zhipu AI (GLM-4 / AutoGLM / BigModel)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "BigModel MCP tool configuration",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://open.bigmodel.cn/dev/howuse/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "modelscope-qwen-agent",
+      "platform": "Alibaba ModelScope / Qwen-Agent (Python SDK)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "qwen_agent tools list",
+      "kind": "python",
+      "snippet": "tools = [{\"mcpServers\": {\"gspc\": {\"type\": \"streamable-http\", \"url\": \"https://councilof.ai/mcp/free\"}}}]",
+      "docs": "https://github.com/QwenLM/Qwen-Agent",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "baidu-qianfan",
+      "platform": "Baidu ERNIE / Qianfan AppBuilder",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "appbuilder MCPClient",
+      "kind": "python",
+      "snippet": "from appbuilder.mcp_server.client import MCPClient\n\nclient = MCPClient()\nawait client.connect_to_server(service_url=\"https://councilof.ai/mcp/free\")",
+      "docs": "https://github.com/baidubce/app-builder",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "hf-smolagents",
+      "platform": "Hugging Face smolagents",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "smolagents MCPClient",
+      "kind": "python",
+      "snippet": "from smolagents import MCPClient\n\nwith MCPClient({\"url\": \"https://councilof.ai/mcp/free\", \"transport\": \"streamable-http\"}) as tools:\n    pass",
+      "docs": "https://huggingface.co/docs/smolagents/reference/tools",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "llama-stack",
+      "platform": "Meta Llama Stack",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "llama_stack_client toolgroups",
+      "kind": "python",
+      "snippet": "client.toolgroups.register(toolgroup_id=\"mcp::gspc\", provider_id=\"model-context-protocol\", mcp_endpoint={\"uri\": \"https://councilof.ai/mcp/free\"})",
+      "docs": "https://llama-stack.readthedocs.io/en/latest/building_applications/tools.html",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "pydantic-ai",
+      "platform": "PydanticAI",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "pydantic_ai.mcp.MCPServerStreamableHTTP",
+      "kind": "python",
+      "snippet": "from pydantic_ai.mcp import MCPServerStreamableHTTP\n\ngspc_server = MCPServerStreamableHTTP(\"https://councilof.ai/mcp/free\")",
+      "docs": "https://ai.pydantic.dev/mcp/client/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "litellm",
+      "platform": "LiteLLM Proxy / Universal MCP Gateway",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "litellm_config.yaml / JSON MCP registry",
+      "kind": "json",
+      "snippet": "{\n  \"mcp_servers\": {\n    \"gspc\": { \"transport\": \"http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://docs.litellm.ai/docs/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "google-adk-free",
+      "platform": "Google ADK (Vertex AI Agent Builder, free door)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "your ADK agent's tools",
+      "kind": "python",
+      "snippet": "from google.adk.tools.mcp_tool.mcp_toolset import McpToolset\nfrom google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams\n\ngspc = McpToolset(connection_params=StreamableHTTPConnectionParams(url=\"https://councilof.ai/mcp/free\"))",
+      "docs": "https://google.github.io/adk-docs/tools/mcp-tools/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
       "id": "google-adk",
       "platform": "Google ADK (Vertex AI Agent Builder)",
       "group": "Agent frameworks and APIs",
@@ -193,6 +451,17 @@
       "snippet": "from google.adk.tools.mcp_tool.mcp_toolset import McpToolset\nfrom google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams\n\ngspc = McpToolset(connection_params=StreamableHTTPConnectionParams(url=\"https://councilof.ai/mcp\"))",
       "docs": "https://google.github.io/adk-docs/tools/mcp-tools/",
       "url": "https://councilof.ai/mcp"
+    },
+    {
+      "id": "langchain-free",
+      "platform": "LangChain / LangGraph (free door)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "pip install langchain-mcp-adapters",
+      "kind": "python",
+      "snippet": "from langchain_mcp_adapters.client import MultiServerMCPClient\n\nclient = MultiServerMCPClient({\"gspc\": {\"transport\": \"streamable_http\", \"url\": \"https://councilof.ai/mcp/free\"}})\ntools = await client.get_tools()",
+      "docs": "https://github.com/langchain-ai/langchain-mcp-adapters",
+      "url": "https://councilof.ai/mcp/free"
     },
     {
       "id": "langchain",

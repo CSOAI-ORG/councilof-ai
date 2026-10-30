@@ -36,7 +36,7 @@ type ConnectClient = {
   snippet: string;
   docs: string;
   url: string;
-  install_action?: { kind: "vscode"; href: string };
+  install_action?: { kind: "vscode" | "cursor"; href: string };
 };
 export const PLATFORMS = (CONNECT_MATRIX as { clients: ConnectClient[] }).clients;
 const GROUPS = [...new Set(PLATFORMS.map((c) => c.group))];
@@ -45,6 +45,25 @@ export const FULL_DOOR = "https://councilof.ai/mcp";
 export const AGENT_CARD = "https://councilof.ai/.well-known/agent.json";
 export const A2A_ENDPOINT = "https://councilof.ai/api/a2a";
 export const VERIFY_OFFLINE = "curl -O https://councilof.ai/signed/verify-card.mjs && node verify-card.mjs --all";
+export const ANTIGRAVITY_JSON = `{"mcpServers":{"csoai-gspc":{"serverUrl":"${FREE_DOOR}"}}}`;
+export const AGENT_SKILLS_INDEX = "/.well-known/agent-skills/index.json";
+export const EVIDENCE_RENDER_CMD =
+  "pip install csoai-evidence-fabric\ncsoai-evidence render otel events.jsonl > spans.otlp.json\ncsoai-evidence render ocsf events.jsonl > findings.ocsf.jsonl\ncsoai-evidence render sarif events.jsonl > report.sarif.json\ncsoai-evidence render intoto events.jsonl > attestations.intoto.jsonl";
+
+const QUICK_JUMP_IDS = [
+  "antigravity",
+  "claude-code",
+  "cursor",
+  "vscode",
+  "gemini-cli",
+  "nvidia-nat",
+  "deepseek-cli",
+  "minimax-mcp",
+  "qwen-code",
+  "kimi-cli",
+  "openclaw",
+  "dify",
+] as const;
 
 function Code({ label, text }: { label: string; text: string }) {
   const [copied, setCopied] = useState(false);
@@ -111,6 +130,22 @@ const A = ({ href, children }: { href: string; children: ReactNode }) => (
 );
 
 export default function ConnectHub() {
+  const [filterQuery, setFilterQuery] = useState("");
+  const normalizedQuery = filterQuery.trim().toLowerCase();
+  const filteredPlatforms = normalizedQuery
+    ? PLATFORMS.filter(
+        (c) =>
+          c.platform.toLowerCase().includes(normalizedQuery) ||
+          c.id.toLowerCase().includes(normalizedQuery) ||
+          c.group.toLowerCase().includes(normalizedQuery) ||
+          c.where.toLowerCase().includes(normalizedQuery),
+      )
+    : PLATFORMS;
+  const visibleGroups = GROUPS.filter((g) => filteredPlatforms.some((c) => c.group === g));
+  const quickJumpRows = QUICK_JUMP_IDS.map((id) => PLATFORMS.find((c) => c.id === id)).filter(
+    (c): c is ConnectClient => Boolean(c),
+  );
+
   useEffect(() => {
     document.title = "Connect an agent | Council of AI";
     setMetaDescription(
@@ -129,7 +164,7 @@ export default function ConnectHub() {
         <div className="section-shell relative py-10 sm:py-16">
           <p className="t-kicker ink-kicker">Connect · MCP · A2A · HTTP</p>
           <h1 className="t-band mt-3 max-w-3xl text-white">Connect an agent or a client.</h1>
-          <div className="max-w-3xl"><DocMeta updated="2026-09-30" slug="connect" /></div>
+          <div className="max-w-3xl"><DocMeta updated="2026-10-25" slug="connect" /></div>
           <p className="t-lede mt-4 max-w-2xl ink-muted">
             Every door below reads the same published records the site shows: the live board, the signed
             cards, the corrections ledger. The free door needs no account and no key, and verification
@@ -140,6 +175,7 @@ export default function ConnectHub() {
               ["#free", "Free MCP door"],
               ["#platforms", "GSPC in your platform"],
               ["#stacks", "Install into your stack"],
+              ["#agent-skills", "Portable Agent Skills & renderers"],
               ["#full", "Full MCP endpoint"],
               ["#a2a", "A2A agent card"],
               ["#http", "Plain HTTP"],
@@ -174,6 +210,7 @@ export default function ConnectHub() {
                 </li>
               ))}
             </ul>
+            <Code label="Google Antigravity (~/.gemini/antigravity/mcp_config.json)" text={ANTIGRAVITY_JSON} />
             <Code label="Claude Code" text={CLAUDE_CODE_CMD} />
             <Code label="Cursor (~/.cursor/mcp.json)" text={CURSOR_JSON} />
             <p className="t-body mt-4 text-muted-foreground">
@@ -194,11 +231,53 @@ export default function ConnectHub() {
               tools). Every address in these blocks was checked against the live server; the menus named in each
               block follow the vendor&apos;s own documentation, linked below it.
             </p>
-            {GROUPS.map((group) => (
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <label htmlFor="connect-platform-search" className="sr-only">
+                Filter {PLATFORMS.length} MCP clients by platform or group
+              </label>
+              <input
+                id="connect-platform-search"
+                type="search"
+                value={filterQuery}
+                onChange={(e) => setFilterQuery(e.target.value)}
+                placeholder={`Filter ${PLATFORMS.length} clients (e.g. Antigravity, Claude, Cursor, Gemini, NeMo, DeepSeek, MiniMax, Qwen, Kimi)...`}
+                className="min-h-10 flex-1 rounded-xl border border-border bg-background px-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-emerald-600 focus:outline-none"
+                data-testid="connect-platform-filter"
+              />
+              {normalizedQuery ? (
+                <button
+                  type="button"
+                  onClick={() => setFilterQuery("")}
+                  className="min-h-10 rounded-xl border border-border bg-card px-3.5 text-xs font-semibold text-foreground hover:border-emerald-600/50"
+                >
+                  Show all ({PLATFORMS.length})
+                </button>
+              ) : null}
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-1.5" aria-label="Quick jump to popular platforms">
+              <span className="mr-1 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">Quick jump:</span>
+              {quickJumpRows.map((c) => (
+                <a
+                  key={c.id}
+                  href={`#connect-${c.id}`}
+                  onClick={() => {
+                    setFilterQuery("");
+                    window.setTimeout(() => {
+                      const el = document.getElementById(`connect-${c.id}`) as HTMLDetailsElement | null;
+                      if (el) el.open = true;
+                    }, 20);
+                  }}
+                  className="inline-flex min-h-8 items-center rounded-full border border-border bg-background px-2.5 text-xs font-semibold text-foreground transition hover:border-emerald-600/50"
+                >
+                  {c.platform}
+                </a>
+              ))}
+            </div>
+            {visibleGroups.map((group) => (
               <div key={group} className="mt-6">
                 <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground">{group}</h3>
                 <div className="mt-2 grid grid-cols-[minmax(0,1fr)] gap-2">
-                  {PLATFORMS.filter((c) => c.group === group).map((c) => (
+                  {filteredPlatforms.filter((c) => c.group === group).map((c) => (
                     <details
                       key={c.id}
                       id={`connect-${c.id}`}
@@ -221,6 +300,17 @@ export default function ConnectHub() {
                             data-testid={`connect-install-${c.id}`}
                           >
                             Add to VS Code
+                          </a>
+                        </p>
+                      )}
+                      {c.install_action?.kind === "cursor" && (
+                        <p className="mt-2 text-[13px] leading-snug">
+                          <a
+                            href={c.install_action.href}
+                            className="font-semibold text-emerald-800 underline underline-offset-2"
+                            data-testid={`connect-install-${c.id}`}
+                          >
+                            Add to Cursor
                           </a>
                         </p>
                       )}
@@ -297,6 +387,20 @@ export default function ConnectHub() {
               <A href={`https://pypi.org/project/${PYPI.llamaStack}/`}>{PYPI.llamaStack}</A>,{" "}
               <A href={`https://pypi.org/project/${PYPI.nat}/`}>{PYPI.nat}</A>.
             </p>
+          </Door>
+        </div>
+
+        <div id="agent-skills" className="scroll-mt-24">
+          <Door id="agent-skills-h" kicker="Agent Skills · OTel · OCSF · SARIF · in-toto" title="Portable Agent Skills and multi-format evidence renderers">
+            <p className="t-body mt-3 max-w-3xl text-muted-foreground">
+              For skills-compatible agents (Google Antigravity, Claude Code, Cursor, Gemini CLI, Codex, OpenClaw), we publish
+              deterministic <code className="font-mono text-foreground">SKILL.md</code> procedures at{" "}
+              <A href={AGENT_SKILLS_INDEX}>{AGENT_SKILLS_INDEX}</A>. Each skill invokes the deterministic cryptographic
+              verifier rather than asking a language model whether a signature looks valid, and preserves the three-state
+              verdict (<code className="font-mono">VALID</code>, <code className="font-mono">INVALID</code>,{" "}
+              <code className="font-mono">UNCHECKABLE</code>) and original artifact digest.
+            </p>
+            <Code label="Multi-format deterministic evidence renderers (Apache-2.0)" text={EVIDENCE_RENDER_CMD} />
           </Door>
         </div>
 
