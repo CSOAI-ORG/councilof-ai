@@ -205,3 +205,19 @@ card-attestation key) even though it is perfectly self-consistent.
 - Verify a card, free: <https://councilof.ai/gspc-verify/>
 
 Apache-2.0. CSOAI Ltd (UK 16939677).
+
+
+## Board response compatibility
+
+`board_totals` returns a compact summary by default, including separately labelled
+coverage and comparison results. Request `{"detail":"full"}` when your consumer needs
+`count_grammar`, `by_family` or the complete `measured_on` block.
+
+`get_axis` is for a dimension selected at runtime; the corresponding `axis_*` tool
+selects one fixed dimension without arguments. A model is returned in `leader` only
+when the board reports `SEPARATED`. For a tied or untested comparison,
+`top_observed_not_separated` identifies the observation without declaring a winner.
+
+Original `facts_as_of` and `measurement_time` remain distinct from `fetched_at`.
+Retrieving a record now does not refresh the underlying measurement. Unmeasured and
+unreachable states remain explicit; no cached value is silently promoted to live.
