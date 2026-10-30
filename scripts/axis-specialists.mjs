@@ -30,6 +30,17 @@ export function canonical(value) {
 export const sha256 = (value) => createHash("sha256").update(canonical(value)).digest("hex");
 const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
 const present = (value) => value !== undefined && value !== null && value !== "" && (!Array.isArray(value) || value.length > 0);
+// These helpers validate declared metadata only; they do not fetch evidence bytes.
+const declaredSha256 = (value) => typeof value === "string" && /^[a-f0-9]{64}$/i.test(value);
+const declaredEvidenceUrl = (value) => {
+  if (typeof value !== "string" || value !== value.trim()) return false;
+  try {
+    const url = new URL(value);
+    return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password;
+  } catch {
+    return false;
+  }
+};
 const check = (id, state, detail, evidence = null) => ({ id, state, detail, ...(evidence === null ? {} : { evidence }) });
 
 export function validateRegistry(registry, sourceSlots, snapshot, mcpTools) {
@@ -95,8 +106,8 @@ export function auditSpecialist(spec, row, registry) {
   if (row.kind === "model-comparison") {
     const validRun = row.status === "MEASURED" && Number.isInteger(row.n) && row.n > 0;
     checks.push(check("MODEL_RUN_STATE", validRun ? "PASS" : "FINDING", validRun ? `measured model-comparison run with n=${row.n}` : "model-comparison row lacks a measured run"));
-    checks.push(check("FROZEN_BANK", present(row.dataset_url) ? "PASS" : "FINDING", present(row.dataset_url) ? "frozen bank URL is published" : "frozen bank URL is absent", row.dataset_url ?? null));
-    checks.push(check("ROW_LINEAGE", present(row.peritem_file_sha256) ? "PASS" : "FINDING", present(row.peritem_file_sha256) ? "published per-item rows are digest-bound" : "per-item row digest is not published on this row"));
+    checks.push(check("FROZEN_BANK", declaredEvidenceUrl(row.dataset_url) ? "DECLARED" : "FINDING", declaredEvidenceUrl(row.dataset_url) ? "bank URL is declared; bank bytes and freeze state were not verified" : "bank URL is absent or invalid", row.dataset_url ?? null));
+    checks.push(check("ROW_LINEAGE", declaredSha256(row.peritem_file_sha256) ? "DECLARED" : "FINDING", declaredSha256(row.peritem_file_sha256) ? "SHA-256 row digest is declared; source bytes were not re-hashed" : "per-item row digest is absent or is not a SHA-256 digest"));
     if (row.leader && row.public_leader_state) checks.push(check("LEADER_STATE", "FINDING", "a named leader and a leader-suppression state cannot both be public"));
     if (!row.leader && row.public_leader_state) checks.push(check("LEADER_STATE", "PASS", `leader withheld: ${row.public_leader_state}`));
     if (row.leader) checks.push(check("LEADER_STATE", present(row.leader_card_url) || present(row.leader_card_state) ? "PASS" : "FINDING", present(row.leader_card_url) || present(row.leader_card_state) ? "leader evidence state is published" : "named leader has no evidence state"));
@@ -144,8 +155,9 @@ export function auditSpecialist(spec, row, registry) {
     summary: {
       checks: checks.length,
       passed: checks.filter((item) => item.state === "PASS").length,
+      declared: checks.filter((item) => item.state === "DECLARED").length,
       findings: findings.length,
-      audit_state: row.status === "UNMEASURED" ? "MEASUREMENT_GAP_VISIBLE" : findings.length ? "IMPROVEMENT_REQUIRED" : "HUMAN_REVIEW_READY",
+      audit_state: findings.length ? "IMPROVEMENT_REQUIRED" : row.status === "UNMEASURED" ? "MEASUREMENT_GAP_VISIBLE" : "HUMAN_REVIEW_READY",
     },
     negative_controls: spec.negative_controls.map((control) => ({ control, state: "SPECIFIED_NOT_RUN" })),
     improvement_proposals: spec.improvements.map((proposal, index) => ({
