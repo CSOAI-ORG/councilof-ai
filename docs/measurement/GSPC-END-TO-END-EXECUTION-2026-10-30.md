@@ -12,7 +12,7 @@ software check is not a completed human workflow or a benchmark rank.
 | 1. Inventory | Read every public repository's metadata; distinguish tables, archives, applications and controlled access. | 150 HF public entries and 146 Kaggle public entries inventoried; private entries excluded. | Existing read access. |
 | 2. Product pages | Clear purpose, inputs, usage, provenance, limits and canonical links; remove repeated announcements. | Published README/description hashes and anonymous readbacks; existing data unchanged. | Completed in PR 3647. |
 | 3. Dataset access | Select homogeneous tables; document structured archives; preserve gates. | Original bytes load and convert to Parquet for each table recipe; archive examples parse; public publication receipts and server readback. | This change. |
-| 4. Licence consistency | Reconcile Kaggle platform labels with pinned source and public mirrored README declarations. | Exact before/after proposal for each of 20 CC0/CC-BY discrepancies; owner decision, then metadata-only readback. | Explicit owner approval for a licence-label change, enforced by scripts/spray/gspc-spray.py:kaggle_licences. |
+| 4. Licence consistency | Reconcile Kaggle platform labels with pinned source and public mirrored README declarations. | Exact approved transition and manifest, preserved settings/file inventory and metadata readback for each of 20 CC0/CC-BY discrepancies. | Owner approved the presented 20 label corrections on 30 October 2026; the canonical guard and hash-bound approval record enforce that scope. |
 | 5. Reproducible tools | Qualified canonical runner and a pinned Inspect integration; retain missing/malformed answers and both denominators. | Framework execution using synthetic controls, canonical grader parity, complete log readback and tamper refusal. | Local software checks; no paid model calls. |
 | 6. Source release | Canonical source, tests, reviewed PR and protected merge. | Successful checks on the exact merged revision; deployment result. | Existing repository protections. |
 | 7. Real user acceptance | Enrol an actual operator; accept and decline bounded challenges; verify allowed effects, exported artifact and recovery. | Named human decision joined to the request and effect. Automated fixtures do not satisfy this gate. | Operator participation and scoped runtime. |
@@ -33,6 +33,51 @@ software check is not a completed human workflow or a benchmark rank.
 For all changes, compare repository parents before writing and all original non-README
 blob identities after writing. A stale parent, privacy change or mismatched readback stops publication.
 Pending dataset-server processing is reported separately from failed local loading.
+
+## Approved Kaggle label correction
+
+The approved transition is **CC0-1.0 → CC-BY-4.0**, limited to the 20 references
+in the retained review manifest. It changes the platform label only. It does not
+rewrite historical licence declarations or revoke rights in earlier copies.
+Sixteen source declarations were checked at pinned public HF revisions; four
+were checked in already-public Kaggle README files because their current HF
+sources are private. Those private repositories remain outside this operation.
+
+`scripts/hf/publish_kaggle_licences.py` imports the existing `kaggle_licences`
+guard. The separate approval record binds the exact manifest SHA-256, ordered
+references, transition, approval reference and scope. Every reviewed before/after
+payload and source declaration is checked against its retained digest before
+publication. The qualified Kaggle 2.2.4 / kagglesdk 0.1.35 environment is retained.
+
+The publisher reads current complete typed metadata, preserves newer page edits,
+rechecks immediately before writing, and uses only `dataset_metadata_update`.
+It records intent before the request, retains the original checkpoint across a
+lost response, and normalizes Kaggle's display licence names on readback. Every
+other setting and the paginated file inventory must match. A changed version,
+visibility, identity, unknown licence or conflicting declaration stops the run.
+
+```bash
+python scripts/hf/publish_kaggle_licences.py \
+  --manifest licence-review-proposals.json --approval licence-approval.json \
+  --review-root licence-audit --out licence-publication \
+  --only nicktempleman/csoai-gspc-verify --publish
+# After the canary is PUBLISHED_VERIFIED, repeat without --only.
+```
+
+The manifest and approval are retained operational evidence, not automatic
+authority for another dataset or future transition. The default invocation
+without `--publish` is a read-only preview. Twenty successful readbacks are the
+completion criterion; the existence of this command is not a publication claim.
+
+## Source and deployment checkpoint
+
+The access and Inspect integration release, PR 3650, merged as
+`223dd8c8c619588ba7527d8d411b352daba8a8ed`. Protected deployment run 41027413834
+completed successfully, including public root/witness checks, the live MCP tool
+inventory check and outward-claim validation. Its separate product qualification
+run also passed. The working-group release PR 3641 is deployed; its retained
+record reports a private Kaggle notebook run completed. These software outcomes
+do not constitute human appointments or end-user acceptance.
 
 ## Reproduction commands
 
