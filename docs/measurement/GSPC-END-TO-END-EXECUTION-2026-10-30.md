@@ -70,7 +70,23 @@ python scripts/hf/publish_kaggle_licences.py \
 The manifest and approval are retained operational evidence, not automatic
 authority for another dataset or future transition. The default invocation
 without `--publish` is a read-only preview. Twenty successful readbacks are the
-completion criterion; the existence of this command is not a publication claim.
+completion criterion. On 30 October 2026, all 20 approved corrections passed,
+completing at 09:37:50 UTC. Readback matched every preserved setting and all 113
+file names/byte lengths. No file upload or dataset-version creation was performed.
+One interrupted receipt write was reconciled from its original checkpoint and
+the approved batch completed.
+
+## Benchmark workspace copy
+
+`scripts/hf/templates/kaggle-benchmark-workspace.json` is the maintained title,
+subtitle, description and matching citation title for the existing Kaggle benchmark workspace. It removes
+an obsolete axis count from the display title while retaining the existing URL.
+It links to the qualified public suite and tools, states the 30 October bank
+qualification (12 usable tasks, 780 samples; swarm and jail refused), and separates
+Inspect qualification from qualification of the existing Kaggle task adapters.
+Apply only these presentation fields; preserve visibility, collaborators, task
+membership, source notebooks and model runs. The copy does not launch evaluations
+or claim a result. Keep the previous text and exact post-save readback as receipts.
 
 ## Source and deployment checkpoint
 
