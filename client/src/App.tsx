@@ -429,22 +429,18 @@ function ScrollToTop() {
       return;
     }
     window.scrollTo({ top: 0, behavior: 'instant' });
-    // Lazy sections may mount after more than one second on a cold connection.
-    // Observe their insertion, and stop watching when navigation changes or expires.
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const observer = new MutationObserver(() => {
+    let frames = 0;
+    let raf = 0;
+    const seek = () => {
       const el = document.getElementById(id);
-      if (!el) return;
-      observer.disconnect();
-      clearTimeout(timer);
-      el.scrollIntoView({ block: 'start' });
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    timer = setTimeout(() => observer.disconnect(), 10_000);
-    return () => {
-      observer.disconnect();
-      clearTimeout(timer);
+      if (el) {
+        el.scrollIntoView({ block: 'start' });
+        return;
+      }
+      if (++frames < 60) raf = requestAnimationFrame(seek);
     };
+    raf = requestAnimationFrame(seek);
+    return () => cancelAnimationFrame(raf);
   }, [location]);
   return null;
 }

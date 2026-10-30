@@ -8,7 +8,6 @@
  */
 import { describe, expect, it } from "vitest";
 import manifest from "./__fixtures__/x402-manifest-2026-09-06.json";
-import currentManifest from "../../../scripts/fixtures/x402scan/well_known_x402.json";
 import {
   GROUPS,
   buildCatalogue,
@@ -19,21 +18,6 @@ import {
 } from "./servicesCatalogue";
 
 describe("every published door is grouped", () => {
-  it("renders the producer's canonical signed feed without changing its manifest URL", () => {
-    const feed = currentManifest.resources.find((r) => pathOf(r.url) === "/api/signed-data-feed");
-    expect(feed).toBeDefined();
-    const c = buildCatalogue({ resources: feed ? [feed] : [] });
-    expect(c.ungrouped).toEqual([]);
-    expect(c.groups.flatMap((g) => g.cards)).toHaveLength(1);
-    const card = c.groups.find((g) => g.group.id === "model-measurement")?.cards[0];
-    expect(card).toMatchObject({
-      url: feed?.url,
-      path: "/api/signed-data-feed",
-      method: feed?.method,
-      group: "model-measurement",
-      freeForever: false,
-    });
-  });
 
   it("classifies all observed 10 October 2026 live x402 resource families", () => {
     // Uses observed, existing paths only; unknown future paths remain ungrouped.

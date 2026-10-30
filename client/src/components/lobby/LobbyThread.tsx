@@ -1,14 +1,7 @@
 import type { RefObject } from "react";
-import { Link } from "wouter";
-import { verificationNavigationReply } from "@/lib/askNavigation";
 import { MEASURE_CHAT, TYPE, TONE } from "./glass";
 import { STATE_LABEL, type LobbyChat } from "./useLobbyChat";
 import { AnswerText } from "./answerText";
-import { TalkRunView } from "../talk/TalkPanel";
-
-const VERIFY_GUIDE_PARTS = verificationNavigationReply.split(
-  "[open Verify](/dashboard?tab=verify)",
-);
 
 const STATE_TONE: Record<string, string> = {
   model_response: TONE.running,
@@ -46,7 +39,7 @@ export default function LobbyThread({
     >
       {turns.map((t, i) => (
         <div
-          key={t.id ?? i}
+          key={i}
           className={`${MEASURE_CHAT} ${t.role === "user" ? "ml-auto max-w-[min(42rem,92%)]" : "max-w-[min(44rem,96%)]"}`}
         >
           <p className="sr-only">
@@ -57,10 +50,7 @@ export default function LobbyThread({
           >
             {t.role === "user" ? "You" : t.state === "model_response" ? "Upstream model" : "Council"}
           </p>
-          {t.talk ? (
-            <TalkRunView run={t.talk} showQuestion={false} busy={chat.busy}
-              onConfirm={chat.talk?.confirm} onCancel={chat.talk?.cancel} onStop={chat.talk?.stop} />
-          ) : <div
+          <div
             className={
               "rounded-2xl px-5 py-3.5 text-[15.5px] leading-[1.65] " +
               (t.role === "user"
@@ -71,25 +61,8 @@ export default function LobbyThread({
             {/* The user's own words are shown verbatim — never re-interpreted.
                 The Council answers in Markdown, so its turn is rendered (see
                 answerText.tsx: React nodes, whitelist, never innerHTML). */}
-            {t.role === "user" ? t.text : (
-              t.role === "council" &&
-              t.state === "deterministic" &&
-              t.signature === "local page guidance" &&
-              t.text === verificationNavigationReply &&
-              VERIFY_GUIDE_PARTS.length === 2
-            ) ? (
-              <>
-                {VERIFY_GUIDE_PARTS[0]}
-                <Link
-                  href="/dashboard?tab=verify"
-                  className="rounded-sm font-semibold underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                >
-                  open Verify
-                </Link>
-                {VERIFY_GUIDE_PARTS[1]}
-              </>
-            ) : <AnswerText text={t.text} />}
-          </div>}
+            {t.role === "user" ? t.text : <AnswerText text={t.text} />}
+          </div>
           {t.role === "council" && (t.state || t.signature) && (
             <div className="mt-1.5 flex flex-wrap items-center gap-2">
               {t.state && (

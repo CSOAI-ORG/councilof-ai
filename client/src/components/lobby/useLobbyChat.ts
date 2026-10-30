@@ -1,7 +1,4 @@
-import { isVerificationNavigationQuestion, verificationNavigationReply } from "@/lib/askNavigation";
-import { useCallback, useMemo, useRef, useState } from "react";
-import type { TalkOrigin, TalkRun } from "@/lib/aguiTalk";
-import { upsertTalkRun } from "@/lib/talkHistory";
+import { useCallback, useMemo, useState } from "react";
 import {
   isExplicitNavigationCommand,
   LOBBY_TABS,
@@ -54,9 +51,6 @@ const CHAT_ENDPOINT =
 const SPACE_TAB = LOBBY_TABS.find((t) => t.id === "space")!;
 
 export type Turn = {
-  id?: string;
-  replyTo?: string;
-  talk?: TalkRun;
   role: "user" | "council";
   text: string;
   state?: string;
@@ -336,37 +330,20 @@ export interface LobbyChat {
     onNavigate: (t: LobbyTab) => void,
     onOpenRoute?: (path: string, label: string) => void,
     /** Offered a free question after every local lane (pane commands, a pasted card) has passed on
-     *  it. Returning true means the host accepted it for a result card elsewhere (Council OS: the Ask
+     *  it. Returning true means the host answered it as a result card elsewhere (Council OS: the Ask
      *  panel), so it is not sent to POST /api/chat and printed here as raw text. */
-    onFreeQuestion?: (question: string, origin?: TalkOrigin) => boolean | "busy",
-    onAccepted?: () => void,
-  ) => Promise<void | boolean>;
+    onFreeQuestion?: (question: string) => boolean,
+  ) => Promise<void>;
   startThread: () => void;
   selectThread: (id: string) => void;
   /** Total turns this session — quoted by the docked bar, computed never typed. */
   turnCount: number;
-  /** Controls supplied by the workspace; other history readers remain compatible. */
-  talk?: {
-    confirm: (run: TalkRun) => void;
-    cancel: (run: TalkRun) => void;
-    stop: (id: string) => void;
-  };
 }
 
-export interface TalkLobbyChat extends LobbyChat {
-  recordUserMessage: (text: string, origin?: TalkOrigin) => TalkOrigin | null;
-  recordTalkRun: (run: TalkRun) => void;
-  isBusy: () => boolean;
-}
-
-export function useLobbyChat(): TalkLobbyChat {
+export function useLobbyChat(): LobbyChat {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const activeIdRef = useRef<string | null>(null);
-  const busyRef = useRef(false);
-  const nextId = useRef(0);
-  const idFor = (kind: string) => `${kind}-${Date.now().toString(36)}-${++nextId.current}-${Math.random().toString(36).slice(2, 10)}`;
 
   const active = useMemo(
     () => threads.find((t) => t.id === activeId) ?? null,
@@ -378,94 +355,85 @@ export function useLobbyChat(): TalkLobbyChat {
     [threads],
   );
 
-  const startThread = useCallback(() => {
-    activeIdRef.current = null;
-    setActiveId(null);
-  }, []);
-  const selectThread = useCallback((id: string) => {
-    activeIdRef.current = id;
-    setActiveId(id);
-  }, []);
+  const startThread = useCallback(() => setActiveId(null), []);
+  const selectThread = useCallback((id: string) => setActiveId(id), []);
 
-  const recordUserMessage = useCallback((text: string, prepared?: TalkOrigin): TalkOrigin | null => {
-    const question = text.trim();
-    if (!question) return null;
-    // Allocate outside React's updater, which can run later or be replayed in Strict Mode.
-    const threadId = prepared?.threadId ?? activeIdRef.current ?? idFor("thread");
-    const userMessageId = prepared?.userMessageId ?? idFor("question");
-    const at = now();
-    const userTurn: Turn = { id: userMessageId, role: "user", text: question, at };
-    activeIdRef.current = threadId;
-    setActiveId(threadId);
-    setThreads((prev) => {
-      if (prev.some((thread) => thread.id === threadId))
-        return prev.map((thread) => thread.id === threadId ? { ...thread, turns: [...thread.turns, userTurn] } : thread);
-      return [...prev, {
-        id: threadId, title: question.length > 64 ? question.slice(0, 63).trimEnd() + "…" : question,
-        startedAt: at, turns: [userTurn],
-      }];
-    });
-    return { threadId, userMessageId };
-  }, []);
-
-  const recordTalkRun = useCallback((run: TalkRun) => {
-    const receivedAt = now();
-    setThreads((prev) => upsertTalkRun(prev, run, receivedAt));
-  }, []);
+  const recordUserMessage = useCallback(
+    (text: string) => {
+      const question = text.trim();
+      if (!question) return;
+      let id = activeId;
+      const userTurn: Turn = { role: "user", text: question, at: now() };
+      setThreads((prev) => {
+        if (id && prev.some((t) => t.id === id)) {
+          return prev.map((t) =>
+            t.id === id ? { ...t, turns: [...t.turns, userTurn] } : t,
+          );
+        }
+        const fresh: Thread = {
+          id: `t${Date.now().toString(36)}${prev.length}`,
+          title:
+            question.length > 64
+              ? question.slice(0, 63).trimEnd() + "…"
+              : question,
+          startedAt: now(),
+          turns: [userTurn],
+        };
+        id = fresh.id;
+        return [...prev, fresh];
+      });
+      setActiveId(id!);
+    },
+    [activeId],
+  );
 
   const send = useCallback(
     async (
       raw: string,
       onNavigate: (t: LobbyTab) => void,
       onOpenRoute?: (path: string, label: string) => void,
-      onFreeQuestion?: (question: string, origin?: TalkOrigin) => boolean | "busy",
-      onAccepted?: () => void,
+      onFreeQuestion?: (question: string) => boolean,
     ) => {
       const question = raw.trim();
-      if (!question || busyRef.current) return false;
-      busyRef.current = true;
-      try {
-      const verificationHelp = isVerificationNavigationQuestion(question);
-      const tab = matchTab(question);
-      const extra = matchRoute(question);
-      const axisMatch = matchAxisOrSpace(question);
-      const refusal = matchRefusal(question);
-      const mcpRead = matchSafeMcpReadIntent(question);
-      const guardedAction = matchGuardedActionIntent(question);
-      const pastedCard = looksLikeCardJson(question);
-      const prepared: TalkOrigin = {
-        threadId: activeIdRef.current ?? idFor("thread"), userMessageId: idFor("question"),
-      };
-      // Offer the external result-card runner before committing a question to History.
-      // A busy rejection preserves the draft and creates no orphan history turn.
-      const free = !verificationHelp && !tab && !(extra && onOpenRoute) && !axisMatch.isPractice && !axisMatch.axis &&
-        !refusal && !mcpRead && !guardedAction && !pastedCard
-        ? onFreeQuestion?.(question, prepared) : false;
-      if (free === "busy") return false;
-      const origin = recordUserMessage(question, prepared);
-      if (!origin) return false;
-      const threadId = origin.threadId;
-      onAccepted?.();
+      if (!question || busy) return;
 
-      const push = (t: Omit<Turn, "at">) => {
-        const turn = { ...t, at: now() };
+      // Open (or continue) a thread and record the user's turn.
+      let id = activeId;
+      const userTurn: Turn = { role: "user", text: question, at: now() };
+      setThreads((prev) => {
+        if (id && prev.some((t) => t.id === id)) {
+          return prev.map((t) =>
+            t.id === id ? { ...t, turns: [...t.turns, userTurn] } : t,
+          );
+        }
+        const fresh: Thread = {
+          id: `t${Date.now().toString(36)}${prev.length}`,
+          title:
+            question.length > 64
+              ? question.slice(0, 63).trimEnd() + "…"
+              : question,
+          startedAt: now(),
+          turns: [userTurn],
+        };
+        id = fresh.id;
+        return [...prev, fresh];
+      });
+      // `id` was assigned synchronously inside the updater above when a thread
+      // was created, so it is safe to adopt it here.
+      const threadId = id!;
+      setActiveId(threadId);
+
+      const push = (t: Omit<Turn, "at">) =>
         setThreads((prev) =>
           prev.map((x) =>
             x.id === threadId
-              ? { ...x, turns: [...x.turns, turn] }
+              ? { ...x, turns: [...x.turns, { ...t, at: now() }] }
               : x,
           ),
         );
-      };
-
-      if (verificationHelp) {
-        push({ role: "council", text: verificationNavigationReply, state: "deterministic",
-          signature: "local page guidance" });
-        return true;
-      }
 
       // Lane 1 — deterministic command. Answered locally, labelled locally.
-
+      const tab = matchTab(question);
       if (tab) {
         onNavigate(tab);
         push({
@@ -476,9 +444,9 @@ export function useLobbyChat(): TalkLobbyChat {
           state: "deterministic",
           signature: `local command · ${tab.path || "in-lobby pane"}`,
         });
-        return true;
+        return;
       }
-
+      const extra = matchRoute(question);
       if (extra && onOpenRoute) {
         onOpenRoute(extra.path, extra.label);
         push({
@@ -489,13 +457,13 @@ export function useLobbyChat(): TalkLobbyChat {
           state: "deterministic",
           signature: `local command · ${extra.path}`,
         });
-        return true;
+        return;
       }
 
       // Lane 1.5 — axis-specific navigation. Uses the existing space pane contract.
       // General "open arena" / "open space" already handled by matchTab above.
       // This lane handles individual axis names: MEASURED opens space, UNMEASURED refuses.
-
+      const axisMatch = matchAxisOrSpace(question);
       if (axisMatch.isPractice) {
         onNavigate(SPACE_TAB);
         push({
@@ -510,7 +478,7 @@ export function useLobbyChat(): TalkLobbyChat {
           state: "deterministic",
           signature: "practice mode · unsigned",
         });
-        return true;
+        return;
       }
       if (axisMatch.axis) {
         const axis = axisMatch.axis;
@@ -537,10 +505,10 @@ export function useLobbyChat(): TalkLobbyChat {
             signature: `axis closed · ${axis.axis} · unmeasured`,
           });
         }
-        return true;
+        return;
       }
 
-
+      const refusal = matchRefusal(question);
       if (refusal) {
         push({
           role: "council",
@@ -548,10 +516,10 @@ export function useLobbyChat(): TalkLobbyChat {
           state: "ungrounded",
           signature: `refusal · ${refusal.id}`,
         });
-        return true;
+        return;
       }
 
-
+      const mcpRead = matchSafeMcpReadIntent(question);
       if (mcpRead) {
         setBusy(true);
         try {
@@ -566,10 +534,10 @@ export function useLobbyChat(): TalkLobbyChat {
         } finally {
           setBusy(false);
         }
-        return true;
+        return;
       }
 
-
+      const guardedAction = matchGuardedActionIntent(question);
       if (guardedAction) {
         onNavigate(guardedAction.tab);
         push({
@@ -580,10 +548,10 @@ export function useLobbyChat(): TalkLobbyChat {
           state: "deterministic",
           signature: "review boundary · no execution",
         });
-        return true;
+        return;
       }
 
-      if (pastedCard) {
+      if (looksLikeCardJson(question)) {
         setBusy(true);
         try {
           const card = JSON.parse(question);
@@ -608,19 +576,19 @@ export function useLobbyChat(): TalkLobbyChat {
         } finally {
           setBusy(false);
         }
-        return true;
+        return;
       }
 
       // Lane 1.9 — the host shows the answer as a result card (tools audit retest, 6 Oct 2026: on
       // every pane but the start screen, answers arrived here as raw text dumps).
-      if (free === true) {
+      if (onFreeQuestion?.(question)) {
         push({
           role: "council",
-          text: "Question sent to the Ask panel. Its answer and source will appear when the run returns.",
+          text: "Answered in the Ask panel, as a card with its source and a Verify yourself link.",
           state: "deterministic",
           signature: "handed to the Ask panel · POST /api/agui/run",
         });
-        return true;
+        return;
       }
 
       // Lane 2 — the estate's honest endpoint.
@@ -640,7 +608,7 @@ export function useLobbyChat(): TalkLobbyChat {
             state: "deterministic",
             signature: "local fallback · no measurement read",
           });
-          return true;
+          return;
         }
         const j: any = await r.json();
         const answer = j?.answer ?? j?.reply;
@@ -651,7 +619,7 @@ export function useLobbyChat(): TalkLobbyChat {
             state: "deterministic",
             signature: "local fallback · no measurement read",
           });
-          return true;
+          return;
         }
         push({
           role: "council",
@@ -680,13 +648,8 @@ export function useLobbyChat(): TalkLobbyChat {
       } finally {
         setBusy(false);
       }
-      return true;
-      } finally {
-        busyRef.current = false;
-        setBusy(false);
-      }
     },
-    [recordUserMessage],
+    [activeId, busy],
   );
 
   return {
@@ -695,8 +658,6 @@ export function useLobbyChat(): TalkLobbyChat {
     active,
     busy,
     recordUserMessage,
-    recordTalkRun,
-    isBusy: () => busyRef.current,
     send,
     startThread,
     selectThread,

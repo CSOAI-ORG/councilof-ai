@@ -444,14 +444,13 @@ export default function GspcWorkspaceHome({
    *  receives the hooks the home needs on that panel (onRunDone saves Get results lookups). */
   talk: ReactNode | ((hooks: TalkHooks) => ReactNode);
   /** Send a question to that TalkPanel (Get results uses it for the free lookup). */
-  onAsk?: (question: string) => boolean | void;
+  onAsk?: (question: string) => void;
 }) {
   const { expectLookup, onRunDone } = useLookupRecorder();
   const askLookup = useCallback(
     (question: string, subject: string) => {
-      if (!onAsk || onAsk(question) === false) return false;
-      if (subject) expectLookup(question, subject);
-      return true;
+      expectLookup(question, subject);
+      onAsk?.(question);
     },
     [expectLookup, onAsk],
   );

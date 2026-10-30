@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import evidenceNotes from "@/data/evidence-notes.json";
-import { readAllTimeRevenue, type AllTimeRevenue } from "@/lib/revenueCoverage";
 
 type BazaarFinding =
   | { state: "loading" }
@@ -59,7 +58,12 @@ export default function Pressroom() {
   const [revenue, setRevenue] = useState<
     | { state: "loading" }
     | { state: "uncheckable" }
-    | AllTimeRevenue
+    | {
+        state: "measured";
+        payers: number;
+        settlements: number;
+        usdcAtomic: number;
+      }
   >({ state: "loading" });
   const [bazaar, setBazaar] = useState<BazaarFinding>({ state: "loading" });
 
@@ -77,7 +81,22 @@ export default function Pressroom() {
           : Promise.reject(new Error(`HTTP ${response.status}`)),
       )
       .then((body) => {
-        setRevenue(readAllTimeRevenue(body) ?? { state: "uncheckable" });
+        const payers = body?.one_number?.all_time;
+        const settlements = body?.one_number?.settlements;
+        const usdcAtomic = body?.settled_usdc?.count;
+        if (
+          body?.one_number?.status === "MEASURED" &&
+          Number.isSafeInteger(payers) &&
+          payers >= 0 &&
+          Number.isSafeInteger(settlements) &&
+          settlements >= 0 &&
+          Number.isSafeInteger(usdcAtomic) &&
+          usdcAtomic >= 0
+        ) {
+          setRevenue({ state: "measured", payers, settlements, usdcAtomic });
+        } else {
+          setRevenue({ state: "uncheckable" });
+        }
       })
       .catch((error: unknown) => {
         if (!(error instanceof DOMException && error.name === "AbortError")) {
@@ -157,17 +176,16 @@ export default function Pressroom() {
         </div>
         <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
           <div className="text-xs font-bold uppercase tracking-wide text-emerald-800">
-            Live payment records
+            Live commercial proof
           </div>
-          {revenue.state === "measured" || revenue.state === "partial" ? (
+          {revenue.state === "measured" ? (
             <p className="mt-2 text-sm text-emerald-950">
-              <strong>{revenue.state === "partial" ? "PARTIAL: all-time ledger observations:" : "MEASURED: all-time ledger observations:"}</strong> {revenue.payers.toLocaleString()}{" "}
-              non-self payer {revenue.payers === 1 ? "wallet" : "wallets"},{" "}
+              <strong>MEASURED:</strong> {revenue.payers.toLocaleString()}{" "}
+              outside {revenue.payers === 1 ? "payer" : "payers"},{" "}
               {revenue.settlements.toLocaleString()} non-self{" "}
               {revenue.settlements === 1 ? "settlement" : "settlements"},{" "}
-              {(revenue.atomic / 1_000_000).toFixed(2)} USDC recorded by this site's facilitator receipts.
-              {revenue.state === "partial" ? " The 30-day payer and repeat-payer counts are UNMEASURED because timestamp coverage is incomplete." : ""}
-              {" These observations do not establish independent customers or accepted delivery."}
+              {(revenue.usdcAtomic / 1_000_000).toFixed(2)} USDC settled on
+              Base.
             </p>
           ) : revenue.state === "loading" ? (
             <p className="mt-2 text-sm text-emerald-950">
@@ -175,8 +193,8 @@ export default function Pressroom() {
             </p>
           ) : (
             <p className="mt-2 text-sm text-emerald-950">
-              <strong>UNCHECKABLE:</strong> complete all-time settlement observations
-              are unavailable at this read; no previous count is reused.
+              <strong>UNCHECKABLE:</strong> the live settlement ledger could not
+              be read; no previous count is reused.
             </p>
           )}
           <a
