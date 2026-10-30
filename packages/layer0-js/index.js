@@ -7,14 +7,15 @@
 //   const l0 = new Layer0({ base: process.env.CSOAI_API_BASE, identity: "did:csoai:acme" });
 //   const { result, attestation } = await l0.governed("evidence.collect", inputs, () => doWork());
 //
-// Set CSOAI_API_BASE to your gateway (e.g. https://api.csoai.org). No secrets needed client-side.
+// The default gateway is https://councilof.ai. Set CSOAI_API_BASE to point somewhere else.
+// No secrets needed client-side.
 
 import crypto from "node:crypto";
 
 const sha256 = (s) => "sha256:" + crypto.createHash("sha256").update(typeof s === "string" ? s : JSON.stringify(s)).digest("hex");
 
 export class Layer0 {
-  constructor({ base = process.env.CSOAI_API_BASE || "https://api.csoai.org", identity, endpoint = "tool://local" } = {}) {
+  constructor({ base = process.env.CSOAI_API_BASE || "https://councilof.ai", identity, endpoint = "tool://local" } = {}) {
     this.base = base.replace(/\/$/, "");
     this.identity = identity;
     this.endpoint = endpoint;
