@@ -5,39 +5,12 @@ import { buildChallenge } from "../../../functions/api/_hitl";
 import { validateAxisSpecialistAudit } from "../components/gspc/CouncilAxisSpecialistPane";
 import { acceptReviewChallenge, axisReviewRequest, submitAxisReview, verifyPinnedSpecialist } from "./axisSpecialistReview";
 
-const { board } = vi.hoisted(() => ({ board: { axes: [] as any[] } }));
-vi.mock("../../../functions/api/_chatCanon", () => ({ loadBoard: async () => board }));
-import { onRequestPost } from "../../../functions/api/hitl";
-import { listChallenges } from "../../../functions/api/_hitl";
-
 const audit = () => validateAxisSpecialistAudit(structuredClone(BUNDLE.specialists[0]), BUNDLE.specialists[0].axis);
 const request = () => axisReviewRequest(audit(), audit().improvement_proposals[0].id);
 async function reply(input: Awaited<ReturnType<typeof request>>) {
   return { ...await buildChallenge({ ...input, at: "2026-10-30T08:00:00Z", required_module: null }), stored: true };
 }
-describe("axis review content and real handler handoff", () => {
-  it("hands all 33 axes to the existing challenge handler with exact bindings and no decision", async () => {
-    board.axes = BUNDLE.specialists.map(item => item.source.axis_row);
-    const values = new Map<string, string>();
-    const store = {
-      put: async (key: string, value: string) => { values.set(key, value); },
-      get: async (key: string) => values.get(key) ?? null,
-      list: async ({ prefix }: { prefix: string }) => ({ keys: [...values.keys()].filter(key => key.startsWith(prefix)).map(name => ({ name })), list_complete: true }),
-    };
-    for (const source of BUNDLE.specialists) {
-      const value = validateAxisSpecialistAudit(source, source.axis);
-      const input = await axisReviewRequest(value, value.improvement_proposals[0].id);
-      const send = async (url: string, init?: RequestInit) => {
-        const response = await onRequestPost({ request: new Request(`https://fixture.invalid${url}`, init), env: { HITL_KV: store } } as any);
-        return { response, body: await response.json() };
-      };
-      const result = await submitAxisReview(input, send);
-      expect(result).toMatchObject({ axis: source.axis, stored: true, subject: input.subject, proposed_action: input.proposed_action, facts: input.facts });
-      expect(result).not.toHaveProperty('decision');
-    }
-    expect(await listChallenges(store as any)).toHaveLength(33);
-    expect([...values.keys()].every(key => key.startsWith('hitl:challenge:'))).toBe(true);
-  });
+describe("axis review content and response binding", () => {
   it.each(['proposal', 'row', 'charter', 'rehash'])('rejects altered %s before a submission can be prepared', async mode => {
     const value = audit();
     if (mode === 'row') value.source.axis_row.n += 1;

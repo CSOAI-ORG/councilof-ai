@@ -59,6 +59,8 @@ For every axis, the pane exposes mapped article titles, required evidence fields
 
 A reader can explicitly select one existing proposal, acknowledge that its identifiers will be public, and send it through the existing `/api/hitl/challenge` handler. The request binds axis, proposal, audit digest, charter version/digest, source-row digest and snapshot. It carries no editable private note or credential. The returned challenge must match that exact request and verify under the existing challenge-id rule before the existing `HitlConsole` receives it. Stored, stateless and unconfirmed outcomes remain distinct. Concurrent clicks and in-session repeats of an uncertain submission are blocked; writes are never retried automatically. This is an in-session duplicate guard, not server-side idempotency across browser sessions.
 
+The shared human-review store module explicitly imports its Cloudflare KV type. The all-axis handler integration test lives beside the server handler, while client contract tests remain in the client tree. This lets the browser reuse the same challenge contract without pulling a worker entrypoint into the browser TypeScript project. No runtime behaviour or TypeScript gate threshold changes.
+
 The human console retains its existing competency, operator, storage and receipt controls. A successful challenge submission is not a decision or execution authority. The code does not appoint 33 reviewers, provision clusters, sign evidence or promote any of the ten unmeasured axes. Protected production release and genuine human acceptance remain separate.
 
 ### Executed plan and acceptance
@@ -75,6 +77,6 @@ Charter bytes retained: `3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d94
 ```sh
 node scripts/axis-specialists.mjs --check
 node scripts/axis-specialists.mjs --selftest
-node node_modules/vitest/vitest.mjs run scripts/axis-specialists.charter.test.mjs scripts/axis-specialists.evidence.test.mjs client/src/lib/axisSpecialistReview.test.ts client/src/components/gspc/CouncilAxisSpecialistPane.test.ts client/src/components/gspc/CouncilAxisSpecialistPane.boundary.test.ts functions/api/axis-specialists.test.ts functions/api/a2a.axis-specialist.test.ts
+node node_modules/vitest/vitest.mjs run scripts/axis-specialists.charter.test.mjs scripts/axis-specialists.evidence.test.mjs client/src/lib/axisSpecialistReview.test.ts functions/api/axis-specialist-handoff.test.ts client/src/components/gspc/CouncilAxisSpecialistPane.test.ts client/src/components/gspc/CouncilAxisSpecialistPane.boundary.test.ts functions/api/axis-specialists.test.ts functions/api/a2a.axis-specialist.test.ts
 EAT_BROWSER_OUTPUT=/absolute/private/results node scripts/axis-specialists.browser.mjs
 ```
