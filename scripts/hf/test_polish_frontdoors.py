@@ -1,6 +1,6 @@
 """Protect dataset provenance and non-presentation bytes during card maintenance."""
 import unittest
-from polish_frontdoors import assert_unchanged_files, front_matter, render_card, GSPC_ONE_CONFIG
+from polish_frontdoors import assert_unchanged_files, front_matter, render_card, GSPC_ONE_CONFIG, ROOT, TARGETS
 
 
 class FrontdoorGuards(unittest.TestCase):
@@ -47,6 +47,9 @@ class FrontdoorGuards(unittest.TestCase):
         new=render_card('gspc-one',current)
         self.assertEqual(front_matter(new)[0],front_matter(current)[0]+'\n'+GSPC_ONE_CONFIG)
         self.assertEqual(render_card('gspc-one',new),new)
+        canonical = (ROOT / TARGETS['gspc-one'][2]).read_text()
+        self.assertEqual(render_card('gspc-one', canonical), canonical)
+        self.assertEqual(new, canonical)
         with self.assertRaises(ValueError):render_card('gspc-one',self.card())
 
 

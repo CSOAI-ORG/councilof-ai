@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render three existing public HF front pages; publish only with --publish.
+"""Render existing public HF front pages; publish only with --publish.
 
 Uses the owner's existing Hub session. Reads and commits against a pinned parent;
 changes only README.md and the organisation's static index.html. No repo creation,
@@ -19,7 +19,7 @@ TARGETS = {
     "dataset": ("csoai/gspc-board", "dataset", "scripts/hf/templates/gspc-board.md"),
     "board-space": ("csoai/gspc-board", "space", "spaces/gspc-board/README.md"),
     "benchmark-suite": ("csoai/gspc-benchmark-suite", "dataset", "scripts/hf/templates/gspc-benchmark-suite.md"),
-    "gspc-one": ("csoai/gspc-one", "dataset", "scripts/hf/templates/gspc-one.md"),
+    "gspc-one": ("csoai/gspc-one", "dataset", "scripts/gspc-one/HF_README.md"),
 }
 GSPC_ONE_CONFIG = "configs:\n- config_name: default\n  data_files:\n  - split: train\n    path: gspc-one.json\n  field: rows"
 
@@ -52,7 +52,7 @@ def render_card(target: str, current: str, snapshot: dict | None = None) -> str:
                 raise ValueError("Unexpected GSPC One configuration; review before replacing")
         else:
             fm += "\n" + GSPC_ONE_CONFIG
-        body = template
+        _, body = front_matter(template)
     elif target == "benchmark-suite":
         # This repository is a multi-schema bundle. Automatic conversion was
         # displaying one registry manifest as a one-row test dataset.
