@@ -7,7 +7,8 @@
 //   const l0 = new Layer0({ base: process.env.CSOAI_API_BASE, identity: "did:csoai:acme" });
 //   const { result, attestation } = await l0.governed("evidence.collect", inputs, () => doWork());
 //
-// Set CSOAI_API_BASE to a configured gateway. See APPROVAL-CONTRACT.md.
+// The default gateway is https://councilof.ai; set CSOAI_API_BASE to override it.
+// Configure host approval verification as described in APPROVAL-CONTRACT.md.
 
 import crypto from "node:crypto";
 
@@ -29,7 +30,7 @@ export class Layer0ExecutionError extends Error {
 }
 
 export class Layer0 {
-  constructor({ base = process.env.CSOAI_API_BASE || "https://api.csoai.org", identity, endpoint = "tool://local", verifyApproval } = {}) {
+  constructor({ base = process.env.CSOAI_API_BASE || "https://councilof.ai", identity, endpoint = "tool://local", verifyApproval } = {}) {
     this.base = base.replace(/\/$/, "");
     this.identity = identity;
     this.endpoint = endpoint;
