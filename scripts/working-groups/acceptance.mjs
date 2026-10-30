@@ -93,7 +93,7 @@ try{
   await page.locator("#wg-query").focus();await page.keyboard.press("Tab");await expect(page.locator("#wg-group")).toBeFocused();
   checks.push("320px and 390px layout, keyboard order and reduced-motion rendering");
   await page.setViewportSize({width:1280,height:900});await page.goto(staticOrigin);
-  await page.locator("#search").fill("effect-binding");await expect(page.locator("#count")).toHaveText("1 documents shown");
+  await page.locator("#search").fill("effect-binding");await expect(page.locator("#count")).toHaveText("1 document shown");
   await page.getByText("Use with an AI client", {exact:true}).click();
   await expect(page.locator("#ai-client code")).toHaveText("working_group_review");
   await expect(page.locator("#ai-client a")).toHaveAttribute("href","https://councilof.ai/mcp/free");
