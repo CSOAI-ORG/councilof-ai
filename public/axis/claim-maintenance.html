@@ -4,11 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>claim-maintenance — GSPC axis | Council of AI</title>
-<meta name="description" content="Measurement question for the claim-maintenance axis: At each scheduled re-read, is a captured public claim still served unchanged, changed with disclosure, changed silently, withdrawn or unreachable; says nothing about whether the claim is true (pending gated re-read wave (&gt;=30 claims)). State: UNMEASURED. Read from GET /api/gspc. Measurement, not certification." />
+<meta name="description" content="Measurement question for the claim-maintenance axis: At each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true (claim-maintenance v0.2 re-read wave). State: MEASURED. Read from GET /api/gspc. Measurement, not certification." />
 <meta name="robots" content="index,follow" />
 <link rel="canonical" href="https://councilof.ai/axis/claim-maintenance" />
 <meta property="og:title" content="claim-maintenance — GSPC axis | Council of AI" />
-<meta property="og:description" content="Measurement question for the claim-maintenance axis: At each scheduled re-read, is a captured public claim still served unchanged, changed with disclosure, changed silently, withdrawn or unreachable; says nothing about whether the claim is true (pending gated re-read wave (&gt;=30 claims)). State: UNMEASURED. Read from GET /api/gspc. Measurement, not certification." />
+<meta property="og:description" content="Measurement question for the claim-maintenance axis: At each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true (claim-maintenance v0.2 re-read wave). State: MEASURED. Read from GET /api/gspc. Measurement, not certification." />
 <meta property="og:url" content="https://councilof.ai/axis/claim-maintenance" />
 <meta property="og:type" content="article" />
 <meta property="og:image" content="https://councilof.ai/og-image.png" />
@@ -61,22 +61,22 @@
   </div>
 </header>
 <main class="wrap">
-  <p class="lid">33 axes · 23 measured · 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED</p>
+  <p class="lid">33 axes · 24 measured · 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED</p>
   <h1>claim-maintenance</h1>
-  <p class="state" data-axis="claim-maintenance" data-status="UNMEASURED" data-separation="" data-n="0">UNMEASURED</p>
-  <p><span class="pill">family: subject</span><span class="pill">kind: declared-slot</span></p>
+  <p class="state" data-axis="claim-maintenance" data-status="MEASURED" data-separation="" data-n="174">MEASURED</p>
+  <p><span class="pill">family: subject</span><span class="pill">kind: measured-subject</span></p>
 
   <h2>What this axis asks</h2>
-  <p>at each scheduled re-read, is a captured public claim still served unchanged, changed with disclosure, changed silently, withdrawn or unreachable; says nothing about whether the claim is true (pending gated re-read wave (&gt;=30 claims))</p>
+  <p>at each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true (claim-maintenance v0.2 re-read wave)</p>
 
   <h2>The numbers, as the board serves them</h2>
   <dl>
-    <dt>State</dt><dd><span data-axis="claim-maintenance" data-status="UNMEASURED" data-separation="" data-n="0">UNMEASURED</span></dd>
-    <dt>n</dt><dd>0 bank items<br /><span class="muted">Reported DISCOVERED-style as counts per subject class, never a ranking.</span></dd>
+    <dt>State</dt><dd><span data-axis="claim-maintenance" data-status="MEASURED" data-separation="" data-n="174">MEASURED</span></dd>
+    <dt>n</dt><dd>174 bank items<br /><span class="muted">Reported DISCOVERED-style as counts per subject class, never a ranking.</span></dd>
   </dl>
 
   <h2>The board's note</h2>
-  <div class="note">DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score. Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid &gt;= 30, passing the gate. Census checks are a DISCOVERED check grid, not scores on this axis.</div>
+  <div class="note">n_valid 174 of 182 captured claims, re-read 2026-10-28 with the spec's own visible-text extractor. Counts per outcome, never a ranking, and never a statement that a claim is true. The disclosure split ('changed with disclosure' vs 'changed silently') is NOT part of this measurement: the published spec defines disclosure at the artefact level and not for a source's own edit, so those claims are recorded as CHANGED_DISCLOSURE_NOT_DECIDABLE.</div>
 
 
   <h2>What this page is not</h2>
