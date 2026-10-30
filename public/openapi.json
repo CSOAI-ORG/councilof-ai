@@ -433,6 +433,84 @@
         "summary": "POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at."
       }
     },
+    "/api/a2a/key": {
+      "get": {
+        "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports GET.",
+        "operationId": "get__api_a2a_key",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "Pages dispatches HEAD only to an onRequestHead export; the door exports GET."
+      }
+    },
+    "/api/a2a/route": {
+      "get": {
+        "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "operationId": "get__api_a2a_route",
+        "responses": {
+          "405": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Method not allowed \u2014 use the documented read method"
+          }
+        },
+        "security": [],
+        "summary": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
+      },
+      "post": {
+        "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "operationId": "post__api_a2a_route",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405."
+      }
+    },
+    "/api/a2a/verify": {
+      "get": {
+        "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "operationId": "get__api_a2a_verify",
+        "responses": {
+          "405": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Method not allowed \u2014 use the documented read method"
+          }
+        },
+        "security": [],
+        "summary": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
+      },
+      "post": {
+        "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "operationId": "post__api_a2a_verify",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405."
+      }
+    },
     "/api/action-jobs": {
       "get": {
         "description": "Bare GET returns public contract metadata. Requests with job_id require writer bearer authorization; origin restrictions still apply. /api/action-jobs \u2014 bounded, durable action-intent ledger staging.",
@@ -3126,6 +3204,37 @@
         "security": [],
         "summary": "GET /api/fulfill \u2014 public fulfillment door is closed.",
         "x-csoai-lifecycle": "DOOR_CLOSED"
+      }
+    },
+    "/api/gate": {
+      "get": {
+        "description": "A GET on a POST path is a method error, not a 404.",
+        "operationId": "get__api_gate",
+        "responses": {
+          "405": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Method not allowed \u2014 use the documented read method"
+          }
+        },
+        "security": [],
+        "summary": "A GET on a POST path is a method error, not a 404.",
+        "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
+      },
+      "post": {
+        "description": "A GET on a POST path is a method error, not a 404.",
+        "operationId": "post__api_gate",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "A GET on a POST path is a method error, not a 404."
       }
     },
     "/api/growth-loops": {
@@ -11030,7 +11139,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 136,
+    "public_operations": 140,
     "quarantined": [
       {
         "buyable": false,
@@ -11046,7 +11155,7 @@
       "well_known": "csoai.x402/0.2"
     },
     "scheme": "exact",
-    "unauthenticated_facades": 42,
+    "unauthenticated_facades": 45,
     "well_known": "https://councilof.ai/.well-known/x402.json"
   }
 }
