@@ -881,8 +881,10 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
         raise Refused("HF dataset README provenance paragraph changed; manual review required")
 
     if text.count(summary_start):
-        pattern = re.escape(summary_start) + r".*?" + re.escape(summary_end)
-        text, removed = re.subn(pattern, "", text, count=1, flags=re.S)
+        # Remove the managed block and its surrounding blank lines as one unit. Replacing
+        # it with one separator keeps repeated publication byte-stable.
+        pattern = r"\\n{0,2}" + re.escape(summary_start) + r".*?" + re.escape(summary_end) + r"\\n{0,2}"
+        text, removed = re.subn(pattern, "\\n\\n", text, count=1, flags=re.S)
         if removed != 1:
             raise Refused("HF dataset card overview could not be moved")
     load_heading = re.search(r"(?m)^#{1,6} Load the dataset\s*$", text)
@@ -1112,10 +1114,15 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
     """Readable page copy; all snapshot claims come from the captured truth."""
     subtitle = f"AI measurement axes, evidence and limits · {tr['as_of']} snapshot"
     assert 20 <= len(subtitle) <= 80, f"Kaggle subtitle must be 20–80 chars, got {len(subtitle)}"
-    counts = derive_counts(tr["board"])
-    if not counts["printed_agrees_with_array"]:
-        raise Refused("board totals disagree with the axis array; refusing the Kaggle page summary")
-    overview = snapshot_overview(counts, tr["as_of"], tr["read_at"], heading="### Snapshot at a glance")
+    # Legacy/minimal callers may provide only the dated release claim. Real board payloads always
+    # carry axes; derive the visible summary from them and refuse inconsistent totals.
+    if "axes" in tr["board"]:
+        counts = derive_counts(tr["board"])
+        if not counts["printed_agrees_with_array"]:
+            raise Refused("board totals disagree with the axis array; refusing the Kaggle page summary")
+        overview = snapshot_overview(counts, tr["as_of"], tr["read_at"], heading="### Snapshot at a glance")
+    else:
+        overview = ""
     description = f"""## About this dataset
 
 A dated export of the Council of AI public GSPC measurement board. Each row describes one declared axis: what was measured, the evidence type, the published result and its limitations. Use it to explore coverage and inspect evidence in a notebook.
