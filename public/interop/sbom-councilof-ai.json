@@ -1,10 +1,10 @@
 {
  "bomFormat": "CycloneDX",
  "specVersion": "1.5",
- "serialNumber": "urn:uuid:07569564-dcf5-41dd-b96e-959b8bf63a81",
+ "serialNumber": "urn:uuid:568b6601-73fe-416f-bb61-36126be4e82c",
  "version": 1,
  "metadata": {
-  "timestamp": "2026-10-29T08:57:34.414802+00:00",
+  "timestamp": "2026-10-30T09:55:59.502569+00:00",
   "lifecycles": [
    {
     "phase": "pre-build"
@@ -20,7 +20,7 @@
    "type": "application",
    "name": "csoai-platform",
    "version": "1.0.0",
-   "bom-ref": "source:1371ba5013ae78f4b2fec731f17e107c10b6af14"
+   "bom-ref": "source:73e78b8c987996b76b6fbe5b455c680bb476182d"
   },
   "properties": [
    {
@@ -29,15 +29,15 @@
    },
    {
     "name": "commit",
-    "value": "1371ba5013ae78f4b2fec731f17e107c10b6af14"
+    "value": "73e78b8c987996b76b6fbe5b455c680bb476182d"
    },
    {
     "name": "package.json:sha256",
-    "value": "e693af6bed4e8b21cf71b73930b8c795c7639ff746eb251da3e4d7a5c9458eda"
+    "value": "1ac2ac3aa99bf9b8f55246da04eb7c1faae68f87604ff38c1af7d9953f628f26"
    },
    {
     "name": "package-lock.json:sha256",
-    "value": "79389dc6c86003185c6a7e9b23bb72110ff33265654bba871a7997b119dd80e2"
+    "value": "87fe904314bb8f471c4495ecab8ce2c2e65dd55aea5219d8eea970166597f819"
    },
    {
     "name": "csoai:lockfile:version",
@@ -14751,6 +14751,47 @@
   },
   {
    "type": "library",
+   "bom-ref": "npm-lock:61071b57be71beecbdfff219c8c8d76ddd2efd9e58a96e8606558ba2b32c8a3c",
+   "name": "axe-core",
+   "version": "4.14.0",
+   "purl": "pkg:npm/axe-core@4.14.0",
+   "scope": "required",
+   "properties": [
+    {
+     "name": "csoai:lockfile:path",
+     "value": "node_modules/axe-core"
+    },
+    {
+     "name": "csoai:lockfile:development-only",
+     "value": "true"
+    },
+    {
+     "name": "csoai:lockfile:optional",
+     "value": "false"
+    },
+    {
+     "name": "csoai:version:evidence",
+     "value": "committed npm package-lock.json declaration; not installed/deployed observation"
+    },
+    {
+     "name": "csoai:license:evidence",
+     "value": "lockfile declaration only; text, authority and obligations not verified"
+    },
+    {
+     "name": "csoai:lockfile:integrity-declaration",
+     "value": "sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ=="
+    }
+   ],
+   "licenses": [
+    {
+     "license": {
+      "name": "MPL-2.0"
+     }
+    }
+   ]
+  },
+  {
+   "type": "library",
    "bom-ref": "npm-lock:418983c464831c3d4a92957ed7c00e77eea434265103abf575b93cd8f3b7e942",
    "name": "axios",
    "version": "1.18.1",
@@ -17131,8 +17172,8 @@
    "type": "library",
    "bom-ref": "npm-lock:0ce62c59c80613c75faca23fae8b4f1a1b3179aea37f36e575d6710b7b505e33",
    "name": "concurrently",
-   "version": "9.2.4",
-   "purl": "pkg:npm/concurrently@9.2.4",
+   "version": "9.2.5",
+   "purl": "pkg:npm/concurrently@9.2.5",
    "scope": "required",
    "properties": [
     {
@@ -17157,7 +17198,7 @@
     },
     {
      "name": "csoai:lockfile:integrity-declaration",
-     "value": "sha512-TZ0CEhyzvFjgtAvHTusDMgj7wNdihCh7LLLrzdUOXIhdlnL2JBBGA9eJxR24rtqgmdjh3OA3hrN1rCHj6HM8qA=="
+     "value": "sha512-YMZlvWrTPQEhjKp60XSmMGt60+pffbv6DyRnOMvVO98+J7aF8w8Ui9FhdcOwvSixc/kyR6SoVvmejcn/2lZBqg=="
     }
    ],
    "licenses": [
@@ -21190,8 +21231,8 @@
    "type": "library",
    "bom-ref": "npm-lock:b63150233bde7b5a2a724150f947da6c13abaa9375eca146b09aec65622920ab",
    "name": "dompurify",
-   "version": "3.4.13",
-   "purl": "pkg:npm/dompurify@3.4.13",
+   "version": "3.4.17",
+   "purl": "pkg:npm/dompurify@3.4.17",
    "scope": "required",
    "properties": [
     {
@@ -21216,7 +21257,7 @@
     },
     {
      "name": "csoai:lockfile:integrity-declaration",
-     "value": "sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ=="
+     "value": "sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w=="
     }
    ],
    "licenses": [
@@ -35034,8 +35075,8 @@
    "type": "library",
    "bom-ref": "npm-lock:7f261d7761d03ff045a872c4bcc5e3b60b923d1d9a11f559f032feb2f1969a21",
    "name": "proxy-addr",
-   "version": "2.0.7",
-   "purl": "pkg:npm/proxy-addr@2.0.7",
+   "version": "2.0.8",
+   "purl": "pkg:npm/proxy-addr@2.0.8",
    "scope": "required",
    "properties": [
     {
@@ -35060,7 +35101,7 @@
     },
     {
      "name": "csoai:lockfile:integrity-declaration",
-     "value": "sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg=="
+     "value": "sha512-5nnx0yGyVUcY6t9RnWcARWtwT9F1D8O9rt08htPvnd49W1IgZtmLkhu9WfMzQj1cFxjHIO6connUNVW5k7AVyQ=="
     }
    ],
    "licenses": [
@@ -38765,8 +38806,8 @@
    "type": "library",
    "bom-ref": "npm-lock:52cbf37778b54ab4dcb79ec49435ae894fdb610fb7fa60a0aff81f1792909258",
    "name": "shell-quote",
-   "version": "1.9.0",
-   "purl": "pkg:npm/shell-quote@1.9.0",
+   "version": "1.12.0",
+   "purl": "pkg:npm/shell-quote@1.12.0",
    "scope": "required",
    "properties": [
     {
@@ -38791,7 +38832,7 @@
     },
     {
      "name": "csoai:lockfile:integrity-declaration",
-     "value": "sha512-Iov+JwFv/2HcTpcwNMKd8+IWNb8tboQJNQTkAY/LLVK7gGH9jy+LGkVqPxfekHl+yMmiqXszdGWXgkfml7hjqA=="
+     "value": "sha512-PcByqNyT/38F2kDNi006HAMRJaULuBzq/FOsw3qdZvX/GA9W/jamDaRskgHjubHiftXK5sIFxLNkvrXUwcof6Q=="
     }
    ],
    "licenses": [
