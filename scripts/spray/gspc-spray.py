@@ -923,12 +923,16 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
         elif in_inventory and line.startswith("## "):
             in_inventory = False
         if line.startswith("At the dated snapshot read,"):
-            line = (f"At the dated snapshot read, the board had **{counts['slots']} declared slots and "
-                    f"{counts['by_status'].get('MEASURED', 0)} measured axes**. "
+            line = (f"At the dated snapshot read, the board had **{counts['slots']} declared slots, "
+                    f"{counts['by_status'].get('MEASURED', 0)} measured and "
+                    f"{counts['by_status'].get('UNMEASURED', 0)} unmeasured axes** — slots are not "
+                    "measurements and these counts are never summed. "
                     "Model-comparison and deterministic-facts runs must not be pooled into one accuracy figure.")
         elif line.startswith("For current counts, separation states and withheld leader fields"):
             line = ("For current counts, separation states and withheld leader fields, read the live JSON and "
                     "retain the retrieval time. A tie is not a win; untested separation is not a separated lead. "
+                    "The methodology DOI is a permanent record name whose Zenodo deposit may be UNAVAILABLE at a "
+                    "given time; point-in-time availability: https://councilof.ai/interop/zenodo-status.json. "
                     "The dataset remains measurement evidence, not certification or a ranking guarantee.")
         elif line.startswith("**Lid:** this dated export records"):
             line = (f"**Lid:** this dated export records {counts['slots']} axis rows. "
@@ -1174,7 +1178,11 @@ Explore the [Public Watchdog working groups and document tracker](https://counci
 
 Use the [free verifier]({VERIFY_URL}) and [verification instructions]({HOWTO_URL}). Keys resolve via `did:web:csoai.org`: [DID document]({DID_URL}). Check the [corrections register](https://councilof.ai/corrections/) for later withdrawals or corrections.
 
-Attribute the board export to Council of AI / CSOAI Ltd under CC-BY-4.0. Linked datasets and third-party material retain their own licences. Cite the dataset URL, Kaggle version, capture time and source hashes from `SNAPSHOT.json`.
+![GSPC board](https://councilof.ai/api/badge)
+
+![GSPC living board](https://councilof.ai/badge/board.svg)
+
+Attribute the board export to Council of AI / CSOAI Ltd under CC-BY-4.0. Linked datasets and third-party material retain their own licences. Cite the dataset URL, Kaggle version, capture time and source hashes from `SNAPSHOT.json`. The methodology DOI ({tr['board'].get('doi') or ZENODO_METHODOLOGY_DOI}) is a permanent record name; its Zenodo deposit may be UNAVAILABLE at a given time — point-in-time availability: https://councilof.ai/interop/zenodo-status.json.
 
 Issuer: {tr['board'].get('issuer', 'CSOAI Ltd')}.
 
