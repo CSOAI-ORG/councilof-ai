@@ -856,7 +856,7 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
         f"{value} {state.lower()}" for state, value in sorted(separation.items())
         if state not in {"SEPARATED", "TIE", "UNTESTED"} and value
     )
-    summary = "\\n".join([
+    summary = "\n".join([
         summary_start,
         "## Snapshot at a glance",
         "",
@@ -877,10 +877,10 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
         if replaced != 1:
             raise Refused("HF dataset card overview could not be replaced")
     else:
-        load_heading = re.search(r"(?m)^## Load the dataset\\s*$", text)
+        load_heading = re.search(r"(?m)^## Load the dataset\s*$", text)
         if not load_heading:
             raise Refused("HF dataset card has no safe insertion point before the dataset instructions")
-        text = text[:load_heading.start()] + summary + "\\n\\n" + text[load_heading.start():]
+        text = text[:load_heading.start()] + summary + "\n\n" + text[load_heading.start():]
 
     paragraph = (
         "The default viewer files (`board.parquet` and `board.jsonl`) project the "
