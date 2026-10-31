@@ -1,5 +1,9 @@
-// GET /api/watchdog-sources — source inventory plus last HEAD-only status snapshot.
-// This endpoint never fetches incident records and never writes to GSPC or a review queue.
+/**
+ * GET /api/watchdog-sources — public-source inventory and last HEAD-only availability snapshot.
+ * The response includes source and rights links plus ingestion gates; it never fetches or stores
+ * incident records, report text, personal data, or snapshots, and it performs no classification,
+ * assignment, GSPC write, or action. Human review remains required before ingestion.
+ */
 import { headFromGet } from "./_head";
 import registry from "../../data/watchdog/source-registry.json";
 import status from "../../watchdog-source-status.json";
