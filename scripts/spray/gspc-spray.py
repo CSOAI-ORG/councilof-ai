@@ -882,9 +882,13 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
 
     if text.count(summary_start):
         pattern = re.escape(summary_start) + r".*?" + re.escape(summary_end)
-        text, replaced = re.subn(pattern, lambda _match: summary, text, count=1, flags=re.S)
-        if replaced != 1:
-            raise Refused("HF dataset card overview could not be replaced")
+        text, removed = re.subn(pattern, "", text, count=1, flags=re.S)
+        if removed != 1:
+            raise Refused("HF dataset card overview could not be moved")
+    load_heading = re.search(r"(?m)^### Load the dataset\s*$", text)
+    if load_heading:
+        prefix = text[:load_heading.start()].rstrip()
+        text = prefix + "\n\n" + summary + "\n\n" + text[load_heading.start():]
     else:
         placement = re.escape(paragraph) + r"\n\n"
         match = re.search(placement, text)
