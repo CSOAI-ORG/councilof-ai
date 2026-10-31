@@ -1,6 +1,8 @@
-// GET /api/research-plan — live measured-board context joined to versioned research semantics.
-// This endpoint does not conduct research, interpret source changes, submit candidates, re-run a
-// bank, sign, train, repair or promote. A source-change candidate is never a measurement.
+/**
+ * GET /api/research-plan — live measured-board context joined to versioned research semantics.
+ * This endpoint does not conduct research, interpret source changes, submit candidates, re-run a
+ * bank, sign, train, repair or promote. A source-change candidate is never a measurement.
+ */
 import { headFromGet } from "./_head";
 import registry from "./_gspc_research_semantics.json";
 

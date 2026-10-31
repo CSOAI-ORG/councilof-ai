@@ -1,0 +1,80 @@
+{
+  "schema": "csoai.watchdog-source-status/0.1",
+  "registry_version": "2026-10-31",
+  "observed_at": "2026-10-31T03:59:14.274Z",
+  "monitoring_method": "HEAD",
+  "collection_scope": "SOURCE_PAGE_METADATA_ONLY",
+  "summary": {
+    "registered_sources": 7,
+    "monitored_sources": 6,
+    "reachable_source_pages": 4,
+    "redirected_source_pages": 2,
+    "access_limited_source_pages": 0,
+    "non_reachable_or_unchecked_source_pages": 2,
+    "not_monitored_sources": 1
+  },
+  "controls": {
+    "endpoint_checks_only": true,
+    "request_method": "HEAD",
+    "fetch_incident_records": false,
+    "download_snapshots": false,
+    "store_report_text": false,
+    "store_personal_data": false,
+    "automatic_classification": false,
+    "automatic_assignment": false,
+    "automatic_action": false,
+    "writes_gspc": false,
+    "requires_human_review_before_ingestion": true
+  },
+  "sources": [
+    {
+      "id": "aiid",
+      "state": "REACHABLE",
+      "http_status": 200,
+      "checked_at": "2026-10-31T03:59:14.274Z",
+      "error_code": null
+    },
+    {
+      "id": "oecd-aim",
+      "state": "REDIRECTED",
+      "http_status": 302,
+      "checked_at": "2026-10-31T03:59:14.274Z",
+      "error_code": null
+    },
+    {
+      "id": "aiaaic",
+      "state": "REACHABLE",
+      "http_status": 200,
+      "checked_at": "2026-10-31T03:59:14.274Z",
+      "error_code": null
+    },
+    {
+      "id": "avid",
+      "state": "REACHABLE",
+      "http_status": 200,
+      "checked_at": "2026-10-31T03:59:14.274Z",
+      "error_code": null
+    },
+    {
+      "id": "mitre-atlas",
+      "state": "REACHABLE",
+      "http_status": 200,
+      "checked_at": "2026-10-31T03:59:14.274Z",
+      "error_code": null
+    },
+    {
+      "id": "ai-incident-index",
+      "state": "REDIRECTED",
+      "http_status": 301,
+      "checked_at": "2026-10-31T03:59:14.274Z",
+      "error_code": null
+    },
+    {
+      "id": "eu-ai-act-serious-incident-channel",
+      "state": "NOT_MONITORED",
+      "http_status": null,
+      "checked_at": null,
+      "error_code": null
+    }
+  ]
+}

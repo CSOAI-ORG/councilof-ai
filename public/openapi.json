@@ -8675,7 +8675,7 @@
     },
     "/api/research-plan": {
       "get": {
-        "description": "",
+        "description": "GET /api/research-plan \u2014 live measured-board context joined to versioned research semantics. This endpoint does not conduct research, interpret source changes, submit candidates, re-run a bank, sign, train, repair or promote. A source-change candidate is never a measurement.",
         "operationId": "get__api_research-plan",
         "responses": {
           "200": {
@@ -8686,7 +8686,7 @@
           }
         },
         "security": [],
-        "summary": ""
+        "summary": "GET /api/research-plan \u2014 live measured-board context joined to versioned research semantics. This endpoint does not conduct research, interpret source changes, submit candidates, re-run a bank\u2026"
       }
     },
     "/api/revenue": {
@@ -9799,6 +9799,22 @@
         "security": [],
         "summary": "POST /api/waitlist \u2014 join the waitlist for a product that is not on sale yet (RAS booking desk first). The entry is proposed into the Busabase `waitlist` base for review; nothing is sold, priced\u2026",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
+    "/api/watchdog-sources": {
+      "get": {
+        "description": "GET /api/watchdog-sources \u2014 public-source inventory and last HEAD-only availability snapshot. The response includes source and rights links plus ingestion gates; it never fetches or stores incident records, report text, personal data, or snapshots, and it performs no classification, assignment, GSPC write, or action. Human review remains required before ingestion.",
+        "operationId": "get__api_watchdog-sources",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/watchdog-sources \u2014 public-source inventory and last HEAD-only availability snapshot. The response includes source and rights links plus ingestion gates; it never fetches or stores\u2026"
       }
     },
     "/api/wave-dashboard": {
@@ -11012,7 +11028,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 140,
+    "public_operations": 141,
     "quarantined": [
       {
         "buyable": false,
