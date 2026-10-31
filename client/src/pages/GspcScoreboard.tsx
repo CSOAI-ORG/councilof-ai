@@ -3,7 +3,7 @@ import { Link, useRoute } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { verifyPublishedArenaElo } from "@/lib/arenaAttestation";
-import { BOARD_COUNT_OBSERVED, boardCountFromPayload, boardKindSplitFromPayload } from "@/lib/boardCount";
+import { BOARD_COUNT_OBSERVED, BOARD_OBSERVED_AT, boardCountFromPayload, boardKindSplitFromPayload } from "@/lib/boardCount";
 import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
 import RowsSeparationPanel, { RowsAxisDetermination } from "@/components/board/RowsSeparationPanel";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
@@ -329,7 +329,7 @@ export default function GspcScoreboard() {
         <img
           src="/images/detail/board_arena_detail.jpg"
           alt="Measured systems facing each other across the GSPC board"
-          className="mb-8 h-48 w-full rounded-2xl object-cover sm:h-64"
+          className="mb-6 h-40 w-full rounded-2xl object-cover sm:h-52"
         />
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
           Board source: GET /api/gspc — recompute published results, free
@@ -350,6 +350,91 @@ export default function GspcScoreboard() {
             </a>
           </p>
         )}
+        <section
+          aria-label="GSPC board at a glance"
+          data-testid="board-overview"
+          className="mt-6 grid gap-3 lg:grid-cols-3"
+        >
+          <article className="rounded-2xl border border-emerald-700/15 bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
+              Scope and measured coverage
+            </p>
+            <p className="mt-3 text-2xl font-black tracking-tight text-gray-900">
+              {board.public_count}
+            </p>
+            <p className="mt-2 text-sm leading-5 text-gray-600">
+              Declared axis slots and measured axes are shown together.
+            </p>
+          </article>
+
+          <article className="rounded-2xl border border-emerald-700/15 bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
+              Leader separation
+            </p>
+            {board.separation ? (
+              <>
+                <div className="mt-3 grid grid-cols-3 gap-2" aria-label="Model-comparison separation states">
+                  <div className="rounded-xl border border-sky-200 bg-sky-50 p-3 text-center">
+                    <p className="text-xl font-black tabular-nums text-sky-900">{board.separation.separated}</p>
+                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-sky-800">separated</p>
+                  </div>
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-center">
+                    <p className="text-xl font-black tabular-nums text-amber-900">{board.separation.ties}</p>
+                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-amber-800">ties</p>
+                  </div>
+                  <div className="rounded-xl border border-gray-200 bg-gray-50 p-3 text-center">
+                    <p className="text-xl font-black tabular-nums text-gray-700">{board.separation.untested}</p>
+                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-gray-600">untested</p>
+                  </div>
+                </div>
+                <p className="mt-3 text-xs leading-5 text-gray-600">
+                  {board.separation.comparison_axes} model-comparison axes. A tie is not a win.
+                </p>
+              </>
+            ) : (
+              <p className="mt-3 text-sm leading-5 text-gray-600">
+                Separation is not published in this read. Unavailable is not zero.
+              </p>
+            )}
+          </article>
+
+          <article className="rounded-2xl border border-emerald-700/15 bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
+              Source state
+            </p>
+            <p className="mt-3">
+              <span
+                className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-bold ${
+                  board.live
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                    : "border-amber-200 bg-amber-50 text-amber-900"
+                }`}
+              >
+                {board.live ? "LIVE API" : "RECORDED OBSERVATION"}
+              </span>
+            </p>
+            <p className="mt-2 text-sm leading-5 text-gray-600">
+              {board.live ? (
+                "Counts are derived from this live API response."
+              ) : (
+                <>
+                  Recorded observation:{" "}
+                  <time dateTime={BOARD_OBSERVED_AT || undefined}>
+                    {BOARD_OBSERVED_AT || "date unavailable"}
+                  </time>
+                  .
+                </>
+              )}
+            </p>
+            <a
+              className="mt-3 inline-flex min-h-11 items-center font-semibold text-emerald-700 underline underline-offset-2"
+              href="/api/gspc"
+            >
+              Open the live JSON →
+            </a>
+          </article>
+        </section>
+
         <p className="mt-3 max-w-3xl text-gray-600">
           {board.lid ?? board.public_count}
           {board.public_leader_count != null && !board.lid && (
