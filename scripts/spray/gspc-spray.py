@@ -896,7 +896,7 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
         match = re.search(placement, text)
         if not match:
             raise Refused("HF dataset card provenance paragraph has no safe overview insertion point")
-        text = text[:match.start()] + paragraph + "\n\n" + summary + "\\n\\n" + text[match.end():]
+        text = text[:match.start()] + paragraph + "\n\n" + summary + "\n\n" + text[match.end():]
 
     inventory = []
     seen = set()
