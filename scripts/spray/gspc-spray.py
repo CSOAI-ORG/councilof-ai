@@ -871,17 +871,6 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
         "These are dated snapshot counts; use the live board for current state. A TIE is not a win.",
         summary_end,
     ])
-    if text.count(summary_start):
-        pattern = re.escape(summary_start) + r".*?" + re.escape(summary_end)
-        text, replaced = re.subn(pattern, lambda _match: summary, text, count=1, flags=re.S)
-        if replaced != 1:
-            raise Refused("HF dataset card overview could not be replaced")
-    else:
-        load_heading = re.search(r"(?m)^## Load the dataset\s*$", text)
-        if not load_heading:
-            raise Refused("HF dataset card has no safe insertion point before the dataset instructions")
-        text = text[:load_heading.start()] + summary + "\n\n" + text[load_heading.start():]
-
     paragraph = (
         "The default viewer files (`board.parquet` and `board.jsonl`) project the "
         "[dated `snapshot/` release](snapshot/SNAPSHOT.json): its published root is "
@@ -896,6 +885,18 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
     )
     if replacements != 1:
         raise Refused("HF dataset README provenance paragraph changed; manual review required")
+
+    if text.count(summary_start):
+        pattern = re.escape(summary_start) + r".*?" + re.escape(summary_end)
+        text, replaced = re.subn(pattern, lambda _match: summary, text, count=1, flags=re.S)
+        if replaced != 1:
+            raise Refused("HF dataset card overview could not be replaced")
+    else:
+        placement = re.escape(paragraph) + r"\\n\\n"
+        match = re.search(placement, text)
+        if not match:
+            raise Refused("HF dataset card provenance paragraph has no safe overview insertion point")
+        text = text[:match.start()] + paragraph + "\\n\\n" + summary + "\\n\\n" + text[match.end():]
 
     inventory = []
     seen = set()
