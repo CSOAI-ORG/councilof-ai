@@ -883,8 +883,8 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
     if text.count(summary_start):
         # Remove the managed block and its surrounding blank lines as one unit. Replacing
         # it with one separator keeps repeated publication byte-stable.
-        pattern = r"\\n{0,2}" + re.escape(summary_start) + r".*?" + re.escape(summary_end) + r"\\n{0,2}"
-        text, removed = re.subn(pattern, "\\n\\n", text, count=1, flags=re.S)
+        pattern = r"\n{0,2}" + re.escape(summary_start) + r".*?" + re.escape(summary_end) + r"\n{0,2}"
+        text, removed = re.subn(pattern, "\n\n", text, count=1, flags=re.S)
         if removed != 1:
             raise Refused("HF dataset card overview could not be moved")
     load_heading = re.search(r"(?m)^#{1,6} Load the dataset\s*$", text)
