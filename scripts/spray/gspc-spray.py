@@ -459,6 +459,24 @@ def render_readme(tr: dict, counts: dict, rows: list[dict]) -> str:
     lines.append("**Measurement, not certification.** A TIE is never a win. An empty slot is a finding, not a zero. "
                  "No slot is for sale.")
     lines.append("")
+    sep_parts = [
+        f"{sep.get('SEPARATED', 0)} separated",
+        f"{sep.get('TIE', 0)} ties",
+        f"{sep.get('UNTESTED', 0)} untested",
+    ]
+    sep_parts.extend(f"{value} {state.lower()}" for state, value in sorted(sep.items())
+                     if state not in {"SEPARATED", "TIE", "UNTESTED"} and value)
+    lines.append("## Snapshot at a glance")
+    lines.append("")
+    lines.append("| Scope and measurement | Evidence types | Leader separation |")
+    lines.append("|---|---|---|")
+    lines.append(f"| **{counts['slots']} slots · {st.get('MEASURED', 0)} measured** | "
+                 f"**{n_model} model-comparison axes · {n_fact} deterministic-fact axes** | "
+                 f"**{' · '.join(sep_parts)}** |")
+    lines.append("")
+    lines.append(f"Root snapshot `as_of` `{as_of}` · source board read at `{read_at}`. "
+                 "Separation counts apply only to model-comparison axes; a TIE is not a win.")
+    lines.append("")
     lines.append("## Honest counts — derived from the `axes` array in `board.json`, never typed")
     lines.append("")
     lines.append(f"- slots on the board: **{counts['slots']}**")
@@ -824,6 +842,46 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
     if not counts["printed_agrees_with_array"]:
         raise Refused("board totals disagree with the axis array; refusing the HF dataset card")
     text = readme.decode("utf-8")
+    summary_start = "<!-- gspc-overview:start -->"
+    summary_end = "<!-- gspc-overview:end -->"
+    if text.count(summary_start) != text.count(summary_end) or text.count(summary_start) > 1:
+        raise Refused("HF dataset card overview markers are unbalanced or duplicated")
+    separation = counts["separation_over_model_comparison"]
+    separation_parts = [
+        f"{separation.get('SEPARATED', 0)} separated",
+        f"{separation.get('TIE', 0)} ties",
+        f"{separation.get('UNTESTED', 0)} untested",
+    ]
+    separation_parts.extend(
+        f"{value} {state.lower()}" for state, value in sorted(separation.items())
+        if state not in {"SEPARATED", "TIE", "UNTESTED"} and value
+    )
+    summary = "\\n".join([
+        summary_start,
+        "## Snapshot at a glance",
+        "",
+        "| Scope and measurement | Evidence types | Leader separation |",
+        "|---|---|---|",
+        f"| **{counts['slots']} slots · {counts['by_status'].get('MEASURED', 0)} measured** | "
+        f"**{counts['by_kind'].get('model-comparison', 0)} model-comparison axes · "
+        f"{counts['by_kind'].get('deterministic-facts', 0)} deterministic-fact axes** | "
+        f"**{' · '.join(separation_parts)}** |",
+        "",
+        f"Root snapshot `as_of` `{tr['as_of']}` · source board read at `{tr['read_at']}`. "
+        "These are dated snapshot counts; use the live board for current state. A TIE is not a win.",
+        summary_end,
+    ])
+    if text.count(summary_start):
+        pattern = re.escape(summary_start) + r".*?" + re.escape(summary_end)
+        text, replaced = re.subn(pattern, lambda _match: summary, text, count=1, flags=re.S)
+        if replaced != 1:
+            raise Refused("HF dataset card overview could not be replaced")
+    else:
+        load_heading = re.search(r"(?m)^## Load the dataset\\s*$", text)
+        if not load_heading:
+            raise Refused("HF dataset card has no safe insertion point before the dataset instructions")
+        text = text[:load_heading.start()] + summary + "\\n\\n" + text[load_heading.start():]
+
     paragraph = (
         "The default viewer files (`board.parquet` and `board.jsonl`) project the "
         "[dated `snapshot/` release](snapshot/SNAPSHOT.json): its published root is "
