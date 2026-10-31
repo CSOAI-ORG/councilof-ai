@@ -32,6 +32,12 @@ const DECLARED_IDS = [
   "claim-maintenance",
   "serving-fidelity",
 ] as const;
+const OBSERVED_SUBJECT_IDS = [
+  "lab-practice",
+  "measurer-integrity",
+  "regulator-transparency",
+  "claim-maintenance",
+] as const;
 const live = {
   axis_slots: LIVE_AXES.length,
   measured_axes: LIVE_AXES.filter((a) => a.status === "MEASURED").length,
@@ -96,11 +102,13 @@ describe("signed board freeze vs live axis arrays", () => {
   it("the committed newest freeze agrees with the committed axis arrays", () => {
     const r = crosscheckBoardSnapshot(live);
     expect(r.source).toBe("public/signed/gspc-board.2026-09-29.signed.json");
-    // The 2026-09-29 freeze predates the declared subject slots (2026-10-16). Until a new freeze is
-    // signed (a separate step) the comparison must DISAGREE by exactly the 10 declared axis ids and
-    // nothing else: measured stays exactly 23, and every n, score, card or root field is unchanged.
-    expect(LIVE_AXES.filter((a) => a.status === "UNMEASURED").map((a) => a.axis).sort()).toEqual([...DECLARED_IDS].sort());
-    expect(live.measured_axes).toBe(23);
+    // The 2026-09-29 freeze predates the declared subject slots (2026-10-16). Four later
+    // content-addressed observation runs are live, but the historical signed bytes stay unchanged.
+    // The comparison therefore disagrees by the 10 added axis ids and four later measurements.
+    expect(LIVE_AXES.filter((a) => a.status === "UNMEASURED").map((a) => a.axis).sort()).toEqual(
+      DECLARED_IDS.filter((id) => !OBSERVED_SUBJECT_IDS.includes(id as typeof OBSERVED_SUBJECT_IDS[number])).sort(),
+    );
+    expect(live.measured_axes).toBe(23 + OBSERVED_SUBJECT_IDS.length);
     expect(r.measured_axes).toBe(23);
     expect(r.axis_slots).toBe(23);
     expect(live.axis_slots).toBe(23 + DECLARED_IDS.length);
@@ -158,7 +166,7 @@ describe("signed board freeze vs live axis arrays", () => {
 });
 
 describe("served /api/gspc vs the 2026-09-29 signed freeze (Measure ruling on #3266)", () => {
-  it("differs only by the 10 declared UNMEASURED axes: measured exactly 23, no n, score, card or root change", async () => {
+  it("adds 10 subject axes and four observed runs without changing any frozen row", async () => {
     (globalThis as unknown as { caches: unknown }).caches = {
       default: { match: async () => undefined, put: async () => undefined },
     };
@@ -178,13 +186,24 @@ describe("served /api/gspc vs the 2026-09-29 signed freeze (Measure ruling on #3
     const extra = served.filter((a) => !frozen.has(a.axis));
     expect(extra.map((a) => a.axis)).toEqual([...DECLARED_IDS]);
     for (const a of extra) {
-      expect(a.status).toBe("UNMEASURED");
-      expect(a.n ?? 0).toBe(0);
+      if (OBSERVED_SUBJECT_IDS.includes(a.axis as typeof OBSERVED_SUBJECT_IDS[number])) {
+        expect(a.status).toBe("MEASURED");
+        expect(a.kind).toBe("deterministic-facts");
+        expect(a.n).toBeGreaterThanOrEqual(30);
+        expect(a.accuracy).toBeUndefined();
+        expect(a.leader).toBeUndefined();
+        expect(a.separation).toBeUndefined();
+      } else {
+        expect(a.status).toBe("UNMEASURED");
+        expect(a.n ?? 0).toBe(0);
+      }
     }
     for (const id of frozen.keys()) expect(served.map((a) => a.axis)).toContain(id);
-    expect(body.totals.measured_axes).toBe(23);
+    expect(body.totals.measured_axes).toBe(23 + OBSERVED_SUBJECT_IDS.length);
     expect(freeze.totals.measured_axes).toBe(23);
-    expect(served.filter((a) => a.status === "MEASURED").map((a) => a.axis).sort()).toEqual([...frozen.keys()].sort());
+    expect(served.filter((a) => a.status === "MEASURED").map((a) => a.axis).sort()).toEqual(
+      [...frozen.keys(), ...OBSERVED_SUBJECT_IDS].sort(),
+    );
     // Measure ruling on #3266 (16 Oct 2026), two narrow exemptions and nothing else:
     //  (1) method_status is allowed ONLY as an added field: absent from the freeze and from master,
     //      present on every served row.

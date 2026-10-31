@@ -785,9 +785,9 @@ export const onRequestGet: PagesFunction = async (context) => {
           },
           subject: {
             ...bySelectedFamily("subject"),
-            note: "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). Declared slots, " +
-              "UNMEASURED until a frozen sha-pinned bank with n_valid >= 30 passes the gate. Census checks are a " +
-              "DISCOVERED check grid, never scores here. No aggregate score and no overall rank.",
+            note: "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). A slot stays " +
+              "UNMEASURED until a frozen sha-pinned bank with n_valid >= 30 passes the gate. Measured rows carry " +
+              "deterministic observed facts, not scores or compliance verdicts. No aggregate score and no overall rank.",
           },
           financial: {
             ...financialFamilyBlock(bySelectedFamily("financial").axes, bySelectedFamily("financial").measured),
