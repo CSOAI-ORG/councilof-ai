@@ -1,0 +1,131 @@
+{
+ "schema": "csoai.root-policy-ruling/0.1",
+ "ruled_at": "2026-10-29T06:10:00Z",
+ "subject": "the public root",
+ "ruling": "The public root stays a deduplicated current-state set with sticky card membership. It is not an append-only log, and the public copy must stop implying that it is. The append-only property belongs to the signed card index and the corrections ledger, which are separate corpora; the root is the snapshot those corpora are summarised into.",
+ "implementation": {
+  "state": "ALREADY_BEHAVES_THIS_WAY",
+  "code_change_required": false,
+  "code_change_made": false,
+  "gap": "never in the code; it was in how the structure was described"
+ },
+ "where_the_append_only_property_lives": [
+  "the signed card index",
+  "the corrections ledger"
+ ],
+ "evidence": [
+  {
+   "n": 1,
+   "claim": "the builder says so in its own words",
+   "detail": "the root builder states that the root is a coverage SNAPSHOT, not an append-only log; the leaf-union builder assembles it with RFC 6962 domain separation over the leaves it selects — a Merkle tree over the current membership set, not a chain of history"
+  },
+  {
+   "n": 2,
+   "claim": "the root's own history loses members",
+   "detail": "across the 69-entry root history card_count moves in both directions: -2, -1, -3, -4, -6",
+   "implication": "an append-only structure cannot lose members; a set can"
+  },
+  {
+   "n": 3,
+   "claim": "master and live disagreed on membership at equal size",
+   "detail": "the repository root and the live root carried the same count but 67 different leaves",
+   "implication": "a recomputed membership set, not an appended history: if it were append-only, the live root would be a superset of the repository root, not a different set of the same size"
+  },
+  {
+   "n": 4,
+   "claim": "sticky cards are the mechanism that stops measurement loss",
+   "detail": "the builder's retention logic keeps a card's membership sticky so that a measurement already published is not silently dropped when the current set is recomputed",
+   "implication": "coverage without false accumulation — the correct trade for a snapshot"
+  },
+  {
+   "n": 5,
+   "claim": "the append-only surfaces exist, and they are elsewhere",
+   "detail": "the corrections ledger carries 58 withdrawn and 1,682 superseded entries, both confirmed against live sources",
+   "implication": "the root summarises; the ledger remembers"
+  }
+ ],
+ "counts_at_ruling": {
+  "measured_at": "2026-10-29T06:10:00Z",
+  "public_root_catalogued_leaves": 324,
+  "signed_card_index_declared": 335,
+  "signed_card_index_rows": 335,
+  "root_history_entries": 69,
+  "note": "the two corpora have no id in common; neither is a subset of the other by construction, and neither may be presented as the other"
+ },
+ "counts_after": {
+  "measured_at": "2026-10-30T00:58:22Z",
+  "public_root_catalogued_leaves": 326,
+  "merkle_root": "aab2825a63efc7c7",
+  "note": "the Bitcoin-confirmed candidate merged into master at 09:52:51Z on 2026-10-29 and the root moved from 324 to 326 catalogued leaves. The estate then recomputed it overnight: the SAME 326 leaves at a DIFFERENT merkle root (7bd83223baf71d04 -> aab2825a63efc7c7), confirmed on Bitcoin at block height 973757 (block hash 0000000000000000000032a93db644f2235d6257ee69a75d63570b76730049b2, block time 2026-10-30T01:02:10Z) and served live byte-identical to master. That is this ruling in one observation - a membership SET recomputed over time, not an append-only log. The ruling is about the SHAPE of the structure and is unchanged by the count."
+ },
+ "obliges": [
+  "the public copy stops implying append-only: where the root is described as an append-only ledger or an ever-growing log, that wording is wrong and must be corrected",
+  "the two corpora stay named separately",
+  "the card index's count and the root's count are not a defect to be reconciled by fiat — two different corpora with two different membership rules"
+ ],
+ "does_not": [
+  "convert the root into an append-only log",
+  "change any count, merkle root, signature or leaf",
+  "move any axis to MEASURED",
+  "confer any status on any subject"
+ ],
+ "open_gap": {
+  "corrected_at": "2026-10-30T04:36:00Z",
+  "was": {
+   "path": "/state-of-claim-maintenance/",
+   "state": "NOT_SERVED",
+   "observed": 404,
+   "against": "the live register claims 92.86% coverage with due_unrun_next_read 26"
+  },
+  "why_it_was_wrong": "Two errors, both measured. (1) The live register never claimed 92.86% coverage: no version of register.json carries a coverage percentage at all, it holds raw counts only. The 92.86% is in the estate's 30 September convergence note (_alignment/CLAIM-MAINTENANCE-CATEGORY-CONVERGENCE-20260930.md:59-60), which derived it on 30 September from the register version then live - 26 of 28 subjects had a scheduled next read, and 26/28 = 92.857%. That note is a working document in _alignment/, not a published estate page. (2) The 26 was live on 2026-10-27 and not on 2026-10-29: it is the same set of 26 subjects under a different field name in a later register version. The published sentence paired the note's coverage percentage with the live register's due-unrun count - two different register versions, two different field names, one set of 26 subjects - and attributed both to a register that carried neither.",
+  "register_version_history": [
+    {
+      "register_as_of": "2026-09-25 / 2026-09-28",
+      "published": "25-30 Sep 2026",
+      "subjects_with_a_scheduled_next_read": 26,
+      "subjects_with_a_due_unrun_next_read": null,
+      "subjects_with_a_completed_scheduled_read": null,
+      "note": "this is the version the 30 September note derived 92.86% from (26 of 28 subjects)"
+    },
+    {
+      "register_as_of": "2026-10-01",
+      "published": "1 Oct 2026",
+      "subjects_with_a_scheduled_next_read": 0,
+      "subjects_with_a_due_unrun_next_read": 26,
+      "subjects_with_a_completed_scheduled_read": null,
+      "note": "the same 26 subjects reclassified as past-due; this is the version live on 2026-10-27"
+    },
+    {
+      "register_as_of": "2026-10-08",
+      "published": "29 Oct 2026",
+      "subjects_with_a_scheduled_next_read": 0,
+      "subjects_with_a_due_unrun_next_read": 0,
+      "subjects_with_a_completed_scheduled_read": 21,
+      "note": "the version live today"
+    }
+  ],
+  "register_live": {
+   "url": "https://councilof.ai/spec/claim-maintenance/register.json",
+   "http": 200,
+   "as_of": "2026-10-08T05:40:55Z",
+   "subjects_with_a_scheduled_next_read": 0,
+   "subjects_with_a_due_unrun_next_read": 0,
+   "subjects_with_a_completed_scheduled_read": 21,
+   "subjects_with_due_execution_unverified": 5,
+   "claims_92_86_coverage": false
+  },
+  "human_page": {
+   "path": "/claim-maintenance/",
+   "http": 200
+  },
+  "dead_path_still_dead": {
+   "path": "/state-of-claim-maintenance/",
+   "http": 404,
+   "named_by_any_live_surface": false
+  },
+  "gap_that_remains": "the register is served; what is missing is report #1 - the state table CJ-49 row asks for a published State of Claim Maintenance report, and none exists. The 30 September note's 92.86% scheduled coverage still contradicts the register's own totals, so on 2026-10-30 that note was given a DATED CORRECTION rather than a rewrite - a dated record is not rewritten, and the error is kept visible.",
+  "note": "corrected, not quietly edited; the earlier wording misattributed a note figure to the live register"
+ },
+ "source_document": "docs/GSPC-ROOT-POLICY-RULING-2026-10-29.md",
+ "not_a_certification": "This ruling describes the shape of a published structure. It decides nothing about whether any measured claim is true, and it grants no status to any subject."
+}

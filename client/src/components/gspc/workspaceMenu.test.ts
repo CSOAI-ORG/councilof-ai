@@ -27,6 +27,7 @@ describe("the grouped global menu", () => {
     expect(MENU_GROUPS[0].heading).toBeNull();
     expect(MENU_GROUPS[0].sections.map((id) => byId.get(id))).toEqual([
       "Get results", "My results", "Check a result", "Leaderboard", "For developers", "Learn",
+      "Staff & human review",
     ]);
   });
   it("links support and resources to same-site pages and machine files only", () => {
