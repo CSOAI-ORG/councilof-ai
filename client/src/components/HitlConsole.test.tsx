@@ -11,8 +11,10 @@ const MODULE = {
   id: "GSPC-governance",
   axis: "governance",
   title: 'Read the record for "governance"',
-  briefing: "Axis: governance. Published status: MEASURED. Published separation: TIE.",
-  question: 'According to the published record you were briefed on, which statement about the axis "governance" is TRUE?',
+  briefing:
+    "Axis: governance. Published status: MEASURED. Published separation: TIE.",
+  question:
+    'According to the published record you were briefed on, which statement about the axis "governance" is TRUE?',
   options: [
     { id: "A", text: "It is MEASURED and its separation is TIE." },
     { id: "B", text: "It is UNMEASURED and its separation is TIE." },
@@ -75,27 +77,41 @@ describe("the human-in-the-loop console", () => {
   }
 
   function stub(handlers: (url: string, init?: any) => Response | null) {
-    return vi.spyOn(globalThis, "fetch").mockImplementation(async (input: any, init?: any) => {
-      const url = String(input);
-      const r = handlers(url, init);
-      if (r) return r;
-      throw new Error(`unexpected fetch: ${url}`);
-    });
+    return vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation(async (input: any, init?: any) => {
+        const url = String(input);
+        const r = handlers(url, init);
+        if (r) return r;
+        if (url === "/api/hitl/record")
+          return json({
+            schema: "csoai.hitl-record/0.1",
+            store_bound: true,
+            count: 0,
+            receipts: [],
+          });
+        throw new Error(`unexpected fetch: ${url}`);
+      });
   }
 
   const json = (body: unknown, status = 200) =>
-    new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { "content-type": "application/json" },
+    });
 
   it("states the policy line and the MEOK decision vocabulary", async () => {
     stub((url) =>
       url.endsWith("/api/hitl")
         ? json(snapshot())
         : url.endsWith("/api/hitl/challenges")
-          ? json({ challenges: [] })
+          ? json({ schema: "csoai.hitl-companion-state/0.1", challenges: [] })
           : null,
     );
     const c = await mount();
-    expect(c.querySelector('[data-testid="hitl-policy"]')?.textContent).toContain(
+    expect(
+      c.querySelector('[data-testid="hitl-policy"]')?.textContent,
+    ).toContain(
       "Measurement and Human-in-the-Loop Oversight — Never Certification",
     );
     expect(c.textContent).toContain("APPROVED, HOLD, REJECTED");
@@ -104,16 +120,25 @@ describe("the human-in-the-loop console", () => {
   it("says plainly when the decision path is locked, and refuses to pretend it is open", async () => {
     stub((url) =>
       url.endsWith("/api/hitl")
-        ? json(snapshot({ decision_path: "locked", operator_token_configured: false }))
+        ? json(
+            snapshot({
+              decision_path: "locked",
+              operator_token_configured: false,
+            }),
+          )
         : url.endsWith("/api/hitl/challenges")
-          ? json({ challenges: [] })
+          ? json({ schema: "csoai.hitl-companion-state/0.1", challenges: [] })
           : null,
     );
     const c = await mount({ challenge: CHALLENGE });
     expect(c.querySelector('[data-testid="hitl-locked-note"]')).not.toBeNull();
-    expect(c.textContent).toContain("No decision can be taken on this deployment");
+    expect(
+      c.querySelector('[data-testid="hitl-locked-note"]')?.textContent,
+    ).toContain("The decision path is locked");
     // The buttons are disabled, so the operator cannot take a decision the server would refuse.
-    const approve = c.querySelector<HTMLButtonElement>('[data-testid="hitl-decide-APPROVED"]')!;
+    const approve = c.querySelector<HTMLButtonElement>(
+      '[data-testid="hitl-decide-APPROVED"]',
+    )!;
     expect(approve.disabled).toBe(true);
   });
 
@@ -122,7 +147,7 @@ describe("the human-in-the-loop console", () => {
       url.endsWith("/api/hitl")
         ? json(snapshot())
         : url.endsWith("/api/hitl/challenges")
-          ? json({ challenges: [] })
+          ? json({ schema: "csoai.hitl-companion-state/0.1", challenges: [] })
           : null,
     );
     const c = await mount({ challenge: CHALLENGE });
@@ -140,20 +165,30 @@ describe("the human-in-the-loop console", () => {
       url.endsWith("/api/hitl")
         ? json(snapshot())
         : url.endsWith("/api/hitl/challenges")
-          ? json({ challenges: [] })
+          ? json({ schema: "csoai.hitl-companion-state/0.1", challenges: [] })
           : null,
     );
     const c = await mount({ challenge: CHALLENGE });
-    expect(c.querySelector('[data-testid="hitl-module-question"]')?.textContent).toContain("governance");
-    expect(c.querySelector('[data-testid="hitl-option-A"]')?.textContent).toContain("It is MEASURED");
-    expect(c.querySelector('[data-testid="hitl-submit-module"]')).not.toBeNull();
+    expect(
+      c.querySelector('[data-testid="hitl-module-question"]')?.textContent,
+    ).toContain("governance");
+    expect(
+      c.querySelector('[data-testid="hitl-option-A"]')?.textContent,
+    ).toContain("It is MEASURED");
+    expect(
+      c.querySelector('[data-testid="hitl-submit-module"]'),
+    ).not.toBeNull();
   });
 
   it("checks the answer against the live record and reports what the server said", async () => {
     const seen: any[] = [];
     stub((url, init) => {
       if (url.endsWith("/api/hitl")) return json(snapshot());
-      if (url.endsWith("/api/hitl/challenges")) return json({ challenges: [] });
+      if (url.endsWith("/api/hitl/challenges"))
+        return json({
+          schema: "csoai.hitl-companion-state/0.1",
+          challenges: [],
+        });
       if (url.endsWith("/api/hitl/modules")) {
         seen.push(JSON.parse(String(init?.body ?? "{}")));
         return json({
@@ -162,7 +197,8 @@ describe("the human-in-the-loop console", () => {
           module_id: "GSPC-governance",
           axis: "governance",
           correct_option: "A",
-          explanation: "The published record for governance reports status MEASURED and separation TIE.",
+          explanation:
+            "The published record for governance reports status MEASURED and separation TIE.",
           oversight_gate_unlocked: true,
         });
       }
@@ -171,34 +207,64 @@ describe("the human-in-the-loop console", () => {
     const c = await mount({ challenge: CHALLENGE });
 
     await act(async () => {
-      const radio = c.querySelector<HTMLInputElement>('[data-testid="hitl-option-A"] input')!;
+      const radio = c.querySelector<HTMLInputElement>(
+        '[data-testid="hitl-option-A"] input',
+      )!;
       radio.click();
     });
     await act(async () => {
-      c.querySelector<HTMLButtonElement>('[data-testid="hitl-submit-module"]')!.click();
+      c.querySelector<HTMLButtonElement>(
+        '[data-testid="hitl-submit-module"]',
+      )!.click();
     });
 
     expect(seen[0]).toEqual({ module_id: "GSPC-governance", answer: "A" });
-    expect(c.querySelector('[data-testid="hitl-module-result"]')?.textContent).toContain("Correct");
+    expect(
+      c.querySelector('[data-testid="hitl-module-result"]')?.textContent,
+    ).toContain("Correct");
   });
 
   it("sends the decision with the challenge, the module and the answer — and the token in the HEADER, never the body", async () => {
     const seen: any[] = [];
     stub((url, init) => {
       if (url.endsWith("/api/hitl")) return json(snapshot());
-      if (url.endsWith("/api/hitl/challenges")) return json({ challenges: [] });
+      if (url.endsWith("/api/hitl/challenges"))
+        return json({
+          schema: "csoai.hitl-companion-state/0.1",
+          challenges: [],
+        });
       if (url.endsWith("/api/hitl/modules")) {
-        seen.push({ url, body: JSON.parse(String(init?.body ?? "{}")), headers: init?.headers });
-        return json({ ok: true, correct: true, module_id: "GSPC-governance", axis: "governance", correct_option: "A" });
+        seen.push({
+          url,
+          body: JSON.parse(String(init?.body ?? "{}")),
+          headers: init?.headers,
+        });
+        return json({
+          ok: true,
+          correct: true,
+          module_id: "GSPC-governance",
+          axis: "governance",
+          correct_option: "A",
+        });
       }
       if (url.endsWith("/api/hitl/decision")) {
-        seen.push({ url, body: JSON.parse(String(init?.body ?? "{}")), headers: init?.headers });
+        seen.push({
+          url,
+          body: JSON.parse(String(init?.body ?? "{}")),
+          headers: init?.headers,
+        });
         return json({
           ok: true,
           blocked_by_competency_gate: false,
           receipt: {
             schema: "csoai.hitl-oversight-receipt/0.1",
             decision: "APPROVED",
+            operator: "the operator",
+            challenge: {
+              id: CHALLENGE.id,
+              subject: CHALLENGE.subject,
+              proposed_action: CHALLENGE.proposed_action,
+            },
             axis: "governance",
             at: "2026-10-26T00:00:00.000Z",
             note: "competency-verified",
@@ -217,22 +283,35 @@ describe("the human-in-the-loop console", () => {
 
     // Answer the module, name the operator, type the token, then decide.
     await act(async () => {
-      c.querySelector<HTMLInputElement>('[data-testid="hitl-option-A"] input')!.click();
+      c.querySelector<HTMLInputElement>(
+        '[data-testid="hitl-option-A"] input',
+      )!.click();
     });
     await act(async () => {
-      c.querySelector<HTMLButtonElement>('[data-testid="hitl-submit-module"]')!.click();
+      c.querySelector<HTMLButtonElement>(
+        '[data-testid="hitl-submit-module"]',
+      )!.click();
     });
     await act(async () => {
-      const op = c.querySelector<HTMLInputElement>('[data-testid="hitl-operator"]')!;
-      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!;
+      const op = c.querySelector<HTMLInputElement>(
+        '[data-testid="hitl-operator"]',
+      )!;
+      const setter = Object.getOwnPropertyDescriptor(
+        HTMLInputElement.prototype,
+        "value",
+      )!.set!;
       setter.call(op, "the operator");
       op.dispatchEvent(new Event("input", { bubbles: true }));
-      const tok = c.querySelector<HTMLInputElement>('[data-testid="hitl-token"]')!;
+      const tok = c.querySelector<HTMLInputElement>(
+        '[data-testid="hitl-token"]',
+      )!;
       setter.call(tok, "s3cret");
       tok.dispatchEvent(new Event("input", { bubbles: true }));
     });
     await act(async () => {
-      c.querySelector<HTMLButtonElement>('[data-testid="hitl-decide-APPROVED"]')!.click();
+      c.querySelector<HTMLButtonElement>(
+        '[data-testid="hitl-decide-APPROVED"]',
+      )!.click();
     });
 
     const decision = seen.find((s) => s.url.endsWith("/api/hitl/decision"));
@@ -242,7 +321,7 @@ describe("the human-in-the-loop console", () => {
     expect(decision.body.operator).toBe("the operator");
     expect(decision.body.module_id).toBe("GSPC-governance");
     expect(decision.body.answer).toBe("A");
-    // The token travels in the header. A body gets logged; a header does not.
+    // The token stays out of the public request body. Header logging must still be redacted by the host.
     expect(decision.headers["x-hitl-token"]).toBe("s3cret");
     expect(JSON.stringify(decision.body)).not.toContain("s3cret");
 
@@ -250,22 +329,35 @@ describe("the human-in-the-loop console", () => {
     const receipt = c.querySelector('[data-testid="hitl-receipt"]');
     expect(receipt).not.toBeNull();
     expect(receipt!.textContent).toContain("APPROVED");
-    expect(receipt!.textContent).toContain("did:web:csoai.org#board-attestation-1");
+    expect(receipt!.textContent).toContain(
+      "did:web:csoai.org#board-attestation-1",
+    );
+    expect(receipt!.textContent).toContain("not verified here");
   });
 
   it("shows the reason when the competency gate blocks the decision", async () => {
     stub((url, init) => {
       if (url.endsWith("/api/hitl")) return json(snapshot());
-      if (url.endsWith("/api/hitl/challenges")) return json({ challenges: [] });
+      if (url.endsWith("/api/hitl/challenges"))
+        return json({
+          schema: "csoai.hitl-companion-state/0.1",
+          challenges: [],
+        });
       if (url.endsWith("/api/hitl/modules")) {
-        return json({ ok: true, correct: false, module_id: "GSPC-governance", axis: "governance" });
+        return json({
+          ok: true,
+          correct: false,
+          module_id: "GSPC-governance",
+          axis: "governance",
+        });
       }
       if (url.endsWith("/api/hitl/decision")) {
         return json(
           {
             ok: false,
             blocked_by_competency_gate: true,
-            reason: "Human-in-the-Loop Competency Gate: the answer does not match the live published record.",
+            reason:
+              "Human-in-the-Loop Competency Gate: the answer does not match the live published record.",
           },
           422,
         );
@@ -274,15 +366,23 @@ describe("the human-in-the-loop console", () => {
     });
     const c = await mount({ challenge: CHALLENGE });
     await act(async () => {
-      c.querySelector<HTMLInputElement>('[data-testid="hitl-option-A"] input')!.click();
+      c.querySelector<HTMLInputElement>(
+        '[data-testid="hitl-option-A"] input',
+      )!.click();
     });
     await act(async () => {
-      c.querySelector<HTMLButtonElement>('[data-testid="hitl-submit-module"]')!.click();
+      c.querySelector<HTMLButtonElement>(
+        '[data-testid="hitl-submit-module"]',
+      )!.click();
     });
     await act(async () => {
-      c.querySelector<HTMLButtonElement>('[data-testid="hitl-decide-APPROVED"]')!.click();
+      c.querySelector<HTMLButtonElement>(
+        '[data-testid="hitl-decide-APPROVED"]',
+      )!.click();
     });
-    expect(c.querySelector('[data-testid="hitl-error"]')?.textContent).toContain("Competency Gate");
+    expect(
+      c.querySelector('[data-testid="hitl-error"]')?.textContent,
+    ).toContain("Competency Gate");
     // Nothing was recorded, so there is no receipt to show.
     expect(c.querySelector('[data-testid="hitl-receipt"]')).toBeNull();
   });
@@ -292,11 +392,17 @@ describe("the human-in-the-loop console", () => {
       url.endsWith("/api/hitl")
         ? json(snapshot())
         : url.endsWith("/api/hitl/challenges")
-          ? json({ challenges: [] })
+          ? json({ schema: "csoai.hitl-companion-state/0.1", challenges: [] })
           : null,
     );
     const c = await mount();
-    expect(c.querySelector('[data-testid="hitl-no-challenge"]')).not.toBeNull();
-    expect(c.querySelector('[data-testid="hitl-decide-APPROVED"]')?.hasAttribute("disabled")).toBe(true);
+    expect(
+      c.querySelector('[data-testid="hitl-no-challenge"]')?.textContent,
+    ).toContain("returned queue contains no pending challenge");
+    expect(
+      c
+        .querySelector('[data-testid="hitl-decide-APPROVED"]')
+        ?.hasAttribute("disabled"),
+    ).toBe(true);
   });
 });

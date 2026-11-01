@@ -51,7 +51,12 @@ const output = result.isError === true ? result.content[0].text : JSON.parse(res
 process.stdout.write(JSON.stringify({ output, isError: result.isError === true, requests }));
 `;
 
+// The retained public 200 response to /api/tools?q=eu%20ai%20act, read on 2026-10-08.
+// Its probe_finished stays 2026-09-30: reading it later does not make that probe a new measurement.
+const retainedZeroMatch = JSON.parse(fs.readFileSync(new URL('../mcp/csoai-governance/fixtures/catalog-zero.json', import.meta.url), 'utf8'));
+
 const fixtures = [
+  { name: 'retained_public_zero_match_response_stays_empty', query: 'eu ai act', status: 200, body: retainedZeroMatch, expected: { total: 0, showing: 0, matches: [] } },
   { name: 'authoritative_no_match_does_not_return_unfiltered_catalogue', query: 'no-such-governance-tool', status: 200, body: { total: 0, catalogue_total: 2, distinct_tools: ['board_totals', 'get_axis'], tools: [] }, expected: { total: 0, showing: 0, matches: [] } },
   { name: 'authoritative_nonempty_filter_preserves_projection', query: 'get_axis', status: 200, body: { total: 1, catalogue_total: 2, distinct_tools: ['board_totals', 'get_axis'], tools: [{ name: 'get_axis', clusterLabel: 'Evidence', tools: 3, connect: 'retained-install-hint' }] }, expected: { total: 1, showing: 1, matches: [{ name: 'get_axis', cluster: 'Evidence', tools: 3, install: 'retained-install-hint' }] } },
   { name: 'empty_authoritative_array_wins_over_populated_legacy_fields', query: 'no-match', status: 200, body: { total: 0, tools: [], matches: ['legacy-unfiltered'], mcps: ['legacy-mcp'], distinct_tools: ['legacy-distinct'] }, expected: { total: 0, showing: 0, matches: [] } },
@@ -63,6 +68,7 @@ const fixtures = [
   { name: 'legacy_array_without_count_uses_existing_length_fallback', query: '', status: 200, body: ['legacy-a'], expected: { total: 1, showing: 1, matches: [{ name: 'legacy-a' }] } },
   { name: 'existing_twenty_five_result_cap_and_full_total_preserved', query: '', status: 200, body: { total: 30, tools: Array.from({ length: 30 }, (_, i) => 'fixture-' + i) }, expected: { total: 30, showing: 25, matches: Array.from({ length: 25 }, (_, i) => ({ name: 'fixture-' + i })) } },
   { name: 'non_json_gateway_response_remains_explicit_error', query: 'unavailable', status: 503, nonJson: true, expectedError: 'CSOAI MCP error: catalog gateway unreachable (status 503)' },
+  { name: 'non_ok_json_gateway_response_remains_explicit_error', query: 'unavailable', status: 503, body: { total: 0, tools: [] }, expectedError: 'CSOAI MCP error: catalog gateway unreachable (status 503)' },
 ];
 
 for (const fixture of fixtures) {
