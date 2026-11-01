@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-28T12:24:14Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "anthropic",
+      "surface": "terms",
+      "url": "https://www.anthropic.com/legal/commercial-terms",
+      "prev_sha256": "0c6133b70bbf6b45a4c6e1d455d8c7cdc879ab196d2619e320861e8e3b1dc2c7",
+      "new_sha256": "a261e3fa01c148793053462a678b7d6cabe336f86f4168131f658063d7e32b26",
+      "prev_bytes_sha256": "f5c7a12e0ebc4b15513f9118383992a85703e5e2def0661f3567829463c6c69f",
+      "new_bytes_sha256": "e656c6f2b76dee768e9748a7c80b57fa1e8dc840d1b1d2ef411b8f96285ecea7",
+      "prev_fetched_at": "2026-10-26T11:15:08Z",
+      "fetched_at": "2026-10-28T12:24:14Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 243702,
+        "new": 243683
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e6af3a3d50e70b58b08d711ee3bb65ec91e1b348c66a88be232f7439a8d3d894",
+    "sig_ed25519": "78c6cfe353cf9342e75e463e52f9194d3520d7ca7214cb21ffec4bd0398710760f28e81ca382d45dd26d7928984a371a2143f5bd3575fe7dac8f42eb81e5f409",
+    "source_urls": [
+      "https://www.anthropic.com/legal/commercial-terms"
+    ],
+    "subject": "Anthropic — terms: bytes changed 2026-10-28",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:anthropic",
+      "surface:terms",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "2b53e511de27ce54ea6ab2dadee7f183849a5789518416f73e1ba84138ec14ad",
+    "0cb1c395992c148dd22cf9a54fe6ef23815f7e150a2a0d030944f54d965f40a6",
+    "a798830d5a37f8fcebf22db084dc22acab3b25d8cf77e6eca4aaadd254876f90",
+    "e7bffcd39b88fef5d2ed88b9dc8212eee4957523bd716fae3d9e06457b02e537",
+    "0ab4f324d808f415bc1f383367534768c1430cb06a05b0e1f4d3d0d32345fb61",
+    "57e0636f81fe861e6d4b7c1eeb2ab716a22cec1168cd190200487dd709672058",
+    "11f5d67f4db2496c65970d39be4f36341ff22cc600a2234407e98adc3964542f",
+    "176200b26fd094d89be6cbde327a448f84af31c04a433352c5835fc454314661",
+    "aa6ab9166acf4d7a92aa2743240915ead88e4fe0c3eada56656a50f2e0b69600"
+  ]
+}
