@@ -8,7 +8,7 @@
     "state": "DECLARED_NOT_PROVISIONED",
     "shared_write_access": false,
     "cross_axis_credentials": false,
-    "note": "Thirty-three isolated execution and evidence namespaces are declared. No compute cluster, spend or autonomous agent is claimed by this registry."
+    "note": "Thirty-four isolated execution and evidence namespaces are declared. No compute cluster, spend or autonomous agent is claimed by this registry."
   },
   "rsi_contract": {
     "mode": "RECOMMENDATION_ONLY",
@@ -320,6 +320,26 @@
       "audit_focus": ["claimed model identity", "reference serving parity", "frozen prompts and decoding", "spend hold"],
       "negative_controls": ["run paid inference without approval and require the spend gate to refuse", "treat a reviewed method as a completed run and require status failure"],
       "improvements": ["complete free-credit reference replay with immutable request manifests", "replace the short method reference with a full content digest before any measurement run"]
+    },
+    {
+      "axis": "watchdog-ingest",
+      "mission": "Audit the daily public watchdog and incident intake: that each pinned source was probed on schedule, that each answer carried the shape its publisher documents, and that no unreachable or unparseable source is ever reported as a count of zero.",
+      "reviewer_role": "public watchdog intake reviewer",
+      "required_fields": ["applies_to", "method", "method_sha", "method_status", "n_note"],
+      "audit_focus": [
+        "pinned-source reachability and parseability",
+        "REACHABLE vs UNREACHABLE vs UNCHECKABLE separation",
+        "daily run freshness and published index agreement",
+        "unpinned findings stay visible as gaps"
+      ],
+      "negative_controls": [
+        "point a pinned source at a dead host and require the row to read UNREACHABLE, never 0",
+        "serve HTML where a feed is documented and require UNCHECKABLE, never a zero count"
+      ],
+      "improvements": [
+        "freeze the daily run window and sha-pin it so the axis can carry a real n instead of staying a declared slot",
+        "open a data request with the AI Incident Database maintainers for a public incident export path, since the site serves HTML only"
+      ]
     }
   ]
 }
