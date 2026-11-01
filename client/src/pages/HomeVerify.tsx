@@ -16,6 +16,7 @@
  *   5. HomeProofPoints  - nine concrete safeguards, each linked to its public proof.
  *   6. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
  *                         the regulator and the agent.
+ *   4b. HomeLast30Days - dated list of merged changes, each linked to its PR. No typed counts.
  *   7. Proof strip      - four live figures from GET /api/momentum, then "More numbers".
  *   8. Company strip    - the accountable entity and "Who we are".
  *
@@ -37,6 +38,7 @@ import HomeProducts from "@/components/home/HomeProducts";
 import HomeHumanReview from "@/components/home/HomeHumanReview";
 import HomeProofPoints from "@/components/home/HomeProofPoints";
 import HomeWaysIn from "@/components/home/HomeWaysIn";
+import HomeLast30Days from "@/components/home/HomeLast30Days";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
@@ -133,6 +135,7 @@ export default function HomeVerify() {
       <LiveBoardGlance />
       <HomeProofPoints />
       <HomeWaysIn />
+      <HomeLast30Days />
 
       {/* Proof: four live figures a first-time visitor can open at the source. Everything else is
           behind "More numbers", on /about/#numbers. The board's own figures are in the board band
