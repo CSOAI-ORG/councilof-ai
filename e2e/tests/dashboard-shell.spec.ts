@@ -722,3 +722,120 @@ test("the home header carries a booking door to /assess/ within one click", asyn
     await expect(mobile).toHaveAttribute("href", "/assess/");
   }
 });
+
+for (const width of [375, 894, 1024, 1280, 1440, 1536]) {
+  test(`workflow entry and header remain usable at ${width}px`, async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop", "Exercise each width once with the desktop project");
+
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/connect/", { waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("connect-hub")).toBeVisible({ timeout: 30_000 });
+    await page.evaluate(() => document.fonts.ready.then(() => undefined));
+
+    const header = page.locator("[data-site-header]").first();
+    const row = header.locator("#navigation > div").first();
+    await expect(header).toBeVisible();
+
+    const geometry = await row.evaluate((element) => {
+      const brand = element.querySelector<HTMLAnchorElement>('a[href="/"]')!;
+      const brandRect = brand.getBoundingClientRect();
+      const logoRect = brand.querySelector("svg")!.getBoundingClientRect();
+      const controls = Array.from(element.querySelectorAll<HTMLElement>("a, button"))
+        .filter((control) => control !== brand && control.getClientRects().length > 0)
+        .map((control) => {
+          const rect = control.getBoundingClientRect();
+          return {
+            name: control.getAttribute("aria-label") || control.textContent?.trim() || "",
+            left: rect.left,
+            right: rect.right,
+            width: rect.width,
+          };
+        })
+        .filter((control) => control.width > 0)
+        .sort((a, b) => a.left - b.left);
+      return {
+        viewport: window.innerWidth,
+        brand: { left: brandRect.left, right: brandRect.right, width: brandRect.width },
+        logoWidth: logoRect.width,
+        controls,
+        overflow: document.documentElement.scrollWidth - window.innerWidth,
+      };
+    });
+
+    await info.attach(`header-geometry-${width}`, {
+      body: Buffer.from(JSON.stringify(geometry, null, 2)),
+      contentType: "application/json",
+    });
+    const evidence = `${width}px: ${JSON.stringify(geometry)}`;
+    expect(geometry.brand.width, evidence).toBeGreaterThan(140);
+    expect(geometry.logoWidth, evidence).toBeGreaterThanOrEqual(35);
+    expect(geometry.brand.left, evidence).toBeGreaterThanOrEqual(0);
+    expect(geometry.controls.length, evidence).toBeGreaterThan(0);
+    expect(geometry.overflow, evidence).toBeLessThanOrEqual(1);
+
+    let previousRight = geometry.brand.right;
+    for (const control of geometry.controls) {
+      expect(control.left, `${evidence}; ${control.name}`).toBeGreaterThanOrEqual(previousRight - 1);
+      expect(control.right, `${evidence}; ${control.name}`).toBeLessThanOrEqual(geometry.viewport + 1);
+      previousRight = control.right;
+    }
+
+    const openMenu = header.getByRole("button", { name: "Open menu", exact: true });
+    if (width < 1536) {
+      await expect(openMenu).toBeVisible();
+      await expect(header.getByTestId("header-book-measurement")).toBeHidden();
+      await openMenu.click();
+      const closeMenu = header.getByRole("button", { name: "Close menu", exact: true });
+      await expect(closeMenu).toBeVisible();
+      for (const [name, href] of [
+        ["Verify", "/gspc-verify"],
+        ["Services", "/services/"],
+        ["Board", "/board/"],
+        ["Tools", "/tools"],
+        ["Council OS", "/dashboard"],
+      ] as const) {
+        const link = header.getByRole("link", { name, exact: true });
+        await expect(link).toHaveAttribute("href", href);
+        await link.scrollIntoViewIfNeeded();
+        await expect(link).toBeInViewport();
+      }
+      const booking = header.getByTestId("mobile-book-measurement");
+      await expect(booking).toHaveAttribute("href", "/assess/");
+      await booking.scrollIntoViewIfNeeded();
+      await expect(booking).toBeInViewport();
+      await closeMenu.click();
+      await expect(openMenu).toBeVisible();
+      await expect(booking).toHaveCount(0);
+    } else {
+      await expect(openMenu).toBeHidden();
+      await expect(header.getByTestId("header-book-measurement")).toBeVisible();
+      await expect(header.getByTestId("header-book-measurement")).toHaveAttribute("href", "/assess/");
+      await expect(header.getByRole("button", { name: "Measure", exact: true })).toBeVisible();
+    }
+
+    const choose = page.locator("#choose");
+    const cards = choose.locator("li > a");
+    await expect(cards).toHaveCount(3);
+    for (const [index, heading, href] of [
+      [0, "Read evidence in your agent", "#free"],
+      [1, "Show evidence in your product", "/panel/"],
+      [2, "Scope a business measurement", "/contact/?arm=run"],
+    ] as const) {
+      await expect(cards.nth(index)).toHaveAttribute("href", href);
+      await expect(cards.nth(index).getByRole("heading", { name: heading })).toBeVisible();
+    }
+
+    await choose.scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: info.outputPath(`workflow-entry-${width}.png`),
+      fullPage: false,
+    });
+    await cards.nth(0).click();
+    await expect(page).toHaveURL(/#free$/);
+    await expect(page.locator("#free")).toBeInViewport();
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth),
+      `${width}px after opening the free evidence section`,
+    ).toBeLessThanOrEqual(1);
+  });
+}
