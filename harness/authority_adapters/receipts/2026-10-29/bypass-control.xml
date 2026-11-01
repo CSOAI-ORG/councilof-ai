@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="1.666" timestamp="2026-10-29T06:10:34.972855+01:00" hostname="d702ec635c6d"><testcase classname="harness.authority_adapters.test_strands" name="test_ui_approval_does_not_override_host_denial[unissued]" time="0.010"><failure message="AssertionError: assert [{'text': 'reviewed'}] == []&#10;  &#10;  Left contains one more item: {'text': 'reviewed'}&#10;  Use -v to get more diff">harness/authority_adapters/test_strands.py:123: in test_ui_approval_does_not_override_host_denial
+    assert host.readback() == []
+E   AssertionError: assert [{'text': 'reviewed'}] == []
+E     
+E     Left contains one more item: {'text': 'reviewed'}
+E     Use -v to get more diff</failure></testcase><testcase classname="harness.authority_adapters.test_openai" name="test_sdk_approval_does_not_override_host_denial[unissued]" time="0.013"><failure message="Failed: DID NOT RAISE UserError">harness/authority_adapters/test_openai.py:107: in test_sdk_approval_does_not_override_host_denial
+    asyncio.run(run())
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+harness/authority_adapters/test_openai.py:104: in run
+    with pytest.raises(UserError) as failure:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE UserError</failure></testcase></testsuite></testsuites>
