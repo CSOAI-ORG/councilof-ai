@@ -277,6 +277,12 @@ jobs:
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
 
+      - name: Dependency security regressions — sanitizer, quoting and proxy trust
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npm ci --prefix api-server --ignore-scripts --no-audit --no-fund
+          node --test scripts/dependency-security.node-test.mjs
+
       - name: Offline uploader regressions — isolated network namespace
         if: steps.scope.outputs.gated == 'true'
         timeout-minutes: 10
@@ -469,6 +475,24 @@ jobs:
           npx playwright install --with-deps chromium
           npm run prerender:dashboard
 
+      - name: Axis specialists — charter and human review journey
+        id: axis_specialist_journey
+        if: steps.scope.outputs.gated == 'true'
+        env:
+          EAT_BROWSER_OUTPUT: ${{ runner.temp }}/axis-specialist-eat
+        run: |
+          node scripts/axis-specialists.mjs --check
+          node scripts/axis-specialists.browser.mjs
+
+      - name: Retain axis specialist journey evidence
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.axis_specialist_journey.outcome == 'success' || steps.axis_specialist_journey.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: axis-specialist-journey-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/axis-specialist-eat/*.json
+          retention-days: 3
+          if-no-files-found: warn
+
       - name: Council OS first question — desktop and mobile
         id: council_os_first_question
         if: steps.scope.outputs.gated == 'true'
@@ -654,6 +678,22 @@ jobs:
           node scripts/producers-check.mjs --selftest
           node scripts/producers-check.mjs
 
+      # The SBOM's recorded generation commit must be REACHABLE from the merge ref this job
+      # checks out. A branch that was rewritten after its SBOM was minted pins a commit that
+      # is in NO ref, and the producer manifest above then reports the consequence without
+      # naming the cause: "sbom FAILED — SBOM held; previous output preserved". A census of every
+      # open PR on 2026-10-30 found 40 of 132 carrying such a pin, and 29 of them were MERGEABLE
+      # and blocked by nothing else.
+      #
+      # This step names the cause and the two remedies. It is read-only and adds no
+      # dependency: the selftest builds a throwaway repository and proves the gate goes red on
+      # an orphaned pin and green on a reachable one.
+      - name: SBOM pin — the recorded generation commit must be reachable from this merge ref
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/sbom-pin-gate.mjs --selftest
+          node scripts/sbom-pin-gate.mjs
+
       # The estate's central claim is that a stranger can recompute and verify the evidence from
       # published bytes. public/signed/HOW-TO-VERIFY.md carried a JavaScript snippet offering to do
       # exactly that, and on 2026-09-05 it was measured failing 85 of 335 cards (25.4%) — every one
@@ -741,6 +781,7 @@ jobs:
           python3 -B scripts/canary/test_canary_delivery.py
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py scripts/spray/test_gspc_spray_surfaces.py
           python3 -m pytest -q scripts/surface/test_lm_eval_parity.py
+          python3 -m pytest -q scripts/hf/test_product_cards.py scripts/hf/test_polish_frontdoors.py scripts/hf/test_catalogue_publication.py harness/bench/test_comparison_integrity.py harness/bench/test_paired_comparison.py harness/bench/test_run_bench.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
           # The pre-send mail check: no address but the one being checked may ever be put to a mail server.

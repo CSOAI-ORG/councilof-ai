@@ -1,0 +1,378 @@
+{
+  "additional_profile_cases": [
+    {
+      "execution_authority": false,
+      "id": "subject-mismatch",
+      "input_sha256": "83cbb11f70fa5520d8ac869743fa6f3f2d167fca9661a0fae7d2f9ecd2231c28",
+      "profile_status": "discussion-candidate",
+      "reason": "SUBJECT_MISMATCH",
+      "result": "fail",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "OK_CURRENT",
+        "result": "pass"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "future-lookup",
+      "input_sha256": "26de87b589367947486618b1c2c2342327bbb159f724cad07eced30be23baa8c",
+      "profile_status": "discussion-candidate",
+      "reason": "LOOKUP_TIME_AFTER_EVALUATION",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "OK_CURRENT",
+        "result": "pass"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "future-attested-time",
+      "input_sha256": "fa29fbfb799f17059af09743ebe747038d6edcca95d87ab79f7b87cfe8eb7bda",
+      "profile_status": "discussion-candidate",
+      "reason": "ATTESTED_TIME_AFTER_EVALUATION",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "OK_CURRENT",
+        "result": "pass"
+      }
+    }
+  ],
+  "baseline_cases": [
+    {
+      "execution_authority": false,
+      "id": "C01",
+      "input_sha256": "470b1bd5e7a84da79723e994047c2800caeca5073961832aebea9245779fff70",
+      "profile_status": "discussion-candidate",
+      "reason": "OK_CURRENT",
+      "result": "pass",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "OK_CURRENT",
+        "result": "pass"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "C02",
+      "input_sha256": "7835e44f88a666829f50cd655e1c2edfced8a710e1c5a66c9c38175891bb4f53",
+      "profile_status": "discussion-candidate",
+      "reason": "OK_HISTORICAL",
+      "result": "pass",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "OK_HISTORICAL",
+        "result": "pass"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "C03",
+      "input_sha256": "9b960ea208d0419af6c97d8f5890d99b24aabcdacb4470fe75a103abaeda217a",
+      "profile_status": "discussion-candidate",
+      "reason": "KEY_OUTSIDE_VALIDITY",
+      "result": "fail",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "KEY_OUTSIDE_VALIDITY",
+        "result": "fail"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "C04",
+      "input_sha256": "6c2bbcb71b6e31198effb997ca86b49c5f177191e41c6a8f9206c3eb89b8db97",
+      "profile_status": "discussion-candidate",
+      "reason": "STALE_LOOKUP",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "STALE_LOOKUP",
+        "result": "could-not-determine"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "C05",
+      "input_sha256": "8b868b296787726e06e3722e61f31f69db75256461ceabc5476e1e019a243f6c",
+      "profile_status": "discussion-candidate",
+      "reason": "NO_LINEAGE",
+      "result": "fail",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "NO_LINEAGE",
+        "result": "fail"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "C06",
+      "input_sha256": "d7bac9706f82591cc7d054ebeed0b5c3b7dc1fdd18a53e0879333ac1eef28b61",
+      "profile_status": "discussion-candidate",
+      "reason": "OK_HISTORICAL",
+      "result": "pass",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "OK_HISTORICAL",
+        "result": "pass"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "C07",
+      "input_sha256": "cbefc5aaf414e19a2588c9bea5df4aacb682182d9e6d8ca7a4d0072b0cc06a01",
+      "profile_status": "discussion-candidate",
+      "reason": "KEY_REVOKED",
+      "result": "fail",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "KEY_REVOKED",
+        "result": "fail"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "C08",
+      "input_sha256": "a12cda696838620adf5a6bcf70f8bb6dbbf93e21821075a8ce0e9775b163b0a7",
+      "profile_status": "discussion-candidate",
+      "reason": "SOURCE_UNAVAILABLE",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "SOURCE_UNAVAILABLE",
+        "result": "could-not-determine"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "C09",
+      "input_sha256": "ebe0adb8a26bae7b56921028599050d5b5b13105dd2852fd7fb5e982a4792c33",
+      "profile_status": "discussion-candidate",
+      "reason": "NO_STATUS_SOURCE",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "NO_STATUS_SOURCE",
+        "result": "could-not-determine"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "C10",
+      "input_sha256": "cb7f3b1f42ffe36c9494e09ff874016a1f50db81a38b4e17a24b023d29d4443f",
+      "profile_status": "discussion-candidate",
+      "reason": "SIGNING_TIME_UNATTESTED",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "SIGNING_TIME_UNATTESTED",
+        "result": "could-not-determine"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M01",
+      "input_sha256": "0eb4a24a79447aedcc2b076e47f2e1dbe3836faef3e3cf6787fb4c6545bb60cf",
+      "profile_status": "discussion-candidate",
+      "reason": "BAD_SIGNATURE",
+      "result": "fail",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "BAD_SIGNATURE",
+        "result": "fail"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M02",
+      "input_sha256": "f706fd5d069a38871973cfcb397c4c93a48f8a7405eff744bd1c22b7d244fcfa",
+      "profile_status": "discussion-candidate",
+      "reason": "STALE_LOOKUP",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "STALE_LOOKUP",
+        "result": "could-not-determine"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M03",
+      "input_sha256": "9030864162562625d51f61f0c890f3e1bdc78582bd8098ba744fa798b1fcde61",
+      "profile_status": "discussion-candidate",
+      "reason": "NO_LINEAGE",
+      "result": "fail",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "NO_LINEAGE",
+        "result": "fail"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M04",
+      "input_sha256": "f5ca93ea35ecfb99a6c0148c2ea444865c5adfd78fae86a4ff5147f909bac7c6",
+      "profile_status": "discussion-candidate",
+      "reason": "BAD_LINEAGE",
+      "result": "fail",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "BAD_LINEAGE",
+        "result": "fail"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M05",
+      "input_sha256": "87d49985ea1ae762ea9b9a15327e9aade720cb04f10f559e8814c4587d9d0beb",
+      "profile_status": "discussion-candidate",
+      "reason": "KEY_OUTSIDE_VALIDITY",
+      "result": "fail",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "KEY_OUTSIDE_VALIDITY",
+        "result": "fail"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M06",
+      "input_sha256": "7c46e65190c7b25d5ad9498f6b2abc135522493bb1a3a45e00c4703cdb5fa030",
+      "profile_status": "discussion-candidate",
+      "reason": "BAD_TIMESTAMP",
+      "result": "fail",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "BAD_TIMESTAMP",
+        "result": "fail"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M07",
+      "input_sha256": "49f13670985f2894af44a9bfa79c0e000491d962f2cf3ae1f0ab92bfc3e6c9f2",
+      "profile_status": "discussion-candidate",
+      "reason": "SIGNING_TIME_UNATTESTED",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "SIGNING_TIME_UNATTESTED",
+        "result": "could-not-determine"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M08",
+      "input_sha256": "19b79023b3a2bfbedb12c4dbc07f2fc3095e6c1e3584893725467def22261773",
+      "profile_status": "discussion-candidate",
+      "reason": "REVOCATION_UNVERIFIABLE",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "REVOCATION_UNVERIFIABLE",
+        "result": "could-not-determine"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M09",
+      "input_sha256": "7c485fe7a139fa824acb8ed3fbf3103a7ca7b1ae24d635965d47995184ea45e6",
+      "profile_status": "discussion-candidate",
+      "reason": "SOURCE_UNAVAILABLE",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "SOURCE_UNAVAILABLE",
+        "result": "could-not-determine"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M10",
+      "input_sha256": "3788ddb43b47f82a09daf461b7f31120307ed5b746ee8dd59305ce20192002cd",
+      "profile_status": "discussion-candidate",
+      "reason": "NO_STATUS_SOURCE",
+      "result": "could-not-determine",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "NO_STATUS_SOURCE",
+        "result": "could-not-determine"
+      }
+    },
+    {
+      "execution_authority": false,
+      "id": "M11",
+      "input_sha256": "f56e9fd827c1ba95af354e6132e67c47706ecb8c65843c1e615dc6f3992d5a8b",
+      "profile_status": "discussion-candidate",
+      "reason": "HISTORY_DIGEST_MISMATCH",
+      "result": "fail",
+      "schema": "council.key-evidence-profile/1",
+      "scope": "cryptographic-evidence-only",
+      "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+      "upstream_result": {
+        "reason": "HISTORY_DIGEST_MISMATCH",
+        "result": "fail"
+      }
+    }
+  ],
+  "execution_authority": false,
+  "fixture_scope": "synthetic",
+  "limitations": [
+    "Not a W3C Recommendation or adopted group requirement.",
+    "Not an independent cryptographic implementation.",
+    "Not a production authority service or general credential verifier.",
+    "Hashes provide byte comparison, not publisher authentication."
+  ],
+  "reproduction_type": "same-reference-implementation; Council integration profile",
+  "schema": "council.key-evidence-replay/1",
+  "upstream_commit": "a42fb08becca8e7b90b521b6012ca9ca7f3f1bdf",
+  "upstream_file_count": 26
+}

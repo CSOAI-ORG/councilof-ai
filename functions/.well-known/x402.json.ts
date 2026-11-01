@@ -363,6 +363,8 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       "A resource that carries no_sale reads live state before it offers anything. Unpaid, it answers 402 with this entry's accepts[] when that read succeeds; otherwise it answers no_sale.status with a JSON body that contains every field of no_sale.body, requests no payment and sends nothing to a facilitator. Read that answer as the door declining to sell. Any other non-402 answer from a listed resource is a mismatch between this manifest and the door.",
     not: ["score", "certificate", "filled-cells", "pay-to-pass", "rank"],
     catalog: `${origin}/api/x402`,
+    // The public signed-card catalogue (free; distinct from `catalog`, the x402 resource list).
+    public_catalog: `${origin}/catalog.json`,
     board: `${origin}/api/gspc`,
     verify: `${origin}/gspc-verify`,
     explainer: `${origin}/pricing`,
