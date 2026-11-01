@@ -7,10 +7,10 @@
 
 - **Name:** Council of AI — GSPC Measurement Tools
 - **Repository:** https://github.com/CSOAI-ORG/councilof-ai
-- **npm package:** csoai-gspc-mcp (v0.2.4)
+- **npm package:** csoai-gspc-mcp (v0.2.5)
 - **MCP endpoint:** https://councilof.ai/mcp (streamable-http)
 - **Free door (no payment tool):** https://councilof.ai/mcp/free
-- **stdio:** npx -y csoai-gspc-mcp@0.2.4
+- **stdio:** npx -y csoai-gspc-mcp@0.2.5
 
 ## Description
 
@@ -37,7 +37,7 @@ https://councilof.ai
 
 This is a staged draft. Nothing here has been sent. Three gates, in order:
 
-1. `npm publish csoai-gspc-mcp@0.2.4` must succeed and `npm view csoai-gspc-mcp@0.2.4` must resolve. The stdio line installs that exact version, and only that version carries the 53 tools. **Resolving the version is not enough**: download the published tarball and compare its own manifests to the live door's `tools/list`, because a version number can resolve while carrying a different payload. That is exactly what happened to `0.2.3`, which was published 2026-10-26T07:21:23.715Z with 19 tools (14 free + 5 metered, measured from the published tarball on 2026-10-28) and resolves to this day; `0.2.3` is taken, so the fix is a new version, not a re-publish.
+1. `npm publish csoai-gspc-mcp@0.2.5` must succeed and `npm view csoai-gspc-mcp@0.2.5` must resolve. The stdio line installs that exact version, and only that version carries the 53 tools. **Resolving the version is not enough**: download the published tarball and compare its own manifests to the live door's `tools/list`, because a version number can resolve while carrying a different payload. That is exactly what happened to `0.2.4`, published 2026-10-28T16:48:34.768Z with 52 tools (47 free + 5 metered, measured from the published tarball on 2026-11-01) — it resolves to this day and is one tool short of the door, because `axis_watchdog-ingest` landed after it was published; `0.2.4` is taken, so the fix is a new version, not a re-publish. `0.2.3` is the older instance of the same trap: published 2026-10-26T07:21:23.715Z with 19 tools (14 free + 5 metered, measured from the published tarball on 2026-10-28) and still resolves.
 2. `POST https://councilof.ai/mcp` with `tools/list` must return 53 tools (48 free + 5 metered). If the live route and this draft disagree, the live route wins and this draft is wrong.
 3. The counts and the tool names above are held against `functions/mcp/gspc-tools.json` and `functions/mcp/paid-tools.json` by `functions/mcp/tool-counts.test.ts`, and the npm version above is held against `mcp/gspc-server/package.json`. A fleet change turns that test red, and this draft has to be updated in the same commit.
 
