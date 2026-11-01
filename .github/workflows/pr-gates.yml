@@ -678,6 +678,22 @@ jobs:
           node scripts/producers-check.mjs --selftest
           node scripts/producers-check.mjs
 
+      # The SBOM's recorded generation commit must be REACHABLE from the merge ref this job
+      # checks out. A branch that was rewritten after its SBOM was minted pins a commit that
+      # is in NO ref, and the producer manifest above then reports the consequence without
+      # naming the cause: "sbom FAILED — SBOM held; previous output preserved". A census of every
+      # open PR on 2026-10-30 found 40 of 132 carrying such a pin, and 29 of them were MERGEABLE
+      # and blocked by nothing else.
+      #
+      # This step names the cause and the two remedies. It is read-only and adds no
+      # dependency: the selftest builds a throwaway repository and proves the gate goes red on
+      # an orphaned pin and green on a reachable one.
+      - name: SBOM pin — the recorded generation commit must be reachable from this merge ref
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/sbom-pin-gate.mjs --selftest
+          node scripts/sbom-pin-gate.mjs
+
       # The estate's central claim is that a stranger can recompute and verify the evidence from
       # published bytes. public/signed/HOW-TO-VERIFY.md carried a JavaScript snippet offering to do
       # exactly that, and on 2026-09-05 it was measured failing 85 of 335 cards (25.4%) — every one
