@@ -3659,6 +3659,19 @@
       "payment": "free"
     },
     {
+      "id": "axis_watchdog-ingest",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "axis_watchdog-ingest",
+      "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "axis_swarm",
       "protocols": [
         "mcp"
