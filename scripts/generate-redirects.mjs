@@ -37,9 +37,11 @@ if (!existsSync(FUNCTIONS_DIR)) {
   throw new Error("[redirects] functions/ is required to exclude Pages Function routes");
 }
 
+// /packs mixes physical evidence files with a maintained app page.
+// Native asset serving handles the files; a prefix rewrite masks the page.
 const STATIC_DIRS = ["/benchmarks", "/vendor", "/assets",
-                     "/.well-known", "/corpus-watch", "/flywheel", "/packs",
-                     "/datasets", "/my-results",
+                     "/.well-known", "/corpus-watch", "/flywheel",
+                     "/datasets",
                      // /signed is the evidence tree IETF implementers are pointed at.
                      // Without this the SPA catch-all answers /signed/ with the app
                      // shell (soft 404) instead of the directory index.
@@ -55,6 +57,9 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
   .sort();
 
 const EXISTING = [
+  // Historical pricing bookmarks resolve to the current measured dashboard.
+  "/pricing-free           /dashboard/?tab=measured&task=pricing-overview 302",
+  "/pricing-free/          /dashboard/?tab=measured&task=pricing-overview 302",
   // /gspc/field is a generated static surface (scripts/surface/build-gspc-field.mjs). The bare
   // path must reach that page rather than the catch-all shell, exactly as /gspc/jail reaches
   // its own surface. Without this rule /gspc/field renders the SPA shell and the page is orphaned.
@@ -112,7 +117,6 @@ const EXISTING = [
   // and it emits one file at public/publisher-health.json. A second copy under
   // /signed/ would drift. Redirect the signed path to the one writer.
   "/signed/publisher-health.json  /publisher-health.json  308",
-  "/signed/root.json              /root.json              308",
   // Guessed-URL aliases for the signed card index (2026-09-14): GET /card_index.json and
   // GET /cards/card_index.json were 404 while the one writer's output is served at
   // /signed/card_index.json. Redirected, never copied: a second copy of signed bytes drifts.

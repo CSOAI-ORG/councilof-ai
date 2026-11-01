@@ -5,10 +5,12 @@
 # ORDER IS LOAD-BEARING: every splat-free rule first (2000-rule static budget),
 # then every splat rule (100-rule dynamic budget), catch-all last. One splat placed
 # early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —
-# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 20/100.
+# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 18/100.
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
+/pricing-free           /dashboard/?tab=measured&task=pricing-overview 302
+/pricing-free/          /dashboard/?tab=measured&task=pricing-overview 302
 /gspc/field  /gspc/field/  308
 /alliance-map          /memberships         308
 /alliance-map/         /memberships         308
@@ -27,7 +29,6 @@
 /schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308
 /schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308
 /signed/publisher-health.json  /publisher-health.json  308
-/signed/root.json              /root.json              308
 /card_index.json        /signed/card_index.json  301
 /cards/card_index.json  /signed/card_index.json  301
 /world/observatory      /world/observatory/       308
@@ -250,7 +251,7 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- every other concrete <Route> bare path → its prerendered trailing-slash (419) ---
+# --- every other concrete <Route> bare path → its prerendered trailing-slash (418) ---
 /a2ui  /a2ui/  308
 /ab-testing  /ab-testing/  308
 /accessibility  /accessibility/  308
@@ -546,7 +547,6 @@
 /postmortems/x402-settlement-reading  /postmortems/x402-settlement-reading/  308
 /press  /press/  308
 /pressroom  /pressroom/  308
-/pricing-free  /pricing-free/  308
 /privacy  /privacy/  308
 /products  /products/  308
 /proof-receipt  /proof-receipt/  308
@@ -735,9 +735,7 @@
 /.well-known/*  /.well-known/:splat  200
 /corpus-watch/*  /corpus-watch/:splat  200
 /flywheel/*  /flywheel/:splat  200
-/packs/*  /packs/:splat  200
 /datasets/*  /datasets/:splat  200
-/my-results/*  /my-results/:splat  200
 /signed/*  /signed/:splat  200
 /stack/*  /stack/:splat  200
 /world/observatory/*  /world/observatory/:splat  200
