@@ -408,7 +408,7 @@ def badge_row(f: dict) -> str:
         # 2026-10-14: the dead methodology DOI badge is removed from the row (mirrors such as
         # mcpservers.org copied it as a live link); the methodology now links to its live page.
         f"[![Methodology](https://img.shields.io/badge/methodology-councilof.ai-{GREEN}?style=flat-square)](https://councilof.ai/methodology/)",
-        f"[![License MIT](https://img.shields.io/badge/license-MIT-{GREEN}?style=flat-square)](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/LICENSE)",
+        f"[![License MIT](https://img.shields.io/badge/license-MIT-{GREEN}?style=flat-square)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE)",
     ])
 
 
@@ -555,7 +555,7 @@ WHO_WE_ARE = (
 
 
 def derived_line(f: dict) -> str:
-    return (f"_derived {f['derived']} by [`scripts/github/org-readme.py`](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/scripts/github/org-readme.py) — "
+    return (f"_derived {f['derived']} by [`scripts/github/org-readme.py`](https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/github/org-readme.py) — "
             "every number on this page is read live from the URLs in that script; if this page and the API disagree, the API is right._")
 
 
