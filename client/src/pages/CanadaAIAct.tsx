@@ -1,58 +1,24 @@
-/**
- * Canada AI Act Landing Page
- * Framework-specific landing page for Canadian AI regulation
- */
-
-import { FrameworkLandingPage } from './FrameworkLandingPage';
+import { FrameworkReferencePage } from "./FrameworkLandingPage";
 
 export default function CanadaAIActPage() {
   return (
-    <FrameworkLandingPage
-      frameworkId="canada-ai-act"
-      frameworkName="Canada AI Act"
+    <FrameworkReferencePage
       region="Canada"
-      description="Master Canada's artificial intelligence regulation. Understand high-risk AI requirements, transparency obligations, and compliance mechanisms for AI systems in Canadian markets."
-      deadline="2026-09-30"
-      threats={[
-        'Administrative monetary penalties up to CAD $15M or 3% of global revenue',
-        'Mandatory high-risk AI system registration and documentation',
-        'Transparency and disclosure requirements for AI decision-making',
-        'Liability and compensation obligations for AI-caused harms',
-        'Market access restrictions for non-compliant AI systems',
-        'Reputational damage and loss of consumer trust',
-      ]}
-      keyRequirements={[
-        'Identification and classification of high-risk AI systems',
-        'Transparency and explainability for AI decision-making',
-        'Human oversight and control mechanisms',
-        'Bias testing and mitigation requirements',
-        'Data governance and quality standards',
-        'Incident reporting and documentation',
-        'Regular compliance assessments and audits',
-      ]}
-      trainingModules={[
+      introduction="Inspect the legislative record and the status of each Canadian AI reference. The proposed Artificial Intelligence and Data Act in Bill C-27 is not an enacted compliance regime or a September 2026 deadline."
+      sources={[
         {
-          title: 'Canada AI Act Essentials',
-          description: 'Overview of Canadian AI regulation, high-risk systems, and compliance requirements',
-          duration: '2-3 hours',
+          title: "Bill C-27: parliamentary record",
+          status: "Historical legislative proposal",
+          description: "The record for the 44th Parliament, first session, lists consideration in committee as incomplete. Third reading and Senate stages were not reached. Check this record rather than treating the proposed AIDA requirements as enacted law.",
+          href: "https://www.parl.ca/legisinfo/en/bill/44-1/c-27",
         },
         {
-          title: 'High-Risk AI Requirements',
-          description: 'In-depth coverage of high-risk AI systems, transparency, and oversight',
-          duration: '3-4 hours',
-        },
-        {
-          title: 'Compliance & Documentation',
-          description: 'Practical guidance on documentation, testing, and incident reporting',
-          duration: '2-3 hours',
+          title: "AIDA: government background",
+          status: "Archived government page",
+          description: "The government marks its AIDA page as archived and describes the Act as proposed. It is background material for research, not confirmation of a current legal duty, penalty or implementation date.",
+          href: "https://ised-isde.canada.ca/site/innovation-better-canada/en/artificial-intelligence-and-data-act",
         },
       ]}
-      comingSoon={true}
-      certificationInfo={{
-        examLength: 90,
-        passingScore: 70,
-        validity: '2 years',
-      }}
     />
   );
 }
