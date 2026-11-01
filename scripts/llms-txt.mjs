@@ -63,6 +63,7 @@ import fs from "fs";
 import { createHash } from "node:crypto";
 import path from "path";
 import { fileURLToPath } from "url";
+import { isPlaceholderLink } from "./internal-links-check.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CHECK = process.argv.includes("--check");
@@ -214,7 +215,16 @@ function paidDoorsSection() {
   if (!doors.length) throw new Error("council-os/capabilities.json declares no paid door — absent is not zero");
   const lines = doors.map((c) => {
     const req = c.probe?.request ?? c.path;
-    const preview = c.free_preview ? ` · free preview: ${SITE}${c.free_preview}` : "";
+    // A TEMPLATE IS NOT A LINK. Three declared previews carry a <slot> (…?id=<wrapped-symbol:chain>…).
+    // Printed after the origin they were URLs a reader follows: the outward gate fetched them on
+    // 2026-10-13 and got a 400. So a preview with a slot is printed as code text with no origin, and
+    // only a concrete preview is printed as an address. The door's own link, built from the request
+    // the probe really makes, must be concrete — a slot there is a declaration error, said out loud.
+    if (isPlaceholderLink(req)) throw new Error(`${c.id}: the door's request "${req}" carries a template slot — a link must be an address that answers`);
+    const previewPath = c.free_preview?.startsWith(SITE) ? c.free_preview.slice(SITE.length) : c.free_preview;
+    const preview = !previewPath ? ""
+      : isPlaceholderLink(previewPath) ? ` · free preview, as a pattern (replace the <…> part; not a link): \`GET ${previewPath}\``
+      : ` · free preview: ${SITE}${previewPath}`;
     // llms.txt spec form is `[Title](url)`: an agent crawler extracts a bare `https://…` as text, not
     // as a link, so the paid doors were listed but not linkable. The URL stays verbatim inside the
     // parens — `x402-descriptions.test.ts` checks `llms.includes(canonical text)` and the free-door
@@ -451,6 +461,30 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
   const left = out.match(/\{\{[A-Z_]+\}\}/);
   if (left) throw new Error(`unsubstituted placeholder ${left[0]} — it has no named source`);
   return out;
+}
+
+// A proof upgrade changes only the on-disk timestamp manifest. Refresh that
+// section without fetching a new board or changing unrelated dated snapshots.
+if (process.argv.includes("--timestamps-only")) {
+  const plans = ["public/llms.txt", "public/llms-full.txt"].map((file) => {
+    const have = fs.readFileSync(p(file), "utf8");
+    const marker = "Derived at generation from https://councilof.ai/interop/ots/manifest.json";
+    const start = have.indexOf(marker);
+    if (start < 0 || have.indexOf(marker, start + marker.length) >= 0) {
+      throw new Error(`${file}: expected exactly one timestamp section`);
+    }
+    const end = have.indexOf("\n## ", start);
+    if (end < 0) throw new Error(`${file}: timestamp section boundary missing`);
+    return { file, have, want: have.slice(0, start) + otsSection().trimEnd() + "\n" + have.slice(end) };
+  });
+  // Validate both section boundaries before writing either output.
+  let drift = 0;
+  for (const { file, have, want } of plans) {
+    if (have !== want) drift++;
+    if (!CHECK) fs.writeFileSync(p(file), want);
+    console.log(`${file}: timestamp section ${have === want ? "unchanged" : CHECK ? "drift" : "refreshed"}`);
+  }
+  process.exit(CHECK && drift ? 1 : 0);
 }
 
 let b;

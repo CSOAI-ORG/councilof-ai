@@ -7,16 +7,18 @@
  * totals.model_fleets, a count of model-comparison AXES).
  *
  * THE ORDER IS THE ARGUMENT, and each figure is printed once:
- *   1. HomeHero         - what we do, in one sentence, over one image. No figures.
- *   2. LiveBoardGlance  - the live GSPC board: every axis with its state, the count line with its
+ *   1. HomeHero         - six visual stories: measure, verify, work, connect, maintain, correct.
+ *   2. HomeProducts     - nine concise routes into the working products and services.
+ *   3. HomeHumanReview  - the actual escalation, competence, authority and receipt workflow.
+ *   4. LiveBoardGlance  - the live GSPC board: every axis with its state, the count line with its
  *                         separation line, and the model count (derived from the signed cards by
  *                         scripts/build-models-measured.mjs; list at /models-measured/).
- *   3. HomeSteps        - how it works, which is also what makes it different: measure, sign,
- *                         re-check, correct. Four sections, four of our own images, no figures.
- *   4. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
+ *   5. HomeProofPoints  - nine concrete safeguards, each linked to its public proof.
+ *   6. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
  *                         the regulator and the agent.
- *   5. Proof strip      - four live figures from GET /api/momentum, then "More numbers".
- *   6. Company strip    - the accountable entity and "Who we are".
+ *   4b. HomeLast30Days - dated list of merged changes, each linked to its PR. No typed counts.
+ *   7. Proof strip      - four live figures from GET /api/momentum, then "More numbers".
+ *   8. Company strip    - the accountable entity and "Who we are".
  *
  * WHAT LEFT THE FRONT DOOR, AND WHERE IT WENT (align, do not delete): the full momentum band,
  * HomeProof, HomeCredibility, HomeWeakScore, the separation explanation, the memberships and the
@@ -32,8 +34,11 @@ import { useEffect } from "react";
 import { Link } from "wouter";
 import HomeHero from "@/components/home/HomeHero";
 import LiveBoardGlance from "@/components/home/LiveBoardGlance";
-import HomeSteps from "@/components/home/HomeSteps";
+import HomeProducts from "@/components/home/HomeProducts";
+import HomeHumanReview from "@/components/home/HomeHumanReview";
+import HomeProofPoints from "@/components/home/HomeProofPoints";
 import HomeWaysIn from "@/components/home/HomeWaysIn";
+import HomeLast30Days from "@/components/home/HomeLast30Days";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
@@ -125,9 +130,12 @@ export default function HomeVerify() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
 
       <HomeHero />
+      <HomeProducts />
+      <HomeHumanReview />
       <LiveBoardGlance />
-      <HomeSteps />
+      <HomeProofPoints />
       <HomeWaysIn />
+      <HomeLast30Days />
 
       {/* Proof: four live figures a first-time visitor can open at the source. Everything else is
           behind "More numbers", on /about/#numbers. The board's own figures are in the board band
