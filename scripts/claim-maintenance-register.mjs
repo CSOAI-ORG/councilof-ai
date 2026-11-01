@@ -14,6 +14,15 @@
  *
  *   node scripts/claim-maintenance-register.mjs            # write the register
  *   node scripts/claim-maintenance-register.mjs --check    # CI: committed register must match disk
+ *   --as-of <UTC instant>   generate as at that instant (tests, reproduction); default is now
+ *   --claims-dir <dir>      read registries from here instead of public/claims (tests)
+ *   --out <file>            write or check this file instead of the committed register (tests)
+ *
+ * THE SCHEDULE. The register also prints every re-read the one scheduler has planned
+ * (scripts/claims/maintenance_due.py: the read a registry's own bytes name, and created + 7, 30
+ * and 90 days). Before 2026-10-13 it knew only the first of those four, so once that date passed
+ * it reported zero scheduled reads while the scheduler still held a day-30 and a day-90 read for
+ * every live registry. The dates are printed as dates: this file holds no record of any run.
  *
  * The register is published at:
  *   https://councilof.ai/spec/claim-maintenance/register.json   (static bytes)
@@ -23,11 +32,18 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { readOutcomes, scheduledReadState } from "./claims/maintenance-schedule-state.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CLAIMS_DIR = join(ROOT, "public/claims");
-const OUT = join(ROOT, "public/spec/claim-maintenance/register.json");
+const CLAIMS_DIR = flag("--claims-dir") ?? join(ROOT, "public/claims");
+const OUT = flag("--out") ?? join(ROOT, "public/spec/claim-maintenance/register.json");
 const CHECK = process.argv.includes("--check");
+const checksArg = process.argv.indexOf("--checks-dir");
+if (checksArg >= 0 && (!process.argv[checksArg + 1] || process.argv[checksArg + 1].startsWith("--"))) {
+  throw new Error("--checks-dir requires a path to a pinned local check ledger");
+}
+const CHECKS_DIR = checksArg >= 0 ? process.argv[checksArg + 1] : join(ROOT, "public/interop/claim-maintenance");
+const checkLedger = readOutcomes(CHECKS_DIR);
 const BASE = "https://councilof.ai";
 const STATES = ["CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"];
 /** Every published artifact schema. A v0.1 artifact stays conforming to v0.1 forever (spec 12). */
@@ -126,6 +142,7 @@ function readRegistry(file) {
   return {
     file,
     registry_url,
+    registry_sha256: sha256(Buffer.from(raw, "utf8")),
     registry_id: doc.registry_id || file.replace(/\.json$/, ""),
     schema: doc.schema ?? null,
     created,
@@ -133,7 +150,7 @@ function readRegistry(file) {
     subjects,
     // Quoted, never restated. The registry's own words are carried in a field whose NAME says
     // they are a quotation, so this register never asserts the source's vocabulary as its own —
-    // and `signed` below is derived here rather than trusted from that sentence.
+    // and the legacy `signed` presence/binding flag is not a signature verification verdict.
     signature_state_verbatim: doc.signature_state ?? null,
     supersedes: doc.supersedes ?? null,
     ...signatureOf(file, raw, doc),
@@ -142,23 +159,36 @@ function readRegistry(file) {
 
 
 /**
- * Is this registry signed, and over WHICH bytes? A registry may carry the signature inside it, or
- * — as the rev2 registry does — in a sidecar that pins the registry by sha256. A sidecar is only
- * a signature of this file if the digest it pins is the digest this file actually has, so that is
- * checked rather than assumed: an unchecked claim about bytes is the failure this lane exists to
- * stop, and reading "signed" off a prose field would have reported a signed registry as unsigned.
+ * Preserve the legacy `signed` presence/binding flag, but never use it as a cryptographic
+ * verdict. This projection checks only local material and the sidecar's SHA256 pin.
+ * Signature validity and signer authentication require the separate verifier ceremony.
  */
 function signatureOf(file, raw, doc) {
+  const verification = {
+    signature_verification: "UNCHECKABLE",
+    signature_verification_note:
+      "This register checks material presence and SHA256 binding only. Cryptographic signature validity and signer authentication have not been verified here.",
+  };
   const inline = Boolean(doc.sig || doc.sig_ed25519 || doc.signature);
-  if (inline) return { signed: true, signature_binding: "inline" };
+  if (inline) return {
+    signed: true, signature_binding: "inline", signature_material_present: true,
+    signature_binding_state: "INLINE_MATERIAL_UNVERIFIED", ...verification,
+  };
   const sidecarFile = file.replace(/\.json$/, ".signed.json");
   const sidecarPath = join(CLAIMS_DIR, sidecarFile);
-  if (!existsSync(sidecarPath)) return { signed: false, signature_binding: "none" };
+  if (!existsSync(sidecarPath)) return {
+    signed: false, signature_binding: "none", signature_material_present: false,
+    signature_binding_state: "NO_MATERIAL", ...verification,
+  };
   let sidecar;
   try {
     sidecar = JSON.parse(readFileSync(sidecarPath, "utf8"));
   } catch {
-    return { signed: false, signature_binding: "sidecar_unparseable", signature_sidecar_url: `${BASE}/claims/${sidecarFile}` };
+    return {
+      signed: false, signature_binding: "sidecar_unparseable", signature_material_present: null,
+      signature_binding_state: "SIDECAR_UNPARSEABLE",
+      signature_sidecar_url: `${BASE}/claims/${sidecarFile}`, ...verification,
+    };
   }
   const pinned = sidecar?.payload?.artifact?.sha256 ?? null;
   const actual = sha256(Buffer.from(raw, "utf8"));
@@ -166,6 +196,9 @@ function signatureOf(file, raw, doc) {
   return {
     signed: ok,
     signature_binding: "sidecar",
+    signature_material_present: Boolean(sidecar?.sig || sidecar?.sig_ed25519 || sidecar?.signature),
+    signature_binding_state: ok ? "SIDECAR_SHA256_MATCH" : "SIDECAR_SHA256_MISMATCH",
+    ...verification,
     signature_sidecar_url: `${BASE}/claims/${sidecarFile}`,
     sidecar_pins_sha256: pinned,
     file_sha256_read_here: actual,
@@ -221,13 +254,98 @@ const superseded = registries.filter((r) => r.superseded_by);
 // registries would otherwise both claim the same as_of, and an archived snapshot could not be
 // told apart from the live document it no longer matches — one label over two byte-sets is the
 // defect this whole lane is about.
-const asOf = new Date().toISOString().replace(/\.\d+Z$/, "Z");
+//
+// --check does NOT read the clock. It regenerates as at the committed register's own as_of and
+// compares, so it answers one question only: do the committed bytes match the registries on
+// disk? Fields that compare a date with as_of used to be recomputed against today, which turned
+// the check red on the day a scheduled date passed with nothing on disk changed.
+const asOf = clock();
+
+/** One value-taking flag, or null. Hoisted, so the constants at the top of the file can use it. */
+function flag(name) {
+  const i = process.argv.indexOf(name);
+  if (i < 0) return null;
+  const v = process.argv[i + 1];
+  if (!v || v.startsWith("--")) throw new Error(`${name} requires a value`);
+  return v;
+}
+
+function clock() {
+  const asked = flag("--as-of");
+  if (asked) {
+    const t = iso(asked);
+    if (!t) throw new Error(`--as-of must be a UTC instant (YYYY-MM-DDTHH:MM:SSZ) or a date, got ${asked}`);
+    return t;
+  }
+  if (CHECK && existsSync(OUT)) {
+    try {
+      const committed = iso(JSON.parse(readFileSync(OUT, "utf8")).as_of);
+      if (committed) return committed;
+    } catch {
+      // An unparseable committed register is reported as DRIFT by the comparison below.
+    }
+  }
+  return new Date().toISOString().replace(/\.\d+Z$/, "Z");
+}
+
+// THE SCHEDULE — the same rule the one scheduler runs (scripts/claims/maintenance_due.py,
+// schedule()): for every LIVE registry, the read its own bytes name and created + 7, 30 and 90
+// days. Dates only. Whether a check ran is recorded by the scheduler in its own ledger and is
+// never inferred here; scripts/claim-maintenance-register.schedule.test.mjs compares this list
+// with the scheduler's own plan so the two cannot drift apart.
+const OFFSETS = [["day-7", 7], ["day-30", 30], ["day-90", 90]];
+const addDays = (date, days) => {
+  const [y, m, d] = date.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10);
+};
+const asOfDate = asOf.slice(0, 10);
+// The scheduler's order: due date, then registry, then check name.
+const inOrder = (a, b) => {
+  for (const k of ["due", "registry_id", "check"]) {
+    if (a[k] < b[k]) return -1;
+    if (a[k] > b[k]) return 1;
+  }
+  return 0;
+};
+const scheduledChecks = [];
+for (const r of live) {
+  r.nextCheck = null;
+  if (!r.created) continue;
+  const created = r.created.slice(0, 10);
+  const named = r.subjects.flatMap((s) => s.nexts).sort()[0] ?? null;
+  const rows = [];
+  if (named) {
+    rows.push({ check: "scheduled-read", due: named.slice(0, 10), basis: "earliest next_read_utc in the registry's own bytes" });
+  }
+  for (const [check, days] of OFFSETS) {
+    rows.push({ check, due: addDays(created, days), basis: `registry created ${created} + ${days} days` });
+  }
+  for (const c of rows) {
+    scheduledChecks.push({
+      registry_id: r.registry_id,
+      ...c,
+      // A check is due ON its date, so only a later date is still ahead of this register.
+      position: c.due > asOfDate ? "AFTER_AS_OF" : "ON_OR_BEFORE_AS_OF",
+    });
+  }
+}
+scheduledChecks.sort(inOrder);
+for (const r of live) {
+  const next = scheduledChecks.find((c) => c.registry_id === r.registry_id && c.position === "AFTER_AS_OF");
+  r.nextCheck = next ? { check: next.check, due: next.due, basis: next.basis } : null;
+}
 
 const subjectRows = [];
 for (const r of live) {
   for (const s of r.subjects) {
     const min = (a) => (a.length ? a.slice().sort()[0] : null);
     const max = (a) => (a.length ? a.slice().sort().slice(-1)[0] : null);
+    const scheduleState = scheduledReadState({
+      next: min(s.nexts), asOf,
+      registry: { id: r.registry_id, url: r.registry_url, sha256: r.registry_sha256 },
+      claimIds: [...new Set(s.claims.map((c) => c?.claim_id).filter((id) => typeof id === "string" && id))],
+      ledger: checkLedger,
+    });
     subjectRows.push({
       subject: s.name,
       subject_key: s.key,
@@ -243,16 +361,11 @@ for (const r of live) {
       last_read: max(s.reads) || r.created,
       last_read_basis: s.reads.length ? "artifact.access_date" : "registry.created_utc",
       next_scheduled_read: min(s.nexts),
-      // A named date that is already before this register's as_of is not "SCHEDULED" — the
-      // weekly pod loop that owned those reads was retired 2026-09-28 and the dates passed
-      // without a completed run. DUE_NOT_RUN is the same word the one scheduler uses
-      // (scripts/claims/maintenance_due.py). This field is derived from (next, as_of) only;
-      // run outcomes stay in the checks ledger, never inferred here.
-      next_scheduled_read_state: !s.nexts.length
-        ? "UNSCHEDULED"
-        : min(s.nexts) < asOf
-          ? "DUE_NOT_RUN"
-          : "SCHEDULED",
+      // A date alone cannot establish that no run occurred. Join the existing check ledger's
+      // exact pinned bytes by registry digest, claim ids and read time; never infer completion
+      // from a different registry version, a partial run, or a fresh build timestamp.
+      next_scheduled_read_state: scheduleState.state,
+      next_scheduled_read_evidence: scheduleState.evidence,
       registry_id: r.registry_id,
       registry_url: r.registry_url,
       registry_schema: r.schema,
@@ -263,6 +376,9 @@ for (const r of live) {
       timestamp_state: r.otsPresent ? "RECEIPT_PRESENT_UPGRADE_UNVERIFIED" : "NONE",
       conforming_artifacts: s.conforming,
       claims_without_a_specification_state: s.unknown,
+      // The earliest planned re-read of this subject's registry dated after as_of, from the whole
+      // rule above — not only the one date the registry's own bytes name. null when none is left.
+      next_scheduled_check: r.nextCheck,
     });
   }
 }
@@ -278,8 +394,18 @@ const totals = {
     STATES.map((st) => [st, subjectRows.reduce((n, s) => n + (s.states[st] || 0), 0)]),
   ),
   claims_conforming_to_artifact_schema: subjectRows.reduce((n, s) => n + s.conforming_artifacts, 0),
-  subjects_with_a_scheduled_next_read: subjectRows.filter((s) => s.next_scheduled_read_state === "SCHEDULED").length,
-  subjects_with_a_due_unrun_next_read: subjectRows.filter((s) => s.next_scheduled_read_state === "DUE_NOT_RUN").length,
+  scheduled_checks: scheduledChecks.length,
+  scheduled_checks_after_as_of: scheduledChecks.filter((c) => c.position === "AFTER_AS_OF").length,
+  scheduled_checks_on_or_before_as_of: scheduledChecks.filter((c) => c.position === "ON_OR_BEFORE_AS_OF").length,
+  // Counted over the whole rule. It used to count only a registry-named date still ahead, so it
+  // read 0 from the day the last such date passed, with a day-30 and a day-90 read still planned.
+  subjects_with_a_scheduled_next_read: subjectRows.filter(
+    (s) => s.next_scheduled_check || s.next_scheduled_read_state === "SCHEDULED",
+  ).length,
+  // Was subjects_with_a_due_unrun_next_read. "Unrun" is a run outcome, and this file has none.
+  subjects_with_due_execution_unverified: subjectRows.filter((s) => s.next_scheduled_read_state === "DUE_EXECUTION_UNVERIFIED").length,
+  subjects_with_a_completed_scheduled_read: subjectRows.filter((s) => s.next_scheduled_read_state === "COMPLETED").length,
+  subjects_with_a_retry_required: subjectRows.filter((s) => s.next_scheduled_read_state === "RETRY_REQUIRED").length,
 };
 
 /**
@@ -305,6 +431,33 @@ const disclosures = registries
       "path verified. The receipt's state here is RECEIPT_PRESENT_UPGRADE_UNVERIFIED (spec 8.1-8.3).",
   }));
 
+/**
+ * The schedule, in the register's own bytes. Three things a reader could not get from this file
+ * before: every planned re-read (not only the one a registry names), which of them are still
+ * ahead, and where the record of what actually ran is kept. It carries no outcome of its own.
+ */
+const EXECUTED_CHECKS =
+  "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/latest.json";
+const schedule = {
+  rule:
+    "For every LIVE registry: the read its own bytes name (scheduled-read, the earliest next_read_utc) " +
+    "and its created date + 7, 30 and 90 days (day-7, day-30, day-90). A check is due on its date.",
+  scheduler:
+    "scripts/claims/maintenance_due.py, once a day — the one scheduler. This list is the same rule applied " +
+    "to the same registry files; a test compares it with the scheduler's own plan.",
+  dates_not_outcomes:
+    "These are dates. This register is generated from the registry files and holds no record of any run, " +
+    "so a check dated on or before as_of is neither confirmed here nor reported missed here.",
+  executed_checks: {
+    authority: EXECUTED_CHECKS,
+    also_at: `${BASE}/api/state — ledgers.claim_maintenance, a snapshot of that file with its own run_at`,
+    holds: "which checks ran, when, and what each read found",
+  },
+  position_is_relative_to: "as_of",
+  after_the_last_check: "A registry has no planned re-read after its day-90 date until a revision of it names one.",
+  checks: scheduledChecks,
+};
+
 const register = {
   schema: "csoai.claim-maintenance.register/0.1",
   title: "Claim maintenance register — the subjects Council of AI maintains public claims on",
@@ -313,6 +466,25 @@ const register = {
   specification_licence: "CC0-1.0",
   maintainer: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   generated_by: "scripts/claim-maintenance-register.mjs — generated from the registry files on disk, never hand-listed (spec 7.5)",
+  signature_projection: {
+    authority: "Local material presence and sidecar SHA256 binding only",
+    verification: "UNCHECKABLE",
+    compatibility_fields: {
+      signed: "Legacy material-presence or sidecar-digest-match flag; never cryptographic signature validity or signer authentication.",
+      sidecar_pin_verified: "Exact SHA256 comparison only; it does not verify a signature or authenticate a signer.",
+    },
+    boundary: "Signature source wording is quoted verbatim. No cryptographic signature verification or signer authentication is performed by this register.",
+  },
+  scheduled_read_projection: {
+    authority: "scripts/claims/maintenance_due.py outcomes.jsonl; this is a derived view, never a second scheduler",
+    source: checkLedger.capture?.source_url ?? null,
+    captured_at: checkLedger.capture?.captured_at ?? null,
+    bytes_sha256: checkLedger.capture?.bytes_sha256 ?? null,
+    outcomes_head_sha256: checkLedger.capture?.outcomes_head_sha256 ?? null,
+    entries: checkLedger.rows.length,
+    rule: "COMPLETED requires the exact registry digest, every subject claim id, a read at or after its recorded due time, and no failed/unconfirmed claims. Missing matching local proof is DUE_EXECUTION_UNVERIFIED, never an assertion that no read ran.",
+    boundary: "Unsigned producer reports; internal chain integrity is not independent source truth, a signature, or Bitcoin inclusion. Claim evidence states and per-claim cadence are unchanged.",
+  },
   what_this_is:
     "The continuous, independent observation of public claims these organisations make about themselves: " +
     "captured verbatim with source and date, hashed, re-read on a schedule, every observed change recorded, " +
@@ -340,6 +512,7 @@ const register = {
     "A defect in any record here is a defect in this register. Report it to nicholas@csoai.org; corrections are published at " +
     `${BASE}/api/corrections.`,
   totals,
+  schedule,
   disclosures,
   subjects: subjectRows,
   non_registry_files_in_claims_dir: nonRegistryFiles,
@@ -359,6 +532,10 @@ const register = {
     signature_state_verbatim: r.signature_state_verbatim,
     signed: r.signed,
     signature_binding: r.signature_binding,
+    signature_material_present: r.signature_material_present,
+    signature_binding_state: r.signature_binding_state,
+    signature_verification: r.signature_verification,
+    signature_verification_note: r.signature_verification_note,
     ...(r.signature_sidecar_url ? { signature_sidecar_url: r.signature_sidecar_url } : {}),
     ...(r.sidecar_pin_verified === undefined ? {} : { sidecar_pin_verified: r.sidecar_pin_verified }),
     ...(r.sidecar_pin_note ? { sidecar_pin_note: r.sidecar_pin_note } : {}),
@@ -369,9 +546,11 @@ const register = {
   does_not_prove: [
     "that any claim listed here is false — this register makes no such statement about anyone",
     "that a claim in CLAIM_CAPTURED or UNMEASURED has been checked; it has not",
+    "that any scheduled check ran or will run — schedule.checks are dates, and the scheduler's own ledger records what ran",
     "that the subjects here are the only organisations making claims worth observing — this is what we maintain, not a survey",
     "that a superseded registry was wrong; it was replaced, its bytes are unchanged, and it is still served at its own URL",
     "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified",
+    "that a legacy signed flag or a sidecar SHA256 match verifies a cryptographic signature or authenticates its signer; verification here is UNCHECKABLE",
   ],
 };
 register.register_digest = sha256(canonical(register));
