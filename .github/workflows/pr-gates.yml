@@ -277,6 +277,12 @@ jobs:
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
 
+      - name: Dependency security regressions — sanitizer, quoting and proxy trust
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npm ci --prefix api-server --ignore-scripts --no-audit --no-fund
+          node --test scripts/dependency-security.node-test.mjs
+
       - name: Offline uploader regressions — isolated network namespace
         if: steps.scope.outputs.gated == 'true'
         timeout-minutes: 10
@@ -671,6 +677,22 @@ jobs:
         run: |
           node scripts/producers-check.mjs --selftest
           node scripts/producers-check.mjs
+
+      # The SBOM's recorded generation commit must be REACHABLE from the merge ref this job
+      # checks out. A branch that was rewritten after its SBOM was minted pins a commit that
+      # is in NO ref, and the producer manifest above then reports the consequence without
+      # naming the cause: "sbom FAILED — SBOM held; previous output preserved". A census of every
+      # open PR on 2026-10-30 found 40 of 132 carrying such a pin, and 29 of them were MERGEABLE
+      # and blocked by nothing else.
+      #
+      # This step names the cause and the two remedies. It is read-only and adds no
+      # dependency: the selftest builds a throwaway repository and proves the gate goes red on
+      # an orphaned pin and green on a reachable one.
+      - name: SBOM pin — the recorded generation commit must be reachable from this merge ref
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/sbom-pin-gate.mjs --selftest
+          node scripts/sbom-pin-gate.mjs
 
       # The estate's central claim is that a stranger can recompute and verify the evidence from
       # published bytes. public/signed/HOW-TO-VERIFY.md carried a JavaScript snippet offering to do
