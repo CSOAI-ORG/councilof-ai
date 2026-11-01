@@ -8,9 +8,14 @@ const fetchReturning = (body: unknown, status = 200) =>
   vi.fn(async () => Response.json(body, { status })) as unknown as typeof fetch;
 
 describe("Council axis specialist reader", () => {
-  it("declares exactly 33 unique axes and reads only the selected same-origin endpoint", async () => {
-    expect(INDEX.specialists).toHaveLength(33);
-    expect(new Set(INDEX.specialists.map((item) => item.axis)).size).toBe(33);
+  it("declares exactly one unique specialist per axis and reads only the selected same-origin endpoint", async () => {
+    // The count is DERIVED from the served index, never typed: the estate adds axes
+    // (slot 34 = watchdog-ingest, 2026-10-30) and a typed 33 here would fail on a
+    // correct board — the same mistake canon.json's frozen count made.
+    const axes = INDEX.specialists.map((item) => item.axis);
+    expect(axes.length).toBe(INDEX.specialists.length);
+    expect(axes.length).toBeGreaterThan(0);
+    expect(new Set(axes).size).toBe(axes.length);
     const fetcher = vi.fn(async () => Response.json(audit()));
     const result = await loadAxisSpecialist("governance", fetcher as unknown as typeof fetch);
     expect(result.axis).toBe("governance");
