@@ -10,7 +10,7 @@ from dify_plugin.entities.tool import ToolInvokeMessage
 DOOR = "https://councilof.ai/mcp/free"
 
 
-class AxisInterpretability-reproducibilityTool(Tool):
+class AxisInterpretabilityReproducibilityTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
         args = {k: v for k, v in tool_parameters.items() if v not in (None, "")}
         body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "axis_interpretability-reproducibility", "arguments": args}}).encode()

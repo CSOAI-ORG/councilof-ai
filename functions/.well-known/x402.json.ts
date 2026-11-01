@@ -20,6 +20,7 @@ import { OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL, X402_SIGNER_KID } from 
 import { USDC_BASE } from "../api/_skus";
 import { challengeAccept, toV1Requirements, x402Accepts, type X402Env } from "../api/_x402";
 import {
+  COVERAGE_EVIDENCE_DESCRIPTION,
   PROOF_BUNDLE_DESCRIPTION,
   RECEIPTS_BATCH_DESCRIPTION,
   REQUEST_ATTESTATION_DESCRIPTION,
@@ -46,11 +47,18 @@ import PAID_TOOLS from "../mcp/paid-tools.json";
 import { freshCapsulePaymentRequired, PATH as FRESH_CAPSULE_PATH } from "../api/measurement/fresh-capsule";
 import { FREE_DOOR_PRODUCT_ID, FREE_DOOR_SKU } from "../api/free-door";
 import { headFromGet } from "../api/_head";
+import { NO_SALE_UNMEASURED } from "../api/_x402_no_sale";
 
 /** The SKU tier each door passes to x402Accepts — keyed by the path the door serves. */
 // pathScoped: the door charges its PATH, not the concrete example URL, so a buyer's target never
 // becomes a catalogue row (x402-ras-doors 64e556117). The listing builds its terms the same way.
-export type ListingOffer = { skuId: string; tier: string; productId?: string; amountAtomic?: "0"; pathScoped?: true };
+// noSale: the door reads live state BEFORE it offers, and answers this instead of a 402 when there
+// is nothing to sell. It is the object the wrapper doors build that answer from
+// (functions/api/_x402_no_sale.ts), published as resources[].no_sale by listingAccepts() — so the
+// listing says in a field what only the description said in prose.
+// functions/.well-known/x402-no-sale-parity.test.ts holds both ways: a door that answers a non-402
+// it did not declare fails, and so does a declaration no door gives.
+export type ListingOffer = { skuId: string; tier: string; productId?: string; amountAtomic?: "0"; pathScoped?: true; noSale?: typeof NO_SALE_UNMEASURED };
 export const OFFERS: Record<string, ListingOffer> = {
   // The free door lists under its OWN product and sku id, as its 402 does (functions/api/free-door.ts).
   "/api/free-door": { skuId: FREE_DOOR_SKU, tier: "per_request", productId: FREE_DOOR_PRODUCT_ID, amountAtomic: "0" },
@@ -61,11 +69,13 @@ export const OFFERS: Record<string, ListingOffer> = {
   "/api/discover/ondo": { skuId: "request_attestation", tier: "per_request", amountAtomic: "0" },
   "/api/discover/ondo-ousg": { skuId: "request_attestation", tier: "per_request", amountAtomic: "0" },
   "/api/request-attestation": { skuId: "request_attestation", tier: "per_request" },
+  // COVERAGE EVIDENCE (TUI-2): the assembled row door charges its PATH, buyer query never listed.
+  "/api/coverage-evidence": { skuId: "coverage_evidence", tier: "per_request", productId: "csoai.product.coverage_evidence", pathScoped: true },
   "/api/evidence-bundle": { skuId: "evidence_bundle", tier: "bundle" },
   "/api/signed-data-feed": { skuId: "issuance", tier: "reserve" },
   "/api/proof": { skuId: "issuance", tier: "reserve" },
   "/api/rwa/evidence": { skuId: "request_attestation", tier: "per_request" },
-  "/api/wrapper": { skuId: "request_attestation", tier: "per_request" },
+  "/api/wrapper": { skuId: "request_attestation", tier: "per_request", noSale: NO_SALE_UNMEASURED },
   "/api/wrapper/changes": { skuId: "request_attestation", tier: "per_request" },
   "/api/art50/marking-evidence": { skuId: "art50_marking_evidence", tier: "pack" },
   "/api/feeds/provider-diff": { skuId: "provider_diff_feed", tier: "history_batch" },
@@ -84,7 +94,7 @@ export const offerFor = (url: string): ListingOffer | null => {
   // PER-ASSET WRAPPER DOORS (functions/api/wrapper/asset/[asset].ts): the /api/wrapper SKU and tier,
   // path-scoped by construction (the door's resource.url carries no query).
   const asset = path.match(/^\/api\/wrapper\/asset\/([a-z0-9]+)$/);
-  if (asset) return { skuId: "request_attestation", tier: "per_request", productId: `csoai.product.wrapper.asset.${asset[1]}` };
+  if (asset) return { skuId: "request_attestation", tier: "per_request", productId: `csoai.product.wrapper.asset.${asset[1]}`, noSale: NO_SALE_UNMEASURED };
   return OFFERS[path] ?? null;
 };
 
@@ -103,6 +113,8 @@ export function listingAccepts(env: X402Env, listedUrl: string, description: str
     // RAS doors (x402-ras-doors) declare a per-door outputSchema on accepts[] as well; other doors keep the bare projection.
     accepts: terms.map((a) => (outputSchema.type === "object" && Object.keys(outputSchema).length === 1 ? challengeAccept(a, url, description) : { ...challengeAccept(a, url, description), outputSchema })),
     accepts_v1: terms.map((a) => ({ ...toV1Requirements(a), outputSchema })),
+    // Present only on a door that can decline to sell; absent everywhere else, never null.
+    ...(offer.noSale ? { no_sale: offer.noSale } : {}),
   };
 }
 
@@ -159,6 +171,13 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       },
     },
     resources: [
+      // TUI-2 COVERAGE EVIDENCE (2026-10-13): the assembled evidence row for one named asset
+      // from the dated coverage record (finance/full-spread PR #13). Discovery gap: agents could
+      // see aggregate coverage counts but had no per-asset payable resource carrying the
+      // provenance digests. pathScoped — the buyer's asset query never becomes a catalogue row.
+      { method: "GET", url: `${origin}/api/coverage-evidence?asset=tether`, paid_for: "assembly", free_preview: `${origin}/api/coverage-evidence?asset=tether&preview=1`,
+        description: COVERAGE_EVIDENCE_DESCRIPTION,
+        ...req(`${origin}/api/coverage-evidence?asset=tether`, COVERAGE_EVIDENCE_DESCRIPTION)  },
       // The resource the x402 Bazaar indexed first (2026-09-05), and it was missing from the
       // document agents read after they find the domain. Discovery pointed one way and the
       // catalogue the other: an agent arriving from the Bazaar landed on /api/free-door, and an
@@ -336,8 +355,16 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
     // removed, not populated; the self-parity instrument (csoai.self-parity/0.1) reads each index.
     index_membership:
       "not asserted by this manifest — whether a third-party index lists a resource is measured by reading that index, never typed here",
+    // HOW TO READ resources[].no_sale (2026-10-13). Without this line the field is a shape with no
+    // rule; with it, a checker that compares this manifest with a live door has one: 402 → compare
+    // accepts[]; the declared no-sale answer → the door declined, nothing was requested; anything
+    // else → the listing and the door disagree. scripts/outward-gate/outward_gate.py reads it so.
+    no_sale_answers:
+      "A resource that carries no_sale reads live state before it offers anything. Unpaid, it answers 402 with this entry's accepts[] when that read succeeds; otherwise it answers no_sale.status with a JSON body that contains every field of no_sale.body, requests no payment and sends nothing to a facilitator. Read that answer as the door declining to sell. Any other non-402 answer from a listed resource is a mismatch between this manifest and the door.",
     not: ["score", "certificate", "filled-cells", "pay-to-pass", "rank"],
     catalog: `${origin}/api/x402`,
+    // The public signed-card catalogue (free; distinct from `catalog`, the x402 resource list).
+    public_catalog: `${origin}/catalog.json`,
     board: `${origin}/api/gspc`,
     verify: `${origin}/gspc-verify`,
     explainer: `${origin}/pricing`,
