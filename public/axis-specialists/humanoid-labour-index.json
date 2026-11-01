@@ -1,0 +1,242 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "humanoid-labour-index",
+  "specialist": {
+    "id": "meok-humanoid-labour-index-specialist",
+    "cluster_id": "meok-axis-humanoid-labour-index",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit the named humanoid labour component facts without presenting their eight source facts as a validated composite labour index.",
+    "reviewer_role": "humanoid labour evidence reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "component source identity",
+    "deployment versus labour claims",
+    "small-n transparency",
+    "unsigned run state"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-09-17T12:58:11Z",
+      "source": "/interop/financial-measure-run-humanoid-labour-index.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "2e78a7629ace3312c48662ca4f07df1a283a902f52dbe420d8114f08db8f95ce",
+    "axis_row": {
+      "axis": "humanoid-labour-index",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-humanoid-labour-index",
+      "bench": "Disclosure",
+      "task": "named vendor publishes a dated deployment count on a stable URL? Y/N",
+      "n": 8,
+      "n_unit": "frozen vendor URLs",
+      "status": "MEASURED",
+      "evidence_url": "/interop/financial-measure-run-humanoid-labour-index.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "colour": "#fbbf24",
+      "hue": 43,
+      "note": "MEASURED as disclosure facts on 8 frozen URLs. Fleet size / hours / incidents stay UNMEASURED inside the card. Vendor blogs are not a bank. Not an index.",
+      "method_status": "legacy: n 8",
+      "facts_as_of": "2026-09-17T12:58:11Z",
+      "facts_status": "MEASURED",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "source": "/interop/financial-measure-run-humanoid-labour-index.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist humanoid-labour-index audits only the humanoid-labour-index row",
+      "evidence": "humanoid-labour-index"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-humanoid-labour-index; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "FACT_RUN_STATE",
+      "state": "PASS",
+      "detail": "deterministic-facts run with n=8 frozen vendor URLs"
+    },
+    {
+      "id": "FACT_LINEAGE",
+      "state": "PASS",
+      "detail": "run artifact and fact timestamp are published"
+    },
+    {
+      "id": "RUN_ATTESTATION",
+      "state": "FINDING",
+      "detail": "run artifact is CONTENT_ADDRESSED_UNSIGNED; content identity is not a signature"
+    },
+    {
+      "id": "NO_MODEL_RANKING",
+      "state": "PASS",
+      "detail": "deterministic facts carry no model leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "FINDING",
+      "detail": "legacy: n 8"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 6,
+    "declared": 0,
+    "findings": 2,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "convert component facts into an index score and require scope rejection",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "treat a demo announcement as labour deployment and require evidence-class failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "humanoid-labour-index-proposal-1",
+      "proposal": "rename public presentation toward components unless a new index method is approved",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "humanoid-labour-index-proposal-2",
+      "proposal": "add deployment-stage and source-date labels to every component",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_humanoid-labour-index",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/humanoid-labour-index",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "humanoid labour evidence reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "b0b8a0c1c615fbfe3299f6f60a048edc011a190fe31a132a08c805aa9937dc9c",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "dataset_url",
+      "evidence_url",
+      "facts_as_of",
+      "facts_status",
+      "run_attestation"
+    ],
+    "measurement_url": "/api/gspc/axis/humanoid-labour-index",
+    "competency_url": "/api/hitl/modules/humanoid-labour-index",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}
