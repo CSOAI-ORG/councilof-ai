@@ -149,6 +149,25 @@
       "flagged_org_affected": true
     },
     {
+      "id": "kimi-plugin",
+      "format": "Kimi plugin (kimi.plugin.json + shared skills/ + locales/, MCP declared inline)",
+      "output": [
+        "distribution/plugin/kimi.plugin.json",
+        "distribution/plugin/locales/en-US.json",
+        "distribution/plugin/locales/zh-CN.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/plugin/kimi.plugin.json"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "remote",
+      "listing_channel": "Kimi Code CLI `/plugins install <path>` (local directory or GitHub repo), or Kimi desktop's personal market via `kimi-daimon kimi-plugin register-personal`",
+      "owner_approval_needed": true,
+      "approver": "Nick — Kimi desktop personal-market registration and/or the CLI install",
+      "flagged_org_impact": "Same repo as claude-plugin; the Kimi desktop personal market is local, so no public repo is needed for the personal install.",
+      "flagged_org_affected": false
+    },
+    {
       "id": "antigravity-plugin",
       "format": "Google Antigravity IDE plugin (plugin.json + mcp_config.json + rules/AGENTS.md + skills/)",
       "output": [
@@ -569,6 +588,8 @@
         "distribution/dify/gspc/tools/axis_claim-maintenance.py",
         "distribution/dify/gspc/tools/axis_serving-fidelity.yaml",
         "distribution/dify/gspc/tools/axis_serving-fidelity.py",
+        "distribution/dify/gspc/tools/axis_watchdog-ingest.yaml",
+        "distribution/dify/gspc/tools/axis_watchdog-ingest.py",
         "distribution/packages/gspc.difypkg"
       ],
       "doctrine_carriers": [
@@ -621,6 +642,64 @@
       "listing_channel": "AGNTCY Directory (ADS): dirctl push + dirctl sign (sigstore) + dirctl routing publish from a directory identity, or the agntcy/dir import-records PR; ARD/AI Catalog consumers read the same records from /oasf/ and /ard/v1/",
       "approver": "Nick - directory identity (federation needs a merged agntcy/dir-staging PR) and the push itself",
       "flagged_org_impact": "None.",
+      "flagged_org_affected": false
+    },
+    {
+      "id": "working-group-resources",
+      "format": "Public tracker resources: website, HF static Space candidate, offline Kaggle notebook and local stdio configuration template",
+      "output": [
+        "public/working-groups/catalog.json",
+        "public/working-groups/index.html",
+        "distribution/working-groups/hf/index.html",
+        "distribution/working-groups/hf/catalog.json",
+        "distribution/working-groups/hf/README.md",
+        "distribution/working-groups/kaggle/working-groups.ipynb",
+        "distribution/working-groups/kaggle/kernel-metadata.template.json",
+        "distribution/working-groups/mcp-client.template.json",
+        "distribution/working-groups/LICENSE",
+        "distribution/working-groups/hf/LICENSE",
+        "distribution/working-groups/README.md",
+        "distribution/working-groups/manifest.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/working-groups/README.md"
+      ],
+      "licence": "MIT (repository code and original proposal text); source references retain their own licences",
+      "version_source": "dated-catalog",
+      "listing_channel": "Candidate resource kit; not registered or published",
+      "owner_approval_needed": true,
+      "approver": "Existing release owner for destinations and human review",
+      "flagged_org_affected": false
+    },
+    {
+      "id": "charter-register-resources",
+      "format": "Read-only charter source register, public views, HF static kit, offline Kaggle notebook and local MCP configuration",
+      "output": [
+        "public/charter-register/index.html",
+        "public/charter-register/discussion.html",
+        "public/charter-register/register.json",
+        "public/charter-register/manifest.json",
+        "distribution/charter-federation/README.md",
+        "distribution/charter-federation/LICENSE",
+        "distribution/charter-federation/mcp-client.template.json",
+        "distribution/charter-federation/hf/README.md",
+        "distribution/charter-federation/hf/index.html",
+        "distribution/charter-federation/hf/discussion.html",
+        "distribution/charter-federation/hf/register.json",
+        "distribution/charter-federation/hf/manifest.json",
+        "distribution/charter-federation/hf/LICENSE",
+        "distribution/charter-federation/kaggle/charter-register.ipynb",
+        "distribution/charter-federation/kaggle/kernel-metadata.template.json",
+        "distribution/charter-federation/manifest.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/charter-federation/README.md"
+      ],
+      "licence": "MIT for original code and review material; referenced works retain their own licences",
+      "version_source": "register-sha256",
+      "listing_channel": "Generated public resource kit; receiving-host acceptance recorded separately",
+      "owner_approval_needed": true,
+      "approver": "Existing protected release and destination owner",
       "flagged_org_affected": false
     }
   ],
@@ -814,6 +893,12 @@
       "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
     },
     {
+      "id": "kimi-plugin",
+      "kind": "rendered-only",
+      "row": "kimi-plugin",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
       "id": "antigravity-plugin",
       "kind": "rendered-only",
       "row": "antigravity-plugin",
@@ -892,6 +977,18 @@
       "kind": "rendered-only",
       "row": "dify-plugin",
       "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "working-group-resources-candidate",
+      "kind": "rendered-only",
+      "row": "working-group-resources",
+      "why": "Candidate resources only. No public HF/Kaggle upload, marketplace listing or live MCP tool change."
+    },
+    {
+      "id": "charter-register-resources-candidate",
+      "kind": "rendered-only",
+      "row": "charter-register-resources",
+      "why": "Generated resources; no new live MCP tools, memberships or authority grants."
     }
   ],
   "connect_matrix": {
@@ -998,9 +1095,9 @@
         "platform": "Gemini CLI",
         "group": "Coding agents",
         "door": "free",
-        "where": "~/.gemini/settings.json",
+        "where": "~/.gemini/settings.json (or .gemini/settings.json in a project). Gemini CLI loads MCP servers only in a trusted folder; in an untrusted one this server shows as Disabled, so trust the folder when asked or run /permissions in it. If you installed the csoai-gspc extension, skip this: it already adds a server named gspc, which is why this entry is named council-of-ai.",
         "kind": "json",
-        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"httpUrl\": \"{free}\" }\n  }\n}",
+        "snippet": "{\n  \"mcpServers\": {\n    \"council-of-ai\": { \"httpUrl\": \"{free}\" }\n  }\n}",
         "docs": "https://geminicli.com/docs/tools/mcp-server/"
       },
       {
