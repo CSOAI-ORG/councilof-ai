@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-25T09:54:25Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "anthropic",
+      "surface": "art50_marking",
+      "url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+      "prev_sha256": "1dc146806bdde83c60d2caac459b291eff549445574aa505154e1c5ca216d92a",
+      "new_sha256": "49d8734383552bb5e513a5d08aab3707c46b56d6ca661a9c6505596336fe101d",
+      "prev_bytes_sha256": "fb44c63cb365fbecb13d5bdcc9f89f796a8c4b0630b0fc445a8eb360b3784baf",
+      "new_bytes_sha256": "4d90c091bd3716d8c9dfa55d565d5f36cdf04ec2ca95bb69bead1eb678ce7789",
+      "prev_fetched_at": "2026-09-14T10:50:14Z",
+      "fetched_at": "2026-10-25T09:54:25Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 355806,
+        "new": 238174
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "1590fa3a3d3c89d2cb738b31665a28f0397d994d57e7ca9c88f355ac58dd535d",
+    "sig_ed25519": "ffb9b0fec007d8727043369862a8f17d5a24c04461075e17701ebfc54dac18e89ecafe838a935a64f74803afc33bbd4b14683762f797117cef85c7b0eb89c90a",
+    "source_urls": [
+      "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content"
+    ],
+    "subject": "Anthropic — art50_marking: bytes changed 2026-10-25",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:anthropic",
+      "surface:art50_marking",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "948cb0b5352359661348b0f1e80ed7caa84dc6a0132a0edc4f34219a4f1f0574",
+    "68974d99c19eda0ffd2537efd82846682021e558186e50117a2b1e811c59eb91",
+    "e1c991bcbd1c763494ba7eab2b8bb2e255464e60b2c0c066283d5c9665b0b546",
+    "8a4848250a08c44ebdfd63342100653d93ca4eeb9b69201e5744f2591f715a9c",
+    "116cf28a1ef3fa20909649dbdf72bf8ad776baabb6d38f029772a3813d565c19",
+    "57e0636f81fe861e6d4b7c1eeb2ab716a22cec1168cd190200487dd709672058",
+    "11f5d67f4db2496c65970d39be4f36341ff22cc600a2234407e98adc3964542f",
+    "176200b26fd094d89be6cbde327a448f84af31c04a433352c5835fc454314661",
+    "aa6ab9166acf4d7a92aa2743240915ead88e4fe0c3eada56656a50f2e0b69600"
+  ]
+}
