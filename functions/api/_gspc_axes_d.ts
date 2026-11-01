@@ -54,4 +54,42 @@ export const AXES_D: AxisScore[] = [
   slot("serving-fidelity", "inference-endpoints-and-routers", "pending frozen bank",
     "does an endpoint or serving configuration claiming model M behave like M's reference serving on a frozen bank",
     300, { n_note: "HELD for spend: free credit only.", method_status: "reviewed, not run", method: "serving-fidelity v0.2", method_sha: "18206f71" }),
+  // ── slot 34, ruled in 2026-10-30 ───────────────────────────────────────────
+  // THE PUBLIC WATCHDOG LAYER, ingested daily.
+  //
+  // WHY THIS SLOT EXISTS (the gap this names): before 2026-10-30 the estate's contact
+  // with public watchdogs and incident databases was ONE-SHOT PRESENCE PROBES —
+  // public/.well-known/layer-o-presence.json carried ns_incidentdatabase_ai as
+  // QUALIFIED / presence UNMEASURED, as_of 2026-09-29 — which is a record that a URL
+  // answered ONCE, on a day, forever. NVD, CVE, OSV and GHSA had NO entries at all.
+  // So the honest answer to "are we measuring the public watchdogs and incident
+  // databases?" was NO: nothing was measured, one thing was probed, once.
+  //
+  // This slot makes that gap VISIBLE and names what would close it. It is a DECLARED
+  // SLOT, not a score: the intake harness (scripts/watchdog_intake.py) runs daily and
+  // publishes a real artifact, but a daily run of 18 sources is a probe of the public
+  // layer, not a frozen n>=30 bank, so the axis stays UNMEASURED until the method is
+  // frozen and pinned. n 0 is the literal truth, never a score.
+  slot("watchdog-ingest", "public-watchdog-and-incident-sources", "pending frozen method + sha-pinned daily runs",
+    "does the public watchdog and incident layer answer on a schedule, does each answer carry the shape its publisher documents, and which of our own axes does each source touch",
+    310, {
+      n_note: "The daily intake run probes 18 public sources and publishes " +
+        "public/interop/watchdog-intake/_index.json. That is a DAILY PROBE OF THE PUBLIC LAYER, " +
+        "not a frozen n>=30 bank, so this slot stays UNMEASURED. When the daily runs are frozen, " +
+        "sha-pinned and pinned to a published run window, the axis becomes MEASURED with n counting " +
+        "SOURCES PROBED — the same grammar as effect-binding's 'tool-call servers probed', never " +
+        "pooled with bank-item n.",
+      method: "watchdog_intake.py v0.1 — daily pinned-source intake",
+      method_sha: "scripts/watchdog_intake.py",
+      public_pages: "HIDDEN_PENDING_OWNER_GO",
+      note: "DECLARED-UNMEASURED slot (2026-10-30). Nothing has been measured on this axis: n 0 is the " +
+        "literal truth, never a score. The daily intake run probes 18 public sources and publishes " +
+        "public/interop/watchdog-intake/_index.json — a DAILY PROBE OF THE PUBLIC LAYER, not a frozen " +
+        "n>=30 bank, so this slot stays UNMEASURED. When the daily runs are frozen, sha-pinned and pinned " +
+        "to a published run window, the axis becomes MEASURED with n counting SOURCES PROBED — the same " +
+        "grammar as effect-binding's 'tool-call servers probed', never pooled with bank-item n. The public " +
+        "watchdog gap this names: before 2026-10-30 the AI Incident Database was a ONE-SHOT PRESENCE PROBE " +
+        "(layer-o-presence.json ns_incidentdatabase_ai, QUALIFIED / presence UNMEASURED, as_of 2026-09-29) " +
+        "and NVD, CVE, OSV and GHSA had no entries at all.",
+    }),
 ];

@@ -56,7 +56,8 @@
       "axis_regulator-transparency",
       "axis_interpretability-reproducibility",
       "axis_claim-maintenance",
-      "axis_serving-fidelity"
+      "axis_serving-fidelity",
+      "axis_watchdog-ingest"
     ],
     "paid": [
       "commission_card",
@@ -422,6 +423,8 @@
         "distribution/dify/gspc/tools/axis_claim-maintenance.py",
         "distribution/dify/gspc/tools/axis_serving-fidelity.yaml",
         "distribution/dify/gspc/tools/axis_serving-fidelity.py",
+        "distribution/dify/gspc/tools/axis_watchdog-ingest.yaml",
+        "distribution/dify/gspc/tools/axis_watchdog-ingest.py",
         "distribution/packages/gspc.difypkg"
       ],
       "doctrine_carriers": [
@@ -473,28 +476,100 @@
       "doctrine_carriers": [
         "distribution/working-groups/README.md"
       ]
+    },
+    {
+      "id": "charter-register-resources",
+      "output": [
+        "public/charter-register/index.html",
+        "public/charter-register/discussion.html",
+        "public/charter-register/register.json",
+        "public/charter-register/manifest.json",
+        "distribution/charter-federation/README.md",
+        "distribution/charter-federation/LICENSE",
+        "distribution/charter-federation/mcp-client.template.json",
+        "distribution/charter-federation/hf/README.md",
+        "distribution/charter-federation/hf/index.html",
+        "distribution/charter-federation/hf/discussion.html",
+        "distribution/charter-federation/hf/register.json",
+        "distribution/charter-federation/hf/manifest.json",
+        "distribution/charter-federation/hf/LICENSE",
+        "distribution/charter-federation/kaggle/charter-register.ipynb",
+        "distribution/charter-federation/kaggle/kernel-metadata.template.json",
+        "distribution/charter-federation/manifest.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/charter-federation/README.md"
+      ]
     }
   ],
   "files": [
     {
       "path": "distribution/SUBMIT.md",
-      "sha256": "c6b8cc0864b6ba448af3139d075f998e32cdf7009f3357ff891cb4b3bce52033"
+      "sha256": "b6807a94b2c1e446c47bf0d7914085e629a71854093631670cc5c7ccd8cdd222"
     },
     {
       "path": "distribution/agntcy/README.md",
       "sha256": "063f811096bef6d0f293dc2032abca37b75216689b3f4ce9a224406bf7792f84"
     },
     {
+      "path": "distribution/charter-federation/LICENSE",
+      "sha256": "d1c9de1ba9d7b4cdb5b2ba02270b92522a40be9a947864a2bb4311bc93f58fa9"
+    },
+    {
+      "path": "distribution/charter-federation/README.md",
+      "sha256": "a21faeb5dcd04e54af58cebbd395d8111a88ddda72fb2468b84ec569aac3aa3b"
+    },
+    {
+      "path": "distribution/charter-federation/hf/LICENSE",
+      "sha256": "d1c9de1ba9d7b4cdb5b2ba02270b92522a40be9a947864a2bb4311bc93f58fa9"
+    },
+    {
+      "path": "distribution/charter-federation/hf/README.md",
+      "sha256": "3025d8d46152fbc249deef0d96296ff8b27e846abe6888b906e592e15fa0e1d4"
+    },
+    {
+      "path": "distribution/charter-federation/hf/discussion.html",
+      "sha256": "99bfed18ab28013a67c28de9a706c27b344175b79220f2b42f1a99d6b43c1562"
+    },
+    {
+      "path": "distribution/charter-federation/hf/index.html",
+      "sha256": "6ab39943e98d3a49c84099e89b74812284a5da493079710ca6eeddf0926cad4e"
+    },
+    {
+      "path": "distribution/charter-federation/hf/manifest.json",
+      "sha256": "abba500bcc41b50f4119e2bf2889563a2370fab3c862a0633aa71bc0a38bb6a8"
+    },
+    {
+      "path": "distribution/charter-federation/hf/register.json",
+      "sha256": "c0ce8529bcdd9c80ce8b752786d6c64a76d0923bd81028eaf66ccfd20f139d84"
+    },
+    {
+      "path": "distribution/charter-federation/kaggle/charter-register.ipynb",
+      "sha256": "7daf2938884550e1e11313195848ab31af19ad7522c915f98cabbd82ba2f9259"
+    },
+    {
+      "path": "distribution/charter-federation/kaggle/kernel-metadata.template.json",
+      "sha256": "020ca2947c8f1e60cbf2249e9ec7b426909adf219e9ad5ea5f89556d2183f647"
+    },
+    {
+      "path": "distribution/charter-federation/manifest.json",
+      "sha256": "178475fb73946c8b6f5df088a37a1fe1853692eac570a521549b9ddd407cb8e1"
+    },
+    {
+      "path": "distribution/charter-federation/mcp-client.template.json",
+      "sha256": "363a7ea2820462e6bfea669068eb6192ecd4542ff40885dd2f0d318ac0f57d1b"
+    },
+    {
       "path": "distribution/claude/connector.json",
-      "sha256": "35eaf1192cfc4d3d633d412183857722df7688131146c63eb1d48fc261d15519"
+      "sha256": "1817e08ddbbc25ad2afdcceea886de3457a51078c200fac8f405067a7fd94616"
     },
     {
       "path": "distribution/connect/connect-matrix.json",
-      "sha256": "585442a40d6cff8d34efc11cee1102c6227258ce9fa6435d0f143e7db97ad2d2"
+      "sha256": "493aaacfbf0ad951fc85c8d4d9d008504a6eaa9367524cf21fc0a18596ce1779"
     },
     {
       "path": "distribution/copilot-studio/apiDefinition.swagger.json",
-      "sha256": "8f16529e7f9a438928dd74fefa638731c9acdbc64045e8f3940bb20dce761fe3"
+      "sha256": "58b1dae5b2d5368c5085a8842b9064dbe6555606cf38535c5543bc5770d27e72"
     },
     {
       "path": "distribution/copilot-studio/apiProperties.json",
@@ -506,7 +581,7 @@
     },
     {
       "path": "distribution/copilot-studio/intro.md",
-      "sha256": "ce6f6ed5c358c9c1778722b87f5663e3003ce02cce8177d7a23f13f9225a7442"
+      "sha256": "08be7e6b5ec42111efcec7b392347197cd4f7f0ed82b739b76360c9df711b808"
     },
     {
       "path": "distribution/dify/gspc/PRIVACY.md",
@@ -514,7 +589,7 @@
     },
     {
       "path": "distribution/dify/gspc/README.md",
-      "sha256": "42f5e4aad0d485b2a7806fb90394861c3fcfa4e91f062912b72681d9965d4bea"
+      "sha256": "af42c1dd0e8839e7a820cbe457b59d7ab5b85922487d5111fcf1385d40743cc0"
     },
     {
       "path": "distribution/dify/gspc/_assets/icon.svg",
@@ -534,7 +609,7 @@
     },
     {
       "path": "distribution/dify/gspc/provider/gspc.yaml",
-      "sha256": "25be0a31b7168d18dd3f3a1676ecb3735ba4d5ad42c29da6ad5e32233fa5d952"
+      "sha256": "9b48db2334b958cfd149b09d6a4b13f1a169c68e7fc3bc9e52a08a73643e8845"
     },
     {
       "path": "distribution/dify/gspc/requirements.txt",
@@ -805,6 +880,14 @@
       "sha256": "8390d4d754e8e511124c1178dc41a32554926d5c11899013566b7cad3512f6d2"
     },
     {
+      "path": "distribution/dify/gspc/tools/axis_watchdog-ingest.py",
+      "sha256": "7d7b989138a80ca614d90a1357f5774de00f39235c2ac9703939ef3fb81ace31"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/axis_watchdog-ingest.yaml",
+      "sha256": "89158ee685e1fb20c6e9bc6b42e2d9c5f2b036873170dfceb37ce13150aca6de"
+    },
+    {
       "path": "distribution/dify/gspc/tools/board_totals.py",
       "sha256": "a5acebebaff8dc2a2c51c828fe68b3dce1bd35e8dcf50a5ce4fa69aa04fa9062"
     },
@@ -918,15 +1001,15 @@
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/readme.md",
-      "sha256": "a0a78bf1e1eb31bd750e7317ed11c65cb77e8aea514faf21b101f22876b9e7a1"
+      "sha256": "0c247c72a9aff6fbe40bb7ff03bfa9e2d1c94acd6e30cb8e73bc171cf1ff88ab"
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/server.yaml",
-      "sha256": "104cf62e95ff2e117ae6879312d006f40b3b70caa64ac1ad8558c7d21720e121"
+      "sha256": "fa59d60b249b489c00b3a66c1e031f6bf189b5370d4b656d867058faef144d7e"
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/tools.json",
-      "sha256": "a431395c4577c10ef42c498c036b524edc36f791fffc436f152584df9865eb5e"
+      "sha256": "492e401082af49d1ab8779c0a67804891e603387ae123aeb224739376b960163"
     },
     {
       "path": "distribution/gcp-marketplace/LISTING.md",
@@ -938,15 +1021,15 @@
     },
     {
       "path": "distribution/gemini/GEMINI.md",
-      "sha256": "4f7c42ec4d7d3c49f0fa5b0dc03bd9a240cd425d06825baf1183eb2bd8669013"
+      "sha256": "4842bf2d00a689d92cd0f59ffe60e49a4981be861acfe36d4701658025228295"
     },
     {
       "path": "distribution/gemini/gemini-extension.json",
-      "sha256": "bc484f64299f092a1b85b87066cca706643ea7532d75ba9a6cfdca1cc14a250c"
+      "sha256": "584509f328261e97a3b4ae2d36f8d9b36fe0f559e4a67548945ce6ed428a43fe"
     },
     {
       "path": "distribution/hf-space/csoai-gspc-mcp/README.md",
-      "sha256": "c1b0bbf5ecb16c43278e782fc524565ba3747fd46c6adc2df349c820649150db"
+      "sha256": "ecdaea482ef1a9f0d77917c64075555ee77582a26d63a4f167dee0ccc4bbcbf0"
     },
     {
       "path": "distribution/hf-space/csoai-gspc-mcp/app.py",
@@ -958,11 +1041,11 @@
     },
     {
       "path": "distribution/mcp-registry/ai.councilof-gspc/server.json",
-      "sha256": "81807b2369610f1e599a329ce40b706e705e30a328bdc95f16ee3d88bfe4098a"
+      "sha256": "c4bb6132c7ff2b79abe74a6cf9b1dec0d363036fc4055a88b90e1c2b9f50f523"
     },
     {
       "path": "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json",
-      "sha256": "2c5bc2ae09584b69b0e753f41d54fe5abc1c2f4e7f3392b54713b22a2d366103"
+      "sha256": "a34404709476618d2e1cf673eae972cb2ae5c1c59d5f5e93a2956f8b594da8c1"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/LICENSE",
@@ -970,11 +1053,11 @@
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/README.md",
-      "sha256": "b7e3cd823b5dbb55fd62a30cd458a5e14f49273f6ffb6b1498b66ba713b74db1"
+      "sha256": "7bbddaf3a135d91f3aad803be3d18f037b7e8b271c86fa83d5c14f63d4f0397a"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/gspc-client.js",
-      "sha256": "7d4d30a05597ff6417143c90166a5c247646e8c9a07152a21bcca598f5664936"
+      "sha256": "aa4b2d4fb9fb646de3d6ec84b1023de7f4d55af8deeb2e38e909399609862876"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/index.d.ts",
@@ -986,7 +1069,7 @@
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/package.json",
-      "sha256": "c1c40c0e163216aaa1109b1c325191ea1b4fd87d82a51fc0b79e746d59b13641"
+      "sha256": "8619eddf943455b6f62f244c4707bdde090ddff9d2a4bf14f9fea6bec8acd54b"
     },
     {
       "path": "distribution/npm/mastra-gspc/LICENSE",
@@ -994,11 +1077,11 @@
     },
     {
       "path": "distribution/npm/mastra-gspc/README.md",
-      "sha256": "578840e61515cd2451e4a25c95b02392ac1812426b58a53cfadc4e124489a18e"
+      "sha256": "39e4cf9ef745a0beb7fab634222213e39c909392dbce4594222b1850eb1829f5"
     },
     {
       "path": "distribution/npm/mastra-gspc/gspc-client.js",
-      "sha256": "7d4d30a05597ff6417143c90166a5c247646e8c9a07152a21bcca598f5664936"
+      "sha256": "aa4b2d4fb9fb646de3d6ec84b1023de7f4d55af8deeb2e38e909399609862876"
     },
     {
       "path": "distribution/npm/mastra-gspc/index.d.ts",
@@ -1010,7 +1093,7 @@
     },
     {
       "path": "distribution/npm/mastra-gspc/package.json",
-      "sha256": "fd413d873426c17bcdb1b206f824d2d128acf6f7e1dc8809e4481227697a1ab7"
+      "sha256": "8fc0760a13b6a3da0afda28a0f75e2fc8779c3215f346780993db6ff3c0d0fe1"
     },
     {
       "path": "distribution/openai-plugin/assets/logo.png",
@@ -1022,39 +1105,39 @@
     },
     {
       "path": "distribution/openai-plugin/plugin.json",
-      "sha256": "12d6149475d32761e0d37bccf13e52bb6f7e5a1ad52d8b3369a34cfe2566540b"
+      "sha256": "4a0728105600f196dafb12bdeeb4be6b2835cfc7ad80d5cbac17d47b023e6d0e"
     },
     {
       "path": "distribution/openai-plugin/skills/get-started/SKILL.md",
-      "sha256": "82465cea2333537ecbb5a57189327798c2e452f3b87026e1e7e05e45c4aaa947"
+      "sha256": "c04d6d75ffdc1afb73ba2440482eb24f98293f964cc450e6ee73a38822d5f075"
     },
     {
       "path": "distribution/openai/app.json",
-      "sha256": "6f95cbafea39b85f73dbd0fa4c1e96e69818853bf0849fb8fe0f142150f9cafb"
+      "sha256": "09e633557825de67cd4980f419a9c8cb89e8d29ace57a9e23ffeb9e950464de8"
     },
     {
       "path": "distribution/packages/gspc-openai-plugin.zip",
-      "sha256": "031520a1ac76c00087e7e7e0a9f9d1361c6b399fa010b6f6b8d04decdb59b44b"
+      "sha256": "e3f683a1e47bd471223abd41723ea24f24431a40fb44343ddaac556f2aadeb6e"
     },
     {
       "path": "distribution/packages/gspc.difypkg",
-      "sha256": "2b4b32e3662fcbd519bdf22dcb6cd147c41a5d53f6ca64a3e55b4b635e18fb0c"
+      "sha256": "ac9dee8a150d5ed8457f3d70ec1ef309204e13af89ca37ae19b1017023c1c81b"
     },
     {
       "path": "distribution/plugin/.claude-plugin/marketplace.json",
-      "sha256": "b61fb00c3662fbd5ba57aaaff1da8da9660c11e2158dd0184e2131505804001c"
+      "sha256": "2d31be0bebe7f2e541ee7b9c912cbc532a3c7317cfe7c1e095d9489396b85a6a"
     },
     {
       "path": "distribution/plugin/.claude-plugin/plugin.json",
-      "sha256": "51f1126203ec4dd01342bf7c8e0f456d64600b2def67a165ad22ad7d13421fd1"
+      "sha256": "7eec25d0878821d4ae5f6d2fc21b63181a6c8516d53d9992e5a6cb65f79f8807"
     },
     {
       "path": "distribution/plugin/.cursor-plugin/plugin.json",
-      "sha256": "72109701c99eaf89597d06ad7530087a24686bcc715584d0e562d2438d1bc06e"
+      "sha256": "73f00341a76b12513cf71f9afbd0804f2a7b6531a1be06b7d1a33ce99c4b3fc9"
     },
     {
       "path": "distribution/plugin/.grok-plugin/marketplace.json",
-      "sha256": "923c8814ebc0c982345f47fc99121665e86f9c4813b854cbc0168b8c32853946"
+      "sha256": "631495ff0d12c510f50ce811f704a33a05a17148b1ed1f3466d46e3cf9e4acb7"
     },
     {
       "path": "distribution/plugin/.mcp.json",
@@ -1062,19 +1145,19 @@
     },
     {
       "path": "distribution/plugin/README.md",
-      "sha256": "c4227fd971d2ffe2d7e125fbc38e293287012131a3502ea6f65f1780ffe8839d"
+      "sha256": "cefb0e82d22fecc22827b5911aa633630e743a49e30efbb1f94ab5a093cedb83"
     },
     {
       "path": "distribution/plugin/kimi.plugin.json",
-      "sha256": "2bee3dc26557386f2eef6d4d7b809bb24af8fe85791b2a0cc9b8c149463e62b6"
+      "sha256": "f291adeb2c0f99e0acc331b6878d41d7c94a595b86f18a10232c36210a1cf479"
     },
     {
       "path": "distribution/plugin/locales/en-US.json",
-      "sha256": "92b40893f796e143e1522e634f67f79d3f5ab42e64cf6d87ee63655889d7c7e1"
+      "sha256": "be559acfd52d5bb3b21d1fa47f182eac9c29ab51f5b88fc022c6ecd57daa7aec"
     },
     {
       "path": "distribution/plugin/locales/zh-CN.json",
-      "sha256": "f4a9fa0a8536bde6844c53139e3225cdd28d0ae2706859cfae84e41270504879"
+      "sha256": "df4525c9fb9cebed829406ec164ccad51ac0e5d67ecd6e2c39176ff87089abb8"
     },
     {
       "path": "distribution/plugin/mcp_config.json",
@@ -1082,7 +1165,7 @@
     },
     {
       "path": "distribution/plugin/plugin.json",
-      "sha256": "1e47ed11b7928b257a8c5cda8fbee2b9df3d4bfcb61b4c55dee2957f2544a5e4"
+      "sha256": "34ac4a15e87debbb150bb6a2467d7b0999999e8f609778c40f1a9eecb71ef2e7"
     },
     {
       "path": "distribution/plugin/rules/AGENTS.md",
@@ -1094,7 +1177,7 @@
     },
     {
       "path": "distribution/plugin/skills/gspc/SKILL.md",
-      "sha256": "b0ae7aae09e566afbe9c4f6eec2d9297d056e3779c9ee4696405cc369f060e7a"
+      "sha256": "9c832f1a78e8b71f7840bf6fa51e21f347fe50458022052f7746480e982519df"
     },
     {
       "path": "distribution/python/crewai-csoai/LICENSE",
@@ -1174,7 +1257,7 @@
     },
     {
       "path": "distribution/working-groups/README.md",
-      "sha256": "62cae3e5a1e73e8e504223d0f7a9c99bbafe564a57f2e4b45b28b9e9c97ad57b"
+      "sha256": "5d3f77e2f7b36e5e4f1e3ed4b7d977b78456541c34ac73736e5ea09fb50ca265"
     },
     {
       "path": "distribution/working-groups/hf/LICENSE",
@@ -1186,7 +1269,7 @@
     },
     {
       "path": "distribution/working-groups/hf/catalog.json",
-      "sha256": "a81de289c3dce394baab67d0d914ad478cb2165e1176e4212bea612c4c5d904b"
+      "sha256": "10c50d1958abd4b5253b4792b14d153b6cb6e9ed3e10e34350be331e602ad366"
     },
     {
       "path": "distribution/working-groups/hf/controlai.html",
@@ -1198,7 +1281,7 @@
     },
     {
       "path": "distribution/working-groups/hf/index.html",
-      "sha256": "a1157fceacf2c17648476f22d8da4282c9b66a471e84c702c608fa7005d83805"
+      "sha256": "d75ec19aedf56d2dd9a033b28f7ddcb1760ef6bd43acf4e441097cc83df702aa"
     },
     {
       "path": "distribution/working-groups/kaggle/kernel-metadata.template.json",
@@ -1206,11 +1289,11 @@
     },
     {
       "path": "distribution/working-groups/kaggle/working-groups.ipynb",
-      "sha256": "ad47c20c245a3def264061350459ce67dfbd3186b27f2d81a05677fd5ac7d6a6"
+      "sha256": "31a280c383bdabe011353f6bc0af8c010577a806dd525d1f1b818e698d23fcfd"
     },
     {
       "path": "distribution/working-groups/manifest.json",
-      "sha256": "51e0f98b41c609e6c51274414cc9ae9a06e0255590984a78ba06b65b35306576"
+      "sha256": "26cbfce3443474a827da2982b3da1051d08c8dc2df6e1278ee69b19924fd1cd4"
     },
     {
       "path": "distribution/working-groups/mcp-client.template.json",
@@ -1218,19 +1301,35 @@
     },
     {
       "path": "public/.claude-plugin/marketplace.json",
-      "sha256": "b61fb00c3662fbd5ba57aaaff1da8da9660c11e2158dd0184e2131505804001c"
+      "sha256": "2d31be0bebe7f2e541ee7b9c912cbc532a3c7317cfe7c1e095d9489396b85a6a"
     },
     {
       "path": "public/.claude-plugin/plugin.json",
-      "sha256": "51f1126203ec4dd01342bf7c8e0f456d64600b2def67a165ad22ad7d13421fd1"
+      "sha256": "7eec25d0878821d4ae5f6d2fc21b63181a6c8516d53d9992e5a6cb65f79f8807"
     },
     {
       "path": "public/.well-known/mcp.json",
-      "sha256": "c5c23015a67d5db5d5fd6a0bf94db095e31e2bd28e51115cca02c1eeae50a75b"
+      "sha256": "d7f494dc3aabbf08ae3d47ac7ff440d7ce0fe0cf268426aa10499bad82bd5120"
     },
     {
       "path": "public/.well-known/mcp/server-card.json",
-      "sha256": "2fddd7ea017e52eb9373b309ae5672628eaad0b044cb0fd96d0d3337535e7183"
+      "sha256": "a4a47f906aa7c76d9ca06c5f8c5abd939f1f0cebea8ebb436e85462caa5b0746"
+    },
+    {
+      "path": "public/charter-register/discussion.html",
+      "sha256": "99bfed18ab28013a67c28de9a706c27b344175b79220f2b42f1a99d6b43c1562"
+    },
+    {
+      "path": "public/charter-register/index.html",
+      "sha256": "6ab39943e98d3a49c84099e89b74812284a5da493079710ca6eeddf0926cad4e"
+    },
+    {
+      "path": "public/charter-register/manifest.json",
+      "sha256": "abba500bcc41b50f4119e2bf2889563a2370fab3c862a0633aa71bc0a38bb6a8"
+    },
+    {
+      "path": "public/charter-register/register.json",
+      "sha256": "c0ce8529bcdd9c80ce8b752786d6c64a76d0923bd81028eaf66ccfd20f139d84"
     },
     {
       "path": "public/oasf/ai.councilof.gspc.oasf.json",
@@ -1242,7 +1341,7 @@
     },
     {
       "path": "public/working-groups/catalog.json",
-      "sha256": "a81de289c3dce394baab67d0d914ad478cb2165e1176e4212bea612c4c5d904b"
+      "sha256": "10c50d1958abd4b5253b4792b14d153b6cb6e9ed3e10e34350be331e602ad366"
     },
     {
       "path": "public/working-groups/controlai.html",
@@ -1254,7 +1353,7 @@
     },
     {
       "path": "public/working-groups/index.html",
-      "sha256": "a1157fceacf2c17648476f22d8da4282c9b66a471e84c702c608fa7005d83805"
+      "sha256": "d75ec19aedf56d2dd9a033b28f7ddcb1760ef6bd43acf4e441097cc83df702aa"
     }
   ]
 }

@@ -588,6 +588,8 @@
         "distribution/dify/gspc/tools/axis_claim-maintenance.py",
         "distribution/dify/gspc/tools/axis_serving-fidelity.yaml",
         "distribution/dify/gspc/tools/axis_serving-fidelity.py",
+        "distribution/dify/gspc/tools/axis_watchdog-ingest.yaml",
+        "distribution/dify/gspc/tools/axis_watchdog-ingest.py",
         "distribution/packages/gspc.difypkg"
       ],
       "doctrine_carriers": [
@@ -671,6 +673,37 @@
       "listing_channel": "Candidate resource kit; not registered or published",
       "owner_approval_needed": true,
       "approver": "Existing release owner for destinations and human review",
+      "flagged_org_affected": false
+    },
+    {
+      "id": "charter-register-resources",
+      "format": "Read-only charter source register, public views, HF static kit, offline Kaggle notebook and local MCP configuration",
+      "output": [
+        "public/charter-register/index.html",
+        "public/charter-register/discussion.html",
+        "public/charter-register/register.json",
+        "public/charter-register/manifest.json",
+        "distribution/charter-federation/README.md",
+        "distribution/charter-federation/LICENSE",
+        "distribution/charter-federation/mcp-client.template.json",
+        "distribution/charter-federation/hf/README.md",
+        "distribution/charter-federation/hf/index.html",
+        "distribution/charter-federation/hf/discussion.html",
+        "distribution/charter-federation/hf/register.json",
+        "distribution/charter-federation/hf/manifest.json",
+        "distribution/charter-federation/hf/LICENSE",
+        "distribution/charter-federation/kaggle/charter-register.ipynb",
+        "distribution/charter-federation/kaggle/kernel-metadata.template.json",
+        "distribution/charter-federation/manifest.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/charter-federation/README.md"
+      ],
+      "licence": "MIT for original code and review material; referenced works retain their own licences",
+      "version_source": "register-sha256",
+      "listing_channel": "Generated public resource kit; receiving-host acceptance recorded separately",
+      "owner_approval_needed": true,
+      "approver": "Existing protected release and destination owner",
       "flagged_org_affected": false
     }
   ],
@@ -954,6 +987,12 @@
       "kind": "rendered-only",
       "row": "working-group-resources",
       "why": "Candidate resources only. No public HF/Kaggle upload, marketplace listing or live MCP tool change."
+    },
+    {
+      "id": "charter-register-resources-candidate",
+      "kind": "rendered-only",
+      "row": "charter-register-resources",
+      "why": "Generated resources; no new live MCP tools, memberships or authority grants."
     }
   ],
   "connect_matrix": {

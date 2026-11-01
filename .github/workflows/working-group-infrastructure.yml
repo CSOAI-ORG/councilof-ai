@@ -11,6 +11,7 @@ on:
       - 'scripts/working-groups/**'
       - 'scripts/harness-x/render.mjs'
       - 'mcp/working-groups-preview/**'
+      - 'functions/mcp/**'
       - 'tools/working-group-lab/**'
       - 'evidence/research/controlai/**'
       - 'docs/governance/controlai-evidence-integration.md'
@@ -39,6 +40,7 @@ jobs:
       - run: node scripts/harness-x/render.mjs --check
       - run: node --test scripts/working-groups/core.node-test.mjs scripts/working-groups/research.node-test.mjs
       - run: node scripts/working-groups/check-research.mjs --as-of "$(date -u +%F)"
+      - run: npx vitest run functions/mcp/working-groups.test.ts functions/mcp/mcp-protocol.test.ts
       - run: python3 tools/working-group-lab/test_lab.py
       - run: npx playwright install --with-deps chromium
       - run: node scripts/working-groups/acceptance.mjs --output "$RUNNER_TEMP/working-group-acceptance.json"
