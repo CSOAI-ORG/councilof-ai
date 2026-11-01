@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { verifyRecord } from "@/lib/recordVerify";
+import WorkingGroups from "@/components/WorkingGroups";
 // Shared with the server-side router (#3141): 4xx/5xx/timeout is UNCHECKABLE, never FAILED.
 import { retrievalState } from "../../../functions/_lib/watchdogRoute";
 import {
@@ -76,6 +77,7 @@ export default function Watchdog() {
     return () => window.removeEventListener("popstate", on);
   }, []);
   const params = useMemo(() => parseJourney(search), [search]);
+  const showGroups = new URLSearchParams(search).get("view") === "groups";
   const go = useCallback((href: string) => {
     window.history.pushState(null, "", href);
     setSearch(window.location.search);
@@ -92,11 +94,14 @@ export default function Watchdog() {
         <Link href="/dashboard" className={`inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm font-semibold ${FOCUS}`}>
           Ask a question
         </Link>
-        <button type="button" onClick={() => go("/watchdog/")} aria-pressed={params.view === "claims"} className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold ${FOCUS}`}>
+        <button type="button" onClick={() => go("/watchdog/")} aria-pressed={!showGroups && params.view === "claims"} className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold ${FOCUS}`}>
           Claims
         </button>
         <button type="button" onClick={() => go(libraryHref())} aria-pressed={params.view === "library"} className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold ${FOCUS}`} data-testid="watchdog-library-tab">
           Research library
+        </button>
+        <button type="button" onClick={() => go("/watchdog/?view=groups")} aria-pressed={showGroups} className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold ${FOCUS}`}>
+          Working groups
         </button>
         <Link href="/board" className={`inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm ${FOCUS}`}>
           Live board
@@ -105,7 +110,7 @@ export default function Watchdog() {
           Corrections
         </Link>
       </div>
-      {params.view === "library" ? <Library /> : <Claims params={params} go={go} />}
+      {showGroups ? <WorkingGroups /> : params.view === "library" ? <Library /> : <Claims params={params} go={go} />}
     </div>
   );
 }
