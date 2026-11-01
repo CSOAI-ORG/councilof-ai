@@ -1,0 +1,243 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "ai-adoption-components",
+  "specialist": {
+    "id": "meok-ai-adoption-components-specialist",
+    "cluster_id": "meok-axis-ai-adoption-components",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit the component series behind AI adoption facts, preserving the small component count and preventing revival of a retired composite index claim.",
+    "reviewer_role": "statistical-series reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "component definitions",
+    "series vintage",
+    "small-n transparency",
+    "retired-index non-claim"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-09-17T12:58:11Z",
+      "source": "/interop/financial-measure-run-ai-adoption-components.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "ae966acf8e41d0271e87df5e740c6323930e92ee5f2024adadbf2648681e071b",
+    "axis_row": {
+      "axis": "ai-adoption-components",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-ai-economy-index",
+      "dataset_note": "The Hub slug keeps the retired name gspc-ai-economy-index so old links resolve; the live axis is ai-adoption-components and this is not an index (C-2026-0826-05). The card says so on its face.",
+      "bench": "Eurostat",
+      "task": "cited EU AI-adoption series (not an index)",
+      "n": 2,
+      "n_unit": "public series",
+      "status": "MEASURED",
+      "evidence_url": "/interop/financial-measure-run-ai-adoption-components.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "colour": "#fbbf24",
+      "hue": 43,
+      "note": "MEASURED as two Eurostat series from isoc_eb_ai, 2025: enterprises with 10+ employees using any AI 19.95%, large enterprises 250+ 55.03%. The size class is a dimension of the same response, so both series are read from one fetch. Not an index. No formula file. The MEASURED-INDEX-v0.1 sticker stays withdrawn (C-2026-0826-05). Former slot id ai-economy-index.",
+      "method_status": "legacy: n 2",
+      "facts_as_of": "2026-09-17T12:58:11Z",
+      "facts_status": "MEASURED",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "source": "/interop/financial-measure-run-ai-adoption-components.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-ai-economy-index"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist ai-adoption-components audits only the ai-adoption-components row",
+      "evidence": "ai-adoption-components"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-ai-adoption-components; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "FACT_RUN_STATE",
+      "state": "PASS",
+      "detail": "deterministic-facts run with n=2 public series"
+    },
+    {
+      "id": "FACT_LINEAGE",
+      "state": "PASS",
+      "detail": "run artifact and fact timestamp are published"
+    },
+    {
+      "id": "RUN_ATTESTATION",
+      "state": "FINDING",
+      "detail": "run artifact is CONTENT_ADDRESSED_UNSIGNED; content identity is not a signature"
+    },
+    {
+      "id": "NO_MODEL_RANKING",
+      "state": "PASS",
+      "detail": "deterministic facts carry no model leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "FINDING",
+      "detail": "legacy: n 2"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 6,
+    "declared": 0,
+    "findings": 2,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "reconstruct a composite index from components and require the retired-claim guard to fail",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "mix series vintages silently and require lineage failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "ai-adoption-components-proposal-1",
+      "proposal": "publish component-level definitions and vintage tables",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "ai-adoption-components-proposal-2",
+      "proposal": "expand the frozen component set before any broader adoption claim is proposed",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_ai-adoption-components",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/ai-adoption-components",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "statistical-series reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "ccf36510e43c7828cd6ab7b3b72895e8ea3801c004f46151a5ff4bbc59c895b0",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "dataset_url",
+      "dataset_note",
+      "evidence_url",
+      "facts_as_of",
+      "method_status"
+    ],
+    "measurement_url": "/api/gspc/axis/ai-adoption-components",
+    "competency_url": "/api/hitl/modules/ai-adoption-components",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}

@@ -26,6 +26,8 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { vscodeInstallAction } from "./vscode-install.mjs";
 import { cursorInstallAction } from "./cursor-install.mjs";
+import { workingGroupKit } from "../working-groups/render-kit.mjs";
+import { charterKit } from "../charter-federation/render-kit.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const args = process.argv.slice(2);
@@ -200,6 +202,110 @@ emit("distribution/plugin/plugin.json", j({
   skills: "./skills",
   rules: "./rules",
   "x-csoai-doctrine": DOCTRINE,
+}));
+
+// ── Kimi Code CLI + Kimi desktop: the same door and the same two skills, in Kimi's shape ──────
+// Kimi reads a plugin from <root>/kimi.plugin.json (or <root>/.kimi-plugin/plugin.json), with its
+// skills at a "./" path inside the root and its MCP servers declared inline. The plugin root here
+// IS distribution/plugin/, so the two skills already rendered for the other platforms are the two
+// Kimi ships: one source, four flavours, no second copy of the doctrine to drift.
+//
+// The MCP entry is {"url": ...} and nothing else, on purpose. Kimi treats a url with no transport as
+// HTTP, and the desktop validator strips out-of-spec keys — the neighbouring .mcp.json says
+// "type": "http", which Kimi does not recognise, so this flavour does not reuse that file's shape.
+const KIMI_SKILL_OVERRIDES = {
+  gspc: {
+    displayName: "Council of AI GSPC",
+    description: "Read the live GSPC board and verify signed measurement cards through the free Council of AI MCP door.",
+  },
+  "gspc-verify": {
+    displayName: "GSPC & SAFE evidence verification",
+    description: "Verify a signed card, a measurement capsule or a SAFE evidence pack deterministically, offline or over the free verifier.",
+  },
+};
+const KIMI_MCP_OVERRIDES = {
+  [PLUGIN]: {
+    displayName: "Council of AI GSPC",
+    description: "The free Council of AI MCP door: the live board, signed-card verification, and the public measurement corpus.",
+  },
+};
+const KIMI_TRY_PROMPTS = [
+  "Read the live GSPC board totals and tell me how many axes are measured.",
+  "Verify this measurement card and give me the state: VALID, INVALID or UNCHECKABLE.",
+  "Show me the governance axis row with its n, accuracy and separation state.",
+];
+const KIMI_INTERFACE = {
+  displayName: "Council of AI GSPC",
+  shortDescription: "The live GSPC board and signed-card verification, over MCP.",
+  longDescription: pluginCore.description,
+  developerName: ID.publisher,
+  websiteURL: ID.website,
+  iconUrl: ID.icon,
+  category: "DEVELOPER",
+  hostKind: "local",
+  platforms: ["macos", "linux", "windows"],
+  defaultLocale: "en-US",
+  locales: "./locales/",
+  tryPrompts: KIMI_TRY_PROMPTS,
+  skillOverrides: KIMI_SKILL_OVERRIDES,
+  mcpOverrides: KIMI_MCP_OVERRIDES,
+};
+emit("distribution/plugin/kimi.plugin.json", j({
+  $schema: "https://catalog.msh.team/misc/kimi.plugin.schema.json",
+  name: PLUGIN,
+  version: REMOTE_VERSION,
+  description: pluginCore.description,
+  keywords: pluginCore.keywords,
+  author: ID.publisher,
+  homepage: ID.website,
+  license: "Apache-2.0",
+  skillInstructions: `${STANCE} ${LINKS}`,
+  interface: KIMI_INTERFACE,
+  skills: "./skills/",
+  mcpServers: { [PLUGIN]: { url: ID.door } },
+  // The doctrine pin travels with the manifest, as it does with every other flavour. Kimi ignores
+  // unknown top-level fields (its own validator warns only on id/permissions/tools/apps/…), so the
+  // pin is inert to the client and load-bearing to the estate's distribution check.
+  "x-csoai-doctrine": DOCTRINE,
+}));
+// The platform requires locales/ to cover zh-CN and en-US together with defaultLocale. The base copy
+// is English (the request language); the zh-CN file is a real translation, not the base copied over.
+const localeDoc = (o) => ({
+  displayName: o.displayName,
+  shortDescription: o.shortDescription,
+  longDescription: o.longDescription,
+  developerName: o.developerName,
+  tryPrompts: o.tryPrompts,
+  mcpOverrides: o.mcpOverrides,
+  skillOverrides: o.skillOverrides,
+});
+emit("distribution/plugin/locales/en-US.json", j(localeDoc(KIMI_INTERFACE)));
+emit("distribution/plugin/locales/zh-CN.json", j({
+  displayName: "Council of AI GSPC",
+  shortDescription: "通过 MCP 读取实时 GSPC 榜单并验证签名测量卡。",
+  longDescription: `Council of AI GSPC over MCP：${FLEET}。读取实时榜单，验证签名测量卡（VALID / INVALID / UNCHECKABLE）。仅供测量，不构成认证。`,
+  developerName: ID.publisher,
+  tryPrompts: [
+    "读取实时 GSPC 榜单总数，并告诉我有多少个轴已被测量。",
+    "验证这张测量卡，并给出状态：VALID、INVALID 还是 UNCHECKABLE。",
+    "展示 governance 轴的行，包括 n、准确率与分离状态。",
+  ],
+  mcpOverrides: {
+    [PLUGIN]: {
+      displayName: "Council of AI GSPC",
+      description: "Council of AI 的免费 MCP 入口：实时榜单、签名卡验证与公开测量语料。",
+    },
+  },
+  skillOverrides: {
+    gspc: {
+      displayName: "Council of AI GSPC",
+      description: "通过 Council of AI 免费 MCP 入口读取实时 GSPC 榜单并验证签名测量卡。",
+    },
+    "gspc-verify": {
+      displayName: "GSPC 与 SAFE 证据验证",
+      description: "以确定性的方式，离线或通过免费验证器，验证签名卡、测量胶囊或 SAFE 证据包。",
+    },
+  },
 }));
 const toolLines = (list) => list.map((t) => `- \`${t.id}\` — ${firstSentence(t.description)}`).join("\n");
 const doctrineFooter = (indent = "") =>
@@ -763,7 +869,7 @@ ${usage}
 \`\`\`
 
 Optional Layer 0 wrapping: pass \`{ layer0: new Layer0({...}) }\` from \`@csoai/layer0\` (${layer0Version}) and every call runs
-through \`Layer0.governed()\` (gate → run → attest). \`@csoai/layer0\` is an optional peer and is not yet on npm.
+through \`Layer0.governed()\` (gate → run → attest). \`@csoai/layer0\` is an optional peer and has been on npm since 2026-10-30.
 
 States: \`LIVE\`, \`ERROR\` (the door answered with a JSON-RPC error), \`UNREACHABLE\` (no number is returned).
 ${STANCE}
@@ -1094,7 +1200,7 @@ emit("public/.well-known/mcp/server-card.json", j({
   doi_status_url: "https://councilof.ai/interop/zenodo-status.json",
   doi_alternative: { url: "https://councilof.ai/methodology/", relation: "the live methodology page; not the deposit's bytes" },
   explicitly_not: ["certification", "accreditation", "conformity-assessment", "legal-determination", "enforcement"],
-  discovery: { well_known_mcp: `${ID.website}/.well-known/mcp.json`, agent_card: `${ID.website}/.well-known/agent-card.json` },
+  discovery: { well_known_mcp: `${ID.website}/.well-known/mcp.json`, agent_card: `${ID.website}/.well-known/agent-card.json`, catalog: `${ID.website}/catalog.json` },
   doctrine: DOCTRINE,
   generated_by: WELL_KNOWN_GENERATOR,
 }));
@@ -1408,7 +1514,7 @@ ${LINKS}
 {
   const DF = "distribution/dify/gspc";
   const yq = (s) => JSON.stringify(s);
-  const cls = (n) => n.split("_").map(cap).join("") + "Tool";
+  const cls = (n) => n.split(/[^A-Za-z0-9]+/).filter(Boolean).map(cap).join("") + "Tool";
   const pyDoor = (name) => `"""GSPC ${name} for Dify. Generated by scripts/harness-x/render.mjs — do not hand-edit."""
 import json
 import urllib.request
@@ -1580,6 +1686,8 @@ const rowsById0 = Object.fromEntries(dist.distribution.map((r) => [r.id, r]));
 const PY_ORDER = `Publish csoai-gspc ${pyClientVersion} to PyPI first: this package requires csoai-gspc>=${pyClientVersion}, and \`scripts/harness-x/parity_live.py\` reports that floor uninstallable until it is there. (The floor also keeps out 0.2.20260928, a snapshot release cut on 2026-09-28 from pre-2026-09-26 client code; gspc-spray.py now refuses a package source older than the one PyPI serves.)`;
 const PY_NO_REUSE = `The source version is ${AV}. PyPI and npm refuse to re-upload a version, so any content change moves adapter_version; parity_live.py flags a live version whose bytes the source no longer produces.`;
 const STEPS = {
+  "charter-register-resources": ["Run the charter integrity/participation tests, canonical rebuild and resource exporter checks. Publish through the existing protected site release; verify each external host separately. See distribution/charter-federation/README.md."],
+  "working-group-resources": ["Run node --test scripts/working-groups/core.node-test.mjs and the local acceptance runner. The kit is a candidate: use the existing protected site release, then stage an authorised HF static Space or private Kaggle notebook. Local stdio is a preview, not the live GSPC tool fleet. See distribution/working-groups/README.md."],
   "mcp-registry-github": [
     "DEPRECATED ALIAS. The canonical name is the domain one (mcp-registry-domain). Owner step: deprecate this name in the registry (`mcp-publisher login github` as a CSOAI-ORG member, then set its status to deprecated). Publish no new versions under it.",
     "This file stays rendered so the deprecation has the descriptor it names; check.mjs still compares its version with the registry's isLatest.",
@@ -1599,6 +1707,12 @@ const STEPS = {
   "cursor-plugin": ["Same repo as claude-plugin; submit it through Cursor's marketplace publisher flow (Cursor account login)."],
   "grok-plugin": ["Same repo as claude-plugin; the marketplace file sits at .grok-plugin/marketplace.json with source `./`."],
   "antigravity-plugin": ["Same repo as claude-plugin; or copy distribution/plugin/ to ~/.gemini/config/plugins/csoai-gspc/ in Google Antigravity."],
+  "kimi-plugin": [
+    "Kimi Code CLI (terminal): `/plugins install <path>` with this directory as the path, then `/reload` or a new session. The CLI copies a local install to `$KIMI_CODE_HOME/plugins/managed/gspc/` and runs from that copy.",
+    "Kimi Code CLI from a repo: the same directory at the root of a public repo, then `/plugins install https://github.com/<owner>/<repo>`.",
+    "Kimi desktop: register the directory into the personal market (`kimi-daimon kimi-plugin register-personal <dir>`), then install it from the Personal tab of the Plugins page. The daemon hot-reloads active sessions; no restart.",
+    `No key is needed: the MCP entry points at the free door ${ID.door} over HTTP.`,
+  ],
   "claude-connector": [
     "SUBMITTED 2026-09-28 (the free door, /mcp/free); review pending in the directory portal. Nothing further to submit.",
     "Every tool on both doors carries MCP annotations (title, readOnlyHint, destructiveHint, idempotentHint, openWorldHint); check.mjs holds that. The directory listing names the free door only (Software Directory Policy 4.A).",
@@ -1699,10 +1813,12 @@ ${STEPS[r.id].map((s, i) => `${i + 1}. ${s}`).join("\n")}
 `).join("\n")}
 ## Owner decisions (not taken in this lane)
 
-1. **Licences.** \`councilof-mcp\` (PyPI, 1.0.1) and \`@csoai/layer0\` (\`packages/layer0-js\`, ${layer0Version}) are MIT against the
-   Apache-2.0 default. Not changed here. \`@csoai/layer0\` is also not on npm, so the TS adapters take it as an optional peer.
-2. **Layer0 gateway.** \`@csoai/layer0\` defaults to https://api.csoai.org, which did not answer on 2026-09-25; the TS adapters
-   therefore call ${ID.door} directly and use Layer0 only when a caller passes an instance.
+1. **Licences.** \`councilof-mcp\` (PyPI, 1.0.1) is MIT against the Apache-2.0 default. Not changed here.
+   \`@csoai/layer0\` (\`packages/layer0-js\`, ${layer0Version}) is Apache-2.0 from 0.2.0 and has been on npm since 2026-10-30,
+   so the TS adapters can take it as an ordinary dependency.
+2. **Layer0 gateway.** \`@csoai/layer0\` defaults to https://councilof.ai, where the public Layer 0 gateway is served
+   (re-probed 2026-10-30: /api/gate 200, /api/a2a/route 200 with a signed envelope, /api/a2a/verify 400 on an empty
+   body). The TS adapters call ${ID.door} directly and use Layer0 only when a caller passes an instance.
 3. **Doctrine text.** \`docs/DOCTRINE.md\` rule 4 types a board grammar ("22 · 15 · 7") that the live board no longer prints.
    Outputs carry only the hash, so nothing stale is copied; fix the text, then \`render.mjs --pin-doctrine\`.
 4. **Second registry name** (\`${dist.registry_names.domain}\`) — keep both names or one.
@@ -1822,6 +1938,9 @@ ${LINKS}
 Doctrine sha256 ${DOCTRINE.sha256}. Measurement, not certification. A listing is never adoption.
 `);
 }
+
+for (const [file, content] of workingGroupKit(read, DOCTRINE)) emit(file, content);
+for (const [file, content] of charterKit(read, DOCTRINE)) emit(file, content);
 
 // ── manifest + write/check ──────────────────────────────────────────────────────────────────
 const manifestEntries = [...outputs.keys()].sort().map((p) => ({ path: p, sha256: sha256(outputs.get(p)) }));

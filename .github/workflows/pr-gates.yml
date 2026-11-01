@@ -277,6 +277,98 @@ jobs:
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
 
+      - name: Dependency security regressions — sanitizer, quoting and proxy trust
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          npm ci --prefix api-server --ignore-scripts --no-audit --no-fund
+          node --test scripts/dependency-security.node-test.mjs
+
+      - name: Offline uploader regressions — isolated network namespace
+        if: steps.scope.outputs.gated == 'true'
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+          runner_uid="$(id -u)"
+          runner_gid="$(id -g)"
+          test "$runner_uid" -ne 0
+          host_netns="$(readlink /proc/self/ns/net)"
+          offline_home="$(mktemp -d "$RUNNER_TEMP/csoai-intake-offline.XXXXXX")"
+          echo "Uploader test checkout: $(git rev-parse HEAD)"
+          # Fail closed if this hosted runner cannot create the isolated namespace.
+          # Clear inherited credentials/proxies before unshare; load tests only after
+          # dropping the runner's supplementary groups and all privilege escalation.
+          /usr/bin/sudo -n /usr/bin/env -i PATH=/usr/bin:/bin \
+            HOME="$offline_home" TMPDIR="$offline_home" \
+            HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1 \
+            /usr/bin/unshare --net -- /usr/bin/setpriv \
+            --reuid="$runner_uid" --regid="$runner_gid" --clear-groups \
+            --bounding-set=-all --inh-caps=-all --ambient-caps=-all --no-new-privs \
+            /usr/bin/python3 -I -B -u - "$host_netns" "$runner_uid" "$runner_gid" <<'PY'
+          import errno
+          import os
+          from pathlib import Path
+          import socket
+          import subprocess
+          import sys
+
+          host_netns, runner_uid, runner_gid = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+          if os.readlink('/proc/self/ns/net') == host_netns:
+              raise SystemExit('Network guard failed: still in the host namespace')
+          if runner_uid == 0 or os.getresuid() != (runner_uid,) * 3 or os.getresgid() != (runner_gid,) * 3 or os.getgroups():
+              raise SystemExit('Network guard failed: runner privileges were not dropped')
+          status = dict(line.split(':', 1) for line in Path('/proc/self/status').read_text().splitlines() if ':' in line)
+          if status['NoNewPrivs'].strip() != '1' or any(int(status[key].strip(), 16) for key in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb')):
+              raise SystemExit('Network guard failed: capabilities or privilege escalation remain')
+          if {name for _, name in socket.if_nameindex()} != {'lo'}:
+              raise SystemExit('Network guard failed: a non-loopback interface exists')
+          for family, address in ((socket.AF_INET, ('192.0.2.1', 443)), (socket.AF_INET6, ('2001:db8::1', 443))):
+              try:
+                  probe = socket.socket(family, socket.SOCK_STREAM)
+              except OSError as exc:
+                  if family == socket.AF_INET6 and exc.errno in (errno.EAFNOSUPPORT, errno.EPROTONOSUPPORT):
+                      print('Network guard: IPv6 unavailable', flush=True)
+                      continue
+                  raise
+              with probe:
+                  probe.settimeout(2)
+                  denied = probe.connect_ex(address)
+              if family == socket.AF_INET6 and denied == errno.EADDRNOTAVAIL:
+                  if Path('/proc/net/if_inet6').read_text().strip():
+                      raise SystemExit('Network guard failed: IPv6 addresses exist despite EADDRNOTAVAIL')
+                  print('Network guard: IPv6 denied (EADDRNOTAVAIL; no configured IPv6 addresses)', flush=True)
+                  continue
+              if denied not in (errno.ENETUNREACH, errno.EHOSTUNREACH):
+                  raise SystemExit(f'Network guard failed: unexpected connect result {denied} for {address}')
+              print(f'Network guard: external connect denied ({family.name}, errno={denied})', flush=True)
+          print('Network guard verified before loading uploader tests', flush=True)
+
+          # Every child inherits the same isolated network namespace and restrictions.
+          # Explicit modules plus a nonzero collection check prevent discover-zero passes.
+          test_driver = '''
+          import sys
+          import unittest
+          from pathlib import Path
+          sys.path.insert(0, str(Path('scripts').resolve()))
+          suite = unittest.defaultTestLoader.loadTestsFromName(sys.argv[1])
+          count = suite.countTestCases()
+          if count == 0:
+              raise SystemExit('No tests collected for ' + sys.argv[1])
+          print(f'{sys.argv[1]}: {count} collected tests', flush=True)
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          raise SystemExit(0 if result.wasSuccessful() else 1)
+          '''
+          for module in (
+              'test_intake_manifest',
+              'test_intake_snapshot',
+              'test_runpod_current_intake',
+              'test_intake_composition',
+              'test_runpod_gspc_push_to_hf',
+              'test_runpod_gspc_upload_heartbeat',
+          ):
+              subprocess.run([sys.executable, '-I', '-B', '-u', '-c', test_driver, module], check=True, timeout=90)
+          PY
+
       # This used to run only after merge in deploy.yml. PR #1847 passed every hosted
       # PR check and then the master deployment stopped because TypeScript errors had
       # risen above the committed ceiling. Keep the same non-mutating ratchet on both
@@ -287,6 +379,21 @@ jobs:
         run: |
           npm run ts-ratchet:selftest
           npm run ts-ratchet
+
+      # A node:test file that vitest cannot collect is reported by vitest as a FAILED
+      # SUITE ("No test suite found in file ..."), even when every test in it passes. Two
+      # PRs were red on exactly this on 28 October 2026 — #3570 and #3573 — each costing
+      # a full CI cycle, and the message reads like a broken test rather than a missing
+      # registration. The registry is hand-maintained in vitest.config.ts, so this check
+      # reads that list and vitest's own exclude list out of the same file and fails when
+      # a node:test file is reachable by vitest and named in neither. It runs BEFORE the
+      # unit step so the failure names the cause instead of arriving as a vitest error.
+      # The selftest runs first: a gate that has never been seen failing is decoration.
+      - name: node:test registry — selftest, then the real registry
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/node-test-registry.mjs --selftest
+          node scripts/node-test-registry.mjs
 
       # `scripts` joined this line on 2026-09-06. It was absent, and EIGHT test files under
       # scripts/ had therefore never run in CI - 1007 assertions, including the vocabulary gate
@@ -332,6 +439,26 @@ jobs:
         uses: actions/setup-node@v4
         with: { node-version: 20 }
 
+# The public Layer-0 gateway re-expresses the estate's policy rule so a reader anywhere can
+      # reach it. A re-expression is a fork, so the fork is checked against the canonical source.
+      # The full comparison needs the canonical product, which is not in this repository, so CI
+      # runs the part that can be checked here: the comparator proves it can SEE a disagreement,
+      # and the gateway's own crypto, canonical form and refusal paths are exercised.
+      - name: Layer-0 gateway — the comparator can fail
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/review/layer0-parity.mjs --selftest
+
+# The published record of pins that do not resolve for an anonymous reader. Offline and
+      # deterministic, so it can block a PR without racing a host's rate limit: every entry must
+      # be well formed, inside its review window, and still name a pin this tree publishes. The
+      # networked half - does a pin still resolve - runs on the schedule, where a red result is a
+      # fact about production rather than a race with a hub.
+      - name: Published-pin record integrity — offline, blocking
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/review/published-pins-liveness.mjs --selftest
+          node scripts/review/published-pins-liveness.mjs --root . --record-only
+
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
@@ -348,10 +475,28 @@ jobs:
           npx playwright install --with-deps chromium
           npm run prerender:dashboard
 
+      - name: Axis specialists — charter and human review journey
+        id: axis_specialist_journey
+        if: steps.scope.outputs.gated == 'true'
+        env:
+          EAT_BROWSER_OUTPUT: ${{ runner.temp }}/axis-specialist-eat
+        run: |
+          node scripts/axis-specialists.mjs --check
+          node scripts/axis-specialists.browser.mjs
+
+      - name: Retain axis specialist journey evidence
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.axis_specialist_journey.outcome == 'success' || steps.axis_specialist_journey.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: axis-specialist-journey-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/axis-specialist-eat/*.json
+          retention-days: 3
+          if-no-files-found: warn
+
       - name: Council OS first question — desktop and mobile
         id: council_os_first_question
         if: steps.scope.outputs.gated == 'true'
-        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries'
 
       - name: Retain Council OS first-question premerge evidence
         if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
@@ -361,6 +506,7 @@ jobs:
           path: |
             test-results/**/trace.zip
             test-results/**/agui-request-lifecycle.json
+            test-results/**/agui-local-trace.json
             test-results/**/*.png
           retention-days: 3
           if-no-files-found: warn
@@ -532,6 +678,22 @@ jobs:
           node scripts/producers-check.mjs --selftest
           node scripts/producers-check.mjs
 
+      # The SBOM's recorded generation commit must be REACHABLE from the merge ref this job
+      # checks out. A branch that was rewritten after its SBOM was minted pins a commit that
+      # is in NO ref, and the producer manifest above then reports the consequence without
+      # naming the cause: "sbom FAILED — SBOM held; previous output preserved". A census of every
+      # open PR on 2026-10-30 found 40 of 132 carrying such a pin, and 29 of them were MERGEABLE
+      # and blocked by nothing else.
+      #
+      # This step names the cause and the two remedies. It is read-only and adds no
+      # dependency: the selftest builds a throwaway repository and proves the gate goes red on
+      # an orphaned pin and green on a reachable one.
+      - name: SBOM pin — the recorded generation commit must be reachable from this merge ref
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/sbom-pin-gate.mjs --selftest
+          node scripts/sbom-pin-gate.mjs
+
       # The estate's central claim is that a stranger can recompute and verify the evidence from
       # published bytes. public/signed/HOW-TO-VERIFY.md carried a JavaScript snippet offering to do
       # exactly that, and on 2026-09-05 it was measured failing 85 of 335 cards (25.4%) — every one
@@ -610,10 +772,16 @@ jobs:
           # opentimestamps-client: test_ots_restamp_ledger.py builds detached proofs offline and runs
           # the release gate's own .ots check over them.
           python3 -m pip install -q pytest cryptography pyarrow huggingface_hub opentimestamps-client
+          node --test scripts/claims/maintenance-schedule-state.node-test.mjs scripts/claims/signature-projection.node-test.mjs
+          node --test scripts/claims/reread-extractor.node-test.mjs scripts/claims/reread-presence.node-test.mjs
+          node scripts/claim-maintenance-register.mjs --check
+          python3 -m pytest -q scripts/claims/test_maintenance_due.py
           # Canary privacy, safe capture retention and verified PR proposal (offline only).
           python3 -B scripts/canary/test_canary.py
           python3 -B scripts/canary/test_canary_delivery.py
-          python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
+          python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py scripts/spray/test_gspc_spray_surfaces.py
+          python3 -m pytest -q scripts/surface/test_lm_eval_parity.py
+          python3 -m pytest -q scripts/hf/test_product_cards.py scripts/hf/test_polish_frontdoors.py scripts/hf/test_catalogue_publication.py harness/bench/test_comparison_integrity.py harness/bench/test_paired_comparison.py harness/bench/test_run_bench.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
           # The pre-send mail check: no address but the one being checked may ever be put to a mail server.
@@ -621,11 +789,21 @@ jobs:
           # The outward gate itself. Its tests were not in CI: from the day brand-gate.mjs gained a look-behind
           # that Python cannot read, the gate could score nothing at 100% and one of these tests sat red unseen.
           python3 -m pytest -q scripts/outward-gate/test_outward_gate.py scripts/outward-gate/test_gate_draft.py
+          # The daily scorecard workflow (outward-gate-daily.yml): it only reads, a low score never turns it
+          # red, and a run that could not measure never stays green. Its two inline scripts are run here.
+          python3 -m pytest -q scripts/outward-gate/test_daily_workflow.py
           # C-2026-0914-01: a one-option exact-label menu is refused, and every signed card
           # graded by one is in WITHDRAWN.jsonl (derived from the bound bank bytes).
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
           python3 scripts/withdraw_one_option_cards.py
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
+          # The public-watchdog intake lane (2026-10-30): the harness must be able to report
+          # UNREACHABLE and UNCHECKABLE and never 0; the charter feed must never turn a routing
+          # row into a decision; and the atom the publisher signs must pass the publisher's own
+          # admission check (scripts/adapters/staged_leaves.py) with a verdict word refused.
+          python3 -m pytest -q scripts/readers/test_watchdog_intake_reader.py
+          python3 -B scripts/test_watchdog_intake.py
+          python3 -B scripts/test_watchdog_charter_feed.py
           # public-root halted on every run of 5-6 Oct 2026 on a stale ledger proof; the re-stamp
           # producer must keep the old pair, roll back on failure and clear the gate's own check.
           python3 -m pytest -q scripts/test_ots_restamp_ledger.py
