@@ -666,10 +666,23 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     const hfSf = JSON.parse(readFileSync(hfSfPath, "utf8")) as Record<string, any>;
     expect(sf.schema).toBe("csoai.safe-fluid-reverification-daily-signal/1.0");
     expect(sf.signal_sha256).toBe(hfSf.signal_sha256);
-    expect(sf.counts?.sector_atlas_domains_covered).toBe(9);
-    expect(sf.counts?.canonical_gspc_axes_mapped).toBe(33);
-    expect(sf.counts?.result_states_demonstrated).toBe(5);
-    expect(sf.counts?.watch_states_demonstrated).toBe(3);
+    // DERIVED from the artifact's own lists. Each of these counts SUMMARISES a list
+    // the same file carries, so the count is a pointer, not a second typed truth: a
+    // frozen 33 or 9 here breaks the moment the publisher extends the list and
+    // forgets the summary. Deriving keeps the check — the count must still agree
+    // with the data — and removes the number that goes stale on its own.
+    expect(sf.counts?.sector_atlas_domains_covered).toBe(
+      (sf.nine_domain_daily_signal_capsules as unknown[]).length,
+    );
+    expect(sf.counts?.canonical_gspc_axes_mapped).toBe(
+      (sf.all_33_axes_frozen_to_fluid_watch_map as unknown[]).length,
+    );
+    expect(sf.counts?.result_states_demonstrated).toBe(
+      (sf.states_demonstrated?.result_states as unknown[]).length,
+    );
+    expect(sf.counts?.watch_states_demonstrated).toBe(
+      (sf.states_demonstrated?.watch_states as unknown[]).length,
+    );
     expect(sf.counts?.max_capsule_bytes).toBeLessThanOrEqual(3072);
   });
 
@@ -762,7 +775,9 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     expect(wh.candidate_axis_34_public_incident_vigilance?.axis_id).toBe("public-incident-vigilance");
     expect(wh.candidate_axis_34_public_incident_vigilance?.board_admission_state).toBe("CANDIDATE_SLOT_MEASURED_IN_WATCHDOG");
     expect(wh.candidate_axis_34_public_incident_vigilance?.n_valid).toBe(36);
-    expect(wh.counts?.canonical_gspc_axes_routed).toBe(33);
+    expect(wh.counts?.canonical_gspc_axes_routed).toBe(
+      (wh.all_33_axes_to_watchdog_meok_wg_safe_crosswalk as unknown[]).length,
+    );
     expect(wh.counts?.public_watchdog_working_groups_bound).toBe(7);
     expect(wh.counts?.hitl_steward_lanes_bound).toBe(6);
     expect(wh.daily_gspc_signal_to_wg_safe_consolidation?.sample_3kb_incident_capsule?.within_3kb_budget).toBe(true);
