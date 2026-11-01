@@ -1,5 +1,6 @@
 /** Local email-draft preparation only. No fetch, storage, payment or send action. */
 import { BUYING_ENQUIRIES, CONTACT_MAILBOX } from '@/lib/buying';
+import { workingGroupEnquiry } from './workingGroups';
 
 export const ENQUIRY_EMAIL = CONTACT_MAILBOX;
 export const ENQUIRY_LIMITS = { name: 100, email: 254, subject: 160, message: 5000 } as const;
@@ -31,6 +32,7 @@ export function wrapperEnquiryHref(pair: string, asOf: string): string {
 export function enquiryPreset(search: string): Pick<EnquiryFields, 'subject' | 'message'> | null {
   const params = new URLSearchParams(search);
   const arm = params.get('arm');
+  if (arm === 'working-group') return workingGroupEnquiry(params.get('group'), params.get('stage'));
   if (arm === 'invoice') {
     const product = BUYING_ENQUIRIES.find((p) => p.product === params.get('product'));
     if (!product) return null;
