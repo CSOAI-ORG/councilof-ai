@@ -31,6 +31,8 @@ const DECLARED_IDS = [
   "interpretability-reproducibility",
   "claim-maintenance",
   "serving-fidelity",
+  // Slot 34, ruled 2026-10-30: the public watchdog / incident-source intake.
+  "watchdog-ingest",
 ] as const;
 const live = {
   axis_slots: LIVE_AXES.length,
@@ -96,9 +98,12 @@ describe("signed board freeze vs live axis arrays", () => {
   it("the committed newest freeze agrees with the committed axis arrays", () => {
     const r = crosscheckBoardSnapshot(live);
     expect(r.source).toBe("public/signed/gspc-board.2026-09-29.signed.json");
-    // The 2026-09-29 freeze predates the declared subject slots (2026-10-16). Until a new freeze is
-    // signed (a separate step) the comparison must DISAGREE by exactly the 10 declared axis ids and
-    // nothing else: measured stays exactly 23, and every n, score, card or root field is unchanged.
+    // The 2026-09-29 freeze predates the declared subject slots (10 on 2026-10-16, plus
+    // watchdog-ingest on 2026-10-30). Until a new freeze is signed (a separate step) the
+    // comparison must DISAGREE by exactly the declared axis ids and nothing else: measured
+    // stays exactly 23, and every n, score, card or root field is unchanged. The count is
+    // DERIVED from DECLARED_IDS.length, so adding a declared slot does not need this
+    // assertion retyped — only the id list above does.
     expect(LIVE_AXES.filter((a) => a.status === "UNMEASURED").map((a) => a.axis).sort()).toEqual([...DECLARED_IDS].sort());
     expect(live.measured_axes).toBe(23);
     expect(r.measured_axes).toBe(23);
