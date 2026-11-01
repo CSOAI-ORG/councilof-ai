@@ -32,6 +32,17 @@ afterEach(() => {
 });
 
 describe("browser MCP request contract", () => {
+  it("makes no MCP requests during prerender", async () => {
+    const network = vi.fn();
+    vi.stubGlobal("fetch", network);
+    vi.stubGlobal("window", { __CSOAI_PRERENDER__: true });
+
+    await expect(mcpRpc("tools/list")).rejects.toThrow(
+      "MCP requests are disabled during prerender",
+    );
+    expect(network).not.toHaveBeenCalled();
+  });
+
   it("falls back only for local tools/list and receives the exact canonical list", async () => {
     const seen: Request[] = [];
     vi.stubGlobal(
