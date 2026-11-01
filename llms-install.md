@@ -35,18 +35,19 @@ shown here). Every release published to npm so far carries fewer tools than the
 remote, so this guide no longer gives a local configuration: use the remote above,
 or the free read-only door https://councilof.ai/mcp/free.
 
-The latest published release is `0.2.3` (published 2026-10-26T07:21:23.715Z), and
-it carries 19 tools (14 free + 5 metered) — measured from the published tarball on
-2026-10-28, not from this repository. It was published 39 minutes before the 33
-named axes merged, so it holds the fleet as it stood then. It is **not** marked
-deprecated on npm, which is why `npm view csoai-gspc-mcp@latest deprecated` prints
-nothing: deprecation is not the signal here, the tool count is.
+The latest published release is `0.2.4` (published 2026-10-28T16:48:34.768Z),
+and its published tarball carries the same 52 tool names as the live door —
+47 free + 5 metered. That was established the way this guide requires: on
+2026-11-01 the published tarball's own manifests (`gspc-tools.json`,
+`paid-tools.json`) were extracted and compared name-for-name with the live
+door's `tools/list`. Zero names differ in either direction. The earlier
+`0.2.3` (19 tools, published 2026-10-26) predates the 52-name contract and
+remains not marked deprecated on npm — the check above is the signal, not
+npm deprecation flags.
 
-The repository currently prepares `0.2.4`, but that source version is **not a
-published npm release** until `npm view csoai-gspc-mcp@0.2.4 version` confirms that
-exact version AND the published tarball's own manifests carry the same names as
-the live door. Do not install or advertise any published release as the contract
-before that independent check.
+Advertise the local release only while the published tarball keeps matching
+the live door: re-run the same comparison (`npm pack csoai-gspc-mcp@latest`,
+extract both manifests, diff against `tools/list`) whenever either side moves.
 
 ## Exact reviewed tool catalog
 
