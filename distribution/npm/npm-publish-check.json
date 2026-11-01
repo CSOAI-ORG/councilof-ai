@@ -1,0 +1,33 @@
+{
+  "schema": "csoai.npm-publish-check/1",
+  "generated_by": "scripts/harness-x/npm-publish-live.mjs",
+  "checked_at": "2026-11-01T11:54:15.180Z",
+  "package": "csoai-gspc-mcp",
+  "registry": "https://registry.npmjs.org/csoai-gspc-mcp",
+  "published": {
+    "version": "0.2.4",
+    "published_at": "2026-10-28T16:48:34.768Z",
+    "tarball": "https://registry.npmjs.org/csoai-gspc-mcp/-/csoai-gspc-mcp-0.2.4.tgz",
+    "tarball_sha256": "cea24d2bcef3657b7b35a98d8b658c1b387a45b5c17772bb27b47a901cb0101d",
+    "free_tools": 47,
+    "metered_tools": 5,
+    "total_tools": 52
+  },
+  "live_door": {
+    "url": "https://councilof.ai/mcp",
+    "total_tools": 53,
+    "free_tools": 48,
+    "metered_tools": 5
+  },
+  "diff": {
+    "live_only": [
+      "axis_watchdog-ingest"
+    ],
+    "published_only": []
+  },
+  "limits": [
+    "The published release's manifests were extracted and compared by NAME. Nothing here says the published tarball runs, installs, or behaves as the live door does.",
+    "The live door's free/metered split is inferred by name-set membership against the published tarball's paid-tools.json, not by asking the door to classify its own tools.",
+    "This record is dated and is never edited: when npm publishes or the door moves, a new record is written."
+  ]
+}
