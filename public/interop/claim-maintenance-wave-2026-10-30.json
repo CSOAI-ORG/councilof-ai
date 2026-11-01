@@ -1,0 +1,4030 @@
+{
+  "schema": "csoai.claim-maintenance.wave/0.2",
+  "started_at": "2026-10-30T05:03:15.240Z",
+  "completed_at": "2026-10-30T05:03:22.782Z",
+  "input_sha256": "825245659b672120d2ddab3047b2f70971f230d861aaab2317f5b5488d470c90",
+  "method": {
+    "schema": "csoai.claim-maintenance.wave-input/0.2",
+    "frozen_at": "2026-10-30T05:03:15.240Z",
+    "specification": "https://councilof.ai/spec/claim-maintenance/v0.2/",
+    "node": "v22.22.3",
+    "methods": [
+      {
+        "file": "scripts/measurements/claim-maintenance-wave.mjs",
+        "sha256": "e7bac11f8a12818854fa82d1dcdf5d485ba55704e7b35c31e90d7c594dc78f0a"
+      },
+      {
+        "file": "scripts/claim-capture.mjs",
+        "sha256": "10432c76c61b34ff9b726d2341844833b3e9a7fef19e5b77e5e545c45483559d"
+      },
+      {
+        "file": "public/spec/claim-maintenance/v0.2/claim-maintenance-v0.2.md",
+        "sha256": "d649ba0fdefb63abc205102bc8863db2e7852b207fd4e9e23e05e286e13e3b2e"
+      }
+    ],
+    "registers": [
+      {
+        "file": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+        "sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557"
+      },
+      {
+        "file": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+        "sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac"
+      },
+      {
+        "file": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+        "sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7"
+      },
+      {
+        "file": "claimreg-hiring-platforms-2026-09-24.json",
+        "sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd"
+      }
+    ],
+    "selection": "verified supersedes links; unique subject identifier plus claim_id; conflicting active copies rejected",
+    "request": {
+      "timeout_ms": 20000,
+      "max_body_bytes": 8388608,
+      "concurrency": 4,
+      "user_agent": "csoai-claim-maintenance-wave/0.2 (+https://councilof.ai)",
+      "body_representation": "Fetch-decoded HTTP response body; no text normalization for raw-bytes"
+    },
+    "scope": "Convenience corpus of captured claims, clustered by source URL. No population inference."
+  },
+  "status": "CANDIDATE_OBSERVATION",
+  "axis_promotion_eligible": false,
+  "counts": {
+    "registry_rows": 182,
+    "active_registry_rows": 91,
+    "unique_claims": 91,
+    "selected_claims": 91,
+    "rejected_claims": 0,
+    "superseded_registers": [
+      "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+      "claimreg-hiring-platforms-2026-09-24.json"
+    ],
+    "distinct_sources": 37,
+    "comparable_claims": 87,
+    "comparable_sources": 35,
+    "CHANGED": 61,
+    "UNCHANGED": 26,
+    "UNREACHABLE": 4
+  },
+  "outstanding_gates": [
+    "source-edit disclosure method",
+    "withdrawal adjudication beyond text absence",
+    "sampling and dependence review",
+    "independent review and authorized admission"
+  ],
+  "does_not_prove": [
+    "Whether any claim is true, false, withdrawn or changed silently.",
+    "A count of independent subjects; multiple claims share a source response.",
+    "A ranking, grade, signature, public measurement admission or human approval."
+  ],
+  "rejected": [],
+  "sources": [
+    {
+      "source_url": "https://arize.com/",
+      "started_at": "2026-10-30T05:03:15.420Z",
+      "http_status": 200,
+      "final_url": "https://arize.com/",
+      "content_type": "text/html; charset=UTF-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:16.521Z",
+      "body_bytes": 415493,
+      "body_sha256": "84e61b481a6f8d7a78ec8093dce057a9e2b06a9ea80957e5c3766d9b595ef09c"
+    },
+    {
+      "source_url": "https://councilof.ai/",
+      "started_at": "2026-10-30T05:03:15.492Z",
+      "http_status": 200,
+      "final_url": "https://councilof.ai/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:15.785Z",
+      "body_bytes": 169390,
+      "body_sha256": "9c99fa7672a835a9f98391dde2062013f356016d9ef38c3b89ea3db14673e448"
+    },
+    {
+      "source_url": "https://galileo.ai/",
+      "started_at": "2026-10-30T05:03:15.497Z",
+      "http_status": 200,
+      "final_url": "https://galileo.ai/",
+      "content_type": "text/html",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:16.133Z",
+      "body_bytes": 900867,
+      "body_sha256": "c95a9949507fd2f405ce61fbe930443f697a856fd2e0970fcaacb42129e23d4d"
+    },
+    {
+      "source_url": "https://instahuman.com/",
+      "started_at": "2026-10-30T05:03:15.506Z",
+      "http_status": 404,
+      "final_url": "https://instahuman.com/",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": false,
+      "completed_at": "2026-10-30T05:03:15.769Z",
+      "reason": "HTTP_404"
+    },
+    {
+      "source_url": "https://instahuman.com/legal/terms-of-use",
+      "started_at": "2026-10-30T05:03:15.769Z",
+      "http_status": 404,
+      "final_url": "https://instahuman.com/legal/terms-of-use",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": false,
+      "completed_at": "2026-10-30T05:03:15.902Z",
+      "reason": "HTTP_404"
+    },
+    {
+      "source_url": "https://invoke.nanocorp.app/",
+      "started_at": "2026-10-30T05:03:15.785Z",
+      "http_status": 200,
+      "final_url": "https://invoke.nanocorp.app/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:18.742Z",
+      "body_bytes": 76465,
+      "body_sha256": "d05992de6bd9937f03a1f680a6aae8092c5fe37efc5b9a875eb77ca58e56d2f9"
+    },
+    {
+      "source_url": "https://invoke.nanocorp.app/for-agents",
+      "started_at": "2026-10-30T05:03:15.903Z",
+      "http_status": 200,
+      "final_url": "https://invoke.nanocorp.app/for-agents",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:18.750Z",
+      "body_bytes": 103832,
+      "body_sha256": "daca782dfc39ff12e49050ca75eb86675298b2d32459fbcb3805438e4c2df178"
+    },
+    {
+      "source_url": "https://invoke.nanocorp.app/terms",
+      "started_at": "2026-10-30T05:03:16.134Z",
+      "http_status": 200,
+      "final_url": "https://invoke.nanocorp.app/terms",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:17.717Z",
+      "body_bytes": 22637,
+      "body_sha256": "846af681154f84028de87d85e7cb3b6ee624fc622a85a5b865bcc2517036f8f6"
+    },
+    {
+      "source_url": "https://langfuse.com/",
+      "started_at": "2026-10-30T05:03:16.521Z",
+      "http_status": 200,
+      "final_url": "https://langfuse.com/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:17.173Z",
+      "body_bytes": 581001,
+      "body_sha256": "8fb6b75e425d46f9a2e738b961a5750d80548fbb5f86ad0a32cc4b2e70f8188c"
+    },
+    {
+      "source_url": "https://mistral.ai/",
+      "started_at": "2026-10-30T05:03:17.197Z",
+      "http_status": 200,
+      "final_url": "https://mistral.ai/",
+      "content_type": "text/html; charset=UTF-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:17.865Z",
+      "body_bytes": 318503,
+      "body_sha256": "d97d8057dc0e4a28cfc6a78e3fb59f9f4d449148799ae968f7d5f7feb495b411"
+    },
+    {
+      "source_url": "https://paymanai.com/",
+      "started_at": "2026-10-30T05:03:17.718Z",
+      "http_status": 200,
+      "final_url": "https://paymanai.com/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:18.497Z",
+      "body_bytes": 252648,
+      "body_sha256": "4ee046f61461f6ba948831fcbe77829c4094951ac756c5c2aedc2ae4a9db2968"
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/Giskard-AI/giskard-oss/main/README.md",
+      "started_at": "2026-10-30T05:03:17.865Z",
+      "http_status": 200,
+      "final_url": "https://raw.githubusercontent.com/Giskard-AI/giskard-oss/main/README.md",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:18.566Z",
+      "body_bytes": 11695,
+      "body_sha256": "4205adcf5633733936571493c67551633699b0acd4e012a4caf476c92d7c9be9"
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/NVIDIA-NeMo/Guardrails/main/README.md",
+      "started_at": "2026-10-30T05:03:18.498Z",
+      "http_status": 200,
+      "final_url": "https://raw.githubusercontent.com/NVIDIA-NeMo/Guardrails/main/README.md",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:18.782Z",
+      "body_bytes": 21901,
+      "body_sha256": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7"
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/NVIDIA/garak/main/README.md",
+      "started_at": "2026-10-30T05:03:18.567Z",
+      "http_status": 200,
+      "final_url": "https://raw.githubusercontent.com/NVIDIA/garak/main/README.md",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:18.756Z",
+      "body_bytes": 20164,
+      "body_sha256": "640626790dc73543d58857ea0ebc7e47ccdb38cd9dd8fc56467147f7f3a5798e"
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/gotohuman/gotohuman-mcp-server/main/README.md",
+      "started_at": "2026-10-30T05:03:18.742Z",
+      "http_status": 200,
+      "final_url": "https://raw.githubusercontent.com/gotohuman/gotohuman-mcp-server/main/README.md",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:18.974Z",
+      "body_bytes": 3230,
+      "body_sha256": "5fd8ce60e9a1b756001f00670521e88f5ac37df57c461635ffaeb5717ad6f570"
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/gotohuman/gotohuman-mcp-server/main/package.json",
+      "started_at": "2026-10-30T05:03:18.750Z",
+      "http_status": 200,
+      "final_url": "https://raw.githubusercontent.com/gotohuman/gotohuman-mcp-server/main/package.json",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:19.025Z",
+      "body_bytes": 764,
+      "body_sha256": "a0f2778032146427156086f6b4ad0513e9d81f8addd69baa5565616532e5de13"
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/guardrails-ai/guardrails/main/README.md",
+      "started_at": "2026-10-30T05:03:18.756Z",
+      "http_status": 200,
+      "final_url": "https://raw.githubusercontent.com/guardrails-ai/guardrails/main/README.md",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:18.962Z",
+      "body_bytes": 9744,
+      "body_sha256": "6031353db4bfd3cd632034193b2958ccdf940943b8dbc33ee04aeee7c3a99c0e"
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/invariantlabs-ai/invariant/main/README.md",
+      "started_at": "2026-10-30T05:03:18.782Z",
+      "http_status": 200,
+      "final_url": "https://raw.githubusercontent.com/invariantlabs-ai/invariant/main/README.md",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:19.010Z",
+      "body_bytes": 5139,
+      "body_sha256": "3fadddc4e6e97a01d6db4255690675a74db4c5435195fe913bc3087ca84e408d"
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/meta-llama/PurpleLlama/main/README.md",
+      "started_at": "2026-10-30T05:03:18.962Z",
+      "http_status": 200,
+      "final_url": "https://raw.githubusercontent.com/meta-llama/PurpleLlama/main/README.md",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:19.138Z",
+      "body_bytes": 7980,
+      "body_sha256": "ba4b067ebb5131715c2bf6e1f87d63a7b9268c4d357e6139202ab994a1dab77d"
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/microsoft/PyRIT/main/README.md",
+      "started_at": "2026-10-30T05:03:18.975Z",
+      "http_status": 200,
+      "final_url": "https://raw.githubusercontent.com/microsoft/PyRIT/main/README.md",
+      "content_type": "text/plain; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:19.262Z",
+      "body_bytes": 1576,
+      "body_sha256": "862ed8123d72539718cc2152dfc7a42a68d8c262c8ab9ef69de73e497a8d8dac"
+    },
+    {
+      "source_url": "https://registry.npmjs.org/rentahuman-mcp/latest",
+      "started_at": "2026-10-30T05:03:19.010Z",
+      "http_status": 200,
+      "final_url": "https://registry.npmjs.org/rentahuman-mcp/latest",
+      "content_type": "application/json",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:19.335Z",
+      "body_bytes": 2612,
+      "body_sha256": "f5b698dfa45b317508bbe7630fa68030eb73045170d4ab6672cbb62b6ccf1846"
+    },
+    {
+      "source_url": "https://rentahuman.ai/",
+      "started_at": "2026-10-30T05:03:19.025Z",
+      "http_status": 200,
+      "final_url": "https://rentahuman.ai/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.281Z",
+      "body_bytes": 384240,
+      "body_sha256": "d708e82116cc30362919dcd842bcb80a5a5305ac73ea0bf8f1b6716762b1b75d"
+    },
+    {
+      "source_url": "https://rentahuman.ai/docs",
+      "started_at": "2026-10-30T05:03:19.139Z",
+      "http_status": 200,
+      "final_url": "https://rentahuman.ai/docs",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.709Z",
+      "body_bytes": 1600787,
+      "body_sha256": "0ac4c744cee3717ffbb3cd7120d879cf839f4b5f5167d2f01348e8ef44550f01"
+    },
+    {
+      "source_url": "https://rentahuman.ai/terms",
+      "started_at": "2026-10-30T05:03:19.262Z",
+      "http_status": 200,
+      "final_url": "https://rentahuman.ai/terms",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.140Z",
+      "body_bytes": 558097,
+      "body_sha256": "60d18aa676aa3415dfcbc3f70533b9bf16636be9e29f36803387efa91f01e946"
+    },
+    {
+      "source_url": "https://web.archive.org/web/20241005225726id_/https://paymanai.com/",
+      "started_at": "2026-10-30T05:03:19.335Z",
+      "http_status": 200,
+      "final_url": "https://web.archive.org/web/20241005225726id_/https://paymanai.com/",
+      "content_type": "text/html",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.137Z",
+      "body_bytes": 36943,
+      "body_sha256": "9f1c7f2eb942f61b54f7dc7c917fe7a7afcb5609075d439082dbcd086b0d6cde"
+    },
+    {
+      "source_url": "https://www.anthropic.com/",
+      "started_at": "2026-10-30T05:03:20.137Z",
+      "http_status": 200,
+      "final_url": "https://www.anthropic.com/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.585Z",
+      "body_bytes": 173070,
+      "body_sha256": "2b05c3761dd188c71003b689a29d14928939ba72fbd2c92565953b46a26b3873"
+    },
+    {
+      "source_url": "https://www.armilla.ai/",
+      "started_at": "2026-10-30T05:03:20.141Z",
+      "http_status": 200,
+      "final_url": "https://www.armilla.ai/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.528Z",
+      "body_bytes": 56417,
+      "body_sha256": "2bdec588ae00a0d66285bc64a29c40ee73371d149a1538bc7f171c0bbd745fba"
+    },
+    {
+      "source_url": "https://www.credo.ai/",
+      "started_at": "2026-10-30T05:03:20.282Z",
+      "http_status": 200,
+      "final_url": "https://www.credo.ai/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.575Z",
+      "body_bytes": 172840,
+      "body_sha256": "a4e21af7b3b1a3945030f987e1d7530a06337024474f43d79ab240d4cc4c08a7"
+    },
+    {
+      "source_url": "https://www.ecb.europa.eu/paym/target/pontes/html/index.en.html",
+      "started_at": "2026-10-30T05:03:20.528Z",
+      "http_status": 200,
+      "final_url": "https://www.ecb.europa.eu/paym/target/pontes/html/index.en.html",
+      "content_type": "text/html; charset=UTF-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.861Z",
+      "body_bytes": 109900,
+      "body_sha256": "81a8143e187d3ada4fb39ae90dd7365f22a78bfa1c6ba828d2287ee1386e96ee"
+    },
+    {
+      "source_url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
+      "started_at": "2026-10-30T05:03:20.576Z",
+      "http_status": 200,
+      "final_url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
+      "content_type": "text/html; charset=UTF-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.844Z",
+      "body_bytes": 105886,
+      "body_sha256": "c0c593e78ca8ad3473cae60ef06ba6a865600d55db7c6d72aebd5a89021a9d21"
+    },
+    {
+      "source_url": "https://www.gotohuman.com/",
+      "started_at": "2026-10-30T05:03:20.586Z",
+      "http_status": 200,
+      "final_url": "https://www.gotohuman.com/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.847Z",
+      "body_bytes": 46428,
+      "body_sha256": "3f5b3ed1701a2b28d5986e4ac7f6a7e40f1b1d48fd06fe050a53fa5222d00009"
+    },
+    {
+      "source_url": "https://www.gotohuman.com/imprint",
+      "started_at": "2026-10-30T05:03:20.710Z",
+      "http_status": 200,
+      "final_url": "https://www.gotohuman.com/imprint",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:20.894Z",
+      "body_bytes": 11457,
+      "body_sha256": "8a61269f9d8f9070ce5e59353adb5bace399c3710d54b38840012ccb5a5cef68"
+    },
+    {
+      "source_url": "https://www.helicone.ai/pricing",
+      "started_at": "2026-10-30T05:03:20.844Z",
+      "http_status": 200,
+      "final_url": "https://www.helicone.ai/pricing",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:21.194Z",
+      "body_bytes": 162258,
+      "body_sha256": "4fb262a04d48156ba735997e43269aa8426c51452ff48326eeb8521900861a09"
+    },
+    {
+      "source_url": "https://www.holisticai.com/",
+      "started_at": "2026-10-30T05:03:20.847Z",
+      "http_status": 200,
+      "final_url": "https://www.holisticai.com/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:21.032Z",
+      "body_bytes": 322510,
+      "body_sha256": "3511de32fece658f718ef2e50b9f5b0d92071eeb08ac5ecb4b2d16c38dad4d61"
+    },
+    {
+      "source_url": "https://www.sebi.gov.in/sebi_data/faqfiles/sep-2026/1789049630065.pdf",
+      "started_at": "2026-10-30T05:03:20.861Z",
+      "http_status": 200,
+      "final_url": "https://www.sebi.gov.in/sebi_data/faqfiles/sep-2026/1789049630065.pdf",
+      "content_type": "application/pdf",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:22.572Z",
+      "body_bytes": 208654,
+      "body_sha256": "aab30b8f506ad5f374b71294baebf6cd880b30f510014ba4145d9a5c2e692e69"
+    },
+    {
+      "source_url": "https://www.traceloop.com/",
+      "started_at": "2026-10-30T05:03:20.894Z",
+      "http_status": 200,
+      "final_url": "https://www.traceloop.com/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:21.679Z",
+      "body_bytes": 58759,
+      "body_sha256": "7b3ca949ec62fe969c61805eea278cfad67b44d6eb52980fbe74ccdfd7dcf5d1"
+    },
+    {
+      "source_url": "https://www.vanta.com/",
+      "started_at": "2026-10-30T05:03:21.033Z",
+      "http_status": 200,
+      "final_url": "https://www.vanta.com/",
+      "content_type": "text/html; charset=utf-8",
+      "ok": true,
+      "completed_at": "2026-10-30T05:03:21.164Z",
+      "body_bytes": 348792,
+      "body_sha256": "40af433a4cfbde3859066a4457d3cf57d4eea00202b63e08363abb620794758c"
+    }
+  ],
+  "rows": [
+    {
+      "claim_id": "VA-1",
+      "subject": "Vanta",
+      "identifier": "vanta.com",
+      "source_url": "https://www.vanta.com/",
+      "captured_at": "2026-09-25T05:31:01Z",
+      "captured_digest": "408590d5a050632428a599c7bac18b98d8470108c4b0fb368e9985630c659d6f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "ddd12399f36a87534261b67c8c71fa4531ba0fea49234cd75af469777a94c563",
+      "claim_verbatim_sha256": "03e2e5b46cbdd2a35a65146cc7ef6c9af75d49ae82d365070b5c49a2eed92d3c",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "ddd12399f36a87534261b67c8c71fa4531ba0fea49234cd75af469777a94c563",
+          "captured_at": "2026-09-25T05:31:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "167d8c67e1c88f0a02da708d0b3ff612ef2929a3e9b7a86dd96283422ff360c0",
+          "captured_at": "2026-09-23T04:35:54Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.164Z",
+      "response_body_sha256": "40af433a4cfbde3859066a4457d3cf57d4eea00202b63e08363abb620794758c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "f10ea75dedae3942b260d9bfca0e990600804840c076bd75942edc4280b2416f",
+      "reread_chars": 12385,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "VA-2",
+      "subject": "Vanta",
+      "identifier": "vanta.com",
+      "source_url": "https://www.vanta.com/",
+      "captured_at": "2026-09-25T05:31:01Z",
+      "captured_digest": "408590d5a050632428a599c7bac18b98d8470108c4b0fb368e9985630c659d6f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "8224652cbef5abb4d0e5fa3485f823cbfbfc31e975e0471f4466f1622025f674",
+      "claim_verbatim_sha256": "343aa7b6f4a5fd93708659782d612e921225ddd4441e2f7bdb7243a73b12af7d",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "8224652cbef5abb4d0e5fa3485f823cbfbfc31e975e0471f4466f1622025f674",
+          "captured_at": "2026-09-25T05:31:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "ab029de4202b0c352aae775669ce4c8225b7f47d2f556e9fcecffbccb3a6d9bb",
+          "captured_at": "2026-09-23T04:35:54Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.164Z",
+      "response_body_sha256": "40af433a4cfbde3859066a4457d3cf57d4eea00202b63e08363abb620794758c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "f10ea75dedae3942b260d9bfca0e990600804840c076bd75942edc4280b2416f",
+      "reread_chars": 12385,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "VA-3",
+      "subject": "Vanta",
+      "identifier": "vanta.com",
+      "source_url": "https://www.vanta.com/",
+      "captured_at": "2026-09-25T05:31:01Z",
+      "captured_digest": "408590d5a050632428a599c7bac18b98d8470108c4b0fb368e9985630c659d6f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "b14bebf56f7d13ebd8eec436d2c3211637c80764527ffa34af1e7c2109de6759",
+      "claim_verbatim_sha256": "983965327fb9e2565a51a0a567011c3c081bdf96de528277a97a0c9917d87c3e",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "b14bebf56f7d13ebd8eec436d2c3211637c80764527ffa34af1e7c2109de6759",
+          "captured_at": "2026-09-25T05:31:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "901f1f5cc04abe0b40dc8d3552b318d9e7ee969484e2b27d4588024379e06f17",
+          "captured_at": "2026-09-23T04:35:54Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.164Z",
+      "response_body_sha256": "40af433a4cfbde3859066a4457d3cf57d4eea00202b63e08363abb620794758c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "f10ea75dedae3942b260d9bfca0e990600804840c076bd75942edc4280b2416f",
+      "reread_chars": 12385,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "VA-4",
+      "subject": "Vanta",
+      "identifier": "vanta.com",
+      "source_url": "https://www.vanta.com/",
+      "captured_at": "2026-09-25T05:31:01Z",
+      "captured_digest": "408590d5a050632428a599c7bac18b98d8470108c4b0fb368e9985630c659d6f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "a467e071a641eb46016da98dc95846fc9ea9437ae24a6e3c99163e3571fd692a",
+      "claim_verbatim_sha256": "a64013cde2faf0c9d2865a2351d7e86ab148b14f556be603d5f9091984393265",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "a467e071a641eb46016da98dc95846fc9ea9437ae24a6e3c99163e3571fd692a",
+          "captured_at": "2026-09-25T05:31:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "c5d8e7909707cf4e167637b1cdf5c765cc2ed9302ed8ad3fc8c4c2b6b33b67e3",
+          "captured_at": "2026-09-23T04:35:54Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.164Z",
+      "response_body_sha256": "40af433a4cfbde3859066a4457d3cf57d4eea00202b63e08363abb620794758c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "f10ea75dedae3942b260d9bfca0e990600804840c076bd75942edc4280b2416f",
+      "reread_chars": 12385,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "CR-1",
+      "subject": "Credo AI",
+      "identifier": "credo.ai",
+      "source_url": "https://www.credo.ai/",
+      "captured_at": "2026-09-25T05:31:02Z",
+      "captured_digest": "beaeec8efed1798c9f783f5b88684837b6c69a5520b7923ab1c990d861e69a98",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "5a03708c0141de5ef91d13e250513e6d70144f90833f22136fce874b538f552e",
+      "claim_verbatim_sha256": "6a16f639d5e56cd4a7d93e6332446c61127bf267aff8980876975d1358486545",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "5a03708c0141de5ef91d13e250513e6d70144f90833f22136fce874b538f552e",
+          "captured_at": "2026-09-25T05:31:02Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "e71246d4f43f36dd0b4716ca63fe4e3ff7bc00c04a8cc6884e485d3d5dbcffbe",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.575Z",
+      "response_body_sha256": "a4e21af7b3b1a3945030f987e1d7530a06337024474f43d79ab240d4cc4c08a7",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "32b1e8c1c48e0a6578b8030111bed4b019a54ec81bb6f64332b21e6be3ad5ce4",
+      "reread_chars": 12448,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "CR-2",
+      "subject": "Credo AI",
+      "identifier": "credo.ai",
+      "source_url": "https://www.credo.ai/",
+      "captured_at": "2026-09-25T05:31:02Z",
+      "captured_digest": "beaeec8efed1798c9f783f5b88684837b6c69a5520b7923ab1c990d861e69a98",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "ecb86c4eae69f68d32346b5b779629068543881391c8b5c72cbc270471daa8e3",
+      "claim_verbatim_sha256": "32bd08af8d4e4890135429a40187965d3c07ccac0e7f0fe919d7cea33b726b77",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "ecb86c4eae69f68d32346b5b779629068543881391c8b5c72cbc270471daa8e3",
+          "captured_at": "2026-09-25T05:31:02Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "0e5e4f63fd5f625b39b0d2a6b9a8dc5a390374975836f0da509db023571a5c2f",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.575Z",
+      "response_body_sha256": "a4e21af7b3b1a3945030f987e1d7530a06337024474f43d79ab240d4cc4c08a7",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "32b1e8c1c48e0a6578b8030111bed4b019a54ec81bb6f64332b21e6be3ad5ce4",
+      "reread_chars": 12448,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "CR-3",
+      "subject": "Credo AI",
+      "identifier": "credo.ai",
+      "source_url": "https://www.credo.ai/",
+      "captured_at": "2026-09-25T05:31:02Z",
+      "captured_digest": "beaeec8efed1798c9f783f5b88684837b6c69a5520b7923ab1c990d861e69a98",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "48cfcbc55a986de4a25fad873b2311aa1a6f6f62d388082c8cd242ca840d8145",
+      "claim_verbatim_sha256": "82d4e2d681c35ce8bf3bc05c17454a41d0ae2ca8e9e2bc24048d835d4b1d1036",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "48cfcbc55a986de4a25fad873b2311aa1a6f6f62d388082c8cd242ca840d8145",
+          "captured_at": "2026-09-25T05:31:02Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "3735ca6f4f3e29e7fd5ad525f1c3497582df7a7cd905768c964dc6d17ae90755",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.575Z",
+      "response_body_sha256": "a4e21af7b3b1a3945030f987e1d7530a06337024474f43d79ab240d4cc4c08a7",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "32b1e8c1c48e0a6578b8030111bed4b019a54ec81bb6f64332b21e6be3ad5ce4",
+      "reread_chars": 12448,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "HO-1",
+      "subject": "Holistic AI",
+      "identifier": "holisticai.com",
+      "source_url": "https://www.holisticai.com/",
+      "captured_at": "2026-09-25T05:31:03Z",
+      "captured_digest": "b4e8ee094a07cea62041478836e9bbea33ca5200ac19a6de07270ad76f3d614a",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "2abeafbeb7ba463bb85fe9836d850803e8da3bed84d16dc10ab3013fa3570fee",
+      "claim_verbatim_sha256": "ee957bc9b558c38cd8dd8867b757172c3861e485c1665c0371e09642081f1011",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "2abeafbeb7ba463bb85fe9836d850803e8da3bed84d16dc10ab3013fa3570fee",
+          "captured_at": "2026-09-25T05:31:03Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "ff2bb1672021e953be56668133b7e8f463d56e689b70d8bdb16848759364590f",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.032Z",
+      "response_body_sha256": "3511de32fece658f718ef2e50b9f5b0d92071eeb08ac5ecb4b2d16c38dad4d61",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "eef7424a334bd04ca60ee2c6424526a64b3a7e9461f206bc7452a145336bb5af",
+      "reread_chars": 10644,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "HO-2",
+      "subject": "Holistic AI",
+      "identifier": "holisticai.com",
+      "source_url": "https://www.holisticai.com/",
+      "captured_at": "2026-09-25T05:31:03Z",
+      "captured_digest": "b4e8ee094a07cea62041478836e9bbea33ca5200ac19a6de07270ad76f3d614a",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "31f28f6918fcc2ab0ee4db0cb3560f6321cd1db1cca45ab80d483408ea4c8836",
+      "claim_verbatim_sha256": "828e26101620a0e0bcc2d3e3fa390b90deec5c6fa4ff5690f0c6c6bfb35cb827",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "31f28f6918fcc2ab0ee4db0cb3560f6321cd1db1cca45ab80d483408ea4c8836",
+          "captured_at": "2026-09-25T05:31:03Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "24ccc3ce106bd5bf09ef25e54f6a58d6bb7f861cba6c7d76e247a16cdfbe38ff",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.032Z",
+      "response_body_sha256": "3511de32fece658f718ef2e50b9f5b0d92071eeb08ac5ecb4b2d16c38dad4d61",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "eef7424a334bd04ca60ee2c6424526a64b3a7e9461f206bc7452a145336bb5af",
+      "reread_chars": 10644,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "HO-3",
+      "subject": "Holistic AI",
+      "identifier": "holisticai.com",
+      "source_url": "https://www.holisticai.com/",
+      "captured_at": "2026-09-25T05:31:03Z",
+      "captured_digest": "b4e8ee094a07cea62041478836e9bbea33ca5200ac19a6de07270ad76f3d614a",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "3c9946316d5c5093f1229b0b931b759afb966c40fc84331d29da908e581d1c00",
+      "claim_verbatim_sha256": "fdc45102d979511ab7e78cd1e6021fc6f586ca3761b51cdcd316324de320fb24",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "3c9946316d5c5093f1229b0b931b759afb966c40fc84331d29da908e581d1c00",
+          "captured_at": "2026-09-25T05:31:03Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "478ff692a4035843793a3ab02f89cad712ffaf25826f9b48461411f20960badf",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.032Z",
+      "response_body_sha256": "3511de32fece658f718ef2e50b9f5b0d92071eeb08ac5ecb4b2d16c38dad4d61",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "eef7424a334bd04ca60ee2c6424526a64b3a7e9461f206bc7452a145336bb5af",
+      "reread_chars": 10644,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "AR-1",
+      "subject": "Armilla",
+      "identifier": "armilla.ai",
+      "source_url": "https://www.armilla.ai/",
+      "captured_at": "2026-09-25T05:31:03Z",
+      "captured_digest": "812c17b7a13a87e31855ce2c228937157466f010459684c6e7164aa9cfbfd8ce",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "0a702f8ed2d75239ad8f4072bd27ec40a6e1a33c969d7d04e0fec66c7a6c36ee",
+      "claim_verbatim_sha256": "d7f891446e2cc713ee770d4dcad7a34d84f170161da981f1becf2bb0cd2b1e48",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "0a702f8ed2d75239ad8f4072bd27ec40a6e1a33c969d7d04e0fec66c7a6c36ee",
+          "captured_at": "2026-09-25T05:31:03Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "b69a0ec7a58ca4d03c4d35dac13dcc3bf351dbc1c9ec68a0256f557148f71ccf",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.528Z",
+      "response_body_sha256": "2bdec588ae00a0d66285bc64a29c40ee73371d149a1538bc7f171c0bbd745fba",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "09f2d11033c910c851663275ef8d385a7ba6ed29bdc30ccc77e9b2dd5545a8cb",
+      "reread_chars": 6408,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "AR-2",
+      "subject": "Armilla",
+      "identifier": "armilla.ai",
+      "source_url": "https://www.armilla.ai/",
+      "captured_at": "2026-09-25T05:31:03Z",
+      "captured_digest": "812c17b7a13a87e31855ce2c228937157466f010459684c6e7164aa9cfbfd8ce",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "cc4fa42d5d68b71eca78f8b9fb62d148087f80342a8600877c9b796a7dc39183",
+      "claim_verbatim_sha256": "42cf6e2bdd0bb8efd2fde4821a3010763f229731852147dc4149fd137150af79",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "cc4fa42d5d68b71eca78f8b9fb62d148087f80342a8600877c9b796a7dc39183",
+          "captured_at": "2026-09-25T05:31:03Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "f1c4e1018143183ffa551bd1ba1801f296f7463b00cde6fcc9a5889aadaf495b",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.528Z",
+      "response_body_sha256": "2bdec588ae00a0d66285bc64a29c40ee73371d149a1538bc7f171c0bbd745fba",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "09f2d11033c910c851663275ef8d385a7ba6ed29bdc30ccc77e9b2dd5545a8cb",
+      "reread_chars": 6408,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "AZ-1",
+      "subject": "Arize AI",
+      "identifier": "arize.com",
+      "source_url": "https://arize.com/",
+      "captured_at": "2026-09-25T05:31:04Z",
+      "captured_digest": "fac46dc4712ec3d8cd5ee775e3ffbdbb8e0de6d958ea80805a7cf8c448b2b12e",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "33c5302813bec5fd33f3e9be9d650a8e5adfabaa325b86ce78ff9312935308f7",
+      "claim_verbatim_sha256": "0de2bc4ba16e843d2f420bc7a504a9a3b02fed253ac43554b03d0729d09c114f",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "33c5302813bec5fd33f3e9be9d650a8e5adfabaa325b86ce78ff9312935308f7",
+          "captured_at": "2026-09-25T05:31:04Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "6aa1866a16157f2d6534239a8609ca126bd043c9ef1f2a1ac0a4fcdf194d1e55",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:16.521Z",
+      "response_body_sha256": "84e61b481a6f8d7a78ec8093dce057a9e2b06a9ea80957e5c3766d9b595ef09c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "dde21ad02b70ede4b642f4383a477dd5ffdf824fcec260bcbef27a4619e318fe",
+      "reread_chars": 9208,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "AZ-2",
+      "subject": "Arize AI",
+      "identifier": "arize.com",
+      "source_url": "https://arize.com/",
+      "captured_at": "2026-09-25T05:31:04Z",
+      "captured_digest": "fac46dc4712ec3d8cd5ee775e3ffbdbb8e0de6d958ea80805a7cf8c448b2b12e",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "ec67d68f8f53f94bc1833c4f14f6a1c24b7e0733fcd091dd349031e425ba835a",
+      "claim_verbatim_sha256": "1e823a878c97c9169a65542fd76d2f77ecc6f04e2ad744ad3c02b29e34050499",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "ec67d68f8f53f94bc1833c4f14f6a1c24b7e0733fcd091dd349031e425ba835a",
+          "captured_at": "2026-09-25T05:31:04Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "e1141e754b184b275ca393dc5981ecf07347aa20b9779d417767583ae9b40b0e",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:16.521Z",
+      "response_body_sha256": "84e61b481a6f8d7a78ec8093dce057a9e2b06a9ea80957e5c3766d9b595ef09c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "dde21ad02b70ede4b642f4383a477dd5ffdf824fcec260bcbef27a4619e318fe",
+      "reread_chars": 9208,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "AZ-3",
+      "subject": "Arize AI",
+      "identifier": "arize.com",
+      "source_url": "https://arize.com/",
+      "captured_at": "2026-09-25T05:31:04Z",
+      "captured_digest": "fac46dc4712ec3d8cd5ee775e3ffbdbb8e0de6d958ea80805a7cf8c448b2b12e",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "497a8162b19daf39c7372335a5a029d0fd6ad7badcc741ee5254ace75ad425d4",
+      "claim_verbatim_sha256": "534a4b31d707d22d5156e924dde3ac3aee0bfb15d0a19c6564f4c2dfbc079618",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "497a8162b19daf39c7372335a5a029d0fd6ad7badcc741ee5254ace75ad425d4",
+          "captured_at": "2026-09-25T05:31:04Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "d138073f556a5894b977a08a8f6005b1921d48627986cdfa04287ef1071b7526",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:16.521Z",
+      "response_body_sha256": "84e61b481a6f8d7a78ec8093dce057a9e2b06a9ea80957e5c3766d9b595ef09c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "dde21ad02b70ede4b642f4383a477dd5ffdf824fcec260bcbef27a4619e318fe",
+      "reread_chars": 9208,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "LF-1",
+      "subject": "Langfuse",
+      "identifier": "langfuse.com",
+      "source_url": "https://langfuse.com/",
+      "captured_at": "2026-09-25T05:31:04Z",
+      "captured_digest": "c43a572e146b9ba8a3b32ffcc80542bd2117740249a1f3e471c8bab24fa28143",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "d5432516733e8cf95da1c0ca09108fff886723cf72818b50526747f0146ce854",
+      "claim_verbatim_sha256": "cab40bb58daa00f3c9187fa9bc087c2fe029c4ecca518adae34a310d7466985f",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "d5432516733e8cf95da1c0ca09108fff886723cf72818b50526747f0146ce854",
+          "captured_at": "2026-09-25T05:31:04Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "2086ac0913e38b466f1a7213b807acdac5a11180511409d835e21625e1237d1a",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:17.173Z",
+      "response_body_sha256": "8fb6b75e425d46f9a2e738b961a5750d80548fbb5f86ad0a32cc4b2e70f8188c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "4b6c6263dd4c4fa1385d5bd2c32975aa50c476505a3ef5aecba38c05589230f7",
+      "reread_chars": 11085,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "LF-2",
+      "subject": "Langfuse",
+      "identifier": "langfuse.com",
+      "source_url": "https://langfuse.com/",
+      "captured_at": "2026-09-25T05:31:04Z",
+      "captured_digest": "c43a572e146b9ba8a3b32ffcc80542bd2117740249a1f3e471c8bab24fa28143",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "a049fc51a160ac3900156002d4e8a8986495c0a94b4027ba106dab5389bfcd9d",
+      "claim_verbatim_sha256": "d932aff0ea99567b29cc36c446b304b6b4343ecf0accc677fd2f8e32b89560fc",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "a049fc51a160ac3900156002d4e8a8986495c0a94b4027ba106dab5389bfcd9d",
+          "captured_at": "2026-09-25T05:31:04Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "cd15d944c51d8ce4f8b2df99a9533a264284e39f1a5e5741275e4037fd14289a",
+          "captured_at": "2026-09-23T04:35:55Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:17.173Z",
+      "response_body_sha256": "8fb6b75e425d46f9a2e738b961a5750d80548fbb5f86ad0a32cc4b2e70f8188c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "4b6c6263dd4c4fa1385d5bd2c32975aa50c476505a3ef5aecba38c05589230f7",
+      "reread_chars": 11085,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "LF-3",
+      "subject": "Langfuse",
+      "identifier": "langfuse.com",
+      "source_url": "https://langfuse.com/",
+      "captured_at": "2026-09-25T05:31:04Z",
+      "captured_digest": "c43a572e146b9ba8a3b32ffcc80542bd2117740249a1f3e471c8bab24fa28143",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "4ab494abaf6ae756af36b23381618bc7f0780ea51cbaa307aff12e854cf2d1aa",
+      "claim_verbatim_sha256": "a3df3447c3156aadec14bbcdb51a2c77aead7fb984751a5b250a0828c00cb978",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "4ab494abaf6ae756af36b23381618bc7f0780ea51cbaa307aff12e854cf2d1aa",
+          "captured_at": "2026-09-25T05:31:04Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "8591b43fe502d308ec3772b04b8c3ea4f70847ebcc57ed38ca40bfab5e459bd4",
+          "captured_at": "2026-09-23T04:35:56Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:17.173Z",
+      "response_body_sha256": "8fb6b75e425d46f9a2e738b961a5750d80548fbb5f86ad0a32cc4b2e70f8188c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "4b6c6263dd4c4fa1385d5bd2c32975aa50c476505a3ef5aecba38c05589230f7",
+      "reread_chars": 11085,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "LF-4",
+      "subject": "Langfuse",
+      "identifier": "langfuse.com",
+      "source_url": "https://langfuse.com/",
+      "captured_at": "2026-09-25T05:31:04Z",
+      "captured_digest": "c43a572e146b9ba8a3b32ffcc80542bd2117740249a1f3e471c8bab24fa28143",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "aec7f6110d975cefb3ea732ff7777b85d70908f32cd3a314e6c4eaf763679fbd",
+      "claim_verbatim_sha256": "b9821b86bd6c0d677e7acf76203c9ff1731e728a9159b832eafc5bcb7d12850c",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "aec7f6110d975cefb3ea732ff7777b85d70908f32cd3a314e6c4eaf763679fbd",
+          "captured_at": "2026-09-25T05:31:04Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "aa5369cf59b3fc7acb4c973b682ffd80c24a4598a49367a93c23dc280fd7d125",
+          "captured_at": "2026-09-23T04:35:56Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:17.173Z",
+      "response_body_sha256": "8fb6b75e425d46f9a2e738b961a5750d80548fbb5f86ad0a32cc4b2e70f8188c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "4b6c6263dd4c4fa1385d5bd2c32975aa50c476505a3ef5aecba38c05589230f7",
+      "reread_chars": 11085,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "LF-5",
+      "subject": "Langfuse",
+      "identifier": "langfuse.com",
+      "source_url": "https://langfuse.com/",
+      "captured_at": "2026-09-25T05:31:04Z",
+      "captured_digest": "c43a572e146b9ba8a3b32ffcc80542bd2117740249a1f3e471c8bab24fa28143",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "93a8cebe2e5011088f2100eb540890c0c02f224bfe1c6acdf7392bae0acd6ddb",
+      "claim_verbatim_sha256": "0675d6c0dcbf10bd28683af5da5bbcb02cc02bba3907d1e42e6e694d4304d003",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "93a8cebe2e5011088f2100eb540890c0c02f224bfe1c6acdf7392bae0acd6ddb",
+          "captured_at": "2026-09-25T05:31:04Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "2059044422519bb5b6db432f440a02486d6e694a0f4d14462ddf2770ac4195f2",
+          "captured_at": "2026-09-23T04:35:56Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:17.173Z",
+      "response_body_sha256": "8fb6b75e425d46f9a2e738b961a5750d80548fbb5f86ad0a32cc4b2e70f8188c",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "4b6c6263dd4c4fa1385d5bd2c32975aa50c476505a3ef5aecba38c05589230f7",
+      "reread_chars": 11085,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GA-1",
+      "subject": "Galileo",
+      "identifier": "galileo.ai",
+      "source_url": "https://galileo.ai/",
+      "captured_at": "2026-09-25T05:31:05Z",
+      "captured_digest": "a49052dcb8fc5fb8995c6e22ca916a157601e1fa8715349d7bf7b41e6403f436",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "a6391f2c09e6b8b3024b9e42e7539f7b49ada5b252cf0c9765a2e79e47aac630",
+      "claim_verbatim_sha256": "18db3375ac5debcee31940e7ec623a8834a2e20e640daaf16f08c3f223fcb82c",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "a6391f2c09e6b8b3024b9e42e7539f7b49ada5b252cf0c9765a2e79e47aac630",
+          "captured_at": "2026-09-25T05:31:05Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "33542a0007064eed6399c026df277c70ea4b01374b98186ff040990b7443142b",
+          "captured_at": "2026-09-23T04:35:56Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:16.133Z",
+      "response_body_sha256": "c95a9949507fd2f405ce61fbe930443f697a856fd2e0970fcaacb42129e23d4d",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "a49052dcb8fc5fb8995c6e22ca916a157601e1fa8715349d7bf7b41e6403f436",
+      "reread_chars": 9695,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GA-2",
+      "subject": "Galileo",
+      "identifier": "galileo.ai",
+      "source_url": "https://galileo.ai/",
+      "captured_at": "2026-09-25T05:31:05Z",
+      "captured_digest": "a49052dcb8fc5fb8995c6e22ca916a157601e1fa8715349d7bf7b41e6403f436",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "2a71f4c2a48559f65b4a43113d0653ce63baea9d5ea2a38e446705e0595e1970",
+      "claim_verbatim_sha256": "6373a5deea61b170e9283302fd587266c299fb76cb3e4f78e098ef20caf51df7",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "2a71f4c2a48559f65b4a43113d0653ce63baea9d5ea2a38e446705e0595e1970",
+          "captured_at": "2026-09-25T05:31:05Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "d55d439f46459de2ff91f60cefe0c9484d6fa053263cd35b9141b2feaad77308",
+          "captured_at": "2026-09-23T04:35:56Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:16.133Z",
+      "response_body_sha256": "c95a9949507fd2f405ce61fbe930443f697a856fd2e0970fcaacb42129e23d4d",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "a49052dcb8fc5fb8995c6e22ca916a157601e1fa8715349d7bf7b41e6403f436",
+      "reread_chars": 9695,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "TR-1",
+      "subject": "Traceloop",
+      "identifier": "traceloop.com",
+      "source_url": "https://www.traceloop.com/",
+      "captured_at": "2026-09-25T05:31:06Z",
+      "captured_digest": "3833598ff9ded7aebf6a3b6b741d96a6b8bf7123d6cf3d16d69dc0c93c7cd4a5",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "be0ec93e730c693401eb07b4ed4590967a14907fdc8582ad9e36739261d5d871",
+      "claim_verbatim_sha256": "e857ca3ea9af93ea6be8c1f35b633db90ab48518dacab06fcdaf6215dc99eb88",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "be0ec93e730c693401eb07b4ed4590967a14907fdc8582ad9e36739261d5d871",
+          "captured_at": "2026-09-25T05:31:06Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "5dc6c32d32ff9020b6b33c562225fcd5d252be20edac8fe6c9bd9726da03033e",
+          "captured_at": "2026-09-23T04:35:56Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.679Z",
+      "response_body_sha256": "7b3ca949ec62fe969c61805eea278cfad67b44d6eb52980fbe74ccdfd7dcf5d1",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "3833598ff9ded7aebf6a3b6b741d96a6b8bf7123d6cf3d16d69dc0c93c7cd4a5",
+      "reread_chars": 3170,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "TR-2",
+      "subject": "Traceloop",
+      "identifier": "traceloop.com",
+      "source_url": "https://www.traceloop.com/",
+      "captured_at": "2026-09-25T05:31:06Z",
+      "captured_digest": "3833598ff9ded7aebf6a3b6b741d96a6b8bf7123d6cf3d16d69dc0c93c7cd4a5",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "da4e54f4bf8964355087953facd5ff866a50b8283664309eb4dda2bff753ccb0",
+      "claim_verbatim_sha256": "956e3db144ba9dea2085eaee71b1413e49477b39edcde7b5ab58bf0a02c096c6",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "da4e54f4bf8964355087953facd5ff866a50b8283664309eb4dda2bff753ccb0",
+          "captured_at": "2026-09-25T05:31:06Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "4eb9b56bfd676753f61cc2292c178b2a6ed8329a0f5c57bdf05b0cd7ae59aea7",
+          "captured_at": "2026-09-23T04:35:56Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.679Z",
+      "response_body_sha256": "7b3ca949ec62fe969c61805eea278cfad67b44d6eb52980fbe74ccdfd7dcf5d1",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "3833598ff9ded7aebf6a3b6b741d96a6b8bf7123d6cf3d16d69dc0c93c7cd4a5",
+      "reread_chars": 3170,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "TR-3",
+      "subject": "Traceloop",
+      "identifier": "traceloop.com",
+      "source_url": "https://www.traceloop.com/",
+      "captured_at": "2026-09-25T05:31:06Z",
+      "captured_digest": "3833598ff9ded7aebf6a3b6b741d96a6b8bf7123d6cf3d16d69dc0c93c7cd4a5",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "da76ac5c8d196cfcd2fd8a509cd9e666b867581b23cedbe82a119ca092bf0113",
+      "claim_verbatim_sha256": "53c2dc154c100bc5c96654cb906f4741585154cadc11450034e761e9ac34cb3b",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "da76ac5c8d196cfcd2fd8a509cd9e666b867581b23cedbe82a119ca092bf0113",
+          "captured_at": "2026-09-25T05:31:06Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "8f7e2060d16ffd6529bb620b5710f6dbb83e1ea3c640180f8cafa3c6808b60b2",
+          "captured_at": "2026-09-23T04:35:56Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.679Z",
+      "response_body_sha256": "7b3ca949ec62fe969c61805eea278cfad67b44d6eb52980fbe74ccdfd7dcf5d1",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "3833598ff9ded7aebf6a3b6b741d96a6b8bf7123d6cf3d16d69dc0c93c7cd4a5",
+      "reread_chars": 3170,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "HE-1",
+      "subject": "Helicone",
+      "identifier": "helicone.ai",
+      "source_url": "https://www.helicone.ai/pricing",
+      "captured_at": "2026-09-25T05:31:06Z",
+      "captured_digest": "ada8fb2ea35ef9b6ee3d74091152e2252a2f6d283489434e7674d6941b071b0c",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "f31b5f26bef5140f0681a3edb31e5d12c89f54731921430964e022f75b9554d4",
+      "claim_verbatim_sha256": "f87e406dfa0fa2df56a95ce5c354f4fafd7454fbfb07b93aa80657a8e7359332",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "f31b5f26bef5140f0681a3edb31e5d12c89f54731921430964e022f75b9554d4",
+          "captured_at": "2026-09-25T05:31:06Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "958960b4fa12d90902e5d64d62f2f432a67c6a6ea9e73176e040bfd5dcad50a8",
+          "captured_at": "2026-09-23T04:35:57Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.194Z",
+      "response_body_sha256": "4fb262a04d48156ba735997e43269aa8426c51452ff48326eeb8521900861a09",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "ccd19aea789063c0f8d4df36888c1eb1a273c7a6757fd8a7535b195a2496d292",
+      "reread_chars": 3718,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "HE-2",
+      "subject": "Helicone",
+      "identifier": "helicone.ai",
+      "source_url": "https://www.helicone.ai/pricing",
+      "captured_at": "2026-09-25T05:31:06Z",
+      "captured_digest": "ada8fb2ea35ef9b6ee3d74091152e2252a2f6d283489434e7674d6941b071b0c",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "afb62f5665fae5514df09dccd4006447d377757de09e96f1d976ea26b70c1829",
+      "claim_verbatim_sha256": "af22e35cf86ccfa44168b1b94638923e0b0ef04c1637d85be6ca9650581e83bf",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "afb62f5665fae5514df09dccd4006447d377757de09e96f1d976ea26b70c1829",
+          "captured_at": "2026-09-25T05:31:06Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "a85e13db116ac3598d3c0244bb7f793ba15a47f98425d7d7c046855dc0786261",
+          "captured_at": "2026-09-23T04:35:57Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.194Z",
+      "response_body_sha256": "4fb262a04d48156ba735997e43269aa8426c51452ff48326eeb8521900861a09",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "ccd19aea789063c0f8d4df36888c1eb1a273c7a6757fd8a7535b195a2496d292",
+      "reread_chars": 3718,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "HE-3",
+      "subject": "Helicone",
+      "identifier": "helicone.ai",
+      "source_url": "https://www.helicone.ai/pricing",
+      "captured_at": "2026-09-25T05:31:06Z",
+      "captured_digest": "ada8fb2ea35ef9b6ee3d74091152e2252a2f6d283489434e7674d6941b071b0c",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "584430fc86d3b78cfba231f04a53f5dfb05f294bead1f1cdb361f151593b0433",
+      "claim_verbatim_sha256": "f4c2720ac086688c873ef08ab64508c4ce73a07cfe9c5e52740dfb9d9319a0f2",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "584430fc86d3b78cfba231f04a53f5dfb05f294bead1f1cdb361f151593b0433",
+          "captured_at": "2026-09-25T05:31:06Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "6f08330bdddeefec525c76d5b7d27e89e8fd942b5a7323f4c5413e310af129ff",
+          "captured_at": "2026-09-23T04:35:57Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:21.194Z",
+      "response_body_sha256": "4fb262a04d48156ba735997e43269aa8426c51452ff48326eeb8521900861a09",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "ccd19aea789063c0f8d4df36888c1eb1a273c7a6757fd8a7535b195a2496d292",
+      "reread_chars": 3718,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "AN-1",
+      "subject": "Anthropic",
+      "identifier": "anthropic.com",
+      "source_url": "https://www.anthropic.com/",
+      "captured_at": "2026-09-25T05:31:06Z",
+      "captured_digest": "f843f4ee2f8923e27a70f51d29487468b301227602eeb61332768e12905f65c1",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "cb22a97f1fada1a2ce455fa547fae458656e4cd62c264f853d5502a6808b99aa",
+      "claim_verbatim_sha256": "a519c8e81b397e1761388396de24fb6fb95d9fc91ac6fc523c10f3f753314f30",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "cb22a97f1fada1a2ce455fa547fae458656e4cd62c264f853d5502a6808b99aa",
+          "captured_at": "2026-09-25T05:31:06Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "bf58c5c81de0d00436bc8f03a7dc3b35433543a9c8bfbb74c575499e97e47410",
+          "captured_at": "2026-09-23T04:35:57Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.585Z",
+      "response_body_sha256": "2b05c3761dd188c71003b689a29d14928939ba72fbd2c92565953b46a26b3873",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "bef880b931157440d6cde2bb38186e6ba78aa08971bdbf16f69c1a8f0c5ca75f",
+      "reread_chars": 2115,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "AN-2",
+      "subject": "Anthropic",
+      "identifier": "anthropic.com",
+      "source_url": "https://www.anthropic.com/",
+      "captured_at": "2026-09-25T05:31:06Z",
+      "captured_digest": "f843f4ee2f8923e27a70f51d29487468b301227602eeb61332768e12905f65c1",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "0380dacfef0b21c1d3958436e06b8767413483313cf5e02ca2f244e718e3d0fb",
+      "claim_verbatim_sha256": "57846ccd7c50e1bd268d3b73b648c570af1e17e0fd9ca6788a43d3dd6fc69629",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "0380dacfef0b21c1d3958436e06b8767413483313cf5e02ca2f244e718e3d0fb",
+          "captured_at": "2026-09-25T05:31:06Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "adcfd71a67c6903d37770bce8a3c33712d9a3f3c8d4963b70401afed0a84c0ac",
+          "captured_at": "2026-09-23T04:35:57Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.585Z",
+      "response_body_sha256": "2b05c3761dd188c71003b689a29d14928939ba72fbd2c92565953b46a26b3873",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "bef880b931157440d6cde2bb38186e6ba78aa08971bdbf16f69c1a8f0c5ca75f",
+      "reread_chars": 2115,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "MI-1",
+      "subject": "Mistral AI",
+      "identifier": "mistral.ai",
+      "source_url": "https://mistral.ai/",
+      "captured_at": "2026-09-25T05:31:06Z",
+      "captured_digest": "e3b720f30748d3faac73466f68c0441d07c93383910551b1c40cf420fad5c54e",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "50da653b7e5c92ccaa15d344a893c9096b1fc979fc3757f4fe02942a53a516f1",
+      "claim_verbatim_sha256": "783cd457d5b5aa2e25c8f47cbb80363f010b20cf9d7e5a8053ca5cded2b636c0",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "50da653b7e5c92ccaa15d344a893c9096b1fc979fc3757f4fe02942a53a516f1",
+          "captured_at": "2026-09-25T05:31:06Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "0b9c63f687875fb206300e7ec7d306f63eb68e8266338168da13a92ec0c3c027",
+          "captured_at": "2026-09-23T04:35:57Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:17.865Z",
+      "response_body_sha256": "d97d8057dc0e4a28cfc6a78e3fb59f9f4d449148799ae968f7d5f7feb495b411",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "c23c5c57945fe43260a063d77ef7fd9338fb0d05c672a17fd5e5df9740a8b6ed",
+      "reread_chars": 5604,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "MI-2",
+      "subject": "Mistral AI",
+      "identifier": "mistral.ai",
+      "source_url": "https://mistral.ai/",
+      "captured_at": "2026-09-25T05:31:06Z",
+      "captured_digest": "e3b720f30748d3faac73466f68c0441d07c93383910551b1c40cf420fad5c54e",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "dd462f312c43360422b36ec5793f41e59f41002831c87f952fb4d53d2540e6d4",
+      "claim_verbatim_sha256": "3701012ad33174ee6423584722a2301b7f62e01aeb6bc0c9996dd8d09aa714c7",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "dd462f312c43360422b36ec5793f41e59f41002831c87f952fb4d53d2540e6d4",
+          "captured_at": "2026-09-25T05:31:06Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "7b16eaba201ff5aeb01f99b27e581b5ae39df48a497a3bf0b9933c3e4071c5b2",
+          "captured_at": "2026-09-23T04:35:57Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:17.865Z",
+      "response_body_sha256": "d97d8057dc0e4a28cfc6a78e3fb59f9f4d449148799ae968f7d5f7feb495b411",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "c23c5c57945fe43260a063d77ef7fd9338fb0d05c672a17fd5e5df9740a8b6ed",
+      "reread_chars": 5604,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "EC-1",
+      "subject": "European Central Bank (Pontes)",
+      "identifier": "549300DTUYXVMJXZNY75",
+      "source_url": "https://www.ecb.europa.eu/paym/target/pontes/html/index.en.html",
+      "captured_at": "2026-09-25T05:31:07Z",
+      "captured_digest": "18445a2c36045be868ddd5960a456478f5b4246e2c93d3fc4afc8fafaf886f00",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "5fc66c974ad14fad1161e8a5edef72d292d48bc3600d90e9fb830724943e25d4",
+      "claim_verbatim_sha256": "ce9a546e74823195c5bfa834665a5067dfd40bf1a41ca74795e17415dbe046b6",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "5fc66c974ad14fad1161e8a5edef72d292d48bc3600d90e9fb830724943e25d4",
+          "captured_at": "2026-09-25T05:31:07Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "4136aaec83ed1b2d42272a6f192b78d41406d7a26b47add8b53308033e1ab0aa",
+          "captured_at": "2026-09-23T04:35:58Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.861Z",
+      "response_body_sha256": "81a8143e187d3ada4fb39ae90dd7365f22a78bfa1c6ba828d2287ee1386e96ee",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "8ec817aad9d86183209e2ad4e1891c9016bd4df47cb2f06d15cc80e8dea466f7",
+      "reread_chars": 17217,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "EC-2",
+      "subject": "European Central Bank (Pontes)",
+      "identifier": "549300DTUYXVMJXZNY75",
+      "source_url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
+      "captured_at": "2026-09-25T05:31:07Z",
+      "captured_digest": "6ffce52449d0f1f19e7673e33785ef81fb9e5dc7fd974ef2ff5ca8cb85e15f01",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "00b9d1553f5fa2074afc7633b7058602e1d15eec23cbd898fc0ecad1d3bf79fe",
+      "claim_verbatim_sha256": "1ef42257b5f8edf989b46019dc2296eabb35afbd59369c905ea08a7be87ac9d4",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "00b9d1553f5fa2074afc7633b7058602e1d15eec23cbd898fc0ecad1d3bf79fe",
+          "captured_at": "2026-09-25T05:31:07Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "e6d54b21c5861f177461e4fbf9357dfa2ec5ca59ac278ef80b27fd1fa469d052",
+          "captured_at": "2026-09-23T04:35:58Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.844Z",
+      "response_body_sha256": "c0c593e78ca8ad3473cae60ef06ba6a865600d55db7c6d72aebd5a89021a9d21",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "0abb62defbc984bafbe7139e4b87048c934db40d1f6f9c06faf98d8f473d5807",
+      "reread_chars": 16893,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "EC-3",
+      "subject": "European Central Bank (Pontes)",
+      "identifier": "549300DTUYXVMJXZNY75",
+      "source_url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
+      "captured_at": "2026-09-25T05:31:07Z",
+      "captured_digest": "6ffce52449d0f1f19e7673e33785ef81fb9e5dc7fd974ef2ff5ca8cb85e15f01",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "2bfb758ccd3e5f65e7e41d3510ab41c496663fbafd4ab434c183b8bc423da5e3",
+      "claim_verbatim_sha256": "ed42d63cf23cb323344d7c57565511911f7998a5350bcdbc5c76b810abcfaddb",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "2bfb758ccd3e5f65e7e41d3510ab41c496663fbafd4ab434c183b8bc423da5e3",
+          "captured_at": "2026-09-25T05:31:07Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "611e9b0ea5b54f3d363d000a5d3491c8e30a1b094697c4b8fce97303525f59d4",
+          "captured_at": "2026-09-23T04:35:58Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.844Z",
+      "response_body_sha256": "c0c593e78ca8ad3473cae60ef06ba6a865600d55db7c6d72aebd5a89021a9d21",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "0abb62defbc984bafbe7139e4b87048c934db40d1f6f9c06faf98d8f473d5807",
+      "reread_chars": 16893,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "EC-4",
+      "subject": "European Central Bank (Pontes)",
+      "identifier": "549300DTUYXVMJXZNY75",
+      "source_url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
+      "captured_at": "2026-09-25T05:31:07Z",
+      "captured_digest": "6ffce52449d0f1f19e7673e33785ef81fb9e5dc7fd974ef2ff5ca8cb85e15f01",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "098df111bf5d27827bc9ef00dc89fa8b738d5f5f090ba0c9b1f71b62045a5c88",
+      "claim_verbatim_sha256": "528d41087fc5754bf437c275aa0d7a2a46ae8851e6772c157940e6dedc1c0f29",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "098df111bf5d27827bc9ef00dc89fa8b738d5f5f090ba0c9b1f71b62045a5c88",
+          "captured_at": "2026-09-25T05:31:07Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "9b94fcf439e35d8b5a2e73b427a8656bd5f353d1454941c77c1d0c0ac6c6cc4f",
+          "captured_at": "2026-09-23T04:35:58Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.844Z",
+      "response_body_sha256": "c0c593e78ca8ad3473cae60ef06ba6a865600d55db7c6d72aebd5a89021a9d21",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "0abb62defbc984bafbe7139e4b87048c934db40d1f6f9c06faf98d8f473d5807",
+      "reread_chars": 16893,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "SB-1",
+      "subject": "Securities and Exchange Board of India (Demat 2.0)",
+      "identifier": "sebi.gov.in",
+      "source_url": "https://www.sebi.gov.in/sebi_data/faqfiles/sep-2026/1789049630065.pdf",
+      "captured_at": "2026-09-23T04:36:00Z",
+      "captured_digest": "aab30b8f506ad5f374b71294baebf6cd880b30f510014ba4145d9a5c2e692e69",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "81f6fe6b9a994aebbe3d7bfc03ed50af5d87d0bfc4cb284e1588df747859b100",
+      "claim_verbatim_sha256": "6ab0e1dbf3e00de727a1ab844974cb2e12b3d94ae58b7e71af70fad1113a64e1",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "81f6fe6b9a994aebbe3d7bfc03ed50af5d87d0bfc4cb284e1588df747859b100",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "f14b314071a0795e82f9f277e25957fd89d13f4c9e71a9e2c6ff42ae363009d2",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:22.572Z",
+      "response_body_sha256": "aab30b8f506ad5f374b71294baebf6cd880b30f510014ba4145d9a5c2e692e69",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "aab30b8f506ad5f374b71294baebf6cd880b30f510014ba4145d9a5c2e692e69",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "SB-2",
+      "subject": "Securities and Exchange Board of India (Demat 2.0)",
+      "identifier": "sebi.gov.in",
+      "source_url": "https://www.sebi.gov.in/sebi_data/faqfiles/sep-2026/1789049630065.pdf",
+      "captured_at": "2026-09-23T04:36:00Z",
+      "captured_digest": "aab30b8f506ad5f374b71294baebf6cd880b30f510014ba4145d9a5c2e692e69",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "68d677fdf06ec1c82108a679304b726de21de0dd896ccc9efeeb03aa92538827",
+      "claim_verbatim_sha256": "0fd52edc619779f6690ef13d7ca0b5cfa76bcd24c3c33ff870cce7a4d6b1f448",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "68d677fdf06ec1c82108a679304b726de21de0dd896ccc9efeeb03aa92538827",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "3860f0d1532784361b559d8305a1cbc263eec0d1a97e54f0469358ef358188e5",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:22.572Z",
+      "response_body_sha256": "aab30b8f506ad5f374b71294baebf6cd880b30f510014ba4145d9a5c2e692e69",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "aab30b8f506ad5f374b71294baebf6cd880b30f510014ba4145d9a5c2e692e69",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "SB-3",
+      "subject": "Securities and Exchange Board of India (Demat 2.0)",
+      "identifier": "sebi.gov.in",
+      "source_url": "https://www.sebi.gov.in/sebi_data/faqfiles/sep-2026/1789049630065.pdf",
+      "captured_at": "2026-09-23T04:36:00Z",
+      "captured_digest": "aab30b8f506ad5f374b71294baebf6cd880b30f510014ba4145d9a5c2e692e69",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "160575c6ad1bdd0350bec5eb5e9b603a1399a53eff6e25c898b33bcd37d172e2",
+      "claim_verbatim_sha256": "3b342196113000721dfdaad2d5fdfc812d63026fa566410d3bc5d8169b7fe5ab",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "160575c6ad1bdd0350bec5eb5e9b603a1399a53eff6e25c898b33bcd37d172e2",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "f1d9b305278202eb2e9bc8c14f68de2c5eaa33d7a477e4d93da7d5166e64cc01",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:22.572Z",
+      "response_body_sha256": "aab30b8f506ad5f374b71294baebf6cd880b30f510014ba4145d9a5c2e692e69",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "aab30b8f506ad5f374b71294baebf6cd880b30f510014ba4145d9a5c2e692e69",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "CS-1",
+      "subject": "Council of AI (CSOAI Ltd)",
+      "identifier": "16939677",
+      "source_url": "https://councilof.ai/",
+      "captured_at": "2026-09-25T05:31:07Z",
+      "captured_digest": "726456f620ba41446ab450013fcf6b658660f7c69c9cb7e85a9eb291a065340f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "cbf6ab549504f14b063bded72f0118e4e92c0a8a827b26c5b279b0759a680894",
+      "claim_verbatim_sha256": "292eeb0b930e78719c7e167fd0976b843bdce906c2d752b36350ceec990494ed",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "cbf6ab549504f14b063bded72f0118e4e92c0a8a827b26c5b279b0759a680894",
+          "captured_at": "2026-09-25T05:31:07Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "e87134194bd53b829dff9fc8a23e2d416f1924cceaa85c57134ce7a06c8e9380",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:15.785Z",
+      "response_body_sha256": "9c99fa7672a835a9f98391dde2062013f356016d9ef38c3b89ea3db14673e448",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "1d4535ca76651da59967b4b6baf5b051e69cdc371a003f0e036d50b7538ef617",
+      "reread_chars": 16149,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "CS-2",
+      "subject": "Council of AI (CSOAI Ltd)",
+      "identifier": "16939677",
+      "source_url": "https://councilof.ai/",
+      "captured_at": "2026-09-25T05:31:07Z",
+      "captured_digest": "726456f620ba41446ab450013fcf6b658660f7c69c9cb7e85a9eb291a065340f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "0762e8a6ae95b54c6d2543703206030a14f95b039d9118961e4906e3fe9ee828",
+      "claim_verbatim_sha256": "18f779f22dcb7ab934f6b137281cf7493155b44d821255cf507e7fc18830db37",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "0762e8a6ae95b54c6d2543703206030a14f95b039d9118961e4906e3fe9ee828",
+          "captured_at": "2026-09-25T05:31:07Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "395652d9d2cb9a78cf68054ec3e992d1a3691e52d059d50e27554f43e4aa2d40",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:15.785Z",
+      "response_body_sha256": "9c99fa7672a835a9f98391dde2062013f356016d9ef38c3b89ea3db14673e448",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "1d4535ca76651da59967b4b6baf5b051e69cdc371a003f0e036d50b7538ef617",
+      "reread_chars": 16149,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "CS-3",
+      "subject": "Council of AI (CSOAI Ltd)",
+      "identifier": "16939677",
+      "source_url": "https://councilof.ai/",
+      "captured_at": "2026-09-25T05:31:07Z",
+      "captured_digest": "726456f620ba41446ab450013fcf6b658660f7c69c9cb7e85a9eb291a065340f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "77c3ae8dddf3ae862990710bff33952047ed751316e0bf43f5b979995b8037eb",
+      "claim_verbatim_sha256": "04a019576bd5ea36a05838c277379523c3260e41f00952c55e6c53c590d59f9a",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "77c3ae8dddf3ae862990710bff33952047ed751316e0bf43f5b979995b8037eb",
+          "captured_at": "2026-09-25T05:31:07Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "b6d793d3771b4d76e967babd270ebe055905bd735ecdb4da412c8e3875e9d7f4",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:15.785Z",
+      "response_body_sha256": "9c99fa7672a835a9f98391dde2062013f356016d9ef38c3b89ea3db14673e448",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "1d4535ca76651da59967b4b6baf5b051e69cdc371a003f0e036d50b7538ef617",
+      "reread_chars": 16149,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "CS-4",
+      "subject": "Council of AI (CSOAI Ltd)",
+      "identifier": "16939677",
+      "source_url": "https://councilof.ai/",
+      "captured_at": "2026-09-25T05:31:07Z",
+      "captured_digest": "726456f620ba41446ab450013fcf6b658660f7c69c9cb7e85a9eb291a065340f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "6cf85ff207528a12ce457d1f27deaf67ee1e0a496fc2d110b65c1fb1220a56bf",
+      "claim_verbatim_sha256": "8d8c04e3b30101fbec0188d81a2499ee7e3c1c1f8786ae010a85da1b0d5d3dd0",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "6cf85ff207528a12ce457d1f27deaf67ee1e0a496fc2d110b65c1fb1220a56bf",
+          "captured_at": "2026-09-25T05:31:07Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "6f44c9f2abf497c6f5a1508de2b87b477f256c8602a039cb3302c69d961510fd",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:15.785Z",
+      "response_body_sha256": "9c99fa7672a835a9f98391dde2062013f356016d9ef38c3b89ea3db14673e448",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "1d4535ca76651da59967b4b6baf5b051e69cdc371a003f0e036d50b7538ef617",
+      "reread_chars": 16149,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "NG-1",
+      "subject": "NVIDIA NeMo Guardrails",
+      "identifier": "github.com/NVIDIA-NeMo/Guardrails",
+      "source_url": "https://raw.githubusercontent.com/NVIDIA-NeMo/Guardrails/main/README.md",
+      "captured_at": "2026-09-23T04:36:00Z",
+      "captured_digest": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "0cb466776e1badd9886258758b01c01f6f2f74cbecb8b1f4f43e7f90942e26e6",
+      "claim_verbatim_sha256": "5d8e278612758185345a3368db3d7f3816ed12a4489cf24597b615d288f9b72a",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "0cb466776e1badd9886258758b01c01f6f2f74cbecb8b1f4f43e7f90942e26e6",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "1414513a8f03bf14ece12c6c1a150f529101e537b8a679ac1e27c99b2e73f213",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.782Z",
+      "response_body_sha256": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "NG-2",
+      "subject": "NVIDIA NeMo Guardrails",
+      "identifier": "github.com/NVIDIA-NeMo/Guardrails",
+      "source_url": "https://raw.githubusercontent.com/NVIDIA-NeMo/Guardrails/main/README.md",
+      "captured_at": "2026-09-23T04:36:00Z",
+      "captured_digest": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "7d11e32244b955dadaeb774e54cca8222fe7a479a9fd6aae67e022fea3e79133",
+      "claim_verbatim_sha256": "e696c4d9fc86df0fd2cac7a95918673a46e9fef47b8eaa130afebbd4b1802653",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "7d11e32244b955dadaeb774e54cca8222fe7a479a9fd6aae67e022fea3e79133",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "5b2eee4aaf9b9eb51fae5890fa010edbb257f9413df2c18e55e9fcb72deabd00",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.782Z",
+      "response_body_sha256": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "NG-3",
+      "subject": "NVIDIA NeMo Guardrails",
+      "identifier": "github.com/NVIDIA-NeMo/Guardrails",
+      "source_url": "https://raw.githubusercontent.com/NVIDIA-NeMo/Guardrails/main/README.md",
+      "captured_at": "2026-09-23T04:36:00Z",
+      "captured_digest": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "386729159e2ff1a65366000b255661cbf5985c30414023e1f98cf63ebee4cdc8",
+      "claim_verbatim_sha256": "9ebd4d18da7010a945cc941c785e7b9588dd46585835501e602de74bcc2ca1fa",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "386729159e2ff1a65366000b255661cbf5985c30414023e1f98cf63ebee4cdc8",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "3d2444fbcbb9a888c173833e57769bc5fa21db1a39d6cb9fa78cbed602f2eb46",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.782Z",
+      "response_body_sha256": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "NG-4",
+      "subject": "NVIDIA NeMo Guardrails",
+      "identifier": "github.com/NVIDIA-NeMo/Guardrails",
+      "source_url": "https://raw.githubusercontent.com/NVIDIA-NeMo/Guardrails/main/README.md",
+      "captured_at": "2026-09-23T04:36:00Z",
+      "captured_digest": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "18321f80a91e79ab24e35ef6ac0f6798071acf6cd9f1f1478f6558d2a58f8df2",
+      "claim_verbatim_sha256": "f379c8a2504a06328484cd54e403ec6266c556b380c0a57a42d5ff07deb768ef",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "18321f80a91e79ab24e35ef6ac0f6798071acf6cd9f1f1478f6558d2a58f8df2",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "b487fc9a3ead88b3150b20adaf44f4b669f0a2daf0647217008355e5177f41e5",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.782Z",
+      "response_body_sha256": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "103d82000531fdcd71d54ec154df338580b03d6f150af86449f93d9c2ec58da7",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GK-1",
+      "subject": "garak",
+      "identifier": "github.com/NVIDIA/garak",
+      "source_url": "https://raw.githubusercontent.com/NVIDIA/garak/main/README.md",
+      "captured_at": "2026-09-23T04:36:00Z",
+      "captured_digest": "54a61bb985390ba90eff8aaf347a355df5560d9dbe9f4868cdd1624a0703c330",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "685fd68d1ab3dd3caec47ecf954c73dbeeeec745f332d7acdcd8d2805c89c424",
+      "claim_verbatim_sha256": "70b692d2aa6b57a7c5ce575ca060e34266918f3d0ed987ec447c38cb485a651e",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "685fd68d1ab3dd3caec47ecf954c73dbeeeec745f332d7acdcd8d2805c89c424",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "f97d73d19f1a224be77581cdc81fb800be672dbacc96404d9e8e562c21554682",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.756Z",
+      "response_body_sha256": "640626790dc73543d58857ea0ebc7e47ccdb38cd9dd8fc56467147f7f3a5798e",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "640626790dc73543d58857ea0ebc7e47ccdb38cd9dd8fc56467147f7f3a5798e",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GK-2",
+      "subject": "garak",
+      "identifier": "github.com/NVIDIA/garak",
+      "source_url": "https://raw.githubusercontent.com/NVIDIA/garak/main/README.md",
+      "captured_at": "2026-09-23T04:36:00Z",
+      "captured_digest": "54a61bb985390ba90eff8aaf347a355df5560d9dbe9f4868cdd1624a0703c330",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "78f9cd440c807275e2d08c2e99f84f2e575f4d9baed44aad74d3361c9c33723a",
+      "claim_verbatim_sha256": "c9070321abf246aa1816c9a6a45c38ec7cb32c5aa586fda37a8ffa7a4330b2c4",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "78f9cd440c807275e2d08c2e99f84f2e575f4d9baed44aad74d3361c9c33723a",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "a2a9bf04463b21cb1deb547b8345c6e585c99545688d81d32ebb1dedfbd657a4",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.756Z",
+      "response_body_sha256": "640626790dc73543d58857ea0ebc7e47ccdb38cd9dd8fc56467147f7f3a5798e",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "640626790dc73543d58857ea0ebc7e47ccdb38cd9dd8fc56467147f7f3a5798e",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GK-3",
+      "subject": "garak",
+      "identifier": "github.com/NVIDIA/garak",
+      "source_url": "https://raw.githubusercontent.com/NVIDIA/garak/main/README.md",
+      "captured_at": "2026-09-23T04:36:00Z",
+      "captured_digest": "54a61bb985390ba90eff8aaf347a355df5560d9dbe9f4868cdd1624a0703c330",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "49ff295be4150a21b45b7948f8a1b250134a8045d8a73b3230f2b37a583aa389",
+      "claim_verbatim_sha256": "2861aa9b6f9caddb9e70515f30d49e6d146ebc4195cc96fdcf8cddca3db9c722",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "49ff295be4150a21b45b7948f8a1b250134a8045d8a73b3230f2b37a583aa389",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "e8fc2c112d58fab3a444cf96ec3d7ea3c02b6098cf84132f31d8e2cbee98f1b6",
+          "captured_at": "2026-09-23T04:36:00Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.756Z",
+      "response_body_sha256": "640626790dc73543d58857ea0ebc7e47ccdb38cd9dd8fc56467147f7f3a5798e",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "640626790dc73543d58857ea0ebc7e47ccdb38cd9dd8fc56467147f7f3a5798e",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GR-1",
+      "subject": "Guardrails AI",
+      "identifier": "github.com/guardrails-ai/guardrails",
+      "source_url": "https://raw.githubusercontent.com/guardrails-ai/guardrails/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "6031353db4bfd3cd632034193b2958ccdf940943b8dbc33ee04aeee7c3a99c0e",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "efea31162fe3bf9e6fe5a559351b48d7b6b117b97f0c9f9aa55d319df600bfa0",
+      "claim_verbatim_sha256": "b2334ac4a4b70c3cbbeab19dce19caacf4dbada8cc89c5cbcdade5951b71044b",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "efea31162fe3bf9e6fe5a559351b48d7b6b117b97f0c9f9aa55d319df600bfa0",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "ad4af84221d57c01fb10c119220e68657f359ebfe9a27eae36138f181729ec4c",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.962Z",
+      "response_body_sha256": "6031353db4bfd3cd632034193b2958ccdf940943b8dbc33ee04aeee7c3a99c0e",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "6031353db4bfd3cd632034193b2958ccdf940943b8dbc33ee04aeee7c3a99c0e",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GR-2",
+      "subject": "Guardrails AI",
+      "identifier": "github.com/guardrails-ai/guardrails",
+      "source_url": "https://raw.githubusercontent.com/guardrails-ai/guardrails/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "6031353db4bfd3cd632034193b2958ccdf940943b8dbc33ee04aeee7c3a99c0e",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "5b76708c34966204f8c2d3aa1e8dbe05f961b6844b16996cbecb66c1ae195f50",
+      "claim_verbatim_sha256": "db31745b676a0b832413b72f63ac54cbd4d525a845246738d979bd97547c1b06",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "5b76708c34966204f8c2d3aa1e8dbe05f961b6844b16996cbecb66c1ae195f50",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "85e07c157f103998478b5b826dc5bd53dae707b9483beb66815d6015f3eeceea",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.962Z",
+      "response_body_sha256": "6031353db4bfd3cd632034193b2958ccdf940943b8dbc33ee04aeee7c3a99c0e",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "6031353db4bfd3cd632034193b2958ccdf940943b8dbc33ee04aeee7c3a99c0e",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "PR-1",
+      "subject": "PyRIT",
+      "identifier": "github.com/microsoft/PyRIT",
+      "source_url": "https://raw.githubusercontent.com/microsoft/PyRIT/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "862ed8123d72539718cc2152dfc7a42a68d8c262c8ab9ef69de73e497a8d8dac",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "3c6920a58b6e66fddc007e0f0e8996375177436d2904f9d2f0013e3c30adb6b6",
+      "claim_verbatim_sha256": "818872ab9db3742dc68745255b7a8ebb3b2c1e466856cbf8296558b3e200cbe0",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "3c6920a58b6e66fddc007e0f0e8996375177436d2904f9d2f0013e3c30adb6b6",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "609814cfbb006e008495a41ac2dfb94efcce3a569fac825dc07803e9395da2b2",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:19.262Z",
+      "response_body_sha256": "862ed8123d72539718cc2152dfc7a42a68d8c262c8ab9ef69de73e497a8d8dac",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "862ed8123d72539718cc2152dfc7a42a68d8c262c8ab9ef69de73e497a8d8dac",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "PL-1",
+      "subject": "Purple Llama",
+      "identifier": "github.com/meta-llama/PurpleLlama",
+      "source_url": "https://raw.githubusercontent.com/meta-llama/PurpleLlama/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "ba4b067ebb5131715c2bf6e1f87d63a7b9268c4d357e6139202ab994a1dab77d",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "da6ce497661b50f594e52e905542c7d2ec27eb4e19a1e2bba17bf3e4329163df",
+      "claim_verbatim_sha256": "bff7d6133e0318ba372ecf54509beb4f3ddaa312337ae46072c3f5f8cfba3bb8",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "da6ce497661b50f594e52e905542c7d2ec27eb4e19a1e2bba17bf3e4329163df",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "998fbb7f6c7ad91e6e2a02b9f187a53c960bf68cef61e2f5ff2895d97c19058f",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:19.138Z",
+      "response_body_sha256": "ba4b067ebb5131715c2bf6e1f87d63a7b9268c4d357e6139202ab994a1dab77d",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "ba4b067ebb5131715c2bf6e1f87d63a7b9268c4d357e6139202ab994a1dab77d",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "PL-2",
+      "subject": "Purple Llama",
+      "identifier": "github.com/meta-llama/PurpleLlama",
+      "source_url": "https://raw.githubusercontent.com/meta-llama/PurpleLlama/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "ba4b067ebb5131715c2bf6e1f87d63a7b9268c4d357e6139202ab994a1dab77d",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "191a9d6e923bc2ea7642d543c2b8b9731622c15722efe02ace8061d187ab9ea5",
+      "claim_verbatim_sha256": "4d07159d9a1b42e38bc4df2b64c774374dc202e47d728f2ea3fc785a98bf8dda",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "191a9d6e923bc2ea7642d543c2b8b9731622c15722efe02ace8061d187ab9ea5",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "413957553a9150b20eb35cc66eee2b722e627d4a829967223fa6b749a7645b12",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:19.138Z",
+      "response_body_sha256": "ba4b067ebb5131715c2bf6e1f87d63a7b9268c4d357e6139202ab994a1dab77d",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "ba4b067ebb5131715c2bf6e1f87d63a7b9268c4d357e6139202ab994a1dab77d",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "PL-3",
+      "subject": "Purple Llama",
+      "identifier": "github.com/meta-llama/PurpleLlama",
+      "source_url": "https://raw.githubusercontent.com/meta-llama/PurpleLlama/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "ba4b067ebb5131715c2bf6e1f87d63a7b9268c4d357e6139202ab994a1dab77d",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "128ce6289854a07ba6f4c9516cc6a489b9c6f6046205fb39357406770189b041",
+      "claim_verbatim_sha256": "7ce704a81c6e17aafdbddbc5218a155785f0efd4732b0b930b5722d8207a29f9",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "128ce6289854a07ba6f4c9516cc6a489b9c6f6046205fb39357406770189b041",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "5aff142d9a5a20d343ecf6af09af8493e0664333a51861dff40ea254fbbf5440",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:19.138Z",
+      "response_body_sha256": "ba4b067ebb5131715c2bf6e1f87d63a7b9268c4d357e6139202ab994a1dab77d",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "ba4b067ebb5131715c2bf6e1f87d63a7b9268c4d357e6139202ab994a1dab77d",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "IV-1",
+      "subject": "Invariant Guardrails",
+      "identifier": "github.com/invariantlabs-ai/invariant",
+      "source_url": "https://raw.githubusercontent.com/invariantlabs-ai/invariant/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "3fadddc4e6e97a01d6db4255690675a74db4c5435195fe913bc3087ca84e408d",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "5d0db221dded9a76a5c10002837a486b4bf68f33aea714f3963e074d025f26db",
+      "claim_verbatim_sha256": "dfd84e3ae65ac836ec97d3fed05c1ba360033537382379c25a14e4c23b46f3bb",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "5d0db221dded9a76a5c10002837a486b4bf68f33aea714f3963e074d025f26db",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "0f916c525931407cfd520d17627abb129852a37fbe690dd30f0ae5388c6e60e5",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:19.010Z",
+      "response_body_sha256": "3fadddc4e6e97a01d6db4255690675a74db4c5435195fe913bc3087ca84e408d",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "3fadddc4e6e97a01d6db4255690675a74db4c5435195fe913bc3087ca84e408d",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "IV-2",
+      "subject": "Invariant Guardrails",
+      "identifier": "github.com/invariantlabs-ai/invariant",
+      "source_url": "https://raw.githubusercontent.com/invariantlabs-ai/invariant/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "3fadddc4e6e97a01d6db4255690675a74db4c5435195fe913bc3087ca84e408d",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "131c253b01693aebd68d956cb428e6c803b15f06d2f0b3a8b1dd6c2284514087",
+      "claim_verbatim_sha256": "bb8124fb3ee7403b2036bb6007da73e0d3e7c1f710021e1021dc94337025e95a",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "131c253b01693aebd68d956cb428e6c803b15f06d2f0b3a8b1dd6c2284514087",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "bd0edc83a1847694fab69ca862c9c31c40e39049c7e5729cb424e7119b93399a",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:19.010Z",
+      "response_body_sha256": "3fadddc4e6e97a01d6db4255690675a74db4c5435195fe913bc3087ca84e408d",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "3fadddc4e6e97a01d6db4255690675a74db4c5435195fe913bc3087ca84e408d",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "IV-3",
+      "subject": "Invariant Guardrails",
+      "identifier": "github.com/invariantlabs-ai/invariant",
+      "source_url": "https://raw.githubusercontent.com/invariantlabs-ai/invariant/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "3fadddc4e6e97a01d6db4255690675a74db4c5435195fe913bc3087ca84e408d",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "c7a1a1836b16663457d0eca905a1cc7be96870073b35a10d0439d7acca716e4e",
+      "claim_verbatim_sha256": "db9d51df0f13b35728a8f91107ba391d44816f444544d6c8ff296ce96efd995d",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "c7a1a1836b16663457d0eca905a1cc7be96870073b35a10d0439d7acca716e4e",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "8abd47f4d46a4da1088f9f722ac606656fa09b38e6c763c545a6578231e91329",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:19.010Z",
+      "response_body_sha256": "3fadddc4e6e97a01d6db4255690675a74db4c5435195fe913bc3087ca84e408d",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "3fadddc4e6e97a01d6db4255690675a74db4c5435195fe913bc3087ca84e408d",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GI-1",
+      "subject": "Giskard",
+      "identifier": "github.com/Giskard-AI/giskard-oss",
+      "source_url": "https://raw.githubusercontent.com/Giskard-AI/giskard-oss/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "d9e0da4e684ea8f7959448b4362ade0f0762eadbbf1ec0060eb1dbaf532cd531",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "c32d02e5cb36ffaac9bc13f74fcdf00118630942819f298fafd3b321480777b9",
+      "claim_verbatim_sha256": "c01691cf762a9dbaf8b95d91867ad5c1e723b2b06b939686696830a228fd45b5",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "c32d02e5cb36ffaac9bc13f74fcdf00118630942819f298fafd3b321480777b9",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "d5e3c8a0e8952c8d192fab2e7a50cbf3000aea6b4111b622dd7c32cc8c6aed80",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.566Z",
+      "response_body_sha256": "4205adcf5633733936571493c67551633699b0acd4e012a4caf476c92d7c9be9",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "4205adcf5633733936571493c67551633699b0acd4e012a4caf476c92d7c9be9",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GI-2",
+      "subject": "Giskard",
+      "identifier": "github.com/Giskard-AI/giskard-oss",
+      "source_url": "https://raw.githubusercontent.com/Giskard-AI/giskard-oss/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "d9e0da4e684ea8f7959448b4362ade0f0762eadbbf1ec0060eb1dbaf532cd531",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "0cc1c032c2f7c403a90d3fe4648f53a1b3166c13e600a87586ce70650af94d55",
+      "claim_verbatim_sha256": "c22f3b6f3d6b8be5a7d4f2cadd13d3365ce2fe65c6aad38f2239710a78f1276a",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "0cc1c032c2f7c403a90d3fe4648f53a1b3166c13e600a87586ce70650af94d55",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "cfa32e27a481e05ffcd1873272886b48cb3a66f36f7734ed91c8d73d60f29a9b",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.566Z",
+      "response_body_sha256": "4205adcf5633733936571493c67551633699b0acd4e012a4caf476c92d7c9be9",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "4205adcf5633733936571493c67551633699b0acd4e012a4caf476c92d7c9be9",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GI-3",
+      "subject": "Giskard",
+      "identifier": "github.com/Giskard-AI/giskard-oss",
+      "source_url": "https://raw.githubusercontent.com/Giskard-AI/giskard-oss/main/README.md",
+      "captured_at": "2026-09-23T04:36:01Z",
+      "captured_digest": "d9e0da4e684ea8f7959448b4362ade0f0762eadbbf1ec0060eb1dbaf532cd531",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "37c3dfb2d11c108ed6f318b29174aa06a67b110abf1f4b7652a3ad5e5a6ad453",
+      "claim_verbatim_sha256": "7c1d14b7bc7e9b674089caedadeb34ce8dbea517db671f08adb827b9837854ed",
+      "registers": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+          "register_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+          "artifact_sha256": "37c3dfb2d11c108ed6f318b29174aa06a67b110abf1f4b7652a3ad5e5a6ad453",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-ai-assurance-and-settlement-2026-09-23.json",
+          "register_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+          "artifact_sha256": "095a7c1fc52fba5fe89adc6d24f46b8f2ff8cfa0592dc2f40164c96ff22cf4b5",
+          "captured_at": "2026-09-23T04:36:01Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.566Z",
+      "response_body_sha256": "4205adcf5633733936571493c67551633699b0acd4e012a4caf476c92d7c9be9",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "4205adcf5633733936571493c67551633699b0acd4e012a4caf476c92d7c9be9",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "RH-1",
+      "subject": "RentAHuman",
+      "identifier": "rentahuman.ai",
+      "source_url": "https://rentahuman.ai/",
+      "captured_at": "2026-09-25T05:31:14Z",
+      "captured_digest": "fd164c2219a16e7dd6b17649c299460fe7f14dc68540b55bfe76ef3617a44ac8",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "a048b297790950cb56ad70fe3437ba8804ca7ce22aa2700947334057882a5d73",
+      "claim_verbatim_sha256": "db81b0b816c04067d97aa04f260dab9f513371629f781200e07643c1a7a0880b",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "a048b297790950cb56ad70fe3437ba8804ca7ce22aa2700947334057882a5d73",
+          "captured_at": "2026-09-25T05:31:14Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "e55e77c239617a9b7c54546f06795f4628101e415c7d1586acc6e49454231524",
+          "captured_at": "2026-09-24T15:39:22Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.281Z",
+      "response_body_sha256": "d708e82116cc30362919dcd842bcb80a5a5305ac73ea0bf8f1b6716762b1b75d",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "1b4609398afef26a64911957c0eee72fa13a3646a395774743545dbb520a8312",
+      "reread_chars": 2412,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "RH-2",
+      "subject": "RentAHuman",
+      "identifier": "rentahuman.ai",
+      "source_url": "https://rentahuman.ai/",
+      "captured_at": "2026-09-25T05:31:14Z",
+      "captured_digest": "fd164c2219a16e7dd6b17649c299460fe7f14dc68540b55bfe76ef3617a44ac8",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "8ee2b7532022a11941d83675a27bf97e4597a0bc2c147f7e3925bee9c6a41e99",
+      "claim_verbatim_sha256": "1c4198030ba2e5ce8fb98ce584297bb7b300f2a040db5138e5b2d9738af057d8",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "8ee2b7532022a11941d83675a27bf97e4597a0bc2c147f7e3925bee9c6a41e99",
+          "captured_at": "2026-09-25T05:31:14Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "841b8980e8abce48e0b0b3eac84b827f9f9e49c4197f06e6f5776f791625c27a",
+          "captured_at": "2026-09-24T15:39:22Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.281Z",
+      "response_body_sha256": "d708e82116cc30362919dcd842bcb80a5a5305ac73ea0bf8f1b6716762b1b75d",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "1b4609398afef26a64911957c0eee72fa13a3646a395774743545dbb520a8312",
+      "reread_chars": 2412,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "RH-3",
+      "subject": "RentAHuman",
+      "identifier": "rentahuman.ai",
+      "source_url": "https://rentahuman.ai/docs",
+      "captured_at": "2026-09-25T05:31:16Z",
+      "captured_digest": "99d3e6b97703ee188dfeaec9cb44f52e97e5b6f25c9efec1b2e8ff7ba5afd109",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "4dbeb9ed69c5e8521d2a5a0cd64357dc379749f315db92492eb3c8cafdf74e6b",
+      "claim_verbatim_sha256": "f638519dbbcf26320d8f6d79ebbe7223fd411c88b25e91913fbc3b17fc3ffee2",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "4dbeb9ed69c5e8521d2a5a0cd64357dc379749f315db92492eb3c8cafdf74e6b",
+          "captured_at": "2026-09-25T05:31:16Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "4c54dd9bcee2816f3cb55877bb661fe356b744aab6361e791242325dbc6b6c67",
+          "captured_at": "2026-09-24T15:39:23Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.709Z",
+      "response_body_sha256": "0ac4c744cee3717ffbb3cd7120d879cf839f4b5f5167d2f01348e8ef44550f01",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "32b4ebee7630dc3333344d9dc68619eb2222c947ac64f7696062cb738c369980",
+      "reread_chars": 147431,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "RH-4",
+      "subject": "RentAHuman",
+      "identifier": "rentahuman.ai",
+      "source_url": "https://rentahuman.ai/",
+      "captured_at": "2026-09-25T05:31:14Z",
+      "captured_digest": "fd164c2219a16e7dd6b17649c299460fe7f14dc68540b55bfe76ef3617a44ac8",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "f107b851431569761934263860cdd6c6f5359d5ea761a9c2d0d9277b0df88170",
+      "claim_verbatim_sha256": "1642cd57f8b54d2ad9828ff5063b9e704ad08b576dce6c907d49e1978968fd66",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "f107b851431569761934263860cdd6c6f5359d5ea761a9c2d0d9277b0df88170",
+          "captured_at": "2026-09-25T05:31:14Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "6fa472f0dd3c388077ff22b8eaa05b5195949faa9cfc1d2450eab426ad961a9c",
+          "captured_at": "2026-09-24T15:39:23Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.281Z",
+      "response_body_sha256": "d708e82116cc30362919dcd842bcb80a5a5305ac73ea0bf8f1b6716762b1b75d",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "1b4609398afef26a64911957c0eee72fa13a3646a395774743545dbb520a8312",
+      "reread_chars": 2412,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "RH-5",
+      "subject": "RentAHuman",
+      "identifier": "rentahuman.ai",
+      "source_url": "https://rentahuman.ai/terms",
+      "captured_at": "2026-09-25T05:31:17Z",
+      "captured_digest": "f9bf7a19cfb25b2954ed4d205a2920430dbc3998a80ba69b332d653d2ebe9a87",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "8fb52fe77d57277b165b298d6c48ba596238f67d0b259e4e971f315cca00d711",
+      "claim_verbatim_sha256": "99ea59a43aa08d691d885c1f30fc97bb71568955428e0cc151de191ea0b6932b",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "8fb52fe77d57277b165b298d6c48ba596238f67d0b259e4e971f315cca00d711",
+          "captured_at": "2026-09-25T05:31:17Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "857ac0142a34e6de72db05704941160e7d80a7efe7ee4064d964c8007e3c3c73",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.140Z",
+      "response_body_sha256": "60d18aa676aa3415dfcbc3f70533b9bf16636be9e29f36803387efa91f01e946",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "dfc0b0d4393d89e9ee2035a773596966ee18f1fb3f016cee026f292385c719b2",
+      "reread_chars": 80539,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "RH-6",
+      "subject": "RentAHuman",
+      "identifier": "rentahuman.ai",
+      "source_url": "https://rentahuman.ai/terms",
+      "captured_at": "2026-09-25T05:31:17Z",
+      "captured_digest": "f9bf7a19cfb25b2954ed4d205a2920430dbc3998a80ba69b332d653d2ebe9a87",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "570d8166a4281d0760c14396e52ef2999ddf1c2f24ca5d8a6c3e8fc6033ac0a6",
+      "claim_verbatim_sha256": "0c296a68fb60fa380b0524ec183185b08b98ba6a2f6d6cc65369e245584d475d",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "570d8166a4281d0760c14396e52ef2999ddf1c2f24ca5d8a6c3e8fc6033ac0a6",
+          "captured_at": "2026-09-25T05:31:17Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "6245666a38c94c3a9a4f8b0ae1114900854a3477eaa4bbcaf30c5329ac08c9b3",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.140Z",
+      "response_body_sha256": "60d18aa676aa3415dfcbc3f70533b9bf16636be9e29f36803387efa91f01e946",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "dfc0b0d4393d89e9ee2035a773596966ee18f1fb3f016cee026f292385c719b2",
+      "reread_chars": 80539,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "RH-7",
+      "subject": "RentAHuman",
+      "identifier": "rentahuman.ai",
+      "source_url": "https://rentahuman.ai/terms",
+      "captured_at": "2026-09-25T05:31:17Z",
+      "captured_digest": "f9bf7a19cfb25b2954ed4d205a2920430dbc3998a80ba69b332d653d2ebe9a87",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "7591e2dca47c8ba13a3a4ee6c38135035906e92d726fbcf846fb6a39eeaabf6c",
+      "claim_verbatim_sha256": "77bdea704ee0ddef9f8145cd1dc09ccffa9053965eeb41b985b2fd2d51d76fda",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "7591e2dca47c8ba13a3a4ee6c38135035906e92d726fbcf846fb6a39eeaabf6c",
+          "captured_at": "2026-09-25T05:31:17Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "f8009b83d82101255d5bfb01929e76c1ac40e78e944a9ffd76d78528c6311728",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.140Z",
+      "response_body_sha256": "60d18aa676aa3415dfcbc3f70533b9bf16636be9e29f36803387efa91f01e946",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "dfc0b0d4393d89e9ee2035a773596966ee18f1fb3f016cee026f292385c719b2",
+      "reread_chars": 80539,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "RH-8",
+      "subject": "RentAHuman",
+      "identifier": "rentahuman.ai",
+      "source_url": "https://rentahuman.ai/terms",
+      "captured_at": "2026-09-25T05:31:17Z",
+      "captured_digest": "f9bf7a19cfb25b2954ed4d205a2920430dbc3998a80ba69b332d653d2ebe9a87",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "40fddea1fb5265093263ba2b0793669b965d76907ce632decdac286b326b2e78",
+      "claim_verbatim_sha256": "07fd4f4cd840d0efb27d0777c1b9945f6965202ea39dffea892b29fe0c3322de",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "40fddea1fb5265093263ba2b0793669b965d76907ce632decdac286b326b2e78",
+          "captured_at": "2026-09-25T05:31:17Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "ce7a273af3cc3add9bf39e9f2898092b6832fbac870e44179b2ea99737a3d04c",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.140Z",
+      "response_body_sha256": "60d18aa676aa3415dfcbc3f70533b9bf16636be9e29f36803387efa91f01e946",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "dfc0b0d4393d89e9ee2035a773596966ee18f1fb3f016cee026f292385c719b2",
+      "reread_chars": 80539,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "RH-9",
+      "subject": "RentAHuman",
+      "identifier": "rentahuman.ai",
+      "source_url": "https://registry.npmjs.org/rentahuman-mcp/latest",
+      "captured_at": "2026-09-24T15:39:24Z",
+      "captured_digest": "573e3916a0ff7e2956c1dab5d5307e8c5632f7774a8e99b2a978cb080b89c709",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "f59a8b0446eb37bb890e50df8e511873c1ba80f1cc2d3445970c0459928ab3eb",
+      "claim_verbatim_sha256": "808b32cf4f6ada9c708cad9a467e007add9cef8ec9dd2e8af6e6aa1a0517ee4e",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "f59a8b0446eb37bb890e50df8e511873c1ba80f1cc2d3445970c0459928ab3eb",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "3324adab2ab98e0a3ceb17c4bba6436f1898eebb7aca4e237eaea706ae005688",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:19.335Z",
+      "response_body_sha256": "f5b698dfa45b317508bbe7630fa68030eb73045170d4ab6672cbb62b6ccf1846",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "f5b698dfa45b317508bbe7630fa68030eb73045170d4ab6672cbb62b6ccf1846",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GT-1",
+      "subject": "gotoHuman",
+      "identifier": "gotohuman.com",
+      "source_url": "https://www.gotohuman.com/",
+      "captured_at": "2026-09-25T05:31:17Z",
+      "captured_digest": "a5c7d59c3e01d9c0ca8f167b98f542c5e7479b8784be100efdb5b30bc2a5815b",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "e0c11937170e1e5de0efc16915ca51abed115a1ca3c71dc8b87a8ab7ccd17787",
+      "claim_verbatim_sha256": "19c3ee5c6b99a407fbe0cfdc04adfd0fb98229b76c00a7e75e7b226d1787f58e",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "e0c11937170e1e5de0efc16915ca51abed115a1ca3c71dc8b87a8ab7ccd17787",
+          "captured_at": "2026-09-25T05:31:17Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "0eaf81ffe8b3835066be1e439999ea4197c60f1d63ac2aeb4014bc91eaba0db5",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.847Z",
+      "response_body_sha256": "3f5b3ed1701a2b28d5986e4ac7f6a7e40f1b1d48fd06fe050a53fa5222d00009",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "820f8e21fb006c00901e3a6bcb1cf37d9f51b89a0b900808a4cdd4592498c5cf",
+      "reread_chars": 5104,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GT-2",
+      "subject": "gotoHuman",
+      "identifier": "gotohuman.com",
+      "source_url": "https://www.gotohuman.com/",
+      "captured_at": "2026-09-25T05:31:17Z",
+      "captured_digest": "a5c7d59c3e01d9c0ca8f167b98f542c5e7479b8784be100efdb5b30bc2a5815b",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "67f335125d9620dc800823ccfe93d72760201387ecc92a0d48ddef8f8a739efc",
+      "claim_verbatim_sha256": "842e771dc9b1812e9c1fdd4b25ad51813555ac43fa2903b49e3a83fb2bfb7159",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "67f335125d9620dc800823ccfe93d72760201387ecc92a0d48ddef8f8a739efc",
+          "captured_at": "2026-09-25T05:31:17Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "8775657b0d740206c66eb9dd794194534c29366175cd03a8474399b1f641fc9a",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.847Z",
+      "response_body_sha256": "3f5b3ed1701a2b28d5986e4ac7f6a7e40f1b1d48fd06fe050a53fa5222d00009",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "820f8e21fb006c00901e3a6bcb1cf37d9f51b89a0b900808a4cdd4592498c5cf",
+      "reread_chars": 5104,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GT-3",
+      "subject": "gotoHuman",
+      "identifier": "gotohuman.com",
+      "source_url": "https://raw.githubusercontent.com/gotohuman/gotohuman-mcp-server/main/package.json",
+      "captured_at": "2026-09-24T15:39:24Z",
+      "captured_digest": "a0f2778032146427156086f6b4ad0513e9d81f8addd69baa5565616532e5de13",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "1b62babd75ea5538e61ab47656f9e4f71bb68c14769447d580ba7ef11228c38b",
+      "claim_verbatim_sha256": "5edff0d3404e97f7ff84b9b063c9e417abeb7f83e2fb88d3d3bbfc82d5f0ea63",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "1b62babd75ea5538e61ab47656f9e4f71bb68c14769447d580ba7ef11228c38b",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "e6dda1fe51ac1da8064fb51f1ccb7de35e1e89a9b0f88d22471053ccd1eea9cf",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:19.025Z",
+      "response_body_sha256": "a0f2778032146427156086f6b4ad0513e9d81f8addd69baa5565616532e5de13",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "a0f2778032146427156086f6b4ad0513e9d81f8addd69baa5565616532e5de13",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GT-4",
+      "subject": "gotoHuman",
+      "identifier": "gotohuman.com",
+      "source_url": "https://raw.githubusercontent.com/gotohuman/gotohuman-mcp-server/main/README.md",
+      "captured_at": "2026-09-24T15:39:24Z",
+      "captured_digest": "c1aa1764efdd1ad014aab9df7685d1eae25f1d18b55e12e11655654e01ffae81",
+      "coverage": "raw-bytes",
+      "extractor": null,
+      "artifact_sha256": "bb1e17bfb3ac99bfbcb958607fd5f95e63f5fc766f3bb939a236c2533665bb54",
+      "claim_verbatim_sha256": "a072106aff4fb1c51d7a9ed8318f906eb7e5dd7c381babb08dba9e81c07b9d44",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "bb1e17bfb3ac99bfbcb958607fd5f95e63f5fc766f3bb939a236c2533665bb54",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "a5de57f4eaf425b9792e3fefd62bf8bcbaa2ae4824592e418b942fa0aaddb43b",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.974Z",
+      "response_body_sha256": "5fd8ce60e9a1b756001f00670521e88f5ac37df57c461635ffaeb5717ad6f570",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "5fd8ce60e9a1b756001f00670521e88f5ac37df57c461635ffaeb5717ad6f570",
+      "reread_chars": null,
+      "claim_text_observation": "NOT_EXTRACTED_FROM_RAW_BODY",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GT-5",
+      "subject": "gotoHuman",
+      "identifier": "gotohuman.com",
+      "source_url": "https://www.gotohuman.com/imprint",
+      "captured_at": "2026-09-25T05:31:18Z",
+      "captured_digest": "89029fd72f99bba0deeb5a53a5b425797e711571d5f645d6f3391a6b7b48435a",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "f29216c926fed3f6c81d293b8026abd12966fcd9fcac5474a2acd35e98713387",
+      "claim_verbatim_sha256": "ef6ffc575b2e912a5846175debbe95e41f2a3bd4e9eb815cea2314de1f7ca8fa",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "f29216c926fed3f6c81d293b8026abd12966fcd9fcac5474a2acd35e98713387",
+          "captured_at": "2026-09-25T05:31:18Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "dfe1857055f8579de9cd40abc770e50b25104af68addb5a9cc203b3cc045ad25",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.894Z",
+      "response_body_sha256": "8a61269f9d8f9070ce5e59353adb5bace399c3710d54b38840012ccb5a5cef68",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "89029fd72f99bba0deeb5a53a5b425797e711571d5f645d6f3391a6b7b48435a",
+      "reread_chars": 170,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "GT-6",
+      "subject": "gotoHuman",
+      "identifier": "gotohuman.com",
+      "source_url": "https://www.gotohuman.com/",
+      "captured_at": "2026-09-25T05:31:17Z",
+      "captured_digest": "a5c7d59c3e01d9c0ca8f167b98f542c5e7479b8784be100efdb5b30bc2a5815b",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "edbefe04a8cfa2054531de64f672fd605f5d4efabdd35626f02014e029fb4dad",
+      "claim_verbatim_sha256": "63c14308aad8f01972f1d9851f561e13fc3653f54fbefd73ae6bdc44a283cad4",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "edbefe04a8cfa2054531de64f672fd605f5d4efabdd35626f02014e029fb4dad",
+          "captured_at": "2026-09-25T05:31:17Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "a61c7c8fc3d77faf026a93d2c6253cf5c2c1c9659d49ca216ca92345116ee9eb",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.847Z",
+      "response_body_sha256": "3f5b3ed1701a2b28d5986e4ac7f6a7e40f1b1d48fd06fe050a53fa5222d00009",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "820f8e21fb006c00901e3a6bcb1cf37d9f51b89a0b900808a4cdd4592498c5cf",
+      "reread_chars": 5104,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "PM-1",
+      "subject": "Payman",
+      "identifier": "paymanai.com",
+      "source_url": "https://paymanai.com/",
+      "captured_at": "2026-09-25T05:31:18Z",
+      "captured_digest": "b5a45d517d098da640135e04eb34079e715808ebf68ab5d6eaf6e309ca194b1f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "56cefd9d806841ee8cea2179f2b404806fe388587fa10f9263e731024e4a1e6b",
+      "claim_verbatim_sha256": "7499e9674053e54b0ab8f5d07dc9a95adb6d78c8b7e137518973d6622e354f9c",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "56cefd9d806841ee8cea2179f2b404806fe388587fa10f9263e731024e4a1e6b",
+          "captured_at": "2026-09-25T05:31:18Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "92c7f6c53e3420494d0f07fd51e1dc9d1b7f79b0ed176980bdd973eda453f468",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.497Z",
+      "response_body_sha256": "4ee046f61461f6ba948831fcbe77829c4094951ac756c5c2aedc2ae4a9db2968",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "d4446c40de9781488c7e2f8789b06a4324850eebc43f3e172f9de20baa50b7ca",
+      "reread_chars": 7374,
+      "claim_text_observation": "NOT_FOUND_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "PM-2",
+      "subject": "Payman",
+      "identifier": "paymanai.com",
+      "source_url": "https://paymanai.com/",
+      "captured_at": "2026-09-25T05:31:18Z",
+      "captured_digest": "b5a45d517d098da640135e04eb34079e715808ebf68ab5d6eaf6e309ca194b1f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "0e82d6c3dd4db07351b375a07a683cdab08ab4bfca86fe9804eb8133082e265d",
+      "claim_verbatim_sha256": "005790c85bcebedd76c935cb5211e497b2e64e2b535df2c47f6c0c8c96c5bb84",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "0e82d6c3dd4db07351b375a07a683cdab08ab4bfca86fe9804eb8133082e265d",
+          "captured_at": "2026-09-25T05:31:18Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "d0dce74e4995344ac64ed30ff1385fa16c984f2db3c7f7ca4284959f8ac5e349",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.497Z",
+      "response_body_sha256": "4ee046f61461f6ba948831fcbe77829c4094951ac756c5c2aedc2ae4a9db2968",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "d4446c40de9781488c7e2f8789b06a4324850eebc43f3e172f9de20baa50b7ca",
+      "reread_chars": 7374,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "PM-3",
+      "subject": "Payman",
+      "identifier": "paymanai.com",
+      "source_url": "https://paymanai.com/",
+      "captured_at": "2026-09-25T05:31:18Z",
+      "captured_digest": "b5a45d517d098da640135e04eb34079e715808ebf68ab5d6eaf6e309ca194b1f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "db188d1526ae3dc89d3d661a5c91d27a0bc1acba4d6797cc67e87c77c9661c8a",
+      "claim_verbatim_sha256": "7472c5c7f19407558f032c327fa0bc1c5c186109af956051d632568e9c6389a6",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "db188d1526ae3dc89d3d661a5c91d27a0bc1acba4d6797cc67e87c77c9661c8a",
+          "captured_at": "2026-09-25T05:31:18Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "e08ca5bdc573b99cf202c534bedc22e273efdb31e4bd8eda2fb8cfe722bb0f5c",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.497Z",
+      "response_body_sha256": "4ee046f61461f6ba948831fcbe77829c4094951ac756c5c2aedc2ae4a9db2968",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "d4446c40de9781488c7e2f8789b06a4324850eebc43f3e172f9de20baa50b7ca",
+      "reread_chars": 7374,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "PM-4",
+      "subject": "Payman",
+      "identifier": "paymanai.com",
+      "source_url": "https://paymanai.com/",
+      "captured_at": "2026-09-25T05:31:18Z",
+      "captured_digest": "b5a45d517d098da640135e04eb34079e715808ebf68ab5d6eaf6e309ca194b1f",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "822f1e895c16fd455ed91f9c2d0a68f4e0ce7c896050e32b43b036281dbdd325",
+      "claim_verbatim_sha256": "27bc63abc3426397996c207e373caf2be83bc17d68ae183fd0565d3cca61bb33",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "822f1e895c16fd455ed91f9c2d0a68f4e0ce7c896050e32b43b036281dbdd325",
+          "captured_at": "2026-09-25T05:31:18Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "88e21d80e9e17ccc67acf00be7bfb1fe60f950be32b98c29b11d18584e2ada47",
+          "captured_at": "2026-09-24T15:39:24Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.497Z",
+      "response_body_sha256": "4ee046f61461f6ba948831fcbe77829c4094951ac756c5c2aedc2ae4a9db2968",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "d4446c40de9781488c7e2f8789b06a4324850eebc43f3e172f9de20baa50b7ca",
+      "reread_chars": 7374,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "PM-5",
+      "subject": "Payman",
+      "identifier": "paymanai.com",
+      "source_url": "https://web.archive.org/web/20241005225726id_/https://paymanai.com/",
+      "captured_at": "2026-09-25T05:31:20Z",
+      "captured_digest": "70e1a44ed62cdd9c66801edef04fe9ebb748f178050d5eebf6618c895272b09c",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "c636839e3d2bbcc9f912eae96da35500e50560e3e2502813426fe991a85a2b19",
+      "claim_verbatim_sha256": "54f85527e49a874575f41d9c98c92ed94c235350221aadf008cd945b88b14bf9",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "c636839e3d2bbcc9f912eae96da35500e50560e3e2502813426fe991a85a2b19",
+          "captured_at": "2026-09-25T05:31:20Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "140b18a37a358de179404f62208a06371bf7ecda0d681954bb541c01d67afac0",
+          "captured_at": "2026-09-24T15:39:25Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:20.137Z",
+      "response_body_sha256": "9f1c7f2eb942f61b54f7dc7c917fe7a7afcb5609075d439082dbcd086b0d6cde",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "70e1a44ed62cdd9c66801edef04fe9ebb748f178050d5eebf6618c895272b09c",
+      "reread_chars": 3909,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "IN-1",
+      "subject": "Invoke",
+      "identifier": "invoke.nanocorp.app",
+      "source_url": "https://invoke.nanocorp.app/",
+      "captured_at": "2026-09-25T05:31:21Z",
+      "captured_digest": "7ab129fe7ef883997cb5528c5a5871d41ca30b0d3275cdfdd9ef8bac85626be5",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "0982b3d91b96602d33eb59803d2603220d9d3251f20dccfc0761f882beab44d1",
+      "claim_verbatim_sha256": "980cccd53312879e7198eee8d9cfa2ba92b52a4bf381784dba861d1f855a04e8",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "0982b3d91b96602d33eb59803d2603220d9d3251f20dccfc0761f882beab44d1",
+          "captured_at": "2026-09-25T05:31:21Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "fa716af86b4765575ea75b3d3c8b66ac63b88348502b446b9a3d4dc95a5df65b",
+          "captured_at": "2026-09-24T15:39:27Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.742Z",
+      "response_body_sha256": "d05992de6bd9937f03a1f680a6aae8092c5fe37efc5b9a875eb77ca58e56d2f9",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "b25f3d0946aba50fa9609ac1f1ad11b09538c2c3e8d9e52ce0ad67dda5c7e0f3",
+      "reread_chars": 7959,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "IN-2",
+      "subject": "Invoke",
+      "identifier": "invoke.nanocorp.app",
+      "source_url": "https://invoke.nanocorp.app/",
+      "captured_at": "2026-09-25T05:31:21Z",
+      "captured_digest": "7ab129fe7ef883997cb5528c5a5871d41ca30b0d3275cdfdd9ef8bac85626be5",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "baa36aa8c01583f362617fe1f7ed996d264369050d6fda33f7b495c141c42115",
+      "claim_verbatim_sha256": "c7569f23f2ddf21c4a6b4d2977f72a70adda50e3203e0f5da4176e37c85e6b3d",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "baa36aa8c01583f362617fe1f7ed996d264369050d6fda33f7b495c141c42115",
+          "captured_at": "2026-09-25T05:31:21Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "9c23f65860473f692ea8257a524dea87b02c3807d4ce69665487837c5c200561",
+          "captured_at": "2026-09-24T15:39:27Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.742Z",
+      "response_body_sha256": "d05992de6bd9937f03a1f680a6aae8092c5fe37efc5b9a875eb77ca58e56d2f9",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "b25f3d0946aba50fa9609ac1f1ad11b09538c2c3e8d9e52ce0ad67dda5c7e0f3",
+      "reread_chars": 7959,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "IN-3",
+      "subject": "Invoke",
+      "identifier": "invoke.nanocorp.app",
+      "source_url": "https://invoke.nanocorp.app/terms",
+      "captured_at": "2026-09-25T05:31:21Z",
+      "captured_digest": "4efd6fda206e7a67be6009ce8da264fcf3204a6f879f667f8240ba2953ddaac2",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "8938b40781a3ca975afdb09733e9894434bfaa5d046b0748d7b92e64874396e5",
+      "claim_verbatim_sha256": "406a228932ac816794928556656d250bbcc9722ce5fc5b290f6bca47562a9c4c",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "8938b40781a3ca975afdb09733e9894434bfaa5d046b0748d7b92e64874396e5",
+          "captured_at": "2026-09-25T05:31:21Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "10406647280e9325cd24c91cf09fd4d3aec560bcd4a0c5cd83f9b8f1b2013dba",
+          "captured_at": "2026-09-24T15:39:27Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:17.717Z",
+      "response_body_sha256": "846af681154f84028de87d85e7cb3b6ee624fc622a85a5b865bcc2517036f8f6",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "4efd6fda206e7a67be6009ce8da264fcf3204a6f879f667f8240ba2953ddaac2",
+      "reread_chars": 1464,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "IN-4",
+      "subject": "Invoke",
+      "identifier": "invoke.nanocorp.app",
+      "source_url": "https://invoke.nanocorp.app/terms",
+      "captured_at": "2026-09-25T05:31:21Z",
+      "captured_digest": "4efd6fda206e7a67be6009ce8da264fcf3204a6f879f667f8240ba2953ddaac2",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "d0e549630b445fb62769031041b7083041064b3d55f8457a31380dc8f8232f14",
+      "claim_verbatim_sha256": "4974c50322af00ba2268721f10bdd7b5d96c2d06e208f426fa544359bf816a26",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "d0e549630b445fb62769031041b7083041064b3d55f8457a31380dc8f8232f14",
+          "captured_at": "2026-09-25T05:31:21Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "855c09955697eb303087b6688e0a3f51dc50adb1fb02719e27400311516c89a1",
+          "captured_at": "2026-09-24T15:39:27Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:17.717Z",
+      "response_body_sha256": "846af681154f84028de87d85e7cb3b6ee624fc622a85a5b865bcc2517036f8f6",
+      "comparable": true,
+      "outcome": "UNCHANGED",
+      "reread_digest": "4efd6fda206e7a67be6009ce8da264fcf3204a6f879f667f8240ba2953ddaac2",
+      "reread_chars": 1464,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "IN-5",
+      "subject": "Invoke",
+      "identifier": "invoke.nanocorp.app",
+      "source_url": "https://invoke.nanocorp.app/for-agents",
+      "captured_at": "2026-09-25T05:31:22Z",
+      "captured_digest": "f884f2743c4ac50b31aa5f0e6929915801db69252ca666982b2c7f51b5a781c3",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "e3f329d4cdd25ff77613656c074384e0f60d0d61ed4ca1a4efe9db4df569362c",
+      "claim_verbatim_sha256": "4d8408cb3a1c6dfbe9ac527a342d2e4d4018047fd5f1cf4bb3b18682c71677cb",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "e3f329d4cdd25ff77613656c074384e0f60d0d61ed4ca1a4efe9db4df569362c",
+          "captured_at": "2026-09-25T05:31:22Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "beaccd999f8c05366ae52f4ab65adaa3929147738f37cb1737aa344e67fea41a",
+          "captured_at": "2026-09-24T15:39:27Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:18.750Z",
+      "response_body_sha256": "daca782dfc39ff12e49050ca75eb86675298b2d32459fbcb3805438e4c2df178",
+      "comparable": true,
+      "outcome": "CHANGED",
+      "reread_digest": "2528b586d3f3b3185a221870c779d4d5d324e48b94ffeec0d9aea21293baf57c",
+      "reread_chars": 9526,
+      "claim_text_observation": "PRESENT_IN_EXTRACTED_TEXT",
+      "disclosure": "NOT_DECIDABLE_BY_THIS_METHOD"
+    },
+    {
+      "claim_id": "IH-1",
+      "subject": "InstaHuman",
+      "identifier": "instahuman.com",
+      "source_url": "https://instahuman.com/",
+      "captured_at": "2026-09-25T05:31:23Z",
+      "captured_digest": "d3b392ca78db2578ec36b763748ccad798e1cb054e9808907414fe1e7e038b3d",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "7c89aa3f0f3f97f9074d397705078498635d9386852ea9e7d38cdc23ce10dcba",
+      "claim_verbatim_sha256": "796be16673a945026d448c4eaf8700cd751b7a887e17c9cdd6ea984100911acb",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "7c89aa3f0f3f97f9074d397705078498635d9386852ea9e7d38cdc23ce10dcba",
+          "captured_at": "2026-09-25T05:31:23Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "d6640691ba0b1e12500bde56524c66815ca2d68e9ee7aefce2416e71ef0e4475",
+          "captured_at": "2026-09-24T15:39:29Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:15.769Z",
+      "response_body_sha256": null,
+      "comparable": false,
+      "outcome": "UNREACHABLE",
+      "reason": "HTTP_404"
+    },
+    {
+      "claim_id": "IH-2",
+      "subject": "InstaHuman",
+      "identifier": "instahuman.com",
+      "source_url": "https://instahuman.com/legal/terms-of-use",
+      "captured_at": "2026-09-25T05:31:23Z",
+      "captured_digest": "3e23bd23bd08d08e09499a04f4d38a33db4858bbdf57e19848de32e26f2fb9ac",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "0f5fe1e3b90d34d50de4da9dfbbeae251efb29a7e86db844492044556e4cefb4",
+      "claim_verbatim_sha256": "4492458c0760f3eea008d20519cac45d9127d340568c406d7ba62399ffd199de",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "0f5fe1e3b90d34d50de4da9dfbbeae251efb29a7e86db844492044556e4cefb4",
+          "captured_at": "2026-09-25T05:31:23Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "ae073bfbacafab1a12a4473094ae0318d288e1f12a6aa0e72f19e27521504bd4",
+          "captured_at": "2026-09-24T15:39:29Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:15.902Z",
+      "response_body_sha256": null,
+      "comparable": false,
+      "outcome": "UNREACHABLE",
+      "reason": "HTTP_404"
+    },
+    {
+      "claim_id": "IH-3",
+      "subject": "InstaHuman",
+      "identifier": "instahuman.com",
+      "source_url": "https://instahuman.com/legal/terms-of-use",
+      "captured_at": "2026-09-25T05:31:23Z",
+      "captured_digest": "3e23bd23bd08d08e09499a04f4d38a33db4858bbdf57e19848de32e26f2fb9ac",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "f5f67a886014e26d0a393b4a4fc3412c91b60c5065a76566a16c71bb67e65c12",
+      "claim_verbatim_sha256": "1eb079908628a649a1dd2093452c7dedb6f8221c1b98525552e0c2e52e2da8f8",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "f5f67a886014e26d0a393b4a4fc3412c91b60c5065a76566a16c71bb67e65c12",
+          "captured_at": "2026-09-25T05:31:23Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "81980b2d3c5b70aafa9af84d515cf131c9463e0e4a685fe71eb074b95a4aa77d",
+          "captured_at": "2026-09-24T15:39:29Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:15.902Z",
+      "response_body_sha256": null,
+      "comparable": false,
+      "outcome": "UNREACHABLE",
+      "reason": "HTTP_404"
+    },
+    {
+      "claim_id": "IH-4",
+      "subject": "InstaHuman",
+      "identifier": "instahuman.com",
+      "source_url": "https://instahuman.com/legal/terms-of-use",
+      "captured_at": "2026-09-25T05:31:23Z",
+      "captured_digest": "3e23bd23bd08d08e09499a04f4d38a33db4858bbdf57e19848de32e26f2fb9ac",
+      "coverage": "visible-text",
+      "extractor": "csoai-visible-text/2",
+      "artifact_sha256": "6e6de9743ef1d07373c3af12c98c469c67e5a2b3ca394356f777d18d12b9e8a4",
+      "claim_verbatim_sha256": "e2c5766c939565d9542123b141ec954d084a8e914b9a567484184076993cd579",
+      "registers": [
+        "claimreg-hiring-platforms-2026-09-24-rev2.json"
+      ],
+      "lineage": [
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24-rev2.json",
+          "register_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+          "artifact_sha256": "6e6de9743ef1d07373c3af12c98c469c67e5a2b3ca394356f777d18d12b9e8a4",
+          "captured_at": "2026-09-25T05:31:23Z",
+          "active": true
+        },
+        {
+          "register": "claimreg-hiring-platforms-2026-09-24.json",
+          "register_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+          "artifact_sha256": "01e00745121bedc765077fad47a3484f899da2c49f406f3653e204d5cd556324",
+          "captured_at": "2026-09-24T15:39:29Z",
+          "active": false
+        }
+      ],
+      "observed_at": "2026-10-30T05:03:15.902Z",
+      "response_body_sha256": null,
+      "comparable": false,
+      "outcome": "UNREACHABLE",
+      "reason": "HTTP_404"
+    }
+  ]
+}
