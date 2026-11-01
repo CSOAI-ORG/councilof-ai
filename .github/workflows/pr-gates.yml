@@ -797,6 +797,13 @@ jobs:
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
           python3 scripts/withdraw_one_option_cards.py
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
+          # The public-watchdog intake lane (2026-10-30): the harness must be able to report
+          # UNREACHABLE and UNCHECKABLE and never 0; the charter feed must never turn a routing
+          # row into a decision; and the atom the publisher signs must pass the publisher's own
+          # admission check (scripts/adapters/staged_leaves.py) with a verdict word refused.
+          python3 -m pytest -q scripts/readers/test_watchdog_intake_reader.py
+          python3 -B scripts/test_watchdog_intake.py
+          python3 -B scripts/test_watchdog_charter_feed.py
           # public-root halted on every run of 5-6 Oct 2026 on a stale ledger proof; the re-stamp
           # producer must keep the old pair, roll back on failure and clear the gate's own check.
           python3 -m pytest -q scripts/test_ots_restamp_ledger.py
