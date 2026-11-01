@@ -26,11 +26,22 @@ row in `council-os/distribution.json`, (b) `STEPS[id]` in the renderer, (c) a
 live in `scripts/harness-x/kimi-plugin.node-test.mjs` because Kimi's validator is
 inside the Kimi application and CI cannot run it.
 
-## HITL: only the back end is built
+## HITL: configuration and human acceptance are separate
 
-`scripts/hitl/hitl_probe.py` is the client-side elicitation probe (a server that
-elicits must stop when the human declines; no secrets in form mode) and it passes
-its controls. The END-USER decision path — a human deciding on a raised challenge,
-gated by a competency module and returning a signed receipt — is NOT BUILT here:
-`/api/hitl` returns 404 live and `COUNCIL_HITL_DECIDE_TOKEN` appears nowhere in
-the repo. Do not describe it as working; it is a gap.
+The endpoint and console are implemented in `functions/api/hitl.ts`,
+`functions/api/_hitl.ts` and `client/src/components/HitlConsole.tsx`.
+The operator binding used by the implementation is `HITL_DECIDE_TOKEN`.
+
+A read-only observation on 2026-10-30 at 10:14:52Z returned HTTP 200 from
+`https://councilof.ai/api/hitl`. It reported a bound decision store, configured
+operator token and signing key, and an open recording path. The bounded receipt
+is `docs/operations/hitl-configuration-readback-20261030.json`. This supersedes
+the earlier note that the endpoint was unbuilt or returned 404; it is a dated
+observation, not a promise about future configuration.
+
+Configuration does not establish a genuine human's identity, consent,
+competence, current execution authority, or successful durable decision.
+A recordable decision is not permission to execute a tool. Preserve those
+separate acceptance requirements; do not manufacture an operator or treat an
+automated test as a human decision. Check the current deployment before making
+a current readiness claim. The readback sent no POST or decision.
