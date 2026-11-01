@@ -376,15 +376,15 @@ export default function GspcScoreboard() {
                 <div className="mt-3 grid grid-cols-3 gap-2" aria-label="Model-comparison separation states">
                   <div className="rounded-xl border border-sky-200 bg-sky-50 p-3 text-center">
                     <p className="text-xl font-black tabular-nums text-sky-900">{board.separation.separated}</p>
-                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-sky-800">separated</p>
+                    <p className="mt-1 whitespace-nowrap text-[10px] font-semibold uppercase tracking-normal text-sky-800">separated</p>
                   </div>
                   <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-center">
                     <p className="text-xl font-black tabular-nums text-amber-900">{board.separation.ties}</p>
-                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-amber-800">ties</p>
+                    <p className="mt-1 whitespace-nowrap text-[10px] font-semibold uppercase tracking-normal text-amber-800">ties</p>
                   </div>
                   <div className="rounded-xl border border-gray-200 bg-gray-50 p-3 text-center">
                     <p className="text-xl font-black tabular-nums text-gray-700">{board.separation.untested}</p>
-                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-gray-600">untested</p>
+                    <p className="mt-1 whitespace-nowrap text-[10px] font-semibold uppercase tracking-normal text-gray-600">untested</p>
                   </div>
                 </div>
                 <p className="mt-3 text-xs leading-5 text-gray-600">
