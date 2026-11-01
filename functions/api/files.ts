@@ -1,6 +1,6 @@
 /**
  * files — retired until its response can be derived from current evidence.
- * @openapi-unavailable
+ * @openapi-retired
  */
 import { headFromGet } from "./_head";
 
