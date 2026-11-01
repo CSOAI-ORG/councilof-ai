@@ -797,6 +797,13 @@ jobs:
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
           python3 scripts/withdraw_one_option_cards.py
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
+          # The public-watchdog intake lane (2026-10-30): the harness must be able to report
+          # UNREACHABLE and UNCHECKABLE and never 0; the charter feed must never turn a routing
+          # row into a decision; and the atom the publisher signs must pass the publisher's own
+          # admission check (scripts/adapters/staged_leaves.py) with a verdict word refused.
+          python3 -m pytest -q scripts/readers/test_watchdog_intake_reader.py
+          python3 -B scripts/test_watchdog_intake.py
+          python3 -B scripts/test_watchdog_charter_feed.py
           # public-root halted on every run of 5-6 Oct 2026 on a stale ledger proof; the re-stamp
           # producer must keep the old pair, roll back on failure and clear the gate's own check.
           python3 -m pytest -q scripts/test_ots_restamp_ledger.py
@@ -809,6 +816,11 @@ jobs:
           # reasons and a step that is green only because nobody looks is the defect
           # this line exists to stop repeating.
           python3 -m pytest -q harness/gspc-top100/test_mill_honesty.py -k sign_mill_skips_already_signed
+          # Card signing runs master's code with the landing branch as data
+          # (hf-fin-shells-measure.yml dispatched on master with land_branch). The tests build a
+          # throwaway git repo: only the two data directories are read from a branch, signed
+          # outputs go to that branch and never to master, and the three landers dispatch that way.
+          python3 -m pytest -q scripts/test_sign_land_branch.py
           python3 scripts/watch/test_provider_watch.py
           python3 scripts/watch/test_provider_watch_promotion.py
 

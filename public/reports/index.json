@@ -17,11 +17,11 @@
  "as_of": "2026-08-19T09:24:39.174226+00:00",
  "as_of_field": "the newest body.created stamp across the cards — when the last card was measured, never when this file was generated",
  "counts": {
-  "axes": 33,
+  "axes": 34,
   "axes_by_kind": {
    "model-comparison": 14,
    "deterministic-facts": 9,
-   "declared-slot": 9,
+   "declared-slot": 10,
    "measured-subject": 1
   },
   "axes_with_subject_reports": 9,
@@ -1062,6 +1062,25 @@
    },
    "subject_reports": "none",
    "reason": "HELD for spend: free credit only."
+  },
+  {
+   "axis": "watchdog-ingest",
+   "kind": "declared-slot",
+   "family": "subject",
+   "bench": "pending frozen method + sha-pinned daily runs",
+   "task": "does the public watchdog and incident layer answer on a schedule, does each answer carry the shape its publisher documents, and which of our own axes does each source touch",
+   "status": "UNMEASURED",
+   "n": 0,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "The daily intake run probes 18 public sources and publishes public/interop/watchdog-intake/_index.json. That is a DAILY PROBE OF THE PUBLIC LAYER, not a frozen n>=30 bank, so this slot stays UNMEASURED. When the daily runs are frozen, sha-pinned and pinned to a published run window, the axis becomes MEASURED with n counting SOURCES PROBED — the same grammar as effect-binding's 'tool-call servers probed', never pooled with bank-item n."
   }
  ],
  "subjects": [
@@ -5527,5 +5546,5 @@
  ],
  "canonical_rule": "canonical_sha256 = sha256(canonical JSON of this object minus generated_at and canonical_sha256; keys sorted, no whitespace)",
  "generated_at": "2026-08-19T09:24:39.174226+00:00",
- "canonical_sha256": "d715e43d733ba0b601fcf11643838ac1dc4033e7d3fd2ddab3ac4d7b63c51a3e"
+ "canonical_sha256": "4fc8f1af0b9ed9cdb069b45b2c867cb90198bb279b57a205675b6fb4436909f6"
 }
