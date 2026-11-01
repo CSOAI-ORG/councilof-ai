@@ -83,7 +83,8 @@ export default function BoardField({ rows, setId }: { rows: AxisRow[]; setId: st
         overlap, nothing separates — a TIE is the test declining to separate, not two models being equal.
       </p>
 
-      <ul className="mt-3 space-y-1.5">
+      <div className="mt-3 overflow-x-auto">
+      <ul className="min-w-[30rem] space-y-1.5">
         {rows.map((r) => {
           const chip = r.separation ?? r.status;
           return (
@@ -117,6 +118,7 @@ export default function BoardField({ rows, setId }: { rows: AxisRow[]; setId: st
           );
         })}
       </ul>
+      </div>
 
       <p className="mt-3 border-t border-gray-100 pt-2 text-[11px] leading-relaxed text-gray-600">
         {measured.length} of {rows.length} rows carry a run. A slot listed with n = 0 is named and counted
