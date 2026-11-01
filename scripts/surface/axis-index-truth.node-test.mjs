@@ -125,9 +125,10 @@ test("the axes index page says 32 where the board serves 33, because one slot is
 test("the commit board renders exactly its public canonical axes without promoting the owner-held slot", async () => {
   const live = await loadBoard();
   const allIds = live.axes.map((row) => row.axis);
-  assert.equal(allIds.length, 33);
-  assert.equal(new Set(allIds).size, 33);
+  assert.equal(allIds.length, 34);
+  assert.equal(new Set(allIds).size, 34);
   assert.ok(allIds.includes("regulator-transparency"));
+  assert.ok(allIds.includes("watchdog-ingest"));
 
   const publicIds = live.axes
     .filter((row) => row.public_pages !== OWNER_GATED)
@@ -135,6 +136,7 @@ test("the commit board renders exactly its public canonical axes without promoti
     .sort();
   assert.equal(publicIds.length, 32);
   assert.ok(!publicIds.includes("regulator-transparency"));
+  assert.ok(!publicIds.includes("watchdog-ingest"));
 
   const out = renderAll(live);
   const renderedIds = Object.keys(out)
