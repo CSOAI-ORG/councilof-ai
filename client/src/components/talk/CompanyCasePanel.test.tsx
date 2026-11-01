@@ -2,9 +2,11 @@
 // Synthetic render regression only; this never invokes a backend or the reserved acceptance request.
 import { act, createRef } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useSearch } from "wouter";
-import CompanyCasePanel, { type CompanyCasePanelHandle } from "./CompanyCasePanel";
+import CompanyCasePanel, { type CompanyCasePanelHandle, type CompanyCasePanelProps, type CompanyCaseVerifiedCallback } from "./CompanyCasePanel";
+import { startListening } from "@/lib/councilListen";
+import * as councilVoice from "@/lib/councilVoice";
 import { companyWorkspaceSelection, type CommittedCompanyCase, type PendingCompanyCase, type CompanyCase, type CompanyCaseConnection } from "./companyCaseModel";
 
 describe("company case pending navigation", () => {
@@ -151,15 +153,17 @@ describe("company case pending navigation", () => {
     let nextRead: CompanyCase = proposed;
     const submit = vi.fn(async () => proposed);
     const read = vi.fn(async () => nextRead);
+    const verified = vi.fn();
     const connection: CompanyCaseConnection = { session: { status: "ready", subject: owner }, client: { caseIdForRequest: async () => caseId, submit, read } };
     const handle = createRef<CompanyCasePanelHandle>();
     function Harness() {
       const selection = companyWorkspaceSelection(useSearch());
-      return <CompanyCasePanel ref={handle} connection={connection} caseId={selection.caseId} />;
+      return <CompanyCasePanel ref={handle} connection={connection} caseId={selection.caseId} onCaseVerified={verified} />;
     }
     container = document.createElement("div"); document.body.append(container); root = createRoot(container);
     await act(async () => { root!.render(<Harness />); });
     await act(async () => { handle.current?.ask(committed.request); });
+    expect(verified).toHaveBeenLastCalledWith(proposed, "submitted", { ownerSubject: owner, caseId, requestId: committed.requestId });
     expect(container.querySelector('[data-testid="company-case-awaiting-review"]')).not.toBeNull();
     expect(container.querySelector('[data-testid="company-case-saved"]')).toBeNull();
     expect(container.querySelector('[data-testid="result-follow-up"]')).toBeNull();
@@ -173,6 +177,7 @@ describe("company case pending navigation", () => {
     root = createRoot(container);
     await act(async () => { root!.render(<Harness />); });
     expect(read).toHaveBeenCalledTimes(1);
+    expect(verified).toHaveBeenLastCalledWith(nextRead, "initial-read", { ownerSubject: owner, caseId, requestId: committed.requestId });
     expect(container.querySelector('[data-testid="company-case-awaiting-review"]')).not.toBeNull();
     expect(container.textContent).toContain("Approval reported; awaiting verified merge");
     expect(container.querySelector('[data-testid="result-follow-up"]')).toBeNull();
@@ -180,6 +185,7 @@ describe("company case pending navigation", () => {
     nextRead = committed;
     await act(async () => { container!.querySelector<HTMLButtonElement>('[data-testid="company-case-awaiting-review"] button')!.click(); });
     expect(read).toHaveBeenCalledTimes(2);
+    expect(verified).toHaveBeenLastCalledWith(committed, "read", { ownerSubject: owner, caseId, requestId: committed.requestId });
     expect(submit).toHaveBeenCalledTimes(1);
     expect(container.querySelector('[data-testid="company-case-saved"]')).not.toBeNull();
     expect(container.querySelector('[data-testid="company-case-awaiting-review"]')).toBeNull();
@@ -242,4 +248,229 @@ describe("company case pending navigation", () => {
     expect(fetcher).not.toHaveBeenCalled();
   });
 
+});
+
+describe("company case verified presentation and owned dictation", () => {
+  let root: Root | undefined;
+  let container: HTMLDivElement | undefined;
+  const recognitionDescriptor = Object.getOwnPropertyDescriptor(window, "SpeechRecognition");
+  const owner = "voice-owner@example.invalid";
+  const caseId = "voice-case";
+  const requestId = "00000000-0000-4000-8000-000000000031";
+
+  class Recognition extends EventTarget {
+    static instances: Recognition[] = [];
+    continuous = false;
+    interimResults = false;
+    lang = "";
+    maxAlternatives = 1;
+    buffer = "GSPC buffered draft";
+    constructor() { super(); Recognition.instances.push(this); }
+    start = vi.fn(() => { this.dispatchEvent(new Event("start")); });
+    stop = vi.fn(() => { this.emit(this.buffer, true); this.dispatchEvent(new Event("end")); });
+    abort = vi.fn(() => { this.emit("GSPC LATE_ABORTED_DRAFT", true); this.dispatchEvent(new Event("end")); });
+    emit(text: string, isFinal: boolean) {
+      this.dispatchEvent(Object.assign(new Event("result"), {
+        resultIndex: 0, results: { length: 1, 0: { isFinal, 0: { transcript: text } } },
+      }));
+    }
+    fail(error: string) { this.dispatchEvent(Object.assign(new Event("error"), { error })); }
+  }
+
+  function fixture(overrides: Partial<CommittedCompanyCase> = {}): CommittedCompanyCase {
+    return {
+      caseId, requestId, ownerSubject: owner, request: "GSPC fixture request",
+      result: { id: "voice-result", text: "Synthetic result", fetchedAt: "2026-10-25T03:00:00Z", sha256: "a".repeat(64), sources: [{ title: "Fixture", reference: "fixture-only", fetchedAt: "2026-10-25T03:00:00Z" }] },
+      receipt: { id: "voice-receipt", caseId, resultId: "voice-result", resultSha256: "a".repeat(64), sha256: "b".repeat(64), createdAt: "2026-10-25T03:00:01Z", integrity: "unsigned" },
+      persistence: { merged: true, nativeReadbackVerified: true, nativeCommitId: "voice-native-head" },
+      verification: { resultDigestVerified: true, receiptDigestVerified: true, receiptBindingVerified: true },
+      ...overrides,
+    };
+  }
+
+  function connection(client: NonNullable<CompanyCaseConnection["client"]>, subject = owner): CompanyCaseConnection {
+    return { session: { status: "ready", subject }, client };
+  }
+
+  async function render(props: CompanyCasePanelProps & { ref?: import("react").Ref<CompanyCasePanelHandle> }) {
+    if (!container) { container = document.createElement("div"); document.body.append(container); root = createRoot(container); }
+    await act(async () => { root!.render(<CompanyCasePanel {...props} />); });
+  }
+
+  const input = () => container!.querySelector<HTMLInputElement>("#talk-input")!;
+  const mic = () => container!.querySelector<HTMLButtonElement>('[data-testid="company-case-mic"]')!;
+  const readButton = () => container!.querySelector<HTMLButtonElement>('[data-testid="company-case-saved"] button')!;
+
+  beforeEach(() => {
+    Recognition.instances = [];
+    Object.defineProperty(window, "SpeechRecognition", { configurable: true, value: Recognition });
+    vi.spyOn(councilVoice, "stopVoice").mockImplementation(() => undefined);
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("Unexpected backend fetch"));
+    vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue(requestId);
+    window.history.replaceState(null, "", "/dashboard/?workspace=company");
+  });
+
+  afterEach(async () => {
+    if (root) await act(async () => { root!.unmount(); });
+    container?.remove(); root = undefined; container = undefined;
+    if (recognitionDescriptor) Object.defineProperty(window, "SpeechRecognition", recognitionDescriptor);
+    else Reflect.deleteProperty(window, "SpeechRecognition");
+    vi.restoreAllMocks();
+    window.history.replaceState(null, "", "/dashboard/?workspace=company");
+  });
+
+  it("reports initial and explicit reads with bound identities without restarting for callback changes", async () => {
+    let next = fixture();
+    const read = vi.fn(async () => next);
+    const submit = vi.fn(async () => next);
+    const conn = connection({ caseIdForRequest: async () => caseId, read, submit });
+    const first = vi.fn(), latest = vi.fn();
+    await render({ connection: conn, caseId, onCaseVerified: first });
+    expect(first).toHaveBeenCalledTimes(1);
+    expect(first).toHaveBeenCalledWith(next, "initial-read", { ownerSubject: owner, caseId, requestId });
+    await render({ connection: conn, caseId, onCaseVerified: latest });
+    expect(read).toHaveBeenCalledTimes(1);
+    await act(async () => { readButton().click(); });
+    expect(latest).toHaveBeenCalledTimes(1);
+    expect(latest).toHaveBeenCalledWith(next, "read", { ownerSubject: owner, caseId, requestId });
+    next = fixture({ requestId: "crossed-request" });
+    await act(async () => { readButton().click(); });
+    expect(read).toHaveBeenCalledTimes(3);
+    expect(latest).toHaveBeenCalledTimes(1);
+    expect(container!.querySelector('[data-testid="company-case-saved"]')).toBeNull();
+    expect(submit).not.toHaveBeenCalled();
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
+
+  it("does not report crossed-owner, aborted or unmounted reads", async () => {
+    let finishOld!: (value: CompanyCase) => void;
+    const readOld = vi.fn((_id: string, _options: { signal: AbortSignal }) => new Promise<CompanyCase>((resolve) => { finishOld = resolve; }));
+    const oldCallback = vi.fn(), currentCallback = vi.fn();
+    const oldConnection = connection({ caseIdForRequest: async () => caseId, read: readOld, submit: vi.fn() });
+    await render({ connection: oldConnection, caseId, onCaseVerified: oldCallback });
+    const otherOwner = "other-voice-owner@example.invalid";
+    let next = fixture({ ownerSubject: owner });
+    const readCurrent = vi.fn(async () => next);
+    const currentConnection = connection({ caseIdForRequest: async () => caseId, read: readCurrent, submit: vi.fn() }, otherOwner);
+    await render({ connection: currentConnection, caseId, onCaseVerified: currentCallback });
+    expect(readOld.mock.calls[0][1].signal.aborted).toBe(true);
+    await act(async () => { finishOld(fixture()); });
+    expect(oldCallback).not.toHaveBeenCalled();
+    expect(currentCallback).not.toHaveBeenCalled();
+    next = fixture({ ownerSubject: otherOwner });
+    const recover = Array.from(container!.querySelectorAll("button")).find((button) => button.textContent === "Check this case’s saved status")!;
+    await act(async () => { recover.click(); });
+    expect(currentCallback).toHaveBeenCalledTimes(1);
+    expect(currentCallback).toHaveBeenCalledWith(next, "initial-read", { ownerSubject: otherOwner, caseId, requestId });
+    const calls = readCurrent.mock.calls.length;
+    await render({ connection: currentConnection, caseId, invalidCase: true, onCaseVerified: currentCallback });
+    expect(readCurrent).toHaveBeenCalledTimes(calls);
+    expect(currentCallback).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(["sync", "async"] as const)("keeps verified submitted status when %s presentation fails", async (mode) => {
+    const value = fixture();
+    const callback: CompanyCaseVerifiedCallback = vi.fn(() => {
+      if (mode === "async") return Promise.reject(new Error("Synthetic presentation failure"));
+      throw new Error("Synthetic presentation failure");
+    });
+    const submit = vi.fn(async () => value), read = vi.fn(async () => value);
+    const handle = createRef<CompanyCasePanelHandle>();
+    await render({ ref: handle, connection: connection({ caseIdForRequest: async () => caseId, submit, read }), onCaseVerified: callback });
+    await act(async () => { handle.current!.ask(value.request); });
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith(value, "submitted", { ownerSubject: owner, caseId, requestId });
+    expect(container!.querySelector('[data-testid="company-case-saved"]')).not.toBeNull();
+    expect(container!.querySelector('[role="alert"]')).toBeNull();
+    expect(submit).toHaveBeenCalledTimes(1);
+    expect(read).not.toHaveBeenCalled();
+  });
+
+  it("keeps interim and buffered final speech in the draft until an explicit send", async () => {
+    const submit = vi.fn(async () => fixture()), read = vi.fn(async () => fixture());
+    await render({ listen: true, connection: connection({ caseIdForRequest: async () => caseId, submit, read }) });
+    await act(async () => { mic().click(); });
+    const recognition = Recognition.instances[0];
+    expect(councilVoice.stopVoice).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(councilVoice.stopVoice).mock.invocationCallOrder[0]).toBeLessThan(recognition.start.mock.invocationCallOrder[0]);
+    await act(async () => { recognition.emit("GSPC interim draft", false); });
+    expect(input().value).toBe("GSPC interim draft");
+    await act(async () => { mic().click(); });
+    expect(recognition.stop).toHaveBeenCalledTimes(1);
+    expect(recognition.abort).not.toHaveBeenCalled();
+    expect(input().value).toBe("GSPC buffered draft");
+    expect(mic().getAttribute("aria-pressed")).toBe("false");
+    expect(submit).not.toHaveBeenCalled();
+    expect(read).not.toHaveBeenCalled();
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
+
+  it("discards active dictation before explicit submit and read, and disables the busy mic", async () => {
+    let finish!: (value: CompanyCase) => void;
+    const value = fixture({ request: "GSPC explicit draft" });
+    const submit = vi.fn(() => new Promise<CompanyCase>((resolve) => { finish = resolve; }));
+    const read = vi.fn(async () => value);
+    const conn = connection({ caseIdForRequest: async () => caseId, submit, read });
+    await render({ listen: true, connection: conn });
+    await act(async () => { mic().click(); Recognition.instances[0].emit(value.request, false); });
+    await act(async () => { container!.querySelector<HTMLButtonElement>('button[type="submit"]')!.click(); });
+    expect(Recognition.instances[0].abort).toHaveBeenCalledTimes(1);
+    expect(submit).toHaveBeenCalledTimes(1);
+    expect(submit).toHaveBeenCalledWith(value.request, expect.objectContaining({ requestId, signal: expect.any(AbortSignal) }));
+    expect(mic().disabled).toBe(true);
+    await act(async () => { finish(value); });
+    expect(input().value).toBe("");
+    await act(async () => { mic().click(); Recognition.instances[1].emit("GSPC unsent follow-up", false); });
+    await act(async () => { readButton().click(); });
+    expect(Recognition.instances[1].abort).toHaveBeenCalledTimes(1);
+    expect(input().value).toBe("GSPC unsent follow-up");
+    expect(read).toHaveBeenCalledTimes(1);
+    expect(submit).toHaveBeenCalledTimes(1);
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
+
+  it("discards on voice-off without allowing an old unmount to stop another owner's mic", async () => {
+    const submit = vi.fn(async () => fixture()), read = vi.fn(async () => fixture());
+    const conn = connection({ caseIdForRequest: async () => caseId, submit, read });
+    await render({ listen: true, connection: conn });
+    await act(async () => { mic().click(); Recognition.instances[0].emit("GSPC retained draft", false); });
+    await render({ listen: false, connection: conn });
+    expect(Recognition.instances[0].abort).toHaveBeenCalledTimes(1);
+    expect(input().value).toBe("GSPC retained draft");
+    await render({ listen: true, connection: conn });
+    await act(async () => { mic().click(); });
+    const nextOwner = new AbortController();
+    const nextTranscript = vi.fn();
+    try {
+      await act(async () => { startListening({ signal: nextOwner.signal, onTranscript: nextTranscript }); });
+      const nextRecognition = Recognition.instances[2];
+      await act(async () => { root!.unmount(); }); root = undefined;
+      expect(nextRecognition.abort).not.toHaveBeenCalled();
+      nextRecognition.emit("GSPC new owner draft", true);
+      expect(nextTranscript).toHaveBeenCalledTimes(1);
+      expect(nextTranscript).toHaveBeenCalledWith("GSPC new owner draft", true);
+      expect(submit).not.toHaveBeenCalled();
+    } finally { nextOwner.abort(); }
+  });
+
+  it("keeps native microphone errors visible after the primitive ends its owned session", async () => {
+    await render({ listen: true, connection: connection({ caseIdForRequest: async () => caseId, submit: vi.fn(), read: vi.fn() }) });
+    await act(async () => { mic().click(); Recognition.instances[0].fail("not-allowed"); });
+    expect(mic().getAttribute("aria-pressed")).toBe("false");
+    expect(container!.querySelector('[data-testid="company-case-mic-note"]')!.textContent).toContain("The microphone was not allowed.");
+    expect(input().value).toBe("");
+  });
+
+  it("does not activate input without opt-in or a valid available company connection", async () => {
+    const conn = connection({ caseIdForRequest: async () => caseId, submit: vi.fn(), read: vi.fn() });
+    await render({ connection: conn });
+    expect(mic()).toBeNull();
+    await render({ listen: true, connection: { session: { status: "unavailable" } } });
+    expect(mic().disabled).toBe(true);
+    expect(input().disabled).toBe(true);
+    await render({ listen: true, connection: conn, invalidCase: true });
+    expect(mic().disabled).toBe(true);
+    expect(input().disabled).toBe(true);
+    expect(Recognition.instances).toHaveLength(0);
+  });
 });
