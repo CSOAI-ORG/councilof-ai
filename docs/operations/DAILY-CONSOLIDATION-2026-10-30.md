@@ -221,19 +221,99 @@ claim that the human path is staffed.
    `--door-origin` — and commit the live observation, replacing the pre-deploy stand-in
    record. The committed artifact currently says so on every row it touched, which is the
    point.
-3. **Wire the daily job.** The workflow does not exist yet. The house style is in
-   `.github/workflows/catalog-trust-round.yml` (schedule + `workflow_dispatch`, run the
-   script, land via PR, never push master). Note: signing via `/api/board-sign` requires
-   the workflow filename to contain `public-root`, `hf-fin-shells`, `hf-inference-mill` or
-   `auto-eat-sign` — the intake artifact is **unsigned** until a lane is chosen for it.
-4. **Open the AIID data request** — ask the maintainers for a public incident JSON/CSV
-   export path, or ingest their published Excel export on a slower cadence. Until then
-   `aiid` stays a **published gap**, not a covered source.
+3. ~~**Wire the daily job.**~~ **Done — see §9.** The signing lane is settled and the daily
+   loop is written. The earlier note in this record (that signing required a workflow
+   filename on `/api/board-sign`'s allow-list) was **the wrong lane**, and §9 says which
+   lane is right and why.
+4. **Open the AIID data request** — the draft is written and ready to send at
+   `docs/operations/AIID-DATA-REQUEST-2026-10-30.md`; it is **not sent**, because sending it
+   is the owner's to do. Until it is answered, `aiid` stays a **published gap**, not a
+   covered source.
 
 **Also still open, and not touched here:** the `.github/workflows/eat-overnight.yml`
 board assertion is **stale from before this work** (it checks for `"22 axis"`, and the
 live board reads `33 axes · 23 measured`), so that scheduled job has been failing on its
 own terms. It needs a separate fix and is not caused by the 34th axis.
+
+## 9. The signing lane, settled — and the daily loop that now runs
+
+The earlier note in §8.3 was wrong about where the daily index gets signed. `/api/board-sign`
+is the **board card signer**, and its OIDC allow-list (`public-root`, `hf-fin-shells`,
+`hf-inference-mill`, `auto-eat-sign`) names the workflows that may sign **board cards**. The
+daily intake artifact is not a board card, and shoehorning its filename into that allow-list
+would have been a naming trick that made the allow-list lie about what it allowed.
+
+The lane that already exists and already does exactly this job is the **staged-leaf lane**:
+
+| stage | what it is | where |
+|---|---|---|
+| stage | the reader folds a day's run into ONE card-v0 atom, **unsigned** | `scripts/readers/watchdog_intake_reader.py` → `public/interop/watchdog-intake-2026-10/` |
+| admit | the publisher's own admission check | `scripts/adapters/staged_leaves.py` → `STAGED_DIRS` |
+| sign | the public root signs the atom into the ONE merkle root | `.github/workflows/public-root.yml` |
+| witness | Rekor + OpenTimestamps anchor that root | `witness_public_root.py` |
+
+So the chain now runs end to end, with **no new key, no new workflow name and no change to
+the signing allow-list**:
+
+```
+pod loop 09:40Z  ->  probe 18 sources  ->  write run + index + latest + charter feed
+                 ->  branch watchdog/auto-<date>  ->  path-restricted land onto master
+                 ->  public-root ticks  ->  reader stages the card-v0 atom
+                 ->  the root signs it  ->  Rekor + OTS witness the root
+                 ->  the day's probe is evidence a third party can check
+```
+
+The atom carries the day's state as **three facts that never merge** — REACHABLE /
+UNCHECKABLE / UNREACHABLE — plus the routing rows as a **count with their HOLD decision**,
+never as a decision. It is 2,714 bytes of the 3,072-byte card-v0 cap, with room for three
+more sources before it must be re-cut.
+
+### 9.1 The daily loop
+
+`scripts/pod-loops/watchdog-intake.sh` (new), scheduled at **09:40Z** by the pod's own
+supervised scheduler (`scheduler.sh` — the pod has no cron). It runs from its **own**
+`--shared` clone of the bare repo, sparse (no-cone) to the two producer scripts, the reader,
+the publisher's admission module and the output directory — because the two producers are
+files at `scripts/` root, which the shared `$REPO` sparse set does not carry, and `scripts/`
+is 133 MB, which the pod's volume should not spend on one loop.
+
+It lands a `watchdog/auto-<date>` branch and **never pushes master**. The land job
+(`mill-hourly-land.sh`, hourly :50) merges it only when the loop's own receipt says `OK` for
+that branch **and** the net diff adds only `public/interop/watchdog-intake/<run-id>.json` and
+modifies only the three derived views (`_index.json`, `latest.json`, `charter-feed.json`).
+Anything else — a deletion, another lane's path, a path-traversal name — is a HOLD left for a
+human. That allowlist was exercised with negative controls, not just positives.
+
+The loop also refuses to land a day that could never be signed: before it branches, it stages
+the atom and runs it through the **publisher's own** `_check`, so a day that the root would
+skip is a HOLD rather than a silent gap in the root's history.
+
+### 9.2 The defects this surfaced, and fixed
+
+1. **`scripts/build-axis-reports.slots.test.mjs` typed 33 axes and 10 subject axes** — the same
+   defect the estate repaired in `canon.json` that morning: a typed count that turns a
+   legitimate growth into a red build. It is now **derived** from the one canonical axis table
+   (`functions/mcp/axis-aliases.json`), so the guard keeps its teeth — a slot that vanishes
+   still fails — without a number that has to be edited every time a slot is declared.
+
+2. **`scripts/build_ai_eval_gap_map.py` typed "33 axis slots" in its prose** while carrying a
+   live board quote beside it, so the map would have contradicted the very quote it holds the
+   moment the board grew. Both mentions now derive from the board read the script makes, and
+   an unreachable board yields "an unknown number", never a number.
+
+3. **The tool catalogue was typed in three more places** — `llms-install.md` and
+   `public/llms-install.md` (the catalogue block and the "same N names" sentence), and the
+   Docker submission draft (`server.yaml`, `readme.md`). The two test files that guard them
+   typed the counts too. All of them now derive from the canonical tool set, and the docker
+   test's stale-word guard derives the forbidden spellings instead of naming one.
+
+4. **Three dated records failed the axis-count rule** (`completion.json`,
+   `completion-audit.json`, the ai-eval universe map). They are listed in
+   `facts.json counts.historical_count_exemptions` with their date, reason and the one count
+   they record — the mechanism that exists for exactly this, so no dated receipt is edited to
+   match a later board. The three live surfaces that cite the board and are not built by the
+   prerender are rebound by the estate's own tool (`scripts/surface/rebind-board-cites.mjs`),
+   which derives from this commit's board.
 
 ---
 
@@ -241,10 +321,15 @@ own terms. It needs a separate fix and is not caused by the 34th axis.
 
 `canon.json` · `scripts/drift-guard.mjs` · `scripts/watchdog_intake.py` ·
 `scripts/test_watchdog_intake.py` · `scripts/watchdog_charter_feed.py` ·
-`scripts/test_watchdog_charter_feed.py` · `functions/api/_gspc_axes_d.ts` ·
+`scripts/test_watchdog_charter_feed.py` · `scripts/readers/watchdog_intake_reader.py` ·
+`scripts/readers/test_watchdog_intake_reader.py` · `scripts/adapters/staged_leaves.py` ·
+`scripts/pod-loops/watchdog-intake.sh` · `scripts/pod-loops/mill-hourly-land.sh` ·
+`scripts/pod-loops/scheduler.sh` · `.github/workflows/public-root.yml` ·
+`.github/workflows/pr-gates.yml` · `functions/api/_gspc_axes_d.ts` ·
 `council-os/axis-specialists/registry.json` ·
 `council-os/axis-specialists/board-2026-10-28.snapshot.json` ·
-`public/interop/watchdog-intake/` ·
+`public/interop/watchdog-intake/` · `public/interop/watchdog-intake-2026-10/` ·
+`docs/operations/AIID-DATA-REQUEST-2026-10-30.md` ·
 `docs/standards/osaia-safe-reverification/SAFE-v1.0-PORT-20261026.md` ·
 `docs/governance/public-watchdog-working-groups.md` (lane-local) ·
 `~/Downloads/Council_of_AI_Completion_Intelligence_Addendum_v1_1_2026-10-30.docx`

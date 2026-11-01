@@ -297,6 +297,36 @@
           "date": "2026-09-29",
           "historical_axes": 23,
           "reason": "Signed board freeze: byte-identical forever; its 23 is the board it signed."
+        },
+        {
+          "path": "completion.json",
+          "date": "2026-10-27",
+          "historical_axes": 33,
+          "reason": "Dated completion ledger (generated_at 2026-10-27T04:05:00Z). Its board receipt is dated 2026-10-25 and records the board as it was on that date; a dated receipt is never edited. Re-measure it with scripts/completion_audit.py rather than editing this line."
+        },
+        {
+          "path": "completion-audit.json",
+          "date": "2026-10-28",
+          "historical_axes": 33,
+          "reason": "Dated completion audit (measured_at 2026-10-28T04:10:07Z). Every LIVE line carries the value its probe saw on that date, so its board public_count is the board of 2026-10-28, not of today. Re-run scripts/completion_audit.py to re-measure; never edit the line."
+        },
+        {
+          "path": "interop/ai-eval-universe-2026-10/index.json",
+          "date": "2026-10-30",
+          "historical_axes": 33,
+          "reason": "Dated universe map quoting the live board by field name with its response sha256. Its counts are the board it read on its date; the generator now derives them from that same read, so the next deliberate run carries the new count itself."
+        },
+        {
+          "path": "interop/subject-axis-live-20261027/audit-laneD-planned-not-done.json",
+          "date": "2026-10-27",
+          "historical_axes": 33,
+          "reason": "Dated subject-axis audit of 2026-10-27. Its 33 is the board that existed when the lane D audit ran; the receipts it binds are byte-identical evidence of that run and are never edited."
+        },
+        {
+          "path": "interop/subject-axis-live-20261027/outreach-send-receipts-20261029.json",
+          "date": "2026-10-29",
+          "historical_axes": 33,
+          "reason": "Dated outreach receipt set of 2026-10-29. The receipts record what was sent and what the board said on that date; a receipt is never edited to match a later board."
         }
       ]
     }
