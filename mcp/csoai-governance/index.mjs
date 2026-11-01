@@ -5,7 +5,7 @@
  * Exposes the CSOAI Sovereign's governance layer to ANY MCP client — Claude
  * Science, Claude Code, Cursor, or your own agent. Four tools:
  *   csoai_sign     — Ed25519-seal an artifact to CSOAI Layer 0 (auditable + reproducible)
- *   csoai_verify   — verify a seal offline against its public key
+ *   csoai_verify   — request verification through /api/verify against the supplied public key
  *   csoai_govern   — ask the CSOAI Sovereign a governance / cybersecurity question (role-guarded)
  *   csoai_catalog  — search the published governed CSOAI tools / MCPs
  *
@@ -29,6 +29,24 @@ async function api(path, body) {
   try { return { ok: r.ok, status: r.status, json: JSON.parse(text) }; }
   catch { return { ok: r.ok, status: r.status, json: null, text }; }
 }
+const SITE = GW.replace(/\/api$/, "");
+const STOP = new Set("the a an of to for in on and or is are what which who how does do my our under with by be it this that apply applies".split(" "));
+const words = (x) => String(x || "").toLowerCase().match(/[a-z0-9]+/g)?.filter((w) => w.length > 1 && !STOP.has(w)) || [];
+async function govClock(q) {
+  try {
+    const r = await fetch(SITE + "/regulatory-clock.json", { headers: { "user-agent": UA } });
+    if (!r.ok) return { matches: [] };
+    const d = await r.json();
+    const qw = new Set(words(q));
+    const rows = [...(d.events || []), ...(d.already_live || []).map((e) => ({ ...e, status: "already live" }))];
+    const scored = rows.map((e) => {
+      const hay = words([e.instrument, e.provision, e.binds, e.requires, e.jur].join(" "));
+      let s = 0; for (const w of new Set(hay)) if (qw.has(w)) s++;
+      return { s, e };
+    }).filter((x) => x.s > 0).sort((a, b) => b.s - a.s).slice(0, 6);
+    return { matches: scored.map(({ e }) => ({ date: e.date, jurisdiction: e.jur, instrument: e.instrument, provision: e.provision, binds: e.binds, requires: e.requires, confidence: e.confidence, status: e.status })) };
+  } catch { return { matches: [] }; }
+}
 const out = (obj) => ({ content: [{ type: "text", text: typeof obj === "string" ? obj : JSON.stringify(obj, null, 2) }] });
 const err = (msg) => ({ isError: true, content: [{ type: "text", text: "CSOAI MCP error: " + msg }] });
 
@@ -45,7 +63,7 @@ const TOOLS = [
   },
   {
     name: "csoai_verify",
-    description: "Verify a CSOAI Layer-0 Ed25519 seal offline: confirm the signature matches the artifact and public key. Use to check provenance of anything previously sealed with csoai_sign.",
+    description: "Request verification through /api/verify: confirm whether the signature matches the artifact and supplied public key. This client uses a network request; signature validity alone does not establish issuer identity. Use to check provenance of anything previously sealed with csoai_sign.",
     inputSchema: {
       type: "object",
       properties: {
@@ -68,7 +86,7 @@ const TOOLS = [
   },
   {
     name: "csoai_catalog",
-    description: "Search the CSOAI catalog of published governed tools / MCPs (framework-compliance, cyber, evidence, identity, and more). Returns matching governed tools with their cluster and install hint.",
+    description: "Search the CSOAI catalog of published governed tools / MCPs (framework-compliance, cyber, evidence, identity, and more). Returns matching probed server-tool rows and their query total; inventory counts are separate.",
     inputSchema: {
       type: "object",
       properties: { query: { type: "string", description: "Optional keyword (e.g. 'eu ai act', 'nist', 'evidence')." } },
@@ -78,7 +96,7 @@ const TOOLS = [
 
 const BAD = /travell?er|companion|walks beside|i'?m sorry|can'?t help|as an ai language model|on your journey|dear friend|kindred/i;
 
-const server = new Server({ name: "csoai-governance", version: "0.1.0" }, { capabilities: { tools: {} } });
+const server = new Server({ name: "csoai-governance", version: "0.1.1" }, { capabilities: { tools: {} } });
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
 
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
@@ -97,20 +115,37 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       return out(r.json);
     }
     if (name === "csoai_govern") {
-      const sys = "You are the CSOAI Sovereign — the AI-governance and cybersecurity assistant. Answer strictly in that role, concise and concrete (regulations, obligations, controls, deadlines, risk tiers). Never a personal companion, never poetic, never name other vendors, never refuse an ordinary governance question.";
-      const r = await api("/chat", { message: sys + "\n\nUser question: " + String(a.question || "") });
-      const t = String((r.json && (r.json.response || r.json.answer || r.json.reply)) || "").trim();
-      if (!t || (r.json && r.json.model === "idle") || BAD.test(t)) return out("The live Sovereign is unavailable or returned an out-of-role reply. Ask again, or consult csoai.org / the CSOAI Regulator Atlas.");
-      return out(t);
+      const q = String(a.question || "").trim();
+      if (!q) return err("question is required");
+      // 1) The live grounded answerer, asked the bare question (a prepended persona prompt only
+      //    pushed the router into its help text). Use it only when it actually grounded.
+      const r = await api("/chat", { message: q });
+      const j = r.json || {};
+      const t = String(j.answer || j.response || j.reply || "").trim();
+      const grounded = t && j.state && j.state !== "ungrounded" && j.model !== "idle" && !BAD.test(t);
+      // 2) The published regulatory clock: dated obligations with instrument, provision, who it
+      //    binds, what it requires and a confidence grade. Ranked by word overlap with the question.
+      const clock = await govClock(q);
+      if (!grounded && !clock.matches.length) {
+        return out({ answer: "No published CSOAI source matches this question. Not legal advice.", sources: [SITE + "/regulatory-clock.json"], measured_answer: t || null });
+      }
+      return out({
+        answer: grounded ? t : null,
+        obligations: clock.matches,
+        sources: [grounded ? GW + "/chat" : null, SITE + "/regulatory-clock.json"].filter(Boolean),
+        note: "Quoted from CSOAI published data. Confidence A = primary text, B = multiple expert sources, C = single source. Informative only; not legal advice; measures, never certifies.",
+      });
     }
     if (name === "csoai_catalog") {
       const r = await api("/tools?q=" + encodeURIComponent(String(a.query || "")));
-      if (!r.json) return err("catalog gateway unreachable (status " + r.status + ")");
+      // A non-OK status is an error even when the body parses as JSON: an error
+      // page must never be presented as a successful "0 matches" search.
+      if (!r.ok || !r.json) return err("catalog gateway unreachable (status " + r.status + ")");
       const j = r.json;
-      const probed = Array.isArray(j.tools) && j.tools.length ? j.tools : null;
-      const raw = j.matches || j.mcps || probed || j.distinct_tools || j.tools || (Array.isArray(j) ? j : []);
+      const probed = Array.isArray(j.tools) ? j.tools : null;
+      const raw = probed || j.matches || j.mcps || j.distinct_tools || j.tools || (Array.isArray(j) ? j : []);
       const matches = raw.slice(0, 25).map((m) => typeof m === "string" ? { name: m } : ({ name: m.name, cluster: m.clusterLabel || m.cluster, tools: m.tools, install: m.connect }));
-      return out({ total: j.total || j.catalogue_total || matches.length, showing: matches.length, matches });
+      return out({ total: j.total ?? j.catalogue_total ?? matches.length, showing: matches.length, matches });
     }
     return err("unknown tool: " + name);
   } catch (e) {

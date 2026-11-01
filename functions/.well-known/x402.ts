@@ -1,14 +1,7 @@
 /**
- * GET /.well-known/x402 and /.well-known/x402/ — 308 to the JSON door.
- * Agents probe the suffix-less well-known; the file we ship is x402.json.
- * Pack assembly only. Does not fill a cell.
+ * GET/HEAD /.well-known/x402 and /.well-known/x402/ — the suffix-less discovery aliases.
+ * Serves the canonical manifest at 200 (strict indexers — x402scan registerFromOrigin, the
+ * IronBridge validator — do not follow redirects). Per x402-alias-parity.test.ts: callable
+ * onRequestGet + onRequestHead, NO catch-all onRequest. `./x402/index` re-exports from here.
  */
-export function onRequest() {
-  return new Response(null, {
-    status: 308,
-    headers: {
-      location: "/.well-known/x402.json",
-      "cache-control": "public, max-age=300",
-    },
-  });
-}
+export { onRequestGet, onRequestHead } from "./x402.json";

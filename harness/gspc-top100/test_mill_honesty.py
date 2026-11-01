@@ -11,6 +11,7 @@ sys.path.insert(0, str(HERE))
 from mill_hub_queue import (  # noqa: E402
     MODEL_AXES,
     _DEAD,
+    ITEM_EVIDENCE_SCHEMA,
     apply_valid_flips,
     axis_prompt,
     mill_index_row,
@@ -48,7 +49,13 @@ def test_mill_script_does_not_slice_prefix() -> None:
     assert "millable_slugs" in src
     assert "provider_order" in src
     assert "live_providers" in src
-    assert "router_names = [slug]" in src or "router_names = [slug] +" in src
+    # Router names are DERIVED per provider, not built from a single-element
+    # literal: `router_names = [slug]` was the #1692-era shape, and a fixed
+    # one-element list is what made a sliced window re-measure the same eight.
+    # The invariant that matters is that no per-item list is sliced by prefix —
+    # asserted above — plus that the name set comes from the provider helper.
+    assert "router_names = mill_router_names(" in src
+    assert "rec[\"router_names\"] = router_names" in src
     sys.path.insert(0, str(HERE.parents[1] / "scripts"))
     from mill_window import DEFAULT_PROVIDERS  # noqa: E402
 
@@ -524,7 +531,14 @@ def test_infer_hub_falls_back_to_openrouter_under_the_same_id() -> None:
 
 
 def test_flip_hub_queue_only_valid_n30_cells(tmp_path: Path | None = None) -> None:
-    """flip_hub_queue: a cell flips iff the signed card verifies VALID under the DID and n>=30."""
+    """flip_hub_queue: a cell flips iff the signed card verifies VALID under the DID and n>=30.
+
+    Fixtures use the `ollama:` model class on purpose: validate_cards exempts it from
+    HF admission (local/pod runs carry no HF graded bundle), and a synthetic card cannot
+    produce one — validate_bundle re-forges every item against the frozen bank, which is
+    exactly what makes a forged fixture impossible. Admission itself is covered by
+    scripts/test_verify_hub_mill_evidence.py; this test isolates the FLIP rule.
+    """
     import shutil
     from base64 import urlsafe_b64encode
 
@@ -551,15 +565,15 @@ def test_flip_hub_queue_only_valid_n30_cells(tmp_path: Path | None = None) -> No
         w["did"] = did
         return w
 
-    (cards / "signed-govern-valid.json").write_text(json.dumps(signed("org/a", "governance", 30)))
-    (cards / "signed-safety-small.json").write_text(json.dumps(signed("org/a", "safety", 10)))
-    (cards / "signed-govern-bad.json").write_text(json.dumps(signed("org/b", "governance", 30, ok=False)))
-    unsigned = stage_unsigned("org/c", "governance", hits=1, n=30, reason="signed-pending-verify")
+    (cards / "signed-govern-valid.json").write_text(json.dumps(signed("ollama:org-a", "governance", 30)))
+    (cards / "signed-safety-small.json").write_text(json.dumps(signed("ollama:org-a", "safety", 10)))
+    (cards / "signed-govern-bad.json").write_text(json.dumps(signed("ollama:org-b", "governance", 30, ok=False)))
+    unsigned = stage_unsigned("ollama:org-c", "governance", hits=1, n=30, reason="signed-pending-verify")
     (cards / "signed-govern-unsigned.json").write_text(json.dumps(unsigned))
     rows = [
-        {"rank": 1, "id": "org/a", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
-        {"rank": 2, "id": "org/b", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
-        {"rank": 3, "id": "org/c", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"rank": 1, "id": "ollama:org-a", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"rank": 2, "id": "ollama:org-b", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"rank": 3, "id": "ollama:org-c", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
     ]
     q = root / "queue.jsonl"
     q.write_text("".join(json.dumps(r) + "\n" for r in rows))
@@ -571,7 +585,7 @@ def test_flip_hub_queue_only_valid_n30_cells(tmp_path: Path | None = None) -> No
     assert rep["changed"] is True, "a written cell is a census change even when nothing is MEASURED"
     assert rep["verdicts"] == {"VALID": 1, "UNQUOTABLE": 1, "INVALID": 1, "UNCHECKABLE": 1}
     out_rows = [json.loads(l) for l in (root / "out" / "queue.jsonl").read_text().splitlines()]
-    a = next(r for r in out_rows if r["id"] == "org/a")
+    a = next(r for r in out_rows if r["id"] == "ollama:org-a")
     assert a["measured_axes"]["governance"]["status"] == "UNMEASURED"
     assert "signed-pending-verify" in a["measured_axes"]["governance"]["unmeasured"]
     assert a["measured_axes"]["governance"]["card_id"]
@@ -605,9 +619,12 @@ def test_index_row_mirrors_body_status_issue_1155() -> None:
     did_doc = {"verificationMethod": [{"id": did, "publicKeyJwk": {"x": urlsafe_b64encode(pub).decode().rstrip("=")}}]}
 
     # Three cards: VALID+MEASURED body, VALID+UNMEASURED body, INVALID sig.
+    # Model class `ollama:` is deliberate — see test_flip_hub_queue_only_valid_n30_cells:
+    # it is exempt from HF admission, so this test measures the MIRROR rule (cell status
+    # follows the body) rather than re-deriving a graded bundle it cannot honestly have.
     cards = []
     # Case 1: signed, body says MEASURED → index row MEASURED
-    w_ok = stage_unsigned("unit/a", "governance", hits=25, n=30, reason="ok")
+    w_ok = stage_unsigned("ollama:unit-a", "governance", hits=25, n=30, reason="ok")
     w_ok["body"]["status"] = "MEASURED"
     w_ok["body"]["unmeasured"] = []
     # Regenerate id + signature after body mutation (stage_unsigned computes id
@@ -619,7 +636,7 @@ def test_index_row_mirrors_body_status_issue_1155() -> None:
     w_ok["did"] = did
     cards.append(w_ok)
     # Case 2: signed, body says UNMEASURED (signed-pending-verify) → index row UNMEASURED
-    w_pv = stage_unsigned("unit/b", "safety", hits=25, n=30, reason="signed-pending-verify")
+    w_pv = stage_unsigned("ollama:unit-b", "safety", hits=25, n=30, reason="signed-pending-verify")
     w_pv["body"]["status"] = "UNMEASURED"
     w_pv["body"]["unmeasured"] = ["signed-pending-verify"]
     raw = canonical_body_bytes(w_pv["body"])
@@ -628,7 +645,7 @@ def test_index_row_mirrors_body_status_issue_1155() -> None:
     w_pv["did"] = did
     cards.append(w_pv)
     # Case 3: signed, body says UNMEASURED n<30 → index row UNMEASURED with reason
-    w_nq = stage_unsigned("unit/c", "openness", hits=4, n=10, reason="n<30 unquotable")
+    w_nq = stage_unsigned("ollama:unit-c", "openness", hits=4, n=10, reason="n<30 unquotable")
     w_nq["body"]["status"] = "UNMEASURED"
     w_nq["body"]["unmeasured"] = ["n<30", "signed-pending-verify"]
     raw = canonical_body_bytes(w_nq["body"])
@@ -638,9 +655,9 @@ def test_index_row_mirrors_body_status_issue_1155() -> None:
     cards.append(w_nq)
 
     rows = [
-        {"id": "unit/a", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
-        {"id": "unit/b", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
-        {"id": "unit/c", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"id": "ollama:unit-a", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"id": "ollama:unit-b", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"id": "ollama:unit-c", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
     ]
     from pathlib import Path as _P
     import shutil
@@ -669,16 +686,16 @@ def test_index_row_mirrors_body_status_issue_1155() -> None:
         for r in out_rows
         if r.get("measured_axes")
     }
-    assert cell_status == {"unit/a": "MEASURED", "unit/b": "UNMEASURED"}, cell_status
+    assert cell_status == {"ollama:unit-a": "MEASURED", "ollama:unit-b": "UNMEASURED"}, cell_status
     idx = (out / "mill-cards" / "INDEX.jsonl").read_text().splitlines()
     assert len(idx) == 2, f"expected 2 VALID index rows, got {len(idx)}: {idx}"
     by_status = {json.loads(l)["model"]: json.loads(l)["status"] for l in idx}
-    assert by_status["unit/a"] == "MEASURED", by_status  # body=MEASURED
-    assert by_status["unit/b"] == "UNMEASURED", by_status  # body=UNMEASURED
+    assert by_status["ollama:unit-a"] == "MEASURED", by_status  # body=MEASURED
+    assert by_status["ollama:unit-b"] == "UNMEASURED", by_status  # body=UNMEASURED
     # And the unmeasured[] field must carry the reason through
     by_unmeasured = {json.loads(l)["model"]: json.loads(l)["unmeasured"] for l in idx}
-    assert by_unmeasured["unit/a"] == [], by_unmeasured
-    assert "signed-pending-verify" in by_unmeasured["unit/b"], by_unmeasured
+    assert by_unmeasured["ollama:unit-a"] == [], by_unmeasured
+    assert "signed-pending-verify" in by_unmeasured["ollama:unit-b"], by_unmeasured
     # The signed cards landed (with their original filenames)
     assert (root / "out" / "mill-cards" / "signed-govern.json").is_file()
     assert (root / "out" / "mill-cards" / "signed-safe.json").is_file()
@@ -906,8 +923,24 @@ def test_sign_mill_emits_measured_at_n30_and_supersedes_never_overwrites(tmp_pat
     sm.SRC = src
     sm.DST = dst
     sm.LEDGER = dst / "SUPERSEDED.jsonl"
-    sm.sign_via_oidc = lambda body: "cd" * 32
-    assert sm.main() == 0
+
+    # The signer's entry point returns (signature, attested digest); the digest
+    # is the content address, so it must be the same hash the verifier recomputes
+    # from the frozen body. local_content_address gives exactly that.
+    def _digest(body: dict) -> str:
+        digest = sm.local_content_address(body)
+        if digest is None:
+            raise AssertionError("canonical forms differ — attested digest required")
+        return digest
+
+    def cd_sig() -> str:
+        return "cd" * 32
+
+    sm.sign_via_oidc_attested = lambda body: (cd_sig(), _digest(body))
+    # main(argv=None) falls back to sys.argv[1:], which under pytest is pytest's
+    # own flags — argparse then exits 2 before touching a single card. Pass []
+    # explicitly: the test drives the module globals, not a CLI.
+    assert sm.main([]) == 0
 
     # Content-addressed: the name is a function of the body, not of the source file.
     live = {json.loads(f.read_text())["body"]["model"]: f for f in dst.glob("signed-*.json")}
@@ -926,8 +959,8 @@ def test_sign_mill_emits_measured_at_n30_and_supersedes_never_overwrites(tmp_pat
     def never(body):
         raise AssertionError("must not re-sign an unchanged body")
 
-    sm.sign_via_oidc = never
-    assert sm.main() == 0
+    sm.sign_via_oidc_attested = never
+    assert sm.main([]) == 0
     assert {f.name: f.read_bytes() for f in dst.glob("signed-*.json")} == before
 
     # Now the run behind the big card changes. That is a NEW card: the old file
@@ -936,8 +969,8 @@ def test_sign_mill_emits_measured_at_n30_and_supersedes_never_overwrites(tmp_pat
     old_id = out_big["id"]
     moved = stage_unsigned("unit/big", "governance", hits=29, n=30, reason="")
     (src / "unsigned-governan-aaaaaaaaaaaa.json").write_text(json.dumps(moved, indent=2) + "\n")
-    sm.sign_via_oidc = lambda body: "ef" * 32
-    assert sm.main() == 0
+    sm.sign_via_oidc_attested = lambda body: ("ef" * 32, _digest(body))
+    assert sm.main([]) == 0
 
     assert (dst / old_file).read_bytes() == before[old_file], "superseded bytes must survive"
     cards = [json.loads(f.read_text()) for f in dst.glob("signed-*.json")]
@@ -1045,7 +1078,10 @@ def test_mill_grading_writes_item_evidence_bundle(tmp_path: Path | None = None) 
     assert ev["bank_sha256"] == hashlib.sha256((banks / "governance.jsonl").read_bytes()).hexdigest()
     assert ev["bank_dataset"] == "csoai/gspc-gov"
     assert ev["model_hf_revision"] == "f" * 40
-    assert ev["schema"] == "csoai.mill-item-evidence/0.2"
+    # Asserted against the producer constant, not a literal: the bundle schema
+    # moved 0.2 -> 0.3 and this test kept pinning the retired number, which
+    # made it fail for a change every consumer already accepts.
+    assert ev["schema"] == ITEM_EVIDENCE_SCHEMA
     assert ev["bank_revision"] == "e" * 40
     assert (out / ev["bank_file"]).read_bytes() == (banks / "governance.jsonl").read_bytes()
     rows = [json.loads(l) for l in bundle.read_text().splitlines()]

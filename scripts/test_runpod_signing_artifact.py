@@ -49,7 +49,7 @@ class ArtifactTests(unittest.TestCase):
                 "accuracy": 0.5, "status": "UNMEASURED", "unmeasured": ["awaiting admission"],
                 "compute_evidence": {"run_id": run_id}}
         candidate_raw = json.dumps({"body": body}).encode()
-        receipt = {"schema": "csoai.runpod-gspc-intake-verification/0.1", "state": "VERIFIED_QUARANTINE",
+        receipt = {"schema": "csoai.runpod-gspc-intake-verification/0.1", "state": "VERIFIED_QUARANTINE", "instrument_id": "exact-label-t128",
                    "run_id": run_id, "axis": body["axis"], "subject": body["model"],
                    "counts": {"graded_n": n}, "accuracy": body["accuracy"],
                    "source_hashes": {"card_file_sha256": artifact.digest(candidate_raw),

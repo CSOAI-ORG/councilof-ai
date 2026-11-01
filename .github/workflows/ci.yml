@@ -5,6 +5,11 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  # 28 Oct 2026: `build` is one of the four required contexts, so the merge queue needs this
+  # workflow to run on the merge_group commit as well — the queue reads the checks of the merged
+  # tree, not of the pull request head. The job reads no pull_request context beyond CANDIDATE_HEAD,
+  # which falls back to github.sha (the merge_group commit) when there is no pull request.
+  merge_group:
 
 permissions:
   contents: read
@@ -23,6 +28,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Revenue report evidence and read-only check regressions
+        run: python -I -B scripts/growth/test_revenue_loop.py
       - name: Install verification test dependencies
         run: python -m pip install --disable-pip-version-check --only-binary=cryptography 'jsonschema==4.25.1' 'rfc3339-validator==0.1.4' 'cryptography==50.0.2'
       - name: Require verification dependencies and sources
@@ -39,9 +46,13 @@ jobs:
               'packages/evidence-fabric/tests/test_safe_pack_verify.py',
               'docs/standards/osaia-safe-reverification/test_hitl_authority_effect.py',
               'docs/standards/osaia-safe-reverification/test_approval_dependency_binding.py',
+              'docs/standards/osaia-safe-reverification/test_hitl_authority_effect_v0_2.py',
               'docs/standards/osaia-safe-reverification/hitl-authority-effect-v0.1.schema.json',
               'docs/standards/osaia-safe-reverification/hitl-authority-effect.example.json',
+              'docs/standards/osaia-safe-reverification/hitl-authority-effect-v0.2.schema.json',
+              'docs/standards/osaia-safe-reverification/hitl-authority-effect-v0.2.example.json',
               'docs/standards/osaia-safe-reverification/csoai-alliance-control-plugin-v0.2.json',
+              'docs/standards/osaia-safe-reverification/csoai-alliance-control-plugin-v0.3.json',
               'docs/standards/osaia-safe-reverification/verify_safe_evidence.py',
               'docs/standards/osaia-safe-reverification/examples/example-pass-a2a-card-census-integrity.json',
               'packages/evidence-fabric/safe_freeze_v2.py',
@@ -56,6 +67,11 @@ jobs:
               'packages/evidence-fabric/render/intoto.py',
               'packages/evidence-fabric/render/ecs_hec.py',
               'docs/standards/osaia-safe-reverification/safe-reverification-record-v0.1.schema.json',
+              'docs/standards/osaia-safe-reverification/safe-review-outcome-v0.1.schema.json',
+              'docs/standards/osaia-safe-reverification/safe-discriminating-power-v0.1.schema.json',
+              'docs/standards/osaia-safe-reverification/validate_examples.py',
+              'docs/standards/osaia-safe-reverification/test_discriminating_power.py',
+              'docs/standards/osaia-safe-reverification/examples/example-stale-signed-board-freeze.json',
               'docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.post-fix.safe-rv.json',
               'docs/standards/osaia-safe-evidence-pack/records/C-2026-0928-01.pre-fix.safe-rv.json',
           ):
@@ -71,6 +87,29 @@ jobs:
       - name: HITL schema cases, plugin assertions and added controls
         working-directory: docs/standards/osaia-safe-reverification
         run: python test_hitl_authority_effect.py
+      - name: HITL v0.2 — non-authorizing claim states and the bound authority record
+        working-directory: docs/standards/osaia-safe-reverification
+        run: |
+          python -B test_hitl_authority_effect_v0_2.py
+      - name: HITL v0.2 — the negative control still discriminates
+        working-directory: docs/standards/osaia-safe-reverification
+        run: |
+          python -B - <<'PY'
+          import subprocess, sys
+          out = subprocess.run([sys.executable, '-B', 'test_hitl_authority_effect_v0_2.py'],
+                               capture_output=True, text=True)
+          text = out.stdout + out.stderr
+          if out.returncode != 0:
+              raise SystemExit('v0.2 controls failed:\n' + text)
+          line = [l for l in text.splitlines() if l.startswith('PASS ')]
+          if not line:
+              raise SystemExit('v0.2 controls did not report a PASS line')
+          import re
+          m = re.search(r'(\d+) negative controls', line[0])
+          if not m or int(m.group(1)) < 4:
+              raise SystemExit('v0.2 negative control count too low: ' + line[0])
+          print(line[0])
+          PY
       - name: Approval byte-binding controls
         working-directory: docs/standards/osaia-safe-reverification
         run: |
@@ -88,6 +127,11 @@ jobs:
                   or result.skipped or result.expectedFailures or result.unexpectedSuccesses):
               raise SystemExit('Approval control coverage incomplete or unsuccessful')
           PY
+      - name: SAFE profile examples and discriminating-power controls
+        working-directory: docs/standards/osaia-safe-reverification
+        run: |
+          python validate_examples.py
+          python test_discriminating_power.py
       - name: SAFE whole-pack reader regression controls
         run: |
           python -I -B - <<'PY'
@@ -114,3 +158,89 @@ jobs:
                   or result.skipped or result.expectedFailures or result.unexpectedSuccesses):
               raise SystemExit('Reader control coverage incomplete or unsuccessful')
           PY
+      - name: Read retained SAFE pack offline without authenticating its issuer
+        id: safe_readback
+        env:
+          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python -I -B - <<'PY'
+          import hashlib
+          import json
+          import os
+          import subprocess
+          import sys
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          output = Path(os.environ["RUNNER_TEMP"]) / "safe-pack-readback"
+          output.mkdir()
+          reader = Path("packages/evidence-fabric/safe_pack_verify.py")
+          pack = Path("docs/standards/osaia-safe-evidence-pack")
+          command = [sys.executable, "-I", "-B", str(reader), "--offline", "--pack", str(pack)]
+          receipt = {
+              "schema": "csoai.safe-pack-ci-readback/0.1",
+              "observed_at": datetime.now(timezone.utc).isoformat(),
+              "candidate_head": os.environ["CANDIDATE_HEAD"],
+              "checkout_sha": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "run_id": os.environ["GITHUB_RUN_ID"],
+              "run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "command": command,
+              "source_sha256": hashlib.sha256(reader.read_bytes()).hexdigest(),
+          }
+          try:
+              receipt["freeze_sha256"] = hashlib.sha256((pack / "FREEZE.json").read_bytes()).hexdigest()
+          except OSError as exc:
+              receipt["freeze_sha256"] = None
+              receipt["freeze_read_error"] = str(exc)
+          try:
+              completed = subprocess.run(command, capture_output=True, timeout=120)
+              stdout, stderr = completed.stdout, completed.stderr
+              receipt["exit_code"] = completed.returncode
+          except subprocess.TimeoutExpired as exc:
+              stdout, stderr = exc.stdout or b"", exc.stderr or b""
+              receipt.update(exit_code=None, error="reader_timeout")
+          (output / "stdout.txt").write_bytes(stdout)
+          (output / "stderr.txt").write_bytes(stderr)
+          receipt["stdout_sha256"] = hashlib.sha256(stdout).hexdigest()
+          receipt["stderr_sha256"] = hashlib.sha256(stderr).hexdigest()
+          summary = {}
+          try:
+              summary = json.loads(stdout.decode("utf-8").splitlines()[-1])
+              if not isinstance(summary, dict):
+                  raise ValueError("Reader summary is not an object")
+          except (ValueError, IndexError) as exc:
+              receipt["summary_error"] = str(exc)
+              summary = {}
+          receipt["summary"] = summary
+          checks = summary.get("checks")
+          passed = (
+              receipt["exit_code"] == 2
+              and summary.get("verifier_profile") == "csoai.safe-pack-readback/3"
+              and summary.get("state") == "SELF_CONSISTENT_UNAUTHENTICATED_KEY"
+              and summary.get("signature_valid") is True
+              and "issuer_authenticated" in summary
+              and summary["issuer_authenticated"] is None
+              and isinstance(checks, dict)
+              and set(checks) == {"sums", "validate", "derived", "signature"}
+              and all(isinstance(check, dict) and check.get("holds") is True
+                      for check in checks.values())
+          )
+          receipt["expected_qualified_result"] = passed
+          (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps(receipt, sort_keys=True))
+          if not passed:
+              raise SystemExit("Retained SAFE pack did not reproduce the expected qualified result")
+          PY
+      - name: Retain SAFE pack readback including unavailable or failed results
+        if: >-
+          always() &&
+          (steps.safe_readback.outcome == 'success' ||
+           steps.safe_readback.outcome == 'failure' ||
+           steps.safe_readback.outcome == 'cancelled')
+        uses: actions/upload-artifact@v4
+        with:
+          name: safe-pack-readback-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/safe-pack-readback/
+          if-no-files-found: error
+          retention-days: 14
+

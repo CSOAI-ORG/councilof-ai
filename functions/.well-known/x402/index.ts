@@ -1,1 +1,1 @@
-export { onRequest } from "../x402";
+export { onRequestGet, onRequestHead } from "../x402";

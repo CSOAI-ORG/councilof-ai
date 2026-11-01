@@ -1,0 +1,27 @@
+name: gspc-mcp-reachability-census
+# Pre-axis census (DISCOVERED grid): initialize + notifications/initialized + tools/list only, no credentials,
+# 1 in-flight request per host, global rate cap, opt-out deny list, <=1 retry. Never feeds any axis score or n.
+# Results stay unsigned and unpublished in D1 gspc-layer0. $0: no model/provider calls.
+# Hourly schedule disabled 16 Oct 2026: the repo CLOUDFLARE_API_TOKEN secret has no D1 write (403).
+# The same script (same method sha) runs from the ops box loop instead. Manual dispatch kept.
+on:
+  workflow_dispatch: {}
+permissions: { contents: read }
+concurrency: { group: gspc-mcp-reachability-census, cancel-in-progress: false }
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Run census on queued rows
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CENSUS_LIMIT: "200"
+          CENSUS_GLOBAL_RPS: "4"
+          SPEND_CAP_USD: "91.6"
+          SPEND_STOP_LEFT_USD: "5"
+        run: python3 scripts/mcp_reachability_census.py

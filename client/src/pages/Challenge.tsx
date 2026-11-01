@@ -64,6 +64,7 @@ export default function Challenge() {
         <p className="mt-4 text-lg leading-relaxed text-slate-700">
           Every signed measurement on this estate is reviewable — including East-West cards and crosswalk mappings.
           If you contest a result, this is the path. The answer is always a re-measurement, never a defence.
+          Re-measurement is arranged run by run today rather than scheduled automatically.
         </p>
 
         <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">

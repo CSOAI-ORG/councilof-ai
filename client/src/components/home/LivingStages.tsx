@@ -376,18 +376,18 @@ function Boundary() {
 const VERIFY_STEPS = [
   {
     n: "01",
-    h: "Pin our key first — this step is not optional",
-    d: "Fetch /.well-known/did.json and take the card-attestation key. Every published card must carry that exact pubkey. Verifying a card against the key it ships with proves only that the file is self-consistent — anyone can alter a body and sign it with a key they generated a second ago.",
+    h: "Pin the expected issuer key first",
+    d: "Preserve the original record and pin the expected issuer key for its supported format before checking it offline. Public trust metadata is linked at /.well-known/did.json. An embedded key alone does not establish the expected issuer. Missing trust material or an unsupported format can leave the check UNCHECKABLE.",
   },
   {
     n: "02",
-    h: "Recompute the id from the body",
-    d: "Canonicalise the card's body — every key sorted, no whitespace — and take the SHA-256. That hash must equal the card's id. One changed character and it will not match. One warning if you implement this outside Python: the bytes were written by CPython, which renders a float of integral value as 0.0 where JavaScript and Go write 0, so a naive verifier reports a false failure on a large minority of the set. Our verifier at /signed/verify-card.mjs handles it and the rule is written out at /signed/HOW-TO-VERIFY.md.",
+    h: "Check the declared payload and digest",
+    d: "Use the canonicalization and signed payload specified for the record's supported format. Recompute the digest from that declared payload using the format's rules; encoding differences can change it. The format-specific method is documented at /signed/HOW-TO-VERIFY.md. Unsupported formats remain uncheckable through this path.",
   },
   {
     n: "03",
-    h: "Check the Ed25519 signature — then you are done",
-    d: "Verify the signature over those same bytes under the pinned key. The whole check runs offline on your machine, with no CSOAI code, no account and no permission — or in your browser with WebCrypto. The banks and the grader are published too, so a measurement can be re-run as well as re-checked.",
+    h: "Verify the signature and read its scope",
+    d: "For a supported signed record, verify the declared payload under the pinned expected key and retain VALID, INVALID with its reason, or UNCHECKABLE. Original bytes and pinned trust material permit an offline integrity check; the browser path may fetch public key metadata. Signature validity does not establish factual truth, freshness, authority for an action or legal conformity. Re-running a measurement is a separate task.",
   },
 ];
 
@@ -397,12 +397,12 @@ function VerifyYourself() {
       <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
         <div className="max-w-3xl">
           <Kicker>Do not trust us — check</Kicker>
-          <Heading>Three steps. Then you know.</Heading>
+          <Heading>Three checks, with explicit limits.</Heading>
           <Body>
-            A published card is a small record — under a kilobyte — carrying the axis, the model,
-            the accuracy, the issuer, the date and the hash of the card before it. You can confirm
-            it is genuine and unaltered on your own machine, with no account, no CSOAI code and no
-            permission from us.
+            Start with an existing public record and its stated method, scope and date.
+            The free verifier checks supported signed formats. Preserve the original bytes and
+            expected issuer key for independent integrity checks; unsigned, unsupported or missing
+            evidence can remain UNCHECKABLE.
           </Body>
           <Limits>
             <p>
@@ -446,9 +446,9 @@ function VerifyYourself() {
         <div className="mt-10 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/50 px-5 py-4">
           <Points
             points={[
-              { tag: "benefit", text: "The whole check runs offline — no account and no permission" },
+              { tag: "benefit", text: "Supported signed records can be checked offline with retained bytes and pinned trust material" },
               { tag: "benefit", text: "Pin our key first. A card checked against the key it ships with only proves it is self-consistent" },
-              { tag: "usp", text: "You recompute the same Ed25519 signature over the same hash chain we published" },
+              { tag: "usp", text: "Check the signature over the record's declared canonical payload" },
             ]}
           />
         </div>
@@ -634,10 +634,10 @@ function LiveBoard() {
           is actually its own: the hardest slot on the board, and the human figures kept beside
           the machine ones. The count line itself lives in the first screen. */}
       <p className="mt-6 text-[15px] leading-relaxed text-gray-700">
-        The last slot is jail, containment: whether a model can be talked out of its own guardrails.
-        It is measured{jail?.n ? ` on ${jail.n} gold cells` : ""}, on a smaller fleet than the rest of
-        the board, and its separation is TIE on the live board — a tie is not a separated leader. We
-        print that instead of leaving the cell blank, and instead of dressing it up as a pass.
+        The jail row concerns containment: whether a model can be talked out of its guardrails.
+        Its reported sample{jail?.n ? ` is ${jail.n} cells` : " is not shown here"}.
+        Read its method and published separation state on the board. Neither TIE nor UNTESTED
+        establishes a separated leader.
       </p>
 
       {cols > 0 && (

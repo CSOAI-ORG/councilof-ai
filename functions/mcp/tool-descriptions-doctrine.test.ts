@@ -53,6 +53,16 @@ describe("doctrine lint — the scanner (failing first)", () => {
     expect(doctrineViolations("Guaranteed accurate.")).toHaveLength(1);
   });
 
+  it("exempts the board's own axis ids, and only the id", () => {
+    // machinery-conformity is the live board's name for that axis; we publish it at
+    // councilof.ai/gspc/machinery-conformity/. A reference to a published identifier is not a
+    // conformity claim about a subject.
+    expect(doctrineViolations("The machinery-conformity axis of the live GSPC board.")).toHaveLength(0);
+    // The exemption is narrow: a claim BESIDE the id still trips.
+    expect(doctrineViolations("This axis is machinery-conformity, so it certifies you.")).toHaveLength(1);
+    expect(doctrineViolations("This axis is machinery-conformity, so it is conformant.")).toHaveLength(1);
+  });
+
   it("allows the negations the doctrine itself uses", () => {
     for (const ok of [
       "We measure; we do not certify.",

@@ -55,12 +55,8 @@ function fakeFetch(routes: Record<string, Route>, calls: string[] = []): typeof 
   }) as unknown as typeof fetch;
 }
 
-const revenueBody = (over: Record<string, unknown> = {}) => ({
-  schema: "csoai.revenue/0.1",
-  one_number: { id: "distinct_nonself_payers", status: "MEASURED", records_unreadable: 0, all_time: 2, last_30d: 1, ...over },
-});
 const healthy = (): Record<string, Route> => ({
-  "/api/revenue": () => Response.json(revenueBody()),
+  "/api/revenue": () => Response.json({ one_number: { status: "MEASURED", all_time: 2, last_30d: 1, repeat_nonself_payers: { all_time: 1, last_30d: 0, definition: "Distinct non-self wallets with two different non-zero settlement transaction IDs; not proof of independent customers." } } }),
   "/api/gspc": () =>
     Response.json({
       as_of: "2026-09-21T00:00:00Z",
@@ -326,13 +322,45 @@ describe("/api/footprint — the same-origin rows", () => {
     expect(p.github_stars).toMatchObject({ state: "READ", value: 4 });
     expect(p.qualified_distribution.state).toBe("UNMEASURED");
     expect(p.observed_execution.state).toBe("UNMEASURED");
-    expect(p.repeat_payers.state).toBe("UNMEASURED");
+    expect(p.repeat_payers).toMatchObject({ state: "READ", value: 1, last_30d: 0 });
     expect(p.institutional_use.state).toBe("UNMEASURED");
+  });
+
+  it("shares one revenue snapshot and preserves its repeat definition and measured zero", async () => {
+    const calls: string[] = [];
+    const p = await buildFootprint(deps(healthy(), calls));
+    expect(calls.filter((url) => url === `${ORIGIN}/api/revenue`)).toHaveLength(1);
+    expect(p.repeat_payers).toMatchObject({ state: "READ", value: 1, last_30d: 0, source_field: "one_number.repeat_nonself_payers", as_of: NOW });
+    expect(p.repeat_payers.definition).toBe("Distinct non-self wallets with two different non-zero settlement transaction IDs; not proof of independent customers.");
+    const zero = await buildFootprint(deps({ ...healthy(), "/api/revenue": () => Response.json({ one_number: { status: "MEASURED", all_time: 0, repeat_nonself_payers: { all_time: 0, last_30d: 0, definition: "No repeat non-self wallets recorded." } } }) }));
+    expect(zero.repeat_payers).toMatchObject({ state: "READ", value: 0, last_30d: 0 });
+  });
+
+  it.each([
+    undefined, null, [], {},
+    { all_time: null, last_30d: null, definition: "unmeasured" },
+    { all_time: "1", last_30d: 0, definition: "invalid" },
+    { all_time: -1, last_30d: 0, definition: "invalid" },
+    { all_time: 1.5, last_30d: 0, definition: "invalid" },
+    { all_time: Number.MAX_SAFE_INTEGER + 1, last_30d: 0, definition: "invalid" },
+    { all_time: 1, last_30d: null, definition: "invalid" },
+    { all_time: 1, last_30d: 2, definition: "invalid" },
+    { all_time: 1, last_30d: 0, definition: " " },
+  ])("keeps malformed or absent repeat counts unknown: %j", async (repeat) => {
+    const p = await buildFootprint(deps({ ...healthy(), "/api/revenue": () => Response.json({ one_number: { status: "MEASURED", all_time: 2, repeat_nonself_payers: repeat } }) }));
+    expect(p.repeat_payers).toMatchObject({ state: "UNCHECKABLE", value: null, last_30d: null });
+  });
+
+  it("does not promote a repeat count on an unmeasured source or failed upstream", async () => {
+    const unmeasured = await buildFootprint(deps({ ...healthy(), "/api/revenue": () => Response.json({ one_number: { status: "UNMEASURED", repeat_nonself_payers: { all_time: 1, last_30d: 0, definition: "unmeasured" } } }) }));
+    expect(unmeasured.repeat_payers).toMatchObject({ state: "UNCHECKABLE", value: null, last_30d: null });
+    const denied = await buildFootprint(deps({ ...healthy(), "/api/revenue": () => new Response("denied", { status: 401 }) }));
+    expect(denied.repeat_payers).toMatchObject({ state: "UNCHECKABLE", value: null, last_30d: null });
   });
 
   it("null one_number → UNCHECKABLE with the revenue surface's own reason", async () => {
     const p = await buildFootprint(
-      deps({ ...healthy(), "/api/revenue": () => Response.json(revenueBody({ status: "UNCHECKABLE", all_time: null, source: "kv unavailable" })) }),
+      deps({ ...healthy(), "/api/revenue": () => Response.json({ one_number: { status: "UNCHECKABLE", all_time: null, source: "kv unavailable" } }) }),
     );
     expect(p.economic_use).toMatchObject({ state: "UNCHECKABLE", value: null });
     expect(String(p.economic_use.reason)).toContain("kv unavailable");
@@ -345,7 +373,7 @@ describe("/api/footprint — the same-origin rows", () => {
   });
 
   it("a measured zero is a real zero only when the store answered", async () => {
-    const p = await buildFootprint(deps({ ...healthy(), "/api/revenue": () => Response.json(revenueBody({ all_time: 0, last_30d: 0 })) }));
+    const p = await buildFootprint(deps({ ...healthy(), "/api/revenue": () => Response.json({ one_number: { status: "MEASURED", all_time: 0 } }) }));
     expect(p.economic_use).toMatchObject({ state: "READ", value: 0 });
   });
 
