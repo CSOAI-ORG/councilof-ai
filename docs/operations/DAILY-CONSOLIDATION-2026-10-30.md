@@ -317,8 +317,65 @@ skip is a HOLD rather than a silent gap in the root's history.
 
 ---
 
-### Provenance
+## 10. Two things the owner has to decide
 
+### 10.1 There are now TWO candidate 34th axes
+
+While this branch was open, master advanced 104 commits and brought in a parallel lane's artifact
+`public/interop/universal-watchdog-incident-harness-v1.json` (generated 2026-10-30T09:30Z). It
+proposes a **candidate 34th axis of its own**:
+
+| | this branch | the lane's candidate |
+|---|---|---|
+| axis id | `watchdog-ingest` | `public-incident-vigilance` |
+| aliases | — | `watchdog-incident-vigilance`, `gspc-public-incident-vigilance` |
+| kind | `declared-slot`, `n: 0`, **UNMEASURED** | `deterministic-facts`, `n: 36`, "MEASURED in watchdog", staged for an owner ceremony |
+| shape | a **daily** probe of 18 pinned public sources; three states never merged; digests; a card-v0 atom signed into the ONE root | a **frozen** bank of 36 probes (12 databases × 3 dimensions), verdicts `PASS_NATIVE` / `GAP_BRIDGED_BY_CSOAI_LAYER0` |
+| cadence | continuous | one-shot; it goes stale and nothing re-runs it |
+
+They are the same subject — public watchdogs and incident databases — and **the board can carry
+one slot for it**. Nothing breaks technically (the candidate is not in the alias table and is not
+admitted), but the slot number 34 is claimed twice.
+
+**What this branch delivers and what it does not.** This branch delivers a harness that runs
+every day, records three states that never merge, binds every row to the bytes it read, signs
+the day into the public root, and routes the findings to a human queue that stays HOLD. It does
+**not** claim a measurement of the 12 databases: the axis is a declared slot with `n: 0` and
+status UNMEASURED, and the artifacts say so.
+
+**The recommendation** is to admit **this** lane's slot and treat the 36-probe bank as one
+*source* inside it — because a frozen bank of probes about live advisory feeds and dashboards is
+exactly the thing that goes stale, whereas a daily probe keeps its own currency, and the
+candidate's own note asks for an owner ceremony that this branch does not perform. Admitting the
+candidate instead is also defensible; it is the owner's call, and admitting it means renaming or
+removing `watchdog-ingest` before the ceremony.
+
+**One factual conflict inside that candidate, checked live today.** Its probe `WD-AIID-01`
+records `schema_ingest: PASS — "JSON/CSV incident IDs and report URLs parse deterministically"`
+for the AI Incident Database. The estate's own probe could not reproduce that against the public
+surface: `https://incidentdatabase.ai/api/graphql` answers an unauthenticated read **403**, every
+site route returns the same 322,936-byte SPA shell, and the repository carries `site/` with **no
+`data/` directory**. AIID's own `site/docs/API_ACCESS.md` says the endpoint requires a logged-in
+account (`401`, `API_LOGIN_REQUIRED`) and that its Excel export is uploaded by CI to a Cloudflare
+R2 bucket rather than published at a URL. So the endpoint does exist and does work **with an
+account** — the candidate's `PASS` is not wrong about the corpus, but it is not a *public*
+measurement, and the artifact does not say what it took to make it pass. That is a fact for the
+owner, not a defect to fix here: the candidate file is a dated lane artifact and was not edited.
+
+### 10.2 The AIID answer, now documented rather than inferred
+
+The earlier finding was "no public machine-readable API" on the strength of a 404. It is now
+carried with the maintainers' own words: their README and `site/docs/API_ACCESS.md` state that
+`/api/graphql` requires a logged-in account, that the site's incident pages are static pages
+rather than a feed, and that an integration is expected to *get in touch* rather than work around
+the requirement. The data request at
+`docs/operations/AIID-DATA-REQUEST-2026-10-30.md` now asks for one of three things — an
+integration account, a public JSON/CSV export, or a public URL for the Excel export — and cites
+the probes it was built on. It is drafted and ready to send; **sending it is the owner's.**
+
+---
+
+### Provenance
 `canon.json` · `scripts/drift-guard.mjs` · `scripts/watchdog_intake.py` ·
 `scripts/test_watchdog_intake.py` · `scripts/watchdog_charter_feed.py` ·
 `scripts/test_watchdog_charter_feed.py` · `scripts/readers/watchdog_intake_reader.py` ·

@@ -14,18 +14,31 @@ What we probed, live, on 2026-10-30:
 
 | Probe | Result |
 |---|---|
+| `https://incidentdatabase.ai/api/graphql` (your documented endpoint) | **403** `{"error":"Forbidden - Invalid origin"}` — unauthenticated read refused |
 | `https://incidentdatabase.ai/api/incidents?limit=1` | **404** — returns the Gatsby SPA HTML, not JSON |
-| `https://incidentdatabase.ai/` | 200, HTML only |
-| Any documented public JSON/CSV API | none found |
+| `https://incidentdatabase.ai/graphql` | **404** — same SPA shell |
+| `https://incidentdatabase.ai/{download,dataset,excel}` | **404** — same SPA shell |
+| `https://incidentdatabase.ai/{robots.txt,sitemap.xml}` | **404** — same 322,936-byte SPA shell (a catch-all route) |
+| `https://api.incidentdatabase.ai/incidents` | no DNS resolution |
+| `github.com/responsible-ai-collaborative/aiid` | reachable — `site/` only, **no `data/` directory** |
+| `site/excel-export-pipeline` | present; its output is uploaded by CI to a **Cloudflare R2 bucket**, not to a public URL |
 
-What the site itself says: the incident corpus lives in the project's **private database** and is
-published as a **static Excel export**. We have not been able to locate a documented, stable,
-machine-readable URL that a daily job may fetch.
+**Your own documentation agrees with our probe.** `site/docs/API_ACCESS.md` and the repository
+README state that the endpoint answers a session-less request with **HTTP 401 and
+`extensions.code: "API_LOGIN_REQUIRED"`**, that the endpoint requires a logged-in account as a
+response to automated traffic, and that the site's incident pages are statically generated and
+remain readable without an account — "the requirement applies to the API, not to browsing the
+database."
 
-So today the estate's position is: **AIID is probed and recorded as a published gap**, not
+So the gap is precise, and it is not a bug on our side: **there is no public, unauthenticated,
+machine-readable path to the incident corpus.** Your README also names the route for exactly our
+case — *"if you maintain a research or product integration and need a higher volume than a normal
+account, please get in touch rather than working around the requirement."*
+
+Today the estate's position is: **AIID is probed and recorded as a published gap**, not
 ingested. It appears in `public/interop/watchdog-intake/` under `unpinned_findings` with the
-reason stated, and it is named in the axis's own gap list. It is not counted as measured, and it
-is not counted as zero. It is a visible hole.
+reason stated and quoted, and it is named in the axis's own gap list. It is not counted as
+measured, and it is not counted as zero. It is a visible hole.
 
 We are not asking AIID to change its architecture. We are asking for one of three small things.
 
@@ -40,19 +53,22 @@ We are not asking AIID to change its architecture. We are asking for one of thre
 > the answer had, and the sha256 of the bytes we read. Your incident corpus is the most directly
 > relevant source in that set for us, and it is the one we currently cannot read.
 >
-> What we found today (2026-10-30): `https://incidentdatabase.ai/api/incidents?limit=1` returns
-> **404** with the site's HTML rather than JSON, and we could not find a documented public
-> machine-readable endpoint or a stable export URL.
+> What we found today (2026-10-30): `https://incidentdatabase.ai/api/graphql` refuses an
+> unauthenticated read (403 from an origin check; your own `site/docs/API_ACCESS.md` says a
+> session-less request gets 401 `API_LOGIN_REQUIRED`), and the incident pages themselves are
+> static pages rather than a feed. The repository carries `site/excel-export-pipeline`, whose
+> output CI uploads to an R2 bucket.
 >
 > Would any of these be possible?
 >
-> 1. **A documented public JSON (or JSONL / CSV) export URL** for the incident corpus — even a
->    static file at a stable path, regenerated on your release cadence. We would fetch it daily,
->    hash the bytes, and record only the count and the fields we can read.
-> 2. **A stable URL for the Excel export you already publish**, if one exists — we can parse it on
->    a slower cadence than our other feeds.
-> 3. **A documented API route** in the shape the site's frontend already uses, if the frontend
->    queries a real endpoint we could not find.
+> 1. **An integration account** for a public, read-only research integration — your README names
+>    this route for exactly our case. We would fetch on a daily cadence, record only the HTTP
+>    status, the byte count and the sha256 of the response, and the number of incident records
+>    the response carries.
+> 2. **A documented public JSON (or JSONL / CSV) export URL** for the incident corpus — even a
+>    static file at a stable path, regenerated on your release cadence.
+> 3. **A stable public URL for the Excel export you already produce**, if one is or could be
+>    published — we can parse it on a slower cadence than our other feeds.
 >
 > What we would do with it, precisely:
 >
