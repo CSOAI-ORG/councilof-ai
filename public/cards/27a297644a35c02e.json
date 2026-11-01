@@ -1,0 +1,85 @@
+{
+  "card": {
+    "as_of": "2026-10-28T21:00:26Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.ledger-head/0.1",
+      "ledger": "corrections-watch",
+      "authority_for": "whether other organisations' corrections reached their pages",
+      "served_url": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/corrections-watch/latest.json",
+      "http_status": 200,
+      "not_a_grade": true,
+      "bytes_sha256": "a20be038b7495cd5e194b5898df100842cdd305d66fc0fed1f2692da9d5e9ecf",
+      "n_bytes": 29695,
+      "entries": 15,
+      "last_update": "2026-10-25",
+      "row_states": {
+        "BOTH_PRESENT": 1,
+        "STALE_STILL_SERVED": 13,
+        "UNCHECKABLE": 1
+      },
+      "signed": true,
+      "scope": "third-party pages; not a record of our own corrections",
+      "state": "PROBED"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "27a297644a35c02e293d5e2b2ca39dfbc711788fe81f752bde2779c92e61f2f5",
+    "sig_ed25519": "285ed9af1573eb7b07e27a1189221791a0fd1d7ffa5be889bc9fd71f0a452aac6136cf13db59b7557c1f994a871d10b08020e44126c0ed9ece982018105cad08",
+    "source_urls": [
+      "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/corrections-watch/latest.json"
+    ],
+    "subject": "Ledger head: corrections-watch (served bytes, digest and count at one read)",
+    "surface": "public.notice",
+    "tags": [
+      "ledger-head",
+      "corrections-watch",
+      "ledger-heads-2026-09"
+    ],
+    "unmeasured": [
+      "whether any entry is correct; this atom commits to the served bytes and their head only"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "3c4384e29f71dd9fb1127a630d8e7b68f583d02050bae86c27a92e34f1b040c3",
+    "dbbade6b108e6c8e0ee22c56cc82957d6d3999ca5b0ac62bd20ffab954bd3af1",
+    "c3cac8966983e6e5b5c1a58eaaa5c5a9ed6b1b7c3d9f1ecc95149726d0694d29",
+    "1069e53581fb442df3ced5b360a77c744bf75546e176e243c24d2688848e0f85",
+    "729f2121cf38f959ef6b4a8c38555509eceeeb2c30eff2aa9b2c3c38a6de5877",
+    "6f7329f6540a9fffaf16205f00a66c5bc513366403fa0a0a46b6d451853f6b03",
+    "9775c31fa2de1dac387043fbcfc514bd91be2ffde5e9d5b14e85859cf4ac2dd4",
+    "32a67cbf7902dbc574c34e4c4033f4242985956f081fbba7fba8291fbf5efa83",
+    "64b80cfb5eaf6db74b79d27190fdc9010eda89d74fc5133ba5441211a67d9fea"
+  ]
+}
