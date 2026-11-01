@@ -6,7 +6,7 @@
   "counts": {
     "s1_and_sec_registrants_crosswalked": 4,
     "s1_risk_domains_mapped": 9,
-    "distinct_gspc_axes_referenced": 33,
+    "distinct_gspc_axes_referenced": 34,
     "daily_permissionless_bulletins": 4,
     "one_founder_autonomous_engines": 4
   },
@@ -43,7 +43,8 @@
     "reserve-attestation",
     "safety",
     "serving-fidelity",
-    "swarm"
+    "swarm",
+    "watchdog-ingest"
   ],
   "s1_ipo_risk_crosswalk": [
     {
@@ -299,9 +300,15 @@
               "status": "UNMEASURED",
               "n": 0,
               "pre_admission_bank_n": 35
+            },
+            {
+              "axis": "watchdog-ingest",
+              "slot": 34,
+              "status": "UNMEASURED",
+              "n": 0
             }
           ],
-          "public_verify_command": "curl -sS https://councilof.ai/api/gspc | jq '.axes[] | select(.axis==\"provenance\" or .axis==\"conformance\" or .axis==\"openness\" or .axis==\"detector-interop\" or .axis==\"provenance-controls\" or .axis==\"distribution-integrity\" or .axis==\"interop-conformance\")'"
+          "public_verify_command": "curl -sS https://councilof.ai/api/gspc | jq '.axes[] | select(.axis==\"provenance\" or .axis==\"conformance\" or .axis==\"openness\" or .axis==\"detector-interop\" or .axis==\"provenance-controls\" or .axis==\"distribution-integrity\" or .axis==\"interop-conformance\" or .axis==\"watchdog-ingest\")'"
         }
       ]
     },
@@ -475,7 +482,7 @@
       "title": "Article 1 Care (protect x help) Tail-Harm & AI Delusion Non-Reinforcement Measurement Bulletin",
       "permission_required": false,
       "cadence": "Per model release and MEOK 4-perspective router evaluation",
-      "headline_observation": "On GSPC Axis #8 care (CareBench, n=199), the 14-model fleet mean is 0.293 with worst-5% tail harm cvar05_harm=0.9895. Frozen instrument CARE-PSY-v1 (n=36, bank_sha256=bb420eacb612582d079f04513566fe36bb1b92306cab81345f2c0cbbcff6e12e) and the 18-source Article-1 Care research registry v1.1 (registry_sha256=df059173a52aabfcb37ed6ca72d1da92ae66d8ad97be4efa94be4df0ee2e37a4) provide deterministic multi-turn delusion non-reinforcement and Turn-of-Flip (ToF) persistence measurement.",
+      "headline_observation": "On GSPC Axis #8 care (CareBench, n=199), the 14-model fleet mean is 0.293 with worst-5% tail harm cvar05_harm=0.9895. Frozen instrument CARE-PSY-v1 (n=36, bank_sha256=bb420eacb612582d079f04513566fe36bb1b92306cab81345f2c0cbbcff6e12e) and the 18-source Article-1 Care research registry v1.1 (registry_sha256=5fbac45a3473710271fea7b25cef77c1e0545697ccaf1dcedcabf712b8bc03ac) provide deterministic multi-turn delusion non-reinforcement and Turn-of-Flip (ToF) persistence measurement.",
       "verify_command": "curl -sS https://councilof.ai/interop/psychosis-delusion-guard-bank-v1.json | jq '{instrument_id, n_items, bank_sha256}'"
     },
     {
@@ -512,5 +519,5 @@
       }
     ]
   },
-  "artifact_sha256": "c44b331e54d566f50e817ade72deb9502b3d0b5ea27dee122b79f5570888955f"
+  "artifact_sha256": "0dc2d1453c1aca648f296ed3df8b53fb5e21d2099aa69b342e87624ca3b3818e"
 }

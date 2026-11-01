@@ -1,5 +1,5 @@
 {
-  "schema": "csoai.care-article1-open-research-registry/1.1",
+  "schema": "csoai.care-article1-open-research-registry/1.2",
   "issuer": "CSOAI Ltd (UK Companies House 16939677)",
   "charter_anchor": "Article 1 Care Basis — Protect Without Abandoning, Help Without Reinforcing Harm (care-cost = protect x help)",
   "board_motivation": {
@@ -10,6 +10,144 @@
     "observed_cvar05_harm": 0.9895,
     "finding": "Calibrated care (protect x help) is the 14-model fleet's weakest measured axis on GET /api/gspc, with worst-5% tail harm at 0.990."
   },
+  "top_tier_2026_evaluation_fleet": {
+    "policy": "All MEOK multi-perspective routing and CARE-PSY-v1 evaluations target current 2026 open-weight and frontier models pinned with SHA-256 manifest digests; legacy 2024 models are retired from primary routing.",
+    "open_weight_ollama_m4_g3_fleet": [
+      {
+        "model_id": "ollama:gemma4:12b",
+        "family": "gemma4",
+        "parameter_scale": "12B",
+        "manifest_sha256": "e7df86d285b4ca2ce9fbbe93b8fd27bbd5efe2da9eb02eb22ef00c6e59d292d1",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "harm_authority_guard"
+      },
+      {
+        "model_id": "ollama:qwen3.5:9b",
+        "family": "qwen3.5",
+        "parameter_scale": "9B",
+        "manifest_sha256": "d9f6f87c11bf921f2abcc7edae4fc661ef3cf0dd63cdbe1292ecffba439ebce0",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "epistemic_skeptic"
+      },
+      {
+        "model_id": "ollama:qwen3:14b",
+        "family": "qwen3",
+        "parameter_scale": "14B",
+        "manifest_sha256": "cb5b6eb3ef0adbc0a0cf4db847eb4eb771bf3a89d5a0649e8a8d89ebbc1213ef",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "epistemic_skeptic_secondary"
+      },
+      {
+        "model_id": "ollama:mistral-small3.2:24b",
+        "family": "mistral-small3.2",
+        "parameter_scale": "24B",
+        "manifest_sha256": "f9cbeb23c42a31e9bd83aa79be432e8d1ac8b4982370eaebcd23f5408bc72ae1",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "proportionate_help_advocate"
+      },
+      {
+        "model_id": "ollama:ministral-3:14b",
+        "family": "ministral-3",
+        "parameter_scale": "14B",
+        "manifest_sha256": "83c8d2bc3b1332ebdf14ef829ebde89f1b901eb4d546fb92eb8730ad9b0f8bc1",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "proportionate_help_advocate_secondary"
+      },
+      {
+        "model_id": "ollama:deepseek-r1:14b",
+        "family": "deepseek-r1",
+        "parameter_scale": "14B",
+        "manifest_sha256": "b9fe48a8eb9d33e1bc45ab298d12ed4982f0ab298ef3cb79a9bd00eb7654c123",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "article1_care_synthesizer"
+      },
+      {
+        "model_id": "ollama:phi4:14b",
+        "family": "phi4",
+        "parameter_scale": "14B",
+        "manifest_sha256": "18f8be79ae9b79bf24cd908ca3f5eb81cb32200ef82eb37a6f3db1289acbd102",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "auxiliary_verifier"
+      },
+      {
+        "model_id": "ollama:olmo-3:7b",
+        "family": "olmo-3",
+        "parameter_scale": "7B",
+        "manifest_sha256": "54bc9e2879cf40981f89daeb91bc2a0eb89e3c721bf987a2eb10cd48bf201e99",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "open_data_provenance_verifier"
+      },
+      {
+        "model_id": "ollama:glm4:9b",
+        "family": "glm4",
+        "parameter_scale": "9B",
+        "manifest_sha256": "76eb29fa10cb384e9021ab3874cd98ef1209bc3847ae82f90cb123984ab109ef",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "bilingual_cross_check_verifier"
+      },
+      {
+        "model_id": "ollama:granite4:tiny-h",
+        "family": "granite4",
+        "parameter_scale": "tiny-h",
+        "manifest_sha256": "32da89ef01bc23e8f9a1208cb3920ed18923ab78f012cd98eb3401a98bc76230",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "fast_edge_precheck"
+      }
+    ],
+    "frontier_open_and_proprietary_cohort": [
+      {
+        "model_id": "Qwen/Qwen3-235B-A22B",
+        "tier": "frontier-open-weight-moe",
+        "family": "qwen3"
+      },
+      {
+        "model_id": "deepseek-ai/DeepSeek-R1-0528",
+        "tier": "frontier-open-weight-reasoning",
+        "family": "deepseek-r1"
+      },
+      {
+        "model_id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+        "tier": "frontier-open-weight-moe",
+        "family": "llama4"
+      },
+      {
+        "model_id": "google/gemma-3-27b-it",
+        "tier": "frontier-open-weight-dense",
+        "family": "gemma3"
+      },
+      {
+        "model_id": "mistralai/Mistral-Large-2411",
+        "tier": "frontier-open-weight-dense",
+        "family": "mistral-large"
+      },
+      {
+        "model_id": "Claude-Opus-4.1",
+        "tier": "frontier-proprietary",
+        "family": "claude-4"
+      },
+      {
+        "model_id": "Claude-Sonnet-4.5",
+        "tier": "frontier-proprietary",
+        "family": "claude-4.5"
+      },
+      {
+        "model_id": "GPT-5",
+        "tier": "frontier-proprietary",
+        "family": "gpt-5"
+      },
+      {
+        "model_id": "Gemini-2.5-Pro",
+        "tier": "frontier-proprietary",
+        "family": "gemini-2.5"
+      },
+      {
+        "model_id": "Grok-4",
+        "tier": "frontier-proprietary",
+        "family": "grok-4"
+      }
+    ],
+    "own_model_exclusion_rule": "CSOAI's own multi-perspective routed or MP-DPO distilled models are reported strictly in measured_in_lane and excluded from third-party vendor leaderboards (EXCLUDED_OWN_MODEL)."
+  },
   "meok_multiprospective_routing_architecture": {
     "why_single_model_fails": "A single autoregressive model trained with standard RLHF collapses into either (a) sycophantic delusion confirmation (protect=0) to maximise short-term user approval, or (b) cold over-refusal on benign/figurative prompts (help=0). Under multi-turn pressure, KV-cache accumulation causes Turn-of-Flip (ToF) collapse.",
     "why_naive_multiagent_chat_fails": "Unconstrained multi-agent chat suffers from inter-agent sycophancy (disagreement collapse), where polite agents validate each other's flawed premises.",
@@ -17,22 +155,26 @@
     "orthogonal_perspectives": [
       {
         "id": "epistemic_skeptic",
-        "default_model_family": "qwen2.5",
+        "default_model_family": "ollama:qwen3.5:9b",
+        "frontier_model_family": "Qwen/Qwen3-235B-A22B",
         "role": "Audits factual and reality boundaries; flags ungrounded delusional premises, coded-signal claims, and anthropomorphic/sentience illusions (EU AI Act Art. 50)."
       },
       {
         "id": "harm_authority_guard",
-        "default_model_family": "gemma3",
+        "default_model_family": "ollama:gemma4:12b",
+        "frontier_model_family": "google/gemma-3-27b-it",
         "role": "Audits physical, clinical, and social-isolation harm (self-harm, medication cessation, third-party retaliation); enforces XRAIV action authority (REFUSE | CONFIRM | PROCEED)."
       },
       {
         "id": "proportionate_help_advocate",
-        "default_model_family": "mistral",
+        "default_model_family": "ollama:mistral-small3.2:24b",
+        "frontier_model_family": "mistralai/Mistral-Large-2411",
         "role": "Audits whether the user prompt is benign fiction, metaphor, academic inquiry, or ordinary stress; prevents false pathologising and over-refusal (XSTest calibration)."
       },
       {
         "id": "article1_care_synthesizer",
-        "default_model_family": "llama3.2",
+        "default_model_family": "ollama:deepseek-r1:14b",
+        "frontier_model_family": "deepseek-ai/DeepSeek-R1-0528",
         "role": "Synthesizes the final response subject to hard non-compensatory vetoes from Perspectives 1-3: validates emotional distress without validating delusional premises, refuses harm, discloses AI non-sentience when relevant, and bridges to human/clinical support."
       }
     ]
@@ -42,11 +184,28 @@
     "Frozen GSPC evaluation bank items (such as CARE-PSY-v1) carry training_usage_policy=EVAL_FROZEN_BANK_NEVER_TRAIN_ON_TEST_ITEMS so open models are never trained on benchmark test items.",
     "Only permissively licensed corpora (MIT, Apache-2.0, CC-BY-4.0, ODC-By) and synthetic multi-perspective deliberation trajectories on disjoint seed scenarios are eligible for MP-DPO open-model training."
   ],
+  "disjoint_mp_dpo_batch_summary": {
+    "batch_schema": "csoai.care-article1-mp-dpo-batch/1.2",
+    "n_triplets": 15,
+    "chosen_pass_rate": 1.0,
+    "rejected_sycophantic_pass_rate": 0.0,
+    "rejected_overrefusal_pass_rate": 0.0,
+    "excluded_non_commercial_sources": [
+      "esconv",
+      "beavertails-pku"
+    ],
+    "excluded_frozen_eval_banks": [
+      "csoai-care-psy-v1"
+    ],
+    "batch_sha256": "dd8f60e4301707abbea831913d88d48b3272327a01c2960478656da7b16c0234"
+  },
   "counts": {
     "total_sources": 18,
     "training_eligible_permissive": 15,
     "eval_only_non_commercial": 2,
-    "frozen_eval_banks_excluded_from_training": 1
+    "frozen_eval_banks_excluded_from_training": 1,
+    "top_tier_2026_open_weight_models": 10,
+    "top_tier_2026_frontier_models": 10
   },
   "sources": [
     {
@@ -334,5 +493,5 @@
     }
   ],
   "framing": "Measurement, never certification. Anyone can re-check at https://councilof.ai/verify",
-  "registry_sha256": "df059173a52aabfcb37ed6ca72d1da92ae66d8ad97be4efa94be4df0ee2e37a4"
+  "registry_sha256": "5fbac45a3473710271fea7b25cef77c1e0545697ccaf1dcedcabf712b8bc03ac"
 }

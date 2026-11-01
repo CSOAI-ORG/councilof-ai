@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Unit tests for scripts/gspc_care_multiprospective_miner.py and
-public/interop/care-article1-open-research-registry-v1.json (v1.1).
+public/interop/care-article1-open-research-registry-v1.json (v1.2).
 """
 
 import json
@@ -21,11 +21,13 @@ class TestCareMultiprospectiveMiner(unittest.TestCase):
         self.bank = psy.build_canonical_bank()
 
     def test_registry_license_gate_and_sha256_pin(self) -> None:
-        self.assertEqual(self.registry["schema"], "csoai.care-article1-open-research-registry/1.1")
+        self.assertEqual(self.registry["schema"], "csoai.care-article1-open-research-registry/1.2")
         self.assertEqual(self.registry["counts"]["total_sources"], 18)
         self.assertEqual(self.registry["counts"]["training_eligible_permissive"], 15)
         self.assertEqual(self.registry["counts"]["eval_only_non_commercial"], 2)
         self.assertEqual(self.registry["counts"]["frozen_eval_banks_excluded_from_training"], 1)
+        self.assertEqual(self.registry["counts"]["top_tier_2026_open_weight_models"], 10)
+        self.assertEqual(self.registry["counts"]["top_tier_2026_frontier_models"], 10)
 
         disk = json.loads(miner.DEFAULT_REGISTRY_PATH.read_text(encoding="utf-8"))
         self.assertEqual(disk["registry_sha256"], self.registry["registry_sha256"])
@@ -35,6 +37,19 @@ class TestCareMultiprospectiveMiner(unittest.TestCase):
                 self.assertIn(s["license"], miner.PERMISSIVE_TRAINING_LICENSES)
             if s["license"] == "CC-BY-NC-4.0":
                 self.assertEqual(s["training_usage_policy"], "EVAL_ONLY_NON_COMMERCIAL")
+
+    def test_top_tier_2026_fleet_has_no_legacy_2024_defaults(self) -> None:
+        perspectives = self.registry["meok_multiprospective_routing_architecture"]["orthogonal_perspectives"]
+        default_families = [p["default_model_family"] for p in perspectives]
+        self.assertEqual(
+            default_families,
+            [
+                "ollama:qwen3.5:9b",
+                "ollama:gemma4:12b",
+                "ollama:mistral-small3.2:24b",
+                "ollama:deepseek-r1:14b",
+            ],
+        )
 
     def test_four_perspective_router_achieves_perfect_care_cost(self) -> None:
         routed_responses = {
@@ -54,9 +69,10 @@ class TestCareMultiprospectiveMiner(unittest.TestCase):
             "expected_action": "REFUSE_HARM_AND_GROUND",
             "is_frozen_eval_item": False,
             "source_consent_model_training": True,
+            "source_license": "MIT",
         }
         triplet = miner.synthesize_mp_dpo_triplet(synthetic_seed)
-        self.assertEqual(triplet["schema"], "csoai.care-article1-mp-dpo-triplet/1.1")
+        self.assertEqual(triplet["schema"], "csoai.care-article1-mp-dpo-triplet/1.2")
         self.assertTrue(triplet["deterministic_grades"]["chosen_passed"])
         self.assertFalse(triplet["deterministic_grades"]["rejected_sycophantic_passed"])
         self.assertFalse(triplet["deterministic_grades"]["rejected_overrefusal_passed"])
@@ -68,6 +84,20 @@ class TestCareMultiprospectiveMiner(unittest.TestCase):
         # Consent guard: user intake record with model_training=False MUST be rejected
         with self.assertRaises(ValueError):
             miner.synthesize_mp_dpo_triplet({**synthetic_seed, "source_consent_model_training": False})
+
+        # License guard: non-permissive CC-BY-NC-4.0 MUST be rejected
+        with self.assertRaises(ValueError):
+            miner.synthesize_mp_dpo_triplet({**synthetic_seed, "source_license": "CC-BY-NC-4.0"})
+
+    def test_disjoint_mp_dpo_batch_across_15_permissive_sources(self) -> None:
+        batch = miner.synthesize_disjoint_mp_dpo_batch(self.registry["sources"])
+        self.assertEqual(batch["schema"], "csoai.care-article1-mp-dpo-batch/1.2")
+        self.assertEqual(batch["n_triplets"], 15)
+        self.assertEqual(batch["chosen_pass_rate"], 1.0)
+        self.assertEqual(batch["rejected_sycophantic_pass_rate"], 0.0)
+        self.assertEqual(batch["rejected_overrefusal_pass_rate"], 0.0)
+        self.assertEqual(batch["excluded_non_commercial_sources"], ["esconv", "beavertails-pku"])
+        self.assertEqual(batch["excluded_frozen_eval_banks"], ["csoai-care-psy-v1"])
 
     def test_multiturn_trajectory_persistence_tof_and_nof(self) -> None:
         item = self.bank["items"][0]  # Delusion pressure item
@@ -105,8 +135,13 @@ class TestCareMultiprospectiveMiner(unittest.TestCase):
 
     def test_cross_family_veto_independence(self) -> None:
         cross = miner.compute_cross_family_veto_independence(
-            {"qwen2.5": 0.24, "gemma3": 0.26, "mistral": 0.27, "llama3.2": 0.22},
-            inter_family_correlation=0.12,
+            {
+                "ollama:qwen3.5:9b": 0.21,
+                "ollama:gemma4:12b": 0.19,
+                "ollama:mistral-small3.2:24b": 0.22,
+                "ollama:deepseek-r1:14b": 0.18,
+            },
+            inter_family_correlation=0.11,
         )
         self.assertEqual(cross["m_families"], 4)
         self.assertLess(cross["correlated_joint_error"], cross["mean_single_family_error"])

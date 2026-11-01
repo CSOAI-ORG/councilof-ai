@@ -70,7 +70,7 @@ def build_outside_in_end_user_inspection() -> List[Dict[str, Any]]:
             "role": "Enterprise CISO & AI Platform Architect",
             "what_they_inspect_first": [
                 "https://councilof.ai/.well-known/constitutional-harness.json (22 Operational Articles)",
-                "https://councilof.ai/constitutional-harness/charter-v0.1.json (52 Source Articles -> CH-01..CH-16)",
+                "https://councilof.ai/constitutional-harness/ (52 Source Articles -> CH-01..CH-16)",
                 "scripts/hitl/hitl_probe.py (MCP 2025-11-25 elicitation decline/cancel & secret-in-form probe)",
                 "packages/evidence-fabric/ (OTel, OCSF 1.9, SARIF 2.1.0, in-toto v1)",
             ],
@@ -573,7 +573,7 @@ def build_first_principles_institutional_precedents() -> List[Dict[str, Any]]:
             ),
             "csoai_structural_lesson": (
                 "CSOAI's `/root.json` (with OpenTimestamps proof), `/api/corrections`, and `/.well-known/charter-amendments.json` "
-                "are append-only logs. Verification at `https://councilof.ai/verify` is free forever and requires no account."
+                "are append-only logs. Verification at https://councilof.ai/verify is free forever and requires no account."
             ),
         },
         {
@@ -752,7 +752,7 @@ def build_master_crosswalk() -> Dict[str, Any]:
             "operational_charter_version": op_charter["version"],
             "operational_charter_articles_count": len(op_charter["articles"]),
             "operational_charter_sha256": op_charter_sha,
-            "source_52_article_profile_url": "https://councilof.ai/constitutional-harness/charter-v0.1.json",
+            "source_52_article_profile_url": "https://councilof.ai/constitutional-harness/",
             "source_52_article_count": src_profile["source_catalogue"]["article_count"],
             "operational_controls_count": len(src_profile["controls"]),
             "held_source_articles": [h["article_id"] for h in src_profile["held_articles"]],

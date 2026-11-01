@@ -79,6 +79,10 @@ test("escalate with approval receipt runs and returns status=attested", async ()
   const l0 = new Layer0({
     base: "https://councilof.ai",
     identity: "did:csoai:test",
+    // An escalation is now authorised by the receipt AND the trusted host's
+    // verification of it, so the test supplies a verifier: the receipt alone
+    // is not an approval.
+    verifyApproval: async () => true,
     fetchImpl: makeMockFetch({
       gateDecision: { state: "escalate", reason: "human-review-needed" },
       attestEnvelope: { sig: "ed25519:approved" },
@@ -107,6 +111,18 @@ test("attestation failure returns status=executed_unattested and never claims at
   assert.equal(res.status, "attested" === res.status ? "fail" : "executed_unattested");
   assert.equal(res.attestation, null);
   assert.equal(res.result, "work-done");
+});
+
+test("governedLocal: enforces CH-10 secret minimization and CH-13 regulatory refusal", async () => {
+  const l0 = new Layer0({ identity: "did:csoai:local-dev" });
+  await assert.rejects(
+    () => l0.governedLocal("read_evidence", { api_key: "sk-secret-123" }, async () => "ok"),
+    /CH-10: raw secret field 'api_key'/
+  );
+  await assert.rejects(
+    () => l0.governedLocal("certify_compliance", { model: "x" }, async () => "ok"),
+    /CH-13: action 'certify_compliance' is outside CSOAI constitutional boundary/
+  );
 });
 
 for (const [label, action, options] of [

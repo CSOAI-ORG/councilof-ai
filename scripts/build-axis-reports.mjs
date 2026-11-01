@@ -3,9 +3,9 @@
  * build-axis-reports.mjs — one report per (GSPC board slot × subject), derived from signed cards.
  *
  * WHAT IT JOINS
- *   1. the 23 board slots      — functions/api/_gspc_axes_{a,b,c,fin}.ts, bundled with esbuild and
+ *   1. every board slot       — functions/api/_gspc_axes_{a,b,c,fin,d}.ts, bundled with esbuild and
  *                                executed, so the slot list, kind and status are the SAME bytes that
- *                                GET /api/gspc serves. Never a second list of axes.
+ *                                GET /api/gspc serves. Never a second list of axes or a typed total.
  *   2. the signed card corpus  — public/signed/card-matrix.json (one cell per model × corpus-axis) and
  *                                the card file behind every cell, verified (id + Ed25519) before use.
  *   3. the crosswalk           — client/src/data/regulator-crosswalk.json: obligation POINTERS
@@ -65,17 +65,18 @@ export function slugify(id) {
   return String(id).toLowerCase().replace(/[^a-z0-9.]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
-// ─── the 33 slots: run the same modules /api/gspc imports ───────────────────
+// ─── every slot: run the same modules /api/gspc imports ────────────────────
 export async function loadSlots(repo = REPO_DEFAULT) {
   const { build } = await import("esbuild");
   const api = join(repo, "functions/api");
-  const entry = ["a", "b", "c", "fin", "d"].map((s) => `export { AXES_${s.toUpperCase()} } from "./_gspc_axes_${s}";`).join("\n");
+  const modules = ["a", "b", "c", "fin", "d"];
+  const entry = modules.map((s) => `export { AXES_${s.toUpperCase()} } from "./_gspc_axes_${s}";`).join("\n");
   const r = await build({
     stdin: { contents: entry, resolveDir: api, loader: "ts" },
     bundle: true, format: "esm", platform: "neutral", write: false, logLevel: "silent",
   });
   const mod = await import("data:text/javascript;base64," + Buffer.from(r.outputFiles[0].text).toString("base64"));
-  const slots = [...mod.AXES_A, ...mod.AXES_B, ...mod.AXES_C, ...mod.AXES_FIN, ...mod.AXES_D];
+  const slots = modules.flatMap((s) => mod[`AXES_${s.toUpperCase()}`]);
   const ids = new Set();
   for (const s of slots) {
     if (ids.has(s.axis)) throw new Error(`duplicate slot id ${s.axis}`);
