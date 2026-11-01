@@ -1,0 +1,316 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "continuity",
+  "specialist": {
+    "id": "meok-continuity-specialist",
+    "cluster_id": "meok-axis-continuity",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit continuity answers for persistence, recovery and state consistency without mistaking a plausible answer for demonstrated operational resilience.",
+    "reviewer_role": "continuity evaluation reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "state transitions",
+    "recovery cases",
+    "frozen-bank replay",
+    "leader neutrality"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "DAY",
+      "precision": "day",
+      "observed_on": "2026-08-12",
+      "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+      "source_field": "measured",
+      "note": "The source publishes day precision only. No midnight timestamp is invented."
+    },
+    "axis_row_sha256": "c800b3f78ab4fb35b122f9296cc7aae0453f471420517d33c21278f9c3e8def0",
+    "axis_row": {
+      "axis": "continuity",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "PQCBench",
+      "task": "post-quantum status of a cryptographic assumption",
+      "n": 33,
+      "separation": "TIE",
+      "fleet_mean": 0.45,
+      "mean_harm": 0.55,
+      "cvar05_harm": null,
+      "status": "MEASURED",
+      "dataset": "csoai/gspc-asi",
+      "colour": "#c084fc",
+      "hue": 271,
+      "method_status": "meets-rule",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "The axis designed to discriminate across frontier models. The tuned specialist leads on points; flat TIE vs gemma3:12b (p=1.0).",
+        "does_not_assert_current_public_fields": true
+      },
+      "leader": "gemma3:12b (base model)",
+      "accuracy": 0.6061,
+      "interval": [
+        0.437,
+        0.753
+      ],
+      "separation_p": 0.6875,
+      "separation_method": "Exact McNemar on the discordant items, leader vs the best base model, rule fixed 2026-08-13: p<0.05 is SEPARATED, anything else is a TIE. Wilson 95% intervals are annotation only. Computed by scripts/gspc_separation_from_rows.py from the published per-item rows with our own models removed from the fleet before comparison.",
+      "separation_sentence": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=33; p=0.6875).",
+      "separation_evidence": {
+        "source": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361)",
+        "file": "peritem_asi.jsonl",
+        "file_sha256": "f90910c6cede5f97a1158226535020c17cf6f7f22a19ce65201511b179ef9e40",
+        "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
+        "fleet": "6 base models; our own prompt overlays on stock base models removed before comparison",
+        "leader": {
+          "model": "gemma3:12b",
+          "k": 20,
+          "n": 33,
+          "accuracy": 0.6061,
+          "wilson95": [
+            0.437,
+            0.753
+          ]
+        },
+        "next_best": {
+          "model": "deepseek-r1:8b",
+          "k": 18,
+          "n": 33,
+          "accuracy": 0.5455,
+          "wilson95": [
+            0.38,
+            0.702
+          ]
+        },
+        "paired_items": 33,
+        "discordant": {
+          "leader_only_correct": 4,
+          "next_best_only_correct": 2
+        },
+        "mcnemar_p": 0.6875,
+        "control": {
+          "what": "labels shuffled within items, same test re-run; share that came out SEPARATED",
+          "nperm": 1000,
+          "seed": 20260927,
+          "fixed_pair_rate": 0.034,
+          "reselect_rate": 0
+        },
+        "recompute": "python3 separation_test.py --rows rows --json out.json  (in the dataset; stdlib only; checks SHA256SUMS first)"
+      },
+      "peritem_file_sha256": "f90910c6cede5f97a1158226535020c17cf6f7f22a19ce65201511b179ef9e40",
+      "leader_source": "per-item rows",
+      "leader_card_state": "NO_SIGNED_PER_MODEL_CARD",
+      "leader_card_note": "leader shown from per-item rows; no signed per-model card yet",
+      "note": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=33; p=0.6875). gemma3:12b 20/33 vs deepseek-r1:8b 18/33, both read from the published per-item rows. A TIE is not a win: the point-estimate lead is not a measured advantage. leader shown from per-item rows; no signed per-model card yet.",
+      "distinct_items": 33,
+      "distinct_items_source": "distinct item ids in the published per-item rows (peritem_asi.jsonl)",
+      "mde": {
+        "value": null,
+        "state": "NOT_REACHABLE",
+        "reason": "No difference up to the observed discordance (6 of 33 paired items) reaches 80% power with this test.",
+        "unit": "accuracy difference (proportion), leader minus the best base model",
+        "alpha": 0.05,
+        "power": 0.8,
+        "test": "exact two-sided McNemar on the discordant items, leader vs the best base model (the board's separation test, rule fixed 2026-08-13)",
+        "paired_items": 33,
+        "discordance_rate": 0.1818,
+        "source": "functions/api/_gspc_rows_power.ts, generated by scripts/gspc_separation_from_rows.py --power from csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361, peritem_sha256 0d8dacfbe7384a5d…)"
+      },
+      "measurement_time": {
+        "state": "DAY",
+        "precision": "day",
+        "observed_on": "2026-08-12",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "note": "The source publishes day precision only. No midnight timestamp is invented."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-asi"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist continuity audits only the continuity row",
+      "evidence": "continuity"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-continuity; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "MODEL_RUN_STATE",
+      "state": "PASS",
+      "detail": "measured model-comparison run with n=33"
+    },
+    {
+      "id": "FROZEN_BANK",
+      "state": "DECLARED",
+      "detail": "bank URL is declared; bank bytes and freeze state were not verified",
+      "evidence": "https://huggingface.co/datasets/csoai/gspc-asi"
+    },
+    {
+      "id": "ROW_LINEAGE",
+      "state": "DECLARED",
+      "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
+    },
+    {
+      "id": "LEADER_STATE",
+      "state": "PASS",
+      "detail": "leader evidence state is published"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "meets-rule"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 6,
+    "declared": 2,
+    "findings": 0,
+    "audit_state": "HUMAN_REVIEW_READY"
+  },
+  "negative_controls": [
+    {
+      "control": "drop recovery items from replay and require coverage failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "present a text-only result as an operational drill and require scope rejection",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "continuity-proposal-1",
+      "proposal": "publish separate continuity and recovery slices",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "continuity-proposal-2",
+      "proposal": "add an explicit non-operational-scope statement to every replay receipt",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_continuity",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/continuity",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "continuity evaluation reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "3641ed6af3b8cc707f291e6214abe1669a571ab2146fe71774961882c17e0d4d",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "dataset_url",
+      "peritem_file_sha256",
+      "separation_evidence",
+      "measurement_time",
+      "method_status"
+    ],
+    "measurement_url": "/api/gspc/axis/continuity",
+    "competency_url": "/api/hitl/modules/continuity",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}
