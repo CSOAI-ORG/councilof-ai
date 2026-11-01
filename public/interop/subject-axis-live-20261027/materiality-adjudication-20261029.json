@@ -1,0 +1,337 @@
+{
+ "schema": "csoai.materiality-adjudication/0.1",
+ "adjudicated_at": "2026-10-29T03:37:22.043Z",
+ "rule": "MATERIAL = wave2 stable across two reads 30s apart and wave3 text differs; CHURN = wave2 unstable within run or baseline unreachable; WITHDRAWN = the page is gone (no row). No intent inferred; no third party named from a delta.",
+ "evidence": "out/claim-maintenance.wave4-probe-20261029.raw.json",
+ "n_candidates": 32,
+ "n_controls_unchanged": 45,
+ "n_controls_marked": 0,
+ "negative_control": "PASS",
+ "counts": {
+  "MATERIAL": 26,
+  "CHURN": 6,
+  "WITHDRAWN": 0
+ },
+ "rows": [
+  {
+   "n": 1,
+   "subject": "OpenAI",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "796dcb89e5fbd24d0b03e1885f81731485c7f860d58f421497c76f586a1585bc",
+   "wave3_text_sha256": "9e17b254dc7554a8eabc4ada7a6d3a8931d41a0000ed4e61059c89d258ee61d2",
+   "wave2_churn_class": "UNSTABLE_WITHIN_RUN",
+   "mark": "CHURN",
+   "note": "wave 2's two reads 30 s apart already differed (read1 `796dcb89e5fb` vs read2 `d6108321cca0`), so the page churns on its own; the wave 2→wave 3 text difference is not attributable to a change in the claim"
+  },
+  {
+   "n": 2,
+   "subject": "Google DeepMind",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "cbcacc9a1e0bf78ec83cc7bbf6899f148e82260df9941cc093e760aebf808810",
+   "wave3_text_sha256": "53a3b2a437bacddf5f0799ef39569badc75e4e87b39ca868d9e619a462cfdd6e",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 3,
+   "subject": "Microsoft AI",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "79471b1bb071906e57a051cf311b2c83ea7509df537e629986fcc1b404057585",
+   "wave3_text_sha256": "d25acb50f222e105f99510a43f6d52d565de951cd86f8f9c23325875b34cb17b",
+   "wave2_churn_class": "UNSTABLE_WITHIN_RUN",
+   "mark": "CHURN",
+   "note": "wave 2's two reads 30 s apart already differed (read1 `79471b1bb071` vs read2 `b39b7fac9dab`), so the page churns on its own; the wave 2→wave 3 text difference is not attributable to a change in the claim"
+  },
+  {
+   "n": 4,
+   "subject": "xAI",
+   "axis": "lab-practice",
+   "wave2_text_sha256": null,
+   "wave3_text_sha256": "da221a475c99128791c9e3d50f0e0bc0fe124c61f9b96065cf669fe1f25a086e",
+   "wave2_churn_class": "UNKNOWN_UNREACHABLE",
+   "mark": "CHURN",
+   "note": "wave 2's baseline is UNREACHABLE, so there is no stable baseline to attribute a change to; unreachable is a state, not a deletion, so this is not recorded as withdrawn"
+  },
+  {
+   "n": 5,
+   "subject": "Stability AI",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "dbed3c1e210754b6855de0af2824858337837eaea95af44a4d4b5ba72f4e1a58",
+   "wave3_text_sha256": "62ecae5b3442abee707dbb88f03736bf4aeac86fb4045f64a195fe0c40e87c99",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 6,
+   "subject": "Hugging Face",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "f4404f4177059e7750f39727ebddbf9a9265019e07f7a7aac0309f7a4d6dfb76",
+   "wave3_text_sha256": "fcba3cf67e2db3ff48107c2c8e72a6943cb201db05ae3de126e95caabefe21d1",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 7,
+   "subject": "Cerebras",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "ea34d7c5593bea9de51bb70240e9b29912f999567951bbfd3b7380e7a8cb0b26",
+   "wave3_text_sha256": "87813eabfff532850ee3f184d75494ab661459cb36eea0b5f9b63315367bbbd3",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 8,
+   "subject": "Scale AI",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "a939a4db7cf1697eaf5c8bdb6d74b90935fe2cac21abc522b53aa9953bed0fb2",
+   "wave3_text_sha256": "98d1c46d2896e4bf5027c0401bcd2703d6a85a78afbfb51aeabf7eeb0f49fc23",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 9,
+   "subject": "Fireworks AI",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "6544d9e0808ce992b558300e078545c072a634357f2b1867f0f8c21584ced65d",
+   "wave3_text_sha256": "48e4f28aafb66ef84f3d83948f2b6fd5a518d9557f280a38bc421d947c20ae1c",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 10,
+   "subject": "Hugging Face Trust",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "f4f5e8ee18eeb8c518a5b6c5ed2c3224884578921dfcc8781b1beaa4a13ffccf",
+   "wave3_text_sha256": "d309b6827a38b69add475e7db32f3fa678c5bb07c0ec50e3393c4663e74839c6",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 11,
+   "subject": "UK CMA",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "2fe16928f27ee3123ea1c79a397d360922527612e3242196b8154498a7cc8fb5",
+   "wave3_text_sha256": "f4264a1a09aeb1773b24564a46a5eb82f8bda0ff8115af53806faf362a0d8f35",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 12,
+   "subject": "Ofcom",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "2f380aa05b3f40e833a88e32a9758eb8ffb8d63fad954259cfe0f1644a58fcbd",
+   "wave3_text_sha256": "cda86a51dde0401e1551b7e8bb6bc6a4551d6dfb432b4437cc41856602834835",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 13,
+   "subject": "MHRA",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "3ac6210647c788d087f2149a2639e3b7306e939197c1a0f7a364be62e639d722",
+   "wave3_text_sha256": "1dcc37fdecdc6a97ed60b7256dc8b3cf08a1d75aa12c19caf591a3ae4b5d29bf",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 14,
+   "subject": "DSIT",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "a47da623a9c643fe50ef325d5d871874f113c8163084c26829279d73aa63c2a9",
+   "wave3_text_sha256": "f611e676bf48c937b7bf95e19552f67a60cac31529188d6cb7918424f44c1ef8",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 15,
+   "subject": "Bank of England",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "eddb1dbeeb8a5ad5eba466dd6259d1a1265f4d9b1b171b83496eaabdc20c0df9",
+   "wave3_text_sha256": "d00ad4dd1b16932d85ab9d13d4595c7f1e001e2d96eb3ee24361e63822ae67b9",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 16,
+   "subject": "Ofgem",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "57a293fb97a49ae44e558799887da1c9f62bd9e95ab385dc87d2d136ce68f839",
+   "wave3_text_sha256": "84fa4b5e24321f914f07f2b33d1872ea2ee0a338d444530948f6c7d9ebfd4fa3",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 17,
+   "subject": "CQC",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "5c2110e22d8b3abcc95a03b550d01c9c0da9cf929180620f04d95a2352cbeff9",
+   "wave3_text_sha256": "1e76876803ddb1d829463fe474f965537d0f2b72fa3a30f56782b7c657f86c8c",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 18,
+   "subject": "IPO",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "6326b1aed0234b8b3dba60270339d4a55babc0a684a064842c96348607df456e",
+   "wave3_text_sha256": "2b932ec53dc395cc9b412c84c63607ee187f7ec40f1556e75d02abeddea2c29d",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 19,
+   "subject": "NCSC",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "59e1ae0d4a9f97acd3768f1165fcaeb6d755dbd51a0047ba047492dcd25b2b4f",
+   "wave3_text_sha256": "68d976e4434a048e4b061b1848bcc2e1ab997688752fea8c85d51c282674844c",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 20,
+   "subject": "EDPS",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "162bf3123ec622996dc63e638beab05a07da470271396cff935cd18cadf81c71",
+   "wave3_text_sha256": "c6de29aad57f505d067a432a473cd71a2b3ad3ec52b25b616a4f06d2df4e4def",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 21,
+   "subject": "EDPB",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "0fc0c57262b73d9dd02ece2acf919ad3e0a0ef769ec3a1d127cea9fb9a82d390",
+   "wave3_text_sha256": "c3a181bec11b50553d62fdba4adc512d86cc635899447f93456c6d4700cd3fe2",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 22,
+   "subject": "ECB",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "0e738a69024afcaf1158b8ded3d252b8815f2f5cb5848c7f33444466c66f920b",
+   "wave3_text_sha256": "92281305398f42083e6985be8b98f9e23c746731b0c4ee9d4c1aa6b2595a0699",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 23,
+   "subject": "ESMA",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "516784c60b9d24bb9f82bfd21708f0fdbf285cd6590f2f510152825ce8848483",
+   "wave3_text_sha256": "896991b5877a3c84b1a0d31c65c5a9dc0a12dddedcf4390d04d6a0ef1fcfd445",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 24,
+   "subject": "US NTIA",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "910911444ec2adfc413c360de8f52fc2e6cf6ed748a3d257c452049fef0b2bd5",
+   "wave3_text_sha256": "d297f980a4a7769e318ebb6ac9087578f0cea3b1c5160448660e586e7d7047ef",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 25,
+   "subject": "UNESCO AI",
+   "axis": "regulator-transparency",
+   "wave2_text_sha256": "668cf7bfe209124679d29bd3c74cd7b3e247790fe152c8a62b9998ab9351af9d",
+   "wave3_text_sha256": "dd61d26dcf61c7bcb3ddd4b06a64777e0744a50cf25f355a8c251626c3b69598",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 26,
+   "subject": "Alibaba Qwen2.5 Repository",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "52b5501a687c7d7c2fd53fe2195f8c91a29212341b57aba2ec649b8344fd9cb3",
+   "wave3_text_sha256": "6b97c2b33937447c33f4b167a8204d7b26761fbd0d4f86fd41ffe7da10e6edab",
+   "wave2_churn_class": "UNSTABLE_WITHIN_RUN",
+   "mark": "CHURN",
+   "note": "wave 2's two reads 30 s apart already differed (read1 `52b5501a687c` vs read2 `3aba193cb6de`), so the page churns on its own; the wave 2→wave 3 text difference is not attributable to a change in the claim"
+  },
+  {
+   "n": 27,
+   "subject": "Zhipu AI GLM-4 Repository",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "391c2faee5e9c8715fb665bbb11169f9b5819846a15bf37c03173a3751910e1a",
+   "wave3_text_sha256": "7ce78d6a128832afccd92dd80e2c2f050ee2ffa449dc97bfd6f5e40c82ea2455",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 28,
+   "subject": "MiniMax-01 Repository",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "3cf1c3493db7d030680939e08dad1ca10fa402a9e20c9ee2b3c4e594372b4a94",
+   "wave3_text_sha256": "2c0e031661142bcd035568767d28ab2ba41ea2290f1dd033f27ad7b79e396927",
+   "wave2_churn_class": "UNSTABLE_WITHIN_RUN",
+   "mark": "CHURN",
+   "note": "wave 2's two reads 30 s apart already differed (read1 `3cf1c3493db7` vs read2 `9986528f6ca3`), so the page churns on its own; the wave 2→wave 3 text difference is not attributable to a change in the claim"
+  },
+  {
+   "n": 29,
+   "subject": "Shanghai AI Lab OpenCompass",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "92c60e76a02a1f72af52b6ce959a48c0e779c89a93d40e48baa3d143c88ae9a0",
+   "wave3_text_sha256": "f5bf4b505bae44ec9a7a9bc496f5a28237f5fdc59bfc8b1f68db5e8cca154160",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 30,
+   "subject": "BAAI FlagEmbedding",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "aad12e6f3bda6d32db30dbc854debcdb265e7087e5edd877479b4808a54186eb",
+   "wave3_text_sha256": "bee78c5cd8d9328982af5adc1d46c0cadb7a3c1294b33f6d1b21656ce047a872",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 31,
+   "subject": "NVIDIA NeMo Guardrails",
+   "axis": "lab-practice",
+   "wave2_text_sha256": "e4dc7d5b22c80558571cb7ee28517e150084659e3bfe8c908c167d25f753fe58",
+   "wave3_text_sha256": "a6eaa2bfd8c1359c768169093915a651790fd3fd68bf6ba5b99a4cce01f220af",
+   "wave2_churn_class": "STABLE",
+   "mark": "MATERIAL",
+   "note": "wave 2's two reads 30 s apart were byte-identical, so the delta is attributable to a content change in the claim page, not to churn; no intent inferred and no third party named"
+  },
+  {
+   "n": 32,
+   "subject": "OSAIA SAFE Spec",
+   "axis": "lab-practice",
+   "wave2_text_sha256": null,
+   "wave3_text_sha256": "50156d14cda68d3bb74ce2047a8991df2e3ae1170cdeb85877a849a827b19106",
+   "wave2_churn_class": "UNKNOWN_UNREACHABLE",
+   "mark": "CHURN",
+   "note": "wave 2's baseline is UNREACHABLE, so there is no stable baseline to attribute a change to; unreachable is a state, not a deletion, so this is not recorded as withdrawn"
+  }
+ ]
+}
