@@ -41,6 +41,7 @@
 //     check pass on a hand-written answer: the correct answer is re-derived from the live board
 //     every time it is asked and every time it is signed.
 
+import type { KVNamespace } from "@cloudflare/workers-types";
 import {
   BOARD_ATTESTATION_DID,
   canonicalBytes,
