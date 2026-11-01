@@ -6,6 +6,7 @@ superseded file keeps its bytes so anyone who read it can see what was published
 
 | Superseded (unchanged) | Superseding note | Register id | What changed |
 |---|---|---|---|
+| `contributions/osaia-safe-v1.0-port-2026-10-26.md` | `corrections/osaia-safe-v1.0-port-2026-10-26-SUPERSEDES.md` | osaia-safe-v1.0-port-2026-10-26 | Two section-2 comment counts went stale between 26 and 28 Oct 2026 (issue #32: 2 -> 3; issue #72: 2 -> 6), and the honesty register said the Alliance might never read the contribution when it had in fact responded substantively three times. Engagement, not acceptance; the acceptance half stands. The binding claim -- the patch applies cleanly to the approved SAFE.md, 4 hunks, 20,094 -> 22,852 bytes -- was re-verified 28 Oct 2026 and still holds. |
 | `merkle-count-binding-2026-09-17.md` | `merkle-count-binding-2026-09-18-SUPERSEDES.md` | C-2026-0922-01 | Domain-separation prefixes alone do not remove the odd-node padding collision; the tree shape plus a signed size does. One paragraph; the count-binding guidance stands. |
 | `living-stamp-unverifiable.json` | `public-corrections-living-stamp-unverifiable-json-2026-09-22-SUPERSEDES.md` | C-2026-0924-01 | public/corrections/living-stamp-unverifiable.json lists 7 slots as UNMEASURED; the live board carries 0 UNMEASURED axes |
 | `living-stamp-unverifiable.json` | `public-corrections-living-stamp-unverifiable-json-2026-09-22-C-2026-0924-02-SUPERSEDES.md` | C-2026-0924-02 | public/corrections/living-stamp-unverifiable.json: attestations_that_do_verify (measurement cards) 150 -> 335 |
