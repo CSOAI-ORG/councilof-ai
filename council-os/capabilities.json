@@ -5472,6 +5472,35 @@
       "paid_for": "issuance"
     },
     {
+      "audience": "agent",
+      "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+      "description_state": "DOCUMENTED",
+      "id": "api-coverage-evidence",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "GET",
+      "name": "Coverage evidence row",
+      "paid_for": "assembly",
+      "path": "/api/coverage-evidence",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/coverage-evidence?asset=tether",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.coverage-evidence/0.1"
+      ],
+      "source": "functions/api/coverage-evidence.ts",
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
       "id": "api-request-attestation-post",
       "kind": "http",
       "path": "/api/request-attestation",
@@ -8110,6 +8139,32 @@
       },
       "required_args": [],
       "order": 46
+    },
+    {
+      "id": "axis_watchdog-ingest",
+      "kind": "mcp_tool",
+      "name": "axis_watchdog-ingest",
+      "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [],
+      "order": 47
     },
     {
       "id": "axis_swarm",
