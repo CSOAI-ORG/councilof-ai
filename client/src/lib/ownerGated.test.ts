@@ -22,10 +22,12 @@ describe("owner-gated axes never render publicly", () => {
   });
 });
 
-describe("declared-slot method_status", () => {
-  it("every new axis carries method_status", () => {
+describe("subject-axis method_status", () => {
+  it("distinguishes admitted runs from declared slots", () => {
     for (const a of AXES_D) {
-      if (a.axis === "serving-fidelity") {
+      if (a.status === "MEASURED") {
+        expect(a.method_status, a.axis).toBe("meets-rule");
+      } else if (a.axis === "serving-fidelity") {
         expect(a.method_status).toBe("reviewed, not run");
         expect(a.method).toBe("serving-fidelity v0.2");
         expect(a.method_sha).toBe("18206f71");

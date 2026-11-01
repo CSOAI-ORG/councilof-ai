@@ -1,0 +1,783 @@
+{
+  "schema": "csoai.subject-discovery/1.0",
+  "axis": "measurer-integrity",
+  "description": "Global and Chinese AI evaluation bodies, benchmarks, and harnesses: presence of published method, dataset/tasks, license, reproducibility code, and citation.",
+  "observed_at": "2026-10-24T06:25:37.853297+00:00",
+  "authority_state": "measurement_only_not_a_certification",
+  "n_subjects": 40,
+  "n_reachable": 40,
+  "meets_n30_gate": true,
+  "presence_check_definitions": {
+    "method_or_protocol": "evaluation|benchmark|methodology|protocol|harness|metric",
+    "dataset_or_tasks": "dataset|tasks|prompts|samples|questions|subset",
+    "license_declared": "license|apache|mit|cc-by|cc0|bsd",
+    "reproducibility_code": "install|pip|python|git clone|reproduc|run",
+    "citation_or_paper": "arxiv|paper|citation|bibtex|doi"
+  },
+  "rows": [
+    {
+      "axis": "measurer-integrity",
+      "subject": "Stanford CRFM HELM",
+      "region": "US",
+      "url": "https://github.com/stanford-crfm/helm",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 635.4,
+      "bytes": 331407,
+      "sha256": "30f708e6cde008bb98882b35eb29e27f96bf8a7f226059901e5fc3bdddc99058",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "UK AISI Inspect Evals",
+      "region": "UK",
+      "url": "https://github.com/UKGovernmentBEIS/inspect_evals",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 673.3,
+      "bytes": 400000,
+      "sha256": "27609dbd528bf1c8d1633a232f5a9901be00368d98868ce7bfcbf0634ec4fdb3",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "UK AISI Inspect AI Harness",
+      "region": "UK",
+      "url": "https://github.com/UKGovernmentBEIS/inspect_ai",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 660.5,
+      "bytes": 343881,
+      "sha256": "e1b66317221d5b5145cd98ffe16544a709b4984caa01d550bad05580df84beb3",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "EleutherAI lm-evaluation-harness",
+      "region": "Global",
+      "url": "https://github.com/EleutherAI/lm-evaluation-harness",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 630.1,
+      "bytes": 400000,
+      "sha256": "ae52f2a5c4190875423f498eac9db2b6205b8d71a8b70233d91fd884238b1e3d",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "Shanghai AI Lab OpenCompass",
+      "region": "CN",
+      "url": "https://github.com/open-compass/opencompass",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 722.5,
+      "bytes": 381574,
+      "sha256": "9901aad2ca5034085664aca5e114a2bd13d2c534af901824602ae2bdddb46750",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "Shanghai AI Lab VLMEvalKit",
+      "region": "CN",
+      "url": "https://github.com/open-compass/VLMEvalKit",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 649.3,
+      "bytes": 346060,
+      "sha256": "48784d04cf0f45d69cc95a357ece37f05deea57e2e41eeccaf518cd64af8762e",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "ZJUICSR ZJU-SafeEval",
+      "region": "CN",
+      "url": "https://huggingface.co/datasets/ZJUICSR/ZJU-SafeEval",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 394.7,
+      "bytes": 400000,
+      "sha256": "4ef6343690896a8acae90e23fdeeb7c24ff74130fe8ae1a4b9c740ba0e6279b0",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "SafetyBench (THU/hmaya)",
+      "region": "CN",
+      "url": "https://huggingface.co/datasets/hmaya/SafetyBench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 375.5,
+      "bytes": 211887,
+      "sha256": "bd23b9a10abf09d071c2f39b4b4d5264cb12930d7cbee7cff78b677c0ee36503",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "THU CoAI SafetyBench Code",
+      "region": "CN",
+      "url": "https://github.com/thu-coai/SafetyBench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 639.8,
+      "bytes": 284111,
+      "sha256": "45b3137609dfb7bf46c32b98b8bdb1f242a351cdfc9802ffbfe66a4ab899f12c",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "METR Task Standard",
+      "region": "US",
+      "url": "https://github.com/METR/task-standard",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 880.9,
+      "bytes": 350625,
+      "sha256": "5cbd245853f01d0cf76a32549a1cb2704fffd87dddca3f65d02ecf14b5e93c73",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "MLCommons Modelbench / AILuminate",
+      "region": "Global",
+      "url": "https://github.com/mlcommons/modelbench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 705.3,
+      "bytes": 329506,
+      "sha256": "8189c29bd89e4551072bb18a3276493229941e7088cf85306a8af802e92c58e5",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "SWE-bench",
+      "region": "US",
+      "url": "https://github.com/SWE-bench/SWE-bench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 657.1,
+      "bytes": 342293,
+      "sha256": "716359365260581004844e52c2f6fc481b14ae1c6b51baecdae4e55f36dc8c12",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "LiveBench",
+      "region": "Global",
+      "url": "https://github.com/LiveBench/LiveBench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 643.9,
+      "bytes": 348202,
+      "sha256": "f1cd3476a00985fe7211f472736b8ec52494d49096d447952f0c41d716ec2b6f",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "BigCodeBench",
+      "region": "Global",
+      "url": "https://github.com/bigcode-project/bigcodebench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 596.9,
+      "bytes": 372096,
+      "sha256": "25ed3dfa3d4d81e81fe51b307491233df136aa84c5591522290c257bf4706881",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "EvalPlus",
+      "region": "Global",
+      "url": "https://github.com/evalplus/evalplus",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 653.2,
+      "bytes": 400000,
+      "sha256": "c9ec45ad66944df4d34524e674bdc654a17802474f28ad3c2b8622187eb3023e",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "TrustLLM",
+      "region": "Global",
+      "url": "https://github.com/HowieHwong/TrustLLM",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 700.8,
+      "bytes": 341819,
+      "sha256": "8d0a506b39bb104dc8679070c157294aa996b869ed77527906d09e20573429f4",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "HarmBench (CAIS)",
+      "region": "US",
+      "url": "https://github.com/centerforaisafety/HarmBench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 574.4,
+      "bytes": 347641,
+      "sha256": "5ce6383cd8de7e26a0e6f663724121b99bc9d7deb119fbf115e4bc423bf4174a",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "JailbreakBench",
+      "region": "Global",
+      "url": "https://github.com/JailbreakBench/jailbreakbench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 577.0,
+      "bytes": 400000,
+      "sha256": "cf0b24cfd80c080ce541ce48d641496897a5e45a420a8df981a02ef88fd0703e",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "GAIA Benchmark",
+      "region": "Global",
+      "url": "https://huggingface.co/gaia-benchmark",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 305.0,
+      "bytes": 168937,
+      "sha256": "ff19bc8e60703130666c708cb50a9bf6a2bfe70f789edcb25c04dc4313ad1c2b",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "OSWorld",
+      "region": "Global",
+      "url": "https://github.com/xlang-ai/OSWorld",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 582.8,
+      "bytes": 400000,
+      "sha256": "d4e9e3d906152f7571b3822f5d653abb6731f55c5df9690248a467786e71202e",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "THUDM AgentBench",
+      "region": "CN",
+      "url": "https://github.com/THUDM/AgentBench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 520.0,
+      "bytes": 350780,
+      "sha256": "912ebc915bf2f2f8f5ceb5bd6641f2ba46cdae71d6016e92083a3bb862eb1898",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "Sierra tau-bench",
+      "region": "US",
+      "url": "https://github.com/sierra-research/tau-bench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 1044.2,
+      "bytes": 318109,
+      "sha256": "12d4b09593c8fbbab5bfcead2945b6350dc6a766dc6c3080b7eef17b5f641686",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "Cybench",
+      "region": "US",
+      "url": "https://github.com/andyzorigin/cybench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 952.7,
+      "bytes": 355647,
+      "sha256": "67d4179d86d4a3c28ac27c1dcbd69c885c7d4ad8dd5d506b588cf3aeb2d4a2f1",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "ARC Prize / ARC-AGI",
+      "region": "US",
+      "url": "https://github.com/arcprize/ARC-AGI",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 977.3,
+      "bytes": 400000,
+      "sha256": "6eb2a1278646c2166bc3ea504bbfe975a0c7e8b4b8bf3a86bf6baa27435f9320",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "LMSYS FastChat / MT-Bench",
+      "region": "US",
+      "url": "https://github.com/lm-sys/FastChat",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 985.4,
+      "bytes": 400000,
+      "sha256": "52d0c0c046d67a6f76495b81f65a3552f8793a433455a2d7b03b05ee7f8d1730",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "C-Eval (SJTU/HKU)",
+      "region": "CN",
+      "url": "https://github.com/hkust-nlp/ceval",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 798.5,
+      "bytes": 345293,
+      "sha256": "05bbdf7fbf629f80319a8dd299b201e36143e06ad77b8a2217c3e8e9c3bd1e0a",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "CMMLU",
+      "region": "CN",
+      "url": "https://github.com/haonan-li/CMMLU",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 1129.9,
+      "bytes": 337571,
+      "sha256": "30051a0761044afc6c54d8a9870bbfb02e23e3c8fd22a884206655913046e300",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "TIGER-Lab MMLU-Pro",
+      "region": "Global",
+      "url": "https://github.com/TIGER-AI-Lab/MMLU-Pro",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 558.5,
+      "bytes": 308796,
+      "sha256": "4dd3ed96034ea0ceca93120b4d59722f708fe2b62e6b7b6f64c569fdbc2cf861",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "GPQA (Rein et al.)",
+      "region": "US",
+      "url": "https://github.com/idavidrein/gpqa",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 1070.3,
+      "bytes": 287466,
+      "sha256": "2bbb3dd1aff141993f83ed3f5f5ad0a903f43b7a6ac30ad1e49187d84ca19b33",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "Princeton HAL (Holistic Agent Leaderboard)",
+      "region": "US",
+      "url": "https://github.com/princeton-pli/hal-harness",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 807.5,
+      "bytes": 400000,
+      "sha256": "31293c51b59b87d847f27e5c707f1211a6dbad0e14ea9fe97b238749bb85aa40",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "HazyResearch LegalBench",
+      "region": "US",
+      "url": "https://github.com/HazyResearch/legalbench",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 738.2,
+      "bytes": 302175,
+      "sha256": "342324f8e2756def55dbdaf8b702a70452b432ec00943dd68b8e4b38884aec3a",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "CRUXEval",
+      "region": "US",
+      "url": "https://github.com/facebookresearch/cruxeval",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 636.6,
+      "bytes": 338097,
+      "sha256": "b4d57002c3aeca37c34e0378e3bca8f28180ec9ddbdd1f38d4b7986a9eacd72b",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "OpenAI simple-evals",
+      "region": "US",
+      "url": "https://github.com/openai/simple-evals",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 541.9,
+      "bytes": 373823,
+      "sha256": "c097b3de6b5f0fbb7155aca9a3fc6fcde874c5bedfa48e0ef3ac19393d975a9b",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "NVIDIA Garak",
+      "region": "US",
+      "url": "https://github.com/NVIDIA/garak",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 574.1,
+      "bytes": 400000,
+      "sha256": "772fb071241f3a9dc7f89021294a07b2fac70dc9faaa192c7e936dc94cc331b3",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "Promptfoo Eval Harness",
+      "region": "US",
+      "url": "https://github.com/promptfoo/promptfoo",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 596.8,
+      "bytes": 400000,
+      "sha256": "fd92cf2ca23cbd0ef39ba9c317d24d7adf842e00dcf554c25277d608b20f87fe",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "Confident AI DeepEval",
+      "region": "US",
+      "url": "https://github.com/confident-ai/deepeval",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 533.7,
+      "bytes": 400000,
+      "sha256": "eb48055897c3b208709b597d512941e1cf32fe99fb3c82bf293e16adbc8755bc",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "ExplodingGradients Ragas",
+      "region": "Global",
+      "url": "https://github.com/explodinggradients/ragas",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 858.2,
+      "bytes": 360779,
+      "sha256": "974e8a9a43cc363e559d591baff6549d4f880d069cfadfa0ec222ec2e4aa2416",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "Hugging Face Lighteval",
+      "region": "EU",
+      "url": "https://github.com/huggingface/lighteval",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 709.5,
+      "bytes": 336614,
+      "sha256": "1cef0243de6b4a333daa7e9c2f4a140a65b97ac65f27414a295d87bd7f339003",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "FlagOpen FlagEval / FlagEmbedding",
+      "region": "CN",
+      "url": "https://github.com/FlagOpen/FlagEmbedding",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 663.4,
+      "bytes": 369354,
+      "sha256": "a2329883cc7eb4ab45d3448372e711bf9369145fd4cee8c1361e571679b3d159",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    },
+    {
+      "axis": "measurer-integrity",
+      "subject": "SuperCLUE",
+      "region": "CN",
+      "url": "https://github.com/CLUEbenchmark/SuperCLUE",
+      "reachable": true,
+      "http_status": 200,
+      "latency_ms": 508.7,
+      "bytes": 400000,
+      "sha256": "b409f1545c294b5274bd8cccab70fae3560d595ea618810eb4d4920e8804f6b3",
+      "presence_checks": {
+        "method_or_protocol": true,
+        "dataset_or_tasks": true,
+        "license_declared": true,
+        "reproducibility_code": true,
+        "citation_or_paper": true
+      },
+      "checks_present_count": 5
+    }
+  ],
+  "limitations": [
+    "Presence checks record observable strings in public HTML/JSON bytes at observed_at; absence on the landed URL is not evidence of absence elsewhere.",
+    "Nothing in this file is a score, rank, endorsement, or certification."
+  ]
+}
