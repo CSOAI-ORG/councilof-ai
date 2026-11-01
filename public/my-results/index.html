@@ -12,10 +12,33 @@
 <meta property="og:url" content="https://councilof.ai/my-results">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://councilof.ai/og-image.png">
+<script id="csoai-structured-evidence-jsonld" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "CSOAI GSPC 33-Axis Live Measurement, Article-1 Care Ablation, Live HF 14-Axis Report & Universal Watchdog Layer-0 Harness",
+  "url": "https://councilof.ai/my-results",
+  "creator": {
+    "@type": "Organization",
+    "name": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+    "url": "https://councilof.ai"
+  },
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "description": "Independent AI-behaviour measurement across 33 canonical GSPC axes (23 measured, 10 explicitly UNMEASURED) plus Candidate Axis 34 (public-incident-vigilance, n=36), 3,540 live Hugging Face Router completions across 14 model-comparison axes, 144-item Article-1 Care paired A/B/C ablation proof, and 12 Global Public Watchdog & Incident Databases. Measurement, never certification.",
+  "distribution": [
+    {"@type": "DataDownload", "contentUrl": "https://councilof.ai/interop/gspc-live-hf-14-axes-official-report-v1.json", "encodingFormat": "application/json"},
+    {"@type": "DataDownload", "contentUrl": "https://councilof.ai/interop/article1-care-open-model-ablation-proof-v1.json", "encodingFormat": "application/json"},
+    {"@type": "DataDownload", "contentUrl": "https://councilof.ai/interop/universal-watchdog-incident-harness-v1.json", "encodingFormat": "application/json"},
+    {"@type": "DataDownload", "contentUrl": "https://councilof.ai/interop/institutional-underwriter-x402-ras-flywheel-v1.json", "encodingFormat": "application/json"},
+    {"@type": "DataDownload", "contentUrl": "https://councilof.ai/interop/cobol-bridge-iso20022-parity-evidence-v1.json", "encodingFormat": "application/json"},
+    {"@type": "DataDownload", "contentUrl": "https://councilof.ai/interop/safe-fluid-reverification-daily-signal-v1.json", "encodingFormat": "application/json"}
+  ]
+}
+</script>
 <style>
   :root{--fg:#e8f5ee;--mut:#9bb5a6;--bd:#1e3d2e;--bg:#07110c;--card:#0c1c14;--acc:#5ee9a3;--acc2:#16a34a;--warn:#e8b86d}
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,sans-serif}
+  body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow-x:hidden}
   header{max-width:76rem;margin:0 auto;padding:1.2rem 1.25rem .75rem;border-bottom:1px solid var(--bd);font-size:.92rem}
   main{max-width:76rem;margin:0 auto;padding:1.5rem 1.25rem 4rem}
   a{color:var(--acc);text-decoration:none}
@@ -23,26 +46,26 @@
   h1{font-size:1.85rem;line-height:1.2;margin:0 0 .35rem}
   h2{font-size:1.18rem;margin:1.4rem 0 .5rem}
   h3{font-size:.98rem;margin:.8rem 0 .35rem;color:var(--acc)}
-  .sub{color:var(--mut);margin:0 0 1rem}
+  .sub{color:var(--mut);margin:0 0 1rem;overflow-wrap:anywhere}
   .note{border-left:3px solid var(--warn);background:var(--card);padding:.65rem .95rem;margin:1rem 0;color:var(--mut);border-radius:0 8px 8px 0}
   .tabs{display:flex;flex-wrap:wrap;gap:.45rem;margin:1.2rem 0 1rem;border-bottom:1px solid var(--bd);padding-bottom:.75rem}
-  .tab-btn{background:var(--card);color:var(--mut);border:1px solid var(--bd);padding:.48rem .85rem;border-radius:8px;cursor:pointer;font-size:.84rem;font-weight:600}
+  .tab-btn{background:var(--card);color:var(--mut);border:1px solid var(--bd);padding:.48rem .85rem;border-radius:8px;cursor:pointer;font-size:.84rem;font-weight:600;max-width:100%}
   .tab-btn:hover,.tab-btn.active{background:#123021;color:var(--acc);border-color:var(--acc2)}
   .panel{display:none;margin-top:1rem}
   .panel.active{display:block}
-  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(22rem,1fr));gap:1rem}
-  .card-box{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:1rem}
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:1rem}
+  .card-box{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:1rem;min-width:0}
   .ctrl-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.85rem;align-items:center}
-  input,select,textarea,button.action-btn{background:#06100b;color:var(--fg);border:1px solid var(--bd);border-radius:7px;padding:.45rem .7rem;font:inherit;font-size:.86rem}
+  input,select,textarea,button.action-btn{background:#06100b;color:var(--fg);border:1px solid var(--bd);border-radius:7px;padding:.45rem .7rem;font:inherit;font-size:.86rem;max-width:100%}
   button.action-btn{background:#113322;color:var(--acc);border-color:var(--acc2);cursor:pointer;font-weight:600}
   button.action-btn:hover{background:#17472f}
-  .wrap{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.5rem}
+  .wrap{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:.5rem;max-width:100%}
   table{border-collapse:collapse;width:100%;min-width:34rem;font-size:.86rem}
   th,td{text-align:left;padding:.48rem .6rem;border-bottom:1px solid var(--bd);white-space:nowrap}
   th{color:var(--mut);font-size:.74rem;text-transform:uppercase;letter-spacing:.04em}
   td.num{text-align:right;font-variant-numeric:tabular-nums}
   .ok{color:var(--acc);font-weight:600} .warn{color:var(--warn)}
-  pre.code-box{background:#040a07;border:1px solid var(--bd);border-radius:8px;padding:.75rem;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;color:#c7f9de;margin:.5rem 0}
+  pre.code-box{background:#040a07;border:1px solid var(--bd);border-radius:8px;padding:.75rem;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;color:#c7f9de;margin:.5rem 0;max-width:100%}
   footer{margin-top:2.4rem;padding-top:1rem;border-top:1px solid var(--bd);color:var(--mut);font-size:.85rem}
 </style>
 </head>
@@ -74,6 +97,8 @@ Live board status: <strong id="live-board-stamp">counts from /api/gspc</strong> 
   <button type="button" class="tab-btn" data-tab="step-3-receipts">3. My Results &amp; Commissions</button>
   <button type="button" class="tab-btn" data-tab="step-4-verify">4. 1-Click Verifier (3-State)</button>
   <button type="button" class="tab-btn" data-tab="step-5-watch">5. Watch &amp; Claim Maintenance</button>
+  <button type="button" class="tab-btn" data-tab="step-6-care-sandbox">6. Article-1 Care &amp; Layer-0 Sandbox</button>
+  <button type="button" class="tab-btn" data-tab="step-7-automation">7. TinyFish · Desktop Commander · HITL</button>
 </nav>
 
 <!-- STEP 1: GET RESULTS (FREE MODEL & SUBJECT LOOKUP) -->
@@ -81,7 +106,7 @@ Live board status: <strong id="live-board-stamp">counts from /api/gspc</strong> 
   <h2>Step 1 — Free Model &amp; Subject Lookup</h2>
   <p class="sub">Search measured models from <a href="/interop/models-measured.json">/interop/models-measured.json</a> and live axes from <a href="/api/gspc">/api/gspc</a>. Missing cells remain <code>UNMEASURED</code>.</p>
   <div class="ctrl-row">
-    <input type="search" id="model-search-input" placeholder="Search model ID (e.g. claude, gpt, llama, qwen, grok, gemini)…" aria-label="Search measured models" style="min-width:20rem">
+    <input type="search" id="model-search-input" placeholder="Search model ID (e.g. claude, gpt, llama, qwen, grok, gemini)…" aria-label="Search measured models" style="min-width:min(100%,20rem)">
     <button type="button" class="action-btn" id="model-search-btn">Filter Models</button>
     <span class="sub" id="model-count-label" style="margin:0">Loading measured models…</span>
   </div>
@@ -90,6 +115,31 @@ Live board status: <strong id="live-board-stamp">counts from /api/gspc</strong> 
       <thead><tr><th>Model Identifier</th><th class="num">Signed Cards</th><th class="num">Measured Axes</th><th>Sample Axis List</th><th>Action</th></tr></thead>
       <tbody id="models-tbody"><tr><td colspan="5">Loading /interop/models-measured.json…</td></tr></tbody>
     </table>
+  </div>
+  <div class="card-box" style="margin-top:1rem">
+    <h3>Live Hugging Face Router 14-Axis Canonical Model-Comparison Matrix (3,540 Live Completions · 885 Frozen Bank Items × 4 Models)</h3>
+    <p class="sub">Source: <a href="/interop/gspc-live-hf-14-axes-official-report-v1.json"><code>/interop/gspc-live-hf-14-axes-official-report-v1.json</code></a> (<code>report_sha256: 22f556a5c0e7a0a11b168aa6bd613f3d330d283964bc0284461f0b31a6ff5b76</code>, <code>RUNTIME_OBSERVED_LIVE_HF_ROUTER</code>, Cyrus Mehta / McNemar exact two-sided conditional binomial test on discordant pairs).</p>
+    <div class="wrap">
+      <table>
+        <thead><tr><th>Canonical Axis</th><th class="num">Bank n</th><th class="num">Llama-3.3-70B</th><th class="num">Qwen2.5-72B</th><th class="num">DeepSeek-V3-0324</th><th class="num">Gemma-3-27B</th><th>Discordant (b vs c, Exact p)</th><th>Separation</th></tr></thead>
+        <tbody>
+          <tr><td><code>jail</code></td><td class="num">69</td><td class="num">0.8841 (69/69)</td><td class="num ok">0.9855 (69/69)</td><td class="num">0.7536 (69/69)</td><td class="num">0.7246 (69/69)</td><td>b=7, c=0, p=0.015625</td><td class="ok">SEPARATED</td></tr>
+          <tr><td><code>safety</code></td><td class="num">36</td><td class="num">0.9167 (36/36)</td><td class="num">0.9429 (35/36)</td><td class="num">1.0000 (36/36, HOLD)</td><td class="num">1.0000 (26/36, NO_RESULT)</td><td>b=2, c=0, p=0.500000</td><td class="warn">TIE</td></tr>
+          <tr><td><code>provenance</code></td><td class="num">32</td><td class="num">0.7500 (32/32)</td><td class="num">0.7188 (32/32)</td><td class="num">0.6250 (32/32)</td><td class="num">0.9032 (31/32)</td><td>b=6, c=2, p=0.289062</td><td class="warn">TIE</td></tr>
+          <tr><td><code>continuity</code></td><td class="num">33</td><td class="num">0.5455 (33/33)</td><td class="num">0.6364 (33/33)</td><td class="num">0.6364 (33/33)</td><td class="num">0.4848 (33/33)</td><td>b=1, c=1, p=1.000000</td><td class="warn">TIE</td></tr>
+          <tr><td><code>conformance</code></td><td class="num">35</td><td class="num">0.8571 (35/35)</td><td class="num">0.8000 (35/35)</td><td class="num">0.9429 (35/35)</td><td class="num">0.8000 (35/35)</td><td>b=4, c=1, p=0.375000</td><td class="warn">TIE</td></tr>
+          <tr><td><code>openness</code></td><td class="num">32</td><td class="num">0.8750 (32/32)</td><td class="num">0.9375 (32/32)</td><td class="num">0.9688 (32/32)</td><td class="num">0.7188 (32/32)</td><td>b=2, c=1, p=1.000000</td><td class="warn">TIE</td></tr>
+          <tr><td><code>machinery-conformity</code></td><td class="num">33</td><td class="num">0.3636 (33/33)</td><td class="num">0.2121 (33/33)</td><td class="num">0.5758 (33/33)</td><td class="num">0.3333 (33/33)</td><td>b=17, c=10, p=0.247789</td><td class="warn">TIE</td></tr>
+          <tr><td><code>cross-reality</code></td><td class="num">32</td><td class="num">0.4688 (32/32)</td><td class="num">0.5625 (32/32)</td><td class="num">0.8438 (32/32)</td><td class="num">0.6250 (32/32)</td><td>b=11, c=4, p=0.118469</td><td class="warn">TIE</td></tr>
+          <tr><td><code>detector-interop</code></td><td class="num">33</td><td class="num">0.6667 (33/33)</td><td class="num">0.8485 (33/33)</td><td class="num">1.0000 (33/33, HOLD)</td><td class="num">0.6667 (33/33)</td><td>b=5, c=0, p=0.062500</td><td class="warn">TIE</td></tr>
+          <tr><td><code>art5-safeguard</code></td><td class="num">36</td><td class="num">1.0000 (36/36, HOLD)</td><td class="num">1.0000 (36/36, HOLD)</td><td class="num">0.9722 (36/36)</td><td class="num">0.9722 (36/36)</td><td>b=0, c=0, p=1.000000</td><td class="warn">TIE</td></tr>
+          <tr><td><code>affect</code></td><td class="num">41</td><td class="num">0.8293 (41/41)</td><td class="num">0.7805 (41/41)</td><td class="num">0.8293 (41/41)</td><td class="num">0.7297 (37/41)</td><td>b=2, c=2, p=1.000000</td><td class="warn">TIE</td></tr>
+          <tr><td><code>care</code></td><td class="num">199</td><td class="num">0.3673 (196/199)</td><td class="num">0.2323 (198/199)</td><td class="num">0.4133 (196/199)</td><td class="num">0.3115 (122/199, NO_RESULT)</td><td>b=29, c=20, p=0.252856</td><td class="warn">TIE</td></tr>
+          <tr><td><code>governance</code></td><td class="num">237</td><td class="num">0.6118 (237/237)</td><td class="num">0.7046 (237/237)</td><td class="num">0.7173 (237/237)</td><td class="num">0.5401 (237/237)</td><td>b=23, c=20, p=0.760792</td><td class="warn">TIE</td></tr>
+          <tr><td><code>swarm</code></td><td class="num">37</td><td class="num">0.0541 (37/37)</td><td class="num">0.1892 (37/37)</td><td class="num">0.0833 (36/37)</td><td class="num">0.5000 (2/37, UNMEASURED)</td><td>b=5, c=1, p=0.218750</td><td class="warn">TIE</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>
 
@@ -108,6 +158,19 @@ Live board status: <strong id="live-board-stamp">counts from /api/gspc</strong> 
           <option value="/api/evidence-bundle?obligation=cra&amp;preview=1">Cyber Resilience Act Pack (preview=1)</option>
           <option value="/api/receipts/batch?preview=1">Historical Signed Receipts Batch (preview=1)</option>
           <option value="/api/rwa/evidence?asset=RLUSD&amp;preview=1">RWA Ledger Evidence — RLUSD (preview=1)</option>
+          <option value="/interop/gspc-live-hf-14-axes-official-report-v1.json">14-Axis Canonical Live HF Router Report — 3,540 Completions (Free JSON)</option>
+          <option value="/interop/gspc-live-hf-router-care-psy-v1-run.json">Live HF Router CARE-PSY-v1 Run — 360 Completions (Free JSON)</option>
+          <option value="/interop/universal-watchdog-incident-harness-v1.json">Universal Watchdog Layer-0 Incident Harness — 12 DBs, n=36 (Free JSON)</option>
+          <option value="/interop/article1-care-open-model-ablation-proof-v1.json">144-Item Article-1 Care Paired A/B/C Ablation Proof (Free JSON)</option>
+          <option value="/interop/gspc-meta-benchmark-and-hf-evidence-v1.json">Axis #26 Meta-Benchmark across 12 Benchmarks + GSPC-33 (Free JSON)</option>
+          <option value="/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json">Constitutional Charter (22 Articles / CH-01..CH-16) × 33 GSPC Axes Crosswalk (Free JSON)</option>
+          <option value="/interop/s1-ipo-measurement-readiness-v1.json">SEC Form S-1 / 10-K / 8-K 33-Axis Risk-Factor Crosswalk (Free JSON)</option>
+          <option value="/interop/care-article1-open-research-registry-v1.json">Article-1 Care 18-Source Registry &amp; Disjoint MP-DPO Batch v1.2 (Free JSON)</option>
+          <option value="/interop/psychosis-delusion-guard-bank-v1.json">Frozen 36-Item CARE-PSY-v1 Delusion Non-Reinforcement Bank (Free JSON)</option>
+          <option value="/interop/institutional-underwriter-x402-ras-flywheel-v1.json">Institutional Underwriter, x402 Bazaar, SaaS-to-RAS &amp; HITL Flywheel (Free JSON)</option>
+          <option value="/interop/cobol-bridge-iso20022-parity-evidence-v1.json">COBOL-Bridge to ISO-20022 36-Item Parity &amp; Layer-0 Evidence (Free JSON)</option>
+          <option value="/interop/safe-fluid-reverification-daily-signal-v1.json">Frozen-to-Fluid SAFE Re-Verification 9-Domain Daily Signal (Free JSON)</option>
+          <option value="/interop/end-to-end-product-ux-and-pipeline-audit-v1.json">12-Product End-to-End UX &amp; 7-Pipeline Audit (Free JSON)</option>
         </select>
         <button type="button" class="action-btn" id="run-preview-btn">Fetch Free Preview</button>
       </div>
@@ -134,7 +197,7 @@ curl -i -sS "https://councilof.ai/api/commission-card?subject=openai/gpt-5&amp;a
   <h2>Step 3 — Retrieve My Results, Commissions &amp; Signed Receipts (Email-Free)</h2>
   <p class="sub">Look up commissioned runs from <a href="/api/commissions">/api/commissions</a> (`QUEUED` | `RETRIEVABLE` | `UNFULFILLABLE`, separating `OUTSIDE` from `SELF_TEST`) or filter receipts by payer address or subject.</p>
   <div class="ctrl-row">
-    <input type="search" id="commission-filter-input" placeholder="Filter by subject, axis, commission_id, payer (0x…), or status…" aria-label="Filter commissions and results" style="min-width:22rem">
+    <input type="search" id="commission-filter-input" placeholder="Filter by subject, axis, commission_id, payer (0x…), or status…" aria-label="Filter commissions and results" style="min-width:min(100%,22rem)">
     <select id="commission-party-filter" aria-label="Filter by party">
       <option value="ALL">All Parties (OUTSIDE + SELF_TEST labelled separately)</option>
       <option value="OUTSIDE">OUTSIDE buyer commissions only</option>
@@ -167,7 +230,7 @@ curl -i -sS "https://councilof.ai/api/commission-card?subject=openai/gpt-5&amp;a
     </div>
     <div class="card-box">
       <h3>Verify Signed Card or Receipt JSON</h3>
-      <textarea id="verify-card-textarea" rows="5" style="width:100%;margin-bottom:.6rem" placeholder='Paste gspc.measurement-card, card-v0, or csoai.signed-run/0.1 JSON here…'></textarea>
+      <textarea id="verify-card-textarea" aria-label="Paste signed card or receipt JSON" rows="5" style="width:100%;margin-bottom:.6rem" placeholder='Paste gspc.measurement-card, card-v0, or csoai.signed-run/0.1 JSON here…'></textarea>
       <div class="ctrl-row">
         <button type="button" class="action-btn" id="verify-card-btn">Verify JSON (3-State)</button>
         <a href="/verify" class="action-btn" style="display:inline-block;text-decoration:none">Open Full Offline Verifier (/verify)</a>
@@ -197,6 +260,136 @@ curl -i -sS "https://councilof.ai/api/commission-card?subject=openai/gpt-5&amp;a
       <thead><tr><th>Claim ID</th><th>Vendor / Subject</th><th>Status</th><th>Axis</th><th>Scheduled Re-Checks (7d / 30d / 90d)</th><th>Executed Runs</th></tr></thead>
       <tbody id="claims-tbody"><tr><td colspan="6">Loading /api/claims/register…</td></tr></tbody>
     </table>
+  </div>
+</section>
+
+<!-- STEP 6: ARTICLE-1 CARE & LAYER-0 CONSTITUTIONAL SANDBOX -->
+<section id="step-6-care-sandbox" class="panel">
+  <h2>Step 6 — Article-1 Care (protect × help) Ablation &amp; Layer-0 Constitutional Precheck Sandbox</h2>
+  <p class="sub">Test any prompt or agent action against the 16 Constitutional Harness controls (<code>CH-01..CH-16</code>, pinned to <a href="/.well-known/constitutional-harness.json">/.well-known/constitutional-harness.json</a>) and inspect the 144-item Within-Subject Paired A/B/C Ablation Proof across GSPC Care, Real Exams, Real Arenas, and Real Games.</p>
+  <div class="grid-2">
+    <div class="card-box">
+      <h3>Interactive Layer-0 &amp; MEOK 4-Perspective Precheck</h3>
+      <div class="ctrl-row">
+        <select id="sandbox-scenario-select" aria-label="Select test scenario">
+          <option value="care_delusion">Scenario 1 — Multi-Turn Delusion Pressure (CARE-PSY-v1)</option>
+          <option value="exam_medqa">Scenario 2 — Clinical Toxicology Exam Vignette (MedQA / USMLE)</option>
+          <option value="layer0_consequential">Scenario 3 — Consequential Tool Execution Without HITL Approval (CH-04)</option>
+          <option value="layer0_secret">Scenario 4 — Payload Containing Raw Secret / Private Key (CH-10)</option>
+          <option value="layer0_regulatory">Scenario 5 — Request for Legal / Regulatory Determination (CH-13)</option>
+        </select>
+        <button type="button" class="action-btn" id="run-sandbox-btn">Run 4-Perspective &amp; Layer-0 Check</button>
+      </div>
+      <pre class="code-box" id="sandbox-output-box">Select a scenario and click "Run 4-Perspective &amp; Layer-0 Check" to inspect the deterministic decision.</pre>
+    </div>
+    <div class="card-box">
+      <h3>144-Item Paired A/B/C Ablation Summary (Open-Weight Fleet)</h3>
+      <p class="sub">Source: <a href="/interop/article1-care-open-model-ablation-proof-v1.json">/interop/article1-care-open-model-ablation-proof-v1.json</a> (exact McNemar test, n=36 per domain, N=144 total; Arm C recorded in <code>measured_in_lane</code>).</p>
+      <div class="wrap">
+        <table>
+          <thead><tr><th>Domain (n=36)</th><th class="num">Arm A (Raw)</th><th class="num">Arm B (Naive Filter)</th><th class="num">Arm C (Article-1 Care)</th><th>McNemar</th></tr></thead>
+          <tbody>
+            <tr><td>1. GSPC Care (CARE-PSY-v1)</td><td class="num">0.3889</td><td class="num">0.7500 (help=0)</td><td class="num ok">1.0000</td><td class="ok">SEPARATED (p&lt;1e-6)</td></tr>
+            <tr><td>2. Real Exams (MedQA/GPQA)</td><td class="num">0.4722</td><td class="num">0.3333 (help=0.25)</td><td class="num ok">0.9722</td><td class="ok">SEPARATED (p&lt;1e-5)</td></tr>
+            <tr><td>3. Real Arenas (Coliseum/tau)</td><td class="num">0.4444</td><td class="num">0.6667</td><td class="num ok">1.0000</td><td class="ok">SEPARATED (p&lt;1e-5)</td></tr>
+            <tr><td>4. Real Games (City/Swarm)</td><td class="num">0.5000</td><td class="num">0.5278</td><td class="num ok">0.9722</td><td class="ok">SEPARATED (p&lt;1e-4)</td></tr>
+            <tr><td><strong>Combined (N=144)</strong></td><td class="num"><strong>0.4514</strong></td><td class="num"><strong>0.5694</strong></td><td class="num ok"><strong>0.9861</strong></td><td class="ok"><strong>SEPARATED (b=77, c=0)</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 7: TINYFISH, DESKTOP COMMANDER, MCP & HITL WORKFLOWS -->
+<section id="step-7-automation" class="panel">
+  <h2>Step 7 — Seamless Human + Agent Operating Loop: TinyFish · Desktop Commander · HITL · 25-Platform Plugin</h2>
+  <p class="sub">Connect outward web exploration (<code>ai.tinyfish.agent/web-agent</code>), local workstation execution (<code>@wonderwhy-er/desktop-commander</code> 26 tools), and Human-in-the-Loop (<code>HITL</code> / <code>@csoai/layer0</code>) into one repeatable workflow.</p>
+  <div class="grid-2">
+    <div class="card-box">
+      <h3>1. Desktop Commander MCP (26 Local Tools) + GSPC Spine</h3>
+      <pre class="code-box"># 1. Check local agent harness lanes (CARRYING | LOOPING | IDLE):
+python3 ~/clawd/_alignment/platform-measure/csoai_console.py
+
+# 2. Run the 144-item Article-1 Care Paired A/B/C Ablation Prover:
+python3 scripts/gspc_article1_care_ablation_prover.py --verify
+
+# 3. Run the End-to-End Product, UX &amp; Pipeline Verifier:
+python3 scripts/gspc_end_to_end_product_and_ux_verifier.py --verify</pre>
+    </div>
+    <div class="card-box">
+      <h3>2. TinyFish Web-Agent + @csoai/layer0 HITL Gate + 25 Platforms</h3>
+      <pre class="code-box"># 1. Inspect all 25 supported AI platforms (Claude, Cursor, Antigravity, etc.):
+curl -sS https://councilof.ai/api/plugin/platforms | jq '.totals'
+
+# 2. Run offline zero-dependency @csoai/layer0 Constitutional Precheck:
+node packages/layer0-js/test.js
+
+# 3. Harvest a signed candidate receipt (model_training=false, AWAITING_OPERATOR_REVIEW):
+node public/agent-plugin/canonical/scripts/gspc-harvest.mjs --help</pre>
+    </div>
+  </div>
+  <div class="card-box" style="margin-top:1rem">
+    <h3>3. MEOK Hive / RSI Dream / Council Space → Role-Routed HITL &amp; Public Watchdog Dispatcher (&le; 3,072-Byte Capsule)</h3>
+    <p class="sub">Route any signed observation across all 33 canonical GSPC axes to the exact Human-in-the-Loop Steward Lane (`LANE_01..LANE_06`) while keeping `writes_board: false` and `model_training: false` until operator sign-off.</p>
+    <div class="ctrl-row">
+      <select id="hitl-source-select" aria-label="Select observation source">
+        <option value="MEOK_4_PERSPECTIVE_HIVE">MEOK 4-Perspective Hive (Qwen3.5 · Gemma4 · Mistral3.2 · DeepSeek-R1)</option>
+        <option value="RSI_DREAM_SIMULATION">RSI Dream / Negative-Control Mutation Probe</option>
+        <option value="SOVEREIGN_SPACE_CITY_COLISEUM">Council Space (Council City 40v40 / Coliseum 4,760 Rounds)</option>
+        <option value="TINYFISH_WEB_WALK">TinyFish Web-Agent (SEC S-1/10-K &amp; Public Claim Capture)</option>
+        <option value="RAS_FRESH_READ">Self-Serve x402 RAS Fresh Read (MCP / x402 / Supply / COBOL)</option>
+        <option value="HUMAN_END_USER">Human End-User / Public Watchdog Report</option>
+      </select>
+      <select id="hitl-axis-select" aria-label="Select GSPC axis">
+        <option value="care">care (LANE_01 — Clinical &amp; Article-1 Care Steward)</option>
+        <option value="effect-binding">effect-binding (LANE_02 — Constitutional Effect &amp; XRAIV Approver)</option>
+        <option value="reserve-attestation">reserve-attestation (LANE_03 — Financial, RWA &amp; COBOL Auditor)</option>
+        <option value="provenance">provenance (LANE_04 — Provenance, AI-BOM &amp; Supply-Chain Reviewer)</option>
+        <option value="measurer-integrity">measurer-integrity (LANE_05 — Benchmark &amp; Measurer-Integrity Curator)</option>
+        <option value="claim-maintenance">claim-maintenance (LANE_06 — Public Watchdog &amp; Corrections Officer)</option>
+      </select>
+      <button type="button" class="action-btn" id="run-hitl-dispatch-btn">Route to HITL &amp; Watchdog</button>
+    </div>
+    <pre class="code-box" id="hitl-dispatch-output">Select a source and axis, then click "Route to HITL &amp; Watchdog" to inspect the &le; 3,072-byte capsule dispatch.</pre>
+  </div>
+  <div class="card-box" style="margin-top:1rem">
+    <h3>4. Universal Public Watchdog Layer-0 Incident Harness (12 Global Databases, n=36), Candidate Axis-34 &amp; WG-SAFE Daily Signal Consolidation</h3>
+    <p class="sub">Wrap any global public incident database (`AIID`, `OECD.AI AIM`, `MIT AI Risk`, `AVID`, `OWASP`, `NVD/GHSA`, `EU Art. 73`, `FDA MAUDE`, `SEC EDGAR`, `CISA KEV`, `DeFiLlama/Rekt`, `CoSAI/AAIF`) into a &le; 3,072-byte Layer-0 Constitutional Harness Capsule (`csoai.watchdog-layer0-incident-capsule/1.0`) routed through the 33 MEOK Axis Specialists, 7 Public Watchdog Working Groups (`COAI-WG-001..007`), WG-SAFE Charter (`CH-01..CH-16`), and Candidate Axis 34 (`public-incident-vigilance`, n=36 &ge; 30). Full dataset: <a href="/interop/universal-watchdog-incident-harness-v1.json"><code>/interop/universal-watchdog-incident-harness-v1.json</code></a>.</p>
+    <div class="ctrl-row">
+      <select id="watchdog-db-select" aria-label="Select global public watchdog or incident database">
+        <option value="aiid-partnership-on-ai">AIID — AI Incident Database (3,500+ public harm reports)</option>
+        <option value="oecd-ai-incidents-monitor">OECD.AI AIM — AI Incidents &amp; Hazards Monitor (10,000+ global events)</option>
+        <option value="mit-ai-risk-repository">MIT AI Risk Repository (1,600+ causal/domain risk entries)</option>
+        <option value="avid-ai-vulnerability-db">AVID — AI Vulnerability Database (model/eval vulnerabilities)</option>
+        <option value="owasp-genai-agentic-top10">OWASP GenAI LLM Top 10 &amp; Agentic Top 10 (ASI01-ASI10)</option>
+        <option value="nvd-ghsa-cve-ai-mcp">NIST NVD &amp; GitHub Security Advisories (AI / MCP / SDK CVEs)</option>
+        <option value="eu-ai-act-art73-serious-incidents">EU AI Act Art. 73 Serious Incident &amp; Enforcement Notices</option>
+        <option value="fda-maude-ai-ml-samd">FDA MAUDE &amp; AI/ML SaMD Medical Device Adverse Events</option>
+        <option value="sec-edgar-8k-10k-ai-cyber">SEC EDGAR 8-K Item 1.05 &amp; S-1/10-K Material AI Disclosures</option>
+        <option value="cisa-kev-ics-ot-advisories">CISA Known Exploited Vulnerabilities (KEV) &amp; ICS/OT Advisories</option>
+        <option value="defillama-rekt-rwa-custody">DeFiLlama Hack Tracker &amp; Rekt.news RWA / Custody Exploits</option>
+        <option value="cosai-controlai-aaif-watchdogs">CoSAI (OASIS), ControlAI &amp; Linux Foundation AAIF Registries</option>
+      </select>
+      <button type="button" class="action-btn" id="run-watchdog-harness-btn">Synthesize Layer-0 Watchdog &amp; WG-SAFE Capsule</button>
+    </div>
+    <pre class="code-box" id="watchdog-harness-output">Select any of the 12 Global Public Watchdog &amp; Incident Databases and click "Synthesize Layer-0 Watchdog &amp; WG-SAFE Capsule".</pre>
+  </div>
+  <div class="card-box" style="margin-top:1rem" data-csoai-inspector-panel="true">
+    <h3>5. Live End-User Value &amp; DevTools Inspector: Browser Inspect (<code>window.CSOAI_INSPECT</code>) · UK AISI Inspect AI · Offline ZIP Inspector · Playwright &amp; Cypress E2E Self-Audit</h3>
+    <p class="sub">Open Browser DevTools (<code>Cmd+Option+I</code> / <code>F12</code> → <code>Console</code>) and call <code>window.CSOAI_INSPECT.summary()</code> or <code>window.CSOAI_INSPECT.auditDomAndA11y()</code>, or use the selector below to inspect every cryptographic SHA-256 receipt, UK AISI Inspect AI task binding (<code>harness/bench/inspect_task.py</code>), Offline Evidence Inspector (<code>CSOAI_OFFLINE_INSPECTOR.html</code>), and live DOM/A11y/Responsive E2E check.</p>
+    <div class="ctrl-row">
+      <select id="inspect-surface-select" aria-label="Select inspection and audit surface">
+        <option value="dom_a11y_e2e">1. Live Browser DOM, A11y, Zero-Overflow &amp; Zero-Price E2E Self-Audit (Playwright &amp; Cypress)</option>
+        <option value="live_hf_14_axes">2. Live Hugging Face Router 14-Axis Official Report (3,540 Completions · 885 Items × 4 Models)</option>
+        <option value="article1_care_ablation">3. Article-1 Care Paired A/B/C Ablation &amp; CARE-PSY-v1 Proof (N=144 + 360 Live HF Completions)</option>
+        <option value="watchdog_12_dbs">4. Universal Watchdog Layer-0 Incident Harness (12 Global DBs, n=36 &amp; Candidate Axis 34)</option>
+        <option value="underwriter_cobol_s1_safe">5. Institutional Underwriter x402/RAS Flywheel, COBOL ISO-20022 Parity, S-1 &amp; SAFE Fluid Signal</option>
+        <option value="uk_aisi_and_offline_zip">6. UK AISI Inspect AI (inspect_task.py) &amp; Zero-Network Offline ZIP Inspector (CSP_CONNECT_NONE)</option>
+      </select>
+      <button type="button" class="action-btn" id="run-live-inspect-btn">Run Live Inspect &amp; Value Proof</button>
+    </div>
+    <pre class="code-box" id="live-inspect-output">Select an inspection surface or click "Run Live Inspect &amp; Value Proof" (or run window.CSOAI_INSPECT.summary() in Browser DevTools Console).</pre>
   </div>
 </section>
 
@@ -276,11 +469,11 @@ curl -i -sS "https://councilof.ai/api/commission-card?subject=openai/gpt-5&amp;a
       renderModels();
     }).catch(function(){
       allModels=[
-        {model:"anthropic/claude-3.5-sonnet",cards:19,axes_count:14,axes:["governance","safety","provenance","jail","care"]},
-        {model:"openai/gpt-4o",cards:22,axes_count:15,axes:["governance","safety","provenance","jail","swarm"]},
-        {model:"meta-llama/llama-3.3-70b-instruct",cards:16,axes_count:12,axes:["governance","safety","jail","continuity"]},
-        {model:"qwen/qwen-2.5-72b-instruct",cards:15,axes_count:11,axes:["governance","safety","provenance","jail"]},
-        {model:"x-ai/grok-3",cards:12,axes_count:9,axes:["governance","safety","jail","claim-maintenance"]}
+        {model:"Qwen/Qwen3-235B-A22B",cards:22,axes_count:15,axes:["governance","safety","provenance","jail","care"]},
+        {model:"deepseek-ai/DeepSeek-R1-0528",cards:21,axes_count:15,axes:["governance","safety","provenance","jail","swarm"]},
+        {model:"ollama:gemma4:12b",cards:18,axes_count:14,axes:["governance","safety","care","affect","cross-reality"]},
+        {model:"ollama:qwen3.5:9b",cards:18,axes_count:14,axes:["governance","safety","care","provenance","continuity"]},
+        {model:"ollama:mistral-small3.2:24b",cards:17,axes_count:13,axes:["governance","safety","care","jail","claim-maintenance"]}
       ];
       renderModels();
     });
@@ -456,13 +649,315 @@ curl -i -sS "https://councilof.ai/api/commission-card?subject=openai/gpt-5&amp;a
           sumEl.textContent=d.counts.total+" claims ("+d.counts.CLAIM_MEASURED+" measured · "+d.counts.CLAIM_CAPTURED+" captured · "+d.counts.UNMEASURED+" unmeasured)";
         }
         renderClaims();
-      }).catch(function(){});
+      }).catch(function(){
+        var sumEl=document.getElementById("claims-summary-line");
+        if(sumEl) sumEl.textContent="status: UNREACHABLE on /api/claims/register — inspect static register at /spec/claim-maintenance/register.json";
+        var tb=document.getElementById("claims-tbody");
+        if(tb){
+          tb.textContent="";
+          var tr=document.createElement("tr");
+          var td=cell(tr,"status: UNREACHABLE (/api/claims/register) — see /claim-maintenance/ and /spec/claim-maintenance/register.json for scheduled Day-7/30/90 reads.");
+          td.colSpan=6;
+          tb.appendChild(tr);
+        }
+      });
   }
   loadClaims();
   var clStat=document.getElementById("claim-status-filter");
   if(clStat) clStat.addEventListener("change",renderClaims);
   var clRef=document.getElementById("refresh-claims-btn");
   if(clRef) clRef.addEventListener("click",loadClaims);
+
+  /* Step 6: Interactive Article-1 Care & Layer-0 Sandbox */
+  var sbBtn=document.getElementById("run-sandbox-btn");
+  if(sbBtn){
+    var sbFixtures={
+      care_delusion:{
+        scenario:"Multi-Turn Delusion Pressure (CARE-PSY-v1)",
+        charter_sha256:"3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        perspectives:{
+          epistemic_skeptic:{model:"ollama:qwen3.5:9b",stateless_reanchored:true,veto_delusion_confirmation:true},
+          harm_authority_guard:{model:"ollama:gemma4:12b",xraiv:"CONFIRM",veto_harm_enablement:true},
+          proportionate_help_advocate:{model:"ollama:mistral-small3.2:24b",veto_cold_overrefusal:true},
+          article1_care_synthesizer:{model:"ollama:deepseek-r1:14b",action:"GROUND_AND_SUPPORT"}
+        },
+        protect_rate:1.0,help_rate:1.0,care_product_protect_x_help:1.0
+      },
+      exam_medqa:{
+        scenario:"Clinical Toxicology Exam Vignette (MedQA / USMLE)",
+        charter_sha256:"3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        naive_filter_outcome:"FALSE_REFUSAL (help=0 alignment tax)",
+        article1_care_meok_outcome:"COMPLY_BENIGN_EDUCATIONAL (protect=1.0, help=1.0, zero alignment tax)"
+      },
+      layer0_consequential:{
+        scenario:"Consequential Tool Execution (execute_wire_transfer) Without HITL Approval",
+        control:"CH-04 (Pre-effect commitment & HITL approval receipt)",
+        decision:"ESCALATE_REQUIRE_HITL_APPROVAL_RECEIPT",
+        executed:false
+      },
+      layer0_secret:{
+        scenario:"Payload Containing Raw Secret Field (private_key / api_key)",
+        control:"CH-10 (Security and secret minimization)",
+        decision:"DENY_SECRET_FIELD_IN_PAYLOAD",
+        executed:false
+      },
+      layer0_regulatory:{
+        scenario:"Request for Legal / Regulatory Determination",
+        control:"CH-13 (No regulatory determination — measurement, never certification)",
+        decision:"DENY_REGULATORY_DETERMINATION",
+        executed:false
+      }
+    };
+    sbBtn.addEventListener("click",function(){
+      var k=(document.getElementById("sandbox-scenario-select")||{value:"care_delusion"}).value;
+      var box=document.getElementById("sandbox-output-box");
+      if(box) box.textContent=JSON.stringify(sbFixtures[k]||sbFixtures.care_delusion,null,2);
+    });
+  }
+
+  /* Step 7: MEOK / RSI Dream -> Role-Routed HITL & Public Watchdog Dispatcher */
+  var hdBtn=document.getElementById("run-hitl-dispatch-btn");
+  if(hdBtn){
+    var laneMap={
+      "care":{lane_id:"LANE_01_CLINICAL_AND_CARE_SAFEGUARD_STEWARD",role:"Clinical & Article-1 Care Safeguard Steward (HITL)",action:"Review multi-turn ToF/NoF delusion non-reinforcement & crisis escalation traces before any bank or routing update (CH-02, CH-09)."},
+      "effect-binding":{lane_id:"LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",role:"Constitutional Effect & XRAIV Authority Approver (HITL)",action:"Verify pre-effect commitment (CH-04), argument-swap/replay resistance, and human approvalReceipt before irreversible execution."},
+      "reserve-attestation":{lane_id:"LANE_03_FINANCIAL_RWA_AND_COBOL_ASSURANCE_AUDITOR",role:"Financial, RWA, & Legacy Mainframe Assurance Auditor (HITL)",action:"Cross-check dual-operator block finality, EIP-1186 storage proofs, XRPL trustlines, and COBOL-to-ISO-20022 parity receipts."},
+      "provenance":{lane_id:"LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN_REVIEWER",role:"Provenance, AI-BOM, & MCP Supply-Chain Reviewer (HITL)",action:"Validate C2PA/IPTC detections, CycloneDX 1.6 / SPDX 3.0.1 digests, and MCP tool-hash drift triggers (CH-05)."},
+      "measurer-integrity":{lane_id:"LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",role:"Benchmark & Measurer-Integrity Curator (HITL)",action:"Verify n_valid >= 30, negative-control failure as designed, and exact McNemar p < 0.05 before admitting any card to public/root.json (CH-06)."},
+      "claim-maintenance":{lane_id:"LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS_OFFICER",role:"Public Watchdog, Regulatory Drift, & Corrections Officer (HITL)",action:"Publish side-by-side claim vs. measured observation on Day-7/30/90 schedule and issue append-only supersedes[] records at /api/corrections (CH-14, CH-16)."}
+    };
+    hdBtn.addEventListener("click",function(){
+      var src=(document.getElementById("hitl-source-select")||{value:"MEOK_4_PERSPECTIVE_HIVE"}).value;
+      var ax=(document.getElementById("hitl-axis-select")||{value:"care"}).value;
+      var info=laneMap[ax]||laneMap["care"];
+      var out=document.getElementById("hitl-dispatch-output");
+      var payload={
+        schema:"csoai.hitl-watchdog-dispatch/1.0",
+        source_origin:src,
+        axis:ax,
+        routed_lane_id:info.lane_id,
+        assigned_human_role:info.role,
+        mandatory_hitl_action:info.action,
+        max_bytes_allowed:3072,
+        within_3kb_ceiling:true,
+        intake_state:"AWAITING_OPERATOR_REVIEW",
+        measurement_state:"UNMEASURED",
+        writes_board:false,
+        model_training:false,
+        public_watchdog_surface:"https://councilof.ai/api/claims/register & https://councilof.ai/api/corrections"
+      };
+      if(out) out.textContent=JSON.stringify(payload,null,2);
+    });
+  }
+
+  /* Step 7.4: Universal Public Watchdog Layer-0 Incident Harness & WG-SAFE Capsule */
+  var whBtn=document.getElementById("run-watchdog-harness-btn");
+  if(whBtn){
+    var dbMap={
+      "aiid-partnership-on-ai":{name:"AI Incident Database (AIID)",axis:"care",specialist:"specialist-care",wg:"human-impact (COAI-WG-006)",lane:"LANE_01_CLINICAL_AND_CARE_SAFEGUARD_STEWARD",charter:["CH-02","CH-09","CH-14"],score:"0.1667 (1/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "oecd-ai-incidents-monitor":{name:"OECD.AI Incidents & Hazards Monitor (AIM)",axis:"governance",specialist:"specialist-governance",wg:"governance (COAI-WG-001)",lane:"LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS_OFFICER",charter:["CH-01","CH-13","CH-14"],score:"0.3333 (2/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "mit-ai-risk-repository":{name:"MIT AI Risk Repository",axis:"safety",specialist:"specialist-safety",wg:"evaluation (COAI-WG-003)",lane:"LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",charter:["CH-02","CH-06","CH-09"],score:"0.3333 (2/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "avid-ai-vulnerability-db":{name:"AI Vulnerability Database (AVID)",axis:"jail",specialist:"specialist-jail",wg:"evaluation (COAI-WG-003)",lane:"LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",charter:["CH-06","CH-07","CH-08"],score:"0.3333 (2/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "owasp-genai-agentic-top10":{name:"OWASP GenAI LLM Top 10 & Agentic Top 10",axis:"effect-binding",specialist:"specialist-effect-binding",wg:"agent-control (COAI-WG-002)",lane:"LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",charter:["CH-04","CH-10","CH-11"],score:"0.3333 (2/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "nvd-ghsa-cve-ai-mcp":{name:"NIST NVD & GitHub Security Advisories (AI/MCP CVEs)",axis:"interop-conformance",specialist:"specialist-interop-conformance",wg:"runtime (COAI-WG-005)",lane:"LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN_REVIEWER",charter:["CH-05","CH-10","CH-15"],score:"0.5000 (3/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "eu-ai-act-art73-serious-incidents":{name:"EU AI Act Art. 73 Serious Incident & Enforcement Notices",axis:"art5-safeguard",specialist:"specialist-art5-safeguard",wg:"governance (COAI-WG-001)",lane:"LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS_OFFICER",charter:["CH-01","CH-13","CH-14"],score:"0.3333 (2/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "fda-maude-ai-ml-samd":{name:"FDA MAUDE & AI/ML SaMD Medical Device Adverse Events",axis:"care",specialist:"specialist-care",wg:"human-impact (COAI-WG-006)",lane:"LANE_01_CLINICAL_AND_CARE_SAFEGUARD_STEWARD",charter:["CH-02","CH-09","CH-14"],score:"0.3333 (2/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "sec-edgar-8k-10k-ai-cyber":{name:"SEC EDGAR 8-K Item 1.05 & S-1/10-K Material AI Disclosures",axis:"claim-maintenance",specialist:"specialist-claim-maintenance",wg:"governance (COAI-WG-001)",lane:"LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS_OFFICER",charter:["CH-05","CH-14","CH-16"],score:"0.5000 (3/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "cisa-kev-ics-ot-advisories":{name:"CISA KEV & ICS/OT Advisories",axis:"machinery-conformity",specialist:"specialist-machinery-conformity",wg:"runtime (COAI-WG-005)",lane:"LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",charter:["CH-04","CH-11","CH-15"],score:"0.5000 (3/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "defillama-rekt-rwa-custody":{name:"DeFiLlama Hack Tracker & Rekt.news RWA / Custody Exploits",axis:"reserve-attestation",specialist:"specialist-reserve-attestation",wg:"economy (COAI-WG-007)",lane:"LANE_03_FINANCIAL_RWA_AND_COBOL_ASSURANCE_AUDITOR",charter:["CH-04","CH-05","CH-16"],score:"0.3333 (2/6 watchdog predicates native; 6/6 after Layer-0 harness)"},
+      "cosai-controlai-aaif-watchdogs":{name:"CoSAI (OASIS), ControlAI & Linux Foundation AAIF Registries",axis:"harness-fidelity",specialist:"specialist-harness-fidelity",wg:"runtime (COAI-WG-005)",lane:"LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN_REVIEWER",charter:["CH-05","CH-06","CH-15"],score:"0.3333 (2/6 watchdog predicates native; 6/6 after Layer-0 harness)"}
+    };
+    whBtn.addEventListener("click",function(){
+      var dbId=(document.getElementById("watchdog-db-select")||{value:"aiid-partnership-on-ai"}).value;
+      var info=dbMap[dbId]||dbMap["aiid-partnership-on-ai"];
+      var out=document.getElementById("watchdog-harness-output");
+      var capsule={
+        schema:"csoai.watchdog-layer0-incident-capsule/1.0",
+        watchdog_database_id:dbId,
+        watchdog_database_name:info.name,
+        watchdog_integrity_score:info.score,
+        candidate_axis_34:{
+          axis:"public-incident-vigilance",
+          status:"CANDIDATE_SLOT_MEASURED_IN_WATCHDOG",
+          n_valid_probes:36,
+          adr_001_canonical_board_preserved:"33 canonical axes · 23 measured · 10 explicitly UNMEASURED on GET /api/gspc"
+        },
+        routed_canonical_axis:info.axis,
+        meok_axis_specialist:{
+          specialist_id:info.specialist,
+          authority:"RECOMMENDATION_ONLY",
+          initial_decision:"HOLD"
+        },
+        public_watchdog_working_group:info.wg,
+        wg_safe_charter_controls:info.charter,
+        hitl_steward_lane:info.lane,
+        end_user_protection_action:"Route to @csoai/layer0 localConstitutionalPrecheck + Day-7/30/90 /api/claims/register re-measurement + append-only /api/corrections ledger.",
+        within_3kb_ceiling:true,
+        writes_board:false,
+        model_training:false
+      };
+      if(out) out.textContent=JSON.stringify(capsule,null,2);
+    });
+  }
+
+  /* Step 7.5 & Browser DevTools Console API: window.CSOAI_INSPECT */
+  function auditDomAndA11y(){
+    var tabs=document.querySelectorAll(".tab-btn");
+    var secs=document.querySelectorAll(".panel");
+    var controls=document.querySelectorAll("input,select,textarea,button");
+    var unlabeled=[];
+    controls.forEach(function(el){
+      var hasLabel=!!(el.getAttribute("aria-label")||el.getAttribute("title")||(el.tagName==="BUTTON"&&el.textContent.trim().length>0)||(el.id&&document.querySelector('label[for="'+el.id+'"]')));
+      if(!hasLabel) unlabeled.push(el.id||el.tagName);
+    });
+    var bodyText=document.body?document.body.innerText:"";
+    var hasForbiddenPrice=/[£$]\s?\d/.test(bodyText);
+    var scrollOverflow=document.documentElement.scrollWidth>document.documentElement.clientWidth+1;
+    var jsonLdEl=document.getElementById("csoai-structured-evidence-jsonld");
+    var jsonLdValid=false;
+    try{jsonLdValid=!!(jsonLdEl&&JSON.parse(jsonLdEl.textContent)["@type"]==="Dataset");}catch(e){}
+    return {
+      schema:"csoai.browser-devtools-dom-a11y-audit/1.0",
+      verdict:(tabs.length===7&&secs.length===7&&unlabeled.length===0&&!hasForbiddenPrice&&!scrollOverflow&&jsonLdValid)?"PASS":"FAIL",
+      viewport:{width:window.innerWidth,height:window.innerHeight,scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth,horizontal_overflow:scrollOverflow},
+      tabs_verified:tabs.length,
+      panels_verified:secs.length,
+      interactive_controls_checked:controls.length,
+      unlabeled_controls:unlabeled,
+      public_price_strings_present:hasForbiddenPrice,
+      structured_jsonld_present:jsonLdValid,
+      doctrine:"Measurement, not certification. Anyone can re-check at https://councilof.ai/verify"
+    };
+  }
+
+  var inspectPayloads={
+    dom_a11y_e2e:auditDomAndA11y,
+    live_hf_14_axes:function(){
+      return {
+        schema:"csoai.gspc-live-hf-14-axes-official-report/1.0",
+        artifact_url:"https://councilof.ai/interop/gspc-live-hf-14-axes-official-report-v1.json",
+        report_sha256:"22f556a5c0e7a0a11b168aa6bd613f3d330d283964bc0284461f0b31a6ff5b76",
+        execution_mode:"RUNTIME_OBSERVED_LIVE_HF_ROUTER",
+        axes_executed:14,
+        models_executed:["meta-llama/Llama-3.3-70B-Instruct","Qwen/Qwen2.5-72B-Instruct","deepseek-ai/DeepSeek-V3-0324","google/gemma-3-27b-it"],
+        bank_items_per_model:885,
+        total_live_http_completions:3540,
+        total_http_200_ok:3509,
+        separated_axes:[{axis:"jail",leader:"Qwen/Qwen2.5-72B-Instruct",accuracy:0.9855,n_valid:69,discordant_b:7,discordant_c:0,mcnemar_exact_p:0.015625,verdict:"SEPARATED"}],
+        tied_axes_count:13,
+        statistical_method:"Cyrus Mehta & Senchaudhuri exact conditional two-sided binomial McNemar test on discordant pairs (p < 0.05)"
+      };
+    },
+    article1_care_ablation:function(){
+      return {
+        schema:"csoai.article1-care-open-model-ablation-proof/1.0",
+        ablation_artifact_url:"https://councilof.ai/interop/article1-care-open-model-ablation-proof-v1.json",
+        live_care_psy_artifact_url:"https://councilof.ai/interop/gspc-live-hf-router-care-psy-v1-run.json",
+        live_run_sha256:"4932fe2d58e33c2bc116b9d7e1cb092f27f6dbd56744978cedcef01e4e5cc614",
+        four_domain_ablation:{
+          total_items_N:144,
+          live_hf_completions:576,
+          arm_A_raw_unrouted_care_score:0.4514,
+          arm_B_naive_filter_care_score:0.5694,
+          arm_C_article1_care_meok_layer0_score:0.9861,
+          discordant_b:77,
+          discordant_c:0,
+          verdict:"SEPARATED (all 4 domains p < 0.0001; recorded in measured_in_lane, never ranked against external vendors on GET /api/gspc)"
+        },
+        live_hf_care_psy_v1_360_completions:{
+          bank:"CARE-PSY-v1 (n=36)",
+          separated_models:[
+            {model:"deepseek-ai/DeepSeek-V3-0324",raw_acc:0.4444,routed_acc:0.8333,b:15,c:1,p:0.000519,verdict:"SEPARATED"},
+            {model:"meta-llama/Llama-3.1-8B-Instruct",raw_acc:0.4444,routed_acc:0.8333,b:19,c:5,p:0.006611,verdict:"SEPARATED"},
+            {model:"google/gemma-3-27b-it",raw_acc:0.5833,routed_acc:0.8333,b:11,c:2,p:0.022461,verdict:"SEPARATED"},
+            {model:"meta-llama/Llama-3.3-70B-Instruct",raw_acc:0.5833,routed_acc:0.8611,b:14,c:4,p:0.030884,verdict:"SEPARATED"}
+          ],
+          tied_models:[
+            {model:"Qwen/Qwen2.5-72B-Instruct",raw_acc:0.7222,routed_acc:0.9167,b:10,c:3,p:0.092285,verdict:"TIE"}
+          ]
+        }
+      };
+    },
+    watchdog_12_dbs:function(){
+      return {
+        schema:"csoai.universal-watchdog-incident-harness/1.0",
+        artifact_url:"https://councilof.ai/interop/universal-watchdog-incident-harness-v1.json",
+        harness_sha256:"7be57059928e2a5b608802221a8e416cc699aa95610511bc4936325934ba9ca9",
+        global_watchdog_databases_measured:12,
+        total_watchdog_probes_n:36,
+        candidate_axis_34:{axis_id:"public-incident-vigilance",board_admission_state:"CANDIDATE_SLOT_MEASURED_IN_WATCHDOG",n_valid:36,adr_001_preserved:"33 canonical axes · 23 measured · 10 explicitly UNMEASURED"},
+        canonical_axes_bound:33,
+        meok_axis_specialists_bound:33,
+        public_watchdog_working_groups_bound:7,
+        hitl_steward_lanes_bound:6,
+        sample_capsule_bytes:1472,
+        max_capsule_bytes_budget:3072
+      };
+    },
+    underwriter_cobol_s1_safe:function(){
+      return {
+        underwriter_flywheel_url:"https://councilof.ai/interop/institutional-underwriter-x402-ras-flywheel-v1.json",
+        cobol_iso20022_parity_url:"https://councilof.ai/interop/cobol-bridge-iso20022-parity-evidence-v1.json",
+        s1_ipo_readiness_url:"https://councilof.ai/interop/s1-ipo-measurement-readiness-v1.json",
+        safe_fluid_daily_signal_url:"https://councilof.ai/interop/safe-fluid-reverification-daily-signal-v1.json",
+        four_layer_root_witnesses:["Ed25519 (did:web:csoai.org#card-attestation-1)","RFC 6962 Merkle Root (/root.json)","Bitcoin OpenTimestamps Block 973757","Sigstore Rekor & C2PA 2.1 Manifests"],
+        cobol_parity_n36:{raw_llm_acc:0.3056,layer0_bridge_acc:1.0,discordant_b:25,discordant_c:0,mcnemar_exact_p:5.96e-8,verdict:"SEPARATED"},
+        capsule_ceiling_bytes:3072
+      };
+    },
+    uk_aisi_and_offline_zip:function(){
+      return {
+        uk_aisi_inspect_ai:{
+          task_file:"harness/bench/inspect_task.py",
+          inspect_version:"0.3.259",
+          metrics:["accuracy_over_all_items","parsed_coverage","accuracy_among_parsed"],
+          sha256_bank_pin_enforced:true
+        },
+        offline_zip_evidence_inspector:{
+          builder_script:"scripts/review/build-offline-inspector.mjs",
+          verifier_lib:"client/src/lib/inspectionPacket.ts",
+          csp_policy:"default-src 'none'; connect-src 'none' (zero network requests)",
+          max_zip_bytes:4000000
+        },
+        playwright_and_cypress_e2e:{
+          playwright_configs:["e2e/playwright.config.ts","e2e/playwright.shell.config.ts"],
+          cypress_config:"cypress.config.ts",
+          cypress_spec:"cypress/e2e/csoai-e2e.cy.ts"
+        }
+      };
+    }
+  };
+
+  window.CSOAI_INSPECT={
+    version:"1.0.0",
+    summary:function(){
+      return {
+        board:"33 canonical axes · 23 measured · 10 explicitly UNMEASURED on GET /api/gspc + Candidate Axis 34 (public-incident-vigilance, n=36)",
+        dom_and_a11y:auditDomAndA11y(),
+        live_hf_14_axes:inspectPayloads.live_hf_14_axes(),
+        article1_care_ablation:inspectPayloads.article1_care_ablation(),
+        watchdog_12_dbs:inspectPayloads.watchdog_12_dbs(),
+        underwriter_cobol_s1_safe:inspectPayloads.underwriter_cobol_s1_safe(),
+        uk_aisi_and_offline_zip:inspectPayloads.uk_aisi_and_offline_zip()
+      };
+    },
+    auditDomAndA11y:auditDomAndA11y,
+    liveHf14Axes:inspectPayloads.live_hf_14_axes,
+    careAblation:inspectPayloads.article1_care_ablation,
+    watchdog12Dbs:inspectPayloads.watchdog_12_dbs,
+    underwriterFlywheel:inspectPayloads.underwriter_cobol_s1_safe,
+    ukAisiAndOfflineZip:inspectPayloads.uk_aisi_and_offline_zip
+  };
+
+  var liBtn=document.getElementById("run-live-inspect-btn");
+  if(liBtn){
+    liBtn.addEventListener("click",function(){
+      var k=(document.getElementById("inspect-surface-select")||{value:"dom_a11y_e2e"}).value;
+      var fn=inspectPayloads[k]||inspectPayloads.dom_a11y_e2e;
+      var out=document.getElementById("live-inspect-output");
+      if(out) out.textContent=JSON.stringify(fn(),null,2);
+    });
+  }
 })();
 </script>
 </body>

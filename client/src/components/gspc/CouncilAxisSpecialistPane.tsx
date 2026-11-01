@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import INDEX from "../../../../public/axis-specialists/index.json";
+import { verifyPinnedSpecialist } from "../../lib/axisSpecialistReview";
+import AxisReviewPanel from "./AxisReviewPanel";
 
 type Json = Record<string, unknown>;
 const record = (value: unknown): Json | null =>
@@ -23,8 +25,10 @@ export type AxisSpecialistAudit = {
   source: {
     snapshot: string;
     axis_row_sha256: string;
-    axis_row: { status: string; family: string; kind: string; n: number };
+    axis_row: { axis: string; status: string; family: string; kind: string; n: number; [key: string]: unknown };
   };
+  charter: { version: string; sha256: string; mapping_kind: string; machine_url: string; human_url: string; articles: Array<{ article: number; title: string }> };
+  review: { state: "NOT_SUBMITTED"; execution_authority: false; required_fields: string[]; measurement_url: string; competency_url: string; challenge_url: string; console_url: string; corrections_url: string; next_step: string; note: string };
   checks: Array<{ id: string; state: string; detail: string; evidence?: unknown }>;
   summary: {
     checks: number;
@@ -62,6 +66,8 @@ export function validateAxisSpecialistAudit(value: unknown, axis: string): AxisS
   const axisRow = record(source?.axis_row);
   const summary = record(audit?.summary);
   const gate = record(audit?.human_gate);
+  const charter = record(audit?.charter);
+  const review = record(audit?.review);
   const proposals = audit?.improvement_proposals;
   const validProposals = Array.isArray(proposals) && proposals.length > 0 && proposals.every((item) => {
     const proposal = record(item);
@@ -94,6 +100,14 @@ export function validateAxisSpecialistAudit(value: unknown, axis: string): AxisS
   });
   if (
     audit?.schema !== "csoai.axis-specialist-audit/1.0" ||
+    charter?.sha256 !== INDEX.charter.sha256 ||
+    charter.version !== INDEX.charter.version ||
+    charter.mapping_kind !== INDEX.charter.mapping_kind ||
+    !Array.isArray(charter.articles) || !charter.articles.length ||
+    !charter.articles.every(item => Number.isInteger(record(item)?.article) && typeof record(item)?.title === "string") ||
+    review?.state !== "NOT_SUBMITTED" || review.execution_authority !== false ||
+    !Array.isArray(review.required_fields) || !review.required_fields.every(field => typeof field === "string") ||
+    typeof review.next_step !== "string" ||
     audit.axis !== axis ||
     specialist?.id !== `meok-${axis}-specialist` ||
     specialist.cluster_id !== `meok-axis-${axis}` ||
@@ -137,7 +151,9 @@ export async function loadAxisSpecialist(
     const error = record(record(body)?.error);
     throw new Error(typeof error?.message === "string" ? error.message : `Specialist audit returned HTTP ${response.status}`);
   }
-  return validateAxisSpecialistAudit(body, axis);
+  const audit = validateAxisSpecialistAudit(body, axis);
+  await verifyPinnedSpecialist(audit);
+  return audit;
 }
 
 export default function CouncilAxisSpecialistPane() {
@@ -197,8 +213,9 @@ export default function CouncilAxisSpecialistPane() {
           </output>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          {INDEX.coverage.specialists} specialists · {INDEX.coverage.clusters} declared logical clusters · {INDEX.applied_proposals} applied proposals · source {INDEX.source_snapshot}
+          {INDEX.coverage.charter_connections}/{INDEX.coverage.specialists} axes linked to the charter and review path · {INDEX.applied_proposals} applied proposals
         </p>
+        <p className="mt-2 break-all text-xs text-muted-foreground">Audit snapshot: {INDEX.source_snapshot}. Read the current measurement separately; a connected workflow is not a new measured axis.</p>
       </header>
 
       {loading ? (
@@ -237,6 +254,23 @@ export default function CouncilAxisSpecialistPane() {
               <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{audit.specialist.cluster_state}. No shared writes or cross-axis credentials. No provisioned compute cluster is claimed.</p>
               <p className="mt-3 text-xs text-muted-foreground">Reviewer: <span className="font-semibold text-foreground">{audit.human_gate.reviewer_role}</span></p>
             </aside>
+          </section>
+
+          <section className="mt-6 rounded-2xl border border-border bg-card p-5" aria-labelledby="axis-charter">
+            <h3 id="axis-charter" className="text-lg font-bold">Charter, evidence and next step</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{audit.review.next_step}</p>
+            <p className="mt-3 text-sm">Charter {audit.charter.version}. These article references guide review; they are not a compliance verdict.</p>
+            <details className="mt-3"><summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold">Read the mapped charter articles ({audit.charter.articles.length})</summary><ul className="space-y-2 text-sm text-muted-foreground">{audit.charter.articles.map(item => <li key={item.article}>Article {item.article}: {item.title}</li>)}</ul></details>
+            <p className="mt-3 break-all font-mono text-[10px]">Charter SHA-256 {audit.charter.sha256}</p>
+            <nav aria-label="Axis evidence and governance" className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-emerald-900">
+              <a className="min-h-11 py-2 underline" href="/constitutional-harness/">Operational charter</a>
+              <a className="min-h-11 py-2 underline" href={`/.well-known/constitutional-harness.json`}>Charter JSON</a>
+              <a className="min-h-11 py-2 underline" href={`/api/gspc/axis/${axis}`}>Current axis record</a>
+              <a className="min-h-11 py-2 underline" href={`/api/hitl/modules/${axis}`}>Reviewer briefing</a>
+              <a className="min-h-11 py-2 underline" href="/corrections/">Request a correction</a>
+            </nav>
+            <details className="mt-3"><summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold">Required evidence fields ({audit.review.required_fields.length})</summary><dl className="space-y-3 text-xs">{audit.review.required_fields.map(field => <div key={field}><dt className="font-mono font-bold">{field}</dt><dd className="mt-1 break-all text-muted-foreground">{audit.source.axis_row[field] == null || audit.source.axis_row[field] === "" ? "Missing in this snapshot" : typeof audit.source.axis_row[field] === "object" ? JSON.stringify(audit.source.axis_row[field]) : String(audit.source.axis_row[field])}</dd></div>)}</dl></details>
+            <p className="mt-3 text-xs text-muted-foreground">The audit body and row match this application's pinned content. That check does not verify the linked evidence or grant authority.</p>
           </section>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
@@ -288,6 +322,7 @@ export default function CouncilAxisSpecialistPane() {
           </footer>
         </>
       ) : null}
+      <AxisReviewPanel audit={!loading && !error ? audit : null} />
       {selected ? <span className="sr-only">Selected specialist {selected.specialist_id}</span> : null}
     </div>
   );
