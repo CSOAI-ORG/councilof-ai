@@ -410,6 +410,34 @@ def derive_counts(board: dict) -> dict:
     }
 
 
+def snapshot_overview(counts: dict, as_of: str, read_at: str,
+                     heading: str = "## Snapshot at a glance") -> str:
+    """Render one data-derived summary consistently across published surfaces."""
+    separation = counts["separation_over_model_comparison"]
+    separation_parts = [
+        f"{separation.get('SEPARATED', 0)} separated",
+        f"{separation.get('TIE', 0)} ties",
+        f"{separation.get('UNTESTED', 0)} untested",
+    ]
+    separation_parts.extend(
+        f"{value} {state.lower()}" for state, value in sorted(separation.items())
+        if state not in {"SEPARATED", "TIE", "UNTESTED"} and value
+    )
+    return "\n".join([
+        heading,
+        "",
+        "| Scope and measurement | Evidence types | Leader separation |",
+        "|---|---|---|",
+        f"| **{counts['slots']} slots · {counts['by_status'].get('MEASURED', 0)} measured** | "
+        f"**{counts['by_kind'].get('model-comparison', 0)} model-comparison axes · "
+        f"{counts['by_kind'].get('deterministic-facts', 0)} deterministic-fact axes** | "
+        f"**{' · '.join(separation_parts)}** |",
+        "",
+        f"Root snapshot `as_of` `{as_of}` · source board read at `{read_at}`. "
+        "Separation counts apply only to model-comparison axes; a TIE is not a win.",
+    ])
+
+
 def axis_rows(board: dict, banks: list[dict]) -> list[dict]:
     bank_by_axis = {b["axis"]: b for b in banks}
     rows = []
@@ -458,6 +486,8 @@ def render_readme(tr: dict, counts: dict, rows: list[dict]) -> str:
     lines.append("")
     lines.append("**Measurement, not certification.** A TIE is never a win. An empty slot is a finding, not a zero. "
                  "No slot is for sale.")
+    lines.append("")
+    lines.extend(snapshot_overview(counts, as_of, read_at).splitlines())
     lines.append("")
     lines.append("## Honest counts — derived from the `axes` array in `board.json`, never typed")
     lines.append("")
@@ -824,6 +854,17 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
     if not counts["printed_agrees_with_array"]:
         raise Refused("board totals disagree with the axis array; refusing the HF dataset card")
     text = readme.decode("utf-8")
+    summary_start = "<!-- gspc-overview:start -->"
+    summary_end = "<!-- gspc-overview:end -->"
+    if text.count(summary_start) != text.count(summary_end) or text.count(summary_start) > 1:
+        raise Refused("HF dataset card overview markers are unbalanced or duplicated")
+    overview = snapshot_overview(counts, tr["as_of"], tr["read_at"])
+    summary = "\n".join([
+        summary_start,
+        overview,
+        "These are dated snapshot counts; use the live board for current state.",
+        summary_end,
+    ])
     paragraph = (
         "The default viewer files (`board.parquet` and `board.jsonl`) project the "
         "[dated `snapshot/` release](snapshot/SNAPSHOT.json): its published root is "
@@ -838,6 +879,24 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
     )
     if replacements != 1:
         raise Refused("HF dataset README provenance paragraph changed; manual review required")
+
+    if text.count(summary_start):
+        # Remove the managed block and its surrounding blank lines as one unit. Replacing
+        # it with one separator keeps repeated publication byte-stable.
+        pattern = r"\n{0,2}" + re.escape(summary_start) + r".*?" + re.escape(summary_end) + r"\n{0,2}"
+        text, removed = re.subn(pattern, "\n\n", text, count=1, flags=re.S)
+        if removed != 1:
+            raise Refused("HF dataset card overview could not be moved")
+    load_heading = re.search(r"(?m)^#{1,6} Load the dataset\s*$", text)
+    if load_heading:
+        prefix = text[:load_heading.start()].rstrip()
+        text = prefix + "\n\n" + summary + "\n\n" + text[load_heading.start():]
+    else:
+        placement = re.escape(paragraph) + r"\n\n"
+        match = re.search(placement, text)
+        if not match:
+            raise Refused("HF dataset card provenance paragraph has no safe overview insertion point")
+        text = text[:match.start()] + paragraph + "\n\n" + summary + "\n\n" + text[match.end():]
 
     inventory = []
     seen = set()
@@ -1055,17 +1114,28 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
     """Readable page copy; all snapshot claims come from the captured truth."""
     subtitle = f"AI measurement axes, evidence and limits · {tr['as_of']} snapshot"
     assert 20 <= len(subtitle) <= 80, f"Kaggle subtitle must be 20–80 chars, got {len(subtitle)}"
+    # Legacy/minimal callers may provide only the dated release claim. Real board payloads always
+    # carry axes; derive the visible summary from them and refuse inconsistent totals.
+    if "axes" in tr["board"]:
+        counts = derive_counts(tr["board"])
+        if not counts["printed_agrees_with_array"]:
+            raise Refused("board totals disagree with the axis array; refusing the Kaggle page summary")
+        overview = snapshot_overview(counts, tr["as_of"], tr["read_at"], heading="### Snapshot at a glance")
+    else:
+        overview = ""
     description = f"""## About this dataset
 
 A dated export of the Council of AI public GSPC measurement board. Each row describes one declared axis: what was measured, the evidence type, the published result and its limitations. Use it to explore coverage and inspect evidence in a notebook.
 
 [Explore the interactive board](https://huggingface.co/spaces/csoai/gspc-board) · [Live source JSON]({BOARD_URL}) · [Verify a signed record — free]({VERIFY_URL}) · [Methodology](https://councilof.ai/methodology/)
 
+{overview}
+
 ### This release
 
 {tr['lid']}
 
-This snapshot was read at {tr['read_at']}, with the transparency root published at {tr['as_of']}. The capture time is not a new measurement. For current state, use the live source; retain this release for historical analysis.
+This is a historical capture, not a new measurement. Use the live board for current state; retain this release for historical analysis.
 
 ### Start with the CSV
 

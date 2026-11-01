@@ -27,6 +27,7 @@ import { fileURLToPath } from "node:url";
 import { vscodeInstallAction } from "./vscode-install.mjs";
 import { cursorInstallAction } from "./cursor-install.mjs";
 import { workingGroupKit } from "../working-groups/render-kit.mjs";
+import { charterKit } from "../charter-federation/render-kit.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const args = process.argv.slice(2);
@@ -1193,7 +1194,7 @@ emit("public/.well-known/mcp/server-card.json", j({
   doi_status_url: "https://councilof.ai/interop/zenodo-status.json",
   doi_alternative: { url: "https://councilof.ai/methodology/", relation: "the live methodology page; not the deposit's bytes" },
   explicitly_not: ["certification", "accreditation", "conformity-assessment", "legal-determination", "enforcement"],
-  discovery: { well_known_mcp: `${ID.website}/.well-known/mcp.json`, agent_card: `${ID.website}/.well-known/agent-card.json` },
+  discovery: { well_known_mcp: `${ID.website}/.well-known/mcp.json`, agent_card: `${ID.website}/.well-known/agent-card.json`, catalog: `${ID.website}/catalog.json` },
   doctrine: DOCTRINE,
   generated_by: WELL_KNOWN_GENERATOR,
 }));
@@ -1679,6 +1680,7 @@ const rowsById0 = Object.fromEntries(dist.distribution.map((r) => [r.id, r]));
 const PY_ORDER = `Publish csoai-gspc ${pyClientVersion} to PyPI first: this package requires csoai-gspc>=${pyClientVersion}, and \`scripts/harness-x/parity_live.py\` reports that floor uninstallable until it is there. (The floor also keeps out 0.2.20260928, a snapshot release cut on 2026-09-28 from pre-2026-09-26 client code; gspc-spray.py now refuses a package source older than the one PyPI serves.)`;
 const PY_NO_REUSE = `The source version is ${AV}. PyPI and npm refuse to re-upload a version, so any content change moves adapter_version; parity_live.py flags a live version whose bytes the source no longer produces.`;
 const STEPS = {
+  "charter-register-resources": ["Run the charter integrity/participation tests, canonical rebuild and resource exporter checks. Publish through the existing protected site release; verify each external host separately. See distribution/charter-federation/README.md."],
   "working-group-resources": ["Run node --test scripts/working-groups/core.node-test.mjs and the local acceptance runner. The kit is a candidate: use the existing protected site release, then stage an authorised HF static Space or private Kaggle notebook. Local stdio is a preview, not the live GSPC tool fleet. See distribution/working-groups/README.md."],
   "mcp-registry-github": [
     "DEPRECATED ALIAS. The canonical name is the domain one (mcp-registry-domain). Owner step: deprecate this name in the registry (`mcp-publisher login github` as a CSOAI-ORG member, then set its status to deprecated). Publish no new versions under it.",
@@ -1932,6 +1934,7 @@ Doctrine sha256 ${DOCTRINE.sha256}. Measurement, not certification. A listing is
 }
 
 for (const [file, content] of workingGroupKit(read, DOCTRINE)) emit(file, content);
+for (const [file, content] of charterKit(read, DOCTRINE)) emit(file, content);
 
 // ── manifest + write/check ──────────────────────────────────────────────────────────────────
 const manifestEntries = [...outputs.keys()].sort().map((p) => ({ path: p, sha256: sha256(outputs.get(p)) }));
