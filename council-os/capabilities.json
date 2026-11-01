@@ -5550,6 +5550,35 @@
       "paid_for": "issuance"
     },
     {
+      "audience": "agent",
+      "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+      "description_state": "DOCUMENTED",
+      "id": "api-coverage-evidence",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "method": "GET",
+      "name": "Coverage evidence row",
+      "paid_for": "assembly",
+      "path": "/api/coverage-evidence",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/coverage-evidence?asset=tether",
+        "safe": true
+      },
+      "schema_refs": [
+        "csoai.coverage-evidence/0.1"
+      ],
+      "source": "functions/api/coverage-evidence.ts",
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
       "id": "api-request-attestation-post",
       "kind": "http",
       "path": "/api/request-attestation",
