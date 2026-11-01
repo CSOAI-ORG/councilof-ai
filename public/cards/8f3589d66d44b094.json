@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-24T09:38:06Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "cohere",
+      "surface": "model_cards",
+      "url": "https://docs.cohere.com/docs/models",
+      "prev_sha256": "dec2d4b47502f96f11ce73f7a42edba6961f10b7996bf673d95f1bf027f31e77",
+      "new_sha256": "78fb5f93a3fb1b4ba337559a129e529c2e9bd0d5d3a8427dbc90728b97259744",
+      "prev_bytes_sha256": "f9c0e3c5722abe215b04c37a2e1f03f847fef8653c630c1e62dd15157fc9ee34",
+      "new_bytes_sha256": "bc1b6fd1a0039bd2ceecee9c16ffc348774ef06dd2c07ac4457dc6bc3bc7b99f",
+      "prev_fetched_at": "2026-09-14T10:50:39Z",
+      "fetched_at": "2026-10-24T09:38:06Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 781283,
+        "new": 261204
+      },
+      "etag": {
+        "prev": "\"16rww648sqgqrl\"",
+        "new": "W/\"afo2ebg96ld3\""
+      },
+      "last_modified": {
+        "prev": null,
+        "new": "Fri, 23 Oct 2026 21:27:48 GMT"
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "8f3589d66d44b09432a049823040233a529e810d060961c5bfb7eadb82c19c22",
+    "sig_ed25519": "448afeaa686b7810a3cb84385968be3cb7be936d10aa2c97e8e1ce78e8a9200222ddc700ae76cfc3f753da798455d929832ac16e249676a2ee1241eb6e1b5407",
+    "source_urls": [
+      "https://docs.cohere.com/docs/models"
+    ],
+    "subject": "Cohere — model_cards: bytes changed 2026-10-24",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:cohere",
+      "surface:model_cards",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "f3c40b992db0376785c4a99309591766587daf7f323fd431bf38eb3b68db639e",
+    "335d873822fb9352d7cd782f4aa6549e63669ab181201537eda680ee75d3ddc6",
+    "a71828285117d6329141f015b598303e6d08205461ce14f4bc2102a822ab7cea",
+    "d7b7e077cb274639486ce9d0b1859cb4a4da650dc2bc2fb98bfd4f6755e792f3",
+    "0ab4f324d808f415bc1f383367534768c1430cb06a05b0e1f4d3d0d32345fb61",
+    "57e0636f81fe861e6d4b7c1eeb2ab716a22cec1168cd190200487dd709672058",
+    "11f5d67f4db2496c65970d39be4f36341ff22cc600a2234407e98adc3964542f",
+    "176200b26fd094d89be6cbde327a448f84af31c04a433352c5835fc454314661",
+    "aa6ab9166acf4d7a92aa2743240915ead88e4fe0c3eada56656a50f2e0b69600"
+  ]
+}
