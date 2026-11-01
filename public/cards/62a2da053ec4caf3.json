@@ -1,0 +1,77 @@
+{
+  "card": {
+    "as_of": "2026-10-19T13:55:11Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "door": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+      "http": 200,
+      "kind": "csoai.x402-door-exception/0.1",
+      "not_delivery_proof": true,
+      "notes": [
+        "expected 402 challenge, got HTTP 200"
+      ],
+      "paid_for": "issuance",
+      "state": "DISCOVERED"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "62a2da053ec4caf3bcd3a5ea04b7e043512283b1deb935871248ea4694713293",
+    "sig_ed25519": "e03a734e48b1e3435da83a881db6ed1a84f57ffd9787221c0485afb62ac7e90f9caf981fd08f3dfc411f8bd0e8f5f7b83d58f677e3e8eca4d2f0d56de969c808",
+    "source_urls": [
+      "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+      "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
+    ],
+    "subject": "x402 door exception: https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+    "surface": "public.notice",
+    "tags": [
+      "x402",
+      "conformance",
+      "exception"
+    ],
+    "unmeasured": [
+      "fulfillment_bytes"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "17d7d9cd8b0b21827dcebabf3f1a5da11dc66f19305c3d192a4a3637126ed8a5",
+    "dd8492f62c8894adb7c7ccaeaa0b001b4dd6b8eb342a157e57ad74bd1f91a231",
+    "1cb3ad5c04e5159142cb7b2b523fd6540d15962cd614b7ae19efe6ddcc4f52f3",
+    "2678bbb7af4caa55cb7c904e47161102a67436603b2313396d6669b04a43f111",
+    "73b5cde3a2d5d47a17d9f637207782457f5060cce8d96fc319e8cb734342911b",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "64f9d01d2337ff41c79e2f56277cecb69c7b05ec665684deae11e995bae438db",
+    "34e4b0ce8c51de06b49945533ff96b882a5ce2c440b1f2251c8f60257e0ce3e2",
+    "f22cb68ea6d7ebf5485ca0b008970e2533173113057abe2e2f5b4147b176d22a"
+  ]
+}
