@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-15T10:03:29Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "deepseek",
+      "surface": "pricing",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing",
+      "prev_sha256": "2806fc6f350940a06c4e65884a60885ec07991e2fcffbbadbd99960baa9b901d",
+      "new_sha256": "cf19c0da2cfbbbfeca138905344c42d688cf0a282393eadac03e51376f7a0176",
+      "prev_bytes_sha256": "755aa9b488d1185cba016ca4de3b3b6b8f593f5e13e5f9f961305289a5c8d242",
+      "new_bytes_sha256": "210f102275ccf1a6542f08a3bc9e4b4c7c83278cb74b35217bffa112df6363b2",
+      "prev_fetched_at": "2026-09-14T10:50:43Z",
+      "fetched_at": "2026-10-15T10:03:29Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 23359,
+        "new": 23982
+      },
+      "etag": {
+        "prev": "\"1ad65360aed66e45a8943178f8549845\"",
+        "new": "\"20be8baf3684a937d04325535534386c\""
+      },
+      "last_modified": {
+        "prev": "Fri, 11 Sep 2026 11:04:50 GMT",
+        "new": "Thu, 24 Sep 2026 09:35:27 GMT"
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "206b2aeb6d5dea90b121a495325a362fd03aa096d7e1ae2b80512b6ffd15b56b",
+    "sig_ed25519": "403538c6f67f25582ec392cb7f3333c9e1a538617dffe1541ea13e16773be67271dfd99893cbee99e4be27fe3e2aee1589de31183d52272cfcb5b42bc059ba01",
+    "source_urls": [
+      "https://api-docs.deepseek.com/quick_start/pricing"
+    ],
+    "subject": "DeepSeek — pricing: bytes changed 2026-10-15",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:deepseek",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "4bfe4fde71cbe8a0c264e03bba211ed2ee0ceda2c0ab08abd8bb89a987ae05e5",
+    "ffacf8adb0300c944d6d02ad924a3b285df394b9e734e367e4ad03098ea12037",
+    "7927aced95a1fbf04cfb6c58e9302dd14b924734450fbb0e025670b507af1fd7",
+    "477a5a048d6490d0eebf8dbc65565a9ee82ac7739c7858611964a09d64b6da68",
+    "20a9258dbeb1b7df97eb65ac0c28a123258276cbd9be0d53fc9705c6cf659a71",
+    "53fd5d0d4af681c0aa1818d7eacc3632578336e0632b0547f89ac8a412d2468e",
+    "fce67b59e1167d1549c282121212e4cbf95450138c1a9c77955cf951e235a0ff",
+    "0a89447a221b87c26ed08ccf68ec106257c71d3bf92a225220c87576dbcebb3f",
+    "b24c76185ddd3c04fc3a87f74d885bc797bd4e7c99f901923b735f8861a1cb05"
+  ]
+}
