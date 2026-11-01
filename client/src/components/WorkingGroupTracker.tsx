@@ -28,6 +28,7 @@ export default function WorkingGroupTracker() {
         <a className={"inline-flex min-h-11 items-center " + LINK} href={tracker.forum}>Open public forum on GitHub</a>
         <a className={"inline-flex min-h-11 items-center " + LINK} href="/working-groups/catalog.json" download>Download public register (JSON)</a>
         <a className={"inline-flex min-h-11 items-center " + LINK} href="/working-groups/">Open lightweight tracker</a>
+        <a className={"inline-flex min-h-11 items-center " + LINK} href="/charter-register/">Inspect charter sources and review routes</a>
       </nav>
       <p className="text-sm text-muted-foreground">This register is public. Posting on GitHub needs an account; use the review email route below if you cannot use GitHub. Public posts must contain public or synthetic evidence only.</p>
     </div>
