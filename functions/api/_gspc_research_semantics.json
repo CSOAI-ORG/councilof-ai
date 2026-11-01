@@ -1,0 +1,241 @@
+{
+  "schema": "csoai.gspc-research-semantics/0.1",
+  "version": "2026-10-28",
+  "scope": "Research semantics for axes already carrying a published measurement. This registry does not add a measurement, establish legal compliance, or authorise a system change.",
+  "controls": {
+    "read_only": true,
+    "writes_board": false,
+    "model_training": false,
+    "automatic_fixing": false,
+    "automatic_signing": false,
+    "automatic_promotion": false,
+    "candidate_is_measurement": false,
+    "source_change_is_legal_change": false
+  },
+  "sources": {
+    "nist-ai-rmf": { "publisher": "NIST", "title": "AI Risk Management Framework and Generative AI Profile", "url": "https://www.nist.gov/itl/ai-risk-management-framework", "watch": true },
+    "eu-ai-act": { "publisher": "European Union", "title": "Consolidated Regulation (EU) 2024/1689", "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02024R1689-20260727", "watch": true },
+    "nist-adversarial-ml": { "publisher": "NIST", "title": "Adversarial Machine Learning: A Taxonomy and Terminology of Attacks and Mitigations (AI 100-2e2025)", "url": "https://csrc.nist.gov/pubs/ai/100/2/e2025/final", "watch": true },
+    "owasp-llm": { "publisher": "OWASP", "title": "Top 10 for Large Language Model Applications 2025", "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/assets/PDF/OWASP-Top-10-for-LLMs-v2025.pdf", "watch": true },
+    "mcp-tools": { "publisher": "Model Context Protocol", "title": "MCP specification — server tools", "url": "https://modelcontextprotocol.io/specification/2026-07-28/server/tools", "watch": true },
+    "c2pa": { "publisher": "Coalition for Content Provenance and Authenticity", "title": "C2PA Technical Specification 2.2", "url": "https://spec.c2pa.org/specifications/specifications/2.2/specs/_attachments/C2PA_Specification.pdf", "watch": true },
+    "w3c-prov": { "publisher": "W3C", "title": "PROV-O: The PROV Ontology", "url": "https://www.w3.org/TR/prov-o/", "watch": true },
+    "otel-semconv": { "publisher": "OpenTelemetry", "title": "OpenTelemetry semantic conventions", "url": "https://opentelemetry.io/docs/specs/semconv/", "watch": true },
+    "slsa-verification": { "publisher": "SLSA", "title": "Verifying artifacts", "url": "https://slsa.dev/spec/v1.1-rc2/verifying-artifacts", "watch": true },
+    "sigstore-threat-model": { "publisher": "Sigstore", "title": "Sigstore threat model", "url": "https://docs.sigstore.dev/about/threat-model/", "watch": true },
+    "eu-machinery": { "publisher": "European Union", "title": "Regulation (EU) 2023/1230 on machinery", "url": "https://eur-lex.europa.eu/eli/reg/2023/1230/oj/eng", "watch": true },
+    "eurostat-ai": { "publisher": "Eurostat", "title": "Use of artificial intelligence in enterprises", "url": "https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Use_of_artificial_intelligence_in_enterprises", "watch": true },
+    "iso-10218": { "publisher": "ISO", "title": "ISO 10218-1:2025 Robotics — Safety requirements — Industrial robots", "url": "https://www.iso.org/standard/73934.html", "watch": true },
+    "eu-mica": { "publisher": "European Union", "title": "Regulation (EU) 2023/1114 on markets in crypto-assets", "url": "https://eur-lex.europa.eu/eli/reg/2023/1114/oj/eng", "watch": true },
+    "fsb-stablecoin": { "publisher": "Financial Stability Board", "title": "High-level recommendations for global stablecoin arrangements", "url": "https://www.fsb.org/2023/07/high-level-recommendations-for-the-regulation-supervision-and-oversight-of-global-stablecoin-arrangements-final-report/", "watch": true }
+  },
+  "axes": [
+    {
+      "axis": "governance",
+      "continuous_question": "When governance terminology, risk classes, roles or lifecycle controls change, which frozen items and labels need independent review before a comparable re-run?",
+      "compound_semantics": ["risk-tier classification against the frozen legal key", "role and obligation provenance", "applicability and uncertainty boundaries", "versioned governance-source semantics"],
+      "implementation": { "present": "GovBench, 237 rows, deterministic grading and paired separation on the living board.", "missing": "Source-to-item version map, counsel-reviewed label migration and a version-preserving replay pipeline." },
+      "safe_autonomous_action": "Fingerprint governance sources and prepare an unsigned item-impact review request.",
+      "human_gate": "Counsel and the measurement owner approve interpretation, bank versioning and any board change.",
+      "source_ids": ["eu-ai-act", "nist-ai-rmf"]
+    },
+    {
+      "axis": "safety",
+      "continuous_question": "Do new harm and refusal taxonomies expose missing paired safe/unsafe cases or a mismatch between calibrated refusal and the frozen DefBench labels?",
+      "compound_semantics": ["harmful-request refusal", "safe-request helpfulness", "calibration and over-refusal", "paired deterministic labels"],
+      "implementation": { "present": "DefBench, 36 paired requests and deterministic scoring.", "missing": "Versioned threat-to-pair coverage and human-reviewed expansion without rewriting historical results." },
+      "safe_autonomous_action": "Detect taxonomy revisions and propose coverage-gap candidates only.",
+      "human_gate": "Safety reviewers approve new cases, gold labels and replay admission.",
+      "source_ids": ["nist-ai-rmf", "nist-adversarial-ml", "owasp-llm"]
+    },
+    {
+      "axis": "provenance",
+      "continuous_question": "Do provenance-format or Article 50 marking changes alter which marks survive, how validity is computed, or what the model must distinguish?",
+      "compound_semantics": ["machine-readable marking validity", "provenance persistence through transformation", "claim and manifest integrity", "absence versus uncheckability"],
+      "implementation": { "present": "ProvBench, 32 Article 50 validity items plus a separate Art. 50 byte-inspection workflow.", "missing": "Detector/version matrix tied to frozen transformations and counsel-approved label updates." },
+      "safe_autonomous_action": "Watch format and statutory sources; emit a provenance-semantics review request.",
+      "human_gate": "Format specialists and counsel approve validity predicates and bank versions.",
+      "source_ids": ["c2pa", "w3c-prov", "eu-ai-act"]
+    },
+    {
+      "axis": "continuity",
+      "continuous_question": "Has the cryptographic assumption, migration guidance or evidence date changed enough to require new post-quantum continuity cases?",
+      "compound_semantics": ["cryptographic assumption identification", "post-quantum migration status", "continuity of evidence across algorithm change", "date-bounded validity"],
+      "implementation": { "present": "PQCBench, 33 frozen items and deterministic status classification.", "missing": "A standards-version register and reviewed cryptographic migration fixtures." },
+      "safe_autonomous_action": "Record source revisions and identify assumptions requiring cryptographic review.",
+      "human_gate": "Cryptography reviewers approve labels; operators authorise re-measurement.",
+      "source_ids": ["nist-ai-rmf", "slsa-verification"]
+    },
+    {
+      "axis": "conformance",
+      "continuous_question": "Which MCP specification revisions change protocol obligations, error behaviour or the distinction between tool description and actual server enforcement?",
+      "compound_semantics": ["MCP request and response conformance", "capability and version negotiation", "schema and error semantics", "declared capability versus observed behaviour"],
+      "implementation": { "present": "MCPBench, 35 model-comparison items plus a separately measured effect-binding server census.", "missing": "Specification-version negotiation matrix and reviewed server replay fixtures." },
+      "safe_autonomous_action": "Fingerprint MCP normative pages and prepare a versioned conformance diff request.",
+      "human_gate": "Protocol maintainers approve test semantics and independent operators approve server re-probes.",
+      "source_ids": ["mcp-tools"]
+    },
+    {
+      "axis": "openness",
+      "continuous_question": "Have licence texts, model-use restrictions or intended-use assumptions changed so that licence-reasoning cases need new labels?",
+      "compound_semantics": ["licence permission and obligation reasoning", "intended-use compatibility", "weight/data/code licence separation", "attribution and downstream restrictions"],
+      "implementation": { "present": "OSSBench, 32 licence-reasoning items.", "missing": "Dated licence-text snapshots and counsel-reviewed intended-use mappings." },
+      "safe_autonomous_action": "Preserve candidate licence revisions and request item-impact review.",
+      "human_gate": "Licensing counsel approves interpretations and bank revisions.",
+      "source_ids": ["slsa-verification", "nist-ai-rmf"]
+    },
+    {
+      "axis": "machinery-conformity",
+      "continuous_question": "Do machinery-law changes alter Part A scope, safety-function classification or treatment of self-evolving behaviour in the frozen cases?",
+      "compound_semantics": ["Part A machinery scope", "safety-function classification", "self-evolving control behaviour", "legal versus engineering conformity boundaries"],
+      "implementation": { "present": "MachBench, 33 deterministic classification items; no public leader without a signed card.", "missing": "Provision-level item mapping, engineer/counsel review and evidence for a separated public result." },
+      "safe_autonomous_action": "Detect official text changes and prepare a scoped classification review.",
+      "human_gate": "Machinery engineers and counsel approve labels; no conformity decision is automated.",
+      "source_ids": ["eu-machinery", "iso-10218"]
+    },
+    {
+      "axis": "care",
+      "continuous_question": "Do updated safety and vulnerability taxonomies reveal cases where protect and help trade-offs, severity labels or paired conduct assumptions need review?",
+      "compound_semantics": ["protection without unnecessary refusal", "helpfulness under vulnerability", "paired conduct and severity", "human escalation boundaries"],
+      "implementation": { "present": "CareBench, 199 rows and a protect-by-help rubric.", "missing": "Lived-experience review, escalation fixtures and source-to-severity versioning." },
+      "safe_autonomous_action": "Flag taxonomy changes for scenario and severity review without generating gold labels.",
+      "human_gate": "Safeguarding specialists and affected-person reviewers approve scenarios and labels.",
+      "source_ids": ["nist-ai-rmf", "eu-ai-act", "owasp-llm"]
+    },
+    {
+      "axis": "cross-reality",
+      "continuous_question": "Do agentic threat and protocol changes alter when an action may proceed, requires confirmation, or must be refused across digital and physical effects?",
+      "compound_semantics": ["action authority", "request/result effect binding", "human confirmation for consequential effects", "cross-environment refusal and provenance"],
+      "implementation": { "present": "XRAIV, 32 action-classification items, with the effect-binding census as a separate fact run.", "missing": "End-to-end authorised-effect harness, reversible controls and explicit human-confirmation evidence." },
+      "safe_autonomous_action": "Prepare candidate action scenarios and never execute consequential effects.",
+      "human_gate": "A named operator authorises scope and a human confirms each consequential test action.",
+      "source_ids": ["mcp-tools", "owasp-llm", "eu-machinery"]
+    },
+    {
+      "axis": "detector-interop",
+      "continuous_question": "Do new provenance formats, detector versions or transformations change the cross-detector compatibility matrix?",
+      "compound_semantics": ["watermark/detector compatibility", "transformation survival", "format/version interoperability", "unchecked cells versus failures"],
+      "implementation": { "present": "DetBench, 33 matrix items; the board withholds an unverifiable leader.", "missing": "Executable detector fixtures, signed per-model evidence and an explicit version matrix." },
+      "safe_autonomous_action": "Track detector/format revisions and propose new matrix cells.",
+      "human_gate": "Provenance engineers validate detector outputs and reviewers admit a replay.",
+      "source_ids": ["c2pa", "eu-ai-act"]
+    },
+    {
+      "axis": "art5-safeguard",
+      "continuous_question": "Has the consolidated prohibition text or its authoritative interpretation changed which frozen scenarios trip Article 5 safeguards?",
+      "compound_semantics": ["prohibited-practice classification", "context and actor applicability", "exception and uncertainty handling", "counsel-gated legal labels"],
+      "implementation": { "present": "Art5Bench, 36 deterministic legal-scenario items.", "missing": "Provision-version mapping and counsel-approved external re-ranking evidence." },
+      "safe_autonomous_action": "Detect source changes and open legal-label review; never issue a breach verdict.",
+      "human_gate": "Counsel approves legal interpretation and every affected gold label.",
+      "source_ids": ["eu-ai-act"]
+    },
+    {
+      "axis": "swarm",
+      "continuous_question": "Do emerging multi-agent protocols and attacks expose coordination, delegation or collective-escape cases absent from wave 2b?",
+      "compound_semantics": ["multi-agent coordination safety", "delegation and authority propagation", "shared-state and message integrity", "collective failure detection"],
+      "implementation": { "present": "SwarmBench v2b, 37 items and signed candidate cards; separation remains UNTESTED.", "missing": "Current pinned bank, published paired rows and executable multi-agent authority traces." },
+      "safe_autonomous_action": "Propose protocol/threat-derived scenarios and preserve existing measurements.",
+      "human_gate": "Safety and protocol reviewers approve scenarios; an operator runs the frozen fleet.",
+      "source_ids": ["owasp-llm", "mcp-tools", "nist-adversarial-ml"]
+    },
+    {
+      "axis": "affect",
+      "continuous_question": "Do new manipulation, vulnerability or disclosure findings require revised affect-safety scenarios or severity labels?",
+      "compound_semantics": ["emotional manipulation avoidance", "vulnerability-sensitive disclosure", "embodied and relational safety", "counsel-pending severity semantics"],
+      "implementation": { "present": "AffectBench, 41 items with explicit counsel-pending legal labels.", "missing": "Counsel sign-off, affected-person review and updated external comparison evidence." },
+      "safe_autonomous_action": "Collect candidate scenario impacts without inferring psychological harm or legal effect.",
+      "human_gate": "Safeguarding specialists and counsel approve scenarios, labels and publication.",
+      "source_ids": ["eu-ai-act", "nist-ai-rmf", "owasp-llm"]
+    },
+    {
+      "axis": "jail",
+      "continuous_question": "Do new attack classes require new distinct prompts, detector operating points or a fresh prompt-level separation analysis?",
+      "compound_semantics": ["escape-attempt detection", "false-positive and recall trade-offs", "distinct-prompt coverage", "layered defence and prompt-level separation"],
+      "implementation": { "present": "A 71-row gold bank derived from 27 distinct inputs, deterministic detector grading and published zero-FP operating-point results.", "missing": "At least 30 distinct prompts for the legacy method gate, broader attack coverage and a prompt-level paired test." },
+      "safe_autonomous_action": "Map attack-taxonomy changes to coverage candidates; do not label synthetic attacks as gold.",
+      "human_gate": "Adversarial-testing reviewers approve gold prompts, safe execution and separation analysis.",
+      "source_ids": ["nist-adversarial-ml", "owasp-llm"]
+    },
+    {
+      "axis": "effect-binding",
+      "continuous_question": "Do protocol revisions or server behaviour changes alter whether caller authorisation binds to the exact request and result, including replay and human confirmation?",
+      "compound_semantics": ["request/result binding", "caller authorisation at execution", "replay and nonce behaviour", "returned evidence and explicit human confirmation"],
+      "implementation": { "present": "EffectBench v0.1 signed probe over 261 of 600 attempted servers, with controls and fail-capable grading.", "missing": "A published method hash, repeat-run scheduling, backend-effect evidence and a consented consequential-action harness." },
+      "safe_autonomous_action": "Watch protocol semantics and schedule read-only review proposals; tool annotations alone never establish trust.",
+      "human_gate": "Server owners and operators approve scope; people confirm consequential tests and reviewers admit results.",
+      "source_ids": ["mcp-tools", "owasp-llm"]
+    },
+    {
+      "axis": "provenance-controls",
+      "continuous_question": "Have issuer account flags, identity domains or the chain reader changed, and do the attestation chain and observed ledger still need to be distinguished?",
+      "compound_semantics": ["allowlisting and authorisation flags", "issuer freeze capability", "identity-domain disclosure", "ledger observation versus attestation provenance"],
+      "implementation": { "present": "Signed ChainFacts run over six XRPL issuers with mainnet observations and explicitly separate devnet attestations.", "missing": "Repeatable reader snapshots, remaining-instrument coverage and separately authorised mainnet attestation." },
+      "safe_autonomous_action": "Request a read-only ledger re-observation and preserve chain/network identity.",
+      "human_gate": "Operators approve ledger reads and attestation deployment; counsel keeps risk verdicts unmeasured.",
+      "source_ids": ["eu-mica", "fsb-stablecoin", "slsa-verification"]
+    },
+    {
+      "axis": "reserve-attestation",
+      "continuous_question": "Has an issuer's dated disclosure or applicable reserve-attestation expectations changed the PASS/FAIL/UNCHECKABLE language test?",
+      "compound_semantics": ["third-party attestation language presence", "dated issuer disclosure", "unreachable versus absent evidence", "reserve observation versus solvency or redemption assurance"],
+      "implementation": { "present": "ReserveFacts over 16 reader instruments with three-state grading and an unsigned content-addressed run.", "missing": "Fresh dated page captures, reviewer-confirmed source semantics and independent signature admission." },
+      "safe_autonomous_action": "Propose a disclosure re-fetch and preserve unreachable sources as UNCHECKABLE.",
+      "human_gate": "Financial reviewers approve wording predicates and signing; no reserve assurance is inferred.",
+      "source_ids": ["eu-mica", "fsb-stablecoin"]
+    },
+    {
+      "axis": "regulatory-framework",
+      "continuous_question": "Have issuer declarations or official regime texts changed whether a governing framework is declared and confirmable?",
+      "compound_semantics": ["governing-regime declaration", "official-source confirmability", "jurisdiction and instrument scope", "disclosure presence versus legal authorisation"],
+      "implementation": { "present": "RegimeFacts over 16 reader rows, deterministic three-state declaration grading.", "missing": "Current disclosure captures, jurisdiction-specific legal review and signed rerun admission." },
+      "safe_autonomous_action": "Watch official regimes and propose declaration re-checks, never compliance conclusions.",
+      "human_gate": "Counsel approves regime mappings and reviewers approve any signed result.",
+      "source_ids": ["eu-mica", "fsb-stablecoin"]
+    },
+    {
+      "axis": "distribution-integrity",
+      "continuous_question": "Have supply, holder or reader semantics changed, and can represented and distributed quantities now be compared in the same unit?",
+      "compound_semantics": ["reader-based distributed classification", "chain supply and holder observations", "represented-versus-distributed unit consistency", "signature and source completeness"],
+      "implementation": { "present": "DistributionFacts over 16 XRPL reader rows; represented-versus-distributed remains UNCHECKABLE.", "missing": "A same-unit external representation source, dated snapshots and independent run signing." },
+      "safe_autonomous_action": "Request a same-schema reader refresh and flag missing comparable units.",
+      "human_gate": "Data reviewers approve source compatibility and measurement admission.",
+      "source_ids": ["eu-mica", "fsb-stablecoin"]
+    },
+    {
+      "axis": "custody-disclosure",
+      "continuous_question": "Have named custodian or auditor disclosures changed, without turning name presence into an assessment of service quality?",
+      "compound_semantics": ["custodian naming and confirmability", "auditor naming and confirmability", "dated disclosure provenance", "disclosure versus custody or audit quality"],
+      "implementation": { "present": "CustodyFacts over 16 reader rows with separate three-state custodian and auditor predicates.", "missing": "Fresh source captures, independent entity confirmation and signed rerun review." },
+      "safe_autonomous_action": "Propose a disclosure re-check and retain unresolvable entities as UNCHECKABLE.",
+      "human_gate": "Financial reviewers approve entity evidence; no quality judgement is automated.",
+      "source_ids": ["eu-mica", "fsb-stablecoin"]
+    },
+    {
+      "axis": "ai-adoption-components",
+      "continuous_question": "Has Eurostat revised the cited enterprise AI-use series, population, size class or comparability metadata?",
+      "compound_semantics": ["enterprise AI-adoption rate", "enterprise-size component", "survey population and year", "series revision and comparability caveats"],
+      "implementation": { "present": "Two cited isoc_eb_ai component facts for 2025; no composite index.", "missing": "Dataset-version monitoring, API-driven rerun and a reviewed component update; no index formula exists." },
+      "safe_autonomous_action": "Detect source revisions and prepare a component-level rerun request.",
+      "human_gate": "Statistical reviewers validate population, units and revisions before publication.",
+      "source_ids": ["eurostat-ai"]
+    },
+    {
+      "axis": "labour-components",
+      "continuous_question": "Have Eurostat labour-force activity or unemployment series, populations or definitions changed?",
+      "compound_semantics": ["activity-rate component", "unemployment-rate component", "age and denominator definitions", "series revision and comparability"],
+      "implementation": { "present": "Two cited 2025 Eurostat component facts from lfsi_emp_a and une_rt_a; no composite index.", "missing": "Versioned API extraction, definition review and signed component rerun; no index formula exists." },
+      "safe_autonomous_action": "Watch statistical definitions and request component re-observation only.",
+      "human_gate": "Statistical reviewers approve series and denominator changes before publication.",
+      "source_ids": ["eurostat-ai"]
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "continuous_question": "Have named vendors changed dated deployment-count disclosures, and what industrial-robot scope limits prevent broader labour or safety inference?",
+      "compound_semantics": ["dated vendor deployment disclosure", "stable-source availability", "disclosed count versus fleet size, hours or incidents", "industrial-robot versus public-facing humanoid scope"],
+      "implementation": { "present": "Eight frozen vendor URLs graded for dated count disclosure; no composite index and fleet/hours/incidents unmeasured.", "missing": "Independent deployment evidence, labour denominators, incident data and any defensible index methodology." },
+      "safe_autonomous_action": "Detect disclosure revisions and request a fact rerun without estimating missing fleet data.",
+      "human_gate": "Robotics and labour reviewers approve scope and evidence before any new measure is named.",
+      "source_ids": ["iso-10218", "eurostat-ai"]
+    }
+  ]
+}

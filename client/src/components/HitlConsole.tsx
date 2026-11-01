@@ -1,4 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import HitlDecisionHistory from "./HitlDecisionHistory";
+import { requestHitlJson } from "../lib/hitlRequest";
+import { parseHitlReceipt, type PublicHitlReceipt } from "../lib/hitlRecord";
 
 /**
  * The human-in-the-loop console.
@@ -83,40 +86,127 @@ export default function HitlConsole({
   onReceipt?: (receipt: unknown) => void;
 }) {
   const [snap, setSnap] = useState<HitlSnapshot | null>(null);
+  const [snapshotState, setSnapshotState] = useState<
+    "loading" | "ready" | "error"
+  >("loading");
+  const [queueState, setQueueState] = useState<"loading" | "ready" | "error">(
+    "loading",
+  );
+  const [recordRevision, setRecordRevision] = useState(0);
+  const [outcomeUnknown, setOutcomeUnknown] = useState(false);
   const [queued, setQueued] = useState<HitlChallengeView[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
-  const [moduleResult, setModuleResult] = useState<{ correct: boolean; explanation?: string } | null>(null);
+  const [moduleResult, setModuleResult] = useState<{
+    correct: boolean;
+    explanation?: string;
+  } | null>(null);
   const [operator, setOperator] = useState("");
   const [note, setNote] = useState("");
   const [token, setToken] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [receipt, setReceipt] = useState<any>(null);
+  const [receipt, setReceipt] = useState<PublicHitlReceipt | null>(null);
+  const [acknowledgedId, setAcknowledgedId] = useState<string | null>(null);
+  const submitting = useRef(false);
+  const loadGeneration = useRef(0);
+  const loadController = useRef<AbortController | null>(null);
 
   const load = useCallback(async () => {
-    try {
-      const r = await fetch("/api/hitl");
-      if (r.ok) setSnap((await r.json()) as HitlSnapshot);
-    } catch {
-      /* an unreachable surface must not pretend there is nothing to decide; the gates below
-         still say what this deployment can and cannot do */
-    }
-    try {
-      const r = await fetch("/api/hitl/challenges");
-      if (r.ok) {
-        const j = await r.json();
-        setQueued(Array.isArray(j?.challenges) ? j.challenges : []);
-      }
-    } catch {
-      /* no queue is reachable */
-    }
+    const current = ++loadGeneration.current;
+    loadController.current?.abort();
+    const controller = new AbortController();
+    loadController.current = controller;
+    setSnapshotState("loading");
+    setQueueState("loading");
+    setSnap(null);
+    setQueued([]);
+    await Promise.all([
+      (async () => {
+        try {
+          const { response: r, body: j } = await requestHitlJson("/api/hitl", {
+            signal: controller.signal,
+          });
+          if (current !== loadGeneration.current) return;
+          if (!r.ok) throw new Error("State unavailable");
+          if (
+            j?.schema !== "csoai.hitl-companion-state/0.1" ||
+            !["open", "locked"].includes(j.decision_path) ||
+            typeof j.signing_key_configured !== "boolean" ||
+            typeof j.store_bound !== "boolean" ||
+            !Array.isArray(j.modules) ||
+            !j.modules.every(
+              (m: any) =>
+                m &&
+                ["id", "axis", "title", "briefing", "question"].every(
+                  (k) => typeof m[k] === "string",
+                ) &&
+                Array.isArray(m.options) &&
+                m.options.length > 0 &&
+                m.options.every(
+                  (o: any) =>
+                    o && typeof o.id === "string" && typeof o.text === "string",
+                ),
+            )
+          ) {
+            throw new Error("State unreadable");
+          }
+          setSnap(j as HitlSnapshot);
+          setSnapshotState("ready");
+        } catch {
+          if (current === loadGeneration.current) setSnapshotState("error");
+        }
+      })(),
+      (async () => {
+        try {
+          const { response: r, body: j } = await requestHitlJson(
+            "/api/hitl/challenges",
+            { signal: controller.signal },
+          );
+          if (current !== loadGeneration.current) return;
+          if (!r.ok) throw new Error("Queue unavailable");
+          if (
+            j?.schema !== "csoai.hitl-companion-state/0.1" ||
+            !Array.isArray(j.challenges) ||
+            new Set(j.challenges.map((c: any) => c?.id)).size !==
+              j.challenges.length ||
+            !j.challenges.every(
+              (c: any) =>
+                c &&
+                typeof c.id === "string" &&
+                c.id.length > 0 &&
+                ["id", "subject", "proposed_action", "raised_by", "at"].every(
+                  (k) => typeof c[k] === "string",
+                ) &&
+                ["PENDING", "DECIDED"].includes(c.state) &&
+                (c.axis === null || typeof c.axis === "string"),
+            )
+          ) {
+            throw new Error("Queue unreadable");
+          }
+          setQueued(j.challenges);
+          setQueueState("ready");
+        } catch {
+          if (current === loadGeneration.current) setQueueState("error");
+        }
+      })(),
+    ]);
   }, []);
 
   useEffect(() => {
     void load();
+    return () => {
+      ++loadGeneration.current;
+      loadController.current?.abort();
+    };
   }, [load]);
 
-  const pending = incoming ?? queued.find((c) => c.state === "PENDING") ?? null;
+  const pendingCases = queued.filter((c) => c.state === "PENDING");
+  const pending =
+    incoming ??
+    pendingCases.find((c) => c.id === selectedId) ??
+    pendingCases[0] ??
+    null;
 
   // The module for the axis under review. It comes from the live board, never from a copy.
   const module: HitlModuleView | null = useMemo(() => {
@@ -133,82 +223,148 @@ export default function HitlConsole({
     return mods[0] ?? null;
   }, [snap, pending]);
 
-  const locked = snap?.decision_path === "locked";
+  useEffect(() => {
+    setPicked(null);
+    setModuleResult(null);
+    setNote("");
+  }, [pending?.id, module?.id]);
+
+  const locked = snap?.decision_path !== "open";
 
   async function submitModule() {
-    if (!module || !picked) return;
+    if (!module || !picked || submitting.current) return;
+    submitting.current = true;
     setBusy(true);
     setError(null);
     try {
-      const r = await fetch("/api/hitl/modules", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ module_id: module.id, answer: picked }),
-      });
-      const j = await r.json();
+      const { response: r, body: j } = await requestHitlJson(
+        "/api/hitl/modules",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ module_id: module.id, answer: picked }),
+        },
+      );
       if (!r.ok) {
-        setError(String(j?.reason ?? j?.error ?? "The module could not be checked."));
+        setError(
+          String(j?.reason ?? j?.error ?? "The module could not be checked."),
+        );
         return;
       }
-      setModuleResult({ correct: Boolean(j.correct), explanation: j.explanation });
+      if (
+        j?.ok !== true ||
+        typeof j.correct !== "boolean" ||
+        j.module_id !== module.id
+      )
+        throw new Error("Module result unreadable");
+      setModuleResult({
+        correct: j.correct,
+        explanation: j.explanation,
+      });
     } catch {
-      setError("The competence check could not be reached, so the decision stays open.");
+      setError(
+        "The competence result could not be confirmed. The decision endpoint will check the current record again.",
+      );
     } finally {
+      submitting.current = false;
       setBusy(false);
     }
   }
 
   async function decide(decision: string) {
-    if (!pending) return;
+    if (
+      !pending ||
+      locked ||
+      outcomeUnknown ||
+      submitting.current ||
+      acknowledgedId === pending.id
+    )
+      return;
+    submitting.current = true;
     setBusy(true);
     setError(null);
+    setReceipt(null);
     try {
-      const r = await fetch("/api/hitl/decision", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          ...(token.trim() ? { "x-hitl-token": token.trim() } : {}),
+      const { response: r, body: j } = await requestHitlJson(
+        "/api/hitl/decision",
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            ...(token.trim() ? { "x-hitl-token": token.trim() } : {}),
+          },
+          body: JSON.stringify({
+            challenge: pending,
+            decision,
+            operator: operator.trim(),
+            note: note.trim(),
+            module_id: module?.id ?? "",
+            answer: picked ?? "",
+          }),
         },
-        body: JSON.stringify({
-          challenge: pending,
-          decision,
-          operator: operator.trim(),
-          note: note.trim(),
-          module_id: module?.id ?? "",
-          answer: picked ?? "",
-        }),
-      });
-      const j = await r.json();
+      );
       if (!r.ok) {
+        if (r.status >= 500) throw new Error("Decision outcome unknown");
         setError(
           j?.reason ??
             j?.why ??
             j?.error ??
-            "The decision was not recorded. Nothing was changed.",
+            "The decision request was rejected. Check the record before trying again.",
         );
         return;
       }
-      setReceipt(j?.receipt ?? null);
-      onReceipt?.(j?.receipt ?? null);
+      if (j?.ok !== true || !j.receipt)
+        throw new Error("Decision outcome unknown");
+      const accepted = parseHitlReceipt(j.receipt);
+      if (
+        accepted.challenge.id !== pending.id ||
+        accepted.challenge.subject !== pending.subject ||
+        accepted.challenge.proposed_action !== pending.proposed_action ||
+        accepted.decision !== decision
+      )
+        throw new Error("Receipt does not match this decision");
+      setReceipt(accepted);
+      setAcknowledgedId(pending.id);
+      setRecordRevision((n) => n + 1);
       void load();
+      try {
+        onReceipt?.(j.receipt);
+      } catch {
+        setError(
+          "A matching receipt was returned, but the surrounding view could not refresh. Keep the receipt and inspect the public record.",
+        );
+      }
     } catch {
-      setError("The decision could not be sent, so nothing was recorded.");
+      setOutcomeUnknown(true);
+      setRecordRevision((n) => n + 1);
+      setError(
+        "The decision outcome is unknown. Check Past public decisions before any retry; the request may have been recorded. Further decisions are paused in this session.",
+      );
     } finally {
+      submitting.current = false;
       setBusy(false);
     }
   }
 
   return (
-    <section data-testid="hitl-console" className="mt-8 rounded-2xl border border-amber-400/30 bg-amber-500/5 p-5">
+    <section
+      data-testid="hitl-console"
+      className="mt-8 rounded-2xl border border-amber-400/30 bg-slate-950 p-5 text-amber-50"
+    >
       <div className="mb-1 flex flex-wrap items-center gap-2">
         <h2 className="text-xl font-bold text-amber-50">Human in the loop</h2>
-        <span data-testid="hitl-policy" className="rounded-full border border-amber-400/50 px-2 py-0.5 text-[11px] text-amber-200">
-          {snap?.policy ?? "Measurement and Human-in-the-Loop Oversight — Never Certification"}
+        <span
+          data-testid="hitl-policy"
+          className="rounded-full border border-amber-400/50 px-2 py-0.5 text-[11px] text-amber-200"
+        >
+          {snap?.policy ??
+            "Measurement and Human-in-the-Loop Oversight — Never Certification"}
         </span>
       </div>
       <p className="mb-4 text-sm text-amber-100/80">
-        A measurement says what was observed. It never says what should happen. The acts — publish, release, send,
-        approve — wait for a competent, named human.
+        A measurement says what was observed. It never says what should happen.
+        The acts — publish, release, send, approve — wait for a competent, named
+        human.
       </p>
 
       {/* 1. THE GATE STATE, HONESTLY. */}
@@ -216,50 +372,111 @@ export default function HitlConsole({
         <div
           data-testid="hitl-gate-decision"
           className={`rounded-xl border px-3 py-2 ${
-            locked ? "border-rose-400/40 bg-rose-500/10 text-rose-100" : "border-emerald-400/40 bg-emerald-500/10 text-emerald-100"
+            locked
+              ? "border-rose-400/40 bg-rose-500/10 text-rose-100"
+              : "border-emerald-400/40 bg-emerald-500/10 text-emerald-100"
           }`}
         >
           <span className="block font-semibold">Decision path</span>
-          {locked ? "locked — no operator token" : "open — an operator token is required"}
+          {snapshotState !== "ready"
+            ? "unknown — status has not been confirmed"
+            : locked
+              ? "locked — decision requirements are not met"
+              : "open — an operator token is required"}
         </div>
         <div
           data-testid="hitl-gate-signing"
           className="rounded-xl border border-sky-400/40 bg-sky-500/10 px-3 py-2 text-sky-100"
         >
           <span className="block font-semibold">Receipt signature</span>
-          {snap?.signing_key_configured
-            ? `signed under ${snap?.signature_did ?? "the board attestation key"}`
-            : "unsigned — no board signing key on this deployment"}
+          {snapshotState !== "ready"
+            ? "unknown — status has not been confirmed"
+            : snap?.signing_key_configured
+              ? `signed under ${snap?.signature_did ?? "the board attestation key"}`
+              : "unsigned — no board signing key on this deployment"}
         </div>
         <div
           data-testid="hitl-gate-store"
           className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-3 py-2 text-emerald-100"
         >
           <span className="block font-semibold">Decision ledger</span>
-          {snap?.store_bound ? "persisted" : "not persisted — no store bound"}
+          {snapshotState !== "ready"
+            ? "unknown — status has not been confirmed"
+            : snap?.store_bound
+              ? "store configured — each write needs acknowledgement"
+              : "not persisted — no store bound"}
         </div>
       </div>
 
-      {locked ? (
-        <p role="note" data-testid="hitl-locked-note" className="mb-5 rounded-xl border border-rose-400/40 bg-rose-500/10 px-3 py-2 text-[13px] text-rose-100">
-          No decision can be taken on this deployment until an operator token is configured. That is deliberate: an
-          approval endpoint anyone can call is not a human in the loop. Everything else here — the record, the
-          curriculum, the challenge — works without it.
+      {snapshotState === "ready" && locked ? (
+        <p
+          role="note"
+          data-testid="hitl-locked-note"
+          className="mb-5 rounded-xl border border-rose-400/40 bg-rose-500/10 px-3 py-2 text-[13px] text-rose-100"
+        >
+          {typeof snap?.decision_path_note === "string"
+            ? snap.decision_path_note
+            : "The decision path is locked. Check this deployment’s operator and storage requirements."}
         </p>
+      ) : null}
+
+      {snapshotState === "error" || queueState === "error" ? (
+        <button
+          type="button"
+          onClick={() => void load()}
+          className="mb-4 rounded-lg border border-amber-400/40 px-3 py-2 text-sm"
+        >
+          Retry status read
+        </button>
       ) : null}
 
       {/* 2. THE CHALLENGE. */}
       <div className="mb-5 rounded-xl border border-amber-400/30 bg-black/20 p-4">
-        <h3 className="mb-2 text-sm font-semibold text-amber-50">Under review</h3>
+        <h3 className="mb-2 text-sm font-semibold text-amber-50">
+          Under review
+        </h3>
+        {!incoming && pendingCases.length > 1 ? (
+          <label className="mb-3 block text-xs text-amber-100/80">
+            Choose a pending challenge
+            <select
+              data-testid="hitl-select-challenge"
+              value={pending?.id ?? ""}
+              disabled={busy || outcomeUnknown}
+              onChange={(event) => {
+                if (busy || outcomeUnknown) return;
+                setSelectedId(event.currentTarget.value);
+                setError(null);
+              }}
+              className="mt-1 block w-full min-w-0 rounded-lg border border-amber-400/40 bg-slate-950 px-3 py-2 text-sm"
+            >
+              {pendingCases.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.subject} · {c.id}
+                </option>
+              ))}
+            </select>
+            <span className="mt-1 block">
+              Choose from the returned queue. Other pending work may not be
+              included in this response.
+            </span>
+          </label>
+        ) : null}
         {pending ? (
           <div data-testid="hitl-challenge">
             <p className="text-sm text-amber-50/90">
               <span className="font-semibold">{pending.subject}</span>
-              {pending.axis ? <span className="ml-2 text-[12px] text-amber-100/70">axis: {pending.axis}</span> : null}
+              {pending.axis ? (
+                <span className="ml-2 text-[12px] text-amber-100/70">
+                  axis: {pending.axis}
+                </span>
+              ) : null}
             </p>
-            <p className="mt-2 whitespace-pre-wrap text-[13px] text-amber-100/85">{pending.proposed_action}</p>
+            <p className="mt-2 whitespace-pre-wrap text-[13px] text-amber-100/85">
+              {pending.proposed_action}
+            </p>
             <p className="mt-2 text-[11px] text-amber-100/60">
-              raised by {pending.raised_by} · {pending.at} · challenge {pending.id}
+              raised by {pending.raised_by} · {pending.at} · challenge{" "}
+              {pending.id}
             </p>
             {pending.facts ? (
               <p className="mt-2 rounded-lg border border-emerald-400/25 bg-emerald-500/5 px-3 py-2 text-[12px] text-emerald-100/85">
@@ -268,9 +485,15 @@ export default function HitlConsole({
             ) : null}
           </div>
         ) : (
-          <p data-testid="hitl-no-challenge" className="text-[13px] text-amber-100/70">
-            Nothing is waiting for a human. Ask a staff member to publish, release, send or approve something, and it
-            raises a challenge here instead of doing it.
+          <p
+            data-testid="hitl-no-challenge"
+            className="text-[13px] text-amber-100/70"
+          >
+            {queueState === "ready"
+              ? "The returned queue contains no pending challenge. Ask a staff member to propose an action for review."
+              : queueState === "loading"
+                ? "Loading the review queue…"
+                : "The review queue could not be checked. This does not mean that nothing is waiting."}
           </p>
         )}
       </div>
@@ -279,10 +502,16 @@ export default function HitlConsole({
       {module ? (
         <div className="mb-5 rounded-xl border border-sky-400/30 bg-sky-500/5 p-4">
           <h3 className="mb-2 text-sm font-semibold text-sky-50">
-            Competency — read the record <span className="font-normal text-sky-100/60">({module.id})</span>
+            Competency — read the record{" "}
+            <span className="font-normal text-sky-100/60">({module.id})</span>
           </h3>
-          <p className="mb-3 whitespace-pre-wrap text-[12px] text-sky-100/80">{module.briefing}</p>
-          <p data-testid="hitl-module-question" className="mb-3 text-[13px] text-sky-50">
+          <p className="mb-3 whitespace-pre-wrap text-[12px] text-sky-100/80">
+            {module.briefing}
+          </p>
+          <p
+            data-testid="hitl-module-question"
+            className="mb-3 text-[13px] text-sky-50"
+          >
             {module.question}
           </p>
           <div className="mb-3 space-y-1">
@@ -374,7 +603,13 @@ export default function HitlConsole({
               key={d}
               type="button"
               data-testid={`hitl-decide-${d}`}
-              disabled={busy || locked || !pending}
+              disabled={
+                busy ||
+                locked ||
+                !pending ||
+                outcomeUnknown ||
+                acknowledgedId === pending?.id
+              }
               onClick={() => void decide(d)}
               className={`rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-40 ${
                 d === "APPROVED"
@@ -388,33 +623,58 @@ export default function HitlConsole({
             </button>
           ))}
         </div>
+        {acknowledgedId && acknowledgedId === pending?.id ? (
+          <p role="status" className="mt-2 text-xs text-emerald-100/80">
+            A matching receipt was returned for this challenge. Further
+            submissions for it are paused in this view. Inspect the public
+            record; this does not prove execution.
+          </p>
+        ) : null}
         {!pending ? (
-          <p className="mt-2 text-[12px] text-emerald-100/60">There is no challenge to decide, so there is nothing to sign.</p>
+          <p className="mt-2 text-[12px] text-emerald-100/60">
+            No challenge is selected for a decision.
+          </p>
         ) : null}
         {error ? (
-          <p data-testid="hitl-error" className="mt-3 rounded-lg border border-rose-400/40 bg-rose-500/10 px-3 py-2 text-[13px] text-rose-100">
+          <p
+            role="alert"
+            data-testid="hitl-error"
+            className="mt-3 rounded-lg border border-rose-400/40 bg-rose-500/10 px-3 py-2 text-[13px] text-rose-100"
+          >
             {error}
           </p>
         ) : null}
         {receipt ? (
-          <div data-testid="hitl-receipt" className="mt-3 rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-3 py-2 text-[13px] text-emerald-50">
+          <div
+            data-testid="hitl-receipt"
+            className="mt-3 rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-3 py-2 text-[13px] text-emerald-50"
+          >
+            <p className="mb-1 break-all text-xs">
+              Most recent returned receipt · challenge {receipt.challenge.id}
+            </p>
             <p className="font-semibold">
               {receipt.decision} · {receipt.axis} · {receipt.at}
             </p>
-            <p className="mt-1 text-[12px] text-emerald-100/85">{receipt.note}</p>
+            <p className="mt-1 text-[12px] text-emerald-100/85">
+              {receipt.note}
+            </p>
             <p className="mt-1 text-[12px] text-emerald-100/70">
               {receipt.signature?.value_hex
-                ? `Signed under ${receipt.signature.did}. sha256 ${receipt.signature.sha256}`
+                ? `Signature present; not verified here. Declared signer: ${receipt.signature.did ?? "not supplied"}.`
                 : `UNSIGNED: ${receipt.signature?.unsigned_reason ?? "no signing key"}`}
             </p>
           </div>
         ) : null}
       </div>
 
+      <HitlDecisionHistory revision={recordRevision} />
+
       <p className="mt-4 text-[11px] text-amber-100/55">
-        The receipt schema is csoai.hitl-oversight-receipt/0.1 and the decision vocabulary is APPROVED, HOLD,
-        REJECTED — the same ones the MEOK H.I.M. uses. A machine signature proves the bytes came from this
-        deployment; it never proves the human was right, and it never certifies anything.
+        The receipt schema is csoai.hitl-oversight-receipt/0.1 and the decision
+        vocabulary is APPROVED, HOLD, REJECTED — the same ones the MEOK H.I.M.
+        uses. A valid signature can authenticate receipt bytes when checked
+        against a trusted key. This view does not verify signatures, human
+        identity or execution, and a receipt never certifies anything.
       </p>
     </section>
   );
