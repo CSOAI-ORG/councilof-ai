@@ -44,6 +44,7 @@ import {
   decisionPathOpen,
   deriveModule,
   deriveModules,
+  getChallenge,
   handlesSensitiveData,
   hitlStore,
   listChallenges,
@@ -130,6 +131,33 @@ function publicChallenge(c: HitlChallenge, decided: boolean): Record<string, unk
   };
 }
 
+/**
+ * THE PUBLISHED ENDPOINT MAP. Every path named here is a door a reader may walk up to, so every
+ * one of them must actually be routable — and it was not.
+ *
+ * WHY THIS MAP EXISTED WITHOUT THE DOORS. This file dispatched on the sub-path
+ * (`/^\/api\/hitl\/?/` stripped off the pathname, then "modules" / "challenge" / "decision" /
+ * "record"), and that dispatch was correct and complete. But a Cloudflare Pages Function is
+ * reached by its own FILE, not by its pathname pattern: `functions/api/hitl.ts` answers
+ * `/api/hitl` and nothing else. Every other path fell through to the platform's 404 before the
+ * dispatch ever ran. So the human-in-the-loop path published its own curriculum, its own
+ * endpoint map and its own decision machinery, and then 404'd on every one of them except the
+ * first. A reader could see that a challenge could be raised, and could not raise one.
+ *
+ * The doors are the thin route files under `functions/api/hitl/`, each of which re-exports these
+ * handlers. They are thin on purpose: the logic stays in one file, and the routing is what was
+ * missing. `_published-endpoint-routes.test.ts` is the ratchet — it fails if this map ever names
+ * a path with no route file behind it.
+ */
+export const HITL_ENDPOINTS = {
+  state: "GET /api/hitl",
+  modules: "GET /api/hitl/modules",
+  answer_module: "POST /api/hitl/modules",
+  challenge: "POST /api/hitl/challenge",
+  decision: "POST /api/hitl/decision",
+  record: "GET /api/hitl/record",
+} as const;
+
 export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
   const url = new URL(ctx.request.url);
   const path = url.pathname.replace(/^\/api\/hitl\/?/, "");
@@ -137,8 +165,18 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
 
   const board = await loadBoard(origin);
   const store = hitlStore(ctx.env);
-  const challenges = await listChallenges(store);
-  const receipts = await listReceipts(store);
+  let challenges: HitlChallenge[];
+  let receipts: HitlReceipt[];
+  try {
+    [challenges, receipts] = await Promise.all([
+      listChallenges(store, 50, true), listReceipts(store, 50, true),
+    ]);
+  } catch {
+    return json({
+      ok: false, store_bound: Boolean(store), storage_state: "READ_FAILED",
+      error: "decision history could not be read; no empty-ledger claim is made",
+    }, 503);
+  }
   const decidedIds = new Set(receipts.map((r) => r.challenge?.id).filter(Boolean));
   const completed = await listCompletedModules(store);
 
@@ -199,8 +237,9 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
       store_bound: Boolean(store),
       count: receipts.length,
       receipts: receipts.map(publicReceipt),
+      history_scope: { limit: 50, complete: false, consistency: "eventual", selection: "KV_KEY_ORDER" },
       note: store
-        ? "Every decision recorded on this deployment, with its signature state."
+        ? "A bounded view of recorded decisions, including historical decisions, with their signature states. This is not an exhaustive ledger or current execution authority."
         : "No decision store is bound to this deployment, so this is an empty ledger — which is not the same as 'no decision was ever taken'.",
     });
   }
@@ -220,12 +259,13 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     challenge_schema: HITL_CHALLENGE_SCHEMA,
     review_queue_summary: counts,
     counts_are: store
-      ? "the persisted ledger of this deployment"
+      ? "counts in a bounded, eventually consistent view of challenges and historical decisions; not current execution authority"
       : "an empty ledger — no decision store is bound, so these zeros are not a claim that nothing was ever decided",
     store_bound: Boolean(store),
-    decision_path: decisionPathOpen(ctx.env) ? "open" : "locked",
-    decision_path_note: decisionPathOpen(ctx.env)
-      ? "An operator token is configured. A decision requires it."
+    decision_path: decisionPathOpen(ctx.env) && store ? "open" : "locked",
+    decision_path_note: decisionPathOpen(ctx.env) && store
+      ? "An operator token and decision store are configured. Recording requires an acknowledged write; this is not execution authority."
+      : !store ? "No decision store is bound, so a decision cannot be recorded."
       : "No operator token is configured, so a decision cannot be taken on this deployment. This is deliberate: a public endpoint that accepts an approval from anyone is not a human in the loop.",
     operator_token_configured: decisionPathOpen(ctx.env),
     signing_key_configured: signingKeyConfigured(ctx.env),
@@ -233,14 +273,7 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     modules: modules.map((m) => publicModule(m, completed.includes(m.id))),
     module_count: modules.length,
     completed_modules: completed,
-    endpoints: {
-      state: "GET /api/hitl",
-      modules: "GET /api/hitl/modules",
-      answer_module: "POST /api/hitl/modules",
-      challenge: "POST /api/hitl/challenge",
-      decision: "POST /api/hitl/decision",
-      record: "GET /api/hitl/record",
-    },
+    endpoints: HITL_ENDPOINTS,
     meok_note:
       "These are the MEOK H.I.M. shapes: the same receipt schema, the same decision vocabulary, the same competency gate. This surface does not call the MEOK H.I.M., because the MEOK H.I.M. runs on a private network this deployment cannot reach. The two are interoperable by shape.",
     never: ["certification", "a price", "an approval without a human", "a competence check that is not re-derived from the live record"],
@@ -314,11 +347,19 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       facts: typeof body?.facts === "string" ? body.facts : null,
       required_module: null,
     });
-    await putChallenge(store, challenge);
+    const stored = await putChallenge(store, challenge);
+    if (store && !stored) {
+      return json({
+        ok: false, stored: false, storage_state: "WRITE_UNCONFIRMED",
+        error: "challenge storage did not acknowledge the write",
+        challenge_id: challenge.id,
+        note: "The write outcome is unconfirmed. Do not treat this as a recorded challenge.",
+      }, 503);
+    }
     return json(
       {
         ...challenge,
-        stored: Boolean(store),
+        stored,
         note: store
           ? "Recorded and waiting for a human. The decision path needs the operator token and a competency check."
           : "Raised. No decision store is bound, so this challenge is not persisted — carry it to the decision endpoint.",
@@ -396,6 +437,13 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       );
     }
 
+    if (!store) {
+      return json({
+        ok: false, stored: false, storage_state: "UNBOUND",
+        error: "a decision store is required before recording a decision",
+      }, 503);
+    }
+
     const decision = String(body?.decision ?? "").trim().toUpperCase() as HitlDecision;
     if (!HITL_DECISIONS.includes(decision)) {
       return json(
@@ -408,9 +456,43 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       );
     }
 
-    const challenge = body?.challenge as HitlChallenge | undefined;
-    if (!challenge || typeof challenge !== "object" || !challenge.id) {
+    const presented = body?.challenge as HitlChallenge | undefined;
+    if (!presented || typeof presented !== "object" || Array.isArray(presented) ||
+        typeof presented.id !== "string" || !/^chl_[a-f0-9]{16}$/.test(presented.id)) {
       return json({ ok: false, error: "challenge is required" }, 400);
+    }
+    let challenge = presented;
+    // A queue item deliberately omits private fields. Resolve the exact original only
+    // inside this authenticated boundary; never reconstruct its missing hash inputs or
+    // replace a malformed full challenge silently. An id alone is insufficient: bind
+    // every displayed action field so a substituted/stale view cannot be approved.
+    const isQueueProjection = !["schema", "policy", "source", "facts"].some(
+      key => Object.prototype.hasOwnProperty.call(presented, key),
+    );
+    if (isQueueProjection) {
+      let original: HitlChallenge | null;
+      try {
+        original = await getChallenge(store, presented.id);
+      } catch (error) {
+        const invalid = error instanceof Error && error.message === "HITL_CHALLENGE_INVALID";
+        return json({
+          ok: false, stored: false,
+          storage_state: invalid ? "CHALLENGE_INVALID" : "READ_FAILED",
+          error: invalid ? "the stored challenge does not verify" : "the original challenge could not be read",
+        }, invalid ? 422 : 503);
+      }
+      if (!original) {
+        return json({
+          ok: false, stored: false, storage_state: "CHALLENGE_UNAVAILABLE",
+          error: "the original challenge is not available in this read",
+          note: "The store is eventually consistent. No decision was recorded by this request; a missing read does not prove absence.",
+        }, 503);
+      }
+      const displayedFields = ["axis", "subject", "proposed_action", "raised_by", "at", "required_module"] as const;
+      if (displayedFields.some(key => !Object.prototype.hasOwnProperty.call(presented, key) || presented[key] !== original[key])) {
+        return json({ ok: false, error: "the displayed challenge does not match the stored original" }, 422);
+      }
+      challenge = original;
     }
     if (!(await verifyChallenge(challenge))) {
       return json(
@@ -472,15 +554,29 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       competency_verified: true,
       completed_modules: Array.from(new Set([...completed, checked.module.id])).sort(),
       module_id: checked.module.id,
-      challenge,
+      // Sign the public projection, with the original id still binding its full content.
+      // Do not disclose private context through the new decision or public history.
+      // Existing signed receipts remain byte-for-byte unchanged.
+      challenge: { ...challenge, source: null, facts: null },
       at: new Date().toISOString(),
       signingKey: ctx.env.BOARD_SIGN_KEY_PKCS8_B64,
     });
 
-    await putReceipt(store, receipt);
+    const stored = await putReceipt(store, receipt);
+    if (!stored) {
+      return json({
+        ok: false, stored: false, storage_state: "WRITE_UNCONFIRMED",
+        error: "decision storage did not acknowledge the write",
+        challenge_id: challenge.id,
+        note: "The write outcome is unconfirmed. Reconcile stored history before submitting another decision. No execution authority is granted.",
+      }, 503);
+    }
 
     return json({
       ok: true,
+      stored: true,
+      storage_state: "WRITE_ACKNOWLEDGED",
+      execution_authority: false,
       blocked_by_competency_gate: false,
       receipt: publicReceipt(receipt),
       note: receipt.signature.value_hex
@@ -494,3 +590,4 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
 
 /** HEAD answers what GET answers, with no body (functions/api/_head.ts). */
 export const onRequestHead = headFromGet(onRequestGet);
+
