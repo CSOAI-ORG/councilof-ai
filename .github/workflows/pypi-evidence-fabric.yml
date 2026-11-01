@@ -1,0 +1,85 @@
+name: Publish csoai-evidence-fabric (PyPI)
+
+# Manual and version-confirmed by design. Authentication is PyPI trusted publishing (GitHub
+# OIDC), never a long-lived token.
+#
+# The package is a library and a CLI: it needs no server, so it can be published the moment the
+# trusted publisher is registered. Required trusted publisher configuration on PyPI, project
+# csoai-evidence-fabric:
+#     owner:  CSOAI-ORG
+#     repo:   councilof-ai
+#     workflow: pypi-evidence-fabric.yml
+#     environment: (leave empty - this workflow does not use a GitHub environment)
+#
+# The build is the estate's own: pypi/build_pkg.py copies the canonical sources (it never edits
+# them), then pypi/check_install.py runs inside a clean venv against the installed wheel and
+# refuses unless every canonical golden file is reproduced byte for byte, the doctrine guard
+# still refuses an UNMEASURED event carrying a number, and the verifier returns VALID on the
+# frozen SAFE-pack fixture while rejecting its tamper controls.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Exact package version to publish (must match pypi/pyproject.toml)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    # workflow_dispatch allows an operator to select any ref. PyPI's trusted publisher binds the
+    # workflow filename, not this repository branch, so a non-master run must never start a job
+    # capable of obtaining an OIDC token.
+    if: github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Confirm version is exact and unused
+        id: ver
+        working-directory: packages/evidence-fabric
+        env:
+          EXPECTED_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          actual="$(grep -E '^version = ' pypi/pyproject.toml | head -1 | cut -d'"' -f2)"
+          test "$actual" = "$EXPECTED_VERSION"
+          if curl -fsS "https://pypi.org/pypi/csoai-evidence-fabric/$actual/json" >/dev/null 2>&1; then
+            echo "csoai-evidence-fabric $actual is already on PyPI; a published version is immutable and must not be overwritten"
+            exit 1
+          fi
+          echo "version $actual confirmed and not yet published"
+
+      - name: Build the distribution from the canonical sources
+        working-directory: packages/evidence-fabric
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip build setuptools wheel
+          python pypi/build_pkg.py dist-stage
+          python -m build --no-isolation dist-stage
+
+      - name: Install the wheel in a clean venv and check it against the canonical golden files
+        working-directory: packages/evidence-fabric
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/ef-check
+          /tmp/ef-check/bin/pip install --quiet --upgrade pip
+          /tmp/ef-check/bin/pip install --quiet dist-stage/dist/*.whl
+          /tmp/ef-check/bin/python pypi/check_install.py .
+
+      - name: Publish through trusted OIDC
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/evidence-fabric/dist-stage/dist
+          attestations: true
+          print-hash: true

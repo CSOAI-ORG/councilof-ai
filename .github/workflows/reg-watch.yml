@@ -27,6 +27,12 @@ jobs:
         id: watch
         continue-on-error: true
         run: node scripts/reg-watch.mjs
+      - name: GSPC research source detector selftest (offline)
+        run: node --test scripts/research/watch-sources.test.mjs
+      - name: Run the GSPC research source detector
+        id: research-watch
+        continue-on-error: true
+        run: node scripts/research/watch-sources.mjs
       - name: Commit updated state (and any events)
         env:
           GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
@@ -34,12 +40,12 @@ jobs:
           set -euo pipefail
           git config user.name "reg-watch"
           git config user.email "nicholas@csoai.org"
-          git add reg-watch-state.json reg-watch-events/ 2>/dev/null || true
+          git add reg-watch-state.json reg-watch-events/ research-watch-state.json research-review-requests/ 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "no state change"
             exit 0
           fi
-          git commit -m "reg-watch: state update $(date -u +%F)"
+          git commit -m "watch: source-state update $(date -u +%F)"
           # Land via branch + PR (the census-delta.yml pattern). A direct push to
           # master is GH006: the required "gates" check applies to pushes too, and
           # a push creates a commit no check has run on yet (red since 2026-09-06).
@@ -47,8 +53,8 @@ jobs:
           BR="automation/reg-watch-${STAMP}"
           git push origin "HEAD:$BR"
           gh pr create --base master --head "$BR" \
-            --title "reg-watch: state update ${STAMP}" \
-            --body "Automated reg-watch state update (and any provision-change events under \`reg-watch-events/\`). Opened as a PR because a direct push to master cannot satisfy the required \`gates\` check (GH006). Needs a human merge; until merged the reg-watch state on master is stale."
+            --title "watch: source-state update ${STAMP}" \
+            --body "Automated regulation and GSPC research source-state update. May include provision events under \`reg-watch-events/\` and UNSIGNED, unmeasured human-review requests under \`research-review-requests/\`. A source change is not a legal interpretation, measurement or board update. Opened as a PR because direct pushes cannot satisfy the required \`gates\` check (GH006). Needs human review and merge."
       # Regulator calendar: T-7 / T-2 / T-0 alerts for VERIFIED doors in
       # measurement/calendar/regulator-doors.json (no new cron — rides this daily run).
       - name: Regulator calendar selftest (offline — proves the alerts can fire and the rules can fail)
@@ -79,3 +85,11 @@ jobs:
           TITLE="Provision change detected — $(date -u +%F)"
           BODY="reg-watch detected a change in a watched legal instrument. Event files are in reg-watch-events/. Detection only — map to affected provisions and (once passes exist) flip dependent state records to EXPIRED-REGULATION-CHANGED. Not a legal interpretation."
           gh issue create --title "$TITLE" --body "$BODY" --label "reg-watch" 2>/dev/null || gh issue create --title "$TITLE" --body "$BODY"
+      - name: Raise a human-review alert on a GSPC source change
+        if: steps.research-watch.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="GSPC research source change — $(date -u +%F)"
+          BODY="Confirmed source fingerprints produced unsigned requests in research-review-requests/. Each requests human impact analysis and a decision whether to re-measure. None is a measurement, signed finding, legal interpretation or automatic board update."
+          gh issue create --title "$TITLE" --body "$BODY" --label "gspc-research" 2>/dev/null || gh issue create --title "$TITLE" --body "$BODY"
