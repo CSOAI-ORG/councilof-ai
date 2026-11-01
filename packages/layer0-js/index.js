@@ -7,6 +7,8 @@
 //      enforcing Controls CH-01..CH-16, Human-in-the-Loop (HITL) approval receipts, secret
 //      minimization (CH-10), and Ed25519 effect-receipt signing (`node:crypto`).
 //
+// Configure host approval verification as described in APPROVAL-CONTRACT.md.
+//
 // Doctrine: Measurement, never certification. Anyone can re-check at https://councilof.ai/verify
 
 import crypto from "node:crypto";
@@ -77,6 +79,21 @@ function containsRawSecretKey(obj) {
   return null;
 }
 
+// A rejected callback may already have produced an effect. The wrapper cannot
+// infer rollback or safe retry from its rejection. Preserve the original cause.
+export class Layer0ExecutionError extends Error {
+  constructor(cause, { action, inputsHash, signal }) {
+    super("Execution callback failed; reconcile the effect before retrying", { cause });
+    this.name = "Layer0ExecutionError";
+    this.code = "EXECUTION_OUTCOME_UNKNOWN";
+    this.status = "execution_outcome_unknown";
+    this.callbackStarted = true;
+    this.action = action;
+    this.inputsHash = inputsHash;
+    this.cancellationRequested = signal?.aborted === true;
+  }
+}
+
 export class Layer0 {
   constructor({
     base = process.env.CSOAI_API_BASE || "https://councilof.ai",
@@ -86,6 +103,7 @@ export class Layer0 {
     endpoint = "tool://local",
     fetchImpl = fetch,
     keyPair = null,
+    verifyApproval,
   } = {}) {
     this.base = base.replace(/\/$/, "");
     this.identity = identity;
@@ -94,6 +112,12 @@ export class Layer0 {
     this.endpoint = endpoint;
     this._fetch = fetchImpl;
     this._keyPair = keyPair;
+    // Trusted host configuration, never an agent-supplied per-call option. The host
+    // must authenticate the receipt and check scope, tenant, epoch, expiry and revocation.
+    if (verifyApproval !== undefined && typeof verifyApproval !== "function") {
+      throw new TypeError("verifyApproval must be a trusted host function");
+    }
+    this.verifyApproval = verifyApproval;
   }
 
   _ensureKeyPair() {
@@ -287,18 +311,40 @@ export class Layer0 {
   }
 
   // The full governed wrapper (remote gateway): gate → run → attest.
-  // - Throws on deny.
-  // - Refuses escalate without an explicit approval receipt (unless allowUnapprovedEscalation: true).
+  // - Throws on deny, and on an unknown or malformed gate decision.
+  // - Refuses escalate without an approval receipt AND a trusted host verifier. The
+  //   legacy allowUnapprovedEscalation escape is deliberately gone: a receipt the host
+  //   has not verified is not an approval.
   // - Distinguishes `attested`, `executed_unattested`, and `executed_unapproved` in `status`.
+  // - Cancellation is cooperative: once run() starts the executor must honour signal.
   async governed(action, inputs, run, options = {}) {
+    if (typeof run !== "function") throw new TypeError("run must be a function");
+    // Bind the cancellation channel at admission; mutating options while an
+    // authorization request is pending must not detach an existing cancellation.
+    const signal = options.signal;
+    const stopIfAborted = () => {
+      if (signal?.aborted) {
+        const err = new Error("Execution cancelled before dispatch");
+        err.code = "EXECUTION_CANCELLED";
+        throw err;
+      }
+    };
+    const inputsHash = sha256(inputs);
+    stopIfAborted();
     const decision = await this.gate(action, inputs);
+    if (!decision || typeof decision !== "object" || Array.isArray(decision) ||
+        !["allow", "deny", "escalate"].includes(decision.state)) {
+      const err = new Error("Layer-0 Gate returned an unknown or malformed decision");
+      err.code = "INVALID_GATE_DECISION";
+      throw err;
+    }
     if (decision.state === "deny") {
       throw new Error(`Layer-0 Gate denied: ${decision.reason || action}`);
     }
     const escalated = decision.state === "escalate";
     const approval = options.approval ?? options.approvalReceipt ?? decision.approval ?? null;
-    if (escalated && approval === null) {
-      if (!options.allowUnapprovedEscalation) {
+    if (escalated) {
+      if (!approval || typeof approval !== "object" || Array.isArray(approval)) {
         const err = new Error(
           `Layer-0 Gate escalation requires an approval receipt before execution: ${decision.reason || action}`
         );
@@ -306,30 +352,60 @@ export class Layer0 {
         err.decision = decision;
         throw err;
       }
+      // Trusted host configuration, never an agent-supplied per-call option. The host
+      // must authenticate the receipt and check scope, tenant, epoch, expiry and revocation.
+      if (!this.verifyApproval ||
+          (await this.verifyApproval(approval, {
+            action, inputsHash, identity: this.identity, endpoint: this.endpoint, decision,
+          })) !== true) {
+        const err = new Error("Escalation approval was not verified by the trusted host");
+        err.code = "APPROVAL_NOT_VERIFIED";
+        throw err;
+      }
     }
-    const result = await run({ requiresHumanReview: escalated, decision, approval });
-    const attestation = await this._attest(
-      action,
-      inputs,
-      escalated ? { ...decision, approval } : decision
-    );
+    if (sha256(inputs) !== inputsHash) {
+      const err = new Error("Inputs changed after the authorization request");
+      err.code = "AUTHORIZATION_INPUTS_CHANGED";
+      throw err;
+    }
+    stopIfAborted();
+    let result;
+    try {
+      result = await run({ requiresHumanReview: escalated, decision, approval, signal });
+    } catch (cause) {
+      throw new Layer0ExecutionError(cause, { action, inputsHash, signal });
+    }
+    // Evidence-service failure cannot erase a callback result already obtained.
+    // Preserve the same executed_unattested contract for custom transports too.
+    let attestation = null;
+    try {
+      attestation = await this._attest(
+        action,
+        inputs,
+        escalated ? { ...decision, approval } : decision,
+        inputsHash
+      );
+    } catch { /* The effect is retained below; no automatic retry or attestation. */ }
     const attested = Boolean(attestation);
+    // Missing attestation is a distinct outcome, never a silent success.
+    // An abort after dispatch must not erase a possibly completed effect.
     const status = !attested
       ? "executed_unattested"
       : escalated && approval === null
         ? "executed_unapproved"
         : "attested";
-    return { result, decision, approval, attestation, attested, status };
+    return { result, decision, approval, attestation, attested, status,
+      cancellationRequested: signal?.aborted === true };
   }
 
   // §4 build + sign an A2A attestation envelope via the gateway
-  async _attest(action, inputs, decision) {
+  async _attest(action, inputs, decision, inputsHash = sha256(inputs)) {
     return this._post("/api/a2a/route", {
       from: { endpoint: this.endpoint, party: this.identity },
       to: { endpoint: "csoai://ledger" },
       intent: "attestation",
       action,
-      payload: { inputsHash: sha256(inputs), decisionState: decision?.state || null },
+      payload: { inputsHash, decisionState: decision?.state || null },
       identity: this.identity,
     })
       .then((r) => r.envelope || null)

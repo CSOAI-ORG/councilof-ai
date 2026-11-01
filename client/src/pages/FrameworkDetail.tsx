@@ -11,7 +11,7 @@ type Server = { slug: string; name: string; description: string; frameworks: str
 const ALL = (registry.servers as Server[]) || [];
 
 export default function FrameworkDetail() {
-  useEffect(() => { document.title = "Framework compliance — CSOAI Charter crosswalk | CSOAI"; }, []);
+  useEffect(() => { document.title = "Framework evidence — CSOAI Charter crosswalk | CSOAI"; }, []);
   const [, params] = useRoute("/frameworks/:slug");
   const slug = params?.slug || "";
   const fw = useMemo(() => FRAMEWORKS.find((f) => f.slug === slug), [slug]);
@@ -88,22 +88,24 @@ export default function FrameworkDetail() {
           <div className="flex items-start gap-3">
             <ShieldCheck className="h-6 w-6 text-emerald-600 shrink-0 mt-0.5" />
             <div>
-              <h2 className="font-bold text-lg mb-1">Mapped to the CSOAI 52-Article Charter</h2>
+              <h2 className="font-bold text-lg mb-1">Framework references and the operational charter</h2>
               <p className="text-gray-600 text-sm leading-relaxed">
-                This crosswalk shows how {fw.name}'s requirements map to the CSOAI Partnership Charter, where the gaps are,
-                and which MEOK MCPs satisfy each clause. Free under CC BY 4.0. See the full{" "}
+                This catalogue groups references and tools associated with {fw.name}. A listing does not establish
+                that a tool satisfies a requirement. Historical crosswalks may use the earlier Partnership Charter's
+                numbering; the current operational charter has 22 articles. Inspect the source, version and
+                measurement evidence for each mapping. See the{" "}
                 <Link href="/crosswalks"><span className="text-emerald-700 underline cursor-pointer">crosswalk library</span></Link>{" "}
-                or the <Link href="/charter"><span className="text-emerald-700 underline cursor-pointer">52-Article Charter</span></Link>.
+                or the <a href="/constitutional-harness/" className="text-emerald-700 underline">operational charter</a>.
               </p>
             </div>
           </div>
         </Card>
 
-        {/* MCP tools that satisfy this */}
+        {/* Catalogue associations, not evidence of requirement satisfaction. */}
         {tag && tools.length > 0 && (
           <div className="mb-12">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold flex items-center gap-2"><Boxes className="h-6 w-6 text-emerald-600" /> {tools.length} MCP tools that satisfy {fw.name}</h2>
+              <h2 className="text-2xl font-bold flex items-center gap-2"><Boxes className="h-6 w-6 text-emerald-600" /> {tools.length} catalogue tools associated with {fw.name}</h2>
               <Link href={`/mcp?framework=${encodeURIComponent(tag)}`}>
                 <Button variant="outline" size="sm">View all <ArrowRight className="h-3.5 w-3.5 ml-1.5" /></Button>
               </Link>
@@ -143,3 +145,4 @@ export default function FrameworkDetail() {
     </div>
   );
 }
+
