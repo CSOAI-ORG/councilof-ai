@@ -16,9 +16,11 @@ emits an **Ed25519‑signed attestation** you (or any auditor) can verify offlin
 > release this package until all three answer, so an install line that cannot work is never
 > published.
 >
-> `/api/a2a/route` signs its envelopes with the deployment's Layer-0 key. Until that key is
-> configured the route answers **503** and says so: an unsigned artefact is honest and a
-> fabricated signature is not. The gate and the verify path work regardless.
+> `/api/a2a/route` signs its envelopes with the deployment's Layer-0 key, whose public half is
+> published at `GET /api/a2a/key` and pinned in the estate's DID document as
+> `did:web:csoai.org#layer0-attestation-1`. If that key is ever absent the route answers **503**
+> and says so: an unsigned artefact is honest and a fabricated signature is not. The gate and the
+> verify path work regardless.
 >
 > ```
 > curl -s -o /dev/null -w '%{http_code}\n' -X POST https://councilof.ai/api/gate -d '{}'   # 200
@@ -54,6 +56,10 @@ Conformance levels (see `CSOAI_Layer0_A2A_Protocol.md`): wrapping with `governed
 | `verify(envelope, peerKey?)` | verify an inbound A2A envelope |
 
 Backend: the public gateway is `functions/api/gate.ts` + `functions/api/a2a/{route,verify,key}.ts` (Cloudflare Pages Functions) in the source repository, with the policy rule in `functions/_lib/layer0.ts` — checked against the canonical product's rule by `scripts/review/layer0-parity.mjs`. Home: https://councilof.ai/layer0/
+
+- Live GSPC board: https://councilof.ai/api/gspc
+- Corrections ledger: https://councilof.ai/corrections/ (JSON: https://councilof.ai/api/corrections)
+- Free card verification: https://councilof.ai/gspc-verify/
 
 ## Licence
 
