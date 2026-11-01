@@ -11,7 +11,11 @@ const axes = snapshot.axes.map(row => row.axis);
 describe('all-axis charter integration', () => {
   it('connects exactly the source axes without changing their measurement or authority', async () => {
     const tree = buildTree({ registry, snapshot, sourceSlots: await loadSlots(), mcpTools });
-    expect(tree.get('index.json').coverage).toMatchObject({ specialists: 33, charter_connections: 33, review_connections: 33 });
+    expect(tree.get('index.json').coverage).toMatchObject({
+      specialists: axes.length,
+      charter_connections: axes.length,
+      review_connections: axes.length,
+    });
     for (const row of snapshot.axes) {
       const audit = tree.get(`${row.axis}.json`);
       expect(audit.source.axis_row).toEqual(row);
