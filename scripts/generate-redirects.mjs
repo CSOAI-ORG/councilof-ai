@@ -55,10 +55,13 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
   .sort();
 
 const EXISTING = [
-  // /gspc/field is a generated static surface (scripts/surface/build-gspc-field.mjs). The bare
-  // path must reach that page rather than the catch-all shell, exactly as /gspc/jail reaches
-  // its own surface. Without this rule /gspc/field renders the SPA shell and the page is orphaned.
-  "/gspc/field  /gspc/field/  308",
+  // /gspc/field shipped for six hours on 2026-11-01 as a second, static board surface. It
+  // duplicated the board page and its own Wilson bars (components/gspc/LivingBoard.tsx), which
+  // is the fragmentation /board exists to end. The cross-axis read it carried now lives in
+  // components/gspc/BoardField.tsx, mounted on /board; the URL is retired into the page that owns
+  // the numbers rather than left as a fifth board.
+  "/gspc/field  /board  308",
+  "/gspc/field/ /board  308",
   // The hand-authored /arena tree was a second, stale product surface. Keep
   // historical machine evidence in public/arena/*.json{,l}, but route every
   // former human page into the one Council OS play surface. Exact rules are
