@@ -1,7 +1,6 @@
 import { Link } from "wouter";
 import { toolSummary } from "@/lib/mcpTools";
 import EmptySlots from "@/components/EmptySlots";
-import HealthTerms from "@/components/HealthTerms";
 import ProductFill from "@/components/ProductFill";
 import { useBoardCount } from "@/lib/boardCount";
 import { CATALOG_ITEMS, CATALOG_PAGES } from "@/lib/catalogPages";
@@ -92,7 +91,7 @@ const MODULES = [
     name: "White-label embed",
     href: "/embed",
     tag: "Verify module",
-    what: "A self-verifying badge: WebCrypto checks the Ed25519 signature in the reader's own browser. Green only when the bytes are true.",
+    what: "A self-verifying badge: WebCrypto checks the Ed25519 signature in the reader's own browser. Check integrity and signature status separately. A valid result does not establish truth, freshness or compliance.",
   },
   {
     name: "Distribution integrity",
@@ -203,13 +202,8 @@ export default function Products() {
         </ul>
       </section>
 
-      {/* Operator notes (health inventory, governance terminal, revenue funnels, external audit,
-          playbook audit) moved to the noindex /status/internal page on 6 Oct 2026: they were
-          agent instructions and strategy notes, not product copy a buyer can act on. */}
       <CatalogIndex />
-
       <ProductFill tone="dark" />
-      <HealthTerms tone="dark" />
       <EmptySlots tone="dark" />
 
       <section aria-labelledby="engine-h" className="mt-12">
@@ -309,7 +303,7 @@ export default function Products() {
         <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-slate-300">
           <li>We measure. We do not certify, and nothing here is a conformity assessment or a conformity mark.</li>
           <li>UNMEASURED is a first-class answer — it appears on this page and on the board wherever it is true.</li>
-          <li>No public prices, here or anywhere: verification is free forever, and a grade is never sold.</li>
+          <li>Paid x402 operations disclose their terms in the payment challenge. Verification is free; a grade is never sold.</li>
           <li>Determinations of legal compliance remain with the competent authorities, always.</li>
           <li>
             We measure against regulation; we do not enforce it. We cannot approve, ban, fine or

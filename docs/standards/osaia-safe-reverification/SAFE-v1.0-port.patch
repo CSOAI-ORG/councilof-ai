@@ -1,0 +1,59 @@
+--- a/SAFE.md
++++ b/SAFE.md
+@@ -134,7 +134,7 @@
+ 
+ ## Review Framework
+ 
+-Examine each incident across the complete operating stack. For every applicable control layer, state the expected outcome, assessment and supporting evidence, using pass, fail, insufficient evidence or not applicable. Pass means the stated control outcome is supported; fail means it is contradicted. Missing, inaccessible or inconclusive evidence is insufficient evidence, with the reason recorded. These labels describe a specific assessment but do not indicate general system safety or legal compliance.
++Examine each incident across the complete operating stack. For every applicable control layer, state the expected outcome, assessment and supporting evidence, using pass, fail, insufficient evidence or not applicable. Pass means the stated control outcome is supported; fail means it is contradicted. Missing, inaccessible or inconclusive evidence is insufficient evidence, with the reason recorded. The evidence-delivery state, the underlying control outcome and the attribution of a failure to a layer are three separate records. Evidence that did not arrive cannot produce a pass or a fail: where delivery was expected and did not occur, the outcome is insufficient evidence unless the expected producer, the delivery obligation, the observation window and a functioning collection path are all established, in which case the absence is recorded as an evidence-delivery failure and not as a failure of the control. A layer is credited with a failure only on evidence delivered to it. These labels describe a specific assessment but do not indicate general system safety or legal compliance.
+ 
+ | Control layer | Review Criteria |
+ |---|---|
+@@ -147,6 +147,7 @@
+ | Human operations | Responsibilities, escalation paths and stop procedures were clear, and people had an opportunity to understand, contest or recover from the outcome. |
+ | Supply chain | A partner or third-party dependency (cloud, evaluation, data or tooling provider) upheld assumed controls. |
+ | Serving path | The invoked model, runtime, gateway, cache, proxy and wrapper matched configurations and produced expected results. |
++| Evidence delivery | The expected producer existed, the delivery obligation was met, the observation window closed and the collection path functioned, so an absence of evidence can be attributed to delivery rather than to the control. |
+ | Authorization and commitment | The consequential action matches valid authorization at commitment, including delegation, expiry and revocation. |
+ | Workflow composition | The combined sequence, shared state and interactions did not cross a trust boundary and did not exceed the originating scope. |
+ 
+@@ -175,7 +176,7 @@
+ - The failure and affected systems
+ - The required defensive outcome
+ - The minimum control and acceptable alternatives
+-- A reproducible verification method stating its subject, scope, assumptions, evidence path, failure behavior, known systematic error classes and measurement uncertainty
++- A reproducible verification method stating its subject, scope, assumptions, evidence path, failure behavior, known systematic error classes and measurement uncertainty, together with evidence that the method can produce its intended negative outcome: a control that must pass and a control that must fail under the same configuration. A method whose must-fail control passed is not discriminating, and any outcome it produced is unverified rather than verified
+ - The evidence to retain, responsible owner and implementation deadline
+ - Adoption, effectiveness and review metrics
+ - The distinctions among an observed event, a reported claim, a structural finding, a control recommendation and a verified test result (stating the evidence and limitations for each)
+@@ -186,6 +187,30 @@
+ 
+ ---
+ 
++## Maintained Claims
++
++A finding is not a claim, and a claim is not a permission. A machine-readable claim that is still current for its
++observed baseline is evidence state; whether an accountable external principal presently permits an action is
++authority state. These are separate, and neither extends the other: a current measurement cannot authorise an
++action, and a maintained claim cannot restore or enlarge its own authority.
++
++SAFE does not require any particular claim format, and nothing here obliges a member to maintain claims
++machine-readably. Where a party does so, the following lifecycle is offered as an optional companion profile:
++
++- a stable claim identity, a finding reference, the subject and scope, the control layer, the authority basis, the
++  evidence and its observation time, the freshness rule and its triggers, the current review state, the transition
++  reason, links to any correction or supersession, the accountable review role, the next review condition, and
++  adoption and effectiveness metrics that do not collapse a measurement into a grade
++- a claim that becomes stale, due for retest or unmeasured is never silently carried forward; where revalidation is
++  required and unavailable, consequential execution fails closed while the history is preserved
++- a correction or supersession is a new record that references the record it replaces; history is not rewritten, and
++  a superseded claim remains retrievable and states why it was superseded
++
++Where revalidation is required and unavailable, the correct behaviour is to fail closed while preserving history,
++not to keep the previous result standing.
++
++---
++
+ ## The Compact
+ 
+ Report honest mistakes and close calls early so the community can prevent the next incident.

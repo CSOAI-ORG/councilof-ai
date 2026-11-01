@@ -1,0 +1,57 @@
+{
+  "profile": "csoai.safe-discriminating-power/0.1",
+  "record_id": "dp-2026-10-26-discriminating",
+  "issued_at": "2026-10-26T06:00:00Z",
+  "method": {
+    "method_id": "synthetic.single.option.menu.v0.1",
+    "method_version": "0.1",
+    "procedure": "python3 test_discriminating_power.py",
+    "procedure_digest": {
+      "alg": "sha256",
+      "value": "8f6dfec8bb4b3062827b354eb49131e27af6fe5ddaf9d89c41c3d0c1176012f2"
+    },
+    "reproduction": "re_execution",
+    "controls_executed": true,
+    "declared_failure_modes": [
+      "A one-option answer menu normalises every response to the permitted label before the check runs.",
+      "A grader that compares only the normalised label cannot distinguish a valid response from an invalid one."
+    ],
+    "noise_floor": null
+  },
+  "controls": {
+    "must_pass": {
+      "control_id": "control-a-valid",
+      "expectation": "PASS",
+      "observed": "PASS",
+      "input_digest": {
+        "alg": "sha256",
+        "value": "072a6f6024a06babe3e04c96256bae24cff4e6d08d1acde1c28f5862c58da243"
+      },
+      "description": "A valid input that must produce PASS."
+    },
+    "must_fail": {
+      "control_id": "control-b-invalid",
+      "expectation": "FAIL",
+      "observed": "FAIL",
+      "input_digest": {
+        "alg": "sha256",
+        "value": "a9a765fc266c97b804dcfa5a87f0a8c661e5b7361ced7e0cc9c2934e757db74f"
+      },
+      "description": "A deliberately invalid input that must produce FAIL."
+    }
+  },
+  "outcome": {
+    "verification_path": "DISCRIMINATING",
+    "claimed_outcome": "VERIFIED",
+    "reason": "Control A passed and Control B failed as designed, so the instrument can discriminate."
+  },
+  "claim": {
+    "subject": "synthetic item set",
+    "scope": "A repaired check that compares the raw response against the expected answer.",
+    "statement": "The verification method can produce the intended negative outcome."
+  },
+  "limits": [
+    "Synthetic corpus. It reproduces a failure shape; it is not a production measurement.",
+    "No real incident, model, deployment or subject is named or implied."
+  ]
+}

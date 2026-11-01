@@ -4,6 +4,7 @@ import { AXES_A } from "../api/_gspc_axes_a";
 import { AXES_B } from "../api/_gspc_axes_b";
 import { AXES_FIN } from "../api/_gspc_axes_fin";
 import { AXES_C } from "../api/_gspc_axes_c";
+import { AXES_D } from "../api/_gspc_axes_d";
 import capture from "./__fixtures__/gspc-2026-09-05.json";
 
 // A REAL capture of GET https://councilof.ai/api/gspc, read 2026-09-05 (66 KB, verbatim).
@@ -168,8 +169,8 @@ describe("/badge/board.svg — the whole board as one image, derived and never t
     });
     const svg = await r.text();
     expect(r.headers.get("x-gspc-board")).toBe("derived");
-    const all = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
-    const ids = all.map((a) => a.axis);
+    const all = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
+    const ids = all.map((a) => (a.public_pages === "HIDDEN_PENDING_OWNER_GO" ? "held slot (owner-gated)" : a.axis));
     const inSvg = [...svg.matchAll(/<text x="56" y="\d+" font-size="13" fill="#111827">([^<]+)<\/text>/g)].map((m) => m[1]);
     expect(inSvg).toEqual(ids);
     // The capture in __fixtures__ is a REAL production read from 2026-09-05, before ADR-002
@@ -180,7 +181,7 @@ describe("/badge/board.svg — the whole board as one image, derived and never t
     // revision typed the set {"effect-binding"} with kind "declared-slot" and went red the
     // day that slot became a measured axis. Re-capture, then restore the strict equality.
     const captured = new Set(CAPTURE.axes.map((a) => a.axis));
-    const declared = new Set(all.map((a) => a.axis).filter((id) => !captured.has(id)));
+    const declared = new Set(ids.filter((id) => !captured.has(id)));
     // every axis missing from the capture must be one the arrays actually carry today
     for (const id of declared) expect(ids).toContain(id);
     // and nothing the capture holds may have vanished

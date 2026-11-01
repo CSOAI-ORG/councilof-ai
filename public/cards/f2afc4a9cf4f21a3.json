@@ -1,0 +1,97 @@
+{
+  "card": {
+    "as_of": "2026-10-28T21:00:26Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.ledger-head/0.1",
+      "ledger": "claim-maintenance-checks",
+      "authority_for": "executed day-7/30/90 re-checks of maintained claims",
+      "served_url": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/latest.json",
+      "http_status": 200,
+      "not_a_grade": true,
+      "bytes_sha256": "eb432e603ef3118d937bbeeb94ce2ab531384ef924fb82040c86a1f73fd764bd",
+      "n_bytes": 10432,
+      "entries": 11,
+      "head_digest": "6fbf90ee628772c364cdc05fbbfb6a788744edb6906fa46cbdf0e4041acd68ac",
+      "last_update": "2026-10-25T08:00:22Z",
+      "outcomes": {
+        "CHANGED_CONFIRMED": 6,
+        "NOT_YET_DUE": 4,
+        "READ_NOT_COMPARABLE": 1
+      },
+      "checks": [
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2|scheduled-read|2026-09-28|CHANGED_CONFIRMED",
+        "claimreg-hiring-platforms-2026-09-24-rev2|scheduled-read|2026-10-01|CHANGED_CONFIRMED",
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2|day-7|2026-10-02|CHANGED_CONFIRMED",
+        "claimreg-hiring-platforms-2026-09-24-rev2|day-7|2026-10-02|CHANGED_CONFIRMED",
+        "claimreg-ondo-chainlink-maintenance-20260928T023900Z|day-7|2026-10-05|READ_NOT_COMPARABLE",
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2|day-30|2026-10-25|CHANGED_CONFIRMED",
+        "claimreg-hiring-platforms-2026-09-24-rev2|day-30|2026-10-25|CHANGED_CONFIRMED",
+        "claimreg-ondo-chainlink-maintenance-20260928T023900Z|day-30|2026-10-28|NOT_YET_DUE",
+        "claimreg-ai-assurance-and-settlement-2026-09-23-rev2|day-90|2026-12-24|NOT_YET_DUE",
+        "claimreg-hiring-platforms-2026-09-24-rev2|day-90|2026-12-24|NOT_YET_DUE",
+        "claimreg-ondo-chainlink-maintenance-20260928T023900Z|day-90|2026-12-27|NOT_YET_DUE"
+      ],
+      "state": "PROBED"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f2afc4a9cf4f21a3495792a0cfb6e0e6992d6613df46c69fedc1c84ca0b29e48",
+    "sig_ed25519": "c83f506ea5ecd69af58bf2b5541307a69935fd45ce8ed6947699d915d4d356f20876b8fdcf2bbbfd4b46714111e2d8ec68eb74ddab89c530f5597f9ae8d9ff0e",
+    "source_urls": [
+      "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/latest.json"
+    ],
+    "subject": "Ledger head: claim-maintenance-checks (served bytes, digest and count at one read)",
+    "surface": "public.notice",
+    "tags": [
+      "ledger-head",
+      "claim-maintenance-checks",
+      "ledger-heads-2026-09"
+    ],
+    "unmeasured": [
+      "whether any entry is correct; this atom commits to the served bytes and their head only"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "362163045f989e757c90b2f50bb792dde5856a9cbf679b87e6736287784281e1",
+    "8a3e1dc702255fdc589a94a1c2907a9406f2817e9ce0ba0bf56e794508268976",
+    "c3cac8966983e6e5b5c1a58eaaa5c5a9ed6b1b7c3d9f1ecc95149726d0694d29",
+    "1069e53581fb442df3ced5b360a77c744bf75546e176e243c24d2688848e0f85",
+    "729f2121cf38f959ef6b4a8c38555509eceeeb2c30eff2aa9b2c3c38a6de5877",
+    "6f7329f6540a9fffaf16205f00a66c5bc513366403fa0a0a46b6d451853f6b03",
+    "9775c31fa2de1dac387043fbcfc514bd91be2ffde5e9d5b14e85859cf4ac2dd4",
+    "32a67cbf7902dbc574c34e4c4033f4242985956f081fbba7fba8291fbf5efa83",
+    "64b80cfb5eaf6db74b79d27190fdc9010eda89d74fc5133ba5441211a67d9fea"
+  ]
+}

@@ -81,6 +81,45 @@ def test_otel_no_score_for_unmeasured():
     assert otel.attributes(EVS[6])["gen_ai.evaluation.score.value"] == 0.25
 
 
+def test_otel_subsecond_precision_and_clock_separation():
+    import copy
+    ev1 = copy.deepcopy(EVS[0])
+    ev2 = copy.deepcopy(EVS[0])
+    ev1["claim"]["read_at"] = "2026-09-30T12:00:00.123456Z"
+    ev1["event_id"] = E.compute_event_id(ev1)
+    ev2["claim"]["read_at"] = "2026-09-30T12:00:00.654321789Z"
+    ev2["event_id"] = E.compute_event_id(ev2)
+    r1 = otel.log_record(ev1)
+    r2 = otel.log_record(ev2)
+    assert r1["timeUnixNano"].endswith("123456000")
+    assert r2["timeUnixNano"].endswith("654321789")
+    assert r1["timeUnixNano"] != r2["timeUnixNano"]
+
+    # Separate source/occurrence time (observed.read_at) vs collection time (claim.read_at)
+    ev3 = copy.deepcopy(EVS[0])
+    ev3["observed"] = {"tools": 3, "read_at": "2026-09-30T11:59:58.500000Z"}
+    ev3["claim"]["read_at"] = "2026-09-30T12:00:00.250000Z"
+    ev3["event_id"] = E.compute_event_id(ev3)
+    r3 = otel.log_record(ev3)
+    assert r3["timeUnixNano"] != r3["observedTimeUnixNano"]
+    assert int(r3["timeUnixNano"]) < int(r3["observedTimeUnixNano"])
+
+    # Qualified correlation traceId/spanId
+    ev4 = copy.deepcopy(EVS[0])
+    ev4["observed"] = {
+        "tools": 3,
+        "correlation": {
+            "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736",
+            "span_id": "00f067aa0ba902b7",
+        },
+    }
+    ev4["event_id"] = E.compute_event_id(ev4)
+    r4 = otel.log_record(ev4)
+    assert r4["traceId"] == "4bf92f3577b34da6a3ce929d0e0e4736"
+    assert r4["spanId"] == "00f067aa0ba902b7"
+    assert "traceId" not in r1 and "spanId" not in r1
+
+
 # ---------------- SARIF 2.1.0
 def test_sarif_validates_against_2_1_0():
     jsonschema = pytest.importorskip("jsonschema")

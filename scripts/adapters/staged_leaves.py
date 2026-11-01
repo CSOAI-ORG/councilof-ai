@@ -31,6 +31,9 @@ STAGED_DIRS = (
     "x402-door-conformance-2026-09",
     "agent-interop-canonical-2026-09",
     "mcp-liveness-2026-09",
+    # Claim-maintenance text-delta lane (2026-10-29): one PROBED atom per wave-3
+    # text-delta measurement, from the wave-4 probe. Admission/signing unchanged.
+    "claim-maintenance-2026-10",
     # Wrapper-economy lane (2026-09-13): wrapped-asset parity atoms from
     # scripts/readers/wrapped-asset-parity-reader.mjs --stage. PROBED / UNMEASURED only;
     # the read state lives in payload.parity_state. Admission/signing unchanged.
@@ -43,6 +46,13 @@ STAGED_DIRS = (
     # presence, receipt chain) from scripts/readers/ledger_heads_reader.py --stage. The head digest of
     # every ledger becomes a leaf of the ONE root. Admission/signing unchanged.
     "ledger-heads-2026-09",
+    # MCP conformance (2026-10-25, lane agent-interop): one PROBED atom per (subject, pinned
+    # instrument) run from scripts/probes/mcp_conformance_probe.py. The subject set is the first-party
+    # door, a deterministic registry sample, and every directory record whose declared endpoint is a
+    # loopback address. Two instruments are pinned - the stable suite at spec 2025-11-25 and the alpha
+    # suite at spec 2026-07-28 - because the stable suite does not know the later spec release, and a
+    # result from one channel is not comparable with the other. Admission/signing unchanged.
+    "mcp-conformance-2026-10",
 )
 SURFACE = "public.notice"
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"

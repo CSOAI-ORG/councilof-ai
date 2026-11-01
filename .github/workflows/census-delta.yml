@@ -108,7 +108,7 @@ jobs:
       - name: commit SUMMARY + counts-only register
         id: land
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
         run: |
           set -euo pipefail
           # Use GitHub's linked bot identity so the commit is attributable to the

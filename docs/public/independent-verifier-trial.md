@@ -26,7 +26,7 @@ No account, wallet or paid request is needed for this trial. The scope is a supp
 
 The served-file SHA256 identifies the original downloaded JSON file, not text whose whitespace may have changed when copied into the browser. The card id identifies the canonical signed body; these are different hashes with different purposes.
 
-Reply in the existing discussion where you received this trial, or email [nicholas@csoai.org](mailto:nicholas@csoai.org), with:
+Return your result in the discussion where you received this trial, [open a public verifier trial report](https://github.com/CSOAI-ORG/councilof-ai/issues/new?title=%5BVerifier%20trial%5D%20Public%20card%20result&body=Task%20attempted%3A%20%0APublic%20sample%20card%20URL%3A%20https%3A%2F%2Fcouncilof.ai%2Fsigned%2Fcards%2F82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json%0AAttempted%20at%20(UTC)%3A%20%0AVerifier%20route%20and%20version%20actually%20observed%3A%20%0ADisplayed%20verdict%20and%20reasons%2C%20or%20error%20(remove%20secrets)%3A%20%0ADid%20the%20result%20help%3F%20Where%20did%20you%20get%20stuck%3F%20%0ARelationship%20to%20CSOAI%20%2F%20how%20this%20trial%20was%20independent%3A%20%0AMay%20CSOAI%20quote%20this%20report%3F%20%0A%0AInclude%20public%20sample%20details%20only.%20Do%20not%20include%20confidential%20inputs%2C%20personal%20data%2C%20credentials%2C%20wallet%20secrets%20or%20payment%2Fauthentication%20headers.%20This%20is%20a%20trial%20result%2C%20not%20certification%2C%20paid%20delivery%20or%20adoption.), or email [nicholas@csoai.org](mailto:nicholas@csoai.org). The optional public report requires GitHub sign-in; trying the free verifier does not. Do not post confidential inputs, personal data, credentials, wallet secrets or payment/authentication headers. Include:
 
 - the task you attempted;
 - the example URL and served-file SHA256 above;
@@ -37,6 +37,12 @@ Reply in the existing discussion where you received this trial, or email [nichol
 For the optional Python client, include its printed result or error. Include any source/version you actually used; do not infer the running server's version from this document's reference pin. Exclude confidential inputs. An unsuccessful trial is useful evidence too.
 
 A returned report can establish a particular independent attempt and its outcome. It does not by itself establish production adoption, a sale, certification or acceptance by a directory maintainer.
+
+## Keep the result and scope any separate request
+
+Before closing or reloading, manually retain the original published card JSON and copy the verdict, reasons and check details, or error, with the checked time (UTC). The browser verifier does not save pasted records or results. A public-record link fetches current published bytes for a new check; it does not restore an earlier verdict.
+
+For a separate fresh-check or claim-maintenance need, review the [existing services](https://councilof.ai/services/) and use the enquiry path there. Name the subject, public source, required output, freshness and delivery date. Check the service's scope: a receipt for existing evidence is not a fresh measurement. This trial remains free; an enquiry is not an order, and returning your result requires no purchase.
 
 ## Recorded CSOAI reproduction
 

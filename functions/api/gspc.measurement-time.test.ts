@@ -90,8 +90,10 @@ describe("GET /api/gspc structured measurement time", () => {
     expect(body.measurement_time_contract.states.EXACT).toHaveLength(10);
     expect(body.measurement_time_contract.states.DAY).toHaveLength(12);
     expect(body.measurement_time_contract.states.NOT_AFTER).toEqual(["swarm"]);
-    expect(body.measurement_time_contract.states.UNCHECKABLE).toEqual([]);
-    expect(Object.values(body.measurement_time_contract.states).flat()).toHaveLength(23);
+    // Declared-UNMEASURED slots have no measurement, so no time can be checked: UNCHECKABLE, derived.
+    const declared = body.axes.filter((a) => a.status === "UNMEASURED").map((a) => a.axis);
+    expect(body.measurement_time_contract.states.UNCHECKABLE).toEqual(declared);
+    expect(Object.values(body.measurement_time_contract.states).flat()).toHaveLength(body.axes.length);
   });
 });
 

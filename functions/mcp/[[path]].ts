@@ -20,12 +20,13 @@ import GSPC_TOOLS from "./gspc-tools.json";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
-import { toolSpan, withTraceHeader } from "./_otel";
+import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
 import { recordUsage } from "../_lib/usage";
+import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
 export const MCP_HTTP_SERVER_VERSION = "1.4.4";
@@ -135,6 +136,7 @@ function buildMcp(
         "tools/list": { ttlMs: 300_000, cacheScope: "public" },
       },
     });
+    registerWorkingGroups(server);
     for (const { definition, inputSchema, outputSchema } of TOOLS) {
       server.registerTool(
         definition.name,
@@ -209,6 +211,21 @@ function jsonError(
       headers: { ...CORS, "cache-control": "no-store" },
     },
   );
+}
+
+/** Collapse a single-message SSE answer into application/json for clients that did not ask for SSE. */
+export async function sseToJson(response: Response): Promise<Response> {
+  if (!(response.headers.get("content-type") ?? "").includes("text/event-stream")) return response;
+  const text = await response.text();
+  const messages = text
+    .split(/\r?\n\r?\n/)
+    .map((ev) => ev.split(/\r?\n/).filter((l) => l.startsWith("data:")).map((l) => l.slice(5).trimStart()).join("\n"))
+    .filter((d) => d.length > 0);
+  const headers = new Headers(response.headers);
+  headers.set("content-type", "application/json");
+  headers.delete("content-length");
+  const out = messages.length === 1 ? messages[0] : `[${messages.join(",")}]`;
+  return new Response(out, { status: response.status, statusText: response.statusText, headers });
 }
 
 function withHeaders(response: Response): Response {
@@ -342,14 +359,16 @@ export function discoveryHtml(
 :root{color-scheme:light dark;--fg:#111;--bg:#fff;--mut:#555;--line:#e5e5e5;--pre:#f6f6f6;--a:#047857}
 @media(prefers-color-scheme:dark){:root{--fg:#e9e9e9;--bg:#0f1115;--mut:#a2a2a2;--line:#262a31;--pre:#171a20;--a:#6ee7b7}}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:52rem;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+header{max-width:52rem;margin:0 auto;padding:1rem 1.25rem 0;border-bottom:1px solid var(--line);font-size:.95rem}
+header nav{padding-bottom:.75rem}
+main{max-width:52rem;margin:0 auto;padding:2rem 1.25rem 4rem}
 h1{font-size:1.9rem;line-height:1.2;margin:0 0 .4rem}h2{margin:2.2rem 0 .6rem;font-size:1.2rem;border-bottom:1px solid var(--line);padding-bottom:.35rem}
 a{color:var(--a);text-decoration:underline;text-underline-offset:2px}
 .lede{color:var(--mut)}p,li,dd{overflow-wrap:anywhere}
 dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.35rem 1rem}dt{color:var(--mut)}dd{margin:0;min-width:0}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:var(--pre);border-radius:4px;padding:0 .2em}
 footer{margin-top:3rem;color:var(--mut);font-size:.9rem;border-top:1px solid var(--line);padding-top:1rem}
-</style></head><body><main>
+</style></head><body><header><nav aria-label="Primary"><a href="/">Council of AI</a> · <a href="/benchmarks">Benchmarks</a> · <a href="/verify">Verify</a> · <a href="/mcp">MCP</a> · <a href="/api/gspc">Board JSON</a></nav></header><main>
 <h1>MCP server endpoint</h1>
 <p class="lede">This address is a Model Context Protocol server (<code>${escHtml(document.server_info.name)}</code> ${escHtml(document.server_info.version)}, Streamable HTTP). Add <code>${url}</code> to an MCP client; this page is what a browser sees.</p>
 <p>${escHtml(document.doctrine)}</p>
@@ -444,6 +463,7 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       tools: FREE_DEFINITIONS.map((d) => d.name),
       documentation: `${origin}/connect/claude/`,
       privacy: `${origin}/privacy-policy/`,
+      working_groups: WORKING_GROUP_ACCESS,
       board: `${origin}/api/gspc`,
       signed_cards: `${origin}/signed/card_index.json`,
       how_to_verify: `${origin}/signed/HOW-TO-VERIFY.md`,
@@ -468,6 +488,7 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
           "measurement, not certification; the catalog and verification remain free",
         catalog: `${origin}/api/x402`,
       },
+      working_groups: WORKING_GROUP_ACCESS,
       board: `${origin}/api/gspc`,
       signed_cards: `${origin}/signed/card_index.json`,
       how_to_verify: `${origin}/signed/HOW-TO-VERIFY.md`,
@@ -564,33 +585,45 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
     const tool = typeof params.name === "string" && KNOWN_TOOL_NAMES.has(params.name) ? params.name : "not-a-tool";
     recordUsage({ request, env, waitUntil }, "mcp_tool", tool);
   }
-  const traceId =
+  const trace =
     call.method === "tools/call" && typeof params.name === "string"
-      ? toolSpan((env ?? {}) as Record<string, unknown>, params.name)
+      ? startToolRequestSpan(
+          (env ?? {}) as Record<string, unknown>,
+          KNOWN_TOOL_NAMES.has(params.name) || (door === "full" && params.name === "verify")
+            ? params.name
+            : null,
+        )
       : null;
   try {
+    // Lenient Accept (MCP streamable HTTP): a client that sends only application/json, or no
+    // Accept at all, gets a plain JSON answer instead of the SDK's 406. SSE stays when asked for.
+    const wantsSse = (request.headers.get("accept") ?? "").includes("text/event-stream");
+    const forwardHeaders = new Headers(request.headers);
+    if (!wantsSse) forwardHeaders.set("accept", "application/json, text/event-stream");
     const boundedRequest = new Request(request.url, {
       method: "POST",
-      headers: request.headers,
+      headers: forwardHeaders,
       body,
       signal: request.signal,
     });
-    return withTraceHeader(
-      withHeaders(
-        await (door === "free" ? mcpFree : mcp).fetch(
-          boundedRequest,
-        ),
-      ),
-      traceId,
+    const upstream = await (door === "free" ? mcpFree : mcp).fetch(boundedRequest);
+    const response = withTraceHeader(
+      withHeaders(wantsSse ? upstream : await sseToJson(upstream)),
+      trace?.traceId ?? null,
     );
+    // fetch resolves at response headers. A 200, including an SSE response or
+    // JSON-RPC tool error, does not establish tool completion or an external effect.
+    trace?.responseHeaders(upstream.status);
+    return response;
   } catch {
-    return jsonError(
+    trace?.transportError();
+    return withTraceHeader(jsonError(
       500,
       -32603,
       door === "free"
         ? "MCP request failed. Nothing was written; retry later or report it to contact@csoai.org."
         : "MCP request failed. Delivery and settlement are unconfirmed; inspect receipts before retrying paid work.",
       id,
-    );
+    ), trace?.traceId ?? null);
   }
 };

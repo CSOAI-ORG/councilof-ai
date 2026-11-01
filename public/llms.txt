@@ -1,8 +1,10 @@
 # Council of AI (CSOAI Ltd)
 
-Public name: Council of AI. Legal: CSOAI Ltd, UK Companies House 16939677. did:web:csoai.org.
-Neutral AI measurement body. Measurement, not certification. We do not certify, accredit, or issue conformity assessments.
-Contact: nicholas@csoai.org. To object to, dispute or request a correction of anything we publish: https://councilof.ai/dispute/ or that address; dated corrections: https://councilof.ai/api/corrections.
+> Public name: Council of AI. Legal: CSOAI Ltd, UK Companies House 16939677. did:web:csoai.org.
+> Neutral AI measurement body. Measurement, not certification. We do not certify, accredit, or issue conformity assessments.
+> Contact: nicholas@csoai.org. To object to, dispute or request a correction of anything we publish: https://councilof.ai/dispute/ or that address; dated corrections: https://councilof.ai/api/corrections.
+
+Full-content companion for bulk indexing: https://councilof.ai/llms-full.txt
 
 ## Claim boundary (quote this paragraph; it is the whole of what we assert)
 
@@ -42,12 +44,12 @@ Switchboard framing: the estate densifies a recomputable signed record over time
 
 Do not freeze numbers in this file. Read the living board:
 GET https://councilof.ai/api/gspc
-Python's default urllib User-Agent (Python-urllib/x.y) is refused at our CDN with 403 'error code: 1010'. Send any User-Agent, e.g. urllib.request.Request(url, headers={'User-Agent': 'my-check/1'}).
+If a public source refuses a request, retain its HTTP status and observation time. Report the source as unreachable for that request; do not substitute a cached value or work around an access restriction.
 
 Public lock (language only — every count lives on the API, none is frozen here):
 Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO numbers and they always travel together: `totals.axes` counts SLOTS on the board, `totals.measured_axes` counts slots with a real run behind them, and `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone would claim measurements that do not exist — quote both, or quote the smaller. In-lane honesty probes are not board-quotable.
 
-Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the withheld model axes — their count is `totals.own_leaders_excluded` + `totals.uncarded_leaders_dropped`, read live):
+Measurement scope: a measured axis does not necessarily identify a separated public leader. Read the live exclusion and separation fields beside the measured count:
 23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.
 Also quote `totals.public_leader_count` beside any "23 measured" claim. Public point leaders are shown on safety (TIE), swarm (UNTESTED for separation), and jail (UNTESTED for separation). The 8 financial axes are fact runs, not leader scores. TIE is TIE; UNTESTED is not a win. Not a certificate.
 
@@ -59,7 +61,7 @@ carries a separated lead: across `totals.comparison_axes` = 14 model-comparison 
 `totals.separated_leads` = 0, `totals.ties` = 7, and
 `totals.untested_separations` = 7. (The 9 deterministic-fact axes have no
 fleet and no leader, so no separation test applies to them and they are not counted as untested.)
-So "23 measured of 23" is a statement that a run exists behind every slot. It is not a
+So "23 measured of 33" is a statement that a run exists behind 23 of the 33 slots (10 are declared with none). It is not a
 statement that any axis can tell two models apart, and it must never be written so that a reader
 could take it that way. Quote the separation fields beside the measured count, every time. UNTESTED
 and TIE are first-class states; neither is a win, and neither is a defect to be hidden.
@@ -107,6 +109,15 @@ Measurement, not certification.
 - ai-adoption-components (financial, deterministic-facts): row GET https://councilof.ai/api/gspc?axis=ai-adoption-components · page https://councilof.ai/axis/ai-adoption-components · bank https://huggingface.co/datasets/csoai/gspc-ai-economy-index · evidence https://councilof.ai/interop/financial-measure-run-ai-adoption-components.json · MCP get_axis {"axis":"ai-adoption-components"}
 - labour-components (financial, deterministic-facts): row GET https://councilof.ai/api/gspc?axis=labour-components · page https://councilof.ai/axis/labour-components · bank https://huggingface.co/datasets/csoai/gspc-human-labour-index · evidence https://councilof.ai/interop/financial-measure-run-labour-components.json · MCP get_axis {"axis":"labour-components"}
 - humanoid-labour-index (financial, deterministic-facts): row GET https://councilof.ai/api/gspc?axis=humanoid-labour-index · page https://councilof.ai/axis/humanoid-labour-index · bank https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index · evidence https://councilof.ai/interop/financial-measure-run-humanoid-labour-index.json · MCP get_axis {"axis":"humanoid-labour-index"}
+- lab-practice (subject, declared-slot): row GET https://councilof.ai/api/gspc?axis=lab-practice · page https://councilof.ai/axis/lab-practice · bank: none on this row (the board row is the evidence pointer) · MCP get_axis {"axis":"lab-practice"}
+- company-practice (subject, declared-slot): row GET https://councilof.ai/api/gspc?axis=company-practice · page https://councilof.ai/axis/company-practice · bank: none on this row (the board row is the evidence pointer) · MCP get_axis {"axis":"company-practice"}
+- measurer-integrity (subject, declared-slot): row GET https://councilof.ai/api/gspc?axis=measurer-integrity · page https://councilof.ai/axis/measurer-integrity · bank: none on this row (the board row is the evidence pointer) · MCP get_axis {"axis":"measurer-integrity"}
+- harness-fidelity (subject, declared-slot): row GET https://councilof.ai/api/gspc?axis=harness-fidelity · page https://councilof.ai/axis/harness-fidelity · bank: none on this row (the board row is the evidence pointer) · MCP get_axis {"axis":"harness-fidelity"}
+- interop-conformance (subject, declared-slot): row GET https://councilof.ai/api/gspc?axis=interop-conformance · page https://councilof.ai/axis/interop-conformance · bank: none on this row (the board row is the evidence pointer) · MCP get_axis {"axis":"interop-conformance"}
+- humanoid-deployment (subject, declared-slot): row GET https://councilof.ai/api/gspc?axis=humanoid-deployment · page https://councilof.ai/axis/humanoid-deployment · bank: none on this row (the board row is the evidence pointer) · MCP get_axis {"axis":"humanoid-deployment"}
+- interpretability-reproducibility (subject, declared-slot): row GET https://councilof.ai/api/gspc?axis=interpretability-reproducibility · page https://councilof.ai/axis/interpretability-reproducibility · bank: none on this row (the board row is the evidence pointer) · MCP get_axis {"axis":"interpretability-reproducibility"}
+- claim-maintenance (subject, declared-slot): row GET https://councilof.ai/api/gspc?axis=claim-maintenance · page https://councilof.ai/axis/claim-maintenance · bank: none on this row (the board row is the evidence pointer) · MCP get_axis {"axis":"claim-maintenance"}
+- serving-fidelity (subject, declared-slot): row GET https://councilof.ai/api/gspc?axis=serving-fidelity · page https://councilof.ai/axis/serving-fidelity · bank: none on this row (the board row is the evidence pointer) · MCP get_axis {"axis":"serving-fidelity"}
 
 ## Dated effect-binding probe account
 
@@ -163,14 +174,12 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
   many doors there are — fetch GET https://councilof.ai/.well-known/x402.json and count `resources`.
   - [Art50 marking evidence](https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png) · free preview: https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1
     Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Detects C2PA and IPTC metadata only (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark is read. States: DETECTED, NOT_DETECTED (not proof the output is unmarked) or UNCHECKABLE; never a legal determination. CSOAI is a C2PA member. Free unsigned preview; verification is free.
-  - [Evidence bundle](https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1)
+  - [Evidence bundle](https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1) · free preview: https://councilof.ai/api/evidence-bundle?obligation=article-50
     OSCAL evidence bundle for one obligation: EU AI Act Article 50/53, DORA or EU-CRA. Returns selected card objects with signature fields, any retained inclusion proofs, an OSCAL wrapper and assembly manifest. Does not verify input-card signatures. Reports manifest signing status and any unsigned reason. States: ASSEMBLED or ASSEMBLED-EMPTY; zero selected cards stays zero. Supported-card verification is free at /gspc-verify. No new measurement or conformity determination.
   - [Feeds provider diff](https://councilof.ai/api/feeds/provider-diff?history=1)
     Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.
-  - [Fresh capsule](https://councilof.ai/api/measurement/fresh-capsule) · free preview: https://councilof.ai/api/measurement/fresh-capsule?endpoint=<https MCP URL>&dimension=TOOLS&preview=1
+  - [Fresh capsule](https://councilof.ai/api/measurement/fresh-capsule) · free preview: https://councilof.ai/api/measurement/fresh-capsule?endpoint=https://councilof.ai/mcp&dimension=TOOLS&preview=1
     Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.
-  - [Fresh capsule (POST)](https://councilof.ai/api/measurement/fresh-capsule)
-    POST alias of GET /api/measurement/fresh-capsule for gateways that POST {}; the query string selects the claim and the body is ignored.
   - [Pop a2a](https://councilof.ai/api/pop/a2a) · free preview: https://councilof.ai/api/pop/a2a?preview=1
     A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.
   - [Pop claim watch](https://councilof.ai/api/pop/claim-watch) · free preview: https://councilof.ai/api/pop/claim-watch?preview=1
@@ -195,25 +204,19 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.
   - [Ras mcp probe](https://councilof.ai/api/ras/mcp-probe?url=https://councilof.ai/mcp)
     MCP discovery probe receipt: one live, read-only discovery of a public https MCP endpoint, signed. Runs server/discover, else initialize and tools/list, and never calls a tool: protocol version requested and negotiated, tool count, tool-names sha256. States include LISTED, PARTIAL, AUTH_REQUIRED, NOT_MCP, TIMEOUT and UNREACHABLE, delivered as found. Verification is free at /api/verify.
-  - [Ras mcp probe (POST)](https://councilof.ai/api/ras/mcp-probe)
-    GET /api/ras/mcp-probe?url=<https MCP endpoint> — ONE live, read-only MCP discovery of a public endpoint, returned with an Ed25519-signed receipt.
   - [Ras supply](https://councilof.ai/api/ras/supply?asset=USDC&ledger=ethereum)
     Token supply read receipt: one fresh totalSupply() read of an issuer-listed EVM deployment, signed. The address is parsed from the issuer's own page on the request (USDC). States: STATE_PROOF_VERIFIED on Ethereum (EIP-1186 proof checked against the block stateRoot), OPERATOR_API elsewhere, or UNCHECKABLE with the reason. Not a reserve attestation. Verification is free at /api/verify.
-  - [Ras supply (POST)](https://councilof.ai/api/ras/supply)
-    GET /api/ras/supply?asset=USDC&ledger=ethereum — one fresh, signed read of an issuer-listed token deployment's totalSupply(), labelled by the strength of the evidence behind it.
   - [Ras x402 check](https://councilof.ai/api/ras/x402-check?url=https://councilof.ai/api/free-door)
     x402 challenge conformance receipt: one live GET of a public x402 resource, checked and signed. The rule is the daily census's: HTTP 402, a PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body. States: CONFORMANT, NOT_CONFORMANT, TIMEOUT, UNREACHABLE or BLOCKED, delivered as found. Verification is free at /api/verify.
-  - [Ras x402 check (POST)](https://councilof.ai/api/ras/x402-check)
-    GET /api/ras/x402-check?url=<https x402 resource> — ONE live GET of a public x402 resource, scored by the rule of the daily census, returned with an Ed25519-signed receipt.
   - [Receipts batch](https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z) · free preview: https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1
     Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.
   - [Request attestation](https://councilof.ai/api/request-attestation?subject=model-or-subject-id)
     One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.
-  - [Rwa evidence](https://councilof.ai/api/rwa/evidence?asset=RLUSD) · free preview: https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1
+  - [Rwa evidence](https://councilof.ai/api/rwa/evidence?asset=RLUSD) · free preview, as a pattern (replace the <…> part; not a link): `GET /api/rwa/evidence?asset=<symbol>&preview=1`
     RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.
   - [Signed data feed](https://councilof.ai/api/signed-data-feed?feed=1)
     Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.
-  - [Wrapper](https://councilof.ai/api/wrapper?id=usdc.e:arbitrum) · free preview: https://councilof.ai/api/wrapper?id=<wrapped-symbol:chain>&preview=1
+  - [Wrapper](https://councilof.ai/api/wrapper?id=usdc.e:arbitrum) · free preview, as a pattern (replace the <…> part; not a link): `GET /api/wrapper?id=<wrapped-symbol:chain>&preview=1`
     Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.
   - [Wrapper asset pack DAI](https://councilof.ai/api/wrapper/asset/dai) · free preview: https://councilof.ai/api/wrapper/asset/dai?preview=1
     Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.
@@ -223,21 +226,21 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.
   - [Wrapper changes](https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum) · free preview: https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum&preview=1
     Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.
-  - [Free door](https://councilof.ai/api/free-door) — a live 402 route priced at zero: it settles, and charges nothing.
   - [Chainlink discovery](https://councilof.ai/api/discover/chainlink) — a live 402 route priced at zero: it settles, and charges nothing.
   - [Ondo discovery](https://councilof.ai/api/discover/ondo) — a live 402 route priced at zero: it settles, and charges nothing.
   - [Ondo OUSG discovery](https://councilof.ai/api/discover/ondo-ousg) — a live 402 route priced at zero: it settles, and charges nothing.
+  - [Free door](https://councilof.ai/api/free-door) — a live 402 route priced at zero: it settles, and charges nothing.
 - Free preview: omit `bundle=1` or add `preview=1` as the 402 body documents. Verify stays free: https://councilof.ai/gspc-verify
 - Follow a commission (free): GET https://councilof.ai/api/commissions — per subject `fulfillment` QUEUED | RETRIEVABLE | UNFULFILLABLE, `retrieval` points at the signed cards, `by_origin` separates OUTSIDE from SELF_TEST. Quote it live; a settled request is not a measurement until a signed card is retrievable.
 
 ## Overlay notes (ARC-AGI is an overlay, not an axis)
 
-notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; it is an overlay, not an axis. The newest slot on the board (ADR-002, 2026-09-16) is effect-binding — not ARC-AGI; whether that slot is MEASURED or still a declared slot is on its own row, GET https://councilof.ai/api/gspc?axis=effect-binding, never typed here (this file once froze it as "no run behind it" and was stale within a week). Quote live `totals.public_count` from GET https://councilof.ai/api/gspc — do not freeze any pair in this file (live derives 23·23·0 after #1077). Do not add ARC-AGI as an axis. Do not add an axis to gspc.ts / /api/gspc / board_living.json. See /gspc-overlays.json and /schema/gspc-axes-notes.json.
+notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; it is an overlay, not an axis. The newest slot on the board (ADR-002, 2026-09-16) is effect-binding — not ARC-AGI; whether that slot is MEASURED or still a declared slot is on its own row, GET https://councilof.ai/api/gspc?axis=effect-binding, never typed here (this file once froze it as "no run behind it" and was stale within a week). Quote live `totals.public_count` from GET https://councilof.ai/api/gspc — do not freeze any pair in this file (live derives 33·23·10 after #1077). Do not add ARC-AGI as an axis. Do not add an axis to gspc.ts / /api/gspc / board_living.json. See /gspc-overlays.json and /schema/gspc-axes-notes.json.
 
 ## Census leftover (not a grade)
 
 CENSUS_3M: census + digest + queue + lock. Remainder UNMEASURED.
-Hub listings are DISCOVERED, not MEASURED. Do not mill 3,032,028 listings. Unique n stays 30 UNSIGNED. mill.sh stays dead.
+Hub listings are DISCOVERED, not MEASURED. The retained source note names 3,032,028 listings and a separate unsigned sample with unique n=30; these counts describe different populations and do not establish a GSPC measurement.
 
 - Census (n_measured=0, status_all=UNMEASURED): https://councilof.ai/signed/hub-census-baseline.json
 - Digest (sha256_jsonl, measured:false): 0a510a890fa336f099a516a503df86340a529c90b935f026d291e5dcd8e8f1e9 — coverage leftover, not a signed GSPC cell. Do not invent a 3M digest file.
@@ -282,11 +285,11 @@ Each record below is a dated account of what public sources state, with its sour
 
 Each page shows declared vs observed, the dates, the evidence level and its signed source, and has a machine twin at <page>index.json. None says anything about security, quality or safety, and none is a rating. Operators who opted out, or whose robots.txt refuses CSOAI-census, have no page. Objections and context: https://councilof.ai/census/
 
-- MCP servers (contract parity per host): https://councilof.ai/mcp-servers/ — https://councilof.ai/mcp-servers/<host>/
-- A2A agent cards (listed vs served, signature state): https://councilof.ai/agent-cards/ — https://councilof.ai/agent-cards/<host>/
-- x402 doors and settlement-census hosts: https://councilof.ai/x402/ — https://councilof.ai/x402/<door-or-host>/
-- Tokenised-asset deployments (issuer list vs ledger read): https://councilof.ai/stablecoins/deployments/ — https://councilof.ai/stablecoins/<asset>/<chain>/
-- Sitemap index of all of them: https://councilof.ai/sitemaps/index.xml
+- MCP servers (contract parity per host): https://councilof.ai/mcp-servers/ — one page per host, at the path pattern `/mcp-servers/<host>/`
+- A2A agent cards (listed vs served, signature state): https://councilof.ai/agent-cards/ — one page per host, at `/agent-cards/<host>/`
+- x402 doors and settlement-census hosts: https://councilof.ai/x402/ — one page per door or host, at `/x402/<door-or-host>/`
+- Tokenised-asset deployments (issuer list vs ledger read): https://councilof.ai/stablecoins/deployments/ — one page per deployment, at `/stablecoins/<asset>/<chain>/`
+- Sitemap index of all of them (the real addresses behind the `<…>` patterns above; a pattern is not an address): https://councilof.ai/sitemaps/index.xml
 - Press, machine-readable — what changed in the window, with the command that proves each line, and a named list of what we are NOT announcing: https://councilof.ai/api/press.json (human: https://councilof.ai/press/)
 
 The older https://councilof.ai/feed.xml is a hand-maintained item list kept for its subscribers; its historical titles freeze counts that the live board has moved past. Quote the board, not a feed title.
@@ -298,15 +301,15 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Source-linked SOV World observatory (dated simulation archive; check source date and signature-verification status on the page): https://councilof.ai/world/observatory/
 - Agent card: https://councilof.ai/.well-known/agent-card.json
-- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 19 tools: fourteen free readers plus five x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
-- MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the fourteen free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
-- Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
+- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 52 tools: forty-seven free readers plus five x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
+- MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the forty-seven free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
+- Public root (https://councilof.ai/root.json): Merkle envelope. Read live `sig_ed25519` and the stated preimage fields (`kind`, `schema`, `as_of`, `merkle_root`, `card_count`, `did_intended`). Check the signature against a published pinned key; report an absent signature as unsigned and an unavailable check as UNCHECKABLE. Presence in the root does not by itself establish a GSPC measurement or grade. Verification is free.
 - Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending until an independent `ots verify` confirms a Bitcoin attestation; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
-- Dated immutable mill-card root (as of 2026-10-12T15:39:10Z, 1479 leaves): https://councilof.ai/interop/card-root-2026-10-12.json (SHA-256 6338a5dbd8ea0f4632696383b232dad2c238f63aae51820831bb0683f1663010). Its .ots sidecar (SHA-256 646387c6d0e913b6d31566d401263f1c46293c5cabb5afed81118f6cd62c3080) is calendar-pending: a submitted request, not evidence of a time, until a Bitcoin attestation is added. This is not local Bitcoin full-node chain validation.
-- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 19-tool contract as the HTTP door. The published npm release is marked deprecated on npm and carries fewer tools than the HTTP door; until a newer release is published, use https://councilof.ai/mcp/free.
+- Dated immutable mill-card root (as of 2026-10-26T04:00:34Z, 1511 leaves): https://councilof.ai/interop/card-root-2026-10-26.json (SHA-256 66df4b5332f861b79000c62f27050b75e7e34c9a2e811ef3c5afcf465d660775). Its .ots sidecar (SHA-256 46ccfd4dd39e1887fff2d8da0ef303d15c1474dabc2c59765c0c97da6f07a323) carries a BitcoinBlockHeaderAttestation, as parsed from the proof bytes into https://councilof.ai/interop/ots/manifest.json. No public-header audit is published for this root, so the block header is not independently corroborated here; this is not local Bitcoin full-node chain validation or verification of individual card measurements.
+- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 52-tool contract as the HTTP door. The published npm release is marked deprecated on npm and carries fewer tools than the HTTP door; until a newer release is published, use https://councilof.ai/mcp/free.
 - Verify a server (per-server evidence, in the browser): https://councilof.ai/verify-server/ — every signed measurement capsule keyed to ONE endpoint URL, each re-derivable in the page (capsule id + Merkle inclusion + index signature). States only; an unknown URL is NOT_MEASURED, never clean. Same module as the MCP tools server_evidence / verify_capsule.
 - MCP registry: ai.councilof/gspc → https://councilof.ai/mcp (the canonical, domain-verified name; io.github.CSOAI-ORG/gspc is its deprecated alias for the same door. Query the official registry for the currently published server version.)
-- Smithery: https://smithery.ai/servers/csoai/gspc-mcp — a third-party listing of this door. Its tools[] is Smithery's own snapshot and can lag the door; before relying on it, read the live POST https://councilof.ai/mcp tools/list (19 tools: fourteen free readers plus five x402-metered evidence tools). The older csoai/gspc entry is a stale duplicate.
+- Smithery: https://smithery.ai/servers/csoai/gspc-mcp — a third-party listing of this door. Its tools[] is Smithery's own snapshot and can lag the door; before relying on it, read the live POST https://councilof.ai/mcp tools/list (52 tools: forty-seven free readers plus five x402-metered evidence tools). The older csoai/gspc entry is a stale duplicate.
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
@@ -315,7 +318,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 
 ## Where it's published (distribution — not authority)
 
-Printers of the live board. Reach is distribution. Authority stays GET /api/gspc + lid + signed cards + free verify. Do not treat directory listings or download counters as grades. Never invent download numbers in this file; quote Hub live if needed.
+Distribution mirrors reproduce published evidence. The live board (GET /api/gspc), its stated measurement scope, signed records and free verification remain the authoritative references. Listings and download counters do not establish a measurement, grade or adoption.
 
 - Hugging Face org: https://huggingface.co/csoai
 - MCP flagship: POST https://councilof.ai/mcp — registry id ai.councilof/gspc (deprecated alias: io.github.CSOAI-ORG/gspc)
@@ -394,16 +397,16 @@ board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-13T04:06:11Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-01T04:56:20Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 668. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 692. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 648.
-- Still calendar-pending: 20. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 692.
+- Still calendar-pending: 0. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
-- Proofs whose subject is not served beside them: 67 — an anchor a reader cannot check
+- Proofs whose subject is not served beside them: 84 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
 - This producer does not check block headers against a Bitcoin node. `ots verify` against your own
   node does that, and an .ots is not a proof because of its file extension.
@@ -434,11 +437,11 @@ index and it does not anchor GSPC.
 ## For agents
 
 - One human-readable page for agent builders, rendered from the machine files themselves (ai-catalog, agent card, tools/list, x402.json): https://councilof.ai/agents/
-- A2UI v0.9.1 (the current A2UI release) surfaces: GET https://councilof.ai/api/a2ui/board (the board card) and GET https://councilof.ai/api/a2ui/verify?card=<64-hex card id> (a verify result). Add ?version=v1.0 for the v1.0 Candidate form. AG-UI runs carry the same surface as a CUSTOM event named a2ui.
+- A2UI v0.9.1 (the current A2UI release) surfaces: GET https://councilof.ai/api/a2ui/board (the board card) and, on the same origin, `GET /api/a2ui/verify?card=<64-hex card id>` (a verify result; a pattern, so replace the <…> part with a card id). Add ?version=v1.0 for the v1.0 Candidate form. AG-UI runs carry the same surface as a CUSTOM event named a2ui.
 
 Prefer the keyless board API and verify.
 Cite live `totals.public_count` — never freeze axis counts in prompts.
-Apex https://csoai.org/mcp may still require Infra secrets; prefer councilof.ai/mcp until apex is green.
+Primary public MCP service: councilof.ai/mcp. For requests to https://csoai.org/mcp retain the returned status and evidence state for that endpoint.
 
 ## AEO
 

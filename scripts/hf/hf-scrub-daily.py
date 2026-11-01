@@ -9,7 +9,8 @@
                                                         # scrub it (push only with --push), record the commit id
 
 State (DIR/queue.json) holds one row per repo: pending | done (commit) | clean (nothing to change on re-read) |
-error (reason, retried next run, at most 3 tries). Every run appends one JSON line per repo to DIR/runs.jsonl.
+error (reason, retried next run, at most 3 tries) | refused (changed managed bytes, review required).
+Every run appends one JSON line per repo to DIR/runs.jsonl.
 The scrub only rewrites the legacy lines hf-org-card.py names; everything else on a card, including any hand
 edit, is kept byte for byte, and the commit is made against the revision that was read (a concurrent edit
 makes it fail rather than overwrite). No number is written onto a card.
@@ -69,12 +70,20 @@ def cmd_queue(state: Path) -> int:
         for r in listers[kind](author=hoc.ORG):
             seen += 1
             key = f"{kind}:{r.id}"
-            if q["rows"].get(key, {}).get("state") == "done":
+            previous = q["rows"].get(key, {})
+            if previous.get("state") == "done" and not (
+                key == "dataset:csoai/gspc-normalized" and previous.get("guide_policy") != "2026-10-14"
+            ):
                 continue
             text, sha = card_text(api, r.id, kind)
             if text is None:
                 continue
-            _, changes = hoc.scrub_legacy(text, None, None, "")
+            try:
+                _, changes = hoc.clean_card(r.id, kind, text)
+            except ValueError as exc:
+                q["rows"][key] = {"repo": r.id, "kind": kind, "state": "refused", "parent": sha,
+                                   "reason": str(exc), "tries": 0}
+                continue
             if changes:
                 q["rows"][key] = {"repo": r.id, "kind": kind, "state": "pending", "changes": len(changes), "tries": 0}
             elif key in q["rows"] and q["rows"][key]["state"] != "done":
@@ -83,8 +92,9 @@ def cmd_queue(state: Path) -> int:
     q["repos_seen"] = seen
     save(state / "queue.json", q)
     pend = sum(1 for r in q["rows"].values() if r["state"] == "pending")
-    print(json.dumps({"built_at": q["built_at"], "repos_seen": seen, "pending": pend}))
-    return 0
+    refused = sum(1 for r in q["rows"].values() if r["state"] == "refused")
+    print(json.dumps({"built_at": q["built_at"], "repos_seen": seen, "pending": pend, "refused": refused}))
+    return 1 if refused else 0
 
 
 def cmd_run(state: Path, limit: int, push: bool) -> int:
@@ -105,28 +115,34 @@ def cmd_run(state: Path, limit: int, push: bool) -> int:
             entry.update(result="error", reason=sha)
             rc = 1
         else:
-            new, changes = hoc.scrub_legacy(text, None, None, "")
-            entry.update(parent=sha, changes=len(changes), detail=changes[:8])
-            if not changes:
-                row.update(state="clean")
-                entry["result"] = "clean"
-            elif not push:
-                entry["result"] = "dry"
+            try:
+                new, changes = hoc.clean_card(row["repo"], row["kind"], text)
+            except ValueError as exc:
+                row.update(state="refused", parent=sha, reason=str(exc))
+                entry.update(result="refused", parent=sha, reason=str(exc))
+                rc = 1
             else:
-                dest = out / row["repo"].replace("/", "__") / "README.md"
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                dest.write_text(new, encoding="utf-8")
-                try:
-                    c = api.create_commit(row["repo"], [CommitOperationAdd(path_in_repo="README.md", path_or_fileobj=str(dest))],
-                                          repo_type=row["kind"], parent_commit=sha,
-                                          commit_message="card: remove agent directives, typed lid and MCP tool count become live "
-                                                         "pointers, DOI availability note (hf-org-card.py --scrub)")
-                    row.update(state="done", commit=c.oid, at=entry["at"])
-                    entry.update(result="done", commit=c.oid)
-                except Exception as e:  # noqa: BLE001
-                    row.update(state="error", reason=f"{type(e).__name__}: {str(e)[:160]}")
-                    entry.update(result="error", reason=row["reason"])
-                    rc = 1
+                entry.update(parent=sha, changes=len(changes), detail=changes[:8])
+                if not changes:
+                    row.update(state="clean")
+                    entry["result"] = "clean"
+                elif not push:
+                    entry["result"] = "dry"
+                else:
+                    dest = out / row["repo"].replace("/", "__") / "README.md"
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    dest.write_text(new, encoding="utf-8")
+                    try:
+                        c = api.create_commit(row["repo"], [CommitOperationAdd(path_in_repo="README.md", path_or_fileobj=str(dest))],
+                                              repo_type=row["kind"], parent_commit=sha,
+                                              commit_message="card: remove agent directives, typed lid and MCP tool count become live "
+                                                             "pointers, DOI availability note (hf-org-card.py --scrub)")
+                        row.update(state="done", commit=c.oid, at=entry["at"], guide_policy="2026-10-14")
+                        entry.update(result="done", commit=c.oid)
+                    except Exception as e:  # noqa: BLE001
+                        row.update(state="error", reason=f"{type(e).__name__}: {str(e)[:160]}")
+                        entry.update(result="error", reason=row["reason"])
+                        rc = 1
         with open(state / "runs.jsonl", "a") as fh:
             fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
         print(json.dumps(entry, ensure_ascii=False))

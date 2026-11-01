@@ -7,7 +7,7 @@
 export const PYPI_BADGE_PACKAGE = "csoai";
 export const PYPI_BADGE_SRC = `https://img.shields.io/pepy/dt/${PYPI_BADGE_PACKAGE}?label=PyPI%20downloads%2C%20including%20mirrors`;
 export const PYPI_BADGE_HREF = `https://pepy.tech/projects/${PYPI_BADGE_PACKAGE}`;
-export const PYPI_BADGE_ALT = `PyPI downloads of the ${PYPI_BADGE_PACKAGE} package, including mirrors and automated installs, read live from pepy.tech`;
+export const PYPI_BADGE_ALT = `Reported PyPI downloads of the ${PYPI_BADGE_PACKAGE} package, including mirrors and automated installs, via Shields.io and pepy.tech`;
 
 export default function PypiLiveBadge({ className = "" }: { className?: string }) {
   return (
@@ -15,7 +15,7 @@ export default function PypiLiveBadge({ className = "" }: { className?: string }
       <a href={PYPI_BADGE_HREF} rel="noopener noreferrer" className="inline-flex min-h-11 items-center">
         <img src={PYPI_BADGE_SRC} alt={PYPI_BADGE_ALT} height={20} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
       </a>
-      <span>{PYPI_BADGE_PACKAGE} package on PyPI, including mirrors · live badge from pepy.tech</span>
+      <span>{PYPI_BADGE_PACKAGE} package on PyPI, including mirrors and automated installs · reported downloads, not unique users</span>
     </p>
   );
 }

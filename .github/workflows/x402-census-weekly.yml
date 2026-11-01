@@ -26,7 +26,7 @@ concurrency:
 jobs:
   census:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
 
@@ -40,7 +40,8 @@ jobs:
           # The collector appends; start a fresh snapshot on same-day retries.
           : > "$OUT"
           echo "OUT=$OUT" >> "$GITHUB_ENV"
-          python3 scripts/grants/x402-settlement-census.py --max-hosts 400 --out "$OUT"
+          # 0 eligible hosts are dropped: cap well above the known population (script slices [:max_hosts]).
+          python3 scripts/grants/x402-settlement-census.py --max-hosts 100000 --out "$OUT"
           echo "OUT=$OUT" >> "$GITHUB_ENV"
           test -s "$OUT"
 

@@ -163,7 +163,7 @@ export default function LiveCounters({ variant, showBoard = false }: LiveCounter
     <section
       data-testid={`live-counters-${variant}`}
       data-status={status.kind}
-      aria-label="Adoption funnel, read live"
+      aria-label="Reported distribution and use stages"
       className={compact ? "mb-6 text-center" : "mx-auto max-w-6xl px-4 pt-8"}
       data-variant={variant}
     >
