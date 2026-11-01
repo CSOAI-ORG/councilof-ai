@@ -41,12 +41,19 @@ const httpKey = (method, endpoint) => {
   return verb + " " + path;
 };
 
+/** Same set as WITHDRAWN_LIFECYCLES in scripts/capability-registry.mjs: a withdrawn route is
+ *  declared and still answers its fail-closed status, and /openapi.json does not list it. */
+const WITHDRAWN = new Set(["RETIRED", "DOOR_CLOSED"]);
+
 /** Registry truth: HTTP is method+path+lifecycle; MCP/A2A expose LIVE names only. */
 export function expected(registry) {
   const out = { http: new Map(), mcp: new Set(), a2a: new Set() };
   for (const c of registry.capabilities ?? []) {
     for (const protocol of c.protocols ?? []) {
       if (protocol === "http") {
+        // Not expected in the document, so a live document that lists one reports it as
+        // "served but NOT registered" instead of passing.
+        if (WITHDRAWN.has(String(c.lifecycle))) continue;
         const key = httpKey(
           c.method ?? c.probe?.method,
           c.endpoint ?? c.probe?.request,
@@ -183,6 +190,20 @@ async function main() {
           method: "GET",
           endpoint: "/.well-known/example",
         },
+        {
+          id: "api-withdrawn-quiet",
+          lifecycle: "RETIRED",
+          protocols: ["http"],
+          method: "GET",
+          endpoint: "/api/withdrawn-quiet",
+        },
+        {
+          id: "api-withdrawn-listed",
+          lifecycle: "DOOR_CLOSED",
+          protocols: ["http"],
+          method: "GET",
+          endpoint: "/api/withdrawn-listed",
+        },
       ],
     };
     const d = diff(
@@ -193,6 +214,7 @@ async function main() {
             "/api/gspc": { get: {} },
             "/api/draft": { post: {} },
             "/api/ghost": { post: {} },
+            "/api/withdrawn-listed": { get: { "x-csoai-lifecycle": "DOOR_CLOSED" } },
           },
         },
         mcp: {
@@ -212,13 +234,16 @@ async function main() {
           x.observed === "LIVE",
       ) &&
       !d.http.missing.includes("GET /api/gspc") &&
-      !d.http.missing.some((x) => x.includes("/.well-known/"));
+      !d.http.missing.some((x) => x.includes("/.well-known/")) &&
+      // a withdrawn route the document leaves out is agreement; one it lists is drift
+      !d.http.missing.includes("GET /api/withdrawn-quiet") &&
+      d.http.extra.includes("GET /api/withdrawn-listed");
     if (!caught) {
       console.error("✖ capability-drift-guard selftest FAILED");
       process.exit(1);
     }
     console.log(
-      "✓ capability-drift-guard selftest: method/path/lifecycle drift, MCP extras and A2A omissions are caught",
+      "✓ capability-drift-guard selftest: method/path/lifecycle drift, a listed withdrawn route, MCP extras and A2A omissions are caught",
     );
     process.exit(0);
   }
