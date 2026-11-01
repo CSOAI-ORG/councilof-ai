@@ -22,31 +22,40 @@ npm package, API key, or OAuth:
 }
 ```
 
-Reconnect and confirm that Cline's server panel discovers the exact 12 names below
+Reconnect and confirm that Cline's server panel discovers the reviewed tool names below
 (`tools/list` at the protocol level) before relying on the integration. The remote
 is the canonical service; it is also suitable for MCP clients that support remote
 Streamable HTTP configuration. This is not a claim of support for every AI platform
 or client.
 
-## Optional local stdio package (not the contract; use the remote)
+## Optional local stdio package: check the published archive
 
-The package identity is `csoai-gspc-mcp` (not the stale scoped name previously
-shown here). Every release published to npm so far carries fewer tools than the
-remote, so this guide no longer gives a local configuration: use the remote above,
-or the free read-only door https://councilof.ai/mcp/free.
+The package identity is `csoai-gspc-mcp`. This guide keeps the canonical remote
+configuration above as the simplest starting point. The free read-only door is
+https://councilof.ai/mcp/free. Source, published-package and deployed-remote versions
+are separate facts; none is inferred from another.
 
-The latest published release is `0.2.3` (published 2026-10-26T07:21:23.715Z), and
-it carries 19 tools (14 free + 5 metered) — measured from the published tarball on
-2026-10-28, not from this repository. It was published 39 minutes before the 33
-named axes merged, so it holds the fleet as it stood then. It is **not** marked
-deprecated on npm, which is why `npm view csoai-gspc-mcp@latest deprecated` prints
-nothing: deprecation is not the signal here, the tool count is.
+**Published-archive observation (30 October 2026):** `0.2.4` was published at
+2026-10-28T16:48:34.768Z. Its immutable npm archive contains 52 tool definitions
+(47 free + 5 metered), and its registry SHA-512 integrity value was checked against
+the downloaded bytes. Archive SHA-256:
+`cea24d2bcef3657b7b35a98d8b658c1b387a45b5c17772bb27b47a901cb0101d`.
+This is a dated archive observation, not a claim about every future latest release.
+A matching tool list is not proof of matching response behaviour: source version
+0.2.5 repairs summary/full board responses and preserves separated-leader and
+original-date semantics.
 
-The repository currently prepares `0.2.4`, but that source version is **not a
-published npm release** until `npm view csoai-gspc-mcp@0.2.4 version` confirms that
-exact version AND the published tarball's own manifests carry the same names as
-the live door. Do not install or advertise any published release as the contract
-before that independent check.
+**Historical mismatch: `0.2.3`** was published at 2026-10-26T07:21:23.715Z with
+19 tools (14 free + 5 metered), as observed from its published archive on
+28 October. Preserve that incident as history, not as the current latest version.
+An empty `npm view csoai-gspc-mcp@latest deprecated` response does not prove parity;
+inspect the actual archive and exercise the documented behaviour.
+
+The repository currently prepares `0.2.5`, but that source version is **not a
+published npm release** until `npm view csoai-gspc-mcp@0.2.5 version` confirms that
+exact version AND the published archive's definitions and tested responses agree
+with the declared contract. A local candidate passing tests does not establish
+registry publication. Keep any eventual release receipt separate from this guide.
 
 ## Exact reviewed tool catalog
 

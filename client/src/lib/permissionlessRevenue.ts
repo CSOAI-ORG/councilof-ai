@@ -30,10 +30,10 @@ export type Opening = {
 };
 
 export const EARN_RULING =
-  "Earn by assembling and licensing work. Do not mint, mine or coupon a grade.";
+  "Evidence assembly and data licensing with a defined scope.";
 
 export const EARN_WEDGE =
-  "Every host that can verify is a cash register for assembly the moment settlement exists. Until then, the same assembly invoices on enquiry.";
+  "Review the existing evidence services, check the sample output and agree what will be delivered. Payment does not purchase a favourable measurement or ranking.";
 
 export const OPEN_SDKS = [
   { id: "mcp-http", href: "https://councilof.ai/mcp", eats: `${TOOL_COUNT_SENTENCE} Works in Claude, Cursor, Kimi, Grok.` },
@@ -54,7 +54,7 @@ export const OPENINGS: Opening[] = [
   {
     id: "enquiry-skus",
     when: "now",
-    title: "Invoice the four SKUs",
+    title: "Discuss an existing evidence service",
     eats: "Run / re-attest, Ledger packs, Data licences. Verify stays free and pulls the queue.",
     never: "A rank is never sold. A fifth SKU.",
     feed: "Open SDKs + /products + /licensing-agreement",
@@ -72,7 +72,7 @@ export const OPENINGS: Opening[] = [
   {
     id: "census-data",
     when: "now",
-    title: "Sell the census, not two million scores",
+    title: "Request a scoped census dataset",
     eats: "Speed 0 Hub walk: DISCOVERED ids, eligibility, digest collisions. Procurement and insurers buy coverage of their vendor list.",
     never: "Stamping hub-queue MEASURED. Claiming we scored the Hub.",
     feed: "Hub list_models + blobs=true. Write to the HF corpus after Card v2.",
@@ -81,8 +81,8 @@ export const OPENINGS: Opening[] = [
   {
     id: "corrections-sla",
     when: "now",
-    title: "Licence the honesty feed",
-    eats: "Corrections + EUNOMIA deadlines as a webhook / SLA. Competitors cannot fake a retraction history.",
+    title: "Request corrections and change records",
+    eats: "Corrections + EUNOMIA deadlines as a webhook / SLA. Published history retains the original record and its corrections.",
     never: "A GSPC score. A highlight reel.",
     feed: "GET /api/corrections · /eunomia-data",
     href: "/api/corrections",
@@ -90,7 +90,7 @@ export const OPENINGS: Opening[] = [
   {
     id: "sdk-funnel",
     when: "now",
-    title: "Feed every open SDK we already planted",
+    title: "Connect through published tools",
     eats: "npm, MCP HTTP, official registry, plugin, embed, badge, agent-card. Free verify in the host. Paid work is assemble / re-attest / data.",
     never: "A second first-party MCP product. Chat harvest.",
     feed: OPEN_SDKS.map((s) => s.id).join(" · "),
@@ -117,7 +117,7 @@ export const OPENINGS: Opening[] = [
   {
     id: "flags-after-100",
     when: "after-100",
-    title: "Permissionless flags after 100/100 A+++",
+    title: "Publication candidates after evidence review",
     eats: "Same receipts on Kaggle, ModelScope, Zenodo, GHCR. More hosts, more verify, more assembly.",
     never: "A 2-million-model inference sweep.",
     feed: "/tools hundred-gate",
@@ -126,7 +126,7 @@ export const OPENINGS: Opening[] = [
   {
     id: "rerun-work",
     when: "after-100",
-    title: "Sell independent reruns",
+    title: "Request a separately scoped reproduction",
     eats: "A stranger pays for a second-provider rerun of a signed digest. Work, not a new rank.",
     never: "Shared Kaggle / Colab / ZeroGPU quotas.",
     feed: "Card v2 + GHCR harness pin + labelled Council-run vs reproduced",

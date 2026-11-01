@@ -25,8 +25,8 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     (match) => JSON.parse(match[1]),
   );
   const configs = examples.filter((example) => example.mcpServers);
-  // One remote configuration only: every published npm release is marked deprecated on npm and
-  // carries fewer tools, so the guide no longer offers a local stdio configuration (6 Oct 2026).
+  // Keep one canonical remote configuration. Historical package observations are dated;
+  // neither source version nor deprecation status establishes the current archive contract.
   assert.equal(configs.length, 1, "one remote configuration, no local stdio configuration");
   assert.deepEqual(configs[0], {
     mcpServers: {
@@ -88,7 +88,7 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
 
   // The version the guide names is the source package's, read from package.json, never typed here.
   const v = packageJson.version.replace(/\./g, "\\.");
-  // The published npm release is a DATED FACT about the published tarball, not
+  // The historical mismatched release is a DATED FACT about its published tarball, not
   // about this repository, and it is recorded here so the guide cannot drift
   // from it. Measured 2026-10-28: npm csoai-gspc-mcp@0.2.3 carries 19 tools
   // (14 free + 5 metered) because it was published 39 minutes before the 33
@@ -106,7 +106,7 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
   );
   assert.ok(
     PUBLISHED.tools < catalogTotal,
-    "a published release must not be recorded as carrying the full fleet",
+    "the retained historical mismatch must remain distinct from the current full fleet",
   );
   assert.match(guide, new RegExp("`" + PUBLISHED.version + "`"));
   assert.match(guide, new RegExp(PUBLISHED.tools + " tools"));
@@ -132,4 +132,19 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
   assert.match(guide, new RegExp(`npm view csoai-gspc-mcp@${v} version`));
   assert.match(guide, /npm view csoai-gspc-mcp@latest deprecated/);
   assert.match(guide, /https:\/\/github\.com\/CSOAI-ORG\/councilof-ai/);
+});
+
+
+test("install guide retains dated publication observations without declaring every release obsolete", async () => {
+  const guide = await readFile(new URL("llms-install.md", root), "utf8");
+  const served = await readFile(new URL("public/llms-install.md", root), "utf8");
+  assert.equal(served, guide, "source and served install guides must be byte-identical");
+  assert.doesNotMatch(guide, /Every release published to npm so far carries fewer tools/);
+  assert.doesNotMatch(guide, /The latest published release is `0\.2\.3`/);
+  assert.match(guide, /Published-archive observation \(30 October 2026\)/);
+  assert.match(guide, /`0\.2\.4`/);
+  assert.match(guide, /2026-10-28T16:48:34\.768Z/);
+  assert.match(guide, /cea24d2bcef3657b7b35a98d8b658c1b387a45b5c17772bb27b47a901cb0101d/);
+  assert.match(guide, /Historical mismatch: `0\.2\.3`/);
+  assert.match(guide, /A matching tool list is not proof of matching response behaviour/);
 });

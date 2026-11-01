@@ -455,7 +455,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "discovery",
     href: "https://docs.openml.org/benchmark/",
     plant: "Classical / tabular GSPC-D later. Not the generative-LLM execution layer.",
-    note: "Permissionless archive, different community.",
+    note: "Open submission archive; check its current publication rules.",
   },
   {
     id: "a2a-task-service",
@@ -575,7 +575,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "discovery",
     href: "https://huggingface.co/datasets/csoai/hub-queue",
     plant: "Never. Millions are DISCOVERED by census. MEASURED is unique lineages.",
-    note: "A Hub listing is not a GSPC grade. Permissionless after 100/100 A+++ still does not invent that sentence.",
+    note: "A Hub listing is not a GSPC grade. Completing an internal evidence review does not establish a model grade.",
   },
 ];
 

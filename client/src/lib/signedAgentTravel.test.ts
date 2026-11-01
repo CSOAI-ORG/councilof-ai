@@ -18,7 +18,8 @@ describe("Signed agent travel", () => {
   it("agrees our agent travels without per-site permission, and census stays DISCOVERED", () => {
     expect(AGENT_TRAVEL_RULING).toMatch(/Sign Council once/);
     expect(AGENT_TRAVEL_RULING).toMatch(/Do not auto-sign the subjects/);
-    expect(AGENT_TRAVEL_AGREED).toMatch(/do not auto-MEASURED/i);
+    expect(AGENT_TRAVEL_AGREED).toMatch(/directory listing records discovery/i);
+    expect(AGENT_TRAVEL_AGREED).toMatch(/does not establish a measurement/i);
     expect(autoWithoutPermission().map((l) => l.id)).toEqual(
       expect.arrayContaining(["council-agent", "census", "flags"]),
     );

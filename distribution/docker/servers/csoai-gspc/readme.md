@@ -6,11 +6,11 @@ Remote MCP: `https://councilof.ai/mcp` (streamable HTTP; no account, API key or 
 
 48 free tools:
 
-- `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.
-- `get_axis` — One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
+- `board_totals` — Read the live GSPC board overview.
+- `get_axis` — Read one live board dimension by its axis id.
 - `verify_card` — Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed.
 - `list_cards` — The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself.
-- `get_root` — GET the permissionless public-root at https://councilof.ai/root.json.
+- `get_root` — Read the published public-root metadata at https://councilof.ai/root.json.
 - `get_card` — GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json.
 - `verify_inclusion` — Check a sha256 against the live public-root merkle via GET /api/proof?sha=.
 - `x402_trust` — GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire.
