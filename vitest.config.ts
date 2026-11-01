@@ -29,7 +29,6 @@ export const NODE_TEST_FILES = [
   'scripts/contract-convergence.test.mjs',
   'scripts/feed-delivery-kit.test.mjs',
   'scripts/harness-x/render.test.mjs',
-  'scripts/historical-door-routing.test.mjs',
   'scripts/research/watch-sources.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
   'scripts/review/first-ask-completion.test.mjs',

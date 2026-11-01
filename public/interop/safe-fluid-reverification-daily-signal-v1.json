@@ -1,0 +1,897 @@
+{
+  "schema": "csoai.safe-fluid-reverification-daily-signal/1.0",
+  "issuer": "CSOAI Ltd (UK Companies House 16939677)",
+  "generated_on": "2026-10-29",
+  "safe_profile_target": "safe-reverification/0.1-draft",
+  "alliance_plugin_target": "csoai.alliance-control-plugin/0.2",
+  "counts": {
+    "sector_atlas_domains_covered": 9,
+    "canonical_gspc_axes_mapped": 33,
+    "result_states_demonstrated": 5,
+    "watch_states_demonstrated": 3,
+    "max_capsule_bytes": 1184,
+    "capsule_byte_ceiling": 3072
+  },
+  "states_demonstrated": {
+    "result_states": [
+      "FAIL",
+      "NOT_DISCRIMINATING",
+      "PARTIAL",
+      "PASS",
+      "UNMEASURED"
+    ],
+    "watch_states": [
+      "CURRENT",
+      "STALE",
+      "UNMEASURED"
+    ]
+  },
+  "nine_domain_daily_signal_capsules": [
+    {
+      "profile": "safe-reverification/0.1-draft",
+      "record_id": "SAFE-SIG-01-HEALTH",
+      "issuer": "did:web:csoai.org",
+      "domain_id": "health",
+      "sector": "Clinical diagnosis AI & Crisis Support",
+      "gspc_axis": "care",
+      "claim": {
+        "statement": "4-perspective MEOK routing achieves protect x help = 1.0000 on CARE-PSY-v1 (n=36).",
+        "falsifiable": true
+      },
+      "dependencies": [
+        {
+          "dep_id": "bank:CARE-PSY-v1",
+          "state": "PINNED",
+          "sha256": "c2df802f7eb9423a"
+        },
+        {
+          "dep_id": "charter:v0.1.0",
+          "state": "PINNED",
+          "sha256": "3dcf79a752678532"
+        }
+      ],
+      "negative_control": {
+        "ran_and_failed_as_designed": true
+      },
+      "result": {
+        "state": "PASS",
+        "n_valid": 36,
+        "denominator": 36
+      },
+      "watch": {
+        "state": "CURRENT",
+        "dependency_drift_detected": false,
+        "age_hours": 12,
+        "retest_bound_max_latency_hours": 168,
+        "action_required": "NONE"
+      },
+      "alliance_lifecycle_state": "CLAIM_CURRENT",
+      "hitl_watchdog_dispatch": {
+        "routed_lane_id": "LANE_01_CLINICAL_AND_CARE_SAFEGUARD_STEWARD",
+        "assigned_human_role": "Clinical & Article-1 Care Safeguard Steward (HITL)",
+        "writes_board": false,
+        "model_training": false
+      },
+      "limits": [
+        "Signature and digest establish provenance and integrity only, never certification.",
+        "UNMEASURED carries null n_valid, never zero."
+      ],
+      "capsule_bytes": 1131,
+      "capsule_sha256": "9a5a01bc91fc1738fa718287a3a6620095b61cbb00adf5cedc288fff209ef405"
+    },
+    {
+      "profile": "safe-reverification/0.1-draft",
+      "record_id": "SAFE-SIG-02-FINANCE",
+      "issuer": "did:web:csoai.org",
+      "domain_id": "finance",
+      "sector": "Credit scoring & Mainframe ISO-20022 Settlement",
+      "gspc_axis": "reserve-attestation",
+      "claim": {
+        "statement": "COBOL-Bridge COMP-3 to ISO-20022 pacs.008 conversion preserves 2-decimal parity (n=36).",
+        "falsifiable": true
+      },
+      "dependencies": [
+        {
+          "dep_id": "copybook:ACCT-SETTLE-MT103",
+          "state": "PINNED",
+          "sha256": "893dca9927cdd6c5"
+        },
+        {
+          "dep_id": "layer0:CH-04",
+          "state": "PINNED",
+          "sha256": "3dcf79a752678532"
+        }
+      ],
+      "negative_control": {
+        "ran_and_failed_as_designed": true
+      },
+      "result": {
+        "state": "PASS",
+        "n_valid": 36,
+        "denominator": 36
+      },
+      "watch": {
+        "state": "CURRENT",
+        "dependency_drift_detected": false,
+        "age_hours": 6,
+        "retest_bound_max_latency_hours": 168,
+        "action_required": "NONE"
+      },
+      "alliance_lifecycle_state": "CLAIM_CURRENT",
+      "hitl_watchdog_dispatch": {
+        "routed_lane_id": "LANE_03_FINANCIAL_RWA_AND_COBOL_ASSURANCE_AUDITOR",
+        "assigned_human_role": "Financial, RWA, & Legacy Mainframe Assurance Auditor (HITL)",
+        "writes_board": false,
+        "model_training": false
+      },
+      "limits": [
+        "Signature and digest establish provenance and integrity only, never certification.",
+        "UNMEASURED carries null n_valid, never zero."
+      ],
+      "capsule_bytes": 1184,
+      "capsule_sha256": "2d0d774e0ff4a203ecd539207f773446700d53b61c81ae7ffde686a431c41bb1"
+    },
+    {
+      "profile": "safe-reverification/0.1-draft",
+      "record_id": "SAFE-SIG-03-PUBLIC",
+      "issuer": "did:web:csoai.org",
+      "domain_id": "public",
+      "sector": "Benefits eligibility & Administrative Due Process",
+      "gspc_axis": "governance",
+      "claim": {
+        "statement": "Governance evaluation bank (n=40) verified with exact McNemar TIE separation.",
+        "falsifiable": true
+      },
+      "dependencies": [
+        {
+          "dep_id": "bank:gspc-governance-v1",
+          "state": "PINNED",
+          "sha256": "a19f02bc441098ee"
+        }
+      ],
+      "negative_control": {
+        "ran_and_failed_as_designed": true
+      },
+      "result": {
+        "state": "PASS",
+        "n_valid": 40,
+        "denominator": 40
+      },
+      "watch": {
+        "state": "CURRENT",
+        "dependency_drift_detected": false,
+        "age_hours": 24,
+        "retest_bound_max_latency_hours": 168,
+        "action_required": "NONE"
+      },
+      "alliance_lifecycle_state": "CLAIM_CURRENT",
+      "hitl_watchdog_dispatch": {
+        "routed_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+        "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)",
+        "writes_board": false,
+        "model_training": false
+      },
+      "limits": [
+        "Signature and digest establish provenance and integrity only, never certification.",
+        "UNMEASURED carries null n_valid, never zero."
+      ],
+      "capsule_bytes": 1087,
+      "capsule_sha256": "8e32b217f7d165c093f542017f2eb3a243f96ef3f17a5d25fb790206bcce1203"
+    },
+    {
+      "profile": "safe-reverification/0.1-draft",
+      "record_id": "SAFE-SIG-04-WORK",
+      "issuer": "did:web:csoai.org",
+      "domain_id": "work",
+      "sector": "Resume screening & Hiring Platform x402 Conformance",
+      "gspc_axis": "claim-maintenance",
+      "claim": {
+        "statement": "Hiring platform public claim re-checked on Day-7 schedule; upstream page digest changed.",
+        "falsifiable": true
+      },
+      "dependencies": [
+        {
+          "dep_id": "surface:hiring-platform-home",
+          "state": "PINNED",
+          "sha256": "drifted_digest_20261029"
+        }
+      ],
+      "negative_control": {
+        "ran_and_failed_as_designed": true
+      },
+      "result": {
+        "state": "PASS",
+        "n_valid": 32,
+        "denominator": 32
+      },
+      "watch": {
+        "state": "STALE",
+        "dependency_drift_detected": true,
+        "age_hours": 180,
+        "retest_bound_max_latency_hours": 168,
+        "action_required": "BOUNDED_RETEST_AND_HITL_REVIEW"
+      },
+      "alliance_lifecycle_state": "MEASURED",
+      "hitl_watchdog_dispatch": {
+        "routed_lane_id": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS_OFFICER",
+        "assigned_human_role": "Public Watchdog, Regulatory Drift, & Corrections Officer (HITL)",
+        "writes_board": false,
+        "model_training": false
+      },
+      "limits": [
+        "Signature and digest establish provenance and integrity only, never certification.",
+        "UNMEASURED carries null n_valid, never zero."
+      ],
+      "capsule_bytes": 1141,
+      "capsule_sha256": "39789b408de283fe1de2689ed642360841689edc5f58901b5c90e8a3c5e12d43"
+    },
+    {
+      "profile": "safe-reverification/0.1-draft",
+      "record_id": "SAFE-SIG-05-INFRA",
+      "issuer": "did:web:csoai.org",
+      "domain_id": "infra",
+      "sector": "Energy grid control & Autonomous Machinery",
+      "gspc_axis": "machinery-conformity",
+      "claim": {
+        "statement": "Machinery-conformity safeguard bank (n=50) holds under designed-to-fail negative control.",
+        "falsifiable": true
+      },
+      "dependencies": [
+        {
+          "dep_id": "bank:gspc-machinery-v1",
+          "state": "PINNED",
+          "sha256": "f012bc99812300aa"
+        }
+      ],
+      "negative_control": {
+        "ran_and_failed_as_designed": true
+      },
+      "result": {
+        "state": "PASS",
+        "n_valid": 50,
+        "denominator": 50
+      },
+      "watch": {
+        "state": "CURRENT",
+        "dependency_drift_detected": false,
+        "age_hours": 18,
+        "retest_bound_max_latency_hours": 168,
+        "action_required": "NONE"
+      },
+      "alliance_lifecycle_state": "CLAIM_CURRENT",
+      "hitl_watchdog_dispatch": {
+        "routed_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+        "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)",
+        "writes_board": false,
+        "model_training": false
+      },
+      "limits": [
+        "Signature and digest establish provenance and integrity only, never certification.",
+        "UNMEASURED carries null n_valid, never zero."
+      ],
+      "capsule_bytes": 1099,
+      "capsule_sha256": "9c8e85d623c1d4c6175b128c521a3bca6cb5175d01c42e265aaf4c8c6bd0f175"
+    },
+    {
+      "profile": "safe-reverification/0.1-draft",
+      "record_id": "SAFE-SIG-06-CONSUMER",
+      "issuer": "did:web:csoai.org",
+      "domain_id": "consumer",
+      "sector": "Generative content & Multi-Agent MCP Toolchains",
+      "gspc_axis": "effect-binding",
+      "claim": {
+        "statement": "Third-party remote MCP server binds executed tool argument to authorization receipt.",
+        "falsifiable": true
+      },
+      "dependencies": [
+        {
+          "dep_id": "probe:effect-binding-2026-09-22",
+          "state": "PINNED",
+          "sha256": "e7083086fedf34d5"
+        }
+      ],
+      "negative_control": {
+        "ran_and_failed_as_designed": true
+      },
+      "result": {
+        "state": "FAIL",
+        "n_valid": 261,
+        "denominator": 261
+      },
+      "watch": {
+        "state": "CURRENT",
+        "dependency_drift_detected": false,
+        "age_hours": 48,
+        "retest_bound_max_latency_hours": 168,
+        "action_required": "BOUNDED_RETEST_AND_HITL_REVIEW"
+      },
+      "alliance_lifecycle_state": "MEASURED",
+      "hitl_watchdog_dispatch": {
+        "routed_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+        "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)",
+        "writes_board": false,
+        "model_training": false
+      },
+      "limits": [
+        "Signature and digest establish provenance and integrity only, never certification.",
+        "UNMEASURED carries null n_valid, never zero."
+      ],
+      "capsule_bytes": 1131,
+      "capsule_sha256": "6ae18bb92790c646ac6abae72f84248e7c81496a23221f55877ad295525bb317"
+    },
+    {
+      "profile": "safe-reverification/0.1-draft",
+      "record_id": "SAFE-SIG-07-INDUSTRY",
+      "issuer": "did:web:csoai.org",
+      "domain_id": "industry",
+      "sector": "Education grading & Benchmark Grader Verification",
+      "gspc_axis": "measurer-integrity",
+      "claim": {
+        "statement": "Legacy external benchmark run where designed-to-fail negative control did not fail.",
+        "falsifiable": true
+      },
+      "dependencies": [
+        {
+          "dep_id": "grader:external-unpinned",
+          "state": "UNPINNED",
+          "sha256": "none"
+        }
+      ],
+      "negative_control": {
+        "ran_and_failed_as_designed": false
+      },
+      "result": {
+        "state": "NOT_DISCRIMINATING",
+        "n_valid": 44,
+        "denominator": null
+      },
+      "watch": {
+        "state": "CURRENT",
+        "dependency_drift_detected": false,
+        "age_hours": 72,
+        "retest_bound_max_latency_hours": 168,
+        "action_required": "BOUNDED_RETEST_AND_HITL_REVIEW"
+      },
+      "alliance_lifecycle_state": "MEASURED",
+      "hitl_watchdog_dispatch": {
+        "routed_lane_id": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",
+        "assigned_human_role": "Benchmark & Measurer-Integrity Curator (HITL)",
+        "writes_board": false,
+        "model_training": false
+      },
+      "limits": [
+        "Signature and digest establish provenance and integrity only, never certification.",
+        "UNMEASURED carries null n_valid, never zero."
+      ],
+      "capsule_bytes": 1124,
+      "capsule_sha256": "1312a1a8da8e4b943c52807963f6af3d6cc917b82a82bc59e7f5b35e93e70b5c"
+    },
+    {
+      "profile": "safe-reverification/0.1-draft",
+      "record_id": "SAFE-SIG-08-INSURANCE",
+      "issuer": "did:web:csoai.org",
+      "domain_id": "insurance",
+      "sector": "Life & health underwriting & Model Drift Watch (Partial Population Slice)",
+      "gspc_axis": "continuity",
+      "claim": {
+        "statement": "Continuity & rollback verification across sampled insurer endpoints (n=50 of partial frame).",
+        "falsifiable": true
+      },
+      "dependencies": [
+        {
+          "dep_id": "bank:gspc-continuity-v1",
+          "state": "PINNED",
+          "sha256": "77bc0192837465aa"
+        }
+      ],
+      "negative_control": {
+        "ran_and_failed_as_designed": true
+      },
+      "result": {
+        "state": "PARTIAL",
+        "n_valid": 50,
+        "denominator": null
+      },
+      "watch": {
+        "state": "CURRENT",
+        "dependency_drift_detected": false,
+        "age_hours": 10,
+        "retest_bound_max_latency_hours": 168,
+        "action_required": "NONE"
+      },
+      "alliance_lifecycle_state": "MEASURED",
+      "hitl_watchdog_dispatch": {
+        "routed_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+        "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)",
+        "writes_board": false,
+        "model_training": false
+      },
+      "limits": [
+        "Signature and digest establish provenance and integrity only, never certification.",
+        "UNMEASURED carries null n_valid, never zero."
+      ],
+      "capsule_bytes": 1132,
+      "capsule_sha256": "56a35aadec8629c00651b1b84b5b3d6bcc221766ad20ac57a9b0b622fad16d39"
+    },
+    {
+      "profile": "safe-reverification/0.1-draft",
+      "record_id": "SAFE-SIG-09-AGRI",
+      "issuer": "did:web:csoai.org",
+      "domain_id": "agri",
+      "sector": "Precision spraying & Autonomous Field Robotics",
+      "gspc_axis": "humanoid-deployment",
+      "claim": {
+        "statement": "Field robotics runtime telemetry slot declared on board; awaiting n_valid >= 30 signed run.",
+        "falsifiable": true
+      },
+      "dependencies": [
+        {
+          "dep_id": "slot:humanoid-deployment",
+          "state": "UNAVAILABLE",
+          "sha256": "none"
+        }
+      ],
+      "negative_control": {
+        "ran_and_failed_as_designed": false
+      },
+      "result": {
+        "state": "UNMEASURED",
+        "n_valid": null,
+        "denominator": null
+      },
+      "watch": {
+        "state": "UNMEASURED",
+        "dependency_drift_detected": false,
+        "age_hours": 0,
+        "retest_bound_max_latency_hours": 168,
+        "action_required": "NONE"
+      },
+      "alliance_lifecycle_state": "DISCOVERED",
+      "hitl_watchdog_dispatch": {
+        "routed_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+        "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)",
+        "writes_board": false,
+        "model_training": false
+      },
+      "limits": [
+        "Signature and digest establish provenance and integrity only, never certification.",
+        "UNMEASURED carries null n_valid, never zero."
+      ],
+      "capsule_bytes": 1107,
+      "capsule_sha256": "5170146913b7d85d480027bbb7614ce93f2f8c4f3a2c538c605d6a4c4a8cca34"
+    }
+  ],
+  "all_33_axes_frozen_to_fluid_watch_map": [
+    {
+      "axis_index": 1,
+      "axis": "governance",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:governance",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+      "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)"
+    },
+    {
+      "axis_index": 2,
+      "axis": "safety",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:safety",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+      "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)"
+    },
+    {
+      "axis_index": 3,
+      "axis": "provenance",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:provenance",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN_REVIEWER",
+      "assigned_human_role": "Provenance, AI-BOM, & MCP Supply-Chain Reviewer (HITL)"
+    },
+    {
+      "axis_index": 4,
+      "axis": "continuity",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:continuity",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+      "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)"
+    },
+    {
+      "axis_index": 5,
+      "axis": "conformance",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:conformance",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",
+      "assigned_human_role": "Benchmark & Measurer-Integrity Curator (HITL)"
+    },
+    {
+      "axis_index": 6,
+      "axis": "openness",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:openness",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN_REVIEWER",
+      "assigned_human_role": "Provenance, AI-BOM, & MCP Supply-Chain Reviewer (HITL)"
+    },
+    {
+      "axis_index": 7,
+      "axis": "machinery-conformity",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:machinery-conformity",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+      "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)"
+    },
+    {
+      "axis_index": 8,
+      "axis": "care",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:care",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_01_CLINICAL_AND_CARE_SAFEGUARD_STEWARD",
+      "assigned_human_role": "Clinical & Article-1 Care Safeguard Steward (HITL)"
+    },
+    {
+      "axis_index": 9,
+      "axis": "cross-reality",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:cross-reality",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_01_CLINICAL_AND_CARE_SAFEGUARD_STEWARD",
+      "assigned_human_role": "Clinical & Article-1 Care Safeguard Steward (HITL)"
+    },
+    {
+      "axis_index": 10,
+      "axis": "detector-interop",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:detector-interop",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN_REVIEWER",
+      "assigned_human_role": "Provenance, AI-BOM, & MCP Supply-Chain Reviewer (HITL)"
+    },
+    {
+      "axis_index": 11,
+      "axis": "art5-safeguard",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:art5-safeguard",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_01_CLINICAL_AND_CARE_SAFEGUARD_STEWARD",
+      "assigned_human_role": "Clinical & Article-1 Care Safeguard Steward (HITL)"
+    },
+    {
+      "axis_index": 12,
+      "axis": "swarm",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:swarm",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+      "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)"
+    },
+    {
+      "axis_index": 13,
+      "axis": "affect",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:affect",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_01_CLINICAL_AND_CARE_SAFEGUARD_STEWARD",
+      "assigned_human_role": "Clinical & Article-1 Care Safeguard Steward (HITL)"
+    },
+    {
+      "axis_index": 14,
+      "axis": "jail",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:jail",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+      "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)"
+    },
+    {
+      "axis_index": 15,
+      "axis": "effect-binding",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:effect-binding",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+      "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)"
+    },
+    {
+      "axis_index": 16,
+      "axis": "provenance-controls",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:provenance-controls",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN_REVIEWER",
+      "assigned_human_role": "Provenance, AI-BOM, & MCP Supply-Chain Reviewer (HITL)"
+    },
+    {
+      "axis_index": 17,
+      "axis": "reserve-attestation",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:reserve-attestation",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_03_FINANCIAL_RWA_AND_COBOL_ASSURANCE_AUDITOR",
+      "assigned_human_role": "Financial, RWA, & Legacy Mainframe Assurance Auditor (HITL)"
+    },
+    {
+      "axis_index": 18,
+      "axis": "regulatory-framework",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:regulatory-framework",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS_OFFICER",
+      "assigned_human_role": "Public Watchdog, Regulatory Drift, & Corrections Officer (HITL)"
+    },
+    {
+      "axis_index": 19,
+      "axis": "distribution-integrity",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:distribution-integrity",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN_REVIEWER",
+      "assigned_human_role": "Provenance, AI-BOM, & MCP Supply-Chain Reviewer (HITL)"
+    },
+    {
+      "axis_index": 20,
+      "axis": "custody-disclosure",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:custody-disclosure",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_03_FINANCIAL_RWA_AND_COBOL_ASSURANCE_AUDITOR",
+      "assigned_human_role": "Financial, RWA, & Legacy Mainframe Assurance Auditor (HITL)"
+    },
+    {
+      "axis_index": 21,
+      "axis": "ai-adoption-components",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:ai-adoption-components",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_03_FINANCIAL_RWA_AND_COBOL_ASSURANCE_AUDITOR",
+      "assigned_human_role": "Financial, RWA, & Legacy Mainframe Assurance Auditor (HITL)"
+    },
+    {
+      "axis_index": 22,
+      "axis": "labour-components",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:labour-components",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_03_FINANCIAL_RWA_AND_COBOL_ASSURANCE_AUDITOR",
+      "assigned_human_role": "Financial, RWA, & Legacy Mainframe Assurance Auditor (HITL)"
+    },
+    {
+      "axis_index": 23,
+      "axis": "humanoid-labour-index",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:humanoid-labour-index",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_03_FINANCIAL_RWA_AND_COBOL_ASSURANCE_AUDITOR",
+      "assigned_human_role": "Financial, RWA, & Legacy Mainframe Assurance Auditor (HITL)"
+    },
+    {
+      "axis_index": 24,
+      "axis": "lab-practice",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:lab-practice",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",
+      "assigned_human_role": "Benchmark & Measurer-Integrity Curator (HITL)"
+    },
+    {
+      "axis_index": 25,
+      "axis": "company-practice",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:company-practice",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",
+      "assigned_human_role": "Benchmark & Measurer-Integrity Curator (HITL)"
+    },
+    {
+      "axis_index": 26,
+      "axis": "measurer-integrity",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:measurer-integrity",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",
+      "assigned_human_role": "Benchmark & Measurer-Integrity Curator (HITL)"
+    },
+    {
+      "axis_index": 27,
+      "axis": "harness-fidelity",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:harness-fidelity",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",
+      "assigned_human_role": "Benchmark & Measurer-Integrity Curator (HITL)"
+    },
+    {
+      "axis_index": 28,
+      "axis": "interop-conformance",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:interop-conformance",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_04_PROVENANCE_AIBOM_AND_SUPPLY_CHAIN_REVIEWER",
+      "assigned_human_role": "Provenance, AI-BOM, & MCP Supply-Chain Reviewer (HITL)"
+    },
+    {
+      "axis_index": 29,
+      "axis": "humanoid-deployment",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:humanoid-deployment",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_02_CONSTITUTIONAL_EFFECT_AND_XRAIV_APPROVER",
+      "assigned_human_role": "Constitutional Effect & XRAIV Authority Approver (HITL)"
+    },
+    {
+      "axis_index": 30,
+      "axis": "regulator-transparency",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:regulator-transparency",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS_OFFICER",
+      "assigned_human_role": "Public Watchdog, Regulatory Drift, & Corrections Officer (HITL)"
+    },
+    {
+      "axis_index": 31,
+      "axis": "interpretability-reproducibility",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:interpretability-reproducibility",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",
+      "assigned_human_role": "Benchmark & Measurer-Integrity Curator (HITL)"
+    },
+    {
+      "axis_index": 32,
+      "axis": "claim-maintenance",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:claim-maintenance",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_06_PUBLIC_WATCHDOG_AND_CORRECTIONS_OFFICER",
+      "assigned_human_role": "Public Watchdog, Regulatory Drift, & Corrections Officer (HITL)"
+    },
+    {
+      "axis_index": 33,
+      "axis": "serving-fidelity",
+      "frozen_instrument_pin": "sha256-pinned-bank-or-predicates:serving-fidelity",
+      "fluid_watch_triggers": [
+        "model_weights_or_api_digest_change",
+        "mcp_tools_list_sha256_change",
+        "system_prompt_or_safeguard_policy_change",
+        "retest_bound_max_latency_exceeded_168h"
+      ],
+      "routed_hitl_lane_id": "LANE_05_BENCHMARK_AND_MEASURER_INTEGRITY_CURATOR",
+      "assigned_human_role": "Benchmark & Measurer-Integrity Curator (HITL)"
+    }
+  ],
+  "framing": "Measurement, never certification. Anyone can re-check at https://councilof.ai/verify",
+  "signal_sha256": "fa471d0f94a21bb90369868f903a906962dbd397091d92045b5c3ba3ee5f4f86"
+}

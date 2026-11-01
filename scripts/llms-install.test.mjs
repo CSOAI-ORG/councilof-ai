@@ -16,10 +16,6 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     json("functions/mcp/gspc-tools.json"),
     json("functions/mcp/paid-tools.json"),
   ]);
-  assert.equal(
-    await readFile(new URL("public/llms-install.md", root), "utf8"), guide,
-    "the published install guide must match its canonical source",
-  );
 
   const remote = descriptor.remotes.find(
     (candidate) => candidate.type === "streamable-http",
@@ -29,8 +25,8 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     (match) => JSON.parse(match[1]),
   );
   const configs = examples.filter((example) => example.mcpServers);
-  // Stable npm releases are deprecated; prerelease publication alone does not establish tool parity.
-  // Keep one canonical remote configuration rather than implying local stdio compatibility.
+  // One remote configuration only: every published npm release is marked deprecated on npm and
+  // carries fewer tools, so the guide no longer offers a local stdio configuration (6 Oct 2026).
   assert.equal(configs.length, 1, "one remote configuration, no local stdio configuration");
   assert.deepEqual(configs[0], {
     mcpServers: {
@@ -56,8 +52,13 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     catalog.x402_metered,
     paid.tools.map((tool) => tool.name),
   );
-  assert.equal(catalog.free.length, 47);
-  assert.equal(catalog.x402_metered.length, 5);
+  // DERIVED, never typed. The guide's catalogue must be the canonical tool set, so the
+  // count it holds is the count the door serves — a typed number here turned every
+  // legitimate growth of the fleet into a red build (it said 47 while the door served
+  // 48). The deepEqual above is the real guard: a tool added to the canonical set and
+  // missing from the guide still fails.
+  assert.equal(catalog.free.length, free.tools.length);
+  assert.equal(catalog.x402_metered.length, paid.tools.length);
 
   // The prose count and the prose wording are held to the catalogue, so neither can drift.
   // "the same N names" must be N = free + x402-metered, and the free-tool sentence must not

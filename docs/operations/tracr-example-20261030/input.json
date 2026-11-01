@@ -1,0 +1,670 @@
+{
+  "acceptance": {
+    "exact_reverse_cases": 39,
+    "wrong_identity_cases_rejected": 24
+  },
+  "admission_eligible": false,
+  "environment": {
+    "packages": {
+      "absl-py": "2.5.1",
+      "chex": "0.1.92",
+      "dm-haiku": "0.0.17",
+      "einops": "0.8.2",
+      "jax": "0.12.0.1",
+      "jaxlib": "0.12.0.1",
+      "jmp": "0.0.4",
+      "ml_dtypes": "0.6.0",
+      "networkx": "3.7",
+      "numpy": "2.5.4",
+      "opt_einsum": "3.4.0",
+      "pip": "25.3",
+      "scipy": "1.18.1",
+      "tabulate": "0.10.0",
+      "toolz": "1.2.0",
+      "tracr": "1.0.0",
+      "typing_extensions": "4.16.0"
+    },
+    "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+    "python": "3.13.12"
+  },
+  "frozen_at": "2026-10-30T05:51:04.063540+00:00",
+  "input_bank": [
+    {
+      "expected": [
+        "BOS",
+        1
+      ],
+      "id": "reverse-1-01",
+      "identity_is_discriminating": false,
+      "input": [
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2
+      ],
+      "id": "reverse-1-02",
+      "identity_is_discriminating": false,
+      "input": [
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3
+      ],
+      "id": "reverse-1-03",
+      "identity_is_discriminating": false,
+      "input": [
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        1
+      ],
+      "id": "reverse-2-01",
+      "identity_is_discriminating": false,
+      "input": [
+        1,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        1
+      ],
+      "id": "reverse-2-02",
+      "identity_is_discriminating": true,
+      "input": [
+        1,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        1
+      ],
+      "id": "reverse-2-03",
+      "identity_is_discriminating": true,
+      "input": [
+        1,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        2
+      ],
+      "id": "reverse-2-04",
+      "identity_is_discriminating": true,
+      "input": [
+        2,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        2
+      ],
+      "id": "reverse-2-05",
+      "identity_is_discriminating": false,
+      "input": [
+        2,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        2
+      ],
+      "id": "reverse-2-06",
+      "identity_is_discriminating": true,
+      "input": [
+        2,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        3
+      ],
+      "id": "reverse-2-07",
+      "identity_is_discriminating": true,
+      "input": [
+        3,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        3
+      ],
+      "id": "reverse-2-08",
+      "identity_is_discriminating": true,
+      "input": [
+        3,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        3
+      ],
+      "id": "reverse-2-09",
+      "identity_is_discriminating": false,
+      "input": [
+        3,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        1,
+        1
+      ],
+      "id": "reverse-3-01",
+      "identity_is_discriminating": false,
+      "input": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        1,
+        1
+      ],
+      "id": "reverse-3-02",
+      "identity_is_discriminating": true,
+      "input": [
+        1,
+        1,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        1,
+        1
+      ],
+      "id": "reverse-3-03",
+      "identity_is_discriminating": true,
+      "input": [
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        2,
+        1
+      ],
+      "id": "reverse-3-04",
+      "identity_is_discriminating": false,
+      "input": [
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        2,
+        1
+      ],
+      "id": "reverse-3-05",
+      "identity_is_discriminating": true,
+      "input": [
+        1,
+        2,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        2,
+        1
+      ],
+      "id": "reverse-3-06",
+      "identity_is_discriminating": true,
+      "input": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        3,
+        1
+      ],
+      "id": "reverse-3-07",
+      "identity_is_discriminating": false,
+      "input": [
+        1,
+        3,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        3,
+        1
+      ],
+      "id": "reverse-3-08",
+      "identity_is_discriminating": true,
+      "input": [
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        3,
+        1
+      ],
+      "id": "reverse-3-09",
+      "identity_is_discriminating": true,
+      "input": [
+        1,
+        3,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        1,
+        2
+      ],
+      "id": "reverse-3-10",
+      "identity_is_discriminating": true,
+      "input": [
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        1,
+        2
+      ],
+      "id": "reverse-3-11",
+      "identity_is_discriminating": false,
+      "input": [
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        1,
+        2
+      ],
+      "id": "reverse-3-12",
+      "identity_is_discriminating": true,
+      "input": [
+        2,
+        1,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        2,
+        2
+      ],
+      "id": "reverse-3-13",
+      "identity_is_discriminating": true,
+      "input": [
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        2,
+        2
+      ],
+      "id": "reverse-3-14",
+      "identity_is_discriminating": false,
+      "input": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        2,
+        2
+      ],
+      "id": "reverse-3-15",
+      "identity_is_discriminating": true,
+      "input": [
+        2,
+        2,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        3,
+        2
+      ],
+      "id": "reverse-3-16",
+      "identity_is_discriminating": true,
+      "input": [
+        2,
+        3,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        3,
+        2
+      ],
+      "id": "reverse-3-17",
+      "identity_is_discriminating": false,
+      "input": [
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        3,
+        2
+      ],
+      "id": "reverse-3-18",
+      "identity_is_discriminating": true,
+      "input": [
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        1,
+        3
+      ],
+      "id": "reverse-3-19",
+      "identity_is_discriminating": true,
+      "input": [
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        1,
+        3
+      ],
+      "id": "reverse-3-20",
+      "identity_is_discriminating": true,
+      "input": [
+        3,
+        1,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        1,
+        3
+      ],
+      "id": "reverse-3-21",
+      "identity_is_discriminating": false,
+      "input": [
+        3,
+        1,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        2,
+        3
+      ],
+      "id": "reverse-3-22",
+      "identity_is_discriminating": true,
+      "input": [
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        2,
+        3
+      ],
+      "id": "reverse-3-23",
+      "identity_is_discriminating": true,
+      "input": [
+        3,
+        2,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        2,
+        3
+      ],
+      "id": "reverse-3-24",
+      "identity_is_discriminating": false,
+      "input": [
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        1,
+        3,
+        3
+      ],
+      "id": "reverse-3-25",
+      "identity_is_discriminating": true,
+      "input": [
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        2,
+        3,
+        3
+      ],
+      "id": "reverse-3-26",
+      "identity_is_discriminating": true,
+      "input": [
+        3,
+        3,
+        2
+      ]
+    },
+    {
+      "expected": [
+        "BOS",
+        3,
+        3,
+        3
+      ],
+      "id": "reverse-3-27",
+      "identity_is_discriminating": false,
+      "input": [
+        3,
+        3,
+        3
+      ]
+    }
+  ],
+  "install_report_sha256": "a19b7f2b334bfab2fda8bd52ccbb1517b8f5112ff7e08cd00b84de1aca952db4",
+  "method_sha256": "08f48b1a844ef2208c8d3ec719ca608705cc54f77c318a87edd518c60e73ae85",
+  "model": {
+    "compiler_bos": "BOS",
+    "device": "cpu",
+    "max_seq_len": 5,
+    "vocab": [
+      1,
+      2,
+      3
+    ]
+  },
+  "review_state": "UNREVIEWED_EXPERIMENT",
+  "schema": "csoai.tracr-example-input/0.1",
+  "scope": "Published README reverse example on all 39 length-1-to-3 inputs over {1,2,3}; a convenience finite domain, not a population estimate.",
+  "source_sha256": {
+    "CONTRIBUTING.md": "651d6d3a2064443869be2c204d42a1e648f3545617f0786b97de009781bf722f",
+    "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "README.md": "7b7646a7998ffc82e6bff1bfc701dacbaf36d352c5489713ce365312e89ded93",
+    "compression_heatmap.png": "cdbcbed3f453be9b4b2088d53a02887abf6864aad308bb09571d300c09b6d2c6",
+    "setup.py": "48b9cf2704b35a699ba28dac87fb5ac07e5bd083bbbbf375e1461aa787804403",
+    "tracr/__init__.py": "dbd485f56b72c356361676088de05d358837f7b2f5d78f96879ad849e820eaad",
+    "tracr/compiler/__init__.py": "276052cc5c938d5cafce6a42868c886682fdc47b187cedae2721f99de81ad0c9",
+    "tracr/compiler/assemble.py": "82e273127675ac1eb5766c29492035e875c37caf8cd0746515729e7f93420ca0",
+    "tracr/compiler/assemble_test.py": "5126f455202da50c2fc6d40d03e523834218913baefbd3483d580b3482a74d84",
+    "tracr/compiler/basis_inference.py": "a42831cadf50ff5b4d2daca10f98ee32d83946c89f8f9814b214da02cbc86852",
+    "tracr/compiler/basis_inference_test.py": "50dcf42c80e740fc94de554352e980ced9b2bd11cddb3ce7952e5f055ab31c8a",
+    "tracr/compiler/compiling.py": "45a432183b455219f70fd55d84e5d412b0d483d69019bedc4942bc283ebf0ebf",
+    "tracr/compiler/craft_graph_to_model.py": "c4fffa6338bc81b9933f0cdab49650352359a2036727ea0d79801bc565c258e7",
+    "tracr/compiler/craft_graph_to_model_test.py": "7fc1fef5d146880d99f8a595273c89fb6cccd60b628399b372494c8c940ff73d",
+    "tracr/compiler/craft_model_to_transformer.py": "e6aee6a4d5b7fb3fafd61bafe7d5e03eebcc29e2f2ab8a79ca8ce06aed08d8b9",
+    "tracr/compiler/expr_to_craft_graph.py": "56ef21916556d46d30acecc0803cabe6d1bdf4221a459aa9db24d0689937f09d",
+    "tracr/compiler/expr_to_craft_graph_test.py": "5a14a31140df651b1a686981c5916ce44127142021eef5b936875bb4bc9cd2da",
+    "tracr/compiler/lib.py": "2ddfaf47cc8cf3e425497dd77434caa5d0bda2729c9a10764df9c2cddd167abc",
+    "tracr/compiler/lib_test.py": "5662a336127480d88c3304cb8f82695c02a614035081acdd1199dbc5c13d7950",
+    "tracr/compiler/nodes.py": "17ca881a63aee06010c31d0570960d7b955bce1f29d863b8714763c48e67cc66",
+    "tracr/compiler/rasp_to_craft_integration_test.py": "85bc3dae6d6ab6345f69fe77714b8816d3fe30cc673098ed749b9ece98793317",
+    "tracr/compiler/rasp_to_graph.py": "4f12f599ef273ce820af292495b43588f7cfab53d86a423b967d9a86b2a3ec51",
+    "tracr/compiler/rasp_to_graph_test.py": "6a9090280cbfa434a6654c75ccc4810bd3616bd6b709c60721c0772b498e45f5",
+    "tracr/compiler/rasp_to_transformer_integration_test.py": "2297702d90e0ee6c63bb0edd1f5cc2a04728b397d30825fed3b97361eb71c4eb",
+    "tracr/compiler/test_cases.py": "e9823ddfc5a5814b9e0a7ef1d89e666421598c43ba310116509703b0b309adde",
+    "tracr/compiler/validating.py": "bf31929adfe4191061ed5f2bb5daf954a5c919a874971e3b94500f07aea6e67b",
+    "tracr/compiler/validating_test.py": "af4302125221195b6653b6f93d2d896ce768e83902dd70f9cd26a28cc83672bf",
+    "tracr/craft/__init__.py": "dbd485f56b72c356361676088de05d358837f7b2f5d78f96879ad849e820eaad",
+    "tracr/craft/bases.py": "7259c6200842ee84eb5e9d7c0dfe3ea43e808c9539460d371093bda150e0da34",
+    "tracr/craft/bases_test.py": "4b792a52e57adb15db8f32176f86f8036305d8bf4ae9a2e20b62e3274ce30ce0",
+    "tracr/craft/chamber/__init__.py": "dbd485f56b72c356361676088de05d358837f7b2f5d78f96879ad849e820eaad",
+    "tracr/craft/chamber/categorical_attn.py": "157b4615983d1226dd2a0c87b18b96235d87b641337208902e5ab839440ae030",
+    "tracr/craft/chamber/categorical_attn_test.py": "62e1e6ea7c0a4bccda085ab6e26b85689ed57a783f94082cd7f4c34e33799597",
+    "tracr/craft/chamber/categorical_mlp.py": "18e78b0209bd9afe9b5cb4bd7fe0163295c29626e4bc63a350542f5daa900431",
+    "tracr/craft/chamber/categorical_mlp_test.py": "56c079a15762b3e7e5e6de23db70ca00a9072c9813d561fcc736feff8d19a817",
+    "tracr/craft/chamber/numerical_mlp.py": "d5551a368f0638446dcfeba240210d46faa21a4d5452bfa55ce8b970806cab51",
+    "tracr/craft/chamber/numerical_mlp_test.py": "22db5ecb6c91b9e0fa4b9792c6d6256a89b443fdae94c2df64e0154610abcf43",
+    "tracr/craft/chamber/selector_width.py": "73e0592c0641a4328f4694bb2fec2e343b65344a74784b012cedebe188e1ecea",
+    "tracr/craft/chamber/selector_width_test.py": "b1cfe75f1a2487df46210ae9625a8148949673e04e8edd4c495aeb551460c3f0",
+    "tracr/craft/tests_common.py": "aca559d80e25c0cbe3d7d992ef1b3d7fa0639cf4a74a63e986493bea142d29ed",
+    "tracr/craft/transformers.py": "8a0e04201703107b1626bd8c625582ed13f2cbd34ae84cb875f2ead62c652a9c",
+    "tracr/craft/transformers_test.py": "07bcc527e0fd157c42418e2e0f69141a5a76955d913225395bdc320d63275937",
+    "tracr/craft/vectorspace_fns.py": "e5004b309ae4b572d3724e8cbb15a1573f5a8040954c0bd17464d7e712719e47",
+    "tracr/craft/vectorspace_fns_test.py": "4b86fa15a2c916e4aaab9b9254f0755a3efec5875b53be9b6fa538ef2071a560",
+    "tracr/examples/Visualize_Tracr_Models.ipynb": "c54f21e997f20dd5f8de874c584da11978cb7ef3de471845c137e7e412d8132a",
+    "tracr/examples/__init__.py": "dbd485f56b72c356361676088de05d358837f7b2f5d78f96879ad849e820eaad",
+    "tracr/rasp/__init__.py": "dbd485f56b72c356361676088de05d358837f7b2f5d78f96879ad849e820eaad",
+    "tracr/rasp/causal_eval.py": "9bd1e86fb531c04308a9313da16f2123a53602d8fcf858a365852f0a71e7b1b1",
+    "tracr/rasp/causal_eval_test.py": "7003ec1dafb5f4eb0cae7abe9856b17ef5824b0fea061da23309d7d340c2eef7",
+    "tracr/rasp/rasp.py": "e0545080b8a3f5cf0a3098fcbb30591ed53cd882dbe1c5ef2067d86f9d92ef73",
+    "tracr/rasp/rasp_test.py": "5e3f861f660c89b29f52918171cb9f53c189108f0b8f017237b0ef227dc3818f",
+    "tracr/transformer/__init__.py": "dbd485f56b72c356361676088de05d358837f7b2f5d78f96879ad849e820eaad",
+    "tracr/transformer/attention.py": "cd365e874477a2b36d2c0812d22cd0c16356cfba4137a8fd5e40ff3a629de5c6",
+    "tracr/transformer/compressed_model.py": "b4f82d7faf9c35aa8b235dbc240132ae7077a88d8436a79681992b6db688d5bf",
+    "tracr/transformer/compressed_model_test.py": "3e48f0f730fe77845743cfaff11a0647fcec03ae6542f1ad880cc3f1eca9cfc6",
+    "tracr/transformer/encoder.py": "67d2c72580212632d5d8059380d89af2090ed3d547a694361899fa33c574df9d",
+    "tracr/transformer/encoder_test.py": "e834c98ed1cf14cc94f6f56cb3712e7e5f92396d276afba4e1bacb612ddffe8d",
+    "tracr/transformer/model.py": "583941cd376bfc3c42ba0347ad17b2f0b3cfccfc4aa98f870e156f0a3223c2e9",
+    "tracr/transformer/model_test.py": "ec703d6f9ceeb0d45e463bc33b687065e3276c663f1468de8b199dcddcea41e5",
+    "tracr/utils/__init__.py": "dbd485f56b72c356361676088de05d358837f7b2f5d78f96879ad849e820eaad",
+    "tracr/utils/debugging.py": "0c75c12dcd28a1f4eda6829b5af55cf20e32eb98e1d4688604550f09a49f1ae5",
+    "tracr/utils/errors.py": "92c01d9bc5dd9976a1038acb6b05a4a4bbb100406305d98dbb3b86d7c3932a97",
+    "tracr/utils/errors_test.py": "ab694e07530dfc8edaf5d3b8663a109c730a3c0ea8c4b7e85806bb9b0d2e8809"
+  },
+  "source_url": "https://github.com/google-deepmind/tracr/blob/9ce2b8c82b6ba10e62e86cf6f390e7536d4fd2cd/README.md",
+  "upstream_commit": "9ce2b8c82b6ba10e62e86cf6f390e7536d4fd2cd"
+}

@@ -294,9 +294,90 @@ for(const route of ROUTES.filter(r=>r.documented_zero_amount)){
 }
 
 const headModule=await moduleFrom(current('functions/api/_head.ts'));
-let paymentAllowed=true,settlements=0;
+// Receipt projection: actual receipt reader and delivery reader, synthetic KV only.
+const denyReceiptCrypto=()=>{throw Error('unexpected receipt signing or verification');};
+const receiptRecordModule=await moduleFrom(current('functions/api/_x402_receipt.ts'),{
+ './_x402_config':{toCaip2Network:denyReceiptCrypto},
+ './_x402_jws':{parseJws:denyReceiptCrypto,signJws:denyReceiptCrypto,verifyJwsSignature:denyReceiptCrypto,JWS_ALG:'EdDSA'},
+ './_x402_offer':{X402_SIGNER_KID:'fixture-key-no-signature',OFFER_RECEIPT_EXTENSION:'offer-receipt'}
+});
+const receiptProjectionModule=await moduleFrom(current('functions/api/receipts/index.ts'),{
+ '../_x402_receipt':receiptRecordModule,'../_x402_delivery_record':helperModule,'../_head':headModule
+});
+const receiptFixturePayer='0x1111111111111111111111111111111111111111';
+const receiptFixtureResource='https://example.test/api/evidence-bundle?obligation=article-50&bundle=1';
+const receiptFixtureTx='tx-resource-join-fixture';
+const receiptFixture=receiptRecordModule.namespace.buildReceiptRecord({
+ receipt:{format:'jws',signature:'FIXTURE_NOT_SIGNED'},kid:'fixture-key-no-signature',
+ payload:{version:1,network:'eip155:8453',resourceUrl:'https://example.test/api/evidence-bundle',payer:receiptFixturePayer,issuedAt:1792886400,transaction:receiptFixtureTx},
+ resource:receiptFixtureResource,amount_atomic:'1',asset:'fixture-asset',self:false,settlement_recorded:true
+});
+const deliveryFixture=h.buildDeliveryRecord({
+ transaction:receiptFixtureTx,resource:receiptFixtureResource,response_sha256:digest(Buffer.from('retained fixture body')),response_bytes:21,
+ content_type:'application/json; charset=utf-8',delivered_at:'2026-10-25T00:00:00Z'
+});
+const receiptProjectionExpected={
+ payer:receiptFixturePayer,txHash:receiptFixtureTx,network:'eip155:8453',amount:'1',asset:'fixture-asset',resource:receiptFixtureResource,
+ settledAt:'2026-10-25T00:00:00.000Z',receipt:{format:'jws',signature:'FIXTURE_NOT_SIGNED'},kid:'fixture-key-no-signature',
+ zero_value:false,self:false,record_schema:'csoai.x402.receipt-record/0.1',delivery:null
+};
+function receiptProjectionKv(delivery,includeReceipt=true){
+ const kv=new Kv();
+ kv.list=async({prefix})=>({keys:[...kv.map.keys()].filter(name=>name.startsWith(prefix)).map(name=>({name})),list_complete:true});
+ if(includeReceipt)kv.map.set(receiptRecordModule.namespace.receiptPayerKey(receiptFixturePayer,receiptFixture.payload.issuedAt,receiptFixtureTx),JSON.stringify(receiptFixture));
+ if(delivery!==null)kv.map.set(h.deliveryTxKey(receiptFixtureTx),JSON.stringify(delivery));
+ return kv;
+}
+async function readReceiptProjection(kv){
+ cx.fetch=denyFetch;
+ const response=await receiptProjectionModule.namespace.onRequestGet({request:new Request('https://example.test/api/receipts?payer='+receiptFixturePayer),env:{REVENUE_KV:kv}});
+ return{response,body:await response.json()};
+}
+await test('payer receipt projection attaches exact full-resource delivery metadata',async()=>{
+ const kv=receiptProjectionKv(deliveryFixture),before=JSON.stringify([...kv.map]);
+ const {response,body}=await readReceiptProjection(kv);
+ assert.equal(response.status,200);assert.equal(body.schema,'csoai.receipts.by-payer/0.1');assert.equal(body.status,'OK');assert.equal(body.count,1);
+ assert.deepEqual(body.items,[{...receiptProjectionExpected,delivery:{
+  schema:deliveryFixture.schema,response_sha256:deliveryFixture.response_sha256,response_bytes:deliveryFixture.response_bytes,
+  content_type:deliveryFixture.content_type,delivered_at:deliveryFixture.delivered_at,signed:false,claim_boundary:deliveryFixture.claim_boundary
+ }}]);
+ assert.equal(kv.gets,2);assert.equal(kv.puts,0);assert.equal(JSON.stringify([...kv.map]),before);
+});
+for(const [name,resource]of[
+ ['query','https://example.test/api/evidence-bundle?obligation=article-53&bundle=1'],
+ ['path','https://example.test/api/rwa/evidence?asset=fixture'],
+ ['origin','https://other.example/api/evidence-bundle?obligation=article-50&bundle=1']
+]){
+ await test('payer receipt projection refuses same-transaction different-'+name+' delivery attachment',async()=>{
+  const kv=receiptProjectionKv({...deliveryFixture,resource}),before=JSON.stringify([...kv.map]);
+  const {response,body}=await readReceiptProjection(kv);
+  assert.equal(response.status,200);assert.equal(body.schema,'csoai.receipts.by-payer/0.1');assert.equal(body.status,'OK');assert.equal(body.count,1);
+  assert.deepEqual(body.items,[receiptProjectionExpected]);
+  assert.equal(kv.gets,2);assert.equal(kv.puts,0);assert.equal(JSON.stringify([...kv.map]),before);
+ });
+}
+await test('payer receipt projection keeps an existing receipt with null delivery when no delivery row exists',async()=>{
+ const kv=receiptProjectionKv(null),before=JSON.stringify([...kv.map]);
+ const {response,body}=await readReceiptProjection(kv);
+ assert.equal(response.status,200);assert.equal(body.status,'OK');assert.equal(body.count,1);assert.deepEqual(body.items,[receiptProjectionExpected]);
+ assert.equal(kv.gets,2);assert.equal(kv.puts,0);assert.equal(JSON.stringify([...kv.map]),before);
+});
+await test('payer receipt projection preserves bound-empty items and measured zero count',async()=>{
+ const kv=receiptProjectionKv(null,false);
+ const {response,body}=await readReceiptProjection(kv);
+ assert.equal(response.status,200);assert.equal(body.schema,'csoai.receipts.by-payer/0.1');assert.equal(body.status,'OK');assert.deepEqual(body.items,[]);assert.equal(body.count,0);
+ assert.equal(kv.gets,0);assert.equal(kv.puts,0);assert.equal(kv.map.size,0);
+});
+await test('payer receipt projection preserves UNRECORDED null items and count without a store',async()=>{
+ const {response,body}=await readReceiptProjection(undefined);
+ assert.equal(response.status,200);assert.equal(body.schema,'csoai.receipts.by-payer/0.1');assert.equal(body.status,'UNRECORDED');assert.equal(body.items,null);assert.equal(body.count,null);
+ assert.equal(body.unavailable_capability.capability,'settlement-receipt persistence');
+});
+
+let paymentAllowed=true,settlements=0,paymentVerifications=0;
 const x402={
  verifyX402Payment:async req=>{
+  paymentVerifications++;
   if(paymentAllowed&&req.headers.has('x-payment')){settlements++;return{ok:true,settlement:{transaction:'tx-fixture'},paymentResponse:'opaque-echo'};}
   return{ok:false,reason:'unpaid or refused'};
  },
@@ -433,11 +514,60 @@ const evidenceModule=await moduleFrom(current('functions/api/evidence-bundle.ts'
   signPayload:async payload=>{if(failBundleSign)throw Error('fixture sign failure');return{sha256:digest(Buffer.from(JSON.stringify(payload))),bytes:100,sig_ed25519:null,unsigned_reason:'offline unsigned fixture',did:'did:fixture'};}},
  './_x402_descriptions':{EVIDENCE_BUNDLE_DESCRIPTION:'fixture'},'./_x402_delivery_record':helperModule
 });
-async function runEvidence(query,paid=true,fixtureCards={}){
- const kv=new Kv();settlements=0;paymentAllowed=paid;
- cx.fetch=async()=>new Response(JSON.stringify({cards:fixtureCards,merkle_root:'a'.repeat(64),as_of:'fixture-date'}));
+async function runEvidence(query,paid=true,fixtureCards={},corpusRead){
+ const kv=new Kv();settlements=0;paymentVerifications=0;paymentAllowed=paid;
+ cx.fetch=corpusRead||(async()=>new Response(JSON.stringify({cards:fixtureCards,merkle_root:'a'.repeat(64),as_of:'fixture-date'})));
  const out=await evidenceModule.namespace.onRequestGet({request:new Request('https://example.test/api/evidence-bundle?'+query,{headers:paid?{'x-payment':'fixture'}:{}}),env:{REVENUE_KV:kv}});
  return{kv,out,settlements};
+}
+const unavailableEvidenceReads=[
+ ['HTTP failure',async()=>new Response('unavailable',{status:503})],
+ ['missing cards',async()=>Response.json({})],
+ ['array cards',async()=>Response.json({cards:[]})],
+ ['null cards',async()=>Response.json({cards:null})],
+ ['string cards',async()=>Response.json({cards:'unavailable'})],
+ ['numeric cards',async()=>Response.json({cards:1})],
+];
+for(const [name,read] of unavailableEvidenceReads){
+ for(const [mode,query,paid] of [
+  ['preview','obligation=fixture',false],
+  ['unpaid bundle','obligation=fixture&bundle=1',false],
+  ['presented payment','obligation=fixture&bundle=1',true],
+  ['invoice','obligation=fixture&invoice=gbp&commissioned_by=fixture',false],
+ ]){
+  await test('full evidence '+name+' refuses '+mode+' before payment',async()=>{
+   const actual=await runEvidence(query,paid,{},read),body=await actual.out.json();
+   assert.equal(actual.out.status,503);assert.equal(body.status,'UNCHECKABLE');
+   assert.equal(body.error,'corpus_unavailable');assert.equal(body.relevant_signed_cards,null);
+   assert.equal(body.corpus.signed_cards_total,null);assert.equal(body.corpus.read_state,'UNCHECKABLE');
+   assert.equal(body.cards,undefined);assert.equal(body.manifest_card,undefined);assert.equal(body.buy,undefined);
+   assert.equal(body.reference,undefined);assert.equal(actual.settlements,0);assert.equal(paymentVerifications,0);
+   assert.equal(actual.kv.puts,0);assert.equal(actual.kv.map.size,0);
+  });
+ }
+}
+for(const [name,read] of [
+ ['transport rejection',async()=>{throw Error('offline transport failure');}],
+ ['JSON decoding rejection',async()=>new Response('{')],
+ ['body read rejection',async()=>({ok:true,json:async()=>{throw Error('offline body read failure');}})],
+ ['null response body',async()=>Response.json(null)],
+]){
+ await test('full evidence '+name+' rejects before payment',async()=>{
+  await assert.rejects(runEvidence('obligation=fixture&bundle=1',true,{},read));
+  assert.equal(settlements,0);assert.equal(paymentVerifications,0);
+ });
+}
+for(const [mode,query,status] of [
+ ['preview','obligation=fixture',200],
+ ['unpaid bundle','obligation=fixture&bundle=1',402],
+]){
+ await test('full evidence readable empty '+mode+' retains zero count',async()=>{
+  const actual=await runEvidence(query,false),body=await actual.out.json();
+  const preview=mode==='preview'?body:body.csoai.preview;
+  assert.equal(actual.out.status,status);assert.equal(preview.relevant_signed_cards,0);
+  assert.equal(preview.corpus.signed_cards_total,0);assert.equal(actual.settlements,0);
+  assert.equal(actual.kv.puts,0);
+ });
 }
 await test('full valid ASSEMBLED-EMPTY records zero-selected bundle',async()=>{
  failBundleSign=false;const actual=await runEvidence('obligation=fixture&bundle=1'),raw=await bytes(actual.out),body=JSON.parse(raw);

@@ -60,6 +60,10 @@ const EXISTING = [
   // Historical pricing bookmarks resolve to the current measured dashboard.
   "/pricing-free           /dashboard/?tab=measured&task=pricing-overview 302",
   "/pricing-free/          /dashboard/?tab=measured&task=pricing-overview 302",
+  // /gspc/field is a generated static surface (scripts/surface/build-gspc-field.mjs). The bare
+  // path must reach that page rather than the catch-all shell, exactly as /gspc/jail reaches
+  // its own surface. Without this rule /gspc/field renders the SPA shell and the page is orphaned.
+  "/gspc/field  /gspc/field/  308",
   // The hand-authored /arena tree was a second, stale product surface. Keep
   // historical machine evidence in public/arena/*.json{,l}, but route every
   // former human page into the one Council OS play surface. Exact rules are
