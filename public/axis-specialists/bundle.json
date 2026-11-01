@@ -162,14 +162,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-gov"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -184,7 +184,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -234,7 +235,94 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "ac86ab20164eeb9411e375fd29d5332f99de738088b561684bdb6f5aec7a8fdc"
+      "audit_sha256": "96e5dd988950820cd72d3ceae39296777d8506bc9801c826e5a4f169f9cfb3de",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 14,
+            "title": "Regulatory determination is outside CSOAI"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "leader_card_url",
+          "measurement_time"
+        ],
+        "measurement_url": "/api/gspc/axis/governance",
+        "competency_url": "/api/hitl/modules/governance",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -392,14 +480,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-agi"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -414,7 +502,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 7,
+        "passed": 5,
+        "declared": 2,
         "findings": 1,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -464,7 +553,99 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "5427fd11aa4c8d53252fb7b1556dc66f312c2be47e29eec0544a03371194a12b"
+      "audit_sha256": "9ee13b48ec991725fc73ad2a0b51949d6cee19944ff8636c0b106d8e080124d2",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 8,
+            "title": "Runtime isolation is least privilege"
+          },
+          {
+            "article": 9,
+            "title": "Credentials are not agent memory"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "macro_f1",
+          "unparsed_rate",
+          "cvar05_harm",
+          "mean_harm"
+        ],
+        "measurement_url": "/api/gspc/axis/safety",
+        "competency_url": "/api/hitl/modules/safety",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -625,14 +806,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-prv"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -647,7 +828,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -697,7 +879,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "e01c89f070e51493f4bea63b8e75d4f9e3dd35c5e6f540514dcc3e31d34c38af"
+      "audit_sha256": "a2b5a50a1eef8aea644d69c7eace8877aa2dc2f8a911382204eb77c1741fb5e5",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "leader_card_url",
+          "separation_evidence",
+          "measurement_time"
+        ],
+        "measurement_url": "/api/gspc/axis/provenance",
+        "competency_url": "/api/hitl/modules/provenance",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -857,14 +1122,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-asi"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -879,7 +1144,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -929,7 +1195,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "8fa4be6d86b05c8a8906584ad9704cda5093e49dd1d0622f1720ecc5b5ad9e54"
+      "audit_sha256": "3641ed6af3b8cc707f291e6214abe1669a571ab2146fe71774961882c17e0d4d",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "measurement_time",
+          "method_status"
+        ],
+        "measurement_url": "/api/gspc/axis/continuity",
+        "competency_url": "/api/hitl/modules/continuity",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -1089,14 +1438,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-mcp"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -1111,7 +1460,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -1161,7 +1511,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "9afeeb9165d0e3b15f4c03532d3908995824dc6561e3827378494c3b4bf6e8e4"
+      "audit_sha256": "2dcfc7fc972125dd7d43bb990d58ac06dcfcd74b3ce6bac7793e812bca102b9e",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "measurement_time",
+          "method_status"
+        ],
+        "measurement_url": "/api/gspc/axis/conformance",
+        "competency_url": "/api/hitl/modules/conformance",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -1320,14 +1753,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-oss"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -1342,7 +1775,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -1392,7 +1826,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "3f5bfdef4d2509af1450540c5a2400d5a18e82bc39e55529b9317ba6477a77dd"
+      "audit_sha256": "3f835b276a784eb33e28a0afaaa08d5803cd0d1e74d2485b893a0179e2dc617c",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "separation_evidence",
+          "measurement_time",
+          "method_status"
+        ],
+        "measurement_url": "/api/gspc/axis/openness",
+        "competency_url": "/api/hitl/modules/openness",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -1503,14 +2020,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-mach"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -1525,7 +2042,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -1575,7 +2093,94 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "eff182cbfd4293f21a8bbbc0b190c7ebfa5b5590e179449e3a34c03d350bb74d"
+      "audit_sha256": "b8485813e8ccc6037a9a392df4c7407f5d250807fb38a61e03a825d582de7cf8",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 14,
+            "title": "Regulatory determination is outside CSOAI"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "measurement_time"
+        ],
+        "measurement_url": "/api/gspc/axis/machinery-conformity",
+        "competency_url": "/api/hitl/modules/machinery-conformity",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -1738,14 +2343,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-care"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -1760,7 +2365,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -1810,7 +2416,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "9b3b24a08c1df8e3242a330cebb72d9467f8a257afd3d5faa2b6166835fa5d4a"
+      "audit_sha256": "8e8f9b641849cc4a4a2b6952e06669a7c24c8c08f99160711297e68bfe4297bb",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "n_note",
+          "separation_n_note",
+          "leader_card_url"
+        ],
+        "measurement_url": "/api/gspc/axis/care",
+        "competency_url": "/api/hitl/modules/care",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -1921,14 +2610,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-xr"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -1943,7 +2632,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -1993,7 +2683,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "030d4e6f60ffa57d0abe6d9236a80ccca206a6bc81404a60747e472bf0e74d06"
+      "audit_sha256": "8f28bcbb94d449479e08bda5a87f78c5504376db1841e134ffbddb54babb1b6f",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "measurement_time"
+        ],
+        "measurement_url": "/api/gspc/axis/cross-reality",
+        "competency_url": "/api/hitl/modules/cross-reality",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -2105,14 +2878,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-det"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -2127,7 +2900,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 8,
+        "passed": 6,
+        "declared": 2,
         "findings": 0,
         "audit_state": "HUMAN_REVIEW_READY"
       },
@@ -2177,7 +2951,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "f4f87cf8d217921d7e12542bab5c8fad0fdfa47b7df7845df6ce39bbde3b4ea0"
+      "audit_sha256": "53aebd2ab3e9309442cf96fa5570ffbd8290f818e635207d5788e1f1bd468fe2",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "measurement_time"
+        ],
+        "measurement_url": "/api/gspc/axis/detector-interop",
+        "competency_url": "/api/hitl/modules/detector-interop",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -2290,14 +3147,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-art5"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -2312,7 +3169,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 7,
+        "passed": 5,
+        "declared": 2,
         "findings": 1,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -2362,7 +3220,94 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "c6af63dc972db560052007c8aac74ab2b437db7df4770f32d72a0c3faa921809"
+      "audit_sha256": "6550888e87c9cc1f8aeeb1c08fb047dbecdda5bdab7526e0815aa4bd93742e41",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 14,
+            "title": "Regulatory determination is outside CSOAI"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "separation_untested_reason_code",
+          "cvar05_harm"
+        ],
+        "measurement_url": "/api/gspc/axis/art5-safeguard",
+        "competency_url": "/api/hitl/modules/art5-safeguard",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -2466,14 +3411,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-swarm"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -2488,7 +3433,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 6,
+        "passed": 4,
+        "declared": 2,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -2538,7 +3484,98 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "f68ca53b57bed0c4d6775508f110264edc4eac8e389d3c0b52c4dffe2e6d3efd"
+      "audit_sha256": "42eb69f87dd264832e9361316c6729dbc19341b262d7d397598966fa8f116548",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 8,
+            "title": "Runtime isolation is least privilege"
+          },
+          {
+            "article": 9,
+            "title": "Credentials are not agent memory"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "n_note",
+          "method_status",
+          "separation_basis"
+        ],
+        "measurement_url": "/api/gspc/axis/swarm",
+        "competency_url": "/api/hitl/modules/swarm",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -2650,14 +3687,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-affect"
         },
         {
           "id": "ROW_LINEAGE",
-          "state": "PASS",
-          "detail": "published per-item rows are digest-bound"
+          "state": "DECLARED",
+          "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
         },
         {
           "id": "LEADER_STATE",
@@ -2672,7 +3709,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 7,
+        "passed": 5,
+        "declared": 2,
         "findings": 1,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -2722,7 +3760,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "46bc0392ea43bd299c11563697635862d20b213cfa211f07134a6336da498475"
+      "audit_sha256": "2954f544961eb9b68f487d62e03d70408695ccb2950cf20376bc431e42bcfb81",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "peritem_file_sha256",
+          "public_leader_state",
+          "cvar05_harm",
+          "mean_harm"
+        ],
+        "measurement_url": "/api/gspc/axis/affect",
+        "competency_url": "/api/hitl/modules/affect",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -2978,14 +4099,14 @@
         },
         {
           "id": "FROZEN_BANK",
-          "state": "PASS",
-          "detail": "frozen bank URL is published",
+          "state": "DECLARED",
+          "detail": "bank URL is declared; bank bytes and freeze state were not verified",
           "evidence": "https://huggingface.co/datasets/csoai/gspc-jail-goldbank"
         },
         {
           "id": "ROW_LINEAGE",
           "state": "FINDING",
-          "detail": "per-item row digest is not published on this row"
+          "detail": "per-item row digest is absent or is not a SHA-256 digest"
         },
         {
           "id": "LEADER_STATE",
@@ -3000,7 +4121,8 @@
       ],
       "summary": {
         "checks": 8,
-        "passed": 5,
+        "passed": 4,
+        "declared": 1,
         "findings": 3,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3050,7 +4172,98 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "bdcffe754fe727e0a05c3e32df9230d82566f151629f0e58028c8ae2a94e2a3c"
+      "audit_sha256": "51083ed84cbeda22ced51f53ddebb073fbf30c16753557df800619015043e392",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 8,
+            "title": "Runtime isolation is least privilege"
+          },
+          {
+            "article": 9,
+            "title": "Credentials are not agent memory"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "dataset_note",
+          "null_grammar",
+          "quotable_models",
+          "method_status"
+        ],
+        "measurement_url": "/api/gspc/axis/jail",
+        "competency_url": "/api/hitl/modules/jail",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3159,6 +4372,7 @@
       "summary": {
         "checks": 8,
         "passed": 7,
+        "declared": 0,
         "findings": 1,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3208,7 +4422,98 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "f787b2956115219e7b35ba3968423c6d5fe4dcfdb861c96be95299b070d47361"
+      "audit_sha256": "6ee80d8389658920f2ed8b9afc03c5e4fdb9993762732b2fe8fc2a72052e2fee",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 8,
+            "title": "Runtime isolation is least privilege"
+          },
+          {
+            "article": 9,
+            "title": "Credentials are not agent memory"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "run_attestation",
+          "coverage",
+          "n_unit"
+        ],
+        "measurement_url": "/api/gspc/axis/effect-binding",
+        "competency_url": "/api/hitl/modules/effect-binding",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3321,6 +4626,7 @@
       "summary": {
         "checks": 8,
         "passed": 7,
+        "declared": 0,
         "findings": 1,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3370,7 +4676,91 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "6455acf76ab03694321ba309be30c7f7a88e1841cb3e42abc990d9a7e62de218"
+      "audit_sha256": "0d0ee461dc676926ed12dfab50c31aee5f2e72b0e4afe5ffbf51a12ce66c8642",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "coverage",
+          "carrier"
+        ],
+        "measurement_url": "/api/gspc/axis/provenance-controls",
+        "competency_url": "/api/hitl/modules/provenance-controls",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3480,6 +4870,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3529,7 +4920,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "6efde660b1340e86bbf4149e54b84e27c5ac5a1c30b3531fff82bd224568e23e"
+      "audit_sha256": "e1aeac7b29a7e04bc1e0be2d106371d51cfc91122cb8d23e4802a8bd54a8df38",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "measurement_url": "/api/gspc/axis/reserve-attestation",
+        "competency_url": "/api/hitl/modules/reserve-attestation",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3638,6 +5112,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3687,7 +5162,94 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "a3984781505974f4dc57420282c4c49fec2f5e071526b1c49489525b24f90a57"
+      "audit_sha256": "f738995f16f7648c9e56b58582faa392a72bca61b0a6c9e20a64a62510d700f7",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 14,
+            "title": "Regulatory determination is outside CSOAI"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "measurement_url": "/api/gspc/axis/regulatory-framework",
+        "competency_url": "/api/hitl/modules/regulatory-framework",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3796,6 +5358,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -3845,7 +5408,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "4ab6e8652102d13d394c5d1e71a941244edc27348f9812d6cf6ef0fb35344669"
+      "audit_sha256": "4b07dd6021e72e862f8f496a11aede64bc2331070f60b62635748f0c63dd77ea",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "measurement_url": "/api/gspc/axis/distribution-integrity",
+        "competency_url": "/api/hitl/modules/distribution-integrity",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -3954,6 +5600,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -4003,7 +5650,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "85511966718bcb5a728146a5e040269050066007029c48f3967da9c244f8ac12"
+      "audit_sha256": "741e8c49668851c2d70001c8470630bc48af9e14ac3558c5f6c6c47c4830eb8a",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation",
+          "n_unit"
+        ],
+        "measurement_url": "/api/gspc/axis/custody-disclosure",
+        "competency_url": "/api/hitl/modules/custody-disclosure",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4113,6 +5843,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -4162,7 +5893,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "7d773a8affc9161ff435c80db7c7636ee46888ecb6a8e6ed00b2ae377c11bb62"
+      "audit_sha256": "ccf36510e43c7828cd6ab7b3b72895e8ea3801c004f46151a5ff4bbc59c895b0",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "dataset_note",
+          "evidence_url",
+          "facts_as_of",
+          "method_status"
+        ],
+        "measurement_url": "/api/gspc/axis/ai-adoption-components",
+        "competency_url": "/api/hitl/modules/ai-adoption-components",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4272,6 +6086,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -4321,7 +6136,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "33f673445a8e11753593c3ec2df0ea7177af150a24de714470e6827ac1c22aeb"
+      "audit_sha256": "2edac3cb3fa5510da17c3178a5a162dfdeb89efd9927e1aca455dd804c02fbe8",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "dataset_note",
+          "evidence_url",
+          "facts_as_of",
+          "method_status"
+        ],
+        "measurement_url": "/api/gspc/axis/labour-components",
+        "competency_url": "/api/hitl/modules/labour-components",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4430,6 +6328,7 @@
       "summary": {
         "checks": 8,
         "passed": 6,
+        "declared": 0,
         "findings": 2,
         "audit_state": "IMPROVEMENT_REQUIRED"
       },
@@ -4479,7 +6378,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "992eb9a279fb531e1a879f3456b55dba3498f0b1cb8657ca22191819ae3bcf31"
+      "audit_sha256": "b0b8a0c1c615fbfe3299f6f60a048edc011a190fe31a132a08c805aa9937dc9c",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "dataset_url",
+          "evidence_url",
+          "facts_as_of",
+          "facts_status",
+          "run_attestation"
+        ],
+        "measurement_url": "/api/gspc/axis/humanoid-labour-index",
+        "competency_url": "/api/hitl/modules/humanoid-labour-index",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4570,6 +6552,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -4619,7 +6602,89 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "74ec57935471deb3a98c3528e8a055935103c9c3ae43bc87fda36ed0127e8d22"
+      "audit_sha256": "912f81186f26333def8c705c69fbe520a78a5696163281561adc9f01c5c115e8",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "measurement_url": "/api/gspc/axis/lab-practice",
+        "competency_url": "/api/hitl/modules/lab-practice",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4710,6 +6775,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -4759,7 +6825,89 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "16181238866e33f5367b89d9316b1ab8f044b36ee78c2c353a0618864455de94"
+      "audit_sha256": "1abec7c5bb03bd18e3ea0a5fc45039c5afcee97710d34e015b8135b0a20fed9e",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "measurement_url": "/api/gspc/axis/company-practice",
+        "competency_url": "/api/hitl/modules/company-practice",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4850,6 +6998,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -4899,7 +7048,89 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "3f787ea0c04bdf060686cbb0d699bc0df70d7ad1874c50c88e1d4a0603755abc"
+      "audit_sha256": "77493b93c8ea3e61d7adbdf8df70842ce438440ee7f2df5cccc249b5c452b32c",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "measurement_url": "/api/gspc/axis/measurer-integrity",
+        "competency_url": "/api/hitl/modules/measurer-integrity",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -4990,6 +7221,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5039,7 +7271,97 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "1e6dfdbde644588f31344ea8f899ca5bd673834fa0d776a60e1a3971bfdbeaad"
+      "audit_sha256": "60e3df72bcd3142bae980f6f083ab88d73e4f9ce9f11d1786d485f70bc1510f1",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 8,
+            "title": "Runtime isolation is least privilege"
+          },
+          {
+            "article": 9,
+            "title": "Credentials are not agent memory"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "measurement_url": "/api/gspc/axis/harness-fidelity",
+        "competency_url": "/api/hitl/modules/harness-fidelity",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5130,6 +7452,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5179,7 +7502,89 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "9eec51b43e47f3a88a65cdd91a8ca2354eaf5897d58d8b24ab8582851d7b89b1"
+      "audit_sha256": "da290b8ce595bef869990a15eb750123417766243fde1edf1cf364b47da353dd",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "measurement_url": "/api/gspc/axis/interop-conformance",
+        "competency_url": "/api/hitl/modules/interop-conformance",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5270,6 +7675,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5319,7 +7725,89 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "528274eafd29b62ff18fa915e52de9b5c5f12c28f6d70d6bba19c0f1cb4fc59e"
+      "audit_sha256": "fdffe1597913851e211fa2fdad09579d76d4d2226254a3a7265cd0da6dac27d1",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "measurement_url": "/api/gspc/axis/humanoid-deployment",
+        "competency_url": "/api/hitl/modules/humanoid-deployment",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5411,6 +7899,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5460,7 +7949,94 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "4e7270c7754759db766fc7c5b1e8827a4c3db0036b96a29ad69600cc4e463742"
+      "audit_sha256": "97e1b1a24795c1ade3de1f7007742228da79876bf8cf8f95f58a01b68c6863da",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 14,
+            "title": "Regulatory determination is outside CSOAI"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "public_pages",
+          "n",
+          "status"
+        ],
+        "measurement_url": "/api/gspc/axis/regulator-transparency",
+        "competency_url": "/api/hitl/modules/regulator-transparency",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5551,6 +8127,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5600,7 +8177,89 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "fd35cd79398e1b2f16e3f808bedbe21709603fb96cdad044eccd706239c8f8c0"
+      "audit_sha256": "e128be170af12a00baf6f42a792d35c4a3ed615aa268e4a93b722dd91aed1581",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n",
+          "status"
+        ],
+        "measurement_url": "/api/gspc/axis/interpretability-reproducibility",
+        "competency_url": "/api/hitl/modules/interpretability-reproducibility",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5692,6 +8351,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5741,7 +8401,90 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "07bb8c659b9082ce102aee0795faac33d4cc8a1dde01d0f69838f53130fb95b0"
+      "audit_sha256": "ee2ffab292056389b37e8e48bce9446c5b25a79cd5d5afec6edbccaa8d9d808a",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "applies_to",
+          "method_status",
+          "n_note",
+          "n",
+          "status"
+        ],
+        "measurement_url": "/api/gspc/axis/claim-maintenance",
+        "competency_url": "/api/hitl/modules/claim-maintenance",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     },
     {
       "schema": "csoai.axis-specialist-audit/1.0",
@@ -5835,6 +8578,7 @@
       "summary": {
         "checks": 6,
         "passed": 6,
+        "declared": 0,
         "findings": 0,
         "audit_state": "MEASUREMENT_GAP_VISIBLE"
       },
@@ -5884,8 +8628,91 @@
         "not autonomous self-improvement",
         "not a provisioned compute cluster"
       ],
-      "audit_sha256": "09b3d548a5f23e931e5d734d023528e3f7a19c2110b6a4dfb842843d29838094"
+      "audit_sha256": "6f3bfa059d62cccb9dd47182dd7890c262aab8ba96a8f7b3a0f75a820b589ea7",
+      "charter": {
+        "version": "0.1.0",
+        "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+        "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+        "machine_url": "/.well-known/constitutional-harness.json",
+        "human_url": "/constitutional-harness/",
+        "articles": [
+          {
+            "article": 1,
+            "title": "Measurement is not authority"
+          },
+          {
+            "article": 2,
+            "title": "Default deny"
+          },
+          {
+            "article": 3,
+            "title": "Identity and tenancy are bound"
+          },
+          {
+            "article": 4,
+            "title": "Authority is time-bounded state"
+          },
+          {
+            "article": 5,
+            "title": "Authority may narrow but not silently expand"
+          },
+          {
+            "article": 7,
+            "title": "Research and execution are separate"
+          },
+          {
+            "article": 10,
+            "title": "Effects must be bound to receipts"
+          },
+          {
+            "article": 11,
+            "title": "Verification is separate from invocation"
+          },
+          {
+            "article": 17,
+            "title": "Corrections preserve history"
+          },
+          {
+            "article": 18,
+            "title": "Failure stages stay explicit"
+          },
+          {
+            "article": 19,
+            "title": "No self-approval loop"
+          },
+          {
+            "article": 20,
+            "title": "Consequential changes require owner-visible review"
+          },
+          {
+            "article": 21,
+            "title": "Public claims track actual state"
+          },
+          {
+            "article": 22,
+            "title": "The charter itself is versioned evidence"
+          }
+        ]
+      },
+      "review": {
+        "state": "NOT_SUBMITTED",
+        "execution_authority": false,
+        "required_fields": [
+          "applies_to",
+          "method",
+          "method_sha",
+          "method_status",
+          "n_note"
+        ],
+        "measurement_url": "/api/gspc/axis/serving-fidelity",
+        "competency_url": "/api/hitl/modules/serving-fidelity",
+        "challenge_url": "/api/hitl/challenge",
+        "console_url": "/dashboard?tab=staff",
+        "corrections_url": "/corrections/",
+        "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+        "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+      }
     }
   ],
-  "bundle_sha256": "5cf7708b54740447a2df56a2bcad96b1c0f447829b4cbd736085d342c76453d4"
+  "bundle_sha256": "c44f18fe3a12453059a957eb71c537de5797f55e224a5b2836d0bf4c099b086a"
 }
