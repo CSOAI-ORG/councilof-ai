@@ -20,6 +20,45 @@ type Entry = {
 };
 type Ledger = { corrections?: Entry[]; signature_state?: string; signature_check?: { checked_at?: string } };
 
+type WatchdogLedger = {
+  schema?: string;
+  as_of?: string;
+  gspc_board_boundary?: {
+    declared_slots?: number;
+    measured_axes?: number;
+    unmeasured_axes?: number;
+    model_comparison_axes?: { total?: number; separated?: number; tie?: number; untested?: number };
+    subject_family_measured_axes?: number;
+    slot_34_gate_rule?: string;
+  };
+  evidence_planes?: { plane_id: string; name: string; authority: string; unit: string; separation_rule: string }[];
+  data_provenance_records?: { order: number; record_type: string; description: string }[];
+  case_governed_views?: { view_id: string; visibility: string; contents: string }[];
+  feed_health_states?: string[];
+  registered_sources?: {
+    source_id: string;
+    name: string;
+    category: string;
+    cadence: string;
+    health_state: string;
+    candidate_axes: string[];
+    storage_target: string;
+  }[];
+  meok_human_qualification?: {
+    enrolled_human_operator_keys?: number;
+    specialist_taxonomy_slots?: number;
+    initial_qualified_functions?: { function_id: string; title: string; scope: string }[];
+    layer0_action_boundary?: string[];
+  };
+  wg_safe_crosswalk?: { states?: string[]; rule?: string };
+  cloud_compute_and_storage_offload?: {
+    local_operator_machine_policy?: string;
+    surfaces?: { surface: string; repo?: string; space?: string; workflow?: string; capacity?: string; purpose?: string; sync_mechanism?: string }[];
+  };
+  execution_gates?: { gate: string; title: string; status: string }[];
+  artifact_sha256?: string;
+};
+
 function clip(s: string | undefined, n: number): string {
   if (!s) return "";
   return s.length > n ? `${s.slice(0, n - 1).trimEnd()}…` : s;
@@ -27,6 +66,7 @@ function clip(s: string | undefined, n: number): string {
 
 export default function CorrectionsPane() {
   const read = useLiveJson<Ledger>("/api/corrections");
+  const watchdog = useLiveJson<WatchdogLedger>("/interop/watchdog-signal-ledger-v1.json");
   const [shown, setShown] = useState(8);
   const [windowDays, setWindowDays] = useState<number | null>(null);
   const [by, setBy] = useState<string | null>(null);
@@ -132,6 +172,179 @@ export default function CorrectionsPane() {
           </div>
         </>
       )}
+      {watchdog.state === "ok" && watchdog.data ? (
+        <section
+          className="mt-8 space-y-6 rounded-2xl border border-border bg-card p-5 sm:p-6"
+          aria-labelledby="watchdog-signal-ledger-heading"
+          data-testid="watchdog-signal-ledger-section"
+        >
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <div>
+              <p className="t-kicker text-emerald-800">Watchdog Signal Registry &amp; Coverage Ledger</p>
+              <h3 id="watchdog-signal-ledger-heading" className="mt-1 text-xl font-black tracking-tight text-foreground">
+                3 Separated Evidence Planes · 5 Provenance Records · Cloud Offload
+              </h3>
+            </div>
+            <a
+              href="/interop/watchdog-signal-ledger-v1.json"
+              className="font-mono text-xs font-semibold text-emerald-800 underline underline-offset-4"
+            >
+              GET /interop/watchdog-signal-ledger-v1.json
+            </a>
+          </div>
+
+          {watchdog.data.gspc_board_boundary ? (
+            <div className="rounded-xl border border-border/80 bg-muted/40 p-4 text-xs leading-relaxed text-muted-foreground">
+              <p className="font-semibold text-foreground">
+                Canonical GSPC Board Boundary (<span className="font-mono">GET /api/gspc</span>):{" "}
+                <span className="font-mono">
+                  {watchdog.data.gspc_board_boundary.declared_slots} declared slots ·{" "}
+                  {watchdog.data.gspc_board_boundary.measured_axes} MEASURED ·{" "}
+                  {watchdog.data.gspc_board_boundary.unmeasured_axes} UNMEASURED
+                </span>{" "}
+                (never summed) ·{" "}
+                <span className="font-mono">
+                  {watchdog.data.gspc_board_boundary.model_comparison_axes?.total} model-comparison axes (
+                  {watchdog.data.gspc_board_boundary.model_comparison_axes?.separated} SEPARATED ·{" "}
+                  {watchdog.data.gspc_board_boundary.model_comparison_axes?.tie} TIE ·{" "}
+                  {watchdog.data.gspc_board_boundary.model_comparison_axes?.untested} UNTESTED)
+                </span>
+              </p>
+              <p className="mt-1">{watchdog.data.gspc_board_boundary.slot_34_gate_rule}</p>
+            </div>
+          ) : null}
+
+          {Array.isArray(watchdog.data.evidence_planes) ? (
+            <div>
+              <h4 className="text-sm font-bold text-foreground">1. Three Distinct Evidence Planes</h4>
+              <div className="mt-2 grid gap-3 sm:grid-cols-3">
+                {watchdog.data.evidence_planes.map((p) => (
+                  <div key={p.plane_id} className="rounded-xl border border-border p-3 text-xs">
+                    <p className="font-bold text-foreground">{p.name}</p>
+                    <p className="mt-1 font-mono text-[11px] text-emerald-800">{p.authority}</p>
+                    <p className="mt-1 text-muted-foreground">{p.unit}</p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">{p.separation_rule}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {Array.isArray(watchdog.data.data_provenance_records) ? (
+            <div>
+              <h4 className="text-sm font-bold text-foreground">2. Five-Record Provenance Chain &amp; Three Governed Case Views</h4>
+              <ol className="mt-2 grid gap-2 sm:grid-cols-5">
+                {watchdog.data.data_provenance_records.map((r) => (
+                  <li key={r.order} className="rounded-xl border border-border p-3 text-xs">
+                    <p className="font-mono font-bold text-emerald-800">
+                      {r.order}. {r.record_type}
+                    </p>
+                    <p className="mt-1 text-muted-foreground">{r.description}</p>
+                  </li>
+                ))}
+              </ol>
+              {Array.isArray(watchdog.data.case_governed_views) ? (
+                <div className="mt-2 grid gap-2 sm:grid-cols-3">
+                  {watchdog.data.case_governed_views.map((v) => (
+                    <div key={v.view_id} className="rounded-xl border border-border/70 bg-muted/20 p-3 text-xs">
+                      <span className="font-mono font-bold text-foreground">{v.view_id}</span>{" "}
+                      <span className="rounded bg-slate-200 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-900">
+                        {v.visibility}
+                      </span>
+                      <p className="mt-1 text-muted-foreground">{v.contents}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
+          {Array.isArray(watchdog.data.registered_sources) ? (
+            <div>
+              <h4 className="text-sm font-bold text-foreground">
+                3. Registered Sources &amp; Seven Feed-Health States (
+                <span className="font-mono text-xs font-normal text-muted-foreground">
+                  {(watchdog.data.feed_health_states ?? []).join(" · ")}
+                </span>
+                )
+              </h4>
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                {watchdog.data.registered_sources.map((s) => (
+                  <div key={s.source_id} className="rounded-xl border border-border p-3 text-xs">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="font-bold text-foreground">{s.name}</span>
+                      <span className="rounded bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-semibold text-slate-900">
+                        {s.health_state}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-muted-foreground">
+                      {s.category} · cadence: <span className="font-mono">{s.cadence}</span> · axes:{" "}
+                      <span className="font-mono">{s.candidate_axes.join(", ")}</span>
+                    </p>
+                    <p className="mt-1 font-mono text-[11px] text-muted-foreground">vault: {s.storage_target}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {watchdog.data.meok_human_qualification && watchdog.data.wg_safe_crosswalk ? (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-xl border border-border p-3 text-xs">
+                <h4 className="font-bold text-foreground">
+                  4. MEOK 3-Function Human Qualification (enrolled keys:{" "}
+                  <span className="font-mono">{watchdog.data.meok_human_qualification.enrolled_human_operator_keys}</span>)
+                </h4>
+                <ul className="mt-2 space-y-1.5 text-muted-foreground">
+                  {(watchdog.data.meok_human_qualification.initial_qualified_functions ?? []).map((fn) => (
+                    <li key={fn.function_id}>
+                      <span className="font-semibold text-foreground">{fn.title}:</span> {fn.scope}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-xl border border-border p-3 text-xs">
+                <h4 className="font-bold text-foreground">5. WG-SAFE 6-State Crosswalk &amp; Layer-0 Boundary</h4>
+                <p className="mt-1 font-mono text-[11px] text-emerald-800">
+                  {(watchdog.data.wg_safe_crosswalk.states ?? []).join(" → ")}
+                </p>
+                <p className="mt-1 text-muted-foreground">{watchdog.data.wg_safe_crosswalk.rule}</p>
+                <p className="mt-2 font-mono text-[11px] text-muted-foreground">
+                  {(watchdog.data.meok_human_qualification.layer0_action_boundary ?? []).join(" · ")}
+                </p>
+              </div>
+            </div>
+          ) : null}
+
+          {watchdog.data.cloud_compute_and_storage_offload ? (
+            <div>
+              <h4 className="text-sm font-bold text-foreground">
+                6. Hugging Face (10 TB Public + 1 TB Private), Kaggle &amp; RunPod Offload
+              </h4>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {watchdog.data.cloud_compute_and_storage_offload.local_operator_machine_policy}
+              </p>
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                {(watchdog.data.cloud_compute_and_storage_offload.surfaces ?? []).map((sf) => (
+                  <div key={sf.surface} className="rounded-xl border border-border p-3 text-xs">
+                    <p className="font-bold text-foreground">{sf.surface}</p>
+                    {sf.capacity ? <p className="mt-0.5 font-mono text-[11px] text-emerald-800">{sf.capacity}</p> : null}
+                    {sf.repo ? (
+                      <p className="mt-0.5">
+                        <a href={sf.repo} target="_blank" rel="noreferrer noopener" className="font-mono text-[11px] underline">
+                          {sf.repo}
+                        </a>
+                      </p>
+                    ) : null}
+                    {sf.sync_mechanism ? <p className="mt-1 text-muted-foreground">{sf.sync_mechanism}</p> : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
       {read.state === "loading" ? null : (
       <NextSteps
         testId="corrections-next"

@@ -349,6 +349,35 @@ describe("the board's cardinality is followed, not asserted", () => {
     if (boardAxesForTest) expect(boardAxesForTest(twentyThree)).not.toBeNull();
   });
 
+  it("accepts the current 33-axis board with declared subject axes", async () => {
+    const current = boardWith(33);
+    for (let index = 22; index < current.axes.length; index += 1) {
+      current.axes[index] = {
+        ...current.axes[index],
+        axis: index === 22 ? "lab-practice" : `subject-slot-${index}`,
+        family: "subject",
+        kind: "declared-slot",
+        status: "UNMEASURED",
+        n: 0,
+      };
+    }
+    stub({ board: current });
+    const { response, text } = await get(
+      "/api/learning-scenarios?axis=lab-practice",
+    );
+    expect(response.status).toBe(200);
+    expect(JSON.parse(text)).toMatchObject({
+      canonical_axis_count: 33,
+      scenario_count: 1,
+      scenarios: [
+        {
+          axis: "lab-practice",
+          board_measurement: { family: "subject", status: "UNMEASURED" },
+        },
+      ],
+    });
+  });
+
   it("a board whose totals disagree with its own rows is still rejected", async () => {
     const lying = boardWith(23);
     lying.totals.axes = 22; // the board contradicts itself
@@ -356,5 +385,35 @@ describe("the board's cardinality is followed, not asserted", () => {
       boardAxesForTest?: (b: unknown) => unknown;
     };
     if (boardAxesForTest) expect(boardAxesForTest(lying)).toBeNull();
+  });
+
+  it("accepts the live board's declared subject family without weakening row or total checks", async () => {
+    const current = boardWith(33);
+    current.axes = current.axes.map((axis, index) => index < 22 ? axis : {
+      ...axis,
+      axis: `subject-slot-${index}`,
+      family: "subject",
+      kind: "declared-slot",
+      applies_to: "declared-subject-class",
+      status: "UNMEASURED",
+      n: 0,
+    });
+    current.totals = { axes: 33, measured_axes: 22 };
+    stub({ board: current });
+    const { response, text } = await get();
+    expect(response.status).toBe(200);
+    const body = JSON.parse(text);
+    expect(body.canonical_axis_count).toBe(33);
+    expect(body.scenario_count).toBe(33);
+    expect(body.scenarios[22].board_measurement).toMatchObject({
+      classification: "BOARD_MEASUREMENT_CONTEXT",
+      family: "subject",
+      kind: "declared-slot",
+      status: "UNMEASURED",
+      n: 0,
+    });
+    current.totals.axes = 32;
+    stub({ board: current });
+    expect((await get()).response.status).toBe(503);
   });
 });
