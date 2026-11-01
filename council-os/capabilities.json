@@ -6741,6 +6741,7 @@
         "method": "GET",
         "request": "/api/wrapper?id=usdc.e:arbitrum",
         "expect_status": [
+          200,
           402
         ],
         "safe": true
@@ -6749,14 +6750,15 @@
       "free_preview": "/api/wrapper?id=<wrapped-symbol:chain>&preview=1",
       "paid_for": "issuance",
       "probe_override": {
-        "expect_status": [
-          402,
-          200
-        ],
-        "method": "GET",
-        "note": "200 is the preview-only answer when the read is UNMEASURED; never sold",
-        "request": "/api/wrapper?id=usdc.e:arbitrum",
-        "safe": true
+        "observed_at": "2026-10-29",
+        "observed_on": "https://councilof.ai",
+        "probe": {
+          "expect_status": [
+            200,
+            402
+          ]
+        },
+        "why": "A readable pair offers a 402 challenge. An unavailable upstream read returns 200 with UNMEASURED and preview-only no-sale behavior, as documented in functions/api/wrapper.ts and observed on 29 October. HTTP 200 does not establish delivery or measurement."
       }
     },
     {
@@ -9052,6 +9054,191 @@
         "safe": true
       },
       "source": "functions/.well-known/x402.json.ts"
+    },
+    {
+      "id": "api-layer0-gate",
+      "kind": "http",
+      "path": "/api/gate",
+      "method": "POST",
+      "name": "Layer 0 Sovereign Gate",
+      "description": "POST /api/gate - the CSOAI Layer-0 Sovereign Gate decision. Answers one question: what does the estate's policy say about the action that was asked about? A policy decision, not a certification, not a ranking, and not a statement that anything was executed. Identity is required; the G-block floor G >= 0.50 is non-derogable; EU AI Act Article 5 practices and the AILuminate hazards are denied; Annex III domains escalate to a human.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/gate",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "POST is a JSON body; the loop's probe shape is GET"
+      },
+      "source": "functions/api/gate.ts"
+    },
+    {
+      "id": "api-layer0-gate-get",
+      "kind": "http",
+      "path": "/api/gate",
+      "method": "GET",
+      "name": "Layer 0 Sovereign Gate (GET)",
+      "description": "GET is not allowed on /api/gate; the decision is a POST.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi",
+        "llms"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/gate",
+        "expect_status": [
+          405
+        ],
+        "safe": true
+      },
+      "source": "functions/api/gate.ts"
+    },
+    {
+      "id": "api-layer0-a2a-route",
+      "kind": "http",
+      "path": "/api/a2a/route",
+      "method": "POST",
+      "name": "Layer 0 A2A envelope",
+      "description": "POST /api/a2a/route - builds and signs a csoai.a2a/0.1 attestation envelope: an Ed25519 signature over the canonical envelope (without its sig field), a policy block carrying the gate's decision, and an episode hash over the exchange. A denied action is refused with 403 and no envelope. When this deployment has no signing key the route answers 503 and says so: an unsigned artefact is honest and a fabricated signature is not.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a/route",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "POST is a JSON body; the loop's probe shape is GET"
+      },
+      "source": "functions/api/a2a/route.ts"
+    },
+    {
+      "id": "api-layer0-a2a-route-get",
+      "kind": "http",
+      "path": "/api/a2a/route",
+      "method": "GET",
+      "name": "Layer 0 A2A envelope (GET)",
+      "description": "GET is not allowed on /api/a2a/route; the envelope is built by a POST.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi",
+        "llms"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/a2a/route",
+        "expect_status": [
+          405
+        ],
+        "safe": true
+      },
+      "source": "functions/api/a2a/route.ts"
+    },
+    {
+      "id": "api-layer0-a2a-verify",
+      "kind": "http",
+      "path": "/api/a2a/verify",
+      "method": "POST",
+      "name": "Layer 0 A2A envelope verification",
+      "description": "POST /api/a2a/verify - verifies an inbound A2A envelope. It rebuilds the canonical form of the envelope with its sig field removed and checks the Ed25519 signature against the peer key the caller supplies, or against this deployment's own published key. It answers valid true or false and never true for an envelope it could not check. A valid signature says who signed the bytes; it says nothing about whether the decision inside was right.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a/verify",
+        "expect_status": [
+          400
+        ],
+        "safe": false,
+        "unsafe_reason": "POST is a JSON body; the loop's probe shape is GET"
+      },
+      "source": "functions/api/a2a/verify.ts"
+    },
+    {
+      "id": "api-layer0-a2a-verify-get",
+      "kind": "http",
+      "path": "/api/a2a/verify",
+      "method": "GET",
+      "name": "Layer 0 A2A envelope verification (GET)",
+      "description": "GET is not allowed on /api/a2a/verify; an envelope is verified by a POST.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi",
+        "llms"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/a2a/verify",
+        "expect_status": [
+          405
+        ],
+        "safe": true
+      },
+      "source": "functions/api/a2a/verify.ts"
+    },
+    {
+      "id": "api-layer0-a2a-key",
+      "kind": "http",
+      "path": "/api/a2a/key",
+      "method": "GET",
+      "name": "Layer 0 signing public key",
+      "description": "GET /api/a2a/key - the public half of this deployment's Layer-0 signing key: the kid that names it, and the key itself. The public key is DERIVED from the same secret the signer uses, so the two cannot drift apart. When no signing key is configured the endpoint answers 404 and says so; it never publishes a placeholder that would fail verification in a confusing way.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi",
+        "llms"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/a2a/key",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/a2a/key.ts"
     }
   ]
 }
