@@ -2,7 +2,7 @@
 Proposal dated 30 October 2026. Status: forming. This is a proposed operating model, not evidence that members have accepted roles or that a staffed review service is available.
 
 ## Purpose and coverage
-Use public evidence and reproducible measurements to examine AI claims, publish limitations and corrections, and make room for independent challenge. The seven groups in [the registry](../../council-os/working-groups.json) map to the 33 axes in the dated 28 October board snapshot. The live board remains the authority for measurement state and counts. This registry complements the existing axis-specialist registry: automated specialists propose; people decide.
+Use public evidence and reproducible measurements to examine AI claims, publish limitations and corrections, and make room for independent challenge. The groups in [the registry](../../council-os/working-groups.json) map to the axes in the dated 28 October board snapshot. The live board remains the authority for measurement state and counts. This registry complements the existing axis-specialist registry: automated specialists propose; people decide.
 
 Council of AI organises its own groups. W3C, IETF, SAFE and other external participation does not grant endorsement, certification authority or regulatory powers. No organisation or person becomes a member by being mentioned in research.
 
