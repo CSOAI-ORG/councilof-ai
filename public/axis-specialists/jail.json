@@ -252,14 +252,14 @@
     },
     {
       "id": "FROZEN_BANK",
-      "state": "PASS",
-      "detail": "frozen bank URL is published",
+      "state": "DECLARED",
+      "detail": "bank URL is declared; bank bytes and freeze state were not verified",
       "evidence": "https://huggingface.co/datasets/csoai/gspc-jail-goldbank"
     },
     {
       "id": "ROW_LINEAGE",
       "state": "FINDING",
-      "detail": "per-item row digest is not published on this row"
+      "detail": "per-item row digest is absent or is not a SHA-256 digest"
     },
     {
       "id": "LEADER_STATE",
@@ -274,7 +274,8 @@
   ],
   "summary": {
     "checks": 8,
-    "passed": 5,
+    "passed": 4,
+    "declared": 1,
     "findings": 3,
     "audit_state": "IMPROVEMENT_REQUIRED"
   },
@@ -324,5 +325,96 @@
     "not autonomous self-improvement",
     "not a provisioned compute cluster"
   ],
-  "audit_sha256": "6825aa18761827e21448d1a87417800c72e6a7f54acd9034278994896af7c6e2"
+  "audit_sha256": "db0bd144a6895d990b85503bbc12005a2fa3b174742d28c75459b2db40d50cc2",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 8,
+        "title": "Runtime isolation is least privilege"
+      },
+      {
+        "article": 9,
+        "title": "Credentials are not agent memory"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "dataset_url",
+      "dataset_note",
+      "null_grammar",
+      "quotable_models",
+      "method_status"
+    ],
+    "measurement_url": "/api/gspc/axis/jail",
+    "competency_url": "/api/hitl/modules/jail",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
 }
