@@ -157,6 +157,54 @@ def test_hf_viewer_refuses_inconsistent_printed_totals():
         spray.hf_viewer_files(truth)
 
 
+def test_hf_viewer_reuses_identical_table_with_different_parquet_encoding():
+    import pyarrow.parquet as pq
+
+    truth = _viewer_truth()
+    fresh = spray.hf_viewer_files(truth)
+    table = pq.read_table(io.BytesIO(fresh["board.parquet"]))
+    alternate = io.BytesIO()
+    pq.write_table(table, alternate, compression="gzip", use_dictionary=False)
+    existing = alternate.getvalue()
+    assert existing != fresh["board.parquet"]
+    reused = spray.hf_viewer_files(truth, existing_parquet=existing)
+    assert reused["board.parquet"] == existing
+    assert reused["board.jsonl"] == fresh["board.jsonl"]
+    assert spray.hf_viewer_files(truth, existing_parquet=reused["board.parquet"]) == reused
+
+
+@pytest.mark.parametrize("change", ["value", "row_order", "column_order", "type", "metadata", "null"])
+def test_hf_viewer_does_not_reuse_a_different_table(change):
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    truth = _viewer_truth()
+    fresh = spray.hf_viewer_files(truth)
+    table = pq.read_table(io.BytesIO(fresh["board.parquet"]))
+    if change == "value":
+        rows = table.to_pylist()
+        rows[0]["status"] = "UNMEASURED"
+        table = pa.Table.from_pylist(rows, schema=table.schema)
+    elif change == "row_order":
+        table = table.take([1, 0])
+    elif change == "column_order":
+        table = table.select(list(reversed(table.schema.names)))
+    elif change == "type":
+        table = table.set_column(4, "n", table.column("n").cast(pa.int32()))
+    elif change == "metadata":
+        table = table.replace_schema_metadata({b"unreviewed": b"changed"})
+    else:
+        table = table.set_column(4, "n", pa.array([None, 4], type=pa.int64()))
+    alternate = io.BytesIO()
+    pq.write_table(table, alternate)
+    assert spray.hf_viewer_files(truth, existing_parquet=alternate.getvalue()) == fresh
+
+
+def test_hf_viewer_recovers_corrupt_parquet_without_reusing_it():
+    truth = _viewer_truth()
+    assert spray.hf_viewer_files(truth, existing_parquet=b"invalid parquet") == spray.hf_viewer_files(truth)
+
+
 def test_hf_dataset_companions_refresh_only_bounded_provenance_and_inventory():
     tr = _viewer_truth()
     paragraph = "The default viewer files (`board.parquet` and `board.jsonl`) were old."
@@ -305,7 +353,7 @@ def _truth():
 def test_kaggle_page_text_is_derived_from_the_truth_only():
     subtitle, description = spray.kaggle_page_text(_truth())
     assert "2026-09-14T03:12:56Z" in subtitle
-    assert description.startswith("22 axes measured · not a certificate.")
+    assert "\n22 axes measured · not a certificate.\n" in description
     assert description.endswith("spray-fingerprint: " + "9" * 64)
     assert not spray.BANNED.search(description)
 

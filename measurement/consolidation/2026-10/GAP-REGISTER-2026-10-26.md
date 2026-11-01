@@ -265,7 +265,7 @@ All live observations are from URLs actually fetched.
 
 | # | File path | Stale value in the file | Live observed value | One-line fix |
 |---|---|---|---|---|
-| I16 | `public/interop/zenodo-status.json` (and `https://councilof.ai/api/gspc` → `doi_status`) | "Zenodo record unavailable since 29 Sep 2026: **every CSOAI Zenodo record returns HTTP 410**" · status **UNCHECKABLE** · `doi_status: UNAVAILABLE` | `https://zenodo.org/api/records/21991104` → **HTTP 302**; `https://zenodo.org/api/records/22344048` → **HTTP 200** (status codes only; record contents not inspected) | Re-probe and publish the observed status codes with the date; only claim 410 while 410 is what the probe returns. |
+| I16 | `public/interop/zenodo-status.json` (and `https://councilof.ai/api/gspc` → `doi_status`) | "Zenodo record unavailable since 29 Sep 2026: **every CSOAI Zenodo record returns HTTP 410**" · status **UNCHECKABLE** · `doi_status: UNAVAILABLE` | `https://zenodo.org/api/records/21991104` → **HTTP 302**; `https://zenodo.org/api/records/22344048` → **HTTP 200** (status codes only; record contents not inspected) | Re-probe and publish the observed status codes with the date; only claim 410 while 410 is what the probe returns. **Closed 28 Oct 2026 — see A12.** The blanket sentence was corrected and the per-DOI rows were confirmed unchanged (37 × 410, 2 × 200, control 200). The "HTTP 302" recorded here was Zenodo's concept-to-version **redirect**, not a status: the **final** hop of `21991104` is **410**, so the deposit is still gone and `doi_status: UNAVAILABLE` stands. `doi.org` answers **403 for every DOI including the live control**, and `/api/records/zenodo.<id>` answers **404 for live records too**; both are method faults, and the probe that writes the file now uses the numeric id, follows redirects, and reports the final hop. |
 | I17 | `docs/standards/osaia-safe-reverification/SAFE-v1.0-PORT-20261026.md:72` | States the board fingerprint reads "**23 axes · 23 measured**" | `https://councilof.ai/api/gspc` → **33 axes · 23 measured** | Correct the figure before the document goes upstream. |
 | I18 | `docs/standards/osaia-safe-reverification/SAFE-v1.0-PORT-20261026.md:17` | PR #64 "one file: `rfc-safe-proposal.md`" — still against the superseded file | The document itself (line 14) records that the approved specification is now `SAFE.md` | Re-base the patch; the document already identifies this as Move 1. |
 | I19 | `docs/corrections/2026-09-25-board-snapshot-refreeze.md:10` | "**23 axes · 23 measured · 0 unmeasured**" | `https://councilof.ai/api/gspc` → 33 axes, 23 measured, **10 unmeasured** | Do **not** edit the dated document — publish a dated supersession note beside it. |
@@ -358,6 +358,7 @@ is complete today — §3 records what is missing.
 3. `measurement/filings/2026-10/HONESTY-REGISTER-2026-10-26.md` → three claims are carried as UNVERIFIED with the source actually opened; no claim is asserted without a source.
 4. `measurement/calendar/regulator-doors.json` → parses; every door has an owner and a state.
 5. `GET https://councilof.ai/api/gspc` → `limitations[]` states that scores describe measured runs on frozen splits on a date and do not describe compliance with anything.
+6. `GET https://councilof.ai/interop/zenodo-status.json` → the notice states the observed counts and the date, and does **not** claim every record is gone; each row carries `http_status_at_check` beside `http_status_at_prior_check`; the `control` block names a record that is alive and is not ours and records its status (closed 28 Oct 2026 — see A12). The probe that writes it is `scripts/probe-zenodo-status.mjs` and **refuses to write** unless the control answers 200.
 
 ### 5.11 Human-in-the-loop and the Council's human-in-the-loop approval gate
 1. `public/interop/hitl-elicitation-probe-2026-09-24.json` → `signed` must be `true` (currently `false` — A15).
@@ -443,7 +444,7 @@ made later.
 | K6 | "Coverage is complete across every industry" | The board publishes one SCAFFOLD domain against 33 axes; the financial axes cover 16 issuer accounts; the human-in-the-loop instrument is a pilot. Completeness is not available as a claim |
 | K7 | "The Council has paying customers / revenue" | `distinct_nonself_payers` = 2 and `settlements` = 3, and the Council's own doctrine says a settlement does not establish delivery, acceptance or repeat use |
 | K8 | "Every published artefact carries a proof" | The measurement capsules carry none; the x402 manifest carries none; the Hub cells are third-party; `public/claims-register.json` is unsigned; the human-in-the-loop artefact is unsigned |
-| K9 | "The live Zenodo records are all gone (410)" | Today's probes returned 302 and 200. The published claim is out of date; I did not repeat it, and I did not assert the opposite either — only the observed status codes |
+| K9 | "The live Zenodo records are all gone (410)" | A control-backed re-probe on 28 Oct 2026: of 39 DOIs, **37 are gone (410)** and **2 are alive (200)**. The published claim is out of date; I did not repeat it, and I did not assert the opposite either — only the observed status codes. (The "302" this row originally recorded was the concept-to-version redirect; the final hop of the methodology deposit is 410. See A12.) |
 | K10 | "The README's numbers are the Council's position" | The README itself says the API wins when they disagree; the live API was taken as the reference throughout |
 | K11 | "Negative controls exist for every domain" | They do not. Domains with **no** negative control found: agent identity (sectoral cards), agentic payments (manifest and catalogue), AI registries (census), stablecoins (deployment index), security tooling (OWASP axis map, CRA note), regulatory filings (NIST draft), and the measurement capsules. This is stated as a gap (§3A18, §3C) rather than smoothed over |
 | K12 | "The Council's position is 'unicorn' status or market-leading" | No artefact carries a score, coverage figure, market position or ranking, and this document certifies nothing. The word is not used as a claim anywhere above |
@@ -471,7 +472,7 @@ Every live figure below was read from the named endpoint on 28 October 2026 (03:
 | A9 | **CLOSED** | The contribution document now states both numbers and distinguishes them: the signed board freeze "states **23 axes · 23 measured**" and "the **living board** … states **33 axes · 23 measured**" (`SAFE-v1.0-PORT-20261026.md:99-100`). It no longer presents 23 as the current board. |
 | A10 | **CLOSED as an engineering gap**, one owner-gated step remains | The patch is bound to the **approved** `SAFE.md` at pinned upstream commit `ba76bac74c251926cb3d14bc363e0443b5959007`, and the binding is executable: `verify-patch-applies.sh` checks the pinned digest and byte count, applies the patch, and requires it to be **rejected** both against the superseded draft and against a mutated anchor. The upstream pull request is still **not submitted** — it needs a co-author with a normal GitHub account, and that is the owner's to choose. |
 | A11 | **CLOSED 28 Oct 2026** | The pointer's `drift` block is recomputed against the live root and re-published: `drift.status MATCH`, `checked_at 2026-10-28T11:51:39Z`, `live_root_sha256 e9fb00e2…`, `live_root_merkle_root a2620ac3…`, `match_sha256 true`, `match_merkle_root true`, `conflict NONE` over 67 sidecars. The earlier `DRIFTED` observation (`checked_at 2026-10-27T23:47:33Z`, against `3bab85baa5ef…`) was **true when it was made** — at that instant the live root still was the previous root, because the newly witnessed candidate reached master six minutes later, at 23:53:31Z (commit `ef2fa5f2e`, PR #3545). The earlier observation is preserved verbatim in `public/corrections/root-witness-pointer-drift-2026-10-27-SUPERSEDES.md` and indexed in `public/corrections/SUPERSESSIONS.md`; the register id is the gap-register row rather than a corrections-ledger id, because the ledger signature covers the bytes of its entries and is re-issued by a separate owner-gated step, so no entry was added and no signed ledger byte was moved. |
-| A12 | **IN FLIGHT** | Measured truth table on 28 October: **38** Zenodo records answer HTTP 410, **2** answer HTTP 200 (`22293340`, `22344048`), and `doi.org` returns **403 even for a known-live DOI** — a publisher-side client rejection, not record absence, confirmed with a control. The published notice still reads "every CSOAI Zenodo record returns HTTP 410 … Status UNCHECKABLE" (`public/interop/zenodo-status.json`, `as_of 2026-09-29T16:46Z`). |
+| A12 | **CLOSED 28 Oct 2026** | The published Zenodo status is re-probed with a corrected method and the blanket sentence is corrected. The truth table on 28 October 2026, re-verified twice with a control: of the **39** DOIs the file names, **37 answer HTTP 410** (gone) and **2 answer HTTP 200** (`10.5281/zenodo.22293340` and `10.5281/zenodo.22344048`, 8,138 bytes each), with **0** other. The control `10.5281/zenodo.3234648` — alive, not ours — answered **200**, so this is a reading of the deposits and not of our own access. An interim count published in this register during the closure read **38 gone and 2 alive (40 records)**; it is superseded by the **37 of 39** above, which is the count that reconciles with the 39 DOIs the published file actually names. The published file's own per-DOI rows agree with the count carried here, and that is what the interim count did not reconcile with. **Zero disagreements** with the per-DOI states already published on 29 September: the file's *rows* were right and are untouched; its *blanket sentences* ("every CSOAI Zenodo record returns HTTP 410", "Status UNCHECKABLE") were wrong **on the day they were written** and are now corrected, with the prior text kept verbatim in the file's `superseded` block and in `public/corrections/zenodo-status-2026-09-29-SUPERSEDES.md`, indexed in `public/corrections/SUPERSESSIONS.md`. The board's `doi_status` needs **no** re-point: `/api/gspc` names `10.5281/zenodo.21991104`, which answers **410**, so `doi_status: UNAVAILABLE` stands. Two methods were wrong and are fixed: `doi.org` answers **403 for every DOI including the live control** (publisher-side client rejection, so the old method could not tell "gone" from "refused" — hence its `UNCHECKABLE`), and `/api/records/zenodo.<id>` answers **404 for every record including live ones** (the `zenodo.` prefix makes the request malformed). The probe that writes the file — `scripts/probe-zenodo-status.mjs`, with 11 tests — **did not exist** despite the source comment referring to it; it now exists, refuses to write unless the control answers 200, and reports the **final hop** with `final_url` beside it. The probe is **idempotent**: running it twice keeps the 29 September text verbatim rather than overwriting it with the previous run's text, and a test asserts that every sentence it replaces is preserved. This register's own earlier reading of the methodology deposit as "HTTP 302" was that redirect, not a status: the final hop is **410**, so the deposit is still gone. The register id is the gap-register row rather than a corrections-ledger id, because the ledger signature covers the bytes of its entries and is re-issued by a separate owner-gated step, so no entry was added and no signed ledger byte was moved. **What remains open is B1 and the 108 citations**, which need the Zenodo account appeal and are not closable by engineering. |
 | A13 | **OPEN** | The board publishes 33 axes against a `domains` array with one entry (`cross-border`, `SCAFFOLD`). |
 | A14 | **OPEN** | 7 of the 9 deterministic-facts run artefacts remain `CONTENT_ADDRESSED_UNSIGNED`; a content id is not a signer authorisation. |
 | A15 | **OPEN** | The human-in-the-loop probe artefact is `signed: false` and the instrument remains a pilot, not deployed and not on the board. |
@@ -483,10 +484,14 @@ Every live figure below was read from the named endpoint on 28 October 2026 (03:
 ### 6.1 What is still open, in one list
 
 **Open and engineering-closable:** A2, A3, A5, A6, A8, A13, A16, A17, A18.
-**In flight (closure being landed):** A7, A12, A19.
+**In flight (closure being landed):** A7, A19.
 **Closed:** A1, A4, A9, A10 (as an engineering gap), A11 (28 Oct 2026 — the pointer's drift
 verdict is recomputed and re-published; the earlier observation is preserved in a dated
-note beside it).
+note beside it), A12 (28 Oct 2026 — the Zenodo status is
+re-probed with a corrected method and a control; the blanket "every record returns 410"
+sentence is corrected and the prior text kept verbatim in a dated note beside it; the
+per-DOI states were right and are unchanged, and the board's `doi_status` needs no
+re-point).
 **Not closable by engineering — a named owner action, or not ours to close:** A14 and A15 need the
 signing and deployment paths, not a document edit; the upstream SAFE pull request under A10 needs a
 co-author with a normal GitHub account; the corrections ledger's signature re-issue after a ledger
@@ -515,6 +520,228 @@ is complete. It is a dated list of which named contradictions were re-measured, 
 read, and which of them are still open. **A closure is a closure of the named contradiction, not of
 the domain.**
 
+## 7. STATUS RE-MEASURED AT 28 OCTOBER 2026, 16:1x–16:3x UTC — a second pass
+
+§6 recorded the status of every engineering-closable row at a single measurement window on the morning of
+28 October 2026 (03:0x–03:5x UTC). Between that window and this one, the artefact behind eight rows was
+corrected and landed. **The rows in §6 are left unchanged above**, for the same reason §3A is: a dated
+observation stays dated, and re-writing it in place would destroy the only record of what it said that
+morning. This section is the second reading, and it names, row by row, what closed each one.
+
+### 7.1 Why the rows moved
+
+A register of measurements drifts in exactly one way: a fix lands after the measurement, and the row still
+describes the state before the fix. That is not an error in the row — it is what a dated record does. The
+error would be editing §6 in place.
+
+Every row that moved here moved for that reason, and in every case the fix landed **after** §6's window:
+
+| row | what closed it | landed |
+|---|---|---|
+| A2, A3, A5, A6 | `README.md`'s generated block, regenerated through `scripts/github/org-readme.py` | #3570 — 14:52:42Z |
+| A7 | the two documents that pinned the old root, repointed at the live root with a read date | #3564 — 10:23:06Z |
+| A9, A10 | the SAFE v1.0 port document, and a negative control that is no longer vacuous | #3532 — 27 Oct 08:12:53Z · #3535 — 27 Oct 09:14:02Z |
+| A11 | the witness pointer's drift observation, recomputed against the live root | #3572 — 14:40:27Z |
+| A12 | the Zenodo availability status, re-probed and re-published | #3573 — in flight at this measurement |
+| A19 | three dated `-SUPERSEDES` notes, indexed in `public/corrections/SUPERSESSIONS.md` | #3569 — 15:33:51Z |
+| A8 | `docs/github/PROFILE-README.md`, regenerated through the same generator | #3586 — 16:29:13Z |
+
+A8 is the one that had no prior row movement to explain it, so its cause is recorded here in full: the
+generator's corrections selection had been fixed, and `README.md` and `docs/github/PERSONAL-PROFILE-DRAFT.md`
+were regenerated at 09:41:25Z — but `docs/github/PROFILE-README.md` was not. It still carried
+`_derived 2026-10-26T10:08:28Z` and the oldest entry in the ledger as the latest one. Nothing in this
+repository regenerates it; the daily `org-readme.yml` lives in `CSOAI-ORG/.github` and pushes the profile,
+not this repository's copy. #3586 regenerated all three artefacts in one run so they cannot diverge again.
+
+### 7.2 The re-measured status, every row
+
+Every live figure below was read from the named endpoint on 28 October 2026, 16:1x–16:3x UTC.
+
+| Row | Status at this measurement | What was measured |
+|---|---|---|
+| A1 | **CLOSED** | unchanged from §6 — `README.md:17` says "the 33-axis GSPC board" and `:23` carries `totals.public_count` = **33 axes · 23 measured**. Live board: **33 slots · 23 measured · 10 UNMEASURED**. |
+| A2 | **CLOSED** | `README.md:84` now carries the live root — `a2620ac322c5…` · **325** leaves · as_of `2026-10-27T21:20:49Z` — and the repeat at `:92` reads the same leaf count. Live `GET /root.json`: merkle `a2620ac322c562b6…`, `card_count` 325, `len(card_sha256)` 325, same `as_of`. |
+| A3 | **CLOSED** | `README.md:86` now names the ledger's newest entry — **93** entries · latest **`C-2026-1006-13`** (2026-10-06) · `signature_state` **VALID**. Live `GET /api/corrections`: 93 entries, newest `C-2026-1006-13`, `signature_state` VALID. |
+| A4 | **CLOSED** | unchanged from §6 — `README.md:88` says **438** cells; live `GET /api/hub-cards` → `counts.cells` 438, measured 438, unmeasured 0, complete true. |
+| A5 | **CLOSED** | `README.md:94` now says **4** settlements · **3** payers all-time · 3 in 30 d. Live `GET /api/revenue` → `one_number.settlements` **4**, `all_time` 3, `last_30d` 3, `self_settlements` 22, `repeat_nonself_payers.all_time` 1. |
+| A6 | **CLOSED** | the Hugging Face row (`README.md:124`) now reads as_of `2026-10-27T21:20:49Z` · merkle `a2620ac322c5…` · 325 leaves · modified 2026-10-28T09:36:54.000Z · **yes**. Live: the dataset's `lastModified` is 2026-10-28T09:36:54.000Z and its `snapshot/root.json` reads a2620ac3… / 325 / 2026-10-27T21:20:49Z. |
+| A7 | **CLOSED** | `docs/grants/README.md:85` now reads the live root `a2620ac322c5…` under a "Read on 2026-10-28" column, and `docs/trust/ANCHOR-PREPARATION.md` carries a dated supersession banner naming `sha256 e9fb00e2…`, 25,925 B, 325 cards, merkle `a2620ac3…`, `as_of 2026-10-27T21:20:49Z` — and tells the reader to read the root live at execution time. |
+| A8 | **CLOSED 28 Oct 2026** | `docs/github/PROFILE-README.md` was regenerated through `scripts/github/org-readme.py`. Its corrections row now reads **93** entries · latest **`C-2026-1006-13`** (2026-10-06) · `signature_state` **VALID**, beside the live root `a2620ac322c5…` · 325 leaves and the live publisher metric (3 payers · 4 settlements). The generator's own selftest passes: the newest correction is selected, the oldest `entries[-1]` would not be, and an undated ledger is not guessed. |
+| A9 | **CLOSED** | unchanged from §6 — the port document states the signed board freeze ("23 axes · 23 measured") and the living board ("33 axes · 23 measured") separately, and does not present 23 as the current board. |
+| A10 | **CLOSED as an engineering gap**, one owner-gated step remains | unchanged from §6 — the patch is bound to the approved `SAFE.md` at a pinned upstream commit, and the negative control is non-vacuous. The upstream pull request is still not submitted: it needs a co-author with a normal GitHub account, and that is the owner's to choose. |
+| A11 | **CLOSED 28 Oct 2026** | unchanged from §6 — the pointer's `drift` block reads `MATCH` at `checked_at 2026-10-28T11:51:39Z` against `live_root_sha256 e9fb00e2…` / `live_root_merkle_root a2620ac3…`, `match_sha256` and `match_merkle_root` true, `conflict NONE` over 67 sidecars. |
+| A12 | **IN FLIGHT** | #3573 re-probes the Zenodo deposits and re-publishes `public/interop/zenodo-status.json`. At this measurement the published notice still reads `as_of 2026-09-29T16:46Z`, so the row stays open until that change lands. |
+| A13 | **OPEN** | live `GET /api/gspc` → `domains[]` still carries **one** entry (`cross-border`, status `SCAFFOLD`) against `totals.axes` = 33. The array is served from `functions/api/gspc.ts`. |
+| A14 | **OPEN** | live `GET /api/gspc` → `totals.financial_run_attestations`: `run_artifacts` 9, `ed25519_signed` 2, `content_addressed_unsigned` 7; signed axes `effect-binding`, `provenance-controls`. |
+| A15 | **OPEN** | `public/interop/hitl-elicitation-probe-2026-09-24.json` still carries `signed: false` and `status` "PILOT — not on the board, not a board axis instrument". |
+| A16 | **OPEN** | live `GET /measurement-capsules/latest.json` → `as_of 2026-10-01T08:11:31Z` against the live root's `as_of 2026-10-27T21:20:49Z` — **26 days** behind. |
+| A17 | **OPEN** | live `GET /.well-known/x402.json` carries no signature field, and there is no checked-in copy of the manifest under `public/.well-known/`. |
+| A18 | **OPEN** | the A2A directory census (`public/interop/a2a-directories-20260930T103424Z.json`) carries an OpenTimestamps proof (`ots_state` STAMPED 2026-09-30) and a `known_defects` list of defects found in **other** directories — but no paired must-fail census of our own counter. |
+| A19 | **CLOSED 28 Oct 2026** | three dated artefacts now each carry a `-SUPERSEDES` note beside it, indexed in `public/corrections/SUPERSESSIONS.md` (#3569). The dated artefacts themselves are not edited — dated evidence stays as it was read. |
+
+### 7.3 What is still open, and what each one would take
+
+Of the rows still open, one is closable by writing code in this repository:
+
+- **A18** — publish a paired negative-control census: a deliberately malformed directory and the expected
+  rejection of it, in the same dated pair. The missing thing is the published, dated, paired artefact; the
+  counter's own test suite already carries named fixtures.
+
+The other five are not closable by writing code here. Each needs the board-attestation signing key, which
+is not in this environment:
+
+- **A13** — publish a domain map under `csoai.gspc-domains/<domain>/1.0` for the domains the board already
+  measures, or state on the board that the array is deliberately a stub. Either changes the board payload the
+  living stamp is computed over, and the board's own published `sig_input` rule says "canonical board minus
+  signature fields, **as published when signed, and not reproducible**" — so a re-signature is required, not
+  merely a re-publish.
+- **A14** — sign the 7 content-addressed-only run artefacts under the board key.
+- **A15** — sign the probe artefact, then publish a frozen bank and route it through the board's
+  declared-slot admission gate.
+- **A16** — rebuild the capsule so it carries the current root `as_of` and card count, and re-sign the index.
+- **A17** — sign the x402 manifest under the board key and publish the signed copy under `public/.well-known/`.
+
+**A13–A17 are blocked on one credential, not on five decisions.** Nothing here claims they are closed, and
+the register's own doctrine holds: **a closure is a closure of the named contradiction, not of the domain.**
+
+### 7.4 What this section is not
+
+It is not a certification, an audit opinion, a conformity assessment, or a claim that any domain is
+complete. It is a second dated reading of the same rows, taken after eight fixes landed. A row that reads
+CLOSED here says only that the contradiction it named no longer held at 16:1x–16:3x UTC on 28 October 2026 —
+and that a row which reads OPEN here is open because it was measured, not because it was assumed.
+
+
+## 8. STATUS RE-MEASURED AT 1 NOVEMBER 2026, 04:3x UTC — a third pass
+
+§6 recorded the status of every engineering-closable row at 03:0x–03:5x UTC on 28 October, and §7 recorded it
+again at 16:1x–16:3x UTC the same day. **Both are left unchanged above**, for the reason §7 gave for §6: a dated
+observation stays dated, and re-writing it in place would destroy the only record of what it said at the time.
+This section is the third reading.
+
+Every live figure below was read from the named endpoint in **one window, 2026-11-01T04:39:39Z**, so the figures
+in the table are mutually comparable rather than a patchwork of reads taken at different moments. The read itself
+is reproducible: `python3 scripts/measurements/gap-register-pass3.py` in this repository performs exactly these
+reads and prints them with the read time.
+
+### 8.1 Why the rows moved
+
+A register of measurements drifts in exactly one way: a fix lands after the measurement, and the row still describes
+the state before the fix. That is not an error in the row — it is what a dated record does. The error would be
+editing §6 or §7 in place.
+
+| row | what moved it | when |
+|---|---|---|
+| **A18** | `public/interop/a2a-directories-20260930T103424Z.controls.json` — three controls, and with the `ours` exclusion removed the must-fail case flips, so the counter can fail | #3553 — 30 Oct 04:22:58Z, **after** §7's window |
+| **A11** | the witness pointer's drift block, re-checked against the live root by the estate's own `scripts/witness_public_root.py --recheck`: `DRIFTED` → `MATCH`, conflict `NONE` over 75 sidecars | landing as its own change; at this measurement the published pointer still reads `DRIFTED`, and §8.2 says exactly that |
+| **A16** | the capsule index moved from `2026-10-01T08:11:31Z` to `2026-10-28T08:30:40Z` — the gap to the live root narrowed from **26 days** to **1 day 16 hours** | published at `GET /measurement-capsules/latest.json` |
+| **A2, A6** | the live root moved: 325 leaves · `a2620ac322c5…` · `2026-10-27T21:20:49Z` → **326** leaves · `aab2825a63efc7c7…` · `2026-10-30T00:58:22Z`. The README's "live now" column still carries the previous reading, so both rows are open again | the root was republished at 30 Oct 00:58:22Z |
+
+**A18 is the row that matters most here, and it moved in the one direction that is easy to get wrong.** §7 read it
+OPEN at 16:1x–16:3x UTC on 28 October. The artefact that closes it — a paired must-fail census of our own counter,
+with three named controls and a grader that is shown to flip — landed on 30 October, thirty-four hours *after* §7's
+window. A register that had been rewritten in place would have kept saying OPEN and been wrong about a closed row; a
+register that had been rewritten optimistically would have claimed a closure it had not measured. The row says OPEN,
+and §8 says the closure landed after the window.
+
+### 8.2 The re-measured status, every row
+
+| Row | Status at this measurement | What was measured |
+|---|---|---|
+| A1 | **CLOSED** | unchanged — `README.md:17` says "the 33-axis GSPC board" and `:23` carries `totals.public_count` = **33 axes · 23 measured**. Live board: **33 slots · 23 measured · 10 UNMEASURED**, `public_count` "33 axes · 23 measured". |
+| A2 | **OPEN again** | `README.md:84` carries root `a2620ac322c5…` · **325** leaves · as_of `2026-10-27T21:20:49Z`, under a column headed **"live now"**. Live `GET /root.json`: sha256 `684a59fed86bf111…` · **25,997 B** · merkle `aab2825a63efc7c7…` · **326** leaves · as_of `2026-10-30T00:58:22Z`. The repository's own `public/root.json` carries the live values, so the contradiction is between the README's block and the tree it sits in. |
+| A3 | **CLOSED** | `README.md:86` says **93** entries · latest `C-2026-1006-13` (2026-10-06) · signature_state **VALID**. Live `GET /api/corrections`: 93 entries, newest `C-2026-1006-13` (2026-10-06), `signature_state` **VALID**, recomputed and attested content id equal. |
+| A4 | **CLOSED** | `README.md:88` says **438** cells. Live `GET /api/hub-cards` → `counts.cells` 438, measured 438, unmeasured 0, `complete` true, no unresolved supersessions or withdrawals. |
+| A5 | **CLOSED** | `README.md:94` says 3 all-time · 3 in 30 d · 4 settlements. Live `GET /api/revenue` → `one_number.all_time` **3**, `last_30d` **3**, `settlements` **4**, `self_settlements` 22. |
+| A6 | **OPEN again** | `README.md:124` (the Hugging Face row) carries as_of `2026-10-27T21:20:49Z` · merkle `a2620ac322c5…` · 325 leaves. The live root is now **326** leaves · `aab2825a63efc7c7…` · `2026-10-30T00:58:22Z`. Same cause as A2, and the same closure. |
+| A7 | **CLOSED** | `docs/grants/README.md:83-87` carries a **"Read on 2026-10-28"** column naming the root and the card count, and `docs/trust/ANCHOR-PREPARATION.md:5-7,24-25` carries a dated observation plus "read it live from `https://councilof.ai/root.json` at execution time". The dated reading is now one root behind; **the pointer is the closure and the number is a dated reading.** |
+| A8 | **CLOSED** | `docs/github/PROFILE-README.md:81` carries **93** entries · latest `C-2026-1006-13` (2026-10-06) · signature_state **VALID**. Its root row carries the same dated reading as A2 and moves with it. |
+| A9 | **CLOSED** | unchanged — `SAFE-v1.0-PORT-20261026.md:99-100` states the signed freeze's "**23 axes · 23 measured**" and the living board's "**33 axes · 23 measured**" separately, and `:102-103` records the freeze as `SUPERSEDED_KNOWN_CLAIM_DEFECT` with the living board named `current_authority`. |
+| A10 | **CLOSED as an engineering gap**, one owner-gated step remains | unchanged — the patch is bound to the **approved** `SAFE.md` at pinned upstream commit `ba76bac74c251926cb3d14bc363e0443b5959007` (`:152`), and the negative control is non-vacuous. The upstream pull request is still **not submitted**: it needs a co-author with a normal GitHub account, and that is the owner's to choose. |
+| A11 | **the published verdict is stale; the drift it names has resolved** | The published pointer's `drift` block still reads `DRIFTED`, `checked_at 2026-10-30T02:36:44Z` — and that reading was **true when it was made**: the site was serving a root whose sha256 was `8d1df2d7001d70fa…` / merkle `0e91ad36a7674e05…`, while the witness covered `684a59fed86bf111…` / `aab2825a63efc7c7…`. **The site now serves exactly the witnessed bytes**: the live `root.json` is sha256 `684a59fed86bf111…`, 25,997 B, merkle `aab2825a63efc7c7…` — the pointer's own `live_root.sha256`, and the subject of its dated sidecar `root-witness-2026-10-30-684a59fe.json`. The pointer's `live_root` block was already right; only the drift block lagged. The correction is the estate's own recompute — `scripts/witness_public_root.py --recheck`, the command the `public-root` workflow already runs on every publish — and it now reports `MATCH` with conflict `NONE` over 75 sidecars; `scripts/root-witness-release-gate.py --phase live` reports **PASS**. The work plan recorded this row as key-custody-gated on 28 Oct because the live gate failed closed then; **it is not a signing operation and was never one**, and the credential was never what was missing. |
+| A12 | **CLOSED** | live `GET /interop/zenodo-status.json` → `as_of 2026-10-28T12:13:53Z`: the file names **39** DOIs, and at the check **37 answer HTTP 410** and **2 answer HTTP 200** — with the control `10.5281/zenodo.3234648`, alive and not ours, answering 200, so this is a reading of the deposits and not of our own access. |
+| A13 | **OPEN** | live `GET /api/gspc` → `domains[]` still carries **one** entry (status `SCAFFOLD`) against `totals.axes` = 33. |
+| A14 | **OPEN** | live `GET /api/gspc` → `totals.financial_run_attestations`: `run_artifacts` **9**, `ed25519_signed` **2**, `content_addressed_unsigned` **7**; signed axes `effect-binding`, `provenance-controls`. A content id proves identity of bytes, not signer authorisation. |
+| A15 | **OPEN** | live `GET /interop/hitl-elicitation-probe-2026-09-24.json` → `signed: false`, status "PILOT — not on the board, not a board axis instrument". |
+| A16 | **OPEN, and much narrower** | live `GET /measurement-capsules/latest.json` → `as_of 2026-10-28T08:30:40Z` against the live root's `as_of 2026-10-30T00:58:22Z`: **1 day 16 hours** behind, down from the **26 days** §7 measured. The index is a signed artefact — `scripts/measurement_capsule_layout.py` copies the `.signed.json` sidecar and the `.ots` proof — so a fresh index still needs a signed source index. **The credential, not a rebuild.** |
+| A17 | **OPEN** | live `GET /.well-known/x402.json` → 22 top-level keys and **no signature field**; there is still no checked-in copy of the manifest under `public/.well-known/`. |
+| A18 | **CLOSED** | `public/interop/a2a-directories-20260930T103424Z.controls.json` carries three controls: a real directory, a not-a-directory, and the must-fail case drawn from the census's own rule — **a row answered from `ours` is never evidence about a third party**. The published census's own totals reproduce under that rule, and with the exclusion removed the must-fail case flips (`grader_can_fail.detected: true`), so the counter can fail. Live: HTTP 200. §7's OPEN row was measured at 16:1x–16:3x UTC on 28 October; the artefact landed on 30 October. |
+| A19 | **CLOSED** | the three dated `-SUPERSEDES` notes sit beside the three dated artefacts they supersede, and `public/corrections/SUPERSESSIONS.md` indexes them. Live: HTTP 200 for the index and for both the Zenodo and witness-pointer notes. The dated artefacts themselves are not edited — dated evidence stays as it was read. |
+
+### 8.3 What is still open, and what each one would take
+
+**Open and closable by a regeneration: A2, A6.** Both are the same row in two places, and both close by running
+`scripts/github/org-readme.py --councilof README.md`, the same generator that closed them on 28 October (#3570).
+
+They will open again, and the reason is worth stating rather than hiding: the README's generated block is produced
+by reading the **live** endpoints, and it is regenerated **by hand in a PR**. The root is republished roughly daily —
+85 roots are on record, with 1–4 published on each of the last seven active days — so the "live now" column goes
+behind about once a day and no gate in this repository would tell anyone until the next manual regeneration.
+
+**No gate is proposed for it here, and the reason is a measured one.** A gate that compares the README's reading
+with the committed `public/root.json` would go red on essentially every root publication. A guard that cries wolf is
+set to continue-on-error within a week, and then protects nothing — which is a worse outcome than having no gate at
+all, because it looks like coverage. The closure that actually holds is the regeneration, and its recurrence is
+recorded here instead.
+
+**Open and blocked on one credential — the board-attestation signing key — not on five decisions:**
+
+- **A13** — publish a domain map for the domains the board already measures, or state on the board that the array is
+  deliberately a stub. Either changes the board payload the living stamp is computed over, and the board's own
+  published `sig_input` rule says the preimage is "canonical board minus signature fields, **as published when
+  signed, and not reproducible**" — so a re-publish of the board is a re-signature, not a rebuild.
+- **A14** — sign the 7 content-addressed-only run artefacts under the board key.
+- **A15** — sign the probe artefact, then publish a frozen bank and route it through the board's declared-slot
+  admission gate.
+- **A16** — rebuild the capsule index over the current root and re-sign it.
+- **A17** — sign the x402 manifest under the board key and publish the signed copy under `public/.well-known/`.
+
+**Nothing here claims they are closed.** A closure is a closure of the named contradiction, not of the domain.
+
+### 8.4 One thing this pass found that is not a row
+
+The register's rows are the estate's named contradictions. This pass also produced a finding about the estate's own
+supply-chain artefact, and it is recorded here rather than in a pull-request body, because a finding that only lives
+in a PR description is a finding that disappears when the PR merges.
+
+**A squash-merge can leave `master`'s SBOM pinning a commit that is not in `master`'s history.**
+
+The mechanism, measured on 1 November 2026. A pull request is merged with `--squash`, which creates one new commit on
+`master` and does **not** carry the branch's commits into `master`'s history. If that pull request's SBOM was minted
+on the branch — pinning a commit that exists only in the branch's history — the squash carries the *file* into
+`master` while leaving the *commit it names* behind. `master`'s SBOM then names a commit that `master` does not
+contain. On 30 October at 09:2x UTC, `master`'s SBOM pinned `0d47f7506a07…` ("Refresh reviewed mirror from
+integrated signed inputs"), a commit that was not an ancestor of `master`.
+
+**The estate's existing producer gate cannot see this, and that is the finding.** `scripts/gen_sbom.py --check`
+proves the SBOM with `git show <recorded>:package.json`. That read succeeds for *any* commit present in the object
+store, reachable or not — and `pr-gates` checks out with `fetch-depth: 0`, so the object is present. The gate is
+therefore green on a pin that CI cannot resolve, and the failure surfaces much later, in the deploy, as
+`sbom FAILED — SBOM held; previous output preserved` — with nothing in the message saying that a pin pointed at a
+commit nobody can reach.
+
+`master` is repaired: its SBOM now pins `73e78b8c98…` ("Reconcile critical dependency fixes with current master and
+retain both SBOM histories"), which **is** an ancestor of `master`. The intermediate commit is still in the estate's
+history and is still reachable — but the pin that named it was not, and the same shape will recur on the next
+squash-merge of a branch whose SBOM was minted on the branch.
+
+The fix is not a re-stamp. It is a check that the pin is **reachable from the head being pushed**, which is what
+`scripts/sbom-pin-gate.mjs` does: it asks whether the recorded commit is an **ancestor of HEAD**, not whether it can
+be read. The two questions differ exactly here — the object exists in both cases, and only the ancestry answer tells
+CI whether the read will resolve in the merge ref it checks out. The gate is wired into the pre-push hook and into
+`pr-gates.yml`, so a green push is a green CI on this axis, in seconds rather than in a deploy that fails twelve
+minutes later.
+
+### 8.5 What this section is not
+
+It is not a certification, an audit opinion, a conformity assessment, a compliance determination, or a claim that
+any domain is complete. It is a dated list of which named contradictions were re-measured, what they now read, and
+which of them are still open — and, for two rows, an explicit statement that the row has **re-opened** because the
+thing it measured moved.
+
+**A row that reads CLOSED here says only that the contradiction it named no longer held at 04:3x UTC on 1 November
+2026.** A row that reads OPEN here is open because it was measured, not because it was assumed. And §6 and §7 are
+left exactly as they were written, because a dated observation stays dated.
 ---
 
 *Council of AI — measurement, not certification. Verification of every artefact is free. A slot is a

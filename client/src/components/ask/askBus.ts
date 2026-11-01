@@ -27,9 +27,9 @@ export function isAskEntryRoute(location: string, search: string): boolean {
   return path === "/" || path === "/tools" || home;
 }
 
-/** Entry routes open Ask after hydration on wider screens only; on mobile opening is user-initiated. */
-export function shouldAutoOpenAsk(location: string, search: string, mobile: boolean): boolean {
-  return !mobile && isAskEntryRoute(location, search);
+/** Opening Ask is always a deliberate action; hydration and navigation keep the page unobstructed. */
+export function shouldAutoOpenAsk(_location: string, _search: string, _mobile: boolean): boolean {
+  return false;
 }
 
 export function openAsk(question?: string): void {
