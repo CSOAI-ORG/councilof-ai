@@ -398,7 +398,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.3+0627e989beb4",
+    "version": "0.3+f0d6dd16d126",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Operations carrying x-payment-info have a paid mode: request their x-csoai.door URL to select it. Without payment, that mode answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters alone may select a free view on mixed-mode operations. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -431,6 +431,84 @@
         },
         "security": [],
         "summary": "POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at."
+      }
+    },
+    "/api/a2a/key": {
+      "get": {
+        "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports GET.",
+        "operationId": "get__api_a2a_key",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "Pages dispatches HEAD only to an onRequestHead export; the door exports GET."
+      }
+    },
+    "/api/a2a/route": {
+      "get": {
+        "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "operationId": "get__api_a2a_route",
+        "responses": {
+          "405": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Method not allowed \u2014 use the documented read method"
+          }
+        },
+        "security": [],
+        "summary": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
+      },
+      "post": {
+        "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "operationId": "post__api_a2a_route",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405."
+      }
+    },
+    "/api/a2a/verify": {
+      "get": {
+        "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "operationId": "get__api_a2a_verify",
+        "responses": {
+          "405": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Method not allowed \u2014 use the documented read method"
+          }
+        },
+        "security": [],
+        "summary": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
+      },
+      "post": {
+        "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+        "operationId": "post__api_a2a_verify",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405."
       }
     },
     "/api/action-jobs": {
@@ -958,6 +1036,22 @@
         },
         "security": [],
         "summary": "GET /api/axis-register \u2014 the GSPC axis register (canonical scored rows)."
+      }
+    },
+    "/api/axis-specialists": {
+      "get": {
+        "description": "GET /api/axis-specialists \u2014 unsigned MEOK Hive audit index for every GSPC axis. Each specialist has an isolated logical cluster, distinct checks and proposals, and a MEOK H.I.M.-compatible HOLD gate. No apply operation or new measurement.",
+        "operationId": "get__api_axis-specialists",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/axis-specialists \u2014 unsigned MEOK Hive audit index for every GSPC axis. Each specialist has an isolated logical cluster, distinct checks and proposals, and a MEOK H.I.M.-compatible HOLD\u2026"
       }
     },
     "/api/badge": {
@@ -2986,6 +3080,37 @@
         "x-csoai-lifecycle": "DOOR_CLOSED"
       }
     },
+    "/api/gate": {
+      "get": {
+        "description": "A GET on a POST path is a method error, not a 404.",
+        "operationId": "get__api_gate",
+        "responses": {
+          "405": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Method not allowed \u2014 use the documented read method"
+          }
+        },
+        "security": [],
+        "summary": "A GET on a POST path is a method error, not a 404.",
+        "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
+      },
+      "post": {
+        "description": "A GET on a POST path is a method error, not a 404.",
+        "operationId": "post__api_gate",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "A GET on a POST path is a method error, not a 404."
+      }
+    },
     "/api/growth-loops": {
       "get": {
         "description": "/api/growth-loops \u2014 retired until loop status is derived from current evidence.",
@@ -3070,6 +3195,100 @@
         },
         "security": [],
         "summary": "The operator token, from the header."
+      }
+    },
+    "/api/hitl/challenge": {
+      "post": {
+        "description": "POST /api/hitl/challenge \u2014 raise a challenge for a human to decide.",
+        "operationId": "post__api_hitl_challenge",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/hitl/challenge \u2014 raise a challenge for a human to decide."
+      }
+    },
+    "/api/hitl/challenges": {
+      "get": {
+        "description": "GET /api/hitl/challenges \u2014 the review queue: the challenges waiting for a human, and the ones already decided.",
+        "operationId": "get__api_hitl_challenges",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/hitl/challenges \u2014 the review queue: the challenges waiting for a human, and the ones already decided."
+      }
+    },
+    "/api/hitl/decision": {
+      "post": {
+        "description": "POST /api/hitl/decision \u2014 record a human decision: APPROVED, HOLD or REJECTED.",
+        "operationId": "post__api_hitl_decision",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/hitl/decision \u2014 record a human decision: APPROVED, HOLD or REJECTED."
+      }
+    },
+    "/api/hitl/modules": {
+      "get": {
+        "description": "GET  /api/hitl/modules \u2014 the competency curriculum, derived from the live board. POST /api/hitl/modules \u2014 answer one module; the answer is checked against the live record.",
+        "operationId": "get__api_hitl_modules",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET  /api/hitl/modules \u2014 the competency curriculum, derived from the live board. POST /api/hitl/modules \u2014 answer one module; the answer is checked against the live record."
+      },
+      "post": {
+        "description": "GET  /api/hitl/modules \u2014 the competency curriculum, derived from the live board. POST /api/hitl/modules \u2014 answer one module; the answer is checked against the live record.",
+        "operationId": "post__api_hitl_modules",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET  /api/hitl/modules \u2014 the competency curriculum, derived from the live board. POST /api/hitl/modules \u2014 answer one module; the answer is checked against the live record."
+      }
+    },
+    "/api/hitl/record": {
+      "get": {
+        "description": "GET /api/hitl/record \u2014 the signed receipts: the decisions that were taken, and the receipts that prove them.",
+        "operationId": "get__api_hitl_record",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/hitl/record \u2014 the signed receipts: the decisions that were taken, and the receipts that prove them."
       }
     },
     "/api/hub-cards": {
@@ -3823,6 +4042,22 @@
         },
         "security": [],
         "summary": "KV namespace for PAL memory. Optional: without it, PALs have no memory and say so."
+      }
+    },
+    "/api/pals/provision": {
+      "post": {
+        "description": "POST /api/pals/provision \u2014 build a staff member.",
+        "operationId": "post__api_pals_provision",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/pals/provision \u2014 build a staff member."
       }
     },
     "/api/plugin": {
@@ -8438,6 +8673,22 @@
         }
       }
     },
+    "/api/research-plan": {
+      "get": {
+        "description": "",
+        "operationId": "get__api_research-plan",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": ""
+      }
+    },
     "/api/revenue": {
       "get": {
         "description": "GET /api/revenue \u2014 the three-SKU revenue instrumentation (EXEC-A-REVENUE.md \u00a75).",
@@ -10761,7 +11012,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 127,
+    "public_operations": 140,
     "quarantined": [
       {
         "buyable": false,
@@ -10777,7 +11028,7 @@
       "well_known": "csoai.x402/0.2"
     },
     "scheme": "exact",
-    "unauthenticated_facades": 42,
+    "unauthenticated_facades": 45,
     "well_known": "https://councilof.ai/.well-known/x402.json"
   }
 }
