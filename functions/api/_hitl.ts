@@ -41,6 +41,7 @@
 //     check pass on a hand-written answer: the correct answer is re-derived from the live board
 //     every time it is asked and every time it is signed.
 
+import type { KVNamespace } from "@cloudflare/workers-types";
 import {
   BOARD_ATTESTATION_DID,
   canonicalBytes,
@@ -719,16 +720,37 @@ export const HITL_SIGNING_DID = BOARD_ATTESTATION_DID;
 // STORE HELPERS
 // ---------------------------------------------------------------------------
 
-export async function putChallenge(store: KVNamespace | null, c: HitlChallenge): Promise<void> {
-  if (!store) return;
+export async function putChallenge(store: KVNamespace | null, c: HitlChallenge): Promise<boolean> {
+  if (!store) return false;
   try {
     await store.put(`${HITL_PREFIX}challenge:${c.id}`, JSON.stringify(c));
+    return true;
   } catch {
-    /* a store that refuses the write leaves the path stateless, not broken */
+    return false;
   }
 }
 
-export async function listChallenges(store: KVNamespace | null, limit = 50): Promise<HitlChallenge[]> {
+/** Resolve a private original after authentication; missing KV reads are not proof of absence. */
+export async function getChallenge(store: KVNamespace, id: string): Promise<HitlChallenge | null> {
+  const raw = await store.get(`${HITL_PREFIX}challenge:${id}`);
+  if (raw === null) return null;
+  let value: HitlChallenge;
+  try {
+    value = JSON.parse(raw) as HitlChallenge;
+  } catch {
+    throw new Error("HITL_CHALLENGE_INVALID");
+  }
+  if (!value || typeof value !== "object" || Array.isArray(value) || value.id !== id ||
+      value.schema !== HITL_CHALLENGE_SCHEMA || value.policy !== HITL_POLICY ||
+      ![value.at, value.subject, value.proposed_action, value.raised_by].every(v => typeof v === "string") ||
+      ![value.axis, value.source, value.facts, value.required_module].every(v => v === null || typeof v === "string") ||
+      !(await verifyChallenge(value))) {
+    throw new Error("HITL_CHALLENGE_INVALID");
+  }
+  return value;
+}
+
+export async function listChallenges(store: KVNamespace | null, limit = 50, strict = false): Promise<HitlChallenge[]> {
   if (!store) return [];
   const out: HitlChallenge[] = [];
   try {
@@ -744,21 +766,26 @@ export async function listChallenges(store: KVNamespace | null, limit = 50): Pro
       }
     }
   } catch {
-    /* an unreachable store yields no challenges */
+    if (strict) throw new Error("HITL_STORE_READ_FAILED");
   }
   return out;
 }
 
-export async function putReceipt(store: KVNamespace | null, r: HitlReceipt): Promise<void> {
-  if (!store) return;
+export async function putReceipt(store: KVNamespace | null, r: HitlReceipt): Promise<boolean> {
+  if (!store) return false;
   try {
-    await store.put(`${HITL_PREFIX}receipt:${r.challenge.id}`, JSON.stringify(r));
+    // Preserve distinct decisions and their exact signature state. Legacy challenge-only
+    // keys remain readable. This is content addressing, not WORM storage, atomic approval
+    // consumption or proof of named-human identity. KV reads remain eventually consistent.
+    const digest = await sha256Hex(canonicalBytes(r));
+    await store.put(`${HITL_PREFIX}receipt:${r.challenge.id}:${digest}`, JSON.stringify(r));
+    return true;
   } catch {
-    /* same rule as above */
+    return false;
   }
 }
 
-export async function listReceipts(store: KVNamespace | null, limit = 50): Promise<HitlReceipt[]> {
+export async function listReceipts(store: KVNamespace | null, limit = 50, strict = false): Promise<HitlReceipt[]> {
   if (!store) return [];
   const out: HitlReceipt[] = [];
   try {
@@ -774,7 +801,7 @@ export async function listReceipts(store: KVNamespace | null, limit = 50): Promi
       }
     }
   } catch {
-    /* an unreachable store yields no receipts */
+    if (strict) throw new Error("HITL_STORE_READ_FAILED");
   }
   return out;
 }
@@ -868,3 +895,4 @@ export function decisionPathOpen(env: HitlEnv): boolean {
 export function signingKeyConfigured(env: HitlEnv): boolean {
   return (env.BOARD_SIGN_KEY_PKCS8_B64 ?? "").trim().length > 0;
 }
+
