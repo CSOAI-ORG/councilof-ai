@@ -54,18 +54,71 @@ summarises; the ledger remembers.
 
 1. **The public copy stops implying append-only.** Where the root is described as an append-only ledger or an
    ever-growing log, that wording is wrong and must be corrected. A snapshot that drops members is not a log.
-2. **The two corpora stay named separately.** The public root (324 catalogued leaves) and the signed card index
-   (335 declared, 335 rows — internally consistent, but a different number again) have **no id in common**. Neither is
+2. **The two corpora stay named separately.** The public root (324 catalogued leaves when this ruling was made) and the
+   signed card index (335 declared, 335 rows — internally consistent, but a different number again) have **no id in
+   common**. Neither is
    a subset of the other by construction, and neither may be presented as the other.
 3. **The card index's 335 and the root's 324 are not a defect to be reconciled by fiat.** They are two different
    corpora with two different membership rules. The live verifier already reports this distinction rather than
    reconciling it.
 
-## The gap this ruling does not close
+### The ruling, demonstrated by the estate's own overnight run — 2026-10-30
 
-`/state-of-claim-maintenance/` returns **404** while the live register claims **92.86%** coverage against
-`due_unrun_next_read: 26`. That is a separate open defect — a published claim about a page that is not served — and it
-is not affected by this ruling. It stays on the docket.
+The root recomputed overnight and **moved to a different merkle root at the same 326 leaves**
+(`7bd83223baf71d04…` → `aab2825a63efc7c7…`, `as_of 2026-10-30T00:58:22Z`), confirmed on Bitcoin at block height **973757**
+(block hash `0000000000000000000032a93db644f2235d6257ee69a75d63570b76730049b2`, block time 2026-10-30T01:02:10Z) and
+served live byte-identical to master. **An append-only structure cannot change its root without adding a leaf.** A
+membership set recomputed over time can, and this one did — which is what this ruling says it is. The counts in the
+paragraphs above are dated readings; the shape is the ruling.
+
+## The gap this ruling does not close — CORRECTED 2026-10-30
+
+**This paragraph was wrong when it was published on 2026-10-29. The correction is recorded here rather than quietly
+edited away.**
+
+As published it read: *"`/state-of-claim-maintenance/` returns **404** while the live register claims **92.86%** coverage
+against `due_unrun_next_read: 26`."*
+
+**Two errors, both measured.**
+
+1. **The live register never claimed 92.86% coverage.** No version of `register.json` carries a coverage percentage at
+   all — it holds raw counts only. The **92.86%** is in the estate's 30 September convergence note
+   (`_alignment/CLAIM-MAINTENANCE-CATEGORY-CONVERGENCE-20260930.md:59-60`: *"subjects with scheduled next read: 26"*,
+   *"scheduled subject coverage: 92.86%"*), which derived it on 30 September from the register version then live:
+   26 of 28 subjects had a scheduled next read, and 26/28 = 92.857%. That note is a working document in `_alignment/`,
+   not a published estate page.
+2. **The 26 was live on 2026-10-27, and not on 2026-10-29.** It is the same set of 26 subjects under a different field
+   name in a later register version. The register's own history:
+
+| register `as_of` | published | `scheduled_next_read` | `due_unrun_next_read` | `completed_scheduled_read` |
+|---|---|---|---|---|
+| 2026-09-25 / 2026-09-28 | 25–30 Sep | **26** | — | — |
+| 2026-10-01 | 1 Oct | 0 | **26** | — |
+| 2026-10-08 | 29 Oct | 0 | 0 | **21** |
+
+The published sentence paired the note's coverage percentage with the live register's due-unrun count — two different
+register versions, two different field names, one set of 26 subjects — and attributed both to a register that carried
+neither.
+
+**What the live register says today** — `https://councilof.ai/spec/claim-maintenance/register.json` → **HTTP 200**:
+
+| field | value |
+|---|---|
+| `as_of` | 2026-10-08T05:40:55Z |
+| `subjects_with_a_scheduled_next_read` | **0** |
+| `subjects_with_a_due_unrun_next_read` | **0** |
+| `subjects_with_a_completed_scheduled_read` | **21** |
+| `subjects_with_due_execution_unverified` | **5** |
+
+The register is **served**, and so is the human page at `https://councilof.ai/claim-maintenance/` → **HTTP 200**. The
+path `/state-of-claim-maintenance/` still returns 404, but **no live surface names it**: the only places that named it
+were the 30 September convergence note (a working document in `_alignment/`) and this docket's own documents.
+
+**The gap that actually remains** is smaller and different. The register is live; what is missing is **report #1** — the
+state table's CJ-49 row asks for a published State of Claim Maintenance report, and no such report exists. The
+30 September note's *"92.86% scheduled coverage"* still contradicts the register's own totals, so on 2026-10-30 that
+note was given a **dated correction** rather than a rewrite — a dated record is not rewritten, and the error is kept
+visible. Neither is affected by this ruling.
 
 **Measurement, never a certification.** This ruling describes the shape of a published structure. It decides nothing
 about whether any measured claim is true, and it grants no status to any subject.
