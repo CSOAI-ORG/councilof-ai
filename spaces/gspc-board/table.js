@@ -36,7 +36,7 @@ const ALIAS = {
 const READ = [
   { title: "A listing is not a grade", body: "A Hub name can sit on a public list. That is DISCOVERED. It is not a GSPC cell." },
   { title: "The board snapshot is signed", body: "Every measured axis carries a published measurement. Public cards check. They do not yet name a unique weight file." },
-  { title: "An empty slot is a finding", body: "Twenty-two axes stay on the map so the gaps stay visible. No invented zero, no invented leader." },
+  { title: "An empty slot is a finding", body: "Declared empty slots stay on the map so gaps stay visible. No invented zero, no invented leader." },
   { title: "A TIE is not a win", body: "When the leader interval contains the fleet mean, the point lead is not a measured advantage. Jail is a measured floor." },
 ];
 

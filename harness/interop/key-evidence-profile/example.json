@@ -1,0 +1,103 @@
+{
+  "evaluationInstant": "2026-10-11T00:00:00Z",
+  "history": {
+    "identifier": "urn:example:subject-a",
+    "keys": [
+      {
+        "kid": "k-2025",
+        "publicKey": "2XSZ9G2Fji-7_trfhgIq_s2S3fg4NdREcg8WP5d34es"
+      },
+      {
+        "kid": "k-2026",
+        "publicKey": "piCd8AffzuMMZNvV7LShejbbjClpiXSqIEb1Uci0EY4",
+        "successorOf": "k-2025"
+      },
+      {
+        "kid": "k-x",
+        "publicKey": "qiVY2SvdaMJLbgQ9jr9197qnHVaufNxwW51x-SgUiO4",
+        "successorOf": "k-2025"
+      }
+    ],
+    "lineage": [
+      {
+        "payload": {
+          "identifier": "urn:example:subject-a",
+          "predecessor": "k-2025",
+          "successor": "k-2026",
+          "successorPublicKey": "piCd8AffzuMMZNvV7LShejbbjClpiXSqIEb1Uci0EY4",
+          "successorValidFrom": "2026-03-01T00:00:00Z",
+          "successorValidUntil": null,
+          "type": "lineage"
+        },
+        "sig": {
+          "alg": "Ed25519",
+          "kid": "k-2025",
+          "value": "-uziXm4liVbrPj3sfh3OarTrycgTxxZQZX05SbffqESMnSEDOd5olLSoOIOKgmzLV-QbM-o1GSXByzm4KooqCA"
+        },
+        "timestamp": {
+          "payload": {
+            "digest": "sha256:2a2014c343beee74c3f9f10d5ea17d3ec449cd696d41d65e5693eb2cd99e0e7e",
+            "time": "2026-03-01T00:00:00Z",
+            "type": "timestamp"
+          },
+          "sig": {
+            "alg": "Ed25519",
+            "kid": "tsa-1",
+            "value": "IJvOb0xNTXmTJdK39UvFegjcIEzwYCLWell7iwT1AJ6N7s63nqw0wkosDrHuf_V__49LOnAU9xmoRG6NQCC5DQ"
+          }
+        }
+      }
+    ],
+    "revocations": []
+  },
+  "id": "C01",
+  "lookup": {
+    "document": "history/complete.json",
+    "fetchedAt": "2026-10-10T23:00:00Z",
+    "method": "https GET of key history document",
+    "sha256": "6afb97a71576d336fd0dcc9f6a1851ce9f95b87a270fe2eb9e12f5e7387e8950",
+    "source": "https://keys.example/subject-a/history.json",
+    "status": "ok"
+  },
+  "policy": {
+    "anchor": {
+      "kid": "k-2025",
+      "publicKey": "2XSZ9G2Fji-7_trfhgIq_s2S3fg4NdREcg8WP5d34es",
+      "validFrom": "2025-01-01T00:00:00Z",
+      "validUntil": "2026-04-01T00:00:00Z"
+    },
+    "identifier": "urn:example:subject-a",
+    "onUnknown": "hold",
+    "stalenessBound": "PT24H",
+    "timestampAuthority": {
+      "kid": "tsa-1",
+      "publicKey": "KZpWnL-slL9CUiqbRtsStPjqZ_ndkFBOU4SpSJTjHtg"
+    }
+  },
+  "statement": {
+    "payload": {
+      "claim": "example claim, content irrelevant to the checks",
+      "identifier": "urn:example:subject-a",
+      "kid": "k-2026",
+      "signedAt": "2026-10-10T12:00:00Z",
+      "type": "statement"
+    },
+    "sig": {
+      "alg": "Ed25519",
+      "kid": "k-2026",
+      "value": "G6c7hBmwTzpt0M7F3WiPpKabntpfYYdv-DQ6xV8pCPFCtTN9CoIAFuzl6zI2IbF7jbe5_21Cu5qc54f-Gba2Aw"
+    },
+    "timestamp": {
+      "payload": {
+        "digest": "sha256:7e988a2549a5c503840df13f32619cbeae7d241507e8612322d3f8d6e74ffc2a",
+        "time": "2026-10-10T12:00:00Z",
+        "type": "timestamp"
+      },
+      "sig": {
+        "alg": "Ed25519",
+        "kid": "tsa-1",
+        "value": "s1CbHtTfH5ark4kYqf5-vntVm7-eV5X8B4upLCupYTpoUyPknQT4Y8v0OerjCre6z8OZTBECL4PmjlrIO6J9Dw"
+      }
+    }
+  }
+}

@@ -24,20 +24,30 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // every PR. They are named one by one, not globbed, and pr-gates.yml runs exactly this list under
 // `node --test` in its own step, so excluding them here removes no coverage.
 export const NODE_TEST_FILES = [
+  'scripts/build-axis-reports.slots.test.mjs',
   'scripts/build-models-measured.test.mjs',
   'scripts/contract-convergence.test.mjs',
   'scripts/feed-delivery-kit.test.mjs',
   'scripts/harness-x/render.test.mjs',
+  'scripts/research/watch-sources.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
   'scripts/review/first-ask-completion.test.mjs',
   'scripts/review/pages-bind-missing-namespaces.test.mjs',
   'scripts/review/pages-release-target.test.mjs',
+  // The published-pin liveness gate: a node:test file vitest cannot collect, named here so
+  // pr-gates.yml runs it under `node --test` instead of leaving it collected-and-red.
+  'scripts/review/published-pins-liveness.test.mjs',
   'scripts/sitemap-withdrawal.node-test.mjs',
   'scripts/surface/axis-index-truth.node-test.mjs',
   'scripts/surface/facts-scope.test.mjs',
   'scripts/surface/prerender-io.test.mjs',
   'scripts/surface/render-board-reference.test.mjs',
   'spaces/gspc-board/table.node-test.mjs',
+  // node:test file. vitest cannot collect it and reports it as a FAILED SUITE
+  // ("No test suite found in file ..."), so it is named here: pr-gates.yml reads
+  // this same list and runs it under `node --test`, which both removes it from
+  // vitest and keeps it covered.
+  'scripts/probe-zenodo-status.test.mjs',
   // A bare assert script (no test framework): node --test runs it as one test; vitest reported
   // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
   'council-os/gspc-pontius-boundary.test.mjs',
