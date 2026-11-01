@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import { FRONTEND_TOOLS, MAX_STEPS, planUi, readPageContext, scrollArgs, withPageSubject } from "./uiTools";
 import { serveAguiRun } from "./aguiRun";
+import { newRun, reduceRun } from "../../client/src/lib/aguiTalk";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 import ToolRunner, { type RunnerTool } from "../../client/src/components/ToolRunner";
 
@@ -205,12 +206,53 @@ describe("AG-UI watch mode — frontend tools, consent, STATE_SNAPSHOT / STATE_D
       ],
       tools: ALL_TOOLS,
     });
-    expect(ev.find((e) => e.type === "STATE_DELTA")).toMatchObject({ delta: [{ op: "add", path: "/watch/reported" }, { op: "replace", value: "done" }] });
+    expect(ev.find((e) => e.type === "STATE_SNAPSHOT")).toMatchObject({ snapshot: { watch: { reported: [{ toolCallId: "ui_1", ok: true }, { toolCallId: "ui_2", ok: true }], status: "done" } } });
     expect(ev.some((e) => e.type === "TOOL_CALL_START")).toBe(false);
   });
   it("page context answers 'this' about the page subject", async () => {
     stubOrigin();
     const ev = await run({ messages: [{ role: "user", content: "how did this measure" }], forwardedProps: { page: { subject: "safety", subjectKind: "axis" } } });
     expect(ev.find((e) => e.type === "TOOL_CALL_START")).toMatchObject({ toolCallName: "get_axis" });
+  });
+});
+
+describe("AG-UI run trace identity and permission boundaries", () => {
+  it("stamps stable server IDs and unique event IDs without executing an unconfirmed paid plan", async () => {
+    const unexpected = vi.fn(async () => { throw new Error("No tool may execute in this held fixture."); });
+    vi.stubGlobal("fetch", unexpected);
+    const response = await serveAguiRun(new Request(ORIGIN + "/api/agui/run", { method: "POST", body: JSON.stringify({
+      threadId: "fixture-thread", runId: "fixture-run",
+      messages: [{ role: "user", content: "commission a card for https://example.com/mcp" }],
+    }) }));
+    const raw = await response.text();
+    const blocks = raw.trim().split("\n\n");
+    const events = blocks.map(block => JSON.parse(block.split("\n").find(line => line.startsWith("data: "))!.slice(6)));
+    expect(events[0]).toMatchObject({ type: "RUN_STARTED", threadId: "fixture-thread", runId: "fixture-run" });
+    expect(events.at(-1)).toMatchObject({ type: "RUN_FINISHED", result: { awaiting_confirmation: true } });
+    expect(events.some(event => event.type === "TOOL_CALL_START")).toBe(false);
+    expect(unexpected).not.toHaveBeenCalled();
+    expect(new Set(events.map(event => event.eventId)).size).toBe(events.length);
+    for (const [index, event] of events.entries()) {
+      expect(event.threadId).toBe("fixture-thread");
+      expect(event.runId).toBe("fixture-run");
+      expect(typeof event.timestamp).toBe("number");
+      expect(blocks[index]).toContain("id: " + event.eventId + "\n");
+    }
+  });
+  it("does not count a browser's reported page actions as grounded measurement", async () => {
+    const states: string[] = [];
+    const response = await serveAguiRun(new Request(ORIGIN + "/api/agui/run", { method: "POST", body: JSON.stringify({
+      messages: [{ role: "tool", toolCallId: "ui_1", content: "reported" }],
+    }) }), undefined, state => states.push(state));
+    const text = await response.text();
+    expect(text).toContain('"frontend_results":1');
+    expect(text).not.toContain('"type":"TOOL_CALL_START"');
+    expect(states).toEqual(["unknown"]);
+    const events = text.split("\n\n").map(block => block.split("\n").find(line => line.startsWith("data: "))).filter((line): line is string => Boolean(line)).map(line => JSON.parse(line.slice(6)));
+    const projected = events.reduce((run, event) => reduceRun(run, event), newRun("reported", "follow-up"));
+    expect(projected.state.watch).toEqual({ reported: [{ toolCallId: "ui_1", ok: true }], status: "done" });
+    expect(projected.tools).toEqual([]);
+    expect(projected.ui).toEqual([]);
+    expect(projected.status).toBe("done");
   });
 });
