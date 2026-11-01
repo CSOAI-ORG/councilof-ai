@@ -3,6 +3,7 @@ import { toolSummary } from "@/lib/mcpTools";
 import EmptySlots from "@/components/EmptySlots";
 import ProductFill from "@/components/ProductFill";
 import { useBoardCount } from "@/lib/boardCount";
+import { CATALOG_ITEMS, CATALOG_PAGES } from "@/lib/catalogPages";
 
 /**
  * /products — four SKUs, one workspace (Council OS).
@@ -201,6 +202,7 @@ export default function Products() {
         </ul>
       </section>
 
+      <CatalogIndex />
       <ProductFill tone="dark" />
       <EmptySlots tone="dark" />
 
@@ -331,5 +333,44 @@ export default function Products() {
       </div>
     </section>
     </div>
+  );
+}
+
+/** Every /catalog.json product: its page, its signed card (UNMEASURED when none) and its article. */
+export function CatalogIndex() {
+  const rows = CATALOG_ITEMS.map((item) => ({ item, map: CATALOG_PAGES[item.id] })).filter((r) => r.map);
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Everything in the catalog",
+    numberOfItems: rows.length,
+    itemListElement: rows.map(({ item, map }, i) => ({ "@type": "ListItem", position: i + 1, name: item.name, url: `https://councilof.ai${map.page}` })),
+  };
+  return (
+    <section aria-labelledby="catalog-h" className="mt-12" data-testid="catalog-index">
+      <h2 id="catalog-h" className="text-xl font-bold text-emerald-300">Everything in the catalog</h2>
+      <p className="mt-2 text-sm text-slate-400">
+        Read from <a className="underline" href="/catalog.json">/catalog.json</a>. Each item links its page, its signed card and its
+        article where one exists. UNMEASURED means no signed card about that product is published.
+      </p>
+      <ul className="mt-4 grid gap-2">
+        {rows.map(({ item, map }) => (
+          <li key={item.id} className="rounded-xl border border-emerald-400/20 bg-emerald-950/30 p-3 text-sm" data-testid={`catalog-item-${item.id}`}>
+            <a href={map.page} className="font-semibold text-emerald-200 underline">{item.name}</a>
+            <span className="ml-2 text-xs text-slate-400">{item.status}{map.pageNote ? ` · ${map.pageNote}` : ""}</span>
+            <span className="ml-2 text-xs">
+              Signed card:{" "}
+              {map.card.state === "SIGNED" ? <a className="underline" href={map.card.href}>signed card</a> : <span className="font-mono text-amber-300">UNMEASURED</span>}
+            </span>
+            {map.article && (
+              <span className="ml-2 text-xs">
+                · <a className="underline" href={`/blog/${map.article}/`}>Article</a>
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld).replace(/</g, "\\u003c") }} />
+    </section>
   );
 }

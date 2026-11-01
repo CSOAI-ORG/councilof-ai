@@ -102,6 +102,7 @@ specific bytes scored on a frozen bank at a specific time. No slot is for sale.
 **Lid:** printed live by `csoai-gspc board` — `totals.lid` verbatim, never typed here.
 
 - Live board: <https://councilof.ai/api/gspc>
+- Corrections ledger: <https://councilof.ai/corrections/> (JSON: <https://councilof.ai/api/corrections>)
 - Verify in a browser, free and with no account: <https://councilof.ai/gspc-verify>
 - How to verify by hand: <https://councilof.ai/signed/HOW-TO-VERIFY.md>
 - Every frozen bank as its own repository: <https://huggingface.co/csoai>
