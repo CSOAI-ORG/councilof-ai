@@ -15,11 +15,14 @@ import { AXES_D } from "./_gspc_axes_d";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { MEASURED_ON } from "./_gspc_types";
 import type { AxisScore } from "./_gspc_types";
+import { measuredOnModel } from "./_gspc_power";
+import { publicView } from "./gspc";
 import reports from "../../public/agent-plugin/reports.json";
 import matrix from "../../public/agent-plugin/platform-matrix.json";
 import { headFromGet } from "./_head";
 
 const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D];
+const PUBLIC_AXES = publicView(AXES);
 
 const json = (body: unknown) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -32,9 +35,9 @@ const json = (body: unknown) =>
   });
 
 export const onRequestGet: PagesFunction = async () => {
-  const measured = AXES.filter((a) => a.status === "MEASURED");
-  const unmeasured = AXES.filter((a) => a.status !== "MEASURED");
-  const behavioural = AXES.filter((a) => a.family !== "financial");
+  const measured = PUBLIC_AXES.filter((a) => a.status === "MEASURED");
+  const unmeasured = PUBLIC_AXES.filter((a) => a.status !== "MEASURED");
+  const behavioural = PUBLIC_AXES.filter((a) => a.kind === "model-comparison" && a.status === "MEASURED");
   const separated = behavioural.filter((a) => a.separation === "SEPARATED");
   const ties = behavioural.filter((a) => a.separation === "TIE");
   const untested = behavioural.filter((a) => a.separation === "UNTESTED");
@@ -42,7 +45,7 @@ export const onRequestGet: PagesFunction = async () => {
   return json({
     schema: "csoai.public-report-index/0.1",
     // The board's own measured_on block, so this index carries the same provenance the board does.
-    measured_on: MEASURED_ON,
+    measured_on: { ...MEASURED_ON, model: measuredOnModel(AXES) },
     totals: {
       axes: AXES.length,
       measured: measured.length,

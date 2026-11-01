@@ -1,0 +1,26 @@
+{
+  "schema": "council.charter-completion-plan/1",
+  "as_of": "2026-10-30",
+  "objective": "One inspectable public path from charter source to a revision-bound working-group review, with reproducible exports and a separately governed human decision boundary.",
+  "public_forum_choice": "Use the existing GitHub Discussions forum and email alternative first. Discourse remains an optional future service, not a launch dependency.",
+  "steps": [
+    {"id":"reconcile","work":"Combine the charter register, committed working-group infrastructure and current master without replacing other lanes' source.","acceptance":"Clean isolated checkout; preserved charter/frozen root; current input hashes; related PRs and source revisions recorded."},
+    {"id":"connect","work":"Connect every reference source to its forming groups and pinned review documents.","acceptance":"Draft retains register, charter and tracker hashes, document IDs/versions and validated public participation routes. No submission or approval is inferred."},
+    {"id":"generate","work":"Render the site, HF static files, offline Kaggle notebook and local MCP configuration from the canonical sources.","acceptance":"Website/HF payload parity; offline notebook executes; changed source or generated output fails the exporter; source licences retained."},
+    {"id":"qualify","work":"Run the integrity, MCP, native working-group and browser journeys on the combined source.","acceptance":"Failure controls, stale revision refusal, mobile/keyboard/no-JavaScript reading, safe draft export and real stdio round trip pass. Representative-user and screen-reader acceptance remain separate."},
+    {"id":"release","work":"Land the reviewed candidate through protected master and the existing GitHub Actions deployment.","acceptance":"Required checks on the current combined tree; no admin bypass or direct Pages write; deployed source and public artifact hashes read back, including delayed anti-clobber checks."},
+    {"id":"platforms","work":"Publish only approved public projections to verified existing publisher accounts and qualify each receiving surface.","acceptance":"Record exact destination, source revision, returned publication ID and readback. No GPU, model-spend, private-case or licence changes. Unavailable destinations remain explicitly unverified."},
+    {"id":"operate","work":"Appoint genuine chairs, reviewers and moderators and exercise one bounded human review with independent appeal.","acceptance":"Actual acceptance, competence/conflict record, named identity, privacy/retention and publication consent. No fabricated member or model-signed human decision."},
+    {"id":"recover_sources","work":"Recover exact historical normalized legal texts or introduce explicitly distinct replacement source versions.","acceptance":"Exact normalization and source-byte match before a record stops being unresolved; scoped applicability reviewed by an accountable person. Never rewrite historical hashes."}
+  ],
+  "related_work": [
+    {"pr":3641,"purpose":"Working-group directory, tracker, forum/intake routes, SDK preview, static exports and SQLite feasibility lab."},
+    {"pr":3646,"purpose":"Charter source federation and this integration/completion work."},
+    {"pr":3634,"purpose":"Existing four-critical-dependency remediation with behavioural regression checks; preserve its separate ownership and release evidence."},
+    {"pr":3647,"purpose":"Merged HF/Kaggle catalogue and benchmark integrity work; do not overwrite its publication changes."},
+    {"pr":3599,"purpose":"Agent SDK authority/effect integration and recipient evidence verification; qualified host/human admission remains separate."}
+  ],
+  "human_roles_required": ["chair and deputy","reviewer with competence and conflicts recorded","moderator","private-case and retention owner","independent appeal reviewer","accessibility and affected-user participants"],
+  "evidence_rules": ["Inventory is not a measurement.","Reference is not adoption or endorsement.","A browser link is not submission or consent.","A generated projection is not a hosted readback.","An authenticated transport is not by itself a named human identity.","Historical and overlapping test counts are never summed."],
+  "operating_constraints": {"new_spending":false,"new_gpu_or_model_runs":false,"automatic_messages":false,"automatic_human_appointments":false,"automatic_charter_adoption":false}
+}

@@ -1,0 +1,47 @@
+title: "[Working group] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Propose public work for Council of AI. A discussion is not an accepted role, a formal decision or a private reporting channel.
+        For confidential material, first agree a private channel at https://councilof.ai/contact/.
+  - type: dropdown
+    id: group
+    attributes:
+      label: Working group
+      options:
+        - governance
+        - agent-control
+        - evaluation
+        - provenance
+        - runtime
+        - human-impact
+        - economy
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Bounded proposal and affected people
+      description: State the problem, one deliverable, excluded scope and who should be involved.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Public evidence and reproducible method
+      description: Link source versions and explain what remains unknown.
+    validations:
+      required: true
+  - type: textarea
+    id: interests
+    attributes:
+      label: Competence, conflicts and participation needs
+      description: Disclose relevant interests. Do not disclose private medical or demographic information.
+  - type: checkboxes
+    id: public
+    attributes:
+      label: Publication check
+      options:
+        - label: This submission contains only material I am authorised to share publicly.
+          required: true
