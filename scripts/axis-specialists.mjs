@@ -18,6 +18,7 @@ export const REPO = join(HERE, "..");
 const REGISTRY_PATH = join(REPO, "council-os/axis-specialists/registry.json");
 const SNAPSHOT_PATH = join(REPO, "council-os/axis-specialists/board-2026-10-28.snapshot.json");
 const MCP_TOOLS_PATH = join(REPO, "functions/mcp/gspc-tools.json");
+const CHARTER_MAP_PATH = join(REPO, "council-os/axis-specialists/charter-map.json");
 const OUT = join(REPO, "public/axis-specialists");
 const AUDIT_SCHEMA = "csoai.axis-specialist-audit/1.0";
 const INDEX_SCHEMA = "csoai.axis-specialist-index/1.0";
@@ -29,6 +30,51 @@ export function canonical(value) {
 }
 export const sha256 = (value) => createHash("sha256").update(canonical(value)).digest("hex");
 const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
+export function loadCharterMap() {
+  const mapping = readJson(CHARTER_MAP_PATH);
+  const bytes = readFileSync(join(REPO, "public/.well-known/constitutional-harness.json"));
+  return { mapping, charter: JSON.parse(bytes), digest: createHash("sha256").update(bytes).digest("hex") };
+}
+
+export function validateCharterMap({ mapping, charter, digest }, axes) {
+  const errors = [];
+  if (mapping?.schema !== "council.axis-charter-map/1.0" || mapping.mapping_kind !== "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE") errors.push("charter mapping boundary invalid");
+  if (mapping?.charter_path !== "public/.well-known/constitutional-harness.json" || mapping.charter_sha256 !== digest || mapping.charter_version !== charter.version) errors.push("charter bytes or version differ from reviewed mapping");
+  const rows = Array.isArray(mapping?.axes) ? mapping.axes : [];
+  if (new Set(rows.map(r => r.axis)).size !== rows.length || rows.map(r => r.axis).sort().join("\n") !== [...axes].sort().join("\n")) errors.push("charter mapping must cover exactly the source axes");
+  const articles = new Set(charter.articles.map(a => a.article));
+  for (const row of rows) {
+    if (!Array.isArray(row.articles) || !row.articles.length || new Set(row.articles).size !== row.articles.length || row.articles.some(a => !Number.isInteger(a) || !articles.has(a))) errors.push(`${row.axis}: invalid charter article references`);
+  }
+  return errors;
+}
+
+export function attachCharter(audit, context, requiredFields) {
+  const { mapping, charter } = context;
+  const row = mapping.axes.find(item => item.axis === audit.axis);
+  audit.charter = {
+    version: mapping.charter_version, sha256: mapping.charter_sha256,
+    mapping_kind: mapping.mapping_kind,
+    machine_url: "/.well-known/constitutional-harness.json",
+    human_url: "/constitutional-harness/",
+    articles: row.articles.map(article => ({ article, title: charter.articles.find(a => a.article === article).title })),
+  };
+  audit.review = {
+    state: "NOT_SUBMITTED", execution_authority: false,
+    required_fields: [...requiredFields],
+    measurement_url: `/api/gspc/axis/${audit.axis}`,
+    competency_url: `/api/hitl/modules/${audit.axis}`,
+    challenge_url: "/api/hitl/challenge", console_url: "/dashboard?tab=staff",
+    corrections_url: "/corrections/",
+    next_step: audit.source.axis_row.status === "UNMEASURED"
+      ? "Agree the measurement method, collect qualifying evidence and obtain independent review before admission."
+      : "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    note: "A review request is not a decision, signature, measurement admission or permission to execute.",
+  };
+  const { audit_sha256: _omit, ...body } = audit;
+  audit.audit_sha256 = sha256(body);
+  return audit;
+}
 const present = (value) => value !== undefined && value !== null && value !== "" && (!Array.isArray(value) || value.length > 0);
 // These helpers validate declared metadata only; they do not fetch evidence bytes.
 const declaredSha256 = (value) => typeof value === "string" && /^[a-f0-9]{64}$/i.test(value);
@@ -188,14 +234,15 @@ export function auditSpecialist(spec, row, registry) {
   return audit;
 }
 
-export function buildTree({ registry, sourceSlots, snapshot, mcpTools } = {}) {
+export function buildTree({ registry, sourceSlots, snapshot, mcpTools, charterContext } = {}) {
   registry ??= readJson(REGISTRY_PATH);
   snapshot ??= readJson(SNAPSHOT_PATH);
   mcpTools ??= readJson(MCP_TOOLS_PATH);
-  const errors = validateRegistry(registry, sourceSlots, snapshot, mcpTools);
+  charterContext ??= loadCharterMap();
+  const errors = [...validateRegistry(registry, sourceSlots, snapshot, mcpTools), ...validateCharterMap(charterContext, sourceSlots.map(r => r.axis))];
   if (errors.length) throw new Error(`axis specialist validation failed:\n- ${errors.join("\n- ")}`);
   const rowById = Object.fromEntries(snapshot.axes.map((row) => [row.axis, row]));
-  const audits = registry.specialists.map((spec) => auditSpecialist(spec, rowById[spec.axis], registry));
+  const audits = registry.specialists.map((spec) => attachCharter(auditSpecialist(spec, rowById[spec.axis], registry), charterContext, spec.required_fields));
   const files = new Map();
   const indexRows = audits.map((audit) => {
     files.set(`${audit.axis}.json`, audit);
@@ -216,6 +263,7 @@ export function buildTree({ registry, sourceSlots, snapshot, mcpTools } = {}) {
       mcp_read_tool: audit.interfaces.mcp_read_tool,
       a2a_skill: audit.interfaces.a2a_skill,
       api: audit.interfaces.api,
+      charter_articles: audit.charter.articles.map(item => item.article),
       audit_sha256: audit.audit_sha256,
       path: `/axis-specialists/${audit.axis}.json`,
     };
@@ -232,8 +280,11 @@ export function buildTree({ registry, sourceSlots, snapshot, mcpTools } = {}) {
     schema: INDEX_SCHEMA,
     policy: registry.policy,
     source_snapshot: bundle.source_snapshot,
+    charter: { version: charterContext.mapping.charter_version, sha256: charterContext.digest, mapping_kind: charterContext.mapping.mapping_kind },
     coverage: {
       specialists: indexRows.length,
+      charter_connections: indexRows.filter(row => row.charter_articles.length > 0).length,
+      review_connections: audits.filter(audit => audit.review.challenge_url === "/api/hitl/challenge").length,
       clusters: new Set(indexRows.map((row) => row.cluster_id)).size,
       mcp_connections: indexRows.filter((row) => row.mcp_read_tool).length,
       a2a_connections: indexRows.filter((row) => row.a2a_skill === "axis-specialist").length,
