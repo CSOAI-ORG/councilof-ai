@@ -2511,6 +2511,36 @@
       "source": "functions/api/discover/ondo-ousg.ts"
     },
     {
+      "audience": "agent",
+      "description": "Quote one published data/v1 dataset version from https://councilof.ai/data/v1/: version (YYYY-MM-DD, default latest), card_count, merkle_root, the snapshot file URLs with their sha256, the manifest's sha256 (published value and the value recomputed here over the served bytes), the citation exactly as published (doi null until one is minted) and the data licence (CC-BY-4.0). Read-only; free. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when the version is not in latest.json or CHANGELOG.json; UNREACHABLE when the source could not be fetched.",
+      "description_state": "DOCUMENTED",
+      "id": "quote_dataset_version",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "quote_dataset_version",
+      "order": 14,
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [],
+      "schema_refs": [
+        "csoai.data-v1-latest/0.1",
+        "csoai.data-v1-snapshot/0.1",
+        "csoai.data-v1-citation/0.1"
+      ],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
       "id": "api-discover-ondo-post",
       "kind": "http",
       "path": "/api/discover/ondo",
@@ -7253,31 +7283,31 @@
       "source": "functions/api/yield.ts"
     },
     {
-      "id": "art50_marking_evidence",
-      "kind": "mcp_tool",
-      "name": "art50_marking_evidence",
+      "audience": "agent",
       "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: which machine-readable marks the named methods DETECT in these bytes right now. Scope: C2PA and IPTC metadata only (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType); no watermark, fingerprint or other kind of mark is read. NOT_DETECTED is not unmarked: Article 50(2) is technology-neutral, so a mark this pack cannot read may be present, and metadata is often stripped on re-save. Disclosure: CSOAI is a member of the C2PA, whose specification is one of the two methods read. The pack carries the verbatim Art 50(2) text hash and the dates it turns on. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
       "description_state": "DOCUMENTED",
-      "audience": "agent",
+      "id": "art50_marking_evidence",
+      "kind": "mcp_tool",
       "lifecycle": "LIVE",
+      "name": "art50_marking_evidence",
+      "order": 49,
       "payment": "x402",
-      "schema_refs": [],
-      "surfaces": [
-        "mcp",
-        "llms"
-      ],
       "probe": {
-        "method": "POST",
-        "request": "/mcp",
         "expect_status": [
           200,
           402
         ],
+        "method": "POST",
+        "request": "/mcp",
         "safe": false,
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 48
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
     },
     {
       "id": "axis_affect",
@@ -7303,7 +7333,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 26
+      "order": 27
     },
     {
       "id": "axis_ai-adoption-components",
@@ -7329,7 +7359,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 34
+      "order": 35
     },
     {
       "id": "axis_art5-safeguard",
@@ -7355,7 +7385,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 24
+      "order": 25
     },
     {
       "id": "axis_care",
@@ -7381,7 +7411,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 21
+      "order": 22
     },
     {
       "id": "axis_claim-maintenance",
@@ -7407,7 +7437,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 45
+      "order": 46
     },
     {
       "id": "axis_company-practice",
@@ -7433,7 +7463,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 38
+      "order": 39
     },
     {
       "id": "axis_conformance",
@@ -7459,7 +7489,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 18
+      "order": 19
     },
     {
       "id": "axis_continuity",
@@ -7485,7 +7515,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 17
+      "order": 18
     },
     {
       "id": "axis_cross-reality",
@@ -7511,7 +7541,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 22
+      "order": 23
     },
     {
       "id": "axis_custody-disclosure",
@@ -7537,7 +7567,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 33
+      "order": 34
     },
     {
       "id": "axis_detector-interop",
@@ -7563,7 +7593,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 23
+      "order": 24
     },
     {
       "id": "axis_distribution-integrity",
@@ -7589,7 +7619,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 32
+      "order": 33
     },
     {
       "id": "axis_effect-binding",
@@ -7615,7 +7645,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 28
+      "order": 29
     },
     {
       "id": "axis_governance",
@@ -7641,7 +7671,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 14
+      "order": 15
     },
     {
       "id": "axis_harness-fidelity",
@@ -7667,7 +7697,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 40
+      "order": 41
     },
     {
       "id": "axis_humanoid-deployment",
@@ -7693,7 +7723,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 42
+      "order": 43
     },
     {
       "id": "axis_humanoid-labour-index",
@@ -7719,7 +7749,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 36
+      "order": 37
     },
     {
       "id": "axis_interop-conformance",
@@ -7745,7 +7775,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 41
+      "order": 42
     },
     {
       "id": "axis_interpretability-reproducibility",
@@ -7771,7 +7801,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 44
+      "order": 45
     },
     {
       "id": "axis_jail",
@@ -7797,7 +7827,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 27
+      "order": 28
     },
     {
       "id": "axis_lab-practice",
@@ -7823,7 +7853,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 37
+      "order": 38
     },
     {
       "id": "axis_labour-components",
@@ -7849,7 +7879,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 35
+      "order": 36
     },
     {
       "id": "axis_machinery-conformity",
@@ -7875,7 +7905,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 20
+      "order": 21
     },
     {
       "id": "axis_measurer-integrity",
@@ -7901,7 +7931,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 39
+      "order": 40
     },
     {
       "id": "axis_openness",
@@ -7927,7 +7957,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 19
+      "order": 20
     },
     {
       "id": "axis_provenance",
@@ -7953,7 +7983,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 16
+      "order": 17
     },
     {
       "id": "axis_provenance-controls",
@@ -7979,7 +8009,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 29
+      "order": 30
     },
     {
       "id": "axis_regulator-transparency",
@@ -8005,7 +8035,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 43
+      "order": 44
     },
     {
       "id": "axis_regulatory-framework",
@@ -8031,7 +8061,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 31
+      "order": 32
     },
     {
       "id": "axis_reserve-attestation",
@@ -8057,7 +8087,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 30
+      "order": 31
     },
     {
       "id": "axis_safety",
@@ -8083,7 +8113,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 15
+      "order": 16
     },
     {
       "id": "axis_serving-fidelity",
@@ -8109,7 +8139,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 46
+      "order": 47
     },
     {
       "id": "axis_swarm",
@@ -8135,7 +8165,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 25
+      "order": 26
     },
     {
       "id": "board_totals",
@@ -8164,62 +8194,62 @@
       "order": 0
     },
     {
-      "id": "commission_card",
-      "kind": "mcp_tool",
-      "name": "commission_card",
+      "audience": "agent",
       "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
       "description_state": "DOCUMENTED",
-      "audience": "agent",
+      "id": "commission_card",
+      "kind": "mcp_tool",
       "lifecycle": "LIVE",
+      "name": "commission_card",
+      "order": 48,
       "payment": "x402",
-      "schema_refs": [],
-      "surfaces": [
-        "mcp",
-        "llms"
-      ],
       "probe": {
-        "method": "POST",
-        "request": "/mcp",
         "expect_status": [
           200,
           402
         ],
+        "method": "POST",
+        "request": "/mcp",
         "safe": false,
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [
         "subject"
       ],
-      "order": 47
-    },
-    {
-      "id": "evidence_bundle",
-      "kind": "mcp_tool",
-      "name": "evidence_bundle",
-      "description": "PAID (x402). For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: selected existing card objects with signature fields and any retained inclusion proofs, an OSCAL assessment-results wrapper and an assembly manifest. Assembly does not verify input-card signatures. A returned unsigned manifest reports its signing status and unsigned reason. If signing throws after settlement, the route returns PAID_NOT_DELIVERED without a delivered bundle or manifest; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. Zero selected cards stays an empty bundle; preview=true here, or the free evidence_bundle_preview tool, shows the count first. No new measurement, full OSCAL conformance or conformity determination is established. Article 53 output is evidence for review, not a legal determination; grants no status. Without x_payment the tool returns the actual 402 challenge; read its terms for each request. Supported-card verification is free at https://councilof.ai/gspc-verify. Measurement, not certification.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "LIVE",
-      "payment": "x402",
       "schema_refs": [],
       "surfaces": [
         "mcp",
         "llms"
-      ],
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "PAID (x402). For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: selected existing card objects with signature fields and any retained inclusion proofs, an OSCAL assessment-results wrapper and an assembly manifest. Assembly does not verify input-card signatures. A returned unsigned manifest reports its signing status and unsigned reason. If signing throws after settlement, the route returns PAID_NOT_DELIVERED without a delivered bundle or manifest; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. Zero selected cards stays an empty bundle; preview=true here, or the free evidence_bundle_preview tool, shows the count first. No new measurement, full OSCAL conformance or conformity determination is established. Article 53 output is evidence for review, not a legal determination; grants no status. Without x_payment the tool returns the actual 402 challenge; read its terms for each request. Supported-card verification is free at https://councilof.ai/gspc-verify. Measurement, not certification.",
+      "description_state": "DOCUMENTED",
+      "id": "evidence_bundle",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "evidence_bundle",
+      "order": 52,
+      "payment": "x402",
       "probe": {
-        "method": "POST",
-        "request": "/mcp",
         "expect_status": [
           200,
           402
         ],
+        "method": "POST",
+        "request": "/mcp",
         "safe": false,
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [
         "obligation"
       ],
-      "order": 51
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
     },
     {
       "id": "evidence_bundle_preview",
@@ -8410,33 +8440,33 @@
       "order": 9
     },
     {
-      "id": "receipts_batch",
-      "kind": "mcp_tool",
-      "name": "receipts_batch",
+      "audience": "agent",
       "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one manifest card citing the batch sha256. Manifest signing is conditional: a returned unsigned manifest declares manifest_card.sig_ed25519:null and unsigned_reason, with signature unmeasured. Manifest root inclusion remains unmeasured. If signing throws after settlement, the route returns PAID_NOT_DELIVERED with no batch or manifest delivered; preserve the settlement receipt and reconcile before reissue, without automatically retrying or paying again. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. This tool returns historical measurement leaves, not payment receipts. /api/receipts/latest reports aggregate receipt-store state when available; its counts do not verify a particular payment, delivery or buyer acceptance. Without x_payment the tool returns the 402 challenge.",
       "description_state": "DOCUMENTED",
-      "audience": "agent",
+      "id": "receipts_batch",
+      "kind": "mcp_tool",
       "lifecycle": "LIVE",
+      "name": "receipts_batch",
+      "order": 51,
       "payment": "x402",
-      "schema_refs": [],
-      "surfaces": [
-        "mcp",
-        "llms"
-      ],
       "probe": {
-        "method": "POST",
-        "request": "/mcp",
         "expect_status": [
           200,
           402
         ],
+        "method": "POST",
+        "request": "/mcp",
         "safe": false,
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [
         "from"
       ],
-      "order": 50
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
     },
     {
       "id": "route",
@@ -8465,33 +8495,33 @@
       "order": 13
     },
     {
-      "id": "rwa_evidence",
-      "kind": "mcp_tool",
-      "name": "rwa_evidence",
+      "audience": "agent",
       "description": "PAID (x402). Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd. preview=true is free (unsigned state). Historical state at fetched_at — not a rating, not a guarantee, not a conformity mark; /api/xrpl and /root.json stay free. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED.",
       "description_state": "DOCUMENTED",
-      "audience": "agent",
+      "id": "rwa_evidence",
+      "kind": "mcp_tool",
       "lifecycle": "LIVE",
+      "name": "rwa_evidence",
+      "order": 50,
       "payment": "x402",
-      "schema_refs": [],
-      "surfaces": [
-        "mcp",
-        "llms"
-      ],
       "probe": {
-        "method": "POST",
-        "request": "/mcp",
         "expect_status": [
           200,
           402
         ],
+        "method": "POST",
+        "request": "/mcp",
         "safe": false,
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [
         "asset"
       ],
-      "order": 49
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
     },
     {
       "id": "server_evidence",

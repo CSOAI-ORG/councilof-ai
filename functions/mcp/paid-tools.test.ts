@@ -104,6 +104,7 @@ const FREE_LIST = [
   "server_evidence",
   "evidence_bundle_preview",
   "route",
+  "quote_dataset_version",
   "axis_governance",
   "axis_safety",
   "axis_provenance",

@@ -43,10 +43,14 @@ describe("#19 one tool-count sentence, every number derived", () => {
   });
 
   it("with today's fleet it reads exactly the audit's sentence", () => {
-    // The fleet lock (tool-fleet.lock.json) is 47 + 5 since 2026-10-26 (the 33 axis tools joined the 14 free readers on 2026-10-26);
+    // The fleet lock (tool-fleet.lock.json) is 48 + 5 since 2026-10-26 (the 33 axis tools joined on 2026-10-26, and quote_dataset_version (data/v1) on 2026-10-15);
     // if the fleet changes, the lock changes in the same commit and this literal is the one line to update.
-    expect([nFree, nPaid]).toEqual([47, 5]);
-    expect(EXPECTED).toBe("47 free tools at /mcp/free; 52 at /mcp (47 free + 5 metered). The npm package is versioned separately.");
+    expect([nFree, nPaid]).toEqual([48, 5]);
+    expect(EXPECTED).toBe("48 free tools at /mcp/free; 53 at /mcp (48 free + 5 metered). The npm package is versioned separately.");
+    // The fleet lock (tool-fleet.lock.json) is 48 + 5 since 2026-10-26 (the 33 axis tools joined on 2026-10-26, and quote_dataset_version (data/v1) on 2026-10-15);
+    // if the fleet changes, the lock changes in the same commit and this literal is the one line to update.
+    expect([nFree, nPaid]).toEqual([48, 5]);
+    expect(EXPECTED).toBe("48 free tools at /mcp/free; 53 at /mcp (48 free + 5 metered). The npm package is versioned separately.");
   });
 
   it("GET /mcp (JSON and page) carries it; GET /mcp/free stays free of payment words", async () => {

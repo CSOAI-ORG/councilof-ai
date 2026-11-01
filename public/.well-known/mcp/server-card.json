@@ -8,7 +8,7 @@
     "title": "Council of AI — GSPC Measurement Tools",
     "version": "1.4.4"
   },
-  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.4 (io.github.CSOAI-ORG/gspc is its deprecated alias). 47 free tools at /mcp/free; 52 at /mcp (47 free + 5 metered). The npm package is versioned separately.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.4 (io.github.CSOAI-ORG/gspc is its deprecated alias). 48 free tools at /mcp/free; 53 at /mcp (48 free + 5 metered). The npm package is versioned separately.",
   "icon_url": "https://councilof.ai/csoai-icon.svg",
   "provider": {
     "name": "CSOAI Ltd",
@@ -26,9 +26,9 @@
       "current": "https://councilof.ai/mcp",
       "stdio": null,
       "stdio_note": "npm csoai-gspc-mcp: published releases are deprecated on npm and carry fewer tools; use the free door https://councilof.ai/mcp/free",
-      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is 52: 47 free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
+      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is 53: 48 free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
       "free": "https://councilof.ai/mcp/free",
-      "free_note": "https://councilof.ai/mcp/free serves the 47 free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
+      "free_note": "https://councilof.ai/mcp/free serves the 48 free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -52,6 +52,7 @@
       "server_evidence",
       "evidence_bundle_preview",
       "route",
+      "quote_dataset_version",
       "axis_governance",
       "axis_safety",
       "axis_provenance",
@@ -91,13 +92,13 @@
       "receipts_batch",
       "evidence_bundle"
     ],
-    "total_tools": 52,
-    "free_tools": 47,
+    "total_tools": 53,
+    "free_tools": 48,
     "metered_tools": 5,
-    "tool_counts": "47 free tools at /mcp/free; 52 at /mcp (47 free + 5 metered). The npm package is versioned separately.",
+    "tool_counts": "48 free tools at /mcp/free; 53 at /mcp (48 free + 5 metered). The npm package is versioned separately.",
     "streaming": false,
     "auth_required": false,
-    "tool_names_sha256": "224e89713b8a337b4e372cf96ec98abf9cb2c33d5aefda06921b6457dee204be",
+    "tool_names_sha256": "37817e41c3572167e4c35515d2e6831e789a9119fa5e2f24108db3ff91ef6644",
     "free_door_tool_names": [
       "board_totals",
       "get_axis",
@@ -113,6 +114,7 @@
       "server_evidence",
       "evidence_bundle_preview",
       "route",
+      "quote_dataset_version",
       "axis_governance",
       "axis_safety",
       "axis_provenance",
@@ -147,7 +149,7 @@
       "axis_claim-maintenance",
       "axis_serving-fidelity"
     ],
-    "free_door_tool_names_sha256": "9f9f2ff6217999a52008c54105c1ca8eb55bd2fcac10f8bc7cd1599b7585a31e",
+    "free_door_tool_names_sha256": "e22e5b17dd2d62b71c1aa4acabe015cf2ae8a21e75af1c561ae733b2e2a69ab2",
     "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
     "derived_from": "tools/list of https://councilof.ai/mcp (functions/mcp/gspc-tools.json + paid-tools.json) and of https://councilof.ai/mcp/free (gspc-tools.json)"
   },
@@ -1353,6 +1355,102 @@
         "destructiveHint": false,
         "idempotentHint": true,
         "openWorldHint": true
+      }
+    },
+    {
+      "name": "quote_dataset_version",
+      "title": "Dataset version quote (data/v1)",
+      "description": "Quote one published data/v1 dataset version from https://councilof.ai/data/v1/: version (YYYY-MM-DD, default latest), card_count, merkle_root, the snapshot file URLs with their sha256, the manifest's sha256 (published value and the value recomputed here over the served bytes), the citation exactly as published (doi null until one is minted) and the data licence (CC-BY-4.0). Read-only; free. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when the version is not in latest.json or CHANGELOG.json; UNREACHABLE when the source could not be fetched.",
+      "annotations": {
+        "title": "Dataset version quote (data/v1)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "description": "Snapshot version, YYYY-MM-DD, or \"latest\" (default).",
+            "pattern": "^(latest|\\d{4}-\\d{2}-\\d{2}(?:\\.\\d+)?)$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "PUBLISHED",
+              "NOT_PUBLISHED",
+              "UNREACHABLE",
+              "UNCHECKABLE",
+              "INVALID_VERSION"
+            ]
+          },
+          "doctrine": {
+            "type": "string",
+            "const": "measurement, not endorsement"
+          },
+          "version": {
+            "type": "string"
+          },
+          "latest_version": {
+            "type": "string"
+          },
+          "versions_published": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "card_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "merkle_root": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "manifest_url": {
+            "type": "string"
+          },
+          "manifest_sha256": {
+            "type": "object"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "citation": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "license": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ]
       }
     },
     {

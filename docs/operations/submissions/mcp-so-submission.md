@@ -14,9 +14,9 @@
 
 ## Description
 
-Independent AI-governance measurement body. 52 MCP tools:
+Independent AI-governance measurement body. 53 MCP tools:
 
-- **47 free readers:** the 14 board readers (`board_totals`, `get_axis`, `verify_card`, `list_cards`, `get_root`, `get_card`, `verify_inclusion`, `x402_trust`, `mcp_trust`, `measurement_index`, `verify_capsule`, `server_evidence`, `evidence_bundle_preview`, `route`) plus one named reader per declared axis (`axis_<axis-id>` — 33 of them), so a caller can ask for one axis by name and get that axis's own board row back, or UNMEASURED where no published run sits behind it.
+- **48 free readers:** the 15 board readers (`board_totals`, `get_axis`, `verify_card`, `list_cards`, `get_root`, `get_card`, `verify_inclusion`, `x402_trust`, `mcp_trust`, `measurement_index`, `verify_capsule`, `server_evidence`, `evidence_bundle_preview`, `route`, `quote_dataset_version`) plus one named reader per declared axis (`axis_<axis-id>` — 33 of them), so a caller can ask for one axis by name and get that axis's own board row back, or UNMEASURED where no published run sits behind it.
 - **5 x402-metered:** `commission_card`, `art50_marking_evidence`, `rwa_evidence`, `receipts_batch`, `evidence_bundle`
 
 Frozen item banks, published scoring code, OTS-anchored Merkle root, Rekor inclusion proofs. Measurement, not certification.
