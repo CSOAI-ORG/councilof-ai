@@ -11,6 +11,12 @@
  *   - UNVERIFIED doors carry date null (a date is never guessed)
  *   - VERIFIED / CLOSED / IN_EFFECT doors carry an ISO date, source_url, retrieved_at, evidence_quote
  *   - ids are unique; status is one of the four
+ *   - linked_from, when a door records one, is a URL and is not the same address as source_url
+ *
+ * linked_from is the official PAGE on which a file source_url was found as a link. The alert prints
+ * it first. A site can replace a linked file while the old file stays reachable at its old address:
+ * on 13 Oct 2026 a re-read of the stored PDF link for the UK Sovereign AI procurement door returned
+ * HTTP 200 and a file created 28 Aug, while the official page linked a different file created 20 Sep.
  *
  * Run:  node scripts/regulator-calendar.mjs [--today YYYY-MM-DD] [--file path] [--out alerts.json]
  *       node scripts/regulator-calendar.mjs --selftest
@@ -38,6 +44,10 @@ export function validateCalendar(cal) {
     if (!ISO.test(d.date ?? "") || Number.isNaN(Date.parse(d.date + "T00:00:00Z"))) problems.push(`${id}: ${d.status} needs an ISO date, has ${JSON.stringify(d.date)}`);
     for (const k of ["source_url", "retrieved_at", "evidence_quote"]) if (!d[k]) problems.push(`${id}: ${d.status} needs ${k}`);
     if (d.source_url && !/^https?:\/\//.test(d.source_url)) problems.push(`${id}: source_url is not a URL`);
+    if (d.linked_from != null) {
+      if (typeof d.linked_from !== "string" || !/^https?:\/\//.test(d.linked_from)) problems.push(`${id}: linked_from is not a URL`);
+      else if (d.linked_from === d.source_url) problems.push(`${id}: linked_from is the same address as source_url; it must be the page that links the file`);
+    }
   }
   return problems;
 }
@@ -58,7 +68,7 @@ export function computeAlerts(cal, todayIso) {
   return alerts.sort((a, b) => a.days - b.days);
 }
 
-const pick = (d) => ({ id: d.id, regulator: d.regulator, instrument: d.instrument, date: d.date, time_tz: d.time_tz ?? null, date_kind: d.date_kind, source_url: d.source_url, retrieved_at: d.retrieved_at });
+const pick = (d) => ({ id: d.id, regulator: d.regulator, instrument: d.instrument, date: d.date, time_tz: d.time_tz ?? null, date_kind: d.date_kind, source_url: d.source_url, linked_from: d.linked_from ?? null, retrieved_at: d.retrieved_at });
 
 export function issueTitle(a) {
   return a.kind === "PASSED_STILL_VERIFIED"
@@ -71,6 +81,7 @@ export function issueBody(a) {
     `**${a.instrument}** — ${a.regulator}`,
     "",
     `- ${a.date_kind}: **${a.date}**${a.time_tz ? ` (${a.time_tz})` : ""}`,
+    ...(a.linked_from ? [`- official page (open this first and follow its link; a linked file can be replaced while the old one stays reachable): ${a.linked_from}`] : []),
     `- official source: ${a.source_url}`,
     `- date last read on that source: ${a.retrieved_at}`,
     "",
@@ -96,6 +107,10 @@ function selftest() {
     ],
   };
   const kinds = Object.fromEntries(computeAlerts(cal, "2026-09-14").map((a) => [a.id, a.kind]));
+  // A door whose source is a FILE found as a link on an official page (the 13 Oct 2026 case).
+  const fileDoor = { id: "h", status: "VERIFIED", date: "2026-09-16", date_kind: "submission_deadline", source_url: "https://cdn.example/a1_guidance.pdf", linked_from: "https://regulator.example/scheme", retrieved_at: "t", evidence_quote: "q", regulator: "r", instrument: "i" };
+  const fileAlert = computeAlerts({ doors: [fileDoor] }, "2026-09-14")[0];
+  const fileBody = fileAlert ? issueBody(fileAlert) : "";
   const cases = [
     ["valid calendar passes validation", validateCalendar(cal).length === 0],
     ["T-7 fires", kinds.a === "T-7"],
@@ -109,6 +124,12 @@ function selftest() {
     ["VERIFIED without evidence fails validation", validateCalendar({ doors: [{ id: "x", status: "VERIFIED", date: "2026-10-01", source_url: "https://x", retrieved_at: "t" }] }).length === 1],
     ["unknown status fails validation", validateCalendar({ doors: [{ id: "x", status: "PROBABLY", date: null }] }).length >= 1],
     ["duplicate id fails validation", validateCalendar({ doors: [{ id: "x", status: "UNVERIFIED", date: null }, { id: "x", status: "UNVERIFIED", date: null }] }).length === 1],
+    ["linked_from that is not a URL fails validation", validateCalendar({ doors: [{ ...fileDoor, linked_from: "sovereignai.gov.uk" }] }).length === 1],
+    ["linked_from equal to source_url fails validation", validateCalendar({ doors: [{ ...fileDoor, linked_from: fileDoor.source_url }] }).length === 1],
+    ["a door with a linking page passes validation", validateCalendar({ doors: [fileDoor] }).length === 0],
+    ["the alert carries the linking page", fileAlert?.linked_from === fileDoor.linked_from],
+    ["the alert body prints the linking page above the file link", fileBody.includes(fileDoor.linked_from) && fileBody.indexOf(fileDoor.linked_from) < fileBody.indexOf(fileDoor.source_url)],
+    ["an alert for a door with no linking page prints no page line", !issueBody(computeAlerts(cal, "2026-09-14").find((a) => a.id === "a")).includes("official page")],
   ];
   let failed = 0;
   for (const [n, ok] of cases) { console.log(`  ${ok ? "✓" : "✗"} ${n}`); if (!ok) failed++; }
