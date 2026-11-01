@@ -6741,6 +6741,7 @@
         "method": "GET",
         "request": "/api/wrapper?id=usdc.e:arbitrum",
         "expect_status": [
+          200,
           402
         ],
         "safe": true
@@ -6749,14 +6750,15 @@
       "free_preview": "/api/wrapper?id=<wrapped-symbol:chain>&preview=1",
       "paid_for": "issuance",
       "probe_override": {
-        "expect_status": [
-          402,
-          200
-        ],
-        "method": "GET",
-        "note": "200 is the preview-only answer when the read is UNMEASURED; never sold",
-        "request": "/api/wrapper?id=usdc.e:arbitrum",
-        "safe": true
+        "observed_at": "2026-10-29",
+        "observed_on": "https://councilof.ai",
+        "probe": {
+          "expect_status": [
+            200,
+            402
+          ]
+        },
+        "why": "A readable pair offers a 402 challenge. An unavailable upstream read returns 200 with UNMEASURED and preview-only no-sale behavior, as documented in functions/api/wrapper.ts and observed on 29 October. HTTP 200 does not establish delivery or measurement."
       }
     },
     {
@@ -8108,6 +8110,32 @@
       },
       "required_args": [],
       "order": 46
+    },
+    {
+      "id": "axis_watchdog-ingest",
+      "kind": "mcp_tool",
+      "name": "axis_watchdog-ingest",
+      "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [],
+      "order": 47
     },
     {
       "id": "axis_swarm",
