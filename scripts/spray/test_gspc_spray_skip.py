@@ -248,7 +248,7 @@ def test_hf_dataset_card_removes_stale_counts_and_alias_inventory():
                        for path in changed).encode()
     files = spray.hf_dataset_companions(readme, manifest, tr, changed)
     text = files["README.md"].decode()
-    assert "2 declared slots and 2 measured axes" in text
+    assert "2 declared slots, 2 measured and 0 unmeasured axes" in text
     assert "23 declared slots" not in text
     assert f"| `board.json` | {len(tr['board_bytes'])} |" in text
     assert f"| `living-board.json` | {len(tr['board_bytes'])} |" in text
