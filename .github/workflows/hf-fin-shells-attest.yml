@@ -1,0 +1,87 @@
+# The file name carries "hf-fin-shells" because the board signer admits a GitHub OIDC token only
+# when its job_workflow_ref contains one of four substrings, and that is one of them
+# (functions/api/board-sign.ts L53-55; same convention as hf-fin-shells-measure.yml L3-4).
+#
+# WHAT IT DOES. Signs corrections and ruling attestations by OIDC, from master's code, and returns
+# the signer's replies as a run artifact. A person or agent then applies a reply in an ordinary
+# reviewed change. Nothing here writes to the repository and nothing here holds a stored credential.
+#
+# WHY A SEPARATE FILE. hf-fin-shells-measure.yml can write repository contents and dispatch other
+# workflows, and it shares one queue with card signing. This job can read the repository and ask
+# for an OIDC token. That is all it can do.
+#
+# DISPATCH (corrections; the script header of scripts/sign-corrections-ledger.mjs has the rest):
+#   node scripts/sign-corrections-ledger.mjs --emit-payload att.json
+#   gh workflow run hf-fin-shells-attest.yml -R CSOAI-ORG/councilof-ai --ref master \
+#     -f kind=corrections \
+#     -f payloads_b64="$(node -e 'process.stdout.write(Buffer.from(JSON.stringify([JSON.parse(require("fs").readFileSync("att.json","utf8"))])).toString("base64"))')"
+#   gh run download <run id> -R CSOAI-ORG/councilof-ai -n board-sign-<run id> -D out
+#
+# The two inputs reach the script only as environment variables; no expression is expanded inside a
+# shell line. scripts/sign-attest/kinds.json decides what may be signed, and
+# scripts/sign-attest/workflow-shape.test.mjs pins the shape of this file.
+#
+# THE ACTIONS ARE PINNED BY COMMIT, because this job can ask for an OIDC token. Each commit below
+# is the one its v4 tag named on 13 Oct 2026. To move one, change the commit and the version
+# comment together, in a reviewed change.
+name: hf-fin-shells-attest
+
+on:
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "Which attestation shape every payload must match (scripts/sign-attest/kinds.json)"
+        type: choice
+        required: true
+        options:
+          - corrections
+          - ruling
+          - rulings-index
+      payloads_b64:
+        description: "base64 of a JSON array of 1 to 10 payload objects"
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      # A dispatch on a branch runs that branch's copy of this file, so this step stops an honest
+      # mistake and nothing more. It is not a boundary: the signer does not check the ref today.
+      - name: Refuse any ref but master
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/master" ]; then
+            echo "refused: this workflow signs only when dispatched on refs/heads/master; got $GITHUB_REF"
+            exit 1
+          fi
+
+      # The full ref name: a bare "master" would also fetch every branch and tag that starts with it.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: refs/heads/master
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+
+      - name: Check every payload, then sign by OIDC
+        env:
+          KIND: ${{ inputs.kind }}
+          PAYLOADS_B64: ${{ inputs.payloads_b64 }}
+          BOARD_SIGN_URL: https://councilof.ai/api/board-sign
+          OUT_DIR: ${{ runner.temp }}/board-sign-out
+        run: node scripts/sign-attest/sign.mjs
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: board-sign-${{ github.run_id }}
+          path: ${{ runner.temp }}/board-sign-out
+          if-no-files-found: error
