@@ -215,6 +215,12 @@
       "rule": "Explicit list only: exact prerendered paths, no glob, no date rule. A listed file is exempt from the axis-count rule ONLY for the count it historically records (historical_axes); any other count in it is still checked, and every other rule still applies. Listed files are never edited to satisfy the gate; signed ones stay byte-identical. Any file not listed, including every live surface, still fails on a stale count.",
       "files": [
         {
+          "path": "interop/canonical-estate-view-2026-10-08/view.json",
+          "date": "2026-10-08",
+          "historical_axes": [22, 23],
+          "reason": "Dated canonical estate view compiled 2026-10-08. Its confirmed_divergences catalogue quotes the board as it stood on three dated reads -- 23 axes on 2026-10-08, 23 axes at the 2026-09-17 frozen read, and 22 axes at the 2026-08-18 stamp -- and every value carries its own as_of and source. A dated record is never edited to match a later board, so it is exempt for the counts it records and for no other."
+        },
+        {
           "path": "claims/claimreg-ai-assurance-and-settlement-2026-09-23.json",
           "date": "2026-09-23",
           "historical_axes": 23,
