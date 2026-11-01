@@ -9,12 +9,14 @@ async function json(path) {
 }
 
 test("llms install guide matches the canonical MCP identity and tool catalog", async () => {
-  const [guide, descriptor, packageJson, free, paid] = await Promise.all([
+  const [guide, publicGuide, descriptor, packageJson, free, paid, capture] = await Promise.all([
     readFile(new URL("llms-install.md", root), "utf8"),
+    readFile(new URL("public/llms-install.md", root), "utf8"),
     json("mcp/gspc-server/server.json"),
     json("mcp/gspc-server/package.json"),
     json("functions/mcp/gspc-tools.json"),
     json("functions/mcp/paid-tools.json"),
+    json("distribution/npm/npm-publish-check.json"),
   ]);
 
   const remote = descriptor.remotes.find(
@@ -69,7 +71,7 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
   const catalogTotal = catalog.free.length + catalog.x402_metered.length;
   for (const [label, text] of [
     ["llms-install.md", guide],
-    ["public/llms-install.md", await readFile(new URL("public/llms-install.md", root), "utf8")],
+    ["public/llms-install.md", publicGuide],
   ]) {
     const proseCount = text.match(/returns the same (\d+) names/);
     assert.ok(proseCount, `${label} must state how many names the remote should return`);
@@ -88,29 +90,92 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
 
   // The version the guide names is the source package's, read from package.json, never typed here.
   const v = packageJson.version.replace(/\./g, "\\.");
-  // The published npm release is a DATED FACT about the published tarball, not
-  // about this repository, and it is recorded here so the guide cannot drift
-  // from it. Measured 2026-10-28: npm csoai-gspc-mcp@0.2.3 carries 19 tools
-  // (14 free + 5 metered) because it was published 39 minutes before the 33
-  // named axes merged. The prepared version must therefore DIFFER from the
-  // published one, and the published one must never claim the full fleet.
-  const PUBLISHED = {
-    version: "0.2.3",
-    tools: 19,
-    published_at: "2026-10-26T07:21:23.715Z",
-  };
+  // The published npm release is a DATED FACT about the published tarball and about the live
+  // door, so it is not typed here either. It is read from the one dated record that measured
+  // it — distribution/npm/npm-publish-check.json, written by
+  // scripts/harness-x/npm-publish-live.mjs — so the guide and this test cannot drift from
+  // each other and neither can be wrong about npm on its own. A capture is never edited: when
+  // npm publishes or the door moves, a NEW capture is written and both are corrected against it.
+  const published = capture.published;
+  const diff = capture.diff;
+  const pubTotal = published.free_tools + published.metered_tools;
   assert.notEqual(
-    PUBLISHED.version,
+    published.version,
     packageJson.version,
     "the prepared version must differ from the published one: a published version cannot be re-published",
   );
   assert.ok(
-    PUBLISHED.tools < catalogTotal,
-    "a published release must not be recorded as carrying the full fleet",
+    pubTotal <= catalogTotal,
+    "a published release cannot carry more names than the live fleet",
   );
-  assert.match(guide, new RegExp("`" + PUBLISHED.version + "`"));
-  assert.match(guide, new RegExp(PUBLISHED.tools + " tools"));
-  assert.match(guide, new RegExp(PUBLISHED.published_at.replace(/\./g, "\\.")));
+  // GROWTH IS PUBLISHED, SHRINKAGE IS DRIFT. The fleet may gain a tool — that is the estate
+  // working — but it must not lose one, and every name the capture records as live-only must
+  // still be in the canonical set the guide publishes.
+  assert.ok(
+    catalogTotal >= pubTotal + diff.live_only.length,
+    "the fleet must not have shrunk below the published release plus the names the capture records as live-only",
+  );
+  for (const name of diff.live_only) {
+    assert.ok(
+      catalog.free.includes(name),
+      `the capture records ${name} as live-only, so it must be in the canonical free set`,
+    );
+  }
+  // The guide must state the capture's facts, in BOTH copies: two copies of the same claim are
+  // two files and are corrected separately. And it must state the DIFFERENCE the capture
+  // records, not a parity it no longer has — "zero names differ" while the capture names a
+  // live-only tool is a false claim about a published package.
+  const differs = diff.live_only.length > 0 || diff.published_only.length > 0;
+  for (const [label, text] of [
+    ["llms-install.md", guide],
+    ["public/llms-install.md", publicGuide],
+  ]) {
+    assert.match(
+      text,
+      new RegExp("`" + published.version.replace(/\./g, "\\.") + "`"),
+      `${label} must name the published release`,
+    );
+    assert.match(
+      text,
+      new RegExp(String(pubTotal) + " tool names"),
+      `${label} must state how many names the published tarball carries`,
+    );
+    assert.match(
+      text,
+      new RegExp(published.published_at.replace(/\./g, "\\.")),
+      `${label} must carry the publish timestamp of the published release`,
+    );
+    assert.match(
+      text,
+      new RegExp("live door\\s+served " + capture.live_door.total_tools + " names"),
+      `${label} must state how many names the live door served`,
+    );
+    if (differs) {
+      assert.doesNotMatch(
+        text,
+        /Zero names differ in either direction/,
+        `${label} must not claim name-for-name parity while the capture records a difference`,
+      );
+      assert.doesNotMatch(
+        text,
+        /carries the same \d+ tool names as the live door/,
+        `${label} must not claim the published tarball matches the live door while the capture records a difference`,
+      );
+      for (const name of diff.live_only) {
+        assert.match(
+          text,
+          new RegExp("`" + name + "`"),
+          `${label} must name ${name}, the name the capture records as live-only`,
+        );
+      }
+    } else {
+      assert.match(
+        text,
+        /carries the same \d+ tool names as the live door/,
+        `${label} must state the parity the capture records`,
+      );
+    }
+  }
   assert.doesNotMatch(guide, /"args":\s*\[\s*"-y",\s*"csoai-gspc-mcp/);
   assert.match(
     guide,
