@@ -3,9 +3,27 @@ import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { renderAll, renderAxesIndex, staleOwnedFiles } from "./build-axis-pages.mjs";
+import { loadBoard, renderAll, renderAxesIndex, staleOwnedFiles } from "./build-axis-pages.mjs";
 
 const OWNER_GATED = "HIDDEN_PENDING_OWNER_GO";
+
+/**
+ * The canonical axis id set is the ONE alias table: "keys are the canonical axis ids
+ * exactly as GET https://councilof.ai/api/gspc spells them (axes[].axis)". It is a
+ * mirror of the axis modules, and functions/mcp/axis-aliases.test.ts already fails if
+ * a key stops being a board row. Comparing the commit board against it is a real
+ * cross-check, and it lets this test DERIVE the axis set instead of typing a count
+ * that goes stale the moment a slot is declared. A typed count here was the estate
+ * repeating the exact defect it repaired in canon.json: a frozen number (23/23/0)
+ * that turns a legitimate growth into a red build — that one held a correct live
+ * board red for 114 consecutive runs. Declaring the 34th axis made this assert 33
+ * and fail, which is the frozen number talking, not the board.
+ */
+const CANONICAL_AXES = Object.keys(
+  JSON.parse(
+    readFileSync(new URL("../../functions/mcp/axis-aliases.json", import.meta.url), "utf8"),
+  ).axes,
+);
 
 /**
  * A board shaped like the live one: 14 model-comparison axes, 9 deterministic-fact
@@ -120,6 +138,48 @@ test("the axes index page says 32 where the board serves 33, because one slot is
   assert.match(out["axes.html"], /<h1>All 32 GSPC axes<\/h1>/);
   // The lid is the board's own totals, left as served.
   assert.match(out["axes.html"], /33 axes · 23 measured/);
+});
+
+test("the commit board renders exactly its public canonical axes without promoting the owner-held slots", async () => {
+  const live = await loadBoard();
+  const allIds = live.axes.map((row) => row.axis);
+  // DERIVED, never typed. The commit board and the canonical alias table must agree
+  // on the axis SET, not merely on a number.
+  assert.deepEqual([...allIds].sort(), [...CANONICAL_AXES].sort());
+  assert.equal(allIds.length, CANONICAL_AXES.length);
+  assert.equal(new Set(allIds).size, CANONICAL_AXES.length);
+  assert.ok(allIds.includes("regulator-transparency"));
+
+  const gatedIds = live.axes
+    .filter((row) => row.public_pages === OWNER_GATED)
+    .map((row) => row.axis);
+  const publicIds = live.axes
+    .filter((row) => row.public_pages !== OWNER_GATED)
+    .map((row) => row.axis)
+    .sort();
+  // The owner-held count is whatever the board says it is. Typing "1" here froze the
+  // public count at 32 and broke the moment a second slot was held back.
+  assert.ok(gatedIds.length > 0, "the owner is still holding at least one slot");
+  assert.equal(publicIds.length, allIds.length - gatedIds.length);
+  assert.ok(!publicIds.includes("regulator-transparency"));
+
+  const out = renderAll(live);
+  const renderedIds = Object.keys(out)
+    .filter((path) => path.startsWith("axis/"))
+    .map((path) => path.slice("axis/".length, -".html".length))
+    .sort();
+  assert.deepEqual(renderedIds, publicIds);
+  // Every owner-held slot gets no page and no row in the index — named, not counted.
+  for (const id of gatedIds) {
+    assert.equal(out[`axis/${id}.html`], undefined);
+    assert.doesNotMatch(out["axes.html"], new RegExp(`data-axis="${id}"`));
+  }
+  // The two headings count the PUBLIC axes, so they are derived from the board too.
+  const publicSlots = live.axes.filter(
+    (row) => row.public_pages !== OWNER_GATED && row.kind === "declared-slot",
+  ).length;
+  assert.match(out["axes.html"], new RegExp(`<h1>All ${publicIds.length} GSPC axes</h1>`));
+  assert.match(out["axes.html"], new RegExp(`<h2>${publicSlots} declared subject slots</h2>`));
 });
 
 test("a declared slot's own page offers no separation machinery", () => {

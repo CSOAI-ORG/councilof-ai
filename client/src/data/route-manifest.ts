@@ -233,6 +233,21 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Bft"
  },
  {
+  "path": "/blog/gspc-g2-comparison-group-2026-10-14",
+  "comp": "BlogPost",
+  "title": "Blog Gspc G2 Comparison Group 2026 10 14"
+ },
+ {
+  "path": "/blog/how-to-verify-an-ai-measurement",
+  "comp": "BlogPost",
+  "title": "Blog How To Verify An Ai Measurement"
+ },
+ {
+  "path": "/blog/keeping-ai-claims-current",
+  "comp": "BlogPost",
+  "title": "Blog Keeping Ai Claims Current"
+ },
+ {
   "path": "/board",
   "comp": "MeasurementBoard",
   "title": "Measurement Board"
@@ -1993,6 +2008,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Twin"
  },
  {
+  "path": "/sovx",
+  "comp": "Wrappers",
+  "title": "Wrappers"
+ },
+ {
   "path": "/spec/signed-receipts",
   "comp": "SignedReceiptsSpec",
   "title": "Signed Receipts Spec"
@@ -2066,6 +2086,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/tc260",
   "comp": "TC260Guide",
   "title": "TC260 Guide"
+ },
+ {
+  "path": "/team",
+  "comp": "Team",
+  "title": "Team"
  },
  {
   "path": "/temples",

@@ -1,0 +1,128 @@
+name: Publish @csoai/layer0 (npm)
+
+# Manual and version-confirmed by design. Authentication is npm trusted publishing (GitHub OIDC),
+# never a long-lived NPM_TOKEN.
+#
+# This package is a CLIENT for a Layer 0 gateway. It is only worth publishing if the gateway it
+# calls is publicly served, so this workflow refuses to publish until it answers. The client's three
+# paths are /api/gate, /api/a2a/route and /api/a2a/verify. They did NOT answer on the public site
+# until 30 October 2026, when the Layer 0 gateway was deployed; they now answer, and the
+# precondition below checks that on every run rather than trusting this comment. Publishing a
+# client whose every method 404s would put a broken install line in front of the world, so the
+# precondition below is part of the gate, not a comment.
+#
+# Required trusted publisher configuration on npm, for the @csoai scope:
+#
+# The organization is the GITHUB organization that owns the repository, CSOAI-ORG. It is NOT the npm
+# scope owner (csoai), and the two are not the same string. npm matches the OIDC subject
+# repo:CSOAI-ORG/councilof-ai:ref:refs/heads/master against this value, case-sensitively, and does
+# NOT check it when the connection is saved: a mismatch does not appear until a publish is
+# attempted, and then it appears as a publish failure with no hint as to the cause.
+#     org:      CSOAI-ORG
+#     repo:     councilof-ai
+#     workflow: npm-layer0.yml
+#     environment: (leave empty - this workflow does not use a GitHub environment)
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Exact package version to publish (must match packages/layer0-js/package.json)"
+        required: true
+        type: string
+      gateway_base:
+        description: "Public base URL the client will call (default https://councilof.ai)"
+        required: false
+        default: "https://councilof.ai"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+
+      # setup-node writes a PLACEHOLDER _authToken into the runner's .npmrc so that `npm publish`
+      # fails with ENEEDAUTH instead of prompting for a login. Left in place, that placeholder is a
+      # real credential as far as npm is concerned: when the OIDC exchange fails - a trusted
+      # publisher whose fields do not match this workflow - npm silently falls back to it and the
+      # publish fails with E404 "Not found", a message that names neither the cause nor the fix.
+      # Taking the placeholder away leaves npm with no credential, so the same failure surfaces as
+      # ENEEDAUTH, which npm documents as the symptom of a trusted publisher that does not match.
+      #
+      # The versions are printed because they are part of the provenance story: the npm that
+      # publishes is the npm that carries the attestation. Trusted publishing needs npm 11.5.1 or
+      # later and Node 22.14.0 or later.
+      - name: No placeholder credential, and record the toolchain that will publish
+        run: |
+          set -euo pipefail
+          cfg="${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}"
+          if [ -f "$cfg" ]; then
+            grep -v '_authToken' "$cfg" > "$cfg.tmp" || true
+            if [ -s "$cfg.tmp" ]; then
+              mv "$cfg.tmp" "$cfg"
+            else
+              echo "::warning::the runner npmrc held nothing but the placeholder token"
+            fi
+          fi
+          echo "node: $(node --version)"
+          echo "npm:  $(npm --version)"
+          echo "npmrc in use:"
+          sed -E 's/(_authToken=).*/\1<removed>/' "$cfg" 2>/dev/null || echo "(no npmrc)"
+
+      - name: Confirm version is exact and unused
+        id: ver
+        working-directory: packages/layer0-js
+        env:
+          EXPECTED_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          actual="$(node -p "require('./package.json').version")"
+          test "$actual" = "$EXPECTED_VERSION"
+          if npm view "@csoai/layer0@$actual" version >/dev/null 2>&1; then
+            echo "@csoai/layer0@$actual already exists; refusing to overwrite an immutable release"
+            exit 1
+          fi
+          echo "version $actual confirmed and not yet published"
+
+      - name: The gateway the client calls must be publicly served
+        working-directory: packages/layer0-js
+        env:
+          GATEWAY_BASE: ${{ inputs.gateway_base }}
+        run: |
+          set -euo pipefail
+          missing=""
+          for p in /api/gate /api/a2a/route /api/a2a/verify; do
+            code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 -X POST "$GATEWAY_BASE$p" || echo 000)"
+            echo "$GATEWAY_BASE$p -> $code"
+            if [ "$code" = "404" ] || [ "$code" = "000" ]; then missing="$missing $p($code)"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::The client calls these paths and the gateway does not answer them:$missing"
+            echo "::error::Publishing now would ship an install line that cannot work. Serve the gateway first, then re-run this workflow."
+            exit 1
+          fi
+
+      - name: Verify the package
+        working-directory: packages/layer0-js
+        run: |
+          set -euo pipefail
+          node --test index.test.js
+          npm pack --dry-run
+
+      - name: Publish through trusted OIDC with automatic provenance
+        working-directory: packages/layer0-js
+        run: npm publish --access public
