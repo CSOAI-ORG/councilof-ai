@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import {
   LIFECYCLES,
   ABSENCE_STATUSES,
+  WITHDRAWN_LIFECYCLES,
   loadRegistry,
   routeTable,
   handlerFor,
@@ -27,6 +28,7 @@ import {
  *   an entry whose route has no handler          a catalogue claiming what nothing serves
  *   a handler no entry declares                  a served route missing from every catalogue
  *   LIVE whose probe expects an absence status   a lifecycle contradicting its own probe
+ *   a withdrawn route listed in openapi.json     a route we took away, advertised as an API
  *   a generated artifact that drifted            a render nobody re-ran
  *   an MCP fleet swap of equal size              the defect a count baseline cannot see
  *   an A2A skill in one place and not another    the card, the alias, SKILL_IDS, the recount
@@ -149,9 +151,84 @@ describe("a declared LIVE whose probe expects a 404 fails", () => {
       expect(src, name).toContain("@openapi-retired");
       const entry = registry.capabilities.find((c: { path?: string }) => c.path === `/api/${name}`);
       expect(entry?.lifecycle, name).toBe("RETIRED");
-      const op = J("public/openapi.json").paths[`/api/${name}`].get;
-      expect(op["x-csoai-lifecycle"], name).toBe("RETIRED");
     }
+  });
+
+  it("a handler that answers RETIRED for its own route carries @openapi-retired", () => {
+    // The repair above reached four handlers by name. Four more (files, memory, operator, sandbox)
+    // served the same csoai.retired-endpoint/0.1 body with code RETIRED and still carried
+    // @openapi-unavailable, so until 13 Oct 2026 the catalogue listed eight withdrawn operations as
+    // "not yet released". This reads every handler instead of a list of names.
+    // functions/api/router.ts is deliberately not matched: it serves that body for four retired
+    // ALIASES (endpoint: RETIRED_PATHS[path]) while its own bare GET answers 200.
+    const own: string[] = [];
+    for (const [route, rec] of TABLE) {
+      if (!route.startsWith("/api/")) continue;
+      if (!/code:\s*"RETIRED"/.test(rec.src)) continue;
+      if (!rec.src.includes(`endpoint: "${route}"`)) continue;
+      own.push(route);
+      expect(rec.src, `${rec.file} answers RETIRED for ${route}`).toContain("@openapi-retired");
+    }
+    // not a vacuous pass: the scan found the routes this was written for
+    for (const route of ["/api/atlas", "/api/certificate-schema", "/api/files", "/api/memory", "/api/operator", "/api/sandbox"]) {
+      expect(own, route).toContain(route);
+    }
+  });
+});
+
+describe("a withdrawn route is declared and probed, never advertised", () => {
+  // api-evangelist/councilof-ai#1 (12 Oct 2026): an independent profile built from /openapi.json
+  // kept listing GET /api/certificate-schema (503 RETIRED) and POST /api/checkout (404) as APIs,
+  // because the document listed them. x-csoai-lifecycle is our marker; nobody else reads it.
+  type Cap = { id: string; path?: string; method: string; lifecycle: string; surfaces: string[] };
+  const withdrawn: Cap[] = registry.capabilities.filter(
+    (c: Cap) => WITHDRAWN_LIFECYCLES.has(c.lifecycle) && c.path,
+  );
+
+  it("the registry declares withdrawn routes, the certificate and checkout surfaces among them", () => {
+    const keys = withdrawn.map((c) => `${c.method} ${c.path}`);
+    for (const k of [
+      "GET /api/certificate-schema",
+      "POST /api/checkout",
+      "GET /api/fulfill",
+      "GET /api/paddle-webhook",
+      "POST /api/paddle-webhook",
+    ]) {
+      expect(keys, k).toContain(k);
+    }
+  });
+
+  it("none is listed in public/openapi.json, none claims the openapi surface, each is named in openapi_gap", () => {
+    const spec = J("public/openapi.json");
+    const gap = new Set(registry.openapi_gap.map((g: { id: string }) => g.id));
+    for (const c of withdrawn) {
+      expect(spec.paths[c.path!]?.[c.method.toLowerCase()], `${c.method} ${c.path} is listed`).toBeUndefined();
+      expect(c.surfaces, c.id).not.toContain("openapi");
+      expect(gap.has(c.id), `${c.id} is not named in openapi_gap`).toBe(true);
+    }
+  });
+
+  it("the document carries no operation marked RETIRED or DOOR_CLOSED", () => {
+    const spec = J("public/openapi.json");
+    const marked: string[] = [];
+    for (const [path, item] of Object.entries(spec.paths as Record<string, Record<string, { "x-csoai-lifecycle"?: string }>>)) {
+      for (const [method, op] of Object.entries(item)) {
+        if (WITHDRAWN_LIFECYCLES.has(op["x-csoai-lifecycle"] ?? "LIVE")) marked.push(`${method.toUpperCase()} ${path}`);
+      }
+    }
+    expect(marked).toEqual([]);
+  });
+
+  it("planting one on the openapi surface, or dropping it from openapi_gap, produces the failure", () => {
+    const planted = structuredClone(registry);
+    const c = planted.capabilities.find((x: Cap) => WITHDRAWN_LIFECYCLES.has(x.lifecycle) && x.path);
+    c.surfaces = ["openapi"];
+    expect(validateShape(planted).join("\n")).toContain("still claims the openapi surface");
+
+    const dropped = structuredClone(registry);
+    const d = dropped.capabilities.find((x: Cap) => WITHDRAWN_LIFECYCLES.has(x.lifecycle) && x.path);
+    dropped.openapi_gap = dropped.openapi_gap.filter((g: { id: string }) => g.id !== d.id);
+    expect(validateShape(dropped).join("\n")).toContain("not named in openapi_gap");
   });
 });
 
