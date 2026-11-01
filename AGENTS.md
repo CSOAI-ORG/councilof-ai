@@ -26,24 +26,70 @@ row in `council-os/distribution.json`, (b) `STEPS[id]` in the renderer, (c) a
 live in `scripts/harness-x/kimi-plugin.node-test.mjs` because Kimi's validator is
 inside the Kimi application and CI cannot run it.
 
-## HITL: distinguish deployed state from end-to-end acceptance
+## HITL: configuration and human acceptance are separate
 
-The decision path has source in `functions/api/hitl.ts`,
+The endpoint and console are implemented in `functions/api/hitl.ts`,
 `functions/api/_hitl.ts` and `client/src/components/HitlConsole.tsx`.
-The configured operator-token binding is `HITL_DECIDE_TOKEN`.
-Do not repeat the historical claim that the end-user path is absent or that
-`/api/hitl` always returns 404.
+The operator binding used by the implementation is `HITL_DECIDE_TOKEN`.
 
-Read-only observation on 2026-10-29: `/api/hitl` reported a bound store, an open
-decision path, configured operator token and signing key, and two approved
-records. `/api/hitl/record` returned those records with competency and signature
-fields. This observation did not independently verify their signatures or run
-a new challenge, human decision and protected action end to end.
+A read-only observation on 2026-10-30 at 10:14:52Z returned HTTP 200 from
+`https://councilof.ai/api/hitl`. It reported a bound decision store, configured
+operator token and signing key, and an open recording path. The bounded receipt
+is `docs/operations/hitl-configuration-readback-20261030.json`. This supersedes
+the earlier note that the endpoint was unbuilt or returned 404; it is a dated
+observation, not a promise about future configuration.
 
-Keep those evidence levels separate. A configured shared operator token is not
-proof of a named person's enterprise identity; a recorded competency answer is
-not a general competence credential. Before claiming an integration enforces
-human authority, test approval, decline, expiry, revocation, changed action
-bytes and duplicate/resumed execution against that exact host version.
-`scripts/hitl/hitl_probe.py` covers client-side elicitation controls; its results
-do not by themselves establish those wider properties.
+Configuration does not establish a genuine human's identity, consent,
+competence, current execution authority, or successful durable decision.
+A recordable decision is not permission to execute a tool. Preserve those
+separate acceptance requirements; do not manufacture an operator or treat an
+automated test as a human decision. Check the current deployment before making
+a current readiness claim. The readback sent no POST or decision.
+
+## Publishing a page or a machine surface: what the two gates actually scan
+
+Both gates run in CI after the build, so they fail the **PR**, not the page. They are not the same
+gate, and their scopes are not the same scope. Read this before publishing anything under `public/`.
+
+**`scripts/brand-gate.mjs` — the brand gate.** It scans the **visible text** of every shipped
+`.html` and `.svg`, and a published `.json` **only in the keys that RENDER**: `name`, `title`,
+`label`, `headline`, `criteria`, `tagline`, `cta`, `heading`, `display_name`, `badge_name`. A
+whole-body JSON scan was tried first and produced 28 false positives out of 30, because this
+estate's JSON says the honest thing in semantic negation keys (`claim_boundary`,
+`does_not_establish`) and quotes retracted claims in a register. **So the same wording can be
+published in a JSON file and refused on a page** — that is a scope difference, not a contradiction.
+Every rule carries an `allowOn` and a `nearAllow`, and `nearAllow` is tested in a **±90-character
+window** around the hit: a disclosure ("no certificates", "superseded", "not 2 Nov") is allowed;
+an assertion is not.
+
+**`scripts/link-gate.mjs` — the link gate.** It scans every published `.json` for absolute
+`councilof.ai` URLs and requires each one to resolve to a path the site actually serves. It is a
+**ratchet**: known-dead targets are listed in `scripts/link-gate-baseline.json` and grandfathered,
+and any **NEW** dead same-origin URL fails the build.
+
+**The convention that satisfies it:** an unserved same-origin path is published as `path:/…` with
+its host and path in separate fields, **never** as a full URL; third-party URLs are published whole.
+The shape is in `public/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json`.
+
+**Evaluate both before pushing.** The two gate scripts want a built tree, which a machine without a
+checkout does not have. Fetch the rules from master and run them against the candidate bytes
+instead: the brand gate's `RULES` array is an `eval`-able literal in the source, and the link
+gate's rule is the same-origin check above. A page's own absolute URLs are checked against the
+**live** site, because that is the question that actually matters for them.
+
+## Bulk data and compute live on RunPod, not on the workstation
+
+The estate's backend is paid RunPod. The local disk is for source, not for bulk, and a full local
+volume is an operational blocker for the estate's own measurements.
+
+| | |
+|---|---|
+| CPU pods | 4 running: `estate-scratch-20261028`, `meok-him-production-20261027`, `council-os-benchmark-live-20261027`, `csoai-build-cpu-writer-20261001` |
+| network volumes | 4, **1.5 TB total**: `estate-scratch-20261028` (400 GB) · `csoai-backup-ro` (800 GB) · `sov-workspace-mtl4` (200 GB) · `council-os-benchmark-data-20261027` (100 GB) |
+| GPU | A100 SXM4 80 GB and MI300X 192 GB are available on demand; do not start one without the owner's OK |
+| credential | `~/.runpod/api_key` and `~/.runpod/config.toml` — **not** `config.json`; `runpodctl` is the CLI |
+| the pod→Oracle route | the pod holds a scoped key in Oracle's `authorized_keys`, so a bulk pull runs **pod→Oracle directly** and the workstation only brokers the key |
+
+HuggingFace is the estate's publication surface for measurement records (the `csoai` organisation),
+but the token on the workstation was **rejected by the Hub** on 2026-11-01 (`Invalid user token`).
+A working write token is needed before the Hub is used from a machine.

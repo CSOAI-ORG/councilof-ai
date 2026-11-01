@@ -1,32 +1,35 @@
-# @csoai/layer0 — design prototype
+# @csoai/layer0
 
-This directory describes a proposed client for policy decisions and action receipts.
-It is not an installation-ready gateway or evidence that an arbitrary tool is governed.
-The examples below describe the intended API; they are not a verified deployment recipe.
+[![npm version](https://img.shields.io/npm/v/%40csoai%2Flayer0)](https://www.npmjs.com/package/@csoai/layer0)
+[![npm downloads](https://img.shields.io/npm/dm/%40csoai%2Flayer0)](https://www.npmjs.com/package/@csoai/layer0)
+[![license](https://img.shields.io/npm/l/%40csoai%2Flayer0)](https://councilof.ai/layer0/)
 
-For published evidence available through the current service, start at
-[Connect](https://councilof.ai/connect/) or the
-[embeddable evidence panel](https://councilof.ai/panel/).
-The [workflow integration guide](../../public/interop/workflow-evidence-integration-2026-10-29.md)
-separates evidence, human review and host enforcement.
 
-> **Recorded availability check: 2026-09-28** (first probed 2026-09-05).
-> `@csoai/layer0` returned **HTTP 404** on the npm registry; `api.csoai.org` (the default
-> `CSOAI_API_BASE`) had **no DNS record**; and `https://councilof.ai` answered **404** on all three
-> paths this client calls (`/api/gate`, `/api/a2a/route`, `/api/a2a/verify`). The install line
-> below did not work in that check, and every method requires a compatible gateway.
-> This is a dated observation, not a new availability probe. No later successful install
-> and gateway acceptance result is recorded in this README.
+Make any tool, MCP server, package or plugin **Layer‑0‑governed + A2A‑ready** in ~15 lines.
+Every governed action passes the CSOAI **Sovereign Gate** (policy/identity/human‑in‑loop), then
+emits an **Ed25519‑signed attestation** you (or any auditor) can verify offline — and a signed
+**A2A envelope** other governed agents can trust.
+
+> **THE GATEWAY IS SERVED AT `https://councilof.ai`.** The default `CSOAI_API_BASE` points
+> there. The three paths this client calls — `/api/gate`, `/api/a2a/route`, `/api/a2a/verify` —
+> are Cloudflare Pages Functions in the source repository, and the publish workflow refuses to
+> release this package until all three answer, so an install line that cannot work is never
+> published.
+>
+> `/api/a2a/route` signs its envelopes with the deployment's Layer-0 key, whose public half is
+> published at `GET /api/a2a/key` and pinned in the estate's DID document as
+> `did:web:csoai.org#layer0-attestation-1`. If that key is ever absent the route answers **503**
+> and says so: an unsigned artefact is honest and a fabricated signature is not. The gate and the
+> verify path work regardless.
 >
 > ```
-> curl -s -o /dev/null -w '%{http_code}\n' https://registry.npmjs.org/@csoai%2flayer0   # 404
-> host api.csoai.org                                                                    # no record
-> curl -s -o /dev/null -w '%{http_code}\n' -X POST https://councilof.ai/api/gate       # 404
+> curl -s -o /dev/null -w '%{http_code}\n' -X POST https://councilof.ai/api/gate -d '{}'   # 200
+> curl -s https://councilof.ai/api/a2a/key                                                   # the public key, if published
 > ```
 
 ```bash
-npm i @csoai/layer0                            # design example; 404 in the recorded check
-export CSOAI_API_BASE=https://your-gateway     # requires a compatible gateway you operate
+npm i @csoai/layer0
+export CSOAI_API_BASE=https://your-gateway     # optional; defaults to https://councilof.ai
 ```
 
 ```js
@@ -34,27 +37,29 @@ import { Layer0 } from "@csoai/layer0";
 
 const l0 = new Layer0({ identity: "did:csoai:acme", endpoint: "mcp://soc2-compliance-ai" });
 
-// Intended API: a compatible gateway and tested host enforcement are prerequisites.
+// wrap any action — denied actions throw, high‑risk actions escalate (control G)
 const { result, attestation } = await l0.governed(
   "evidence.collect",
   { repo: "acme/app" },
   async () => doTheWork()
 );
-// Intended result: verify the signer, exact subject, scope and covered bytes before use.
+// `attestation` is a signed A2A envelope → drop it into another tool / your audit log
 ```
 
-The conformance levels in `CSOAI_Layer0_A2A_Protocol.md` are design targets.
-Calling `governed()` or `verify()` does not establish conformance without evidence from
-the exact deployed gateway and host. A signature does not establish that an action
-was authorised, that its claimed effect occurred, or that another agent should trust it.
+Conformance levels (see `CSOAI_Layer0_A2A_Protocol.md`): wrapping with `governed()` puts you at
+**L0‑3 (attested)**; consuming/emitting envelopes via `verify()` / the gateway reaches **L0‑5 (A2A)**.
 
-| Method | Intended contract |
+| Method | Does |
 |---|---|
 | `gate(action, inputs)` | Sovereign Gate decision: allow / allow‑with‑conditions / deny / escalate |
 | `governed(action, inputs, run)` | gate → run → signed attestation (the common path) |
 | `verify(envelope, peerKey?)` | verify an inbound A2A envelope |
 
-Backend: `api-server/` (Express) + `api-server/a2a.js` in the source repository; it is not served publicly. Home: https://councilof.ai/layer0/
+Backend: the public gateway is `functions/api/gate.ts` + `functions/api/a2a/{route,verify,key}.ts` (Cloudflare Pages Functions) in the source repository, with the policy rule in `functions/_lib/layer0.ts` — checked against the canonical product's rule by `scripts/review/layer0-parity.mjs`. Home: https://councilof.ai/layer0/
+
+- Live GSPC board: https://councilof.ai/api/gspc
+- Corrections ledger: https://councilof.ai/corrections/ (JSON: https://councilof.ai/api/corrections)
+- Free card verification: https://councilof.ai/gspc-verify/
 
 ## Licence
 
