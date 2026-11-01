@@ -1,8 +1,8 @@
 {
   "schema": "csoai.gspc-fact-table/0.1",
-  "produced_at": "2026-10-28T05:25:15Z",
+  "produced_at": "2026-11-01T12:21:01Z",
   "generator": "scripts/measurements/build-gspc-fact-table.mjs",
-  "generator_commit": "95273309f3479eb43909c2f2aa472c3ba3d652f2",
+  "generator_commit": "5e3b098cf3e57c8c0b7204b0a2fba58d29a16b6e",
   "what_this_is": "One long-format fact table of every mill measurement the estate holds, joined from the per-cell evidence files, plus the item universe it refers to and an index of the cells it came from.",
   "what_this_does_not_establish": "That a model is good, or better than another. One run per cell, on one bank, at one time.",
   "source": {
@@ -96,5 +96,35 @@
     "google/gemma-2-9b-it": 120,
     "OBLITERATUS/Qwen3.8-27B-OBLITERATED": 60,
     "Qwen/Qwen2.5-Coder-1.5B-Instruct": 60
+  },
+  "tables": {
+    "measurements": {
+      "layout": "sharded",
+      "rows": 20517,
+      "bytes": 8638598,
+      "part_bytes_limit": 8388608,
+      "parts": [
+        {
+          "file": "gspc_measurements/part-000.jsonl",
+          "rows": 19931,
+          "bytes": 8388478
+        },
+        {
+          "file": "gspc_measurements/part-001.jsonl",
+          "rows": 586,
+          "bytes": 250120
+        }
+      ]
+    },
+    "items": {
+      "layout": "single",
+      "file": "gspc_items.jsonl",
+      "rows": 807
+    },
+    "cells": {
+      "layout": "single",
+      "file": "gspc_cells.jsonl",
+      "rows": 677
+    }
   }
 }
