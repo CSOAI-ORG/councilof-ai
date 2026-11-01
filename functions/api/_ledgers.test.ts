@@ -13,6 +13,8 @@ import { describe, expect, it } from "vitest";
 import { LEDGER } from "./corrections";
 import { LEDGER_META, ledgerRow, ledgersBlock, parseChecks, rootInclusionOf } from "./_ledgers";
 import { onRequestGet as stateGet } from "./state";
+import publicRoot from "../../public/root.json";
+import rootInclusion from "../../public/interop/ledger-heads-2026-09/root-inclusion.json";
 
 const ids = new Set((LEDGER.corrections as { id: string }[]).map((c) => c.id));
 const draftIds = new Set((LEDGER.corrections as { draft_id?: string }[]).map((c) => c.draft_id).filter(Boolean) as string[]);
@@ -84,10 +86,27 @@ describe("ledgers block", () => {
 describe("rootInclusionOf (planted controls)", () => {
   const leaves = new Set(["L1"]);
   const inc = { merkle_root: "M", root_as_of: "2026-09-30T05:03:00Z", ledgers: { k: { atom_sha256: "A", leaf_sha256: "L1" }, z: { atom_sha256: "A", leaf_sha256: null } } };
-  it("IN_ROOT only when the recorded leaf is in the committed root of the same merkle root", () => {
+  it("IN_ROOT only when the recorded leaf is in the committed root", () => {
     expect(rootInclusionOf("k", "A", inc, leaves, "2026-09-30T05:00:00Z", "M").state).toBe("IN_ROOT");
     expect(rootInclusionOf("k", "A", inc, new Set(["L2"]), "2026-09-30T05:00:00Z", "M").state).toBe("NOT_IN_ROOT");
-    expect(rootInclusionOf("k", "A", inc, leaves, "2026-09-30T05:00:00Z", "OTHER").state).toBe("NOT_IN_ROOT");
+  });
+  it("a daily re-signed root that still carries the leaf keeps the head IN_ROOT (E2E 2026-10-13: every ledger read NOT_IN_ROOT while root.json held every leaf)", () => {
+    const resigned = rootInclusionOf("k", "A", inc, leaves, "2026-09-30T05:00:00Z", "OTHER");
+    expect(resigned.state).toBe("IN_ROOT");
+    expect(resigned.leaf_sha256).toBe("L1");
+    const dropped = rootInclusionOf("k", "A", inc, new Set(["L2"]), "2026-09-30T05:00:00Z", "OTHER");
+    expect(dropped.state).toBe("NOT_IN_ROOT");
+    expect(dropped.why).toMatch(/earlier root/);
+  });
+  it("the committed root.json and inclusion record agree on every ledger (state follows the leaf, not the record's root)", () => {
+    const leavesNow = new Set<string>(((publicRoot as { card_sha256?: string[] }).card_sha256 ?? []));
+    const rec = rootInclusion as { ledgers: Record<string, { leaf_sha256: string | null }> };
+    for (const r of ledgersBlock().ledgers) {
+      const leaf = rec.ledgers[r.key]?.leaf_sha256 ?? null;
+      const expected = leaf && leavesNow.has(leaf) ? "IN_ROOT" : r.evidence_state.root_inclusion;
+      expect([r.key, r.evidence_state.root_inclusion]).toEqual([r.key, expected]);
+      if (expected === "IN_ROOT") expect(r.evidence_state.ots_calendar_pending).not.toBeNull();
+    }
   });
   it("a head the record does not know, or read after the last root, is PENDING, not NOT_IN_ROOT", () => {
     expect(rootInclusionOf("k", "B", inc, leaves, "2026-09-30T05:00:00Z", "M").state).toBe("PENDING_NEXT_ROOT");
