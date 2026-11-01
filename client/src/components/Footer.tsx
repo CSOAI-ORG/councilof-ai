@@ -11,6 +11,7 @@ import EmailOff from './EmailOff';
 import { CONTACT_MAILBOX } from '@/lib/buying';
 import FooterVerifyStrip from './FooterVerifyStrip';
 import FooterStats from './momentum/FooterStats';
+import AuthoritySignals from './AuthoritySignals';
 import MembershipStrip from './MembershipStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
@@ -53,8 +54,11 @@ export function Footer() {
     {
       title: 'Developer reference',
       links: [
+        { name: 'Connect a client — install', href: '/connect/' },
         { name: 'Board JSON — /api/gspc', href: '/api/gspc', external: true },
         { name: 'Tool surface — /mcp', href: '/mcp', external: true },
+        { name: 'Python package — PyPI', href: 'https://pypi.org/project/csoai/', external: true },
+        { name: 'MCP package — npm', href: 'https://www.npmjs.com/package/csoai-gspc-mcp', external: true },
         { name: 'Agent card', href: '/.well-known/agent.json', external: true },
         { name: 'Paid services and free previews', href: '/.well-known/x402.json', external: true },
         { name: 'Our public keys', href: '/.well-known/did.json', external: true },
@@ -162,7 +166,7 @@ export function Footer() {
             <span className="text-xl font-bold">CSOAI</span>
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
-            We measure AI behaviour and publish records you can check. Measurement is not certification.
+            UK AI measurement infrastructure operated by CSOAI Ltd. We publish records you can check. Measurement is not certification.
           </p>
           <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
@@ -326,6 +330,10 @@ export function Footer() {
         {/* Live figures from GET /api/momentum: each links to its source and carries its date;
             a figure whose source failed is absent, never zero. */}
         <FooterStats />
+
+        {/* Standing, participation and official-source work — distinct relationships, each linked
+            to its evidence. Regulators are never presented as members, clients or endorsers. */}
+        <AuthoritySignals />
 
         {/* Find us / verify us — live platform logos + listings */}
         <FooterVerifyStrip />

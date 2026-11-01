@@ -1,6 +1,7 @@
 {
  "schema": "csoai.layer0-automation/0.1",
- "as_of": "2026-09-28T21:16Z",
+ "as_of": "2026-10-30T05:45Z",
+ "as_of_note": "Only the npm-publish step was re-verified on this date; the other steps still carry the state recorded on 2026-09-28 and were not re-read.",
  "what_this_is": "Every Layer 0 step, whether it runs by itself today, and the staged job for each manual one. A staged job is written and tested but NOT installed in any crontab: installing it is the integrator's step, and jobs marked owner_gated run only on the owner's say-so.",
  "hosts": {
   "build_pod": "the only deploy host; heavy work under flock /workspace/locks/heavy.lock",
@@ -109,12 +110,17 @@
   },
   {
    "id": "npm-publish",
-   "what": "publish @csoai/layer0 0.2.0",
-   "state": "HELD",
+   "what": "publish @csoai/layer0 (0.2.0 by hand on 2026-10-30; 0.2.1 from master by the trusted-publisher workflow)",
+   "state": "DONE — the npm trusted publisher holds the publish path; no token is needed to release",
    "owner_gated": true,
-   "blockers": [
-    "owner's npm Bypass-2FA granular token (the account's second factor is a WebAuthn key)",
-    "no Layer 0 gateway answers: api.csoai.org has no DNS record and councilof.ai returns 404 on /api/gate, /api/a2a/route and /api/a2a/verify (re-probed 2026-09-28); a published client would fail on every call"
+   "published": [
+    "0.2.0 on 2026-10-30T05:15:46Z, from origin/master's bytes by the npm CLI; no provenance attestation",
+    "0.2.1 from master by .github/workflows/npm-layer0.yml through npm trusted publishing (GitHub OIDC); provenance attached"
+   ],
+   "trusted_publisher": "npm @csoai/layer0: GitHub Actions, organization CSOAI, repository councilof-ai, workflow npm-layer0.yml, no environment; permissions npm publish and npm stage publish",
+   "blockers_resolved": [
+    "the owner's npm Bypass-2FA granular token was used once, for 0.2.0, and then revoked; the trusted publisher replaced it",
+    "the Layer 0 gateway is served: /api/gate 200, /api/a2a/route 200 with a signed envelope, /api/a2a/verify 400 on an empty body, GET /api/a2a/key the published public half (re-probed 2026-10-30)"
    ]
   },
   {

@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -24,6 +25,7 @@ import unicodedata
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 WORKER_SCHEMA = "csoai.runpod-gspc-worker/0.1"
@@ -101,7 +103,15 @@ RUN_OPTIONAL_FIELDS = frozenset(
         "label_parser",
     }
 )
-INSTRUMENT_OPTIONAL_FIELDS = frozenset({"num_parallel", "label_parser"})
+INSTRUMENT_OPTIONAL_FIELDS = frozenset(
+    {"num_parallel", "label_parser", "reasoning"}
+)
+# `reasoning` is optional on the instrument, exactly like `label_parser`: it
+# appears only when the reasoning channel was measured, and a run that never
+# measured it keeps an instrument descriptor that is byte-identical to the one
+# it had before the channel existed. It is a TOP-LEVEL key, never a key inside
+# `decode`: decode.think is pinned False because it means "the graded text is
+# never decoded out of a thinking stream", and it has to keep meaning that.
 
 # --- read-label-v1 -----------------------------------------------------------
 # Ported verbatim in behaviour from harness/typed_output/deterministic.py
@@ -109,7 +119,30 @@ INSTRUMENT_OPTIONAL_FIELDS = frozenset({"num_parallel", "label_parser"})
 # byte-identical to the reader at the pinned commit a74df318. The verifier keeps its
 # own copy so that a change to the harness can never loosen what intake accepts.
 ITEM_SCHEMA_PARSED_BY = "csoai.runpod-gspc-item-evidence/0.2"
+ITEM_SCHEMA_REASONED = "csoai.runpod-gspc-item-evidence/0.3"
+"""The row schema for a run that measured the reasoning channel.
+
+Three versions, keyed on two independent facts: which reader read the labels
+(exact vs read-label) and whether the reasoning channel was measured.
+exact+no -> 0.1. read-label+no -> 0.2. either+reasoning -> 0.3. There is no
+fourth version for "reasoning plus a swapped parser": a row already carries
+label_parser, parse_reason and parse_confidence when the parser was swapped,
+so 0.3 says exactly one extra thing -- this row may carry a reasoning block.
+"""
 ITEM_PARSER_FIELDS = frozenset({"label_parser", "parse_reason", "parse_confidence"})
+ITEM_REASONING_FIELDS = frozenset({"reasoning"})
+"""The row key a reasoning run adds. Absent from every row of a run that did
+not measure the channel, because the row key set is compared EXACTLY."""
+REASONING_DESCRIPTOR_FIELDS = frozenset(
+    {"channel", "request_think", "response_field", "graded"}
+)
+"""The instrument's reasoning declaration: what was asked of Ollama, where the
+answer comes back, and that it was not graded."""
+REASONING_ROW_FIELDS = frozenset({"present", "sha256", "chars", "field"})
+"""One item's measurement of the channel. A digest and a length, never the
+prose: thinking is never graded and never stored."""
+REASONING_CHANNEL = "ollama-think"
+REASONING_RESPONSE_FIELD = "thinking"
 READER_COMMIT = "a74df3185fcdfa10ac8a0a6e5ecca2aff9051470"
 READ_LABEL_PARSER_ID = "read-label-v1"
 READ_LABEL_RULE = "think-stripped-answer-prefix-last-line-exact-v1"
@@ -282,6 +315,15 @@ def _ruled_instrument_id(
     instrument_id = run.get("instrument_id")
     if instrument_id is not None:
         return instrument_id if instrument_id in RULED_INSTRUMENT_IDS else None
+    # A run that measured the reasoning channel has a DIFFERENT instrument from
+    # the one this legacy test recognises: the request asked Ollama for the
+    # thinking stream, so the bytes that were sent are not the bytes a plain
+    # run sent, and instrument_sha256 says so. Inferring the t128 identity from
+    # the decode alone would name an instrument nobody measured, so it is not
+    # done. No ruling covers a reasoning instrument yet; UNRULED_INSTRUMENT is
+    # the honest answer.
+    if "reasoning" in instrument:
+        return None
     decode = instrument.get("decode")
     if not isinstance(decode, dict):
         return None
@@ -298,6 +340,69 @@ def _ruled_instrument_id(
     return None
 
 
+def _check_reasoning_descriptor(value: Any) -> None:
+    """The instrument's reasoning declaration, pinned. Fails closed.
+
+    The declaration says what was asked of Ollama and where the answer comes
+    back. It may not claim the channel was requested when it was not, and it
+    may not claim the reasoning was graded: thinking is never graded and never
+    stored, so `graded` is False by construction and a descriptor that says
+    otherwise is a lie about how the run was made.
+    """
+    if not isinstance(value, dict) or set(value) != REASONING_DESCRIPTOR_FIELDS:
+        raise IntakeError(
+            "BAD_INSTRUMENT", "instrument reasoning declaration has the wrong shape"
+        )
+    if (
+        value.get("channel") != REASONING_CHANNEL
+        or value.get("response_field") != REASONING_RESPONSE_FIELD
+        or value.get("request_think") is not True
+        or value.get("graded") is not False
+    ):
+        raise IntakeError(
+            "BAD_INSTRUMENT", "instrument reasoning declaration is not the pinned channel"
+        )
+
+
+def _check_reasoning_record(value: Any) -> None:
+    """One item's measurement of the reasoning channel. Fails closed.
+
+    The record is a MEASUREMENT: was the channel there, how long, and what is
+    its digest. The prose was never stored, so the digest cannot be recomputed
+    from anything -- it is checked for shape, and for agreeing with the
+    instrument about which field the channel came back in.
+    """
+    if not isinstance(value, dict) or set(value) != REASONING_ROW_FIELDS:
+        raise IntakeError(
+            "BAD_REASONING", "item reasoning record is not the pinned shape"
+        )
+    present = value.get("present")
+    digest = value.get("sha256")
+    chars = value.get("chars")
+    if present is not True and present is not False:
+        raise IntakeError(
+            "BAD_REASONING", "item reasoning record present flag is not a boolean"
+        )
+    if present:
+        if not isinstance(digest, str) or not SHA256_RE.fullmatch(digest):
+            raise IntakeError(
+                "BAD_REASONING", "item reasoning digest is not a sha256"
+            )
+        if type(chars) is not int or chars < 0:
+            raise IntakeError(
+                "BAD_REASONING", "item reasoning length is not a character count"
+            )
+    elif digest is not None or chars is not None:
+        raise IntakeError(
+            "BAD_REASONING",
+            "an absent reasoning channel carries no digest and no length",
+        )
+    if value.get("field") != REASONING_RESPONSE_FIELD:
+        raise IntakeError(
+            "BAD_REASONING", "item reasoning record names another response field"
+        )
+
+
 def _check_instrument_identity(run: dict[str, Any], instrument: dict[str, Any]) -> str:
     """Return the label reader ("exact" or "read-label") after pinning identity.
 
@@ -309,6 +414,14 @@ def _check_instrument_identity(run: dict[str, Any], instrument: dict[str, Any]) 
     max_tokens = decode.get("max_tokens") if isinstance(decode, dict) else None
     if type(max_tokens) is not int:
         raise IntakeError("BAD_INSTRUMENT", "decode max_tokens is not an integer")
+
+    # The reasoning channel is read off the INSTRUMENT, because the instrument is
+    # what instrument_sha256 hashes: a run that measured the channel has a
+    # different instrument from a run that did not, and the gate has to be able
+    # to tell them apart from the bytes alone.
+    has_reasoning = "reasoning" in instrument
+    if has_reasoning:
+        _check_reasoning_descriptor(instrument.get("reasoning"))
 
     instrument_parser = instrument.get("label_parser", None)
     has_instrument_parser = "label_parser" in instrument
@@ -345,6 +458,16 @@ def _check_instrument_identity(run: dict[str, Any], instrument: dict[str, Any]) 
         if reader == "read-label":
             raise IntakeError(
                 "BAD_INSTRUMENT_ID", "a read-label run must carry its pinned instrument id"
+            )
+        if has_reasoning:
+            # The reasoning channel CHANGED the instrument: the request asked
+            # Ollama for the thinking stream, so the bytes that were sent are not
+            # the bytes a plain run sent. A run whose instrument differs from
+            # every pinned one must say which instrument it used, exactly like a
+            # read-label run does. Otherwise the receipt would claim an
+            # instrument identity that nobody pinned.
+            raise IntakeError(
+                "BAD_INSTRUMENT_ID", "a reasoning run must carry its pinned instrument id"
             )
         return reader
     if instrument_id == EXACT_LABEL_T128_ID:
@@ -652,6 +775,86 @@ def _load_allowlist(path: Path, source_dir: Path) -> tuple[set[tuple[str, str]],
     return allowed, sha256_bytes(snapshot.raw)
 
 
+@dataclass(frozen=True)
+class _FrozenBankSnapshot:
+    """Path-shaped, read-only adapter for the already bounded trusted bytes.
+
+    The existing worker loader consumes this snapshot instead of rereading a
+    mutable path. It retains the actual source suffix and exact bytes; it never
+    reconstructs a bank from transferred evidence.
+    """
+
+    raw: bytes
+    suffix: str
+
+    def is_symlink(self) -> bool:
+        return False
+
+    def read_bytes(self) -> bytes:
+        return self.raw
+
+
+def _load_trusted_bank(
+    path: Path | None,
+    source_dir: Path,
+    bank_sha256: str,
+    labels: tuple[str, ...],
+) -> list[Any]:
+    if path is None:
+        raise IntakeError(
+            "MISSING_TRUSTED_BANK", "control-plane trusted bank bytes are required"
+        )
+    _require_absolute_clean_path(path, "trusted bank")
+    if path.is_symlink() or _is_within(path.resolve(strict=False), source_dir):
+        raise IntakeError(
+            "UNTRUSTED_BANK_PATH", "trusted bank must be separate from the transferred run"
+        )
+    snapshot = _safe_snapshot(path, MAX_ITEMS_BYTES, "BAD_TRUSTED_BANK")
+    if sha256_bytes(snapshot.raw) != bank_sha256:
+        raise IntakeError(
+            "TRUSTED_BANK_DIGEST_MISMATCH",
+            "trusted bank bytes do not match the allowlisted run digest",
+        )
+
+    # Reuse only the existing frozen-bank loader and prompt adapter. Importing
+    # this stdlib-only module does not run its guarded worker entry point.
+    module_name = "_runpod_gspc_intake_bank_worker"
+    worker = sys.modules.get(module_name)
+    if worker is None:
+        spec = importlib.util.spec_from_file_location(
+            module_name, Path(__file__).resolve().with_name("runpod_gspc_worker.py")
+        )
+        if spec is None or spec.loader is None:
+            raise IntakeError("TRUSTED_BANK_UNCHECKABLE", "frozen-bank loader unavailable")
+        worker = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = worker
+        spec.loader.exec_module(worker)
+    config = SimpleNamespace(
+        bank_path=_FrozenBankSnapshot(snapshot.raw, path.suffix),
+        expected_bank_sha256=bank_sha256,
+        allowed_labels=labels,
+    )
+    try:
+        items, loaded_sha256 = worker.load_frozen_bank(config)
+    except worker.WorkerError as error:
+        raise IntakeError(
+            "TRUSTED_BANK_UNSUPPORTED",
+            "trusted bank is not supported by the pinned worker loader",
+        ) from error
+    if loaded_sha256 != bank_sha256:
+        raise IntakeError("TRUSTED_BANK_DIGEST_MISMATCH", "bank loader digest disagrees")
+    return [
+        (
+            item.item_id,
+            worker.compose_prompt(item, labels),
+            item.expected,
+            item.predicate,
+            list(item.required_keywords),
+        )
+        for item in items
+    ]
+
+
 def _validate_source_directory(path: Path) -> dict[str, Snapshot]:
     _require_absolute_clean_path(path, "run directory")
     try:
@@ -742,6 +945,8 @@ def _parse_items(
     model_digest: str,
     instrument_sha256: str,
     instrument: dict[str, Any],
+    trusted_bank_path: Path | None,
+    source_dir: Path,
     reader: str = "exact",
 ) -> ItemCounts:
     if not raw.endswith(b"\n") or raw.startswith(b"\n"):
@@ -790,9 +995,20 @@ def _parse_items(
 
     graders = instrument.get("graders")
     keyword_grader = graders.get("keyword_match") if isinstance(graders, dict) else None
+    trusted_items = _load_trusted_bank(trusted_bank_path, source_dir, bank_sha256, labels)
     correct = 0
     parse_errors = 0
     seen_items: set[str] = set()
+    # Two independent facts fix a row's schema and its key set: which reader
+    # read the labels, and whether the reasoning channel was measured. A run
+    # that measured the channel says so on EVERY row, because "the channel was
+    # there" and "the channel was silent" are both measurements.
+    has_reasoning = "reasoning" in instrument
+    pinned_schema = (
+        ITEM_SCHEMA_REASONED
+        if has_reasoning
+        else (ITEM_SCHEMA if reader == "exact" else ITEM_SCHEMA_PARSED_BY)
+    )
     for index, line in enumerate(lines, 1):
         if not line.endswith(b"\n") or line == b"\n":
             raise IntakeError(
@@ -802,7 +1018,13 @@ def _parse_items(
             parse_json_bytes(line, "BAD_ITEM_ROW"), "BAD_ITEM_ROW", "item row"
         )
         if reader == "read-label":
-            _require_exact_keys(row, ITEM_FIELDS | ITEM_PARSER_FIELDS, "item row")
+            expected_row_keys = ITEM_FIELDS | ITEM_PARSER_FIELDS
+        else:
+            expected_row_keys = set(ITEM_FIELDS)
+        if has_reasoning:
+            expected_row_keys = expected_row_keys | ITEM_REASONING_FIELDS
+        _require_exact_keys(row, expected_row_keys, "item row")
+        if reader == "read-label":
             if (
                 row.get("label_parser") != READ_LABEL_PARSER_ID
                 or row.get("parse_confidence") is not None
@@ -814,12 +1036,12 @@ def _parse_items(
                 raise IntakeError(
                     "BAD_LABEL_PARSER", "item parser record is not read-label-v1"
                 )
-        else:
-            _require_exact_keys(row, ITEM_FIELDS, "item row")
+        if has_reasoning:
+            _check_reasoning_record(row.get("reasoning"))
         if canonical_json_bytes(row) + b"\n" != line:
             raise IntakeError("NON_CANONICAL_ITEM", "item row is not canonical JSON")
         pinned = {
-            "schema": ITEM_SCHEMA if reader == "exact" else ITEM_SCHEMA_PARSED_BY,
+            "schema": pinned_schema,
             "run_id": run_id,
             "sequence": index,
             "axis": axis,
@@ -845,6 +1067,22 @@ def _parse_items(
             or row.get("prompt_sha256") != sha256_bytes(prompt.encode("utf-8"))
         ):
             raise IntakeError("PROMPT_HASH_MISMATCH", "item prompt hash does not match")
+        if index > len(trusted_items):
+            raise IntakeError("BANK_COVERAGE_MISMATCH", "run exceeds its frozen bank")
+        trusted_id, trusted_prompt, trusted_expected, trusted_predicate, trusted_keywords = (
+            trusted_items[index - 1]
+        )
+        if item_id != trusted_id:
+            raise IntakeError("BANK_ITEM_MISMATCH", "item ID or order differs from frozen bank")
+        if prompt != trusted_prompt:
+            raise IntakeError("BANK_PROMPT_MISMATCH", "prompt differs from frozen bank adapter")
+        if row.get("expected") != trusted_expected:
+            raise IntakeError("BANK_EXPECTED_MISMATCH", "answer key differs from frozen bank")
+        if (
+            row.get("predicate") != trusted_predicate
+            or row.get("required_keywords") != trusted_keywords
+        ):
+            raise IntakeError("BANK_PREDICATE_MISMATCH", "predicate differs from frozen bank")
         if row.get("decode") != expected_decode:
             raise IntakeError(
                 "ROW_PIN_MISMATCH", "item decode does not match instrument"
@@ -943,6 +1181,12 @@ def _parse_items(
             raise IntakeError("GRADE_MISMATCH", "stored grade does not recompute")
         correct += int(computed_grade)
 
+    if len(lines) != len(trusted_items):
+        raise IntakeError(
+            "BANK_COVERAGE_MISMATCH",
+            "a complete run must contain all supported items from its exact pinned bank",
+        )
+
     return ItemCounts(
         attempted=len(lines),
         transport_ok=len(lines),
@@ -964,6 +1208,7 @@ def _validate_semantics(
     snapshots: dict[str, Snapshot],
     allowed_banks: set[tuple[str, str]],
     allowlist_sha256: str,
+    trusted_bank_path: Path | None = None,
 ) -> dict[str, Any]:
     run = _require_dict(
         parse_json_bytes(snapshots["run"].raw, "BAD_RUN"), "BAD_RUN", "run"
@@ -1094,6 +1339,8 @@ def _validate_semantics(
         model_digest=model_digest,
         instrument_sha256=instrument_sha256,
         instrument=instrument,
+        trusted_bank_path=trusted_bank_path,
+        source_dir=source_dir.resolve(strict=False),
         reader=reader,
     )
     run_counts = _require_dict(run.get("counts"), "BAD_COUNTS", "run counts")
@@ -1229,6 +1476,7 @@ def _validate_semantics(
         "card_file_sha256": sha256_bytes(snapshots["card"].raw),
         "card_id": card_id,
         "bank_allowlist_sha256": allowlist_sha256,
+        "trusted_bank_sha256": bank_sha256,
     }
     bundle_sha256 = sha256_bytes(
         canonical_json_bytes(
@@ -1251,6 +1499,7 @@ def _validate_semantics(
         "subject": subject,
         "model_manifest_digest": model_digest,
         "bank_sha256": bank_sha256,
+        "bank_binding": "trusted-exact-bytes-and-complete-item-set-v1",
         "card_hash_mode": card_hash_mode,
         "source_hashes": source_hashes,
         "counts": expected_counts,
@@ -1281,7 +1530,10 @@ def _write_private_file(path: Path, raw: bytes) -> None:
 
 
 def verify_to_quarantine(
-    run_dir: Path, allowlist_path: Path, quarantine_root: Path
+    run_dir: Path,
+    allowlist_path: Path,
+    quarantine_root: Path,
+    trusted_bank_path: Path | None = None,
 ) -> tuple[Path, dict[str, Any]]:
     run_dir = _require_absolute_clean_path(run_dir, "run directory")
     quarantine_root = _require_absolute_clean_path(quarantine_root, "quarantine root")
@@ -1294,7 +1546,7 @@ def verify_to_quarantine(
     snapshots = _validate_source_directory(run_dir)
     allowed_banks, allowlist_sha256 = _load_allowlist(allowlist_path, source_resolved)
     verification = _validate_semantics(
-        run_dir, snapshots, allowed_banks, allowlist_sha256
+        run_dir, snapshots, allowed_banks, allowlist_sha256, trusted_bank_path
     )
 
     if quarantine_root.exists():
@@ -1342,6 +1594,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", required=True, type=Path)
     parser.add_argument("--bank-allowlist", required=True, type=Path)
+    parser.add_argument(
+        "--trusted-bank",
+        type=Path,
+        help="separate control-plane frozen bank bytes; required for verification",
+    )
     parser.add_argument("--quarantine-root", required=True, type=Path)
     return parser
 
@@ -1350,7 +1607,7 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         destination, verification = verify_to_quarantine(
-            args.run_dir, args.bank_allowlist, args.quarantine_root
+            args.run_dir, args.bank_allowlist, args.quarantine_root, args.trusted_bank
         )
     except IntakeError as error:
         print(f"REJECT {error.code}: {error}", file=sys.stderr)

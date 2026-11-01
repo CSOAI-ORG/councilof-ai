@@ -1,0 +1,246 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "regulatory-framework",
+  "specialist": {
+    "id": "meok-regulatory-framework-specialist",
+    "cluster_id": "meok-axis-regulatory-framework",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit public regulatory-framework facts with source dates and jurisdiction boundaries, never converting a framework reference into a legal conclusion.",
+    "reviewer_role": "regulatory evidence reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "jurisdiction labels",
+    "source effective dates",
+    "framework-to-subject mapping",
+    "unsigned run state"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-09-17T12:58:11Z",
+      "source": "/interop/financial-measure-run-regulatory-framework.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "74df3f149597a9a3030a46cd24f63e41802405f0a9860ce0c711c3726503dab6",
+    "axis_row": {
+      "axis": "regulatory-framework",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-regulatory-framework",
+      "bench": "RegimeFacts",
+      "task": "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)",
+      "status": "MEASURED",
+      "evidence_url": "/interop/financial-measure-run-regulatory-framework.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "colour": "#fbbf24",
+      "hue": 43,
+      "note": "MEASURED v0.3 for declaration presence on a retrieved URL, over the live XRPL reader-16. 4 PASS, 3 FAIL, 9 UNCHECKABLE (no on-chain Domain; UNREACHABLE is never FAIL). Never compliance. Risk verdict UNMEASURED. Not a rating.",
+      "method_status": "legacy: n 16",
+      "facts_as_of": "2026-09-17T12:58:11Z",
+      "facts_status": "MEASURED",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "source": "/interop/financial-measure-run-regulatory-framework.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-regulatory-framework"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist regulatory-framework audits only the regulatory-framework row",
+      "evidence": "regulatory-framework"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-regulatory-framework; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "FACT_RUN_STATE",
+      "state": "PASS",
+      "detail": "deterministic-facts run with n=16 issuer accounts (not bank items)"
+    },
+    {
+      "id": "FACT_LINEAGE",
+      "state": "PASS",
+      "detail": "run artifact and fact timestamp are published"
+    },
+    {
+      "id": "RUN_ATTESTATION",
+      "state": "FINDING",
+      "detail": "run artifact is CONTENT_ADDRESSED_UNSIGNED; content identity is not a signature"
+    },
+    {
+      "id": "NO_MODEL_RANKING",
+      "state": "PASS",
+      "detail": "deterministic facts carry no model leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "FINDING",
+      "detail": "legacy: n 16"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 6,
+    "declared": 0,
+    "findings": 2,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "apply one jurisdiction's framework globally and require scope failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "drop facts_as_of and require freshness to become UNCHECKABLE",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "regulatory-framework-proposal-1",
+      "proposal": "add jurisdiction and effective-date regression fixtures",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "regulatory-framework-proposal-2",
+      "proposal": "sign the next framework-facts run and publish source diffs",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_regulatory-framework",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/regulatory-framework",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "regulatory evidence reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "f738995f16f7648c9e56b58582faa392a72bca61b0a6c9e20a64a62510d700f7",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 14,
+        "title": "Regulatory determination is outside CSOAI"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "evidence_url",
+      "facts_as_of",
+      "facts_status",
+      "run_attestation",
+      "n_unit"
+    ],
+    "measurement_url": "/api/gspc/axis/regulatory-framework",
+    "competency_url": "/api/hitl/modules/regulatory-framework",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}

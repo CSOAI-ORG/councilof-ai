@@ -128,12 +128,16 @@ jobs:
           # where it was, which would reconcile the candidate against whichever master the
           # checkout happened to see.
           git fetch origin +refs/heads/master:refs/remotes/origin/master
-          if [ -f scripts/root_candidate_reconcile.py ]; then
-            reconcile=scripts/root_candidate_reconcile.py
-          else
-            reconcile=/tmp/root_candidate_reconcile.py
-            git show origin/master:scripts/root_candidate_reconcile.py > "$reconcile"
-          fi
+          # The TOOL is ALWAYS taken from master, even when the candidate's tree has a copy.
+          # The candidate's copy is whatever was on the branch when it was last merged, and
+          # the tool's behaviour is part of what decides a merge: on 2026-10-29 the tool
+          # learned that a re-stamped artefact resolves to master's bytes and master's proof,
+          # and the candidate's stale copy would have failed closed on the SBOM instead.
+          # A stale tool is a silent wrong answer. The comment above states the intent —
+          # "the TOOL is taken from master; the TREE it works on is the candidate's" — and
+          # this is that comment made true.
+          reconcile=/tmp/root_candidate_reconcile.py
+          git show origin/master:scripts/root_candidate_reconcile.py > "$reconcile"
           # The merge, the derived-view conflict resolution and the rebuild order live in
           # that script, which has a --selftest that proves each failure goes red. The
           # logic is not inline shell here, because inline shell in the root path is
@@ -217,25 +221,60 @@ jobs:
           # llms.txt, so the candidate could not pass the gate and could not merge.
           # Regenerate the views from the manifest just written.
           node scripts/llms-txt.mjs
+          # public/reports/* is DERIVED from the tree as well, and it is registered in
+          # docs/operations/PRODUCERS.json, so pr-gates' producers-check compares its
+          # committed output against its producer and fails closed when the bytes move
+          # without a rebuild. The candidate rebuilt the proof bytes, so it disagreed with
+          # its producer and the candidate could not pass the gate. Measured on head
+          # 33c16eea, before the new leaf existed: "axis-reports --check: 2 stale path(s)
+          # under public/reports". Regenerate it from the bytes in this commit, the same
+          # way the manifest and the llms views are regenerated.
+          #
+          # The SBOM is NOT regenerated here, and that is deliberate. The SBOM is STAMPED:
+          # public/interop/sbom-councilof-ai.json has a sibling
+          # public/interop/sbom-councilof-ai.json.ots that proves those exact bytes.
+          # scripts/gen_sbom.py embeds a generation timestamp and the generation commit, so
+          # every run produces different bytes and invalidates the inherited proof.
+          # Measured 2026-10-29: this step regenerated the SBOM, the candidate's
+          # stamped-bytes check went red with "STAMPED BYTES CHANGED WITHOUT A NEW PROOF:
+          # public/interop/sbom-councilof-ai.json now hashes to 84b4968f..., but
+          # public/interop/sbom-councilof-ai.json.ots still proves 33642026...", and the
+          # candidate could not merge.
+          #
+          # A stamped file must not be regenerated in place. The candidate carries master's
+          # stamped SBOM forward unchanged — the reconcile step above merges master into the
+          # candidate, and a re-stamped artefact resolves to master's bytes AND master's
+          # proof — so those bytes still match the proof beside them. Re-stamping is a
+          # separate, explicit act: regenerate the SBOM, mint a fresh proof for it, and
+          # commit both together. The SBOM is therefore not added to the commit below.
+          node scripts/build-axis-reports.mjs
           git add public/interop/ots
           git add -- public/llms.txt public/llms-full.txt
           git add public/interop/root-*.json.ots
           git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json
+          git add public/reports
           git add public/interop/stablecoin-universe-2026-09/readiness.json public/archive/index.json
           if ! git diff --cached --quiet; then
             git commit -m "public-root: upgrade exact candidate to Bitcoin-confirmed"
             git push origin "HEAD:$BRANCH"
           fi
 
-      # Master's branch protection requires a pull request but no status check (read in repo
-      # settings on 6 Oct 2026: "Require status checks to pass before merging" is off). So the
-      # `gh pr merge --auto` this step used to run did not wait for pr-gates: on a pull request
-      # with nothing required it merges at once, ungated. A pull request opened with GITHUB_TOKEN
-      # also starts no pull_request workflow, so no check runs on it unless dispatched. Single
-      # writer means a GATED pull request, so the gate is made binding here: run pr-gates on THIS
-      # head commit, wait for it in this job, and merge only that commit and only on success.
+      # Master's branch protection DID require no status check when this step was written
+      # (read in repo settings on 6 Oct 2026: "Require status checks to pass before merging" was
+      # off). It no longer does. Measured 2026-10-26: strict=true, and the required contexts are
+      # gates, build, stamped-bytes and hold-guard - so `gh pr merge --auto` is not enough on its
+      # own and the merge has to wait for those four on the exact head. A pull request opened with
+      # GITHUB_TOKEN also starts no pull_request workflow, so no check runs on it unless dispatched.
+      # Single writer means a GATED pull request, so the gate is made binding here: run pr-gates on
+      # THIS head commit, wait for it in this job, and merge only that commit and only on success.
       # Waiting in-job matters: the refresh step above re-witnesses on every confirmed tick, so the
       # head moves between ticks and a pass recorded on an older commit must never merge a newer one.
+      #
+      # `build` comes from the CI workflow, not from pr-gates, and runs on this repo arrive as
+      # `action_required` until they are approved. An unapproved run produces NO check run, so its
+      # context reads as absent rather than failed, and the merge is refused with "the base branch
+      # policy prohibits the merge" while every gate that did run is green. The gate tool approves
+      # every gated run for these bytes, not only the one it watches.
       - name: Merge only after pr-gates passed on these exact bytes
         if: steps.ots.outputs.confirmed == 'true'
         timeout-minutes: 50

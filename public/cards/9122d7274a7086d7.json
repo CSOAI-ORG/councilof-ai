@@ -1,0 +1,111 @@
+{
+  "card": {
+    "as_of": "2026-10-26T02:12:31Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "check_counts": {
+        "FAILURE": 19,
+        "INFO": 1,
+        "SUCCESS": 22
+      },
+      "checks": "https://councilof.ai/interop/mcp-conformance-2026-10/checks/councilof.ai_mcp_free__alpha-2026-07-28.json",
+      "checks_sha256": "59a0ac201a4d8da1441ff181ec8afc04aad4f053d5c7685f98bdc40177fb9902",
+      "deviation_checks": [
+        "CompletionComplete",
+        "DNSRebindingRejected",
+        "LocalhostHostAccepted",
+        "PromptsGetEmbeddedResource",
+        "PromptsGetSimple",
+        "PromptsGetWithArgs",
+        "PromptsGetWithImage",
+        "PromptsList",
+        "ResourcesList",
+        "ResourcesReadBinary",
+        "ResourcesReadText",
+        "ResourcesTemplateRead",
+        "ToolsCallAudio",
+        "ToolsCallEmbeddedResource",
+        "ToolsCallError",
+        "ToolsCallImage",
+        "ToolsCallMixedContent",
+        "ToolsCallSimpleText",
+        "ToolsCallWithProgress"
+      ],
+      "instrument": "alpha-2026-07-28",
+      "instrument_channel": "alpha",
+      "kind": "csoai.mcp-conformance/0.1",
+      "not_a_grade": true,
+      "report": "https://councilof.ai/interop/mcp-conformance-2026-10/report.json",
+      "run_state": "RUN_DEVIATIONS",
+      "scenarios": 20,
+      "spec_version": "2026-07-28",
+      "state": "PROBED",
+      "subject_id": "councilof.ai/mcp/free",
+      "suite_version": "0.2.0-alpha.12"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9122d7274a7086d7267c5141619971d898599f51f9e1ab189c173e9e5cefeee1",
+    "sig_ed25519": "cc6c9e80a62ecdcc45409b66be762ff8bc64c0152a171514911ccdd4aa99df0f4a2101b06e78cb735f3b3f09578485c01ca9ab4127b52cea7381d6ffe88f5502",
+    "source_urls": [
+      "https://councilof.ai/mcp/free",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/checks/councilof.ai_mcp_free__alpha-2026-07-28.json",
+      "https://councilof.ai/interop/mcp-conformance-2026-10/report.json"
+    ],
+    "subject": "MCP conformance run alpha-2026-07-28 for councilof.ai/mcp/free",
+    "surface": "public.notice",
+    "tags": [
+      "mcp",
+      "conformance",
+      "probe",
+      "mcp-conformance-2026-10"
+    ],
+    "unmeasured": [
+      "behaviour under load",
+      "scenarios outside the frozen spec version",
+      "subjects outside the pinned set"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "637f718630fa085aed249c58934f41ccc93f5db6a801b84ea57874d7a963abea",
+    "c17bb8f3862ef92a61341051b9c7e34d476e764082931d7a875606517eddff18",
+    "cf81be7f58a06ecc352a21f57a5132004317f67a9136057724284b126b98a297",
+    "8049354141eb239cc37d5b88fa0384ed4771ee1a56aa4b52d536d44476120736",
+    "3420678806bfaf27183196a32ad62e57bb35281525f345218fa16249fb179667",
+    "b8042d07e63764bd906ae2950325cfb804121bd3fb741854a3c94ba634a3a281",
+    "9775c31fa2de1dac387043fbcfc514bd91be2ffde5e9d5b14e85859cf4ac2dd4",
+    "32a67cbf7902dbc574c34e4c4033f4242985956f081fbba7fba8291fbf5efa83",
+    "64b80cfb5eaf6db74b79d27190fdc9010eda89d74fc5133ba5441211a67d9fea"
+  ]
+}

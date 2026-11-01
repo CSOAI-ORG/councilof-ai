@@ -363,11 +363,13 @@ export default function About() {
             <Badge className="mb-4 bg-blue-50 text-blue-600 border-blue-200">Global Coverage</Badge>
             <h2 className="text-4xl font-bold mb-6">What is crosswalked, and what is only tracked</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
-              Our published, signed crosswalk maps one measurement across four regimes: the EU AI
-              Act, the UK DRCF alignment, Illinois SB 315, and the Chinese TC260 alignment. That
-              file is at <code>/crosswalk/east-west-v1.json</code> and it is the whole of what is
-              crosswalked today. We track and write about many more jurisdictions than four; those
-              are reference pages, not crosswalked measurement, and this page will not blur the two.
+              Our published, signed crosswalk maps one measurement across four regimes: the EU —
+              where the EU AI Act is mapped alongside GDPR, the Cyber Resilience Act, DORA, NIS2
+              and CSRD — the UK DRCF alignment, Illinois SB 315, and the Chinese TC260 alignment.
+              That file is at <code>/crosswalk/east-west-v1.json</code> and it is the whole of what
+              is crosswalked today. We track and write about many more jurisdictions than four;
+              those are reference pages, not crosswalked measurement, and this page will not blur
+              the two.
             </p>
           </div>
 
