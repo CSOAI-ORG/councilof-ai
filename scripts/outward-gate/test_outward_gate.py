@@ -72,6 +72,39 @@ class TestCurrency(unittest.TestCase):
         r = g.currency_numbers("This line read 22·22·0 until the ruling.", self.LIVE, "x")
         self.assertEqual(r["status"], g.NA, r)
 
+    # GET https://councilof.ai/api/gspc `totals`, read 2026-10-13T07:02Z, with its 23 MEASURED axis rows.
+    LIVE_TOTALS = {"axes": 23, "measured_axes": 23, "unmeasured_axes": 0, "public_count": "23 axes \u00b7 23 measured"}
+
+    def board(self, **totals):
+        return {"totals": dict(self.LIVE_TOTALS, **totals), "axes": [{"status": "MEASURED"}] * 23}
+
+    def test_live_public_count_derives_from_the_axis_array(self):
+        # The gate composed "23 axis \u00b7 23 measured" and failed the live line from 30 Sep 2026 on.
+        self.assertEqual(g.gspc_totals_problems(self.board()), [])
+        self.assertEqual(g.axis_count_line(23, 23), "23 axes \u00b7 23 measured")
+        self.assertEqual(g.axis_count_line(1, 1), "1 axis \u00b7 1 measured")
+        self.assertEqual(g.axis_count_line(2, 0), "2 axes \u00b7 0 measured")
+
+    def test_wrong_public_count_still_fails(self):
+        for doctored in ("23 axes \u00b7 22 measured", "22 axes \u00b7 23 measured", "23 axis \u00b7 23 measured", "stale"):
+            probs = g.gspc_totals_problems(self.board(public_count=doctored))
+            self.assertEqual(len(probs), 1, (doctored, probs))
+            self.assertIn("public_count", probs[0])
+        self.assertTrue(g.gspc_totals_problems(self.board(measured_axes=22)))
+        one_empty = {"totals": dict(self.LIVE_TOTALS), "axes": [{"status": "MEASURED"}] * 22 + [{"status": "UNMEASURED"}]}
+        self.assertTrue(g.gspc_totals_problems(one_empty))
+
+    def test_count_line_follows_its_producer(self):
+        # The line has one composer. If its wording changes there, this fails in the same pull request
+        # instead of the gate failing the live board for two weeks.
+        p = os.path.join(g.REPO, "functions", "api", "_boardCounts.ts")
+        if not os.path.exists(p):
+            self.skipTest("functions/api/_boardCounts.ts not in this checkout")
+        with open(p, encoding="utf-8") as f:
+            src = f.read()
+        self.assertIn('(n === 1 ? "axis" : "axes")', src)
+        self.assertIn("`${axes} ${axisWord(axes)} \u00b7 ${measured} measured`", src)
+
 
 class TestAccountability(unittest.TestCase):
     OBF = ('<footer><a href="/cdn-cgi/l/email-protection#1a2b">[email&#160;protected]</a> CSOAI Ltd. '
@@ -146,6 +179,187 @@ class TestIntegrity(unittest.TestCase):
         self.assertEqual(Status.of(g.ots_state_check(d, {"record.v0.1.1.json.ots": ots_bytes(d)}, st, "x"), "integrity.ots_state_truthful"), [g.PASS])
         # must-fail control: the whole README (which claims Bitcoin for record.json) would have failed it
         self.assertEqual(Status.of(g.ots_state_check(d, {"record.v0.1.1.json.ots": ots_bytes(d)}, "BITCOIN_ATTESTED at block 5", "x"), "integrity.ots_state_truthful"), [g.FAIL])
+
+
+# ---- A2A agent card signature (A2A specification 8.4). The expected signed form is WRITTEN OUT BY HAND
+# below, never computed by the gate, so the gate cannot agree with itself about what was signed.
+CARD_KID = "did:web:csoai.org#card-attestation-2"
+
+
+def a2a_card():
+    """Shaped like the served card: one default-valued field of each presence kind."""
+    return {
+        "name": "T", "description": "d", "version": "1.0.0",
+        "provider": {"organization": "CSOAI Ltd", "url": "https://councilof.ai"},
+        "supportedInterfaces": [{"url": "https://councilof.ai/api/a2a", "protocolBinding": "JSONRPC",
+                                 "protocolVersion": "1.0", "tenant": ""}],                 # plain string, default
+        "capabilities": {"streaming": False, "pushNotifications": False,                   # `optional`, set
+                         "extensions": [{"uri": "https://e/x", "required": False, "description": "x"}]},  # plain bool
+        "defaultInputModes": ["text/plain"], "defaultOutputModes": ["text/plain"],
+        "skills": [{"id": "s", "name": "S", "description": "sd", "tags": [], "examples": []}],  # REQUIRED [] / plain []
+        "explicitly_not": ["grading"],                                               # not in the proto
+    }
+
+
+def a2a_signed_form():
+    """What A2A 8.4.3 step 3 leaves of a2a_card(): `tenant: ""`, `required: false` and `examples: []` are
+    gone (no presence, default value). `streaming: false` (optional, set), `tags: []` (REQUIRED) and
+    `explicitly_not` (unknown to the proto) stay."""
+    return {
+        "name": "T", "description": "d", "version": "1.0.0",
+        "provider": {"organization": "CSOAI Ltd", "url": "https://councilof.ai"},
+        "supportedInterfaces": [{"url": "https://councilof.ai/api/a2a", "protocolBinding": "JSONRPC", "protocolVersion": "1.0"}],
+        "capabilities": {"streaming": False, "pushNotifications": False,
+                         "extensions": [{"uri": "https://e/x", "description": "x"}]},
+        "defaultInputModes": ["text/plain"], "defaultOutputModes": ["text/plain"],
+        "skills": [{"id": "s", "name": "S", "description": "sd", "tags": []}],
+        "explicitly_not": ["grading"],
+    }
+
+
+def card_keypair(kid=CARD_KID):
+    sk = ed25519.Ed25519PrivateKey.generate()
+    raw = sk.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    return sk, g.Did({"id": "did:web:csoai.org", "verificationMethod": [{
+        "id": kid, "type": "JsonWebKey2020",
+        "publicKeyJwk": {"kty": "OKP", "crv": "Ed25519", "x": base64.urlsafe_b64encode(raw).rstrip(b"=").decode()}}]})
+
+
+def sign_a2a(sk, card, signed_form, kid=CARD_KID):
+    """Serve `card`, sign `signed_form`: JWS over b64u(protected) + "." + b64u(sorted-key compact JSON)."""
+    e = lambda b: base64.urlsafe_b64encode(b).rstrip(b"=").decode()
+    j = lambda o: json.dumps(o, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+    prot = e(j({"alg": "EdDSA", "kid": kid, "typ": "JOSE"}))
+    out = dict(card)
+    out["signatures"] = [{"protected": prot, "signature": e(sk.sign((prot + "." + e(j(signed_form))).encode()))}]
+    return out
+
+
+class TestAgentCardSignature(unittest.TestCase):
+    """integrity.agent_card_signed. Before 2026-10-13 the gate canonicalised the card as served and so
+    failed every card that carries a default-valued property and is signed the way A2A 8.4 says."""
+
+    def setUp(self):
+        self.sk, self.did = card_keypair()
+        self.card = sign_a2a(self.sk, a2a_card(), a2a_signed_form())
+
+    def ok(self, card, did=None):
+        return g.verify_jws_card(card, did or self.did, None)
+
+    def test_card_signed_per_a2a_8_4_verifies(self):
+        ok, det = self.ok(self.card)
+        self.assertTrue(ok, det)
+        self.assertIn(CARD_KID, det)
+
+    def test_default_valued_property_is_not_signed_content(self):
+        # served without `"required": false`: the same payload, so the same signature still verifies
+        c = json.loads(json.dumps(self.card))
+        del c["capabilities"]["extensions"][0]["required"]
+        self.assertTrue(self.ok(c)[0])
+        # ...but a NON-default value in that property is signed content
+        c["capabilities"]["extensions"][0]["required"] = True
+        self.assertFalse(self.ok(c)[0])
+
+    def test_one_byte_edit_fails(self):
+        c = dict(self.card, description="e")
+        ok, det = self.ok(c)
+        self.assertFalse(ok, det)
+        self.assertIn("InvalidSignature", det)
+
+    def test_optional_required_and_unknown_fields_are_signed_content(self):
+        for edit in (lambda c: c["capabilities"].pop("streaming"),          # `optional`, explicitly false
+                     lambda c: c["skills"][0].pop("tags"),                  # REQUIRED, empty
+                     lambda c: c["explicitly_not"].append("ranking")):      # not in the proto: kept as served
+            c = json.loads(json.dumps(self.card))
+            edit(c)
+            self.assertFalse(self.ok(c)[0])
+
+    def test_signature_over_the_card_as_served_fails_and_says_so(self):
+        # the reading the gate used to take: defaults kept. A client that follows 8.4.3 rejects it.
+        served = sign_a2a(self.sk, a2a_card(), a2a_card())
+        ok, det = self.ok(served)
+        self.assertFalse(ok, det)
+        self.assertIn("default-valued properties kept", det)
+
+    def test_wrong_key_unknown_kid_and_unsigned_fail(self):
+        _, other = card_keypair()
+        self.assertFalse(self.ok(self.card, other)[0])
+        _, elsewhere = card_keypair("did:web:csoai.org#site-release-1")
+        ok, det = self.ok(self.card, elsewhere)
+        self.assertFalse(ok)
+        self.assertIn("key not in did.json", det)
+        ok, det = self.ok(a2a_card())
+        self.assertFalse(ok)
+        self.assertIn("no signatures", det)
+
+    def test_gate_payload_equals_the_independent_verifier(self):
+        """scripts/verify_agent_card_jws.py has its own table and its own JCS. Same bytes, or one is wrong."""
+        path = os.path.join(g.REPO, "scripts", "verify_agent_card_jws.py")
+        if not os.path.exists(path):
+            self.skipTest("scripts/verify_agent_card_jws.py not in this checkout")
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("verify_agent_card_jws", path)
+        v = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(v)
+        self.assertEqual(g.a2a_signed_payload(self.card), v.canonical_payload(self.card))
+        self.assertEqual(g.a2a_signed_payload(self.card), g.canon(a2a_signed_form()))
+        wk = os.path.join(g.REPO, "public", ".well-known")
+        if not os.path.exists(os.path.join(wk, "agent-card.json")):
+            return
+        # the committed card and DID document: both verifiers reach the same verdict on the same bytes
+        with open(os.path.join(wk, "agent-card.json"), "rb") as f:
+            raw = f.read()
+        with open(os.path.join(wk, "did.json"), encoding="utf-8") as f:
+            did_doc = json.load(f)
+        card = json.loads(raw)
+        self.assertEqual(g.a2a_signed_payload(card), v.canonical_payload(card))
+        ok, det = g.verify_jws_card(card, g.Did(did_doc), None)
+        self.assertEqual(ok, v.verify_card_bytes(raw, did_doc)["state"] == "VALID", det)
+
+
+class CardHttp:
+    def __init__(self, by_url):
+        self.by_url = by_url
+
+    def get(self, url, headers=None, **k):
+        b = self.by_url.get(url)
+        return g.Resp(url, 404 if b is None else 200, {}, b or b"")
+
+
+class TestAgentCardArtifact(unittest.TestCase):
+    URLS = [g.SITE + "/.well-known/agent-card.json", g.SITE + "/.well-known/agent.json",
+            "https://csoai.org/.well-known/agent-card.json"]
+
+    def run_gate(self, apex_card):
+        sk, did = card_keypair()
+        card = sign_a2a(sk, a2a_card(), a2a_signed_form())
+        body = json.dumps(card).encode()
+        apex = body if apex_card is None else json.dumps(apex_card(sk)).encode()
+        ctx = type("Ctx", (), {"http": CardHttp({self.URLS[0]: body, self.URLS[1]: body, self.URLS[2]: apex}),
+                               "did": did, "live": TestCurrency.LIVE})()
+        return g.agent_card_artifact(ctx)["checks"]
+
+    def test_same_signed_card_everywhere_passes(self):
+        res = self.run_gate(None)
+        self.assertEqual(Status.of(res, "consistency.agent_card_same_across_domains"), [g.PASS])
+        signed = [r for r in res if r["check"].startswith("integrity.agent_card_signed[")]
+        self.assertEqual([r["status"] for r in signed], [g.PASS] * 3, signed)
+
+    def test_an_older_card_on_the_apex_fails_both_checks_there_only(self):
+        # a different card, signed under some other rule (Ed25519 over the hex digest): not an A2A JWS
+        def older(sk):
+            c = dict(a2a_card(), version="0.1.0")
+            sig = sk.sign(g.sha(g.canon(c)).encode())
+            e = lambda b: base64.urlsafe_b64encode(b).rstrip(b"=").decode()
+            c["signatures"] = [{"protected": e(json.dumps({"alg": "EdDSA", "kid": CARD_KID, "typ": "JWT"}).encode()),
+                                "signature": e(sig)}]
+            return c
+        res = self.run_gate(older)
+        self.assertEqual(Status.of(res, "consistency.agent_card_same_across_domains"), [g.FAIL])
+        by = {r["check"]: r["status"] for r in res if r["check"].startswith("integrity.agent_card_signed[")}
+        self.assertEqual(by["integrity.agent_card_signed[csoai.org/.well-known/agent-card.json]"], g.FAIL)
+        self.assertEqual(by["integrity.agent_card_signed[councilof.ai/.well-known/agent-card.json]"], g.PASS)
+        self.assertEqual(by["integrity.agent_card_signed[councilof.ai/.well-known/agent.json]"], g.PASS)
 
 
 class TestVenturi(unittest.TestCase):
@@ -284,6 +498,222 @@ class TestDoctrine(unittest.TestCase):
             self.assertEqual(Status.of(res, cid), [g.PASS], cid)
 
 
+
+# Sentences read from the live site on 2026-10-13T07:02Z (GET with the gate's own client). Each is on the
+# page named; none is paraphrased.
+HOME_HTML = ("<p>effect-binding 2026-09-22. Nothing here is a certificate.</p>"
+             "<a href=\"/board\">Open the full board &rarr;</a> <h2>What the states mean</h2>")
+ABOUT_HTML = ("<p>The commercial product is evidence work performed on request &mdash; never a better grade, never a place "
+              "on the board, and never a certificate.</p><p>Existing paid work is issuance and evidence assembly &mdash; "
+              "including Article 50 marking evidence, evidence bundles and supported feeds &mdash; never a better grade, "
+              "a ranking position or a certificate.</p><a>Enquire about an evidence bundle</a>")
+LLMS_TXT = ("Switchboard framing: the estate densifies a recomputable signed record over time (request queue + signed cards); "
+            "witnesses read the root. It is not a phone company and not a certificate.\n\n"
+            "23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs "
+            "· TIE is TIE · not a certificate.\n\n"
+            "Calendar-only proofs remain pending until an independent `ots verify` confirms a Bitcoin attestation; a "
+            "BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local "
+            "full-node chain validation or a certificate.\n- Dated immutable mill-card root\n")
+MCP_TOOL = ("Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview "
+            "of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. "
+            "Verification stays free.")
+CORRECTIONS_HTML = (
+    "<li>What was wrong: A banned brand token shipped live on /library as a CamelCase concatenation of the token with "
+    "&#x27;Training&#x27;, because a word-boundary regex anchored on the bare token missed the concatenation. Two priced "
+    "strings ($0.005/card, a per-hour range) also shipped, against the no-pricing rule.</li>"
+    "<li>C-2026-0902-04 · 2026-09-02 · CORRECTED — primary source only, dated · GPAI Code of Practice "
+    "signatory counts differed: 26 per the Commission&#x27;s 1 Aug 2025 list versus &#x27;28 frozen&#x27; in secondary "
+    "sources.</li>"
+    "<li>/interop/ai-economy-index.v0.1.json and /interop/human-labour-index.v0.1.json each carry a status label of "
+    "MEASURED-INDEX-v0.1, while each also states in its own body that half its input components are bank gaps and that no "
+    "index value is computed.</li>"
+    "<li>(2) llms.txt and llms-full.txt still linked Zenodo DOIs that answer 410 (the open item of C-2026-0929-09). "
+    "(3) Some pages offered or implied certification or compliance determinations (&#x27;Re-certify on every model "
+    "update&#x27;, &#x27;certify to ISO 42001 ... certification and compliance&#x27;, &#x27;certified Watchdog Analyst ... "
+    "Compliant / Non-Compliant&#x27;, &#x27;We sell this&#x27;), GET /api/regulator-findings annotated rates as "
+    "&#x27;measured compliant&#x27; or &#x27;non-compliance risk&#x27;.</li>"
+    "<li>2026-09-05: no policy document, certificate or insurer correspondence was found in the business mailbox or the "
+    "repository.</li>")
+LEDGER = "/corrections/index.html"
+
+
+def brand(text, path=""):
+    r = [x for x in g.doctrine_checks(text, path, prices=True) if x["check"] == "doctrine.brand_gate"]
+    return r[0]["status"], r[0]["evidence"]
+
+
+def have_brand_gate():
+    import shutil
+    return bool(shutil.which("node")) and os.path.exists(os.path.join(g.REPO, "scripts", "brand-gate.mjs"))
+
+
+@unittest.skipUnless(have_brand_gate(), "node or scripts/brand-gate.mjs not available")
+class TestBrandGateParity(unittest.TestCase):
+    """The port must give the deploy gate's answer on the same text. Three ways it did not, on 13 Oct 2026."""
+
+    def setUp(self):
+        self.env = os.environ.pop("BRAND_GATE_ENFORCE_HELD", None)
+
+    def tearDown(self):
+        os.environ.pop("BRAND_GATE_ENFORCE_HELD", None)
+        if self.env is not None:
+            os.environ["BRAND_GATE_ENFORCE_HELD"] = self.env
+
+    # (a) a held rule reports; it does not fail
+    def test_held_rule_reports_and_does_not_fail(self):
+        held = [r["id"] for r in g.load_brand_rules() if r["held"]]
+        self.assertIn("certificate_term", held)  # the loader reads the mark off the rule
+        for text, path in ((g.visible_text(HOME_HTML), "/index.html"), (g.visible_text(ABOUT_HTML), "/about/index.html"),
+                           (LLMS_TXT, "/llms.txt"), (MCP_TOOL, "/mcp")):
+            st, ev = brand(text, path)
+            self.assertEqual(st, g.PASS, (path, ev))
+            self.assertIn("HELD", ev)                    # still reported, with the sentence
+            self.assertIn("certificate_term", ev)
+            self.assertIn("certificate", ev)
+
+    def test_held_rule_fails_under_the_deploy_gates_own_switch(self):
+        os.environ["BRAND_GATE_ENFORCE_HELD"] = "1"
+        st, ev = brand(g.visible_text(HOME_HTML), "/index.html")
+        self.assertEqual(st, g.FAIL, ev)
+        self.assertIn("certificate_term", ev)
+
+    def test_an_enforced_rule_beside_a_held_hit_still_fails(self):
+        st, ev = brand(g.visible_text(HOME_HTML + "<p>Runs on the SOV3 substrate.</p>"), "/index.html")
+        self.assertEqual(st, g.FAIL, ev)
+        self.assertIn("internal_codenames", ev)
+        self.assertNotIn("certificate_term", ev)
+
+    def test_a_draft_still_cannot_say_certificate(self):
+        # Holding the rule changes nothing for mail and notices: their word list bans the word outright,
+        # negated or not, and does not read brand-gate.mjs.
+        for t in ("Download your certificate today.", "Nothing here is a certificate."):
+            self.assertTrue(g.NOTICE_BANNED.search(t), t)
+
+    # (b) the page is judged under its built path
+    def test_built_path(self):
+        for url, built in (("/", "/index.html"), ("/about", "/about/index.html"), ("/about/", "/about/index.html"),
+                           ("/corrections", LEDGER), ("/corrections/", LEDGER), ("/corrections/?x=1", LEDGER),
+                           ("/claim-maintenance/", "/claim-maintenance/index.html"), ("/spec/v0.1", "/spec/v0.1/index.html"),
+                           ("/llms.txt", "/llms.txt"), ("/a/page.html", "/a/page.html"), ("", "/index.html")):
+            self.assertEqual(g.built_path(url), built, url)
+
+    def test_corrections_ledger_passes_under_its_built_path_only(self):
+        text = g.visible_text(CORRECTIONS_HTML)
+        st, ev = brand(text, g.built_path("/corrections/"))
+        self.assertEqual(st, g.PASS, ev)
+        self.assertIn("none hit", ev)
+        self.assertNotIn("HELD", ev)  # the ledger's own "certificate" is exempt there too, as in brand-gate.mjs
+        # must-fail controls: the URL path the gate used to pass, and lookalikes, are not the ledger
+        for path in ("/corrections/", "/corrections", "/corrections-archive/index.html", "/x/corrections/index.html",
+                     "/corrections/other.html", "/Corrections/index.html", "/index.html"):
+            st, ev = brand(text, path)
+            self.assertEqual(st, g.FAIL, (path, ev))
+            for rule in ("pricing_leak", "gpai_code_signature", "measured_index_sticker"):
+                self.assertIn(rule, ev, path)
+
+    def test_ledger_exemption_is_per_rule(self):
+        for bad, rule in (("<li>&#83;OVOS</li>", "internal_codenames"), ("<li>Get certified by CSOAI today.</li>", "certify_claim"),
+                          ("<li>the 33-agent BFT council</li>", "retracted_fault_tolerance")):
+            st, ev = brand(g.visible_text(CORRECTIONS_HTML + bad), LEDGER)
+            self.assertEqual(st, g.FAIL, (rule, ev))
+            self.assertIn(rule, ev)
+
+    def test_ledger_page_is_read_from_brand_gate(self):
+        rx = g.ledger_page()
+        self.assertIsNotNone(rx, "CORRECTIONS_LEDGER_PAGE not readable from scripts/brand-gate.mjs; the ledger is exempt from nothing")
+        self.assertTrue(g.quotes_withdrawn_copy(LEDGER))
+        for path in ("/corrections/", "/corrections-archive/index.html", "/x/corrections/index.html", "/pricing/index.html", "", "/notice"):
+            self.assertFalse(g.quotes_withdrawn_copy(path), path)
+
+    def test_word_checks_are_not_applied_to_the_ledger_and_are_everywhere_else(self):
+        text = g.visible_text(CORRECTIONS_HTML)
+        on = {x["check"]: x for x in g.doctrine_checks(text, LEDGER, prices=True)}
+        self.assertEqual(on["doctrine.no_certify_language"]["status"], g.NA, on)
+        self.assertEqual(on["doctrine.no_public_prices"]["status"], g.NA, on)
+        self.assertIn("corrections ledger", on["doctrine.no_certify_language"]["evidence"])
+        for path in ("/corrections/", "/corrections-archive/index.html", "/index.html", "/notice", ""):
+            off = {x["check"]: x["status"] for x in g.doctrine_checks(text, path, prices=True)}
+            self.assertEqual(off["doctrine.no_certify_language"], g.FAIL, path)
+            self.assertEqual(off["doctrine.no_public_prices"], g.FAIL, path)
+
+    # the reading of the text itself
+    def test_entities_are_decoded_to_a_fixed_point(self):
+        self.assertEqual(g.decode_entities("&pound;&#163;&#xA3;&#XA3;&pound&dollar;&#36;&euro;&#8364;&#128;&yen;&cent;&nbsp;&amp;&amp;pound;"),
+                         "\u00a3\u00a3\u00a3\u00a3\u00a3$$\u20ac\u20ac\u20ac\u00a5\u00a2\u00a0&\u00a3")  # the brand-gate.mjs selftest string and its answer
+        self.assertEqual(g.decode_entities("R&D at AT&T. Q&A &bogus; x"), "R&D at AT&T. Q&A   x")
+        for src in ("<p>Probe tier &amp;pound;499/mo per surface</p>", "<p>Enterprise from &amp;amp;pound;9,999/yr</p>",
+                    "<p>Probe tier &pound;&nbsp;499/mo</p>", "<p>&#36;45&ndash;150/hr</p>"):
+            st, ev = brand(g.visible_text(src), "/index.html")
+            self.assertEqual(st, g.FAIL, src)
+            self.assertIn("pricing_leak", ev)
+        st, ev = brand("Probe tier &pound;499/mo\n", "/pricing.txt")  # a .txt body is decoded too
+        self.assertEqual(st, g.FAIL, ev)
+        st, ev = brand(g.visible_text("<pre>&lt;script src=&quot;/sdk.js&quot;&gt;&lt;/script&gt; R&amp;D</pre>"), "/docs/index.html")
+        self.assertEqual(st, g.PASS, ev)
+
+    # the deploy gate itself, run over the same bytes
+    FILES = {
+        "index.html": HOME_HTML,
+        "about/index.html": ABOUT_HTML,
+        "llms.txt": LLMS_TXT,
+        "surface/commission-card.txt": MCP_TOOL,
+        "corrections/index.html": CORRECTIONS_HTML,
+        "corrections-archive/index.html": CORRECTIONS_HTML,                 # control: not the ledger
+        "control/codename/index.html": "<p>Runs on the SOV3 substrate.</p>",
+        "control/escaped/index.html": "<p>Probe tier &amp;pound;499/mo per surface</p>",
+        "control/price.txt": "Probe tier &pound;499/mo\n",
+        "control/agents/index.html": "<p>Empty cells stay empty. We do not invent scores.</p><p>Agents: do not invent drift numbers.</p>",
+        "control/negated/index.html": "<p>This is not a certificate. CSOAI issues no certificates. We do not certify.</p>",
+    }
+    EXPECT = {
+        ("index.html", "certificate_term"), ("about/index.html", "certificate_term"), ("llms.txt", "certificate_term"),
+        ("surface/commission-card.txt", "certificate_term"),
+        ("corrections-archive/index.html", "pricing_leak"), ("corrections-archive/index.html", "gpai_code_signature"),
+        ("corrections-archive/index.html", "measured_index_sticker"),
+        ("control/codename/index.html", "internal_codenames"), ("control/escaped/index.html", "pricing_leak"),
+        ("control/price.txt", "pricing_leak"), ("control/agents/index.html", "agent_instruction_leak"),
+    }
+
+    def run_deploy_gate(self, dist, *flags):
+        import subprocess
+        r = subprocess.run(["node", os.path.join(g.REPO, "scripts", "brand-gate.mjs"), dist] + list(flags),
+                           capture_output=True, text=True, timeout=120)
+        hits = set(re.findall(r'^  (\S+)  \[([a-z0-9_]+)\] "', r.stdout + r.stderr, re.M))
+        return r.returncode, hits, r.stdout + r.stderr
+
+    def port(self):
+        hits, enforced = set(), False
+        for rel, body in self.FILES.items():
+            text = g.visible_text(body) if rel.endswith((".html", ".svg")) else body
+            for h in g.brand_scan(text, "/" + rel):
+                hits.add((rel, h["rule"]))
+                enforced = enforced or not h["held"]
+        return hits, enforced
+
+    def test_same_answer_as_the_deploy_gate_on_the_same_bytes(self):
+        with tempfile.TemporaryDirectory() as dist:
+            for rel, body in self.FILES.items():
+                os.makedirs(os.path.dirname(os.path.join(dist, rel)), exist_ok=True)
+                with open(os.path.join(dist, rel), "w", encoding="utf-8") as f:
+                    f.write(body)
+            rc, js_hits, out = self.run_deploy_gate(dist, "--enforce-held")
+            self.assertEqual(rc, 1, out)
+            py_hits, _ = self.port()
+            self.assertEqual(py_hits, js_hits, out)
+            self.assertEqual(py_hits, self.EXPECT)  # neither side is vacuous
+            # and the verdict: with the controls removed only the held rule is left, so the deploy gate exits 0
+            for rel in [k for k in self.FILES if k.startswith(("control/", "corrections-archive/"))]:
+                os.remove(os.path.join(dist, rel))
+            rc, _, out = self.run_deploy_gate(dist)
+            self.assertEqual(rc, 0, out)
+            self.assertIn("HELD", out)
+            for rel, body in self.FILES.items():
+                if rel.startswith(("control/", "corrections-archive/")):
+                    continue
+                text = g.visible_text(body) if rel.endswith(".html") else body
+                self.assertEqual(brand(text, "/" + rel)[0], g.PASS, rel)
+
+
 class TestNotClaims(unittest.TestCase):
     def test_question_and_statute_description_pass(self):
         t = "4. Does Council of AI certify, accredit, or issue a conformity mark? No."
@@ -326,6 +756,133 @@ class TestX402(unittest.TestCase):
         body = {"accepts": [{"network": "eip155:8453"}]}
         r = g.Resp("u", 402, {"payment-required": base64.b64encode(json.dumps(body).encode()).decode()}, b"")
         self.assertEqual(g.decode_402(r), body)
+
+    # ---- a door that declines to sell: resources[].no_sale (13 Oct 2026) -----------------------------
+    # The gate reported "4 mismatches over 27 paid resources (by field network, amount, asset, extra.name)".
+    # All four were one door, /api/wrapper?id=usdc.e:arbitrum, answering 200 while its chain read was
+    # UNMEASURED. The 200 below is that answer (read 07:05Z), trimmed to the fields it is judged on.
+    TERMS = {"network": "eip155:8453", "amount": "1", "asset": "0xA", "extra": {"name": "USD Coin"}}
+    NO_SALE = {"status": 200, "body": {"preview_only": True, "state": "UNMEASURED",
+                                       "payment": {"requested": False, "sent_to_facilitator": False, "settled": False}}}
+    LIVE_200 = {"schema": "csoai.wrapper-parity/0.1", "kind": "preview", "preview_only": True, "id": "usdc.e:arbitrum",
+                "state": "UNMEASURED",
+                "reason": "arbitrum: eth_call to 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8 failed on every endpoint "
+                          "(arbitrum.io: HTTP 429; 1rpc.io: RPC error: You've reached the usage limit for your current plan. "
+                          "[rest of that operator's message cut here]; drpc.org: HTTP 400; publicnode.com: HTTP 403)",
+                "payment": {"requested": False, "presented": False, "sent_to_facilitator": False, "settled": False}}
+    WRAPPER = "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum"
+
+    class DoorHttp:
+        """Each URL answers from a table: {url: (status, parsed JSON body or raw bytes)}."""
+
+        def __init__(self, table):
+            self.table = table
+
+        def get(self, url, headers=None, **k):
+            status, body = self.table[url]
+            return g.Resp(url, status, {}, body if isinstance(body, bytes) else json.dumps(body).encode())
+
+    def consistency(self, manifest, table):
+        ctx = g.Ctx(http=self.DoorHttp(table))
+        ctx.x402 = manifest
+        return [c for c in g.x402_artifact(ctx)["checks"] if c["check"] == "consistency.x402_manifest_vs_live_402"][0]
+
+    def two_doors(self, declare):
+        w = {"url": self.WRAPPER, "accepts": [self.TERMS]}
+        if declare:
+            w["no_sale"] = self.NO_SALE
+        man = {"resources": [{"url": "https://councilof.ai/api/proof?bundle=1", "accepts": [self.TERMS]}, w]}
+        table = {"https://councilof.ai/api/proof?bundle=1": (402, {"accepts": [self.TERMS]}), self.WRAPPER: (200, self.LIVE_200)}
+        return man, table
+
+    def test_undeclared_200_is_one_mismatch_not_four(self):
+        # must-fail control: the manifest as production served it on 13 Oct (no no_sale field).
+        r = self.consistency(*self.two_doors(declare=False))
+        self.assertEqual(r["status"], g.FAIL)
+        self.assertTrue(r["evidence"].startswith("1 mismatches over 2 paid resources (1 without a 402 challenge; by field {})"), r["evidence"])
+        self.assertIn("/api/wrapper: no 402 challenge (HTTP 200)", r["evidence"])
+
+    def test_declared_no_sale_is_not_a_mismatch_and_is_named(self):
+        r = self.consistency(*self.two_doors(declare=True))
+        self.assertEqual(r["status"], g.PASS, r["evidence"])
+        self.assertIn("2 paid resources: 1 answered 402", r["evidence"])
+        self.assertIn("1 gave the no-sale answer the manifest declares for it, nothing requested (/api/wrapper)", r["evidence"])
+
+    def test_declaration_does_not_excuse_a_different_answer(self):
+        res = {"url": self.WRAPPER, "accepts": [self.TERMS], "no_sale": self.NO_SALE}
+        self.assertTrue(g.x402_no_sale(res, 200, self.LIVE_200))
+        not_it = {
+            "requests payment": (200, dict(self.LIVE_200, payment={"requested": True, "sent_to_facilitator": False, "settled": False})),
+            "says nothing about payment": (200, {"preview_only": True, "state": "UNMEASURED"}),
+            "another state": (200, dict(self.LIVE_200, state="ESCROW_PARITY_READ")),
+            "not JSON": (200, None),
+            "an error status": (500, self.LIVE_200),
+            "a 402": (402, self.LIVE_200),
+            "carries payment terms": (200, dict(self.LIVE_200, accepts=[self.TERMS])),
+            "truthy, not true": (200, dict(self.LIVE_200, preview_only=1)),
+        }
+        for what, (status, body) in not_it.items():
+            self.assertFalse(g.x402_no_sale(res, status, body), what)
+        self.assertFalse(g.x402_no_sale(res, 200, self.LIVE_200, payment_required_header=True), "carries a PAYMENT-REQUIRED header")
+        # and through the artifact: each of them fails the check on a door that declares a no-sale answer
+        man, table = self.two_doors(declare=True)
+        for what, (status, body) in not_it.items():
+            if status == 402:
+                continue
+            table[self.WRAPPER] = (status, b"<html>" if body is None else body)
+            self.assertEqual(self.consistency(man, table)["status"], g.FAIL, what)
+
+    def test_blanket_declaration_excuses_nothing(self):
+        for decl in ({"status": 200, "body": {}}, {"status": 200}, {"status": 200, "body": {"payment": {"requested": True}}}, "yes", None):
+            res = {"url": self.WRAPPER, "accepts": [self.TERMS], "no_sale": decl}
+            self.assertFalse(g.x402_no_sale(res, 200, self.LIVE_200), decl)
+            self.assertFalse(g.x402_no_sale(res, 200, {}), decl)
+
+    def test_field_drift_on_a_402_still_fails_beside_a_declared_no_sale(self):
+        man, table = self.two_doors(declare=True)
+        table["https://councilof.ai/api/proof?bundle=1"] = (402, {"accepts": [dict(self.TERMS, network="base", extra={"name": "USDC"})]})
+        r = self.consistency(man, table)
+        self.assertEqual(r["status"], g.FAIL)
+        self.assertIn("'network': 1", r["evidence"])
+        self.assertIn("'extra.name': 1", r["evidence"])
+        self.assertIn("0 without a 402 challenge", r["evidence"])
+
+    def test_this_branch_manifest_against_the_answers_of_13_oct(self):
+        """The manifest this tree renders (the committed render build_openapi.py --check holds equal to
+        functions/.well-known/x402.json.ts), every paid door challenging on its own listed terms, and the
+        per-pair wrapper door answering the 200 it answered live: 0 mismatches. Drop the declaration, as
+        production served the manifest that morning, and the same answers are 1 mismatch."""
+        with open(os.path.join(g.REPO, "scripts", "fixtures", "x402scan", "well_known_x402.json")) as f:
+            man = json.load(f)
+        paid = [r for r in man["resources"] if str(r.get("amount", "")) != "0"]
+        self.assertIn(self.WRAPPER, [r["url"] for r in paid])
+        table = {r["url"]: (402, {"accepts": [r["accepts"][0]]}) for r in paid}
+        table[self.WRAPPER] = (200, self.LIVE_200)
+        r = self.consistency(man, table)
+        self.assertEqual(r["status"], g.PASS, r["evidence"])
+        self.assertIn(f"{len(paid)} paid resources: {len(paid) - 1} answered 402", r["evidence"])
+        self.assertIn("(/api/wrapper)", r["evidence"])
+        # every door that declares one may decline at once, and only those
+        declaring = [r for r in paid if r.get("no_sale")]
+        self.assertGreaterEqual(len(declaring), 2)
+        for d in declaring:
+            table[d["url"]] = (200, dict(self.LIVE_200, id=None))
+        self.assertEqual(self.consistency(man, table)["status"], g.PASS)
+        silent = [r for r in paid if not r.get("no_sale")][0]
+        table[silent["url"]] = (200, self.LIVE_200)
+        self.assertEqual(self.consistency(man, table)["status"], g.FAIL, "a door that declares nothing answered the no-sale 200")
+        # must-fail control: the same answers against the manifest without the declaration
+        table = {r["url"]: (402, {"accepts": [r["accepts"][0]]}) for r in paid}
+        table[self.WRAPPER] = (200, self.LIVE_200)
+        before = json.loads(json.dumps(man))
+        for res in before["resources"]:
+            res.pop("no_sale", None)
+        r = self.consistency(before, table)
+        self.assertEqual(r["status"], g.FAIL)
+        self.assertTrue(r["evidence"].startswith(f"1 mismatches over {len(paid)} paid resources (1 without a 402 challenge"), r["evidence"])
+        # the sentence that explains the field passes the gate's own doctrine checks
+        for c in g.doctrine_checks(man["no_sale_answers"], "/.well-known/x402.json", g.OWN_DEV):
+            self.assertEqual(c["status"], g.PASS, c)
 
 
 class TestNotices(unittest.TestCase):

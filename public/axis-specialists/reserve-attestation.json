@@ -1,0 +1,243 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "reserve-attestation",
+  "specialist": {
+    "id": "meok-reserve-attestation-specialist",
+    "cluster_id": "meok-axis-reserve-attestation",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit reserve-related deterministic facts without treating issuer flags or account data as proof of reserve adequacy.",
+    "reviewer_role": "reserve evidence reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "source freshness",
+    "attestation scope",
+    "unsigned run state",
+    "reserve adequacy non-inference"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-09-17T12:58:11Z",
+      "source": "/interop/financial-measure-run-reserve-attestation.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "cc0f92e06441f67ea7554d2136f0be2a7e2fb49675a5f75f0443330c95b18313",
+    "axis_row": {
+      "axis": "reserve-attestation",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-reserve-attestation",
+      "bench": "ReserveFacts",
+      "task": "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
+      "n": 16,
+      "n_unit": "issuer accounts (not bank items)",
+      "n_note": "The live XRPL reader-16 (GET /api/xrpl, writes_board=false). Instrument count, not bank items.",
+      "status": "MEASURED",
+      "evidence_url": "/interop/financial-measure-run-reserve-attestation.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "colour": "#fbbf24",
+      "hue": 43,
+      "note": "MEASURED v0.3 over the live XRPL reader-16 (start set RLUSD/OUSG/USDB/BBRL bidirectional, then the twelve well-known/registry rows). Three-state per fact: 3 PASS, 4 FAIL, 9 UNCHECKABLE (no on-chain declared Domain = no deterministic disclosure surface; UNREACHABLE is never FAIL). Self-declare without attestation language is FAIL. Archax x abrdn and OpenEden TBILL are off this reader — parked under rwa-attest-other. Risk verdict UNMEASURED. Not a rating.",
+      "method_status": "legacy: n 16",
+      "facts_as_of": "2026-09-17T12:58:11Z",
+      "facts_status": "MEASURED",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-09-17T12:58:11Z",
+        "source": "/interop/financial-measure-run-reserve-attestation.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-reserve-attestation"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist reserve-attestation audits only the reserve-attestation row",
+      "evidence": "reserve-attestation"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-reserve-attestation; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "FACT_RUN_STATE",
+      "state": "PASS",
+      "detail": "deterministic-facts run with n=16 issuer accounts (not bank items)"
+    },
+    {
+      "id": "FACT_LINEAGE",
+      "state": "PASS",
+      "detail": "run artifact and fact timestamp are published"
+    },
+    {
+      "id": "RUN_ATTESTATION",
+      "state": "FINDING",
+      "detail": "run artifact is CONTENT_ADDRESSED_UNSIGNED; content identity is not a signature"
+    },
+    {
+      "id": "NO_MODEL_RANKING",
+      "state": "PASS",
+      "detail": "deterministic facts carry no model leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "FINDING",
+      "detail": "legacy: n 16"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 6,
+    "declared": 0,
+    "findings": 2,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "describe account flags as reserve sufficiency and require scope rejection",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "infer a signature from content_id and require attestation failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "reserve-attestation-proposal-1",
+      "proposal": "sign the next deterministic reserve run through the authorized lane",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "reserve-attestation-proposal-2",
+      "proposal": "add issuer-by-issuer evidence-age and scope labels",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_reserve-attestation",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/reserve-attestation",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "reserve evidence reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "e1aeac7b29a7e04bc1e0be2d106371d51cfc91122cb8d23e4802a8bd54a8df38",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "evidence_url",
+      "facts_as_of",
+      "facts_status",
+      "run_attestation",
+      "n_unit"
+    ],
+    "measurement_url": "/api/gspc/axis/reserve-attestation",
+    "competency_url": "/api/hitl/modules/reserve-attestation",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}
