@@ -1,0 +1,94 @@
+{
+ "schema": "csoai.disk-reclaim-receipt/0.1",
+ "measured_at": "2026-10-29T10:05:00Z",
+ "host": "the Mac's /System/Volumes/Data",
+ "volume": {
+  "device": "/dev/disk3s1",
+  "size": "228Gi",
+  "used": "196Gi",
+  "free": "1.7Gi",
+  "capacity": "100%"
+ },
+ "target": {
+  "estate_target_free": ">= 5 GiB",
+  "state": "BELOW_TARGET",
+  "note": "stated as measured, not rounded up"
+ },
+ "reclaimed": [
+  {
+   "pass": 1,
+   "at": "2026-10-29T06:40:00Z",
+   "what": "two merged worktrees removed with git worktree remove --force",
+   "paths": ["~/clawd/_merge/wt-3517", "~/clawd/_merge/wt-3531"],
+   "method": "git worktree remove --force",
+   "history_preserved": "both HEADs (86e7d9a02, 4601f18ba) confirmed present in the parent repo's object store with git cat-file -t -> commit after the removal",
+   "effect": "1.3 GiB -> 4.5-5.0 GiB free"
+  },
+  {
+   "pass": 2,
+   "at": "2026-10-29T09:55:00Z",
+   "what": "twenty derived lane checkouts moved to the recoverable Trash",
+   "paths": ["~/csoai-work/lane-a10", "~/csoai-work/lane-b10", "~/csoai-work/lane-b7", "~/csoai-work/lane-b9", "~/csoai-work/lane-c1", "~/csoai-work/lane-c2", "~/csoai-work/lane-c3", "~/csoai-work/lane-c4", "~/csoai-work/lane-c5", "~/csoai-work/lane-fix", "~/csoai-work/lane-fix2", "~/csoai-work/lane-gaps", "~/csoai-work/lane-gate", "~/csoai-work/lane-m1", "~/csoai-work/lane-m2", "~/csoai-work/lane-m3", "~/csoai-work/lane-m4", "~/csoai-work/lane-m5", "~/csoai-work/lane-m8", "~/csoai-work/lane-test"],
+   "method": "mavis-trash (recoverable; nothing permanently deleted)",
+   "why_safe": "each lane is a GIT_DIR (lane-X.gitdir, holding every ref and the object store) plus a linked checkout (lane-X, the derived content). Before anything was removed, all twenty lane HEADs were confirmed present in CSOAI-ORG/councilof-ai with GET /repos/.../commits/<sha> -> HTTP 200. Every GIT_DIR was kept, so the refs and objects survive locally as well as remotely.",
+   "kept": "all twenty lane-X.gitdir directories, including the shared object store at lane-b7.gitdir/objects",
+   "effect": "~/csoai-work 25G -> 8.1G",
+   "volume_effect": "none yet: mavis-trash moves to the macOS Trash on the same volume, so df has not moved. The space returns when the Trash is emptied, and permanent deletion by an agent is not permitted."
+  },
+  {
+   "pass": 3,
+   "at": "2026-10-29T09:48:00Z",
+   "what": "rebuildable caches cleared",
+   "paths": ["~/Library/Caches", "~/.npm"],
+   "method": "cache clear and npm cache clean --force",
+   "effect": "~/Library/Caches 1.4G -> 961M; npm cache cleaned; about 0.9 GiB returned to the volume"
+  }
+ ],
+ "growth_that_was_measured": {
+  "at": "2026-10-29T09:41:00Z",
+  "detail": "another lane system's checkouts took ~/csoai-work to 25G and the volume fell to 817 MiB free",
+  "attributed_by": "directory measurement, not inference"
+ },
+ "kept_deliberately": [
+  {
+   "path": "~/csoai-work/lane-b8",
+   "size": "889M",
+   "reason": "HEAD 9da85eab2d is not on the remote (HTTP 422) — unique local commits"
+  },
+  {
+   "path": "~/csoai-work/lane-m6",
+   "size": "901M",
+   "reason": "HEAD fe7bb1b6e is not on the remote — unique local commits"
+  },
+  {
+   "path": "~/csoai-work/lane-m7",
+   "size": "900M",
+   "reason": "HEAD fa77c0954 is not on the remote — unique local commits"
+  },
+  {
+   "path": "~/clawd/_merge/fix-20261028",
+   "size": "2.5G",
+   "reason": "branch feat/outward-gate-txt-id-exemptions is diverged ahead 57 — not merged"
+  },
+  {
+   "path": "~/.hermes/hermes-agent",
+   "size": "3.9G",
+   "reason": "LIVE — the hermes gateway runs from this path (mcp_death_supervisor.py under ~/.hermes/hermes-agent/tools/). An earlier plan that treated it as disposable build output was wrong and is void."
+  }
+ ],
+ "still_reclaimable_with_the_owner_word": [
+  {"path": "~/clawd/.git", "size": "2.7G", "method": "git gc", "caveat": "needs headroom, and the repo is shared with a running lane system"},
+  {"path": "~/clawd/councilof-ai-work/condor/data/busabase_backup", "size": "1.8G", "caveat": "a backup"},
+  {"path": "~/OrbStack", "size": "3.1G", "caveat": "container images"},
+  {"path": "~/Documents", "size": "10G", "caveat": "the owner's data"},
+  {"path": "~/.minimax/sessions", "size": "3.9G", "caveat": "the estate's own session record"}
+ ],
+ "pod_is_not_the_answer": {
+  "measured_at": "2026-10-29T09:41:00Z",
+  "workspace": "436 TB reported, every write fails with Disk quota exceeded",
+  "overlay": "9.6 GB free against a 43.7 GB bulk",
+  "conclusion": "the bulk fits nowhere on the pod today, which is why the Oracle transfer has not started"
+ },
+ "source_document": "docs/GSPC-DISK-RECLAIM-RECEIPT-2026-10-29.md",
+ "not_a_certification": "This receipt reports what was measured on this volume, what was removed, what was kept and why, and what the free space is now. It asserts nothing about the state of any other host."
+}
