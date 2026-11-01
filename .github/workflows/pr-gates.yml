@@ -235,7 +235,7 @@ jobs:
             exit 0
           fi
           changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -678,6 +678,22 @@ jobs:
           node scripts/producers-check.mjs --selftest
           node scripts/producers-check.mjs
 
+      # The SBOM's recorded generation commit must be REACHABLE from the merge ref this job
+      # checks out. A branch that was rewritten after its SBOM was minted pins a commit that
+      # is in NO ref, and the producer manifest above then reports the consequence without
+      # naming the cause: "sbom FAILED — SBOM held; previous output preserved". A census of every
+      # open PR on 2026-10-30 found 40 of 132 carrying such a pin, and 29 of them were MERGEABLE
+      # and blocked by nothing else.
+      #
+      # This step names the cause and the two remedies. It is read-only and adds no
+      # dependency: the selftest builds a throwaway repository and proves the gate goes red on
+      # an orphaned pin and green on a reachable one.
+      - name: SBOM pin — the recorded generation commit must be reachable from this merge ref
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/sbom-pin-gate.mjs --selftest
+          node scripts/sbom-pin-gate.mjs
+
       # The estate's central claim is that a stranger can recompute and verify the evidence from
       # published bytes. public/signed/HOW-TO-VERIFY.md carried a JavaScript snippet offering to do
       # exactly that, and on 2026-09-05 it was measured failing 85 of 335 cards (25.4%) — every one
@@ -781,6 +797,13 @@ jobs:
           python3 -m pytest -q harness/gspc-top100/test_one_option_menu.py
           python3 scripts/withdraw_one_option_cards.py
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
+          # The public-watchdog intake lane (2026-10-30): the harness must be able to report
+          # UNREACHABLE and UNCHECKABLE and never 0; the charter feed must never turn a routing
+          # row into a decision; and the atom the publisher signs must pass the publisher's own
+          # admission check (scripts/adapters/staged_leaves.py) with a verdict word refused.
+          python3 -m pytest -q scripts/readers/test_watchdog_intake_reader.py
+          python3 -B scripts/test_watchdog_intake.py
+          python3 -B scripts/test_watchdog_charter_feed.py
           # public-root halted on every run of 5-6 Oct 2026 on a stale ledger proof; the re-stamp
           # producer must keep the old pair, roll back on failure and clear the gate's own check.
           python3 -m pytest -q scripts/test_ots_restamp_ledger.py
@@ -793,6 +816,11 @@ jobs:
           # reasons and a step that is green only because nobody looks is the defect
           # this line exists to stop repeating.
           python3 -m pytest -q harness/gspc-top100/test_mill_honesty.py -k sign_mill_skips_already_signed
+          # Card signing runs master's code with the landing branch as data
+          # (hf-fin-shells-measure.yml dispatched on master with land_branch). The tests build a
+          # throwaway git repo: only the two data directories are read from a branch, signed
+          # outputs go to that branch and never to master, and the three landers dispatch that way.
+          python3 -m pytest -q scripts/test_sign_land_branch.py
           python3 scripts/watch/test_provider_watch.py
           python3 scripts/watch/test_provider_watch_promotion.py
 

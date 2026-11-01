@@ -99,16 +99,31 @@ const claimEvents = claimEventsHead as Json;
 const claimEventsFeed = (claimEvents.feed ?? {}) as Json;
 const claimEventsTotals = (claimEvents.totals ?? {}) as Json;
 
-/** IN_ROOT only when the recorded leaf is actually in the committed root.json. */
+/**
+ * IN_ROOT only when the recorded leaf is actually in the committed root.json.
+ *
+ * The leaf is content-addressed (sha256 of the staged head), so its presence among the committed
+ * root's leaves is the fact, whichever root the inclusion record was written against: the daily
+ * root job re-stages the same unchanged atoms, so a re-signed root carries the same leaf under a new
+ * merkle root. Requiring the record's root to equal the committed root (as this did until 2026-10-13)
+ * flipped every head to NOT_IN_ROOT the day after the record was made, while root.json still carried
+ * every one of them. The record's root is still disclosed as ledgers.root.inclusion_record_root.
+ */
 export function rootInclusionOf(key: string, atomSha: string, incDoc: Json, leaves: Set<string>, atomAsOf = "", rootMerkle: unknown = (publicRoot as Json).merkle_root) {
   const r = incDoc?.ledgers?.[key];
   const sameRoot = incDoc?.merkle_root === rootMerkle;
   const pending = { state: "PENDING_NEXT_ROOT", leaf_sha256: null, why: "this head has not been through a root run yet; the next daily root signs it as a leaf" };
   if (!r || r.atom_sha256 !== atomSha) return pending;
-  if (r.leaf_sha256 && leaves.has(r.leaf_sha256) && sameRoot) return { state: "IN_ROOT", leaf_sha256: r.leaf_sha256, why: null };
+  if (r.leaf_sha256 && leaves.has(r.leaf_sha256)) return { state: "IN_ROOT", leaf_sha256: r.leaf_sha256, why: null };
   // an inclusion record made against a root older than this read cannot say the head was left out
   if (!r.leaf_sha256 && String(incDoc?.root_as_of ?? "") < atomAsOf) return pending;
-  return { state: "NOT_IN_ROOT", leaf_sha256: r.leaf_sha256 ?? null, why: sameRoot ? "no leaf of the committed root carries this head" : "the inclusion record names a different root" };
+  return {
+    state: "NOT_IN_ROOT",
+    leaf_sha256: r.leaf_sha256 ?? null,
+    why: sameRoot
+      ? "no leaf of the committed root carries this head"
+      : "no leaf of the committed root carries this head; the inclusion record was written against an earlier root",
+  };
 }
 
 export function ledgerRow(key: string) {
