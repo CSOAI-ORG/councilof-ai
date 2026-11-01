@@ -206,9 +206,9 @@ describe("leftover: CENSUS_3M is census+digest+queue+lock, remainder UNMEASURED"
     expect(j.lock.n_locked).toBe(40);
     expect(llms).toMatch(/census \+ digest \+ queue \+ lock/);
     expect(llms).toMatch(/Remainder UNMEASURED/);
-    expect(spaceReadme).toMatch(/census, not a grade/);
-    expect(spaceReadme).toMatch(/Remainder UNMEASURED/);
+    expect(spaceReadme).toMatch(/Listing a model in a census is discovery, not measurement/);
+    expect(spaceReadme).toMatch(/\| UNMEASURED \| An explicit coverage gap \|/);
     expect(spaceReadme).not.toMatch(/Fifteen axes carry a signed measurement/);
-    expect(spaceReadme).toMatch(/Not a mill/);
+    expect(spaceReadme).toMatch(/does not run inference or new evaluations/);
   });
 });
