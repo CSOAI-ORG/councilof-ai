@@ -1,0 +1,315 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "openness",
+  "specialist": {
+    "id": "meok-openness-specialist",
+    "cluster_id": "meok-axis-openness",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit openness responses with reproducible evidence for disclosure, access and licensing claims rather than treating availability as openness.",
+    "reviewer_role": "openness and licensing reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "licence precision",
+    "access versus rights",
+    "disclosure completeness",
+    "row replay"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "DAY",
+      "precision": "day",
+      "observed_on": "2026-08-12",
+      "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+      "source_field": "measured",
+      "note": "The source publishes day precision only. No midnight timestamp is invented."
+    },
+    "axis_row_sha256": "50e7f75f0dc5dc1c178e2ccdfa6dbbe8961f51bef4502c6a8a6b38f6cec86abe",
+    "axis_row": {
+      "axis": "openness",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "OSSBench",
+      "task": "licence reasoning versus intended use",
+      "n": 32,
+      "separation": "TIE",
+      "fleet_mean": 0.696,
+      "mean_harm": 0.304,
+      "cvar05_harm": null,
+      "status": "MEASURED",
+      "dataset": "csoai/gspc-oss",
+      "colour": "#2dd4bf",
+      "hue": 174,
+      "method_status": "meets-rule",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "v2 bank (AGPL network trigger, directional compatibility, SSPL/ELv2/BSL service clauses). Canonical count 32 (supersedes stale 16). The tuned specialist leads on points; flat TIE vs gemma3:12b.",
+        "does_not_assert_current_public_fields": true
+      },
+      "leader": "gemma3:12b (base model)",
+      "accuracy": 0.8438,
+      "interval": [
+        0.682,
+        0.931
+      ],
+      "separation_p": 0.424,
+      "separation_method": "Exact McNemar on the discordant items, leader vs the best base model, rule fixed 2026-08-13: p<0.05 is SEPARATED, anything else is a TIE. Wilson 95% intervals are annotation only. Computed by scripts/gspc_separation_from_rows.py from the published per-item rows with our own models removed from the fleet before comparison.",
+      "separation_sentence": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=32; p=0.424).",
+      "separation_evidence": {
+        "source": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361)",
+        "file": "peritem_oss.jsonl",
+        "file_sha256": "f04421a8a8b4a6f01d79dfe771ede8ef40de4338955dcb64a48244df9008685f",
+        "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
+        "fleet": "6 base models; our own prompt overlays on stock base models removed before comparison",
+        "leader": {
+          "model": "gemma3:12b",
+          "k": 27,
+          "n": 32,
+          "accuracy": 0.8438,
+          "wilson95": [
+            0.682,
+            0.931
+          ]
+        },
+        "next_best": {
+          "model": "mistral:7b",
+          "k": 23,
+          "n": 32,
+          "accuracy": 0.7188,
+          "wilson95": [
+            0.546,
+            0.844
+          ]
+        },
+        "paired_items": 32,
+        "discordant": {
+          "leader_only_correct": 9,
+          "next_best_only_correct": 5
+        },
+        "mcnemar_p": 0.424,
+        "control": {
+          "what": "labels shuffled within items, same test re-run; share that came out SEPARATED",
+          "nperm": 1000,
+          "seed": 20260927,
+          "fixed_pair_rate": 0.016,
+          "reselect_rate": 0.001
+        },
+        "recompute": "python3 separation_test.py --rows rows --json out.json  (in the dataset; stdlib only; checks SHA256SUMS first)"
+      },
+      "peritem_file_sha256": "f04421a8a8b4a6f01d79dfe771ede8ef40de4338955dcb64a48244df9008685f",
+      "leader_source": "per-item rows",
+      "leader_card_state": "NO_SIGNED_PER_MODEL_CARD",
+      "leader_card_note": "leader shown from per-item rows; no signed per-model card yet",
+      "note": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=32; p=0.424). gemma3:12b 27/32 vs mistral:7b 23/32, both read from the published per-item rows. A TIE is not a win: the point-estimate lead is not a measured advantage. leader shown from per-item rows; no signed per-model card yet.",
+      "distinct_items": 32,
+      "distinct_items_source": "distinct item ids in the published per-item rows (peritem_oss.jsonl)",
+      "mde": {
+        "value": 0.329,
+        "state": "MEASURED",
+        "unit": "accuracy difference (proportion), leader minus the best base model",
+        "alpha": 0.05,
+        "power": 0.8,
+        "test": "exact two-sided McNemar on the discordant items, leader vs the best base model (the board's separation test, rule fixed 2026-08-13)",
+        "paired_items": 32,
+        "discordance_rate": 0.4375,
+        "source": "functions/api/_gspc_rows_power.ts, generated by scripts/gspc_separation_from_rows.py --power from csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361, peritem_sha256 0d8dacfbe7384a5d…)"
+      },
+      "measurement_time": {
+        "state": "DAY",
+        "precision": "day",
+        "observed_on": "2026-08-12",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "note": "The source publishes day precision only. No midnight timestamp is invented."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-oss"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist openness audits only the openness row",
+      "evidence": "openness"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-openness; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "MODEL_RUN_STATE",
+      "state": "PASS",
+      "detail": "measured model-comparison run with n=32"
+    },
+    {
+      "id": "FROZEN_BANK",
+      "state": "DECLARED",
+      "detail": "bank URL is declared; bank bytes and freeze state were not verified",
+      "evidence": "https://huggingface.co/datasets/csoai/gspc-oss"
+    },
+    {
+      "id": "ROW_LINEAGE",
+      "state": "DECLARED",
+      "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
+    },
+    {
+      "id": "LEADER_STATE",
+      "state": "PASS",
+      "detail": "leader evidence state is published"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "meets-rule"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 6,
+    "declared": 2,
+    "findings": 0,
+    "audit_state": "HUMAN_REVIEW_READY"
+  },
+  "negative_controls": [
+    {
+      "control": "treat public availability as an open licence and require classification failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "remove licence evidence and require the related slice to become UNCHECKABLE",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "openness-proposal-1",
+      "proposal": "add licence-aware openness slices",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "openness-proposal-2",
+      "proposal": "publish unknown and absent disclosure as separate states",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_openness",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/openness",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "openness and licensing reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "3f835b276a784eb33e28a0afaaa08d5803cd0d1e74d2485b893a0179e2dc617c",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "dataset_url",
+      "peritem_file_sha256",
+      "separation_evidence",
+      "measurement_time",
+      "method_status"
+    ],
+    "measurement_url": "/api/gspc/axis/openness",
+    "competency_url": "/api/hitl/modules/openness",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}
