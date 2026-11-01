@@ -1189,7 +1189,7 @@ emit("public/.well-known/mcp/server-card.json", j({
   // 29 Sep 2026: the Zenodo record answers HTTP 410 (account blocked by Zenodo; appeal pending).
   // The identifier stays; this says it does not resolve. Same block GET /api/gspc serves.
   doi_status: "UNAVAILABLE",
-  doi_status_note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record; live status: https://councilof.ai/interop/zenodo-status.json.",
+  doi_status_note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
   doi_status_since: "2026-09-29T15:47Z",
   doi_status_url: "https://councilof.ai/interop/zenodo-status.json",
   doi_alternative: { url: "https://councilof.ai/methodology/", relation: "the live methodology page; not the deposit's bytes" },
