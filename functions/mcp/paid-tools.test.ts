@@ -137,6 +137,7 @@ const FREE_LIST = [
   "axis_interpretability-reproducibility",
   "axis_claim-maintenance",
   "axis_serving-fidelity",
+  "axis_watchdog-ingest",
 ];
 const PAID_LIST = [
   "commission_card",

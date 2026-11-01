@@ -179,5 +179,58 @@ class Cli(unittest.TestCase):
             self.assertEqual(self.run_cli().returncode, 2)
 
 
+
+
+class FiniteMeasurementControls(unittest.TestCase):
+    """Non-finite Python floats are not JSON numeric measurement values."""
+
+    def test_nonfinite_numeric_values_fail_in_each_measured_state(self):
+        for state in ("MEASURED", "SIGNED", "ROOTED"):
+            for value in (float("nan"), float("inf"), float("-inf")):
+                with self.subTest(state=state, value=repr(value)):
+                    errors = ce.validate(measured(
+                        lifecycle_state=state, measurement={"value": value, "n": 30}
+                    ))
+                    self.assertTrue(any("measurement.value" in e for e in errors), errors)
+
+    def test_finite_numeric_extremes_and_existing_scalar_types_stay_valid(self):
+        for value in (0, -1, 0.5, 1e308, -1e308, True, False, "NaN", "Infinity"):
+            with self.subTest(value=value):
+                self.assertEqual(ce.validate(measured(measurement={"value": value, "n": 30})), [])
+
+    def test_nonfinite_cli_inputs_are_invalid_and_never_counted_as_valid(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for index, value in enumerate((float("nan"), float("inf"), float("-inf"))):
+                for suffix in (".json", ".jsonl"):
+                    with self.subTest(value=repr(value), suffix=suffix):
+                        path = Path(tmp) / (str(index) + suffix)
+                        path.write_text(json.dumps(measured(
+                            measurement={"value": value, "n": 30}
+                        )) + "\n", encoding="utf-8")
+                        result = subprocess.run(
+                            [sys.executable, str(HERE / "connector_envelope.py"), str(path)],
+                            capture_output=True, text=True, check=False,
+                        )
+                        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                        self.assertIn("measurement.value", result.stdout)
+                        self.assertIn("0/1 envelopes valid", result.stdout)
+                        self.assertNotIn("Traceback", result.stderr)
+
+    def test_invalid_member_of_a_batch_cannot_produce_a_success_exit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "mixed.jsonl"
+            path.write_text(
+                json.dumps(measured()) + "\n" +
+                json.dumps(measured(measurement={"value": float("nan"), "n": 30})) + "\n",
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [sys.executable, str(HERE / "connector_envelope.py"), str(path)],
+                capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            self.assertIn("1/2 envelopes valid", result.stdout)
+
+
 if __name__ == "__main__":
     unittest.main()
