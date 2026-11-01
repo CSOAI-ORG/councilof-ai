@@ -12,6 +12,24 @@ Alliance, and nothing here states or implies that the Alliance has adopted, endo
 agreed with any of it. This is our own working position, published so that it can be read, cited and
 disagreed with. We measure; we do not certify, and we do not speak for the Alliance.
 
+> **Correction — 28 October 2026.** Two rows of the section 2 table were stale when this document was
+> published, and one sentence of the honesty register has been overtaken by events. The corrections are
+> marked in place, with the value that was published beside the value that is current. The full evidence
+> is in `public/corrections/osaia-safe-v1.0-port-2026-10-26-SUPERSEDES.md`. Nothing else in this
+> document changed, and the substantive claim — that the patch binds to the approved `SAFE.md` — was
+> re-verified on 28 October 2026 and still holds: the patch applies cleanly to the approved file, all
+> four hunks land, and the result is 22,852 bytes.
+>
+> The status line above still reads "prepared, not submitted", and that remains true of **this
+> document**: the pull request to the Alliance has not been opened, because opening it needs a
+> co-author with a normal GitHub account. What has changed is the state of the underlying issues.
+> The Alliance **has** read this work: `@QSAFP-Core` responded substantively on issue **#72** on 13
+> October 2026, on 26 October 2026 and again on 28 October 2026, asking for two specific precisions,
+> which we implemented and made conformance-testable on 28 October 2026. That is engagement, and it is
+> the opposite of acceptance: no one at the Alliance has adopted, endorsed or agreed with any of it,
+> and the submission route in section 7 has still not been taken. The honesty register below is
+> corrected accordingly.
+
 ---
 
 ## 1. Why this document exists
@@ -26,15 +44,23 @@ before the specification was approved.
 
 ## 2. What we verified at source, and how
 
-Verified on 26 October 2026 against `github.com/OpenSecureAIAlliance/RFCs`:
+Verified on 26 October 2026 against `github.com/OpenSecureAIAlliance/RFCs`, and **re-verified on
+28 October 2026** — 21 checks, of which 19 still held and 2 had gone stale:
 
 | Fact | Verified how |
 | --- | --- |
 | `SAFE.md` (20,094 bytes) is the approved specification and now sits beside the superseded `rfc-safe-proposal.md` (7,773 bytes) | repository contents listing |
-| Issue **#32** (discriminating power) is open, filed by us on 2026-09-17, 2 comments | issue API |
-| Issue **#72** (continuous claim maintenance) is open, filed by us on 2026-10-07, 2 comments | issue API |
+| Issue **#32** (discriminating power) is open, filed by us on 2026-09-17 — **2 comments when published on 26 October 2026, 3 as of 28 October 2026** (the third is our own 26 October update) | issue API |
+| Issue **#72** (continuous claim maintenance) is open, filed by us on 2026-10-07 — **2 comments when published on 26 October 2026, 6 as of 28 October 2026** (four added since: one from `@QSAFP-Core` on 13 October, ours on 26 October, and one each way on 26 and 28 October) | issue API |
 | Pull request **#64** is open, not a draft, base `main`, 3 commits, **+24/−0**, one file: `rfc-safe-proposal.md` | pull request API |
 | The approved `SAFE.md` contains **none** of: `discriminat`, `negative control`, `insufficient_evidence`, `not_applicable`, `claim maintenance` | full-text read of the approved file |
+
+Re-verification on 28 October 2026 confirmed the approved `SAFE.md` is still 20,094 bytes, that the
+superseded file is still 7,773 bytes, that pull request **#64** is still open, not a draft, based on
+`main`, at 3 commits and **+24/−0** across one file, that both issues are still open, that the five
+terms are still absent from the approved specification, and — the check that matters — that
+`SAFE-v1.0-port.patch` still applies cleanly to the approved `SAFE.md` with all four hunks landing,
+taking it from 20,094 bytes to 22,852 bytes.
 
 The last row is the finding that matters, and it is the reason this document exists.
 
@@ -224,8 +250,17 @@ bytes; all four hunks land). The example validator reports 9 valid examples and 
 mutations. The worked example in section 5 compares two published artefacts and its designed-to-fail
 control was executed, not asserted.
 
-**UNVERIFIED** — whether the Alliance will accept, or even read, this. We do not know and do not
-predict. The submission route in section 7 has not been taken.
+**UNVERIFIED** — whether the Alliance will accept this. We do not know and do not predict, and we
+expect to be asked for more rather than less. **Corrected 28 October 2026.** This paragraph originally
+read "whether the Alliance will accept, or even read, this. We do not know and do not predict." The
+reading half of that is now answered by the record: `@QSAFP-Core` has responded substantively on
+issue **#72** three times — on 13 October 2026, on 26 October 2026 and on 28 October 2026 — asking for
+two specific precisions (that non-current claim states are explicitly non-authorizing, and that
+action release is bound to a current external authority record). Both were implemented and made
+conformance-testable on 28 October 2026, and the Alliance replied the same day. So the Alliance has
+read this work. That is engagement, not acceptance: no adoption, endorsement or agreement by the
+Alliance is claimed or implied, and the submission route in section 7 has not been taken. The
+acceptance half of the original sentence stands unchanged.
 
 **KILLED** — the claim that this is a standard, an endorsement, or an adopted profile; the claim that
 the example separates anything; and any framing in which a maintained claim authorises an action.
