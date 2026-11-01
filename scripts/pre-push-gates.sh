@@ -105,6 +105,28 @@ node scripts/price-gate.mjs --json-only >/dev/null 2>&1 \
   || { echo "  ✖ price-gate: a published price is in public/ JSON (no public $ prices)"; \
        node scripts/price-gate.mjs --json-only 2>&1 | grep -E "^\s+\S+\.json:" | head -12; fail=1; }
 
+# ADDED 2026-10-30. The SBOM's recorded generation commit must be REACHABLE from HEAD.
+#
+# WHY. scripts/gen_sbom.py --check proves the SBOM by reading its own recorded commit back:
+#     git show <recorded>:package.json
+# A branch that was REWRITTEN after its SBOM was minted pins a commit that is in NO ref. In CI
+# (pr-gates checks out the PR's merge ref) that read exits 128 and the producer gate reports,
+# without naming the cause, "sbom FAILED — SBOM held; previous output preserved". A census of
+# every open PR on 2026-10-30 found 40 of 132 carrying such a pin, and 29 of them were
+# MERGEABLE and blocked by nothing else. Each cost a full CI round trip to learn that a pin
+# pointed at nothing.
+#
+# The check below is the same one CI performs, so a green push is a green CI on this axis —
+# and the sbom-pin-gate adds the one property CI cannot see: a lane that fetched the branch
+# BEFORE it was force-pushed still holds the orphaned commit as an object, so "can I read it?"
+# is green locally while the merge ref CI checks out does not contain it. Object presence is
+# not reachability.
+sbom_out=$(python3 scripts/gen_sbom.py --check 2>&1 \
+  && node scripts/sbom-pin-gate.mjs --selftest 2>&1 \
+  && node scripts/sbom-pin-gate.mjs 2>&1) \
+  || { echo "  ✖ sbom: the SBOM does not pin a reachable commit — its verdict:"; \
+       printf '%s\n' "$sbom_out" | tail -14 | sed 's/^/      /'; fail=1; }
+
 # ADDED 2026-09-20. workflow_run couples follow-on workflows to deploy.yml by its
 # `name:` STRING. A rename lane changed deploy.yml's name without touching the five
 # followers — every one of them would have gone silent on merge with no red anywhere.

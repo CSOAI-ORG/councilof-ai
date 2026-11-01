@@ -1,0 +1,42 @@
+name: Working-group review
+description: Track a bounded public review or correction.
+title: "[WG review] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use a discussion for open-ended proposals. Use this form for a bounded review.
+        No private cases, credentials or personal data. Submission is not approval or membership.
+  - type: input
+    id: document
+    attributes:
+      label: Document ID and version
+      placeholder: COAI-WG-002 v1
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Pinned source, method and observed result
+    validations:
+      required: true
+  - type: textarea
+    id: dissent
+    attributes:
+      label: Uncertainty, dissent and proposed outcome
+      description: Address objections and record missing evidence; do not turn a vote into a decision.
+    validations:
+      required: true
+  - type: textarea
+    id: independence
+    attributes:
+      label: Relevant competence and conflicts
+    validations:
+      required: true
+  - type: checkboxes
+    id: publication
+    attributes:
+      label: Publication permission
+      options:
+        - label: I may share this material publicly and understand that a human must accept and review it.
+          required: true
