@@ -12,7 +12,13 @@ name: Publish @csoai/layer0 (npm)
 # precondition below is part of the gate, not a comment.
 #
 # Required trusted publisher configuration on npm, for the @csoai scope:
-#     org:      CSOAI
+#
+# The organization is the GITHUB organization that owns the repository, CSOAI-ORG. It is NOT the npm
+# scope owner (csoai), and the two are not the same string. npm matches the OIDC subject
+# repo:CSOAI-ORG/councilof-ai:ref:refs/heads/master against this value, case-sensitively, and does
+# NOT check it when the connection is saved: a mismatch does not appear until a publish is
+# attempted, and then it appears as a publish failure with no hint as to the cause.
+#     org:      CSOAI-ORG
 #     repo:     councilof-ai
 #     workflow: npm-layer0.yml
 #     environment: (leave empty - this workflow does not use a GitHub environment)
@@ -48,6 +54,34 @@ jobs:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
           package-manager-cache: false
+
+      # setup-node writes a PLACEHOLDER _authToken into the runner's .npmrc so that `npm publish`
+      # fails with ENEEDAUTH instead of prompting for a login. Left in place, that placeholder is a
+      # real credential as far as npm is concerned: when the OIDC exchange fails - a trusted
+      # publisher whose fields do not match this workflow - npm silently falls back to it and the
+      # publish fails with E404 "Not found", a message that names neither the cause nor the fix.
+      # Taking the placeholder away leaves npm with no credential, so the same failure surfaces as
+      # ENEEDAUTH, which npm documents as the symptom of a trusted publisher that does not match.
+      #
+      # The versions are printed because they are part of the provenance story: the npm that
+      # publishes is the npm that carries the attestation. Trusted publishing needs npm 11.5.1 or
+      # later and Node 22.14.0 or later.
+      - name: No placeholder credential, and record the toolchain that will publish
+        run: |
+          set -euo pipefail
+          cfg="${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}"
+          if [ -f "$cfg" ]; then
+            grep -v '_authToken' "$cfg" > "$cfg.tmp" || true
+            if [ -s "$cfg.tmp" ]; then
+              mv "$cfg.tmp" "$cfg"
+            else
+              echo "::warning::the runner npmrc held nothing but the placeholder token"
+            fi
+          fi
+          echo "node: $(node --version)"
+          echo "npm:  $(npm --version)"
+          echo "npmrc in use:"
+          sed -E 's/(_authToken=).*/\1<removed>/' "$cfg" 2>/dev/null || echo "(no npmrc)"
 
       - name: Confirm version is exact and unused
         id: ver
