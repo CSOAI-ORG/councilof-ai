@@ -1,35 +1,63 @@
 ---
-title: CSOAI-GSPC
+title: GSPC | Council of AI
 emoji: 📐
 colorFrom: green
 colorTo: gray
 sdk: static
+app_file: index.html
 pinned: false
 license: cc-by-4.0
-short_description: "Printer of GET https://councilof.ai/api/gspc. Not a mill."
+short_description: Explore published measurements, evidence and coverage gaps.
+tags:
+- council-of-ai
+- measurement
+- transparency
+- ai-governance
+- responsible-ai
+- evaluation
 ---
 
-# CSOAI-GSPC
+# GSPC · Explore the evidence
 
-Search a model. Open an axis. Read the published record. The Space prints two live, separate populations: the canonical Council board and third-party Hugging Face measured cells.
+Search a model, open an axis and inspect the published record. This viewer displays two separate populations: the **Council GSPC board** and **published third-party Hugging Face measured cells**. Their counts have different meanings and must not be combined.
 
-[![GSPC](https://councilof.ai/api/badge)](https://councilof.ai/gspc-verify)
+[Download the board dataset](https://huggingface.co/datasets/csoai/gspc-board) · [Work in Kaggle](https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board) · [Verify a record](https://councilof.ai/gspc-verify) · [Methodology](https://councilof.ai/methodology/)
 
-Printer of live [`GET https://councilof.ai/api/gspc`](https://councilof.ai/api/gspc) and [`GET https://councilof.ai/api/hub-cards`](https://councilof.ai/api/hub-cards). The first is the canonical Council board; read its current axis count from that live response. The second is the published third-party Hub population; it never changes the board. Do not freeze their counts in this README. Fetch failure → **UNCHECKABLE**. This Space is a printer, not a mill or inference endpoint. Measurement, not certification.
+## How to use this Space
 
-CENSUS_3M leftover: census + digest + queue + lock. It is a census, not a grade. Remainder UNMEASURED. Hub listings 3,032,028 are DISCOVERED, not MEASURED. Never mill 3,032,028 listings. Digest is `sha256_jsonl` on https://councilof.ai/signed/hub-census-baseline.json (`0a510a890fa336f099a516a503df86340a529c90b935f026d291e5dcd8e8f1e9`) — coverage leftover, measured:false, not a signed GSPC cell. Queue: https://huggingface.co/datasets/csoai/hub-queue (a listing; MEASURED/UNMEASURED counts live only in its SUMMARY.json and are never typed here). Lock: https://councilof.ai/fleet/FLEET-B.lock.json n_locked=40 UNMEASURED. mill.sh stays dead.
+1. Select the board or Hub population and use its search and filters.
+2. Open an axis or model record to inspect the scope, date, evidence and result state.
+3. Follow the source links and check admission, withdrawals and signatures where provided before quoting a result.
 
-**UNSIGNED staging (HF Jobs mill):** cards the mill stages under `csoai/gspc-hub-cards/staged-unsigned/<date>/<axis>/` carry `"signature": null`. UNSIGNED — becomes MEASURED only after a VALID signature; nothing here is a rank. A staged card's hits/n are card bytes, not a score; n<30 unquotable; TIE is never a win. Staging never changes `n_measured`, any cell, `mill-cards/`, `INDEX.jsonl` or `cards.jsonl`. Per-model state, every axis verbatim: https://huggingface.co/spaces/csoai/gspc-lookup
+The Space reads the [live board API](https://councilof.ai/api/gspc) and the separate [published Hub cells API](https://councilof.ai/api/hub-cards). It displays existing results; it does not run inference or new evaluations. A failed fetch is **UNCHECKABLE**, never a zero. Current counts come from those responses, not a number frozen in this card.
 
-- Live board: https://councilof.ai/api/gspc
-- Published Hugging Face measured cells: https://councilof.ai/api/hub-cards
-- x402 trust: https://councilof.ai/interop/x402-trust/latest.json
-- Hub census register (counts + card links, never a grade): https://councilof.ai/interop/hf-census/SUMMARY.json
-- Per-model lookup (every axis, verbatim): https://huggingface.co/spaces/csoai/gspc-lookup
-- Verify (free): https://councilof.ai/gspc-verify
-- How to verify: https://councilof.ai/signed/HOW-TO-VERIFY.md
-- Leftover honesty: https://councilof.ai/census-digest-leftover.json
+## Read the result states
 
-Source lives in councilof-ai under `spaces/gspc-board/`.
+| State | Meaning |
+| --- | --- |
+| MEASURED | Evidence exists for an axis; this does not establish a winner |
+| TIE | A separated lead was not established |
+| UNTESTED | Separation was not established by a test |
+| UNMEASURED | An explicit coverage gap |
+| UNSIGNED / UNADMITTED | Staging material; not an admitted measurement to quote |
 
-Verify is free. A rank is never sold. Measurement, not certification.
+A public leader field is not a separated win. Missing values are not zero. Model comparisons and deterministic source facts answer different questions and must not be pooled into one accuracy figure.
+
+## Evidence and admission
+
+A valid signature alone does not admit a card. Check its bound intake receipt (`admitted=true`) and the current withdrawal ledger. [Correction C-2026-0924-03](https://councilof.ai/corrections/mill16-unadmitted-2026-09-24.json) records why signed but unadmitted cards were withdrawn from quotable use. Staged files do not change published measured counts. Listing a model in a census is discovery, not measurement.
+
+Use search in this Space for recorded axis states, the [verification guide](https://councilof.ai/signed/HOW-TO-VERIFY.md) to inspect a signed record, and the [corrections register](https://councilof.ai/corrections/) for later changes.
+
+## Source and terms
+
+Maintained in [Council of AI source](https://github.com/CSOAI-ORG/councilof-ai/tree/master/spaces/gspc-board). Operated by CSOAI Ltd. CC-BY-4.0 applies to this Space's declared content; linked datasets retain their own terms.
+
+Measurement is not certification, accreditation or permission to execute. Verification is free. Payment cannot buy a favourable result or rank.
+
+<details>
+<summary>Earlier card and release notes</summary>
+
+[Previous Space card](https://huggingface.co/spaces/csoai/gspc-board/blob/bfe288e8252dd7ab394796ae8d95b65881c3223a/README.md) preserves the dated historical notes.
+
+</details>

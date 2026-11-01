@@ -57,6 +57,10 @@ Conformance levels (see `CSOAI_Layer0_A2A_Protocol.md`): wrapping with `governed
 
 Backend: the public gateway is `functions/api/gate.ts` + `functions/api/a2a/{route,verify,key}.ts` (Cloudflare Pages Functions) in the source repository, with the policy rule in `functions/_lib/layer0.ts` — checked against the canonical product's rule by `scripts/review/layer0-parity.mjs`. Home: https://councilof.ai/layer0/
 
+- Live GSPC board: https://councilof.ai/api/gspc
+- Corrections ledger: https://councilof.ai/corrections/ (JSON: https://councilof.ai/api/corrections)
+- Free card verification: https://councilof.ai/gspc-verify/
+
 ## Licence
 
 Apache-2.0 from 0.2.0 (see `LICENSE` and `NOTICE`). Earlier versions remain MIT.
