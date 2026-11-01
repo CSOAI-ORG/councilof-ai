@@ -163,15 +163,15 @@ export default function ConnectHub() {
         />
         <div className="section-shell relative py-10 sm:py-16">
           <p className="t-kicker ink-kicker">Connect · MCP · A2A · HTTP</p>
-          <h1 className="t-band mt-3 max-w-3xl text-white">Connect an agent or a client.</h1>
-          <div className="max-w-3xl"><DocMeta updated="2026-10-25" slug="connect" /></div>
+          <h1 className="t-band mt-3 max-w-3xl text-white">Use GSPC in your workflow.</h1>
+          <div className="max-w-3xl"><DocMeta updated="2026-10-29" slug="connect" /></div>
           <p className="t-lede mt-4 max-w-2xl ink-muted">
-            Every door below reads the same published records the site shows: the live board, the signed
-            cards, the corrections ledger. The free door needs no account and no key, and verification
-            stays free.
+            Read published evidence in an agent, show it in your product, or discuss a scoped measurement
+            for a business decision. The free MCP door needs no account or key. Verification stays free.
           </p>
           <ul className="mt-6 flex list-none flex-wrap gap-2 p-0 text-sm font-semibold">
             {[
+              ["#choose", "Choose your starting point"],
               ["#free", "Free MCP door"],
               ["#platforms", "GSPC in your platform"],
               ["#stacks", "Install into your stack"],
@@ -195,6 +195,42 @@ export default function ConnectHub() {
       </header>
 
       <div className="section-shell grid grid-cols-[minmax(0,1fr)] gap-5 py-10 sm:gap-6 sm:py-14">
+        <div id="choose" className="scroll-mt-24">
+          <Door id="choose-h" kicker="Start with your task" title="What do you need to do?">
+            <ul className="mt-5 grid list-none gap-4 p-0 lg:grid-cols-3">
+              {[
+                {
+                  href: "#free",
+                  title: "Read evidence in your agent",
+                  body: "Connect the free MCP door to read published records and corrections. Start with an existing subject."
+                },
+                {
+                  href: "/panel/",
+                  title: "Show evidence in your product",
+                  body: "Explore the embeddable panel and its browser verification. Check each record's subject, date and limits."
+                },
+                {
+                  href: "/contact/?arm=run",
+                  title: "Scope a business measurement",
+                  body: "Discuss the workflow, method, deliverables and acceptance criteria. This is an enquiry, with scope agreed before a run."
+                },
+              ].map((task) => (
+                <li key={task.href}>
+                  <a href={task.href} className="block h-full rounded-xl border border-border bg-background p-5 transition hover:border-emerald-600/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">
+                    <h3 className="text-base font-bold leading-snug text-emerald-900">{task.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{task.body}</p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p className="t-body mt-5 max-w-3xl text-muted-foreground">
+              Adding evidence does not grant permission to act. For human review, host enforcement and
+              integration limits, read the <A href="/interop/workflow-evidence-integration-2026-10-29.md">workflow integration guide</A>
+              {" "}and the <A href="/operational-charter/">operational charter</A>.
+            </p>
+          </Door>
+        </div>
+
         <div id="free" className="scroll-mt-24">
           <Door id="free-h" kicker="Start here" title="The free MCP door">
             <p className="t-body mt-3 max-w-3xl text-muted-foreground">
