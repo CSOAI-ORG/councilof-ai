@@ -11,6 +11,8 @@ original and final URL recorded); 301/302/303 on POST stay PROTOCOL_ERROR; 429 -
 (capped 1h), retry once later, still 429 -> RATE_LIMITED and that host is slowed; other HTTP errors are
 PROTOCOL_ERROR with the status; a different protocolVersion is RESPONDED with version_match false.
 v0.1 rows are never relabelled; counts are always per method sha.
+v0.2.1: template/invalid listed URLs count as NO_PUBLIC_ENDPOINT; unexpected client errors are UNREACHABLE
+with the error recorded instead of aborting the batch.
 Politeness: at most 1 in-flight request per host, a global rate cap, an honest User-Agent naming CSOAI
 with a contact URL, an opt-out deny list (scripts/mcp_reachability_denylist.txt), at most 1 retry.
 Every row stores the sha256 of this file (the method sha). Results are unsigned and unpublished.
@@ -18,7 +20,7 @@ No model or provider calls: spend is $0 (still checked against the ledger cap)."
 import datetime, hashlib, json, os, socket, sys, threading, time, urllib.error, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
-METHOD = "mcp-reachability-census v0.2-ruled"
+METHOD = "mcp-reachability-census v0.2.1-ruled"
 METHOD_SHA = hashlib.sha256(open(__file__, "rb").read()).hexdigest()
 UA = "CSOAI-mcp-reachability-census/0.2.1 (+https://councilof.ai/contact; opt-out: https://councilof.ai/contact)"
 PROTO = "2025-06-18"
@@ -142,7 +144,9 @@ def census(url, prior_rate_limited=False):
         hop = Hop(url)
         try:
             lab, d = census_once(hop); d["attempts"] = attempt; return lab, d
-        except Fail as f:
+        except Exception as e:  # any other client-side failure: recorded, never crashes the batch
+            if isinstance(e, Fail): f = e
+            else: f = Fail("UNREACHABLE", {"error": type(e).__name__ + ": " + str(e)[:200]})
             f.detail.setdefault("original_url", hop.original); f.detail.setdefault("final_url", hop.url)
             if f.label == "RATE_LIMITED":
                 host = urllib.parse.urlparse(hop.url).hostname or ""
@@ -153,8 +157,13 @@ def census(url, prior_rate_limited=False):
             f.detail["attempts"] = attempt; return f.label, f.detail
 
 def endpoint(raw):
+    # A listed URL that is still a template ({placeholder}) or has no valid host/port is not a usable public endpoint.
     for u in (raw.get("remotes") or "").split():
-        if u.startswith("https://"): return u
+        if not u.startswith("https://") or "{" in u or "}" in u: continue
+        try:
+            pu = urllib.parse.urlparse(u); pu.port
+            if pu.hostname: return u
+        except ValueError: continue
     return ""
 
 def main():
