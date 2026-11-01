@@ -263,12 +263,18 @@ export default function ConnectGSPC() {
         <div className="max-w-5xl mx-auto px-6 py-8 grid md:grid-cols-2 gap-8">
           <div>
             <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-              The one check every agent should run first
+              Evidence before a workflow decision
             </h2>
             <p className="text-sm text-gray-700 leading-relaxed">
-              x402 is the payments rail; ERC-8004 is identity; GSPC is the <strong>trust layer</strong> underneath
-              them — the independent, signed measurement an agent reads before it decides to trust a model.
-              It is read-only and unauthenticated, so any agent can call it and no one is gated out.
+              GSPC supplies dated measurement records for a defined subject and method. The free MCP door
+              is read-only and needs no account or key. A valid signature checks the covered bytes;
+              it does not establish that a model is safe for every task or authorise an action.
+              Identity, payment and the host&apos;s permission checks remain separate.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-gray-700">
+              <a href="/interop/workflow-evidence-integration-2026-10-29.md" className="font-semibold text-emerald-800 underline underline-offset-2">
+                Map evidence, human review and execution in your workflow
+              </a>.
             </p>
             <div className="mt-4 flex flex-wrap gap-2 text-[11px]">
               {["AI governance", "model safety", "EU AI Act", "agent verification", "MCP governance", "provenance", "Ed25519"].map(
