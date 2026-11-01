@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-24T09:38:12Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "alibaba-qwen",
+      "surface": "terms",
+      "url": "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-product-terms-of-service",
+      "prev_sha256": "a53034d3f07c82ee4a047567524ca3601b49e4ce55699ca1fa6eae70baea6243",
+      "new_sha256": "bb423f78686d309a060278d38135f7dc68c37be87e64be0bf2a25cbdeb40835f",
+      "prev_bytes_sha256": "3c21047e50a08b90fe924c1235ede88dc7f791a4fe37112a529a1248156f37d4",
+      "new_bytes_sha256": "26841d3823dfc8f1756551201b2328a676fa2f257db728118bc3281e1ac1fdce",
+      "prev_fetched_at": "2026-10-06T12:06:11Z",
+      "fetched_at": "2026-10-24T09:38:12Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 255882,
+        "new": 278829
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "78b8a0ed93ce60b17d62a6b892c7935ce57612fa19e3b720ea7c2558ff52e190",
+    "sig_ed25519": "0ebc235a3f250f457be7f8361e48179ff52386a0ed4a045648da256b161223c95d4e4295a82fc63c037f32ba72906e5788185a0bdae13c3f06c50ff199f10f05",
+    "source_urls": [
+      "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-product-terms-of-service"
+    ],
+    "subject": "Alibaba Cloud / Qwen — terms: bytes changed 2026-10-24",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:alibaba-qwen",
+      "surface:terms",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "5657115f89fd4d18de9638f31625e78433402412c88682b7a88a4387372b90fe",
+    "da6fa4669ebd261e6116b1a45868d890f7d898cd8d1ddd233833d6fc0c558b62",
+    "3d239d8b0d4861051e61222ab4f96bfa2832778253d37dfe9967e63a9c4f1801",
+    "1c8ace320234bad7632688428efdb8aa734d96be48ba7c14b7597e0ba4e188a9",
+    "6dbdbdf6941b3776eed0e472e7195e9cd16c5a78d23475deb2145edc5b4ad4e8",
+    "124eb2bf90b4282f8ccb601d606fd214652c89c66b8173e8d98d7659bacff5c8",
+    "9cad88c6e595775e1cf3891f06cfd9b6e6b6f5077d61e6ac892ff3a31495d7fc",
+    "176200b26fd094d89be6cbde327a448f84af31c04a433352c5835fc454314661",
+    "aa6ab9166acf4d7a92aa2743240915ead88e4fe0c3eada56656a50f2e0b69600"
+  ]
+}
