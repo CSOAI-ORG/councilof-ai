@@ -52,8 +52,13 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     catalog.x402_metered,
     paid.tools.map((tool) => tool.name),
   );
-  assert.equal(catalog.free.length, 47);
-  assert.equal(catalog.x402_metered.length, 5);
+  // DERIVED, never typed. The guide's catalogue must be the canonical tool set, so the
+  // count it holds is the count the door serves — a typed number here turned every
+  // legitimate growth of the fleet into a red build (it said 47 while the door served
+  // 48). The deepEqual above is the real guard: a tool added to the canonical set and
+  // missing from the guide still fails.
+  assert.equal(catalog.free.length, free.tools.length);
+  assert.equal(catalog.x402_metered.length, paid.tools.length);
 
   // The prose count and the prose wording are held to the catalogue, so neither can drift.
   // "the same N names" must be N = free + x402-metered, and the free-tool sentence must not
