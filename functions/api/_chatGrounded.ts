@@ -308,6 +308,16 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const g = await grounded(question, origin);
   if (g) return reply(g, "grounded in published measurement - deterministic - recomputable", "grounded");
 
+  // A seat that cannot answer is a SERVICE STATE, not an absence of grounding. The old code
+  // caught the failure and fell through, so a dead model seat was published as "ungrounded" —
+  // a refusal that named a missing fact where the truth was a broken dependency. Measured on
+  // 2026-10-30: the seat was unreachable for 21 hours and this route answered
+  // `state: ungrounded`, `model: null`, `answered_by: "deterministic (no model in the path)"`,
+  // while the PAL lane named the cause ("The language model is unreachable (http_error)").
+  // Two routes, two vocabularies for the same fault. Only the CLASS of failure is published:
+  // the raw text of a fetch failure can name the private seat hostname, and the seat's URL and
+  // routing id are never returned to public clients.
+  let seatError: "unreachable" | "http_error" | "empty" | null = null;
   if (env.SOV_GATE_URL && env.SOV_GATE_TOKEN) {
     try {
       const r = await fetch(env.SOV_GATE_URL.replace(/\/+$/, "") + "/v1/chat/completions", {
@@ -315,11 +325,19 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
         headers: { "Content-Type": "application/json", "Authorization": "Bearer " + env.SOV_GATE_TOKEN },
         body: JSON.stringify({ model: runtimeModel, messages, stream: false, options: { temperature: 0, num_predict: 400 } }),
       });
-      if (!r.ok) throw new Error("gate HTTP " + r.status);
+      if (!r.ok) {
+        seatError = "http_error";
+        throw new Error("gate HTTP " + r.status);
+      }
       const data: any = await r.json();
       const content = String(data?.choices?.[0]?.message?.content ?? "");
       if (content.trim()) return reply(content, "upstream runtime response · unsigned", "model_response");
-    } catch { /* fall through */ }
+      seatError = "empty";
+    } catch {
+      // The class is set above for a classified failure; a throw that reached here is the
+      // transport itself failing, and the message is deliberately not published.
+      if (!seatError) seatError = "unreachable";
+    }
   }
 
   let named = "";
@@ -328,12 +346,22 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     if (live.length) named = live.map((a: any) => a.axis).filter(Boolean).join(", ");
   } catch { /* ignore */ }
 
+  // The refusal still says "no grounding" — that is true, and it stays `ungrounded`. What
+  // changes is that it no longer implies the measurement was the problem when the seat was.
+  const seatNote = seatError
+    ? `\n\n**The model seat did not answer** (${seatError}). That is a service state, not a missing measurement: the published records are unchanged, and this answer is the deterministic path only.`
+    : "";
   return reply(
     `I could not ground an answer from published measurement.\n\n` +
     `${HELP_TEXT}\n\n` +
     "Try a **named board axis**, **EU AI Act Article 5**, **GET /api/gspc**, **pricing**, **how to buy**, **get measured**, or the **measurement method**.\n\n" +
     `Named axes: ${named || "see GET /api/gspc"}.\n\n` +
-    "I will not invent a number or a legal opinion.",
-    "refused - no grounding available", "ungrounded",
+    "I will not invent a number or a legal opinion." +
+    seatNote,
+    seatError
+      ? `refused - no grounding available; the model seat did not answer (${seatError})`
+      : "refused - no grounding available",
+    "ungrounded",
+    seatError ? { model_seat: seatError } : {},
   );
 };
