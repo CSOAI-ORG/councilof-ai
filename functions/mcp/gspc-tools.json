@@ -3085,6 +3085,63 @@
         "idempotentHint": true,
         "openWorldHint": true
       }
+    },
+    {
+      "name": "axis_watchdog-ingest",
+      "title": "watchdog-ingest axis (live GSPC board)",
+      "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "watchdog-ingest axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     }
   ]
 }
