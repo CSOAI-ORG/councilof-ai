@@ -31,6 +31,9 @@ STAGED_DIRS = (
     "x402-door-conformance-2026-09",
     "agent-interop-canonical-2026-09",
     "mcp-liveness-2026-09",
+    # Claim-maintenance text-delta lane (2026-10-29): one PROBED atom per wave-3
+    # text-delta measurement, from the wave-4 probe. Admission/signing unchanged.
+    "claim-maintenance-2026-10",
     # Wrapper-economy lane (2026-09-13): wrapped-asset parity atoms from
     # scripts/readers/wrapped-asset-parity-reader.mjs --stage. PROBED / UNMEASURED only;
     # the read state lives in payload.parity_state. Admission/signing unchanged.
@@ -50,6 +53,13 @@ STAGED_DIRS = (
     # suite at spec 2026-07-28 - because the stable suite does not know the later spec release, and a
     # result from one channel is not comparable with the other. Admission/signing unchanged.
     "mcp-conformance-2026-10",
+    # Public watchdog intake (2026-10-30, lane watchdog-ingest): one PROBED atom per day about
+    # the 18 pinned public watchdog and incident sources the estate measures, from
+    # scripts/readers/watchdog_intake_reader.py. It reads the run artifact and the charter feed
+    # the intake harness already wrote — it probes nothing itself, so the daily root tick stays
+    # cheap. REACHABLE / UNCHECKABLE / UNREACHABLE stay three facts; the routing rows are carried
+    # as a COUNT with their HOLD decision, never as a decision. Admission/signing unchanged.
+    "watchdog-intake-2026-10",
 )
 SURFACE = "public.notice"
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
