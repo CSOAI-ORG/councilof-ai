@@ -300,6 +300,20 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     });
   }
 
+  // An unreadable corpus is unknown, not an empty selection. Refuse before issuing a
+  // quotation or entering payment verification/settlement; a readable empty corpus stays valid.
+  if (!corpus.read_ok) {
+    return json({
+      schema: "csoai.evidence-bundle/0.1",
+      status: "UNCHECKABLE", error: "corpus_unavailable",
+      obligation: preview.obligation, subject: subject || null,
+      relevant_signed_cards: null,
+      corpus: { ...preview.corpus, signed_cards_total: null, read_state: "UNCHECKABLE" },
+      reason: "The measurement corpus was unavailable or did not provide a cards object. No conclusion about the presence of relevant measurements was established. No payment was verified or settled by this request.",
+      relation: preview.relation, free_verify: preview.free_verify,
+    }, 503);
+  }
+
   const resourceUrl = new URL(`/api/evidence-bundle?obligation=${ob.id}&bundle=1${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`, origin).toString();
   const previewUrl = new URL(resourceUrl);
   previewUrl.searchParams.delete("bundle");
