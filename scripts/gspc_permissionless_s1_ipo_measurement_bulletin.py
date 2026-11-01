@@ -144,8 +144,13 @@ def build_s1_ipo_risk_crosswalk() -> List[Dict[str, Any]]:
                         {"axis": "provenance-controls", "slot": 16, "status": "MEASURED", "n": 120, "kind": "deterministic-facts"},
                         {"axis": "distribution-integrity", "slot": 19, "status": "MEASURED", "n": 120, "kind": "deterministic-facts"},
                         {"axis": "interop-conformance", "slot": 28, "status": "UNMEASURED", "n": 0, "pre_admission_bank_n": 35},
+                        # Slot 34 — the public-watchdog and incident-source slot. It joins the
+                        # external-evidence group because that group is about where the
+                        # evidence comes from and whether it verifies; this slot measures
+                        # whether the public watchdog and incident layer answers at all.
+                        {"axis": "watchdog-ingest", "slot": 34, "status": "UNMEASURED", "n": 0},
                     ],
-                    "public_verify_command": "curl -sS https://councilof.ai/api/gspc | jq '.axes[] | select(.axis==\"provenance\" or .axis==\"conformance\" or .axis==\"openness\" or .axis==\"detector-interop\" or .axis==\"provenance-controls\" or .axis==\"distribution-integrity\" or .axis==\"interop-conformance\")'",
+                    "public_verify_command": "curl -sS https://councilof.ai/api/gspc | jq '.axes[] | select(.axis==\"provenance\" or .axis==\"conformance\" or .axis==\"openness\" or .axis==\"detector-interop\" or .axis==\"provenance-controls\" or .axis==\"distribution-integrity\" or .axis==\"interop-conformance\" or .axis==\"watchdog-ingest\")'",
                 },
             ],
         },
