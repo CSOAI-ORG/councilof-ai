@@ -14,6 +14,10 @@ function fixture() {
   mkdirSync(join(root, "scripts"));
   mkdirSync(join(root, "public/interop/ots"), { recursive: true });
   copyFileSync(resolve(__dirname, "llms-txt.mjs"), join(root, "scripts/llms-txt.mjs"));
+  // llms-txt.mjs imports ./internal-links-check.mjs, so the fixture has to carry it too.
+  // Without it the producer cannot even start: the run dies on module resolution and the
+  // test is measuring a missing file rather than the timestamp behaviour it is about.
+  copyFileSync(resolve(__dirname, "internal-links-check.mjs"), join(root, "scripts/internal-links-check.mjs"));
   for (const name of names) writeFileSync(join(root, "public", name), `BOARD SNAPSHOT ${name}\n## Timestamps\n\n${marker}\nstale\n\n## Evidence\nIMMUTABLE SNAPSHOT ${name}\n`);
   writeFileSync(join(root, "public/interop/ots/manifest.json"), JSON.stringify({
     schema: "csoai.ots-manifest/0.4", as_of: "2026-10-11T00:00:00Z",
