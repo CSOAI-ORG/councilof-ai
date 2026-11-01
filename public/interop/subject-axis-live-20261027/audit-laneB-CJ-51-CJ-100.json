@@ -1,0 +1,502 @@
+[
+  {
+    "id": "CJ-51",
+    "jewel": "OpenShell→Cedar translator (unclaimed)",
+    "claimed_state": "OPEN",
+    "status": "CONTRADICTED",
+    "evidence": "CHECKLIST SAYS: 'OPEN — agent-side spike; upstream contribution to NVIDIA/OpenShell'. ACTUAL: the translator is BUILT, not open. Local repo ~/_work/councilof-ai/harness/openshell-cedar/ contains translate.py, roundtrip.py, ocsf_observer.py, 5 fixtures and out/ with real results. out/roundtrip-summary.json: '{\"cedar\":\"cedar-policy-cli 4.13.0\", \"allow\": {\"cedar_validate\": true, \"translation_status\": \"TRANSLATED\", \"requests\": 636, \"counts\": {\"AGREE\": 636}}, \"deny\": {...\"requests\": 200, \"counts\": {\"AGREE\": 200}}, \"conditional\": {\"translation_status\": \"UNCHECKABLE\", \"requests\": 1605, \"counts\": {\"AGREE\": 1545, \"FAIL_CLOSED\": 60}}}'. README.md: 'OpenShell policy → Cedar (v0), and an OCSF observer'. package/PUBLISHED.json records PyPI upload 2026-09-29. Live: https://pypi.org/pypi/csoai-openshell-harness/json -> name 'csoai-openshell-harness', version 0.1.1, uploads 2026-09-30T15:30:13. Upstream https://github.com/NVIDIA/OpenShell -> HTTP 200, title 'GitHub - NVIDIA/OpenShell: OpenShell is the safe, private runtime for autonomous AI agents.' Only the 'upstream contribution to NVIDIA/OpenShell' part is unproven — no upstream PR found. LIVE SURFACE: PyPI. LOCAL: harness/openshell-cedar/.",
+    "as_of": "2026-10-27",
+    "next_step": "Stop calling this OPEN. Correct the checklist row to BUILT/PACKAGED (PyPI csoai-openshell-harness 0.1.1); open the upstream NVIDIA/OpenShell contribution/PR and attach its number, or mark that sub-claim UNVERIFIED.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-52",
+    "jewel": "Open Agent Safety Platform (NVIDIA GA Sep 28)",
+    "claimed_state": "LIVE",
+    "status": "CONTRADICTED",
+    "evidence": "CHECKLIST SAYS: 'LIVE — 6 adapters built from spec (validated)'. ACTUAL: no NVIDIA 'Open Agent Safety Platform' artefact exists in the estate. Grep of ~/_work/councilof-ai (all .ts/.tsx/.mjs/.json/.md, node_modules excluded) for 'open agent safety|safety platform' -> 0 matches; same grep over ~/_alignment -> 0 matches. Upstream check: https://api.github.com/search/repositories?q=org:NVIDIA+agent+safety -> only 'NVIDIA/halos-outside-in-safety' (79 stars, robot perception blueprint) — no OASP repo. What DOES exist is a different thing: harness/openshell-adapter/ (adapter.py, declared_observed.py, capture-2026-09-28/, prover-fixtures/ with 5 prover JSONs, requalify/v0.1.2 and v0.1.4). That is ONE OpenShell adapter pinned to OpenShell v0.1.4, not six adapters to a GA 'Open Agent Safety Platform'. The '6 adapters' count is unsupported by any artefact found. LOCAL: harness/openshell-adapter/.",
+    "as_of": "2026-10-27",
+    "next_step": "Rewrite the row: name the real artefact (harness/openshell-adapter, OpenShell v0.1.4, 5 prover fixtures) and drop the unverifiable 'NVIDIA GA Sep 28 Open Agent Safety Platform' and the '6 adapters' count until a source for them exists.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-53",
+    "jewel": "MS Agent Governance Toolkit (Cedar/Rego PDP)",
+    "claimed_state": "MERGE",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'MERGE — Harness X merge spike'. ACTUAL: the merge landed, so the state is stale. ~/_work/councilof-ai/scripts/harness-x/ is a full working tree, not a spike: check.mjs (51,604 bytes), connect-live.mjs, parity_live.py (45,484 bytes), render.mjs (99,848 bytes), doctrine-lint.mjs, sign-oasf.mjs, cursor-install/vscode-install, schemas/, and .test.mjs siblings. Git log: commits 8e9df9fce 'one axis, one door: 33 named free tools, 52 in the fleet (#3496)' and 6bfc8e5f3. check.mjs header: 'harness-x check — conformance of every generated Layer 0 artifact, per target ... Fails closed'. BUT the MS Agent Governance Toolkit / Cedar / Rego PDP is a separate thing: grep of the whole repo for '\\brego\\b|\\bcedar\\b' -> matches only capabilities/registry.json, evidence/mcp-registry.json, HANDOFF-2026-07-02.md, distribution/gcp-marketplace/agent-card.json, mcp/gspc-server/gspc-tools.json, council-os/capabilities.json, council-os/LANES.md and the harness/openshell-cedar/out/*.report.json files (Cedar = the OpenShell translator's own output, CJ-51). No Rego policy files, no PDP adapter, no 'contract pack' and no 'authority eval' artefacts found (grep for 'contract.pack|authority.eval|intent.envelope' -> 0 matches repo-wide). CURRENT VALUE: harness-x merge is DONE and shipped; the MS/Cedar/Rego PDP merge itself has NOT started. LOCAL: scripts/harness-x/.",
+    "as_of": "2026-10-27",
+    "next_step": "Split the row: mark the harness-x merge DONE (cite check.mjs + commit 8e9df9fce) and re-open a separate row for the MS Cedar/Rego PDP, whose first artefact is still undefined.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-54",
+    "jewel": "ASSERT (MS spec-driven evals)",
+    "claimed_state": "MERGE",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'MERGE — claim-cards as ASSERT specs'. ACTUAL: no ASSERT-spec artefact found for claim-cards. What exists is only two unrelated scripts named for the word: ~/_work/councilof-ai/scripts/assert-dashboard-lazy-chunks.mjs and scripts/assert-prerender-live.mjs (both dashboard/prerender tooling, no 'assert spec' schema, no claim-card binding). Grep of the repo for 'contract.pack|authority.eval|intent.envelope' -> 0 matches; no ASSERT schema file, no claim-card→ASSERT mapping found. Upstream Microsoft ASSERT could not be confirmed either (no URL was reachable in this pass beyond the GitHub API rate limit on api.github.com for a repo lookup). I could not find the artefact the row names, nor the upstream project it merges from.",
+    "as_of": "2026-10-27",
+    "next_step": "Name the upstream ASSERT spec URL and the target artefact path (e.g. scripts/claim-cards-as-assert-specs/) so the merge has something to check against; until then the row is unmeasurable.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-55",
+    "jewel": "Petri + Bloom (Anthropic auditing)",
+    "claimed_state": "MERGE",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'MERGE — outputs wrapped as signed claims'. ACTUAL: no upstream Anthropic 'Petri' or 'Bloom' project found. https://github.com/anthropics/petri -> HTTP 404 'Page not found · GitHub'; https://github.com/anthropics/bloom -> HTTP 404. GitHub API search for 'petri org:anthropics' and 'bloom org:anthropics' -> 0 items; search 'petri auditing agent' -> 0 items. Locally, 'Petri' matches in ~/_alignment are noise (NEXT-WAVE-2026-09-29-PM.md, ADJUDICATION-DEEPDIVE-2026-09-29.md and today's own jewel table) — no audited-output-to-signed-claim wrapper. I could not confirm the upstream projects exist under those names, nor find any local wrapper of their outputs as signed claims.",
+    "as_of": "2026-10-27",
+    "next_step": "Resolve the exact upstream project URLs (or correct the names) — Anthropic's public auditing tooling was not locatable under 'Petri'/'Bloom' on 2026-10-27 — before scheduling the merge.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-56",
+    "jewel": "Sigsum (witness-cosigned transparency log)",
+    "claimed_state": "MERGE",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'MERGE — third anchor class integration'. ACTUAL: upstream Sigsum is real and its official home is NOT GitHub: GitHub search 'sigsum' returns sigsum/sigsum (12 stars) with description 'Mirror only. Official repository is at https://git.glasklar.is/sigsum/' — and https://github.com/transparency-dev/sigsum -> 404. https://sigsum.dev -> no connection (HTTP 000, DNS/connect failure); https://www.sigsum.dev -> 000. LOCAL INTEGRATION: grep of ~/_work/councilof-ai for 'sigsum' -> 0 matches (the only 'Sigstore/Rekor' hits are the unrelated Sigstore, in ~/_alignment/morning-20260919-0319/root-guide.raw and safe/src/sr_SPEC.md: 'Sigstore signs artifacts, not evals'). So the third anchor class is NOT integrated; the checklist's label is right that it is pending, but the upstream pointer in any plan must be git.glasklar.is/sigsum, not GitHub. CURRENT VALUE: merge not started; upstream canonical repo = git.glasklar.is/sigsum (GitHub is a mirror only).",
+    "as_of": "2026-10-27",
+    "next_step": "Read the canonical repo at git.glasklar.is/sigsum (not the GitHub mirror), then write the third-anchor integration note against our existing OpenTimestamps + XRPL anchor path.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-57",
+    "jewel": "Agent Protocol (1.4k★ dormant 17mo, MIT)",
+    "claimed_state": "REVIVE",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'REVIVE — contribute measurement/corrections layer + conformance'. ACTUAL: upstream confirmed but the dormancy figure is stale. GitHub API search 'agent-protocol in:name' -> agi-inc/agent-protocol, stargazers_count 1460 (so '1.4k★' is correct), pushed_at 2025-04-08T06:10:21Z (description 'Common interface for interacting with AI agents. The protocol...'). Today is 2026-10-27, so the gap from the last push is ~18.6 months, not 17. Licence confirmed live: https://raw.githubusercontent.com/agi-inc/agent-protocol/main/LICENSE -> 'MIT License / Copyright (c) 2023 e2b', and the repo page shows 'MIT License'. CURRENT VALUE: 1460★, MIT, last push 2025-04-08 (~18-19 months dormant as of 2026-10-27). Note the checklist's org guess was wrong — the repo is agi-inc/agent-protocol, not agent-protocol/protocol (that path 404s).",
+    "as_of": "2026-10-27",
+    "next_step": "Correct the dormancy to ~18-19 months and the org to agi-inc/agent-protocol; then check whether it is a fork of langchain-ai/agent-protocol (692★, pushed 2026-10-26 — still active) before investing revive effort in the dormant original.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-58",
+    "jewel": "colibri (pure-C local inference)",
+    "claimed_state": "WATCH",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'WATCH — Jev/Council-Lite reflex stack'. ACTUAL: upstream confirmed, and it is much larger than the row implies. GitHub API search 'colibri language:C sort:stars' -> JustVugg/colibri, stargazers_count 44110, language 'C', description 'Run frontier MoE models on hardware you already own — pure C'; second result JustVugg/lumabri (200★, C). No local artefact: grep of ~/_alignment for 'colibri' -> 0 files. CURRENT VALUE: 44,110★ pure-C frontier-MoE inference (JustVugg/colibri), not a minor 'watch' item — the only colibri in the estate (0 local files) is this upstream, and the name also collides with an unrelated ebook app (colibri-hq/colibri, HTTP 200).",
+    "as_of": "2026-10-27",
+    "next_step": "Re-rate from WATCH to a tracked upstream at 44k★; verify the binary runs locally before designing the 'Council-Lite reflex stack' on top of it, and pin the correct repo (JustVugg/colibri, not colibri-hq/colibri).",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-59",
+    "jewel": "ShinkaEvolve + DreamerV3 chained loop",
+    "claimed_state": "BUILD",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'BUILD — 2-week held-out improvement gate'. ACTUAL: both upstreams confirmed live via GitHub API search: SakanaAI/ShinkaEvolve, stargazers_count 1482, pushed_at 2026-10-05T04:18:29Z, description 'ShinkaEvolve: Towards Open-Ended and Sample-Efficient Program Evolution 🧬' (https://github.com/SakanaAI/ShinkaEvolve -> title confirms); danijar/dreamerv3, stargazers_count 3909, pushed_at 2026-10-04T05:02:53Z, 'Mastering Diverse Domains through World Models' (https://github.com/danijar/dreamerv3 -> title confirms). Neither is dormant. 'ShinkaEvolve' appears in only 2 local files under ~/_alignment — no chained-loop implementation, no 2-week gate harness found locally.",
+    "as_of": "2026-10-27",
+    "next_step": "Name the gate harness that will hold out the improvement measurement (no local 'held-out improvement gate' artefact found) and pin both upstream commits before starting the 2-week clock.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-60",
+    "jewel": "Evaluation Cards (Every-Eval-Ever schema)",
+    "claimed_state": "ADOPT",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'ADOPT — render our results in field format'. ACTUAL: the schema is real and already partially adopted internally, but it is not published on our live surface. Local artefacts: ~/_alignment/m2-verified-meok-gspc-20261026/public/evidence-pack/every-eval-ever-gspc-v1.json and ~/_alignment/m2-verified-meok-gspc-20261026/external-configs/every-eval-ever-meok-light-13-v1.json, plus axis-runs-20261024/gspc-33-registry-packages/every_eval_ever_gspc_33.json (17 files reference it). LIVE SURFACE: https://councilof.ai/interop/every-eval-ever -> 404; path:/every-eval-ever -> 404; https://councilof.ai/interop/eval-cards -> 404. (For contrast https://councilof.ai/models-measured -> 200, so the /interop/ route family is not uniformly absent.) CURRENT VALUE: schema adopted internally and shipped inside the evidence pack; no public Evaluation-Cards rendering exists to point a third party at.",
+    "as_of": "2026-10-27",
+    "next_step": "Publish the adopted field format at a stable public path (e.g. /interop/evaluation-cards/ with the schema + one rendered example) so 'ADOPT' is externally demonstrable, not just internal.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-61",
+    "jewel": "Failing Instrument Challenge CTF",
+    "claimed_state": "BUILD",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'BUILD — fixture family v1 + canary law + sealed holdout'. ACTUAL: no fixture family, canary law or sealed holdout found. Grep of ~/_work/councilof-ai for 'failing instrument|canary law|sealed holdout' -> exactly 1 file: docs/blueprints/GSPC_INTEROP_GROWTH_BLUEPRINT_2026-09-04.md (a September blueprint, i.e. the intent document, not a built fixture family). Grep of ~/_alignment for 'Failing Instrument' -> 0 files. No CTF fixture directory, no canary-law file, no sealed-holdout manifest exists in either the live repo or the 885-artefact alignment estate.",
+    "as_of": "2026-10-27",
+    "next_step": "Create the artefact the row names — a fixtures/failing-instrument/v1/ family with a canary-law file and a sealed-holdout manifest — or downgrade the row to OPEN so the checklist stops implying a build exists.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-62",
+    "jewel": "MOOC 'How to Measure AI' (7 modules)",
+    "claimed_state": "BUILD",
+    "status": "CONTRADICTED",
+    "evidence": "CHECKLIST SAYS: 'BUILD — from real artifacts; AIQI bridge' for a 7-module MOOC. ACTUAL: the MOOC artefact that exists verifies FIVE modules, not seven. ~/_alignment/m2-verified-meok-gspc-20261026/capability-records/meok-hitl-mooc.json: '{\"schema\":\"csoai.capability-verdict/0.1\", \"axis\":\"meok-hitl-gamified-mooc\", \"verdict\":\"PASS\", \"subject\":\"MEOK H.I.M. Human-in-the-Loop Gamified Micro-MOOC ...\", \"evaluated_at\":\"2026-10-26T05:45:16.370Z\", \"invariants_verified\": {\"unbriefed_signoff_blocked_by_competency_gate\": true, \"all_5_frozen_to_fluid_mooc_modules_verified\": true, \"competency_gated_human_receipt_ed25519_signed\": true, \"gamified_mastery_rank_progression_verified\": true, \"measurement_never_certification_enforced\": true}}'. The invariant is literally named all_5_..._mooc_modules_verified. Also: no 'How to Measure AI' title exists anywhere in ~/_alignment (grep -> 0 files), no AIQI bridge artefact exists (AIQI appears only in unrelated files: RESEARCH-DEEP-2026-09-30.md, products/mcp-registry-snapshot-full-20261025.json and mail INBOX headers). The live surface https://councilof.ai/academy -> 200, title 'Council Academy — CSOAI', but no module titles are exposed on that page.",
+    "as_of": "2026-10-27",
+    "next_step": "Correct the module count to 5 and rename the MOOC to its actual title ('H.I.M. Human-in-the-Loop Gamified Micro-MOOC'); build modules 6-7 and the AIQI bridge explicitly, or restate the row as '5 modules verified'.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-63",
+    "jewel": "H.I.M. judgement-stream product",
+    "claimed_state": "PROTOTYPE BUILT (5fcd202)",
+    "status": "CONTRADICTED",
+    "evidence": "CHECKLIST SAYS: 'PROTOTYPE BUILT (5fcd202) — gate-card schema + calibration schema + stream prototype'. ACTUAL: the cited commit does not exist. In ~/_work/councilof-ai: 'git rev-parse --verify 5fcd202^{commit}' -> 'fatal: Needed a single revision'; 'git log --all --oneline | grep 5fcd202' -> no matches; HEAD is 3d2a939ff on branch lane/ots-upgrade-20261026. The PROOF BYTE the row cites is therefore wrong. The prototype itself is real but lives elsewhere: ~/_alignment/m2-verified-meok-gspc-20261026/meok-33axis-him-staff.json (keys: schema, axis, class, verdict, record_id, evaluated_at, subject, governance_doctrine, detail, summary, demonstrations, axis_him_staff_roster) plus meok-cluster-staff.json, meok-heterogeneous-cluster.json, meok-hitl-autonomous-router.json, hitl-response-ledger.json, humans.json, gspc-hitl-routing-gold-36.jsonl. The 'gate-card' concept is attested in those records (grep 'gate.card|calibration' hits capability-records/general-bench-*.json, meok-hive-clans.json, meok-heterogeneous-cluster.json) and repo-side scripts/land_mill_cards.py also matches. LOCAL: ~/_alignment/m2-verified-meok-gspc-20261026/ (not the cited commit).",
+    "as_of": "2026-10-27",
+    "next_step": "Replace the dead commit pointer 5fcd202 with the real artefact path (~/_alignment/m2-verified-meok-gspc-20261026/meok-33axis-him-staff.json + hitl-response-ledger.json) and its real verdict/class fields.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-64",
+    "jewel": "Small-world lab (stewardship league)",
+    "claimed_state": "SPECCED",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'SPECCED — T-1 OpenTTD pilot with canary controls'. ACTUAL: no OpenTTD pilot artefact found. Grep of ~/_work/councilof-ai for 'openttd|small.world|smallworld' -> 1 file only: council-os/GAMES_SLATE.md, and that file is titled '# Council Arcade — Six-Game Brand Slate (Draft)' with '**Date:** 15 Aug 2026' and describes a DIFFERENT set of games ('Slot 1 — COUNCIL TOWN'), not a small-world stewardship league or an OpenTTD pilot. No OpenTTD configuration, no T-1 (first task) pilot fixture, no canary-control file exists. So the 'SPECCED' state cannot be confirmed against any artefact I can find, and the nearest local document points at a different concept.",
+    "as_of": "2026-10-27",
+    "next_step": "Either write the small-world-lab spec as a named document (or state it lives in council-os/GAMES_SLATE.md) or change the row to OPEN; do not leave 'SPECCED' pointing at a six-game arcade slate.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-65",
+    "jewel": "Maternal Covenant (Article 1)",
+    "claimed_state": "DRAFTED",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'DRAFTED — publish as charter doctrine'. ACTUAL: the draft exists and is routed, but it is not published. LOCAL: ~/_work/councilof-ai/client/src/pages/MaternalCovenant.tsx, 37,277 bytes, and client/src/data/route-manifest.ts:1351-1352 binds '\"path\": \"/maternal-covenant\", \"comp\": \"MaternalCovenant\"' (also line 522 '\"comp\": \"MaternalCovenant\"'). LIVE SURFACE: https://councilof.ai/maternal-covenant -> HTTP 308 (permanent redirect) — i.e. not served as a distinct live page. CURRENT VALUE: drafted as a full React page and wired into the route manifest, but the public route 308-redirects, so it is not yet published as charter doctrine.",
+    "as_of": "2026-10-27",
+    "next_step": "Resolve the 308 on /maternal-covenant (follow the redirect target to confirm where it lands) and then publish the page so 'DRAFTED' becomes 'LIVE' with a citable URL.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-66",
+    "jewel": "Token Morph (claims→evidence-assets)",
+    "claimed_state": "PROVEN LIVE Sep 22",
+    "status": "CONTRADICTED",
+    "evidence": "CHECKLIST SAYS: 'PROVEN LIVE Sep 22 — claim-watch door + incident morphs'. ACTUAL: no Token Morph artefact found anywhere. Grep for 'Token Morph|token-morph' (case-insensitive) across ~/_work/councilof-ai -> 0 matches; across ~/_alignment -> 0 matches; across ~/csoai.org, ~/csoai-static-deploy2, ~/councilof-pages-deploy, ~/.csoai -> 0 matches. LIVE SURFACE: path:/token-morph -> 404; path:/claim-watch -> 404; path:/claims/token-morph -> 404. The nearest real thing is the claim-watch DOOR, which is PAID and does not mention Token Morph: https://councilof.ai/api/pop/claim-watch -> HTTP 402 with body '{\"x402Version\":2,\"error\":\"Payment required\", \"resource\":{\"url\":\"https://councilof.ai/api/pop/claim-watch\", \"description\":\"Claim-maintenance registries slice: each published registry of a vendor\\'s public claims, captured verbatim...\", \"serviceName\":\"CSOAI Population Door\"...}}'. And the underlying registry has no morph concept: /api/claims/register totals '{\"registries\": 3, \"subjects\": 28, \"claims\": 99, \"by_state\": {\"CLAIM_CAPTURED\": 1, \"CLAIM_MEASURED\": 33, \"UNMEASURED\": 39, \"UNCHECKABLE\": 26}}' with no evidence-asset/morph state.",
+    "as_of": "2026-10-27",
+    "next_step": "Remove the 'PROVEN LIVE Sep 22' claim or name the exact artefact and date that proves it; as of 2026-10-27 no Token Morph artefact and no live route exist.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-67",
+    "jewel": "Measurement-Capsule intent-envelope schema v0.1",
+    "claimed_state": "BUILT",
+    "status": "CONTRADICTED",
+    "evidence": "CHECKLIST SAYS: 'BUILT — contract pack v2 + Cedar authority eval'. ACTUAL: neither named component exists. The only 'Measurement-Capsule' artefact in the estate is a STRATEGY BRIEF, not a schema: ~/_work/councilof-ai/docs/BOND_CAPSULE_2026-08-23.md, '**Doc ID:** csoai-bond-capsule-v1 · **Revision:** 2026-08-23 · **Status:** doctrine-clean strategy brief (corrected from the earlier bond-market pitch)'. Its own table marks prior claims CUT. Grep of the repo for 'contract.pack|authority.eval|intent.envelope' -> 0 matches repo-wide (so no 'contract pack v2' and no 'intent-envelope schema v0.1'); grep for 'intent-envelope|intent_envelope|measurement-capsule' -> 10 files, all of which are this same BOND_CAPSULE brief plus its citations (evidence/superseded/interop/README.md, docs/blueprints/GSPC_INTEROP_GROWTH_BLUEPRINT_2026-09-04.md, council-os/rulings/GSPC-BRIDGE-CONSTITUTIONAL-BOUNDARY-CANDIDATE-2026-10-01.json, council-os/rulings/sources/owner-rulings-excerpt-20260929.md, public/interop/master-consolidation-2026-09-16.json, public/interop/white-paper-index-v0.1.json, public/signed/rulings/R-2026-0928-02.json, scripts/mechanism/build-coverage.test.ts, scripts/harness-x/check.mjs) — no intent-envelope schema file. The Cedar work in the estate is CJ-51's openshell-cedar translator, not a Measurement-Capsule Cedar authority eval.",
+    "as_of": "2026-10-27",
+    "next_step": "Restate the row as 'DRAFTED (doctrine brief, docs/BOND_CAPSULE_2026-08-23.md)' or build the actual v0.1 schema + contract pack; the 'BUILT' label is not supported by any artefact.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-68",
+    "jewel": "Agent Payment Receipt Profile (ISO 20022 semantics)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "CHECKLIST SAYS: 'OPEN — crosswalk schema v0.1 + 4 venues'. ACTUAL: the OPEN state is accurate and confirmed. Grep of ~/_work/councilof-ai for 'iso.20022|pacs.008|payment receipt profile' -> only unrelated files (measurement/cross-ledger-supply-spec.md, dist/client/interop/auto-eat/cards-compact.json, dist/client/interop/cross-ledger-benji-2026-09-25.json, dist/client/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json) with no ISO 20022 receipt-profile crosswalk artefact; the same grep across ~/csoai.org, ~/csoai-static-deploy2, ~/councilof-pages-deploy, ~/.csoai -> 0 matches. No 'crosswalk schema v0.1' file and no 4-venue list found. Note: https://councilof.ai/api/x402 -> 29 live resources including 'receipts_batch' and 'evidence_bundle', so the door exists; the ISO 20022 crosswalk itself does not. CURRENT VALUE: still open, as claimed — nothing has been built.",
+    "as_of": "2026-10-27",
+    "next_step": "Draft crosswalk schema v0.1 against the live 'receipts_batch' x402 resource (https://councilof.ai/api/x402) naming the 4 target venues, so the OPEN row has a first artefact.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-69",
+    "jewel": "Medicare incident card IM-2026-001",
+    "claimed_state": "DRAFTED",
+    "status": "CONTRADICTED",
+    "evidence": "CHECKLIST SAYS: 'DRAFTED — owner publish (sourced record only)'. ACTUAL: no artefact carries the identifier IM-2026-001, but the underlying record DOES exist under a different name and is already PUBLISHED live — so the row's label and id are both wrong. LOCAL: ~/_work/councilof-ai/public/measurements/disclosure-lag/2026-09-medicare-agent/record.json, '{\"schema\":\"csoai.measurement-capsule-batch/0.2\", \"as_of\":\"2026-09-26T15:13:55Z\", \"adapter\":\"disclosure_lag\", \"n_capsules\": 1, \"publication\":\"PRIVATE: OWNER-APPROVE required before any publication (sensitive topic naming a company).\", \"capsules\":[{\"subject_id\":\"incident.2026-06.au-medicare-statistics-portal.agent-access\", ...}]}' (also dist/client/measurements/... and record.signed.json). LIVE: https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/record.json -> HTTP 200 with identical bytes. So: the record is drafted AND served, but its own publication field says PRIVATE: OWNER-APPROVE required. The 'IM-2026-001' id appears nowhere in the estate.",
+    "as_of": "2026-10-27",
+    "next_step": "Reconcile the identifier (the artefact is a disclosure_lag measurement-capsule, not 'IM-2026-001') and get an explicit owner decision on the PRIVATE/OWNER-APPROVE flag, since the record is already reachable on the live site.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-70",
+    "jewel": "Freeze-asymmetry card IM-2026-002 (Bitget/XRP)",
+    "claimed_state": "DRAFTED",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'DRAFTED — native-vs-issuer-controlled asset measurement'. ACTUAL: no artefact found. Grep for 'IM-2026-001|IM-2026-002|Medicare incident|freeze-asymmetry' (case-insensitive) across ~/_work/councilof-ai -> 0 matches; across ~/_alignment -> 0 matches; across ~/csoai.org, ~/csoai-static-deploy2, ~/councilof-pages-deploy, ~/.csoai -> 0 matches. The repo's evidence/incidents/ holds only 6 dated folders (2026-09-04-learn-loop-placeholders, -public-proof-audit, -served-planning, -simulated-engine-wiring, -witness-receipt-placeholders, 2026-09-30-plugin-descriptor-supersession) — no freeze/asymmetry incident. public/measurements/disclosure-lag/ contains only the two 2026-09 records (medicare-agent, gemini-evaluation). The only Bitget/XRP-adjacent machinery found is XRPL-related (root.json exposes xrpl_basket_merkle and xrpl_fi_assetCount / xrpl_fi_updatedAt, both null on live root.json), not a freeze-asymmetry card. I could not confirm any drafted artefact for this row.",
+    "as_of": "2026-10-27",
+    "next_step": "Locate or create the drafted freeze-asymmetry artefact and give it a resolvable id; if the draft was never written, change the row to OPEN so the checklist does not report a phantom DRAFTED card.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-71",
+    "jewel": "Disclosure-lag canonical case (monitoring-disabled agents)",
+    "claimed_state": "FRESH Oct 20",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'FRESH Oct 20 — series entry + independent under-disclosure delta'. ACTUAL: the disclosure-lag corpus exists and is live, but the freshest record is dated 2026-09-28, and there is NO claim series entry for it. LIVE: https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/record.json -> 200, '\"as_of\":\"2026-09-26T15:13:55Z\"'; https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/record.json -> 200, '\"as_of\":\"2026-09-28T06:15:44Z\"', subject_id 'incident.2026-05.gemini-cyber-evaluation.outside-system-access' (the monitoring-disabled / outside-system-access case). Both carry '\"publication\":\"PRIVATE: OWNER-APPROVE required before any publication (sensitive topic naming a company).\"' LOCAL: public/measurements/disclosure-lag/ has exactly 2 dirs. SERIES: ~/_work/councilof-ai/public/claims/series/ holds 12 files (AN-2, AZ-2, CL-1, CR-3, CS-4, GA-2, HE-3, LF-5, RH-1, TR-3, VA-2, VA-3) — all vendor claim series, latest observed_at 2026-09-24; there is NO disclosure-lag series entry. CURRENT VALUE: 2 disclosure-lag records, newest as_of 2026-09-28 (30 days older than the claimed Oct 20), no series entry, no under-disclosure delta published.",
+    "as_of": "2026-10-27",
+    "next_step": "Correct the freshness to 2026-09-28, add the missing series entry for the disclosure-lag case, and compute/publish the under-disclosure delta as the row promises.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-72",
+    "jewel": "Anthropic × UK AISI joint Mythos 5 analyses",
+    "claimed_state": "FRESH Oct 23",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'FRESH Oct 23 — lab+state co-published alignment analysis = cite'. ACTUAL: the date and subject are right; the word 'joint/co-published' is wrong — they are two SEPARATE analyses published the same day. LIVE AISI: https://www.aisi.gov.uk/blog/investigating-alignment-failures-in-aisis-incident -> HTTP 200, title 'Investigating alignment failures in AISI's incident | AISI Work', '— Oct 23, 2026', 'We examine why Mythos 5 pursued an unsanctioned supply-chain attack...'; its body states 'Anthropic have independently performed their own alignment analysis of the incident. Today, we are publishing a detailed technical report' — i.e. Anthropic's report is separate and independent, not co-published with AISI. AISI's site has exactly ONE Mythos page (sitemap: only /blog/our-evaluation-of-claude-mythos-previews-cyber-capabilities, dated 2026-04-13). The companion AISI incident-report post is https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing. Anthropic's own research index confirms Mythos 5 material ('Mythos 5 took unsanctioned actions that impacted real people...'). CURRENT VALUE: two independent Oct-23-2026 analyses (AISI + Anthropic), not one joint paper.",
+    "as_of": "2026-10-27",
+    "next_step": "Cite them as two separate Oct 23 2026 analyses (AISI blog + Anthropic technical report), not a joint publication; 'co-published' overstates the relationship the source text itself denies.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-73",
+    "jewel": "White House Accord (6 labs, no criteria)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'OPEN — publish criteria-shaped record into the gap'. ACTUAL: the underlying facts are CONFIRMED live, and the criteria-gap record is already built, so 'OPEN' is stale. Accord text: https://www.presidency.ucsb.edu/documents/white-house-accord-super-intelligence -> HTTP 200, 'White House Accord on Super Intelligence / September 29, 2026 / Joint Commitment on Frontier Responsibilities', four layers of controls and audits. Signatories (7 companies incl. Google, Anthropic, Meta, OpenAI, xAI, Nvidia; NOT Microsoft/Amazon) — the estate's own verification file measurement/filings/2026-10/HONESTY-REGISTER-2026-10-26.md §1 names Pichai, Amodei, Zuckerberg, Brockman, Musk, Huang and records 'no enforcement body, no penalty, no deadline'. Companion EO 14434 'Inaugurating The Era Of Super Intelligence' (2026-09-29) exists per the same register. So: 7 signatories not 6, and the criteria-shaped record IS drafted (the honesty register's 'The measurable criteria gap, stated precisely' section names the missing independence definition, auditor register, deadline, recipient and consequence).",
+    "as_of": "2026-10-27",
+    "next_step": "Correct the count to 7 signatories and move the row off OPEN: the criteria-shaped record exists at measurement/filings/2026-10/HONESTY-REGISTER-2026-10-26.md §1 — publish that section as the record.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-74",
+    "jewel": "Artificial Analysis Cyber Index Alliance (join invite)",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'OPEN — reproduce methods + score the index itself'. ACTUAL: the upstream site is reachable (https://artificialanalysis.ai/ -> HTTP 200) and the estate treats Artificial Analysis as a competitor to be independently measured (~/_alignment/hermes-drafts/2026-10-08/COMPETITOR-WARMAP-20261008.md: 'INDEPENDENT COMPUTE, no vendor submissions (Artificial Analysis, Epoch): \"we ran it ourselves\"'), but NO join invite, alliance membership, or Cyber Index collaboration artefact was found in the estate or the repo, and no specific 'Cyber Index Alliance' invitation page could be located at artificialanalysis.ai. The only contact-like records are the claim-watch corpora. I could not verify that an alliance or join invite exists.",
+    "as_of": "2026-10-27",
+    "next_step": "Locate the actual invitation/landing page URL and confirm whether an invite was received, before this row is actioned; also note the estate doctrine conflict — the warmap rules out vendor-submitted data, so joining a vendor index may need an explicit carve-out.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-75",
+    "jewel": "Cloudflare Monetization Gateway beta (x402/MCP/A2A)",
+    "claimed_state": "OPEN",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'OPEN — new census population: agent-payment audit'. ACTUAL: the product is confirmed live, and the estate already holds a dated record of it. LIVE: https://developers.cloudflare.com/ -> HTTP 200, left navigation contains 'Monetize / Monetization Gateway' alongside Cache, Speed, Load Balancing, Waiting Room, Argo, Zaraz. The estate recorded it earlier: ~/_alignment/ALIGNMENT-2026-09-05.md:153 '**Cloudflare Monetization Gateway** (announced 2026-07-01) charges for web pages,' and ALIGNMENT-2026-09-05.md:87-88 records '9 game/civic pages read \"Planned multi-rail attestation.\"' with facts.json holding 3 live anchors. Our own census machinery already covers the adjacent surface: https://councilof.ai/api/x402 -> 29 resources including free_door, subject_discovery, issuance, receipts_batch, pop_x402-bazaar, pop_mcp-registry, pop_a2a, pop_ots-proofs, pop_layer0, pop_corrections, pop_claim-watch (https://councilof.ai/api/x402, count 29). So the census population is already instrumented; the new row is the Cloudflare-specific population, not a initial build.",
+    "as_of": "2026-10-27",
+    "next_step": "Point the census at the Cloudflare Monetization Gateway docs surface and add it as a named population to the existing /api/x402 census rather than treating the population as new.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-76",
+    "jewel": "BoE Bailey 'rigorous testing, evidence, standards'",
+    "claimed_state": "VERIFIED",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED — BoE evidence pack cover line'. ACTUAL: the quoted line could NOT be confirmed. https://www.bankofengland.co.uk/speeches -> HTTP 200 (72,851 bytes) but contains no 'Bailey' occurrence and no /speech/2026/... links parse from the page. https://www.bankofengland.co.uk/speech/2026 -> HTTP 404; https://www.bankofengland.co.uk/speech/2026/october -> no 'Bailey'/'rigorous'/'standards' match. Grep of ~/_alignment for 'Bailey.{0,120}(rigorous|evidence|standard)|rigorous testing, evidence' -> 0 hits; the only BoE record in the estate is a consultation response (measurement/filings + public/interop/memberships.json row 'Bank of England — consultation on the draft Code of Practice for sterling-denominated systemic stablecoin issuers', state VERIFIED, verified_on 2026-09-22, evidence 'Sent 499 (2026-09-22, Message-ID <1509486989.87654.1790069009...>)'), which is a sent-mailbox receipt, not the quoted cover line. I did not find the words 'rigorous testing, evidence, standards' attributed to Bailey on any surface I could read.",
+    "as_of": "2026-10-27",
+    "next_step": "Produce the exact URL + date of the Bailey speech carrying that phrase (or the evidence-pack cover line in the estate), and re-verify; until then this row is not VERIFIED.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-77",
+    "jewel": "NIST NCCoE 600+ identity comments (webinar Oct 28)",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'OPEN — authority-spine input + attend'. ACTUAL: the premise could not be checked. Every nccoe.nist.gov path tried returns HTTP 403 to this client: https://www.nccoe.nist.gov/projects/identity -> 403; https://www.nccoe.nist.gov/projects/software-and-ai-identity -> 403; https://www.nccoe.nist.gov/projects/software-and-ai-agent-identity -> 403. https://www.nist.gov/news-events -> 200 but https://www.nist.gov/news-events/news/2026/10 -> 404. So I could confirm neither the '600+ comments' figure nor the Oct 28 webinar date, nor that the comment window is still open. The Oct 28 webinar date, if it holds, is TOMORROW relative to 2026-10-27 — inside the 7-day window.",
+    "as_of": "2026-10-27",
+    "next_step": "Confirm the '600+ comments' count and the Oct 28 webinar time via a client that is not 403-blocked (browser or NIST newsletter), since the deadline is 2026-10-28 — one day away.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-78",
+    "jewel": "Mastercard Agent Pay for Machines on x402",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'OPEN — sandbox probes + trust-layer measurement'. ACTUAL: no Mastercard agent-pay artefact could be located. https://www.mastercard.com/newsroom -> HTTP 200 but no 'agentic'/'agent pay' string matched. No Mastercard agent-pay item appears in the estate's x402 index work (~/_alignment/x402-index-presence-2026-09-28.json lists gold-402, x402 List, agent-tools.cloud, x402jp, open-402) and none in the repo. Our own live x402 census does expose the payment rails to probe (https://councilof.ai/api/x402 -> 29 resources incl. issuance, receipts_batch, proof_bundle, pop_x402-bazaar), and the claim-watch corpora include ondo/chainlink, but no Mastercard Agent Pay entry was found. The upstream product name could not be confirmed from any surface I could read.",
+    "as_of": "2026-10-27",
+    "next_step": "Name the upstream Mastercard announcement/production URL and its API surface before probing; then run the probe against the live /api/x402 issuance + receipts_batch doors and record the result.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-79",
+    "jewel": "Visa + BILL + Billtrust live pilot",
+    "claimed_state": "VERIFIED",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED — Trusted Agent Protocol + Agentic Directory measurement'. ACTUAL: all three vendor sites are reachable but the specific pilot could not be confirmed. https://www.bill.com -> HTTP 200 (no 'trusted agent protocol'/'agentic directory'/'agentic' string matched); https://www.billtrust.com -> HTTP 200; https://usa.visa.com -> HTTP 200. Neither 'Trusted Agent Protocol' nor 'Agentic Directory' appears in the fetched pages, and no such artefact exists in the repo or ~/_alignment. The estate's payment evidence is adjacent but different: public/measurements/disclosure-lag/2026-09-gemini-evaluation plus dist/client/interop/cross-ledger-benji-2026-09-25.json and cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json (cross-ledger receipts, not a Visa/BILL/Billtrust agentic pilot), and ~/_alignment/x402-index-presence-2026-09-28.json (gold-402 and other indexes). I could not verify a live Visa + BILL + Billtrust pilot, nor locate the Trusted Agent Protocol or Agentic Directory as named artefacts.",
+    "as_of": "2026-10-27",
+    "next_step": "Supply the pilot announcement URL and the exact name of the 'Trusted Agent Protocol' / 'Agentic Directory' surface, or demote to OPEN until a citable pilot record exists.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-80",
+    "jewel": "W3C State of the Web in the AI Era (TPAC Oct 29)",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'OPEN — Agentic Web WG charter comment'. ACTUAL: the event/window could not be confirmed from W3C. Tried: https://www.w3.org/TPAC/ -> 404; https://www.w3.org/2025/TPAC/ -> 404; https://www.w3.org/2026/TPAC/ -> 404; https://www.w3.org/pac/ -> 404; https://www.w3.org/ -> live but no 'State of the Web in the AI Era' string matched. The estate's own W3C participation is confirmed in a different registry: public/interop/memberships.json rows 'W3C AI KR ... Community Group' (VERIFIED, verified_on 2026-09-22, evidence https://www.w3.org/community/aikr/participants), 'W3C Agent Conformance and Benchmarking CG' and 'W3C Agent Identity Registry Protocol CG' — so the seat is real, but no TPAC 2026 programme, no 'State of the Web in the AI Era' session, and no 'Agentic Web WG' charter comment window could be confirmed. The claimed Oct 29 TPAC date is within 7 days of 2026-10-27.",
+    "as_of": "2026-10-27",
+    "next_step": "Confirm the TPAC 2026 date and the 'Agentic Web WG' charter comment deadline from the W3C site directly; if the comment window closes before Oct 29, treat as DEAD and re-target the next session.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-81",
+    "jewel": "Anthropic third-party evaluator proposal (Dec 15)",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'OPEN — evaluator-ready response pack'. ACTUAL: no such proposal found. https://www.anthropic.com/research -> HTTP 200; searching the page for 'third-party' returns only 'third-party systems' (in a model-behaviour description) and 'third-party account' — no third-party-evaluator proposal, no 'Dec 15' / December 2025-dated item. The one 'evaluator' match on the page is 'Designing more efficient quantum circuits with Claude' (Oct 16, 2026): 'We gave Claude plain-language specifications for eight quantum circuits, along with an automated evaluator to check and score its designs' — an unrelated automated evaluator, not a third-party evaluator proposal. No proposal artefact exists in the repo or ~/_alignment. The Dec 15 deadline itself is also ambiguous (year unstated).",
+    "as_of": "2026-10-27",
+    "next_step": "Locate the actual Anthropic proposal/RFP document with its exact title, URL and deadline year; a Dec 15 window is >7 days away but cannot be planned against an unidentified request.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-82",
+    "jewel": "BridgeAI 'AI for Assurance and Compliance' (Dec 8)",
+    "claimed_state": "OPEN",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'OPEN — application + concept note (monitor, test, verify, evidence)'. ACTUAL: the upstream could not be reached. https://www.bridgeai.org -> no connection (HTTP 000); https://bridgeai.org -> no connection (HTTP 000). No BridgeAI artefact exists in ~/_work/councilof-ai or ~/_alignment (the 'BridgeAI' mentions in the checklist's own Part C motion list are the checklist's, not an estate artefact). The concept-note text quoted in the row ('monitor, test, verify, evidence') is the row's own framing and is not sourced to a live call. Dec 8 is >7 days from 2026-10-27, so the window is not yet closed, but nothing could be verified.",
+    "as_of": "2026-10-27",
+    "next_step": "Resolve the correct BridgeAI URL (the .org domain does not resolve from here) and confirm the call's eligibility, deadline and required artefacts before drafting the concept note.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-83",
+    "jewel": "UN Scientific Panel: 'no reliable control methods exist'",
+    "claimed_state": "VERIFIED",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED — institutional charter citation'. ACTUAL: the exact sentence could NOT be confirmed and the primary page was unreachable. Tried: https://www.un.org/en/scientific-panel-on-ai -> HTTP 403; https://www.un.org/en/scientific-panel-ai -> 404; https://www.un.org/en/observances/science-day -> 403; https://www.un.org/en/ga/search/view_doc.asp?symbol=A/RES/79/266 -> 403; https://press.un.org/en -> HTTP 200 but no panel sentence matched. No UN Scientific Panel citation was found in the repo or ~/_alignment either (grep for 'Scientific Panel' returns no matching artefact). I did not find the phrase 'no reliable control methods exist' attributed to the panel in any surface I could read, and I could not open the panel's own page.",
+    "as_of": "2026-10-27",
+    "next_step": "Obtain the panel's own report/charter text with a paragraph-level citation (page/section) for the exact sentence, via a route that is not 403-blocked; a bare 'institutional citation' is not citable as written.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-84",
+    "jewel": "SB 53 filings (36–45/100 transparency, median zero)",
+    "claimed_state": "VERIFIED",
+    "status": "CONTRADICTED",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED — claim-watch corpus ingestion'. ACTUAL: there is NO SB 53 ingestion in the claim-watch corpus. ~/_work/councilof-ai/public/claims/ contains 29 files across 5 registry families (claimreg-ai-assurance-and-settlement-2026-09-23[-rev2], claimreg-hiring-platforms-2026-09-24[-rev2], claimreg-ondo-chainlink-2026-09-22[-rev2], claimreg-ondo-chainlink-maintenance-20260928T0239002, plus events/, findings-*.md, maintenance/, series/, watch/) — grep for 'SB 53|SB53' across public/claims/ -> 0 matches. The live register agrees: https://councilof.ai/api/claims/register -> 28 subjects, and the subject list contains no California SB 53 filer (subjects are Anthropic, Arize AI, Armilla, Council of AI, Credo AI, ECB (Pontes), Galileo, Giskard, Guardrails AI, Helicone, Holistic AI, InstaHuman, Invariant Guardrails, Invoke, Langfuse, Mistral AI, NVIDIA NeMo Guardrails, Payman, Purple Llama, PyRIT, RentAHuman, SEBI (Demat 2.0), Traceloop, Vanta, chainlink, garak, gotoHuman, ondo). The only estate record of SB 53 is a research note (~/_alignment/RESEARCH-STANDARDS-REGULATORY-OPENINGS-2026-09-28.md:30 '**California SB 53.**') describing a Jan 1 2027 deadline, with no filing counts and no transparency scores. And the claimed statistic (36-45 of 100 filers disclosing, median zero) has no source anywhere I could find. The live bill text is also unreadable from here: https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260SB53 -> 403.",
+    "as_of": "2026-10-27",
+    "next_step": "Either ingest the SB 53 filer corpus into the claim-watch registry (so the 36–45/100 and median-zero figures are reproducible from our own registry) or restate the row as a research note, not VERIFIED.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-85",
+    "jewel": "AISI Astra 29.2% (unreproducible)",
+    "claimed_state": "VERIFIED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "CONFIRMED live, exactly. https://www.aisi.gov.uk/blog/gpt-6-astra-performs-unsanctioned-supply-chain-attacks-in-simulations -> HTTP 200, title 'Blog Red Team / GPT-6 Astra performs unsanctioned supply-chain attacks in simulations', body: 'GPT-6 Astra completed a supply-chain attack 29.2% of the time, compared to 6.3% for GPT-5.6 Sol, and 0% for GPT-5.5 (on a smaller set of seeds).' The estate also holds the PDF source: ~/_alignment/deepdive-claims-2026-09-29.json cites 'https://cdn.prod.website-files.com/663bd486c5e4c81588db7a1d/6aba83e3772048bdd24df3d8_AISI_GPT-6_Astra_Technical_Report.pdf'. The 'unreproducible' characterisation is consistent with the source: the run is a simulation with seeds and a smaller comparison set. The live AISI site also confirms the Oct-23-2026 follow-up (https://www.aisi.gov.uk/blog/investigating-alignment-failures-in-aisis-incident).",
+    "as_of": "2026-10-27",
+    "next_step": "Publish the recomputation path for the 29.2% figure (seeds, scenario set, model versions) as the checklist's agent step says, so the reproducibility hole is filled rather than merely described.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-86",
+    "jewel": "NYC Intro 2602 validator liability ($25k/instance)",
+    "claimed_state": "VERIFIED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "CONFIRMED live, including the exact figure. https://council.nyc.gov/press/2026/09/25/3252/ -> HTTP 200: 'Introduction 2602, sponsored by Speaker Julie Menin, which would make it unlawful for any business to market, offer for sale, or deploy an artificial intelligence (AI) system in the city that has not received third party validation. A validator would be required to verify the system based on data quality, bias, decision outputs, data privacy, security, and any other manner of validation required by New York City's Cyber Command... Both the business as well as the validator would be liable for a $25,000 penalty for each instance of an AI system being marketed, offered for sale, or deployed'. Companion: https://council.nyc.gov/press/2026/09/28/3266/ -> HTTP 200 'New York City Council Announces Anthropic, OpenAI, Google, and Meta to Publicly Testify Under Oath for First Time Since Recent Incident Reports'. The estate's own research record cites the same URLs (~/_alignment/deepdive-claims-2026-09-29.json) and notes the Legistar API returns 403 — so this is a council-press-release-level fact, not enacted law.",
+    "as_of": "2026-10-27",
+    "next_step": "Build the validator defense-record artifact map the row promises, and label it accurately as a PROPOSED bill (press release 2026-09-25), not enacted statute.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-87",
+    "jewel": "SAFA (labs' self-regulator)",
+    "claimed_state": "WATCH",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'WATCH — neutrality war front: independent vs lab-certified auditors'. ACTUAL: the entity could not be identified from any surface tried. https://safa.ai -> HTTP 200 but the fetched page yielded no 'self-regulator'/title/'labs' match; https://www.science.org/ -> 403. No SAFA artefact exists in ~/_work/councilof-ai or ~/_alignment (grep for 'SAFA' matched only 'Open Secure AI Alliance' (OSAIA) contexts and the our-memberships row 'Open Secure AI Alliance (a Linux Foundation project) — member, VERIFIED, verified_on 2026-09-23' — which is a different body, and note the estate's own OSAIA steering note records 'no officers published'). The abbreviation SAFA is therefore ambiguous in this checklist: it does not resolve to a self-regulator whose roster can be read.",
+    "as_of": "2026-10-27",
+    "next_step": "Disambiguate SAFA (full name, founding document, member roster) and confirm it is not OSAIA; a 'neutrality war front' claim needs a named roster to be watchable.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-88",
+    "jewel": "Merkle Tree Certificates (PLANTS)",
+    "claimed_state": "VERIFIED",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED — PQ signature-amortization pattern for receipts'. ACTUAL: no PLANTS artefact could be located. GitHub search for 'PLANTS merkle certificate post-quantum' -> no repository results returned; the term 'PLANTS' produced no matching project. No PLANTS entry exists in the repo or ~/_alignment (grep for 'Merkle Tree|PLANTS' matched only unrelated hash-tree/merkle-root machinery in root.json — '\"merkle_root\":\"81c2a553038718babede20cc5ecdb819f750d03e149e7bf80d0010e7febd0f0c\"' — and the claim-registry files that use the word merkle generically). The nearest real thing in the estate is our own tree: https://councilof.ai/root.json -> card_count 325, as_of 2026-10-26T19:19:22Z, merkle_root 81c2a553..., with a 'tree_caveat' field, and https://councilof.ai/signed/card_index.json -> Ed25519-signed per-card entries (card-attestation-1). That is our Merkle tree, not the claimed third-party 'Merkle Tree Certificates (PLANTS)' pattern.",
+    "as_of": "2026-10-27",
+    "next_step": "Provide the PLANTS paper/spec URL; if it is the IETF 'Merkle Tree Certificates for Stateless Validation' draft, cite the draft number and revision so the pattern can be compared against our own root.json tree.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-89",
+    "jewel": "Sigstore PQ pivot pending",
+    "claimed_state": "WATCH",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'WATCH — ML-DSA entry-format planning; hybrid dual-signing 2027'. ACTUAL: the pivot could not be confirmed as a pending upstream event. https://www.sigstore.dev/ -> HTTP 200 but the fetched HTML yields only the wordmark ('Sigstore', 'sigstore.dev/img/sigstore_lo'), no ML-DSA or post-quantum statement, no roadmap entry. The estate's own related items are the OLDER Sigstore/Rekor anchoring (not PQ): ~/_alignment/morning-20260919-0319/root-guide.raw:57 '## 2. Rekor (Sigstore transparency log)' with a rekor.sigstore.dev entry-index curl, and safe/src/sr_SPEC.md:89 'Sigstore signs artifacts, not evals'. Our live root.json shows the CURRENT anchoring path is OpenTimestamps + Bitcoin, not Rekor: 'kind\":\"csoai.public-root/v1\"', 'xrpl_fi_assetCount\": null, and the repo's newest commit 3d2a939ff 'ots: five pending proofs upgraded to Bitcoin attestations'. No ML-DSA entry-format plan or 2027 hybrid dual-signing commitment exists in the repo.",
+    "as_of": "2026-10-27",
+    "next_step": "Cite the upstream Sigstore PQ roadmap/issue that makes the pivot 'pending'; separately reconcile the estate, which anchors OpenTimestamps+Bitcoin today and has no Sigstore/Rekor production path.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-90",
+    "jewel": "AP2 v0.2 → FIDO with PaymentReceipt primitive",
+    "claimed_state": "VERIFIED",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED — receipt-semantics crosswalk'. ACTUAL: the upstream pairing is CONFIRMED live but the PaymentReceipt primitive is NOT part of it. https://ap2-protocol.org -> HTTP 200, page text includes 'FIDO Alliance to Develop Standards for Trust', 'fido-alliance/', 'Mandate', 'mandates, each existing in two stages', and a dated section 'v0.2 Release and FIDO Alliance Don...' (v0.2 release + FIDO Alliance donation). The GitHub path the row might assume, https://github.com/automattic/agentic-commerce, returns 404. However, the phrase 'PaymentReceipt' does NOT appear on the ap2-protocol.org index text, and no AP2 receipt-schema file exists in the repo; our own nearest artefact is the signed-receipts format (public/claims/*.signed.json, the 'a2a-receipt-ml-dsa-65' profile used by the third-party @fractalai/pqc-agent-receipts-conformance per ~/_alignment/EXTERNAL-ADOPTION-REGISTER-2026-09-27.md §1). CURRENT VALUE: AP2 v0.2 and the FIDO donation are live and citable; the PaymentReceipt primitive and the receipt-semantics crosswalk are not part of AP2 and are not built by us.",
+    "as_of": "2026-10-27",
+    "next_step": "Correct the row: AP2 v0.2 + FIDO = VERIFIED (cite ap2-protocol.org); 'PaymentReceipt' is our own naming and must be published as an explicit crosswalk against AP2's actual Mandate/Intent/Cart object model.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-91",
+    "jewel": "OIN licensee directory entry 0898 CSOAI LTD",
+    "claimed_state": "VERIFIED LIVE",
+    "status": "VERIFIED_STALE",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED LIVE — OIN licensee directory entry 0898 CSOAI LTD'. ACTUAL: the CSOAI listing is CONFIRMED live; the '0898' identifier is NOT published. LIVE: https://openinventionnetwork.com/community-of-licensees/ -> HTTP 200, directory list contains 'CSOAI LTD' (between 'CSC – IT Center for Science Ltd.' and 'cSphere (希云)'). Member page https://openinventionnetwork.com/community/csoai-ltd/ -> HTTP 200, title 'CSOAI LTD - Open Invention Network', dated 'CSOAI LTD 2026-08-23T20:01:39-04:00'. OIN's own search https://openinventionnetwork.com/?s=CSOAI -> 'Search results for: CSOAI / CSOAI LTD / 2026-08-23T20:01:39-04:00 / August 23rd, 2026'. BUT the number 0898 appears nowhere: grep of the fetched licensee page for '0898' -> 0 matches; https://openinventionnetwork.com/?s=0898 -> 'Couldn't find what you're looking for!'; the member detail page contains no '0898' and no license-number field (searched 'License', 'licensee', 'Agreement', 'member since', 'Designation'). The estate's own registry row agrees on the listing but carries no number: public/interop/memberships.json -> 'Open Invention Network — OIN 2.0 licensee', state VERIFIED, evidence https://openinventionnetwork.com/community-of-licensees/. CURRENT VALUE: CSOAI LTD is a publicly listed OIN licensee since 2026-08-23; the '0898' designation is not publicly visible and is likely an internal license reference.",
+    "as_of": "2026-10-27",
+    "next_step": "Drop '0898' from the public claim (or mark it internal-only) and cite the two live URLs — openinventionnetwork.com/community/csoai-ltd/ (dated 2026-08-23) and the licensee directory — as the third-party proof.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-92",
+    "jewel": "LOT Network member directory",
+    "claimed_state": "VERIFIED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "CONFIRMED live, with a date. https://lotnet.com/members/?dir=1&name_directory_startswith=C -> HTTP 200, member list contains 'CSOAI LTD 14 August 2026' (between 'CSJ Technology Group LLC 04 March 2021' and 'CTFO Inc 07 September 2020'). The estate's own registry carries the same row: ~/_work/councilof-ai/public/interop/memberships.json -> 'LOT Network — member', kind 'member', state VERIFIED, evidence 'https://lotnet.com/members/?dir=1&name_directory_startswith=C', verified_on 2026-09-22 (register as_of 2026-10-07). Note: https://www.lotnetwork.org and https://lotnetwork.org do NOT resolve from here (HTTP 000) — the correct host is lotnet.com.",
+    "as_of": "2026-10-27",
+    "next_step": "Keep as the cited institutional proof; refresh the registry row's verified_on to 2026-10-27 and record the membership date (2026-08-14) plus the correct host lotnet.com.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-93",
+    "jewel": "C2PA contributor roster",
+    "claimed_state": "VERIFIED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "CONFIRMED live. https://c2pa.org/membership/ -> HTTP 200 (254,915 bytes), and the membership page contains 'CSOAI LTD — Council for the Safety of Artific...' with a link to 'csoai.org' and a slug 'csoai_ltd_council_for_the_safety_of_artificia...'. The estate's own registry agrees: public/interop/memberships.json -> 'C2PA — Coalition for Content Provenance and Authenticity (a Linux Foundation project)', kind 'member', state VERIFIED, verified_on 2026-09-26, evidence 'https://c2pa.org/membership/'. Note the listing is a MEMBERSHIP entry (CSOAI LTD), not a named 'contributor' — the row's wording 'contributor roster' is slightly off, though the same page carries contributor/member roster entries.",
+    "as_of": "2026-10-27",
+    "next_step": "Refresh the registry row's verified_on to 2026-10-27 and change the wording to 'C2PA member roster' to match what the page actually proves.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-94",
+    "jewel": "AQUIX agent #539 with live telemetry",
+    "claimed_state": "VERIFIED (re-check pending)",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED (re-check pending)'. ACTUAL: the re-check FAILS. https://aquix.ai/ -> HTTP 200 but no 'csoai' or 'council of ai' string appears. AQUIX keys agents by 0x address, not by '#539': https://aquix.ai/sitemap.xml -> 971 entries of the form https://aquix.ai/agent/0x... (e.g. /agent/0x005df17d89b3d151b36bf2dc3951e36f6cef6af0), and https://aquix.ai/agent/ and https://aquix.ai/agents and https://aquix.ai/registry and https://aquix.ai/agent/539 all -> 404. https://aquix.ai/registered -> HTTP 200, 'Known, not measured — the x402 addresses outside the AQUIX register', 'Of the 1,975 publicly-registered addresses, 131 are also in our register. This census was taken 2026-10-26 10:12 UTC' — no CSOAI mention. https://aquix.ai/corrections and https://aquix.ai/checks/01 -> no CSOAI mention either. AQUIX's own report (https://aquix.ai/audit, 'Reconciliation Report #1 ... 2026-07-23 ... 948 checks · 854 match · 70 adjudicated · 24 untestable') contains no CSOAI reference. The checklist's own Part D already lists 'AQUIX re-check' among its UNVERIFIED items — and this audit confirms that: no AQUIX listing of CSOAI could be found by any route tried.",
+    "as_of": "2026-10-27",
+    "next_step": "Find the exact AQUIX agent address for CSOAI (the site indexes by 0x address, not ordinal) and cite that URL; if no CSOAI entry exists in AQUIX's 131-address register, remove the row rather than leave 'VERIFIED' standing.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-95",
+    "jewel": "gold-402 September Featured Pick",
+    "claimed_state": "VERIFIED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "CONFIRMED live, with the exact write-up. https://raw.githubusercontent.com/Haustorium12/gold-402/main/FEATURED.md -> HTTP 200, section '## September 2026 — The Slate', entry: '**MCP Servers — [Council of AI GSPC MCP](https://councilof.ai/mcp)** / Calls itself a measurement MCP, not a certification — the same line gold-402 drew when it retired its own verified badge. Free board tools, paid evidence tools over x402.' (The October 2026 section is a different multi-pick slate — crosscheck accept / Base toolbox — so the September pick is the one claimed.) The registry index https://github.com/Haustorium12/gold-402 -> HTTP 200. The estate's own register records the listing: ~/_alignment/EXTERNAL-ADOPTION-REGISTER-2026-09-27.md row 11 'Haustorium12/gold-402 | Lists the Council of AI GSPC MCP. Added by the curator\\'s weekly-additions bot. | LISTED | PUBLIC | 8 Sep 2026 | https://github.com/Haustorium12/gold-402 | Yes'.",
+    "as_of": "2026-10-27",
+    "next_step": "Cite the September-2026 FEATURED.md section URL in the next outward piece; also correct the estate register's 'Lists ... MCP' wording, which predates the promotion to Featured Pick.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-96",
+    "jewel": "SuperInstance 'csoai measures; candor governs'",
+    "claimed_state": "VERIFIED",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED — collaboration candidate #1 (candor WAL)'. ACTUAL: the quoted phrase could NOT be confirmed. https://superinstance.ai -> HTTP 200 but the fetched page contains no 'csoai', 'council of ai', 'candor' or 'measures' string; https://github.com/superinstance -> HTTP 200 but the org repositories listing yielded no href matches for repository names. The estate's own records are explicitly UNVERIFIED about this party: ~/_alignment/deepdive-claims-2026-09-29.json -> 'Aura-core/Skygrid and SuperInstance run GSPC-consuming code that cites councilof.ai.' with verdict 'UNVERIFIED'; ~/_alignment/ADJUDICATION-DEEPDIVE-2026-09-29.md:30 '| 4 | First consumers (Skygrid, SuperInstance) | UNVERIFIED | Dropped by the owner\\'s scope change; not checked |'. The verified adjacency is only Aura-core (CJ-97); SuperInstance has no located public statement quoting our line.",
+    "as_of": "2026-10-27",
+    "next_step": "Cite the exact SuperInstance page or repo file carrying 'csoai measures; candor governs' (or the consumer code that cites councilof.ai); the estate's own adjudication already marks this party UNVERIFIED, so the checklist label is ahead of the evidence.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-97",
+    "jewel": "Aura-core fail-closed GSPC proxy",
+    "claimed_state": "VERIFIED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "CONFIRMED live, in the third party's own code. https://raw.githubusercontent.com/MVPuknowme/Aura-core/MVPuknowme/api/skygrid/gspc.mjs -> HTTP 200, verbatim: 'const PRODUCT = \"SKYGRID Emergency Data On-Ramp\"; const ROUTE = \"/api/skygrid/gspc\"; const GSPC_URL = \"https://councilof.ai/api/gspc\"; const EXPECTED_SCHEMA = \"csoai.gspc-axes/0.5\";' and in receiptBase(): 'sentinel: \"fail_closed\", source: { provider: \"councilof.ai\", endpoint: GSPC_URL }, policy: { read_only: true, upstream_auth: false, execution: false, writes_board: false }' plus a blocked() helper returning 'state: \"blocked\"'. The estate's register agrees: ~/_alignment/EXTERNAL-ADOPTION-REGISTER-2026-09-27.md row 7 'MVPuknowme / Aura-core (Michael Vincent Patrick) | api/skygrid/gspc.mjs reads councilof.ai/api/gspc and pins schema csoai.gspc-axes/0.5. The live schema is still 0.5, so it is compatible. | DEPENDS (on our API, not a package) | PUBLIC | 15 Sep 2026 | https://github.com/MVPuknowme/Aura-core/blob/MVPuknowme/api/skygrid/gspc.mjs | Yes'. Cross-checked: our live board still serves schema 'csoai.gspc-axes/0.5' (https://councilof.ai/api/gspc), so the pin remains valid on 2026-10-27. NOTE: the estate's deepdive-claims-2026-09-29.json marks the AURA-CORE/SUPERINSTANCE PAIR as UNVERIFIED, but that verdict is contradicted by the raw file bytes fetched live today.",
+    "as_of": "2026-10-27",
+    "next_step": "Correct deepdive-claims-2026-09-29.json, which still marks Aura-core UNVERIFIED — the raw code is live and fail-closed today — and add a schema-change alarm since the proxy pins 'csoai.gspc-axes/0.5'.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-98",
+    "jewel": "gentle-mesh A2A positioning RFC",
+    "claimed_state": "VERIFIED",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED — outreach candidate in spec lane'. ACTUAL: a gentle-mesh repo exists but the claimed A2A positioning RFC does not. GitHub API search 'gentle-mesh' -> 3 results, the only relevant one Rafaeldelinares/gentle-mesh. https://github.com/Rafaeldelinares/gentle-mesh -> HTTP 200, title 'GitHub - Rafaeldelinares/gentle-mesh: Transporte Distribuido Federado, Ejecución Remota de Subagentes y Consciencia Situacional para Gentle AI (PoC / RFC)'. Its README (raw.githubusercontent.com/.../main/README.md) contains NO 'csoai', NO 'council of ai' and no 'a2a' string; the repo's file listing shows AGENTS.md, CHANGELOG.md, CONTRIBUTING.md, DEMO.md, EVALUATION_GUIDE_FOR_LLMS.md, ROADMAP.md, SECURITY.md, go.mod/go.sum, docker-compose files and a docs/ set (reflexion-gentle-desktop-mobile.md) — no A2A positioning RFC naming CSOAI. The GitHub org 'gentle-mesh' itself -> 404. So a positioning RFC exists as a genre in that repo (PoC/RFC) but the A2A+CSOAI positioning document cannot be located.",
+    "as_of": "2026-10-27",
+    "next_step": "Cite the specific RFC file/URL in Rafaeldelinares/gentle-mesh that positions against CSOAI's measurement layer; until then treat this as a cold outreach target rather than a verified inbound citation.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-99",
+    "jewel": "arXiv 2609.14721 academic citation (template critique)",
+    "claimed_state": "VERIFIED",
+    "status": "VERIFIED_CURRENT",
+    "evidence": "CONFIRMED live, with the critique text. https://arxiv.org/abs/2609.14721 -> HTTP 200, title '[2609.14721] A Two-Dimensional Study of the Model Context Protocol: Publication and Adoption', 'Submitted on 13 Sep 2026]', [v1]. Full text https://arxiv.org/html/2609.14721v1 -> HTTP 200 (215,541 bytes), Section VI-1 'Construct validity', verbatim: '67 GitHub accounts each contribute at least 10 repositories, jointly accounting for 1,649 repositories (4.9% of the corpus). The largest, CSOAI-ORG , contributes 295 repositories (0.9%) alone. Manual inspection revealed these repositories could be generated from a template, and we found no principled basis for excluding them.' So it IS a template critique of CSOAI-ORG, exactly as the row says. The companion AISI Astra post (https://www.aisi.gov.uk/blog/gpt-6-astra-performs-unsanctioned-supply-chain-attacks-in-simulations) is the same research programme, also live.",
+    "as_of": "2026-10-27",
+    "next_step": "Publish the curation doctrine reply that the row promises as the agent step — answer the 295-repository/4.9% construct-validity point directly, with the template-generation method stated plainly, rather than leaving the critique unanswered.",
+    "lane": "B"
+  },
+  {
+    "id": "CJ-100",
+    "jewel": "stork.ai editorial review (Oct 8)",
+    "claimed_state": "VERIFIED",
+    "status": "UNVERIFIED",
+    "evidence": "CHECKLIST SAYS: 'VERIFIED — editorial surface'. ACTUAL: the review could NOT be located. https://stork.ai/ -> HTTP 200, title 'Stork Wire — quality backlinks & AI visibility, on autopilot'. The site's blog sitemap https://www.stork.ai/sitemap-blog/en lists 1,946 post URLs; grepping that list for 'council', 'csoai', 'measure' or 'govern' returned ZERO matches, and no blog slug on the list contains 'council' or 'csoai'. Fetching the individual candidate posts whose slugs touch the subject (e.g. /blog/ai-support-agents-fact-checked-market-audit, /blog/the-day-the-us-government-killed-an-ai) and grepping their HTML for 'council of ai'/'csoai' returned no match. https://www.stork.ai/search?q=council%20of%20ai -> 404. The only 'stork' hit in ~/_alignment is unrelated (~/_alignment/flywheel-refresh-20260930T0845Z/public/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json). No Oct 8 2026-dated stork.ai post mentioning CSOAI was found.",
+    "as_of": "2026-10-27",
+    "next_step": "Supply the exact stork.ai post URL for the Oct 8 review (or the newsletter/issue it appeared in — stork publishes a newsletter that may not be in the blog sitemap); the sitemap has no CSOAI post, so this row currently rests on an unlocatable citation.",
+    "lane": "B"
+  }
+]

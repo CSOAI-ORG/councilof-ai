@@ -11,6 +11,7 @@ import sys
 # has ONE producer, scripts/hf/cite_block.py; this card passes through it so a rebuild keeps the block.
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "hf"))
 from cite_block import apply as cite_apply  # noqa: E402
+from hf_card_metadata import render as render_metadata, VIEWER_REPAIRS  # noqa: E402
 
 
 
@@ -165,7 +166,8 @@ def render(out):
     R += measurement_chain_pointer()
     R.append("## Licence\n")
     R.append("Index data CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). verify.py and the build scripts Apache-2.0. Each indexed item keeps its own licence, stated per item; this index relicenses nothing.\n")
-    (out / "README.md").write_text(cite_apply("\n".join(R) + "\n", "csoai/evidence-index"))
+    card = cite_apply("\n".join(R) + "\n", "csoai/evidence-index")
+    (out / "README.md").write_text(render_metadata("csoai/evidence-index", card, VIEWER_REPAIRS["csoai/evidence-index"], None))
     print("rendered index.md (%d lines) README.md (%d lines)" % (len(L), len(R)))
 
 

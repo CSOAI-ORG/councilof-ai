@@ -1,0 +1,114 @@
+{
+  "card": {
+    "as_of": "2026-10-28T03:18:49.884Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.claim-maintenance.text-delta/0.1",
+      "state": "PROBED",
+      "axis": "claim-maintenance",
+      "wave": 3,
+      "run_id": "claim-maintenance-wave3-20261028",
+      "observed_at": "2026-10-28T03:18:49.884Z",
+      "authority_for": "a dated re-read of 77 public claim pages, comparing the sha256 of their visible text between two waves",
+      "n_subjects": 77,
+      "n_valid": 77,
+      "n_valid_min": 30,
+      "counts": {
+        "TEXT_CHANGED": 32,
+        "TEXT_UNCHANGED": 45
+      },
+      "baseline": {
+        "wave": 2,
+        "observed_at": "2026-10-27T08:09:16.700Z",
+        "text_digest_baseline": true
+      },
+      "negative_control": {
+        "kind": "text-digest recomputation",
+        "result": "DISCRIMINATING (see runner)"
+      },
+      "method_sha256": "0a0a89b502985b656ea455d22f2e4f9fb849b238d78ac761ab6cc40e9d73f1ff",
+      "extractor": "sha256 over the visible text of each page, capped at 400000 bytes, read twice 30s apart",
+      "transport_note": "Node fetch. councilof.ai answers 200 here and 403 to urllib under the Cloudflare rule `public-data: no BIC`; the estate's own urllib builders read as \"unreachable\" for that reason.",
+      "artefact": {
+        "url": "https://councilof.ai/interop/subject-axis-live-20261027/claim-maintenance.wave3-20261028.json",
+        "bytes_sha256": "8a64c885b1be145f07a7429c80c3bd5f33c8a56d6055e4aa1e2baf4115e75378",
+        "n_bytes": 50458
+      },
+      "dry_run_card": {
+        "url": "https://councilof.ai/interop/subject-axis-live-20261027/card-dryrun-claim-maintenance-wave3-20261028.json",
+        "content_id": "30acaa37a95efecd0418a2d39f29ea4afb17767f21003def604e98035575a09e",
+        "signature_state": "UNSIGNED_DRY_RUN"
+      },
+      "not_a_grade": true,
+      "what_this_does_not_establish": [
+        "Whether any claim is true. A re-read says what was served today, not what is correct.",
+        "Whether a change was material. A text change is a candidate material change; the adjudication is a human call.",
+        "Any promotion of the claim-maintenance axis. That axis is a declared slot with no run behind it and stays UNMEASURED.",
+        "A ranking, a grade, a status or an approval of any subject."
+      ]
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "97bce819ef26086fe16236051e9ebf3f3d2c3812723581de44e6b935a0253c5e",
+    "sig_ed25519": "0f885a4c9207b94574c0ec9243ae2fb6f3a31564024c3fbfdf6371dac3f40b9a8639ec9084ff05667c0689c53be5d935faff30079c395474f31a6ada521a6203",
+    "source_urls": [
+      "https://councilof.ai/interop/subject-axis-live-20261027/claim-maintenance.wave3-20261028.json",
+      "https://councilof.ai/interop/subject-axis-live-20261027/card-dryrun-claim-maintenance-wave3-20261028.json",
+      "https://councilof.ai/spec/claim-maintenance/v0.2/"
+    ],
+    "subject": "Claim-maintenance wave 3: visible-text deltas over 77 public claim pages, wave 2 to wave 3",
+    "surface": "public.notice",
+    "tags": [
+      "claim-maintenance",
+      "wave-3",
+      "text-delta",
+      "claim-maintenance-2026-10"
+    ],
+    "unmeasured": [
+      "whether any changed text is material; the adjudication is a human call and no third party is named from a delta",
+      "whether any claim is true"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "70dc98d5689b9f6551ddae5b92b5aac48b9b5ed3cb9821f31615c4af49cad7fd",
+    "6f3488b383c3ecbdb6366eee38683a0278158fa3751b3bf0ff87422d118a56d7",
+    "b41619c8d48e6233ecb8e9c639bb8411ce3f1d86287957a191d9ecc0b0ba57fe",
+    "a8664263c641796b2836c08c82d8789506ce0c24399761f88fdee82e6e5dfdff",
+    "73b5cde3a2d5d47a17d9f637207782457f5060cce8d96fc319e8cb734342911b",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "13999954b3400b5fc056fafbc2630743735bbbf40cf9b53b045d73c95c0cf015",
+    "c0585a5a862dd0d528ea31e2924ecb1a5fb03cbcf327bc70721ca7f025210dda",
+    "64b80cfb5eaf6db74b79d27190fdc9010eda89d74fc5133ba5441211a67d9fea"
+  ]
+}
