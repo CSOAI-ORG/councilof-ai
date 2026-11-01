@@ -48,21 +48,28 @@ def output_facts(stream) -> tuple[str, dict | None]:
     stream.seek(0)
     checksum = hashlib.sha256()
     counts = None
+    current_collection = None
     for line in stream:
         checksum.update(line)
+        scope = re.fullmatch(rb"current-collection: (AVAILABLE|UNAVAILABLE)\s*", line)
+        if scope:
+            current_collection = scope[1].decode("ascii")
         match = re.fullmatch(
-            rb"pod-push: complete runs (\d+) \xc2\xb7 (?:pushed|planned) (\d+) \xc2\xb7 "
+            rb"pod-push: (complete runs|closed bundles) (\d+) \xc2\xb7 (?:pushed|planned) (\d+) \xc2\xb7 "
             rb"already upstream (\d+) \xc2\xb7 partial skipped (\d+)(?: \xc2\xb7 DRY RUN)?\s*", line,
         )
         if match:
-            counts = dict(zip(("complete_runs", "pushed_or_planned", "already_upstream", "partial_skipped"),
-                              (int(value) for value in match.groups())))
-            if counts["complete_runs"] != counts["pushed_or_planned"] + counts["already_upstream"]:
+            unit = "complete_runs" if match[1] == b"complete runs" else "closed_bundles"
+            counts = dict(zip((unit, "pushed_or_planned", "already_upstream", "partial_skipped"),
+                              (int(value) for value in match.groups()[1:])))
+            if counts[unit] != counts["pushed_or_planned"] + counts["already_upstream"]:
                 counts = None
         empty = re.fullmatch(rb"nothing complete to push \((\d+) partial\)\s*", line)
         if empty:
             counts = {"complete_runs": 0, "pushed_or_planned": 0,
                       "already_upstream": 0, "partial_skipped": int(empty[1])}
+    if counts is not None and current_collection is not None:
+        counts["current_collection"] = current_collection
     return checksum.hexdigest(), counts
 
 
@@ -94,6 +101,9 @@ def run_once(args: argparse.Namespace, *, clock: Callable[[], float] = time.time
             b"def private_head(", b"def freeze_runs(", b"parent_commit=revision", b'"--token-file"',
         )):
             raise ValueError("uploader lacks the atomic private-intake contract")
+        current_root = getattr(args, "current_root", None)
+        if current_root is not None and b"def freeze_current_runs(" not in source:
+            raise ValueError("uploader lacks the current-run snapshot contract")
         receipt = {"schema": SCHEMA, "state": "RUNNING", "repo": REPO,
                    "started_at": timestamp(started), "started_epoch": started,
                    "next_due_epoch": started + args.interval_seconds,
@@ -101,6 +111,8 @@ def run_once(args: argparse.Namespace, *, clock: Callable[[], float] = time.time
         write_receipt(latest, receipt)
         command = [sys.executable, str(args.uploader), "--root", str(args.root), "--repo", REPO,
                    "--token-file", str(args.token_file)]
+        if current_root is not None:
+            command.extend(["--current-root", str(current_root)])
         if args.dry_run:
             command.append("--dry-run")
         with tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
@@ -115,11 +127,13 @@ def run_once(args: argparse.Namespace, *, clock: Callable[[], float] = time.time
                 code, state = 127, "FAILED_TO_START"
             stdout_hash, counts = output_facts(stdout)
             stderr_hash, _ = output_facts(stderr)
+        if counts is not None and "current_collection" in counts:
+            receipt["current_collection"] = counts.pop("current_collection")
         if code == 0 and counts is None:
             # A zero process exit is not proof that a bundle was durably copied.
             code, state = 65, "UNCONFIRMED_OUTPUT"
-        elif code == 0 and counts["complete_runs"] == 0:
-            state = "NO_COMPLETE_RUNS"
+        elif code == 0 and counts.get("complete_runs", counts.get("closed_bundles")) == 0:
+            state = "NO_COMPLETE_RUNS" if "complete_runs" in counts else "NO_CLOSED_BUNDLES"
         finished = clock()
         receipt.update(state=state, finished_at=timestamp(finished), exit_code=code,
                        duration_seconds=max(0, finished - started), stdout_sha256=stdout_hash,
@@ -129,13 +143,14 @@ def run_once(args: argparse.Namespace, *, clock: Callable[[], float] = time.time
         attempt_name = f"{'dry-' if args.dry_run else ''}{int(started * 1000000)}-{os.getpid()}.json"
         write_receipt(history / attempt_name, receipt)
         write_receipt(latest, receipt)
-        print(f"runpod-upload {state} exit={code} complete_runs={counts['complete_runs'] if counts else 'unknown'}")
+        print(f"runpod-upload {state} exit={code} transport_count={counts.get('complete_runs', counts.get('closed_bundles')) if counts else 'unknown'}")
         return 0 if code == 0 else 1
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("/workspace/gspc-24x7"))
+    parser.add_argument("--current-root", type=Path, default=Path("/workspace/runs"))
     parser.add_argument("--state-dir", type=Path, default=Path("/workspace/lanes/state/runpod-upload"))
     parser.add_argument("--uploader", type=Path, default=Path(__file__).with_name("runpod_gspc_push_to_hf.py"))
     parser.add_argument("--token-file", type=Path,

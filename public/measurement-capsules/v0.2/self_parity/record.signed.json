@@ -5,30 +5,30 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/2026-10-01/self_parity/record.json",
-   "sha256": "33fa38ec7539a251f667a7d346466a19378356b792fff8a01bd3d2430f64810f",
+   "path": "measurement-capsules/v0.2/2026-10-25/self_parity/record.json",
+   "sha256": "c2eaa667467e929ebfa7edb2493ed53a3801f97c6bbf59423c676a3a3bb617e2",
    "schema": "csoai.measurement-capsule-batch/0.2",
-   "as_of": "2026-10-01T08:07:31Z"
+   "as_of": "2026-10-25T08:30:14Z"
   },
-  "merkle_root": "8a3d29edf648ca85401c8ec45dbf3a2793a48b0a41e3780b1fd9f840985ed6a9",
-  "n_capsules": 166,
+  "merkle_root": "9d49eccd500733a464f5ca003b3332bf8ba659e6d6c6ddfa9054d32a290ea69d",
+  "n_capsules": 170,
   "states": {
-   "CONSISTENT": 41,
-   "INCONSISTENT": 11,
+   "CONSISTENT": 39,
+   "INCONSISTENT": 13,
    "NOT_DECLARED": 1,
-   "NOT_LISTED": 65,
-   "UNCHECKABLE": 48
+   "NOT_LISTED": 33,
+   "UNCHECKABLE": 84
   },
-  "capsules_sha256": "bf28bb927764dbcbcdfc0409e520a9fff7bcc12bc03e43059d2cf6ebe77e9350",
+  "capsules_sha256": "eb208f4961f6cae808395b2bdbef43d4041c1417eba48f87177a0f3ac0f79bb3",
   "adapter": "self_parity",
   "kind": "measurement.self_parity"
  },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "5dd9454716776fdc61f0c8f4838b62eb01a389c2c2a8f1e5cec6a2a7cf5149b7ace40407358615965b39bc01a0fece6727c3f1c71d235daa182ab0f8893b6205",
-  "payload_sha256": "8191c647a8835af972cd363be96e3ed91c6058f3d84bc5f68ed3f26ac0d35ab2",
-  "signed_at": "2026-10-01T08:07:35.538Z"
+  "sig_ed25519": "178d7671a89f75276130ae7bc6b65722448bd02e63e8447bf9fa72e6405e6ac7ab576126c603ce20aaa4f205f90729c2f6526b7f45aacb5249479360135f8102",
+  "payload_sha256": "7c18f2ae71710ee2a98bb656f0a35fb3fd8e7c547b198c8ef1b1fa0db668ff86",
+  "signed_at": "2026-10-25T08:30:16.136Z"
  },
  "local_verification": {
   "result": "VERIFIES",
