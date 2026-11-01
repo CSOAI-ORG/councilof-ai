@@ -1,6 +1,6 @@
 # @csoai/ai-sdk-gspc
 
-Vercel AI SDK tool for the Council of AI GSPC board. Calls the Council of AI MCP door (https://councilof.ai/mcp, 52 tools (47 free, 5 x402-metered)) directly over HTTP;
+Vercel AI SDK tool for the Council of AI GSPC board. Calls the Council of AI MCP door (https://councilof.ai/mcp, 53 tools (48 free, 5 x402-metered)) directly over HTTP;
 zero runtime dependencies beyond the framework peer. One tool: GSPC board totals.
 
 ```js
@@ -10,8 +10,8 @@ import { gspcTools } from "@csoai/ai-sdk-gspc";
 const { text } = await generateText({ model, tools: gspcTools(), prompt: "What does the GSPC board say?" });
 ```
 
-Optional Layer 0 wrapping: pass `{ layer0: new Layer0({...}) }` from `@csoai/layer0` (0.2.0) and every call runs
-through `Layer0.governed()` (gate → run → attest). `@csoai/layer0` is an optional peer and is not yet on npm.
+Optional Layer 0 wrapping: pass `{ layer0: new Layer0({...}) }` from `@csoai/layer0` (0.2.1) and every call runs
+through `Layer0.governed()` (gate → run → attest). `@csoai/layer0` is an optional peer and has been on npm since 2026-10-30.
 
 States: `LIVE`, `ERROR` (the door answered with a JSON-RPC error), `UNREACHABLE` (no number is returned).
 Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.

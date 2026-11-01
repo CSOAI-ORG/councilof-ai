@@ -1,0 +1,223 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "company-practice",
+  "specialist": {
+    "id": "meok-company-practice-specialist",
+    "cluster_id": "meok-axis-company-practice",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Design a non-lab company-practice instrument that compares public claims with dated public artifacts without inferring actual internal conduct.",
+    "reviewer_role": "company disclosure reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "non-lab subject scope",
+    "claim-to-artifact mapping",
+    "dated evidence",
+    "public-evidence limits"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "UNCHECKABLE",
+      "precision": "unknown",
+      "source": "/api/gspc",
+      "source_field": "none",
+      "note": "No structured measurement time is available; CURRENT admission must fail closed."
+    },
+    "axis_row_sha256": "3c77e99142673ababe1d819d4deba2f795c8ea3b998571690594d180703d36cc",
+    "axis_row": {
+      "axis": "company-practice",
+      "family": "subject",
+      "kind": "declared-slot",
+      "applies_to": "ai-companies-non-lab",
+      "bench": "pending frozen bank",
+      "task": "does a non-lab AI company do what its public material says",
+      "n": 0,
+      "status": "UNMEASURED",
+      "colour": "hsl(210 10% 55%)",
+      "hue": 210,
+      "note": "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score. Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid >= 30, passing the gate. Census checks are a DISCOVERED check grid, not scores on this axis.",
+      "method_status": "no-method: declared slot",
+      "measurement_time": {
+        "state": "UNCHECKABLE",
+        "precision": "unknown",
+        "source": "/api/gspc",
+        "source_field": "none",
+        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist company-practice audits only the company-practice row",
+      "evidence": "company-practice"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-company-practice; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "DECLARED_GAP",
+      "state": "PASS",
+      "detail": "UNMEASURED slot for ai-companies-non-lab; n=0 is not a score"
+    },
+    {
+      "id": "NO_FABRICATED_SCORE",
+      "state": "PASS",
+      "detail": "declared slot has no leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "no-method: declared slot"
+    }
+  ],
+  "summary": {
+    "checks": 6,
+    "passed": 6,
+    "declared": 0,
+    "findings": 0,
+    "audit_state": "MEASUREMENT_GAP_VISIBLE"
+  },
+  "negative_controls": [
+    {
+      "control": "infer internal practice from marketing copy and require scope rejection",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "score fewer than thirty subjects and require the n-floor gate to fail",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "company-practice-proposal-1",
+      "proposal": "create a claim and artifact taxonomy for non-lab companies",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "company-practice-proposal-2",
+      "proposal": "propose a frozen thirty-subject bank with independent re-read instructions",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_company-practice",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/company-practice",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "company disclosure reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "1abec7c5bb03bd18e3ea0a5fc45039c5afcee97710d34e015b8135b0a20fed9e",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "applies_to",
+      "method_status",
+      "n",
+      "status"
+    ],
+    "measurement_url": "/api/gspc/axis/company-practice",
+    "competency_url": "/api/hitl/modules/company-practice",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}
