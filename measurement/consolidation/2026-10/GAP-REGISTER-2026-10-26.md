@@ -698,7 +698,41 @@ recorded here instead.
 
 **Nothing here claims they are closed.** A closure is a closure of the named contradiction, not of the domain.
 
-### 8.4 What this section is not
+### 8.4 One thing this pass found that is not a row
+
+The register's rows are the estate's named contradictions. This pass also produced a finding about the estate's own
+supply-chain artefact, and it is recorded here rather than in a pull-request body, because a finding that only lives
+in a PR description is a finding that disappears when the PR merges.
+
+**A squash-merge can leave `master`'s SBOM pinning a commit that is not in `master`'s history.**
+
+The mechanism, measured on 1 November 2026. A pull request is merged with `--squash`, which creates one new commit on
+`master` and does **not** carry the branch's commits into `master`'s history. If that pull request's SBOM was minted
+on the branch — pinning a commit that exists only in the branch's history — the squash carries the *file* into
+`master` while leaving the *commit it names* behind. `master`'s SBOM then names a commit that `master` does not
+contain. On 30 October at 09:2x UTC, `master`'s SBOM pinned `0d47f7506a07…` ("Refresh reviewed mirror from
+integrated signed inputs"), a commit that was not an ancestor of `master`.
+
+**The estate's existing producer gate cannot see this, and that is the finding.** `scripts/gen_sbom.py --check`
+proves the SBOM with `git show <recorded>:package.json`. That read succeeds for *any* commit present in the object
+store, reachable or not — and `pr-gates` checks out with `fetch-depth: 0`, so the object is present. The gate is
+therefore green on a pin that CI cannot resolve, and the failure surfaces much later, in the deploy, as
+`sbom FAILED — SBOM held; previous output preserved` — with nothing in the message saying that a pin pointed at a
+commit nobody can reach.
+
+`master` is repaired: its SBOM now pins `73e78b8c98…` ("Reconcile critical dependency fixes with current master and
+retain both SBOM histories"), which **is** an ancestor of `master`. The intermediate commit is still in the estate's
+history and is still reachable — but the pin that named it was not, and the same shape will recur on the next
+squash-merge of a branch whose SBOM was minted on the branch.
+
+The fix is not a re-stamp. It is a check that the pin is **reachable from the head being pushed**, which is what
+`scripts/sbom-pin-gate.mjs` does: it asks whether the recorded commit is an **ancestor of HEAD**, not whether it can
+be read. The two questions differ exactly here — the object exists in both cases, and only the ancestry answer tells
+CI whether the read will resolve in the merge ref it checks out. The gate is wired into the pre-push hook and into
+`pr-gates.yml`, so a green push is a green CI on this axis, in seconds rather than in a deploy that fails twelve
+minutes later.
+
+### 8.5 What this section is not
 
 It is not a certification, an audit opinion, a conformity assessment, a compliance determination, or a claim that
 any domain is complete. It is a dated list of which named contradictions were re-measured, what they now read, and
