@@ -216,6 +216,8 @@ describe("catalog + discovery", () => {
       // #2783 (2026-10-01): the zero-priced named-subject discovery doors, one catalogue row.
       "subject_discovery",
       "issuance",
+      // TUI-2 coverage-evidence door (PR #3097): assembled row, tier coverage_evidence.
+      "coverage_evidence",
       "evidence_bundle",
       "data_feed",
       "proof_bundle",
