@@ -60,7 +60,7 @@ const invokeState = async () => {
   return res.json() as Promise<Record<string, any>>;
 };
 
-const CANONICAL_33_AXES = [
+const CANONICAL_AXES = [
   // Family 1 + 2 + 2b: 14 model-comparison axes
   "governance",
   "safety",
@@ -98,6 +98,7 @@ const CANONICAL_33_AXES = [
   "interpretability-reproducibility",
   "claim-maintenance",
   "serving-fidelity",
+  "watchdog-ingest",
 ] as const;
 
 const EXPECTED_MODEL_COMPARISON: Record<
@@ -234,21 +235,22 @@ const EXPECTED_SUBJECT_SLOTS = [
   "interpretability-reproducibility",
   "claim-maintenance",
   "serving-fidelity",
+  "watchdog-ingest",
 ] as const;
 
-describe("GSPC all-33-axes full-depth audit & cross-surface parity", () => {
+describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
   let board: Record<string, any>;
   beforeAll(async () => {
     board = await invokeGspc();
   });
 
-  it("GET /api/gspc serves all 33 canonical axes in order with zero own-model leakage", async () => {
+  it("GET /api/gspc serves every canonical axis in order with zero own-model leakage", async () => {
     const axes = board.axes as Array<Record<string, any>>;
-    expect(axes.map((a) => a.axis)).toEqual([...CANONICAL_33_AXES]);
-    expect(board.totals.axes).toBe(33);
+    expect(axes.map((a) => a.axis)).toEqual([...CANONICAL_AXES]);
+    expect(board.totals.axes).toBe(CANONICAL_AXES.length);
     expect(board.totals.quotable_axes).toBe(23);
     expect(board.totals.measured_axes).toBe(23);
-    expect(board.totals.unmeasured_axes).toBe(10);
+    expect(board.totals.unmeasured_axes).toBe(EXPECTED_SUBJECT_SLOTS.length);
     expect(board.totals.comparison_axes).toBe(14);
     expect(board.totals.separated_leads).toBe(0);
     expect(board.totals.ties).toBe(7);
@@ -365,12 +367,12 @@ describe("GSPC all-33-axes full-depth audit & cross-surface parity", () => {
     });
   }
 
-  it("GET /api/reports agrees with GET /api/gspc on all 33 axes and leaks zero own-model names", async () => {
+  it("GET /api/reports agrees with GET /api/gspc on every axis and leaks zero own-model names", async () => {
     const rep = await invokeReports();
     expect(rep.totals).toEqual({
-      axes: 33,
+      axes: CANONICAL_AXES.length,
       measured: 23,
-      unmeasured: 10,
+      unmeasured: EXPECTED_SUBJECT_SLOTS.length,
       model_comparison_axes: 14,
       separated: 0,
       tie: 7,
@@ -382,14 +384,14 @@ describe("GSPC all-33-axes full-depth audit & cross-surface parity", () => {
     expect([...collectOwnModelIdentifiers(rep)]).toEqual([]);
   });
 
-  it("public/reports/index.json indexes all 33 slots across all three kinds", () => {
-    expect(reportsIndex.counts.axes).toBe(33);
+  it("public/reports/index.json indexes every slot across all three kinds", () => {
+    expect(reportsIndex.counts.axes).toBe(CANONICAL_AXES.length);
     expect(reportsIndex.counts.axes_by_kind).toEqual({
       "model-comparison": 14,
       "deterministic-facts": 9,
-      "declared-slot": 10,
+      "declared-slot": EXPECTED_SUBJECT_SLOTS.length,
     });
-    expect(reportsIndex.axes.map((a: { axis: string }) => a.axis)).toEqual([...CANONICAL_33_AXES]);
+    expect(reportsIndex.axes.map((a: { axis: string }) => a.axis)).toEqual([...CANONICAL_AXES]);
   });
 
   it("GET /api/axis-register reports jail separation as UNTESTED (C-2026-0929-02)", async () => {
@@ -399,26 +401,26 @@ describe("GSPC all-33-axes full-depth audit & cross-surface parity", () => {
     expect(reg.counting_rule).toContain("UNTESTED since 2026-09-29");
   });
 
-  it("GET /api/state board.by_family partitions all 33 axes into 15 gspc + 8 financial + 10 subject", async () => {
+  it("GET /api/state board.by_family partitions every axis into the gspc, financial and subject families", async () => {
     const st = await invokeState();
     const byFam = st.board.by_family.value;
     expect(byFam.gspc).toMatchObject({ axes: 15, measured: 15 });
     expect(byFam.financial).toMatchObject({ axes: 8, measured: 8 });
-    expect(byFam.subject).toMatchObject({ axes: 10, measured: 0 });
-    expect(byFam.gspc.axes + byFam.financial.axes + byFam.subject.axes).toBe(33);
+    expect(byFam.subject).toMatchObject({ axes: EXPECTED_SUBJECT_SLOTS.length, measured: 0 });
+    expect(byFam.gspc.axes + byFam.financial.axes + byFam.subject.axes).toBe(CANONICAL_AXES.length);
   });
 
-  it("functions/mcp/axis-aliases.json resolves all 33 canonical axis IDs", () => {
+  it("functions/mcp/axis-aliases.json resolves every canonical axis ID", () => {
     const doc = axisAliases as { axes: Record<string, string[]> };
-    expect(Object.keys(doc.axes)).toEqual([...CANONICAL_33_AXES]);
-    for (const axis of CANONICAL_33_AXES) {
+    expect(Object.keys(doc.axes)).toEqual([...CANONICAL_AXES]);
+    for (const axis of CANONICAL_AXES) {
       expect(Array.isArray(doc.axes[axis])).toBe(true);
       expect(doc.axes[axis]).toContain(`gspc-${axis}`);
     }
   });
 
-  it("Council OS client/src/lib/gspcAxes.ts AXES snapshot carries all 33 canonical axes with zero own-model scores", () => {
-    expect(OS_AXES.map((a) => a.axis)).toEqual([...CANONICAL_33_AXES]);
+  it("Council OS client/src/lib/gspcAxes.ts AXES snapshot carries every canonical axis with zero own-model scores", () => {
+    expect(OS_AXES.map((a) => a.axis)).toEqual([...CANONICAL_AXES]);
     for (const row of OS_AXES) {
       expect(row.seat).toBeTruthy();
       expect(row.seat).not.toBe("—");
@@ -537,13 +539,13 @@ describe("GSPC all-33-axes full-depth audit & cross-surface parity", () => {
     expect(meta.gamification_arena_city_space_integration?.surfaces?.academy_hitl_raters?.total_modules).toBe(63);
   });
 
-  it("s1-ipo-measurement-readiness-v1.json maps all 33 canonical GSPC axes to public SEC S-1 / 10-K / 8-K risk factors without vendor permission", () => {
+  it("s1-ipo-measurement-readiness-v1.json maps every canonical GSPC axis to public SEC S-1 / 10-K / 8-K risk factors without vendor permission", () => {
     const s1Path = new URL("../../public/interop/s1-ipo-measurement-readiness-v1.json", import.meta.url);
     expect(existsSync(s1Path)).toBe(true);
     const s1 = JSON.parse(readFileSync(s1Path, "utf8")) as Record<string, any>;
     expect(s1.schema).toBe("csoai.s1-ipo-measurement-readiness/1.0");
-    expect(s1.counts?.distinct_gspc_axes_referenced).toBe(33);
-    expect(s1.mapped_gspc_axes).toEqual([...CANONICAL_33_AXES].sort());
+    expect(s1.counts?.distinct_gspc_axes_referenced).toBe(CANONICAL_AXES.length);
+    expect(s1.mapped_gspc_axes).toEqual([...CANONICAL_AXES].sort());
     expect(s1.permissionless_signal_bulletins).toHaveLength(4);
     for (const b of s1.permissionless_signal_bulletins) {
       expect(b.permission_required).toBe(false);
@@ -570,7 +572,15 @@ describe("GSPC all-33-axes full-depth audit & cross-surface parity", () => {
       first_principles_precedents: 7,
       newtons_third_law_reactions: 8,
     });
-    expect(cw.mapped_gspc_axes).toEqual([...CANONICAL_33_AXES].sort());
+    // The crosswalk is a DATED lane artifact, and its producer's input
+    // (public/constitutional-harness/charter-v0.1.json) is not committed, so it cannot be
+    // regenerated here. The axes declared after it was published are named as a visible gap
+    // rather than hidden, and the artifact may never name an axis the board does not carry.
+    const AXES_DECLARED_AFTER_THE_CROSSWALK = ["watchdog-ingest"];
+    expect(cw.mapped_gspc_axes).toEqual(
+      [...CANONICAL_AXES].filter((axis) => !AXES_DECLARED_AFTER_THE_CROSSWALK.includes(axis)).sort(),
+    );
+    expect(cw.mapped_gspc_axes.every((axis) => (CANONICAL_AXES as readonly string[]).includes(axis))).toBe(true);
     expect(cw.crosswalk_sha256).toMatch(/^[0-9a-f]{64}$/);
   });
 
