@@ -20,6 +20,7 @@
  *   entry with no handler   -> FAIL   (a catalogue may not claim a route nothing serves)
  *   handler with no entry   -> FAIL   (a served route may not be missing from every catalogue)
  *   LIVE whose probe expects 404/410/501/503 -> FAIL (a lifecycle that contradicts its own probe)
+ *   RETIRED / DOOR_CLOSED on the openapi surface -> FAIL (a withdrawn route advertised as an API)
  *   MCP tool name not in the door's own manifests -> FAIL (a fleet swap of equal size is caught)
  *   A2A skill id not in the router's SKILL_IDS    -> FAIL (the card and the router are one set)
  *
@@ -66,6 +67,17 @@ export const LIFECYCLES = [
 ];
 /** A lifecycle that states its own ABSENCE. `LIVE` may never expect one of these statuses. */
 export const ABSENCE_STATUSES = new Set([404, 410, 501, 503]);
+/**
+ * WITHDRAWN: the handler is still deployed and answers a fail-closed status, and the route is no
+ * longer offered. Such a route is declared here and probed, and it is NOT listed in
+ * public/openapi.json: every reader of an OpenAPI document treats a path as an API it can call, and
+ * x-csoai-lifecycle is a marker only we read. An independent profile built from that document kept
+ * listing a withdrawn certificate-schema route and a closed checkout route
+ * (api-evangelist/councilof-ai#1, 12 Oct 2026). QUARANTINED_PRE_RELEASE and NOT_IMPLEMENTED are a
+ * different statement (not released yet) and stay listed with their marker.
+ * scripts/build_openapi.py carries the same set and refuses to write a document that lists one.
+ */
+export const WITHDRAWN_LIFECYCLES = new Set(["RETIRED", "DOOR_CLOSED"]);
 
 export const KINDS = ["http", "population_door", "mcp_tool", "a2a_skill", "well_known"];
 export const AUDIENCES = ["human", "agent", "both"];
@@ -188,9 +200,18 @@ export function validateShape(registry) {
   const banned = JSON.stringify(registry).match(/"(count|total|fleet_size|n_[a-z_]+)"\s*:\s*\d+/g);
   ok(!banned, `the declaration carries a typed count: ${banned && banned.join(", ")}`);
 
+  const gapIds = new Set((registry.openapi_gap ?? []).map((g) => g.id));
   const ids = new Set();
   for (const c of registry.capabilities ?? []) {
     const at = `${c.id ?? "(no id)"}`;
+    // A withdrawn route is declared and probed, never advertised: off the openapi surface, and
+    // NAMED in openapi_gap so its absence from the document is a statement rather than a silence.
+    if (WITHDRAWN_LIFECYCLES.has(c.lifecycle) && c.path) {
+      ok(!(c.surfaces ?? []).includes("openapi"),
+        `${at}: declared ${c.lifecycle} and still claims the openapi surface — a withdrawn route is not listed in public/openapi.json`);
+      ok(gapIds.has(c.id),
+        `${at}: declared ${c.lifecycle} and not named in openapi_gap — a withdrawn route is named there, never silently dropped`);
+    }
     ok(typeof c.id === "string" && /^[a-z0-9][a-z0-9._-]*$/.test(c.id), `${at}: id must be a slug`);
     ok(!ids.has(c.id), `${at}: duplicate id`);
     ids.add(c.id);
@@ -443,6 +464,14 @@ function selftest() {
     })),
   );
   must("a quarantined tool swapped into the paid fleet fails", validateAgainstCode(r8), "paid MCP tools disagree");
+
+  // 9. a withdrawn route that still claims the openapi surface, and one nobody names in the gap
+  r = base();
+  r.capabilities[0].lifecycle = "RETIRED";
+  r.capabilities[0].probe.expect_status = [503];
+  must("a RETIRED route on the openapi surface fails", validateShape(r), "still claims the openapi surface");
+  r.capabilities[0].surfaces = [];
+  must("a RETIRED route missing from openapi_gap fails", validateShape(r), "not named in openapi_gap");
 
   if (fails.length) {
     console.error("\nSELFTEST FAIL:");
