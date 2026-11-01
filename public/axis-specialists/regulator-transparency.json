@@ -1,0 +1,229 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "regulator-transparency",
+  "specialist": {
+    "id": "meok-regulator-transparency-specialist",
+    "cluster_id": "meok-axis-regulator-transparency",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Design factual regulator artifact-presence checks for guidance, registries, methods, consultations and contact routes without ratings or owner-gated publication bypass.",
+    "reviewer_role": "regulator transparency reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "artifact presence",
+    "regulator-only scope",
+    "contact-route checks",
+    "owner-gated visibility"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "UNCHECKABLE",
+      "precision": "unknown",
+      "source": "/api/gspc",
+      "source_field": "none",
+      "note": "No structured measurement time is available; CURRENT admission must fail closed."
+    },
+    "axis_row_sha256": "8ca5a89c3c1f90ea65cb112797360dea630f72cd97fc83cb6c7570146006a7c5",
+    "axis_row": {
+      "axis": "regulator-transparency",
+      "family": "subject",
+      "kind": "declared-slot",
+      "applies_to": "regulators",
+      "bench": "pending frozen check bank",
+      "task": "factual presence checks on public artefacts (guidance, registry, methodology, consultation, contact route); no scores, no ratings",
+      "n": 0,
+      "status": "UNMEASURED",
+      "colour": "hsl(270 10% 55%)",
+      "hue": 270,
+      "note": "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score. Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid >= 30, passing the gate. Census checks are a DISCOVERED check grid, not scores on this axis.",
+      "method_status": "no-method: declared slot",
+      "public_pages": "HIDDEN_PENDING_OWNER_GO",
+      "measurement_time": {
+        "state": "UNCHECKABLE",
+        "precision": "unknown",
+        "source": "/api/gspc",
+        "source_field": "none",
+        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist regulator-transparency audits only the regulator-transparency row",
+      "evidence": "regulator-transparency"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-regulator-transparency; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "DECLARED_GAP",
+      "state": "PASS",
+      "detail": "UNMEASURED slot for regulators; n=0 is not a score"
+    },
+    {
+      "id": "NO_FABRICATED_SCORE",
+      "state": "PASS",
+      "detail": "declared slot has no leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "no-method: declared slot"
+    }
+  ],
+  "summary": {
+    "checks": 6,
+    "passed": 6,
+    "declared": 0,
+    "findings": 0,
+    "audit_state": "MEASUREMENT_GAP_VISIBLE"
+  },
+  "negative_controls": [
+    {
+      "control": "convert artifact presence into a regulator rating and require scope rejection",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "remove the owner gate and require publication policy failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "regulator-transparency-proposal-1",
+      "proposal": "freeze the five factual artifact checks with UNCHECKABLE semantics",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "regulator-transparency-proposal-2",
+      "proposal": "propose thirty regulators and retain the owner gate through human approval",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_regulator-transparency",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/regulator-transparency",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "regulator transparency reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "97e1b1a24795c1ade3de1f7007742228da79876bf8cf8f95f58a01b68c6863da",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 14,
+        "title": "Regulatory determination is outside CSOAI"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "applies_to",
+      "method_status",
+      "public_pages",
+      "n",
+      "status"
+    ],
+    "measurement_url": "/api/gspc/axis/regulator-transparency",
+    "competency_url": "/api/hitl/modules/regulator-transparency",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}
