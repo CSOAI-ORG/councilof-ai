@@ -15,6 +15,7 @@ import DISCOVERY_SUBJECTS from "./discover/subjects.json";
 const D = descriptions as Record<string, string>;
 
 export const FREE_DOOR_DESCRIPTION = D.free_door;
+export const COVERAGE_EVIDENCE_DESCRIPTION = D.coverage_evidence;
 export const PROOF_BUNDLE_DESCRIPTION = D.proof_bundle;
 export const RECEIPTS_BATCH_DESCRIPTION = D.receipts_batch;
 export const REQUEST_ATTESTATION_DESCRIPTION = D.request_attestation;
@@ -57,6 +58,7 @@ export const POPULATION_DESCRIPTIONS: Record<string, string> = Object.fromEntrie
 export const DESCRIPTION_KEY_BY_PATH: Record<string, string> = {
   "/api/free-door": "free_door",
   "/api/request-attestation": "request_attestation",
+  "/api/coverage-evidence": "coverage_evidence",
   "/api/evidence-bundle": "evidence_bundle",
   "/api/signed-data-feed": "data_feed",
   "/api/proof": "proof_bundle",

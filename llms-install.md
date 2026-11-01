@@ -51,7 +51,7 @@ before that independent check.
 ## Exact reviewed tool catalog
 
 This list describes the reviewed source contract at this commit. Confirm that the
-deployed remote returns the same 52 names before treating it as the live contract.
+deployed remote returns the same 53 names before treating it as the live contract.
 Listing the catalog and using every free read/verification tool is free. In
 particular, `verify_card` checks a Council-issued signed measurement card without a
 payment. Its three possible verdict classes are `VALID`, `INVALID`, and
@@ -107,7 +107,8 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
     "axis_regulator-transparency",
     "axis_interpretability-reproducibility",
     "axis_claim-maintenance",
-    "axis_serving-fidelity"
+    "axis_serving-fidelity",
+    "axis_watchdog-ingest"
   ],
   "x402_metered": [
     "commission_card",
