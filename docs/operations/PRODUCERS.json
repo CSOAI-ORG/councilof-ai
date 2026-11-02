@@ -263,7 +263,7 @@
       "id": "gspc-fact-table",
       "command": "node scripts/measurements/build-gspc-fact-table.mjs",
       "outputs": [
-        "public/interop/gspc-fact-table/gspc_measurements.jsonl",
+        "public/interop/gspc-fact-table/gspc_measurements/part-000.jsonl",
         "public/interop/gspc-fact-table/gspc_items.jsonl",
         "public/interop/gspc-fact-table/gspc_cells.jsonl",
         "public/interop/gspc-fact-table/MANIFEST.json"
@@ -271,7 +271,9 @@
       "mode": "delegate-to-check",
       "gated": true,
       "reason": "The per-cell mill evidence lives as 664 items-<axis>-<hash>.jsonl files whose NAME carries only a truncated axis and a content hash \u2014 the model is inside the file. A consumer cannot find a cell for a given model without opening every file, cannot join the cells without reading all of them, and cannot read the corpus as a table. This producer joins the cells into one long fact table (model, axis, item, outcome), the item universe it refers to, and an index of the cells it came from. It copies no number it did not read, and it says how many rows carry no model and no grade rather than dropping them.",
-      "check": "node scripts/measurements/build-gspc-fact-table.mjs --check --out public/interop/gspc-fact-table"
+      "check": "node scripts/measurements/build-gspc-fact-table.mjs --check --out public/interop/gspc-fact-table",
+      "outputs_note": "The measurements table is written in PARTS and the MANIFEST names them (tables.measurements.parts), so the parts are a function of the corpus size and cannot be listed here one by one. The producer's own --check compares every part against a fresh build, which is the check that runs in CI; the list above names the first part and the two single-file tables.",
+      "sharded_since": "2026-11-01: the single gspc_measurements.jsonl was 8.2 MiB and grew ~11 KB per card; one card PR of 1,500 cards took it to 24.4 MiB and the next reached 25.3 MiB, over Cloudflare Pages' 25 MiB per-file cap, so the deploy broke on a data arrival. The table is now written in parts of at most 8 MiB."
     },
     {
       "id": "npm-publish-check",

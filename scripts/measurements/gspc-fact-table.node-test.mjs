@@ -15,10 +15,16 @@ const readJsonl = (p) => readFileSync(p, "utf8").split("\n").filter((l) => l.tri
 const skip = !existsSync(path.join(OUT, "MANIFEST.json"));
 const opt = { skip: skip && "no fact table built yet — run scripts/measurements/build-gspc-fact-table.mjs" };
 
-const measurements = skip ? [] : readJsonl(path.join(OUT, "gspc_measurements.jsonl"));
+const manifest = skip ? null : JSON.parse(readFileSync(path.join(OUT, "MANIFEST.json"), "utf8"));
+// The measurements table is written in PARTS (Cloudflare Pages refuses a file over 25 MiB and
+// this table grows with every card the mill lands). The MANIFEST names the parts, so the
+// reader is told which files to read rather than guessing a layout.
+const measurementParts = skip
+  ? []
+  : ((manifest.tables && manifest.tables.measurements && manifest.tables.measurements.parts) || []);
+const measurements = skip ? [] : measurementParts.flatMap((p) => readJsonl(path.join(OUT, p.file)));
 const items = skip ? [] : readJsonl(path.join(OUT, "gspc_items.jsonl"));
 const cells = skip ? [] : readJsonl(path.join(OUT, "gspc_cells.jsonl"));
-const manifest = skip ? null : JSON.parse(readFileSync(path.join(OUT, "MANIFEST.json"), "utf8"));
 
 test("every cell's accuracy re-derives from the fact table", opt, () => {
   const byCell = new Map();
@@ -106,7 +112,8 @@ test("no measurement is left without a key", opt, () => {
 });
 
 test("the canary never reaches the fact table", opt, () => {
-  for (const name of ["gspc_measurements.jsonl", "gspc_items.jsonl", "gspc_cells.jsonl", "MANIFEST.json"]) {
+  const names = ["gspc_items.jsonl", "gspc_cells.jsonl", "MANIFEST.json", ...measurementParts.map((p) => p.file)];
+  for (const name of names) {
     const text = readFileSync(path.join(OUT, name), "utf8");
     assert.ok(!text.includes("GSPC-CANARY"), "the canary leaked into " + name);
   }

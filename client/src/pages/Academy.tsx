@@ -6,6 +6,12 @@ import { useEffect, useState } from "react";
 // no withdrawn pages (2026-09-28: /gspc-scoreboard, /towns and /legacy all dead-ended).
 type Track = { id: string; name: string; level: string; mins: number; blurb: string; steps: { t: string; href: string }[] };
 const TRACKS: Track[] = [
+  { id: "practice", name: "Practise beside published AI results", level: "Beginner", mins: 20, blurb: "Read a measured result, make your own choices in THE RULER, and review the published evidence. This is local practice, not live MEOK play or measured human learning.", steps: [
+    { t: "Read the living board and its limits", href: "/dashboard/?tab=board" },
+    { t: "THE RULER — local practice with published AI answers", href: "/games/ruler/" },
+    { t: "Check a published card", href: "/gspc-verify/" },
+    { t: "What a completion record would mean — issuance is closed", href: "/academy/#completion-records" },
+  ]},
   { id: "board", name: "Read the living board", level: "Beginner", mins: 15, blurb: "What is measured, what is empty, how to check a card. Finishing a track certifies nothing; a completion record needs a reproduced measurement.", steps: [
     { t: "Open Council OS", href: "/dashboard/?tab=home" },
     { t: "The living board — empty cells stay empty", href: "/dashboard/?tab=board" },
@@ -46,7 +52,7 @@ export default function Academy() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - academy</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Learn the board in an afternoon</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Short tracks through the live site. Course completion attests training, not conformity. Pick a track, follow the steps, send the link.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Short tracks through the live site and local game practice. Reading pages or getting a game score does not issue a completion record. Pick a track and follow the steps.</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 py-10 grid gap-8 lg:grid-cols-[300px_1fr] items-start">
