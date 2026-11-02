@@ -55,8 +55,18 @@ function metaText(html) {
     .join(" . ");
 }
 
+// A separation test applies to a MODEL COMPARISON axis only. A deterministic-facts axis
+// reads facts off a public source, and a measured subject axis (first of its kind,
+// 2026-10-29) measures its own subject class rather than models: neither has a fleet, so
+// neither has a separation determination to report. This gate keeps its OWN derivation of
+// that fact rather than importing the page's — two derivations of one quantity will drift,
+// but one derivation shared by both would hide the drift instead of catching it.
 const expectedSep = (row) =>
-  row?.kind === "deterministic-facts" ? "" : row?.status === "MEASURED" ? row?.separation ?? "UNTESTED" : "";
+  row?.kind === "model-comparison"
+    ? row?.status === "MEASURED"
+      ? row?.separation ?? "UNTESTED"
+      : ""
+    : "";
 
 /** 1: structured data-* tokens. */
 export function checkStructured(html, board, file) {
