@@ -52,6 +52,17 @@ export const NODE_TEST_FILES = [
   // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
   'council-os/gspc-pontius-boundary.test.mjs',
   'scripts/watchdog/source-status.test.mjs',
+  // 2026-11-02: six more node:test files arrived via merged lanes and were never
+  // registered, so `npm test` (root vitest) reported each as a failed suite
+  // ("No test suite found"). Each was verified green under `node --test` before
+  // registration; pr-gates' node --test step reads this same list, so coverage moves
+  // with the exclusion — nothing is hidden, it is run by the runner that can collect it.
+  'capabilities/card-counts.test.mjs',
+  'capabilities/journey-backends.test.mjs',
+  'integrations/integrations.test.mjs',
+  'tests/population-delivery-verifier.test.mjs',
+  'actions/verify-card/run.test.mjs',
+  'actions/verify-card/workflow.test.mjs',
 ];
 
 export default defineConfig({
@@ -85,6 +96,13 @@ export default defineConfig({
     },
   },
   test: {
+    // 2026-11-02: the default 5s timeout predates the corpus. Whole-corpus walks (the
+    // 3,197-card mill set, byte-position tamper sweeps at 18s+, sitemap builds over 33k
+    // public files) blew it under full-suite parallel load, and per-test patches were
+    // turning into whack-a-mole — nine heavy tests each red only inside `npm test`.
+    // 20s covers every standalone-measured test with headroom; explicit per-test
+    // timeouts (reach 120s, sandbox-wall 120s, card corpus scaled) still override it.
+    testTimeout: 20_000,
     // packages/** runs under `node --test` (see each package's own test script);
     // vitest cannot collect a node:test file and reports "No test suite found",
     // which made `npm test` red for three suites that are green under their own

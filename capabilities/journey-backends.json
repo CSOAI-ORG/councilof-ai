@@ -1,0 +1,53 @@
+{
+  "schema": "csoai.journey-backends/0.1",
+  "note": "The measured reach of the WP-3 case-model journey, recorded beside journey-backends.test.mjs. Probed against production, unauthenticated, redirect: manual. States only \u2014 a missing backend must show the EXACT unavailable capability and must never fake a completed fix. This file exists because capabilities/registry.json became a GENERATED VIEW (scripts/capability-render.mjs legacy) and cannot carry a hand-maintained record; the test and this data land together.",
+  "probed_at": "2026-11-02T04:21:02Z",
+  "probed_against": "https://councilof.ai",
+  "consequence_for_wp3_and_wp6": "The journey is reachable as far as explain and no further: propose, approve, fix and retest have no runtime to call (ras, remediation and jobs answer 404 not_found), so WP-3's execute half remains a proposal for onward work and WP-6 records the same boundary on its approval side. The receipts register went from UNPUBLISHED (2026-09-05 probe, count 0) to PUBLISHED behind the owner gate (count 26), which moves the WP-6 receipt half from absent to gated.",
+  "backends": {
+    "findings": {
+      "availability": "VERIFIED",
+      "endpoint": "/api/findings",
+      "status_observed": 200,
+      "reason": "200 serving schema csoai.regulation-findings/0.1 with its honesty block, card-backed findings and as_of present \u2014 the read half of the journey has a runtime."
+    },
+    "ras": {
+      "availability": "UNAVAILABLE",
+      "endpoint": "/api/ras",
+      "status_observed": 404,
+      "reason": "404 not_found: no RAS loop runtime exists, so approve, fix and retest cannot execute against anything."
+    },
+    "ras_status": {
+      "availability": "UNAVAILABLE",
+      "endpoint": "/api/ras/status",
+      "status_observed": 404,
+      "reason": "404 not_found: the RAS status surface does not exist either, consistent with ras itself being unavailable."
+    },
+    "remediation": {
+      "availability": "UNAVAILABLE",
+      "endpoint": "/api/remediation",
+      "status_observed": 404,
+      "reason": "404 not_found: no remediation runtime exists, so a fix step has nothing to call."
+    },
+    "jobs": {
+      "availability": "UNAVAILABLE",
+      "endpoint": "/api/jobs",
+      "status_observed": 404,
+      "reason": "404 not_found: no job runtime exists, so a retest cannot be scheduled."
+    },
+    "receipts": {
+      "availability": "OWNER_GATED",
+      "endpoint": "/api/receipts/latest",
+      "status_observed": 200,
+      "reason": "200 with status PUBLISHED and count 26 (2026-11-02): the receipts register went from UNPUBLISHED (2026-09-05 probe, count 0) to published and metered behind the owner gate, so the WP-6 receipt half now records a live, gated surface."
+    },
+    "ras_metered_probes": {
+      "availability": "OWNER_GATED",
+      "endpoint": "/api/ras/mcp-probe",
+      "status_observed": 402,
+      "reason": "402 on /api/ras/mcp-probe, /api/ras/x402-check and /api/ras/supply (2026-11-02): the ras read-side probe routes exist and are priced behind the x402 door \u2014 distinct from the ras execute loop itself, which still 404s at /api/ras."
+    }
+  },
+  "not_a_claim": "A 200 from a read endpoint is a measurement of that endpoint, not a statement that the journey works end to end. The execute half has no runtime and no surface may imply otherwise.",
+  "client_reference_count": 0
+}

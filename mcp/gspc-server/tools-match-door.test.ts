@@ -22,9 +22,12 @@ const doorPaid = J(resolve(ROOT, "functions/mcp/paid-tools.json")).tools.map((t:
 
 describe("the packaged MCP server advertises exactly what the door serves", () => {
   it("reads the door's canonical lists, so this cannot pass vacuously", () => {
-    expect(doorFree).toHaveLength(47);
+    // 33 axes → 34 (PR #3692, the watchdogs axis) moved free tools 47 → 48; the npm
+    // description below already says fifty-three / forty-eight, so the pins here —
+    // not the door — were the stale side of that change.
+    expect(doorFree).toHaveLength(48);
     expect(doorPaid).toHaveLength(5);
-    expect([...doorFree, ...doorPaid]).toHaveLength(52);
+    expect([...doorFree, ...doorPaid]).toHaveLength(53);
     expect([...doorFree, ...doorPaid]).not.toContain("witness_hash");
   });
 

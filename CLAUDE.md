@@ -11,12 +11,16 @@ Shared working agreement for ALL agents on this repo. Read this first.
   Cards: **THREE corpora, zero overlap** — say which one you mean, every time.
   Full map + the correct sentence: `council-os/CARD-CORPORA.md`. In short:
   · `public/cards-bundle.json` → `card_count` = every `public/cards/*.json` wrapper on
-    disk (**1072**, read 2026-09-05). Its own generator note: "signs nothing, measures
-    nothing." A build-time aggregate, not an attestation. Not in `/api/state`.
+    disk — read the number from `public/cards-bundle.json` itself (its `card_count`
+    field), never from this file: it moves continuously (it stood at 1072 on
+    2026-09-05 and has moved since).
+    Its own generator note: "signs nothing, measures nothing." A build-time aggregate,
+    not an attestation. Not in `/api/state`.
   · `public/root.json` → `card_count` = the `card_sha256` leaves under the SIGNED Merkle
-    root (**152**, verified 2026-09-05 in ALL THREE of the deployed `root.json`, the
+    root — read it from `GET /root.json` or `/api/state` → `public_root.card_count`, not
+    from this file (verified 2026-09-05 in ALL THREE of the deployed `root.json`, the
     committed `root.json` and `cards-bundle.json` → `root_card_count`, same
-    `merkle_root cf9f5488…`, same `as_of`). The 152/153 split this line used to record was
+    `merkle_root cf9f5488…`, same `as_of`; it stood at 152 then and has moved since). The 152/153 split this line used to record was
     build-timing drift and has since closed; if the two disagree again that is timing, not
     disagreement. `/api/state` → `public_root.card_count`, kind `catalogued`. Its OTS proof
     covers `root.json` bytes only.
