@@ -267,8 +267,21 @@ export function renderAxesIndex(board) {
 ${list.map((a) => tr(a, leadCol)).join("\n")}
     </tbody>
   </table></div>`;
+  // Consistency guard: the lid quotes the board's totals; the h1 counts the rows this page
+  // lists. The only way those two numbers may differ is axes held back by the owner — and
+  // that difference must be STATED, never left for the reader to discover. A mismatch the
+  // reconciliation line cannot explain is corrupted board data: refuse to render it.
+  const ownerHeld = typeof board?.ownerHeldCount === "number" ? board.ownerHeldCount : 0;
+  const lidLead = parseInt(String(lid(board)).match(/^\s*(\d+)/)?.[1] ?? "NaN", 10);
+  const shown = axes.length;
+  if (Number.isFinite(lidLead) && lidLead !== shown + ownerHeld) {
+    throw Error(`LID_COUNT_MISMATCH the board's totals say ${lidLead} axes but the payload carries ${shown + ownerHeld} (${shown} public + ${ownerHeld} owner-held)`);
+  }
+  const reconcile = lidLead === shown
+    ? ""
+    : `\n  <p class="muted">The board serves ${lidLead} axes; ${ownerHeld} ${ownerHeld === 1 ? "is" : "are"} owner-gated pending go, so this page lists ${shown}. The held slots have no public row, page or count of their own.</p>`;
   const body = `  <p class="lid">${esc(lid(board))}</p>
-  <h1>All ${axes.length} GSPC axes</h1>
+  <h1>All ${shown} GSPC axes</h1>${reconcile}
   <p>Every axis on the board, with the state the board serves for it and a page of its own. An empty slot would read UNMEASURED, never zero. A point leader is not a separated leader: TIE and UNTESTED are their own states, and neither is a win.</p>
 
   <h2>${cmp.length} model-comparison axes</h2>
@@ -297,8 +310,14 @@ ${table(unclassified, false)}` : ""}
 /** Every file this generator owns, keyed by repo-relative path. */
 export function renderAll(boardIn) {
   // Owner-gated rows (public_pages HIDDEN_PENDING_OWNER_GO) stay in GET /api/gspc but get no public
-  // page and no row on any page until the owner's go. Totals are left as served.
-  const board = { ...boardIn, axes: (Array.isArray(boardIn?.axes) ? boardIn.axes : []).filter((a) => a?.public_pages !== "HIDDEN_PENDING_OWNER_GO") };
+  // page and no row on any page until the owner's go. Totals are left as served — which means the
+  // index page carries two counts about the same set: the board's totals and the rows shown here.
+  // A page that shows both counts without reconciling them reads as an error to every reader, so
+  // renderAxesIndex states the held-back count beside them. Only the COUNT is carried; the held
+  // axis ids stay owner business.
+  const allAxes = Array.isArray(boardIn?.axes) ? boardIn.axes : [];
+  const ownerHeld = allAxes.filter((a) => a?.public_pages === "HIDDEN_PENDING_OWNER_GO").length;
+  const board = { ...boardIn, axes: allAxes.filter((a) => a?.public_pages !== "HIDDEN_PENDING_OWNER_GO"), ownerHeldCount: ownerHeld };
   const out = {};
   for (const row of Array.isArray(board?.axes) ? board.axes : []) {
     if (typeof row?.axis !== "string" || !/^[a-z0-9-]+$/.test(row.axis)) throw Error(`AXIS_ID_NOT_A_SLUG ${row?.axis}`);
