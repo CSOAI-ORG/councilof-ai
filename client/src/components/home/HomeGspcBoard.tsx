@@ -244,11 +244,14 @@ function LeaderText({ a }: { a: GspcAxis }) {
         <span className={muted}> The named leader has no verifiable signed card, so no name is published.</span>
       </span>
     );
-  if (st === "PUBLIC")
+  if (st === "PUBLIC" && a.public_leader_state === "PUBLIC" && a.status === "MEASURED" && a.kind === "model-comparison"
+      && typeof a.leader === "string" && a.leader.trim()
+      && (a.separation === "SEPARATED" || a.separation === "TIE" || a.separation === "UNTESTED"))
     return (
       <span data-testid="leader-text">
-        Leader: <span className="font-semibold">{String(a.leader)}</span>
-        {typeof a.accuracy === "number" ? <> {fmtPct(a.accuracy)}</> : null}
+        {a.separation === "SEPARATED" ? "Separated leader: " : a.separation === "TIE"
+          ? "Reported result (tie): " : "Reported result (separation untested): "}<span className="font-semibold">{String(a.leader)}</span>
+        {typeof a.accuracy === "number" && Number.isFinite(a.accuracy) ? <> {fmtPct(a.accuracy)}{a.accuracy_is ? ` (${a.accuracy_is})` : ""}</> : null}
         {a.separation === "TIE" ? <span className={muted}> · TIE, a point lead is not a measured advantage</span> : null}
       </span>
     );
