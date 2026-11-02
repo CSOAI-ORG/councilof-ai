@@ -1,0 +1,104 @@
+/**
+ * sweeper-plan.mjs — the pure planning half of the hygiene sweeper (issue #3746).
+ *
+ * No network, no fs, no clock reads: every function takes its inputs as arguments so
+ * scripts/hygiene/sweeper.node-test.mjs can drive it. The CLI half (sweeper.mjs) fetches
+ * PRs over the gh CLI, asks this module what to do, then applies (or prints, in dry-run).
+ *
+ * Families (the automation PR streams the owner ruled on in #3746):
+ *   mill/land-hfjobs-*    HF Jobs measurement-card landings (data worth landing when green)
+ *   canary-push/*         thin canary captures (value is the latest run)
+ *   x402-door-conformance/*  daily door probes (value is the latest run)
+ *   hf/coverage-*         router-reachability probes (value is the latest run)
+ *
+ * Guard rails, fail-closed: drafts are never planned; [HOLD] titles are never planned;
+ * anything outside the four families is never planned. The plan proposes — the CLI's
+ * apply mode is the only thing that mutates, and dry-run prints the same plan verbatim.
+ */
+
+const FAMILY_PATTERNS = [
+  { id: "mill", re: /^mill\/land-hfjobs-\d+$/ },
+  { id: "canary", re: /^canary-push\/\d+$/ },
+  { id: "x402", re: /^x402-door-conformance\/\d{4}-\d{2}-\d{2}T\d+Z$/ },
+  { id: "coverage", re: /^hf\/coverage-\d{8}T\d+$/ },
+];
+
+// Belt-and-braces: these streams are watcher-owned and promotion-gated; a future family
+// regex accident must not be able to touch them even if they ever look like a family.
+const NEVER_TOUCH = new Set(["public-root/pending", "art50-index/pending"]);
+
+export function familyOf(headRefName) {
+  if (NEVER_TOUCH.has(headRefName)) return null;
+  for (const { id, re } of FAMILY_PATTERNS) if (re.test(headRefName)) return id;
+  return null;
+}
+
+function guarded(pr) {
+  if (pr.draft) return "draft";
+  if (/\[HOLD\]/i.test(pr.title || "")) return "hold";
+  if (!familyOf(pr.headRefName)) return "not-a-family-branch";
+  return null;
+}
+
+/**
+ * plan({ open, closed, now }) — open/closed are PR JSON arrays (gh shape:
+ * number, headRefName, title, draft, state, mergedAt/closedAt). `now` is a Date or ms.
+ *
+ * Returns { supersede, millAutoMerge, gc, skipped }:
+ *   supersede    [{number, family, keep}]  older open siblings of a family that has a
+ *                 newer open sibling — close them; each newer run of these automations
+ *                 writes the same output paths, so an old branch can only regress master.
+ *   millAutoMerge [number]  open mill landings that are the family's newest (supersede
+ *                 would leave exactly these) — the caller still has to verify checks are
+ *                 all green before enabling auto-merge; this list is the eligibility,
+ *                 not the verdict.
+ *   gc           [{number, branch}]  CLOSED (unmerged) family PRs whose closedAt is
+ *                 older than 7 days — their head branch is deletable (the PR ref keeps
+ *                 the commits; nothing merged was dropped).
+ *   skipped      [{number, reason}]  anything a caller might have thought in scope but a
+ *                 guard excluded — printed in dry-run so the plan is always explainable.
+ */
+export function plan({ open = [], closed = [], now }) {
+  const nowMs = now instanceof Date ? now.getTime() : now;
+  const GC_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+  const plan = { supersede: [], millAutoMerge: [], gc: [], skipped: [] };
+
+  const openFamilied = [];
+  for (const pr of open) {
+    const why = guarded(pr);
+    if (why) {
+      if (why !== "not-a-family-branch") plan.skipped.push({ number: pr.number, reason: why });
+      continue;
+    }
+    openFamilied.push({ ...pr, family: familyOf(pr.headRefName) });
+  }
+
+  const byFamily = new Map();
+  for (const pr of openFamilied) {
+    if (!byFamily.has(pr.family)) byFamily.set(pr.family, []);
+    byFamily.get(pr.family).push(pr);
+  }
+
+  for (const [family, prs] of byFamily) {
+    prs.sort((a, b) => b.number - a.number); // automation opens sequentially: newest = highest number
+    const keep = prs[0];
+    for (const older of prs.slice(1)) {
+      plan.supersede.push({ number: older.number, family, keep: keep.number });
+    }
+    if (family === "mill") plan.millAutoMerge.push(keep.number);
+  }
+
+  for (const pr of closed) {
+    if (pr.state !== "CLOSED" || pr.mergedAt) continue; // merged heads are GitHub's call
+    const why = guarded(pr);
+    if (why) continue;
+    const closedMs = Date.parse(pr.closedAt || "");
+    if (!Number.isFinite(closedMs) || nowMs - closedMs < GC_AGE_MS) continue;
+    plan.gc.push({ number: pr.number, branch: pr.headRefName });
+  }
+
+  plan.supersede.sort((a, b) => a.number - b.number);
+  plan.millAutoMerge.sort((a, b) => a - b);
+  plan.gc.sort((a, b) => a.number - b.number);
+  return plan;
+}
