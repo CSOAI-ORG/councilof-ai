@@ -45,8 +45,8 @@ describe("GET /api/gspc structured measurement time", () => {
 
   it("every measured axis carries structured timing and none silently borrows response time", () => {
     const measured = body.axes.filter((a) => a.status === "MEASURED");
-    // 24: the promoted claim-maintenance axis is a measured axis, so it joins this set.
-    expect(measured).toHaveLength(24);
+    // 34: all 11 promoted subject axes are measured axes, so they join this set.
+    expect(measured).toHaveLength(34);
     expect(measured.every((a) => Boolean(a.measurement_time))).toBe(true);
     expect(measured.filter((a) => a.measurement_time.state === "UNCHECKABLE")).toEqual([]);
     expect(body.measurement_time_contract.global_freshness_policy).toBe("UNSET");
@@ -88,9 +88,9 @@ describe("GET /api/gspc structured measurement time", () => {
   });
 
   it("contract state counts are exhaustive", () => {
-    // 11: the promoted claim-maintenance axis carries the wave producer's own observed_at,
-    // so it is EXACT rather than a declared slot with no time.
-    expect(body.measurement_time_contract.states.EXACT).toHaveLength(11);
+    // 21: all 11 promoted subject axes carry their producer's own observed_at (facts_as_of),
+    // so they are EXACT rather than declared slots with no time.
+    expect(body.measurement_time_contract.states.EXACT).toHaveLength(21);
     expect(body.measurement_time_contract.states.DAY).toHaveLength(12);
     expect(body.measurement_time_contract.states.NOT_AFTER).toEqual(["swarm"]);
     // Declared-UNMEASURED slots have no measurement, so no time can be checked: UNCHECKABLE, derived.
