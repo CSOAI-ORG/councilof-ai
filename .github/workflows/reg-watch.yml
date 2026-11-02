@@ -33,6 +33,13 @@ jobs:
         id: research-watch
         continue-on-error: true
         run: node scripts/research/watch-sources.mjs
+      - name: Watchdog source status selftest (offline)
+        run: node --test scripts/watchdog/source-status.test.mjs
+      - name: Run metadata-only incident-source checks
+        id: watchdog-source
+        run: node scripts/watchdog/source-status.mjs
+      - name: Build draft metadata-only Watchdog daily index
+        run: node scripts/watchdog/daily-index.mjs --out watchdog-daily-index.json
       - name: Commit updated state (and any events)
         env:
           GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
@@ -40,7 +47,7 @@ jobs:
           set -euo pipefail
           git config user.name "reg-watch"
           git config user.email "nicholas@csoai.org"
-          git add reg-watch-state.json reg-watch-events/ research-watch-state.json research-review-requests/ 2>/dev/null || true
+          git add reg-watch-state.json reg-watch-events/ research-watch-state.json research-review-requests/ watchdog-source-status.json watchdog-daily-index.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "no state change"
             exit 0
@@ -54,7 +61,7 @@ jobs:
           git push origin "HEAD:$BR"
           gh pr create --base master --head "$BR" \
             --title "watch: source-state update ${STAMP}" \
-            --body "Automated regulation and GSPC research source-state update. May include provision events under \`reg-watch-events/\` and UNSIGNED, unmeasured human-review requests under \`research-review-requests/\`. A source change is not a legal interpretation, measurement or board update. Opened as a PR because direct pushes cannot satisfy the required \`gates\` check (GH006). Needs human review and merge."
+            --body "Automated regulation and GSPC research source-state update. May include provision events under \`reg-watch-events/\` and UNSIGNED, unmeasured human-review requests under \`research-review-requests/\`. The watchdog snapshot and draft daily index report public page availability only; they download no incident records, report text or snapshots. The index keeps rights unknown, case counts not in scope and reviewer status not staffed; it is not a GSPC score or safety decision. A source change is not a legal interpretation, measurement or board update. Opened as a PR because direct pushes cannot satisfy the required \`gates\` check (GH006). Needs human review and merge."
       # Regulator calendar: T-7 / T-2 / T-0 alerts for VERIFIED doors in
       # measurement/calendar/regulator-doors.json (no new cron — rides this daily run).
       - name: Regulator calendar selftest (offline — proves the alerts can fire and the rules can fail)

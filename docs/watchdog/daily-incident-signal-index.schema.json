@@ -1,0 +1,602 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:csoai:watchdog:daily-incident-signal-index:0.1",
+  "title": "Daily Incident Signal Index",
+  "description": "A dated, bounded operational coverage and human-review summary. It is not a global incident census, safety verdict, certification, or GSPC axis score. Public v0.1 editions contain source metadata and approved aggregates only, not report text or personal data.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "report_id",
+    "issued_at",
+    "period",
+    "scope",
+    "coverage",
+    "intake",
+    "human_review",
+    "working_group_process",
+    "evidence_quality",
+    "gspc_link",
+    "privacy",
+    "limitations",
+    "review"
+  ],
+  "properties": {
+    "schema": {
+      "const": "csoai.watchdog.daily-incident-signal-index/0.1"
+    },
+    "report_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "period": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_registry_version",
+        "source_ids",
+        "geographic_scope",
+        "language_scope",
+        "sector_scope",
+        "global_coverage_claim"
+      ],
+      "properties": {
+        "source_registry_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "geographic_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "language_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sector_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "global_coverage_claim": {
+          "const": false
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "in_scope_sources",
+        "monitored_sources",
+        "source_checks",
+        "known_gaps"
+      ],
+      "properties": {
+        "in_scope_sources": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "monitored_sources": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "source_monitoring_rate": {
+          "$ref": "#/$defs/rate_measure"
+        },
+        "not_monitored_source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_check"
+          }
+        },
+        "known_gaps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "intake": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "candidate_items",
+        "duplicate_items",
+        "held_for_rights_or_privacy"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "source_status_only",
+            "metadata_only_authorized",
+            "private_report_channel_enabled",
+            "mixed_authorized"
+          ]
+        },
+        "candidate_items": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "duplicate_items": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "held_for_rights_or_privacy": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "out_of_scope_items": {
+          "$ref": "#/$defs/count_measure"
+        }
+      }
+    },
+    "human_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "staffing_status",
+        "items_by_state",
+        "service_hours_ref"
+      ],
+      "properties": {
+        "staffing_status": {
+          "enum": [
+            "not_staffed",
+            "limited_hours",
+            "staffed",
+            "unavailable"
+          ]
+        },
+        "items_by_state": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "awaiting_triage",
+            "received",
+            "acknowledged",
+            "accepted",
+            "decided",
+            "appealed",
+            "corrected",
+            "closed"
+          ],
+          "properties": {
+            "awaiting_triage": {
+              "$ref": "#/$defs/count_measure"
+            },
+            "received": {
+              "$ref": "#/$defs/count_measure"
+            },
+            "acknowledged": {
+              "$ref": "#/$defs/count_measure"
+            },
+            "accepted": {
+              "$ref": "#/$defs/count_measure"
+            },
+            "decided": {
+              "$ref": "#/$defs/count_measure"
+            },
+            "appealed": {
+              "$ref": "#/$defs/count_measure"
+            },
+            "corrected": {
+              "$ref": "#/$defs/count_measure"
+            },
+            "closed": {
+              "$ref": "#/$defs/count_measure"
+            }
+          }
+        },
+        "service_hours_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "working_group_process": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registry_ref",
+        "groups_in_scope",
+        "adopted_charters",
+        "accepted_chairs",
+        "accepted_reviewers",
+        "active_tasks",
+        "independent_challenges",
+        "unresolved_appeals"
+      ],
+      "properties": {
+        "registry_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "groups_in_scope": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "adopted_charters": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "accepted_chairs": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "accepted_reviewers": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "active_tasks": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "independent_challenges": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "unresolved_appeals": {
+          "$ref": "#/$defs/count_measure"
+        }
+      }
+    },
+    "evidence_quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "items_with_source_pointer",
+        "items_with_capture_time",
+        "items_with_rights_record",
+        "items_with_provenance"
+      ],
+      "properties": {
+        "items_with_source_pointer": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "items_with_capture_time": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "items_with_rights_record": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "items_with_provenance": {
+          "$ref": "#/$defs/count_measure"
+        },
+        "source_pointer_rate": {
+          "$ref": "#/$defs/rate_measure"
+        },
+        "capture_time_rate": {
+          "$ref": "#/$defs/rate_measure"
+        },
+        "rights_record_rate": {
+          "$ref": "#/$defs/rate_measure"
+        },
+        "provenance_rate": {
+          "$ref": "#/$defs/rate_measure"
+        }
+      }
+    },
+    "gspc_link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relationship",
+        "board_ref",
+        "axis_scores_written",
+        "incident_counts_are_axis_scores"
+      ],
+      "properties": {
+        "relationship": {
+          "enum": [
+            "link_only",
+            "not_linked"
+          ]
+        },
+        "board_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "axis_scores_written": {
+          "const": false
+        },
+        "incident_counts_are_axis_scores": {
+          "const": false
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_report_text_included",
+        "direct_identifiers_included",
+        "small_cell_suppression_applied"
+      ],
+      "properties": {
+        "public_report_text_included": {
+          "const": false
+        },
+        "direct_identifiers_included": {
+          "const": false
+        },
+        "small_cell_suppression_applied": {
+          "type": "boolean"
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewer_ref",
+        "decision_ref"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "draft",
+            "reviewed",
+            "approved_for_publication"
+          ]
+        },
+        "reviewer_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "decision_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "count_measure": {
+      "description": "Counts carry an explicit state so unavailable or out-of-scope values cannot be silently represented as zero.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "value"
+          ],
+          "properties": {
+            "status": {
+              "const": "available"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "value",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "unavailable",
+                "not_in_scope"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "rate_measure": {
+      "description": "A rate requires an explicit numerator and non-zero denominator; unavailable or out-of-scope rates carry a reason.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "numerator",
+            "denominator",
+            "value"
+          ],
+          "properties": {
+            "status": {
+              "const": "available"
+            },
+            "numerator": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "denominator": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "numerator",
+            "denominator",
+            "value",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "unavailable",
+                "not_in_scope"
+              ]
+            },
+            "numerator": {
+              "type": "null"
+            },
+            "denominator": {
+              "type": "null"
+            },
+            "value": {
+              "type": "null"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "source_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "checked_at",
+        "check_method",
+        "endpoint_state",
+        "endpoint_http_status",
+        "error_code",
+        "rights_state"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "checked_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "check_method": {
+          "enum": [
+            "http_head",
+            "http_get_metadata",
+            "api_metadata",
+            "manual",
+            "not_checked"
+          ]
+        },
+        "endpoint_state": {
+          "enum": [
+            "reachable",
+            "redirected",
+            "access_limited",
+            "not_found",
+            "method_unsupported",
+            "unavailable",
+            "unreachable",
+            "unknown",
+            "not_checked"
+          ]
+        },
+        "endpoint_http_status": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 100,
+          "maximum": 599
+        },
+        "error_code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "source_updated_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "rights_state": {
+          "enum": [
+            "approved_for_named_fields",
+            "restricted",
+            "not_reviewed",
+            "denied",
+            "unknown"
+          ]
+        }
+      }
+    }
+  }
+}
