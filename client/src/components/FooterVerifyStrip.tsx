@@ -42,11 +42,11 @@ const BADGES: VerifyBadge[] = [
     logo: '/images/badges/verify/pypi.svg',
   },
   {
-    // 29 Sep 2026: the Zenodo record answers 410 (account blocked; appeal pending). The DOI is
+    // 29 Sep 2026: the Zenodo record answers 410 (account blocked; no appeal on record). The DOI is
     // kept as an identifier; the link goes to the dated status record, not to the dead record.
     label: 'DOI 10.5281/zenodo.21991104 · Zenodo record unavailable',
     href: '/interop/zenodo-status.json',
-    title: 'Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. Live methodology: /methodology/',
+    title: 'Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json). Live methodology: /methodology/',
     logo: '/images/badges/verify/zenodo.svg',
   },
   {
