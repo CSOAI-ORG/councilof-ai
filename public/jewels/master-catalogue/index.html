@@ -67,7 +67,8 @@ td.url{font-size:.8rem;word-break:break-all}
 
 <h3>2. The board moved, and the old reading is kept visible</h3>
 <table><thead><tr><th>What</th><th>The 2026-11-01 edition said</th><th>Today</th><th>State</th></tr></thead><tbody>
-<tr><td><strong>the board reading in the 2026-11-01 edition</strong></td><td>33 axes / 23 measured / 10 unmeasured</td><td><strong>34 axes / 23 measured / 11 unmeasured</strong></td><td class="ns">SUPERSEDED. A 34th axis, watchdog-ingest, was declared UNMEASURED by another lane. The 2026-11-01 edition is left as it was published; this edition records the correction rather than rewriting the old one.</td></tr>
+<tr><td><strong>the board reading in the 2026-11-01 edition</strong></td><td>33 axes / 23 measured / 10 unmeasured</td><td><strong>34 axes / 34 measured / 0 unmeasured</strong></td><td class="ns">SUPERSEDED THREE TIMES TODAY, and every step is named here rather than one being quietly dropped. The chain of readings on 2 November: 34 axes / 23 measured / 11 unmeasured at 04:33Z (a 34th axis, watchdog-ingest, had just been declared UNMEASURED by another lane) → 34 / 24 / 10 at 07:03Z (the claim-maintenance axis was promoted to MEASURED — see the next row) → 34 / 34 / 0 now, as the remaining subject axes acquired frozen sha-pinned banks with runs behind them. The board is being actively re-measured by other lanes today, so the figure in this edition is a READING at the timestamp in live_state.read_at, and the live board remains the authority. The 2026-11-01 edition is left as it was published; this edition records the correction rather than rewriting the old one.</td></tr>
+<tr><td><strong>the claim-maintenance axis</strong></td><td>UNMEASURED, with its promotion recorded as an owner-gated decision — the one axis whose promotion this catalogue deliberately did not pre-empt</td><td><strong>MEASURED on the live board: method &quot;claim-maintenance v0.2&quot;, method_sha 32470d102112154b…, bank public/interop/claim-maintenance-wave-2026-10-28.json, bank_sha256 a62b017a9081b817…, n=174, facts_as_of 2026-10-28T06:05:00Z</strong></td><td class="ns">CHANGED, and the record of the change is incomplete in one place. The corrections ledger carries 93 entries; 4 of them mention claim-maintenance (C-2026-0930-01, C-2026-0929-09, C-2026-0929-08, C-2026-0929-07) and all of them are dated 29-30 September and concern the claim-maintenance category’s re-read schedule and the 23-axis count, not the axis’s promotion. None of them names the axis’s promotion to MEASURED. So the promotion is visible on the board but absent from the dated ledger of changes. This catalogue records what the board says and does not assert who ruled it; the missing ledger entry is the residue, and it is listed as an owner gate below.</td></tr>
 <tr><td><strong>the public root leaf count in the 2026-11-01 edition</strong></td><td>331 leaves</td><td><strong>428 leaves</strong></td><td class="ns">SUPERSEDED. The root advanced; the edition did not. Any number in a dated edition that was not re-read is suspect.</td></tr>
 <tr><td><strong>the docket row re-read in the 2026-11-01 edition</strong></td><td>126 distinct URLs, 89 read successfully</td><td><strong>242 distinct URLs, 156 read successfully</strong></td><td class="ns">SUPERSEDED, and the reason is a repaired defect, not a change in the field: the published table’s evidence cells were truncated at 220 characters, so it named 116 fewer surfaces than the estate had actually read.</td></tr>
 </tbody></table>
@@ -94,7 +95,7 @@ td.url{font-size:.8rem;word-break:break-all}
 
 <h2>Live estate state, read today</h2>
 <table><thead><tr><th>Surface</th><th>Reading</th><th>Source</th></tr></thead><tbody>
-<tr><td>GSPC board</td><td><strong>34 axes · 23 measured · 11 unmeasured</strong></td><td><a href="https://councilof.ai/api/gspc">/api/gspc</a> (HTTP 200)</td></tr>
+<tr><td>GSPC board</td><td><strong>34 axes · 34 measured · 0 unmeasured</strong></td><td><a href="https://councilof.ai/api/gspc">/api/gspc</a> (HTTP 200)</td></tr>
 <tr><td>Model-comparison separation</td><td>0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED</td><td><a href="https://councilof.ai/api/gspc">/api/gspc</a></td></tr>
 <tr><td>Public root</td><td><strong>428 leaves</strong>, as_of 2026-11-01T15:09:42Z</td><td><a href="https://councilof.ai/root.json">/root.json</a> (HTTP 200)</td></tr>
 <tr><td>Corrections ledger</td><td><strong>93 entries</strong></td><td><a href="https://councilof.ai/api/corrections">/api/corrections</a> (HTTP 200)</td></tr>
@@ -102,46 +103,36 @@ td.url{font-size:.8rem;word-break:break-all}
 <tr><td>Agent Skills published</td><td><strong>14</strong> — the product skill <code>meok-canonical</code> is not among them</td><td><a href="https://councilof.ai/.well-known/agent-skills/index.json">/.well-known/agent-skills/index.json</a> (HTTP 200)</td></tr>
 <tr><td>Mechanism coverage</td><td>{&quot;PREDICATE&quot;:1,&quot;RELATED_MEASURE&quot;:12,&quot;CROSSWALK_ONLY&quot;:38,&quot;HASH_ONLY&quot;:366}</td><td><a href="https://councilof.ai/mechanism/coverage.json">/mechanism/coverage.json</a> (HTTP 200)</td></tr>
 <tr><td>Claim-maintenance register</td><td>28 subjects · 99 claims · as_of 2026-11-01T07:17:54Z</td><td><a href="https://councilof.ai/spec/claim-maintenance/register.json">/spec/claim-maintenance/register.json</a> (HTTP 200)</td></tr>
-<tr><td>Open pull requests</td><td><strong>75</strong></td><td>GitHub search API</td></tr>
+<tr><td>Open pull requests</td><td><strong>51</strong></td><td>GitHub search API</td></tr>
 </tbody></table>
 
 <h3>The unmeasured axes, as the board reads them today</h3>
 <table><thead><tr><th>Axis</th><th>Family</th><th>Kind</th><th>Status</th><th>n</th></tr></thead><tbody>
-<tr><td><code>lab-practice</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
-<tr><td><code>company-practice</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
-<tr><td><code>measurer-integrity</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
-<tr><td><code>harness-fidelity</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
-<tr><td><code>interop-conformance</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
-<tr><td><code>humanoid-deployment</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
-<tr><td><code>regulator-transparency</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
-<tr><td><code>interpretability-reproducibility</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
-<tr><td><code>claim-maintenance</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
-<tr><td><code>serving-fidelity</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
-<tr><td><code>watchdog-ingest</code></td><td>subject</td><td>declared-slot</td><td>UNMEASURED</td><td>0</td></tr>
+<tr><td colspan="5">—</td></tr>
 </tbody></table>
-<p class="note">An unmeasured axis is a declared position with no run behind it, published so the gap is visible. It is never an error and never a zero. The 34th axis, <code>watchdog-ingest</code>, was declared on 2026-10-30 and another lane owns it.</p>
+<p class="note">An unmeasured axis is a declared position with no run behind it, published so the gap is visible. It is never an error and never a zero. As of this reading the board carries <strong>0</strong> unmeasured axes: the <code>watchdog-ingest</code> slot, declared UNMEASURED on 2026-10-30, and the <code>claim-maintenance</code> axis both acquired runs today. The <code>claim-maintenance</code> promotion is named in the corrections table, and the corrections ledger still carries no entry for it. The board is being actively re-measured by other lanes today, so the figure here is a reading at the timestamp above and the live board remains the authority.</p>
 
 <h2>Jewels found since the table was dated</h2>
 <table><thead><tr><th>ID</th><th>Jewel</th><th>State</th><th>Evidence</th><th>Why it is here</th></tr></thead><tbody>
-<tr><td><code>J-156</code></td><td><strong>The 34th board axis: watchdog-ingest</strong></td><td>DECLARED-UNMEASURED</td><td class="ns">The live board carries watchdog-ingest (family subject, kind declared-slot, applies_to public-watchdog-and-incident-sources). n=0 is the literal truth, never a score. bench: pending frozen method + sha-pinned daily runs. The slot is declared UNMEASURED pending a frozen method and sha-pinned daily runs pinned to a published run window.</td><td class="ns">It is on no list: the 130-row state table is dated 2026-10-27 and the slot was declared 2026-10-30.</td></tr>
-<tr><td><code>J-157</code></td><td><strong>The coverage gap map</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/gspc-gap-map/ -&gt; HTTP 200, 113306 bytes. Enumerates legal provisions crossed with the GSPC lenses and shows which cells the field has measured and which have no instrument.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
-<tr><td><code>J-158</code></td><td><strong>The watchdog programme page</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/watchdog/ -&gt; HTTP 200, 158090 bytes. The public watchdog programme: incident reports, evidence reviews and analyst sign-up, kept open so every report can be checked.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
-<tr><td><code>J-159</code></td><td><strong>The CSOAI-census crawler page</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/census/ -&gt; HTTP 200, 96190 bytes. What the crawler does - public GETs and MCP discovery, never a tool call - which datasets it feeds, and how to ask for a re-check or opt out.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
-<tr><td><code>J-160</code></td><td><strong>The browser-side leaderboard verifier</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/verify-leaderboard/ -&gt; HTTP 200, 96145 bytes. Recomputes the arena reference content ID and verifies its Ed25519 envelope against the pinned public board DID key, in the reader’s browser.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
+<tr><td><code>J-156</code></td><td><strong>The 34th board axis: watchdog-ingest</strong></td><td>VERIFIED_CURRENT</td><td class="ns">The live board carries watchdog-ingest (family subject, kind measured-subject, applies_to public-watchdog-and-incident-sources), status MEASURED. n=106 is the literal truth, never a score. bench: frozen presence bank (5 classes, 3-of-5 bar). method scripts/subject-axis/build_missing_axes.mjs, method_sha eeabfeb8a0515d71…. The slot was declared UNMEASURED on 2026-10-30 and carries a run today; another lane owns the axis and its intake harness.</td><td class="ns">It is on no list: the 130-row state table is dated 2026-10-27 and the slot was declared 2026-10-30.</td></tr>
+<tr><td><code>J-157</code></td><td><strong>The coverage gap map</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/gspc-gap-map/ -&gt; HTTP 200, 112780 bytes. Enumerates legal provisions crossed with the GSPC lenses and shows which cells the field has measured and which have no instrument.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
+<tr><td><code>J-158</code></td><td><strong>The watchdog programme page</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/watchdog/ -&gt; HTTP 200, 157564 bytes. The public watchdog programme: incident reports, evidence reviews and analyst sign-up, kept open so every report can be checked.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
+<tr><td><code>J-159</code></td><td><strong>The CSOAI-census crawler page</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/census/ -&gt; HTTP 200, 95664 bytes. What the crawler does - public GETs and MCP discovery, never a tool call - which datasets it feeds, and how to ask for a re-check or opt out.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
+<tr><td><code>J-160</code></td><td><strong>The browser-side leaderboard verifier</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/verify-leaderboard/ -&gt; HTTP 200, 95619 bytes. Recomputes the arena reference content ID and verifies its Ed25519 envelope against the pinned public board DID key, in the reader’s browser.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
 <tr><td><code>J-161</code></td><td><strong>The AI Claims Index</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/claims-index/ -&gt; HTTP 200, 17936 bytes. A scored public table of 10 AI vendors’ published model claims, each row linked to signed measurement cards anyone can verify.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
-<tr><td><code>J-162</code></td><td><strong>The claims register page</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/claims-register/ -&gt; HTTP 200, 128524 bytes. Every public claim the estate makes about itself, its evidence and its status, generated from the register so a claim cannot outlive its evidence.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
-<tr><td><code>J-163</code></td><td><strong>The per-axis measurement question page</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/axis/claim-maintenance -&gt; HTTP 200, 8177 bytes. The measurement question for the claim-maintenance axis, published on its own route.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
+<tr><td><code>J-162</code></td><td><strong>The claims register page</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/claims-register/ -&gt; HTTP 200, 127998 bytes. Every public claim the estate makes about itself, its evidence and its status, generated from the register so a claim cannot outlive its evidence.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
+<tr><td><code>J-163</code></td><td><strong>The per-axis measurement question page</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/axis/claim-maintenance -&gt; HTTP 200, 8370 bytes. The measurement question for the claim-maintenance axis, published on its own route.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
 </tbody></table>
 
 <h2>What the other lanes shipped since 2026-11-01</h2>
 <p>Eight sessions work this estate in parallel. This catalogue is the reconciled picture, so what they merged is recorded here with its pull request.</p>
 <div class="scroll"><table><thead><tr><th>When (UTC)</th><th>Commit</th><th>Pull request</th></tr></thead><tbody>
+<tr><td>2026-11-02 07:03</td><td><code>41f0e1e4ae</code></td><td class="ns">PR #3737</td></tr>
+<tr><td>2026-11-02 06:26</td><td><code>69af4cc4a9</code></td><td class="ns">PR #3723</td></tr>
 <tr><td>2026-11-02 04:11</td><td><code>8695d6f2ca</code></td><td class="ns">PR #3715</td></tr>
 <tr><td>2026-11-02 03:26</td><td><code>73d4280b3e</code></td><td class="ns">PR #3711</td></tr>
 <tr><td>2026-11-01 18:00</td><td><code>735a3f8259</code></td><td class="ns">PR #3672</td></tr>
 <tr><td>2026-11-01 07:56</td><td><code>d09846079a</code></td><td class="ns">PR #3695</td></tr>
-<tr><td>2026-11-01 05:16</td><td><code>5f4a3b5c9b</code></td><td class="ns">PR #3691</td></tr>
-<tr><td>2026-11-01 05:15</td><td><code>d29e4be284</code></td><td class="ns">PR #3686</td></tr>
 </tbody></table></div>
 
 <h2>Rows by state, as state-checked on 2026-10-27</h2>
@@ -159,7 +150,7 @@ td.url{font-size:.8rem;word-break:break-all}
 
 <h2>Every jewel</h2>
 <p class="note">The live column is today's HTTP status for the surface that row names. A same-origin path the site does not serve is shown in the estate's <code>path:/…</code> form rather than as a link that goes nowhere.</p>
-<p class="note">Every row's evidence and next step travel in the <a href="https://councilof.ai/jewels/master-catalogue/index.json">machine-readable form</a>. This page prints a row's own wording where the estate's brand gate admits it; 9 rows (<code>CJ-02</code> · <code>CJ-03</code> · <code>CJ-14</code> · <code>CJ-24</code> · <code>CJ-25</code> · <code>CJ-35</code> · <code>CJ-88</code> · <code>N-25</code> · <code>N-28</code>) quote wording the gate holds, so those cells point at the machine-readable form rather than lose the record.</p>
+<p class="note">Every row's evidence and next step travel in the <a href="https://councilof.ai/jewels/master-catalogue/index.json">machine-readable form</a>. This page prints a row's own wording where the estate's brand gate admits it; 7 rows (<code>CJ-02</code> · <code>CJ-03</code> · <code>CJ-14</code> · <code>CJ-24</code> · <code>CJ-25</code> · <code>CJ-35</code> · <code>CJ-88</code>) quote wording the gate holds, so those cells point at the machine-readable form rather than lose the record.</p>
 <div class="scroll"><table><thead><tr><th>ID</th><th>Jewel</th><th>Claimed (2026-10-26)</th><th>Verified (2026-10-27)</th><th>Live (2026-11-02)</th><th>Evidence</th><th>Next step</th></tr></thead><tbody>
 <tr>
   <td class="id"><code>CJ-01</code></td>
@@ -1283,7 +1274,7 @@ td.url{font-size:.8rem;word-break:break-all}
   <td class="claimed">*OPEN</td>
   <td><span class="chip ok">Open, verified</span></td>
   <td class="livecell"><span class="live ok" title="https://theamse.org/hackathon/AgenticAIHackathon2026">200</span></td>
-  <td class="ev"><span class="mute">carried in the machine-readable form</span></td>
+  <td class="ev">https://theamse.org/hackathon/AgenticAIHackathon2026 — &#39;Agentic AI Hackathon 2026 / Nov 21 – Nov 22, 2026 / Ulster University, UK / 2 nd International Hackathon / Organized by Ulster University, UK&#39;; &#39;Round I (Idea / PPT Submission): 16 Nov 2026, 10:00 PM&#39;; &#39;Round II (Online Presentation): 21-22 Nov 2026&#39;; &#39;There is no registration fee for the participants&#39;; &#39;Total Prize Pool : $1,200&#39;</td>
   <td class="ns">Register the team and submit the Round I idea/PPT before 16 Nov 2026 22:00 — confirm the clock&#39;s timezone with the organisers, since the page does not state it</td>
 </tr>
 <tr>
@@ -1310,8 +1301,8 @@ td.url{font-size:.8rem;word-break:break-all}
   <td class="claimed">*OPEN</td>
   <td><span class="chip ok">Open, verified</span></td>
   <td class="livecell"><span class="live ok" title="https://warwick.ac.uk/fac/sci/dcs/aamas2027/calls/call-for-blue-sky-ideas/">200</span></td>
-  <td class="ev"><span class="mute">carried in the machine-readable form</span></td>
-  <td class="ns"><span class="mute">carried in the machine-readable form</span></td>
+  <td class="ev">https://warwick.ac.uk/fac/sci/dcs/aamas2027/calls/call-for-blue-sky-ideas/ — &#39;Author registration on Open Review: 20 Oct 2026&#39;; &#39;Abstract submission: 5 Nov 2026&#39;; &#39;Paper submission: 12 Nov 2026&#39;; &#39;Camera-ready submission: 11 Feb 2027 (Hard deadline)&#39;; &#39;All deadlines are at the end of the specified day, Anywhere on Earth (UTC-12)&#39;; &#39;Submissions are limited to 4 pages in length in the AAMAS 2027 format&#39;</td>
+  <td class="ns">Register the author on OpenReview immediately (the 20 Oct registration date has passed), then submit the abstract by 5 Nov 2026 and the 4-page paper by 12 Nov 2026 (UTC-12)</td>
 </tr>
 <tr>
   <td class="id"><code>N-29</code></td>
@@ -1337,11 +1328,12 @@ td.url{font-size:.8rem;word-break:break-all}
 <table><thead><tr><th>#</th><th>Gate</th><th>Why it is not the agent's to close</th><th>Cost</th></tr></thead><tbody>
 <tr><td>1</td><td><strong>Sign the wave-2 card and the five subject-axis banks</strong></td><td class="ns">signing mints public evidence; the estate’s own rule leaves it to the owner</td><td>minutes once reviewed</td></tr>
 <tr><td>2</td><td><strong>Adjudicate materiality for the candidate claim deltas</strong></td><td class="ns">a byte delta triggers human materiality adjudication and is never an automated compliance verdict</td><td>one sitting</td></tr>
-<tr><td>3</td><td><strong>Promote the claim-maintenance axis to MEASURED</strong></td><td class="ns">the method is frozen and sha-pinned and n_valid meets the threshold, but the promotion is the owner’s ruling</td><td>one ruling</td></tr>
+<tr><td>3</td><td><strong>Record the claim-maintenance promotion in the corrections ledger</strong></td><td class="ns">the axis is MEASURED on the live board with a frozen method and a sha-pinned bank, and the ledger carries no entry naming the promotion — a change visible on the board but absent from the dated record of changes is exactly the gap this catalogue exists to close</td><td>one entry</td></tr>
 <tr><td>4</td><td><strong>Declare each subject axis’s sampling frame</strong></td><td class="ns">a governance decision about what the estate claims to speak about</td><td>one page per axis</td></tr>
 <tr><td>5</td><td><strong>Publish the product Agent Skill (meok-canonical)</strong></td><td class="ns">the site publishes 14 skills and that one is not among them; the built artefact is not in the estate repo and the build script it names does not exist on master</td><td>small</td></tr>
 <tr><td>6</td><td><strong>A working HuggingFace write token</strong></td><td class="ns">the token on this machine is rejected by the Hub, so the 10 TB public / 1 TB private storage cannot be written from here</td><td>one token</td></tr>
 <tr><td>7</td><td><strong>The Trash purge and the 33 GB application</strong></td><td class="ns">both are the owner’s data on the owner’s disk</td><td>minutes</td></tr>
+<tr><td>8</td><td><strong>Turn on the repository merge queue</strong></td><td class="ns">branch protection is strict and the merge queue is off, so with dozens of open PRs every merge has to be armed one at a time; the REST API silently drops merge_queue_enabled, so this has to be done in the repository settings UI. It is the highest-leverage single toggle available to the estate</td><td>one toggle in Settings → General</td></tr>
 </tbody></table>
 
 <h2>What this is pinned to</h2>
@@ -1354,6 +1346,6 @@ td.url{font-size:.8rem;word-break:break-all}
 </tbody></table>
 <p class="note">The extractor is the estate's own <code>scripts/claim-capture.mjs</code>, sha256-pinned in the published spec manifest, and the run refuses to measure if the pin does not match. A negative control — a URL that cannot exist — is read first; if the reader reported it reachable, the run would be void.</p>
 
-<p class="note">This catalogue counts and quotes. It decides nothing about whether any measured claim is true, and it grants no status to any subject. Published 2026-11-02T04:33:12.951Z. Measurement, never a certification.</p>
+<p class="note">This catalogue counts and quotes. It decides nothing about whether any measured claim is true, and it grants no status to any subject. Published 2026-11-02T07:16:04.980Z. Measurement, never a certification.</p>
 </main>  <script src="/council-workspace-launcher.js" defer></script>
 </body></html>
