@@ -277,7 +277,9 @@ ${list.map((a) => tr(a, leadCol)).join("\n")}
   if (Number.isFinite(lidLead) && lidLead !== shown + ownerHeld) {
     throw Error(`LID_COUNT_MISMATCH the board's totals say ${lidLead} axes but the payload carries ${shown + ownerHeld} (${shown} public + ${ownerHeld} owner-held)`);
   }
-  const reconcile = lidLead === shown
+  // A lid with no numeric total (the "Current counts are on the live board" fallback)
+  // is nothing to reconcile against: stay silent rather than print NaN into prose.
+  const reconcile = !Number.isFinite(lidLead) || lidLead === shown
     ? ""
     : `\n  <p class="muted">The board serves ${lidLead} axes; ${ownerHeld} ${ownerHeld === 1 ? "is" : "are"} owner-gated pending go, so this page lists ${shown}. The held slots have no public row, page or count of their own.</p>`;
   const body = `  <p class="lid">${esc(lid(board))}</p>

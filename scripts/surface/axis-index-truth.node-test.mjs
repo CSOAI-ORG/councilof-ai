@@ -161,6 +161,15 @@ test("the index stays silent when the board totals equal the rows shown", () => 
   assert.doesNotMatch(html, /owner-gated pending go/);
 });
 
+test("a lid with no numeric total stays silent instead of printing NaN", () => {
+  const b = board({ gated: ["slot-9"] });
+  b.totals = { note: "counts are on the live board" };
+  const html = renderAll(b)["axes.html"];
+  assert.doesNotMatch(html, /NaN/);
+  assert.doesNotMatch(html, /owner-gated pending go/);
+  assert.match(html, /<h1>All 32 GSPC axes<\/h1>/);
+});
+
 test("a totals row the reconciliation cannot explain refuses to render", () => {
   const b = board();
   b.totals = { ...b.totals, public_count: "40 axes · 23 measured" };
