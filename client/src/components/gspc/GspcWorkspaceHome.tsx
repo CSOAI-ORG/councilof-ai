@@ -34,12 +34,68 @@ import {
 } from "./useLiveJson";
 import { useModelsCount } from "./useModelsCount";
 import { checkWords, chipOf, countsLine, dayLabel, readClaimChecks, registryWords, STATUS_WORDS } from "./claimChecks";
+import { FREE_TOOL_NAMES, FREE_TOOLS } from "@/lib/mcpTools";
 import GetResults from "./GetResults";
 import CorpusCount from "./CorpusCount";
 import { correctionHeadline, correctionHref } from "@/lib/correctionHeadline";
 import ModelCountKey from "@/components/ModelCountKey";
 
 const nf = new Intl.NumberFormat("en-GB");
+
+/**
+ * Run-a-tool strip (2026-11-02 consolidation). The free tools were executable for months yet one
+ * click away from the start screen, behind the For developers card — which read as "no actual
+ * tooling working" (the owner's words). This strip puts a hand-picked, honest shortlist on the
+ * first screen: each chip opens the real tool in the workspace tools pane with its real schema.
+ *
+ * The names are curated but validated against the fleet the door actually serves: a chip whose
+ * tool is no longer in FREE_TOOL_NAMES silently drops off, so the strip can never advertise a
+ * tool the door refuses. Titles come from the same file the door reads (mcpTools.ts), never typed
+ * here. No count is printed — the free-tool count figure lives on the For developers card
+ * (one figure per place).
+ */
+const RUN_NOW_TOOLS = ["board_totals", "get_axis", "verify_card", "get_root", "x402_trust", "mcp_trust"];
+
+function RunNowStrip() {
+  const available = new Set(FREE_TOOL_NAMES);
+  const titleOf = (name: string) => FREE_TOOLS.find((t) => t.name === name)?.title ?? name;
+  const chips = RUN_NOW_TOOLS.filter((name) => available.has(name));
+  if (!chips.length) return null;
+  return (
+    <section aria-labelledby="ws-runnow-h" className="mt-6" data-testid="ws-runnow">
+      <h2 id="ws-runnow-h" className="text-xl font-black tracking-tight text-foreground">
+        Run a live tool now
+      </h2>
+      <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
+        Each chip opens the real tool in the workspace — schema, execution and evidence state,
+        against the live door. The free tools need no account.
+      </p>
+      <ul className="mt-3 flex list-none flex-wrap gap-2 p-0" aria-label="Tools you can run right now">
+        {chips.map((name) => (
+          <li key={name}>
+            <Link
+              href={`/dashboard?tab=tools&tool=${encodeURIComponent(name)}`}
+              title={`${titleOf(name)} — tool ${name}`}
+              className="inline-flex min-h-11 items-center rounded-full border border-emerald-950/20 bg-card px-4 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700/50 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+              data-testid={`ws-runnow-${name}`}
+            >
+              {titleOf(name)}
+            </Link>
+          </li>
+        ))}
+        <li>
+          <Link
+            href="/dashboard?tab=tools"
+            className="inline-flex min-h-11 items-center rounded-full border border-dashed border-emerald-950/30 px-4 text-sm font-bold text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+            data-testid="ws-runnow-all"
+          >
+            All free tools <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+          </Link>
+        </li>
+      </ul>
+    </section>
+  );
+}
 
 /** A figure, its loading placeholder, or its failure in words. */
 export function LiveFigureLine({
@@ -575,6 +631,8 @@ export default function GspcWorkspaceHome({
 
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
         <GetResults onAsk={onAsk ? askLookup : undefined} />
+
+        <RunNowStrip />
         <p className="mt-3 text-sm text-muted-foreground">
           Changing evaluation tools?{" "}
           <a className="font-semibold underline underline-offset-2" href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/product/evaluation-migration-handoff.md">Check what survives a migration</a>.
