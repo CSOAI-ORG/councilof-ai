@@ -4,7 +4,7 @@
  * nothing on the site links one as if it were available. Dated record with every DOI and each
  * alternative's check: /interop/zenodo-status.json. Mirror of functions/_lib/zenodoStatus.ts.
  */
-export const ZENODO_NOTICE = "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.";
+export const ZENODO_NOTICE = "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json).";
 export const ZENODO_STATUS_PATH = "/interop/zenodo-status.json";
 /** The GSPC methodology record's DOI: an identifier, not currently a working link. */
 export const METHODOLOGY_DOI = "10.5281/zenodo.21991104";
