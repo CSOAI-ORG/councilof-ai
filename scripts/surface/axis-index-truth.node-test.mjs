@@ -144,13 +144,20 @@ test("the axes index page says 32 where the board serves 33, because one slot is
 });
 
 test("the index reconciles the board's totals with the rows it lists when slots are owner-held", () => {
-  const html = renderAll(board())["axes.html"];
-  // Two counts about one set, and the difference stated in neither's place is an error to the reader.
-  assert.match(html, /33 axes · 23 measured/);
-  assert.match(html, /<h1>All 32 GSPC axes<\/h1>/);
+  const b = board();
+  const html = renderAll(b)["axes.html"];
+  // Two counts about one set, and the difference stated in neither's place is an error
+  // to the reader. Every number here is DERIVED from the fixture — the lane keeps the
+  // fixture's measured count synced to the live board, and a typed "23" went red the
+  // moment the board said 24. The invariant, not the number, is what is pinned.
+  const lidLead = parseInt(b.totals.public_count.match(/^(\d+)/)[1], 10);
+  const shown = parseInt(html.match(/<h1>All (\d+) GSPC axes<\/h1>/)[1], 10);
+  const held = lidLead - shown;
+  assert.equal(shown, lidLead - 1, "the fixture holds back exactly one slot");
+  assert.match(html, new RegExp(`${lidLead} axes · \\d+ measured`));
   assert.match(
     html,
-    /The board serves 33 axes; 1 is owner-gated pending go, so this page lists 32\./,
+    new RegExp(`The board serves ${lidLead} axes; ${held} is owner-gated pending go, so this page lists ${shown}\\.`),
   );
   // The held axis is a count, never a leak.
   assert.doesNotMatch(html, /slot-9/);
@@ -163,7 +170,8 @@ test("the index stays silent when the board totals equal the rows shown", () => 
 
 test("a totals row the reconciliation cannot explain refuses to render", () => {
   const b = board();
-  b.totals = { ...b.totals, public_count: "40 axes · 23 measured" };
+  // A totals count that can never equal shown+held, whatever the fixture grows to.
+  b.totals = { ...b.totals, public_count: "999999 axes · 23 measured" };
   assert.throws(() => renderAll(b), /LID_COUNT_MISMATCH/);
 });
 
