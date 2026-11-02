@@ -186,7 +186,7 @@ export default function DocsHub() {
             </p>
             <p className="mt-3">
               Catalog of every metered endpoint, each with its live-quote link:{" "}
-              <InA to="/x402/catalog">/x402/catalog</InA>.{" "}
+              <InA to="/metered">/metered</InA>.{" "}
               Overview of the rail:{" "}
               <InA to="/dashboard?task=pricing-overview&tab=measured">
                 Council OS → pricing overview
