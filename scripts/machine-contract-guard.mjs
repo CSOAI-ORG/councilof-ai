@@ -139,11 +139,33 @@ try {
 } catch (e) { fail(`/.well-known/did.json fetch error: ${e.message}`); }
 
 // 3. Banned-string sweep over the machine JSON surfaces.
+// /api/corrections is the public ledger of past corrections, and a correction's job is to
+// QUOTE what was wrong — old_values, what_was_wrong, timing_evidence and how_caught carry
+// the retired internal codenames verbatim, labelled "quoted, not claimed". The HTML
+// brand-gate has allowed exactly this on the corrections surfaces since its allowOn rules
+// (scripts/brand-gate.mjs); the machine sweep now honours the same line: those history
+// fields are stripped before the scan, so a NEW leak anywhere else on the payload — title,
+// summary, or a fresh field — still goes red.
+const HISTORY_FIELDS = new Set(["old_values", "old_value", "what_was_wrong", "timing_evidence", "how_caught"]);
+function stripHistoryQuotes(value) {
+  if (Array.isArray(value)) return value.map(stripHistoryQuotes);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const [k, v] of Object.entries(value)) out[k] = HISTORY_FIELDS.has(k) ? null : stripHistoryQuotes(v);
+    return out;
+  }
+  return value;
+}
 for (const path of ["/api/gspc", "/api/reported", "/api/regulation", "/api/corrections", "/api/cross", "/.well-known/agent.json", "/.well-known/agent-card.json", "/.well-known/scitt.json"]) {
   try {
     const { status, body } = await get(HOST + path);
     if (status !== 200) { fail(`${path} returned HTTP ${status}`); continue; }
-    const scan = body.replace(EXEMPT, "\0alias\0").toLowerCase();
+    let text = body;
+    if (path === "/api/corrections") {
+      try { text = JSON.stringify(stripHistoryQuotes(JSON.parse(body))); }
+      catch { /* not JSON — scan as-is, the sweep stays fail-closed */ }
+    }
+    const scan = text.replace(EXEMPT, "\0alias\0").toLowerCase();
     const hits = BANNED.filter((s) => scan.includes(s));
     if (hits.length) fail(`${path} carries banned string(s): ${hits.map((h) => JSON.stringify(h)).join(", ")}`);
     else pass(`${path} clean of banned strings`);
