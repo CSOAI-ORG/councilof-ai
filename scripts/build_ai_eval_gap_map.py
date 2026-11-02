@@ -324,15 +324,15 @@ def _count_tree(tree: list[dict], spec: dict) -> int | None:
 # What CSOAI does not have, per reader. Every comparison names the field path it rests on.
 # The counts are not comparable units, and saying so is part of the answer.
 READER_GAPS = {
-    "helm": "HELM carries 290 scenario definition modules; CSOAI's board declares 33 axis slots, "
-            "of which 23 carry a run. The units differ — one frozen bank per axis against 290 "
+    "helm": "HELM carries 290 scenario definition modules; CSOAI's board declares {axes} axis slots, "
+            "of which {measured} carry a run. The units differ — one frozen bank per axis against 290 "
             "scenario modules — so the numbers are not a scoreboard. The difference is depth per "
             "axis, not slot count.",
     "inspect_ai": "Inspect's portable log artifact is the closest thing in this universe to a "
                   "replayable measurement record. CSOAI publishes no comparable per-run log "
                   "schema: its 9 deterministic-fact run artifacts are content-addressed, and 7 of "
                   "them are unsigned.",
-    "inspect_evals": "55 registered evals against 33 declared axis slots. Different units again: "
+    "inspect_evals": "55 registered evals against {slots} declared axis slots. Different units again: "
                      "a registered eval is a task suite, an axis is a measured behavioural family.",
     "control_arena": "27 control-task definition files. CSOAI has no control-task suite: its "
                      "swarm and cross-reality axes are behavioural fleet measurements over a "
@@ -361,7 +361,7 @@ READER_GAPS = {
     "metr_rebench": "A protocol for repeated runs to control variance. CSOAI's separation rule "
                     "is the board's own; there is no published repeated-run protocol for third "
                     "parties to reproduce it with.",
-    "lm_eval_harness": "221 task directories against 33 declared axis slots. A task adapter "
+    "lm_eval_harness": "221 task directories against {slots} declared axis slots. A task adapter "
                        "library and a behavioural axis are different objects; the counts are "
                        "not comparable and are not offered as a comparison.",
     "long_form_factuality": "A published long-form factuality prompt set, scored by the SAFE "
@@ -406,10 +406,40 @@ def _count_jsonl_objects(repo: str, branch: str, paths: list[str]) -> tuple[int 
     return total, "MEASURED", f"{len(paths)} files at {branch}"
 
 
-def observe(candidate: dict) -> dict:
+# The board's own count, in words, DERIVED from the board read this script makes.
+# It used to be typed ("33 axis slots, of which 23 carry a run"), which meant the prose
+# froze the board at the value it had the day the map was written: the moment the board
+# grew, the map would have contradicted the very quote it carries beside it, and nothing
+# in this file would have said so. GROWTH IS PUBLISHED, SHRINKAGE IS DRIFT — the same
+# grammar the rest of the estate applies to the axis count.
+def board_phrase(board: dict) -> dict:
+    totals = (board or {}).get("totals") or {}
+    axes = totals.get("axes")
+    measured = totals.get("measured_axes")
+    unmeasured = totals.get("unmeasured_axes")
+    if not isinstance(axes, int):
+        # No board, no number. An absent count is never a zero and never a guess.
+        return {
+            "axes": "an unknown number of",
+            "slots": "an unknown number of",
+            "measured": "an unknown number",
+            "unmeasured": "an unknown number",
+            "unavailable": True,
+        }
+    return {
+        "axes": str(axes),
+        "slots": str(axes),
+        "measured": str(measured) if isinstance(measured, int) else "an unknown number",
+        "unmeasured": str(unmeasured) if isinstance(unmeasured, int) else "an unknown number",
+        "unavailable": False,
+    }
+
+
+def observe(candidate: dict, phrase: dict) -> dict:
     repo = candidate["repo"]
     out = dict(candidate)
-    out["csoai_gap"] = READER_GAPS.get(candidate["reader"])
+    gap = READER_GAPS.get(candidate["reader"])
+    out["csoai_gap"] = gap.format(**phrase) if gap else gap
     meta, status, digest = _json(f"https://api.github.com/repos/{repo}")
     out["api_source"] = f"https://api.github.com/repos/{repo}"
     out["api_response_sha256"] = digest or None
@@ -575,8 +605,9 @@ def main() -> int:
     args = ap.parse_args()
     out_dir = ROOT / args.out
 
-    observed = [observe(c) for c in CANDIDATES]
     board = read_board()
+    phrase = board_phrase(board)
+    observed = [observe(c, phrase) for c in CANDIDATES]
 
     doc = {
         "schema": "csoai.ai-eval-universe/0.1",
@@ -611,10 +642,10 @@ def main() -> int:
             "axes": board.get("axes"),
             "response_sha256": board.get("response_sha256"),
             "note": (
-                "Quoted from the live board by field name. The board declares 33 axis slots; "
-                "23 are MEASURED, 10 are declared with no run behind them. An unmeasured axis is "
-                "a visible gap, not a zero, and never a fail."
-            ),
+                "Quoted from the live board by field name. The board declares {axes} axis slots; "
+                "{measured} are MEASURED, {unmeasured} are declared with no run behind them. An "
+                "unmeasured axis is a visible gap, not a zero, and never a fail."
+            ).format(**phrase),
         },
     }
     doc["snapshot_sha256"] = hashlib.sha256(

@@ -19,34 +19,48 @@
   ],
   "source": {
     "schema": "csoai.gspc-axes/0.5",
-    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "snapshot": "council-os/axis-specialists/board-2026-11-02.snapshot.json",
     "measurement_time": {
-      "state": "UNCHECKABLE",
-      "precision": "unknown",
-      "source": "/api/gspc",
-      "source_field": "none",
-      "note": "No structured measurement time is available; CURRENT admission must fail closed."
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-11-02T04:20:54.265Z",
+      "source": "/interop/axis-banks/harness-fidelity-20261102.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
     },
-    "axis_row_sha256": "e956f47bdf2c80d96ac65472d9325bce5a7e4f7099ccb4a0160bfaaf053fa350",
+    "axis_row_sha256": "aced7b6a217213eac91a6bfdf39f3f877960ae2f243678329caf5e28bd169402",
     "axis_row": {
       "axis": "harness-fidelity",
       "family": "subject",
-      "kind": "declared-slot",
+      "kind": "measured-subject",
       "applies_to": "harnesses",
-      "bench": "pending frozen method",
-      "task": "does the same model on the same bank score the same across evaluation harnesses",
-      "n": 0,
-      "status": "UNMEASURED",
-      "colour": "hsl(230 10% 55%)",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an evaluation harness pin its dependencies, publish a must-fail control, isolate execution and document reproduction",
+      "n": 36,
+      "status": "MEASURED",
+      "method_status": "meets-rule",
+      "method": "scripts/subject-axis/build_harness_fidelity.mjs",
+      "method_sha": "1ec4ee46eb119cae5832ed2ffeb1a203609e11c67523231d25be6240b3ff9ab4",
+      "rate": 0.6667,
+      "rate_scale": "fraction",
+      "rate_rule": "presence of at least 3 of 5 declared classes",
+      "bank": "interop/axis-banks/harness-fidelity-20261102.json",
+      "bank_sha256": "3f10dc5f034f3ccf5e6522606cfdc3e4bd4ebcf1a86adc2a28420fba41822a3b",
+      "frame_sha256": "58b661700d97a909a49732ab0843e59e4de90399abe06df5913782911f4dc441",
+      "facts_as_of": "2026-11-02T04:20:54.265Z",
+      "evidence_url": "/interop/axis-banks/harness-fidelity-20261102.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "n_unit": "subjects in the frozen frame",
+      "colour": "hsl(230 62% 52%)",
       "hue": 230,
-      "note": "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score. Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid >= 30, passing the gate. Census checks are a DISCOVERED check grid, not scores on this axis.",
-      "method_status": "no-method: declared slot",
+      "note": "36 subjects from a frozen frame of 40 (4 refusals recorded, never converted to failures). rate 0.6667 = share meeting at least 3 of 5 declared presence classes (4-of-5 0.3611, 5-of-5 0). Class census: pinned 23, must 1, isolation 20, reproduction 29, published 26. 36/36 must-fail negative controls caught. Presence of a string in public bytes at a stated time is not evidence of quality, truth or compliance.",
       "measurement_time": {
-        "state": "UNCHECKABLE",
-        "precision": "unknown",
-        "source": "/api/gspc",
-        "source_field": "none",
-        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-11-02T04:20:54.265Z",
+        "source": "/interop/axis-banks/harness-fidelity-20261102.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
       }
     }
   },
@@ -69,27 +83,22 @@
       "evidence": []
     },
     {
-      "id": "DECLARED_GAP",
-      "state": "PASS",
-      "detail": "UNMEASURED slot for harnesses; n=0 is not a score"
-    },
-    {
-      "id": "NO_FABRICATED_SCORE",
-      "state": "PASS",
-      "detail": "declared slot has no leader, accuracy or separation"
+      "id": "MEASUREMENT_KIND",
+      "state": "FINDING",
+      "detail": "unknown measurement kind measured-subject"
     },
     {
       "id": "CURRENT_METHOD_RULE",
       "state": "PASS",
-      "detail": "no-method: declared slot"
+      "detail": "meets-rule"
     }
   ],
   "summary": {
-    "checks": 6,
-    "passed": 6,
+    "checks": 5,
+    "passed": 4,
     "declared": 0,
-    "findings": 0,
-    "audit_state": "MEASUREMENT_GAP_VISIBLE"
+    "findings": 1,
+    "audit_state": "IMPROVEMENT_REQUIRED"
   },
   "negative_controls": [
     {
@@ -137,7 +146,7 @@
     "not autonomous self-improvement",
     "not a provisioned compute cluster"
   ],
-  "audit_sha256": "60e3df72bcd3142bae980f6f083ab88d73e4f9ce9f11d1786d485f70bc1510f1",
+  "audit_sha256": "3fd807325003ac117158b203f999938799635e93b68702a11ad1f8e5ec0066a0",
   "charter": {
     "version": "0.1.0",
     "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
@@ -225,7 +234,7 @@
     "challenge_url": "/api/hitl/challenge",
     "console_url": "/dashboard?tab=staff",
     "corrections_url": "/corrections/",
-    "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
     "note": "A review request is not a decision, signature, measurement admission or permission to execute."
   }
 }

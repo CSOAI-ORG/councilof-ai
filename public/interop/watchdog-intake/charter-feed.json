@@ -1,0 +1,1340 @@
+{
+ "schema": "csoai.watchdog-charter-feed/0.1",
+ "as_of": "2026-10-30T05:38:20Z",
+ "producer": "scripts/watchdog_charter_feed.py",
+ "measure": "A HUMAN ROUTING QUEUE derived from the daily public-watchdog signal index",
+ "not_a": [
+  "a compliance determination",
+  "a conformity assessment or certification",
+  "a score, grade or ranking",
+  "an approval, or a challenge opened on a human's behalf",
+  "evidence that any obligation is satisfied or unsatisfied"
+ ],
+ "count_grammar": "rows count (SOURCE × OBLIGATION) pairs a human may need to look at. That is a routing count, not a measurement, and it is never pooled with an axis n. A row exists because the source's axis grid intersects the obligation's axis grid — a mechanical rule, so it cannot drift from the data.",
+ "source_index": {
+  "run_id": "20261030T051040Z",
+  "as_of": "2026-10-30T05:10:40Z",
+  "run_artifact": "/interop/watchdog-intake/20261030T051040Z.json"
+ },
+ "obligations_tracked": [
+  "article-50",
+  "article-53",
+  "charter",
+  "cra",
+  "dora"
+ ],
+ "totals": {
+  "rows": 43,
+  "sources_considered": 18,
+  "by_bucket": {
+   "B — the source answered with a count to read": 30,
+   "C — the source answered; read the digest if it matters": 13
+  }
+ },
+ "rows": [
+  {
+   "row_id": "cisa-kev::charter",
+   "source_id": "cisa-kev",
+   "source_name": "CISA Known Exploited Vulnerabilities catalog",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "charter",
+   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "axis_touched": [
+    "effect-binding"
+   ],
+   "observed_count": 1764,
+   "observed_count_kind": "count",
+   "source_digest": "38a7172a5f26470dc7632aaa1c6cff4a51fe7bfec8cdce978a19b816a751e34d",
+   "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "cisa-kev::dora",
+   "source_id": "cisa-kev",
+   "source_name": "CISA Known Exploited Vulnerabilities catalog",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "dora",
+   "obligation_label": "DORA — ICT third-party oversight",
+   "axis_touched": [
+    "supply-chain"
+   ],
+   "observed_count": 1764,
+   "observed_count_kind": "count",
+   "source_digest": "38a7172a5f26470dc7632aaa1c6cff4a51fe7bfec8cdce978a19b816a751e34d",
+   "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "cisa-kev::cra",
+   "source_id": "cisa-kev",
+   "source_name": "CISA Known Exploited Vulnerabilities catalog",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "cra",
+   "obligation_label": "Cyber Resilience Act — products with digital elements",
+   "axis_touched": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "observed_count": 1764,
+   "observed_count_kind": "count",
+   "source_digest": "38a7172a5f26470dc7632aaa1c6cff4a51fe7bfec8cdce978a19b816a751e34d",
+   "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "nvd-cve-api::charter",
+   "source_id": "nvd-cve-api",
+   "source_name": "NIST National Vulnerability Database CVE API 2.0",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "charter",
+   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "axis_touched": [
+    "effect-binding"
+   ],
+   "observed_count": 416948,
+   "observed_count_kind": "count",
+   "source_digest": "38e6cdc16848a9212ede62420a22fb44bba378a3aa3121a39361344b82516222",
+   "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "nvd-cve-api::dora",
+   "source_id": "nvd-cve-api",
+   "source_name": "NIST National Vulnerability Database CVE API 2.0",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "dora",
+   "obligation_label": "DORA — ICT third-party oversight",
+   "axis_touched": [
+    "supply-chain"
+   ],
+   "observed_count": 416948,
+   "observed_count_kind": "count",
+   "source_digest": "38e6cdc16848a9212ede62420a22fb44bba378a3aa3121a39361344b82516222",
+   "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "nvd-cve-api::cra",
+   "source_id": "nvd-cve-api",
+   "source_name": "NIST National Vulnerability Database CVE API 2.0",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "cra",
+   "obligation_label": "Cyber Resilience Act — products with digital elements",
+   "axis_touched": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "observed_count": 416948,
+   "observed_count_kind": "count",
+   "source_digest": "38e6cdc16848a9212ede62420a22fb44bba378a3aa3121a39361344b82516222",
+   "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "ghsa-api::charter",
+   "source_id": "ghsa-api",
+   "source_name": "GitHub Security Advisory Database API",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "charter",
+   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "axis_touched": [
+    "effect-binding"
+   ],
+   "observed_count": 30,
+   "observed_count_kind": "count",
+   "source_digest": "8346c45131537d2a8d546fa98997dd468c35fb0980ffb918d063d450a4075f07",
+   "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "ghsa-api::dora",
+   "source_id": "ghsa-api",
+   "source_name": "GitHub Security Advisory Database API",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "dora",
+   "obligation_label": "DORA — ICT third-party oversight",
+   "axis_touched": [
+    "supply-chain"
+   ],
+   "observed_count": 30,
+   "observed_count_kind": "count",
+   "source_digest": "8346c45131537d2a8d546fa98997dd468c35fb0980ffb918d063d450a4075f07",
+   "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "ghsa-api::cra",
+   "source_id": "ghsa-api",
+   "source_name": "GitHub Security Advisory Database API",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "cra",
+   "obligation_label": "Cyber Resilience Act — products with digital elements",
+   "axis_touched": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "observed_count": 30,
+   "observed_count_kind": "count",
+   "source_digest": "8346c45131537d2a8d546fa98997dd468c35fb0980ffb918d063d450a4075f07",
+   "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "osv-query::charter",
+   "source_id": "osv-query",
+   "source_name": "OSV.dev vulnerability query (npm ecosystem)",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "charter",
+   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "axis_touched": [
+    "effect-binding"
+   ],
+   "observed_count": 10,
+   "observed_count_kind": "count",
+   "source_digest": "d300ec18551ce40170b8d055241c1f6096c676dae41ea8f4c976bda91c206819",
+   "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "osv-query::dora",
+   "source_id": "osv-query",
+   "source_name": "OSV.dev vulnerability query (npm ecosystem)",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "dora",
+   "obligation_label": "DORA — ICT third-party oversight",
+   "axis_touched": [
+    "supply-chain"
+   ],
+   "observed_count": 10,
+   "observed_count_kind": "count",
+   "source_digest": "d300ec18551ce40170b8d055241c1f6096c676dae41ea8f4c976bda91c206819",
+   "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "osv-query::cra",
+   "source_id": "osv-query",
+   "source_name": "OSV.dev vulnerability query (npm ecosystem)",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "cra",
+   "obligation_label": "Cyber Resilience Act — products with digital elements",
+   "axis_touched": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "observed_count": 10,
+   "observed_count_kind": "count",
+   "source_digest": "d300ec18551ce40170b8d055241c1f6096c676dae41ea8f4c976bda91c206819",
+   "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "mitre-cve::charter",
+   "source_id": "mitre-cve",
+   "source_name": "MITRE CVE Services API (single record)",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "charter",
+   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "axis_touched": [
+    "effect-binding"
+   ],
+   "observed_count": "CVE-2021-44228",
+   "observed_count_kind": "value",
+   "source_digest": "cae2ad45ea2739a59680c360555a538019b8f46199c797aed96fba49c073aa89",
+   "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "mitre-cve::cra",
+   "source_id": "mitre-cve",
+   "source_name": "MITRE CVE Services API (single record)",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "cra",
+   "obligation_label": "Cyber Resilience Act — products with digital elements",
+   "axis_touched": [
+    "effect-binding"
+   ],
+   "observed_count": "CVE-2021-44228",
+   "observed_count_kind": "value",
+   "source_digest": "cae2ad45ea2739a59680c360555a538019b8f46199c797aed96fba49c073aa89",
+   "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "go-vuln::dora",
+   "source_id": "go-vuln",
+   "source_name": "Go vulnerability database index",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "dora",
+   "obligation_label": "DORA — ICT third-party oversight",
+   "axis_touched": [
+    "supply-chain"
+   ],
+   "observed_count": 1443,
+   "observed_count_kind": "count",
+   "source_digest": "8bc3c0c9112a422d1dc406e3ef3658c689ce1a6adca48ecc3d31b0164916c2b7",
+   "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "go-vuln::cra",
+   "source_id": "go-vuln",
+   "source_name": "Go vulnerability database index",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "cra",
+   "obligation_label": "Cyber Resilience Act — products with digital elements",
+   "axis_touched": [
+    "supply-chain"
+   ],
+   "observed_count": 1443,
+   "observed_count_kind": "count",
+   "source_digest": "8bc3c0c9112a422d1dc406e3ef3658c689ce1a6adca48ecc3d31b0164916c2b7",
+   "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "depsdev::article-50",
+   "source_id": "depsdev",
+   "source_name": "deps.dev package API",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "article-50",
+   "obligation_label": "Article 50 — AI-generated content marking",
+   "axis_touched": [
+    "provenance"
+   ],
+   "observed_count": 15,
+   "observed_count_kind": "count",
+   "source_digest": "528fd78b0b433653ef0c4ddcc3d86a6f144cfcbf3b3c0e9452098932745ed3ab",
+   "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "depsdev::article-53",
+   "source_id": "depsdev",
+   "source_name": "deps.dev package API",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "article-53",
+   "obligation_label": "Article 53 — GPAI provider transparency documentation",
+   "axis_touched": [
+    "provenance"
+   ],
+   "observed_count": 15,
+   "observed_count_kind": "count",
+   "source_digest": "528fd78b0b433653ef0c4ddcc3d86a6f144cfcbf3b3c0e9452098932745ed3ab",
+   "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "depsdev::dora",
+   "source_id": "depsdev",
+   "source_name": "deps.dev package API",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "dora",
+   "obligation_label": "DORA — ICT third-party oversight",
+   "axis_touched": [
+    "supply-chain"
+   ],
+   "observed_count": 15,
+   "observed_count_kind": "count",
+   "source_digest": "528fd78b0b433653ef0c4ddcc3d86a6f144cfcbf3b3c0e9452098932745ed3ab",
+   "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "depsdev::cra",
+   "source_id": "depsdev",
+   "source_name": "deps.dev package API",
+   "source_kind": "advisory-feed",
+   "source_state": "REACHABLE",
+   "obligation": "cra",
+   "obligation_label": "Cyber Resilience Act — products with digital elements",
+   "axis_touched": [
+    "supply-chain"
+   ],
+   "observed_count": 15,
+   "observed_count_kind": "count",
+   "source_digest": "528fd78b0b433653ef0c4ddcc3d86a6f144cfcbf3b3c0e9452098932745ed3ab",
+   "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "hf-models::article-50",
+   "source_id": "hf-models",
+   "source_name": "Hugging Face model registry API",
+   "source_kind": "model-registry",
+   "source_state": "REACHABLE",
+   "obligation": "article-50",
+   "obligation_label": "Article 50 — AI-generated content marking",
+   "axis_touched": [
+    "provenance"
+   ],
+   "observed_count": 30,
+   "observed_count_kind": "count",
+   "source_digest": "0d047cba6a11f16b5ddbc2b25e55250339ce3ddf39b26d08a2187531a5ff4cf3",
+   "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "hf-models::article-53",
+   "source_id": "hf-models",
+   "source_name": "Hugging Face model registry API",
+   "source_kind": "model-registry",
+   "source_state": "REACHABLE",
+   "obligation": "article-53",
+   "obligation_label": "Article 53 — GPAI provider transparency documentation",
+   "axis_touched": [
+    "provenance",
+    "serving-fidelity"
+   ],
+   "observed_count": 30,
+   "observed_count_kind": "count",
+   "source_digest": "0d047cba6a11f16b5ddbc2b25e55250339ce3ddf39b26d08a2187531a5ff4cf3",
+   "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "openrouter::article-53",
+   "source_id": "openrouter",
+   "source_name": "OpenRouter model catalog API",
+   "source_kind": "model-registry",
+   "source_state": "REACHABLE",
+   "obligation": "article-53",
+   "obligation_label": "Article 53 — GPAI provider transparency documentation",
+   "axis_touched": [
+    "serving-fidelity"
+   ],
+   "observed_count": 456,
+   "observed_count_kind": "count",
+   "source_digest": "7b501cd7e8611a11e46e16b9cf7d50b657712e73df9f40f67ff0eead759071f3",
+   "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "atlas-current::charter",
+   "source_id": "atlas-current",
+   "source_name": "MITRE ATLAS (adversarial ML threat matrix, current release)",
+   "source_kind": "threat-framework",
+   "source_state": "REACHABLE",
+   "obligation": "charter",
+   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "axis_touched": [
+    "effect-binding"
+   ],
+   "observed_count": 221,
+   "observed_count_kind": "count",
+   "source_digest": "ac41ee9f99a47084ba5fdfc77ae83a28687e12390240fffeb37df7914ffe142d",
+   "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "atlas-current::cra",
+   "source_id": "atlas-current",
+   "source_name": "MITRE ATLAS (adversarial ML threat matrix, current release)",
+   "source_kind": "threat-framework",
+   "source_state": "REACHABLE",
+   "obligation": "cra",
+   "obligation_label": "Cyber Resilience Act — products with digital elements",
+   "axis_touched": [
+    "effect-binding"
+   ],
+   "observed_count": 221,
+   "observed_count_kind": "count",
+   "source_digest": "ac41ee9f99a47084ba5fdfc77ae83a28687e12390240fffeb37df7914ffe142d",
+   "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "owasp-llm-top10::article-50",
+   "source_id": "owasp-llm-top10",
+   "source_name": "OWASP Top 10 for LLM Applications",
+   "source_kind": "threat-framework",
+   "source_state": "REACHABLE",
+   "obligation": "article-50",
+   "obligation_label": "Article 50 — AI-generated content marking",
+   "axis_touched": [
+    "provenance"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "3119793148239835dadf3dfd89060b4643799cc17a024a831cc15f6965458366",
+   "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "owasp-llm-top10::article-53",
+   "source_id": "owasp-llm-top10",
+   "source_name": "OWASP Top 10 for LLM Applications",
+   "source_kind": "threat-framework",
+   "source_state": "REACHABLE",
+   "obligation": "article-53",
+   "obligation_label": "Article 53 — GPAI provider transparency documentation",
+   "axis_touched": [
+    "provenance"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "3119793148239835dadf3dfd89060b4643799cc17a024a831cc15f6965458366",
+   "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "owasp-asvs::charter",
+   "source_id": "owasp-asvs",
+   "source_name": "OWASP Application Security Verification Standard",
+   "source_kind": "threat-framework",
+   "source_state": "REACHABLE",
+   "obligation": "charter",
+   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "axis_touched": [
+    "effect-binding"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "0140389ca679b4e5c677862f75c3377b643194a94cd26da3fd88f6d0f5b96770",
+   "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "owasp-asvs::cra",
+   "source_id": "owasp-asvs",
+   "source_name": "OWASP Application Security Verification Standard",
+   "source_kind": "threat-framework",
+   "source_state": "REACHABLE",
+   "obligation": "cra",
+   "obligation_label": "Cyber Resilience Act — products with digital elements",
+   "axis_touched": [
+    "effect-binding"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "0140389ca679b4e5c677862f75c3377b643194a94cd26da3fd88f6d0f5b96770",
+   "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "rekor-log::article-50",
+   "source_id": "rekor-log",
+   "source_name": "Sigstore Rekor transparency log",
+   "source_kind": "transparency-log",
+   "source_state": "REACHABLE",
+   "obligation": "article-50",
+   "obligation_label": "Article 50 — AI-generated content marking",
+   "axis_touched": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "observed_count": 3463517530,
+   "observed_count_kind": "count",
+   "source_digest": "d039b81ec7d1dcddae77176fed1e6596a5187a3f7881f9b0ecaa24da072eeafe",
+   "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "rekor-log::article-53",
+   "source_id": "rekor-log",
+   "source_name": "Sigstore Rekor transparency log",
+   "source_kind": "transparency-log",
+   "source_state": "REACHABLE",
+   "obligation": "article-53",
+   "obligation_label": "Article 53 — GPAI provider transparency documentation",
+   "axis_touched": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "observed_count": 3463517530,
+   "observed_count_kind": "count",
+   "source_digest": "d039b81ec7d1dcddae77176fed1e6596a5187a3f7881f9b0ecaa24da072eeafe",
+   "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "rekor-log::dora",
+   "source_id": "rekor-log",
+   "source_name": "Sigstore Rekor transparency log",
+   "source_kind": "transparency-log",
+   "source_state": "REACHABLE",
+   "obligation": "dora",
+   "obligation_label": "DORA — ICT third-party oversight",
+   "axis_touched": [
+    "provenance-controls"
+   ],
+   "observed_count": 3463517530,
+   "observed_count_kind": "count",
+   "source_digest": "d039b81ec7d1dcddae77176fed1e6596a5187a3f7881f9b0ecaa24da072eeafe",
+   "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "openssf-scorecard::article-50",
+   "source_id": "openssf-scorecard",
+   "source_name": "OpenSSF Scorecard API (one repository)",
+   "source_kind": "supply-chain",
+   "source_state": "REACHABLE",
+   "obligation": "article-50",
+   "obligation_label": "Article 50 — AI-generated content marking",
+   "axis_touched": [
+    "provenance-controls"
+   ],
+   "observed_count": 18,
+   "observed_count_kind": "count",
+   "source_digest": "4966e6884da74d5c9b6d3b237b935c89b70c5cae6e241fde554d0f4f15a0075c",
+   "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "openssf-scorecard::article-53",
+   "source_id": "openssf-scorecard",
+   "source_name": "OpenSSF Scorecard API (one repository)",
+   "source_kind": "supply-chain",
+   "source_state": "REACHABLE",
+   "obligation": "article-53",
+   "obligation_label": "Article 53 — GPAI provider transparency documentation",
+   "axis_touched": [
+    "provenance-controls"
+   ],
+   "observed_count": 18,
+   "observed_count_kind": "count",
+   "source_digest": "4966e6884da74d5c9b6d3b237b935c89b70c5cae6e241fde554d0f4f15a0075c",
+   "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "openssf-scorecard::dora",
+   "source_id": "openssf-scorecard",
+   "source_name": "OpenSSF Scorecard API (one repository)",
+   "source_kind": "supply-chain",
+   "source_state": "REACHABLE",
+   "obligation": "dora",
+   "obligation_label": "DORA — ICT third-party oversight",
+   "axis_touched": [
+    "provenance-controls",
+    "supply-chain"
+   ],
+   "observed_count": 18,
+   "observed_count_kind": "count",
+   "source_digest": "4966e6884da74d5c9b6d3b237b935c89b70c5cae6e241fde554d0f4f15a0075c",
+   "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "openssf-scorecard::cra",
+   "source_id": "openssf-scorecard",
+   "source_name": "OpenSSF Scorecard API (one repository)",
+   "source_kind": "supply-chain",
+   "source_state": "REACHABLE",
+   "obligation": "cra",
+   "obligation_label": "Cyber Resilience Act — products with digital elements",
+   "axis_touched": [
+    "supply-chain"
+   ],
+   "observed_count": 18,
+   "observed_count_kind": "count",
+   "source_digest": "4966e6884da74d5c9b6d3b237b935c89b70c5cae6e241fde554d0f4f15a0075c",
+   "question_for_the_human": "does the current public vulnerability state for the products in question change any obligation this estate has mapped",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "B — the source answered with a count to read"
+  },
+  {
+   "row_id": "safe-repo::charter",
+   "source_id": "safe-repo",
+   "source_name": "OpenSecureAI Alliance wg-safe (SAFE) reference",
+   "source_kind": "standard-body",
+   "source_state": "REACHABLE",
+   "obligation": "charter",
+   "obligation_label": "WG-SAFE charter — runtime enforcement and human oversight",
+   "axis_touched": [
+    "hitl"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "75e7b6e0ac150224843b78a7562a66157c95e5957fa6dcb9113a0a50abcf8a1a",
+   "question_for_the_human": "does the authority chain for the subject still bind — invocation, effect and verification as separate objects — and is the human gate still HOLD",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "slsa::article-50",
+   "source_id": "slsa",
+   "source_name": "SLSA provenance framework reference",
+   "source_kind": "standard-body",
+   "source_state": "REACHABLE",
+   "obligation": "article-50",
+   "obligation_label": "Article 50 — AI-generated content marking",
+   "axis_touched": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "aeff12d58ae18e38178775a9514cba2bcc6f244f4d0d724a099531ca99118952",
+   "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "slsa::article-53",
+   "source_id": "slsa",
+   "source_name": "SLSA provenance framework reference",
+   "source_kind": "standard-body",
+   "source_state": "REACHABLE",
+   "obligation": "article-53",
+   "obligation_label": "Article 53 — GPAI provider transparency documentation",
+   "axis_touched": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "aeff12d58ae18e38178775a9514cba2bcc6f244f4d0d724a099531ca99118952",
+   "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "slsa::dora",
+   "source_id": "slsa",
+   "source_name": "SLSA provenance framework reference",
+   "source_kind": "standard-body",
+   "source_state": "REACHABLE",
+   "obligation": "dora",
+   "obligation_label": "DORA — ICT third-party oversight",
+   "axis_touched": [
+    "provenance-controls"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "aeff12d58ae18e38178775a9514cba2bcc6f244f4d0d724a099531ca99118952",
+   "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "in-toto::article-50",
+   "source_id": "in-toto",
+   "source_name": "in-toto attestation framework reference",
+   "source_kind": "standard-body",
+   "source_state": "REACHABLE",
+   "obligation": "article-50",
+   "obligation_label": "Article 50 — AI-generated content marking",
+   "axis_touched": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "af4afaeb45178ead52df28e3d867d64fddf1626ef4f2a0b256430a55c2375c2e",
+   "question_for_the_human": "does the marking evidence for the subject in question still hold, and is the subject's own published marking still serving the mark it declared",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "in-toto::article-53",
+   "source_id": "in-toto",
+   "source_name": "in-toto attestation framework reference",
+   "source_kind": "standard-body",
+   "source_state": "REACHABLE",
+   "obligation": "article-53",
+   "obligation_label": "Article 53 — GPAI provider transparency documentation",
+   "axis_touched": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "af4afaeb45178ead52df28e3d867d64fddf1626ef4f2a0b256430a55c2375c2e",
+   "question_for_the_human": "does the provider's published technical documentation still match what the serving path actually does, and is any change disclosed rather than silent",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  },
+  {
+   "row_id": "in-toto::dora",
+   "source_id": "in-toto",
+   "source_name": "in-toto attestation framework reference",
+   "source_kind": "standard-body",
+   "source_state": "REACHABLE",
+   "obligation": "dora",
+   "obligation_label": "DORA — ICT third-party oversight",
+   "axis_touched": [
+    "provenance-controls"
+   ],
+   "observed_count": null,
+   "observed_count_kind": "digest",
+   "source_digest": "af4afaeb45178ead52df28e3d867d64fddf1626ef4f2a0b256430a55c2375c2e",
+   "question_for_the_human": "for the third party in question, does the current public advisory state change any claim this estate has made about it",
+   "routing_reason": "the source answered and its grid touches this obligation",
+   "human_decision": "HOLD",
+   "may_apply": false,
+   "approval_may_be_inferred": false,
+   "challenge_opened": false,
+   "challenge_note": "No challenge is opened by this feed. A challenge carries a decision id, an authority epoch, a scope digest and an expiry — creating one here would put a machine in the seat the HOLD gate reserves for a person. Raise it through the council-staff path (/api/hitl, hitl-authority-effect-v0.2).",
+   "is_not": [
+    "a determination of compliance or non-compliance",
+    "a score, grade or ranking of the source",
+    "an approval to act",
+    "evidence that an obligation is satisfied or unsatisfied"
+   ],
+   "routing_bucket": "C — the source answered; read the digest if it matters"
+  }
+ ],
+ "unpinned_findings": [
+  {
+   "id": "aiid",
+   "name": "AI Incident Database",
+   "consequence": "AI incident coverage CANNOT be measured continuously from a public endpoint today. It is a real gap, and it is a gap in the SOURCE, not in our reader.",
+   "next": "Ask the AIID maintainers for a public incident JSON/CSV export path, or ingest their published Excel export on a slower cadence. Until then this row stays a published gap."
+  },
+  {
+   "id": "nvd-cve-feed",
+   "name": "NVD CVE 2.0 annual JSON feed",
+   "consequence": "Covered by the nvd-cve-api row. Not a gap; a scale mismatch, resolved by pinning the API.",
+   "next": "None. If a daily n is wanted, use the NVD API with a date window."
+  },
+  {
+   "id": "atlas-legacy",
+   "name": "MITRE ATLAS legacy dist/ATLAS.yaml",
+   "consequence": "Superseded by the atlas-current row, which is resolved from the release manifest.",
+   "next": "None."
+  },
+  {
+   "id": "npm-audit",
+   "name": "npm registry bulk advisories",
+   "consequence": "Not pinned as a GET source. npm advisories are already reachable through the pinned OSV and GHSA rows.",
+   "next": "Add as a POST source only if npm-specific coverage is ever required."
+  },
+  {
+   "id": "sigstore-tlog",
+   "name": "Sigstore transparency log (api.sigstore.dev)",
+   "consequence": "One transparency log is covered. The second host was not reachable here, so it is not claimed as covered.",
+   "next": "Re-probe from the scheduled host; a DNS failure at one machine is not proof the source is gone."
+  },
+  {
+   "id": "cert-eu",
+   "name": "ENISA/CERT-EU security advisories",
+   "consequence": "NOT covered. A real, named gap in EU-level advisory coverage.",
+   "next": "Look for a documented RSS/JSON feed from CERT-EU; until then, publish the gap."
+  },
+  {
+   "id": "eclipse-kev",
+   "name": "Eclipse Foundation security advisories",
+   "consequence": "NOT covered as a feed. Named gap.",
+   "next": "Check for a JSON/CSV export of the advisory list."
+  }
+ ],
+ "method_note": "Relevance is a grid intersection: a source raises an obligation when the axes it touches meet the axes that obligation bears on. Nothing here decides anything. Every row's human_decision is HOLD and may_apply is false. The digests bind what the human saw, so a later reader can recompute the row from the same bytes."
+}

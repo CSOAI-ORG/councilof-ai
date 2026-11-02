@@ -10,7 +10,7 @@ on:
   workflow_dispatch: {}       # run on demand from the Actions tab
   push:
     branches: [master]
-    paths: ["canon.json", "scripts/drift-guard.mjs", "scripts/machine-contract-guard.mjs", "scripts/publish-freshness.mjs", ".github/workflows/drift-guard.yml"]
+    paths: ["canon.json", "scripts/drift-guard.mjs", "scripts/surface/board-drift.mjs", "scripts/machine-contract-guard.mjs", "scripts/publish-freshness.mjs", ".github/workflows/drift-guard.yml"]
 
 jobs:
   drift-guard:
@@ -28,6 +28,10 @@ jobs:
       - name: Settle
         if: github.event_name == 'push'
         run: sleep 420
+      - name: Install deps (esbuild for the commit board)
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Board-drift selftest (must-fail cases go red)
+        run: node scripts/drift-guard.mjs --selftest
       - name: Assert live site matches canon.json
         id: assert
         continue-on-error: true

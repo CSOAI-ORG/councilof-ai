@@ -22,10 +22,22 @@ const doorPaid = J(resolve(ROOT, "functions/mcp/paid-tools.json")).tools.map((t:
 
 describe("the packaged MCP server advertises exactly what the door serves", () => {
   it("reads the door's canonical lists, so this cannot pass vacuously", () => {
-    expect(doorFree).toHaveLength(47);
-    expect(doorPaid).toHaveLength(5);
-    expect([...doorFree, ...doorPaid]).toHaveLength(52);
-    expect([...doorFree, ...doorPaid]).not.toContain("witness_hash");
+    // Counts are DERIVED, never typed: the door grew 47 -> 48 free when
+    // axis_watchdog-ingest shipped, and a typed 47 turned this file red against
+    // the door's own bytes — the exact frozen-number defect the estate keeps
+    // repairing. What is pinned here are the PERMANENT facts: both banks are
+    // populated, disjoint, anchored on the three free-forever readers, and free
+    // of every dropped mill-tool phantom.
+    expect(doorFree.length).toBeGreaterThanOrEqual(30);
+    expect(doorPaid.length).toBeGreaterThanOrEqual(1);
+    expect(new Set(doorFree).intersection(new Set(doorPaid)).size).toBe(0);
+    for (const anchor of ["board_totals", "get_axis", "verify_card"]) {
+      expect(doorFree).toContain(anchor);
+    }
+    // The mill tools the door refused BY NAME must never originate here either.
+    for (const phantom of ["measure", "verify", "jail-probe", "enter-arena", "witness_hash"]) {
+      expect([...doorFree, ...doorPaid]).not.toContain(phantom);
+    }
   });
 
   it("keeps the package, runtime and registry package reference on one release version", () => {
@@ -42,7 +54,7 @@ describe("the packaged MCP server advertises exactly what the door serves", () =
   it("keeps npm's rendered description short and accurate", () => {
     const { description } = J(resolve(__dirname, "package.json"));
     expect(description.length).toBeLessThanOrEqual(255);
-    expect(description).toContain("Fifty-two tools: forty-seven free readers and five x402-metered evidence tools");
+    expect(description).toContain("Fifty-three tools: forty-eight free readers and five x402-metered evidence tools");
   });
 
   it("ships both canonical tool banks in the Docker client", () => {

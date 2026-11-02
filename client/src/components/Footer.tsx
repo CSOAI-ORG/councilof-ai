@@ -6,7 +6,7 @@
  */
 
 import { Link } from 'wouter';
-import { BookOpen, Linkedin, Mail } from 'lucide-react';
+import { BookOpen, Mail } from 'lucide-react';
 import EmailOff from './EmailOff';
 import { CONTACT_MAILBOX } from '@/lib/buying';
 import FooterVerifyStrip from './FooterVerifyStrip';
@@ -122,7 +122,8 @@ export function Footer() {
 
   const socialLinks = [
     { name: 'Source snapshot (archived)', icon: BookOpen, href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai' },
-    { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
+    // linkedin.com/company/csoai is a 404 (no page exists yet, 2026-11-02 audit).
+    // Re-add here the day the company page goes live.
     { name: 'Email', icon: Mail, href: `mailto:${CONTACT_MAILBOX}` },
   ];
 

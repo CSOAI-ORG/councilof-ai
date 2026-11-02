@@ -19,34 +19,48 @@
   ],
   "source": {
     "schema": "csoai.gspc-axes/0.5",
-    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "snapshot": "council-os/axis-specialists/board-2026-11-02.snapshot.json",
     "measurement_time": {
-      "state": "UNCHECKABLE",
-      "precision": "unknown",
-      "source": "/api/gspc",
-      "source_field": "none",
-      "note": "No structured measurement time is available; CURRENT admission must fail closed."
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-10-28T04:25:30.845Z",
+      "source": "/interop/axis-banks/humanoid-deployment-20261102.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
     },
-    "axis_row_sha256": "1d9a96d040f922e4b3f7d6a23c85f15f4a94d7f46f6326e05baac3f9ecfeb6a9",
+    "axis_row_sha256": "2e07395146dd61904ec9cb7e602cf29fccd30ceca6cd169e67e733e71e8d0cfc",
     "axis_row": {
       "axis": "humanoid-deployment",
       "family": "subject",
-      "kind": "declared-slot",
+      "kind": "measured-subject",
       "applies_to": "humanoid-labs",
-      "bench": "pending frozen registry",
-      "task": "what a humanoid lab has publicly deployed, checked against a public registry",
-      "n": 0,
-      "status": "UNMEASURED",
-      "colour": "hsl(260 10% 55%)",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does a humanoid lab publish control, safety-limit, dexterity, hardware-bus and simulation material",
+      "n": 35,
+      "status": "MEASURED",
+      "method_status": "meets-rule",
+      "method": "scripts/subject-axis/subject-axis-live-run.mjs",
+      "method_sha": "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
+      "rate": 0.4571,
+      "rate_scale": "fraction",
+      "rate_rule": "presence of at least 3 of 5 declared classes",
+      "bank": "interop/axis-banks/humanoid-deployment-20261102.json",
+      "bank_sha256": "edda7ffcf81d3ea863741aeb275304f581aa1f55792a68df7a9cb65b2a29b0ed",
+      "frame_sha256": "f7312869fd6a27ceec48afd62e61d76e7fb99d3eb2a589dc0832fe58561b608b",
+      "facts_as_of": "2026-10-28T04:25:30.845Z",
+      "evidence_url": "/interop/axis-banks/humanoid-deployment-20261102.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "n_unit": "subjects in the frozen frame",
+      "colour": "hsl(260 62% 52%)",
       "hue": 260,
-      "note": "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score. Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid >= 30, passing the gate. Census checks are a DISCOVERED check grid, not scores on this axis.",
-      "method_status": "no-method: declared slot",
+      "note": "35 subjects from a frozen frame of 37 (2 refusals recorded, never converted to failures). rate 0.4571 = share meeting at least 3 of 5 declared presence classes (4-of-5 0.2857, 5-of-5 0.0286). Class census: whole 16, safety 3, bimanual 18, hardware 22, sim 22. 35/35 must-fail negative controls caught. Presence of a string in public bytes at a stated time is not evidence of quality, truth or compliance.",
       "measurement_time": {
-        "state": "UNCHECKABLE",
-        "precision": "unknown",
-        "source": "/api/gspc",
-        "source_field": "none",
-        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "source": "/interop/axis-banks/humanoid-deployment-20261102.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
       }
     }
   },
@@ -69,27 +83,22 @@
       "evidence": []
     },
     {
-      "id": "DECLARED_GAP",
-      "state": "PASS",
-      "detail": "UNMEASURED slot for humanoid-labs; n=0 is not a score"
-    },
-    {
-      "id": "NO_FABRICATED_SCORE",
-      "state": "PASS",
-      "detail": "declared slot has no leader, accuracy or separation"
+      "id": "MEASUREMENT_KIND",
+      "state": "FINDING",
+      "detail": "unknown measurement kind measured-subject"
     },
     {
       "id": "CURRENT_METHOD_RULE",
       "state": "PASS",
-      "detail": "no-method: declared slot"
+      "detail": "meets-rule"
     }
   ],
   "summary": {
-    "checks": 6,
-    "passed": 6,
+    "checks": 5,
+    "passed": 4,
     "declared": 0,
-    "findings": 0,
-    "audit_state": "MEASUREMENT_GAP_VISIBLE"
+    "findings": 1,
+    "audit_state": "IMPROVEMENT_REQUIRED"
   },
   "negative_controls": [
     {
@@ -137,7 +146,7 @@
     "not autonomous self-improvement",
     "not a provisioned compute cluster"
   ],
-  "audit_sha256": "fdffe1597913851e211fa2fdad09579d76d4d2226254a3a7265cd0da6dac27d1",
+  "audit_sha256": "9a4fa73e69befb853d2cff65023a35a6d7bd6e5f5605ca93eda62998f3397bca",
   "charter": {
     "version": "0.1.0",
     "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
@@ -217,7 +226,7 @@
     "challenge_url": "/api/hitl/challenge",
     "console_url": "/dashboard?tab=staff",
     "corrections_url": "/corrections/",
-    "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
     "note": "A review request is not a decision, signature, measurement admission or permission to execute."
   }
 }

@@ -28,7 +28,7 @@ describe("axis-specialist real handler handoff", () => {
       expect(result).toMatchObject({ axis: source.axis, stored: true, subject: input.subject, proposed_action: input.proposed_action, facts: input.facts });
       expect(result).not.toHaveProperty('decision');
     }
-    expect(await listChallenges(store as any)).toHaveLength(33);
+    expect(await listChallenges(store as any)).toHaveLength(BUNDLE.specialists.length);
     expect([...values.keys()].every(key => key.startsWith('hitl:challenge:'))).toBe(true);
   });
 });

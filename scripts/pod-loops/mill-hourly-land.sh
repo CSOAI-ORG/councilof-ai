@@ -58,7 +58,32 @@ for ref in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin/le
     git merge --abort 2>/dev/null; log mill-hourly-land "$b CONFLICT left for a human"
   fi
 done
-[ "$merged" -gt 0 ] || log mill-hourly-land "nothing to land (no unmerged mill/auto-*, arena/auto-* or ledger/auto-* with a receipt)"
+# watchdog/auto-<date> branches (watchdog-intake.sh): the receipt says OK for that branch, AND the
+# branch may only ADD public/interop/watchdog-intake/<run-id>.json and MODIFY the three derived
+# views (_index.json, latest.json, charter-feed.json). The path check is on the net diff from the
+# merge base, which is exactly what a merge would bring in. Any other path, any deletion, or a date
+# that does not match the branch is a HOLD left for a human.
+for ref in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin/watchdog/auto-* | sort); do
+  b=${ref#origin/}; d=${b#watchdog/auto-}
+  git merge-base --is-ancestor "$ref" origin/master && continue
+  [[ $d =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { log mill-hourly-land "$b HOLD branch name is not watchdog/auto-YYYY-MM-DD"; continue; }
+  grep -qE " OK .*branch=$b " "$LOGS/watchdog-intake.log" 2>/dev/null || { log mill-hourly-land "$b HOLD no OK receipt"; continue; }
+  base=$(git merge-base origin/master "$ref") || { log mill-hourly-land "$b HOLD no merge base with master"; continue; }
+  changes=$(git diff --no-renames --name-status "$base" "$ref")
+  [ -n "$changes" ] || { log mill-hourly-land "$b HOLD empty diff"; continue; }
+  outside=$(printf '%s\n' "$changes" \
+    | grep -vE "^A"$'\t'"public/interop/watchdog-intake/[0-9]{8}T[0-9]{6}Z\.json$" \
+    | grep -vE "^M"$'\t'"public/interop/watchdog-intake/(_index\.json|latest\.json|charter-feed\.json)$")
+  if [ -n "$outside" ]; then
+    log mill-hourly-land "$b HOLD path outside the watchdog-intake allowlist: $(printf '%s' "$outside" | tr '\t\n' ': ' | cut -c1-200)"; continue
+  fi
+  if git merge --no-ff --no-edit "$ref" -m "watchdog: public watchdog intake read $d (PROBED states, every routing row HOLD; signed into the root separately) — auto-landed by mill-hourly-land" >/dev/null 2>&1; then
+    merged=$((merged+1)); log mill-hourly-land "$b MERGED $(git rev-parse --short HEAD)"
+  else
+    git merge --abort 2>/dev/null; log mill-hourly-land "$b CONFLICT left for a human"
+  fi
+done
+[ "$merged" -gt 0 ] || log mill-hourly-land "nothing to land (no unmerged mill/auto-*, arena/auto-*, ledger/auto-* or watchdog/auto-* with a receipt)"
 if [ "$merged" -gt 0 ]; then
   # Signed mill cards remain quarantine evidence until a reviewed admission
   # authority exists. Refuse the entire push/deploy if this merge would expose

@@ -46,8 +46,9 @@ Deliverables:
   - Documentation in 3 languages
   - Live status page
 
-Why us: We already have 119 signed atoms, 36 audited pages, 47 well-known
-        doors, 103 API endpoints, and 22-axis GSPC measurement.
+Why us: The live board is already measuring — current axis counts and
+        separation states: https://councilof.ai/api/gspc (measurement, not
+        certification; re-checked at send time).
 
 Contact: nicholas@csoai.org
 """,
@@ -72,7 +73,8 @@ Deliverables:
   - Public verification CLI
   - 100 signed cards across AI governance standards
 
-Why us: We're already live. 119 atoms signed. 22 axes measured. 14 fleets.
+Why us: We're already live. Current board counts:
+        https://councilof.ai/api/gspc — measurement, not certification.
 """,
     },
     {
