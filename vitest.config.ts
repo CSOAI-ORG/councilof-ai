@@ -29,6 +29,11 @@ export const NODE_TEST_FILES = [
   'scripts/contract-convergence.test.mjs',
   'scripts/feed-delivery-kit.test.mjs',
   'scripts/harness-x/render.test.mjs',
+  // The hygiene sweeper planner: a node:test file vitest cannot collect, named here so
+  // pr-gates.yml runs it under node --test (same reason as sitemap-withdrawal below).
+  // No apostrophes in these comments: the registry and the workflow extract entries by
+  // naive quote matching, and a stray quote inside the array corrupts the parsed list.
+  'scripts/hygiene/sweeper.node-test.mjs',
   'scripts/research/watch-sources.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
   'scripts/review/first-ask-completion.test.mjs',
@@ -52,6 +57,24 @@ export const NODE_TEST_FILES = [
   // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
   'council-os/gspc-pontius-boundary.test.mjs',
   'scripts/watchdog/source-status.test.mjs',
+  // 2026-11-02: seven more node:test files that no gate ran. mcp/gspc-server/wired-tools was
+  // already excluded from vitest but was never executed anywhere; the other six were collected
+  // by a bare vitest run and reported as failed suites. Two of them were also RED: the
+  // journey-backends file had read a journey_backends block that the generated capability
+  // registry never carried, and card-counts caught CLAUDE.md pinning a card_count the estate's
+  // own rule forbids. A test nobody runs is a comment.
+  //
+  // NOTE FOR THE NEXT EDITOR: this list is read by a plain quote-scan, so a comment here must
+  // not contain a quoted word - a comment is not a path. scripts/node-test-registry.mjs now
+  // strips comments before reading, but the shell step in pr-gates.yml does not, so keep it
+  // plain anyway.
+  'mcp/gspc-server/wired-tools.test.mjs',
+  'capabilities/card-counts.test.mjs',
+  'capabilities/journey-backends.test.mjs',
+  'integrations/integrations.test.mjs',
+  'tests/population-delivery-verifier.test.mjs',
+  'actions/verify-card/run.test.mjs',
+  'actions/verify-card/workflow.test.mjs',
 ];
 
 export default defineConfig({
@@ -95,6 +118,6 @@ export default defineConfig({
     // copies resolve their fixture paths relative to dist/, so they fail on files that are
     // present in the source tree. dist/ is gitignored, so CI never saw it and only a local
     // run after a build went red, which reads like a broken test rather than a duplicate.
-    exclude: [...defaultExclude, 'dist/**', '**/dist/**', '**/.git-wt-*/**', 'docs/**/*.test.mjs', 'mcp/gspc-server/wired-tools.test.mjs', 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs', ...NODE_TEST_FILES],
+    exclude: [...defaultExclude, 'dist/**', '**/dist/**', '**/.git-wt-*/**', 'docs/**/*.test.mjs', 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs', ...NODE_TEST_FILES],
   },
 });
