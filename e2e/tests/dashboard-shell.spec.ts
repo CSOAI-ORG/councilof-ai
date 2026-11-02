@@ -67,18 +67,10 @@ async function openTab(page: Page, id: string, trailingSlash = false) {
     .waitForLoadState("networkidle", { timeout: 15_000 })
     .catch(() => undefined);
   await page.waitForTimeout(400);
-  // These existing journeys exercise the inline workspace/composer. The entrypoint spec
-  // separately accepts the default Ask pane; close it intentionally before using the canvas.
+  // The page and inline composer remain usable until the reader explicitly opens Ask.
   if (id === "home") {
-    const entryAsk = page.getByTestId("ask-pane");
-    // 12 Oct 2026: mobile keeps Ask closed on entry; open it from the launcher, as a reader would.
-    if ((page.viewportSize()?.width ?? 1280) <= 640) {
-      await expect(entryAsk).toHaveCount(0);
-      await page.getByRole("button", { name: "Open Council of AI chat", exact: true }).click();
-    }
-    await expect(entryAsk).toBeVisible({ timeout: 30_000 });
-    await entryAsk.getByRole("button", { name: "Close Ask", exact: true }).click();
-    await expect(entryAsk).toBeHidden();
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Open Council of AI chat", exact: true })).toBeVisible();
   }
 }
 
@@ -123,7 +115,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes seven plainly named sections (no sov-* name) as direct /dashboard?tab= links", async ({
+test("sidebar exposes eight plainly named sections (no sov-* name) as direct /dashboard?tab= links", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -145,6 +137,7 @@ test("sidebar exposes seven plainly named sections (no sov-* name) as direct /da
     "/dashboard?tab=board",
     "/dashboard?tab=connect",
     "/dashboard?tab=learn",
+    "/dashboard?tab=staff",
     "/dashboard?tab=corrections",
   ]);
   // Surface inspection, 12 Oct 2026: no sov-* label in the public nav; the pane stays reachable by link.
@@ -204,18 +197,16 @@ test("the canonical dashboard accepts its optional trailing slash", async ({
   }
 });
 
-test("every sidebar tab renders its own pane inside the shell, error-free", async ({
+test("every published workspace pane renders its own pane inside the shell, error-free", async ({
   page,
   isMobile,
 }) => {
-  test.setTimeout(240_000);
+  test.setTimeout(480_000);
   await openTab(page, "board");
   const { pageErrors, consoleErrors } = await collectErrors(page);
-  // Loop through the known-good set of tab ids. We don't enumerate the
-  // sidebar links here because the sidebar also carries legacy aliases
-  // and auth-required routes that do NOT render in the shell (the
-  // rail sends workbench to /login when signed out, but on a static
-  // server there is no auth backend, so the test would hang).
+  // Every public canonical pane gets its own mount check. Normalized aliases
+  // and the auth-required workbench are covered separately: they must not be
+  // mistaken for additional public panes or tested against a missing backend.
   const ids = [
     "home",
     "mine",
@@ -223,6 +214,7 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "play",
     "explore",
     "board",
+    "staff",
     "swift",
     "models",
     "measured",
@@ -239,6 +231,19 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     "space",
     "products",
     "library",
+    "connect",
+    "route",
+    "corrections",
+    "claims",
+    "sovx",
+    "embed",
+    "console",
+    "leaderboard",
+    "terminal",
+    "evidence-index",
+    "archive",
+    "xrpl",
+    "state",
   ];
   expect(ids).toContain("board");
   for (const id of ids) {
@@ -257,6 +262,12 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
       await expect(page.getByText("Account overview and recent measurements", { exact: true })).toHaveCount(0);
     } else {
       await expect(pane, `${id}: its own pane is mounted`).toHaveCount(1);
+      if (id === "staff") {
+        await expect(
+          page.getByTestId("hitl-console"),
+          "staff: the human-review workflow is mounted",
+        ).toBeVisible();
+      }
     }
   }
   expect(pageErrors, "no uncaught exceptions across the tabs").toEqual([]);
@@ -394,9 +405,9 @@ test("one workspace keeps the composer and account access while a tool pane is o
     page.getByLabel("Open Council OS"),
     "no legacy overlay launcher over the shell",
   ).toHaveCount(0);
+  // Account access remains available through Sections while navigation starts minimized.
+  await page.getByRole("button", { name: "Open workspace navigation", exact: true }).click();
   if (isMobile) {
-    await page.getByRole("button", { name: "Open workspace navigation" }).click();
-    // The account menu is in the mobile drawer, not the hidden desktop sidebar.
     await expect(
       page.getByRole("dialog", { name: "Council OS sections" })
         .getByLabel("Open account and workspace menu"),
@@ -654,3 +665,177 @@ test("a cold /assess door lands on the measured pane with the RAS booking link",
     href,
   ).toBe(true);
 });
+
+test("workspace navigation starts minimized and remains usable across layout boundaries", async ({ page }, info) => {
+  test.skip(info.project.name !== "desktop", "Exercise responsive widths with the existing desktop project");
+  test.setTimeout(180_000);
+  for (const width of [639, 640, 641, 767, 768]) {
+    await page.setViewportSize({ width, height: 900 });
+    await openTab(page, "board");
+    const trigger = page.getByTestId("workspace-sections-toggle");
+    const navigation = page.getByRole("navigation", { name: "Workspace destinations", exact: true });
+    await expect(trigger, String(width)).toBeVisible();
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(navigation).toBeHidden();
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+    await trigger.focus();
+    await trigger.press("Enter");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(navigation).toBeVisible();
+    await expect(trigger).toHaveAttribute("aria-controls", await navigation.getAttribute("id") || "");
+    await navigation.locator('a[href="/dashboard?tab=verify"]').click();
+    await expect(page).toHaveURL(/tab=verify/);
+    if (width >= 768) {
+      // Desktop expansion survives tab changes; mobile selection dismisses the drawer.
+      await expect(navigation).toBeVisible();
+      await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    } else {
+      await expect(navigation).toBeHidden();
+      await trigger.click();
+      await expect(navigation).toBeVisible();
+    }
+    await navigation.locator("a").first().focus();
+    await page.keyboard.press("Escape");
+    await expect(navigation).toBeHidden();
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(trigger).toBeFocused();
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("dashboard-shell")).toBeVisible({ timeout: 60_000 });
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(navigation).toBeHidden();
+    await expect(page.getByTestId("ask-pane")).toHaveCount(0);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow, String(width)).toBeLessThanOrEqual(1);
+  }
+});
+
+test("the home header carries a booking door to /assess/ within one click", async ({ page }) => {
+  await page.goto("/");
+  const desktop = page.locator('[data-testid="header-book-measurement"]');
+  const opener = page.getByRole("button", { name: "Open menu" });
+  if (await desktop.isVisible({ timeout: 30_000 }).catch(() => false)) {
+    await expect(desktop).toHaveAttribute("href", "/assess/");
+  } else {
+    await opener.click();
+    const mobile = page.locator('[data-testid="mobile-book-measurement"]');
+    await expect(mobile).toBeVisible();
+    await expect(mobile).toHaveAttribute("href", "/assess/");
+  }
+});
+
+for (const width of [375, 894, 1024, 1280, 1440, 1536]) {
+  test(`workflow entry and header remain usable at ${width}px`, async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop", "Exercise each width once with the desktop project");
+
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/connect/", { waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("connect-hub")).toBeVisible({ timeout: 30_000 });
+    await page.evaluate(() => document.fonts.ready.then(() => undefined));
+
+    const header = page.locator("[data-site-header]").first();
+    const row = header.locator("#navigation > div").first();
+    await expect(header).toBeVisible();
+
+    const geometry = await row.evaluate((element) => {
+      const brand = element.querySelector<HTMLAnchorElement>('a[href="/"]')!;
+      const brandRect = brand.getBoundingClientRect();
+      const logoRect = brand.querySelector("svg")!.getBoundingClientRect();
+      const controls = Array.from(element.querySelectorAll<HTMLElement>("a, button"))
+        .filter((control) => control !== brand && control.getClientRects().length > 0)
+        .map((control) => {
+          const rect = control.getBoundingClientRect();
+          return {
+            name: control.getAttribute("aria-label") || control.textContent?.trim() || "",
+            left: rect.left,
+            right: rect.right,
+            width: rect.width,
+          };
+        })
+        .filter((control) => control.width > 0)
+        .sort((a, b) => a.left - b.left);
+      return {
+        viewport: window.innerWidth,
+        brand: { left: brandRect.left, right: brandRect.right, width: brandRect.width },
+        logoWidth: logoRect.width,
+        controls,
+        overflow: document.documentElement.scrollWidth - window.innerWidth,
+      };
+    });
+
+    await info.attach(`header-geometry-${width}`, {
+      body: Buffer.from(JSON.stringify(geometry, null, 2)),
+      contentType: "application/json",
+    });
+    const evidence = `${width}px: ${JSON.stringify(geometry)}`;
+    expect(geometry.brand.width, evidence).toBeGreaterThan(140);
+    expect(geometry.logoWidth, evidence).toBeGreaterThanOrEqual(35);
+    expect(geometry.brand.left, evidence).toBeGreaterThanOrEqual(0);
+    expect(geometry.controls.length, evidence).toBeGreaterThan(0);
+    expect(geometry.overflow, evidence).toBeLessThanOrEqual(1);
+
+    let previousRight = geometry.brand.right;
+    for (const control of geometry.controls) {
+      expect(control.left, `${evidence}; ${control.name}`).toBeGreaterThanOrEqual(previousRight - 1);
+      expect(control.right, `${evidence}; ${control.name}`).toBeLessThanOrEqual(geometry.viewport + 1);
+      previousRight = control.right;
+    }
+
+    const openMenu = header.getByRole("button", { name: "Open menu", exact: true });
+    if (width < 1536) {
+      await expect(openMenu).toBeVisible();
+      await expect(header.getByTestId("header-book-measurement")).toBeHidden();
+      await openMenu.click();
+      const closeMenu = header.getByRole("button", { name: "Close menu", exact: true });
+      await expect(closeMenu).toBeVisible();
+      for (const [name, href] of [
+        ["Verify", "/gspc-verify"],
+        ["Services", "/services/"],
+        ["Board", "/board/"],
+        ["Tools", "/tools"],
+        ["Council OS", "/dashboard"],
+      ] as const) {
+        const link = header.getByRole("link", { name, exact: true });
+        await expect(link).toHaveAttribute("href", href);
+        await link.scrollIntoViewIfNeeded();
+        await expect(link).toBeInViewport();
+      }
+      const booking = header.getByTestId("mobile-book-measurement");
+      await expect(booking).toHaveAttribute("href", "/assess/");
+      await booking.scrollIntoViewIfNeeded();
+      await expect(booking).toBeInViewport();
+      await closeMenu.click();
+      await expect(openMenu).toBeVisible();
+      await expect(booking).toHaveCount(0);
+    } else {
+      await expect(openMenu).toBeHidden();
+      await expect(header.getByTestId("header-book-measurement")).toBeVisible();
+      await expect(header.getByTestId("header-book-measurement")).toHaveAttribute("href", "/assess/");
+      await expect(header.getByRole("button", { name: "Measure", exact: true })).toBeVisible();
+    }
+
+    const choose = page.locator("#choose");
+    const cards = choose.locator("li > a");
+    await expect(cards).toHaveCount(3);
+    for (const [index, heading, href] of [
+      [0, "Read evidence in your agent", "#free"],
+      [1, "Show evidence in your product", "/panel/"],
+      [2, "Scope a business measurement", "/contact/?arm=run"],
+    ] as const) {
+      await expect(cards.nth(index)).toHaveAttribute("href", href);
+      await expect(cards.nth(index).getByRole("heading", { name: heading })).toBeVisible();
+    }
+
+    await choose.scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: info.outputPath(`workflow-entry-${width}.png`),
+      fullPage: false,
+    });
+    await cards.nth(0).click();
+    await expect(page).toHaveURL(/#free$/);
+    await expect(page.locator("#free")).toBeInViewport();
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth),
+      `${width}px after opening the free evidence section`,
+    ).toBeLessThanOrEqual(1);
+  });
+}

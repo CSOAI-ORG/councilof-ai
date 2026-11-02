@@ -1,0 +1,73 @@
+name: Layer 0 attestation key — one-time setup
+
+# Generates a DEDICATED Ed25519 key for the public Layer 0 gateway, installs the PRIVATE
+# half as a Cloudflare Pages secret (LAYER0_SIGN_KEY_PKCS8_B64 on the councilof-ai
+# project), and PRINTS ONLY the public half to the run summary.
+#
+# The private key is born and dies inside this runner + Cloudflare: it is never committed,
+# never logged, never leaves. Re-runnable (rotates the key).
+#
+# WHY A DEDICATED KEY AND NOT THE ROUTER KEY. The estate already holds an Ed25519 key
+# for its own A2A egress (did:csoai:meok-canonical-v1#ed25519-1), but neither it nor the
+# caller registry is published anywhere, so a third party reading an envelope from the
+# public gateway would have no published place to find the key that signed it. This key's
+# public half is pinned in the DID document as did:web:csoai.org#layer0-attestation-1,
+# beside the six keys already published there, so a verifier has exactly one place to look.
+#
+# SCOPE HONESTY: this key attests "this envelope was signed by the Layer 0 gateway". It
+# makes no claim that a human re-ran any measurement behind it.
+
+on:
+  workflow_dispatch: {}
+
+concurrency: { group: layer0-key-setup, cancel-in-progress: false }
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Generate keypair, install private to Cloudflare, emit public
+        env:
+          CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
+          CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+        run: |
+          node -e '
+            const { generateKeyPairSync } = require("crypto");
+            const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+            const pkcs8 = privateKey.export({ type: "pkcs8", format: "der" }).toString("base64");
+            const spki = publicKey.export({ type: "spki", format: "der" });
+            const x = spki.subarray(spki.length - 32).toString("base64url");
+            require("fs").writeFileSync("/tmp/priv.b64", pkcs8);
+            require("fs").writeFileSync("/tmp/pub.x", x);
+          '
+          # install private (stdin) → Cloudflare Pages secret; never printed
+          cat /tmp/priv.b64 | npx wrangler@3 pages secret put LAYER0_SIGN_KEY_PKCS8_B64 --project-name=councilof-ai
+          # emit ONLY the public key, and the exact did.json entry to add
+          PUB=$(cat /tmp/pub.x)
+          {
+            echo "## Layer 0 attestation public key"
+            echo ""
+            echo "publicKeyJwk.x (base64url, Ed25519): \`$PUB\`"
+            echo ""
+            echo "Add to public/.well-known/did.json as \`did:web:csoai.org#layer0-attestation-1\`, then merge:"
+            echo ""
+            echo '```json'
+            echo '{'
+            echo '  "id": "did:web:csoai.org#layer0-attestation-1",'
+            echo '  "type": "JsonWebKey2020",'
+            echo '  "controller": "did:web:csoai.org",'
+            echo '  "publicKeyJwk": {'
+            echo '    "kty": "OKP",'
+            echo '    "crv": "Ed25519",'
+            echo '    "x": "'"$PUB"'",'
+            echo '    "kid": "csoai-layer0-attestation-1",'
+            echo '    "use": "sig"'
+            echo '  }'
+            echo '}'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          rm -f /tmp/priv.b64

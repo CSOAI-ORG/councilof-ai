@@ -17,7 +17,7 @@ import {
 // 30 Sep 2026 (council-os-watch): the old header search (a model call) is retired. ⌘K / Ctrl-K opens the palette
 // (components/ask/CommandPalette.tsx, loaded on first use) whose search falls through to Ask GSPC.
 import { openAsk, openPalette } from '@/components/ask/askBus';
-import { PRIMARY_LINKS, navigation } from '@/components/HeaderNav';
+import { BOOK_MEASUREMENT_LINK, PRIMARY_LINKS, navigation } from '@/components/HeaderNav';
 export { HOME_NAV, ARCHIVE_NAV } from '@/components/HeaderNav';
 
 // SPA hops keep this header mounted: it lives above the router in App.tsx.
@@ -87,10 +87,10 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
 
   return (
     <header data-site-header="" className="sticky top-0 z-50 w-full shrink-0 border-b border-emerald-950/10 bg-white/[0.94] shadow-[0_10px_35px_rgba(6,21,15,0.06)] backdrop-blur-xl">
-      <nav id="navigation" className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
-        <div className="flex h-14 items-center justify-between sm:h-16">
-          <a href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <div className="relative h-9 w-9 sm:h-10 sm:w-10">
+      <nav id="navigation" className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+        <div className="flex h-14 items-center justify-between gap-3 sm:h-16">
+          <a href="/" className="flex shrink-0 items-center gap-3 hover:opacity-90 transition-opacity">
+            <div className="relative h-9 w-9 shrink-0 sm:h-10 sm:w-10">
               <svg viewBox="0 0 100 100" className="w-full h-full" role="img" aria-label="Council of AI">
                 <path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/>
                 <path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/>
@@ -107,24 +107,9 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             <span className="whitespace-nowrap text-lg font-black tracking-tight text-emerald-800 sm:text-xl 2xl:text-2xl">Council of AI</span>
           </a>
 
-          <div className="hidden md:flex items-center" ref={dropdownRef}>
+          <div className="hidden 2xl:flex items-center" ref={dropdownRef}>
             <div className="flex items-center gap-1 2xl:gap-3">
-              <div className="flex items-center gap-1 xl:hidden">
-              {PRIMARY_LINKS.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-                    isActive(item.href)
-                      ? 'text-emerald-700 bg-emerald-50'
-                      : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
-                  }`}
-                >
-                  {item.name}
-                </a>
-              ))}
-              </div>
-              <div className="hidden xl:flex items-center gap-1 2xl:gap-3">
+              <div className="hidden 2xl:flex items-center gap-1 2xl:gap-3">
               {navigation.map((item) => (
                 <div
                   key={item.name}
@@ -209,7 +194,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             </div>
           </div>
 
-          <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
+          <div className="hidden 2xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
             <Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-emerald-800 hover:bg-emerald-50 lg:inline-flex"><Link href="/dashboard?tab=verify">Verify</Link></Button>
             <button
               type="button"
@@ -225,6 +210,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             <button type="button" onClick={() => openPalette()} className="inline-flex min-h-10 shrink-0 items-center rounded-xl p-2 text-slate-600 transition-colors hover:bg-emerald-50 hover:text-emerald-800" aria-label="Search pages and ask (Ctrl K)" title="Search pages and ask (Ctrl K / ⌘K)" aria-keyshortcuts="Control+K Meta+K" data-testid="palette-launcher">
               <Search className="h-5 w-5" aria-hidden="true" />
             </button>
+            <a href={BOOK_MEASUREMENT_LINK.href} className="inline-flex min-h-9 shrink-0 items-center whitespace-nowrap rounded-xl border border-emerald-700 px-3 text-sm font-semibold text-emerald-800 hover:bg-emerald-50" data-testid="header-book-measurement">{BOOK_MEASUREMENT_LINK.name}</a>
             {user ? (
               <>
                 <Suspense fallback={null}><NotificationCenter /></Suspense>
@@ -259,7 +245,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             )}
           </div>
 
-          <div className="md:hidden flex items-center gap-2">
+          <div className="2xl:hidden flex shrink-0 items-center gap-2">
             <button type="button" onClick={() => openAsk()} className="inline-flex min-h-10 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-emerald-900 hover:bg-muted" aria-label="Ask about the results" data-testid="ask-launcher-mobile"><MessageSquareText className="h-5 w-5" aria-hidden="true" /><span className="sr-only sm:not-sr-only">Ask</span></button>
             <button type="button" onClick={() => openPalette()} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label="Search pages and ask"><Search className="h-5 w-5" aria-hidden="true" /></button>
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}>
@@ -269,11 +255,12 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="2xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="space-y-1">
               <a href="/" className={`block px-4 py-3 rounded-lg font-medium ${
                 location === '/' ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
               }`} onClick={() => setMobileMenuOpen(false)}>Home</a>
+              <a href={BOOK_MEASUREMENT_LINK.href} className="block px-4 py-3 rounded-lg font-semibold text-emerald-800" onClick={() => setMobileMenuOpen(false)} data-testid="mobile-book-measurement">{BOOK_MEASUREMENT_LINK.name}</a>
               {PRIMARY_LINKS.filter((item) => !navigation.some((g) => g.name === item.name)).map((item) => (
                 <a key={item.href} href={item.href} className={`block px-4 py-3 rounded-lg font-medium ${
                   isActive(item.href) ? "text-emerald-700 bg-emerald-50" : "text-foreground/80"

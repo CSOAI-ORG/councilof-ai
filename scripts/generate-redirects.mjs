@@ -39,7 +39,7 @@ if (!existsSync(FUNCTIONS_DIR)) {
 
 const STATIC_DIRS = ["/benchmarks", "/vendor", "/assets",
                      "/.well-known", "/corpus-watch", "/flywheel", "/packs",
-                     "/datasets",
+                     "/datasets", "/my-results",
                      // /signed is the evidence tree IETF implementers are pointed at.
                      // Without this the SPA catch-all answers /signed/ with the app
                      // shell (soft 404) instead of the directory index.
@@ -55,6 +55,13 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
   .sort();
 
 const EXISTING = [
+  // /gspc/field shipped for six hours on 2026-11-01 as a second, static board surface. It
+  // duplicated the board page and its own Wilson bars (components/gspc/LivingBoard.tsx), which
+  // is the fragmentation /board exists to end. The cross-axis read it carried now lives in
+  // components/gspc/BoardField.tsx, mounted on /board; the URL is retired into the page that owns
+  // the numbers rather than left as a fifth board.
+  "/gspc/field  /board  308",
+  "/gspc/field/ /board  308",
   // The hand-authored /arena tree was a second, stale product surface. Keep
   // historical machine evidence in public/arena/*.json{,l}, but route every
   // former human page into the one Council OS play surface. Exact rules are
@@ -108,6 +115,7 @@ const EXISTING = [
   // and it emits one file at public/publisher-health.json. A second copy under
   // /signed/ would drift. Redirect the signed path to the one writer.
   "/signed/publisher-health.json  /publisher-health.json  308",
+  "/signed/root.json              /root.json              308",
   // Guessed-URL aliases for the signed card index (2026-09-14): GET /card_index.json and
   // GET /cards/card_index.json were 404 while the one writer's output is served at
   // /signed/card_index.json. Redirected, never copied: a second copy of signed bytes drifts.

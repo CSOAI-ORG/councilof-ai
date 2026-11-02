@@ -1,0 +1,321 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "governance",
+  "specialist": {
+    "id": "meok-governance-specialist",
+    "cluster_id": "meok-axis-governance",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit whether governance answers are reproducible from the frozen bank, published rows and signed leader evidence without converting governance relevance into legal compliance.",
+    "reviewer_role": "governance measurement reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "bank and row lineage",
+    "leader-card agreement",
+    "separation replay",
+    "own-model neutrality"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "measurement_time": {
+      "state": "DAY",
+      "precision": "day",
+      "observed_on": "2026-08-12",
+      "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+      "source_field": "measured",
+      "note": "The source publishes day precision only. No midnight timestamp is invented."
+    },
+    "axis_row_sha256": "cfdd5cd1984ddece176e301004c269d0d9f42dcd122bbd0002765ac13060b441",
+    "axis_row": {
+      "axis": "governance",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "GovBench",
+      "task": "EU AI Act risk-tier classification",
+      "n": 237,
+      "separation": "TIE",
+      "fleet_mean": 0.49,
+      "mean_harm": 0.51,
+      "cvar05_harm": 0.8728,
+      "status": "MEASURED",
+      "dataset": "csoai/gspc-gov",
+      "colour": "#34d399",
+      "hue": 152,
+      "method_status": "meets-rule",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "v2 bank: 237 items, imported 2026-08-05 from the 339 scenarios of the AI Act Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The other 102 scenarios are not graded here, and they are not a private held-out set: all 339 are public in the upstream scenarios.json (github.com/davidath/ai-act-evaluation-benchmark). No held-out slice backs this axis (C-2026-0929-02). In the original run our own tuned governance specialist held the point lead, and that lead was separated from the best base model, mistral:7b (McNemar p=0.0086). That is an in-lane result on our own model, not a public ranking: the public board does not rank our own models and does not count it in totals.separated_leads (C-2026-0915-01). The public leader and determination on this axis come only from the external-only re-rank of the published per-item rows (2026-09-27). The fleet mean is 0.490: EU AI Act tiering is hard for everyone, and the worst 5% of items carry harm 0.873 (CVaR, n=237) — the tail is real.",
+        "does_not_assert_current_public_fields": true
+      },
+      "leader": "mistral:7b (base model)",
+      "accuracy": 0.5865,
+      "interval": [
+        0.523,
+        0.647
+      ],
+      "separation_p": 0.3787,
+      "separation_method": "Exact McNemar on the discordant items, leader vs the best base model, rule fixed 2026-08-13: p<0.05 is SEPARATED, anything else is a TIE. Wilson 95% intervals are annotation only. Computed by scripts/gspc_separation_from_rows.py from the published per-item rows with our own models removed from the fleet before comparison.",
+      "separation_sentence": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=237; p=0.3787).",
+      "separation_evidence": {
+        "source": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361)",
+        "file": "peritem_gov.jsonl",
+        "file_sha256": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+        "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
+        "fleet": "6 base models; our own prompt overlays on stock base models removed before comparison",
+        "leader": {
+          "model": "mistral:7b",
+          "k": 139,
+          "n": 237,
+          "accuracy": 0.5865,
+          "wilson95": [
+            0.523,
+            0.647
+          ]
+        },
+        "next_best": {
+          "model": "deepseek-r1:8b",
+          "k": 128,
+          "n": 237,
+          "accuracy": 0.5401,
+          "wilson95": [
+            0.476,
+            0.602
+          ]
+        },
+        "paired_items": 237,
+        "discordant": {
+          "leader_only_correct": 70,
+          "next_best_only_correct": 59
+        },
+        "mcnemar_p": 0.3787,
+        "control": {
+          "what": "labels shuffled within items, same test re-run; share that came out SEPARATED",
+          "nperm": 1000,
+          "seed": 20260927,
+          "fixed_pair_rate": 0.044,
+          "reselect_rate": 0.001
+        },
+        "recompute": "python3 separation_test.py --rows rows --json out.json  (in the dataset; stdlib only; checks SHA256SUMS first)"
+      },
+      "peritem_file_sha256": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+      "leader_source": "per-item rows",
+      "leader_card_state": "CARD_RECORDS_A_DIFFERENT_MEASUREMENT",
+      "leader_card_note": "leader shown from per-item rows; no signed per-model card yet for this run — the signed card for mistral:7b on this axis records a different measurement (accuracy 0.0), so it does not back the number shown",
+      "leader_card": "cfba2ad1aaf8c3586d692a3b1f138f5e86f2adb0ac84f49353482c6fe8640b73",
+      "leader_card_url": "/signed/cards/cfba2ad1aaf8c3586d692a3b1f138f5e86f2adb0ac84f49353482c6fe8640b73.json",
+      "note": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=237; p=0.3787). mistral:7b 139/237 vs deepseek-r1:8b 128/237, both read from the published per-item rows. A TIE is not a win: the point-estimate lead is not a measured advantage. leader shown from per-item rows; no signed per-model card yet for this run — the signed card for mistral:7b on this axis records a different measurement (accuracy 0.0), so it does not back the number shown.",
+      "distinct_items": 237,
+      "distinct_items_source": "distinct item ids in the published per-item rows (peritem_gov.jsonl)",
+      "mde": {
+        "value": 0.138,
+        "state": "MEASURED",
+        "unit": "accuracy difference (proportion), leader minus the best base model",
+        "alpha": 0.05,
+        "power": 0.8,
+        "test": "exact two-sided McNemar on the discordant items, leader vs the best base model (the board's separation test, rule fixed 2026-08-13)",
+        "paired_items": 237,
+        "discordance_rate": 0.5443,
+        "source": "functions/api/_gspc_rows_power.ts, generated by scripts/gspc_separation_from_rows.py --power from csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361, peritem_sha256 0d8dacfbe7384a5d…)"
+      },
+      "measurement_time": {
+        "state": "DAY",
+        "precision": "day",
+        "observed_on": "2026-08-12",
+        "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+        "source_field": "measured",
+        "note": "The source publishes day precision only. No midnight timestamp is invented."
+      },
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-gov"
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist governance audits only the governance row",
+      "evidence": "governance"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-governance; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "MODEL_RUN_STATE",
+      "state": "PASS",
+      "detail": "measured model-comparison run with n=237"
+    },
+    {
+      "id": "FROZEN_BANK",
+      "state": "DECLARED",
+      "detail": "bank URL is declared; bank bytes and freeze state were not verified",
+      "evidence": "https://huggingface.co/datasets/csoai/gspc-gov"
+    },
+    {
+      "id": "ROW_LINEAGE",
+      "state": "DECLARED",
+      "detail": "SHA-256 row digest is declared; source bytes were not re-hashed"
+    },
+    {
+      "id": "LEADER_STATE",
+      "state": "PASS",
+      "detail": "leader evidence state is published"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "meets-rule"
+    }
+  ],
+  "summary": {
+    "checks": 8,
+    "passed": 6,
+    "declared": 2,
+    "findings": 0,
+    "audit_state": "HUMAN_REVIEW_READY"
+  },
+  "negative_controls": [
+    {
+      "control": "remove the leader card and require the leader claim to be withheld",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "alter one per-item row digest and require lineage failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "governance-proposal-1",
+      "proposal": "publish a one-command governance separation replay with fixed inputs",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "governance-proposal-2",
+      "proposal": "add per-leader card digest cross-checks to the release gate",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_governance",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/governance",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "governance measurement reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "96e5dd988950820cd72d3ceae39296777d8506bc9801c826e5a4f169f9cfb3de",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 14,
+        "title": "Regulatory determination is outside CSOAI"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "dataset_url",
+      "peritem_file_sha256",
+      "separation_evidence",
+      "leader_card_url",
+      "measurement_time"
+    ],
+    "measurement_url": "/api/gspc/axis/governance",
+    "competency_url": "/api/hitl/modules/governance",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}
