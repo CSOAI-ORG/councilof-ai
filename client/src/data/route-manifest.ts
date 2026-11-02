@@ -248,6 +248,21 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Blog Keeping Ai Claims Current"
  },
  {
+  "path": "/blog/owasp-asi-ten-of-ten",
+  "comp": "BlogPost",
+  "title": "Blog Owasp Asi Ten Of Ten"
+ },
+ {
+  "path": "/blog/the-leaderboard-illusion-is-real",
+  "comp": "BlogPost",
+  "title": "Blog The Leaderboard Illusion Is Real"
+ },
+ {
+  "path": "/blog/we-attack-ourselves-every-night",
+  "comp": "BlogPost",
+  "title": "Blog We Attack Ourselves Every Night"
+ },
+ {
   "path": "/board",
   "comp": "MeasurementBoard",
   "title": "Measurement Board"
@@ -601,6 +616,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/distribution-integrity",
   "comp": "DistributionIntegrity",
   "title": "Distribution Integrity"
+ },
+ {
+  "path": "/docs",
+  "comp": "DocsHub",
+  "title": "Docs Hub"
  },
  {
   "path": "/doctrine",
@@ -1416,6 +1436,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/meok-law",
   "comp": "JurisdictionEngine",
   "title": "Jurisdiction Engine"
+ },
+ {
+  "path": "/metered",
+  "comp": "X402Catalog",
+  "title": "X402 Catalog"
  },
  {
   "path": "/methodology",
