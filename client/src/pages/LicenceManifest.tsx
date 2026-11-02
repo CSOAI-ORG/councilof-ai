@@ -128,7 +128,7 @@ export default function LicenceManifest() {
             Verify a card
           </Link>
           {" · "}
-          DOI 10.5281/zenodo.21991104 ({"Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending."})
+          DOI 10.5281/zenodo.21991104 ({"Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json)."})
         </p>
       </div>
     </div>

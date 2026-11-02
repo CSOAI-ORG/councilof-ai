@@ -259,7 +259,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "discovery",
     href: "https://councilof.ai/interop/zenodo-status.json",
     plant: "Papers, notebooks and grant packs that must cite the instrument.",
-    note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. The identifier is kept; live methodology: https://councilof.ai/methodology/.",
+    note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json). The identifier is kept; live methodology: https://councilof.ai/methodology/.",
     snippet: "10.5281/zenodo.21991104",
   },
   {
@@ -427,7 +427,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "discovery",
     href: "https://councilof.ai/interop/zenodo-status.json",
     plant: "Dated eligibility manifest + methods once the census is signed.",
-    note: "The methodology DOI's Zenodo record is unavailable since 29 Sep 2026 (account blocked by Zenodo; appeal pending). The 2,200-subject snapshot is not deposited.",
+    note: "The methodology DOI's Zenodo record is unavailable since 29 Sep 2026 (account blocked by Zenodo; no appeal on record). The 2,200-subject snapshot is not deposited.",
   },
   {
     id: "ghcr-harness",
