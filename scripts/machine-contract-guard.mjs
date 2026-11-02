@@ -139,7 +139,13 @@ try {
 } catch (e) { fail(`/.well-known/did.json fetch error: ${e.message}`); }
 
 // 3. Banned-string sweep over the machine JSON surfaces.
-for (const path of ["/api/gspc", "/api/reported", "/api/regulation", "/api/corrections", "/api/cross", "/.well-known/agent.json", "/.well-known/agent-card.json", "/.well-known/scitt.json"]) {
+// /api/corrections is deliberately NOT in this loop. It is quoted history: each entry carries the
+// withdrawn words verbatim so a reader can see what was said and what changed, which is why
+// brand-gate exempts the same surface (CORRECTIONS_LEDGER_PAGE). Scanning it for banned strings
+// would force the record to be rewritten to pass a linter, and a corrections ledger that edits its
+// own history is worth nothing. The exemption is stated here, not implied.
+pass("/api/corrections exempt from the banned-string scan (verbatim corrections history)");
+for (const path of ["/api/gspc", "/api/reported", "/api/regulation", "/api/cross", "/.well-known/agent.json", "/.well-known/agent-card.json", "/.well-known/scitt.json"]) {
   try {
     const { status, body } = await get(HOST + path);
     if (status !== 200) { fail(`${path} returned HTTP ${status}`); continue; }
