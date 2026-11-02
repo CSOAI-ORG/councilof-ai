@@ -1,0 +1,383 @@
+{
+  "kind": "csoai.sites-census/0.1",
+  "as_of": "2026-10-29T02:55:04Z",
+  "note": "A census is a receipt of what was read, not a grade of what exists. Rows are LIVE/REACHABLE only when the named probe succeeded in this run. UNREACHABLE is not a zero. A site absent from this file was not probed.",
+  "counts": {
+    "sites_probed": 34,
+    "compute_declared": 15,
+    "compute_reachable": 2,
+    "compute_with_gpu": 1,
+    "edge_nodes": 1,
+    "providers_probed": 17,
+    "providers_reachable": 12,
+    "free_tier_reachable": 11,
+    "cpu_cores_reachable": 10,
+    "ram_gib_reachable": 1141,
+    "n_site_lane_state": "UNREACHABLE",
+    "n_site_done": null,
+    "n_site_joined": null
+  },
+  "sites": [
+    {
+      "id": "compute:owner-lan-workstation",
+      "class": "compute",
+      "name": "Owner workstation on the LAN",
+      "state": "REACHABLE",
+      "endpoint": "owner-lan-workstation",
+      "cpu_model": "Apple M2",
+      "cpu_cores": 8,
+      "cpu_host_cores": 8,
+      "cpu_quota_limited": false,
+      "ram_gib": 8,
+      "gpu": "Apple M2",
+      "uptime_s": 1255689,
+      "probe": "ssh owner-lan-workstation → cpu|host|ram|gpu|model|uptime",
+      "detail": "GPU present"
+    },
+    {
+      "id": "compute:oracle-micro-control",
+      "class": "compute",
+      "name": "Oracle micro instance (control lane)",
+      "state": "UNREACHABLE",
+      "probe": "ssh oracle-micro-control",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:runpod-main-engine",
+      "class": "compute",
+      "name": "RunPod pod (main engine)",
+      "state": "REACHABLE",
+      "endpoint": "runpod-main-engine",
+      "cpu_model": "AMD EPYC 9655 96-Core Processor",
+      "cpu_cores": 2,
+      "cpu_host_cores": 192,
+      "cpu_quota_limited": true,
+      "ram_gib": 1133,
+      "gpu": null,
+      "uptime_s": 109652,
+      "probe": "ssh runpod-main-engine → cpu|host|ram|gpu|model|uptime",
+      "detail": "no GPU visible"
+    },
+    {
+      "id": "compute:runpod-meok-backend",
+      "class": "compute",
+      "name": "RunPod pod (MEOK backend)",
+      "state": "UNREACHABLE",
+      "probe": "ssh runpod-meok-backend",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:sovereign-node-brain-2",
+      "class": "compute",
+      "name": "Sovereign node (brain 2)",
+      "state": "UNREACHABLE",
+      "probe": "ssh sovereign-node-brain-2",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:sovereign-node-redblue",
+      "class": "compute",
+      "name": "Sovereign node (red/blue)",
+      "state": "UNREACHABLE",
+      "probe": "ssh sovereign-node-redblue",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:sovereign-node-light-a100",
+      "class": "compute",
+      "name": "Sovereign node (light A100)",
+      "state": "UNREACHABLE",
+      "probe": "ssh sovereign-node-light-a100",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:sovereign-node-agent-vm",
+      "class": "compute",
+      "name": "Sovereign node (agent VM)",
+      "state": "UNREACHABLE",
+      "probe": "ssh sovereign-node-agent-vm",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:sovereign-node-csoai-backend",
+      "class": "compute",
+      "name": "Sovereign node (CSOAI backend)",
+      "state": "UNREACHABLE",
+      "probe": "ssh sovereign-node-csoai-backend",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:sovereign-node-volume-sink",
+      "class": "compute",
+      "name": "Sovereign node (volume sink)",
+      "state": "UNREACHABLE",
+      "probe": "ssh sovereign-node-volume-sink",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:sovereign-node-r4090-a",
+      "class": "compute",
+      "name": "Sovereign node (r4090 a)",
+      "state": "UNREACHABLE",
+      "probe": "ssh sovereign-node-r4090-a",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:sovereign-node-r4090-b",
+      "class": "compute",
+      "name": "Sovereign node (r4090 b)",
+      "state": "UNREACHABLE",
+      "probe": "ssh sovereign-node-r4090-b",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:sovereign-node-r4090-c",
+      "class": "compute",
+      "name": "Sovereign node (r4090 c)",
+      "state": "UNREACHABLE",
+      "probe": "ssh sovereign-node-r4090-c",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:runpod-named-host-a",
+      "class": "compute",
+      "name": "RunPod named host A",
+      "state": "UNREACHABLE",
+      "probe": "ssh runpod-named-host-a",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "compute:runpod-named-host-b",
+      "class": "compute",
+      "name": "RunPod named host B",
+      "state": "UNREACHABLE",
+      "probe": "ssh runpod-named-host-b",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "provider:hf-models",
+      "class": "provider",
+      "name": "Hugging Face — models hub",
+      "state": "REACHABLE",
+      "endpoint": "https://huggingface.co/api/models?limit=1",
+      "http_status": 200,
+      "free_tier": true,
+      "population": 1,
+      "probe": "GET https://huggingface.co/api/models?limit=1",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:hf-spaces",
+      "class": "provider",
+      "name": "Hugging Face — Spaces",
+      "state": "REACHABLE",
+      "endpoint": "https://huggingface.co/api/spaces?limit=1",
+      "http_status": 200,
+      "free_tier": true,
+      "population": 1,
+      "probe": "GET https://huggingface.co/api/spaces?limit=1",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:hf-router",
+      "class": "provider",
+      "name": "Hugging Face — inference router (OpenAI-compat)",
+      "state": "REACHABLE",
+      "endpoint": "https://router.huggingface.co/v1/models",
+      "http_status": 200,
+      "free_tier": true,
+      "population": 136,
+      "probe": "GET https://router.huggingface.co/v1/models",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:hf-spaces-csoai",
+      "class": "provider",
+      "name": "Hugging Face — csoai org",
+      "state": "REACHABLE",
+      "endpoint": "https://huggingface.co/api/models?author=csoai&limit=1",
+      "http_status": 200,
+      "free_tier": true,
+      "population": 1,
+      "probe": "GET https://huggingface.co/api/models?author=csoai&limit=1",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:kaggle-models",
+      "class": "provider",
+      "name": "Kaggle — models API",
+      "state": "REACHABLE",
+      "endpoint": "https://www.kaggle.com/api/v1/models/list?pageSize=1",
+      "http_status": 200,
+      "free_tier": true,
+      "population": 10000,
+      "probe": "GET https://www.kaggle.com/api/v1/models/list?pageSize=1",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:kaggle-kernels",
+      "class": "provider",
+      "name": "Kaggle — notebooks API",
+      "state": "HTTP_401",
+      "endpoint": "https://www.kaggle.com/api/v1/kernels/list?pageSize=1",
+      "http_status": 401,
+      "free_tier": true,
+      "population": null,
+      "probe": "GET https://www.kaggle.com/api/v1/kernels/list?pageSize=1",
+      "detail": "reachable, credential required (401/403)"
+    },
+    {
+      "id": "provider:colab",
+      "class": "provider",
+      "name": "Google Colab",
+      "state": "REACHABLE",
+      "endpoint": "https://colab.research.google.com/",
+      "http_status": 200,
+      "free_tier": true,
+      "population": null,
+      "probe": "GET https://colab.research.google.com/",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:lightning",
+      "class": "provider",
+      "name": "Lightning AI (free studios)",
+      "state": "REACHABLE",
+      "endpoint": "https://lightning.ai/",
+      "http_status": 200,
+      "free_tier": true,
+      "population": null,
+      "probe": "GET https://lightning.ai/",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:brev",
+      "class": "provider",
+      "name": "Brev",
+      "state": "REACHABLE",
+      "endpoint": "https://brev.dev/",
+      "http_status": 200,
+      "free_tier": true,
+      "population": null,
+      "probe": "GET https://brev.dev/",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:paperspace",
+      "class": "provider",
+      "name": "Paperspace",
+      "state": "REACHABLE",
+      "endpoint": "https://www.paperspace.com/",
+      "http_status": 200,
+      "free_tier": true,
+      "population": null,
+      "probe": "GET https://www.paperspace.com/",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:runpod",
+      "class": "provider",
+      "name": "RunPod — console",
+      "state": "REACHABLE",
+      "endpoint": "https://www.runpod.io/console",
+      "http_status": 200,
+      "free_tier": false,
+      "population": null,
+      "probe": "GET https://www.runpod.io/console",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:lambda",
+      "class": "provider",
+      "name": "Lambda Cloud",
+      "state": "HTTP_403",
+      "endpoint": "https://cloud.lambda.ai/",
+      "http_status": 403,
+      "free_tier": false,
+      "population": null,
+      "probe": "GET https://cloud.lambda.ai/",
+      "detail": "reachable, credential required (401/403)"
+    },
+    {
+      "id": "provider:together",
+      "class": "provider",
+      "name": "Together AI",
+      "state": "HTTP_401",
+      "endpoint": "https://api.together.xyz/v1/models",
+      "http_status": 401,
+      "free_tier": false,
+      "population": null,
+      "probe": "GET https://api.together.xyz/v1/models",
+      "detail": "reachable, credential required (401/403)"
+    },
+    {
+      "id": "provider:groq",
+      "class": "provider",
+      "name": "Groq",
+      "state": "HTTP_401",
+      "endpoint": "https://api.groq.com/openai/v1/models",
+      "http_status": 401,
+      "free_tier": false,
+      "population": null,
+      "probe": "GET https://api.groq.com/openai/v1/models",
+      "detail": "reachable, credential required (401/403)"
+    },
+    {
+      "id": "provider:moonshot",
+      "class": "provider",
+      "name": "Moonshot / Kimi — OpenAI-compat",
+      "state": "HTTP_401",
+      "endpoint": "https://api.moonshot.ai/v1/models",
+      "http_status": 401,
+      "free_tier": false,
+      "population": null,
+      "probe": "GET https://api.moonshot.ai/v1/models",
+      "detail": "reachable, credential required (401/403)"
+    },
+    {
+      "id": "provider:csoai-board",
+      "class": "provider",
+      "name": "CSOAI — live GSPC board",
+      "state": "REACHABLE",
+      "endpoint": "https://councilof.ai/api/gspc",
+      "http_status": 200,
+      "free_tier": true,
+      "population": null,
+      "probe": "GET https://councilof.ai/api/gspc",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "provider:csoai-root",
+      "class": "provider",
+      "name": "CSOAI — public root",
+      "state": "REACHABLE",
+      "endpoint": "https://councilof.ai/root.json",
+      "http_status": 200,
+      "free_tier": true,
+      "population": null,
+      "probe": "GET https://councilof.ai/root.json",
+      "detail": "reachable unauthenticated"
+    },
+    {
+      "id": "n_site:onboard-lane",
+      "class": "n_site",
+      "name": "N-site onboard lane (Oracle micro)",
+      "state": "UNREACHABLE",
+      "probe": "ssh oracle-micro-2 → lane counters",
+      "detail": "no ssh session"
+    },
+    {
+      "id": "edge:owner-workstation",
+      "class": "edge",
+      "name": "Owner workstation (session host)",
+      "state": "REACHABLE",
+      "endpoint": "local",
+      "cpu_model": "Apple M4",
+      "cpu_cores": 10,
+      "ram_gib": 16,
+      "gpu": "Apple unified GPU (8 cores, Metal)",
+      "probe": "sysctl machdep.cpu.brand_string / hw.ncpu / hw.memsize + SPDisplaysDataType",
+      "detail": "unified memory — CPU and GPU share the same pool"
+    }
+  ]
+}

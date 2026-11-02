@@ -5,10 +5,12 @@
 # ORDER IS LOAD-BEARING: every splat-free rule first (2000-rule static budget),
 # then every splat rule (100-rule dynamic budget), catch-all last. One splat placed
 # early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —
-# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 19/100.
+# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 20/100.
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
+/gspc/field  /board  308
+/gspc/field/ /board  308
 /alliance-map          /memberships         308
 /alliance-map/         /memberships         308
 /authority            /gspc-verify/        308
@@ -26,6 +28,7 @@
 /schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308
 /schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308
 /signed/publisher-health.json  /publisher-health.json  308
+/signed/root.json              /root.json              308
 /card_index.json        /signed/card_index.json  301
 /cards/card_index.json  /signed/card_index.json  301
 /world/observatory      /world/observatory/       308
@@ -735,6 +738,7 @@
 /flywheel/*  /flywheel/:splat  200
 /packs/*  /packs/:splat  200
 /datasets/*  /datasets/:splat  200
+/my-results/*  /my-results/:splat  200
 /signed/*  /signed/:splat  200
 /stack/*  /stack/:splat  200
 /world/observatory/*  /world/observatory/:splat  200
