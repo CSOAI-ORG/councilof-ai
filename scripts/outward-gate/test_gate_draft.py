@@ -124,3 +124,90 @@ class CitedTitleIsNotAClaim(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# --------------------------------------------------------------------------------------
+# A .txt Internet-Draft: the same two rules the XML form already had, plus the plain-text
+# reference list. Every exemption is narrow and every limit is a must-fail test.
+TXT_ID_HEAD = ("SCITT                                                       N. Templeman\n"
+               "Internet-Draft                                                     CSOAI\n"
+               "Intended status: Informational                        12 September 2026\n"
+               "Expires: 16 March 2027\n\n\n"
+               "1.  Introduction\n\n"
+               "   This document specifies nothing.\n\n\n"
+               "11.  Normative References\n\n"
+               '   [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate\n'
+               "              Transparency\", RFC 6962, DOI 10.17487/RFC6962, June\n"
+               "              2013, <https://www.rfc-editor.org/info/rfc6962>.\n")
+
+
+class TxtInternetDraftExemptions(unittest.TestCase):
+    def test_a_cited_rfc_title_in_a_txt_draft_is_not_a_claim(self):
+        r = gd.gate_text(TXT_ID_HEAD)
+        self.assertEqual(r["notice_banned"], [], r)
+        self.assertTrue(r["at_100"], r)
+
+    def test_must_fail_the_same_word_in_the_body_of_a_txt_draft(self):
+        r = gd.gate_text(TXT_ID_HEAD + "\n1.  Scope\n\n   This service is certified.\n")
+        self.assertFalse(r["at_100"])
+        self.assertTrue(r["notice_banned"])
+
+    def test_must_fail_a_txt_reference_that_cites_no_rfc(self):
+        # Only a real RFC's own title is exempt. A title on any other reference is still text.
+        no_rfc = TXT_ID_HEAD.split("11.  Normative References")[0] + (
+            "11.  Normative References\n\n"
+            '   [NOTE]  Someone, "Certificate Transparency", 2026.\n')
+        r = gd.gate_text(no_rfc)
+        self.assertFalse(r["at_100"])
+        self.assertTrue(r["notice_banned"])
+
+    def test_must_fail_a_quoted_title_outside_the_references_section(self):
+        body = TXT_ID_HEAD + '\n1.  Scope\n\n   The "Certificate Transparency" log is used.\n'
+        r = gd.gate_text(body)
+        self.assertFalse(r["at_100"])
+        self.assertTrue(r["notice_banned"])
+
+    def test_a_denial_construction_in_a_txt_draft_is_not_a_claim(self):
+        r = gd.gate_text(TXT_ID_HEAD +
+                         "\n1.  Scope\n\n"
+                         "   The use case explicitly excludes: grading, ranking,\n"
+                         "   certification, conformity assessment.\n")
+        self.assertTrue(r["at_100"], r)
+
+    def test_must_fail_a_denial_list_that_names_a_subject(self):
+        # "explicitly excludes: X, and we certify Y" is a CLAIM about Y. The exclusion
+        # list must not swallow the clause that follows it.
+        r = gd.gate_text(TXT_ID_HEAD +
+                         "\n1.  Scope\n\n"
+                         "   The use case explicitly excludes: grading, and we certify the rest.\n")
+        self.assertFalse(r["at_100"])
+        self.assertEqual(r["doctrine"]["doctrine.no_certify_language"], "FAIL", r)
+
+    def test_must_fail_a_claim_in_a_txt_draft(self):
+        r = gd.gate_text(TXT_ID_HEAD + "\n1.  Scope\n\n   We certify every measurement.\n")
+        self.assertFalse(r["at_100"])
+
+    def test_must_fail_the_same_construction_outside_an_internet_draft(self):
+        # Without the I-D header the file is a notice, and a notice keeps the notice
+        # word list's no-negation-escape property.
+        notice = ("We are not certified for anything, and the check failed.\n")
+        r = gd.gate_text(notice)
+        self.assertFalse(r["at_100"])
+        self.assertTrue(r["notice_banned"])
+
+    def test_must_fail_a_public_notice_that_says_fails(self):
+        r = gd.gate_text("The verification check fails for this request.\n")
+        self.assertFalse(r["at_100"])
+        self.assertTrue(r["notice_banned"])
+
+    def test_the_real_three_sibling_drafts_reach_100(self):
+        import glob
+        import os
+        here = os.path.expanduser("~/clawd/_alignment/ietf-drafts-20260912")
+        files = sorted(glob.glob(os.path.join(here, "draft-templeman-*.txt")))
+        if not files:
+            self.skipTest("the staged drafts are not on this machine")
+        for f in files:
+            with open(f, encoding="utf-8") as fh:
+                r = gd.gate_text(fh.read(), f)
+            self.assertTrue(r["at_100"], "%s: %s" % (os.path.basename(f), r))
