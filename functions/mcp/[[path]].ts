@@ -24,6 +24,7 @@ import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
+import { READINESS_TOOL_NAMES, readinessToolResult } from "./_readiness";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
 import { recordUsage } from "../_lib/usage";
 import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
@@ -74,7 +75,7 @@ const INSTRUCTIONS =
 // The free door speaks to a person using a chat client, so it carries no operations notes and no
 // payment text (packet CR-6). The count is derived from the file, like the one above.
 export const FREE_INSTRUCTIONS =
-  `Council of AI public measurement records. ${FREE_TOOL_COUNT} free read-only tools: read the GSPC board and one axis, verify a signed measurement card or capsule, check Merkle inclusion, list published measurements about an endpoint, and read census snapshots, and list the already-signed cards relevant to one obligation (observations, never a determination). Every answer carries its state (VALID, INVALID, UNCHECKABLE, UNMEASURED, NOT_MEASURED, UNREACHABLE). Measurement, not certification.`;
+  `Council of AI public measurement records. ${FREE_TOOL_COUNT} free read-only tools: read the GSPC board and one axis, verify a signed measurement card or capsule, check Merkle inclusion, list published measurements about an endpoint, read census snapshots, list the already-signed cards relevant to one obligation (observations, never a determination), and return a framework readiness checklist (evidence planning against published provisions; never a determination). Every answer carries its state (VALID, INVALID, UNCHECKABLE, UNMEASURED, NOT_MEASURED, UNREACHABLE). Measurement, not certification.`;
 const CORS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, HEAD, POST, OPTIONS",
@@ -160,7 +161,9 @@ function buildMcp(
                 ? evidenceToolResult(definition.name, args, origin)
                 : ROUTE_TOOL_NAMES.has(definition.name)
                   ? routeToolResult(args, origin)
-                  : sharedToolResult(definition.name, args, origin),
+                  : READINESS_TOOL_NAMES.has(definition.name)
+                    ? readinessToolResult(args)
+                    : sharedToolResult(definition.name, args, origin),
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.
