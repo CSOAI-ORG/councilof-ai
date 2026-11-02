@@ -894,6 +894,10 @@ function AppShell() {
                   <Route path="/blog/how-to-verify-an-ai-measurement">{() => <BlogPost slug="how-to-verify-an-ai-measurement" />}</Route>
                   <Route path="/blog/keeping-ai-claims-current">{() => <BlogPost slug="keeping-ai-claims-current" />}</Route>
                   <Route path="/blog/gspc-g2-comparison-group-2026-10-14">{() => <BlogPost slug="gspc-g2-comparison-group-2026-10-14" />}</Route>
+                  {/* Three 2026-11-01 series posts restored 2026-11-02 (client/src/data/blog-published.json). */}
+                  <Route path="/blog/we-attack-ourselves-every-night">{() => <BlogPost slug="we-attack-ourselves-every-night" />}</Route>
+                  <Route path="/blog/owasp-asi-ten-of-ten">{() => <BlogPost slug="owasp-asi-ten-of-ten" />}</Route>
+                  <Route path="/blog/the-leaderboard-illusion-is-real">{() => <BlogPost slug="the-leaderboard-illusion-is-real" />}</Route>
                   <Route path="/blog/:slug" component={ContentReviewNotice} />
                   <Route path="/models" component={ModelRegistry} />
                   <Route path="/framework-catalog" component={FrameworkCatalog} />
