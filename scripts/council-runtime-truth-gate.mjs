@@ -1409,7 +1409,6 @@ const reviewedPublicHtmlAppRoutes = new Set([
   "/404",
   "/advisory",
   "/benchmarks",
-  "/globe",
   "/governance", // static discovery bundle (#2777) owns this door; app route retired
 ]);
 const concreteAppRoutes = [...appSource.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
