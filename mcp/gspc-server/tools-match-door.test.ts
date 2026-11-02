@@ -54,7 +54,12 @@ describe("the packaged MCP server advertises exactly what the door serves", () =
     // of every dropped mill-tool phantom.
     expect(doorFree.length).toBeGreaterThanOrEqual(30);
     expect(doorPaid.length).toBeGreaterThanOrEqual(1);
-    expect(new Set(doorFree).intersection(new Set(doorPaid)).size).toBe(0);
+    // Node 20 is the estate's floor (package.json engines.node), and Set.prototype.intersection
+    // is Node 22+. It passed here for a week because the local battery ran Node 22 while CI ran
+    // Node 20, so the same file was green on the desk and red in the gate. The disjointness
+    // check is written the portable way.
+    const paidNames = new Set(doorPaid);
+    expect(doorFree.filter((name) => paidNames.has(name))).toEqual([]);
     for (const anchor of ["board_totals", "get_axis", "verify_card"]) {
       expect(doorFree).toContain(anchor);
     }
