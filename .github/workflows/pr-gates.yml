@@ -402,7 +402,12 @@ jobs:
       # full checkout; they were simply never invoked. A test nobody runs is a comment.
       - name: Unit tests — client, functions and scripts
         if: steps.scope.outputs.gated == 'true'
-        run: npx vitest run client/src functions scripts
+        # 2026-11-02: mcp/gspc-server and measurement/commissioned are in scope too. The door
+        # contract test (tools-match-door) asserts that the packaged MCP server advertises
+        # exactly what the door serves; it carried TYPED counts (47/5/52) that the 34th axis
+        # moved to 48/5/53, and because no gate ran this file, the drift sat on master
+        # unobserved. A test nobody runs is a comment.
+        run: npx vitest run client/src functions scripts mcp/gspc-server measurement/commissioned
 
       # node:test files that vitest cannot collect (vitest.config.ts NODE_TEST_FILES). They used to be
       # reported by vitest as failed suites and so never actually ran. The list is read from the config
