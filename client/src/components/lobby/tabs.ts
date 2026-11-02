@@ -767,6 +767,13 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(independence|conflicts?|our own model tags?|never ranked)\b/i,
   },
   {
+    label: "Article 50 pack",
+    blurb: "The published Article 50(2) marking runbook beside the interactive check — what to prepare, what the mark proves, what it does not.",
+    path: "/packs/eu-article-50",
+    group: "product",
+    cues: /\b(article 50 pack|art\.? ?50 pack|marking runbook|a50 pack)\b/i,
+  },
+  {
     label: "Tokenised-asset deployments",
     blurb: "The deployments the tokenised-asset reads cover, as published.",
     path: "/stablecoins/deployments",
