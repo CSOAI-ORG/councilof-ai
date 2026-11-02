@@ -52,6 +52,7 @@ export const NODE_TEST_FILES = [
   // A bare assert script (no test framework): node --test runs it as one test; vitest reported
   // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
   'council-os/gspc-pontius-boundary.test.mjs',
+  'scripts/watchdog/source-status.test.mjs',
 ];
 
 export default defineConfig({
