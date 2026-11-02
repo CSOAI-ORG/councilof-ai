@@ -36,6 +36,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import re
+import subprocess
 import sys
 import urllib.error
 import urllib.request
@@ -46,7 +49,7 @@ REPO = Path(__file__).resolve().parents[1]
 UA = "csoai-completion-audit/0.1 (+https://councilof.ai)"
 BASE = "https://councilof.ai"
 OUT_JSON = REPO / "public" / "completion-audit.json"
-OUT_MD = REPO / "docs" / "measurement" / "CONSUMER-READY-COMPLETION-AUDIT-2026-10-28.md"
+OUT_MD = REPO / "docs" / "measurement" / "CONSUMER-READY-COMPLETION-AUDIT.md"
 
 # ---------------------------------------------------------------- probe helpers
 
@@ -154,19 +157,86 @@ def p_ots_manifest() -> tuple[str, str, str]:
             f"{BASE}/interop/ots/manifest.json")
 
 
-def p_namespace() -> tuple[str, str, str]:
-    """U-10: the 4->1 namespace consolidation — measurable in the repo."""
-    ns = "com.councilof."
-    hits = 0
+def _dig_available() -> bool:
+    """Is `dig` present? A machine without it CANNOT say a TXT record is absent -
+    it can only say it does not know. Conflating the two is how a DNS claim gets
+    reported as unpublished on a runner that simply lacks the tool."""
+    try:
+        subprocess.run(["dig", "-v"], capture_output=True, timeout=20)
+        return True
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def _dig_txt(name: str) -> list[str] | None:
+    """TXT records for a DNS name. None means: the tool could not be run, so the
+    answer is UNKNOWN. An empty list means: the name publishes no TXT."""
+    try:
+        r = subprocess.run(["dig", "+short", "TXT", name],
+                           capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return [ln.strip().strip('"') for ln in (r.stdout or "").splitlines() if ln.strip()]
+
+
+def p_namespace_dns() -> tuple[str, str, str]:
+    """U-10: the namespace claim, which is a DNS TXT record, not a file edit.
+
+    The checklist's own wording is "`com.councilof/*` DNS TXT", and the estate's
+    own lane row says what to publish: the MCP namespace TXT at
+    `_mcp.com.councilof.ai` naming `com.councilof/*`, plus the `_namespace` label,
+    after checking that no conflicting claim exists. So the box is MEASURED by
+    reading DNS, and it is gated on whoever holds the domain's DNS authority.
+    """
+    if not _dig_available():
+        return ("OPEN",
+                "the dig tool is absent, so the TXT state is UNKNOWN - not absent. "
+                "Install dnsutils and re-measure before reading this as a verdict",
+                "dns:com.councilof.ai")
+    labels = ("com.councilof.ai", "_namespace.com.councilof.ai", "_mcp.com.councilof.ai")
+    found = {n: _dig_txt(n) for n in labels}
+    published = [n for n, v in found.items() if v and any("com.councilof/*" in t for t in v)]
+    if published:
+        return ("LIVE",
+                f"the namespace TXT is published at {', '.join(published)}",
+                "https://councilof.ai/jewels/master-catalogue/")
+    detail = "; ".join(
+        f"{n} -> " + (", ".join(found[n]) if found.get(n) else "no TXT record")
+        for n in labels)
+    return ("OPEN",
+            f"no namespace TXT is published ({detail}) - publishing it needs DNS "
+            f"authority for the domain, which is the owner's",
+            "dns:" + " ".join(labels))
+
+
+def p_namespace_tree() -> tuple[str, str, str]:
+    """U-10b: does any PUBLISHED file still claim the old namespace as its own id?
+
+    A DNS name (com.councilof.ai) is not a claimed namespace - it is the label
+    the claim would be published at, and the estate's own rows legitimately name
+    it. What must not survive is a published artefact claiming an identifier in
+    the `com.councilof.*` space, so that is what this counts.
+    """
+    # A DNS name (com.councilof.ai) and the claim form (com.councilof/*) are
+    # legitimate MENTIONS - the label the claim would be published at, and the
+    # pattern it would name. What must not survive is a published artefact
+    # claiming an identifier INSIDE that space, e.g. com.councilof.gsPC.
+    pattern = re.compile(r"com\.councilof\.(?!ai\b|\*)[A-Za-z0-9_-]+")
+    hits = []
     for p in (REPO / "public").rglob("*"):
-        if p.is_file() and p.suffix in {".md", ".json", ".txt", ".html"}:
-            try:
-                if ns in p.read_text(errors="replace"):
-                    hits += 1
-            except OSError:
-                pass
-    state = "LIVE" if hits == 0 else "OPEN"
-    return (state, f"{hits} public file(s) still carry the '{ns}' namespace",
+        if not (p.is_file() and p.suffix in {".md", ".json", ".txt", ".html"}):
+            continue
+        if p.name == "completion-audit.json":
+            continue                      # this audit's own output names the namespace
+        try:
+            if pattern.search(p.read_text(errors="replace")):
+                hits.append(str(p.relative_to(REPO)))
+        except OSError:
+            pass
+    state = "LIVE" if not hits else "OPEN"
+    return (state,
+            f"{len(hits)} published file(s) still claim an identifier in the com.councilof.* space"
+            + (": " + ", ".join(hits[:4]) if hits else ""),
             "repo:public/ (measured at build time)")
 
 
@@ -239,6 +309,103 @@ def p_completion_ledger() -> tuple[str, str, str]:
 # signature ceremony, a DNS record, a business decision and a paying customer
 # are not things a script can measure, and pretending otherwise is the failure
 # the honesty register exists to prevent.
+# ---------------------------------------------------------------- the agent lane
+# These boxes were listed as "agent builds" with no state. A box with no probe is
+# a box nobody measured, so each one below now has a probe that either sees the
+# artefact or says, precisely, that it is not there. The estate's own jewel table
+# already calls CJ-50 (the Ecosystem Health Board) UNVERIFIED - "no prototype was
+# found on any live or local surface" - while the growth corpus still listed it as
+# "prototype + live board". A probe is what tells those two apart.
+
+_SKIP_DIRS = {".git", "node_modules", "dist", ".next", "target", "__pycache__", ".venv"}
+
+
+def repo_paths_containing(*needles: str, limit: int = 60000) -> list[str]:
+    """Repo paths whose name contains any needle. Bounded, because the audit runs
+    in CI and an unbounded walk is how a measurement becomes a timeout."""
+    out: list[str] = []
+    for root in ("scripts", "docs", "public", "council-os", "functions", "harness"):
+        base = REPO / root
+        if not base.is_dir():
+            continue
+        for dirpath, dirnames, filenames in os.walk(base):
+            dirnames[:] = [d for d in dirnames if d not in _SKIP_DIRS]
+            for name in filenames:
+                low = name.lower()
+                if any(n.lower() in low for n in needles):
+                    out.append(os.path.relpath(os.path.join(dirpath, name), REPO))
+                    if len(out) >= limit:
+                        return out
+    return out
+
+
+def p_ecosystem_health_board() -> tuple[str, str, str]:
+    """U-13: the Ecosystem Health Board + its citation flywheel."""
+    tried = ["/ecosystem-health/", "/health-board/"]
+    codes = {}
+    for path in tried:
+        status, _ = fetch(path)
+        codes[path] = status
+    served = [p for p, c in codes.items() if c == 200]
+    if served:
+        return ("LIVE", f"served at {', '.join(served)}",
+                BASE + (served[0] if served else tried[0]))
+    return ("OPEN",
+            "no Ecosystem Health Board on the edge: "
+            + ", ".join(f"{p} -> HTTP {c}" for p, c in codes.items())
+            + "; the estate's own CJ-50 row calls it UNVERIFIED",
+            BASE + "/reports/")
+
+
+def p_chained_loop() -> tuple[str, str, str]:
+    """U-18: the chained loop v0.1 (evolve, dream, grade, select, remember)."""
+    hits = repo_paths_containing("chained-loop", "chain-loop", "chainloop")
+    if hits:
+        return ("LIVE", f"{len(hits)} artefact(s): {hits[0]}", f"repo:{hits[0]}")
+    return ("OPEN",
+            "no chained-loop artefact in scripts/, docs/, public/, council-os/, "
+            "functions/ or harness/ — the corpus calls the stack 'verified' and "
+            "the 2-week held-out gate the closer; neither is in the tree",
+            "repo:scripts/ docs/ public/ council-os/ functions/ harness/")
+
+
+def p_small_world_league() -> tuple[str, str, str]:
+    """U-19: the small-world lab T-1 league."""
+    hits = repo_paths_containing("small-world", "smallworld", "t1-league")
+    if hits:
+        return ("LIVE", f"{len(hits)} artefact(s): {hits[0]}", f"repo:{hits[0]}")
+    return ("OPEN",
+            "no small-world / T-1 league artefact in the tree; the corpus lists it "
+            "as 'specced, pod spike' and names a pod spike as the closer",
+            "repo:scripts/ docs/ public/ council-os/ functions/ harness/")
+
+
+def p_402_health_split() -> tuple[str, str, str]:
+    """U-22: the 402 health split (60/130) and the stale-directory repoints."""
+    hits = repo_paths_containing("402-health", "health-split", "repoint")
+    if hits:
+        return ("LIVE", f"{len(hits)} artefact(s): {hits[0]}", f"repo:{hits[0]}")
+    return ("OPEN",
+            "no 402-health / health-split / repoint artefact in the tree; the corpus "
+            "lists 'measured, repair queue' with the repair queue as the closer",
+            "repo:scripts/ docs/ public/ council-os/ functions/ harness/")
+
+
+def p_corrections_published() -> tuple[str, str, str]:
+    """U-9: corrections #60-70 published (the corpus says 11 self-catches)."""
+    _, corr = fetch_json("/api/corrections")
+    if not corr:
+        return "OPEN", "the corrections endpoint did not answer", f"{BASE}/api/corrections"
+    entries = corr.get("corrections") or []
+    ids = {str(e.get("id", "")) for e in entries}
+    published_60_70 = sum(1 for i in range(60, 71) if any(x.endswith(f"-{i:02d}") for x in ids))
+    state = "LIVE" if len(entries) >= 70 else "OPEN"
+    return (state,
+            f"{len(entries)} correction(s) published, signature_state="
+            f"{corr.get('signature_state')}; {published_60_70} of the #60-70 range present",
+            f"{BASE}/api/corrections")
+
+
 OWNER_GATED = [
     ("U-5", "Signer ceremony + V-9 rotation", "OWNER",
      "a key and a named human at the ceremony", "not probeable: it needs a human and a key"),
@@ -261,11 +428,6 @@ OWNER_GATED = [
 ]
 
 AGENT_LANE = [
-    ("U-13", "Health Board daily habit + citation flywheel", "deploy+habit"),
-    ("U-14", "OpenShell adapters + Cedar translator", "agent builds"),
-    ("U-15", "Evaluation Cards schema adoption", "agent builds"),
-    ("U-18", "The chained loop v0.1 (fixed grader)", "agent+pod, 2-week gate"),
-    ("U-19", "Small-world lab T-1 league", "pod spike"),
     ("U-20", "1,050-move harvest deck + 1,000-move decks + 31-gate board", "execute continuously"),
 ]
 
@@ -277,10 +439,16 @@ PROBED = [
     ("U-13a", "Agent skills published (12 skills)", p_skills),
     ("U-21", "OpenTimestamps: every published proof Bitcoin-attested", p_ots_manifest),
     ("U-9a", "Corrections published and signed", p_completion_ledger),
-    ("U-10a", "Namespace consolidation 4->1 in the published tree", p_namespace),
+    ("U-10a", "Namespace consolidation: the com.councilof/* DNS TXT claim", p_namespace_dns),
+    ("U-10c", "No published artefact still claims a com.councilof.* identifier", p_namespace_tree),
     ("U-14a", "OpenShell adapter built, with a witness capture", p_openshell_adapter),
     ("U-14b", "Cedar policy set governing the GSPC route", p_cedar_policy),
     ("U-15a", "Evaluation Cards schema published", p_evaluation_cards),
+    ("U-9b", "Corrections #60-70 published", p_corrections_published),
+    ("U-13b", "Ecosystem Health Board + citation flywheel", p_ecosystem_health_board),
+    ("U-18a", "The chained loop v0.1 (fixed grader)", p_chained_loop),
+    ("U-19a", "Small-world lab T-1 league", p_small_world_league),
+    ("U-22", "402 health split + stale-directory repoints", p_402_health_split),
 ]
 
 
@@ -341,6 +509,20 @@ def audit_faults(rows: list[dict]) -> list[str]:
     faults = []
     for r in rows:
         ident = r.get("id", "?")
+        if r.get("state") == "LIVE":
+            rec = (r.get("receipt") or "").strip()
+            # A LIVE box that names a repo path must point at a path that EXISTS.
+            # This is the CJ-50 shape: the corpus called a prototype BUILT and the
+            # estate's own table found no artefact anywhere. A probe that claims
+            # LIVE for a path that is not in the tree is the same error, caught.
+            if rec.startswith("repo:"):
+                target = rec[len("repo:"):].strip()
+                target = target.split(" ", 1)[0]
+                if target.endswith("/"):
+                    if not (REPO / target).is_dir():
+                        faults.append(f"{ident} is LIVE but its receipt path {target!r} is not in the tree")
+                elif not (REPO / target).exists():
+                    faults.append(f"{ident} is LIVE but its receipt path {target!r} is not in the tree")
         if r.get("state") not in STATE_VOCABULARY:
             faults.append(f"{ident} invented the state {r.get('state')!r}")
         if r.get("state") == "LIVE" and not (r.get("measured") or "").strip():
@@ -460,6 +642,16 @@ def selftest() -> int:
         fails.append("the counts rule did not catch a wrong total")
     if not counts_consistent({**c, "live": c["live"] + 1}, real["items"]):
         fails.append("the counts rule did not catch a wrong per-state count")
+    # 9c. and the counterexample: a LIVE row whose repo receipt points at a path
+    # that is NOT in the tree must be caught. This is the CJ-50 shape: the corpus
+    # called a prototype BUILT and the estate's own table found no artefact
+    # anywhere. A probe that claims LIVE for a path that is not in the tree is the
+    # same error, and the audit has to refuse it.
+    ghost = {"id": "X-7", "state": "LIVE", "measured": "a prototype that does not exist",
+             "receipt": "repo:docs/measurement/NO-SUCH-ARTEFACT.md"}
+    if not audit_faults([ghost]):
+        fails.append("the audit did not catch a LIVE row whose repo receipt path is absent")
+
     # 10. the rendered markdown must carry the same numbers as the JSON
     md = render_md(real)
     if f"{c['total']} items" not in md:
