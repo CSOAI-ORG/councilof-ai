@@ -150,7 +150,10 @@ const EXISTING = [
   "/sov-town-lab   /gspc-arena?view=towns  308",
   "/sov-towns      /gspc-arena?view=towns  308",
   "/towns          /gspc-arena?view=towns  308",
-  "/globe          /globe3d.html           308",
+  // 2026-11-02: /globe serves WorldGlobe again (the app route). The static splash that
+  // owned this door is quarantined from public/ like govbench/provbench; the old
+  // /globe.html URL keeps resolving into the app route.
+  "/globe.html     /globe                  308",
   "/byzantine            /council   308",
   "/byzantine-consensus  /council   308",
   "/bft                  /council   308",
@@ -437,7 +440,6 @@ const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([
   "/404",        // hosting fallback; intentionally exists outside the SPA
   "/advisory",   // reviewed legacy hand-off page
   "/benchmarks", // static-first benchmark registry
-  "/globe",      // exact /globe -> /globe3d.html redirect owns this door
   "/governance", // static discovery bundle (#2777) owns this door; app route retired
 ]);
 const publicHtmlRouteCollisions = routes
