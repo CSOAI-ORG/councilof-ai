@@ -158,6 +158,11 @@
         "id": "x402-bazaar-census",
         "superseded_by": "x402-bazaar-conformance",
         "note": "replaced by the daily conformance census; the successor carries a dated release every day, this one does not. Not current — do not quote its date as a measurement."
+      },
+      {
+        "id": "gspc-gap-index",
+        "superseded_by": "https://councilof.ai/api/gspc",
+        "note": "the weekly hollow-claim tape stopped in 2026-W36 and its producer is no longer in the repository. Its rows were a curated per-week selection, not a value derivable from the board, so it is not rebuilt here. The live substitute for what is hollow is the board's own declared-slot list at GET /api/gspc — quote totals.unmeasured_axes and the UNMEASURED axes, never this dataset's date."
       }
     ]
   },
