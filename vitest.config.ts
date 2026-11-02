@@ -34,6 +34,7 @@ export const NODE_TEST_FILES = [
   'scripts/review/first-ask-completion.test.mjs',
   'scripts/review/pages-bind-missing-namespaces.test.mjs',
   'scripts/review/pages-release-target.test.mjs',
+  'scripts/review/pages-prune-deployments.test.mjs',
   // The published-pin liveness gate: a node:test file vitest cannot collect, named here so
   // pr-gates.yml runs it under `node --test` instead of leaving it collected-and-red.
   'scripts/review/published-pins-liveness.test.mjs',
