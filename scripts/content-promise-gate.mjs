@@ -37,6 +37,11 @@
  *      (Persona audit T04, 2026-10-06: the Company menu linked /trust-center and the
  *      footer linked /dpa/, both withdrawn.)
  *
+ *   9. /products chrome names no sov-* path or label (12 Oct 2026, public-names lock). Every
+ *      href/src, title/aria-label/alt and visible word on the rendered /products page is checked for
+ *      a `sov-` token. A signed envelope's own body (schema "csoai.sov-signal-index/1") is data, not
+ *      chrome, and is not read. (Numbered 9 to match the collect-all pack, which adds check 8.)
+ *
  * SELFTEST. `--selftest` runs every check against planted fixtures and asserts
  * each one goes red on the violation AND green on the honest form. A gate that
  * has never been seen failing is decoration.
@@ -144,6 +149,27 @@ export function navHrefs(source) {
   let m;
   while ((m = re.exec(source)) !== null) if (!m[2].startsWith("//")) out.push(m[2]);
   return [...new Set(out)];
+}
+
+/** 9: a `sov-` token (path or label) in /products chrome. */
+export const SOV_TOKEN = /\bsov-[a-z0-9]/i;
+export function isProductsPage(rel) {
+  return /(?:^|\/)products(?:\/index)?\.html$/.test(String(rel).replace(/\\/g, "/"));
+}
+export function checkProductsChromeNoSov(html, rel = "products/index.html") {
+  if (!isProductsPage(rel)) return [];
+  const out = [];
+  const attr = /\b(href|src|title|aria-label|alt)\s*=\s*("([^"]*)"|'([^']*)')/gi;
+  let m;
+  const seen = new Set();
+  const body = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ").replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ");
+  while ((m = attr.exec(body)) !== null) {
+    const v = m[3] ?? m[4] ?? "";
+    if (SOV_TOKEN.test(v) && !seen.has(v)) { seen.add(v); out.push(`${rel}: /products chrome ${m[1]}="${v}" names a sov-* path or label (public-names lock); link the public name, e.g. /signals/coverage-index.signed.json`); }
+  }
+  const t = visibleText(html).match(new RegExp(`.{0,40}${SOV_TOKEN.source}[^\\s]*.{0,20}`, "i"));
+  if (t) out.push(`${rel}: /products visible text names a sov-* label (public-names lock): "${t[0].trim()}"`);
+  return out;
 }
 
 /** 7: navigation never promotes a withdrawn destination. */
@@ -295,6 +321,7 @@ function run() {
     const html = readFileSync(f, "utf8");
     const rel = relative(REPO, f);
     findings.push(...checkOneMain(html, rel));
+    findings.push(...checkProductsChromeNoSov(html, rel));
     findings.push(...checkRawLabelsRendered(html, rel));
     findings.push(...checkUniversalComparison(visibleText(html), rel));
   }
@@ -352,6 +379,15 @@ function selftest() {
 
   must("one main", checkOneMain("<main>a</main>"), false);
   must("two mains", checkOneMain("<main>a</main><main>b</main>"), true);
+
+  // 9. /products chrome: the row as served on 12 Oct 2026 is red; the public name is green.
+  const fillLive = '<li data-testid="fill-row-coverage-index"><a href="/signals/sov-signal.signed.json" class="font-semibold">Coverage index</a><span>live</span></li>';
+  const fillFixed = '<li data-testid="fill-row-coverage-index"><a href="/signals/coverage-index.signed.json" class="font-semibold">Coverage index</a><span>live</span></li>';
+  must("/products links a sov-* path (as served 12 Oct)", checkProductsChromeNoSov(fillLive, "dist/client/products/index.html"), true);
+  must("/products links the coverage index by its public name", checkProductsChromeNoSov(fillFixed, "dist/client/products/index.html"), false);
+  must("/products visible sov-* label", checkProductsChromeNoSov("<p>Read the SOV-signal index</p>", "dist/client/products/index.html"), true);
+  must("a sov-* schema inside JSON-LD is data, not chrome", checkProductsChromeNoSov('<script type="application/ld+json">{"schema":"csoai.sov-signal-index/1"}</script><p>Coverage index</p>', "dist/client/products/index.html"), false);
+  must("check 9 is scoped to /products", checkProductsChromeNoSov(fillLive, "dist/client/signals/index.html"), false);
 
   if (bad) { console.error(`✖ content-promise-gate selftest FAILED (${bad})`); process.exit(1); }
   console.log("✓ content-promise-gate selftest: every check goes red on its violation and green on the honest form");

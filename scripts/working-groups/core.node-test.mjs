@@ -29,7 +29,7 @@ test("axis/group/status filters and an authoritative empty result",()=>{
   assert.throws(()=>selectDocuments(catalog,{query:"x".repeat(201)}),/200/);
 });
 test("unknown groups, moving sources, duplicate IDs and unsupported statuses fail validation",()=>{
-  for(const change of [d=>d.groupId="made-up",d=>d.source.commit="master",d=>d.source.path="../secret",d=>d.status="certified",d=>d.version=2]){
+  for(const change of [d=>d.groupId="made-up",d=>d.source.commit="master",d=>d.source.path="../secret",d=>d.status="certified",d=>d.version+=1]){
     const x=structuredClone(catalog);change(x.documents[0]);assert.throws(()=>validateCatalog(x));
   }
   const x=structuredClone(catalog);x.documents.push(x.documents[0]);assert.throws(()=>validateCatalog(x));
@@ -70,7 +70,7 @@ test("real stdio MCP handshake lists only read and unsent-draft tools; invalid i
   try{
     await client.connect(transport);
     const list=await client.listTools();
-    assert.deepEqual(list.tools.map(t=>t.name).sort(),["working_group_documents","working_group_review_draft"]);
+    assert.deepEqual(list.tools.map(t=>t.name).sort(),["working_group_documents","working_group_research","working_group_review_draft"]);
     for(const tool of list.tools){assert.equal(tool.annotations.readOnlyHint,true);assert.equal(tool.annotations.openWorldHint,false);}
     const r=await client.callTool({name:"working_group_documents",arguments:{query:"effect-binding"}});
     assert.equal(r.structuredContent.documents[0].groupId,"agent-control");
