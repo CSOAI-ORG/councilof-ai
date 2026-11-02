@@ -61,7 +61,7 @@ export const REACH_SURFACES: ReachSurface[] = [
     label: "Zenodo DOI (unavailable)",
     href: "/interop/zenodo-status.json",
     kind: "Archive",
-    note: "DOI 10.5281/zenodo.21991104 from live GET /api/gspc. Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
+    note: "DOI 10.5281/zenodo.21991104 from live GET /api/gspc. Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json).",
   },
 ];
 
