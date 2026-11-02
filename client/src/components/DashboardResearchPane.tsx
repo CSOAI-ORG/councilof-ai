@@ -9,6 +9,40 @@ export function researchPlanUrl(hostname?: string): string {
     : "/api/research-plan";
 }
 
+export function watchdogSourcesUrl(hostname?: string): string {
+  return hostname === "localhost" || hostname === "127.0.0.1"
+    ? "https://councilof.ai/api/watchdog-sources"
+    : "/api/watchdog-sources";
+}
+
+type WatchdogSource = {
+  id: string;
+  publisher: string;
+  title: string;
+  source_role: string;
+  url: string;
+  rights_url: string;
+  watch: boolean;
+  coverage_note: string;
+  reuse_note: string;
+  ingestion_gate: string;
+  availability_state: string;
+  endpoint_http_status: number | null;
+  endpoint_checked_at: string | null;
+};
+type WatchdogSourceReply = {
+  schema?: string;
+  state?: string;
+  observed_at?: string | null;
+  freshness_state?: string;
+  summary?: {
+    registered_sources: number;
+    monitored_sources: number;
+    reachable_source_pages: number;
+    redirected_source_pages?: number;
+  };
+  sources?: WatchdogSource[];
+};
 type ResearchSource = {
   id: string;
   publisher: string;
@@ -47,6 +81,10 @@ type ResearchReply = {
   plans?: ResearchPlan[];
 };
 
+function endpointState(value?: string): string {
+  return (value ?? "UNMEASURED").replaceAll("_", " ").toLowerCase();
+}
+
 function measuredWhen(value?: Record<string, string>): string {
   if (!value) return "measurement time not supplied";
   return value.observed_at ?? value.observed_on ?? value.not_after ?? value.state ?? "UNCHECKABLE";
@@ -56,6 +94,8 @@ export default function DashboardResearchPane() {
   const [reply, setReply] = useState<ResearchReply | null>(null);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
+  const [sourceCoverage, setSourceCoverage] = useState<WatchdogSourceReply | null>(null);
+  const [sourceCoverageError, setSourceCoverageError] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -72,6 +112,25 @@ export default function DashboardResearchPane() {
       })
       .catch((reason: unknown) => {
         if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "Research plan unavailable.");
+      });
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(watchdogSourcesUrl(window.location.hostname), {
+      signal: controller.signal,
+      headers: { accept: "application/json" },
+    })
+      .then(async (response) => {
+        const value = (await response.json()) as WatchdogSourceReply;
+        if (!response.ok || value.schema !== "csoai.watchdog-source-coverage/0.1" || value.state !== "READY" || !Array.isArray(value.sources)) {
+          throw new Error("Watchdog source status is unavailable; no case imports are assumed.");
+        }
+        setSourceCoverage(value);
+      })
+      .catch((reason: unknown) => {
+        if (!controller.signal.aborted) setSourceCoverageError(reason instanceof Error ? reason.message : "Watchdog source status unavailable.");
       });
     return () => controller.abort();
   }, []);
@@ -109,6 +168,57 @@ export default function DashboardResearchPane() {
             <li key={step} className="rounded-lg bg-white/75 px-3 py-2"><strong className="mr-1 text-emerald-900">{index + 1}.</strong>{step}</li>
           ))}
         </ol>
+      </section>
+
+      <section aria-label="Public incident source coverage" className="mt-6 rounded-2xl border border-slate-900/10 bg-white p-5 shadow-sm">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h3 className="text-base font-semibold text-slate-950">Public incident and threat source watch</h3>
+            <p className="mt-1 max-w-3xl text-[13px] leading-relaxed text-slate-600">
+              Seed coverage inventory. Checks public source pages with HTTP HEAD only; it does not read incidents,
+              reports, snapshots or attachments. Page reachability does not mean the incident data is complete or current.
+            </p>
+          </div>
+          {sourceCoverage && <span className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-700">
+            {sourceCoverage.freshness_state ?? "unmeasured"}
+          </span>}
+        </div>
+
+        {sourceCoverageError && <div role="alert" className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-950">{sourceCoverageError}</div>}
+        {!sourceCoverage && !sourceCoverageError && <p role="status" className="mt-4 text-sm text-slate-600">Reading <code>GET /api/watchdog-sources</code>…</p>}
+        {sourceCoverage && <>
+          <p className="mt-3 text-[12px] text-slate-700" aria-live="polite">
+            {sourceCoverage.summary?.reachable_source_pages ?? 0} direct 2xx ·
+            {" "}{sourceCoverage.summary?.redirected_source_pages ?? 0} redirected ·
+            {" "}{sourceCoverage.summary?.monitored_sources ?? 0} source pages checked ·
+            {" "}{sourceCoverage.summary?.registered_sources ?? sourceCoverage.sources?.length ?? 0} sources listed ·
+            {" "}observed {sourceCoverage.observed_at ?? "not recorded"}.
+          </p>
+          <p className="mt-1 text-[12px] text-amber-900">
+            No incident records are collected or routed by this monitor. Reuse review is required before any incident record enters a case workflow or affects a GSPC score.
+          </p>
+          <ul className="mt-4 grid gap-2 md:grid-cols-2">
+            {sourceCoverage.sources?.map((source) => (
+              <li key={source.id} className="rounded-xl border border-slate-900/10 bg-slate-50 p-3">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <a href={source.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-900 underline underline-offset-4">
+                    {source.publisher}: {source.title}<ExternalLink className="h-3 w-3" aria-hidden="true" />
+                  </a>
+                  <span className="rounded-full bg-white px-2 py-1 text-[10px] font-semibold uppercase text-slate-700">
+                    {endpointState(source.availability_state)}{source.endpoint_http_status ? " · " + source.endpoint_http_status : ""}
+                  </span>
+                </div>
+                <p className="mt-2 text-[12px] leading-relaxed text-slate-700">{source.coverage_note}</p>
+                <details className="mt-2 text-[11px] text-slate-600">
+                  <summary className="cursor-pointer font-semibold text-slate-800">Reuse gate and source terms</summary>
+                  <p className="mt-2 leading-relaxed">{source.reuse_note}</p>
+                  <p className="mt-1 font-medium">Ingestion: {endpointState(source.ingestion_gate)}</p>
+                  <a href={source.rights_url} target="_blank" rel="noreferrer" className="mt-1 inline-block text-emerald-900 underline underline-offset-4">Read source terms or methodology</a>
+                </details>
+              </li>
+            ))}
+          </ul>
+        </>}
       </section>
 
       <div className="mt-6 flex flex-wrap items-end justify-between gap-3">
