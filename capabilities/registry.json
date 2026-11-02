@@ -2905,6 +2905,19 @@
       "payment": "free"
     },
     {
+      "id": "api-watchdog-sources",
+      "protocols": [
+        "http"
+      ],
+      "title": "Watchdog sources",
+      "description": "GET /api/watchdog-sources — public-source inventory and last HEAD-only availability snapshot. The response includes source and rights links plus ingestion gates; it never fetches or stores incident records, report text, personal data, or snapshots, and it performs no classification, assignment, GSPC write, or action. Human review remains required before ingestion.",
+      "endpoint": "/api/watchdog-sources",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-wave-dashboard",
       "protocols": [
         "http"

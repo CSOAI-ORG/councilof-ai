@@ -432,9 +432,6 @@
       "id": "benchmark-quality-register",
       "kind": "a2a_skill",
       "name": "Benchmark-quality register",
-      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
@@ -456,10 +453,6 @@
         "benchmark-quality",
         "reproducibility",
         "governance"
-      ],
-      "examples": [
-        "SendMessage with Part.data {\"skill\":\"benchmark-quality-register\",\"input\":{}}",
-        "GET /api/benchmark-quality"
       ]
     },
     {
@@ -689,9 +682,6 @@
       "id": "gspc-board",
       "kind": "a2a_skill",
       "name": "Signed GSPC Board",
-      "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
@@ -712,11 +702,6 @@
         "measurement",
         "governance",
         "verification"
-      ],
-      "examples": [
-        "SendMessage with Part.data {\"skill\":\"gspc-board\",\"input\":{}}",
-        "Legacy compatibility: one text Part containing exactly \"board\"",
-        "GET /api/gspc — the same board, outside A2A"
       ]
     },
     {
@@ -1408,9 +1393,6 @@
       "path": "/api/badge",
       "method": "GET",
       "name": "Badge",
-      "description": "",
-      "description_state": "UNDOCUMENTED",
-      "audience": "agent",
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
@@ -6600,6 +6582,35 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "source": "functions/api/waitlist.ts"
+    },
+    {
+      "id": "api-watchdog-sources",
+      "kind": "http",
+      "path": "/api/watchdog-sources",
+      "method": "GET",
+      "name": "Watchdog sources",
+      "description": "GET /api/watchdog-sources — public-source inventory and last HEAD-only availability snapshot. The response includes source and rights links plus ingestion gates; it never fetches or stores incident records, report text, personal data, or snapshots, and it performs no classification, assignment, GSPC write, or action. Human review remains required before ingestion.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.watchdog-source-coverage/0.1",
+        "csoai.watchdog-source-registry/0.1",
+        "csoai.watchdog-source-status/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/watchdog-sources",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/watchdog-sources.ts"
     },
     {
       "id": "api-wave-dashboard",
