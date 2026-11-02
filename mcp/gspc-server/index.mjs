@@ -849,6 +849,9 @@ const HANDLERS = {
   evidence_bundle_preview: (a) => doorTool("evidence_bundle_preview", a),
   // GSPC Route (decide-only): the door answers it (functions/_lib/route), so the two cannot disagree.
   route: (a) => doorTool("route", a),
+  // framework_readiness: the door answers it (functions/mcp/_readiness.ts), so the stdio copy
+  // cannot drift from the 49-item checklist the HTTP door serves.
+  framework_readiness: (a) => doorTool("framework_readiness", a),
 };
 
 // The axis family: one free tool per GSPC board axis, named for the axis it answers
@@ -915,6 +918,8 @@ function summaryLine(name, payload) {
       return `${payload.state ?? "?"}${payload.reason ? " — " + payload.reason : ""} — ${payload.relevant_signed_cards ?? 0} already-signed card(s) relevant-to the obligation; observations only, never a determination.${payload.review_note ? " " + payload.review_note : ""}`;
     case "route":
       return `${payload.state ?? "?"}${payload.chosen ? " — " + payload.chosen.id + " on basis " + payload.chosen.choice_basis : ""}; separation ${payload.separation ?? "?"}. Unsigned decide-only preview; routing is not ranking.`;
+    case "framework_readiness":
+      return `${payload.state ?? "?"} — ${payload.framework_label ?? payload.framework ?? "?"}: ${payload.item_count ?? "?"} items; a checklist is preparation, never a determination.`;
     case "measurement_index":
     case "verify_capsule":
     case "server_evidence":
