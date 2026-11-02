@@ -116,6 +116,15 @@ export interface AxisScore {
   // Model-comparison axes use signed per-model cards instead and leave this absent.
   run_attestation?: "ED25519_SIGNED" | "CONTENT_ADDRESSED_UNSIGNED";
 
+  // -- subject-axis presence banks (added 2026-11-02) ------------------------
+  // Additive and optional. A subject axis is a measured subject bank: no fleet,
+  // no leader, no accuracy. "rate" is the fraction of the frozen frame meeting a
+  // declared presence bar. It is NOT accuracy and must never be aggregated as one.
+  rate?: number;
+  rate_scale?: "fraction";
+  rate_rule?: string;
+  frame_sha256?: string;
+
   // How to read a null in per_model. null and 0.0 are different facts (undefined vs
   // measured-zero) and an axis that carries both states which is which.
   null_grammar?: string;
