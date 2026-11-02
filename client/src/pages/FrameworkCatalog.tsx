@@ -95,7 +95,7 @@ export default function FrameworkCatalog() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search frameworks…"
+            aria-label="Search framework references" placeholder="Search frameworks…"
             className="w-64 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-emerald-400 focus:outline-none"
           />
           <div className="flex flex-wrap gap-2">
