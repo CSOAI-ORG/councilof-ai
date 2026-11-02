@@ -6,6 +6,12 @@ import { chargeSovereign } from "../lib/sovCharge";
 import { askSovereign } from "../lib/sovAsk";
 import AISystemNotice from "../components/AISystemNotice";
 const GW = "/api";
+// Withdrawn mappings intentionally 404. Link only to reviewed, published guides.
+const PUBLISHED_GUIDES: Record<string, string> = {
+  "eu-ai-act": "/frameworks/eu-ai-act",
+  "nist-ai-rmf": "/frameworks/nist",
+  "iso-42001": "/frameworks/iso-42001",
+};
 async function askSov(q: string): Promise<string> {
   // Route through the CSOAI-Sovereign guard (role-framed + companion-bleed rejected).
   const r = await askSovereign(q, { fallback: "" });
@@ -37,8 +43,8 @@ function Hero() {
     <section className="border-b border-emerald-500/15 bg-[#03110b]">
       <div className="mx-auto max-w-6xl px-6 pt-14 pb-8 text-center">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · the framework hive</p>
-        <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight text-emerald-50">Every framework. <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Everything collected.</span></h1>
-        <p className="mx-auto mt-3 max-w-2xl text-emerald-100/75">Click any framework and your Council assistant brings the whole hive together — who must comply, the obligations, penalties, sectors, cyber threats, crosswalks, and the deadline clock. Then it helps you simulate, measure where you stand, and get trained.</p>
+        <h1 className="mt-3 text-4xl font-black tracking-tight text-emerald-50">AI governance frameworks <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">in one place.</span></h1>
+        <p className="mx-auto mt-3 max-w-2xl text-emerald-100/75">Browse collected framework summaries, scope, obligations and related references. Use them to orient a review, then check the official instrument and any published measurement. Collection is not a claim of complete coverage or compliance.</p>
       </div>
     </section>
   );
@@ -56,7 +62,7 @@ function Card({ f }: { f: HiveFramework }) {
       <p className="mt-1 flex-1 text-[13px] leading-snug text-emerald-100/70">{f.summary.slice(0, 130)}…</p>
       <div className="mt-3 flex items-center justify-between text-[11px]">
         <span className="text-emerald-300/60">{f.authority}</span>
-        {d != null && d > 0 ? <span className="rounded-full bg-amber-400/15 px-2 py-0.5 font-bold text-amber-200">{d}d to deadline</span> : <span className="text-emerald-300/40">in force</span>}
+        {d != null && d > 0 ? <span className="rounded-full bg-amber-400/15 px-2 py-0.5 font-bold text-amber-200">{d}d to listed deadline</span> : <span className="text-emerald-300/40">reference summary</span>}
       </div>
     </Link>
   );
@@ -99,22 +105,22 @@ function Detail({ f }: { f: HiveFramework }) {
           You are interacting with an AI system.
         </div>
         <div className="mt-2 flex gap-2">
-          <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") ask(); }} placeholder={"Ask anything about " + f.name + "…"} className="flex-1 rounded-lg border border-emerald-400/30 bg-black/30 px-3 py-2 text-sm text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
+          <input aria-label={"Ask about " + f.name} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") ask(); }} placeholder={"Ask anything about " + f.name + "…"} className="min-w-0 flex-1 rounded-lg border border-emerald-400/30 bg-black/30 px-3 py-2 text-sm text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
           <button onClick={() => ask()} disabled={busy} className="rounded-lg bg-emerald-500 px-3 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{busy ? "…" : "Ask"}</button>
         </div>
         {ans && <div className="mt-3 max-h-56 overflow-y-auto whitespace-pre-wrap rounded-lg bg-black/30 px-3 py-2 text-sm leading-relaxed text-emerald-50/90">{ans}</div>}
         <div className="mt-3 flex flex-wrap gap-2">
-          <a href={"/gspc-arena?demo=" + simQ} className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">▶ Run a compliance simulation</a>
-          <a href="/assess" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Get compliant — 2-min check</a>
+          <a href={"/gspc-arena?demo=" + simQ} className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">▶ Explore a simulation</a>
+          <a href="/assess" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Start a scoped measurement</a>
           <a href="/academy" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Get trained</a>
           <a href="/system-card" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card</a>
-          <a href={"/frameworks/" + f.slug} className="rounded-full border border-emerald-400/25 px-3 py-1.5 text-xs text-emerald-200/80 hover:bg-white/5">Full clause-by-clause crosswalk →</a>
+          {PUBLISHED_GUIDES[f.slug] && <a href={PUBLISHED_GUIDES[f.slug]} className="rounded-full border border-emerald-400/25 px-3 py-1.5 text-xs text-emerald-200/80 hover:bg-white/5">Read the published CSOAI guide →</a>}
         </div>
       </div>
 
       {/* Collected grid */}
       <div className="mt-8 grid gap-5 md:grid-cols-2">
-        <Panel title="Who must comply">
+        <Panel title={f.status === "Binding" || f.status === "Cyber" ? "Who is in scope" : "Who may use this reference"}>
           <ul className="space-y-1.5 text-sm text-emerald-100/85">{f.whoMustComply.map((w) => <li key={w} className="flex gap-2"><span className="text-emerald-400">▸</span>{w}</li>)}</ul>
         </Panel>
         <Panel title="Penalties">
@@ -129,7 +135,8 @@ function Detail({ f }: { f: HiveFramework }) {
         <Panel title="Threats & cybersecurity it addresses">
           <div className="flex flex-wrap gap-1.5">{f.threats.map((t) => <span key={t} className="rounded-full border border-rose-400/25 bg-rose-500/5 px-2.5 py-1 text-[12px] text-rose-100/80">{t}</span>)}</div>
         </Panel>
-        <Panel title="Crosswalks — comply once, cover many">
+        <Panel title="Related framework references">
+          <p className="mb-3 text-xs leading-relaxed text-emerald-100/70">Related references support comparison. They do not establish that satisfying one instrument satisfies another.</p>
           <div className="flex flex-wrap gap-1.5">{f.crosswalk.map((c) => { const rel = HIVE.find((h) => h.name === c); return rel ? <Link key={c} href={"/hive/" + rel.slug} className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-1 text-[12px] font-semibold text-emerald-100 hover:bg-emerald-500/20">{c} →</Link> : <span key={c} className="rounded-full border border-emerald-500/20 px-2.5 py-1 text-[12px] text-emerald-100/70">{c}</span>; })}</div>
         </Panel>
         <Panel title="CSOAI Layer 0 mapping" wide>
@@ -180,7 +187,7 @@ export default function FrameworkHive() {
       <section className="mx-auto max-w-6xl px-6 py-8">
         <div className="mx-auto mb-6 max-w-md">
           <AISystemNotice route="/hive/:slug" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search frameworks, sectors, threats…" className="w-full rounded-xl border border-emerald-500/25 bg-[#05140d] px-4 py-2.5 text-sm text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
+          <input aria-label="Search framework summaries" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search frameworks, sectors, threats…" className="w-full rounded-xl border border-emerald-500/25 bg-[#05140d] px-4 py-2.5 text-sm text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list.map((f) => <Card key={f.slug} f={f} />)}</div>
         <p className="mt-8 text-center text-xs text-emerald-300/50">{HIVE.length} framework entries collected · crosswalks are mappings, not compliance determinations · verify any published card separately</p>
