@@ -38,16 +38,19 @@ const TONE: Record<string, string> = {
 };
 
 /**
- * `embedded`: rendered as a tab of the World maps page (/map). The tab page owns the hero and
- * the document title, so this body renders without either — the same contract as RelevanceMap.
+ * `embedded`: rendered as the "By region" tab of the World maps page (/map). The tab owns the
+ * heading and intro, so the page's own hero and document title stay off — the same contract as
+ * RelevanceMap's embedded mode.
  */
-export default function RegionsMap({ embedded = false }: { embedded?: boolean; params?: unknown } = {}) {
-  useEffect(() => { if (!embedded) document.title = "Regulatory map by region - EU / US / Global | CSOAI"; }, [embedded]);
+export default function RegionsMap({ embedded = false }: { embedded?: boolean } = {}) {
+  useEffect(() => {
+    if (!embedded) document.title = "Regulatory map by region - EU / US / Global | CSOAI";
+  }, [embedded]);
   const [r, setR] = useState("eu");
   const region = REGIONS.find((x) => x.id === r) || REGIONS[0];
   return (
-    <div className={embedded ? "" : "min-h-screen bg-white"}>
-      {!embedded && (
+    <div className={embedded ? "bg-white" : "min-h-screen bg-white"}>
+      {embedded ? null : (
         <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
           <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
           <div className="relative max-w-6xl mx-auto px-6">
@@ -57,7 +60,7 @@ export default function RegionsMap({ embedded = false }: { embedded?: boolean; p
           </div>
         </section>
       )}
-      <section className="max-w-6xl mx-auto px-6 py-10">
+      <section className={embedded ? "py-2" : "max-w-6xl mx-auto px-6 py-10"}>
         <div className="flex flex-wrap gap-2">
           {REGIONS.map((x) => (
             <button key={x.id} onClick={() => setR(x.id)} className={"rounded-full border px-5 py-2 text-sm font-bold transition-colors " + (r === x.id ? "border-emerald-400 bg-emerald-600 text-white" : "border-gray-200 text-gray-600 hover:bg-gray-50")}>{x.name}</button>
@@ -75,10 +78,14 @@ export default function RegionsMap({ embedded = false }: { embedded?: boolean; p
             </div>
           ))}
         </div>
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className={embedded ? "mt-4 flex flex-wrap gap-2" : "mt-8 flex flex-wrap gap-3"}>
           <a href="/law" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Your exact jurisdiction stack -&gt;</a>
-          <a href="/map" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The relevance map -&gt;</a>
-          <a href="/sectors" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">By sector -&gt;</a>
+          {embedded ? null : (
+            <>
+              <a href="/map?tab=bridges" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The relevance map -&gt;</a>
+              <a href="/sectors" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">By sector -&gt;</a>
+            </>
+          )}
         </div>
       </section>
     </div>

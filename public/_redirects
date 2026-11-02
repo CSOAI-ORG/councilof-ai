@@ -251,7 +251,7 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- client <Redirect> stub routes: hop at the edge, not in the bundle (23) ---
+# --- client <Redirect> stub routes: hop at the edge, not in the bundle (27) ---
 /a2ui  /dashboard?tab=home  308
 /about-ceasai  /about-credential  308
 /attestation-network  /attestation  308
@@ -262,7 +262,10 @@
 /gspc-scoreboard  /dashboard?tab=board  308
 /leaderboard  /dashboard?tab=leaderboard  308
 /lookup  /gspc-verify  308
+/map-regions  /map?tab=regions  308
+/mcp-tools  /dashboard?tab=tools  308
 /public-dashboard  /transparency  308
+/real-world  /globe  308
 /regions  /map?tab=regions  308
 /relevance-map  /map?tab=bridges  308
 /risk-heatmap  /map?tab=risk  308
@@ -275,8 +278,9 @@
 /sovereign-pricing  /pricing  308
 /sovereign-twin  /me  308
 /world  /gspc-arena?view=globe  308
+/world-3d  /globe  308
 
-# --- every other concrete <Route> bare path → its prerendered trailing-slash (409) ---
+# --- every other concrete <Route> bare path → its prerendered trailing-slash (405) ---
 /ab-testing  /ab-testing/  308
 /accessibility  /accessibility/  308
 /accountability-loop  /accountability-loop/  308
@@ -516,11 +520,9 @@
 /lineage  /lineage/  308
 /live-ledger  /live-ledger/  308
 /map  /map/  308
-/map-regions  /map-regions/  308
 /marketing  /marketing/  308
 /maternal-covenant  /maternal-covenant/  308
 /mcp  /mcp/  308
-/mcp-tools  /mcp-tools/  308
 /me  /me/  308
 /measurement-capsules  /measurement-capsules/  308
 /measurements/disclosure-completeness  /measurements/disclosure-completeness/  308
@@ -585,7 +587,6 @@
 /rating-the-raters  /rating-the-raters/  308
 /reach  /reach/  308
 /readiness  /readiness/  308
-/real-world  /real-world/  308
 /receipt  /receipt/  308
 /recommendations  /recommendations/  308
 /rediscovered  /rediscovered/  308
@@ -679,7 +680,6 @@
 /why  /why/  308
 /why-csoai  /why-csoai/  308
 /workbench-paper  /workbench-paper/  308
-/world-3d  /world-3d/  308
 /world-data  /world-data/  308
 /wrappers  /wrappers/  308
 /x402-board  /x402-board/  308

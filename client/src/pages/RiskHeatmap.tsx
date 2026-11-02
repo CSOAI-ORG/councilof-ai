@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // CSOAI Risk Heatmap — HUNT_24 Tier-1 #4 (#1 requested enterprise GRC feature).
 // Interactive 5x5 likelihood x impact matrix with a plotted risk register.
@@ -39,26 +39,30 @@ function cellColor(score: number) {
 }
 
 /**
- * `embedded`: rendered as a tab of the World maps page (/map). The tab page owns the hero and
- * the document title, so this body renders without either — the same contract as RelevanceMap.
- * The worked-example note ships in BOTH modes: the register is illustrative, and saying so is
- * not a decoration, it is the honest label for what this page is.
+ * `embedded`: rendered as the "Risk matrix" tab of the World maps page (/map). The tab owns the
+ * heading and intro, so the page's own hero and document title stay off.
+ *
+ * The register below is a WORKED EXAMPLE — generic demonstration entries, not any organisation's
+ * data — and it says so on the page in both modes. It does not read or store anything.
  */
-export default function RiskHeatmap({ embedded = false }: { embedded?: boolean; params?: unknown } = {}) {
+export default function RiskHeatmap({ embedded = false }: { embedded?: boolean } = {}) {
+  useEffect(() => {
+    if (!embedded) document.title = "Risk heatmap - likelihood x impact, worked example | CSOAI";
+  }, [embedded]);
   const [sel, setSel] = useState<Risk | null>(RISKS[0]);
 
   const byCell = useMemo(() => {
     const m: Record<string, Risk[]> = {};
     RISKS.forEach((r) => {
       const k = r.likelihood + "-" + r.impact;
-      (m[k] || (m[k] = [])).push(r);
+      (m[k] = m[k] || []).push(r);
     });
     return m;
   }, []);
 
   return (
-    <div className={embedded ? "" : "min-h-screen bg-white"}>
-      {!embedded && (
+    <div className={embedded ? "bg-white" : "min-h-screen bg-white"}>
+      {embedded ? null : (
         <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-20">
           <div className="max-w-6xl mx-auto px-6">
             <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">Risk management</p>
@@ -68,14 +72,11 @@ export default function RiskHeatmap({ embedded = false }: { embedded?: boolean; 
         </section>
       )}
 
-      <section className="max-w-6xl mx-auto px-6 py-12 grid gap-8 lg:grid-cols-3">
-        <p className="lg:col-span-3 text-sm leading-relaxed text-gray-500" data-testid="risk-worked-example-note">
-          This matrix is a worked example: an illustrative register (R-01…R-08) with owners and
-          treatments, showing how the heatmap reads. It is not a claim about any real
-          deployment, and nothing on this page is a compliance verdict.
+      <section className={embedded ? "py-2" : "max-w-6xl mx-auto px-6 py-12 grid gap-8 lg:grid-cols-3"}>
+        <p className={embedded ? "mb-3 text-xs font-semibold text-gray-500 lg:col-span-3" : "lg:col-span-3 rounded-xl bg-amber-50 px-4 py-2 text-xs font-semibold text-amber-800"}>
+          Worked example — the register below holds generic demonstration entries, not any organisation's data.
         </p>
-        {/* Matrix */}
-        <div className="lg:col-span-2">
+        <div className={embedded ? "" : "lg:col-span-2"}>
           <div className="flex">
             <div className="flex items-center">
               <span className="rotate-180 text-xs font-semibold uppercase tracking-wide text-gray-500" style={{ writingMode: "vertical-rl" }}>Impact →</span>
