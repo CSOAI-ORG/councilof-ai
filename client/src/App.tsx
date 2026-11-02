@@ -329,7 +329,6 @@ const ModelRegistry = lazy(() => import("./pages/ModelRegistry"));
 const FrameworkCatalog = lazy(() => import("./pages/FrameworkCatalog"));
 const FrameworkPresence = lazy(() => import("./pages/FrameworkPresence"));
 const PolicyGenerator = lazy(() => import("./pages/PolicyGenerator"));
-const RiskHeatmap = lazy(() => import("./pages/RiskHeatmap"));
 const OsEnter = lazy(() => import("./pages/OsEnter"));
 const CouncilTour = lazy(() => import("./pages/CouncilTour"));
 const CouncilAcademy = lazy(() => import("./pages/CouncilAcademy"));
@@ -340,7 +339,6 @@ const SocialOS = lazy(() => import("./pages/SocialOS"));
 const CouncilMinds = lazy(() => import("./pages/CouncilMinds"));
 const TryCouncil = lazy(() => import("./pages/TryCouncil"));
 const Lineage = lazy(() => import("./pages/Lineage"));
-const RelevanceMap = lazy(() => import("./pages/RelevanceMap"));
 const Temples = lazy(() => import("./pages/Temples"));
 const Playbooks = lazy(() => import("./pages/Playbooks"));
 const Dragonfly = lazy(() => import("./pages/Dragonfly"));
@@ -387,6 +385,8 @@ const EmbedPage = lazy(() => import("./pages/EmbedPage"));
 const BadgeKit = lazy(() => import("./pages/BadgeKit"));
 const GetListed = lazy(() => import("./pages/GetListed"));
 const RealWorldMap = lazy(() => import("./pages/RealWorldMap"));
+const WorldMap = lazy(() => import("./pages/WorldMap"));
+const WorldGlobe = lazy(() => import("./pages/WorldGlobe"));
 const OnboardOS = lazy(() => import("./pages/OnboardOS"));
 const GovGraph = lazy(() => import("./pages/GovGraph"));
 const NetworkPage = lazy(() => import("./pages/NetworkPage"));
@@ -921,7 +921,11 @@ function AppShell() {
                   <Route path="/minds" component={CouncilMinds} />
                   <Route path="/try" component={TryCouncil} />
                   <Route path="/lineage" component={Lineage} />
-                  <Route path="/map" component={RelevanceMap} />
+                  {/* 2026-11-02 consolidation: one World maps page; /regions, /relevance-map and
+                      /risk-heatmap redirect into their tab (generated into public/_redirects by
+                      scripts/generate-redirects.mjs, whose 308s used to land on /<path>/
+                      directories that do not exist). */}
+                  <Route path="/map" component={WorldMap} />
                   <Route path="/temples" component={Temples} />
                   <Route path="/playbooks" component={Playbooks} />
                   <Route path="/dragonfly" component={Dragonfly} />
@@ -936,9 +940,10 @@ function AppShell() {
                   <Route path="/registers" component={Registers} />
                   <Route path="/signals/2026-09-24" component={SignedMillBatch20260924} />
                   <Route path="/signals" component={Signals} />
-                  <Route path="/regions" component={RegionsMap} />
-                  {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
-                  <Route path="/globe">{() => <Redirect to="/globe3d.html" />}</Route>
+                  <Route path="/regions">{() => <Redirect to="/map?tab=regions" />}</Route>
+                  {/* 2026-11-02: /globe serves WorldGlobe again (it had drifted to a bare redirect
+                      into the static globe3d.html, which stays up as the iframe WorldGlobe wraps). */}
+                  <Route path="/globe" component={WorldGlobe} />
                   <Route path="/registry" component={ContentReviewNotice} />
                   <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
                   <Route path="/checklist" component={EUActChecklist} />
@@ -1019,7 +1024,7 @@ function AppShell() {
                   <Route path="/four-wings" component={Dragonfly} />
                   <Route path="/industry-playbooks" component={Playbooks} />
                   <Route path="/framework-temples" component={Temples} />
-                  <Route path="/relevance-map" component={RelevanceMap} />
+                  <Route path="/relevance-map">{() => <Redirect to="/map?tab=bridges" />}</Route>
                   <Route path="/rediscovered" component={Lineage} />
                   <Route path="/voice" component={CouncilMinds} />
                   <Route path="/sov-towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
@@ -1027,7 +1032,7 @@ function AppShell() {
                   <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
                   <Route path="/cobol" component={CobolBridge} />
                   <Route path="/cobolbridge" component={CobolBridge} />
-                  <Route path="/risk-heatmap" component={RiskHeatmap} />
+                  <Route path="/risk-heatmap">{() => <Redirect to="/map?tab=risk" />}</Route>
                   <Route path="/webhooks" component={ContentReviewNotice} />
                   <Route path="/evidence" component={ContentReviewNotice} />
                   <Route path="/oscal" component={ContentReviewNotice} />

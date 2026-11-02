@@ -54,6 +54,20 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
   .filter((p, i, a) => a.indexOf(p) === i)
   .sort();
 
+// A route whose whole body is a client <Redirect> stub is not a page: the SPA renders
+// nothing at it, so the prerenderer would snapshot a bare hop and the bare→slash
+// canonicaliser below would canonicalise the stub to /<path>/ — a directory that does
+// not exist — which is exactly how /regions, /relevance-map and /risk-heatmap became
+// silent 404s (found 2026-11-02). Emit the hop as a real redirect rule instead, and
+// keep the stub off the bare→slash list.
+const REDIRECT_STUBS = new Map(
+  [...src.matchAll(
+    /<Route\s+path=["']([^"']+)["']>\s*\{\(\)\s*=>\s*<Redirect\s+to=["']([^"']+)["']\s*\/?\s*>\s*\}\s*<\/Route>/g,
+  )]
+    .map((m) => [m[1], m[2]])
+    .filter(([p]) => p.startsWith("/") && !p.includes(":") && !p.includes("*")),
+);
+
 const EXISTING = [
   // /gspc/field shipped for six hours on 2026-11-01 as a second, static board surface. It
   // duplicated the board page and its own Wilson bars (components/gspc/LivingBoard.tsx), which
@@ -150,7 +164,12 @@ const EXISTING = [
   "/sov-town-lab   /gspc-arena?view=towns  308",
   "/sov-towns      /gspc-arena?view=towns  308",
   "/towns          /gspc-arena?view=towns  308",
-  "/globe          /globe3d.html           308",
+  // 2026-11-02: /globe serves the WorldGlobe page again (client/src/pages/WorldGlobe.tsx,
+  // which itself wraps the static globe3d.html as its immersive layer). The exact
+  // /globe -> /globe3d.html 308 here used to shadow that route, and the stale
+  // public/globe.html shell behind it drifted from every live surface, so both went.
+  // public/globe3d.html stays: it is the iframe WorldGlobe mounts, not a door.
+  "/tool-commons   /dashboard?tab=tools  308",
   "/byzantine            /council   308",
   "/byzantine-consensus  /council   308",
   "/bft                  /council   308",
@@ -437,7 +456,6 @@ const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([
   "/404",        // hosting fallback; intentionally exists outside the SPA
   "/advisory",   // reviewed legacy hand-off page
   "/benchmarks", // static-first benchmark registry
-  "/globe",      // exact /globe -> /globe3d.html redirect owns this door
   "/governance", // static discovery bundle (#2777) owns this door; app route retired
 ]);
 const publicHtmlRouteCollisions = routes
@@ -457,10 +475,19 @@ const funcOwnsPath = (p) => {
   const rel = normFrom(p).replace(/^\//, "");
   return !!rel && existsSync(join(FUNCTIONS_DIR, rel + ".ts"));
 };
+// Stubs whose `from` a hand rule already claims are skipped here (first rule wins and
+// a duplicated `from` is exactly the drift this file exists to prevent); the rest are
+// emitted as real static rules so the hop happens at the edge, not after a 5 MB bundle.
+const REDIRECT_RULES = [...REDIRECT_STUBS.entries()]
+  .filter(([p]) => !CLAIMED_FROM.has(normFrom(p)))
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([p, to]) => `${p}  ${to}  308`);
+
 const ROUTE_SLASH = routes
   .map(normFrom)
   .filter((p) => p !== "/")
   .filter((p) => !CLAIMED_FROM.has(p))
+  .filter((p) => !REDIRECT_STUBS.has(p))
   .filter((p) => !RETIRED_CODENAME.test(p))
   .filter((p) => !publicOwnsPath(p))
   .filter((p) => !funcOwnsPath(p))
@@ -510,6 +537,9 @@ const STATIC_RULES = [
   "# --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---",
   ...PERSONA_SLASH.flatMap((p) => [`/${p}  /${p}/  308`]),
   ...PERSONA_FOR_SLASH.map((p) => `/for/${p}  /for/${p}/  308`),
+  "",
+  `# --- client <Redirect> stub routes: hop at the edge, not in the bundle (${REDIRECT_RULES.length}) ---`,
+  ...REDIRECT_RULES,
   "",
   `# --- every other concrete <Route> bare path → its prerendered trailing-slash (${ROUTE_SLASH.length}) ---`,
   ...ROUTE_SLASH,
