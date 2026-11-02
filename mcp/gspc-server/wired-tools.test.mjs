@@ -88,7 +88,9 @@ const routeServer = createServer((req, res) => {
           ? { state: "NOT_MEASURED", doctrine: "measurement, not endorsement", capsules: [], n_capsules: 0 }
           : name === "verify_capsule"
             ? { state: "UNCHECKABLE", doctrine: "measurement, not endorsement", reason: "fixture" }
-            : { state: "PUBLISHED", doctrine: "measurement, not endorsement", n_batches: 0, batches: [] };
+            : name === "framework_readiness"
+              ? { state: "OK", framework: m.params?.arguments?.framework ?? null, header: "fixture — a readiness checklist; it does not certify compliance", not_a_certification: true, item_count: 6, items: [] }
+              : { state: "PUBLISHED", doctrine: "measurement, not endorsement", n_batches: 0, batches: [] };
       answer(res, 200, { jsonrpc: "2.0", id: m.id, result: { content: [{ type: "text", text: "fixture" }], structuredContent: sc, isError: false } });
     });
     return;
@@ -173,6 +175,8 @@ const freeCalls = {
   measurement_index: {},
   verify_capsule: { capsule_json: "{}" },
   server_evidence: { endpoint_url: "https://nobody.example/mcp" },
+  // framework_readiness requires its framework; the smallest deterministic call
+  framework_readiness: { framework: "cra" },
 };
 const freeResults = new Map();
 for (const name of FREE) {
