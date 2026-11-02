@@ -135,6 +135,9 @@ test("a declared slot row states its state and n, and claims no point leader", (
 test("an axis whose kind the board does not name is shown, but not counted into a group", () => {
   const b = board({ gated: [] });
   b.axes.push({ axis: "mystery-axis", family: "subject", status: "UNMEASURED", n: 0 });
+  // The board payload and its totals must agree or the generator refuses to render
+  // (LID_COUNT_MISMATCH), so a doctored payload updates its own totals too.
+  b.totals = { ...b.totals, public_count: "34 axes · 23 measured · 0 of 14 model-comparison axes separated a leader" };
   const html = renderAxesIndex(b);
   assert.match(html, /<h2>1 axes of an unnamed kind<\/h2>/);
   assert.match(html, /mystery-axis/);
@@ -173,6 +176,38 @@ test("the axes index page says 32 where the board serves 33, because one slot is
   assert.match(out["axes.html"], /<h1>All 32 GSPC axes<\/h1>/);
   // The lid is the board's own totals, left as served.
   assert.match(out["axes.html"], /33 axes · 24 measured/);
+});
+
+test("the index reconciles the board's totals with the rows it lists when slots are owner-held", () => {
+  const b = board();
+  const html = renderAll(b)["axes.html"];
+  // Two counts about one set, and the difference stated in neither's place is an error
+  // to the reader. Every number here is DERIVED from the fixture — the lane keeps the
+  // fixture's measured count synced to the live board, and a typed "23" went red the
+  // moment the board said 24. The invariant, not the number, is what is pinned.
+  const lidLead = parseInt(b.totals.public_count.match(/^(\d+)/)[1], 10);
+  const shown = parseInt(html.match(/<h1>All (\d+) GSPC axes<\/h1>/)[1], 10);
+  const held = lidLead - shown;
+  assert.equal(shown, lidLead - 1, "the fixture holds back exactly one slot");
+  assert.match(html, new RegExp(`${lidLead} axes · \\d+ measured`));
+  assert.match(
+    html,
+    new RegExp(`The board serves ${lidLead} axes; ${held} is owner-gated pending go, so this page lists ${shown}\\.`),
+  );
+  // The held axis is a count, never a leak.
+  assert.doesNotMatch(html, /slot-9/);
+});
+
+test("the index stays silent when the board totals equal the rows shown", () => {
+  const html = renderAll(board({ gated: [] }))["axes.html"];
+  assert.doesNotMatch(html, /owner-gated pending go/);
+});
+
+test("a totals row the reconciliation cannot explain refuses to render", () => {
+  const b = board();
+  // A totals count that can never equal shown+held, whatever the fixture grows to.
+  b.totals = { ...b.totals, public_count: "999999 axes · 23 measured" };
+  assert.throws(() => renderAll(b), /LID_COUNT_MISMATCH/);
 });
 
 test("the commit board renders exactly its public canonical axes without promoting the owner-held slots", async () => {
@@ -215,11 +250,17 @@ test("the commit board renders exactly its public canonical axes without promoti
     (row) => row.public_pages !== OWNER_GATED && row.kind === "declared-slot",
   ).length;
   assert.match(out["axes.html"], new RegExp(`<h1>All ${publicIds.length} GSPC axes</h1>`));
-  assert.match(out["axes.html"], new RegExp(`<h2>${publicSlots} declared subject slots</h2>`));
+  if (publicSlots > 0) {
+    assert.match(out["axes.html"], new RegExp(`<h2>${publicSlots} declared subject slots</h2>`));
+  } else {
+    assert.doesNotMatch(out["axes.html"], /declared subject slots/);
+  }
   // A MEASURED subject axis is not a declared slot: it has a real n over a frozen
   // sha-pinned bank, so it is filed under its own heading. That count is derived
-  // from the board as well, never typed.
-  const measuredSubjects = live.axes.filter((row) => row.kind === "measured-subject").length;
+  // from the public board rows as well, never typed.
+  const measuredSubjects = live.axes.filter(
+    (row) => row.public_pages !== OWNER_GATED && row.kind === "measured-subject",
+  ).length;
   assert.match(out["axes.html"], new RegExp(`<h2>${measuredSubjects} measured subject axes</h2>`));
 });
 

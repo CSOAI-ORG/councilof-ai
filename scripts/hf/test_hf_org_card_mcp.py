@@ -142,7 +142,7 @@ class TypedDoorCountDrift(unittest.TestCase):
     # and sits one bare "\n" from the stale row, which is how the first cut of this check exempted
     # every live stale card while a fixture without neighbours stayed green.
     NEIGHBOURS_BEFORE = ("| Methodology DOI | 10.5281/zenodo.21991104 (Zenodo record unavailable since 29 Sep 2026: "
-                         "account blocked by Zenodo; appeal pending. Live methodology page (not the deposit's bytes): "
+                         "account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json). Live methodology page (not the deposit's bytes): "
                          "<https://councilof.ai/methodology/>) |\n")
     NEIGHBOURS_AFTER = ("\n| MCP Registry | `io.github.CSOAI-ORG/gspc` — version not pinned here; the registry is the authority |"
                         "\n| npm — MCP server | [`csoai-gspc-mcp`](https://www.npmjs.com/package/csoai-gspc-mcp) — "
