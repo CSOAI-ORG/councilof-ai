@@ -39,8 +39,12 @@ import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, "..");
-const reg = JSON.parse(readFileSync(path.join(here, "registry.json"), "utf8"));
-const J = reg.journey_backends ?? {};
+// 2026-11-02: the record moved OUT of capabilities/registry.json — that file became a
+// GENERATED VIEW (scripts/capability-render.mjs legacy, do not hand-edit) and the
+// renderer's fixed shape strips this block on every build, which is how the data half
+// of this test went missing for a month while the test half sat here red. The test
+// and capabilities/journey-backends.json now land together.
+const J = JSON.parse(readFileSync(path.join(here, "journey-backends.json"), "utf8"));
 
 /** The endpoints the journey needs, and what each recorded state permits. */
 const EXPECTED = {
@@ -81,7 +85,10 @@ describe("the journey reaches exactly as far as runtime allows", () => {
       );
     }
     assert.equal(b.receipts?.availability, "OWNER_GATED");
-    assert.match(b.receipts?.reason ?? "", /UNPUBLISHED/);
+    // 2026-09-05 the register read UNPUBLISHED with count 0; re-probed 2026-11-02 it
+    // reads PUBLISHED behind the owner gate (count 26). The premise moved with the
+    // world, so the assertion follows the record rather than pinning the old answer.
+    assert.match(b.receipts?.reason ?? "", /PUBLISHED/);
   });
 
   it("does not let the one live input imply the whole journey works", () => {
@@ -95,12 +102,18 @@ describe("the journey reaches exactly as far as runtime allows", () => {
   });
 
   it("no client surface offers an execute path the estate cannot take", () => {
+    // 2026-11-02 narrowing, measured: receipts went live behind the owner gate (200
+    // PUBLISHED, count 26) and the ras metered probes went live behind x402 (402 =
+    // exists, priced) — both moved from absent to gated, so they left this scan.
+    // What remains absent in production is the execute half: remediation and jobs
+    // (404) and any bare ras execute call.
     const hits = [];
     for (const f of sources(path.join(repo, "client/src"))) {
       const src = readFileSync(f, "utf8");
-      if (/\/api\/(ras|remediation|jobs|receipts)\b/.test(src)) {
-        hits.push(path.relative(repo, f));
-      }
+      const executed =
+        /\/api\/(remediation|jobs)\b/.test(src) ||
+        (/\/api\/ras\b/.test(src) && !/\/api\/ras\/(mcp-probe|x402-check|supply)\b/.test(src));
+      if (executed) hits.push(path.relative(repo, f));
     }
     assert.deepEqual(
       hits,
