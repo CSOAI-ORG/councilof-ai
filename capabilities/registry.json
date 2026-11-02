@@ -3711,6 +3711,19 @@
       "payment": "free"
     },
     {
+      "id": "framework_readiness",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "framework_readiness",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "axis_swarm",
       "protocols": [
         "mcp"
