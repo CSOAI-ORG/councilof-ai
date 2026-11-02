@@ -16,6 +16,7 @@ import { GAP_BY_AXIS } from "./GSPCGapMap";
 import { verifyCardHref } from "@/lib/cardParam";
 import { isOwnModel, ROWS_RECORD_SIGNED_URL } from "@/lib/livingBoard";
 import LivingBoard, { BoardFreshness } from "@/components/gspc/LivingBoard";
+import BoardField from "@/components/gspc/BoardField";
 
 /**
  * /board — one board a person can actually navigate.
@@ -669,9 +670,12 @@ function SetTable({
 }) {
   const [open, setOpen] = useState<string | null>(null);
 
+  const field = <BoardField rows={rows} setId={setId} />;
+
   if (density === "cards") {
     return (
       <div className="space-y-3" data-testid="rows-cards">
+        {field}
         {rows.map((r) => (
           <div key={r.id} className="overflow-hidden rounded-xl border border-gray-200 bg-white">
             <button
@@ -708,8 +712,10 @@ function SetTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
-      <table className="w-full min-w-[720px] text-left text-sm" data-testid="rows-table">
+    <div className="space-y-3">
+      {field}
+      <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+        <table className="w-full min-w-[720px] text-left text-sm" data-testid="rows-table">
         <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-600">
           <tr>
             <th className="px-4 py-2 font-semibold">Row</th>
@@ -778,8 +784,9 @@ function SetTable({
               )}
             </Fragment>
           ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

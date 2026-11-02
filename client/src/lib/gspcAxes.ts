@@ -269,6 +269,11 @@ export const AXES: Axis[] = [
     task: "does an endpoint or serving configuration claiming model M behave like M's reference serving on a frozen bank",
     kind: "declared-slot", family: "subject", applies_to: "inference-endpoints-and-routers",
     note: "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score." },
+  { axis: "watchdog-ingest", bench: "daily public-source probe (18 pinned sources) — no frozen bank", n: 0, macro_f1: null, accuracy: null, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "hsl(310 10% 55%)", lng: 36.82, lat: -1.29, seat: "Nairobi", instrument: "Subject Slot — Public Watchdog & Incident Sources",
+    task: "does the public watchdog and incident layer answer, and what does each answer contain; says nothing about whether a source is correct, current or trustworthy",
+    kind: "declared-slot", family: "subject", applies_to: "public-watchdog-and-incident-sources",
+    note: "DECLARED-UNMEASURED slot (2026-10-30). A daily probe of pinned public sources is not a frozen bank; n 0 is the literal truth, never a score, and a source that cannot be read is never a zero." },
 ];
 
 /**

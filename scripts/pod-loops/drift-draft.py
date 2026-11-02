@@ -347,9 +347,20 @@ def take_snapshot(clone, repo, out_dir):
     if cj.is_file():
         try:
             api = json.loads(cj.read_text(encoding="utf-8"))["api"]
+            # The count block is FLOORS + GRAMMAR (ruled 2026-10-30), not a frozen number:
+            # canon.api.axes_total / measured_axes / unmeasured_axes / quotable_axes /
+            # public_count_contains no longer exist. Reading them with .get() would return
+            # None for every field and report a PHANTOM drift on a correct site — the
+            # silent-failure mode .get() invites. So the floors are read by their real
+            # names, and both shapes are accepted so an older checkout still reads.
+            axes_floor = api.get("axes_total_floor", api.get("axes_total"))
+            measured_floor = api.get("measured_axes_floor", api.get("measured_axes"))
             T["canon.json#api"] = {**file_source(clone, "canon.json", repo["master"]),
-                "values": {"axes": api.get("axes_total"), "measured_axes": api.get("measured_axes"), "unmeasured_axes": api.get("unmeasured_axes"),
-                           "quotable_axes": api.get("quotable_axes"), "public_count": api.get("public_count_contains")}}
+                "values": {"axes_floor": axes_floor, "measured_axes_floor": measured_floor,
+                           "unmeasured_derives_from_data": bool(api.get("count_grammar", {}).get("unmeasured_derives_from_data")),
+                           "public_count_agrees_with_data": bool(api.get("count_grammar", {}).get("public_count_agrees_with_data"))}}
+            if axes_floor is None or measured_floor is None:
+                snap["uncheckable"].append("canon.json api block carries no count floors — the guard cannot be checked from here")
         except Exception as e:
             snap["uncheckable"].append(f"canon.json api block unreadable: {type(e).__name__}")
     for f in sorted((clone / "public/corrections").glob("*.json")) if (clone / "public/corrections").is_dir() else []:

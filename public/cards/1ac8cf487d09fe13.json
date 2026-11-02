@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-24T09:37:39Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "google",
+      "surface": "terms",
+      "url": "https://ai.google.dev/gemini-api/terms",
+      "prev_sha256": "31c5ca95a90809c526687985e1a020c3df914a4fb1009edd89bba20bdd9ef4b6",
+      "new_sha256": "ebc89e0b86e799a5203ab7ac1d046e080d8cae3f1f29707f226e98a1f3c75921",
+      "prev_bytes_sha256": "cfa3e836a8b8f7699476cb6e27266102359a0c1e4b64ca61f05a700af873b784",
+      "new_bytes_sha256": "6ceb277ca96f3cccff2bdd025844706b12ae033b68af03345f2b3f5c18ca0733",
+      "prev_fetched_at": "2026-09-14T10:50:15Z",
+      "fetched_at": "2026-10-24T09:37:39Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 110987,
+        "new": 113278
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": "Tue, 28 Apr 2026 03:23:11 GMT",
+        "new": "Tue, 28 Apr 2026 03:23:11 GMT"
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "1ac8cf487d09fe1327d80358b24de4d4d4c00f36bd3c76896eb0cbe34fb5781e",
+    "sig_ed25519": "2de6453bedcb640ceb3286f09757c9775f56f002dba5649b8f6f938712d08bedc76ffd8e7c208733a17e507a115a3fb98bb3e3f3a94f00be04c83f481279e408",
+    "source_urls": [
+      "https://ai.google.dev/gemini-api/terms"
+    ],
+    "subject": "Google — terms: bytes changed 2026-10-24",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:google",
+      "surface:terms",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "1dc8cb2857c0fc1de23e463cc4df8ce116fe738b8d0ce23cd1c45355d986faae",
+    "a1db79c1e07cf150282f1e21e43d8e8ce2e485386dd71914aac15d7d270e93b7",
+    "9542cdd5a615a4c7b6a6e78d0a85bb89f7dad35cf1c4a97f26821aeebf215cc9",
+    "5c915c011be006e6a291a3dabcb5c55b98ddfa1d166a17a060f82e6a4168e1a2",
+    "5e3187d714af52195ca249acb5c12693bb2738bd6de7350316c2650e01970142",
+    "4f29702101e01532349ac3845ec455a246e589ef350c559781a8e2de88d46b59",
+    "afb4f2401dc05f97da7dc51d7e47bf8236c8a159728f0fdded5af15e73325a87",
+    "d97d8618e495552d09440c87ff714f17d0897af2e8c81be0a2de224788e3f3fe",
+    "5aa89ce1f8d8dfb429dfb95d2df96b7afbdf61e64f1d7e6924d1f64f54377a9b"
+  ]
+}

@@ -59,6 +59,7 @@ One MCP operation, `InvokeGSPC` (Streamable HTTP). Copilot Studio reads the tool
 - `axis_interpretability-reproducibility` — The interpretability-reproducibility axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
 - `axis_claim-maintenance` — The claim-maintenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
 - `axis_serving-fidelity` — The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
+- `axis_watchdog-ingest` — The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
 
 Every tool is read-only (`readOnlyHint: true`, `destructiveHint: false`).
 

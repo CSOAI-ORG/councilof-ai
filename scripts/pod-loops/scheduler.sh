@@ -143,6 +143,12 @@ while true; do
   if [ "$(date -u +%u)" = "1" ] && due 09 20 && stamp claim-watch-measure; then
     CLAIM_WATCH_REF=${CLAIM_WATCH_REF:-origin/master} nohup bash "$LOOPS/claim-watch-measure.sh" --now 8>&- >/dev/null 2>&1 &
   fi
+  # 09:40Z the public-watchdog intake (lane watchdog-ingest): 18 pinned public watchdog and incident
+  # sources probed, the day folded into the WG-SAFE routing queue — every row HOLD, may_apply false,
+  # no challenge opened — and a watchdog/auto-<date> branch the :50 land may merge path-restricted.
+  # The public root signs the day separately (public-root.yml stages the atom). THE STAMP IS THIS
+  # SCHEDULER'S; the script gets --now and must not stamp itself.
+  if due 09 40 && stamp watchdog-intake; then nohup bash "$LOOPS/watchdog-intake.sh" --now 8>&- >/dev/null 2>&1 & fi
   if due 02 20 && stamp register-402index;   then nohup python3 "$LOOPS/register-402index.py" 8>&- >>"$LOGS/register-402index.log" 2>&1 & fi
   if due 02 40 && stamp settle-all-doors;    then nohup python3 "$LOOPS/settle-all-doors.py" 8>&- >>"$LOGS/settle-all-doors.log" 2>&1 & fi
   # hourly mill slice (registered 2026-09-22 by the coordinator): one model x every axis -> verify -> sign -> land on mill/auto-<hour>

@@ -32,9 +32,9 @@
       "tool_counts": {
         "note": "The mandate is 'the listing resolves and the tool count is true'. Declared counts are read from Smithery's detail endpoint; served tools are DERIVED from the two canonical files the door reads (functions/mcp/gspc-tools.json + paid-tools.json), never typed. Neither hosted deployment could be called directly: gspc--csoai.run.tools answers 401 at / and 404 at /mcp, so Smithery's runtime needs a key we do not hold. The comparison is therefore declared-vs-source, not declared-vs-tools/list.",
         "served_by_the_door": {
-          "free": 47,
+          "free": 48,
           "paid": 5,
-          "total": 52,
+          "total": 53,
           "names": [
             "board_totals",
             "get_axis",
@@ -83,6 +83,7 @@
             "axis_interpretability-reproducibility",
             "axis_claim-maintenance",
             "axis_serving-fidelity",
+            "axis_watchdog-ingest",
             "commission_card",
             "art50_marking_evidence",
             "rwa_evidence",
@@ -148,7 +149,7 @@
       "tool_counts": {
         "verdict": "UNCHECKABLE",
         "declared": 11,
-        "served_by_the_door": 52,
+        "served_by_the_door": 53,
         "names": [
           "art50_marking_evidence",
           "board_totals",
@@ -162,7 +163,7 @@
           "verify_card",
           "verify_inclusion"
         ],
-        "detail": "Last Glama probe recorded 11 tool pages identical to the then-door (7 free + 4 paid). The door has served more since: x402_trust, evidence_bundle_preview, evidence_bundle and route, and on 2026-10-26 the 33 axis tools joined, so the door now serves 47 free + 5 x402 = 52. Glama has not been re-probed since that add, so declared=11 stays and the verdict is UNCHECKABLE \u2014 not TRUE. names[] is the last probe, not the live door.",
+        "detail": "Last Glama probe recorded 11 tool pages identical to the then-door (7 free + 4 paid). The door has served more since: x402_trust, evidence_bundle_preview, evidence_bundle and route, and on 2026-10-26 the per-axis tools joined, so the door now serves 48 free + 5 x402 = 53. Glama has not been re-probed since that add, so declared=11 stays and the verdict is UNCHECKABLE \u2014 not TRUE. names[] is the last probe, not the live door.",
         "probe": "compare the /mcp/connectors/ sitemap leaves that are tool pages against jq -r '.tools[].name' functions/mcp/{gspc,paid}-tools.json"
       },
       "tool_count_audit": {

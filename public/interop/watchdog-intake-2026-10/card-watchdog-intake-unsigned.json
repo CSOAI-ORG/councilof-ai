@@ -1,0 +1,72 @@
+{
+ "as_of": "2026-10-30T05:10:40Z",
+ "payload": {
+  "as_of": "2026-10-30T05:10:40Z",
+  "count_grammar": "n counts SOURCES PROBED. REACHABLE, UNCHECKABLE and UNREACHABLE are different facts and are never summed into one figure.",
+  "kind": "csoai.watchdog.intake/0.1",
+  "not_a_grade": true,
+  "published_gaps": 7,
+  "reachable": 18,
+  "routing_human_decision": "HOLD",
+  "routing_rows": 43,
+  "run_id": "20261030T051040Z",
+  "source_states": {
+   "atlas-current": "REACHABLE",
+   "atlas-manifest": "REACHABLE",
+   "cisa-kev": "REACHABLE",
+   "depsdev": "REACHABLE",
+   "ghsa-api": "REACHABLE",
+   "go-vuln": "REACHABLE",
+   "hf-models": "REACHABLE",
+   "in-toto": "REACHABLE",
+   "mitre-cve": "REACHABLE",
+   "nvd-cve-api": "REACHABLE",
+   "openrouter": "REACHABLE",
+   "openssf-scorecard": "REACHABLE",
+   "osv-query": "REACHABLE",
+   "owasp-asvs": "REACHABLE",
+   "owasp-llm-top10": "REACHABLE",
+   "rekor-log": "REACHABLE",
+   "safe-repo": "REACHABLE",
+   "slsa": "REACHABLE"
+  },
+  "sources_probed": 18,
+  "state": "PROBED",
+  "uncheckable": 0,
+  "unreachable": 0
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "3c40be689d18405444430b9e3f245a38f1472e8fb4c730319e76aab93ec7bb19",
+ "source_urls": [
+  "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+  "https://services.nvd.nist.gov/rest/json/cves/2.0?resultsPerPage=1&startIndex=0",
+  "https://api.github.com/advisories?per_page=30",
+  "https://api.osv.dev/v1/query",
+  "https://cveawg.mitre.org/api/cve/CVE-2021-44228",
+  "https://vuln.go.dev/index/modules.json",
+  "https://api.deps.dev/v3alpha/systems/npm/packages/left-pad",
+  "https://huggingface.co/api/models?limit=30",
+  "https://openrouter.ai/api/v1/models",
+  "https://raw.githubusercontent.com/mitre-atlas/atlas-data/main/dist/v6/ATLAS-2026.10.yaml",
+  "https://raw.githubusercontent.com/mitre-atlas/atlas-data/main/dist/manifest.yaml",
+  "https://raw.githubusercontent.com/OWASP/www-project-top-10-for-large-language-model-applications/refs/heads/main/README.md",
+  "https://raw.githubusercontent.com/OWASP/ASVS/master/README.md",
+  "https://rekor.sigstore.dev/api/v1/log",
+  "https://api.securityscorecards.dev/projects/github.com/ossf/scorecard",
+  "https://raw.githubusercontent.com/OpenSecureAIAlliance/wg-safe/main/README.md",
+  "https://raw.githubusercontent.com/slsa-framework/slsa/main/README.md",
+  "https://raw.githubusercontent.com/in-toto/attestation/main/README.md"
+ ],
+ "subject": "Public watchdog and incident-source intake — pinned public sources probed at one instant. Reachability of a source, not a judgement about it.",
+ "surface": "public.notice",
+ "tags": [
+  "watchdog-intake",
+  "public-sources",
+  "watchdog-ingest-axis"
+ ],
+ "unmeasured": [
+  "whether any source's content is correct, complete or current",
+  "whether a source that answered is trustworthy — reachability is not trust",
+  "any judgement about a subject's safety, licensing or regulatory status"
+ ]
+}
