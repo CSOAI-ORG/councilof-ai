@@ -43,7 +43,7 @@ const ROWS: { name: string; how: string; href: string }[] = [
     how: "GET /api/x402-quotes → the doors that answered an unpaid request with HTTP 402 on that read. A 402 is a payment challenge, not a payment.",
     href: "/api/x402-quotes",
   },
-  { name: "Zenodo downloads", how: "The Zenodo API’s unique-download count for the archived board snapshot. Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. While the API answers 410 the count is omitted, not carried forward.", href: "/interop/zenodo-status.json" },
+  { name: "Zenodo downloads", how: "The Zenodo API’s unique-download count for the archived board snapshot. Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json). While the API answers 410 the count is omitted, not carried forward.", href: "/interop/zenodo-status.json" },
 ];
 
 export default function MomentumMethodNote() {
