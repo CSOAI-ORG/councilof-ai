@@ -53,29 +53,26 @@ export function LiveFigureLine({
 }) {
   if (read.state === "loading")
     return (
-      <p role="status" aria-live="polite" className="mt-3 text-[13px] text-muted-foreground" data-testid={testId} data-state="loading">
+      <span role="status" aria-live="polite" className="mt-3 block text-[13px] text-muted-foreground" data-testid={testId} data-state="loading">
         <span className="inline-block h-3 w-24 animate-pulse rounded bg-muted align-middle motion-reduce:animate-none" aria-hidden="true" />
         <span className="sr-only">Reading the live figure</span>
-      </p>
+      </span>
     );
   const f = read.state === "ok" ? pick(read.data) : null;
   if (!f)
     return (
-      <p className="mt-3 text-[13px] text-amber-900" data-testid={testId} data-state="unread">
+      <span className="mt-3 block text-[13px] text-amber-900" data-testid={testId} data-state="unread">
         Not read {read.state === "error" ? `(${read.error})` : "(the field is not in the payload)"}. Nothing is shown in its place.
-      </p>
+      </span>
     );
   return (
-    <p className="mt-3 text-[13px] leading-snug text-muted-foreground" data-testid={testId} data-state="live">
-      {/* Where the figure came from is a tooltip, not a line of source paths on the card face. */}
-      <span
-        className="cursor-help font-mono text-base font-black text-foreground"
-        title={`Read from ${f.source}${f.as_of ? ` · as of ${f.as_of}` : ""}`}
-      >
-        {f.value}
-      </span>{" "}
+    <span className="mt-3 block text-[13px] leading-snug text-muted-foreground" data-testid={testId} data-state="live">
+      <span className="font-mono text-base font-black text-foreground">{f.value}</span>{" "}
       {f.label}
-    </p>
+      <span className="mt-1 block break-words text-xs leading-relaxed text-muted-foreground">
+        Source: {f.source || "not supplied"} · {f.as_of ? `As of ${f.as_of}` : "Source date not supplied"}
+      </span>
+    </span>
   );
 }
 
@@ -132,7 +129,7 @@ function WorkspaceBoardCard() {
         Live leaderboard
       </p>
       <h2 id="ws-board-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
-        What the tests show today
+        What the published tests show
       </h2>
       {error ? (
         <p className="mt-4 rounded-2xl border border-amber-500/50 bg-amber-50 px-4 py-3 text-sm text-amber-950" data-testid="ws-board-error">
@@ -157,7 +154,10 @@ function WorkspaceBoardCard() {
           <p className="mt-1 text-sm leading-snug text-muted-foreground" data-testid="ws-board-separation">
             {sepLine ?? (sep ? `${sep.separated} of ${sep.comparison} model-comparison axes separated · ${sep.ties} TIE · ${sep.untested} UNTESTED` : "separation line not in the payload")}
           </p>
-          <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4" data-testid="ws-board-tiles">
+          <p id="ws-visible-axis-scope" className="mt-3 text-sm text-muted-foreground">
+            Breakdown of the {tiles.length} visible axis rows. The headline above covers the full board.
+          </p>
+          <dl aria-describedby="ws-visible-axis-scope" className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4" data-testid="ws-board-tiles">
             {(Object.keys(TILE_WORD) as TileState[])
               .filter((s) => s !== "UNMEASURED" || tiles.some((t) => t.state === s))
               .map((s) => (
@@ -170,7 +170,7 @@ function WorkspaceBoardCard() {
                 </div>
               ))}
           </dl>
-          <ul className="mt-4 flex list-none flex-wrap gap-1.5 p-0" aria-label="Every axis and its state">
+          <ul className="mt-4 flex list-none flex-wrap gap-1.5 p-0" aria-label="Visible axes and their states">
             {tiles.map((t) => (
               <li key={t.axis} title={`${t.axis}: ${TILE_WORD[t.state]}`} className="inline-flex">
                 <span className={`block h-3.5 w-3.5 rounded-[5px] ${TILE_DOT[t.state]}`} aria-hidden="true" />
@@ -575,6 +575,10 @@ export default function GspcWorkspaceHome({
 
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
         <GetResults onAsk={onAsk ? askLookup : undefined} />
+        <p className="mt-3 text-sm text-muted-foreground">
+          Changing evaluation tools?{" "}
+          <a className="font-semibold underline underline-offset-2" href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/product/evaluation-migration-handoff.md">Check what survives a migration</a>.
+        </p>
 
         <div className="mt-6 grid gap-6 xl:grid-cols-12">
           <section id="ws-answers" aria-labelledby="ws-ask-h" className="min-w-0 scroll-mt-4 xl:col-span-7">
