@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Coins, Unlock, ExternalLink } from "lucide-react";
 
 /**
- * /x402 — the metered-evidence catalog (a storefront without prices).
+ * /x402/catalog — the metered-evidence catalog (a storefront without prices).
  *
  * DOCTRINE (HO.2, ruled): this page renders NO amounts. The authoritative
  * amount for any call is the one printed in its live 402 challenge — the
