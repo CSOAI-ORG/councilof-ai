@@ -142,6 +142,7 @@ export default function X402Catalog() {
                     target="_blank"
                     rel="noreferrer"
                     className="underline decoration-dotted underline-offset-2"
+                    title={"Read the live 402 challenge for " + r.route + " — the challenge is the quote"}
                   >
                     quote
                     <ExternalLink className="ml-1 inline-block h-3 w-3 align-[-1px]" />
