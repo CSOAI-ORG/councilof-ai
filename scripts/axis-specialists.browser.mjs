@@ -43,7 +43,7 @@ try {
   const { onRequestGet } = await import(pathToFileURL(path.join(temporary, "api.mjs")));
   await bundle({ entryPoints: [path.join(root, "functions/api/hitl.ts")], outfile: path.join(temporary, "hitl.mjs"), bundle: true, platform: "node", format: "esm" });
   const hitl = await import(pathToFileURL(path.join(temporary, "hitl.mjs")));
-  const capturedBoard = await fs.readFile(path.join(root, "council-os/axis-specialists/board-2026-10-28.snapshot.json"));
+  const capturedBoard = await fs.readFile(path.join(root, "council-os/axis-specialists/board-2026-11-01.snapshot.json"));
   server = createServer(async (req, res) => {
     try {
       const pathname = new URL(req.url, "http://localhost").pathname;
