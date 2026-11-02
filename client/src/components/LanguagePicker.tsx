@@ -3,6 +3,11 @@ import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
 import { SUPPORTED_LANGUAGES } from "@/lib/i18n";
 
+/** Reading direction for a locale code — Arabic reads right-to-left, everything else left-to-right. */
+export function dirFor(code: string): "rtl" | "ltr" {
+  return code === "ar" ? "rtl" : "ltr";
+}
+
 /**
  * LanguagePicker — the Council OS language door.
  *
@@ -20,9 +25,8 @@ export function LanguagePicker({ compact = false }: { compact?: boolean }) {
   const onChange = useCallback(
     (code: string) => {
       void i18n.changeLanguage(code);
-      const dir = code === "ar" ? "rtl" : "ltr";
       document.documentElement.setAttribute("lang", code);
-      document.documentElement.setAttribute("dir", dir);
+      document.documentElement.setAttribute("dir", dirFor(code));
     },
     [i18n],
   );

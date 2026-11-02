@@ -418,7 +418,7 @@ export default function DashboardLayout({
               role="dialog"
               aria-modal="true"
               aria-label="Menu"
-              className="fixed inset-y-0 left-0 z-[61] flex w-[min(20rem,86vw)] flex-col bg-white shadow-2xl"
+              className="fixed inset-y-0 start-0 z-[61] flex w-[min(20rem,86vw)] flex-col bg-white shadow-2xl"
             >
               <div className="flex h-14 items-center justify-between border-b border-border px-4">
                 <p className="text-sm font-semibold text-slate-900"><MenuTitle /></p>

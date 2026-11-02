@@ -128,3 +128,14 @@ describe("dashboard menu localisation wiring", () => {
     expect(hits).toEqual([]);
   });
 });
+
+import { dirFor } from "@/components/LanguagePicker";
+
+describe("language direction", () => {
+  it("Arabic is rtl; every other shipped locale is ltr", () => {
+    expect(dirFor("ar")).toBe("rtl");
+    for (const code of ["en-US", "en-GB", "fr", "de", "es", "it", "nl", "pl", "pt", "sv", "da", "fi", "zh-CN"]) {
+      expect(dirFor(code), code).toBe("ltr");
+    }
+  });
+});
