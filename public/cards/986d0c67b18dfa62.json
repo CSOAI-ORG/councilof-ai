@@ -1,0 +1,130 @@
+{
+  "card": {
+    "as_of": "2026-10-24T09:37:32Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms.daily/0.1",
+      "state": "PROBED",
+      "run_at": "2026-10-24T09:37:32Z",
+      "normaliser": "csoai-norm-v1",
+      "n_targets": 51,
+      "n_ok": 45,
+      "n_unchanged": 5,
+      "n_changed": 34,
+      "n_bytes_only": 1,
+      "n_first_capture": 0,
+      "n_uncheckable": 6,
+      "n_unknown": 0,
+      "changed": [
+        "anthropic/terms",
+        "anthropic/usage_policy",
+        "anthropic/model_cards",
+        "anthropic/pricing",
+        "anthropic/safety_policy",
+        "google/terms",
+        "google/usage_policy",
+        "google/model_cards",
+        "google/pricing",
+        "google/art50_marking",
+        "meta/terms",
+        "meta/usage_policy",
+        "meta/model_cards",
+        "mistral/model_cards",
+        "mistral/pricing",
+        "mistral/safety_policy",
+        "xai/terms",
+        "xai/usage_policy",
+        "xai/model_cards",
+        "xai/pricing",
+        "xai/safety_policy",
+        "cohere/terms",
+        "cohere/usage_policy",
+        "cohere/model_cards",
+        "cohere/pricing",
+        "cohere/safety_policy",
+        "deepseek/pricing",
+        "alibaba-qwen/terms",
+        "alibaba-qwen/pricing",
+        "alibaba-qwen/usage_policy",
+        "amazon/terms",
+        "amazon/usage_policy",
+        "amazon/pricing",
+        "amazon/safety_policy"
+      ],
+      "uncheckable": [
+        "openai/terms",
+        "openai/usage_policy",
+        "openai/model_cards",
+        "openai/pricing",
+        "openai/safety_policy",
+        "openai/art50_marking"
+      ],
+      "unknown": [],
+      "attests": "for each target listed as unchanged, the normalised sha256 of this capture equals the previous OK capture — an observation of two captures, nothing about the document between them",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "986d0c67b18dfa627053f5dc6b4e860651352237dbda2a248aa85d2c0eeb3814",
+    "sig_ed25519": "6b9e78389bba085f33ec457118b03924dda5774f4acf34a264998cbe49ab30b0f1fbf63975295f524207c196dce1566ee5e0230c113c34dc36979cb6023eed0f",
+    "source_urls": [
+      "https://councilof.ai/feeds/provider-diff/index.json"
+    ],
+    "subject": "provider-diff daily capture 2026-10-24: 34 changed, 6 uncheckable, 0 unknown of 51",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "daily",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "targets listed as uncheckable/unknown (nothing observed; never 'unchanged')",
+      "what changed on any changed target",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "fcd0e9c129f26064e7bc356b9f343f9a24d1c53341ff90545e020b9717b61a44",
+    "08234b02234fbfb56f8c12de5850acbd121d66fb63bec4f487d49ae0733e12c2",
+    "8510190d10136df91fa4c66f881aa378552fadb6c8a37d4eb45035f7d3a07bd1",
+    "aa5c7c40f1fd24629da4d48eb7bdfeddf67b7bd0b14e33cb2df30d33035acfb1",
+    "f29e9b726cd537daf35ffbd804f5ef56f5778a76bb760d6d5318238282839094",
+    "4aa9d282fe75774e643771f20d24ceb9fccb04542539d64b274c287ca4d7be63",
+    "11f5d67f4db2496c65970d39be4f36341ff22cc600a2234407e98adc3964542f",
+    "176200b26fd094d89be6cbde327a448f84af31c04a433352c5835fc454314661",
+    "aa6ab9166acf4d7a92aa2743240915ead88e4fe0c3eada56656a50f2e0b69600"
+  ]
+}

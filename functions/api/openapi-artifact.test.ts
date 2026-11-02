@@ -203,14 +203,25 @@ describe("the free surface is declared, not probed", () => {
     expect(spec.paths["/api/learn-loop"].get["x-csoai-lifecycle"]).toBe("QUARANTINED_PRE_RELEASE");
   });
 
-  it("GET /api/fulfill is a closed door (404), not a public 200", () => {
-    // Live GET returns 404 configured:false. Declaring 200 + security [] made
-    // x402scan treat it as a public read. What would make this fail: responses.200.
-    const op = spec.paths["/api/fulfill"].get;
-    expect(op.responses["404"]).toBeTruthy();
-    expect(op.responses["200"]).toBeUndefined();
-    expect(op["x-csoai-lifecycle"]).toBe("DOOR_CLOSED");
-    expect(op.security).toEqual([]);
+  it("a withdrawn route is not listed: no closed door and no retired route", () => {
+    // History of this assertion. GET /api/fulfill answers 404 configured:false; declaring it a 200
+    // made x402scan treat it as a public read, so it was listed as a 404 marked DOOR_CLOSED. That
+    // marker is ours alone: an independent profile built from this document went on listing
+    // GET /api/certificate-schema (503, marked RETIRED) and POST /api/checkout (its handler answers
+    // 404; the document said 200) as APIs (api-evangelist/councilof-ai#1, 12 Oct 2026). A withdrawn
+    // route is now absent. What would make this fail: any of these paths, or their names, coming back.
+    for (const p of ["/api/fulfill", "/api/checkout", "/api/certificate-schema", "/api/paddle-webhook"]) {
+      expect(spec.paths[p], p).toBeUndefined();
+    }
+    const text = JSON.stringify(spec);
+    expect(text).not.toContain("/api/certificate-schema");
+    expect(text).not.toContain("/api/checkout");
+    for (const { path, method, op } of ops()) {
+      expect(["RETIRED", "DOOR_CLOSED"], `${method} ${path}`).not.toContain(op["x-csoai-lifecycle"]);
+      const codes = Object.keys(op.responses);
+      // an operation whose only documented answers are "not here" is a withdrawn route by another name
+      expect(codes.every((c) => c === "404" || c === "410"), `${method} ${path} documents only ${codes.join("/")}`).toBe(false);
+    }
   });
 });
 

@@ -19,35 +19,49 @@
   ],
   "source": {
     "schema": "csoai.gspc-axes/0.5",
-    "snapshot": "council-os/axis-specialists/board-2026-10-28.snapshot.json",
+    "snapshot": "council-os/axis-specialists/board-2026-11-02.snapshot.json",
     "measurement_time": {
-      "state": "UNCHECKABLE",
-      "precision": "unknown",
-      "source": "/api/gspc",
-      "source_field": "none",
-      "note": "No structured measurement time is available; CURRENT admission must fail closed."
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-10-28T04:25:30.845Z",
+      "source": "/interop/axis-banks/regulator-transparency-20261102.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
     },
-    "axis_row_sha256": "8ca5a89c3c1f90ea65cb112797360dea630f72cd97fc83cb6c7570146006a7c5",
+    "axis_row_sha256": "270a9b7fe8c5df579165fd5167b05174b5632128e71bc0d5e2522c798770661e",
     "axis_row": {
       "axis": "regulator-transparency",
       "family": "subject",
-      "kind": "declared-slot",
+      "kind": "measured-subject",
       "applies_to": "regulators",
-      "bench": "pending frozen check bank",
-      "task": "factual presence checks on public artefacts (guidance, registry, methodology, consultation, contact route); no scores, no ratings",
-      "n": 0,
-      "status": "UNMEASURED",
-      "colour": "hsl(270 10% 55%)",
-      "hue": 270,
-      "note": "DECLARED-UNMEASURED slot (2026-10-16). Nothing has been measured: n 0 is the literal truth, never a score. Becomes MEASURED only with a frozen sha-pinned bank or method, n_valid >= 30, passing the gate. Census checks are a DISCOVERED check grid, not scores on this axis.",
-      "method_status": "no-method: declared slot",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "factual presence checks on public regulatory artefacts (guidance, consultation, enforcement, open data, contact route); no ratings",
+      "n": 41,
+      "status": "MEASURED",
+      "method_status": "meets-rule",
+      "method": "scripts/subject-axis/subject-axis-live-run.mjs",
+      "method_sha": "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
+      "rate": 0.9268,
+      "rate_scale": "fraction",
+      "rate_rule": "presence of at least 3 of 5 declared classes",
       "public_pages": "HIDDEN_PENDING_OWNER_GO",
+      "bank": "interop/axis-banks/regulator-transparency-20261102.json",
+      "bank_sha256": "1a8667ca10ab9486b75daf460a680c12d2b4823ad3bbb9cfd6697143f882f6d5",
+      "frame_sha256": "eb7d23d861fc6151f7b6ebb77e173bc70e22d4d5d76f7f062fcd0d41106d8b23",
+      "facts_as_of": "2026-10-28T04:25:30.845Z",
+      "evidence_url": "/interop/axis-banks/regulator-transparency-20261102.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "n_unit": "subjects in the frozen frame",
+      "colour": "hsl(270 62% 52%)",
+      "hue": 270,
+      "note": "41 subjects from a frozen frame of 46 (5 refusals recorded, never converted to failures). rate 0.9268 = share meeting at least 3 of 5 declared presence classes (4-of-5 0.8293, 5-of-5 0.7073). Class census: statutory 41, consultation 31, enforcement 35, machine 39, contact 37. 41/41 must-fail negative controls caught. Presence of a string in public bytes at a stated time is not evidence of quality, truth or compliance.",
       "measurement_time": {
-        "state": "UNCHECKABLE",
-        "precision": "unknown",
-        "source": "/api/gspc",
-        "source_field": "none",
-        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "source": "/interop/axis-banks/regulator-transparency-20261102.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
       }
     }
   },
@@ -70,27 +84,22 @@
       "evidence": []
     },
     {
-      "id": "DECLARED_GAP",
-      "state": "PASS",
-      "detail": "UNMEASURED slot for regulators; n=0 is not a score"
-    },
-    {
-      "id": "NO_FABRICATED_SCORE",
-      "state": "PASS",
-      "detail": "declared slot has no leader, accuracy or separation"
+      "id": "MEASUREMENT_KIND",
+      "state": "FINDING",
+      "detail": "unknown measurement kind measured-subject"
     },
     {
       "id": "CURRENT_METHOD_RULE",
       "state": "PASS",
-      "detail": "no-method: declared slot"
+      "detail": "meets-rule"
     }
   ],
   "summary": {
-    "checks": 6,
-    "passed": 6,
+    "checks": 5,
+    "passed": 4,
     "declared": 0,
-    "findings": 0,
-    "audit_state": "MEASUREMENT_GAP_VISIBLE"
+    "findings": 1,
+    "audit_state": "IMPROVEMENT_REQUIRED"
   },
   "negative_controls": [
     {
@@ -138,7 +147,7 @@
     "not autonomous self-improvement",
     "not a provisioned compute cluster"
   ],
-  "audit_sha256": "97e1b1a24795c1ade3de1f7007742228da79876bf8cf8f95f58a01b68c6863da",
+  "audit_sha256": "00983a00c13090e26a206357773a01e3bdb9005de3ea43fed7581d3342649786",
   "charter": {
     "version": "0.1.0",
     "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
@@ -223,7 +232,7 @@
     "challenge_url": "/api/hitl/challenge",
     "console_url": "/dashboard?tab=staff",
     "corrections_url": "/corrections/",
-    "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
     "note": "A review request is not a decision, signature, measurement admission or permission to execute."
   }
 }

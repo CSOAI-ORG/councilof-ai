@@ -92,7 +92,7 @@ def write_parquet(rows: list[dict], out: Path) -> None:
 
 
 def readme_for(table: Path, manifest: dict) -> str:
-    axes = sorted({r["axis"] for r in read_jsonl(table / "gspc_measurements.jsonl")})
+    axes = sorted({r["axis"] for r in read_table_rows(table, "gspc_measurements", manifest)})
     configs = "\n".join(
         f"- config_name: {a}\n  data_files:\n  - gspc_measurements.parquet"
         for a in axes)
@@ -180,6 +180,22 @@ Source: `public/interop/mill-evidence/` in
 """
 
 
+def read_table_rows(table: Path, name: str, manifest: dict) -> list[dict]:
+    """The rows of one table.
+
+    The measurements table is written in PARTS on disk -- Cloudflare Pages refuses a file over
+    25 MiB and this table grows with every card the mill lands -- so its rows are read from
+    the parts the MANIFEST names, in name order. The items and cells tables are single files.
+    """
+    parts = (((manifest.get("tables") or {}).get("measurements") or {}).get("parts")) or []
+    if name == "gspc_measurements" and parts:
+        rows: list[dict] = []
+        for part in parts:
+            rows.extend(read_jsonl(table / part["file"]))
+        return rows
+    return read_jsonl(table / f"{name}.jsonl")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--table", required=True, type=Path, help="the built fact table directory")
@@ -191,7 +207,7 @@ def main() -> int:
     manifest = json.loads((table / "MANIFEST.json").read_text())
 
     for name in TABLES:
-        rows = read_jsonl(table / f"{name}.jsonl")
+        rows = read_table_rows(table, name, manifest)
         write_parquet(rows, table / f"{name}.parquet")
         print(f"parquet: {name}.parquet ({len(rows)} rows)")
     (table / "README.md").write_text(readme_for(table, manifest), encoding="utf-8")
@@ -213,7 +229,16 @@ def main() -> int:
         stage = Path(d) / "stage"
         stage.mkdir()
         for name in TABLES:
-            shutil.copy2(table / f"{name}.jsonl", stage / f"{name}.jsonl")
+            parts = (((manifest.get("tables") or {}).get("measurements") or {}).get("parts")) or []
+            if name == "gspc_measurements" and parts:
+                # The published dataset keeps the measurements as ONE file. The parts are a
+                # Pages per-file constraint, not the shape of the data, and a reader of the
+                # dataset reads the whole table in one fetch.
+                (stage / f"{name}.jsonl").write_text(
+                    "".join((table / part["file"]).read_text(encoding="utf-8") for part in parts),
+                    encoding="utf-8")
+            else:
+                shutil.copy2(table / f"{name}.jsonl", stage / f"{name}.jsonl")
             shutil.copy2(table / f"{name}.parquet", stage / f"{name}.parquet")
         shutil.copy2(table / "MANIFEST.json", stage / "MANIFEST.json")
         shutil.copy2(table / "README.md", stage / "README.md")

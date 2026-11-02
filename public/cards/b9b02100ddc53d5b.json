@@ -1,0 +1,102 @@
+{
+  "card": {
+    "as_of": "2026-10-28T12:24:11Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms.daily/0.1",
+      "state": "PROBED",
+      "run_at": "2026-10-28T12:24:11Z",
+      "normaliser": "csoai-norm-v1",
+      "n_targets": 51,
+      "n_ok": 45,
+      "n_unchanged": 5,
+      "n_changed": 6,
+      "n_bytes_only": 15,
+      "n_first_capture": 0,
+      "n_uncheckable": 6,
+      "n_unknown": 0,
+      "changed": [
+        "anthropic/terms",
+        "anthropic/usage_policy",
+        "anthropic/model_cards",
+        "anthropic/safety_policy",
+        "mistral/model_cards",
+        "amazon/pricing"
+      ],
+      "uncheckable": [
+        "openai/terms",
+        "openai/usage_policy",
+        "openai/model_cards",
+        "openai/pricing",
+        "openai/safety_policy",
+        "openai/art50_marking"
+      ],
+      "unknown": [],
+      "attests": "for each target listed as unchanged, the normalised sha256 of this capture equals the previous OK capture — an observation of two captures, nothing about the document between them",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b9b02100ddc53d5b020e7068f67e86a5aa4855778a539954fbdf675e3c7a0ac9",
+    "sig_ed25519": "627626617d1671d871e1d21c3d4e71e0b60a84e498562d106b94d1d51a4d6900f7c5de0073e6a2d89cb1a5fb8e41a60e176b2bedbd484b301af3e6083c9f6e08",
+    "source_urls": [
+      "https://councilof.ai/feeds/provider-diff/index.json"
+    ],
+    "subject": "provider-diff daily capture 2026-10-28: 6 changed, 6 uncheckable, 0 unknown of 51",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "daily",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "targets listed as uncheckable/unknown (nothing observed; never 'unchanged')",
+      "what changed on any changed target",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "2c1f8d52615ff94dd45e4c7d5d45445af6db1b699ab5e8efe7ff2888c28be1d2",
+    "ccc81b38dcca4405258cc3371922a21106cbb895a07dae08288e2d130a3825a9",
+    "b78d127955f30791ee46f12b4f3a9458da09b053025fa653dce7cf2e3b2bc4e7",
+    "aa5c7c40f1fd24629da4d48eb7bdfeddf67b7bd0b14e33cb2df30d33035acfb1",
+    "f29e9b726cd537daf35ffbd804f5ef56f5778a76bb760d6d5318238282839094",
+    "4aa9d282fe75774e643771f20d24ceb9fccb04542539d64b274c287ca4d7be63",
+    "11f5d67f4db2496c65970d39be4f36341ff22cc600a2234407e98adc3964542f",
+    "176200b26fd094d89be6cbde327a448f84af31c04a433352c5835fc454314661",
+    "aa6ab9166acf4d7a92aa2743240915ead88e4fe0c3eada56656a50f2e0b69600"
+  ]
+}
