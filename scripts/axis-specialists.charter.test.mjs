@@ -5,7 +5,7 @@ import { loadSlots } from './build-axis-reports.mjs';
 
 const read = path => JSON.parse(readFileSync(new URL(path, import.meta.url)));
 const registry = read('../council-os/axis-specialists/registry.json');
-const snapshot = read('../council-os/axis-specialists/board-2026-10-28.snapshot.json');
+const snapshot = read('../council-os/axis-specialists/board-2026-11-01.snapshot.json');
 const mcpTools = read('../functions/mcp/gspc-tools.json');
 const axes = snapshot.axes.map(row => row.axis);
 describe('all-axis charter integration', () => {

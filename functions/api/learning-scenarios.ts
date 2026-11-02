@@ -68,7 +68,7 @@ async function fetchObject(
 type BoardAxis = JsonObject & {
   axis: string;
   family: "gspc" | "financial" | "subject";
-  kind: "model-comparison" | "deterministic-facts" | "declared-slot";
+  kind: "model-comparison" | "deterministic-facts" | "declared-slot" | "measured-subject";
   status: string;
   bench: string;
   task: string;
@@ -87,7 +87,8 @@ function validBoardAxis(value: unknown): value is BoardAxis {
   if (
     value.kind !== "model-comparison" &&
     value.kind !== "deterministic-facts" &&
-    value.kind !== "declared-slot"
+    value.kind !== "declared-slot" &&
+    value.kind !== "measured-subject"
   )
     return false;
   if (!nonEmpty(value.status) || !BOARD_STATUSES.has(value.status))
