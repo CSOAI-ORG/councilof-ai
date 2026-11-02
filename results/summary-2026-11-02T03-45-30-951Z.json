@@ -1,0 +1,128 @@
+{
+  "run_id": "2026-11-02T03-45-30-951Z",
+  "engine": "gspc-continuous",
+  "lane": "governance",
+  "repo": "CSOAI-ORG/gspc-board",
+  "bank": {
+    "dataset": "csoai/gspc-master",
+    "source_dir": "fleets",
+    "unique_pairs": 237,
+    "sha256_16": "cc4cc01deab47aa9"
+  },
+  "panel": {
+    "limit": 10,
+    "offset": 0,
+    "n": 10
+  },
+  "started_at": "2026-11-02T03-45-30-951Z",
+  "finished_at": "2026-11-02T03-46-31-032Z",
+  "providers": {
+    "hf:moonshotai/Kimi-K3": {
+      "status": "LIVE",
+      "reason": null,
+      "n": 10,
+      "correct": 0,
+      "unparsed": 10,
+      "transport_errors": 0,
+      "accuracy": 0.0,
+      "wilson95": {
+        "point": 0.0,
+        "low": 0.0,
+        "high": 0.2775
+      }
+    },
+    "hf:deepseek-ai/DeepSeek-V4.1-Flash": {
+      "status": "LIVE",
+      "reason": null,
+      "n": 10,
+      "correct": 7,
+      "unparsed": 0,
+      "transport_errors": 0,
+      "accuracy": 0.7,
+      "wilson95": {
+        "point": 0.7,
+        "low": 0.3968,
+        "high": 0.8922
+      }
+    },
+    "hf:MiniMaxAI/MiniMax-M3.1-Flash": {
+      "status": "LIVE",
+      "reason": null,
+      "n": 10,
+      "correct": 0,
+      "unparsed": 9,
+      "transport_errors": 0,
+      "accuracy": 0.0,
+      "wilson95": {
+        "point": 0.0,
+        "low": 0.0,
+        "high": 0.2775
+      }
+    },
+    "hf:Qwen/Qwen3.8-2.4T-A95B": {
+      "status": "LIVE",
+      "reason": null,
+      "n": 10,
+      "correct": 0,
+      "unparsed": 10,
+      "transport_errors": 0,
+      "accuracy": 0.0,
+      "wilson95": {
+        "point": 0.0,
+        "low": 0.0,
+        "high": 0.2775
+      }
+    },
+    "hf:zai-org/GLM-5.3": {
+      "status": "LIVE",
+      "reason": null,
+      "n": 10,
+      "correct": 0,
+      "unparsed": 10,
+      "transport_errors": 0,
+      "accuracy": 0.0,
+      "wilson95": {
+        "point": 0.0,
+        "low": 0.0,
+        "high": 0.2775
+      }
+    },
+    "deepseek": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 402",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "gemini": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 403",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    },
+    "grok": {
+      "status": "BLOCKED_CREDENTIAL",
+      "reason": "HTTP 400 invalid key",
+      "n": 0,
+      "correct": 0,
+      "unparsed": 0,
+      "transport_errors": 0,
+      "accuracy": null,
+      "wilson95": null
+    }
+  },
+  "live_providers": [
+    "hf:MiniMaxAI/MiniMax-M3.1-Flash",
+    "hf:Qwen/Qwen3.8-2.4T-A95B",
+    "hf:deepseek-ai/DeepSeek-V4.1-Flash",
+    "hf:moonshotai/Kimi-K3",
+    "hf:zai-org/GLM-5.3"
+  ]
+}
