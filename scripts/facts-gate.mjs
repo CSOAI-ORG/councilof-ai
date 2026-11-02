@@ -670,8 +670,14 @@ function selftestCases(N, M, U) {
   [`all ${N} axes are measured is ${U === 0 ? "honest" : "an OVERCLAIM"} (U = ${U})`, `<p>All ${N} axes are measured and signed.</p>`, U !== 0],
   [`VIOLATION: ${N + 8} measured axes (more than the board carries)`, `<p>The board publishes ${N + 8} measured axes.</p>`, true],
   // ── postfix measured grammar = the live totals.lid (2026-09-16, board 23 · 22) ──
-  ["live lid verbatim: N axes measured is a MEASURED claim, not a slot count", "<p>Lid: 15 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.</p>", false],
-  ["VIOLATION: postfix overclaim still fails", "<p>Board right now: 30 axes measured · 14 model fleets.</p>", true],
+  // DERIVED, not typed: the board's measured count moves — it was 23 when this case was
+  // written and is 34 now — and a fixture that hard-codes the number becomes a FALSE
+  // NEGATIVE the moment the board grows past it. The case would sit there expecting a
+  // violation that is no longer a violation, and the gate would look proved while it had
+  // gone blind. A count that moves must be followed everywhere it is published,
+  // including in the gate's own proof.
+  [`live lid verbatim: ${M} axes measured is a MEASURED claim, not a slot count`, `<p>Lid: ${M} axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.</p>`, false],
+  [`VIOLATION: postfix overclaim still fails (${M + 7} measured)`, `<p>Board right now: ${M + 7} axes measured · 14 model fleets.</p>`, true],
   ["understatement passes (fewer than measured is safe)", "<p>The board carries 15 measured axes today.</p>", false],
   ["VIOLATION: EAS asserted live", "<p>Every attestation is anchored on EAS today.</p>", true],
   ["honest EAS label", "<p>EVM · EAS BlackRock BUIDL 0x7712c3420573… UNMEASURED</p>", false],
