@@ -55,8 +55,10 @@ export const NODE_TEST_FILES = [
   // 2026-11-02: six more node:test files arrived via merged lanes and were never
   // registered, so `npm test` (root vitest) reported each as a failed suite
   // ("No test suite found"). Each was verified green under `node --test` before
-  // registration; pr-gates' node --test step reads this same list, so coverage moves
-  // with the exclusion — nothing is hidden, it is run by the runner that can collect it.
+  // registration; the pr-gates node --test step reads this same list, so coverage
+  // moves with the exclusion — nothing is hidden, it is run by the runner that can
+  // collect it. NOTE: no apostrophes in comments here — the registry script extracts
+  // every quoted fragment of this block as a file path.
   'capabilities/card-counts.test.mjs',
   'capabilities/journey-backends.test.mjs',
   'integrations/integrations.test.mjs',
