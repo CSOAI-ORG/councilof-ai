@@ -17,6 +17,7 @@ import { FINANCIAL_FACTS_AS_OF, financialFamilyBlock } from "./_gspc_fin_as_of";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 import { MDE_STATES, UNDERPOWERED_STATE, applyUnderpowered, measuredOnModel, withPower } from "./_gspc_power";
 import { withMeasurementTime } from "./_gspc_measurement_time";
+import { LANGUAGE_STATES, LANGUAGE_UNMEASURED_REASON_CODES, languageContract, languageLimitation, withLanguage } from "./_gspc_language";
 import { headFromGet } from "./_head";
 
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
@@ -544,7 +545,10 @@ export const onRequestGet: PagesFunction = async (context) => {
       ? row.status
       : undefined;
     return { ...a, facts_as_of: row.as_of, ...(facts_status ? { facts_status } : {}) };
-  }).map(withMeasurementTime);
+  }).map(withMeasurementTime)
+    // The language of each axis's items (2026-10-13), read from the served bank's published bytes by
+    // scripts/gspc_bank_language.py. UNMEASURED wherever no item text was read; never a default "en".
+    .map(withLanguage);
   const ownLedExcludedAxes = selectedRaw
     .filter((a) => a.kind === "model-comparison" && isOwnCouncilModel(a.leader))
     .map((a) => a.axis);
@@ -677,6 +681,10 @@ export const onRequestGet: PagesFunction = async (context) => {
       leader_card_state: ["SIGNED_PER_MODEL_CARD", "NO_SIGNED_PER_MODEL_CARD", "CARD_RECORDS_A_DIFFERENT_MEASUREMENT"],
       separation_untested_reason_code: ["NO_SIGNED_CARD_FOR_AXIS", "ROWS_ARE_A_RETIRED_BANK", "TOO_FEW_DISTINCT_ITEMS"],
       verification: ["VALID", "INVALID", "UNCHECKABLE"],
+      // axes[].language.state (2026-10-13): CENSUSED (every distinct item text of the served bank was
+      // read and accounted for) or UNMEASURED with a reason code. A card's language tag is not a state.
+      language_state: [...LANGUAGE_STATES],
+      language_unmeasured_reason_code: [...LANGUAGE_UNMEASURED_REASON_CODES],
       note: "Absence of a field means UNMEASURED. TIE is never a win. A withheld leader is a state, not a zero.",
     },
     totals: (() => {
@@ -971,6 +979,9 @@ export const onRequestGet: PagesFunction = async (context) => {
         UNCHECKABLE: selected.filter((a) => a.measurement_time.state === "UNCHECKABLE").map((a) => a.axis),
       },
     },
+    // Which language the items are in, and how that was read (2026-10-13). Every count is summed from
+    // axes[].language below; the method and the review table are named so a reader can re-run both.
+    language_contract: languageContract(selected),
     axes: selected.map(withResolvableBank),
     // In the payload for honesty; NOT the board. See the note on each entry.
     measured_in_lane: axis ? undefined : MEASURED_IN_LANE,
@@ -1017,6 +1028,9 @@ export const onRequestGet: PagesFunction = async (context) => {
       "affect's legal gold labels and severity bases are COUNSEL-PENDING: the numbers measure model behaviour against a counsel-pending key and are not legal verdicts.",
       "Scores describe measured runs on frozen splits on a date. They do not describe a system's compliance with anything.",
       "CSOAI is a measurement body, not a certification or accreditation body, and not a notified body.",
+      // Appended last on purpose, so no earlier line changes its index. Derived from axes[].language:
+      // it carries no number of its own (functions/api/_gspc_language.ts).
+      languageLimitation(selected),
     ],
   };
 
