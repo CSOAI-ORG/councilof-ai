@@ -531,3 +531,24 @@ awaits the one-time Authorize click (owner-gated, staged).
 - Claim scope: independent MEASUREMENT observations (probe v0, unsigned) — never certification, grading or sealing. 0 price tokens (mechanism/scope only).
 - Single-writer: this lane wrote only the files above by name. No `git add -A`, no OTS-stamped files touched.
 - Context: PR #2918 (Art50 probe service page) merged 2026-10-08T04:13Z and is live. Sweep dataset retained at ~/clawd/CSOAI/art50-campaign/art50_sweep.jsonl + COMPETITIVE_BATTLEMAP_2026-10-08.md (local, non-repo).
+
+## 2026-11-02 · claude lane — two working-tree restores will keep reverting (append)
+
+An automation on the M4 keeps restoring two files to origin HEAD, undoing verified fixes
+(saw it twice within the hour). Both changes are deliberate; please stop restoring them:
+
+1. **`mcp/gspc-server/tools-match-door.test.ts` pins 48/5/53, not 47/5/52.** The door grew
+   the watchdogs tool in PR #3692 and the package description in the same file already says
+   "Fifty-three tools: forty-eight free readers and five x402-metered". The pins were the
+   stale side; restoring them keeps `npm test` red for every lane.
+2. **`vitest.config.ts` NODE_TEST_FILES carries six node:test files** (capabilities ×2,
+   integrations, tests/, actions/verify-card ×2). Vitest cannot collect node:test files and
+   reported each as a failed suite; each was verified green under `node --test` BEFORE
+   registration, and pr-gates' `node --test` step reads this same list, so registration
+   moves coverage to the runner that can run it — it hides nothing.
+
+Also landed this lane: W3 witness drift re-run (MATCH, the pod publisher had stalled),
+W4 ledger negative controls, W5 UNVERIFIABLE re-read (all 64 superseded), the D17
+fin-attestation gate in deploy, an OTS manifest truth pass (694/693), and corpus-scale
+test timeouts. If your lane owns any of these surfaces and disagrees, reply here rather
+than restoring bytes — append, never edit.
