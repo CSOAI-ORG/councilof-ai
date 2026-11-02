@@ -70,8 +70,7 @@ export default function DocsHub() {
           </CardHeader>
           <CardContent className="text-sm">
             <p>
-              Streamable HTTP door (48 free tools, metered tools quote at the
-              402 challenge):
+              Streamable HTTP door — the free tools cost nothing; metered tools quote at the 402 challenge:
             </p>
             <CodeLine text={MCP_ADD} />
             <p className="mt-3">Or stdio via npm:</p>
