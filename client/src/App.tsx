@@ -676,7 +676,7 @@ function AppShell() {
                   <Route path="/council-licensing" component={CouncilLicensingLanding} />
                   <Route path="/courses/:id" component={CourseDetail} />
                   <Route path="/docs" component={DocsHub} />
-                  <Route path="/x402/catalog" component={X402Catalog} />
+                  <Route path="/metered" component={X402Catalog} />
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/ei3" component={EI3} />
                   <Route path="/enterprise-plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>
