@@ -46,7 +46,7 @@ export const OPEN_SDKS = [
   { id: "x402-card", href: "https://councilof.ai/.well-known/x402.json", eats: "Agents already speak 402. Charge assembly. Board stays free." },
   { id: "ras-pack", href: "https://councilof.ai/api/evidence-pack", eats: "csoai.insurability-evidence-pack/0.1 — four-class mapping, live." },
   { id: "eunomia", href: "https://councilof.ai/eunomia-data", eats: "Data-only lane: enforcement record and deadlines. Never scores." },
-  { id: "index", href: "https://councilof.ai/signals/sov-signal.signed.json", eats: "Row-count index. Licence the SLA, not a coupon." },
+  { id: "index", href: "https://councilof.ai/signals/coverage-index.signed.json", eats: "Row-count index. Licence the SLA, not a coupon." },
   { id: "hf-record", href: "https://huggingface.co/csoai", eats: "Public Hugging Face profile and canonical Collection. Read live inventory; append evidence to the canonical dataset instead of spraying repos." },
 ] as const;
 
@@ -148,7 +148,7 @@ export const OPENINGS: Opening[] = [
     eats: "Nothing. A weighted average of scores is not a market we issue.",
     never: "XRP mining, score coupons, on-chain MEASURED, invented payTo.",
     feed: "Signed coverage index counts rows.",
-    href: "https://councilof.ai/signals/sov-signal.signed.json",
+    href: "https://councilof.ai/signals/coverage-index.signed.json",
   },
 ];
 
