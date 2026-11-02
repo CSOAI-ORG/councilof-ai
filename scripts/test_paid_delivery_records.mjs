@@ -374,9 +374,10 @@ await test('payer receipt projection preserves UNRECORDED null items and count w
  assert.equal(body.unavailable_capability.capability,'settlement-receipt persistence');
 });
 
-let paymentAllowed=true,settlements=0;
+let paymentAllowed=true,settlements=0,paymentVerifications=0;
 const x402={
  verifyX402Payment:async req=>{
+  paymentVerifications++;
   if(paymentAllowed&&req.headers.has('x-payment')){settlements++;return{ok:true,settlement:{transaction:'tx-fixture'},paymentResponse:'opaque-echo'};}
   return{ok:false,reason:'unpaid or refused'};
  },
@@ -554,11 +555,60 @@ const evidenceModule=await moduleFrom(current('functions/api/evidence-bundle.ts'
   signPayload:async payload=>{if(failBundleSign)throw Error('fixture sign failure');return{sha256:digest(Buffer.from(JSON.stringify(payload))),bytes:100,sig_ed25519:null,unsigned_reason:'offline unsigned fixture',did:'did:fixture'};}},
  './_x402_descriptions':{EVIDENCE_BUNDLE_DESCRIPTION:'fixture'},'./_x402_delivery_record':helperModule
 });
-async function runEvidence(query,paid=true,fixtureCards={}){
- const kv=new Kv();settlements=0;paymentAllowed=paid;
- cx.fetch=async()=>new Response(JSON.stringify({cards:fixtureCards,merkle_root:'a'.repeat(64),as_of:'fixture-date'}));
+async function runEvidence(query,paid=true,fixtureCards={},corpusRead){
+ const kv=new Kv();settlements=0;paymentVerifications=0;paymentAllowed=paid;
+ cx.fetch=corpusRead||(async()=>new Response(JSON.stringify({cards:fixtureCards,merkle_root:'a'.repeat(64),as_of:'fixture-date'})));
  const out=await evidenceModule.namespace.onRequestGet({request:new Request('https://example.test/api/evidence-bundle?'+query,{headers:paid?{'x-payment':'fixture'}:{}}),env:{REVENUE_KV:kv}});
  return{kv,out,settlements};
+}
+const unavailableEvidenceReads=[
+ ['HTTP failure',async()=>new Response('unavailable',{status:503})],
+ ['missing cards',async()=>Response.json({})],
+ ['array cards',async()=>Response.json({cards:[]})],
+ ['null cards',async()=>Response.json({cards:null})],
+ ['string cards',async()=>Response.json({cards:'unavailable'})],
+ ['numeric cards',async()=>Response.json({cards:1})],
+];
+for(const [name,read] of unavailableEvidenceReads){
+ for(const [mode,query,paid] of [
+  ['preview','obligation=fixture',false],
+  ['unpaid bundle','obligation=fixture&bundle=1',false],
+  ['presented payment','obligation=fixture&bundle=1',true],
+  ['invoice','obligation=fixture&invoice=gbp&commissioned_by=fixture',false],
+ ]){
+  await test('full evidence '+name+' refuses '+mode+' before payment',async()=>{
+   const actual=await runEvidence(query,paid,{},read),body=await actual.out.json();
+   assert.equal(actual.out.status,503);assert.equal(body.status,'UNCHECKABLE');
+   assert.equal(body.error,'corpus_unavailable');assert.equal(body.relevant_signed_cards,null);
+   assert.equal(body.corpus.signed_cards_total,null);assert.equal(body.corpus.read_state,'UNCHECKABLE');
+   assert.equal(body.cards,undefined);assert.equal(body.manifest_card,undefined);assert.equal(body.buy,undefined);
+   assert.equal(body.reference,undefined);assert.equal(actual.settlements,0);assert.equal(paymentVerifications,0);
+   assert.equal(actual.kv.puts,0);assert.equal(actual.kv.map.size,0);
+  });
+ }
+}
+for(const [name,read] of [
+ ['transport rejection',async()=>{throw Error('offline transport failure');}],
+ ['JSON decoding rejection',async()=>new Response('{')],
+ ['body read rejection',async()=>({ok:true,json:async()=>{throw Error('offline body read failure');}})],
+ ['null response body',async()=>Response.json(null)],
+]){
+ await test('full evidence '+name+' rejects before payment',async()=>{
+  await assert.rejects(runEvidence('obligation=fixture&bundle=1',true,{},read));
+  assert.equal(settlements,0);assert.equal(paymentVerifications,0);
+ });
+}
+for(const [mode,query,status] of [
+ ['preview','obligation=fixture',200],
+ ['unpaid bundle','obligation=fixture&bundle=1',402],
+]){
+ await test('full evidence readable empty '+mode+' retains zero count',async()=>{
+  const actual=await runEvidence(query,false),body=await actual.out.json();
+  const preview=mode==='preview'?body:body.csoai.preview;
+  assert.equal(actual.out.status,status);assert.equal(preview.relevant_signed_cards,0);
+  assert.equal(preview.corpus.signed_cards_total,0);assert.equal(actual.settlements,0);
+  assert.equal(actual.kv.puts,0);
+ });
 }
 await test('full valid ASSEMBLED-EMPTY records zero-selected bundle',async()=>{
  failBundleSign=false;const actual=await runEvidence('obligation=fixture&bundle=1'),raw=await bytes(actual.out),body=JSON.parse(raw);

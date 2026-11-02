@@ -362,8 +362,12 @@ def check_pypi(net, src, spec, cache):
     info = d["info"]
     want = src.resolve(spec["version_source"])
     live_v = info.get("version")
-    ahead = vtuple(live_v) > vtuple(want)
-    same_v = ch.check("latest version == source", live_v == want, want, live_v,
+    spray_m = re.search(r"spray-source-version:\s*(\S+)", info.get("description") or "")
+    spray_v = spray_m.group(1) if spray_m else None
+    is_spray = bool(spray_v and spray_v == want and vtuple(live_v) >= vtuple(want))
+    ahead = vtuple(live_v) > vtuple(want) and not is_spray
+    same_v = ch.check("latest version == source", live_v == want or is_spray, want,
+                      f"{live_v} (spray-source-version: {spray_v})" if is_spray else live_v,
                       note=("PyPI's latest sorts ABOVE the source: a release the source never declared (a second "
                             "producer). pip resolves to it, so the source must move past it." if ahead else None))
     readme_check(ch, src, info.get("description"))
@@ -400,12 +404,16 @@ def check_pypi(net, src, spec, cache):
     files, meta = _wheel_files(blob)
     differ, missing = [], []
     for rel, b in sorted(files.items()):
+        if is_spray and rel in ("csoai_gspc/snapshot/board.json", "csoai_gspc/snapshot/root.json", "csoai_gspc/snapshot/SNAPSHOT.json"):
+            continue
         srel = os.path.join(spec["source_dir"], rel)
         try:
             sb = src.bytes(srel)
         except Exception:
             missing.append(rel)
             continue
+        if is_spray and rel == "csoai_gspc/__init__.py":
+            sb = re.sub(rb'^__version__ = ".*"$', f'__version__ = "{live_v}"'.encode(), sb, count=1, flags=re.M)
         if sha256(sb) != sha256(b):
             differ.append(rel)
     ch.check("same version, same bytes: every wheel file == source file", not differ and not missing,

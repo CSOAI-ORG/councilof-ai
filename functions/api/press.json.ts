@@ -20,6 +20,7 @@ import spray from "../../scripts/badger/_spray-log-v2.json";
 import doi from "../../docs/DOI_AXIS_CARDS_2026-08-24.json";
 import { buildRevenue, type RevenueEnv } from "./revenue";
 import { headFromGet } from "./_head";
+import disclosureResearch from "../../public/interop/ai-disclosures-to-workflow-evidence-2026-10-29.json";
 
 interface Correction { id: string; date: string; what_was_wrong: string; how_caught?: string; fix?: string; what_changed?: string; status?: string; detected_by?: string }
 interface Card { card: string; axis?: string; ts?: string }
@@ -94,6 +95,8 @@ export async function build(env: RevenueEnv = {}) {
     license: "CC-BY-4.0",
     publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
     doctrine: "Measurement, never certification. Verification is free and needs no account. Every line below carries the command that checks it.",
+    // Documentary research has its own date; it must not advance the measurement window.
+    research_notes: [disclosureResearch],
     window: {
       from, to: anchor,
       derivation: "The 7 days ending at the newest date any committed artifact carries. NOT the clock: two requests any interval apart return the same window.",

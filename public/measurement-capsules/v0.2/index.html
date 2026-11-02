@@ -1,65 +1,96 @@
 <!doctype html>
 <html lang="en">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Measurement capsules v0.2: published files — Council of AI</title>
-<meta name="description" content="The published measurement-capsule files, schema csoai.measurement-capsule/0.2: the signed index, its anchors, the publication records and each batch's record, leaves and capsules. Measurement, not endorsement.">
+<meta name="description" content="The files and signed records behind the current measurement-capsule index. Measurement, not endorsement.">
 <link rel="canonical" href="https://councilof.ai/measurement-capsules/v0.2/">
 <style>
  :root{color-scheme:light dark;--fg:#111;--bg:#fff;--mut:#555;--line:#e3e3e3}
  @media(prefers-color-scheme:dark){:root{--fg:#e8e8e8;--bg:#111;--mut:#a5a5a5;--line:#2b2b2b}}
  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
- main{max-width:60rem;margin:0 auto;padding:3rem 1rem 5rem}
+ main{max-width:70rem;margin:0 auto;padding:3rem 1rem 5rem}
  h1{font-size:1.5rem;margin:0 0 .25rem} .sub{color:var(--mut);margin:0 0 2rem} h2{font-size:1.02rem;margin:2.2rem 0 .5rem}
  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;overflow-wrap:anywhere}
  table{border-collapse:collapse;width:100%} td,th{text-align:left;vertical-align:top;padding:.4rem .5rem;border-top:1px solid var(--line)}
  th{color:var(--mut);font-weight:500} .wrap{overflow-x:auto} a{color:inherit}
  .rule{border-left:3px solid var(--line);padding:.1rem .8rem;margin:1rem 0;color:var(--fg)}
 </style>
+</head>
+<body>
 <main>
 <h1>Measurement capsules v0.2: published files</h1>
-<p class="sub">Every file behind the current signed index, dated <strong>1 October 2026</strong> (as_of <code>2026-10-01T08:11:31Z</code>): 10,737 capsules of schema <code>csoai.measurement-capsule/0.2</code> in 10 batches of 9 kinds. Measurement, not endorsement: a capsule records what was declared, what was observed and the difference, and grants no authority.</p>
+<p class="sub">Current index dated <strong>2026-10-28</strong> (<code>as_of 2026-10-28T08:30:40Z</code>): 11,529 capsules in 12 batches. The files describe declared and observed measurements; they grant no authority.</p>
 
-<p class="rule"><strong>If this page and <code>index.json</code> ever disagree, <code>index.json</code> is the signed record and wins.</strong> The daily publisher rewrites <code>index.json</code>, <code>index.signed.json</code>, <code>anchors.json</code> and <code>index.json.ots</code> as a new day is sealed; this page is written by hand and can lag them. Every number below was read from the served files on 28 October 2026 and is repeated here with the date it was read. The index root is the check: it is the Merkle Tree Hash over the sorted capsule_id leaves of all the batches together, so it changes whenever any capsule changes.</p>
+<p class="rule"><strong>If this page and <code>index.json</code> ever disagree, <code>index.json</code> is the signed record and wins.</strong> This page is a readable directory derived from the published index and anchor record. Check those files directly for the authoritative values; their timestamps may differ.</p>
 
 <h2>Index</h2>
 <ul>
- <li><a href="index.json">index.json</a>: the index (schema <code>csoai.measurement-capsule-index/0.3</code>, as_of <code>2026-10-01T08:11:31Z</code>, index root <code>9631cc00b91ce9d1e37e517851eab126be6ca1a4dc6b66a26d86352aada5b562</code>, 10,737 capsules in 10 batches; daily chain position 5, previous index dated 30 September 2026)</li>
- <li><a href="index.signed.json">index.signed.json</a>: its Ed25519 signature (<code>did:web:csoai.org#board-attestation-1</code>, signed_at <code>2026-10-01T08:11:32.035Z</code>). The rule is Ed25519 over the canonical payload — JSON, keys sorted recursively, no whitespace — and <code>sha256</code> of those bytes is the <code>payload_sha256</code> the envelope carries. Verifying it says only that the key holder signed those bytes.</li>
- <li><a href="index.json.ots">index.json.ots</a>: its OpenTimestamps proof, carrying Bitcoin block-header attestations at heights <strong>969421</strong> and <strong>969461</strong>, plus two pending calendar attestations. It commits to the index bytes (<code>sha256 657ec68566de144fb22dc7bc8e9f7c8f74808ba718ac3d8c48450cfafa8d6851</code>).</li>
- <li><a href="anchors.json">anchors.json</a>: the anchor states read from the anchor files themselves (as_of <code>2026-10-01T08:52:55Z</code>). It records one Rekor entry for this index — log index <strong>3033118403</strong>, state INCLUDED, inclusion proof verifies. It also names the index's <em>original</em> OpenTimestamps proof (<code>measurement-index-v0.2-2026-10-01.json.ots</code>, <code>sha256 1f8d2994895a74ff384a1a1331e398abdd98d4df8f59850c91436c823b350360</code>), whose state there is PENDING_CALENDAR_COMMITMENT: a calendar commitment alone dates nothing. The upgraded proofs that carry the Bitcoin attestation are published on Hugging Face. The XRP Ledger anchor is PREPARED_NOT_SUBMITTED: memo drafts exist and nothing has been submitted.</li>
- <li><a href="../latest.json">../latest.json</a>: which version is current</li>
+ <li><a href="index.json">index.json</a>: schema <code>csoai.measurement-capsule-index/0.3</code>, dated <code>2026-10-28T08:30:40Z</code>, 11,529 capsules in 12 batches; root <code>bf58e87656139fe46ad5816930c1a1abb866477302e31f8c8c8f49067dd4de7d</code>.</li>
+ <li><a href="index.signed.json">index.signed.json</a>: Ed25519 signed envelope, signed <code>2026-10-28T08:30:41.285Z</code> by <code>did:web:csoai.org#board-attestation-1</code>; artifact SHA-256 <code>241c5673d1afcd6a320e795facb8a7964dbfeda2c02af74705a1fa49d602d688</code>, signed-payload SHA-256 <code>249fae68e2682eda234ce61172dc8f24274adb0e98d0fb0be0cf89d29e0c659b</code>. The published envelope reports local verification <code>VERIFIES</code>. A valid signature binds bytes and signer; it does not prove that a measurement is correct.</li>
+ <li><a href="index.json.ots">index.json.ots</a>: proof SHA-256 <code>30e9826eb7ee35eac599c056f50fe77f27d14de58066c41384ad5ae9643940f2</code>; status <strong>PENDING_CALENDAR_COMMITMENT</strong>. No Bitcoin block height is recorded in this anchor snapshot; a calendar commitment alone dates nothing.</li>
+ <li><a href="anchors.json">anchors.json</a>: anchor states read from the published anchor record at <code>2026-10-28T08:53:00Z</code>.</li>
+ <li><a href="../latest.json">../latest.json</a>: current published version pointer.</li>
 </ul>
 
-<h2>Publication</h2>
-<p>The files dated 26 September 2026 were written with <code>"private_until": "owner approves publication"</code> before the owner approved publication that day. Their signed bytes are not changed. These two signed records supersede that one field: all of it is public.</p>
+<h2>Chain position</h2>
+<p>Index date <code>2026-10-28</code>, chain sequence <code>not stated</code>, previous index date <code>not stated</code>; gap days <code>not stated</code>. Previous index SHA-256: <code>not stated</code>.</p>
+
+<h2>External anchors and publication</h2>
 <ul>
- <li><a href="publication/2026-09-26.json">publication/2026-09-26.json</a> (<a href="publication/2026-09-26.signed.json">signed</a>, <a href="publication/2026-09-26.json.ots">OTS</a>): the index's publication record</li>
- <li><a href="publication/2026-09-26-erratum.json">publication/2026-09-26-erratum.json</a> (<a href="publication/2026-09-26-erratum.signed.json">signed</a>, <a href="publication/2026-09-26-erratum.json.ots">OTS</a>): the erratum for every other file that carries the field (genesis, chain head, batch records)</li>
+ <li>Rekor: INCLUDED (inclusion proof verifies); log index <code>3535235263</code>; subject SHA-256 <code>241c5673d1afcd6a320e795facb8a7964dbfeda2c02af74705a1fa49d602d688</code>.</li>
+ <li>XRP Ledger: <strong>PREPARED_NOT_SUBMITTED</strong> — memo drafts exist; nothing has been submitted to the XRP Ledger</li>
+ <li>Publication: <strong>PUBLIC</strong>, approved <code>2026-09-26</code>; publication record is listed below.</li>
+</ul>
+<ul>
+ <li><a href="publication/2026-09-26.json">publication/2026-09-26.json</a> (<a href="publication/2026-09-26.signed.json">signed</a>, <a href="publication/2026-09-26.json.ots">OTS</a>): original publication record.</li>
+ <li><a href="publication/2026-09-26-erratum.json">publication/2026-09-26-erratum.json</a> (<a href="publication/2026-09-26-erratum.signed.json">signed</a>, <a href="publication/2026-09-26-erratum.json.ots">OTS</a>): publication-field erratum.</li>
 </ul>
 
-<h2>Batches</h2>
+<h2>Batch records</h2>
 <div class="wrap"><table>
- <tr><th>directory</th><th>kind</th><th>capsules</th><th>OpenTimestamps state</th><th>files</th></tr>
- <tr><td><code>a2a_card/</code></td><td><code>measurement.a2a_card_signature</code></td><td>33</td><td>BITCOIN_ATTESTED</td><td><a href="a2a_card/record.json">record.json</a> · <a href="a2a_card/record.signed.json">record.signed.json</a> · <a href="a2a_card/record.json.ots">record.json.ots</a> · <a href="a2a_card/leaves.json">leaves.json</a> · <a href="a2a_card/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
- <tr><td><code>claim_watch/</code></td><td><code>measurement.claim_watch</code></td><td>1</td><td>PENDING_CALENDAR_COMMITMENT</td><td><a href="claim_watch/record.json">record.json</a> · <a href="claim_watch/record.signed.json">record.signed.json</a> · <a href="claim_watch/record.json.ots">record.json.ots</a> · <a href="claim_watch/leaves.json">leaves.json</a> · <a href="claim_watch/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
- <tr><td><code>contract_parity/</code></td><td><code>measurement.contract_parity</code></td><td>9,148</td><td>BITCOIN_ATTESTED</td><td><a href="contract_parity/record.json">record.json</a> · <a href="contract_parity/record.signed.json">record.signed.json</a> · <a href="contract_parity/record.json.ots">record.json.ots</a> · <a href="contract_parity/leaves.json">leaves.json</a> · <a href="contract_parity/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
- <tr><td><code>cross_ledger/</code></td><td><code>measurement.cross_ledger_supply</code></td><td>383</td><td>PENDING_CALENDAR_COMMITMENT</td><td><a href="cross_ledger/record.json">record.json</a> · <a href="cross_ledger/record.signed.json">record.signed.json</a> · <a href="cross_ledger/record.json.ots">record.json.ots</a> · <a href="cross_ledger/leaves.json">leaves.json</a> · <a href="cross_ledger/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
- <tr><td><code>mill_cross_runtime-5ae00c1f4c2e/</code></td><td><code>measurement.cross_runtime_reproduction</code></td><td>14</td><td>BITCOIN_ATTESTED</td><td><a href="mill_cross_runtime-5ae00c1f4c2e/record.json">record.json</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/record.signed.json">record.signed.json</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/record.json.ots">record.json.ots</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/leaves.json">leaves.json</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
- <tr><td><code>mill_cross_runtime-78226433e9e4/</code></td><td><code>measurement.cross_runtime_reproduction</code></td><td>140</td><td>BITCOIN_ATTESTED</td><td><a href="mill_cross_runtime-78226433e9e4/record.json">record.json</a> · <a href="mill_cross_runtime-78226433e9e4/record.signed.json">record.signed.json</a> · <a href="mill_cross_runtime-78226433e9e4/record.json.ots">record.json.ots</a> · <a href="mill_cross_runtime-78226433e9e4/leaves.json">leaves.json</a> · <a href="mill_cross_runtime-78226433e9e4/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
- <tr><td><code>operations/</code></td><td><code>operations</code></td><td>236</td><td>PENDING_CALENDAR_COMMITMENT</td><td><a href="operations/record.json">record.json</a> · <a href="operations/record.signed.json">record.signed.json</a> · <a href="operations/record.json.ots">record.json.ots</a> · <a href="operations/leaves.json">leaves.json</a> · <a href="operations/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
- <tr><td><code>public_signals/</code></td><td><code>measurement.public_signal</code></td><td>119</td><td>PENDING_CALENDAR_COMMITMENT</td><td><a href="public_signals/record.json">record.json</a> · <a href="public_signals/record.signed.json">record.signed.json</a> · <a href="public_signals/record.json.ots">record.json.ots</a> · <a href="public_signals/leaves.json">leaves.json</a> · <a href="public_signals/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
- <tr><td><code>self_parity/</code></td><td><code>measurement.self_parity</code></td><td>166</td><td>PENDING_CALENDAR_COMMITMENT</td><td><a href="self_parity/record.json">record.json</a> · <a href="self_parity/record.signed.json">record.signed.json</a> · <a href="self_parity/record.json.ots">record.json.ots</a> · <a href="self_parity/leaves.json">leaves.json</a> · <a href="self_parity/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
- <tr><td><code>tool_drift/</code></td><td><code>measurement.tool_drift</code></td><td>497</td><td>BITCOIN_ATTESTED</td><td><a href="tool_drift/record.json">record.json</a> · <a href="tool_drift/record.signed.json">record.signed.json</a> · <a href="tool_drift/record.json.ots">record.json.ots</a> · <a href="tool_drift/leaves.json">leaves.json</a> · <a href="tool_drift/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
+ <thead><tr><th>directory / kind</th><th>capsules</th><th>signature</th><th>batch OTS</th><th>recorded states</th><th>files</th></tr></thead>
+ <tbody><tr><td><code>a2a_card/</code><br><code>measurement.a2a_card_signature</code></td><td>33</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>FAILED 8; UNCHECKABLE 12; VERIFIED 13</td><td><a href="a2a_card/record.json">record</a> · <a href="a2a_card/record.signed.json">signature</a> · <a href="a2a_card/record.json.ots">OTS</a> · <a href="a2a_card/leaves.json">leaves</a> · <a href="a2a_card/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>busabase/</code><br><code>measurement.busabase_state</code></td><td>8</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>MEASURED 8</td><td><a href="busabase/record.json">record</a> · <a href="busabase/record.signed.json">signature</a> · <a href="busabase/record.json.ots">OTS</a> · <a href="busabase/leaves.json">leaves</a> · <a href="busabase/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>claim_watch/</code><br><code>measurement.claim_watch</code></td><td>1</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>UNCONFIRMED 1</td><td><a href="claim_watch/record.json">record</a> · <a href="claim_watch/record.signed.json">signature</a> · <a href="claim_watch/record.json.ots">OTS</a> · <a href="claim_watch/leaves.json">leaves</a> · <a href="claim_watch/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>contract_parity/</code><br><code>measurement.contract_parity</code></td><td>9,148</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>CONSISTENT 5570; INCONSISTENT 2905; UNCHECKABLE 673</td><td><a href="contract_parity/record.json">record</a> · <a href="contract_parity/record.signed.json">signature</a> · <a href="contract_parity/record.json.ots">OTS</a> · <a href="contract_parity/leaves.json">leaves</a> · <a href="contract_parity/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>cross_ledger/</code><br><code>measurement.cross_ledger_supply</code></td><td>388</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>CONSISTENT 123; INCONSISTENT 2; ISSUER_LIST_UNAVAILABLE 2; LISTED_NOT_READ 39; NOT_A_SUPPLY_CLAIM 4; OPERATOR_API 90; PERMISSIONED_NOT_READABLE 6; STATE_PROOF_RECORDED 12; STATE_PROOF_VERIFIED 57; TOTAL_COMPLETE 12; TOTAL_PARTIAL 7; UNCHECKABLE 34</td><td><a href="cross_ledger/record.json">record</a> · <a href="cross_ledger/record.signed.json">signature</a> · <a href="cross_ledger/record.json.ots">OTS</a> · <a href="cross_ledger/leaves.json">leaves</a> · <a href="cross_ledger/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>meok/</code><br><code>measurement.meok_state</code></td><td>3</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>MEASURED 3</td><td><a href="meok/record.json">record</a> · <a href="meok/record.signed.json">signature</a> · <a href="meok/record.json.ots">OTS</a> · <a href="meok/leaves.json">leaves</a> · <a href="meok/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>mill_cross_runtime-5ae00c1f4c2e/</code><br><code>measurement.cross_runtime_reproduction</code></td><td>14</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>NOT_REPRODUCED 7; REPRODUCED_AGGREGATE_ONLY 2; REPRODUCED_ITEMWISE 5</td><td><a href="mill_cross_runtime-5ae00c1f4c2e/record.json">record</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/record.signed.json">signature</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/record.json.ots">OTS</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/leaves.json">leaves</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>mill_cross_runtime-78226433e9e4/</code><br><code>measurement.cross_runtime_reproduction</code></td><td>140</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>NOT_REPRODUCED 82; REPRODUCED_AGGREGATE_ONLY 9; REPRODUCED_ITEMWISE 49</td><td><a href="mill_cross_runtime-78226433e9e4/record.json">record</a> · <a href="mill_cross_runtime-78226433e9e4/record.signed.json">signature</a> · <a href="mill_cross_runtime-78226433e9e4/record.json.ots">OTS</a> · <a href="mill_cross_runtime-78226433e9e4/leaves.json">leaves</a> · <a href="mill_cross_runtime-78226433e9e4/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>operations/</code><br><code>operations</code></td><td>1,006</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>BITCOIN_ATTESTED 10; INCLUDED_PROOF_VERIFIES 1; LANDED_NOT_SHIPPED 7; PENDING_CALENDAR_COMMITMENT 1; PRESENT_SHA256_UNRECORDED 980; TIME_TO_CORRECT_UNMEASURED 6; UNCHECKABLE 1</td><td><a href="operations/record.json">record</a> · <a href="operations/record.signed.json">signature</a> · <a href="operations/record.json.ots">OTS</a> · <a href="operations/leaves.json">leaves</a> · <a href="operations/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>public_signals/</code><br><code>measurement.public_signal</code></td><td>122</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>MEASURED 104; PARTIAL 3; UNCHECKABLE 15</td><td><a href="public_signals/record.json">record</a> · <a href="public_signals/record.signed.json">signature</a> · <a href="public_signals/record.json.ots">OTS</a> · <a href="public_signals/leaves.json">leaves</a> · <a href="public_signals/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>self_parity/</code><br><code>measurement.self_parity</code></td><td>170</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>CONSISTENT 39; INCONSISTENT 13; NOT_DECLARED 1; NOT_LISTED 33; UNCHECKABLE 84</td><td><a href="self_parity/record.json">record</a> · <a href="self_parity/record.signed.json">signature</a> · <a href="self_parity/record.json.ots">OTS</a> · <a href="self_parity/leaves.json">leaves</a> · <a href="self_parity/capsules.jsonl.gz">capsules</a></td></tr>
+<tr><td><code>tool_drift/</code><br><code>measurement.tool_drift</code></td><td>496</td><td>VERIFIES</td><td>BITCOIN_ATTESTED</td><td>TOOLS_ADDED 63; TOOLS_ADDED+TOOLS_REMOVED 8; TOOLS_REMOVED 3; UNCHANGED_AT_NAME_GRANULARITY 346; UNCHECKABLE 76</td><td><a href="tool_drift/record.json">record</a> · <a href="tool_drift/record.signed.json">signature</a> · <a href="tool_drift/record.json.ots">OTS</a> · <a href="tool_drift/leaves.json">leaves</a> · <a href="tool_drift/capsules.jsonl.gz">capsules</a></td></tr></tbody>
 </table></div>
-<p>The counts sum to the index's 10,737. A published batch is a signed record over a set of capsules; the capsule to batch root is an RFC 9162 audit path, and each capsule's own id is the SHA-256 of its JCS serialisation. Two kinds are outside the <code>measurement.*</code> kind grammar used by the profile this corpus is being written against: the <code>operations</code> batch (236 capsules) and the single <code>measurement.claim_watch</code> capsule are recorded here under their published names, not renamed.</p>
-<p><code>endpoints/00.json</code> to <code>endpoints/ff.json</code>: 256 shards of the capsules about each measured endpoint, keyed by the first two hex digits of the SHA-256 of the normalised endpoint URL.</p>
+<p>Batch counts sum to 11,529. The index root is <code>bf58e87656139fe46ad5816930c1a1abb866477302e31f8c8c8f49067dd4de7d</code>. Batch-level OTS status is separate from the index-level proof above. Two recorded kinds are outside the usual <code>measurement.*</code> grammar: <code>operations</code> and <code>measurement.claim_watch</code>; they are listed under their published names.</p>
+
+<h2>Freshness recorded by the index</h2>
+<p>The index defines freshness per adapter. <strong>NOT_UPDATED</strong> means the newest carried batch for a daily adapter is older than this index date; <strong>CARRIED</strong> means a weekly/static batch or sibling batch is included by reference. This is the index's source-freshness state, not a claim of current source coverage. Not updated: <code>claim_watch@2026-10-25</code>, <code>cross_ledger@2026-10-25</code>, <code>public_signals@2026-10-25</code>, <code>self_parity@2026-10-25</code>, <code>tool_drift@2026-10-24</code>.</p>
+<div class="wrap"><table><thead><tr><th>adapter</th><th>index freshness</th><th>last good batch</th></tr></thead><tbody><tr><td><code>a2a_card</code></td><td>CARRIED</td><td>2026-09-26</td></tr>
+<tr><td><code>busabase</code></td><td>CARRIED</td><td>2026-10-15</td></tr>
+<tr><td><code>claim_watch</code></td><td>NOT_UPDATED</td><td>2026-10-25</td></tr>
+<tr><td><code>contract_parity</code></td><td>CARRIED</td><td>2026-09-26</td></tr>
+<tr><td><code>cross_ledger</code></td><td>NOT_UPDATED</td><td>2026-10-25</td></tr>
+<tr><td><code>meok</code></td><td>CARRIED</td><td>2026-10-15</td></tr>
+<tr><td><code>mill_cross_runtime</code></td><td>CARRIED</td><td>2026-09-26</td></tr>
+<tr><td><code>mill_cross_runtime-batch2</code></td><td>CARRIED</td><td>2026-09-26</td></tr>
+<tr><td><code>operations</code></td><td>CARRIED</td><td>2026-10-07</td></tr>
+<tr><td><code>public_signals</code></td><td>NOT_UPDATED</td><td>2026-10-25</td></tr>
+<tr><td><code>self_parity</code></td><td>NOT_UPDATED</td><td>2026-10-25</td></tr>
+<tr><td><code>tool_drift</code></td><td>NOT_UPDATED</td><td>2026-10-24</td></tr></tbody></table></div>
+
+<h2>Endpoint shards</h2>
+<p><code>endpoints/00.json</code> through <code>endpoints/ff.json</code> are the published endpoint shards, keyed by the first two hex digits of the SHA-256 of the normalized endpoint URL.</p>
 
 <h2>Verify</h2>
 <ul>
- <li>In the browser: <a href="/verify-server/">/verify-server/</a> returns every capsule held about one endpoint and re-derives its inclusion.</li>
- <li>Over MCP: the tools <code>measurement_index</code>, <code>verify_capsule</code> and <code>server_evidence</code> at <code>https://councilof.ai/mcp/</code>.</li>
- <li>Offline: the builder and verifier source (Apache-2.0) is at <a href="https://huggingface.co/datasets/csoai/evidence-index/tree/main/source">huggingface.co/datasets/csoai/evidence-index/tree/main/source</a>; the daily index chain is in the same dataset under <code>measurement-index/</code>, and the upgraded OpenTimestamps proofs under <code>ots-upgraded/</code>.</li>
+ <li>Browser: <a href="/verify-server/">/verify-server/</a> returns capsules held about one endpoint and re-derives inclusion.</li>
+ <li>Over MCP: <code>measurement_index</code>, <code>verify_capsule</code> and <code>server_evidence</code> at <code>https://councilof.ai/mcp/</code>.</li>
+ <li>Offline builder and verifier source (Apache-2.0): <a href="https://huggingface.co/datasets/csoai/evidence-index/tree/main/source">Hugging Face evidence-index source</a>; the daily index chain is under <code>measurement-index/</code>, and upgraded OpenTimestamps proofs under <code>ots-upgraded/</code>.</li>
 </ul>
-<p class="sub">A valid signature shows only that the key holder signed those bytes. It does not show that any value is correct.</p>
+<p class="sub">A signature shows that the signing key signed specified bytes. It does not prove the truth of the contents or confer endorsement.</p>
 </main>
+</body>
 </html>

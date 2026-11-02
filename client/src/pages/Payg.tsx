@@ -88,7 +88,7 @@ export default function Payg() {
       </div>
 
       <p className="text-center text-sm text-muted-foreground mt-10">
-        Human booking is not live. Verification stays free; the only paid rail is pay-as-you-go x402 at the door.
+        Human booking is not live. Verification stays free; the only paid rail is pay-as-you-go x402 at <a href="/services" className="underline underline-offset-2">the published doors</a>. The exact x402 price, where applicable, is disclosed by the individual door.
       </p>
     </div>
   );

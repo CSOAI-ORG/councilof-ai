@@ -1,0 +1,232 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "watchdog-ingest",
+  "specialist": {
+    "id": "meok-watchdog-ingest-specialist",
+    "cluster_id": "meok-axis-watchdog-ingest",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit the daily public watchdog and incident intake: that each pinned source was probed on schedule, that each answer carried the shape its publisher documents, and that no unreachable or unparseable source is ever reported as a count of zero.",
+    "reviewer_role": "public watchdog intake reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "pinned-source reachability and parseability",
+    "REACHABLE vs UNREACHABLE vs UNCHECKABLE separation",
+    "daily run freshness and published index agreement",
+    "unpinned findings stay visible as gaps"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-11-01.snapshot.json",
+    "measurement_time": {
+      "state": "UNCHECKABLE",
+      "precision": "unknown",
+      "source": "/api/gspc",
+      "source_field": "none",
+      "note": "No structured measurement time is available; CURRENT admission must fail closed."
+    },
+    "axis_row_sha256": "6fcfb952e248aee3c0863074725ae839a755d4b4c0050d3ebdd1840d4bf64cae",
+    "axis_row": {
+      "axis": "watchdog-ingest",
+      "family": "subject",
+      "kind": "declared-slot",
+      "applies_to": "public-watchdog-and-incident-sources",
+      "bench": "pending frozen method + sha-pinned daily runs",
+      "task": "does the public watchdog and incident layer answer on a schedule, does each answer carry the shape its publisher documents, and which of our own axes does each source touch",
+      "n": 0,
+      "status": "UNMEASURED",
+      "colour": "hsl(310 10% 55%)",
+      "hue": 310,
+      "note": "DECLARED-UNMEASURED slot (2026-10-30). Nothing has been measured on this axis: n 0 is the literal truth, never a score. The daily intake run probes 18 public sources and publishes public/interop/watchdog-intake/_index.json — a DAILY PROBE OF THE PUBLIC LAYER, not a frozen n>=30 bank, so this slot stays UNMEASURED. When the daily runs are frozen, sha-pinned and pinned to a published run window, the axis becomes MEASURED with n counting SOURCES PROBED — the same grammar as effect-binding's 'tool-call servers probed', never pooled with bank-item n. The public watchdog gap this names: before 2026-10-30 the AI Incident Database was a ONE-SHOT PRESENCE PROBE (layer-o-presence.json ns_incidentdatabase_ai, QUALIFIED / presence UNMEASURED, as_of 2026-09-29) and NVD, CVE, OSV and GHSA had no entries at all.",
+      "method_status": "no-method: declared slot",
+      "n_note": "The daily intake run probes 18 public sources and publishes public/interop/watchdog-intake/_index.json. That is a DAILY PROBE OF THE PUBLIC LAYER, not a frozen n>=30 bank, so this slot stays UNMEASURED. When the daily runs are frozen, sha-pinned and pinned to a published run window, the axis becomes MEASURED with n counting SOURCES PROBED — the same grammar as effect-binding's 'tool-call servers probed', never pooled with bank-item n.",
+      "method": "watchdog_intake.py v0.1 — daily pinned-source intake",
+      "method_sha": "scripts/watchdog_intake.py",
+      "public_pages": "HIDDEN_PENDING_OWNER_GO",
+      "measurement_time": {
+        "state": "UNCHECKABLE",
+        "precision": "unknown",
+        "source": "/api/gspc",
+        "source_field": "none",
+        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist watchdog-ingest audits only the watchdog-ingest row",
+      "evidence": "watchdog-ingest"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-watchdog-ingest; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "DECLARED_GAP",
+      "state": "PASS",
+      "detail": "UNMEASURED slot for public-watchdog-and-incident-sources; n=0 is not a score"
+    },
+    {
+      "id": "NO_FABRICATED_SCORE",
+      "state": "PASS",
+      "detail": "declared slot has no leader, accuracy or separation"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "no-method: declared slot"
+    }
+  ],
+  "summary": {
+    "checks": 6,
+    "passed": 6,
+    "declared": 0,
+    "findings": 0,
+    "audit_state": "MEASUREMENT_GAP_VISIBLE"
+  },
+  "negative_controls": [
+    {
+      "control": "point a pinned source at a dead host and require the row to read UNREACHABLE, never 0",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "serve HTML where a feed is documented and require UNCHECKABLE, never a zero count",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "watchdog-ingest-proposal-1",
+      "proposal": "freeze the daily run window and sha-pin it so the axis can carry a real n instead of staying a declared slot",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "watchdog-ingest-proposal-2",
+      "proposal": "open a data request with the AI Incident Database maintainers for a public incident export path, since the site serves HTML only",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_watchdog-ingest",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/watchdog-ingest",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "public watchdog intake reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "ba71901ee504283a7ffb2333383e565b2dbff6fc686fa257ba24c7ac7512aecd",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 14,
+        "title": "Regulatory determination is outside CSOAI"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "applies_to",
+      "method",
+      "method_sha",
+      "method_status",
+      "n_note"
+    ],
+    "measurement_url": "/api/gspc/axis/watchdog-ingest",
+    "competency_url": "/api/hitl/modules/watchdog-ingest",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Agree the measurement method, collect qualifying evidence and obtain independent review before admission.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}

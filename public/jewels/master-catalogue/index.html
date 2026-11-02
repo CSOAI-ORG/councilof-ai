@@ -1,0 +1,1535 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Master Catalogue of All Jewels | Council of AI</title>
+<meta name="description" content="Every jewel in the CSOAI estate, state-checked: the 130-row table with each row's claimed state, its verified state, and today's live read of the surface that row names.">
+<link rel="canonical" href="https://councilof.ai/jewels/master-catalogue/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Master Catalogue of All Jewels">
+<meta property="og:description" content="Every jewel in the estate, state-checked, with today's live read of the surface each row names.">
+<meta property="og:url" content="https://councilof.ai/jewels/master-catalogue/">
+<meta property="og:image" content="https://councilof.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{color-scheme:light dark;--fg:#0f172a;--muted:#475569;--line:#cbd5e1;--bg:#ffffff;--ok:#047857;--warn:#b45309;--bad:#b91c1c;--gate:#6d28d9;--dead:#64748b;--mute:#64748b}
+@media (prefers-colorscheme:dark){:root{--fg:#e2e8f0;--muted:#94a3b8;--line:#334155;--bg:#0b1220;--ok:#34d399;--warn:#fbbf24;--bad:#f87171;--gate:#a78bfa;--dead:#94a3b8;--mute:#94a3b8}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:76rem;margin:0 auto;padding:2.5rem 1rem 4rem}
+h1{font-size:2rem;line-height:1.15;margin:0 0 .5rem}
+h2{font-size:1.25rem;margin:2.5rem 0 .6rem;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+h3{font-size:1.05rem;margin:1.6rem 0 .4rem}
+p.lede{color:var(--muted);font-size:1.05rem;margin:0 0 1.5rem;max-width:60rem}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:.5rem .45rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.76rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+code{font-size:.8rem;word-break:break-all}
+nav{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;font-size:.9rem}
+a{color:inherit}
+.note{color:var(--muted);font-size:.9rem;max-width:60rem}
+ul{max-width:60rem}
+.chip{display:inline-block;padding:.1rem .45rem;border-radius:.4rem;font-size:.76rem;font-weight:600;border:1px solid currentColor;white-space:nowrap}
+.chip.ok{color:var(--ok)}.chip.warn{color:var(--warn)}.chip.bad{color:var(--bad)}.chip.gate{color:var(--gate)}.chip.dead{color:var(--dead)}.chip.mute{color:var(--mute)}
+.live{display:inline-block;min-width:2.1rem;text-align:center;padding:.05rem .3rem;border-radius:.3rem;font-size:.78rem;font-weight:700;border:1px solid currentColor}
+.live.ok{color:var(--ok)}.live.bad{color:var(--bad)}.live.gate{color:var(--gate)}.live.mute{color:var(--mute)}
+td.livecell{white-space:nowrap}
+td.ev,td.ns{font-size:.82rem;color:var(--muted);max-width:26rem}
+td.id{white-space:nowrap}
+td.claimed{font-size:.82rem;color:var(--muted)}
+td.url{font-size:.8rem;word-break:break-all}
+.scroll{max-height:44rem;overflow:auto;border:1px solid var(--line);border-radius:.4rem}
+.scroll table{font-size:.84rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.8rem;margin:1rem 0}
+.card{border:1px solid var(--line);border-radius:.5rem;padding:.7rem .8rem}
+.card .n{font-size:1.6rem;font-weight:700;display:block;line-height:1.1}
+.card .k{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+</style></head>
+<body><main>
+<nav><a href="/">Council of AI</a><a href="/claim-maintenance/">Claim maintenance</a><a href="/spec/claim-maintenance/">Specification</a><a href="/api/gspc">Board (JSON)</a><a href="/jewels/master-catalogue/index.json">This catalogue (JSON)</a></nav>
+
+<h1>Master Catalogue of All Jewels</h1>
+<p class="lede">Every jewel in the estate, in one place. Each of the 130 rows carries the state the checklist claimed, the state that was verified on 2026-10-27, and a live read of the surface that row names, taken today. The catalogue is a dated reading: it says what was read, when, and what came back. It certifies nothing.</p>
+
+<div class="grid">
+  <div class="card"><span class="n">130</span><span class="k">jewel rows</span></div>
+  <div class="card"><span class="n">126</span><span class="k">distinct URLs</span></div>
+  <div class="card"><span class="n">89</span><span class="k">read successfully</span></div>
+  <div class="card"><span class="n">37</span><span class="k">unreachable</span></div>
+  <div class="card"><span class="n">27</span><span class="k">text changed since 30 Oct</span></div>
+</div>
+
+<h2>What this is</h2>
+<p>A dated reading of the estate's jewels: the 130-row state table, state-checked, with every named surface re-read today by the estate's own extractor under its published pin. It supersedes the repository document <code>docs/GSPC-MASTER-CATALOG-OF-ALL-JEWELS-2026-10-27.md</code>, which was merged in PR #3531 on 2026-10-29 but was never published as a page a reader could reach.</p>
+
+<h2>What this is not</h2>
+<ul>
+  <li>Not a certification, a rank, a grade or a score.</li>
+  <li>Not a statement that any axis is <strong>MEASURED</strong>. The board carries its own status; this catalogue neither moves it nor pre-empts the decision that moves it.</li>
+  <li>Not a claim that any captured artefact is true. It records what was read, when, and what came back.</li>
+  <li>Not a completeness claim about the estate. It catalogues every jewel the state table names, plus the missing jewels the 2026-10-27 catalogue found. A jewel on no list would not appear here.</li>
+</ul>
+
+<h2>The three laws</h2>
+<ol>
+<li>A signed artefact is not a true artefact. Signature and presence prove where bytes came from; they never prove the number inside.</li>
+<li>The measurement must not manufacture the evidence it measures. Where finishing a jewel would mean minting the evidence, the jewel stays open and the blocker is named.</li>
+<li>Absence is a state. A refused URL, an unreachable endpoint, an unmeasured axis: each is recorded in its own state and never converted to a zero, a failure or a score.</li>
+</ol>
+
+<h2>What this is pinned to</h2>
+<table><thead><tr><th>Artefact</th><th>What</th><th>Bytes</th><th>sha256</th><th>Date</th></tr></thead><tbody>
+<tr><td>State table</td><td><code>docs/GSPC-JEWEL-STATE-TABLE-2026-10-27.md</code></td><td>55915</td><td><code>edace4852ff257217d216f2731bb2cfcefe4f379bfc63be617a9f664eeb74d2d</code></td><td>2026-10-27</td></tr>
+<tr><td>Re-read</td><td><code>out/docket-row-reread-20261030.json</code></td><td>—</td><td><code>0ff108177dba6c7c4e00e3d79214e7a9acba513ea10595438645f5e2e012a39f</code></td><td>2026-10-30T04:17:46.700Z</td></tr>
+<tr><td>Re-read</td><td><code>out/docket-row-reread-20261101.json</code></td><td>—</td><td><code>4f8c4fab13c8db00d0eb65bca69f7ee6a5bdcba3493b920a84c01f8392a8a4f8</code></td><td>2026-11-01T04:32:57.274Z</td></tr>
+<tr><td>Prior catalogue</td><td><code>docs/GSPC-MASTER-CATALOG-OF-ALL-JEWELS-2026-10-27.md</code> (PR #3531, merged 2026-10-29T03:56:52Z)</td><td>—</td><td>—</td><td>2026-10-27</td></tr>
+</tbody></table>
+<p class="note">The re-read of 2026-11-01T04:32:57.274Z is the first <strong>text-level</strong> reading of this table in the estate's history: the 30 October read computed a visible-text digest on every URL, so the two can be diffed at text level and not only at status level.</p>
+
+<h2>Live estate state, read today</h2>
+<table><thead><tr><th>Surface</th><th>Reading</th><th>Source</th></tr></thead><tbody>
+<tr><td>GSPC board</td><td><strong>33 axes · 23 measured · 10 unmeasured</strong></td><td><a href="https://councilof.ai/api/gspc">/api/gspc</a> (HTTP 200)</td></tr>
+<tr><td>Model-comparison separation</td><td>0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED</td><td><a href="https://councilof.ai/api/gspc">/api/gspc</a></td></tr>
+<tr><td>Public root</td><td><strong>331 leaves</strong>, as_of 2026-10-31T17:48:12Z</td><td><a href="https://councilof.ai/root.json">/root.json</a> (HTTP 200)</td></tr>
+<tr><td>Corrections ledger</td><td><strong>93 entries</strong></td><td><a href="https://councilof.ai/api/corrections">/api/corrections</a> (HTTP 200)</td></tr>
+<tr><td>x402 catalogue</td><td><strong>29 resources</strong></td><td><a href="https://councilof.ai/api/x402">/api/x402</a> (HTTP 200)</td></tr>
+<tr><td>Agent Skills published</td><td><strong>14</strong> — the product skill <code>meok-canonical</code> is not among them</td><td><a href="https://councilof.ai/.well-known/agent-skills/index.json">/.well-known/agent-skills/index.json</a> (HTTP 200)</td></tr>
+<tr><td>Mechanism coverage</td><td>{&quot;PREDICATE&quot;:1,&quot;RELATED_MEASURE&quot;:12,&quot;CROSSWALK_ONLY&quot;:38,&quot;HASH_ONLY&quot;:366}</td><td><a href="https://councilof.ai/mechanism/coverage.json">/mechanism/coverage.json</a> (HTTP 200)</td></tr>
+<tr><td>Claim-maintenance register</td><td>28 subjects · 99 claims · as_of 2026-10-08T05:40:55Z</td><td><a href="https://councilof.ai/spec/claim-maintenance/register.json">/spec/claim-maintenance/register.json</a> (HTTP 200)</td></tr>
+<tr><td>Open pull requests</td><td><strong>134</strong></td><td>GitHub search API</td></tr>
+</tbody></table>
+
+<h3>The unmeasured axes, as the board reads them today</h3>
+<table><thead><tr><th>Axis</th><th>Family</th><th>Kind</th><th>Status</th><th>n</th><th>Accuracy</th></tr></thead><tbody>
+<tr>
+  <td><code>lab-practice</code></td><td>subject</td><td>declared-slot</td>
+  <td>UNMEASURED</td><td>0</td><td>—</td>
+</tr>
+<tr>
+  <td><code>company-practice</code></td><td>subject</td><td>declared-slot</td>
+  <td>UNMEASURED</td><td>0</td><td>—</td>
+</tr>
+<tr>
+  <td><code>measurer-integrity</code></td><td>subject</td><td>declared-slot</td>
+  <td>UNMEASURED</td><td>0</td><td>—</td>
+</tr>
+<tr>
+  <td><code>harness-fidelity</code></td><td>subject</td><td>declared-slot</td>
+  <td>UNMEASURED</td><td>0</td><td>—</td>
+</tr>
+<tr>
+  <td><code>interop-conformance</code></td><td>subject</td><td>declared-slot</td>
+  <td>UNMEASURED</td><td>0</td><td>—</td>
+</tr>
+<tr>
+  <td><code>humanoid-deployment</code></td><td>subject</td><td>declared-slot</td>
+  <td>UNMEASURED</td><td>0</td><td>—</td>
+</tr>
+<tr>
+  <td><code>regulator-transparency</code></td><td>subject</td><td>declared-slot</td>
+  <td>UNMEASURED</td><td>0</td><td>—</td>
+</tr>
+<tr>
+  <td><code>interpretability-reproducibility</code></td><td>subject</td><td>declared-slot</td>
+  <td>UNMEASURED</td><td>0</td><td>—</td>
+</tr>
+<tr>
+  <td><code>claim-maintenance</code></td><td>subject</td><td>declared-slot</td>
+  <td>UNMEASURED</td><td>0</td><td>—</td>
+</tr>
+<tr>
+  <td><code>serving-fidelity</code></td><td>subject</td><td>declared-slot</td>
+  <td>UNMEASURED</td><td>0</td><td>—</td>
+</tr>
+</tbody></table>
+<p class="note">An unmeasured axis is a declared position with no run behind it, published so the gap is visible. It is never an error and never a zero.</p>
+
+<h2>Rows by state, as state-checked on 2026-10-27</h2>
+<table><thead><tr><th>State</th><th>Rows</th></tr></thead><tbody>
+<tr><td><span class="chip mute">Unverified</span></td><td><strong>36</strong></td></tr>
+<tr><td><span class="chip ok">Verified current</span></td><td><strong>31</strong></td></tr>
+<tr><td><span class="chip ok">Open, verified</span></td><td><strong>20</strong></td></tr>
+<tr><td><span class="chip warn">Verified, stale</span></td><td><strong>13</strong></td></tr>
+<tr><td><span class="chip bad">Contradicted</span></td><td><strong>12</strong></td></tr>
+<tr><td><span class="chip gate">Owner-gated</span></td><td><strong>11</strong></td></tr>
+<tr><td><span class="chip warn">Closing soon</span></td><td><strong>3</strong></td></tr>
+<tr><td><span class="chip dead">Closed</span></td><td><strong>3</strong></td></tr>
+<tr><td><span class="chip dead">Dead</span></td><td><strong>1</strong></td></tr>
+</tbody></table>
+
+<h2>The text-level delta since 2026-10-30</h2>
+<p>126 URLs were read on both dates with a visible-text digest. <strong>0 changed HTTP status. 27 changed their visible text.</strong> Text that changed under an unchanged status is invisible to a status-level reading — which is why the 30 October receipt said the next read could be text-level, and this one is.</p>
+<div class="scroll"><table><thead><tr><th>Row</th><th>URL</th><th>Status</th><th>Visible-text sha256 (today)</th></tr></thead><tbody>
+<tr>
+  <td><code>CJ-01</code></td>
+  <td class="url">https://councilof.ai/claim-maintenance/</td>
+  <td>200 → 200</td>
+  <td><code>119a0d7a043c2db9…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-02</code></td>
+  <td class="url">https://councilof.ai/api/corrections</td>
+  <td>200 → 200</td>
+  <td><code>61d2de9ed4aa0fb3…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-10</code></td>
+  <td class="url">https://github.com/x402-foundation</td>
+  <td>200 → 200</td>
+  <td><code>ab14dde94e3c3c96…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-13</code></td>
+  <td class="url">https://www.circle.com/blog/building-the-open-agentic-economy</td>
+  <td>200 → 200</td>
+  <td><code>afdaec9f3e282432…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-17</code></td>
+  <td class="url">https://github.com/aaif/project-proposals/issues/42</td>
+  <td>200 → 200</td>
+  <td><code>53c5804c54262307…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-18</code></td>
+  <td class="url">https://osaia.org/</td>
+  <td>200 → 200</td>
+  <td><code>66493c22f50f5cbb…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-23</code></td>
+  <td class="url">https://openid.net/certification/</td>
+  <td>200 → 200</td>
+  <td><code>4ccfe193ef8e5f49…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-26</code></td>
+  <td class="url">https://github.com/docker/mcp-registry</td>
+  <td>200 → 200</td>
+  <td><code>8c7319e2d21e5617…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-26</code></td>
+  <td class="url">https://github.com/docker/mcp-registry/tree/main/servers</td>
+  <td>200 → 200</td>
+  <td><code>ce818a4d5a12debc…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-30</code></td>
+  <td class="url">https://www.iana.org/assignments/media-types/media-types.xhtml</td>
+  <td>200 → 200</td>
+  <td><code>e66b9452b30dcb0a…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-34</code></td>
+  <td class="url">https://www.8004scan.io/</td>
+  <td>200 → 200</td>
+  <td><code>dbaf955aa8e00b46…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-40</code></td>
+  <td class="url">https://nlnet.nl/propose/</td>
+  <td>200 → 200</td>
+  <td><code>665a114829f201f5…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-49</code></td>
+  <td class="url">https://councilof.ai/reports/</td>
+  <td>200 → 200</td>
+  <td><code>8dfd402e26eee37c…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-74</code></td>
+  <td class="url">https://artificialanalysis.ai/</td>
+  <td>200 → 200</td>
+  <td><code>5da8740cc9de32e0…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-75</code></td>
+  <td class="url">https://developers.cloudflare.com/</td>
+  <td>200 → 200</td>
+  <td><code>a89e0e6572e21143…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-86</code></td>
+  <td class="url">https://council.nyc.gov/press/2026/09/25/3252/</td>
+  <td>200 → 200</td>
+  <td><code>03fa5972550222fc…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-92</code></td>
+  <td class="url">https://lotnet.com/members/?dir=1&amp;name_directory_startswith=C</td>
+  <td>200 → 200</td>
+  <td><code>2a969e993f009c01…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-99</code></td>
+  <td class="url">https://arxiv.org/abs/2609.14721</td>
+  <td>200 → 200</td>
+  <td><code>e3988a95584b974b…</code></td>
+</tr>
+<tr>
+  <td><code>CJ-100</code></td>
+  <td class="url">https://stork.ai/</td>
+  <td>200 → 200</td>
+  <td><code>bd3fb7ae8d8f07e7…</code></td>
+</tr>
+<tr>
+  <td><code>N-02</code></td>
+  <td class="url">https://genorma.com/en/standards/pren-iso-iec-42006</td>
+  <td>200 → 200</td>
+  <td><code>ee53d14847434018…</code></td>
+</tr>
+<tr>
+  <td><code>N-03</code></td>
+  <td class="url">https://genorma.com/en/standards/iso-iec-dis-23282</td>
+  <td>200 → 200</td>
+  <td><code>98f6bea9e6995777…</code></td>
+</tr>
+<tr>
+  <td><code>N-03</code></td>
+  <td class="url">https://genorma.com/en/standards/pren-iso-iec-232</td>
+  <td>404 → 404</td>
+  <td><code>8183a95bbec972fa…</code></td>
+</tr>
+<tr>
+  <td><code>N-08</code></td>
+  <td class="url">https://www.amazon.science/research-awards/call-for-proposals/aws-agentic-ai-call-for-proposals-fall-2026</td>
+  <td>200 → 200</td>
+  <td><code>cb2d6af175880863…</code></td>
+</tr>
+<tr>
+  <td><code>N-09</code></td>
+  <td class="url">https://www.amazon.science/research-awards/call-for-proposals/multilingual-and-contextual-ai-evaluation-call-for-proposals-fall-2026</td>
+  <td>200 → 200</td>
+  <td><code>dea1f44bf6de6a5c…</code></td>
+</tr>
+<tr>
+  <td><code>N-21</code></td>
+  <td class="url">https://github.com/ProsusAI/vending-bench</td>
+  <td>200 → 200</td>
+  <td><code>08d841aa6d75bbbd…</code></td>
+</tr>
+<tr>
+  <td><code>N-23</code></td>
+  <td class="url">https://luma.com/voiceagentssf</td>
+  <td>200 → 200</td>
+  <td><code>7447514a3fc253b6…</code></td>
+</tr>
+<tr>
+  <td><code>N-29</code></td>
+  <td class="url">https://icaart.scitevents.org/CallForPapers.aspx?y=2027</td>
+  <td>200 → 200</td>
+  <td><code>e9bfc776b627bdd2…</code></td>
+</tr>
+</tbody></table></div>
+<p class="note">This is not a ranking, a score or a verdict. It is the digest of the visible text, twice, on two dates. The full entries — including both digests and the byte counts — are in this page's JSON.</p>
+
+<h2>Every jewel</h2>
+<p class="note">The live column is today's HTTP status for the surface that row names. A same-origin path the site does not serve is shown in the estate's <code>path:/…</code> form rather than as a link that goes nowhere.</p>
+<p class="note">Every row's evidence and next step travel in the <a href="https://councilof.ai/jewels/master-catalogue/index.json">machine-readable form</a>. This page prints a row's own wording where the estate's brand gate admits it; 2 rows (<code>CJ-88</code> · <code>N-28</code>) quote wording the gate holds, so those cells point at the machine-readable form rather than lose the record. The state table itself is published as a document.</p>
+<div class="scroll"><table><thead><tr><th>ID</th><th>Jewel</th><th>Claimed (2026-10-26)</th><th>Verified (2026-10-27)</th><th>Live (2026-11-01)</th><th>Evidence</th><th>Next step</th></tr></thead><tbody>
+<tr>
+  <td class="id"><code>CJ-01</code></td>
+  <td>Claim maintenance category (zero incumbents)</td>
+  <td class="claimed">*LIVE page</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://councilof.ai/claim-maintenance/">200</span> <span class="live gate" title="&lt;code&gt;&lt;/code&gt;">404</span></td>
+  <td class="ev">https://councilof.ai/claim-maintenance/ -&gt; HTTP 200, page renders &#39;Claim maintenance&#39; spec v0.1 + claim register (Subjects 28, Claims 99, Measured 33, Events 9, Corrections 93). path:/spec/claim-maintenanc</td>
+  <td class="ns">Publish the spec version + register schema as the category&#39;s discoverable identifiers, and either drop the &#39;claimreg v1.</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-02</code></td>
+  <td>Corrections ledger (93 entries)</td>
+  <td class="claimed">*LIVE compounding</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://councilof.ai/api/corrections">200</span> <span class="live ok" title="https://councilof.ai/claim-maintenance/">200</span></td>
+  <td class="ev">https://councilof.ai/api/corrections -&gt; HTTP 200, jq &#39;.corrections/length&#39; = 93, signature_state=&#39;VALID&#39;, timing_fields.added=&#39;2026-09-26&#39;. Cross-check on https://councilof.ai/claim-maintenance/ shows &#39;Corrections 93&#39;. L</td>
+  <td class="ns">Replace &#39;approve+publish #60-70&#39; with &#39;publish #94-100 plus the weekly digest&#39;, since #60-70 are inside the live 93.</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-03</code></td>
+  <td>FractalAI unsolicited conformant implementation</td>
+  <td class="claimed">*ADOPTED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://registry.npmjs.org/@fractalai/pqc-agent-receipts-conformance">200</span></td>
+  <td class="ev">Third-party npm registry, read live: https://registry.npmjs.org/@fractalai/pqc-agent-receipts-conformance -&gt; HTTP 200, name &#39;@fractalai/pqc-agent-receipts-conformance&#39;, author &#39;FractalAI&#39;, license Apache-2.0, latest 0.3.</td>
+  <td class="ns">Publish only the exact README-grounded sentence on path:/spec/signed-receipts/ (currently 404 on that pat</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-04</code></td>
+  <td>Independent implementation of capsule-00 (CounterProof)</td>
+  <td class="claimed">*ADOPTED Oct 8</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="mute">—</td>
+  <td class="ev">Local estate primary source ~/mail-review-20261014-resident/bodies/INBOX-10124.txt: dated &#39;Thu, 8 Oct 2026&#39;, from &#39;brook li &lt;hippoleyer@gmail.com&gt;&#39;, subject &#39;Possible second implementation experiment for SCITT Measuremen</td>
+  <td class="ns">Re-read PR #188 merged_at and diff once GitHub API quota resets, and record the implementer&#39;s independence_proven=false</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-05</code></td>
+  <td>Third-party IETF citation of capsule draft (Gruszka -03)</td>
+  <td class="claimed">*CITED Oct 19</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.ietf.org/archive/id/draft-gruszka-evaluation-receipt-mappings-03.txt">200</span></td>
+  <td class="ev">CLAIM: Gruszka -03 cites our capsule draft. LIVE: https://www.ietf.org/archive/id/draft-gruszka-evaluation-receipt-mappings-03.txt -&gt; HTTP 200, header &#39;K. Gruszka / b7n0de&#39;, date &#39;12 October 2026&#39; (not Oct 19). Its [CAPS</td>
+  <td class="ns">Correct the row: the Gruszka -03 citation is of Mih&#39;s action-capsule-05, not our capsule-00; do not amplify &#39;cited&#39; unti</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-06</code></td>
+  <td>SCITT claim-card I-D (name free)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="livecell"><span class="live bad" title="https://da">0</span></td>
+  <td class="ev">The row&#39;s own step is &#39;OWNER: submit + list post THIS WEEK&#39; — submitting an I-D needs the owner&#39;s IETF account and the list post is an outward email, so it must never be attempted by an agent. Live name check: https://da</td>
+  <td class="ns">Owner submits the claim-card I-D (name confirmed free) and posts to scitt@ietf.org; agent must not submit or send — and</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-07</code></td>
+  <td>Two I-Ds already on datatracker (framing-space, measurement-capsule)</td>
+  <td class="claimed">*ON RECORD</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://datatracker.ietf.org/api/v1/doc/document/?name__startswith=draft-templeman">200</span></td>
+  <td class="ev">Live datatracker API https://datatracker.ietf.org/api/v1/doc/document/?name__startswith=draft-templeman -&gt; HTTP 200, total_count=2: &#39;draft-templeman-scitt-framing-space&#39; rev=01 time=2026-09-27T04:37:55Z and &#39;draft-temple</td>
+  <td class="ns">Keep quoting the exact draft names and their 27 Sep 2026 date; if WG-track adoption is wanted, the missing step is a WG</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-08</code></td>
+  <td>W3C CG participant seat (publicly listed)</td>
+  <td class="claimed">*LIVE</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live gate" title="https://www.w3.org/community/agent-conformance/participants">403</span></td>
+  <td class="ev">Third-party live read https://www.w3.org/community/agent-conformance/participants -&gt; HTTP 200 (34200 b). Page contains an entry &#39;&lt;p class=&quot;chair-name name&quot;&gt;Nicholas Templeman&lt;/p&gt;&#39; with &#39;&lt;p class=&quot;chair-affiliation rep&quot;&gt;c</td>
+  <td class="ns">Contribute the discriminating-power fixtures to the group&#39;s own channel (the seat is proven; participation is not).</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-09</code></td>
+  <td>W3C Agent Identity CG formalizes our posts into 6 rules</td>
+  <td class="claimed">*ADOPTED Oct 1</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="https://www.w3.org/community/agent-identity/participants">403</span></td>
+  <td class="ev">Membership is real: https://www.w3.org/community/agent-identity/participants -&gt; HTTP 200 (78413 b) lists &#39;Nicholas Templeman Individual CLA commitment but affiliated with csoai ltd&#39;. But the CLAIM (that the CG formalised</td>
+  <td class="ns">Do not cite &#39;6 rules&#39; until a CG output document naming our posts is produced; re-run the GitHub code search for org:w3c</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-10</code></td>
+  <td>x402 Foundation engagement validated same-day (Base-ledger data)</td>
+  <td class="claimed">*VALIDATED Oct 26</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://github.com/x402-foundation">200</span></td>
+  <td class="ev">Tried: https://github.com/x402-foundation -&gt; HTTP 200; the org&#39;s repo list (foundation, tsc, wg-card-acceptance, wg-domain-discovery, wg-identity, wg-tax, x402) contains no councilof reference (grep count 0 on both /x402</td>
+  <td class="ns">Re-check github.com/x402-foundation/wg-domain-discovery for our findings-note reference (the estate note &#39;drafts/X402-DO</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-11</code></td>
+  <td>NIST AI Consortium LOI</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.nist.gov/artificial-intelligence/nist-ai-consortium">200</span></td>
+  <td class="ev">CLAIM: OPEN, &#39;submit by Nov 2 cohort (form window lapsed Sep 30)&#39;. LIVE: https://www.nist.gov/artificial-intelligence/nist-ai-consortium -&gt; HTTP 200, text reads &#39;NIST will accept letters of interest from new organization</td>
+  <td class="ns">Correct the row to &#39;LOI sent 27 Sep + follow-up sent 14 Oct; webform resubmission outstanding&#39;; the owner (not the agent</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-12</code></td>
+  <td>NIST TEVV-Athlon comment (Oct 6)</td>
+  <td class="claimed">*STAGED</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="mute">—</td>
+  <td class="ev">The row&#39;s own step is &#39;owner send with Bailey+ASL-3+EvasionBench+Circle&#39; — an outward signed comment that needs the human&#39;s credentials/company-email send, so it must never be attempted by an agent. Drafting material exi</td>
+  <td class="ns">Owner to confirm the live TEVV-Athlon comment window on nist.gov and send the staged comment; agent must not send it.</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-13</code></td>
+  <td>Circle &#39;trusted discovery: MISSING&#39; capstone</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.circle.com/blog/building-the-open-agentic-economy">200</span></td>
+  <td class="ev">Third-party live read https://www.circle.com/blog/building-the-open-agentic-economy -&gt; HTTP 200 (247420 b). Text extracted verbatim: &#39;The capstone: trusted discovery&#39; / &#39;Trusted discovery: a multi-input ranking Missing S</td>
+  <td class="ns">Cite the exact table row in the NIST comment and Series A pack; re-read the page for a post-12-Aug update before publish</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-14</code></td>
+  <td>GLEIF Model (c) third-party attestation market</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.gleif.org/en">200</span> <span class="live ok" title="https://www.gleif.org/en/lei-data">200</span> <span class="live ok" title="https://search.gleif.org/">200</span></td>
+  <td class="ev">Tried: https://www.gleif.org/en -&gt; HTTP 200; https://www.gleif.org/en/lei-data -&gt; HTTP 200; https://search.gleif.org/ -&gt; HTTP 200; but every GLEIF page naming Model (c) returned HTTP 404 — /en/organization-data/gleif-org</td>
+  <td class="ns">Locate the authoritative GLEIF Model (c) page (try api.gleif.org from a network that resolves it) before citing the mark</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-15</code></td>
+  <td>DSRB (forming defence bank)</td>
+  <td class="claimed">*WATCH</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.canada.ca/en/department-finance.html">200</span> <span class="live gate" title="https://www.canada.ca/en/department-finance/news/2026/03/canada-announces-progress-to-est">404</span></td>
+  <td class="ev">Tried: https://www.canada.ca/en/department-finance.html -&gt; HTTP 200 but no DSRB item on the landing page; the specific release URL https://www.canada.ca/en/department-finance/news/2026/03/canada-announces-progress-to-est</td>
+  <td class="ns">Watch canada.ca/financial-administration and NATO communiques for a founding-instrument publication; until one appears,</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-16</code></td>
+  <td>Appia Foundation (conformity assessment, whales on roster)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.linuxfoundation.org/press/linux-foundation-launches-appia-foundation-to-establish-standardized-conformity-specifications-across-the-ai-value-chain">200</span></td>
+  <td class="ev">Third-party live read https://www.linuxfoundation.org/press/linux-foundation-launches-appia-foundation-to-establish-standardized-conformity-specifications-across-the-ai-value-chain -&gt; HTTP 200 (100706 b) — the Appia Foun</td>
+  <td class="ns">Draft the Appia membership inquiry for the owner to send (never the agent), and open the TRACE conformance-predicate PR</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-17</code></td>
+  <td>TRACE (LF) composes SCITT/RATS/EAT/SLSA</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="livecell"><span class="live ok" title="https://github.com/aaif/project-proposals/issues/42">200</span></td>
+  <td class="ev">CLAIM implies TRACE is an LF spec to contribute a conformance predicate to. LIVE: https://github.com/aaif/project-proposals/issues/42 -&gt; HTTP 200 (550510 b), title &#39;[Project Proposal] TRACE Specification&#39; — it is an AAIF</td>
+  <td class="ns">Re-title the row as &#39;TRACE AAIF proposal #42 (not yet reviewed)&#39; and contribute the conformance predicate to the PROPOSA</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-18</code></td>
+  <td>OSAIA shaping window (no officers published)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="livecell"><span class="live ok" title="https://osaia.org/">200</span></td>
+  <td class="ev">CLAIM: an OSAIA shaping window with no officers published. LIVE: https://osaia.org/ -&gt; HTTP 200 but the page is a Korean/Indonesian consumer-shopping storefront (&#39;Sensa138 — Platform Game Online...&#39;, &#39;FEATURED SENSA138&#39;,</td>
+  <td class="ns">Do not cite osaia.org as the OSAIA surface; find the correct alliance domain (the storefront is squatted/parked) or drop</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-19</code></td>
+  <td>ITU Focus Group (free, open)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.itu.int/en/ITU-T/focusgroups/Pages/default.aspx">200</span> <span class="live gate" title="https://www.itu.int/en/ITU-T/focusgroups/ai/">404</span></td>
+  <td class="ev">Tried: https://www.itu.int/en/ITU-T/focusgroups/Pages/default.aspx -&gt; HTTP 200 (132687 b) — the FG index is live; https://www.itu.int/en/ITU-T/focusgroups/ai/ -&gt; HTTP 404 and /focusgroups/ai/011/ -&gt; HTTP 404 (no AI-speci</td>
+  <td class="ns">Enumerate the live ITU-T FG list from the index and pick the exact FG, then the owner registers the seat (free) — agent</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-20</code></td>
+  <td>UKAS AIMS technical-expert channel (free)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.ukas.com/">200</span></td>
+  <td class="ev">The row&#39;s step is &#39;technicalresources@ukas.com expression&#39; — an outward email requiring the owner&#39;s company-email send, so it must not be attempted. Live: https://www.ukas.com/ -&gt; HTTP 200 (273076 b); the AI-management-s</td>
+  <td class="ns">Owner sends the expression; agent confirms the live AIMS technical-expert page URL on ukas.com first so the email cites</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-21</code></td>
+  <td>AIQI Consortium + free ISO 42001 course</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://aiqiconsortium.org/">200</span></td>
+  <td class="ev">Third-party live read https://aiqiconsortium.org/ -&gt; HTTP 200 (248608 b) — the consortium site is live and reachable. LOCAL estate CATALOG-OPENINGS-20261025.md lists AIQI as a course/bridge opportunity and the checklist&#39;</td>
+  <td class="ns">Owner joins AIQI and enrols in the free ISO 42001 course; the MOOC bridge (CJ-62) should reuse these modules rather than</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-22</code></td>
+  <td>IETF 127 hackathon SCITT time-anchor</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.ietf.org/meeting/127/">200</span></td>
+  <td class="ev">Live: https://www.ietf.org/meeting/127/ -&gt; HTTP 200 (96435 b), &#39;IETF 127 San Francisco 14 Nov 2026 - 20 Nov 2026&#39;, &#39;IETF 127 starts Saturday 14 November and runs through Friday afternoon&#39;. The hackathon/codesprint &#39;take</td>
+  <td class="ns">Build the SCITT time-anchor implementation and Cedulon replay test vectors against draft-templeman-scitt-measurement-cap</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-23</code></td>
+  <td>OpenID AuthZEN self-certification (automated, public)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://openid.net/groups/authzen/">200</span> <span class="live ok" title="https://openid.net/certification/">200</span></td>
+  <td class="ev">Live: https://openid.net/groups/authzen/ -&gt; HTTP 200 (150234 b) — &#39;AuthZEN Working Group - OpenID Foundation&#39; is live; https://openid.net/certification/ -&gt; HTTP 200 (132923 b) is the public certification surface. I searc</td>
+  <td class="ns">Run the AuthZEN conformance suite against our claim-event/measurement-capsule profile and publish the result as an unsig</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-24</code></td>
+  <td>x402scan validator self-cert</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.x402scan.com/">200</span></td>
+  <td class="ev">Live: https://www.x402scan.com/ -&gt; HTTP 200 (2044462 b) — the index is live and greps for &#39;validator&#39; return only unrelated paid-tool listings (&#39;DNSSEC status for...&#39;, &#39;Checks up to 5 EU VAT...&#39;), not a self-cert program</td>
+  <td class="ns">Owner signs the SIWX challenge for the payTo wallet to set verified:true; the agent must not sign.</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-25</code></td>
+  <td>Claude MCP directory (opened Sep 25)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="livecell"><span class="live ok" title="https://claude.ai/directory">200</span></td>
+  <td class="ev">https://claude.ai/directory -&gt; HTTP 403 (login-walled, unauthenticated read refused) — I cannot confirm our listing&#39;s presence or state, and submission requires an Anthropic account/login = owner-side. The estate&#39;s own g</td>
+  <td class="ns">Owner submits the paste-ready directory entry now that /mcp/free, /privacy/ and /docs/ are all live 200; agent prepares</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-26</code></td>
+  <td>Docker MCP Catalog (remote, no Dockerfile)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://github.com/docker/mcp-registry">200</span> <span class="live ok" title="https://github.com/docker/mcp-registry/tree/main/servers">200</span></td>
+  <td class="ev">Live third-party: https://github.com/docker/mcp-registry -&gt; HTTP 200 (314474 b) and the servers tree https://github.com/docker/mcp-registry/tree/main/servers -&gt; HTTP 200 (464932 b); grep for &#39;councilof&#39; across both = 0 o</td>
+  <td class="ns">Open the server.yaml PR against docker/mcp-registry with the remote server card URL path:/.well-known/mcp</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-27</code></td>
+  <td>AgentCash marketplace (July)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://agentcash.dev/">200</span> <span class="live ok" title="https://agentcash.dev/docs/sell-to-agents">200</span></td>
+  <td class="ev">Live third-party: https://agentcash.dev/ -&gt; HTTP 200 (562456 b) and the merchant onboarding page https://agentcash.dev/docs/sell-to-agents -&gt; HTTP 200 (260351 b) — the marketplace and its &#39;sell to agents&#39; path are live a</td>
+  <td class="ns">Owner completes AgentCash merchant onboarding at agentcash.dev (not agentcash.com) after the x402scan origin verificatio</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-28</code></td>
+  <td>ARD well-known file</td>
+  <td class="claimed">*DEPLOYED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://councilof.ai/.well-known/ard.json">200</span> <span class="live gate" title="https://agenticresourcediscovery.org/context/v1&amp;#39;">404</span></td>
+  <td class="ev">Live third-party read: https://councilof.ai/.well-known/ard.json -&gt; HTTP 200 (3275 b), specVersion &#39;1.0&#39;, host identifier &#39;did:web:csoai.org&#39;, entries[0].@context &#39;https://agenticresourcediscovery.org/context/v1&#39;, identi</td>
+  <td class="ns">Verify the linked server-card URL path:/.well-known/mcp/server-card.json is 200, then confirm HermesHub i</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-29</code></td>
+  <td>IANA well-known URI (claim-card.json)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml">200</span></td>
+  <td class="ev">Live third-party: https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml -&gt; HTTP 200 — IANA&#39;s well-known URI registry is live and reachable; grep for &#39;claim-card&#39; in it returned 0 matches, i.e. the name c</td>
+  <td class="ns">File the provisional well-known URI registration for claim-card.json pointing at the published spec page; owner submits</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-30</code></td>
+  <td>Vendor media type application/vnd.csoai.claim-card+json</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.iana.org/assignments/media-types/media-types.xhtml">200</span></td>
+  <td class="ev">Live third-party: https://www.iana.org/assignments/media-types/media-types.xhtml -&gt; HTTP 200 — IANA&#39;s media-type registry is live and reachable; grep for &#39;csoai&#39; in it returned 0 matches, so &#39;application/vnd.csoai.claim-</td>
+  <td class="ns">Ship the media-type template with a live sample body on the spec page, then owner files the IANA registration to take fi</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-31</code></td>
+  <td>DID method registration</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://w3c-ccg.github.io/did-method-registry/">200</span></td>
+  <td class="ev">Live third-party: https://w3c-ccg.github.io/did-method-registry/ -&gt; HTTP 200 (312 b); grep for &#39;csoai&#39; = 0 matches, so did:csoai-class is NOT in the registry and the row is accurately OPEN. A W3C CCG registry PR is the s</td>
+  <td class="ns">Prepare the did:csoai-class method specification and open the PR against w3c-ccg/did-method-registry.</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-32</code></td>
+  <td>URN namespace urn:csoai</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="https://www.iana.org/assignments/urn-ns/">404</span> <span class="live bad" title="https://www.iana.or">0</span></td>
+  <td class="ev">Tried the IANA URN namespace registry at four paths — https://www.iana.org/assignments/urn-ns/, .../urn-ns/urn-ns.xhtml, .../urn-ns/urn-ns.xml, .../urn-ns/urn-ns.csv — all HTTP 404 (the registry index https://www.iana.or</td>
+  <td class="ns">Find the current IANA URN namespace registry URL from the assignments index and re-read it for &#39;csoai&#39; before any urn:cs</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-33</code></td>
+  <td>MCP com.councilof/* DNS namespace (fixes B-3)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="mute">—</td>
+  <td class="ev">Live DNS read (dig +short TXT @8.8.8.8, with a working positive control: _dmarc.google.com -&gt; &#39;v=DMARC1; p=reject; rua=mailto:mailauth-reports@google.com&#39;): _mcp.com.councilof.ai -&gt; no TXT record; _namespace.com.councilo</td>
+  <td class="ns">Publish the MCP namespace TXT at the owner-specified _mcp.com.councilof.ai label naming com.councilof/*, then verify wit</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-34</code></td>
+  <td>ERC-8004 Validation Registry (zero deployments)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.8004scan.io/">200</span></td>
+  <td class="ev">Live third-party: https://www.8004scan.io/ -&gt; HTTP 200 (295303 b) and the page does expose a &#39;Validation Registry&#39; section (&#39;Identity, reputation and validation for trustless agents across 29 chains&#39;), with &#39;2 deployment</td>
+  <td class="ns">Read the Validation Registry deployment count from the 8004scan UI section (API paths are 404) and only then assert &#39;zer</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-35</code></td>
+  <td>Circle Marketplace census</td>
+  <td class="claimed">*POD QUEUE</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.circle.com/agent-stack">200</span></td>
+  <td class="ev">Live reachability: https://www.circle.com/agent-stack -&gt; HTTP 200 (262750 b) — the page IS reachable from here, so the &#39;egress-walled here&#39; premise no longer holds for this URL. But the census needs the marketplace&#39;s aut</td>
+  <td class="ns">Owner submits the Circle Agent Marketplace form once with the truthful working offer; agent can census the public /agent</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-36</code></td>
+  <td>EIC Pathfinder DeepRAP (€0.5–4M, Oct 28)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="livecell"><span class="live bad" title="https://eic.ecuropa">0</span></td>
+  <td class="ev">DEADLINE: 28 Oct 2026 — this is TOMORROW, so the window is NOT closed and it DOES close within 7 days; it is the second-tightest live funding window in this lane. Live verification of the call failed: https://eic.ecuropa</td>
+  <td class="ns">Owner decides by 17:00 Brussels on Wed 28 Oct whether to reverse the 7 Oct default no-go (no coordinator approached us);</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-37</code></td>
+  <td>Innovate UK SME Champions (Nov 11)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="mute">—</td>
+  <td class="ev">LOCAL primary source ~/business-20260930/10-revenue-pack/frontier-ai-sme-champions/DEADLINE.md, read live from the Innovation Funding Service competition page on 2026-09-30: competition 2584 &#39;Frontier AI: SME Champions,</td>
+  <td class="ns">Confirm the 30% match-funding gap is resolved (MORNING-REPORT-2026-10-01.md:47 records the draft as &#39;parked&#39; because mat</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-38</code></td>
+  <td>KTP R3 (Oct 14, ~85%)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip dead">Dead</span></td>
+  <td class="livecell"><span class="live gate" title="https://www.ukri.org/opportunities/knowledge-transfer-partnerships/">404</span> <span class="live bad" title="https://www.ukri.or">0</span></td>
+  <td class="ev">The row&#39;s own deadline is Oct 14 — 13 days before today (2026-10-27). That window has closed. Live attempts all failed: https://www.ukri.org/opportunities/knowledge-transfer-partnerships/ -&gt; HTTP 404, https://www.ukri.or</td>
+  <td class="ns">Close as missed (round closed 14 Oct); if a successor R4 appears, treat it as a new row with a fresh deadline rather tha</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-39</code></td>
+  <td>Manifund regranting (rolling)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://manifund.org/about/open-call">200</span></td>
+  <td class="ev">Live third-party: https://manifund.org/about/open-call -&gt; HTTP 200 (44685 b) — the open-call page is live and reachable, consistent with a rolling window. LOCAL estate SIGNUP-SHEET-2026-09-29.md row 23 &#39;Manifund / rollin</td>
+  <td class="ns">Owner creates the Manifund project account and publishes the drafted AI-safety regranting page; rolling window means no</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-40</code></td>
+  <td>NLnet NGI Zero (€5–50k)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://nlnet.nl/propose/">200</span></td>
+  <td class="ev">Live third-party read https://nlnet.nl/propose/ -&gt; HTTP 200 (43192 b); page text: &#39;Next deadline: November 3rd 2026 12:00 CET (noon) Through this form you can request financial support for your project&#39;. This matches LOC</td>
+  <td class="ns">Submit the NLnet proposal at https://nlnet.nl/propose/ BEFORE 3 Nov 12:00 CET — this is the only Part A funding row whos</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-41</code></td>
+  <td>DSIT AI Assurance Fund £11M</td>
+  <td class="claimed">*WATCH</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="https://www.gov.uk/ai-assurance-fund">404</span> <span class="live gate" title="https://www.gov.uk/government/collections/ai-assurance-fund">404</span></td>
+  <td class="ev">Tried: https://www.gov.uk/ai-assurance-fund -&gt; HTTP 404 and https://www.gov.uk/government/collections/ai-assurance-fund -&gt; HTTP 404, so no live DSIT round-2 page could be read. LOCAL estate MORNING-ALIGNMENT-2026-08-26.m</td>
+  <td class="ns">Keep the daily portal watch on gov.uk/dsit and treat the 11M figure as unverified until a live DSIT page states it; an o</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-42</code></td>
+  <td>XRPL GLOW retro (pays completed work)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://xrpl.org/">200</span> <span class="live gate" title="https://xrpl.org/ecosystem/projects/glow.html">404</span> <span class="live gate" title="https://xrpl.org/oss/glow.html">404</span> <span class="live gate" title="https://xrpl.org/ecosystem/gl">404</span></td>
+  <td class="ev">Tried: https://xrpl.org/ -&gt; HTTP 200 (361107 b) — the site is live; but the GLOW project page paths all 404: https://xrpl.org/ecosystem/projects/glow.html, https://xrpl.org/oss/glow.html and https://xrpl.org/ecosystem/gl</td>
+  <td class="ns">Find the current GLOW programme URL from xrpl.org&#39;s live navigation, then confirm the retro terms and the RLUSD corpus a</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-43</code></td>
+  <td>OSO metrics registration (retro clock)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="https://www.opensource.org/">403</span> <span class="live gate" title="https://www.opensource.org/metrics">403</span> <span class="live ok" title="https://osmfoundation.org/">200</span></td>
+  <td class="ev">The target could not be identified from the row alone. Live tries: https://www.opensource.org/ -&gt; HTTP 200 (225880 b) but https://www.opensource.org/metrics -&gt; HTTP 404; https://osmfoundation.org/ -&gt; HTTP 200 (44462 b) b</td>
+  <td class="ns">Name the actual OSO programme and its registration endpoint (one line) before this row can be actioned — as written it i</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-44</code></td>
+  <td>Base Builder Code (ERC-8021)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://base.org/build">200</span></td>
+  <td class="ev">Live: https://base.org/build -&gt; HTTP 200 (63739 b) — the Base Build page is live (&#39;75M+ Agent TX&#39;, &#39;22K+ x402 APIs&#39;) but a grep for &#39;builder code&#39; across the served bytes returned 0 matches, so the Builder Code programme</td>
+  <td class="ns">Confirm the correct ERC number for Base Builder Code from base.org&#39;s own documentation before any base.dev claim; the cl</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-45</code></td>
+  <td>attestation-rail proof-pointer first attestation</td>
+  <td class="claimed">*SPECCED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://eips.ethereum.org/EIPS/eip-7546">200</span></td>
+  <td class="ev">Live: https://eips.ethereum.org/EIPS/eip-7546 -&gt; HTTP 200 is &#39;ERC-7546: Upgradeable Clone for Scalable Contracts&#39; — NOT the Ethereum Attestation Service (attestation-rail is EIP-7546 in the ERC series, but this served page is a diffe</td>
+  <td class="ns">Pin the exact attestation-rail proof-pointer schema bytes (with a file hash) in the repo before the ignition batch; cite the correct</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-46</code></td>
+  <td>Inngot Sollomon IP valuation</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="livecell"><span class="live bad" title="https://www.inngot.co.uk/">0</span></td>
+  <td class="ev">The row&#39;s step is &#39;order (~GBP795-1k) as equity diligence asset&#39; — a paid instruction on the owner&#39;s money, and the valuation order also needs the owner&#39;s identity/engagement. https://www.inngot.co.uk/ did not resolve fr</td>
+  <td class="ns">Owner decides whether to send the free suitability email (no payment) before authorising any GBP795-1k valuation order;</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-47</code></td>
+  <td>UK IPO marks (4 classes £385)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="livecell"><span class="live gate" title="https://www.ipo.gov.uk/">403</span></td>
+  <td class="ev">A trademark filing is a legal act + payment, both owner-only. Live: https://www.ipo.gov.uk/ -&gt; HTTP 403 (bot-blocked to unauthenticated reads) so the current fee list could not be confirmed live. LOCAL estate MOAT-AND-IP</td>
+  <td class="ns">Owner re-drafts and files the e-TM3 with the 4 classes (GBP385 total per the local fee calculation) — the previous draft</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-48</code></td>
+  <td>Dual-anchor timestamps (eIDAS QTSP + OpenTimestamps)</td>
+  <td class="claimed">*RESEARCHED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://councilof.ai/root.json">200</span></td>
+  <td class="ev">Live anchor side confirmed: https://councilof.ai/root.json -&gt; HTTP 200, card_count=325, as_of=&#39;2026-10-26T19:19:22Z&#39;, sig_ed25519 present, xrpl_basket_merkle=&#39;9c45aaf325e26c1856b4f148244ce546c680c21f463e9c2f5ef0590b935b6</td>
+  <td class="ns">Verify the five upgraded Bitcoin attestations in the published proof manifest (OOTS calendar unreachable from here) and</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-49</code></td>
+  <td>State of Claim Maintenance report #1</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="&lt;code&gt;&lt;/code&gt;">404</span> <span class="live ok" title="https://councilof.ai/reports/">200</span></td>
+  <td class="ev">No such report is published. Live: path:/state-of-claim-maintenance/ -&gt; HTTP 404; https://councilof.ai/reports/ -&gt; HTTP 200 (a generic Reports index whose only &#39;claim maintenance&#39; hits are navigation links</td>
+  <td class="ns">Publish report #1 from the live register — and fix the stale scheduling claim first: 26 subjects have a DUE but UNRUN ne</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-50</code></td>
+  <td>The Ecosystem Health Board</td>
+  <td class="claimed">*PROTOTYPE BUILT</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="&lt;code&gt;&lt;/code&gt;">404</span> <span class="live gate" title="&lt;code&gt;&lt;/code&gt;">404</span> <span class="live ok" title="https://councilof.ai/reports/">200</span></td>
+  <td class="ev">No prototype was found on any live or local surface. Live: path:/ecosystem-health/ -&gt; HTTP 404, path:/health-board/ -&gt; HTTP 404, https://councilof.ai/reports/ -&gt; HTTP 200 (generic index, no</td>
+  <td class="ns">Produce the prototype artifact (a local file with a hash) before calling it BUILT, then deploy it unsigned-labelled as t</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-51</code></td>
+  <td>OpenShell→Cedar translator (unclaimed)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;OPEN — agent-side spike; upstream contribution to NVIDIA/OpenShell&#39;. ACTUAL: the translator is BUILT, not open. Local repo ~/_work/councilof-ai/harness/openshell-cedar/ contains translate.py, roundtrip.p</td>
+  <td class="ns">Stop calling this OPEN. Correct the checklist row to BUILT/PACKAGED (PyPI csoai-openshell-harness 0.1.1); open the upstr</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-52</code></td>
+  <td>Open Agent Safety Platform (NVIDIA GA Sep 28)</td>
+  <td class="claimed">*LIVE</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;LIVE — 6 adapters built from spec (validated)&#39;. ACTUAL: no NVIDIA &#39;Open Agent Safety Platform&#39; artefact exists in the estate. Grep of ~/_work/councilof-ai (all .ts/.tsx/.mjs/.json/.md, node_modules exclu</td>
+  <td class="ns">Rewrite the row: name the real artefact (harness/openshell-adapter, OpenShell v0.1.4, 5 prover fixtures) and drop the un</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-53</code></td>
+  <td>MS Agent Governance Toolkit (Cedar/Rego PDP)</td>
+  <td class="claimed">*MERGE</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;MERGE — Harness X merge spike&#39;. ACTUAL: the merge landed, so the state is stale. ~/_work/councilof-ai/scripts/harness-x/ is a full working tree, not a spike: check.mjs (51,604 bytes), connect-live.mjs, p</td>
+  <td class="ns">Split the row: mark the harness-x merge DONE (cite check.mjs + commit 8e9df9fce) and re-open a separate row for the MS C</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-54</code></td>
+  <td>ASSERT (MS spec-driven evals)</td>
+  <td class="claimed">*MERGE</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;MERGE — claim-cards as ASSERT specs&#39;. ACTUAL: no ASSERT-spec artefact found for claim-cards. What exists is only two unrelated scripts named for the word: ~/_work/councilof-ai/scripts/assert-dashboard-la</td>
+  <td class="ns">Name the upstream ASSERT spec URL and the target artefact path (e.g. scripts/claim-cards-as-assert-specs/) so the merge</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-55</code></td>
+  <td>Petri + Bloom (Anthropic auditing)</td>
+  <td class="claimed">*MERGE</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="https://github.com/anthropics/petri">404</span> <span class="live ok" title="https://github.com/an">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;MERGE — outputs wrapped as signed claims&#39;. ACTUAL: no upstream Anthropic &#39;Petri&#39; or &#39;Bloom&#39; project found. https://github.com/anthropics/petri -&gt; HTTP 404 &#39;Page not found · GitHub&#39;; https://github.com/an</td>
+  <td class="ns">Resolve the exact upstream project URLs (or correct the names) — Anthropic&#39;s public auditing tooling was not locatable u</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-56</code></td>
+  <td>Sigsum (witness-cosigned transparency log)</td>
+  <td class="claimed">*MERGE</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;MERGE — third anchor class integration&#39;. ACTUAL: upstream Sigsum is real and its official home is NOT GitHub: GitHub search &#39;sigsum&#39; returns sigsum/sigsum (12 stars) with description &#39;Mirror only. Offici</td>
+  <td class="ns">Read the canonical repo at git.glasklar.is/sigsum (not the GitHub mirror), then write the third-anchor integration note</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-57</code></td>
+  <td>Agent Protocol (1.4k★ dormant 17mo, MIT)</td>
+  <td class="claimed">*REVIVE</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;REVIVE — contribute measurement/corrections layer + conformance&#39;. ACTUAL: upstream confirmed but the dormancy figure is stale. GitHub API search &#39;agent-protocol in:name&#39; -&gt; agi-inc/agent-protocol, starga</td>
+  <td class="ns">Correct the dormancy to ~18-19 months and the org to agi-inc/agent-protocol; then check whether it is a fork of langchai</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-58</code></td>
+  <td>colibri (pure-C local inference)</td>
+  <td class="claimed">*WATCH</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;WATCH — Jev/Council-Lite reflex stack&#39;. ACTUAL: upstream confirmed, and it is much larger than the row implies. GitHub API search &#39;colibri language:C sort:stars&#39; -&gt; JustVugg/colibri, stargazers_c</td>
+  <td class="ns">Re-rate from WATCH to a tracked upstream at 44k★; verify the binary runs locally before designing the &#39;Council-OS-Lite sovere</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-59</code></td>
+  <td>ShinkaEvolve + DreamerV3 chained loop</td>
+  <td class="claimed">*BUILD</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;BUILD — 2-week held-out improvement gate&#39;. ACTUAL: both upstreams confirmed live via GitHub API search: SakanaAI/ShinkaEvolve, stargazers_count 1482, pushed_at 2026-10-05T04:18:29Z, description &#39;ShinkaEv</td>
+  <td class="ns">Name the gate harness that will hold out the improvement measurement (no local &#39;held-out improvement gate&#39; artefact foun</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-60</code></td>
+  <td>Evaluation Cards (Every-Eval-Ever schema)</td>
+  <td class="claimed">*ADOPT</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;ADOPT — render our results in field format&#39;. ACTUAL: the schema is real and already partially adopted internally, but it is not published on our live surface. Local artefacts: ~/_alignment/m2-verified-me</td>
+  <td class="ns">Publish the adopted field format at a stable public path (e.g. /interop/evaluation-cards/ with the schema + one rendered</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-61</code></td>
+  <td>Failing Instrument Challenge CTF</td>
+  <td class="claimed">*BUILD</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;BUILD — fixture family v1 + canary law + sealed holdout&#39;. ACTUAL: no fixture family, canary law or sealed holdout found. Grep of ~/_work/councilof-ai for &#39;failing instrument/canary law/sealed holdout&#39; -&gt;</td>
+  <td class="ns">Create the artefact the row names — a fixtures/failing-instrument/v1/ family with a canary-law file and a sealed-holdout</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-62</code></td>
+  <td>MOOC &#39;How to Measure AI&#39; (7 modules)</td>
+  <td class="claimed">*BUILD</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;BUILD — from real artifacts; AIQI bridge&#39; for a 7-module MOOC. ACTUAL: the MOOC artefact that exists verifies FIVE modules, not seven. ~/_alignment/m2-verified-meok-gspc-20261026/capability-records/meok-</td>
+  <td class="ns">Correct the module count to 5 and rename the MOOC to its actual title (&#39;H.I.M. Human-in-the-Loop Gamified Micro-MOOC&#39;);</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-63</code></td>
+  <td>H.I.M. judgement-stream product</td>
+  <td class="claimed">*PROTOTYPE BUILT (5fcd202)</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;PROTOTYPE BUILT (5fcd202) — gate-card schema + calibration schema + stream prototype&#39;. ACTUAL: the cited commit does not exist. In ~/_work/councilof-ai: &#39;git rev-parse --verify 5fcd202^{commit}&#39; -&gt; &#39;fata</td>
+  <td class="ns">Replace the dead commit pointer 5fcd202 with the real artefact path (~/_alignment/m2-verified-meok-gspc-20261026/meok-33</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-64</code></td>
+  <td>Small-world lab (stewardship league)</td>
+  <td class="claimed">*SPECCED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;SPECCED — T-1 OpenTTD pilot with canary controls&#39;. ACTUAL: no OpenTTD pilot artefact found. Grep of ~/_work/councilof-ai for &#39;openttd/small.world/smallworld&#39; -&gt; 1 file only: council-os/GAMES_SLATE.md, an</td>
+  <td class="ns">Either write the small-world-lab spec as a named document (or state it lives in council-os/GAMES_SLATE.md) or change the</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-65</code></td>
+  <td>Maternal Covenant (Article 1)</td>
+  <td class="claimed">*DRAFTED</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;DRAFTED — publish as charter doctrine&#39;. ACTUAL: the draft exists and is routed, but it is not published. LOCAL: ~/_work/councilof-ai/client/src/pages/MaternalCovenant.tsx, 37,277 bytes, and client/src/da</td>
+  <td class="ns">Resolve the 308 on /maternal-covenant (follow the redirect target to confirm where it lands) and then publish the page s</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-66</code></td>
+  <td>Token Morph (claims→evidence-assets)</td>
+  <td class="claimed">*PROVEN LIVE Sep 22</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;PROVEN LIVE Sep 22 — claim-watch door + incident morphs&#39;. ACTUAL: no Token Morph artefact found anywhere. Grep for &#39;Token Morph/token-morph&#39; (case-insensitive) across ~/_work/councilof-ai -&gt; 0 matches; a</td>
+  <td class="ns">Remove the &#39;PROVEN LIVE Sep 22&#39; claim or name the exact artefact and date that proves it; as of 2026-10-27 no Token Morp</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-67</code></td>
+  <td>Measurement-Capsule intent-envelope schema v0.1</td>
+  <td class="claimed">*BUILT</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;BUILT — contract pack v2 + Cedar authority eval&#39;. ACTUAL: neither named component exists. The only &#39;Measurement-Capsule&#39; artefact in the estate is a STRATEGY BRIEF, not a schema: ~/_work/councilof-ai/docs/BOND_VENTU</td>
+  <td class="ns">Restate the row as &#39;DRAFTED (doctrine brief, docs/BOND_CAPSULE_2026-08-23.md)&#39; or build the actual v0.1 schema + contrac</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-68</code></td>
+  <td>Agent Payment Receipt Profile (ISO 20022 semantics)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;OPEN — crosswalk schema v0.1 + 4 venues&#39;. ACTUAL: the OPEN state is accurate and confirmed. Grep of ~/_work/councilof-ai for &#39;iso.20022/pacs.008/payment receipt profile&#39; -&gt; only unrelated files (measurem</td>
+  <td class="ns">Draft crosswalk schema v0.1 against the live &#39;receipts_batch&#39; x402 resource (path:/api/x402) naming the 4</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-69</code></td>
+  <td>Medicare incident card IM-2026-001</td>
+  <td class="claimed">*DRAFTED</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;DRAFTED — owner publish (sourced record only)&#39;. ACTUAL: no artefact carries the identifier IM-2026-001, but the underlying record DOES exist under a different name and is already PUBLISHED live — so the</td>
+  <td class="ns">Reconcile the identifier (the artefact is a disclosure_lag measurement-capsule, not &#39;IM-2026-001&#39;) and get an explicit o</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-70</code></td>
+  <td>Freeze-asymmetry card IM-2026-002 (Bitget/XRP)</td>
+  <td class="claimed">*DRAFTED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;DRAFTED — native-vs-issuer-controlled asset measurement&#39;. ACTUAL: no artefact found. Grep for &#39;IM-2026-001/IM-2026-002/Medicare incident/freeze-asymmetry&#39; (case-insensitive) across ~/_work/councilof-ai -</td>
+  <td class="ns">Locate or create the drafted freeze-asymmetry artefact and give it a resolvable id; if the draft was never written, chan</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-71</code></td>
+  <td>Disclosure-lag canonical case (monitoring-disabled agents)</td>
+  <td class="claimed">*FRESH Oct 20</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;FRESH Oct 20 — series entry + independent under-disclosure delta&#39;. ACTUAL: the disclosure-lag corpus exists and is live, but the freshest record is dated 2026-09-28, and there is NO claim series entry fo</td>
+  <td class="ns">Correct the freshness to 2026-09-28, add the missing series entry for the disclosure-lag case, and compute/publish the u</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-72</code></td>
+  <td>Anthropic × UK AISI joint Mythos 5 analyses</td>
+  <td class="claimed">*FRESH Oct 23</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;FRESH Oct 23 — lab+state co-published alignment analysis = cite&#39;. ACTUAL: the date and subject are right; the word &#39;joint/co-published&#39; is wrong — they are two SEPARATE analyses published the same day. L</td>
+  <td class="ns">Cite them as two separate Oct 23 2026 analyses (AISI blog + Anthropic technical report), not a joint publication; &#39;co-pu</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-73</code></td>
+  <td>White House Accord (6 labs, no criteria)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="livecell"><span class="live bad" title="https://www.presidency">0</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;OPEN — publish criteria-shaped record into the gap&#39;. ACTUAL: the underlying facts are CONFIRMED live, and the criteria-gap record is already built, so &#39;OPEN&#39; is stale. Accord text: https://www.presidency</td>
+  <td class="ns">Correct the count to 7 signatories and move the row off OPEN: the criteria-shaped record exists at measurement/filings/2</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-74</code></td>
+  <td>Artificial Analysis Cyber Index Alliance (join invite)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://artificialanalysis.ai/">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;OPEN — reproduce methods + score the index itself&#39;. ACTUAL: the upstream site is reachable (https://artificialanalysis.ai/ -&gt; HTTP 200) and the estate treats Artificial Analysis as a competitor to be ind</td>
+  <td class="ns">Locate the actual invitation/landing page URL and confirm whether an invite was received, before this row is actioned; a</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-75</code></td>
+  <td>Cloudflare Monetization Gateway beta (x402/MCP/A2A)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="livecell"><span class="live ok" title="https://developers.cloudflare.com/">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;OPEN — new census population: agent-payment audit&#39;. ACTUAL: the product is confirmed live, and the estate already holds a dated record of it. LIVE: https://developers.cloudflare.com/ -&gt; HTTP 200, left na</td>
+  <td class="ns">Point the census at the Cloudflare Monetization Gateway docs surface and add it as a named population to the existing /a</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-76</code></td>
+  <td>BoE Bailey &#39;rigorous testing, evidence, standards&#39;</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.bankofengland.co.uk/speeches">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;VERIFIED — BoE evidence pack cover line&#39;. ACTUAL: the quoted line could NOT be confirmed. https://www.bankofengland.co.uk/speeches -&gt; HTTP 200 (72,851 bytes) but contains no &#39;Bailey&#39; occurrence and no /s</td>
+  <td class="ns">Produce the exact URL + date of the Bailey speech carrying that phrase (or the evidence-pack cover line in the estate),</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-77</code></td>
+  <td>NIST NCCoE 600+ identity comments (webinar Oct 28)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="https://www.nccoe.nist.gov/projects/identity">403</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;OPEN — authority-spine input + attend&#39;. ACTUAL: the premise could not be checked. Every nccoe.nist.gov path tried returns HTTP 403 to this client: https://www.nccoe.nist.gov/projects/identity -&gt; 403; htt</td>
+  <td class="ns">Confirm the &#39;600+ comments&#39; count and the Oct 28 webinar time via a client that is not 403-blocked (browser or NIST news</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-78</code></td>
+  <td>Mastercard Agent Pay for Machines on x402</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.mastercard.com/newsroom">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;OPEN — sandbox probes + trust-layer measurement&#39;. ACTUAL: no Mastercard agent-pay artefact could be located. https://www.mastercard.com/newsroom -&gt; HTTP 200 but no &#39;agentic&#39;/&#39;agent pay&#39; string matched. N</td>
+  <td class="ns">Name the upstream Mastercard announcement/production URL and its API surface before probing; then run the probe against</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-79</code></td>
+  <td>Visa + BILL + Billtrust live pilot</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.bill.com">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;VERIFIED — Trusted Agent Protocol + Agentic Directory measurement&#39;. ACTUAL: all three vendor sites are reachable but the specific pilot could not be confirmed. https://www.bill.com -&gt; HTTP 200 (no &#39;trust</td>
+  <td class="ns">Supply the pilot announcement URL and the exact name of the &#39;Trusted Agent Protocol&#39; / &#39;Agentic Directory&#39; surface, or d</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-80</code></td>
+  <td>W3C State of the Web in the AI Era (TPAC Oct 29)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="https://www.w3.org/TPAC/">403</span> <span class="live gate" title="https://www.w3.org/2025/TPAC/">403</span> <span class="live gate" title="https://www.w3.org/2026/TPA">403</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;OPEN — Agentic Web WG charter comment&#39;. ACTUAL: the event/window could not be confirmed from W3C. Tried: https://www.w3.org/TPAC/ -&gt; 404; https://www.w3.org/2025/TPAC/ -&gt; 404; https://www.w3.org/2026/TPA</td>
+  <td class="ns">Confirm the TPAC 2026 date and the &#39;Agentic Web WG&#39; charter comment deadline from the W3C site directly; if the comment</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-81</code></td>
+  <td>Anthropic third-party evaluator proposal (Dec 15)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.anthropic.com/research">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;OPEN — evaluator-ready response pack&#39;. ACTUAL: no such proposal found. https://www.anthropic.com/research -&gt; HTTP 200; searching the page for &#39;third-party&#39; returns only &#39;third-party systems&#39; (in a model-</td>
+  <td class="ns">Locate the actual Anthropic proposal/RFP document with its exact title, URL and deadline year; a Dec 15 window is &gt;7 day</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-82</code></td>
+  <td>BridgeAI &#39;AI for Assurance and Compliance&#39; (Dec 8)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live bad" title="https://www.bridgeai.org">0</span> <span class="live bad" title="https://bridgeai.org">0</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;OPEN — application + concept note (monitor, test, verify, evidence)&#39;. ACTUAL: the upstream could not be reached. https://www.bridgeai.org -&gt; no connection (HTTP 000); https://bridgeai.org -&gt; no connectio</td>
+  <td class="ns">Resolve the correct BridgeAI URL (the .org domain does not resolve from here) and confirm the call&#39;s eligibility, deadli</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-83</code></td>
+  <td>UN Scientific Panel: &#39;no reliable control methods exist&#39;</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="https://www.un.org/en/scientific-panel-on-ai">404</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;VERIFIED — institutional charter citation&#39;. ACTUAL: the exact sentence could NOT be confirmed and the primary page was unreachable. Tried: https://www.un.org/en/scientific-panel-on-ai -&gt; HTTP 403; https:</td>
+  <td class="ns">Obtain the panel&#39;s own report/charter text with a paragraph-level citation (page/section) for the exact sentence, via a</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-84</code></td>
+  <td>SB 53 filings (36–45/100 transparency, median zero)</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip bad">Contradicted</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;VERIFIED — claim-watch corpus ingestion&#39;. ACTUAL: there is NO SB 53 ingestion in the claim-watch corpus. ~/_work/councilof-ai/public/claims/ contains 29 files across 5 registry families (claimreg-ai-assu</td>
+  <td class="ns">Either ingest the SB 53 filer corpus into the claim-watch registry (so the 36–45/100 and median-zero figures are reprodu</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-85</code></td>
+  <td>AISI Astra 29.2% (unreproducible)</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.aisi.gov.uk/blog/gpt-6-astra-performs-unsanctioned-supply-chain-attacks-in-simulations">200</span></td>
+  <td class="ev">CONFIRMED live, exactly. https://www.aisi.gov.uk/blog/gpt-6-astra-performs-unsanctioned-supply-chain-attacks-in-simulations -&gt; HTTP 200, title &#39;Blog Red Team / GPT-6 Astra performs unsanctioned supply-chain attacks in si</td>
+  <td class="ns">Publish the recomputation path for the 29.2% figure (seeds, scenario set, model versions) as the checklist&#39;s agent step</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-86</code></td>
+  <td>NYC Intro 2602 validator liability ($25k/instance)</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://council.nyc.gov/press/2026/09/25/3252/">200</span></td>
+  <td class="ev">CONFIRMED live, including the exact figure. https://council.nyc.gov/press/2026/09/25/3252/ -&gt; HTTP 200: &#39;Introduction 2602, sponsored by Speaker Julie Menin, which would make it unlawful for any business to market, offer</td>
+  <td class="ns">Build the validator defense-record artifact map the row promises, and label it accurately as a PROPOSED bill (press rele</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-87</code></td>
+  <td>SAFA (labs&#39; self-regulator)</td>
+  <td class="claimed">*WATCH</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://safa.ai">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;WATCH — neutrality war front: independent vs lab-certified auditors&#39;. ACTUAL: the entity could not be identified from any surface tried. https://safa.ai -&gt; HTTP 200 but the fetched page yielded no &#39;self-</td>
+  <td class="ns">Disambiguate SAFA (full name, founding document, member roster) and confirm it is not OSAIA; a &#39;neutrality war front&#39; cl</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-88</code></td>
+  <td>Merkle Tree Certificates (PLANTS)</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="mute">—</td>
+  <td class="ev"><span class="mute">carried in the machine-readable form</span></td>
+  <td class="ns"><span class="mute">carried in the machine-readable form</span></td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-89</code></td>
+  <td>Sigstore PQ pivot pending</td>
+  <td class="claimed">*WATCH</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.sigstore.dev/">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;WATCH — ML-DSA entry-format planning; hybrid dual-signing 2027&#39;. ACTUAL: the pivot could not be confirmed as a pending upstream event. https://www.sigstore.dev/ -&gt; HTTP 200 but the fetched HTML yields on</td>
+  <td class="ns">Cite the upstream Sigstore PQ roadmap/issue that makes the pivot &#39;pending&#39;; separately reconcile the estate, which ancho</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-90</code></td>
+  <td>AP2 v0.2 → FIDO with PaymentReceipt primitive</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="livecell"><span class="live ok" title="https://ap2-protocol.org">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;VERIFIED — receipt-semantics crosswalk&#39;. ACTUAL: the upstream pairing is CONFIRMED live but the PaymentReceipt primitive is NOT part of it. https://ap2-protocol.org -&gt; HTTP 200, page text includes &#39;FIDO</td>
+  <td class="ns">Correct the row: AP2 v0.2 + FIDO = VERIFIED (cite ap2-protocol.org); &#39;PaymentReceipt&#39; is our own naming and must be publ</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-91</code></td>
+  <td>OIN licensee directory entry 0898 CSOAI LTD</td>
+  <td class="claimed">*VERIFIED LIVE</td>
+  <td><span class="chip warn">Verified, stale</span></td>
+  <td class="livecell"><span class="live gate" title="https://openinventionnetwork.com/community-of-lice">404</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;VERIFIED LIVE — OIN licensee directory entry 0898 CSOAI LTD&#39;. ACTUAL: the CSOAI listing is CONFIRMED live; the &#39;0898&#39; identifier is NOT published. LIVE: https://openinventionnetwork.com/community-of-lice</td>
+  <td class="ns">Drop &#39;0898&#39; from the public claim (or mark it internal-only) and cite the two live URLs — openinventionnetwork.com/commu</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-92</code></td>
+  <td>LOT Network member directory</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://lotnet.com/members/?dir=1&amp;amp;name_directory_startswith=C">200</span></td>
+  <td class="ev">CONFIRMED live, with a date. https://lotnet.com/members/?dir=1&amp;name_directory_startswith=C -&gt; HTTP 200, member list contains &#39;CSOAI LTD 14 August 2026&#39; (between &#39;CSJ Technology Group LLC 04 March 2021&#39; and &#39;CTFO Inc 07 S</td>
+  <td class="ns">Keep as the cited institutional proof; refresh the registry row&#39;s verified_on to 2026-10-27 and record the membership da</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-93</code></td>
+  <td>C2PA contributor roster</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://c2pa.org/membership/">200</span></td>
+  <td class="ev">CONFIRMED live. https://c2pa.org/membership/ -&gt; HTTP 200 (254,915 bytes), and the membership page contains &#39;CSOAI LTD — Council for the Safety of Artific...&#39; with a link to &#39;csoai.org&#39; and a slug &#39;csoai_ltd_council_for_t</td>
+  <td class="ns">Refresh the registry row&#39;s verified_on to 2026-10-27 and change the wording to &#39;C2PA member roster&#39; to match what the pa</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-94</code></td>
+  <td>AQUIX agent #539 with live telemetry</td>
+  <td class="claimed">*VERIFIED (re-check pending)</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://aquix.ai/">200</span> <span class="live ok" title="https://aquix.ai/">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;VERIFIED (re-check pending)&#39;. ACTUAL: the re-check FAILS. https://aquix.ai/ -&gt; HTTP 200 but no &#39;csoai&#39; or &#39;council of ai&#39; string appears. AQUIX keys agents by 0x address, not by &#39;#539&#39;: https://aquix.ai/</td>
+  <td class="ns">Find the exact AQUIX agent address for CSOAI (the site indexes by 0x address, not ordinal) and cite that URL; if no CSOA</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-95</code></td>
+  <td>gold-402 September Featured Pick</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://raw.githubusercontent.com/Haustorium12/gold-402/main/FEATURED.md">200</span></td>
+  <td class="ev">CONFIRMED live, with the exact write-up. https://raw.githubusercontent.com/Haustorium12/gold-402/main/FEATURED.md -&gt; HTTP 200, section &#39;## September 2026 — The Slate&#39;, entry: &#39;**MCP Servers — [Council of AI GSPC MCP](htt</td>
+  <td class="ns">Cite the September-2026 FEATURED.md section URL in the next outward piece; also correct the estate register&#39;s &#39;Lists ...</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-96</code></td>
+  <td>SuperInstance &#39;csoai measures; candor governs&#39;</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://superinstance.ai">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;VERIFIED — collaboration candidate #1 (candor WAL)&#39;. ACTUAL: the quoted phrase could NOT be confirmed. https://superinstance.ai -&gt; HTTP 200 but the fetched page contains no &#39;csoai&#39;, &#39;council of ai&#39;, &#39;can</td>
+  <td class="ns">Cite the exact SuperInstance page or repo file carrying &#39;csoai measures; candor governs&#39; (or the consumer code that cite</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-97</code></td>
+  <td>Aura-core fail-closed GSPC proxy</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://raw.githubusercontent.com/MVPuknowme/Aura-core/MVPuknowme/api/skygrid/gspc.mjs">200</span></td>
+  <td class="ev">CONFIRMED live, in the third party&#39;s own code. https://raw.githubusercontent.com/MVPuknowme/Aura-core/MVPuknowme/api/skygrid/gspc.mjs -&gt; HTTP 200, verbatim: &#39;const PRODUCT = &quot;SKYGRID Emergency Data On-Ramp&quot;; const ROUTE</td>
+  <td class="ns">Correct deepdive-claims-2026-09-29.json, which still marks Aura-core UNVERIFIED — the raw code is live and fail-closed t</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-98</code></td>
+  <td>gentle-mesh A2A positioning RFC</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="mute">—</td>
+  <td class="ev">CHECKLIST SAYS: &#39;VERIFIED — outreach candidate in spec lane&#39;. ACTUAL: a gentle-mesh repo exists but the claimed A2A positioning RFC does not. GitHub API search &#39;gentle-mesh&#39; -&gt; 3 results, the only relevant one Rafaeldeli</td>
+  <td class="ns">Cite the specific RFC file/URL in Rafaeldelinares/gentle-mesh that positions against CSOAI&#39;s measurement layer; until th</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-99</code></td>
+  <td>arXiv 2609.14721 academic citation (template critique)</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip ok">Verified current</span></td>
+  <td class="livecell"><span class="live ok" title="https://arxiv.org/abs/2609.14721">200</span></td>
+  <td class="ev">CONFIRMED live, with the critique text. https://arxiv.org/abs/2609.14721 -&gt; HTTP 200, title &#39;[2609.14721] A Two-Dimensional Study of the Model Context Protocol: Publication and Adoption&#39;, &#39;Submitted on 13 Sep 2026]&#39;, [v1</td>
+  <td class="ns">Publish the curation doctrine reply that the row promises as the agent step — answer the 295-repository/4.9% construct-v</td>
+</tr>
+<tr>
+  <td class="id"><code>CJ-100</code></td>
+  <td>stork.ai editorial review (Oct 8)</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://stork.ai/">200</span></td>
+  <td class="ev">CHECKLIST SAYS: &#39;VERIFIED — editorial surface&#39;. ACTUAL: the review could NOT be located. https://stork.ai/ -&gt; HTTP 200, title &#39;Stork Wire — quality backlinks &amp; AI visibility, on autopilot&#39;. The site&#39;s blog sitemap https:</td>
+  <td class="ns">Supply the exact stork.ai post URL for the Oct 8 review (or the newsletter/issue it appeared in — stork publishes a news</td>
+</tr>
+<tr>
+  <td class="id"><code>N-01</code></td>
+  <td>BS EN/prEN 18283 bias standard comment (closes Nov 24)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live bad" title="https://standardsdevelopment.bsigroup.com/projects/2026-00938">0</span></td>
+  <td class="ev">https://standardsdevelopment.bsigroup.com/projects/2026-00938 — &#39;Comment period start date: 01/10/2026 Comment period end date: 24/11/2026&#39;; &#39;Source: CEN Committee: ART/1 - Artificial Intelligence&#39;; draft ref BS EN 18283</td>
+  <td class="ns">Register/login at BSI Standards Development and comment via https://standardsdevelopment.bsigroup.com/drafts/2026-00938/</td>
+</tr>
+<tr>
+  <td class="id"><code>N-02</code></td>
+  <td>prEN ISO/IEC 42006 enquiry (closes Oct 29 — 3 DAYS)</td>
+  <td class="claimed">*URGENT</td>
+  <td><span class="chip warn">Closing soon</span></td>
+  <td class="livecell"><span class="live ok" title="https://genorma.com/en/standards/pren-iso-iec-42006">200</span></td>
+  <td class="ev">https://genorma.com/en/standards/pren-iso-iec-42006 — &#39;Current stage: 40.20 DIS ballot initiated: 12 weeks Aug 6, 2026&#39; (6 Aug 2026 + 12 weeks = 29 Oct 2026); BSI draft ref &#39;23/30470941 DC — Draft BS EN ISO/IEC 42006&#39; (h</td>
+  <td class="ns">TODAY: open the BSI Standards Development project for BS EN ISO/IEC 42006 (23/30470941 DC) and submit the comment before</td>
+</tr>
+<tr>
+  <td class="id"><code>N-03</code></td>
+  <td>ISO/IEC DIS 23282 NLP evaluation ballot (closes Nov 25)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://genorma.com/en/standards/iso-iec-dis-23282">200</span> <span class="live gate" title="https://genorma.com/en/standards/pren-iso-iec-232">404</span></td>
+  <td class="ev">https://genorma.com/en/standards/iso-iec-dis-23282 — &#39;Current stage: 40.20 DIS ballot initiated: 12 weeks Sep 2, 2026&#39; (2 Sep 2026 + 12 weeks = 25 Nov 2026); the CEN twin https://genorma.com/en/standards/pren-iso-iec-232</td>
+  <td class="ns">Comment through BSI Standards Development before 25 Nov 2026 (note the CEN prEN twin closes 26 Nov 2026)</td>
+</tr>
+<tr>
+  <td class="id"><code>N-04</code></td>
+  <td>BSI three new AI certification schemes (Oct 14)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip dead">Closed</span></td>
+  <td class="livecell"><span class="live ok" title="https://groupsiteppdmig.bsigroup.com/en-GB/insights-and-media/media-centre/press-releases/2026/october/new-ai-schemes-launched-to-help-companies-demonstrate-responsible-deployment-manage-risk-and-meet-regulatory-and-mark">200</span></td>
+  <td class="ev">https://groupsiteppdmig.bsigroup.com/en-GB/insights-and-media/media-centre/press-releases/2026/october/new-ai-schemes-launched-to-help-companies-demonstrate-responsible-deployment-manage-risk-and-meet-regulatory-and-mark</td>
+  <td class="ns">14 October 2026 — that is the launch-announcement date, not an application deadline; the three schemes are open for busi</td>
+</tr>
+<tr>
+  <td class="id"><code>N-05</code></td>
+  <td>AICPA × AIUC-1 joint agent certification (Oct 19)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip dead">Closed</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.aicpa-cima.com/news/article/auditors-meet-urgent-demand-for-ai-assurance-with-new-offering-from-aicpa-and-aiuc">200</span></td>
+  <td class="ev">https://www.aicpa-cima.com/news/article/auditors-meet-urgent-demand-for-ai-assurance-with-new-offering-from-aicpa-and-aiuc — &#39;NEW YORK and SAN FRANCISCO (Oct. 19th, 2026) – The American Institute of CPAs (AICPA) and Arti</td>
+  <td class="ns">19 October 2026 — announcement date, not an application deadline; the joint certification is not live until early 2027</td>
+</tr>
+<tr>
+  <td class="id"><code>N-06</code></td>
+  <td>EN 18286:2026 cited in OJEU (Oct 14)</td>
+  <td class="claimed">*VERIFIED</td>
+  <td><span class="chip dead">Closed</span></td>
+  <td class="livecell"><span class="live ok" title="https://eur-lex.europa.eu/eli/dec_impl/2026/2274/oj">202</span></td>
+  <td class="ev">https://eur-lex.europa.eu/eli/dec_impl/2026/2274/oj — &#39;Commission Implementing Decision (EU) 2026/2274 of 12 October 2026 on the harmonised standards for high-risk AI systems drafted in support of Regulation (EU) 2024/16</td>
+  <td class="ns">14 October 2026 — OJEU publication date (OJ L, 2026/2274); decision dated 12 October 2026; now in force (not a window)</td>
+</tr>
+<tr>
+  <td class="id"><code>N-07</code></td>
+  <td>International Programme on AI Evaluation (priority Nov 13, final Dec 11)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://ai-evaluation.org/apply">200</span></td>
+  <td class="ev">https://ai-evaluation.org/apply — &#39;We will select 40 fully funded participants - graduate and PhD students, researchers, and professionals from around the world&#39;; &#39;Priority Deadline: November 13, 2026&#39;; &#39;Final Deadline:</td>
+  <td class="ns">Submit through ai-evaluation.org/apply before the 13 Nov 2026 priority deadline (CV, motivation statement, then intervie</td>
+</tr>
+<tr>
+  <td class="id"><code>N-08</code></td>
+  <td>AWS Agentic AI CFP (Nov 4)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.amazon.science/research-awards/call-for-proposals/aws-agentic-ai-call-for-proposals-fall-2026">200</span></td>
+  <td class="ev">https://www.amazon.science/research-awards/call-for-proposals/aws-agentic-ai-call-for-proposals-fall-2026 — &#39;Submission period: October 1 - November 4, 2026&#39;; &#39;Unrestricted funds, no more than $70,000 USD on average&#39;; &#39;A</td>
+  <td class="ns">Owner to secure a UK academic PI (faculty member) and submit the 4-page proposal via the ARA portal before 4 Nov 2026 11</td>
+</tr>
+<tr>
+  <td class="id"><code>N-09</code></td>
+  <td>Amazon ARA Multilingual &amp; Contextual AI Evaluation (Nov 4)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.amazon.science/research-awards/call-for-proposals/multilingual-and-contextual-ai-evaluation-call-for-proposals-fall-2026">200</span></td>
+  <td class="ev">https://www.amazon.science/research-awards/call-for-proposals/multilingual-and-contextual-ai-evaluation-call-for-proposals-fall-2026 — &#39;Submission period: October 1 - November 4, 2026 (11:59PM Pacific Time)&#39;; &#39;Unrestrict</td>
+  <td class="ns">Owner to pair with an academic PI and submit via the ARA portal before 4 Nov 2026 11:59 PM PT (frame the work around und</td>
+</tr>
+<tr>
+  <td class="id"><code>N-10</code></td>
+  <td>NSF 26-512 AI Datasets (Nov 4)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.nsf.gov/funding/opportunities/ai-datasets-unlocking-dataset-value-ai-enabled-scientific-discovery/nsf26-512/solicitation">200</span></td>
+  <td class="ev">https://www.nsf.gov/funding/opportunities/ai-datasets-unlocking-dataset-value-ai-enabled-scientific-discovery/nsf26-512/solicitation — &#39;Full Proposal Deadline(s) (due by 5 p.m. submitting organization&#39;s local time): Nove</td>
+  <td class="ns">Owner to approach a US university/non-profit PI to lead and add CSOAI as a subaward partner (UEI, SAM registration and a</td>
+</tr>
+<tr>
+  <td class="id"><code>N-11</code></td>
+  <td>NSF 26-513 State &amp; Regional AI Infrastructure Hubs (Nov 4)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip gate">Owner-gated</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.nsf.gov/funding/opportunities/us-national-science-foundation-state-regional-artificial/nsf26-513/solicitation">200</span></td>
+  <td class="ev">https://www.nsf.gov/funding/opportunities/us-national-science-foundation-state-regional-artificial/nsf26-513/solicitation — &#39;Full Proposal Deadline(s) (due by 5 p.m. submitting organization&#39;s local time): November 04, 20</td>
+  <td class="ns">Owner to join a US-led hub consortium as a subaward partner before 4 Nov 2026 5 pm local — there is no UK-led route</td>
+</tr>
+<tr>
+  <td class="id"><code>N-12</code></td>
+  <td>Innovate UK &#39;Efficient, Structured and Controllable AI&#39; (Nov 18)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://apply-for-innovation-funding.service.gov.uk/competition/2582/overview/9fdb47a5-011c-4c47-ac5e-c426e295fe89">200</span></td>
+  <td class="ev">https://apply-for-innovation-funding.service.gov.uk/competition/2582/overview/9fdb47a5-011c-4c47-ac5e-c426e295fe89 — &#39;Competition opens: Monday 12 October 2026&#39;; &#39;Competition closes: Wednesday 18 November 2026 11:00am&#39;;</td>
+  <td class="ns">Owner to start the IFS application now and submit before 18 Nov 2026 11:00 UK (declaration, UK SME financials, last-minu</td>
+</tr>
+<tr>
+  <td class="id"><code>N-13</code></td>
+  <td>Innovate UK &#39;Frontier/Next-Gen AI Technologies&#39; (Nov 11)</td>
+  <td class="claimed">*UNVERIFIED</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://apply-for-innovation-funding.service.gov.uk/competition/2584/overview/4c7afb5d-4572-4ef2-9507-73ef2dec8ec8">200</span></td>
+  <td class="ev">https://apply-for-innovation-funding.service.gov.uk/competition/2584/overview/4c7afb5d-4572-4ef2-9507-73ef2dec8ec8 — &#39;Frontier AI: SME Champions, Phase 1&#39;; &#39;Competition closes: Wednesday 11 November 2026 11:00am&#39;; &#39;UK re</td>
+  <td class="ns">Owner to correct the row title and start an IFS application for competition 2584 before 11 Nov 2026 11:00 GMT</td>
+</tr>
+<tr>
+  <td class="id"><code>N-14</code></td>
+  <td>OpenAI Cybersecurity Grant Program (rolling)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live ok" title="https://openai.com/index/openai-cybersecurity-grant-program/">200</span></td>
+  <td class="ev">https://openai.com/index/openai-cybersecurity-grant-program/ — &#39;We are launching the Cybersecurity Grant Program—a $1M initiative to boost and quantify AI-powered cybersecurity capabilities&#39;; &#39;Update on February 5, 2026:</td>
+  <td class="ns">Watch grants.openai.com for a cybersecurity program listing and confirm whether microgrants still exist before repeating</td>
+</tr>
+<tr>
+  <td class="id"><code>N-15</code></td>
+  <td>Foresight AI for Science &amp; Safety Nodes RFP (Oct 31)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip warn">Closing soon</span></td>
+  <td class="livecell"><span class="live ok" title="https://foresight.org/grants/ai-science-safety-nodes-rfp-local-compute/">200</span></td>
+  <td class="ev">https://foresight.org/grants/ai-science-safety-nodes-rfp-local-compute/ — &#39;The application deadline for this RFP is 31st October 2026 23:59 PDT&#39;; &#39;Grants typically range from $30,000 to $100,000&#39;; &#39;We accept applications</td>
+  <td class="ns">Owner to submit the application package through the Foresight Institute portal before 31 Oct 2026 23:59 PDT (budget, mil</td>
+</tr>
+<tr>
+  <td class="id"><code>N-16</code></td>
+  <td>HORIZON-BRIDGING-2027-01-13 EU Frontier AI Initiative RIA (Feb 2027)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://hadea.ec.europa.eu/calls-proposals/horizon-europe-digital-bridging-actions-2027_en">200</span></td>
+  <td class="ev">https://hadea.ec.europa.eu/calls-proposals/horizon-europe-digital-bridging-actions-2027_en — &#39;HORIZON-BRIDGING-2027-01 ... Publication date 13 October 2026 ... Opening date 20 October 2026 ... Deadline model Single-stage</td>
+  <td class="ns">Start assembling the consortium and budget now, and pull the topic budget from the Funding &amp; Tenders topic page once it</td>
+</tr>
+<tr>
+  <td class="id"><code>N-17</code></td>
+  <td>AWS Agent Registry GA APIs</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/">200</span></td>
+  <td class="ev">https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/ — &#39;postDateTime&#39;:&#39;2026-08-31T15:21:00Z&#39;; headline &#39;AWS Agent Registry for centralized agent discovery and governance is now gener</td>
+  <td class="ns">Register the estate&#39;s MCP servers, agents and skills in Agent Registry (Europe/Ireland) via console, CLI or SDK</td>
+</tr>
+<tr>
+  <td class="id"><code>N-18</code></td>
+  <td>AAIF Sandbox phase + 4 new projects (Oct 22)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://aaif.io/blog/aaif-sandbox-phase">200</span></td>
+  <td class="ev">https://aaif.io/blog/aaif-sandbox-phase — &#39;Published Time: 2026-09-01&#39;; &#39;Sandbox comes with a six-month checkpoint and a twelve-month window to apply for Growth. Miss it and the TC opens an archival discussion&#39;; &#39;standar</td>
+  <td class="ns">Submit the project proposal through aaif.io/submit-a-project (rolling — no deadline to beat)</td>
+</tr>
+<tr>
+  <td class="id"><code>N-19</code></td>
+  <td>CDF AI SIG (Continuous Delivery Foundation)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://github.com/cdfoundation/AI">200</span></td>
+  <td class="ev">https://github.com/cdfoundation/AI — repo description &#39;This repo is for the AI Special Interest Group (SIG)&#39;; README heading &#39;# CI/CD Artificial Intelligence (AI) Special Interest Group&#39; and &#39;This Special Interest Group</td>
+  <td class="ns">Open an issue in github.com/cdfoundation/AI to join the SIG and stand for a working group</td>
+</tr>
+<tr>
+  <td class="id"><code>N-20</code></td>
+  <td>Agentic SOC Alliance (15 founders)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://www.extrahop.com/agentic-soc-alliance">200</span></td>
+  <td class="ev">https://www.extrahop.com/agentic-soc-alliance — &#39;If your organization is helping shape that future, apply to join the Agentic SOC Alliance today&#39; and &#39;Apply to Join&#39; link; coverage &#39;Agentic SOC Alliance Wants To Set Rule</td>
+  <td class="ns">Owner to submit the Alliance &#39;Apply to Join&#39; form (organisation details and signature required)</td>
+</tr>
+<tr>
+  <td class="id"><code>N-21</code></td>
+  <td>Prosus Vending Bench (Apache-2.0)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://github.com/ProsusAI/vending-bench">200</span></td>
+  <td class="ev">https://github.com/ProsusAI/vending-bench — &#39;An open source vending machine benchmark: a long-horizon agentic business simulation served over MCP, shipped as a Harbor task&#39;; &#39;Start with €1,500. Run six vending machines a</td>
+  <td class="ns">Run the estate&#39;s agent against the benchmark and compare the score with the published baselines</td>
+</tr>
+<tr>
+  <td class="id"><code>N-22</code></td>
+  <td>NIST AITE programme</td>
+  <td class="claimed">*UNVERIFIED</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://pages.nist.gov/ai-technology-evaluation/">200</span></td>
+  <td class="ev">https://pages.nist.gov/ai-technology-evaluation/ — AITE is run by NIST&#39;s Technology Test and Evaluation Division; participation is open to data and model providers under the AITE Participation Agreement, with results pub</td>
+  <td class="ns">Owner to email aite-poc@list.nist.gov requesting participation and to sign the AITE Participation Agreement — no deadlin</td>
+</tr>
+<tr>
+  <td class="id"><code>N-23</code></td>
+  <td>AAIF Voice Agents Forum (SF, Nov 5)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://luma.com/voiceagentssf">200</span></td>
+  <td class="ev">https://luma.com/voiceagentssf — &#39;&quot;startDate&quot;:&quot;2026-11-05T09:00:00.000-08:00&quot;&#39;, &#39;&quot;endDate&quot;:&quot;2026-11-05T18:00:00.000-08:00&quot;&#39;, &#39;General Admission&#39; price 300 USD, &#39;Early Bird Ticket&#39; valid_end_at 2026-10-30T06:59:59Z, &#39;Gene</td>
+  <td class="ns">Owner to buy early-bird tickets before 30 Oct 2026 06:59 UTC (payment required)</td>
+</tr>
+<tr>
+  <td class="id"><code>N-24</code></td>
+  <td>AWS CDS Agentic AI Partner Hackathon (Oct 28)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip mute">Unverified</span></td>
+  <td class="livecell"><span class="live gate" title="https://aws-cds-partner.devpost.com/">403</span></td>
+  <td class="ev">https://aws-cds-partner.devpost.com/ (fetched via r.jina.ai, 11,485 bytes) — &#39;$40,000 in prizes&#39;, &#39;1st Place $18,000 in cash&#39;, &#39;Create d opportunity ID through AWS Partner Central&#39;s AWS Customer Engagement (ACE) ... Mark</td>
+  <td class="ns">Owner to read the live timeline inside the Devpost account (or ask the AWS CDS partner team for the submission close dat</td>
+</tr>
+<tr>
+  <td class="id"><code>N-25</code></td>
+  <td>Agentic AI Hackathon 2026 (Ulster University)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://theamse.org/hackathon/AgenticAIHackathon2026">200</span></td>
+  <td class="ev">https://theamse.org/hackathon/AgenticAIHackathon2026 — &#39;Agentic AI Hackathon 2026 / Nov 21 – Nov 22, 2026 / Ulster University, UK / 2 nd International Hackathon / Organized by Ulster University, UK&#39;; &#39;Round I (Idea / PPT</td>
+  <td class="ns">Register the team and submit the Round I idea/PPT before 16 Nov 2026 22:00 — confirm the clock&#39;s timezone with the organ</td>
+</tr>
+<tr>
+  <td class="id"><code>N-26</code></td>
+  <td>Bharat Agentic-AI Hackathon (Code for India)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://codeforindia.org/hackathon">200</span></td>
+  <td class="ev">https://codeforindia.org/hackathon — &#39;Launches 15 August 2026 · 90 Days · Open Source&#39;; &#39;Build open-source digital public goods for India&#39;s health. 90 days of building, from 15 August to 15 November 2026&#39;; &#39;₹18 lakh in p</td>
+  <td class="ns">Owner to register on AgentFoundry.me and open-source the entry before 15 Nov 2026 (check the Apache-2.0/MIT contribution</td>
+</tr>
+<tr>
+  <td class="id"><code>N-27</code></td>
+  <td>oneAPI DevSummit CFP (event Dec 1)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip warn">Closing soon</span></td>
+  <td class="livecell"><span class="live ok" title="https://uxlfoundation.org/events/oneapi-devsummit-hosted-by-uxl-foundation-2026/">200</span></td>
+  <td class="ev">https://uxlfoundation.org/events/oneapi-devsummit-hosted-by-uxl-foundation-2026/ — &#39;Call for Presentations CFP Close: Oct 31, 2026 Event Date: December 1st, 2026&#39;; &#39;Open-source and community-driven initiatives&#39;</td>
+  <td class="ns">Owner to submit the talk abstract through the UXL Foundation CFP form before 31 Oct 2026</td>
+</tr>
+<tr>
+  <td class="id"><code>N-28</code></td>
+  <td>AAMAS 2027 (Blue Sky Nov 5 / papers Nov 12)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://warwick.ac.uk/fac/sci/dcs/aamas2027/calls/call-for-blue-sky-ideas/">200</span></td>
+  <td class="ev"><span class="mute">carried in the machine-readable form</span></td>
+  <td class="ns">Register the author on OpenReview immediately (the 20 Oct registration date has passed), then submit the abstract by 5 N</td>
+</tr>
+<tr>
+  <td class="id"><code>N-29</code></td>
+  <td>ICAART 2027 (workshop/abstract Dec 3)</td>
+  <td class="claimed">*OPEN</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://icaart.scitevents.org/CallForPapers.aspx?y=2027">200</span></td>
+  <td class="ev">https://icaart.scitevents.org/CallForPapers.aspx?y=2027 — &#39;Workshop QAIO / DTT / LAIS / CyberAIS — Paper Submission: December 3, 2026&#39;; &#39;Abstracts — Abstract Submission: December 3, 2026&#39;; &#39;Position Papers / Regular Pape</td>
+  <td class="ns">Submit via PRIMORIS by 3 Dec 2026 — or take the extended position-paper slot by 29 Oct 2026</td>
+</tr>
+<tr>
+  <td class="id"><code>N-30</code></td>
+  <td>NIST SP 800-82r4 ipd comments (Nov 30)</td>
+  <td class="claimed">*MARGINAL</td>
+  <td><span class="chip ok">Open, verified</span></td>
+  <td class="livecell"><span class="live ok" title="https://csrc.nist.gov/pubs/sp/800/82/r4/ipd">200</span></td>
+  <td class="ev">https://csrc.nist.gov/pubs/sp/800/82/r4/ipd — &#39;Date Published: September 21, 2026&#39;; &#39;Comments Due: November 30, 2026&#39;; &#39;The comment period on this initial public draft is open through November 30, 2026. We encourage you</td>
+  <td class="ns">Draft the OT/PQC/AI-vulnerability comment rows and submit them with the NIST template before 30 Nov 2026</td>
+</tr>
+</tbody></table></div>
+
+<h2>Owner gates — what only the human can do</h2>
+<table><thead><tr><th>#</th><th>Gate</th><th>Why it is not the agent's to close</th><th>Cost</th></tr></thead><tbody>
+<tr>
+  <td>1</td><td><strong>Sign the wave-2 card and the five subject-axis banks</strong></td><td>signing mints public evidence; the estate&#39;s own rule leaves it to the owner</td><td>minutes once reviewed</td>
+</tr>
+<tr>
+  <td>2</td><td><strong>Adjudicate materiality for the candidate claim deltas</strong></td><td>a byte delta triggers human materiality adjudication and is never an automated compliance verdict</td><td>one sitting</td>
+</tr>
+<tr>
+  <td>3</td><td><strong>Promote the claim-maintenance axis to MEASURED</strong></td><td>the method is frozen and sha-pinned and n_valid meets the threshold, but the promotion is the owner&#39;s ruling and this catalogue does not pre-empt it</td><td>one ruling</td>
+</tr>
+<tr>
+  <td>4</td><td><strong>Declare each subject axis&#39;s sampling frame</strong></td><td>a governance decision about what the estate claims to speak about</td><td>one page per axis</td>
+</tr>
+<tr>
+  <td>5</td><td><strong>Publish the product Agent Skill (meok-canonical)</strong></td><td>the site publishes 14 skills and that one is not among them</td><td>small</td>
+</tr>
+<tr>
+  <td>6</td><td><strong>Outward sends: I-D submissions, staged standards comments, the Zenodo appeal, grant applications, trademark filing</strong></td><td>each carries the owner&#39;s name, signature, legal undertaking or payment</td><td>see the rows</td>
+</tr>
+</tbody></table>
+
+<h2>Reproducibility</h2>
+<ul>
+<li>The state table's bytes are pinned by sha256 above, so a reader can prove this catalogue was built from what it claims.</li>
+<li>The extractor is the estate's own <code>scripts/claim-capture.mjs</code>, sha256-pinned in the published spec manifest, and the run refuses to measure if the pin does not match.</li>
+<li>A negative control — a URL that cannot exist — is read first. If the reader reported it reachable, the run is void: a reader that cannot fail cannot measure.</li>
+<li>This page's JSON is the machine-readable form: <a href="https://councilof.ai/jewels/master-catalogue/index.json">/jewels/master-catalogue/index.json</a>.</li>
+<li>The published read it cites by digest: <a href="https://councilof.ai/interop/subject-axis-live-20261027/docket-row-reread-20261101.json">docket-row-reread-20261101.json</a>.</li>
+</ul>
+
+<p class="note">This catalogue counts and quotes. It decides nothing about whether any measured claim is true, and it grants no status to any subject. Published 2026-11-01T04:44:45.308Z. Measurement, never a certification.</p>
+</main>  <script src="/council-workspace-launcher.js" defer></script>
+</body></html>

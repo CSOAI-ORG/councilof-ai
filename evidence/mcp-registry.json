@@ -4,6 +4,7 @@
   "probe_method": "JSON-RPC 2.0 over HTTPS POST: initialize -> tools/list, MCP protocolVersion 2024-11-05. A server counts as reachable only if initialize returned a JSON-RPC result.",
   "probe_host": "workstation",
   "targets_file": "scripts/mcp-targets.json",
+  "probe_scope": "PRE-DEPLOY STAND-IN: every https://councilof.ai/* target was answered by http://127.0.0.1:8799 (this branch's build, served locally or as a Pages preview), NOT by the live door; see `contacted` on each such server. Re-run scripts/mcp-probe.mjs without --door-origin after the deploy and commit the live observation.",
   "honesty_contract": [
     "last_probed is written ONLY by a probe that returned. If nothing answered it is null. No code path synthesises it.",
     "tools_count is derived from the length of the probed tools array. A catalogue's asserted tool count is never used as tools_count.",
@@ -16,7 +17,7 @@
     "reachable_distinct_servers": 2,
     "unreachable_endpoints": 0,
     "catalogued_not_probed": 6,
-    "tools_probed": 104,
+    "tools_probed": 106,
     "tools_catalogued_not_probed": null,
     "external_catalogues_not_probed": [
       {
@@ -27,8 +28,8 @@
         "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
       }
     ],
-    "started": "2026-10-26T08:25:31.290Z",
-    "finished": "2026-10-26T08:25:32.636Z"
+    "started": "2026-10-30T05:31:01.117Z",
+    "finished": "2026-10-30T05:31:01.420Z"
   },
   "servers": [
     {
@@ -39,11 +40,11 @@
       "role": "primary",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-10-26T08:25:31.866Z",
+      "last_probed": "2026-10-30T05:31:01.156Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 52,
+      "tools_count": 53,
       "tools": [
         {
           "name": "board_totals",
@@ -295,6 +296,11 @@
           "required_args": []
         },
         {
+          "name": "axis_watchdog-ingest",
+          "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
           "name": "commission_card",
           "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
           "required_args": [
@@ -331,7 +337,9 @@
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.primary",
       "catalogue_source": null,
-      "catalogue_claim": null
+      "catalogue_claim": null,
+      "contacted": "http://127.0.0.1:8799/mcp",
+      "stand_in_for": "https://councilof.ai/mcp"
     },
     {
       "id": "csoai-gspc-mcp-fallback",
@@ -341,7 +349,7 @@
       "role": "fallback",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-10-26T08:25:32.196Z",
+      "last_probed": "2026-10-30T05:31:01.370Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
@@ -643,11 +651,11 @@
       "role": "alias",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-10-26T08:25:32.382Z",
+      "last_probed": "2026-10-30T05:31:01.378Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 52,
+      "tools_count": 53,
       "tools": [
         {
           "name": "board_totals",
@@ -896,6 +904,11 @@
         {
           "name": "axis_serving-fidelity",
           "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_watchdog-ingest",
+          "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": []
         },
         {
@@ -935,7 +948,9 @@
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current",
       "catalogue_source": null,
-      "catalogue_claim": null
+      "catalogue_claim": null,
+      "contacted": "http://127.0.0.1:8799/mcp",
+      "stand_in_for": "https://councilof.ai/mcp"
     },
     {
       "id": "csoai-gspc-mcp-stdio",
@@ -945,11 +960,11 @@
       "role": "stdio",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-10-26T08:25:32.636Z",
+      "last_probed": "2026-10-30T05:31:01.420Z",
       "http_status": null,
       "protocol_version": "2024-11-05",
-      "server_version": "0.2.3",
-      "tools_count": 52,
+      "server_version": "0.2.4",
+      "tools_count": 53,
       "tools": [
         {
           "name": "board_totals",
@@ -1198,6 +1213,11 @@
         {
           "name": "axis_serving-fidelity",
           "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "axis_watchdog-ingest",
+          "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": []
         },
         {

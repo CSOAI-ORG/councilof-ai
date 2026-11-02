@@ -23,8 +23,8 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     counting_rule:
       "Slot counts live in GET /api/gspc totals (public_count, measured_axes, quotable_axes). " +
       "This register lists the 14 canonical scored rows (13 board axes + jail). Jail is " +
-      "MEASURED; living-board separation is TIE (determined 2026-08-25) — a TIE is not a " +
-      "separated leader. Empty cells stay empty.",
+      "MEASURED; living-board separation is UNTESTED since 2026-09-29 (C-2026-0929-02; " +
+      "71 rows over 27 distinct prompts, no per-row results published). Empty cells stay empty.",
     axes: AXES,
     note: "Static from GSPC_AXIS_REGISTRY.json (ruled source of truth) + jail GoldBank floor. " +
       "Verify any issued card against its own signature and key at /api/cards and /signed/. " +

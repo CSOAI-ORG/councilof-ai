@@ -410,6 +410,34 @@ def derive_counts(board: dict) -> dict:
     }
 
 
+def snapshot_overview(counts: dict, as_of: str, read_at: str,
+                     heading: str = "## Snapshot at a glance") -> str:
+    """Render one data-derived summary consistently across published surfaces."""
+    separation = counts["separation_over_model_comparison"]
+    separation_parts = [
+        f"{separation.get('SEPARATED', 0)} separated",
+        f"{separation.get('TIE', 0)} ties",
+        f"{separation.get('UNTESTED', 0)} untested",
+    ]
+    separation_parts.extend(
+        f"{value} {state.lower()}" for state, value in sorted(separation.items())
+        if state not in {"SEPARATED", "TIE", "UNTESTED"} and value
+    )
+    return "\n".join([
+        heading,
+        "",
+        "| Scope and measurement | Evidence types | Leader separation |",
+        "|---|---|---|",
+        f"| **{counts['slots']} slots · {counts['by_status'].get('MEASURED', 0)} measured** | "
+        f"**{counts['by_kind'].get('model-comparison', 0)} model-comparison axes · "
+        f"{counts['by_kind'].get('deterministic-facts', 0)} deterministic-fact axes** | "
+        f"**{' · '.join(separation_parts)}** |",
+        "",
+        f"Root snapshot `as_of` `{as_of}` · source board read at `{read_at}`. "
+        "Separation counts apply only to model-comparison axes; a TIE is not a win.",
+    ])
+
+
 def axis_rows(board: dict, banks: list[dict]) -> list[dict]:
     bank_by_axis = {b["axis"]: b for b in banks}
     rows = []
@@ -458,6 +486,8 @@ def render_readme(tr: dict, counts: dict, rows: list[dict]) -> str:
     lines.append("")
     lines.append("**Measurement, not certification.** A TIE is never a win. An empty slot is a finding, not a zero. "
                  "No slot is for sale.")
+    lines.append("")
+    lines.extend(snapshot_overview(counts, as_of, read_at).splitlines())
     lines.append("")
     lines.append("## Honest counts — derived from the `axes` array in `board.json`, never typed")
     lines.append("")
@@ -778,7 +808,7 @@ def byte_parity_reason(built: dict[str, bytes], remote: dict[str, bytes]) -> str
 VIEWER_COLUMNS = ("axis", "family", "kind", "status", "n", "separation", "leader", "dataset")
 
 
-def hf_viewer_files(tr: dict) -> dict[str, bytes]:
+def hf_viewer_files(tr: dict, *, existing_parquet: bytes | None = None) -> dict[str, bytes]:
     """Derive the dataset's default viewer from the *same* captured board as snapshot/board.json.
 
     Keep the historical eight-column schema. This is a projection, not a new measurement,
@@ -814,8 +844,21 @@ def hf_viewer_files(tr: dict) -> dict[str, bytes]:
     table = pa.Table.from_pylist(rows, schema=schema)
     parquet = io.BytesIO()
     pq.write_table(table, parquet)
+    parquet_bytes = parquet.getvalue()
+    if existing_parquet is not None:
+        # Parquet writer versions can encode the same table differently (observed
+        # with Arrow 25 and 26). Preserve the pinned mirror bytes only after checking
+        # every row, column, type and schema metadata against this captured board.
+        # This exception is for the derived viewer only; signed source and snapshot
+        # parity remain byte-strict. Corrupt or changed viewers are regenerated.
+        try:
+            previous = pq.read_table(io.BytesIO(existing_parquet))
+            if previous.equals(table, check_metadata=True):
+                parquet_bytes = existing_parquet
+        except (pa.ArrowException, OSError, ValueError):
+            pass
     jsonl = "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows).encode("utf-8")
-    return {"board.parquet": parquet.getvalue(), "board.jsonl": jsonl}
+    return {"board.parquet": parquet_bytes, "board.jsonl": jsonl}
 
 
 def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dict[str, bytes]) -> dict[str, bytes]:
@@ -824,6 +867,17 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
     if not counts["printed_agrees_with_array"]:
         raise Refused("board totals disagree with the axis array; refusing the HF dataset card")
     text = readme.decode("utf-8")
+    summary_start = "<!-- gspc-overview:start -->"
+    summary_end = "<!-- gspc-overview:end -->"
+    if text.count(summary_start) != text.count(summary_end) or text.count(summary_start) > 1:
+        raise Refused("HF dataset card overview markers are unbalanced or duplicated")
+    overview = snapshot_overview(counts, tr["as_of"], tr["read_at"])
+    summary = "\n".join([
+        summary_start,
+        overview,
+        "These are dated snapshot counts; use the live board for current state.",
+        summary_end,
+    ])
     paragraph = (
         "The default viewer files (`board.parquet` and `board.jsonl`) project the "
         "[dated `snapshot/` release](snapshot/SNAPSHOT.json): its published root is "
@@ -838,6 +892,24 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
     )
     if replacements != 1:
         raise Refused("HF dataset README provenance paragraph changed; manual review required")
+
+    if text.count(summary_start):
+        # Remove the managed block and its surrounding blank lines as one unit. Replacing
+        # it with one separator keeps repeated publication byte-stable.
+        pattern = r"\n{0,2}" + re.escape(summary_start) + r".*?" + re.escape(summary_end) + r"\n{0,2}"
+        text, removed = re.subn(pattern, "\n\n", text, count=1, flags=re.S)
+        if removed != 1:
+            raise Refused("HF dataset card overview could not be moved")
+    load_heading = re.search(r"(?m)^#{1,6} Load the dataset\s*$", text)
+    if load_heading:
+        prefix = text[:load_heading.start()].rstrip()
+        text = prefix + "\n\n" + summary + "\n\n" + text[load_heading.start():]
+    else:
+        placement = re.escape(paragraph) + r"\n\n"
+        match = re.search(placement, text)
+        if not match:
+            raise Refused("HF dataset card provenance paragraph has no safe overview insertion point")
+        text = text[:match.start()] + paragraph + "\n\n" + summary + "\n\n" + text[match.end():]
 
     inventory = []
     seen = set()
@@ -864,12 +936,16 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
         elif in_inventory and line.startswith("## "):
             in_inventory = False
         if line.startswith("At the dated snapshot read,"):
-            line = (f"At the dated snapshot read, the board had **{counts['slots']} declared slots and "
-                    f"{counts['by_status'].get('MEASURED', 0)} measured axes**. "
+            line = (f"At the dated snapshot read, the board had **{counts['slots']} declared slots, "
+                    f"{counts['by_status'].get('MEASURED', 0)} measured and "
+                    f"{counts['by_status'].get('UNMEASURED', 0)} unmeasured axes** — slots are not "
+                    "measurements and these counts are never summed. "
                     "Model-comparison and deterministic-facts runs must not be pooled into one accuracy figure.")
         elif line.startswith("For current counts, separation states and withheld leader fields"):
             line = ("For current counts, separation states and withheld leader fields, read the live JSON and "
                     "retain the retrieval time. A tie is not a win; untested separation is not a separated lead. "
+                    "The methodology DOI is a permanent record name whose Zenodo deposit may be UNAVAILABLE at a "
+                    "given time; point-in-time availability: https://councilof.ai/interop/zenodo-status.json. "
                     "The dataset remains measurement evidence, not certification or a ranking guarantee.")
         elif line.startswith("**Lid:** this dated export records"):
             line = (f"**Lid:** this dated export records {counts['slots']} axis rows. "
@@ -991,7 +1067,12 @@ def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
             remote = json.loads(fetch_ok(f"{pinned}/{HF_PATH_IN_REPO}/SNAPSHOT.json?download=true"))
             if remote.get("as_of", "") > tr["as_of"]:
                 raise Refused(f"HF dataset carries newer as_of {remote['as_of']} than captured root {tr['as_of']}")
-            viewer = hf_viewer_files(tr)
+            try:
+                existing_parquet = fetch_ok(f"{pinned}/board.parquet?download=true")
+            except (Refused, Exception):
+                # Optional reuse must not prevent recovery of a missing viewer.
+                existing_parquet = None
+            viewer = hf_viewer_files(tr, existing_parquet=existing_parquet)
             if built.get("board.json") != tr["board_bytes"]:
                 raise Refused("built snapshot board bytes differ from the captured live GET")
             changed = {f"{HF_PATH_IN_REPO}/{path}": data for path, data in built.items()}
@@ -1055,17 +1136,28 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
     """Readable page copy; all snapshot claims come from the captured truth."""
     subtitle = f"AI measurement axes, evidence and limits · {tr['as_of']} snapshot"
     assert 20 <= len(subtitle) <= 80, f"Kaggle subtitle must be 20–80 chars, got {len(subtitle)}"
+    # Legacy/minimal callers may provide only the dated release claim. Real board payloads always
+    # carry axes; derive the visible summary from them and refuse inconsistent totals.
+    if "axes" in tr["board"]:
+        counts = derive_counts(tr["board"])
+        if not counts["printed_agrees_with_array"]:
+            raise Refused("board totals disagree with the axis array; refusing the Kaggle page summary")
+        overview = snapshot_overview(counts, tr["as_of"], tr["read_at"], heading="### Snapshot at a glance")
+    else:
+        overview = ""
     description = f"""## About this dataset
 
 A dated export of the Council of AI public GSPC measurement board. Each row describes one declared axis: what was measured, the evidence type, the published result and its limitations. Use it to explore coverage and inspect evidence in a notebook.
 
 [Explore the interactive board](https://huggingface.co/spaces/csoai/gspc-board) · [Live source JSON]({BOARD_URL}) · [Verify a signed record — free]({VERIFY_URL}) · [Methodology](https://councilof.ai/methodology/)
 
+{overview}
+
 ### This release
 
 {tr['lid']}
 
-This snapshot was read at {tr['read_at']}, with the transparency root published at {tr['as_of']}. The capture time is not a new measurement. For current state, use the live source; retain this release for historical analysis.
+This is a historical capture, not a new measurement. Use the live board for current state; retain this release for historical analysis.
 
 ### Start with the CSV
 
@@ -1115,7 +1207,11 @@ Explore the [Public Watchdog working groups and document tracker](https://counci
 
 Use the [free verifier]({VERIFY_URL}) and [verification instructions]({HOWTO_URL}). Keys resolve via `did:web:csoai.org`: [DID document]({DID_URL}). Check the [corrections register](https://councilof.ai/corrections/) for later withdrawals or corrections.
 
-Attribute the board export to Council of AI / CSOAI Ltd under CC-BY-4.0. Linked datasets and third-party material retain their own licences. Cite the dataset URL, Kaggle version, capture time and source hashes from `SNAPSHOT.json`.
+![GSPC board](https://councilof.ai/api/badge)
+
+![GSPC living board](https://councilof.ai/badge/board.svg)
+
+Attribute the board export to Council of AI / CSOAI Ltd under CC-BY-4.0. Linked datasets and third-party material retain their own licences. Cite the dataset URL, Kaggle version, capture time and source hashes from `SNAPSHOT.json`. The methodology DOI ({tr['board'].get('doi') or ZENODO_METHODOLOGY_DOI}) is a permanent record name; its Zenodo deposit may be UNAVAILABLE at a given time — point-in-time availability: https://councilof.ai/interop/zenodo-status.json.
 
 Issuer: {tr['board'].get('issuer', 'CSOAI Ltd')}.
 

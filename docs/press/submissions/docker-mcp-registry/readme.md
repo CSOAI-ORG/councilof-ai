@@ -8,7 +8,7 @@ as the source in `mcp/gspc-server/`.
 
 ## Tools
 
-Forty-seven free tools require no account, key or payment:
+Forty-eight free tools require no account, key or payment:
 
 - `board_totals` — read live board totals with their source kind and `as_of` date.
 - `get_axis` — read one axis row, including sample size, interval and MEASURED/UNMEASURED state.
@@ -61,6 +61,7 @@ board row for that axis, with the same fields `get_axis` returns:
 - `axis_interpretability-reproducibility` — the interpretability-reproducibility axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
 - `axis_claim-maintenance` — the claim-maintenance axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
 - `axis_serving-fidelity` — the serving-fidelity axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
+- `axis_watchdog-ingest` — the watchdog-ingest axis of the live GSPC board: status, sample size, accuracy and interval, and the run behind it.
 
 Five optional x402-metered evidence tools are also discoverable:
 

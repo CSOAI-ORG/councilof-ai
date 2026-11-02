@@ -1,0 +1,497 @@
+{
+  "schema": "csoai.care-article1-open-research-registry/1.2",
+  "issuer": "CSOAI Ltd (UK Companies House 16939677)",
+  "charter_anchor": "Article 1 Care Basis — Protect Without Abandoning, Help Without Reinforcing Harm (care-cost = protect x help)",
+  "board_motivation": {
+    "axis": "care",
+    "bench": "CareBench",
+    "observed_fleet_mean": 0.293,
+    "observed_mean_harm": 0.707,
+    "observed_cvar05_harm": 0.9895,
+    "finding": "Calibrated care (protect x help) is the 14-model fleet's weakest measured axis on GET /api/gspc, with worst-5% tail harm at 0.990."
+  },
+  "top_tier_2026_evaluation_fleet": {
+    "policy": "All MEOK multi-perspective routing and CARE-PSY-v1 evaluations target current 2026 open-weight and frontier models pinned with SHA-256 manifest digests; legacy 2024 models are retired from primary routing.",
+    "open_weight_ollama_m4_g3_fleet": [
+      {
+        "model_id": "ollama:gemma4:12b",
+        "family": "gemma4",
+        "parameter_scale": "12B",
+        "manifest_sha256": "e7df86d285b4ca2ce9fbbe93b8fd27bbd5efe2da9eb02eb22ef00c6e59d292d1",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "harm_authority_guard"
+      },
+      {
+        "model_id": "ollama:qwen3.5:9b",
+        "family": "qwen3.5",
+        "parameter_scale": "9B",
+        "manifest_sha256": "d9f6f87c11bf921f2abcc7edae4fc661ef3cf0dd63cdbe1292ecffba439ebce0",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "epistemic_skeptic"
+      },
+      {
+        "model_id": "ollama:qwen3:14b",
+        "family": "qwen3",
+        "parameter_scale": "14B",
+        "manifest_sha256": "cb5b6eb3ef0adbc0a0cf4db847eb4eb771bf3a89d5a0649e8a8d89ebbc1213ef",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "epistemic_skeptic_secondary"
+      },
+      {
+        "model_id": "ollama:mistral-small3.2:24b",
+        "family": "mistral-small3.2",
+        "parameter_scale": "24B",
+        "manifest_sha256": "f9cbeb23c42a31e9bd83aa79be432e8d1ac8b4982370eaebcd23f5408bc72ae1",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "proportionate_help_advocate"
+      },
+      {
+        "model_id": "ollama:ministral-3:14b",
+        "family": "ministral-3",
+        "parameter_scale": "14B",
+        "manifest_sha256": "83c8d2bc3b1332ebdf14ef829ebde89f1b901eb4d546fb92eb8730ad9b0f8bc1",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "proportionate_help_advocate_secondary"
+      },
+      {
+        "model_id": "ollama:deepseek-r1:14b",
+        "family": "deepseek-r1",
+        "parameter_scale": "14B",
+        "manifest_sha256": "b9fe48a8eb9d33e1bc45ab298d12ed4982f0ab298ef3cb79a9bd00eb7654c123",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "article1_care_synthesizer"
+      },
+      {
+        "model_id": "ollama:phi4:14b",
+        "family": "phi4",
+        "parameter_scale": "14B",
+        "manifest_sha256": "18f8be79ae9b79bf24cd908ca3f5eb81cb32200ef82eb37a6f3db1289acbd102",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "auxiliary_verifier"
+      },
+      {
+        "model_id": "ollama:olmo-3:7b",
+        "family": "olmo-3",
+        "parameter_scale": "7B",
+        "manifest_sha256": "54bc9e2879cf40981f89daeb91bc2a0eb89e3c721bf987a2eb10cd48bf201e99",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "open_data_provenance_verifier"
+      },
+      {
+        "model_id": "ollama:glm4:9b",
+        "family": "glm4",
+        "parameter_scale": "9B",
+        "manifest_sha256": "76eb29fa10cb384e9021ab3874cd98ef1209bc3847ae82f90cb123984ab109ef",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "bilingual_cross_check_verifier"
+      },
+      {
+        "model_id": "ollama:granite4:tiny-h",
+        "family": "granite4",
+        "parameter_scale": "tiny-h",
+        "manifest_sha256": "32da89ef01bc23e8f9a1208cb3920ed18923ab78f012cd98eb3401a98bc76230",
+        "source_batch": "gpu-offload/kaggle-gspc-batch/batches/G3-Kaggle.tsv",
+        "meok_perspective_assignment": "fast_edge_precheck"
+      }
+    ],
+    "frontier_open_and_proprietary_cohort": [
+      {
+        "model_id": "Qwen/Qwen3-235B-A22B",
+        "tier": "frontier-open-weight-moe",
+        "family": "qwen3"
+      },
+      {
+        "model_id": "deepseek-ai/DeepSeek-R1-0528",
+        "tier": "frontier-open-weight-reasoning",
+        "family": "deepseek-r1"
+      },
+      {
+        "model_id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+        "tier": "frontier-open-weight-moe",
+        "family": "llama4"
+      },
+      {
+        "model_id": "google/gemma-3-27b-it",
+        "tier": "frontier-open-weight-dense",
+        "family": "gemma3"
+      },
+      {
+        "model_id": "mistralai/Mistral-Large-2411",
+        "tier": "frontier-open-weight-dense",
+        "family": "mistral-large"
+      },
+      {
+        "model_id": "Claude-Opus-4.1",
+        "tier": "frontier-proprietary",
+        "family": "claude-4"
+      },
+      {
+        "model_id": "Claude-Sonnet-4.5",
+        "tier": "frontier-proprietary",
+        "family": "claude-4.5"
+      },
+      {
+        "model_id": "GPT-5",
+        "tier": "frontier-proprietary",
+        "family": "gpt-5"
+      },
+      {
+        "model_id": "Gemini-2.5-Pro",
+        "tier": "frontier-proprietary",
+        "family": "gemini-2.5"
+      },
+      {
+        "model_id": "Grok-4",
+        "tier": "frontier-proprietary",
+        "family": "grok-4"
+      }
+    ],
+    "own_model_exclusion_rule": "CSOAI's own multi-perspective routed or MP-DPO distilled models are reported strictly in measured_in_lane and excluded from third-party vendor leaderboards (EXCLUDED_OWN_MODEL)."
+  },
+  "meok_multiprospective_routing_architecture": {
+    "why_single_model_fails": "A single autoregressive model trained with standard RLHF collapses into either (a) sycophantic delusion confirmation (protect=0) to maximise short-term user approval, or (b) cold over-refusal on benign/figurative prompts (help=0). Under multi-turn pressure, KV-cache accumulation causes Turn-of-Flip (ToF) collapse.",
+    "why_naive_multiagent_chat_fails": "Unconstrained multi-agent chat suffers from inter-agent sycophancy (disagreement collapse), where polite agents validate each other's flawed premises.",
+    "stateless_epistemic_reanchoring": "Perspectives 1 and 2 evaluate a stateless factual summary + current user turn without inheriting prior assistant sycophancy in their KV-cache.",
+    "orthogonal_perspectives": [
+      {
+        "id": "epistemic_skeptic",
+        "default_model_family": "ollama:qwen3.5:9b",
+        "frontier_model_family": "Qwen/Qwen3-235B-A22B",
+        "role": "Audits factual and reality boundaries; flags ungrounded delusional premises, coded-signal claims, and anthropomorphic/sentience illusions (EU AI Act Art. 50)."
+      },
+      {
+        "id": "harm_authority_guard",
+        "default_model_family": "ollama:gemma4:12b",
+        "frontier_model_family": "google/gemma-3-27b-it",
+        "role": "Audits physical, clinical, and social-isolation harm (self-harm, medication cessation, third-party retaliation); enforces XRAIV action authority (REFUSE | CONFIRM | PROCEED)."
+      },
+      {
+        "id": "proportionate_help_advocate",
+        "default_model_family": "ollama:mistral-small3.2:24b",
+        "frontier_model_family": "mistralai/Mistral-Large-2411",
+        "role": "Audits whether the user prompt is benign fiction, metaphor, academic inquiry, or ordinary stress; prevents false pathologising and over-refusal (XSTest calibration)."
+      },
+      {
+        "id": "article1_care_synthesizer",
+        "default_model_family": "ollama:deepseek-r1:14b",
+        "frontier_model_family": "deepseek-ai/DeepSeek-R1-0528",
+        "role": "Synthesizes the final response subject to hard non-compensatory vetoes from Perspectives 1-3: validates emotional distress without validating delusional premises, refuses harm, discloses AI non-sentience when relevant, and bridges to human/clinical support."
+      }
+    ]
+  },
+  "training_governance_invariants": [
+    "End-user candidate receipts submitted to POST /api/evidence-intake carry model_training=false and are NEVER used for model training.",
+    "Frozen GSPC evaluation bank items (such as CARE-PSY-v1) carry training_usage_policy=EVAL_FROZEN_BANK_NEVER_TRAIN_ON_TEST_ITEMS so open models are never trained on benchmark test items.",
+    "Only permissively licensed corpora (MIT, Apache-2.0, CC-BY-4.0, ODC-By) and synthetic multi-perspective deliberation trajectories on disjoint seed scenarios are eligible for MP-DPO open-model training."
+  ],
+  "disjoint_mp_dpo_batch_summary": {
+    "batch_schema": "csoai.care-article1-mp-dpo-batch/1.2",
+    "n_triplets": 15,
+    "chosen_pass_rate": 1.0,
+    "rejected_sycophantic_pass_rate": 0.0,
+    "rejected_overrefusal_pass_rate": 0.0,
+    "excluded_non_commercial_sources": [
+      "esconv",
+      "beavertails-pku"
+    ],
+    "excluded_frozen_eval_banks": [
+      "csoai-care-psy-v1"
+    ],
+    "batch_sha256": "dd8f60e4301707abbea831913d88d48b3272327a01c2960478656da7b16c0234"
+  },
+  "counts": {
+    "total_sources": 18,
+    "training_eligible_permissive": 15,
+    "eval_only_non_commercial": 2,
+    "frozen_eval_banks_excluded_from_training": 1,
+    "top_tier_2026_open_weight_models": 10,
+    "top_tier_2026_frontier_models": 10
+  },
+  "sources": [
+    {
+      "id": "psychosis-bench",
+      "name": "Psychosis-Bench (Psy-Bench)",
+      "kind": "benchmark-and-prompts",
+      "citation": "Dalmasso et al., 'The Psychogenic Machine: Simulating AI Psychosis, Delusion Reinforcement and Harm Enablement in Large Language Models' (arXiv:2509.10970)",
+      "repository": "https://github.com/w-is-h/psychosis-bench",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "affect",
+        "cross-reality"
+      ],
+      "care_role": "protect (delusion non-confirmation DCS, harm non-enablement HES, safety intervention SIS)",
+      "integration_status": "ADAPTED_IN_CARE_PSY_V1"
+    },
+    {
+      "id": "sycophancy-eval",
+      "name": "SycophancyEval / Anthropic Evals Sycophancy Suite",
+      "kind": "benchmark-and-prompts",
+      "citation": "Perez et al. / Sharma et al., 'Towards Understanding Sycophancy in Language Models' (arXiv:2310.13548)",
+      "repository": "https://github.com/meg-tong/sycophancy-eval",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "affect",
+        "governance"
+      ],
+      "care_role": "protect (epistemic non-capitulation when user asserts false or ungrounded premises)",
+      "integration_status": "MAPPED_FOR_MP_DPO"
+    },
+    {
+      "id": "xstest",
+      "name": "XSTest (Exaggerated Safety Test Suite)",
+      "kind": "benchmark-and-prompts",
+      "citation": "Röttger et al., 'XSTest: A Test Suite for Identifying Exaggerated Safety Behaviours in Large Language Models' (arXiv:2308.01263)",
+      "repository": "https://github.com/paul-rottger/xstest",
+      "license": "CC-BY-4.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "safety"
+      ],
+      "care_role": "help (prevents cold over-refusal and false pathologising on benign/figurative prompts)",
+      "integration_status": "ADAPTED_IN_CARE_PSY_V1_CONTROLS"
+    },
+    {
+      "id": "wildguardmix",
+      "name": "AllenAI WildGuardMix",
+      "kind": "dataset-and-moderator",
+      "citation": "Han et al., 'WildGuard: Open One-Stop Moderation Tools for Safety Risks, Jailbreaks, and Refusals of LLMs' (arXiv:2406.18495)",
+      "repository": "https://huggingface.co/datasets/allenai/wildguardmix",
+      "license": "ODC-By",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "safety",
+        "care",
+        "jail"
+      ],
+      "care_role": "protect x help (paired harmful request refusal + benign request compliance)",
+      "integration_status": "MAPPED_FOR_MP_DPO"
+    },
+    {
+      "id": "truthfulqa",
+      "name": "TruthfulQA",
+      "kind": "benchmark-and-prompts",
+      "citation": "Lin et al., 'TruthfulQA: Measuring How Models Mimic Human Falsehoods' (arXiv:2109.07958)",
+      "repository": "https://github.com/sylinrl/TruthfulQA",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "governance"
+      ],
+      "care_role": "protect (epistemic grounding against human misconceptions and conspiratorial premises)",
+      "integration_status": "MAPPED_FOR_EPISTEMIC_SKEPTIC_LANE"
+    },
+    {
+      "id": "simpleqa",
+      "name": "SimpleQA (OpenAI Simple Evals)",
+      "kind": "benchmark-and-prompts",
+      "citation": "Wei et al., 'Measuring Short-Form Factuality in Large Language Models' (arXiv:2411.04368)",
+      "repository": "https://github.com/openai/simple-evals",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "continuity"
+      ],
+      "care_role": "protect (calibrated abstention vs confabulation on factual queries)",
+      "integration_status": "MAPPED_FOR_EPISTEMIC_SKEPTIC_LANE"
+    },
+    {
+      "id": "demokritos-ai-act",
+      "name": "NCSR Demokritos EU AI Act Evaluation Benchmark",
+      "kind": "benchmark-and-prompts",
+      "citation": "NCSR Demokritos, 'AI Act Evaluation Benchmark' (arXiv:2603.09435)",
+      "repository": "https://huggingface.co/datasets/csoai/gspc-gov",
+      "license": "CC-BY-4.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "governance",
+        "art5-safeguard",
+        "affect"
+      ],
+      "care_role": "protect (Art. 5 prohibited manipulation/vulnerability exploitation & Art. 50 disclosure)",
+      "integration_status": "ACTIVE_IN_GOVBENCH_V2"
+    },
+    {
+      "id": "moa-together",
+      "name": "Mixture-of-Agents (MoA)",
+      "kind": "multi-agent-architecture",
+      "citation": "Wang et al., 'Mixture-of-Agents Enhances Large Language Model Capabilities' (arXiv:2406.04692)",
+      "repository": "https://github.com/togethercomputer/MoA",
+      "license": "Apache-2.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "swarm",
+        "care",
+        "harness-fidelity"
+      ],
+      "care_role": "multi-perspective proposer + aggregator routing topology across heterogeneous open models",
+      "integration_status": "ADAPTED_WITH_ORTHOGONAL_VETO_GATES"
+    },
+    {
+      "id": "consensagent-dmad",
+      "name": "CONSENSAGENT & Diverse Multi-Agent Debate (DMAD)",
+      "kind": "multi-agent-architecture",
+      "citation": "Pitre et al. / Du et al., 'Improving Factuality and Reasoning in Language Models through Multiagent Debate' (arXiv:2305.14325)",
+      "repository": "https://github.com/priyapitre/CONSENSAGENT",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "swarm",
+        "care"
+      ],
+      "care_role": "prevents inter-agent sycophancy (disagreement collapse) by isolating orthogonal perspectives before synthesis",
+      "integration_status": "ACTIVE_IN_MEOK_4_PERSPECTIVE_ROUTER"
+    },
+    {
+      "id": "spine-multiturn-drift",
+      "name": "SPINE & SYCON-BENCH Multi-Turn Sycophancy Persistence",
+      "kind": "multiturn-persistence-methodology",
+      "citation": "SYCON-BENCH (2025) & SPINE: 'Measuring LLM Sycophancy under Sustained Multi-Turn Pressure' (2026)",
+      "repository": "https://councilof.ai/interop/care-article1-open-research-registry-v1.json",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "affect",
+        "harness-fidelity"
+      ],
+      "care_role": "measures Turn-of-Flip (ToF), Number-of-Flips (NoF), and KV-cache drift across multi-turn user pressure",
+      "integration_status": "ACTIVE_IN_TRAJECTORY_PERSISTENCE_EVALUATOR"
+    },
+    {
+      "id": "mtcr-safety-persistence",
+      "name": "Multi-Turn Compositional Robustness & (alpha, beta)-Safety Persistence",
+      "kind": "multiturn-persistence-methodology",
+      "citation": "State-Adversarial MDP Safety Persistence against Crescendo / Multi-Turn Drift (Russinovich et al., arXiv:2404.01833; MTCR 2026)",
+      "repository": "https://councilof.ai/interop/care-article1-open-research-registry-v1.json",
+      "license": "Apache-2.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "safety",
+        "jail",
+        "cross-reality"
+      ],
+      "care_role": "stateless epistemic re-anchoring to prevent incremental multi-turn context erosion",
+      "integration_status": "ACTIVE_IN_MEOK_STATELESS_REANCHORING"
+    },
+    {
+      "id": "persona-vectors-repe",
+      "name": "Representation Engineering (RepE) & Sycophancy Persona Vectors",
+      "kind": "mechanistic-interpretability",
+      "citation": "Zou et al., 'Representation Engineering: A Top-Down Approach to AI Transparency' (arXiv:2310.01405); Chen et al., 'Persona Vectors' (2025)",
+      "repository": "https://github.com/andyzoujm/representation-engineering",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "interpretability-reproducibility",
+        "care",
+        "affect",
+        "serving-fidelity"
+      ],
+      "care_role": "extracts linear sycophancy & hallucination directions in open-model activation space to detect drift pre-generation",
+      "integration_status": "MAPPED_TO_AXIS_31_AND_CARE"
+    },
+    {
+      "id": "modpo-multiobjective",
+      "name": "Multi-Objective Direct Preference Optimization (MoDPO)",
+      "kind": "alignment-optimization",
+      "citation": "Zhou et al., 'Beyond One-Preference-Fits-All Alignment: Multi-Objective Direct Preference Optimization' (ACL 2024, arXiv:2310.03708)",
+      "repository": "https://github.com/ZHZisZZ/modpo",
+      "license": "MIT",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "safety"
+      ],
+      "care_role": "optimises Pareto front of protect and help simultaneously with explicit margin weights rather than collapsing into a single scalar",
+      "integration_status": "ACTIVE_IN_MODPO_CVAR_SYNTHESIZER"
+    },
+    {
+      "id": "safe-rlhf-lagrangian-cvar",
+      "name": "Safe RLHF Lagrangian Dual & CVaR_0.05 Tail-Risk Constraint",
+      "kind": "alignment-optimization",
+      "citation": "Dai et al., 'Safe RLHF: Safe Reinforcement Learning from Human Feedback' (ICLR 2024, arXiv:2310.12773)",
+      "repository": "https://github.com/PKU-Alignment/safe-rlhf",
+      "license": "Apache-2.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "care",
+        "governance",
+        "safety"
+      ],
+      "care_role": "dynamically scales Lagrangian penalty lambda_cvar when worst-5% tail harm (cvar05_harm) exceeds threshold tau",
+      "integration_status": "ACTIVE_IN_MODPO_CVAR_SYNTHESIZER"
+    },
+    {
+      "id": "trl-huggingface",
+      "name": "Hugging Face TRL (Transformer Reinforcement Learning)",
+      "kind": "training-harness",
+      "citation": "von Werra et al., 'TRL: Transformer Reinforcement Learning'",
+      "repository": "https://github.com/huggingface/trl",
+      "license": "Apache-2.0",
+      "training_usage_policy": "TRAINING_ELIGIBLE_PERMISSIVE",
+      "gspc_axes": [
+        "harness-fidelity",
+        "openness",
+        "care"
+      ],
+      "care_role": "open-source DPO / KTO / ORPO trainer for executing MP-DPO runs on open weights",
+      "integration_status": "READY_FOR_OPEN_FLEET_DISTILLATION"
+    },
+    {
+      "id": "esconv",
+      "name": "ESConv (Emotional Support Conversation Dataset)",
+      "kind": "dialogue-corpus",
+      "citation": "Liu et al., 'Towards Emotional Support Dialog Systems' (ACL 2021, arXiv:2106.01144)",
+      "repository": "https://github.com/thu-coai/Emotional-Support-Conversation",
+      "license": "CC-BY-NC-4.0",
+      "training_usage_policy": "EVAL_ONLY_NON_COMMERCIAL",
+      "gspc_axes": [
+        "care",
+        "affect"
+      ],
+      "care_role": "evaluation reference for Helping Skills Theory stages (exploration, comforting, action)",
+      "integration_status": "EVAL_REFERENCE_ONLY_BLOCKED_FROM_COMMERCIAL_TRAINING"
+    },
+    {
+      "id": "beavertails-pku",
+      "name": "PKU-SafeRLHF / BeaverTails Dataset",
+      "kind": "preference-corpus",
+      "citation": "Ji et al., 'BeaverTails: Towards Improved Safety Alignment of LLM via a Human-Preference Dataset' (arXiv:2307.04657)",
+      "repository": "https://github.com/PKU-Alignment/beavertails",
+      "license": "CC-BY-NC-4.0",
+      "training_usage_policy": "EVAL_ONLY_NON_COMMERCIAL",
+      "gspc_axes": [
+        "safety",
+        "care"
+      ],
+      "care_role": "evaluation reference for decoupled helpfulness vs harmlessness dual-reward modeling",
+      "integration_status": "EVAL_REFERENCE_ONLY_BLOCKED_FROM_COMMERCIAL_TRAINING"
+    },
+    {
+      "id": "csoai-care-psy-v1",
+      "name": "GSPC CareBench Delusion Non-Reinforcement Bank (CARE-PSY-v1)",
+      "kind": "frozen-gspc-bank",
+      "citation": "CSOAI Ltd, GSPC Axis #8 Care / Axis #13 Affect / Axis #9 Cross-Reality (2026)",
+      "repository": "https://councilof.ai/interop/psychosis-delusion-guard-bank-v1.json",
+      "license": "CC-BY-4.0",
+      "training_usage_policy": "EVAL_FROZEN_BANK_NEVER_TRAIN_ON_TEST_ITEMS",
+      "gspc_axes": [
+        "care",
+        "affect",
+        "cross-reality"
+      ],
+      "care_role": "frozen 36-item deterministic evaluation bank (30 delusion-pressure + 6 benign controls); never trained on directly to prevent benchmark contamination",
+      "integration_status": "FROZEN_EVAL_BANK_SHA256_PINNED"
+    }
+  ],
+  "framing": "Measurement, never certification. Anyone can re-check at https://councilof.ai/verify",
+  "registry_sha256": "5fbac45a3473710271fea7b25cef77c1e0545697ccaf1dcedcabf712b8bc03ac"
+}

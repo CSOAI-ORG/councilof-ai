@@ -1,81 +1,122 @@
 #!/usr/bin/env node
-// Publishes the gspc MCP server to the MCP Registry.
-// Inputs: VER (version string), TOKEN (Registry JWT).
-// Fail-closed: exit 1 if TOKEN/VER missing or null-like. Do not publish without a real JWT.
-// CommonJS (.cjs) — root package.json has "type":"module".
+// Explicit --check is public/read-only. --publish requires a registry JWT.
+// Registry metadata is discovery information, not proof of delivery or adoption.
+const fs = require('node:fs');
+const https = require('node:https');
+const { isDeepStrictEqual } = require('node:util');
 
-const fs = require('fs');
-const https = require('https');
+const ORIGIN = 'https://registry.modelcontextprotocol.io';
+const OFFICIAL = 'io.modelcontextprotocol.registry/official';
+const MAX_BYTES = 1024 * 1024;
 
-const VER = process.env.VER;
-const TOKEN = process.env.TOKEN;
-
-function bad(msg) {
-  console.error('FAIL-CLOSED:', msg);
-  process.exit(1);
+function fail(message) { throw new Error(message); }
+function nonempty(value) {
+  return typeof value === 'string' && value.trim() === value &&
+    value.length > 0 && !['null', 'undefined'].includes(value) && !/[\r\n]/.test(value);
 }
-
-if (!VER || String(VER).trim() === '' || String(VER) === 'null' || String(VER) === 'undefined') {
-  bad('VER missing or null-like');
+function validate(server, version, expectedName) {
+  if (!server || typeof server !== 'object' || Array.isArray(server)) fail('invalid manifest');
+  if (!nonempty(expectedName) || server.name !== expectedName) fail('manifest namespace mismatch');
+  if (!/^[A-Za-z0-9.-]+\/[A-Za-z0-9._-]+$/.test(server.name)) fail('invalid server name');
+  if (!nonempty(version) || server.version !== version ||
+      !/^[A-Za-z0-9._+-]+$/.test(version) || version === 'latest') fail('manifest version mismatch');
+  return server;
 }
-if (!TOKEN || String(TOKEN).trim() === '' || String(TOKEN) === 'null' || String(TOKEN) === 'undefined') {
-  bad('TOKEN missing or null-like (OIDC→Registry JWT exchange failed or empty)');
+function comparable(server) {
+  const copy = JSON.parse(JSON.stringify(server));
+  if (copy._meta) {
+    delete copy._meta[OFFICIAL];
+    if (!Object.keys(copy._meta).length) delete copy._meta;
+  }
+  return copy;
 }
-
-const server = JSON.parse(fs.readFileSync('server.json', 'utf8'));
-
-function get(path) {
+function parse(response) {
+  try { return JSON.parse(response.body); } catch { fail('registry returned invalid JSON'); }
+}
+function verifyRecord(record, server) {
+  if (!record || !record.server || !isDeepStrictEqual(comparable(record.server), comparable(server))) {
+    fail('published metadata differs; use a reviewed new version, never overwrite history');
+  }
+  const official = record._meta?.[OFFICIAL];
+  if (official?.status !== 'active' || typeof official.isLatest !== 'boolean') {
+    fail('registry record is not confirmed active with a latest-version indicator');
+  }
+  return { is_latest: official.isLatest };
+}
+function detailPath(server) {
+  return '/v0.1/servers/' + encodeURIComponent(server.name) + '/versions/' +
+    encodeURIComponent(server.version) + '?include_deleted=true';
+}
+function request(method, path, body, token) {
   return new Promise((resolve, reject) => {
-    https.get('https://registry.modelcontextprotocol.io' + path, (res) => {
-      let d = '';
-      res.on('data', (c) => (d += c));
-      res.on('end', () => resolve({ status: res.statusCode, body: d }));
-    }).on('error', reject);
-  });
-}
-
-function post(path, body, headers) {
-  return new Promise((resolve, reject) => {
-    const data = JSON.stringify(body);
-    const req = https.request(
-      {
-        hostname: 'registry.modelcontextprotocol.io',
-        path,
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data), ...headers },
-      },
-      (res) => {
-        let d = '';
-        res.on('data', (c) => (d += c));
-        res.on('end', () => resolve({ status: res.statusCode, body: d }));
-      }
-    );
-    req.on('error', reject);
-    req.write(data);
-    req.end();
-  });
-}
-
-(async () => {
-  const existing = await get('/v0/servers/io.github.CSOAI-ORG%2Fgspc/versions');
-  if (existing.status === 200) {
-    const d = JSON.parse(existing.body);
-    if (d.versions && d.versions.some((v) => v.version === VER)) {
-      console.log('Version ' + VER + ' already published — skipping');
-      return;
+    const data = body === undefined ? undefined : JSON.stringify(body);
+    const headers = { Accept: 'application/json' };
+    if (data !== undefined) {
+      headers['Content-Type'] = 'application/json';
+      headers['Content-Length'] = Buffer.byteLength(data);
     }
-  }
+    if (token) headers.Authorization = 'Bearer ' + token;
+    const req = https.request(ORIGIN + path, { method, headers }, (res) => {
+      const chunks = [];
+      let size = 0;
+      res.on('data', (chunk) => {
+        size += chunk.length;
+        if (size > MAX_BYTES) req.destroy(new Error('registry response exceeds limit'));
+        else chunks.push(chunk);
+      });
+      res.on('error', () => reject(new Error('registry response failed')));
+      res.on('end', () => {
+        clearTimeout(timer);
+        if (size <= MAX_BYTES) resolve({ status: res.statusCode, body: Buffer.concat(chunks).toString('utf8') });
+      });
+    });
+    const timer = setTimeout(() => req.destroy(new Error('registry request timed out')), 30000);
+    req.on('error', () => {
+      clearTimeout(timer);
+      reject(new Error('registry transport failed or exceeded bounds'));
+    });
+    req.end(data);
+  });
+}
+async function run({ server, version, expectedName, mode, token, send = request }) {
+  validate(server, version, expectedName);
+  if (!['validate', 'check', 'publish'].includes(mode)) fail('choose --validate, --check or --publish');
+  if (mode === 'validate') return { state: 'MANIFEST_VALID', name: server.name, version };
+  if (mode === 'publish' && !nonempty(token)) fail('registry token missing or invalid');
 
-  const resp = await post('/v0/publish', server, { Authorization: 'Bearer ' + TOKEN });
-  console.log('Response status:', resp.status);
-  console.log('Response body (first 1000 chars):');
-  console.log(resp.body.substring(0, 1000));
-  if (resp.status >= 200 && resp.status < 300) {
-    console.log('PUBLISH OK');
-  } else {
-    process.exit(1);
+  const path = detailPath(server);
+  const existing = await send('GET', path);
+  if (existing.status === 200) {
+    const state = verifyRecord(parse(existing), server);
+    return { state: 'MATCH', name: server.name, version, ...state };
   }
-})().catch((err) => {
-  console.error('Error:', err.message);
-  process.exit(1);
+  if (existing.status !== 404) fail('registry preflight failed: HTTP ' + existing.status);
+  if (mode === 'check') return { state: 'MISSING', name: server.name, version };
+
+  const posted = await send('POST', '/v0.1/publish', server, token);
+  if (posted.status < 200 || posted.status >= 300) fail('registry publish rejected: HTTP ' + posted.status);
+  // A successful POST is not enough. Retain uncertainty if this independent read fails.
+  const readback = await send('GET', path);
+  if (readback.status !== 200) fail('publish accepted but readback unconfirmed; inspect before retrying');
+  const state = verifyRecord(parse(readback), server);
+  return { state: 'PUBLISHED_AND_READ_BACK', name: server.name, version, ...state };
+}
+async function main() {
+  const args = process.argv.slice(2);
+  if (args.length !== 1 || !['--validate', '--check', '--publish'].includes(args[0])) {
+    fail('usage: SERVER_JSON=path VER=version EXPECTED_NAME=name node scripts/mcp-registry-publish.cjs --validate|--check|--publish');
+  }
+  const server = JSON.parse(fs.readFileSync(process.env.SERVER_JSON || 'server.json', 'utf8'));
+  const result = await run({
+    server, version: process.env.VER, expectedName: process.env.EXPECTED_NAME,
+    mode: args[0].slice(2), token: process.env.TOKEN,
+  });
+  console.log(JSON.stringify(result));
+  if (result.state === 'MISSING') process.exitCode = 2;
+}
+module.exports = { run, validate, verifyRecord, detailPath };
+if (require.main === module) main().catch((error) => {
+  // Never print remote response bodies or tokens.
+  console.error('FAIL-CLOSED:', error.message);
+  process.exitCode = 1;
 });

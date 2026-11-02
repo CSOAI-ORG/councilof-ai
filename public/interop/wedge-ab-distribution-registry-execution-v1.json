@@ -1,0 +1,193 @@
+{
+  "schema": "csoai.wedge-ab.distribution-registry-execution/v1",
+  "generated_at": "2026-10-31T04:58:07Z",
+  "doctrine": "Measurement, not certification. Anyone can re-check at https://councilof.ai/verify",
+  "verify_url": "https://councilof.ai/verify",
+  "board_url": "https://councilof.ai/api/gspc",
+  "corrections_url": "https://councilof.ai/api/corrections",
+  "wedge_a_source_parity": {
+    "status": "MEASURED",
+    "all_package_readmes_contain_required_links": true,
+    "required_readme_links": [
+      "https://councilof.ai/api/gspc",
+      "https://councilof.ai/corrections",
+      "https://councilof.ai/gspc-verify"
+    ],
+    "parity_live_selftest": {
+      "exit_code": 0,
+      "self_test": "PASS",
+      "parity_script_sha256": "a871f8b5c03dc716457c675acfd8d36ada4144226d40711fc31484ea3129b3bb"
+    },
+    "remediated_channels": [
+      {
+        "channel_id": "pypi-csoai-gspc",
+        "fix": "Added https://councilof.ai/corrections/ and https://councilof.ai/api/corrections to scripts/spray/pypi/csoai-gspc/README.md; updated check_pypi in scripts/harness-x/parity_live.py to verify spray-source-version and wheel code bytes."
+      },
+      {
+        "channel_id": "npm-layer0",
+        "fix": "Added https://councilof.ai/api/gspc, https://councilof.ai/corrections/, https://councilof.ai/api/corrections, and https://councilof.ai/gspc-verify/ to packages/layer0-js/README.md."
+      }
+    ]
+  },
+  "wedge_b_distribution_and_mcp_registry": {
+    "mcp_registry": {
+      "validator_exit_code": 0,
+      "node_test_exit_code": 0,
+      "canonical_descriptor": {
+        "path": "distribution/mcp-registry/ai.councilof-gspc/server.json",
+        "name": "ai.councilof/gspc",
+        "version": "1.4.4",
+        "sha256": "81807b2369610f1e599a329ce40b706e705e30a328bdc95f16ee3d88bfe4098a",
+        "live_registry_state": "active"
+      },
+      "deprecated_side_descriptor": {
+        "path": "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json",
+        "name": "io.github.CSOAI-ORG/gspc",
+        "version": "1.4.4",
+        "declared_status": "deprecated",
+        "sha256": "2c5bc2ae09584b69b0e753f41d54fe5abc1c2f4e7f3392b54713b22a2d366103",
+        "live_registry_state": "deprecated",
+        "live_registry_version": "1.4.4"
+      }
+    },
+    "packages": {
+      "python_packages": [
+        {
+          "id": "pypi-csoai-gspc",
+          "name": "csoai-gspc",
+          "source_dir": "scripts/spray/pypi/csoai-gspc",
+          "source_version": "0.2.20261007.1",
+          "pyproject_sha256": "200d7d7cf050f994045a12efbf20c8dd22a002371676c09fbd46eb7e524a09a3",
+          "readme_verification": {
+            "all_required_links_present": true,
+            "links": {
+              "https://councilof.ai/api/gspc": true,
+              "https://councilof.ai/corrections": true,
+              "https://councilof.ai/gspc-verify": true
+            },
+            "readme_sha256": "6e48e169e75b25a4826fa11a377cd6c20b4ae9d527e27b5e0f9c043d4fe37d2f"
+          },
+          "live_pypi_state": "PUBLISHED",
+          "live_pypi_version": "0.2.20261030"
+        },
+        {
+          "id": "pypi-langchain-csoai",
+          "name": "langchain-csoai",
+          "source_dir": "distribution/python/langchain-csoai",
+          "source_version": "0.1.0",
+          "pyproject_sha256": "35601d37ce24f3c02cb080b0a11031a6b0e925767e2e95908ba6c491f6fa1424",
+          "readme_verification": {
+            "all_required_links_present": true,
+            "links": {
+              "https://councilof.ai/api/gspc": true,
+              "https://councilof.ai/corrections": true,
+              "https://councilof.ai/gspc-verify": true
+            },
+            "readme_sha256": "40268ac7f79a4546fed8d3e9a7e37dc4b525306e59bf88e4f6266ebffbfd258d"
+          },
+          "live_pypi_state": "PUBLISHED",
+          "live_pypi_version": "0.1.3"
+        },
+        {
+          "id": "pypi-llama-index-tools-csoai",
+          "name": "llama-index-tools-csoai",
+          "source_dir": "distribution/python/llama-index-tools-csoai",
+          "source_version": "0.1.0",
+          "pyproject_sha256": "6076ba50e51ed3323ebd29e2f70f99353051f21a605a878e1c14f1293baa9cbd",
+          "readme_verification": {
+            "all_required_links_present": true,
+            "links": {
+              "https://councilof.ai/api/gspc": true,
+              "https://councilof.ai/corrections": true,
+              "https://councilof.ai/gspc-verify": true
+            },
+            "readme_sha256": "f502446d46c19a99e6e514a02841cb6c8468dc4403d815a75a8c8531383dd2f9"
+          },
+          "live_pypi_state": "PUBLISHED",
+          "live_pypi_version": "0.1.3"
+        },
+        {
+          "id": "pypi-crewai-csoai",
+          "name": "crewai-csoai",
+          "source_dir": "distribution/python/crewai-csoai",
+          "source_version": "0.1.0",
+          "pyproject_sha256": "b32c561c39432ab20f768c1e819bea5b908e5739b37d8924f8460be5e713b0fd",
+          "readme_verification": {
+            "all_required_links_present": true,
+            "links": {
+              "https://councilof.ai/api/gspc": true,
+              "https://councilof.ai/corrections": true,
+              "https://councilof.ai/gspc-verify": true
+            },
+            "readme_sha256": "861f3f0a1c764c454b04a116b0b075538286afb7dffcccf29f46c793e1def3f3"
+          },
+          "live_pypi_state": "PUBLISHED",
+          "live_pypi_version": "0.1.3"
+        }
+      ],
+      "npm_packages": [
+        {
+          "id": "npm-layer0",
+          "name": "@csoai/layer0",
+          "source_dir": "packages/layer0-js",
+          "source_version": "0.1.0",
+          "package_json_sha256": "dbca370d4ad2aa29e8583005f0d51b56ef6f9cc15bb6184e1591e0c0fe1381ee",
+          "npm_pack_exit_code": 0,
+          "tarball_sha256": "1c70680bb577a8369e8c3bcaee86137ec254c101d649fd275c565d73efb79edd",
+          "readme_verification": {
+            "all_required_links_present": true,
+            "links": {
+              "https://councilof.ai/api/gspc": true,
+              "https://councilof.ai/corrections": true,
+              "https://councilof.ai/gspc-verify": true
+            },
+            "readme_sha256": "b960d578d7bdc257241265da98922ad8d548253fe3a1a38b5a7f24d3585a5c9f"
+          },
+          "live_npm_state": "PUBLISHED",
+          "live_npm_version": "0.2.0"
+        },
+        {
+          "id": "npm-ai-sdk-gspc",
+          "name": "@csoai/ai-sdk-gspc",
+          "source_dir": "distribution/npm/ai-sdk-gspc",
+          "source_version": "0.1.0",
+          "package_json_sha256": "8619eddf943455b6f62f244c4707bdde090ddff9d2a4bf14f9fea6bec8acd54b",
+          "npm_pack_exit_code": 0,
+          "tarball_sha256": "8ccb27041703943a37b9f1994b27ebdd745b130b8fb88793f2c169e7f938fceb",
+          "readme_verification": {
+            "all_required_links_present": true,
+            "links": {
+              "https://councilof.ai/api/gspc": true,
+              "https://councilof.ai/corrections": true,
+              "https://councilof.ai/gspc-verify": true
+            },
+            "readme_sha256": "ca8a5c5e08b90e7dee07437706c2f172a48ca006a3bf8ae4957abf2a91cc89cd"
+          },
+          "live_npm_state": "READY_TO_PUBLISH_PENDING_CREDENTIAL",
+          "live_npm_version": null
+        },
+        {
+          "id": "npm-mastra-gspc",
+          "name": "@csoai/mastra-gspc",
+          "source_dir": "distribution/npm/mastra-gspc",
+          "source_version": "0.1.0",
+          "package_json_sha256": "8fc0760a13b6a3da0afda28a0f75e2fc8779c3215f346780993db6ff3c0d0fe1",
+          "npm_pack_exit_code": 0,
+          "tarball_sha256": "b9241002c85354c6c0b6edf6299fd645fb27e09dc681da8cc273256c500d6f83",
+          "readme_verification": {
+            "all_required_links_present": true,
+            "links": {
+              "https://councilof.ai/api/gspc": true,
+              "https://councilof.ai/corrections": true,
+              "https://councilof.ai/gspc-verify": true
+            },
+            "readme_sha256": "0a6f4bc8619756c71aef6c8adc08b7389f892f3ed30d8771eff8b5d359557427"
+          },
+          "live_npm_state": "READY_TO_PUBLISH_PENDING_CREDENTIAL",
+          "live_npm_version": null
+        }
+      ]
+    }
+  },
+  "artifact_sha256": "f3637de2bb25d85ab19ca694cc30f7ec47c3f126ad28146acc3b58b58dda5bc6"
+}

@@ -138,3 +138,7 @@ Sources are workflow and component references. No standards-body affiliation, le
 Master advanced to `fd7ef854d` while this batch was running. Its #3636 HF/Kaggle presentation lane owns the existing front-page sources and metadata-only publisher (`scripts/hf/FRONTDOOR-MAINTENANCE.md`). This working-group kit is a separate generated resource candidate; do not overwrite those front pages, datasets, licences, privacy settings or the GSPC MCP Space. Link the public tracker through that owner's established source workflow after release.
 
 A full offline distribution audit found a pre-existing invalid Python class name for hyphenated axis tools. The canonical Dify generator now normalises class identifiers while preserving wire tool names; all generated modules are compiled by a regression check. The audit also found an existing stale OASF measurement-agent signature. The OASF record bytes equal the pre-batch HEAD (SHA-256 `2f1c08d231aed238d28bbe31d03804aa21aa519a7ffbcf934a5466dc0d1e233b`). This batch does not issue a replacement signature; the existing signing owner must reconcile that evidence.
+
+## Activate a real review cycle
+
+Use the [working-group activation runbook](working-group-activation-runbook.md) to move from published software to consenting participants, independent evidence, a reasoned human decision and an appeal route. The remote MCP resource and blank review prompt support preparation; they do not submit reviews or appoint people. Retain a separate release receipt and actual host/participant acceptance evidence.

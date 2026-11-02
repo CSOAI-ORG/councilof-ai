@@ -8,8 +8,9 @@ import {
  * AxisPanel — every published GSPC axis, live from GET /api/gspc.
  *
  * The invariant, enforced by `quotable()`: an axis shows a score ONLY when its
- * status is MEASURED. In-lane rows (slot15, human-vs-ai) stay in a separate
- * strip — they are not board rows and are not counted in totals.public_count.
+ * status is MEASURED and a public accuracy is published. In-lane rows (slot15,
+ * human-vs-ai) stay in a separate strip — they are not board rows and are not
+ * counted in totals.public_count.
  */
 
 const TONE: Record<AxisStatus, string> = {
@@ -41,7 +42,9 @@ function AxisCard({ a }: { a: Axis }) {
         <div className="mt-3">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold tabular-nums text-emerald-600">{(a.accuracy as number).toFixed(3)}</span>
-            <span className="text-[11px] text-slate-500">accuracy · n={a.n}</span>
+            <span className="text-[11px] text-slate-500">
+              accuracy · n={a.n}{a.separation ? ` · ${a.separation}` : ""}
+            </span>
           </div>
           <div className="mt-1 font-mono text-[11px] text-slate-500">
             {/* No macro F1 published (jail, swarm) prints nothing — never 0.000. */}
@@ -49,6 +52,33 @@ function AxisCard({ a }: { a: Axis }) {
             {withCI
               ? ` · Wilson 95% [${lo.toFixed(3)}, ${hi.toFixed(3)}]`
               : " · n<30 usable — no interval"}
+          </div>
+        </div>
+      ) : a.status === "MEASURED" && a.kind === "deterministic-facts" ? (
+        <div className="mt-3">
+          <div className="text-sm font-medium text-sky-700">
+            Deterministic facts · n={a.n}{a.n_unit ? ` (${a.n_unit})` : ""}
+          </div>
+          <div className="mt-0.5 font-mono text-[11px] text-slate-500">
+            {a.run_attestation ? `${a.run_attestation} · ` : ""}no model accuracy (fact read, not a fleet comparison)
+          </div>
+        </div>
+      ) : a.status === "MEASURED" && a.public_leader_state === "EXCLUDED_OWN_MODEL" ? (
+        <div className="mt-3">
+          <div className="text-sm font-medium text-slate-700">
+            Measured fleet (n={a.n}) · own leader excluded
+          </div>
+          <div className="mt-0.5 font-mono text-[11px] text-slate-500">
+            {typeof a.fleet_mean === "number" ? `fleet mean ${a.fleet_mean.toFixed(3)} · ` : ""}no public leader asserted
+          </div>
+        </div>
+      ) : a.status === "MEASURED" && a.public_leader_state === "NO_SIGNED_CARD" ? (
+        <div className="mt-3">
+          <div className="text-sm font-medium text-slate-700">
+            Measured fleet (n={a.n}) · no signed leader card
+          </div>
+          <div className="mt-0.5 font-mono text-[11px] text-slate-500">
+            {typeof a.fleet_mean === "number" ? `fleet mean ${a.fleet_mean.toFixed(3)} · ` : ""}no public leader asserted
           </div>
         </div>
       ) : (
@@ -64,7 +94,9 @@ function AxisCard({ a }: { a: Axis }) {
               ? a.status === "MEASURED"
                 ? `Item bank n=${a.n} — this axis publishes no accuracy, so none is shown`
                 : `Item bank n=${a.n}`
-              : "No item bank yet (n=0)"}
+              : a.applies_to
+                ? `No item bank yet (n=0) · applies to ${a.applies_to}`
+                : "No item bank yet (n=0)"}
           </div>
         </div>
       )}
