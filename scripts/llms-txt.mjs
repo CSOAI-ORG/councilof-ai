@@ -431,6 +431,48 @@ function datedMillRootLine() {
   return `- Dated immutable mill-card root (as of ${root.as_of}, ${root.n_leaves} leaves): ${SITE}${rootUrl} (SHA-256 ${digest}). ${proofState}`;
 }
 
+// Some published addresses do not resolve for an anonymous reader. Saying so here is the whole
+// point: a reader who is told which addresses open, and which do not, can judge the evidence
+// they are being handed. Leaving a 401 or a rewritten revision looking live is the failure.
+//
+// The record is the published one, so this section cannot drift from it: it is derived from the
+// same file a reader can fetch, with the same as_of date.
+function pinLivenessSection() {
+  const f = "public/interop/published-pin-not-publicly-verifiable.json";
+  if (!fs.existsSync(p(f))) return "";
+  let d;
+  try { d = readJSON(f); } catch { return ""; }
+  const recs = Array.isArray(d.records) ? d.records : [];
+  if (!recs.length) return "";
+  const gated = recs.filter((r) => r.observed_status === "PRIVATE_OR_GATED").length;
+  const gone = recs.filter((r) => r.observed_status === "REVISION_GONE").length;
+  const addresses = recs.reduce((n, r) => n + (r.published_addresses || 0), 0);
+  return `## Addresses that do not resolve for an anonymous reader
+
+Some addresses this site publishes cannot be opened by a reader who does not hold an access. We
+publish which ones, and why, rather than leaving them to look live.
+
+- **${recs.length}** published revision addresses do not resolve for an anonymous reader.
+- **${gated}** answer HTTP 401: the artefact is private or gated on the hub.
+- **${gone}** answer HTTP 404: the host's history was rewritten past the revision, so the bytes
+  cannot be recovered at that address.
+- They carry **${addresses}** published addresses between them, so a reader who follows one of
+  them is not an edge case.
+
+The record, with the reason and the date for each entry:
+https://councilof.ai/interop/published-pin-not-publicly-verifiable.json
+(measured ${d.as_of ?? "unknown"}; every entry ages out after ${d.review_window_days ?? 90} days and is
+re-measured).
+
+This is about OTHER published artefacts, not the per-axis banks listed above: the banks in the axis
+list were checked in the same sweep and resolve. The bank behind an axis is the evidence for that
+axis, and it is reachable.
+
+We do not certify, accredit, or issue conformity assessments, and nothing here is a grade or a mark
+to buy. Verification is free.
+`;
+}
+
 function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
   const map = {
     LID: t.lid,                                  // verbatim, never re-phrased
@@ -445,6 +487,7 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     SEPARATED_LEADS: t.separated_leads, TIES: t.ties,
     UNTESTED_SEPARATIONS: t.untested_separations, COMPARISON_AXES: t.comparison_axes,
     DISTRIBUTION_SECTION: distributionSection(), OTS_SECTION: otsSection(),
+    PIN_LIVENESS_SECTION: pinLivenessSection(),
     EVIDENCE_RECORDS_SECTION: evidenceRecordsSection(),
     DATED_MILL_ROOT_LINE: datedMillRootLine(),
     ...(() => {

@@ -119,6 +119,31 @@ Measurement, not certification.
 - claim-maintenance (subject, measured-subject): row GET https://councilof.ai/api/gspc?axis=claim-maintenance · page https://councilof.ai/axis/claim-maintenance · evidence https://councilof.ai/interop/claim-maintenance-wave-2026-10-28.json · MCP get_axis {"axis":"claim-maintenance"}
 - serving-fidelity (subject, declared-slot): row GET https://councilof.ai/api/gspc?axis=serving-fidelity · page https://councilof.ai/axis/serving-fidelity · bank: none on this row (the board row is the evidence pointer) · MCP get_axis {"axis":"serving-fidelity"}
 
+
+## Addresses that do not resolve for an anonymous reader
+
+Some addresses this site publishes cannot be opened by a reader who does not hold an access. We
+publish which ones, and why, rather than leaving them to look live.
+
+- **27** published revision addresses do not resolve for an anonymous reader.
+- **24** answer HTTP 401: the artefact is private or gated on the hub.
+- **3** answer HTTP 404: the host's history was rewritten past the revision, so the bytes
+  cannot be recovered at that address.
+- They carry **580** published addresses between them, so a reader who follows one of
+  them is not an edge case.
+
+The record, with the reason and the date for each entry:
+https://councilof.ai/interop/published-pin-not-publicly-verifiable.json
+(measured 2026-10-29; every entry ages out after 90 days and is
+re-measured).
+
+This is about OTHER published artefacts, not the per-axis banks listed above: the banks in the axis
+list were checked in the same sweep and resolve. The bank behind an axis is the evidence for that
+axis, and it is reachable.
+
+We do not certify, accredit, or issue conformity assessments, and nothing here is a grade or a mark
+to buy. Verification is free.
+
 ## Dated effect-binding probe account
 
 - Bounded 22 September 2026 server-probe account: https://councilof.ai/axis/effect-binding-server-probe-2026-09-22 — a dated result, not a current score or security grade. Read the live effect-binding board row for current state.
