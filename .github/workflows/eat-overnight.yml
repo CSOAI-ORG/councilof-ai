@@ -56,9 +56,30 @@ jobs:
           g = json.loads(b)
           pc = (g.get("totals") or {}).get("public_count")
           print("BOARD", pc)
-          if "22 axis" not in str(pc) or "22 measured" not in str(pc):
-              print("HALT: board drifted")
+          # 2026-11-02: this step compared public_count against the literal "22 axis / 22 measured",
+          # typed when the board had 22 axes. Every run since axis 23 existed halted on it, so a
+          # real change and a stale expectation produced the same one-line failure. It now compares
+          # against a committed baseline and NAMES what moved. Nothing is silenced: a sanctioned
+          # board change updates data/gspc/board-baseline.json in the PR that makes it, and
+          # anything else still halts here — with the added, removed and moved axes printed.
+          base = json.loads(Path("data/gspc/board-baseline.json").read_text())
+          live = {a["axis"]: a.get("status") for a in g.get("axes", [])}
+          was = base.get("axes", {})
+          added = sorted(set(live) - set(was))
+          removed = sorted(set(was) - set(live))
+          moved = sorted(k for k in live if k in was and live[k] != was[k])
+          if added or removed or moved:
+              print("HALT: the live board differs from data/gspc/board-baseline.json")
+              for k in added:
+                  print("  added   ", k, live[k])
+              for k in removed:
+                  print("  removed ", k, was[k])
+              for k in moved:
+                  print("  status  ", k, was[k], "->", live[k])
+              print("  A sanctioned board change updates that file in the same PR. A 34th axis is a")
+              print("  governance decision (31 Oct blueprint: frozen method first), never a config edit.")
               sys.exit(3)
+          print("BASELINE ok:", len(live), "axes")
           FIN = ["reserve-attestation","regulatory-framework","distribution-integrity","custody-disclosure","ai-economy-index","human-labour-index","humanoid-labour-index"]
           restore = []
           for slug in FIN:
