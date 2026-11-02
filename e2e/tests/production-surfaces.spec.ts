@@ -259,11 +259,41 @@ test.describe('Article 50 — Transparency Passport', () => {
 
 // ─── 7. GLOBE / SOVEREIGN ───
 test.describe('Globe & Sovereign Surfaces', () => {
+  // 2026-11-02 consolidation: /globe serves WorldGlobe again (it had drifted to a bare redirect
+  // into the static globe3d.html). Assert the restored page's own heading, not just body length.
   test('WorldGlobe page (/globe) renders', async ({ page }) => {
     await page.goto('/globe', { waitUntil: 'networkidle' });
-    await page.waitForTimeout(1500); // MapLibre takes time
+    await page.waitForTimeout(1500); // Cesium iframe + SVG globe take time
     const body = (await page.textContent('body')) || '';
     expect(body.length).toBeGreaterThan(100);
+    expect(body).toMatch(/AI governance, layered on the world/);
+  });
+
+  // 2026-11-02 consolidation: the map pages are tabs of one World maps page (/map).
+  test('World maps page (/map) tabs render and switch', async ({ page }) => {
+    await page.goto('/map', { waitUntil: 'networkidle' });
+    await expect(page.getByTestId('world-tab-bridges')).toBeVisible();
+    await expect(page.getByTestId('world-panel-bridges')).toBeVisible();
+    await page.getByTestId('world-tab-regions').click();
+    await expect(page).toHaveURL(/tab=regions/);
+    await expect(page.getByTestId('world-panel-regions')).toBeVisible();
+    await page.getByTestId('world-tab-risk').click();
+    await expect(page).toHaveURL(/tab=risk/);
+    await expect(page.getByTestId('world-panel-risk')).toBeVisible();
+    // The worked-example honesty note must ship with the risk tab.
+    await expect(page.getByTestId('world-panel-risk')).toContainText(/worked example/i);
+  });
+
+  test('Old map URLs redirect into their /map tab', async ({ page }) => {
+    await page.goto('/regions', { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(/\/map\?tab=regions/);
+    await expect(page.getByTestId('world-panel-regions')).toBeVisible();
+    await page.goto('/relevance-map', { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(/\/map\?tab=bridges/);
+    await page.goto('/risk-heatmap', { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(/\/map\?tab=risk/);
+    await page.goto('/tool-commons', { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(/\/dashboard\?tab=tools/);
   });
 
   // SovSpace was replaced by the Council Space arena in the Council OS redesign:
