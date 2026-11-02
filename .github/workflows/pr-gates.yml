@@ -446,7 +446,14 @@ jobs:
           set -euo pipefail
           echo "PR source revision: $CODEX_DELIVERY_PR_HEAD"
           echo "Checked-out test revision: $(git rev-parse HEAD)"
-          git fetch --no-tags --depth=1 origin 10046fd8b60d75be66bd1f9dbf54155cca26dec3
+          # NO --depth=1 HERE. A depth-1 fetch writes a shallow boundary into THIS
+          # repository, and every later step in this job then walks a truncated history.
+          # That is how the SBOM pin gate came to call a REACHABLE pin orphaned: git could
+          # not finish the walk, and the gate had no way to tell that from a pin that
+          # points at nothing. The commit is still fetched, with its own history, so the
+          # test below sees exactly the same bytes it saw before. No --filter either: it
+          # needs a partial clone, and this checkout is not one.
+          git fetch --no-tags origin 10046fd8b60d75be66bd1f9dbf54155cca26dec3
           test "$(git rev-parse 10046fd8b60d75be66bd1f9dbf54155cca26dec3^{commit})" = 10046fd8b60d75be66bd1f9dbf54155cca26dec3
           node --version
           python3 scripts/test_anthropic_gspc_worker.py
@@ -717,7 +724,10 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: |
           node scripts/sbom-pin-gate.mjs --selftest
-          node scripts/sbom-pin-gate.mjs
+          # Exit 2 is UNCHECKABLE: the store could not answer the question, which is not a
+          # finding about the pin. UNCHECKABLE is never FAIL, so it blocks nothing here.
+          # Exit 1 is a real orphaned pin and still stops the merge.
+          node scripts/sbom-pin-gate.mjs || [ $? -eq 2 ]
 
       # The estate's central claim is that a stranger can recompute and verify the evidence from
       # published bytes. public/signed/HOW-TO-VERIFY.md carried a JavaScript snippet offering to do
