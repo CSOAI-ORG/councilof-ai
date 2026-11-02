@@ -38,29 +38,42 @@ function cellColor(score: number) {
   return "bg-emerald-200 text-emerald-900";
 }
 
-export default function RiskHeatmap() {
+/**
+ * `embedded`: rendered as a tab of the World maps page (/map). The tab page owns the hero and
+ * the document title, so this body renders without either — the same contract as RelevanceMap.
+ * The worked-example note ships in BOTH modes: the register is illustrative, and saying so is
+ * not a decoration, it is the honest label for what this page is.
+ */
+export default function RiskHeatmap({ embedded = false }: { embedded?: boolean; params?: unknown } = {}) {
   const [sel, setSel] = useState<Risk | null>(RISKS[0]);
 
   const byCell = useMemo(() => {
     const m: Record<string, Risk[]> = {};
     RISKS.forEach((r) => {
       const k = r.likelihood + "-" + r.impact;
-      (m[k] = m[k] || []).push(r);
+      (m[k] || (m[k] = [])).push(r);
     });
     return m;
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
-      <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">Risk management</p>
-          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Risk Heatmap</h1>
-          <p className="mt-5 text-lg text-emerald-50 max-w-2xl">Plot every AI and operational risk on a likelihood × impact matrix. Click a risk to see its owner and treatment.</p>
-        </div>
-      </section>
+    <div className={embedded ? "" : "min-h-screen bg-white"}>
+      {!embedded && (
+        <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-20">
+          <div className="max-w-6xl mx-auto px-6">
+            <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">Risk management</p>
+            <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Risk Heatmap</h1>
+            <p className="mt-5 text-lg text-emerald-50 max-w-2xl">Plot every AI and operational risk on a likelihood × impact matrix. Click a risk to see its owner and treatment.</p>
+          </div>
+        </section>
+      )}
 
       <section className="max-w-6xl mx-auto px-6 py-12 grid gap-8 lg:grid-cols-3">
+        <p className="lg:col-span-3 text-sm leading-relaxed text-gray-500" data-testid="risk-worked-example-note">
+          This matrix is a worked example: an illustrative register (R-01…R-08) with owners and
+          treatments, showing how the heatmap reads. It is not a claim about any real
+          deployment, and nothing on this page is a compliance verdict.
+        </p>
         {/* Matrix */}
         <div className="lg:col-span-2">
           <div className="flex">

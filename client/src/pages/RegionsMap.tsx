@@ -37,20 +37,26 @@ const TONE: Record<string, string> = {
   "Guidance": "bg-slate-100 text-slate-600",
 };
 
-export default function RegionsMap() {
-  useEffect(() => { document.title = "Regulatory map by region - EU / US / Global | CSOAI"; }, []);
+/**
+ * `embedded`: rendered as a tab of the World maps page (/map). The tab page owns the hero and
+ * the document title, so this body renders without either — the same contract as RelevanceMap.
+ */
+export default function RegionsMap({ embedded = false }: { embedded?: boolean; params?: unknown } = {}) {
+  useEffect(() => { if (!embedded) document.title = "Regulatory map by region - EU / US / Global | CSOAI"; }, [embedded]);
   const [r, setR] = useState("eu");
   const region = REGIONS.find((x) => x.id === r) || REGIONS[0];
   return (
-    <div className="min-h-screen bg-white">
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
-        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
-        <div className="relative max-w-6xl mx-auto px-6">
-          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - regulatory map</p>
-          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">What governs AI, by region</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Filter by EU, US, or Global and see the frameworks in force, what's phasing in, and the CSOAI bridge that covers each. For the city-to-bloc stack of any single place, use the jurisdiction engine.</p>
-        </div>
-      </section>
+    <div className={embedded ? "" : "min-h-screen bg-white"}>
+      {!embedded && (
+        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
+          <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
+          <div className="relative max-w-6xl mx-auto px-6">
+            <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - regulatory map</p>
+            <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">What governs AI, by region</h1>
+            <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Filter by EU, US, or Global and see the frameworks in force, what's phasing in, and the CSOAI bridge that covers each. For the city-to-bloc stack of any single place, use the jurisdiction engine.</p>
+          </div>
+        </section>
+      )}
       <section className="max-w-6xl mx-auto px-6 py-10">
         <div className="flex flex-wrap gap-2">
           {REGIONS.map((x) => (
