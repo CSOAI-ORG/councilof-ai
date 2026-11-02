@@ -198,6 +198,16 @@ def post_json(url, payload, headers, timeout=90, retries=3):
 
 def classify(model, scenario, cred):
     prompt = PROMPT_TEMPLATE.format(scenario=scenario)
+    if model.startswith("hf:"):
+        router_model = model.split(":", 1)[1]
+        data = post_json(
+            "https://router.huggingface.co/v1/chat/completions",
+            {"model": router_model,
+             "messages": [{"role": "user", "content": prompt}],
+             "temperature": 0, "max_tokens": 24},
+            {"Authorization": "Bearer " + cred},
+        )
+        return data["choices"][0]["message"]["content"]
     if model == "deepseek":
         data = post_json(
             "https://api.deepseek.com/chat/completions",
@@ -232,6 +242,11 @@ def classify(model, scenario, cred):
 
 
 PROVIDERS = {
+    "hf:moonshotai/Kimi-K3": "HF_TOKEN",
+    "hf:deepseek-ai/DeepSeek-V4.1-Flash": "HF_TOKEN",
+    "hf:MiniMaxAI/MiniMax-M3.1-Flash": "HF_TOKEN",
+    "hf:Qwen/Qwen3.8-2.4T-A95B": "HF_TOKEN",
+    "hf:zai-org/GLM-5.3": "HF_TOKEN",
     "deepseek": "DEEPSEEK_API_KEY",
     "gemini": "GEMINI_TOKEN",
     "grok": "GROK_TOKEN",

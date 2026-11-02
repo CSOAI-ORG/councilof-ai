@@ -34,7 +34,7 @@ must not be rewritten as one.
 
 ## 1. CURRENT MEASUREMENT COVERAGE
 
-The GSPC board: **34 axes · 23 measured** = 14 model-comparison + 9 deterministic-fact.
+The GSPC board: **34 axes · 24 measured** = 14 model-comparison + 9 deterministic-fact.
 Measurement, not certification. Anyone can re-check.
 
 ### 1a. What MEASURED means here, and what it does not mean
@@ -53,7 +53,7 @@ its own live fields on GET /api/gspc. Read from the same fetch as the snapshot i
 The 9 deterministic-fact axes have no fleet and no leader, so no separation test applies to
 them; they are not counted as untested and they enter no mean.
 
-Therefore: "23 measured of 34" means a run exists behind 23 of the 34 slots and 11 are declared slots with none. It is NOT a claim that
+Therefore: "24 measured of 34" means a run exists behind 24 of the 34 slots and 10 are declared slots with none. It is NOT a claim that
 any axis can tell two models apart, and any phrasing a reader could take that way is wrong. When you
 quote the measured count, quote the four separation fields beside it. TIE is TIE and UNTESTED is not
 a win; both are first-class states and neither is hidden. This section describes the board as it
@@ -99,16 +99,16 @@ board moves, so treat this as a copy and re-fetch for current values.
   "as_of": null,
   "totals": {
     "axes": 34,
-    "measured_axes": 23,
-    "unmeasured_axes": 11,
-    "quotable_axes": 23,
-    "public_count": "34 axes · 23 measured",
+    "measured_axes": 24,
+    "unmeasured_axes": 10,
+    "quotable_axes": 24,
+    "public_count": "34 axes · 24 measured",
     "separation_public_count": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
     "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axes with a RUN behind them; it is not a count of axes with a separated result. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
     "model_fleets": 14,
     "model_fleets_note": "Counts model-comparison AXES (one fleet per axis), not models. The number of distinct models measured is a different quantity, derived from the signed cards: /interop/models-measured.json (list at /models-measured/).",
     "fact_runs": 9,
-    "count_grammar": "34 axes are on the board; 23 of them carry a measurement and 11 are declared slots with no run behind them. The larger number counts slots, the smaller counts measurements — quote both or quote the smaller. A published slot exists so the gap is visible; it is not evidence of anything having been measured. A measurement is not a separated leader either: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED.",
+    "count_grammar": "34 axes are on the board; 24 of them carry a measurement and 10 are declared slots with no run behind them. The larger number counts slots, the smaller counts measurements — quote both or quote the smaller. A published slot exists so the gap is visible; it is not evidence of anything having been measured. A measurement is not a separated leader either: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED.",
     "by_family": {
       "gspc": {
         "axes": 15,
@@ -117,8 +117,8 @@ board moves, so treat this as a copy and re-fetch for current values.
       },
       "subject": {
         "axes": 11,
-        "measured": 0,
-        "note": "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). Declared slots, UNMEASURED until a frozen sha-pinned bank with n_valid >= 30 passes the gate. Census checks are a DISCOVERED check grid, never scores here. No aggregate score and no overall rank."
+        "measured": 1,
+        "note": "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). Most are declared slots, UNMEASURED until a frozen sha-pinned bank with n_valid >= 30 passes the gate; one (claim-maintenance) is MEASURED that way, kind 'measured-subject', and still measures its own subject class rather than models, so it has no leader, no accuracy and no separation and joins no mean. Census checks are a DISCOVERED check grid, never scores here. No aggregate score and no overall rank."
       },
       "financial": {
         "axes": 8,
@@ -153,7 +153,7 @@ board moves, so treat this as a copy and re-fetch for current values.
     },
     "license": "CC-BY-4.0",
     "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
-    "items": 1230,
+    "items": 1404,
     "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
     "comparison_axes": 14,
     "separated_leads": 0,
@@ -162,7 +162,7 @@ board moves, so treat this as a copy and re-fetch for current values.
     "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
     "externally_led_axes": 9,
     "public_leader_count": 9,
-    "lid": "23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
+    "lid": "24 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
     "own_leaders_excluded": 8,
     "own_leaders_excluded_axes": [
       "governance",
@@ -463,10 +463,10 @@ board moves, so treat this as a copy and re-fetch for current values.
     },
     {
       "axis": "claim-maintenance",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "subject",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "measured-subject",
+      "n": 174,
       "accuracy": null,
       "separation": null
     },
@@ -483,7 +483,7 @@ board moves, so treat this as a copy and re-fetch for current values.
 }
 ```
 
-## 3. THE AXES — deep reference (34 axes · 23 measured, read live at generation)
+## 3. THE AXES — deep reference (34 axes · 24 measured, read live at generation)
 
 Every block below is rendered from the same GET /api/gspc fetch as the snapshot above; nothing in it is typed. The `row` URL filters the live board to that one axis; `page` is the per-axis reference page; `bank`/`evidence` is what stands behind the row.
 
@@ -774,11 +774,12 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 
 ### claim-maintenance
 - family: `subject`
-- kind: `declared-slot`
-- status: `UNMEASURED`
-- n: 0
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 174
 - row: https://councilof.ai/api/gspc?axis=claim-maintenance
 - page: https://councilof.ai/axis/claim-maintenance
+- evidence: https://councilof.ai/interop/claim-maintenance-wave-2026-10-28.json
 
 ### serving-fidelity
 - family: `subject`
@@ -1018,16 +1019,16 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-01T06:20:48Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-01T19:41:17Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 692. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 694. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 691.
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 693.
 - Still calendar-pending: 1. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
-- Proofs whose subject is not served beside them: 84 — an anchor a reader cannot check
+- Proofs whose subject is not served beside them: 86 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
 - This producer does not check block headers against a Bitcoin node. `ots verify` against your own
   node does that, and an .ots is not a proof because of its file extension.

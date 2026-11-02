@@ -35,17 +35,23 @@ shown here). Every release published to npm so far carries fewer tools than the
 remote, so this guide no longer gives a local configuration: use the remote above,
 or the free read-only door https://councilof.ai/mcp/free.
 
-The latest published release is `0.2.3` (published 2026-10-26T07:21:23.715Z), and
-it carries 19 tools (14 free + 5 metered) — measured from the published tarball on
-2026-10-28, not from this repository. It was published 39 minutes before the 33
-named axes merged, so it holds the fleet as it stood then. It is **not** marked
+The latest published release is `0.2.4` (published 2026-10-28T16:48:34.768Z). Its
+published tarball carries 52 tool names — 47 free + 5 metered — measured from the
+tarball's own manifests on 2026-11-01, not from this repository. It is **not** marked
 deprecated on npm, which is why `npm view csoai-gspc-mcp@latest deprecated` prints
-nothing: deprecation is not the signal here, the tool count is.
+nothing: deprecation is not the signal here, the name comparison is.
 
-The repository currently prepares `0.2.4`, but that source version is **not a
-published npm release** until `npm view csoai-gspc-mcp@0.2.4 version` confirms that
-exact version AND the published tarball's own manifests carry the same names as
-the live door. Do not install or advertise any published release as the contract
+That release is **not** name-for-name identical to the live door. The live door
+served 53 names at the same moment: the published tarball is one name short, and
+the name it lacks is `axis_watchdog-ingest`, which the door added after `0.2.4`
+was published. No published name is missing from the door. Re-run the comparison
+— `npm pack csoai-gspc-mcp@latest`, extract `gspc-tools.json` and
+`paid-tools.json`, diff against the door's `tools/list` — whenever either side
+moves, and treat the diff, not npm's deprecation flag, as the signal.
+
+The repository currently prepares `0.2.5`, but that source version is **not a
+published npm release** until `npm view csoai-gspc-mcp@0.2.5 version` confirms that
+exact version. Do not install or advertise any published release as the contract
 before that independent check.
 
 ## Exact reviewed tool catalog

@@ -61,7 +61,7 @@
   </div>
 </header>
 <main class="wrap">
-  <p class="lid">34 axes · 23 measured · 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED</p>
+  <p class="lid">34 axes · 24 measured · 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED</p>
   <h1>All 32 GSPC axes</h1>
   <p>Every axis on the board, with the state the board serves for it and a page of its own. An empty slot would read UNMEASURED, never zero. A point leader is not a separated leader: TIE and UNTESTED are their own states, and neither is a win.</p>
 
@@ -104,7 +104,7 @@
     </tbody>
   </table></div>
 
-  <h2>9 declared subject slots</h2>
+  <h2>8 declared subject slots</h2>
   <p class="muted">A declared slot with no run behind it yet. No model fleet answers it, so no separation test applies to it either: n 0 is the literal truth, never a score. It becomes MEASURED only with a frozen sha-pinned bank, n_valid at least 30, passing the gate.</p>
   <div class="scroll"><table>
     <thead><tr><th>Axis</th><th>State</th><th>n</th></tr></thead>
@@ -116,8 +116,15 @@
       <tr data-axis="interop-conformance" data-status="UNMEASURED" data-separation="" data-n="0"><td><a href="/axis/interop-conformance">interop-conformance</a></td><td>UNMEASURED</td><td>0</td></tr>
       <tr data-axis="humanoid-deployment" data-status="UNMEASURED" data-separation="" data-n="0"><td><a href="/axis/humanoid-deployment">humanoid-deployment</a></td><td>UNMEASURED</td><td>0</td></tr>
       <tr data-axis="interpretability-reproducibility" data-status="UNMEASURED" data-separation="" data-n="0"><td><a href="/axis/interpretability-reproducibility">interpretability-reproducibility</a></td><td>UNMEASURED</td><td>0</td></tr>
-      <tr data-axis="claim-maintenance" data-status="UNMEASURED" data-separation="" data-n="0"><td><a href="/axis/claim-maintenance">claim-maintenance</a></td><td>UNMEASURED</td><td>0</td></tr>
       <tr data-axis="serving-fidelity" data-status="UNMEASURED" data-separation="" data-n="0"><td><a href="/axis/serving-fidelity">serving-fidelity</a></td><td>UNMEASURED</td><td>0</td></tr>
+    </tbody>
+  </table></div>
+  <h2>1 measured subject axes</h2>
+  <p class="muted">A frozen, sha-pinned method or bank measured the subject class this axis names, over at least 30 valid items. No model fleet answers it, so no separation test applies and it joins no leader or mean — but unlike a declared slot its n is a real count, not a zero.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Axis</th><th>State</th><th>n</th></tr></thead>
+    <tbody>
+      <tr data-axis="claim-maintenance" data-status="MEASURED" data-separation="" data-n="174"><td><a href="/axis/claim-maintenance">claim-maintenance</a></td><td>MEASURED</td><td>174</td></tr>
     </tbody>
   </table></div>
   <p class="muted">Rendered from the board this site's build serves (GET /api/gspc), not typed by hand. <a href="/api/gspc">The board as JSON</a> · <a href="/methodology/#separation">how separation is decided</a>.</p>
