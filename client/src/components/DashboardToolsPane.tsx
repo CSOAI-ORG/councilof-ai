@@ -6,6 +6,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import ToolRunner from "./ToolRunner";
+import ToolReceiptsPane from "./ToolReceiptsPane";
 import { FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { useSearch } from "wouter";
 
@@ -163,6 +164,9 @@ export default function DashboardToolsPane() {
           initialToolName={selectedTool}
           initialArguments={initialArguments}
         />
+        {/* Your local run receipts (P5, 2026-11-02): the runner records each execution and this
+            pane shows the log. A localStorage list, stated as not signed evidence on its face. */}
+        <ToolReceiptsPane />
       </div>
     </section>
   );
