@@ -603,6 +603,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Distribution Integrity"
  },
  {
+  "path": "/docs",
+  "comp": "DocsHub",
+  "title": "Docs Hub"
+ },
+ {
   "path": "/doctrine",
   "comp": "Doctrine",
   "title": "Doctrine"

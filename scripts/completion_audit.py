@@ -447,17 +447,23 @@ def p_402_health_split() -> tuple[str, str, str]:
 
 
 def p_corrections_published() -> tuple[str, str, str]:
-    """U-9: corrections #60-70 published (the corpus says 11 self-catches)."""
+    """U-9: the corrections corpus, published and signed.
+
+    The corpus is numbered C-<date>-<n> - C-2026-1006-13, C-2026-0930-12 - NOT #1..#n.
+    An earlier version of this probe counted ids ending "-60" to "-70" and reported "0 of
+    the #60-70 range present" against 93 published corrections, which reads as seventy
+    corrections missing when the series it looked for does not exist. The count is what it
+    is; the invented range is gone.
+    """
     _, corr = fetch_json("/api/corrections")
     if not corr:
         return "OPEN", "the corrections endpoint did not answer", f"{BASE}/api/corrections"
     entries = corr.get("corrections") or []
-    ids = {str(e.get("id", "")) for e in entries}
-    published_60_70 = sum(1 for i in range(60, 71) if any(x.endswith(f"-{i:02d}") for x in ids))
-    state = "LIVE" if len(entries) >= 70 else "OPEN"
+    sig = corr.get("signature_state")
+    state = "LIVE" if entries and sig == "VALID" else "OPEN"
     return (state,
-            f"{len(entries)} correction(s) published, signature_state="
-            f"{corr.get('signature_state')}; {published_60_70} of the #60-70 range present",
+            f"{len(entries)} correction(s) published, signature_state={sig}; the corpus is "
+            f"numbered C-<date>-<n>, so there is no '#60-70' series to be present or absent",
             f"{BASE}/api/corrections")
 
 
@@ -499,7 +505,7 @@ PROBED = [
     ("U-14a", "OpenShell adapter built, with a witness capture", p_openshell_adapter),
     ("U-14b", "Cedar policy set governing the GSPC route", p_cedar_policy),
     ("U-15a", "Evaluation Cards schema published", p_evaluation_cards),
-    ("U-9b", "Corrections #60-70 published", p_corrections_published),
+    ("U-9b", "The corrections corpus, published and signed", p_corrections_published),
     ("U-13b", "Ecosystem Health Board + citation flywheel", p_ecosystem_health_board),
     ("U-18a", "The chained loop v0.1 (fixed grader)", p_chained_loop),
     ("U-19a", "Small-world lab T-1 league", p_small_world_league),

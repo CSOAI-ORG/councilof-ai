@@ -31,16 +31,16 @@
         "totals.quotable_axes"
       ],
       "observed": {
-        "value": "34 axes · 23 measured",
+        "value": "34 axes · 34 measured",
         "axes": 34,
-        "measured_axes": 23,
-        "unmeasured_axes": 11,
-        "quotable_axes": 23,
+        "measured_axes": 34,
+        "unmeasured_axes": 0,
+        "quotable_axes": 34,
         "public_leader_count": 9,
         "model_fleets": 14,
         "fact_runs": 9,
-        "items": 1230,
-        "lid": "23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
+        "items": 1844,
+        "lid": "34 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
         "observed_at": "2026-11-02",
         "binding": false,
         "producer": "scripts/refresh-board-observation.mjs — every field is copied verbatim from the endpoint's totals; never hand-edited.",
@@ -317,7 +317,7 @@
           "path": "completion.json",
           "date": "2026-11-02",
           "historical_axes": 33,
-          "reason": "Dated completion LEDGER, re-measured 2026-11-02 after the 34th axis deployed. It is a log of receipts, not a snapshot: each entry carries its own 'at' and states the board as it was on that date, and a dated receipt is never edited. Its newest receipts (2026-11-02) record the live board - 34 axes · 23 measured - and the live door - 53 tools, 48 free + 5 metered, 34 of them the board's named axes. It still carries the older 2026-10-25 receipt that read 33 axes, and the 2026-10-26 MCP receipt that named 33 axis tools, which is why the exemption is for 33 and not for 34: the file records both boards and the rule exempts only the count it historically recorded. Re-measure by APPENDING a new receipt, never by editing an old one; scripts/completion_audit.py re-measures the audit artefact beside it."
+          "reason": "Dated completion LEDGER, re-measured 2026-11-02 twice: once after the 34th slot deployed, and again after the deploy that measured the ten remaining subject axes. It is a log of receipts, not a snapshot: each entry carries its own 'at' and states the board as it was on that date, and a dated receipt is never edited. Its newest receipts (2026-11-02T07:10:08Z) record the live board - 34 axes · 34 measured, 0 unmeasured - and the live door - 53 tools, 48 free + 5 metered, 34 of them the board's named axes. Its earlier same-day receipt recorded 34 axes · 23 measured, when watchdog-ingest was still a declared slot, and a published slot is not a measurement. It still carries the older 2026-10-25 receipt that read 33 axes, and the 2026-10-26 MCP receipt that named 33 axis tools, which is why the exemption is for 33 and not for 34: the file records every board the estate has published and the rule exempts only the count it historically recorded. Re-measure by APPENDING a new receipt, never by editing an old one; scripts/completion_audit.py re-measures the audit artefact beside it."
         },
         {
           "path": "interop/ai-eval-universe-2026-10/index.json",
