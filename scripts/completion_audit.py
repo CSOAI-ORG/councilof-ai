@@ -40,6 +40,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
@@ -168,15 +169,54 @@ def _dig_available() -> bool:
         return False
 
 
-def _dig_txt(name: str) -> list[str] | None:
-    """TXT records for a DNS name. None means: the tool could not be run, so the
-    answer is UNKNOWN. An empty list means: the name publishes no TXT."""
+def _dig_txt_state(name: str) -> tuple[str, list[str]]:
+    """Ask DNS for a name's TXT records, and say WHICH answer we got.
+
+    Returns (state, txt) where state is:
+      "NOERROR"  the name was resolved; txt holds its TXT records (possibly empty)
+      "NXDOMAIN" the name does not exist at all
+      "UNKNOWN"  the query did not complete, so the answer is unknown
+
+    WHY THE THREE STATES. `dig +short` prints NOTHING for a name that does not exist, for
+    a name that exists but publishes no TXT, and for a query that failed (SERVFAIL, a
+    timeout, a resolver that gave up). Those are three different facts and the short form
+    collapses them into one empty string. Reading only the answer would let a DNS outage
+    report "no TXT record" - an absence the estate never measured. The status line is the
+    difference between "we looked and there is nothing" and "we did not get to look".
+
+    Measured 2026-11-02 on the three labels this audit reads: _mcp.com.councilof.ai and
+    _namespace.com.councilof.ai are NXDOMAIN (the subdomain does not exist), which is a
+    different fact from "the subdomain exists and publishes no TXT".
+    """
     try:
-        r = subprocess.run(["dig", "+short", "TXT", name],
+        r = subprocess.run(["dig", "+noall", "+comments", "+answer", "TXT", name],
                            capture_output=True, text=True, timeout=30)
     except (OSError, subprocess.SubprocessError):
+        return ("UNKNOWN", [])
+    out = r.stdout or ""
+    status = ""
+    for line in out.splitlines():
+        if "status:" in line:
+            status = line.split("status:", 1)[1].split(",")[0].strip().upper()
+            break
+    if status not in ("NOERROR", "NXDOMAIN"):
+        return ("UNKNOWN", [])
+    txt = []
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) >= 5 and parts[3].upper() == "TXT":
+            txt.append(" ".join(parts[4:]).strip().strip('"'))
+    return (status, txt)
+
+
+def _dig_txt(name: str) -> list[str] | None:
+    """TXT records for a DNS name. None means: the tool could not be run, or the query
+    did not complete, so the answer is UNKNOWN. An empty list means: the name was asked
+    and publishes no TXT."""
+    state, txt = _dig_txt_state(name)
+    if state == "UNKNOWN":
         return None
-    return [ln.strip().strip('"') for ln in (r.stdout or "").splitlines() if ln.strip()]
+    return txt
 
 
 def p_namespace_dns() -> tuple[str, str, str]:
@@ -194,15 +234,30 @@ def p_namespace_dns() -> tuple[str, str, str]:
                 "Install dnsutils and re-measure before reading this as a verdict",
                 "dns:com.councilof.ai")
     labels = ("com.councilof.ai", "_namespace.com.councilof.ai", "_mcp.com.councilof.ai")
-    found = {n: _dig_txt(n) for n in labels}
-    published = [n for n, v in found.items() if v and any("com.councilof/*" in t for t in v)]
+    answers = {n: _dig_txt_state(n) for n in labels}
+    published = [n for n, (state, txt) in answers.items()
+                 if state == "NOERROR" and any("com.councilof/*" in t for t in txt)]
     if published:
         return ("LIVE",
                 f"the namespace TXT is published at {', '.join(published)}",
                 "https://councilof.ai/jewels/master-catalogue/")
-    detail = "; ".join(
-        f"{n} -> " + (", ".join(found[n]) if found.get(n) else "no TXT record")
-        for n in labels)
+    def _read(n: str) -> str:
+        state, txt = answers[n]
+        if state == "NXDOMAIN":
+            return "the name does not exist"
+        if state == "UNKNOWN":
+            return "UNKNOWN - the query did not complete"
+        return ", ".join(txt) if txt else "no TXT record"
+    detail = "; ".join(f"{n} -> " + _read(n) for n in labels)
+    unknown = [n for n, (state, _) in answers.items() if state == "UNKNOWN"]
+    if unknown:
+        # Unknown is not absent. If the query did not complete for any label, the audit
+        # cannot say the claim is unpublished - it can only say it did not find out.
+        return ("OPEN",
+                f"the namespace TXT state is UNKNOWN for {', '.join(unknown)} - unknown is "
+                f"not absent ({detail}); publishing it needs DNS authority for the domain, "
+                f"which is the owner's",
+                "dns:" + " ".join(labels))
     return ("OPEN",
             f"no namespace TXT is published ({detail}) - publishing it needs DNS "
             f"authority for the domain, which is the owner's",
@@ -436,7 +491,7 @@ PROBED = [
     ("U-2", "Flagship public (claim maintenance)", p_flagship),
     ("U-3", "Heartbeat board public", p_heartbeat_board),
     ("U-4", "Root advancing + axes + corrections counter", p_root_and_corrections),
-    ("U-13a", "Agent skills published (12 skills)", p_skills),
+    ("U-13a", "Agent skills published", p_skills),
     ("U-21", "OpenTimestamps: every published proof Bitcoin-attested", p_ots_manifest),
     ("U-9a", "Corrections published and signed", p_completion_ledger),
     ("U-10a", "Namespace consolidation: the com.councilof/* DNS TXT claim", p_namespace_dns),
@@ -660,12 +715,65 @@ def selftest() -> int:
     for banned in banned_claims_in(md):
         fails.append(f"the rendered ledger asserts a banned claim: {banned!r}")
 
+    # 12. the DNS namespace probe must be able to go RED, and it must never report an
+    #     answer it did not get. "Unknown" and "absent" are different facts, and a probe
+    #     that conflates them reports an absence the estate never measured.
+    global _dig_available, _dig_txt_state
+    original_dig = _dig_txt_state
+    original_dig_available = _dig_available
+    try:
+        _dig_available = lambda: True
+        _dig_txt_state = lambda n: ("NOERROR", ["com.councilof/*"])
+        if p_namespace_dns()[0] != "LIVE":
+            fails.append("the namespace DNS probe did not report a published TXT as LIVE")
+        _dig_txt_state = lambda n: ("NXDOMAIN", [])
+        state, measured, _ = p_namespace_dns()
+        if state != "OPEN":
+            fails.append("the namespace DNS probe did not go red on an unpublished namespace")
+        if "does not exist" not in measured:
+            fails.append("the namespace DNS probe did not name the NXDOMAIN state")
+        _dig_txt_state = lambda n: ("UNKNOWN", [])
+        state, measured, _ = p_namespace_dns()
+        if state != "OPEN":
+            fails.append("the namespace DNS probe reported a verdict for an unknown answer")
+        if "UNKNOWN" not in measured:
+            fails.append("the namespace DNS probe reported an unknown answer as an absence")
+    finally:
+        _dig_txt_state = original_dig
+        _dig_available = original_dig_available
+
+    # 13. the tree probe must be able to go RED on a real claim, and must not fire on a
+    #     DNS label mention or on the audit's own output. These are the two things that
+    #     made the FIRST version of this row go red for the wrong reason.
+    global REPO
+    original_repo = REPO
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            tmp = Path(td)
+            (tmp / "public").mkdir()
+            REPO = tmp
+            (tmp / "public" / "a.json").write_text(json.dumps(
+                {"evidence": "_mcp.com.councilof.ai -> no TXT record",
+                 "next_step": "Publish the TXT naming com.councilof/*"}))
+            if p_namespace_tree()[0] != "LIVE":
+                fails.append("the namespace tree probe counted a DNS mention as a claim")
+            (tmp / "public" / "b.json").write_text(json.dumps({"id": "com.councilof.gsPC"}))
+            if p_namespace_tree()[0] != "OPEN":
+                fails.append("the namespace tree probe did not go red on a com.councilof.* identifier")
+            (tmp / "public" / "b.json").unlink()
+            (tmp / "public" / "completion-audit.json").write_text(json.dumps(
+                {"measured": "com.councilof.gsPC is claimed"}))
+            if p_namespace_tree()[0] != "LIVE":
+                fails.append("the namespace tree probe counted its own output as a claim")
+    finally:
+        REPO = original_repo
+
     if fails:
         for f in fails:
             print("  FAIL:", f)
         return 1
     print("  completion_audit selftest: OK "
-          "(11 rules, each proven able to catch its own counterexample)")
+          "(13 rules, each proven able to catch its own counterexample)")
     return 0
 
 
