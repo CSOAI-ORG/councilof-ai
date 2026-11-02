@@ -1,4 +1,4 @@
-# CSOAI — CONSUMER-READY COMPLETION AUDIT (measured) — 2026-11-02T03:42:36Z
+# CSOAI — CONSUMER-READY COMPLETION AUDIT (measured) — 2026-11-02T04:37:05Z
 
 Every LIVE line below was **probed against the live surface** and carries the measured value and the receipt. An item is LIVE only if a probe saw it; an item whose probe could not run is OPEN with the reason, never LIVE. Owner-gated items are named as owner-gated rather than counted as done.
 
@@ -12,10 +12,10 @@ This is a measurement of completion, not a claim of a market outcome. "Unicorn s
 | U-2 | Flagship public (claim maintenance) | agent | **LIVE** | GET / -> HTTP 200 | [https://councilof.ai/](https://councilof.ai/) |
 | U-3 | Heartbeat board public | agent | **LIVE** | GET /board/ -> HTTP 200 | [https://councilof.ai/board/](https://councilof.ai/board/) |
 | U-4 | Root advancing + axes + corrections counter | agent | **LIVE** | root as_of=2026-11-01T15:09:42Z, 428 leaves; board public_count=34 axes · 23 measured; corrections=93, signature_state=VALID | [https://councilof.ai/root.json](https://councilof.ai/root.json) |
-| U-13a | Agent skills published (12 skills) | agent | **LIVE** | 14 skill(s) in the published index | [https://councilof.ai/.well-known/agent-skills/index.json](https://councilof.ai/.well-known/agent-skills/index.json) |
+| U-13a | Agent skills published | agent | **LIVE** | 14 skill(s) in the published index | [https://councilof.ai/.well-known/agent-skills/index.json](https://councilof.ai/.well-known/agent-skills/index.json) |
 | U-21 | OpenTimestamps: every published proof Bitcoin-attested | agent | **LIVE** | 677/677 proofs Bitcoin-attested, 0 pending | [https://councilof.ai/interop/ots/manifest.json](https://councilof.ai/interop/ots/manifest.json) |
 | U-9a | Corrections published and signed | agent | **LIVE** | 40 verified, 5 blockers, 8 not_claimed; no unamended 'Public root stale' blocker | [https://councilof.ai/completion.json](https://councilof.ai/completion.json) |
-| U-10a | Namespace consolidation: the com.councilof/* DNS TXT claim | agent | **OPEN** | no namespace TXT is published (com.councilof.ai -> no TXT record; _namespace.com.councilof.ai -> no TXT record; _mcp.com.councilof.ai -> no TXT record) - publishing it needs DNS authority for the domain, which is the owner's | dns:com.councilof.ai _namespace.com.councilof.ai _mcp.com.councilof.ai |
+| U-10a | Namespace consolidation: the com.councilof/* DNS TXT claim | agent | **OPEN** | no namespace TXT is published (com.councilof.ai -> the name does not exist; _namespace.com.councilof.ai -> the name does not exist; _mcp.com.councilof.ai -> the name does not exist) - publishing it needs DNS authority for the domain, which is the owner's | dns:com.councilof.ai _namespace.com.councilof.ai _mcp.com.councilof.ai |
 | U-10c | No published artefact still claims a com.councilof.* identifier | agent | **LIVE** | 0 published file(s) still claim an identifier in the com.councilof.* space | repo:public/ (measured at build time) |
 | U-14a | OpenShell adapter built, with a witness capture | agent | **LIVE** | adapter present, witness capture present; capture receipt DIVERGENT {'DIVERGED': 1, 'HELD': 2}; issuer is still a placeholder (did:web:issuer.example) | repo:harness/openshell-adapter/capture-2026-09-28/out/run-receipt.json |
 | U-14b | Cedar policy set governing the GSPC route | agent | **LIVE** | 5 Cedar policy file(s), 1 schema file(s) | repo:functions/_lib/route/policy/ |
@@ -48,5 +48,5 @@ This is a measurement of completion, not a claim of a market outcome. "Unicorn s
 - an attestation for any third-party evaluation result
 - an endorsement by any person or institution quoted in a checklist
 
-Measured at 2026-11-02T03:42:36Z by `scripts/completion_audit.py`.
+Measured at 2026-11-02T04:37:05Z by `scripts/completion_audit.py`.
 Measurement, not certification.
