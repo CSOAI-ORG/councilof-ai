@@ -2,7 +2,7 @@
  "schema": "csoai.master-catalogue/0.1",
  "title": "CSOAI — Master Catalogue of All Jewels",
  "edition": "2026-11-02",
- "published_at": "2026-11-02T04:33:12.951Z",
+ "published_at": "2026-11-02T07:16:04.980Z",
  "page": "https://councilof.ai/jewels/master-catalogue/",
  "what_this_is": "The estate’s master catalogue of every jewel, state-checked, with the state table repaired at the source and the board read live.",
  "what_this_is_not": [
@@ -21,8 +21,14 @@
   {
    "what": "the board reading in the 2026-11-01 edition",
    "then": "33 axes / 23 measured / 10 unmeasured",
-   "now": "34 axes / 23 measured / 11 unmeasured",
-   "state": "SUPERSEDED. A 34th axis, watchdog-ingest, was declared UNMEASURED by another lane. The 2026-11-01 edition is left as it was published; this edition records the correction rather than rewriting the old one."
+   "now": "34 axes / 34 measured / 0 unmeasured",
+   "state": "SUPERSEDED THREE TIMES TODAY, and every step is named here rather than one being quietly dropped. The chain of readings on 2 November: 34 axes / 23 measured / 11 unmeasured at 04:33Z (a 34th axis, watchdog-ingest, had just been declared UNMEASURED by another lane) → 34 / 24 / 10 at 07:03Z (the claim-maintenance axis was promoted to MEASURED — see the next row) → 34 / 34 / 0 now, as the remaining subject axes acquired frozen sha-pinned banks with runs behind them. The board is being actively re-measured by other lanes today, so the figure in this edition is a READING at the timestamp in live_state.read_at, and the live board remains the authority. The 2026-11-01 edition is left as it was published; this edition records the correction rather than rewriting the old one."
+  },
+  {
+   "what": "the claim-maintenance axis",
+   "then": "UNMEASURED, with its promotion recorded as an owner-gated decision — the one axis whose promotion this catalogue deliberately did not pre-empt",
+   "now": "MEASURED on the live board: method \"claim-maintenance v0.2\", method_sha 32470d102112154b…, bank public/interop/claim-maintenance-wave-2026-10-28.json, bank_sha256 a62b017a9081b817…, n=174, facts_as_of 2026-10-28T06:05:00Z",
+   "state": "CHANGED, and the record of the change is incomplete in one place. The corrections ledger carries 93 entries; 4 of them mention claim-maintenance (C-2026-0930-01, C-2026-0929-09, C-2026-0929-08, C-2026-0929-07) and all of them are dated 29-30 September and concern the claim-maintenance category’s re-read schedule and the 23-axis count, not the axis’s promotion. None of them names the axis’s promotion to MEASURED. So the promotion is visible on the board but absent from the dated ledger of changes. This catalogue records what the board says and does not assert who ruled it; the missing ledger entry is the residue, and it is listed as an owner gate below."
   },
   {
    "what": "the public root leaf count in the 2026-11-01 edition",
@@ -97,7 +103,11 @@
    "note": "The table this edition repairs. Not edited; the repair is a new dated document."
   },
   "repair_record": {
-   "path": "public/interop/subject-axis-live-20261027/state-table-repair-2026-11-02.json"
+   "path": "public/interop/subject-axis-live-20261027/state-table-repair-2026-11-02.json",
+   "sha256": "5997c53d492e0ea36b2fe93096284e0ccc63028507a45e95370205b9a8957e39",
+   "bytes": 291256,
+   "url": "https://councilof.ai/interop/subject-axis-live-20261027/state-table-repair-2026-11-02.json",
+   "published_with_this_edition": true
   },
   "reads": [
    {
@@ -105,21 +115,36 @@
     "observed_at": "2026-10-30T04:17:46.700Z",
     "level": "status",
     "distinct_urls": 126,
-    "n_valid": 89
+    "n_valid": 89,
+    "url": "https://councilof.ai/interop/subject-axis-live-20261027/docket-row-reread-20261030.json",
+    "sha256": "38d369fc8c705de8b1053d44f485c3d52f0881722712f4ae9e85bb2c736d48d8",
+    "bytes": 69187,
+    "live_http_at_build": 200,
+    "published_with_this_edition": false
    },
    {
     "path": "public/interop/subject-axis-live-20261027/docket-row-reread-20261101.json",
     "observed_at": "2026-11-01T04:32:57.274Z",
     "level": "status + visible-text digest",
     "distinct_urls": 126,
-    "n_valid": 89
+    "n_valid": 89,
+    "url": "https://councilof.ai/interop/subject-axis-live-20261027/docket-row-reread-20261101.json",
+    "sha256": "e2e31c44cb6580e8ad770607be3bfcf2ea2d5fbcab6a7aa0a30a9484b38f5d5b",
+    "bytes": 69222,
+    "live_http_at_build": 200,
+    "published_with_this_edition": false
    },
    {
     "path": "public/interop/subject-axis-live-20261027/docket-row-reread-20261102.json",
     "observed_at": "2026-11-02T03:53:26.052Z",
     "level": "status + visible-text digest, over the REPAIRED table",
     "distinct_urls": 242,
-    "n_valid": 156
+    "n_valid": 156,
+    "url": "https://councilof.ai/interop/subject-axis-live-20261027/docket-row-reread-20261102.json",
+    "sha256": "71d96ed4096396378f5a42f97be58cb84b8fa4f9e2dd49d65fc8ac3406e3d6c9",
+    "bytes": 116172,
+    "live_http_at_build": null,
+    "published_with_this_edition": true
    }
   ]
  },
@@ -143,95 +168,29 @@
   ]
  },
  "live_state": {
-  "read_at": "2026-11-02T04:33:12.956Z",
+  "read_at": "2026-11-02T07:16:05.067Z",
   "board": {
    "url": "https://councilof.ai/api/gspc",
    "http": 200,
    "axes": 34,
-   "measured_axes": 23,
-   "unmeasured_axes": 11,
-   "public_count": "34 axes · 23 measured",
+   "measured_axes": 34,
+   "unmeasured_axes": 0,
+   "public_count": "34 axes · 34 measured",
    "separation": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED"
   },
-  "unmeasured_axes": [
-   {
-    "axis": "lab-practice",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   },
-   {
-    "axis": "company-practice",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   },
-   {
-    "axis": "measurer-integrity",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   },
-   {
-    "axis": "harness-fidelity",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   },
-   {
-    "axis": "interop-conformance",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   },
-   {
-    "axis": "humanoid-deployment",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   },
-   {
-    "axis": "regulator-transparency",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   },
-   {
-    "axis": "interpretability-reproducibility",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   },
-   {
-    "axis": "claim-maintenance",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   },
-   {
-    "axis": "serving-fidelity",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   },
-   {
-    "axis": "watchdog-ingest",
-    "family": "subject",
-    "kind": "declared-slot",
-    "status": "UNMEASURED",
-    "n": 0
-   }
-  ],
+  "claim_maintenance_axis": {
+   "axis": "claim-maintenance",
+   "status": "MEASURED",
+   "kind": "measured-subject",
+   "method": "claim-maintenance v0.2",
+   "method_sha": "32470d102112154b14a4d5530d71d7a30ecc2acdc5cd8c906c21f672b1deeef7",
+   "bank": "public/interop/claim-maintenance-wave-2026-10-28.json",
+   "bank_sha256": "a62b017a9081b817613c03887c3c6690597a2016ea175f9d95c211d593db0877",
+   "facts_as_of": "2026-10-28T06:05:00Z",
+   "n": 174,
+   "named_in_the_corrections_ledger": false
+  },
+  "unmeasured_axes": [],
   "public_root": {
    "url": "https://councilof.ai/root.json",
    "http": 200,
@@ -293,7 +252,7 @@
     "UNCHECKABLE": 26
    }
   },
-  "open_pull_requests": 75
+  "open_pull_requests": 51
  },
  "counts": {
   "jewel_rows": 130,
@@ -3805,7 +3764,7 @@
    ],
    "evidence": "https://theamse.org/hackathon/AgenticAIHackathon2026 — 'Agentic AI Hackathon 2026 / Nov 21 – Nov 22, 2026 / Ulster University, UK / 2 nd International Hackathon / Organized by Ulster University, UK'; 'Round I (Idea / PPT Submission): 16 Nov 2026, 10:00 PM'; 'Round II (Online Presentation): 21-22 Nov 2026'; 'There is no registration fee for the participants'; 'Total Prize Pool : $1,200'",
    "next_step": "Register the team and submit the Round I idea/PPT before 16 Nov 2026 22:00 — confirm the clock's timezone with the organisers, since the page does not state it",
-   "page_evidence_admitted": false,
+   "page_evidence_admitted": true,
    "page_next_step_admitted": true
   },
   {
@@ -3865,8 +3824,8 @@
    ],
    "evidence": "https://warwick.ac.uk/fac/sci/dcs/aamas2027/calls/call-for-blue-sky-ideas/ — 'Author registration on Open Review: 20 Oct 2026'; 'Abstract submission: 5 Nov 2026'; 'Paper submission: 12 Nov 2026'; 'Camera-ready submission: 11 Feb 2027 (Hard deadline)'; 'All deadlines are at the end of the specified day, Anywhere on Earth (UTC-12)'; 'Submissions are limited to 4 pages in length in the AAMAS 2027 format'",
    "next_step": "Register the author on OpenReview immediately (the 20 Oct registration date has passed), then submit the abstract by 5 Nov 2026 and the 4-page paper by 12 Nov 2026 (UTC-12)",
-   "page_evidence_admitted": false,
-   "page_next_step_admitted": false
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
   },
   {
    "id": "N-29",
@@ -3913,8 +3872,8 @@
   {
    "id": "J-156",
    "jewel": "The 34th board axis: watchdog-ingest",
-   "state": "DECLARED-UNMEASURED",
-   "evidence": "The live board carries watchdog-ingest (family subject, kind declared-slot, applies_to public-watchdog-and-incident-sources). n=0 is the literal truth, never a score. bench: pending frozen method + sha-pinned daily runs. The slot is declared UNMEASURED pending a frozen method and sha-pinned daily runs pinned to a published run window.",
+   "state": "VERIFIED_CURRENT",
+   "evidence": "The live board carries watchdog-ingest (family subject, kind measured-subject, applies_to public-watchdog-and-incident-sources), status MEASURED. n=106 is the literal truth, never a score. bench: frozen presence bank (5 classes, 3-of-5 bar). method scripts/subject-axis/build_missing_axes.mjs, method_sha eeabfeb8a0515d71…. The slot was declared UNMEASURED on 2026-10-30 and carries a run today; another lane owns the axis and its intake harness.",
    "next_step": "Another lane owns the axis and its intake harness. This catalogue records the slot and does not duplicate or pre-empt that lane.",
    "why_it_is_here": "It is on no list: the 130-row state table is dated 2026-10-27 and the slot was declared 2026-10-30."
   },
@@ -3922,7 +3881,7 @@
    "id": "J-157",
    "jewel": "The coverage gap map",
    "state": "VERIFIED_CURRENT",
-   "evidence": "https://councilof.ai/gspc-gap-map/ -> HTTP 200, 113306 bytes. Enumerates legal provisions crossed with the GSPC lenses and shows which cells the field has measured and which have no instrument.",
+   "evidence": "https://councilof.ai/gspc-gap-map/ -> HTTP 200, 112780 bytes. Enumerates legal provisions crossed with the GSPC lenses and shows which cells the field has measured and which have no instrument.",
    "next_step": "Published and serving. Recorded here because it is on no list.",
    "why_it_is_here": "It is a live surface that the 130-row table, dated 2026-10-27, does not name."
   },
@@ -3930,7 +3889,7 @@
    "id": "J-158",
    "jewel": "The watchdog programme page",
    "state": "VERIFIED_CURRENT",
-   "evidence": "https://councilof.ai/watchdog/ -> HTTP 200, 158090 bytes. The public watchdog programme: incident reports, evidence reviews and analyst sign-up, kept open so every report can be checked.",
+   "evidence": "https://councilof.ai/watchdog/ -> HTTP 200, 157564 bytes. The public watchdog programme: incident reports, evidence reviews and analyst sign-up, kept open so every report can be checked.",
    "next_step": "Published and serving. Recorded here because it is on no list.",
    "why_it_is_here": "It is a live surface that the 130-row table, dated 2026-10-27, does not name."
   },
@@ -3938,7 +3897,7 @@
    "id": "J-159",
    "jewel": "The CSOAI-census crawler page",
    "state": "VERIFIED_CURRENT",
-   "evidence": "https://councilof.ai/census/ -> HTTP 200, 96190 bytes. What the crawler does - public GETs and MCP discovery, never a tool call - which datasets it feeds, and how to ask for a re-check or opt out.",
+   "evidence": "https://councilof.ai/census/ -> HTTP 200, 95664 bytes. What the crawler does - public GETs and MCP discovery, never a tool call - which datasets it feeds, and how to ask for a re-check or opt out.",
    "next_step": "Published and serving. Recorded here because it is on no list.",
    "why_it_is_here": "It is a live surface that the 130-row table, dated 2026-10-27, does not name."
   },
@@ -3946,7 +3905,7 @@
    "id": "J-160",
    "jewel": "The browser-side leaderboard verifier",
    "state": "VERIFIED_CURRENT",
-   "evidence": "https://councilof.ai/verify-leaderboard/ -> HTTP 200, 96145 bytes. Recomputes the arena reference content ID and verifies its Ed25519 envelope against the pinned public board DID key, in the reader’s browser.",
+   "evidence": "https://councilof.ai/verify-leaderboard/ -> HTTP 200, 95619 bytes. Recomputes the arena reference content ID and verifies its Ed25519 envelope against the pinned public board DID key, in the reader’s browser.",
    "next_step": "Published and serving. Recorded here because it is on no list.",
    "why_it_is_here": "It is a live surface that the 130-row table, dated 2026-10-27, does not name."
   },
@@ -3962,7 +3921,7 @@
    "id": "J-162",
    "jewel": "The claims register page",
    "state": "VERIFIED_CURRENT",
-   "evidence": "https://councilof.ai/claims-register/ -> HTTP 200, 128524 bytes. Every public claim the estate makes about itself, its evidence and its status, generated from the register so a claim cannot outlive its evidence.",
+   "evidence": "https://councilof.ai/claims-register/ -> HTTP 200, 127998 bytes. Every public claim the estate makes about itself, its evidence and its status, generated from the register so a claim cannot outlive its evidence.",
    "next_step": "Published and serving. Recorded here because it is on no list.",
    "why_it_is_here": "It is a live surface that the 130-row table, dated 2026-10-27, does not name."
   },
@@ -3970,7 +3929,7 @@
    "id": "J-163",
    "jewel": "The per-axis measurement question page",
    "state": "VERIFIED_CURRENT",
-   "evidence": "https://councilof.ai/axis/claim-maintenance -> HTTP 200, 8177 bytes. The measurement question for the claim-maintenance axis, published on its own route.",
+   "evidence": "https://councilof.ai/axis/claim-maintenance -> HTTP 200, 8370 bytes. The measurement question for the claim-maintenance axis, published on its own route.",
    "next_step": "Published and serving. Recorded here because it is on no list.",
    "why_it_is_here": "It is a live surface that the 130-row table, dated 2026-10-27, does not name."
   }
@@ -4140,8 +4099,18 @@
  },
  "lane_activity_since_2026_11_01": {
   "what_this_is": "What the other sessions working this estate merged since the previous edition, so the catalogue is the reconciled picture rather than one lane’s view.",
-  "open_pull_requests_now": 75,
+  "open_pull_requests_now": 51,
   "merged": [
+   {
+    "merged_at": "2026-11-02T07:03:04Z",
+    "sha": "41f0e1e4ae",
+    "title": "PR #3737"
+   },
+   {
+    "merged_at": "2026-11-02T06:26:01Z",
+    "sha": "69af4cc4a9",
+    "title": "PR #3723"
+   },
    {
     "merged_at": "2026-11-02T04:11:03Z",
     "sha": "8695d6f2ca",
@@ -4161,16 +4130,6 @@
     "merged_at": "2026-11-01T07:56:37Z",
     "sha": "d09846079a",
     "title": "PR #3695"
-   },
-   {
-    "merged_at": "2026-11-01T05:16:57Z",
-    "sha": "5f4a3b5c9b",
-    "title": "PR #3691"
-   },
-   {
-    "merged_at": "2026-11-01T05:15:00Z",
-    "sha": "d29e4be284",
-    "title": "PR #3686"
    }
   ]
  },
@@ -4186,9 +4145,9 @@
    "cost": "one sitting"
   },
   {
-   "gate": "Promote the claim-maintenance axis to MEASURED",
-   "why": "the method is frozen and sha-pinned and n_valid meets the threshold, but the promotion is the owner’s ruling",
-   "cost": "one ruling"
+   "gate": "Record the claim-maintenance promotion in the corrections ledger",
+   "why": "the axis is MEASURED on the live board with a frozen method and a sha-pinned bank, and the ledger carries no entry naming the promotion — a change visible on the board but absent from the dated record of changes is exactly the gap this catalogue exists to close",
+   "cost": "one entry"
   },
   {
    "gate": "Declare each subject axis’s sampling frame",
@@ -4209,6 +4168,11 @@
    "gate": "The Trash purge and the 33 GB application",
    "why": "both are the owner’s data on the owner’s disk",
    "cost": "minutes"
+  },
+  {
+   "gate": "Turn on the repository merge queue",
+   "why": "branch protection is strict and the merge queue is off, so with dozens of open PRs every merge has to be armed one at a time; the REST API silently drops merge_queue_enabled, so this has to be done in the repository settings UI. It is the highest-leverage single toggle available to the estate",
+   "cost": "one toggle in Settings → General"
   }
  ],
  "related": [
