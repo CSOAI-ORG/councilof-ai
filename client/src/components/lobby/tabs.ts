@@ -69,6 +69,8 @@ export type LobbyTabId =
   | "workbench"
   | "software"
   | "learn"
+  | "academy"
+  | "ruler"
   | "staff"
   | "research"
   | "play"
@@ -149,6 +151,14 @@ export const LOBBY_TABS: LobbyTab[] = [
     kind: "native",
     accent: "gold",
     cues: /\b(learn|learning|training arena|mooc|coach|learning path|fix lab)\b/i,
+  },
+  {
+    id: "academy",
+    label: "Academy",
+    blurb:
+      "Council Academy — learn the statute and the method. Completion-record issuance is not currently open.",
+    path: "/academy",
+    cues: /\b(academy|council academy|lessons?|curriculum)\b/i,
   },
   {
     id: "staff",
@@ -504,6 +514,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     accent: "gold",
     cues: /\b(play|game|games|local play|duel|coliseum)\b/i,
   },
+  {
+    id: "ruler",
+    label: "The Ruler",
+    blurb:
+      "Label the same frozen items the published models were measured on, and bet which seat is the model's. Local practice; nothing is sent anywhere.",
+    path: "/games/ruler",
+    accent: "gold",
+    cues: /\b(ruler|labelling game|labeling game|human arm|which seat is the model)\b/i,
+  },
 ];
 
 /** Live pages framed from Home / chat without a dedicated rail tab. */
@@ -693,6 +712,57 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     path: "/dashboard?tab=standards",
     group: "analyst",
     cues: /\b(regulation feed|reg feed)\b/i,
+  },
+  // Live pages that had no Council OS door (menu audit, 2 Nov 2026). Each path was
+  // opened and seen to answer before being listed here.
+  {
+    label: "Paid services & x402 terms",
+    blurb: "Every paid service, its price and the free preview beside it, with the x402 terms.",
+    path: "/services",
+    group: "product",
+    cues: /\b(paid services?|services and terms|x402 terms|price list|services page)\b/i,
+  },
+  {
+    label: "API docs",
+    blurb: "The documented API surface — endpoints, shapes and the honesty notes beside them.",
+    path: "/api-docs",
+    group: "analyst",
+    cues: /\b(api docs?|api documentation|endpoints?)\b/i,
+  },
+  {
+    label: "Daily measurement notes",
+    blurb: "What was measured today, said the same day it was measured.",
+    path: "/notes/daily",
+    group: "record",
+    cues: /\b(daily notes|measurement notes|today'?s (?:notes|runs)|notes\/daily)\b/i,
+  },
+  {
+    label: "Reach",
+    blurb: "How far this reaches — the honest boundary of what the estate covers.",
+    path: "/reach",
+    group: "record",
+    cues: /\b(reach|how far this reaches|coverage boundary)\b/i,
+  },
+  {
+    label: "Memberships",
+    blurb: "Where we take part — standards groups, registries and the public record of each.",
+    path: "/memberships",
+    group: "audience",
+    cues: /\b(memberships?|where we take part|standards groups?|participations?)\b/i,
+  },
+  {
+    label: "Independence & conflicts",
+    blurb: "Our own model tags, the firewall, and every conflict we publish.",
+    path: "/independence",
+    group: "receipts",
+    cues: /\b(independence|conflicts?|our own model tags?|never ranked)\b/i,
+  },
+  {
+    label: "Tokenised-asset deployments",
+    blurb: "The deployments the tokenised-asset reads cover, as published.",
+    path: "/stablecoins/deployments",
+    group: "record",
+    cues: /\b(tokenised[- ]asset deployments?|tokenized[- ]asset deployments?|stablecoin deployments?)\b/i,
   },
 ];
 
@@ -974,9 +1044,11 @@ const DASHBOARD_NAV_DEFINITION: {
       "Learn how each test works, replay recorded model rounds, practise, and inspect continuous research.",
     tabs: [
       { id: "learn", label: "Learning" },
+      { id: "academy", label: "Academy" },
       { id: "research", label: "Continuous research" },
       { id: "space", label: "Model arena" },
       { id: "play", label: "Games" },
+      { id: "ruler", label: "The Ruler" },
     ],
   },
   {
