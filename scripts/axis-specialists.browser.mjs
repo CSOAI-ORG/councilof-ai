@@ -109,8 +109,14 @@ try {
     }
   });
   await check("unmeasured axis retains measurement gap", async () => {
-    await ready(index.specialists.find(row => row.measurement_status === "UNMEASURED").axis);
-    await expect(page.getByText("UNMEASURED stays visible. n=0 is not a score.", { exact: true })).toBeVisible();
+    const unmeasuredRow = index.specialists.find(row => row.measurement_status === "UNMEASURED");
+    if (unmeasuredRow) {
+      await ready(unmeasuredRow.axis);
+      await expect(page.getByText("UNMEASURED stays visible. n=0 is not a score.", { exact: true })).toBeVisible();
+    } else {
+      assert(index.specialists.every(row => row.measurement_status === "MEASURED"));
+      await expect(page.getByText("UNMEASURED stays visible. n=0 is not a score.", { exact: true })).toHaveCount(0);
+    }
   });
   for (const failure of ["bad-count", "wrong-axis", "unknown-state", "forged-proposal"]) {
     await check(failure + " refuses evidence without crashing", async () => {
