@@ -1,0 +1,63 @@
+{
+  "name": "Council of AI — framework_readiness",
+  "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/llms.txt",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "framework_readiness",
+      "name": "Framework readiness checklist",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+      "tags": [
+        "governance",
+        "readiness",
+        "eu-ai-act",
+        "dora",
+        "nis2",
+        "gdpr",
+        "iso-27001",
+        "nist-csf",
+        "soc2",
+        "pci-dss",
+        "cra"
+      ],
+      "examples": [
+        "{\"framework\": \"eu-ai-act\"}",
+        "{\"framework\": \"gdpr\", \"sector\": \"healthcare\"}"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "not a certification, an attestation or a conformity assessment of any kind",
+    "not legal advice and not a scope determination for any entity",
+    "not a score: there is no pass, fail or percentage in the output",
+    "not a measurement of the caller — it lists the evidence that WOULD be measured"
+  ],
+  "mcp_tool": "framework_readiness",
+  "paid": false,
+  "did": "did:web:councilof.ai:agents:framework_readiness"
+}

@@ -39,3 +39,18 @@ export function toolSummary(shown = 4): string {
   const rest = ALL_TOOL_NAMES.length - shown;
   return rest > 0 ? `${head} + ${rest} more (${PAID_TOOL_NAMES.length} x402-metered)` : head;
 }
+
+/**
+ * The frameworks `framework_readiness` accepts — read from the tool's own inputSchema enum in
+ * gspc-tools.json, the file the door serves. 2026-11-02 (governance library): the /tools page
+ * lists one library row per framework; deriving it here means a framework added to the tool
+ * appears on the page without a second hand-typed list drifting from the enum. Never typed.
+ */
+export const READINESS_FRAMEWORKS: string[] = (() => {
+  // JSON module interop differs between vite (build) and vitest (node resolve): one shape carries
+  // the object, the other wraps it in .default. Accept both; find() must never be called on a wrapper.
+  const mod = freeTools as unknown as { tools?: { name: string; inputSchema?: { properties?: { framework?: { enum?: string[] } } } }[]; default?: { tools?: { name: string; inputSchema?: { properties?: { framework?: { enum?: string[] } } } }[] } };
+  const tools = mod.tools ?? mod.default?.tools ?? [];
+  const def = tools.find((t) => t.name === "framework_readiness");
+  return def?.inputSchema?.properties?.framework?.enum ?? [];
+})();
