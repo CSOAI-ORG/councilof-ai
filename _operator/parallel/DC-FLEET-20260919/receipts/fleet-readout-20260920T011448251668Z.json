@@ -1,0 +1,115 @@
+{
+  "generated_at": "2026-09-20T01:14:47.545625+00:00",
+  "limits": [
+    "No funded wallets or trading instructions are created by this reporter",
+    "M2 spot-USDC replay and M4 outcome ledger are different experiments",
+    "Basis-point totals are not dollar portfolio profits",
+    "No automatic winner, parameter tuning or live-trading promotion"
+  ],
+  "m2": {
+    "as_of": "2026-09-20T01:09:33.016235+00:00",
+    "basis": "Fixed simulator normalized to $10 virtual per case; not funded wallets",
+    "input_rows": 11000,
+    "last_collector_at_capture": "2026-09-20T01:09:05.472610+00:00",
+    "live_orders_allowed": false,
+    "next_capture": "Existing hourly study automation; not this dashboard",
+    "phase": "COLLECTING",
+    "receipt_age_seconds": 314.7,
+    "receipt_sha256": "840edea6d3dcea450a2d8a649edcf242de1eeb55e53e07423b35e5a1c906cb88",
+    "status": "VERIFIED_REPLAY",
+    "strategy_groups": {
+      "buy_hold_paper": {
+        "expected_cases": 12,
+        "normalized_virtual_pnl_total": -0.4362591630847089,
+        "normalized_virtual_start_total": 110.0,
+        "simulated_fills": 11,
+        "usable_cases": 11,
+        "worst_drawdown_fraction": 0.013377048044184324
+      },
+      "cash_baseline": {
+        "expected_cases": 12,
+        "normalized_virtual_pnl_total": 0.0,
+        "normalized_virtual_start_total": 110.0,
+        "simulated_fills": 0,
+        "usable_cases": 11,
+        "worst_drawdown_fraction": 0.0
+      },
+      "momentum_paper": {
+        "expected_cases": 12,
+        "normalized_virtual_pnl_total": -3.347660110956881,
+        "normalized_virtual_start_total": 110.0,
+        "simulated_fills": 924,
+        "usable_cases": 11,
+        "worst_drawdown_fraction": 0.06152864989075965
+      },
+      "reversion_paper": {
+        "expected_cases": 12,
+        "normalized_virtual_pnl_total": -3.9386326912502807,
+        "normalized_virtual_start_total": 110.0,
+        "simulated_fills": 1057,
+        "usable_cases": 11,
+        "worst_drawdown_fraction": 0.07837862812844605
+      }
+    },
+    "window_end": "2026-09-20T16:49:32.076068+00:00",
+    "window_start": "2026-09-19T16:49:32.076068+00:00"
+  },
+  "m2_condor_tunnel": {
+    "http_status": 200,
+    "scope": "root reachability only"
+  },
+  "m4": {
+    "as_of": "2026-09-20T01:14:48.083248+00:00",
+    "authority": "OBSERVATION_ONLY",
+    "condor": {
+      "http_status": 200,
+      "scope": "root reachability only"
+    },
+    "host": "M4",
+    "hummingbot": {
+      "http_status": 200,
+      "scope": "root reachability only"
+    },
+    "live_account_or_executor_state": "NOT_QUERIED",
+    "paper_outcomes": {
+      "basis": "Reported paper outcomes; fill prices and costs not independently verified",
+      "comparability": "Not comparable to the M2 spot-USDC replay as a money contest",
+      "latest_resolved_at": "2026-09-20T01:10:21.101517+00:00",
+      "malformed_json_lines": 0,
+      "recomputed_score": {
+        "by_symbol_net_bps": {
+          "BTCUSDT": -785.679,
+          "ETHUSDT": -1117.133,
+          "LINKUSDT": -1260.893,
+          "ONDOUSDT": -271.659
+        },
+        "cost_adjusted_win_rate": 0.2102803738317757,
+        "eligible_for_live_promotion": false,
+        "excluded_nonpaper_rows": 0,
+        "execution": "disabled",
+        "inconsistent_profit_flags": 0,
+        "limits": [
+          "Reported net returns are not independently verified fills or fees",
+          "Sum of per-outcome basis points is not portfolio dollar profit",
+          "No capital allocation, independence or out-of-sample performance established"
+        ],
+        "net_bps_mean": -16.053,
+        "net_bps_total": -3435.364,
+        "pnl_in_currency": null,
+        "rejected_outcomes": 0,
+        "settled_outcomes": 214,
+        "status": "OBSERVED_REPORTED_PAPER_RETURNS"
+      },
+      "reported_horizons_seconds": [
+        900
+      ],
+      "source_bytes": 89231,
+      "source_sha256": "77ca47a871107f0f035786df5c535927ca62b902cd283563b3a188cf78bbdd3f",
+      "status": "OBSERVED"
+    },
+    "writer_unchanged": true
+  },
+  "mode": "READ_ONLY_RESEARCH",
+  "schema": "csoai.fleet-research-readout/0.1",
+  "scoring_revision": "79cb25113dad7b38a447d08d5132d26ec8495ee339c21c45fd748a4511a555d1"
+}

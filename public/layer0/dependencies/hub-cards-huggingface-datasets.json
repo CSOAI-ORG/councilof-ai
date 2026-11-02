@@ -1,0 +1,101 @@
+{
+  "authority": {
+    "dependency_registration": true,
+    "effect_authority": false,
+    "endorsement": false,
+    "gspc_measurement": false,
+    "source_truth": false
+  },
+  "capability_id": "hub-cards",
+  "implementation": {
+    "fixture_path": "scripts/layer0/hub-cards-dependency-fixture.ts",
+    "fixture_sha256": "e2f4a6275598deb406b655a739205356f6ed2530815aabd8fb8815c449e21118",
+    "handler_path": "functions/api/hub-cards.ts",
+    "handler_sha256": "2a85165af1067c80d5fbf6ea8095c47bbe31e6c58a76b35b15b8b255a66a4868"
+  },
+  "inputs": {
+    "after_artifact_sha256": "340ce7a2954e6df443607132cb9268a3f3115f7b41cda79dd317bd1133d90211",
+    "baseline_hf_bytes_sha256": "3e73ae46411c01009824ececcfb3614610448aeb58be0c2799301070718f9d7b",
+    "before_artifact_sha256": "4701bdca13e80a4f83715bdc6985f9c7071eb9f0a71d90cf1ff6f9044ab3be3f",
+    "changed_artifact": "INDEX-safety.jsonl",
+    "changed_hf_bytes_sha256": "e1a32cc4b761e5fc4922de49c533830105097b3b4d17a559ba80dd8887faa1db",
+    "invariant_superseded_ledger_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "invariant_tree_sha256": "0c3cd196e01752901742ec6dc73d74e063faf2a42c923fce10b03824d34b740c",
+    "invariant_withdrawn_ledger_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "law": "This receipt proves output dependence on the named source bytes only.",
+  "method": "synthetic fetch fixture; change one upstream dataset index while all other inputs stay fixed",
+  "outputs": {
+    "baseline_counts": {
+      "cells": 2,
+      "complete": true,
+      "duplicates_collapsed": 0,
+      "indexes_all_read": true,
+      "indexes_discovered": true,
+      "indexes_read": 4,
+      "indexes_total": 4,
+      "indexes_unread": [],
+      "measured": 1,
+      "other": 0,
+      "read_so_far": {
+        "cells": 2,
+        "measured": 1,
+        "other": 0,
+        "unmeasured": 1
+      },
+      "rows_served_by_indexes": 2,
+      "superseded_excluded": 0,
+      "superseded_ledger_read": true,
+      "supersessions_resolved": true,
+      "supersessions_unresolved": [],
+      "unmeasured": 1,
+      "withdrawals_resolved": true,
+      "withdrawals_unresolved": [],
+      "withdrawn_excluded": 0,
+      "withdrawn_ledger_read": true
+    },
+    "baseline_sha256": "ff0027b49562471c8fb067040f2ef7839e44f6da23415665dcb948f1847ce4ad",
+    "changed": true,
+    "changed_counts": {
+      "cells": 3,
+      "complete": true,
+      "duplicates_collapsed": 0,
+      "indexes_all_read": true,
+      "indexes_discovered": true,
+      "indexes_read": 4,
+      "indexes_total": 4,
+      "indexes_unread": [],
+      "measured": 1,
+      "other": 0,
+      "read_so_far": {
+        "cells": 3,
+        "measured": 1,
+        "other": 0,
+        "unmeasured": 2
+      },
+      "rows_served_by_indexes": 3,
+      "superseded_excluded": 0,
+      "superseded_ledger_read": true,
+      "supersessions_resolved": true,
+      "supersessions_unresolved": [],
+      "unmeasured": 2,
+      "withdrawals_resolved": true,
+      "withdrawals_unresolved": [],
+      "withdrawn_excluded": 0,
+      "withdrawn_ledger_read": true
+    },
+    "changed_sha256": "1a074aa46e6b4bb83f2e83b52e0780cf3136d91100834e65ab0cde757a722499",
+    "replay_sha256": "ff0027b49562471c8fb067040f2ef7839e44f6da23415665dcb948f1847ce4ad",
+    "replay_stable": true
+  },
+  "schema": "csoai.layer0-dependency-fixture/0.1",
+  "scope_match_required": true,
+  "source_id": "huggingface-datasets",
+  "source_scope": "csoai/gspc-hub-cards dataset tree + index JSONL",
+  "state": "VERIFIED_DIRECT_DEPENDENCY",
+  "watch": {
+    "dataset": "csoai/gspc-hub-cards",
+    "kind": "huggingface_dataset_indexes",
+    "path": "mill-cards"
+  }
+}

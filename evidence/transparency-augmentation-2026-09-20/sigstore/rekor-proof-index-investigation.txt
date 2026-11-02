@@ -1,0 +1,61 @@
+retrieved_at=2026-09-20T01:53:23Z
+--- live entry by uuid (full), saved for diff
+{
+  "logIndex": 2841551210,
+  "integratedTime": 1789456425,
+  "proofIndex": 2719646948,
+  "proofTreeSize": 2771972606,
+  "proofRoot": "6387873a2f3204e4d43b063a4bf906c5cf2634eede1bd82b547ad273904d0d2a"
+}
+--- entry at logIndex 2719646948 (the index inside the committed file's inclusion proof)
+{
+  "uuid": "108e9186e8c5677a3c4de422cae99dcac548561d424bee49ad76b902a25bf591e2feae85e77fa48c",
+  "logIndex": 2719646948,
+  "integratedTime": 1788575643
+}
+--- committed file inclusion proof header
+{
+  "logIndex": 2719646948,
+  "treeSize": 2719646959,
+  "rootHash": "0f8bd31c5b25951bb399097188fe19e5a53f3441042f8a6acc7136fb0aec3ee6",
+  "nHashes": 15
+}
+--- diff live-vs-committed (byte level)
+9c9
+<         "checkpoint": "rekor.sigstore.dev - 1193050959916656506\n2771972606\nY4eHOi8yBOTUOwY6S/kGxc8mNO7eG9grVHrSc5BNDSo=\n\n— rekor.sigstore.dev wNI9ajBEAiApNOiJwyTmGtnBzo1g9h6UqVt3sC0ELDHAfzpD/5SQKgIgD7W1Co4cSpk1MBwH5jlLs16WXbtABJY6LndmnQWAgW0=\n",
+---
+>         "checkpoint": "rekor.sigstore.dev - 1193050959916656506\n2719646959\nD4vTHFsllRuzmQlxiP4Z5aU/NEEEL4pqzHE2+wrsPuY=\n\n— rekor.sigstore.dev wNI9ajBFAiBmIILDMANFbOv2DOPwNxz506SxIGz2TgRehCGxUkg/jgIhANihnENKuaPJWSMDC3aiIsqy8UVUE0pknXgsFCWNNKLY\n",
+14,15c14
+<           "94e99b25cd523d11fce1abe7c79336e3592413a904793323ff5b73bcf62a3094",
+<           "9f4c81c6b05d75e9ee8449db9eca5f0a2368853848bc79339e534a138d7cfe1c",
+---
+>           "fff644c7d030dc2e35e94dbe47726a22e7304d7f939c8797c900d4bdef89a24c",
+19,20d17
+<           "9143969e1113f5e8d768af27abe5c58037eb5c649d25e6dad412b6cbe7cad196",
+<           "1864426d4dbd977765feca6e264adc6e05c5239e889dc331112aa1bdbfe6355a",
+22,25d18
+<           "c98d3eb09843c9c7a4cf212b5909ee2b363d0b824eadd9f888e4c4883a146e6b",
+<           "9c11b322e99e5baf53cf81f68ed50b56c69516c511ee9cf950a3e73c367adf5b",
+<           "4ba99b1773482e43ee709f9d5e9fcf7bc9be3cbd4b548530a1fb3160775bf097",
+<           "4daf746f0172b1c26d0ef103e5d283fb2fe154ece2fdb87bb38263fa103921a3",
+27d19
+<           "1acca2bb2369ad124848e7d9ca8da5e79dab7d32170e364307038882ab42451f",
+29d20
+<           "3512f7bfdf786c9082e130f08889275708c674a06d60da2a2ae6e7e60a849d26",
+32,35d22
+<           "17979be9962d604870f4e1e98675cd82d1ce36f5b92a7e0f8ddd1cd26cc31f8b",
+<           "06882a84942934c6f97c394b33d87ceb92d116d85c498014d8e335ef29ac9f57",
+<           "8f1cf7aa36a023feed325bde43d7e2912ec4f75989f5b25e448fa4dc756be418",
+<           "ccb36ce7975cf4d04e8421f77b24d47f7652d4ab2a6bebcf947c9cf5e3305fa3",
+37d23
+<           "f314bbfbf11f25aff5e9f56bbad8d79d49bfa542ce2966e838c55c93875b47c2",
+42,43c28,29
+<         "rootHash": "6387873a2f3204e4d43b063a4bf906c5cf2634eede1bd82b547ad273904d0d2a",
+<         "treeSize": 2771972606
+---
+>         "rootHash": "0f8bd31c5b25951bb399097188fe19e5a53f3441042f8a6acc7136fb0aec3ee6",
+>         "treeSize": 2719646959
+45c31
+<       "signedEntryTimestamp": "MEUCIQD5T0Gcyyni+ayk7hoBqSnFZ/IWDiZWL5ifCD54EF/NvQIgFYsRoLPU9dcYyhv2Y/5KPkje3xsLUqTm91crGK6Eb0A="
+---
+>       "signedEntryTimestamp": "MEUCIQCeIVcxhfg7204U5G7L8kE11FoRWC7Vmn90BsJe1srrNgIgGKIZJHORXNr5FuWlfwVvWnsRC5kh1nMJ4JYx3blPvDA="

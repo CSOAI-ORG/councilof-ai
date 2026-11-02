@@ -1,0 +1,289 @@
+Skip to main content
+Skip to navigation
+Council of AI
+Measure
+Products
+Regulation
+Council OS
+Evidence
+Company
+Sign In
+Get measured
+Council of AI/Services/Quickstart
+
+FOR AGENTS AND THE PEOPLE WHO RUN THEM
+
+Explore measurements, see what changed, verify evidence, then connect a supported feed.
+
+Start with the public evidence. The board, change feed and verification path are open reads. The supported door and tool lists below come from the live manifest. Commissioning is optional and comes after those reads; any amount lives only in the door's 402 challenge.
+
+Explore measurements
+See what changed
+Verify evidence
+Access supported feeds
+1 · Explore measurements
+
+Read the current board before choosing an integration or commissioning an output. The response carries the public count line, each axis state and the evidence links the board can support.
+
+curl -s https://councilof.ai/api/gspc | jq '{public_count: .totals.public_count, public_leader_count: .totals.public_leader_count, axes: [.axes[] | {axis, status, n, evidence_url}]}'
+2 · See what changed
+
+The state-change feed carries measurement, correction and regulation-change events. Historical items keep their dated wording; use the live board for current totals.
+
+curl -s https://councilof.ai/api/feed.xml
+3 · Verify evidence — signature, then inclusion
+
+Every deliverable is a card: Ed25519-signed under the published DID key, and either already a leaf of the public Merkle root or staged for the next one. Verify the signature offline, then the leaf against the root the site publishes. A signature proves who signed the bytes; it does not make the read correct — that is what the correction path is for.
+
+curl -s https://councilof.ai/root.json | jq '{card_count, merkle_root, as_of}'
+curl -s https://councilof.ai/interop/root-witness-pointer.json | jq '.witnesses'   # OTS (Bitcoin) + Rekor
+
+In a browser: https://councilof.ai/gspc-verify recomputes the signature client-side. In MCP: the verify tools the manifest names.
+
+4 · Access supported feeds
+
+The manifest names the supported machine doors, their methods and their public indexes. The canonical MCP endpoint exposes the tool list. Read both at connection time; do not cache a typed catalogue.
+
+curl -s https://councilof.ai/.well-known/x402.json | jq '.resources[] | {url, method, paid_for}'
+# MCP (Streamable HTTP) — tools/list needs no wallet
+curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream'   -X POST https://councilof.ai/mcp -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+GET /api/free-door
+Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.
+GET /api/request-attestation?subject=model-or-subject-id
+A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.
+GET /api/evidence-bundle?obligation=article-50&bundle=1
+Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.
+GET /api/eunomia-data?feed=1
+Signed derivative data feed — validated measurement series, authenticated and ready to build on.
+GET /api/proof?bundle=1
+Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.
+GET /api/rwa/evidence?asset=RLUSD
+RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.
+GET /api/wrapper?id=usdc.e:arbitrum
+Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.
+GET /api/wrapper/changes?id=usdc.e:arbitrum
+Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.
+GET /api/art50/marking-evidence?url=https://councilof.ai/og-image.png
+Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.
+GET /api/feeds/provider-diff?history=1
+Provider change record — measurable differences between two measurement rounds for a named model provider.
+GET /api/receipts/batch?from=2026-01-01T00:00:00Z
+Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.
+
+Free tools named by the manifest: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion, x402_trust, mcp_trust · commissioned tools: commission_card, art50_marking_evidence, rwa_evidence, receipts_batch
+
+5 · Optional: commission an output
+
+The whole paid path, in six steps: discover → request → 402 → settle → receive → verify. One worked door is used so every command copy-pastes; any other door in the manifest follows the same steps. Response shapes below come from live calls on 2026-09-14 and are truncated. Amounts and counts are shown as placeholders: the 402 you receive is the only authority on an amount. A settlement of zero is not a purchase.
+
+Payments from the operator's own wallets are recorded as self-tests and never counted as revenue (settled_usdc.excludes_self=true on /api/revenue). The count of outside payers, with self-settlements listed separately, is on that same contract. After settle, fulfillment state is also listed at /api/commissions (RETRIEVABLE + CARDS_PUBLISHED). Machine-readable version of these steps: /quickstart.json.
+
+Step 1 · Discover
+
+Read the payment manifest. /.well-known/x402 redirects here, so use the.json path or curl -L. The MCP tools/list call in section 4, /.well-known/agent-card.json and /llms.txt describe the same doors.
+
+curl -s https://councilof.ai/.well-known/x402.json | jq '{x402Version, scheme, network, asset, payTo, resources: [.resources[] | {method, url}]}'
+# observed 200 (truncated)
+{
+  "x402Version": 2,
+  "scheme": "exact",
+  "network": "eip155:8453",
+  "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+  "resources": [
+    { "method": "GET", "url": "https://councilof.ai/api/free-door" },
+    { "method": "GET", "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id" },
+    …
+  ]
+}
+Step 2 · Request
+
+Call the door with no payment. The answer is a 402, and its body carries a free preview: the signed measurement cards already on file for that subject. You can stop here and verify those for free.
+
+curl -s 'https://councilof.ai/api/request-attestation?subject=qwen2.5:7b' | jq '.csoai.preview | {subject, signed_cards_on_file, first_card: .cards[0], read_from}'
+# observed (402 body, truncated)
+{
+  "subject": "qwen2.5:7b",
+  "signed_cards_on_file": <integer>,
+  "first_card": {
+    "axis": "jail-escape-detection",
+    "card": "3cc7a3caa1a9cb2f04efe93d8ab966ed8ab648309743d0466dbf60ceb709aa23",
+    "card_url": "/signed/cards/3cc7a3caa1a9cb2f04efe93d8ab966ed8ab648309743d0466dbf60ceb709aa23.json"
+  },
+  "read_from": "https://councilof.ai/signed/card-matrix.json"
+}
+Step 3 · Read the 402
+
+The same response is HTTP 402 with a PAYMENT-REQUIRED header (base64 of the body) and an accepts[] entry naming scheme, network, asset, payee and amount. When the signing key is available, extensions["offer-receipt"].info.offers[] carries a signed offer for each entry, which you can check before paying.
+
+curl -s -o 402.json -w '%{http_code}\n' 'https://councilof.ai/api/request-attestation?subject=qwen2.5:7b'
+jq '{x402Version, accepts: [.accepts[] | {scheme, network, asset, payTo, amount, maxAmountRequired, maxTimeoutSeconds}]}' 402.json
+# observed
+402
+{
+  "x402Version": 2,
+  "accepts": [
+    {
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "amount": "<atomic units, read from your 402>",
+      "maxAmountRequired": "<same as amount>",
+      "maxTimeoutSeconds": 300
+    }
+  ]
+}
+
+Read from the live 402 in this browser just now: x402Version 2 · exact · eip155:8453 · asset 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913 · payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 · amount 10000 (atomic)
+
+# check the signed offer offline (needs: pip install cryptography)
+curl -sO https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/scripts/verify_receipt.py
+python3 verify_receipt.py --url 'https://councilof.ai/api/request-attestation?subject=qwen2.5:7b'
+# observed: VALID    offer signed by did:web:csoai.org#board-attestation-1
+Step 4 · Settle from your own wallet
+
+You pay from your own wallet, with your own key, on your own machine. This site never holds a key for you and never settles on your behalf. The public x402 client below signs a USDC authorisation for the accepts[] entry and retries the same URL with the payment header. Check the amount in Step 3 before you run it. This page shows the code; it does not claim any settlement happened.
+
+npm i @x402/fetch @x402/evm viem
+cat > pay.mjs <<'EOF'
+import { wrapFetchWithPaymentFromConfig } from "@x402/fetch";
+import { ExactEvmScheme } from "@x402/evm";
+import { privateKeyToAccount } from "viem/accounts";
+import { writeFileSync } from "node:fs";
+
+// YOUR wallet and YOUR key. Nothing here is sent anywhere except as a signed payment authorisation.
+const account = privateKeyToAccount(process.env.WALLET_KEY);
+const payFetch = wrapFetchWithPaymentFromConfig(fetch, {
+  schemes: [{ network: "eip155:8453", client: new ExactEvmScheme(account) }],
+});
+const r = await payFetch("https://councilof.ai/api/request-attestation?subject=qwen2.5:7b");
+console.log(r.status, r.headers.get("x-payment-response"));
+writeFileSync("receipt.json", await r.text());
+EOF
+WALLET_KEY=0x… node pay.mjs
+Step 5 · Receive
+
+A settled call returns 200 with one card-v0 commission receipt. The shape below is from source (functions/api/request-attestation.ts), not from an observed paid call. The x-payment-response header carries the settlement response; it includes a signed receipt at extensions["offer-receipt"].info.receipt only when the facilitator names a payer and the signing key is present. A commission receipt is not a grade and never adds a measured cell. Published commission subjects and card URLs are also listed at /api/commissions (no wallet needed to read).
+
+# after settle: list retrievable subjects and card URLs (no wallet needed to read)
+curl -s https://councilof.ai/api/commissions   | jq '{count, retrievable, queued, unfulfillable,
+         subjects: [.commissions[] | {subject, fulfillment, delivery, card0: .cards[0].url}]}'
+# from source, not observed
+HTTP 200
+x-payment-response: <base64 settlement response>
+{
+  "card": {
+    "schema": "https://councilof.ai/schema/card-v0.json",
+    "surface": "ras.commission",
+    "subject": "qwen2.5:7b",
+    "as_of": "<ISO time>",
+    "source_urls": ["<door url>", "https://basescan.org/tx/<transaction>", "…"],
+    "payload": {
+      "status": "COMMISSIONED",
+      "subject": "qwen2.5:7b",
+      "settle": { "network": "…", "transaction": "…", "payer": "…" },
+      "reserve": [{ "axis": "…", "card": "<sha256>" }],
+      "reserve_count": <integer>,
+      "fresh_run": "UNMEASURED",
+      "…": "…"
+    },
+    "sha256": "<sha256 of the canonical payload>",
+    "sig_ed25519": "<hex, or null when unsigned>",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "unmeasured": ["fresh_run_schedule", "root_inclusion"]
+  },
+  "verify": "https://councilof.ai/gspc-verify",
+  "signed": true,
+  "unsigned_reason": null,
+  "bytes": <integer>,
+  "note": "Commission receipt. …"
+}
+Step 6 · Verify offline
+
+Fetch the key document once, then check with no network. card-v0-verify.mjs recomputes the payload hash and the Ed25519 signature under the key the card names. The signature covers the payload only; treat envelope fields outside it as unsigned context, and check payload.settle.transaction against Base yourself. You can run it today on any signed card-v0 leaf the site already publishes.
+
+curl -sO https://councilof.ai/verifier/card-v0-verify.mjs
+curl -s https://csoai.org/.well-known/did.json -o did.json
+node card-v0-verify.mjs receipt.json did.json            # your paid receipt
+# try it now on a published leaf:
+curl -s https://councilof.ai/cards/090963760060e3ee.json -o leaf.json
+node card-v0-verify.mjs leaf.json did.json
+# observed: VALID  payload signed by did:web:csoai.org#board-attestation-1 · sha256 …   (exit 0; a changed byte gives INVALID, exit 1)
+# the measurement cards the receipt references (payload.reserve[].card) verify with the card verifier
+curl -sO https://councilof.ai/verifier/gspc-verify.mjs
+curl -s https://councilof.ai/signed/cards/3cc7a3caa1a9cb2f04efe93d8ab966ed8ab648309743d0466dbf60ceb709aa23.json -o m.json
+node gspc-verify.mjs --did-document did.json m.json
+# observed: VALID 1 · INVALID 0 · UNCHECKABLE 0   (exit 0)
+6 · Correct — the path is public
+
+A read can be wrong: a stale escrow address, a predicate that missed a case. Corrections are published beside the record, never by editing signed bytes. The register is at /api/corrections; the revenue contract and the count of distinct outside payers live at /api/revenue.
+
+Measurement, never certification. A grade is never sold. Verify stays free.
+
+CSOAI
+
+Independent measurement body. Signed attestation and transparent measurement — never certification.
+
+PRODUCT
+Verify a card
+Get measured
+Board
+Tools — plugin snippet
+Run / re-attest
+Ledger
+Data
+Library
+EVIDENCE
+GSPC JSON
+Methodology
+Honesty gate
+Corrections
+llms.txt
+API docs
+COMPANY
+About
+Contact
+Partners
+Blog
+FAQ
+Careers
+LEGAL
+Disclaimers
+Privacy
+Terms
+GDPR / DPA
+
+FRAMEWORKS WE MEASURE AGAINST
+
+We are not certified to SOC 2 or ISO 42001. Measurement credential, never certification.
+
+VERIFY US EVERYWHERE
+GitHub · CSOAI-ORG
+Hugging Face · csoai
+PyPI · inspect-signed-receipt
+PyPI · csoai
+PyPI · proofof-ai-mcp
+Zenodo DOI 10.5281/zenodo.21991104
+Wikidata · Q141128616
+Companies House · 16939677
+ORCID 0009-0001-3869-1068
+Software Heritage · archived
+Sigstore Rekor · root witnessed
+did:web trust root
+
+Each link resolves to a public record or independently hosted verification surface.
+
+Verification is free. Paid step: the x402 catalog — commission_card / art50 / rwa / evidence-bundle / the signed feed door. GET /api/x402
+
+© 2026 CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · contact@csoai.org
+
+Independent. No financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor.
+
+Open workspace
+
+Essential cookies only by default. Analytics need consent. Details
+
+Essential only
+Accept analytics
+Dismiss

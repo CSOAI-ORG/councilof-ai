@@ -1,0 +1,77 @@
+{
+  "schema": "csoai.chainlink-oracle-vectors/0.1",
+  "as_of": "2026-09-20T00:00:00Z",
+  "purpose": "Positive and negative boundary vectors for the proposed oracle-boundary instrument. Each vector carries an explicit falsification condition. A vector is a test construction, not a measurement result.",
+  "status": "CANDIDATE_UNMEASURED",
+  "vectors": [
+    {
+      "vector_id": "POS-01-valid-fresh-read",
+      "kind": "POSITIVE_CONTROL",
+      "boundary": "identity and freshness only",
+      "construction": "Read chainId, description(), decimals(), latestRoundData() at a pinned block for the docs-registered ETH/USD proxy. Expect chainId=1, description='ETH / USD', decimals=8, answeredInRound >= roundId, startedAt > 0, updatedAt within the declared heartbeat of the read timestamp.",
+      "expected_instrument_verdict": "PASS on identity, freshness, and round-metadata fields; price truth field stays UNMEASURED",
+      "falsification_condition": "Any expected field mismatches, or the instrument reports anything about price correctness. This pack's frozen read (round metadata complete, see claim feed-latest-round-fields) reproduces the positive case."
+    },
+    {
+      "vector_id": "NEG-01-stale-data",
+      "kind": "NEGATIVE",
+      "boundary": "staleness",
+      "construction": "A latestRoundData response whose updatedAt is older than heartbeat + grace relative to the consumer's read time. Construct by replaying a historical round against a current timestamp.",
+      "expected_instrument_verdict": "FAIL staleness field; the answer value must be disregarded, not averaged",
+      "falsification_condition": "Instrument reports PASS or silently accepts the stale answer as current."
+    },
+    {
+      "vector_id": "NEG-02-wrong-feed",
+      "kind": "NEGATIVE",
+      "boundary": "feed identity",
+      "construction": "A consumer intending BTC/USD reads the ETH/USD aggregator. description() returns 'ETH / USD'; every field is well-formed and fresh.",
+      "expected_instrument_verdict": "FAIL identity field despite valid freshness and complete round metadata",
+      "falsification_condition": "Instrument passes a well-formed read without pinning the (chainId, address, description()) triple against the intended pair."
+    },
+    {
+      "vector_id": "NEG-03-wrong-chain",
+      "kind": "NEGATIVE",
+      "boundary": "chain identity",
+      "construction": "The same aggregator address pattern queried on a different chain (chainId != 1). Address bytes alone collide across chains; an address is not a feed identity.",
+      "expected_instrument_verdict": "FAIL chain field; eth_chainId readback is mandatory before any feed read",
+      "falsification_condition": "Instrument accepts an address-pinned read without chainId pinning."
+    },
+    {
+      "vector_id": "NEG-04-missing-round-metadata",
+      "kind": "NEGATIVE",
+      "boundary": "round completeness",
+      "construction": "A latestRoundData response with answeredInRound < roundId, or startedAt == 0, or updatedAt == 0 (round in progress / incomplete).",
+      "expected_instrument_verdict": "FAIL round-metadata field; the answer is not consumable",
+      "falsification_condition": "Instrument consumes an answer from an incomplete round."
+    },
+    {
+      "vector_id": "NEG-05-divergent-venue-inputs",
+      "kind": "NEGATIVE",
+      "boundary": "aggregation opacity",
+      "construction": "Underlying venues disagree beyond tolerance while the aggregator publishes a single median-like value. The divergence is invisible at the consumer read path.",
+      "expected_instrument_verdict": "UNCHECKABLE at the aggregator read path; the instrument must refuse to grade venue agreement from on-chain bytes",
+      "falsification_condition": "Instrument claims venue-input agreement or disagreement from aggregator reads alone."
+    },
+    {
+      "vector_id": "NEG-06-valid-signature-false-assertion",
+      "kind": "NEGATIVE",
+      "boundary": "signature vs truth",
+      "construction": "An Ed25519-signed card (valid signature, valid hash chain) whose payload asserts 'ETH/USD is $X' where $X contradicts the pinned on-chain read. Signature verification passes; the assertion is false.",
+      "expected_instrument_verdict": "Signature verdict VALID; assertion verdict FAIL. The two verdicts must be reported as separate fields, never merged.",
+      "falsification_condition": "Instrument treats a valid signature as evidence for the signed claim's truth, or merges signature and assertion verdicts into one field."
+    },
+    {
+      "vector_id": "NEG-07-por-beyond-boundary",
+      "kind": "NEGATIVE",
+      "boundary": "reserve attestation",
+      "construction": "A PoR-style feed value cited as proof of reserves. Per the estate's WBTC precedent (card de15a9f881955973): custodian-fed oracle data is not independently readable reserves evidence.",
+      "expected_instrument_verdict": "UNCHECKABLE for reserve truth; the feed establishes only that the contract reported a number",
+      "falsification_condition": "Instrument or report language treats a PoR feed value as reserve verification."
+    }
+  ],
+  "notes": [
+    "Signature and provenance do not prove price truth; NEG-06 is the load-bearing vector for that axiom.",
+    "No vector grades the price level, operator quality, or governance quality of Chainlink.",
+    "Vectors are constructions for a future pinned run; none has been executed against a grader."
+  ]
+}

@@ -1,0 +1,167 @@
+{
+ "schema": "csoai.transparency-augmentation-evidence/1",
+ "as_of": "2026-09-20T03:50:00Z",
+ "scope": "Reversible Sigstore + OpenTimestamps augmentation experiment on non-secret test artifacts. No production keys, no personal identity published, no deployment. Measurement, never certification. Pending OTS proofs remain pending.",
+ "goal": "Kimi K3 Goal 4 \u2014 Sigstore and OpenTimestamps augmentation experiment",
+ "subject_fixture": {
+  "path": "fixtures/card-00a52180-measurement-card.json",
+  "source": "public/signed/cards/00a5218048b4ff922c9793e5d155c7c62b4be5a84de3f09e16af3df59445b3c9.json",
+  "ed25519_layer": "VALID against did:web:csoai.org#card-attestation-1 (fixtures/fixture-ed25519-baseline.txt)"
+ },
+ "verdicts": {
+  "rekor_rekord_existing_layer": "VALID (offline; 4/4 inclusion checks) with findings F1 (preimage-not-bytes coverage, by design) and F2 (virtual vs proof index)",
+  "sigstore_keyless_bundle": "UNCHECKABLE \u2014 live signing declined; no ambient OIDC; GHA-OIDC gate S1 required",
+  "ots_fixture_proof": "CONFIRMED_BITCOIN \u2014 upgraded 2026-09-20T02:49:57Z, ~52 min after stamping; BitcoinBlockHeaderAttestation at block 967779; two-source (blockstream+mempool) 80-byte header BYTE_IDENTICAL; transition transcript ots/ots-upgrade-success.txt; machine state ots/card-00a52180-measurement-card.json.ots.result.json. Existence-before evidence for the fixture digest only \u2014 not correctness, not certification.",
+  "ots_production_root_proof": "CONFIRMED_BITCOIN \u2014 digest binding offline; block 967093 header byte-identical under independent readback"
+ },
+ "files": [
+  {
+   "path": "README.md",
+   "sha256": "afe472ae04320c5e83a435c9e5cb5cae19bbecb5652dee381b444970a505c55d",
+   "bytes": 3832
+  },
+  {
+   "path": "RECOMMENDATION.md",
+   "sha256": "37f19a30908b9a80cfe0d176853068d74925063cc4e3f5c1b41dbc109c79dba5",
+   "bytes": 5358
+  },
+  {
+   "path": "RERUN-VALIDATION.txt",
+   "sha256": "8b4940e2639e0b6b7a58bda08df5a6f0f45db488b41f72a4262c034028246b39",
+   "bytes": 1843
+  },
+  {
+   "path": "THREAT-BOUNDARY.md",
+   "sha256": "e61e4f6df32b46a653a8d4efde388e71b1ceaeb6434c32c96e4013e598e4d826",
+   "bytes": 7932
+  },
+  {
+   "path": "sigstore/keyless-blocker.txt",
+   "sha256": "230f7560c395207ebb0e090fcc78f68066e0f4227f1c92f4572ad19a2bd62916",
+   "bytes": 592
+  },
+  {
+   "path": "sigstore/rekor-canonicalization-test.txt",
+   "sha256": "a7b3f1b85194c5b6695a077c4d9adb6ca620e8322e080cbed728623a8a3606eb",
+   "bytes": 592
+  },
+  {
+   "path": "sigstore/rekor-entry-verify-offline.txt",
+   "sha256": "a7befa3bfe401d9e32e6cfa02d0b1dead040c7251e74aa9fa316d3e4352686c6",
+   "bytes": 1980
+  },
+  {
+   "path": "sigstore/rekor-leaf-analysis.txt",
+   "sha256": "83ba61978f81f8cdf4bb2473e878f092597f53d575d65c4cbdc78bb6e3487eb7",
+   "bytes": 603
+  },
+  {
+   "path": "sigstore/rekor-live-readback.txt",
+   "sha256": "55977d4681c0dccb33931587e140309dac4289444352af69b7372865dc385711",
+   "bytes": 816
+  },
+  {
+   "path": "sigstore/rekor-proof-index-investigation.txt",
+   "sha256": "4ccebfeaf529651731475412272b9376a4bb60fdc0645eae8723fa79907d329c",
+   "bytes": 3153
+  },
+  {
+   "path": "sigstore/rekor-pubkey-fetch.txt",
+   "sha256": "8ee8790240ccd5024a394a9f807b33c024be7fa86261cc2bcb88fa82f6127942",
+   "bytes": 270
+  },
+  {
+   "path": "sigstore/rekor-selftest.txt",
+   "sha256": "0a08bc5a9b4f175609606e43063233c4eeacfc9d9370cd6fdfad79dc473a1dab",
+   "bytes": 206
+  },
+  {
+   "path": "fixtures/card-00a52180-measurement-card.json",
+   "sha256": "1a621d17ec38d82210c8ae65391fd7b4826d9adb18857cd4f8aa9572ec544683",
+   "bytes": 844
+  },
+  {
+   "path": "fixtures/fixture-ed25519-baseline.txt",
+   "sha256": "1e7c1ec298c47173ffe8b9c1052bf622715f95ccf02b49d38f285bd1270eed09",
+   "bytes": 348
+  },
+  {
+   "path": "fixtures/rekor-log-pubkey.pem",
+   "sha256": "dce5ef715502ec9f3cdfd11f8cc384b31a6141023d3e7595e9908a81cb6241bd",
+   "bytes": 178
+  },
+  {
+   "path": "ots/card-00a52180-measurement-card.json.ots",
+   "sha256": "9e42c25fc2823a4f93c01aa08f4d889f69b2ed22fa702707a091d397286bb0ac",
+   "bytes": 1602
+  },
+  {
+   "path": "ots/card-00a52180-measurement-card.json.ots.result.json",
+   "sha256": "8eaa6e00f15b8c54692c4c1e7b868516e41c15a6a3769e9819cbb212eb1c8725",
+   "bytes": 331
+  },
+  {
+   "path": "ots/ots-blockheader-readback.txt",
+   "sha256": "3c96a8a183d7b53c84b20b7664ceecafc087b290467845da239d1a1bb18b3cc8",
+   "bytes": 726
+  },
+  {
+   "path": "ots/ots-stamp-batch-2026-09-17.json",
+   "sha256": "87c1e0f69714f748b408938117fc947d499cb82cccbff87f8465fe9791a9970e",
+   "bytes": 1505
+  },
+  {
+   "path": "ots/ots-stamp-fixture.txt",
+   "sha256": "87460b225d1c82652d309e9fcc0c71ea153360c8ef34932ba1e508f422595032",
+   "bytes": 400
+  },
+  {
+   "path": "ots/ots-upgrade-attempt-1.txt",
+   "sha256": "03544f2dee2237fb9024198f12ae07a77ab4e93c7c367a002cafa193913d04da",
+   "bytes": 841
+  },
+  {
+   "path": "ots/ots-upgrade-success.txt",
+   "sha256": "9b51f9cdf32e934f7d410e9a5337f08ad09ec8baecd286f0c694488907418ee1",
+   "bytes": 1368
+  },
+  {
+   "path": "ots/ots-verify-confirmed-root.txt",
+   "sha256": "cff8bf5ce0573005fb9679781f4502498bcf7381eb7063ed8a5874cda9faab6c",
+   "bytes": 1120
+  },
+  {
+   "path": "ots/ots-verify-pending.txt",
+   "sha256": "df66d72cb7248ba91fc36fdbcc7d059a3f8389d2fa908c4421a3d0176328399e",
+   "bytes": 1900
+  },
+  {
+   "path": "ots/upgrade-watch.sh",
+   "sha256": "ea97678efce65db5c1dd59093d39589273c4aa832cd220859cefcc9162e3211b",
+   "bytes": 3029
+  }
+ ],
+ "upgrade_watcher": {
+  "script": "ots/upgrade-watch.sh",
+  "state": "COMPLETED_SUCCESS",
+  "detail": "Retries scripts/ots-upgrade.py on the fixture proof every 15 min for up to 6h; writes ots/ots-upgrade-success.txt + .result.json on confirmation. Attempt 1 at 2026-09-20T02:03Z: all 3 calendars CommitmentNotFoundError, still pending (ots/ots-upgrade-attempt-1.txt). No git, no public/ writes."
+ },
+ "rerun_validation": "RERUN-VALIDATION.txt \u2014 README commands executed verbatim: rekor selftest pass; offline verify 4/4 VALID + by-design root_hash INVALID (F1); fixture proof pending (exit 1, expected); production proof digest binding offline; keyless leg skipped per gate S1.",
+ "upstream_improvements_uncommitted": [
+  {
+   "file": "scripts/ots_stamp_new.py",
+   "fix": "F4 \u2014 batch manifest filename now uses the actual UTC date instead of hardcoded 2026-09-17; validated: /tmp test wrote ots-stamp-batch-2026-09-20.json matching content as_of",
+   "validated": true
+  },
+  {
+   "file": "scripts/witness_public_root.py",
+   "fix": "F1/F2 \u2014 rekor_upload() now also returns proofLogIndex (tree position from the inclusion proof) on both the 201 and 409 paths; the sidecar rekor block gains covers=SIGNED_PREIMAGE_BYTES and index_semantics notes; validated via import-level call against the committed entry (2719646948)",
+   "validated": true
+  },
+  {
+   "file": "public/signed/HOW-TO-VERIFY-ROOT.md",
+   "fix": "F1/F2 \u2014 Rekor section now states coverage (preimage, not served bytes), the two-indices semantics, and committed-vs-live checkpoint freshness; prose dated honestly (both-fields sidecars from 2026-09-20 on)",
+   "validated": "documentation"
+  }
+ ]
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "csoai.lfx-onboarding/0.1",
+  "project_name": "Council of AI GSPC",
+  "repository": "https://github.com/CSOAI-ORG/councilof-ai",
+  "website": "https://councilof.ai",
+  "organization": "CSOAI LTD",
+  "license": "MIT",
+  "security_policy": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/SECURITY.md",
+  "contribution_guide": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/CONTRIBUTING.md",
+  "scorecard": "https://scorecard.dev/viewer/?uri=github.com/CSOAI-ORG/councilof-ai",
+  "citation": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/CITATION.cff",
+  "claim_boundary": "Candidate onboarding metadata only. SECURITY.md, CONTRIBUTING.md and CODEOWNERS are prepared locally but not yet public in the repository. This does not mean LFX onboarding, LFX Security authorization, OpenSSF badge completion, OpenShell acceptance or OpenBMC acceptance.",
+  "repository_readiness": {
+    "public_now": [
+      "LICENSE",
+      "CITATION.cff",
+      ".github/workflows/scorecard.yml",
+      ".github/dependabot.yml"
+    ],
+    "local_candidate_not_public": [
+      "SECURITY.md",
+      "CONTRIBUTING.md",
+      ".github/CODEOWNERS",
+      "packaging/lfx-gspc/sbom.spdx.json",
+      "integrations/openshell-gspc/",
+      "integrations/openbmc-gspc/"
+    ]
+  }
+}

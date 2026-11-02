@@ -1,0 +1,16 @@
+# OTS UPGRADE SUCCESS — pending -> confirmed transition transcript
+confirmed_at=2026-09-20T02:49:57Z
+$ ots info (attestations)
+File sha256 hash: 1a621d17ec38d82210c8ae65391fd7b4826d9adb18857cd4f8aa9572ec544683
+    verify PendingAttestation('https://bob.btc.calendar.opentimestamps.org')
+    verify BitcoinBlockHeaderAttestation(967779)
+    verify PendingAttestation('https://finney.calendar.eternitywall.com')
+    verify PendingAttestation('https://alice.btc.calendar.opentimestamps.org')
+block height: 967779
+block hash        : 00000000000000000000636048d9461c6671771e35117b62d5ce068233492fbd
+header blockstream: 00000020d9b48add4a5b145aa1ce0af1347af36907631e32179f00000000000000000000432be7061da8eaa457f4871b06fbecb744f6a730a28bce6c7ab8bd19fa2744bc6041af6ac51e0217fe1d01c0
+header mempool    : 00000020d9b48add4a5b145aa1ce0af1347af36907631e32179f00000000000000000000432be7061da8eaa457f4871b06fbecb744f6a730a28bce6c7ab8bd19fa2744bc6041af6ac51e0217fe1d01c0
+two-source header agreement: BYTE_IDENTICAL
+$ ots verify (needs local Bitcoin node; expected to fail without one — F3)
+Could not connect to Bitcoin node: Cookie file unusable ([Errno 2] No such file or directory: '/Users/nicholas/Library/Application Support/Bitcoin/.cookie') and rpcpassword not specified in the configuration file: '/Users/nicholas/Library/Application Support/Bitcoin/bitcoin.conf'
+exit=1

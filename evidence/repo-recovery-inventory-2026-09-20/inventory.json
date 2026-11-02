@@ -1,0 +1,54 @@
+{
+  "kind": "csoai.repo-recovery-inventory/0.1",
+  "audited_at": "2026-09-20T03:30+01:00",
+  "scope": "read-only inventory — no refs moved, no objects written, no remote mutations",
+  "doctrine": "anonymous 404 does not prove deletion (GitHub documents 404 for private/inaccessible resources); every state below is labelled with how it was observed",
+  "primary_repository": {
+    "path": "/Users/nicholas/clawd/councilof-ai-work",
+    "remote_origin": "https://github.com/CSOAI-ORG/councilof-ai.git",
+    "remote_visibility": {
+      "anonymous": "404 (org and repo) — NOT DETERMINATE: consistent with private, renamed, deleted, or permission-scoped",
+      "authenticated_as_CSOAI-ORG": "READ/WRITE OK — fetches, branch pushes and PR creation all succeeded 2026-09-20",
+      "verdict": "repo is PRIVATE, not proven deleted"
+    },
+    "head_commit_count": 1037,
+    "objects": { "loose": 6874, "in_pack": 55472, "pack_bytes_approx": 366518 },
+    "refs": { "local_heads": 121, "local_only_heads_no_upstream": 108, "remote_heads": 5, "tags": 5, "stashes": 1 },
+    "fsck_connectivity": "exit 0; dangling commits/trees/blobs present (normal for multi-lane work); no corruption reported",
+    "origin_master_head": { "sha": "05d3d263", "subject": "corrections: C-2026-0920-01 — live site_attestation unverifiable (#2658)", "date": "2026-09-20" },
+    "worktrees": [
+      { "path": "/Users/nicholas/clawd/councilof-ai-work", "branch": "fix/deploy-trigger-coupling (checked out; other lanes switch it)", "head": "3dfb20e3" },
+      { "path": "/Users/nicholas/_release/csoai-evidence-spine-20260919", "branch": "release/evidence-spine-20260919", "head": "89340b94" },
+      { "path": "/Users/nicholas/clawd/wt-deploy16", "branch": "fix-cards-truncation-17sep", "head": "5db05a25" },
+      { "path": "/Users/nicholas/clawd/wt-otel-pipeline-spans", "branch": "otel-pipeline-spans", "head": "1cf29374 (now on master via #2657)" },
+      { "path": "/Users/nicholas/Documents/CSOAI-Execution-2026-09-12/ember-discovery", "branch": "codex/ember-discovery-20260912", "head": "63f0acfd" },
+      { "path": "/Users/nicholas/Documents/CSOAI-Execution-2026-09-12/ember-preview", "branch": "codex/ember-emilia-scope-20260912", "head": "9420d0ba" },
+      { "path": "/Users/nicholas/Documents/CSOAI-Execution-2026-09-12/receipt-work", "branch": "codex/business-operations-20260912", "head": "4d2fb562" },
+      { "path": "/Users/nicholas/tmp/councilof-ai-wt-s68-cobolbridge", "branch": "surface/cobolbridge-status-200-2026-09-14", "head": "5d2cd83e" }
+    ],
+    "nested_independent_clone": "condor/ carries its own .git (independent history, not a worktree of the monorepo)",
+    "recovery_assessment": "the object store + 8 worktrees + 108 local-only branches make THIS MACHINE the richest known copy; remote holds only 5 heads. If GitHub access is lost, 108 local branches have no remote backup. Single failure domain: confirmed."
+  },
+  "github_actions_state": {
+    "repo_permissions_api": "enabled=true, allowed_actions=all (repo config is NOT the blocker)",
+    "last_run": "2026-09-15T08:06:59Z (pr-gates, workflow_dispatch, failure)",
+    "runs_since": "ZERO — including zero runs triggered by three branch pushes on 2026-09-20 (~03:13–03:40 local)",
+    "org_level_check": "UNCHECKABLE with current token (orgs endpoint needs admin:org scope)",
+    "verdict": "Actions is non-functional at a level above repo config (account/billing/org restriction suspected; pre-push hook comments record an account-level Actions disable on 2026-09-02, and runs existed 2026-09-15, so it stopped after 2026-09-15T08:06Z). Owner-gated: requires billing/account access.",
+    "consequence": "deploy.yml (push-to-master) is the only deploy path and it is NOT running. Master has moved 4+ commits since the last possible deploy window; PRs #2657/#2658 merged today with no deploy. councilof.ai production is frozen at the last pre-freeze deploy (root.json as_of 2026-09-15 corroborates). Merges are silently widening the master-vs-production gap."
+  },
+  "external_mirrors_state": {
+    "hugging_face": "csoai author, 38 public spaces, anonymous readback OK — but space-to-commit freshness NOT audited here",
+    "npm_csoai-gspc-mcp": "0.2.2 live (2026-09-16)",
+    "pypi_csoai-gspc": "0.2.20260915 live",
+    "mcp_registry": "io.github.CSOAI-ORG/gspc 1.4.2 active (2026-09-14)",
+    "zenodo": "NOT CHECKED this session",
+    "kaggle": "kaggle.com/csoai 404"
+  },
+  "claims_this_inventory_does_not_make": [
+    "no claim the GitHub org is deleted — private is the evidenced verdict",
+    "no claim any mirror's bytes match master — freshness unaudited",
+    "no claim the local object store is complete canonical history — no reachability comparison against a second source has been run",
+    "no recovery action taken — inventory only"
+  ]
+}

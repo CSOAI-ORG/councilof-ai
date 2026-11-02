@@ -1,0 +1,18 @@
+--- a/public/robots.txt
++++ b/public/robots.txt
+@@ -73,9 +73,14 @@
+ Allow: /
+ 
+ User-agent: GPTBot
+-Allow: /
++Disallow: /
+ 
+ User-agent: OAI-SearchBot
++Disallow: /.backups/
++Disallow: /_backup/
++Disallow: /api/
++Allow: /api/gspc
++Disallow: /*?*utm_
+ Allow: /
+ 
+ User-agent: ChatGPT-User

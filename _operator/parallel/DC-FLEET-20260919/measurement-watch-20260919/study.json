@@ -1,0 +1,44 @@
+{
+  "assumptions": {
+    "cost_source": "illustrative assumptions, not an exchange fee quotation",
+    "fee_bps_per_side": 10.0,
+    "fill_model": "next observed ask/bid plus assumed slippage; no queue model",
+    "initial_virtual_quote": 1000.0,
+    "maximum_gap_seconds": 90,
+    "minimum_observations": 30,
+    "signal_lookback_observations": 5,
+    "signal_threshold_bps": 10.0,
+    "slippage_bps_per_side": 5.0,
+    "target_entry_fraction": 0.2
+  },
+  "automatic_live_promotion": false,
+  "disclosure": "Results are normalized from the existing fixed-assumption simulator to $10-equivalent per case; no $10 wallets or native exchange bots are created.",
+  "display_virtual_capital_per_case": 10.0,
+  "ends_at": "2026-09-20T16:49:32.076068+00:00",
+  "live_orders_allowed": false,
+  "mode": "READ_ONLY_PAPER_REPLAY",
+  "real_funds_allocated": 0,
+  "schema": "csoai.measurement-watch/0.1",
+  "scope": {
+    "strategies": [
+      "cash_baseline",
+      "buy_hold_paper",
+      "momentum_paper",
+      "reversion_paper"
+    ],
+    "symbols": [
+      "BTC/USDC",
+      "ETH/USDC",
+      "LINK/USDC",
+      "ONDO/USDC"
+    ],
+    "venues": [
+      "coinbase",
+      "kraken",
+      "okx"
+    ]
+  },
+  "source_virtual_capital_per_case": 1000.0,
+  "started_at": "2026-09-19T16:49:32.076068+00:00",
+  "strategy_source_sha256": "10aa33be989b7c852635f2fe2c8480bf2c74d140ffec40ed10e52b2aa4d1a761"
+}

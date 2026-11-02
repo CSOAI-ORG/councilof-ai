@@ -1,0 +1,14 @@
+# OTS UPGRADE ATTEMPT on fixture proof (stamped 2026-09-20T01:57Z; ~10 min elapsed)
+attempted_at=2026-09-20T02:03:47Z
+$ .venv/bin/python scripts/ots-upgrade.py ots/card-00a52180-measurement-card.json.ots
+    https://bob.btc.calendar.opentimestamps.org: CommitmentNotFoundError
+    https://finney.calendar.eternitywall.com: CommitmentNotFoundError
+    https://alice.btc.calendar.opentimestamps.org: CommitmentNotFoundError
+  card-00a52180-measurement-card.json.ots: still pending — not rewritten
+exit=1
+
+# state after attempt:
+File sha256 hash: 1a621d17ec38d82210c8ae65391fd7b4826d9adb18857cd4f8aa9572ec544683
+    verify PendingAttestation('https://bob.btc.calendar.opentimestamps.org')
+    verify PendingAttestation('https://finney.calendar.eternitywall.com')
+    verify PendingAttestation('https://alice.btc.calendar.opentimestamps.org')

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/signed-release-manifest/0.1.json",
+  "title": "csoai.signed-release-manifest/0.1",
+  "description": "One signed release manifest: binds a source commit, exact file hashes, signer authority, timestamp/transparency proof STATE (never an implied proof), public mirrors, and anonymous readback hashes. A manifest without anonymous readback hashes is not evidence of a release. Measurement, never certification.",
+  "type": "object",
+  "required": ["schema", "release_id", "created_at", "source", "files", "signer", "proof_state", "mirrors", "readbacks", "correction"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "csoai.signed-release-manifest/0.1"},
+    "release_id": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "supersedes": {"type": ["string", "null"], "description": "release_id of the superseded manifest; corrections append, never edit"},
+    "source": {
+      "type": "object",
+      "required": ["repo", "commit", "dirty_files"],
+      "additionalProperties": false,
+      "properties": {
+        "repo": {"type": "string", "description": "canonical clone locator at build time"},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "branch": {"type": ["string", "null"]},
+        "dirty_files": {"type": "integer", "minimum": 0, "description": "uncommitted file count at build time; a release from a dirty tree must say so"}
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "description": "exact bytes of the release; the complete denominator, never a sample",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "bytes"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {"type": "string"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "signer": {
+      "type": "object",
+      "required": ["did", "key_id", "alg", "authority", "sig"],
+      "additionalProperties": false,
+      "properties": {
+        "did": {"type": "string"},
+        "key_id": {"type": "string"},
+        "alg": {"const": "Ed25519"},
+        "authority": {"type": "string", "description": "documented signing authority (who/what may sign releases), not the key itself"},
+        "sig": {"type": ["string", "null"], "description": "hex Ed25519 over canonical manifest with sig nulled; null = UNSIGNED manifest"},
+        "rotation_ref": {"type": ["string", "null"], "description": "locator of the key-rotation/compromise procedure"}
+      }
+    },
+    "proof_state": {
+      "type": "object",
+      "required": ["rekor", "ots"],
+      "additionalProperties": false,
+      "description": "transparency/timestamp STATE per layer; a state is never inferred from intent",
+      "properties": {
+        "rekor": {"enum": ["VALID_EXACT_BYTES", "VALID_PREIMAGE_ONLY", "PENDING", "UNCHECKABLE", "NOT_ATTEMPTED"]},
+        "ots": {"enum": ["CONFIRMED_BITCOIN", "PENDING", "UNCHECKABLE", "NOT_ATTEMPTED"]},
+        "rekor_ref": {"type": ["string", "null"]},
+        "ots_ref": {"type": ["string", "null"]},
+        "binding_note": {"type": "string", "description": "which exact bytes each proof binds; preimage-scoped proofs must say so"}
+      }
+    },
+    "mirrors": {
+      "type": "array",
+      "description": "every intended public mirror; listing is not readability",
+      "items": {
+        "type": "object",
+        "required": ["locator", "kind", "state"],
+        "additionalProperties": false,
+        "properties": {
+          "locator": {"type": "string"},
+          "kind": {"enum": ["git-mirror", "release-archive", "registry-listing", "archive-doi"]},
+          "state": {"enum": ["LOCAL", "PUSHED", "PUBLIC_READBACK", "UNREACHABLE", "UNCHECKABLE"]}
+        }
+      }
+    },
+    "readbacks": {
+      "type": "array",
+      "description": "anonymous served-byte readbacks; empty array = release UNPROVEN in public",
+      "items": {
+        "type": "object",
+        "required": ["locator", "retrieved_at", "state"],
+        "additionalProperties": false,
+        "properties": {
+          "locator": {"type": "string"},
+          "retrieved_at": {"type": "string", "format": "date-time"},
+          "served_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+          "matches_release_bytes": {"type": ["boolean", "null"]},
+          "state": {"enum": ["VALID", "INVALID", "UNCHECKABLE"]}
+        }
+      }
+    },
+    "correction": {
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"enum": ["CURRENT", "SUPERSEDED", "WITHDRAWN"]},
+        "note": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

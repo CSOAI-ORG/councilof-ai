@@ -1,0 +1,1077 @@
+{
+  "schema": "csoai.master-harness-index/0.3",
+  "generated_at": "2026-09-17T04:33:51.172848+00:00",
+  "title": "Master Measurement Harness \u2014 23 Axes \u00d7 14 Goals \u00d7 50+ Sources, with Pre-Release Measurement",
+  "principle": "Every adapter outputs the same canonical object. Stop building bespoke integrations. Build an ingestion grammar for regulatory/assurance reality.",
+  "canonical_object": [
+    "subject",
+    "requirement",
+    "jurisdiction",
+    "source",
+    "source_version",
+    "effective_state",
+    "claim",
+    "observation",
+    "measurement",
+    "evidence",
+    "provenance",
+    "uncertainty",
+    "timestamp",
+    "valid_from",
+    "valid_until",
+    "supersedes",
+    "hash",
+    "signature",
+    "root"
+  ],
+  "goal_objects": [
+    "asset_classification",
+    "actor_identity",
+    "jurisdiction",
+    "disclosure",
+    "custody",
+    "transaction_integrity",
+    "market_integrity",
+    "customer_protection",
+    "reserves_collateral",
+    "settlement",
+    "agent_authority",
+    "provenance",
+    "assurance",
+    "change"
+  ],
+  "sources_bound_to_harness": [
+    {
+      "category": "regulatory",
+      "source": "CLARITY Act H.R. 3633",
+      "status": "PROPOSED_FAILED_PROCEDURAL",
+      "goal_objects": [
+        "asset_classification",
+        "actor_identity",
+        "jurisdiction",
+        "custody"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "SEC Regulation Crypto Assets (33-11434)",
+      "status": "OPEN_FOR_COMMENT_2026-10-20",
+      "goal_objects": [
+        "disclosure",
+        "assurance",
+        "provenance"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "SEC/CFTC Joint Crypto Interpretation 2026",
+      "status": "OPERATIVE",
+      "goal_objects": [
+        "asset_classification",
+        "disclosure",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "GENIUS Act P.L. 119-27",
+      "status": "ENACTED_2025-07-18",
+      "goal_objects": [
+        "asset_classification",
+        "reserves_collateral",
+        "custody",
+        "settlement"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "CFTC Innovation Task Force",
+      "status": "ACTIVE_PROGRAMME",
+      "goal_objects": [
+        "agent_authority",
+        "provenance",
+        "asset_classification"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "EU AI Act (Articles 5, 9-15, 50, 53)",
+      "status": "IN_FORCE",
+      "goal_objects": [
+        "care",
+        "conformance",
+        "continuity",
+        "safety"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "NIST AI RMF 1.0",
+      "status": "VOLUNTARY",
+      "goal_objects": [
+        "governance",
+        "provenance",
+        "conformance"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "OSAIA SAFE (RFC by 2026-09-21)",
+      "status": "DRAFT_READY",
+      "goal_objects": [
+        "assurance",
+        "provenance",
+        "change"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "UK DRCF",
+      "status": "VOLUNTARY",
+      "goal_objects": [
+        "governance",
+        "conformance"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "CA SB 942 (California)",
+      "status": "BINDING_LAW",
+      "goal_objects": [
+        "disclosure",
+        "provenance"
+      ]
+    },
+    {
+      "category": "regulatory",
+      "source": "DORA (EU/EEA Financial)",
+      "status": "BINDING_LAW",
+      "goal_objects": [
+        "transaction_integrity",
+        "settlement",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "infrastructure",
+      "source": "SWIFT Blockchain Ledger (17 banks live)",
+      "status": "LIVE_2026-07-09",
+      "goal_objects": [
+        "settlement",
+        "custody",
+        "transaction_integrity",
+        "agent_authority"
+      ]
+    },
+    {
+      "category": "infrastructure",
+      "source": "XRPL on-chain state (16 instruments)",
+      "status": "LIVE",
+      "goal_objects": [
+        "asset_classification",
+        "reserves_collateral",
+        "settlement"
+      ]
+    },
+    {
+      "category": "infrastructure",
+      "source": "XRPL two-way check (issuer registry \u2194 on-chain)",
+      "status": "MEASURED",
+      "goal_objects": [
+        "provenance",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "stablecoin",
+      "source": "Stablecoin universe (425 stablecoins)",
+      "status": "MEASURED_2026-09-16",
+      "goal_objects": [
+        "asset_classification",
+        "reserves_collateral",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "stablecoin",
+      "source": "Stablecoin deep corpus",
+      "status": "MEASURED",
+      "goal_objects": [
+        "reserves_collateral",
+        "custody",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "stablecoin",
+      "source": "Stablecoin on-chain supply",
+      "status": "MEASURED_2026-09-16",
+      "goal_objects": [
+        "settlement",
+        "reserves_collateral"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "a2a engine cards (12 engines)",
+      "status": "ENUMERATED",
+      "goal_objects": [
+        "agent_authority",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "TUI A \u2014 Agent enumeration (13 ENUMERATED)",
+      "status": "ENUMERATED_v0.1",
+      "goal_objects": [
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "TUI B \u2014 Agent measurement",
+      "status": "MEASURED_v0.1",
+      "goal_objects": [
+        "agent_authority",
+        "provenance"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "ERC-8004 trustless agent registry",
+      "status": "POINTER_ONLY",
+      "goal_objects": [
+        "actor_identity",
+        "provenance"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "x402 doors (catalogued 104)",
+      "status": "MEASURED",
+      "goal_objects": [
+        "agent_authority",
+        "settlement"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "MCP registry (1272 entries)",
+      "status": "REGISTRY_CATALOG",
+      "goal_objects": [
+        "agent_authority",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "agent",
+      "source": "A2A Mining Summary",
+      "status": "MEASURED_2026-09-16",
+      "goal_objects": [
+        "agent_authority"
+      ]
+    },
+    {
+      "category": "gspc_self",
+      "source": "GSPC measurement cards (3,998 across 14 axes \u00d7 165 models)",
+      "status": "MEASURED",
+      "goal_objects": [
+        "assurance",
+        "provenance"
+      ]
+    },
+    {
+      "category": "gspc_self",
+      "source": "GSPC white papers (1,051 .md files)",
+      "status": "INDEXED",
+      "goal_objects": [
+        "disclosure"
+      ]
+    },
+    {
+      "category": "gspc_self",
+      "source": "GSPC measurement-root (10 leaves, merkle)",
+      "status": "ROOTED_2026-09-16",
+      "goal_objects": [
+        "change",
+        "provenance"
+      ]
+    },
+    {
+      "category": "gspc_self",
+      "source": "GSPC board (22 axis slots, 21 measured, 1 unmeasured)",
+      "status": "ACTIVE",
+      "goal_objects": [
+        "governance",
+        "conformance"
+      ]
+    },
+    {
+      "category": "rwa",
+      "source": "RWA attestation cards (dcp, superstate_uscc, ondo_stk, etc.)",
+      "status": "ATTESTED",
+      "goal_objects": [
+        "reserves_collateral",
+        "actor_identity"
+      ]
+    },
+    {
+      "category": "rwa",
+      "source": "Benji on-chain supply (Aptos, Arbitrum, Avalanche, Base, BNB, Ethereum, Polygon, Solana, Stellar)",
+      "status": "MEASURED",
+      "goal_objects": [
+        "settlement",
+        "reserves_collateral"
+      ]
+    },
+    {
+      "category": "rwa",
+      "source": "Wrapped-asset parity checks",
+      "status": "MEASURED",
+      "goal_objects": [
+        "reserves_collateral",
+        "provenance"
+      ]
+    },
+    {
+      "category": "ai_lab",
+      "source": "AI labs (anthropic, openai, google, meta, mistral, nvidia, microsoft, huggingface, asi-evolve, oswao, gspc, council-os)",
+      "status": "ENUMERATED",
+      "goal_objects": [
+        "agent_authority"
+      ]
+    },
+    {
+      "category": "ai_lab",
+      "source": "Sovereign model reports (qwen2.5-*, mistral-7b, llama3.2-3b, deepseek-r1-8b, gemma3-12b, falcon3-7b, phi4-14b)",
+      "status": "MEASURED",
+      "goal_objects": [
+        "conformance",
+        "governance",
+        "openness",
+        "safety"
+      ]
+    },
+    {
+      "category": "goal_adapter",
+      "source": "Customer Protection Adapter v0.1",
+      "status": "ACTIVE",
+      "goal_objects": [
+        "customer_protection",
+        "disclosure"
+      ],
+      "fills_gap": true
+    },
+    {
+      "category": "goal_adapter",
+      "source": "Market Integrity Adapter v0.1",
+      "status": "ACTIVE",
+      "goal_objects": [
+        "market_integrity",
+        "transaction_integrity"
+      ],
+      "fills_gap": true
+    },
+    {
+      "category": "engine",
+      "source": "Continuous Churn Engine v0.1",
+      "status": "ACTIVE",
+      "goal_objects": [
+        "change",
+        "provenance"
+      ],
+      "adapters_count": 35
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 1: governance",
+      "status": "MEASURED",
+      "goal_objects": [
+        "governance",
+        "conformance"
+      ],
+      "axis_slot": 1,
+      "axis_name": "governance"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 2: safety",
+      "status": "MEASURED",
+      "goal_objects": [
+        "safety",
+        "conformance"
+      ],
+      "axis_slot": 2,
+      "axis_name": "safety"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 3: provenance",
+      "status": "MEASURED",
+      "goal_objects": [
+        "provenance",
+        "assurance"
+      ],
+      "axis_slot": 3,
+      "axis_name": "provenance"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 4: continuity",
+      "status": "MEASURED",
+      "goal_objects": [
+        "continuity",
+        "assurance"
+      ],
+      "axis_slot": 4,
+      "axis_name": "continuity"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 5: conformance",
+      "status": "MEASURED",
+      "goal_objects": [
+        "conformance",
+        "change"
+      ],
+      "axis_slot": 5,
+      "axis_name": "conformance"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 6: openness",
+      "status": "MEASURED",
+      "goal_objects": [
+        "openness",
+        "disclosure"
+      ],
+      "axis_slot": 6,
+      "axis_name": "openness"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 7: machinery-conformity",
+      "status": "MEASURED",
+      "goal_objects": [
+        "conformance",
+        "change"
+      ],
+      "axis_slot": 7,
+      "axis_name": "machinery-conformity"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 8: care",
+      "status": "MEASURED",
+      "goal_objects": [
+        "customer_protection",
+        "care"
+      ],
+      "axis_slot": 8,
+      "axis_name": "care"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 9: cross-reality",
+      "status": "MEASURED",
+      "goal_objects": [
+        "provenance",
+        "asset_classification"
+      ],
+      "axis_slot": 9,
+      "axis_name": "cross-reality"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 10: detector-interop",
+      "status": "MEASURED",
+      "goal_objects": [
+        "agent_authority",
+        "transaction_integrity"
+      ],
+      "axis_slot": 10,
+      "axis_name": "detector-interop"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 11: art5-safeguard",
+      "status": "MEASURED",
+      "goal_objects": [
+        "customer_protection",
+        "disclosure"
+      ],
+      "axis_slot": 11,
+      "axis_name": "art5-safeguard"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 12: swarm",
+      "status": "MEASURED",
+      "goal_objects": [
+        "agent_authority",
+        "market_integrity"
+      ],
+      "axis_slot": 12,
+      "axis_name": "swarm"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 13: affect",
+      "status": "MEASURED",
+      "goal_objects": [
+        "customer_protection",
+        "care"
+      ],
+      "axis_slot": 13,
+      "axis_name": "affect"
+    },
+    {
+      "category": "gspc_axis",
+      "source": "GSPC axis 14: jail",
+      "status": "MEASURED",
+      "goal_objects": [
+        "market_integrity",
+        "customer_protection"
+      ],
+      "axis_slot": 14,
+      "axis_name": "jail"
+    },
+    {
+      "category": "registering_axis",
+      "source": "GSPC axis 15: memory-poisoning (REGISTERING, adapter defined)",
+      "status": "REGISTERING",
+      "goal_objects": [
+        "market_integrity",
+        "assurance",
+        "conformance"
+      ],
+      "axis_slot": 15,
+      "axis_name": "memory-poisoning",
+      "owasp_asi": "ASI06 Memory & Context Poisoning",
+      "pre_release_signals_count": 4
+    },
+    {
+      "category": "registering_axis",
+      "source": "GSPC axis 16: oversight (REGISTERING, adapter defined)",
+      "status": "REGISTERING",
+      "goal_objects": [
+        "governance",
+        "customer_protection",
+        "agent_authority"
+      ],
+      "axis_slot": 16,
+      "axis_name": "oversight",
+      "owasp_asi": "ASI09 Human-Agent Trust Exploitation + ASI10 Rogue Agents",
+      "pre_release_signals_count": 4
+    },
+    {
+      "category": "registering_axis",
+      "source": "GSPC axis 17: agent-identity (REGISTERING, adapter defined)",
+      "status": "REGISTERING",
+      "goal_objects": [
+        "actor_identity",
+        "agent_authority",
+        "provenance"
+      ],
+      "axis_slot": 17,
+      "axis_name": "agent-identity",
+      "owasp_asi": "ASI03 Identity & Privilege Abuse",
+      "pre_release_signals_count": 5
+    },
+    {
+      "category": "registering_axis",
+      "source": "GSPC axis 18: economic-behavior (REGISTERING, adapter defined)",
+      "status": "REGISTERING",
+      "goal_objects": [
+        "market_integrity",
+        "transaction_integrity",
+        "settlement"
+      ],
+      "axis_slot": 18,
+      "axis_name": "economic-behavior",
+      "owasp_asi": "ASI08 Cascading Failures (economic dimension)",
+      "pre_release_signals_count": 4
+    },
+    {
+      "category": "registering_axis",
+      "source": "GSPC axis 19: collusion (REGISTERING, adapter defined)",
+      "status": "REGISTERING",
+      "goal_objects": [
+        "market_integrity",
+        "agent_authority",
+        "transaction_integrity"
+      ],
+      "axis_slot": 19,
+      "axis_name": "collusion",
+      "owasp_asi": "ASI07 Insecure Inter-Agent Communication",
+      "pre_release_signals_count": 4
+    },
+    {
+      "category": "registering_axis",
+      "source": "GSPC axis 20: deception (REGISTERING, adapter defined)",
+      "status": "REGISTERING",
+      "goal_objects": [
+        "customer_protection",
+        "market_integrity",
+        "disclosure"
+      ],
+      "axis_slot": 20,
+      "axis_name": "deception",
+      "owasp_asi": "ASI01 Agent Goal Hijack + ASI09 Human-Agent Trust Exploitation",
+      "pre_release_signals_count": 4
+    },
+    {
+      "category": "registering_axis",
+      "source": "GSPC axis 21: sycophancy (REGISTERING, adapter defined)",
+      "status": "REGISTERING",
+      "goal_objects": [
+        "customer_protection",
+        "care",
+        "disclosure"
+      ],
+      "axis_slot": 21,
+      "axis_name": "sycophancy",
+      "owasp_asi": "ASI09 Human-Agent Trust Exploitation",
+      "pre_release_signals_count": 3
+    },
+    {
+      "category": "registering_axis",
+      "source": "GSPC axis 22: long-horizon-reliability (REGISTERING, adapter defined)",
+      "status": "REGISTERING",
+      "goal_objects": [
+        "continuity",
+        "assurance",
+        "change"
+      ],
+      "axis_slot": 22,
+      "axis_name": "long-horizon-reliability",
+      "owasp_asi": "ASI08 Cascading Failures",
+      "pre_release_signals_count": 3
+    },
+    {
+      "category": "registering_axis",
+      "source": "GSPC axis 23: effect-binding (REGISTERING, adapter defined)",
+      "status": "REGISTERING",
+      "goal_objects": [
+        "provenance",
+        "transaction_integrity",
+        "agent_authority",
+        "change"
+      ],
+      "axis_slot": 23,
+      "axis_name": "effect-binding",
+      "owasp_asi": "ASI10 Rogue Agents",
+      "pre_release_signals_count": 4
+    },
+    {
+      "category": "pre_release",
+      "source": "arXiv preprints mentioning REGISTERING axes",
+      "status": "DEFINED",
+      "credential": "none",
+      "tick": "6h",
+      "fetch": "https://arxiv.org/list/cs.AI/recent"
+    },
+    {
+      "category": "pre_release",
+      "source": "OWASP GenAI security advisories",
+      "status": "DEFINED",
+      "credential": "none",
+      "tick": "daily",
+      "fetch": "https://genai.owasp.org/"
+    },
+    {
+      "category": "pre_release",
+      "source": "HuggingFace evals for memory-poisoning / collusion / sycophancy",
+      "status": "DEFINED",
+      "credential": "none",
+      "tick": "1h",
+      "fetch": "https://huggingface.co/datasets?other=evals"
+    },
+    {
+      "category": "pre_release",
+      "source": "Provider model cards (Anthropic, OpenAI, Google)",
+      "status": "DEFINED",
+      "credential": "varies",
+      "tick": "6h",
+      "fetch": ""
+    },
+    {
+      "category": "pre_release",
+      "source": "Bug-bounty disclosures mentioning REGISTERING axes",
+      "status": "DEFINED",
+      "credential": "varies",
+      "tick": "1h",
+      "fetch": ""
+    },
+    {
+      "category": "pre_release",
+      "source": "ACL/NeurIPS/ICML pre-prints on agent identity, oversight, effect-binding",
+      "status": "DEFINED",
+      "credential": "none",
+      "tick": "6h",
+      "fetch": ""
+    },
+    {
+      "category": "pre_release",
+      "source": "arXiv RAG / context-poisoning preprints",
+      "status": "DEFINED",
+      "credential": "none",
+      "tick": "6h",
+      "fetch": "https://arxiv.org/list/cs.CL/recent"
+    },
+    {
+      "category": "pre_release",
+      "source": "arXiv multi-agent / collusion / BFT preprints",
+      "status": "DEFINED",
+      "credential": "none",
+      "tick": "6h",
+      "fetch": ""
+    },
+    {
+      "category": "pre_release",
+      "source": "arXiv sycophancy / honesty / alignment preprints",
+      "status": "DEFINED",
+      "credential": "none",
+      "tick": "6h",
+      "fetch": ""
+    },
+    {
+      "category": "pre_release",
+      "source": "Real-time market signals for economic-behavior axis (x402 adoption, stablecoin supply)",
+      "status": "DEFINED",
+      "credential": "none",
+      "tick": "5min",
+      "fetch": ""
+    }
+  ],
+  "stats": {
+    "sources_bound": 69,
+    "regulatory_sources": 11,
+    "infrastructure_sources": 3,
+    "stablecoin_sources": 3,
+    "agent_sources": 7,
+    "gspc_self_sources": 4,
+    "rwa_sources": 3,
+    "ai_lab_sources": 2,
+    "distinct_goal_objects_covered": 20,
+    "all_goal_objects_covered": [
+      "actor_identity",
+      "agent_authority",
+      "asset_classification",
+      "assurance",
+      "care",
+      "change",
+      "conformance",
+      "continuity",
+      "custody",
+      "customer_protection",
+      "disclosure",
+      "governance",
+      "jurisdiction",
+      "market_integrity",
+      "openness",
+      "provenance",
+      "reserves_collateral",
+      "safety",
+      "settlement",
+      "transaction_integrity"
+    ],
+    "all_14_goals_covered": true,
+    "uncovered_goals": [],
+    "goal_adapter_sources": 2,
+    "engine_sources": 1,
+    "axes_total_declared": 23,
+    "axes_measured_quotable": 14,
+    "axes_registering": 9,
+    "axes_with_goal_binding": 23,
+    "gspc_axis_sources": 14,
+    "gspc_axis_count": 14,
+    "registering_axis_sources": 9,
+    "pre_release_sources": 10
+  },
+  "binding_method": "Each source declares its goal-object mappings at adapter level. Each adapter outputs the canonical object. GSPC engine consumes the canonical objects and writes signed cards + OTS stamps + audit records.",
+  "honest_findings": [
+    "The estate already has 9 categories of sources bound to the goal-object ontology.",
+    "OTS calendar aggregator is currently degraded \u2014 1904 submissions received non-proof responses.",
+    "93 valid OTS proofs on origin (56 BTC-attested, 37 calendar-pending).",
+    "TUI A and TUI B establish the agent population boundary \u2014 TUI B measures against TUI A.",
+    "Master roll-up at /public/interop/master-consolidation-rollup-v0.1.json is the single index.",
+    "Strategic deliverables: digital-asset-regulatory-measurement-profile-v0.1, osaia-safe-evidence-adapter-v0.1, white-paper-index-v0.1, benchmark-index-v0.1.",
+    "scripts/hermes-align.sh: 8 ok / 0 FAIL on this M4.",
+    "v0.2: All 23 declared axis slots are mapped to goal-objects. 14 are board-quotable (live measurements). 9 are REGISTERING (declared but not yet measured). The 23-axis count comes from axis-universe-22.json (22 internal) + ADR-002 effect-binding declared (slot 23). ADR-003 (axis 24 issued-supply) is DRAFT and not declared \u2014 not counted.",
+    "v0.3: Added 9 REGISTERING axis sources + 10 pre-release adapters. Total sources bound: 69. All 14 goal-objects covered. All 9 REGISTERING axes have adapter + pre-release signal definitions."
+  ],
+  "sha256": "92a9fea87e5b1872ab4b1e52ac4ab003152db11b6d59c5bb8a194d14d82f23d8",
+  "byte_size": 19168,
+  "axes_total_declared": 23,
+  "axes_measured_quotable": 14,
+  "axes_registering": 9,
+  "declared_axes": [
+    {
+      "slot": 1,
+      "axis": "governance",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 2,
+      "axis": "safety",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 3,
+      "axis": "provenance",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 4,
+      "axis": "continuity",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 5,
+      "axis": "conformance",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 6,
+      "axis": "openness",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 7,
+      "axis": "machinery-conformity",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 8,
+      "axis": "care",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 9,
+      "axis": "cross-reality",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 10,
+      "axis": "detector-interop",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 11,
+      "axis": "art5-safeguard",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 12,
+      "axis": "swarm",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 13,
+      "axis": "affect",
+      "measured": true,
+      "board_quotable": true
+    },
+    {
+      "slot": 14,
+      "axis": "jail",
+      "measured": true,
+      "board_quotable": true,
+      "note": "added 2026-08-18"
+    },
+    {
+      "slot": 15,
+      "axis": "memory-poisoning",
+      "measured": false,
+      "board_quotable": false,
+      "state": "REGISTERING"
+    },
+    {
+      "slot": 16,
+      "axis": "oversight",
+      "measured": false,
+      "board_quotable": false,
+      "state": "REGISTERING"
+    },
+    {
+      "slot": 17,
+      "axis": "agent-identity",
+      "measured": false,
+      "board_quotable": false,
+      "state": "REGISTERING"
+    },
+    {
+      "slot": 18,
+      "axis": "economic-behavior",
+      "measured": false,
+      "board_quotable": false,
+      "state": "REGISTERING"
+    },
+    {
+      "slot": 19,
+      "axis": "collusion",
+      "measured": false,
+      "board_quotable": false,
+      "state": "REGISTERING"
+    },
+    {
+      "slot": 20,
+      "axis": "deception",
+      "measured": false,
+      "board_quotable": false,
+      "state": "REGISTERING"
+    },
+    {
+      "slot": 21,
+      "axis": "sycophancy",
+      "measured": false,
+      "board_quotable": false,
+      "state": "REGISTERING"
+    },
+    {
+      "slot": 22,
+      "axis": "long-horizon-reliability",
+      "measured": false,
+      "board_quotable": false,
+      "state": "REGISTERING"
+    },
+    {
+      "slot": 23,
+      "axis": "effect-binding",
+      "measured": false,
+      "board_quotable": false,
+      "state": "REGISTERING_DECLARED_ADR_002",
+      "note": "declared slot, not yet implemented"
+    }
+  ],
+  "axis_to_goal_mapping": {
+    "governance": [
+      "governance",
+      "conformance"
+    ],
+    "safety": [
+      "safety",
+      "conformance"
+    ],
+    "provenance": [
+      "provenance",
+      "assurance"
+    ],
+    "continuity": [
+      "continuity",
+      "assurance"
+    ],
+    "conformance": [
+      "conformance",
+      "change"
+    ],
+    "openness": [
+      "openness",
+      "disclosure"
+    ],
+    "machinery-conformity": [
+      "conformance",
+      "change"
+    ],
+    "care": [
+      "customer_protection",
+      "care"
+    ],
+    "cross-reality": [
+      "provenance",
+      "asset_classification"
+    ],
+    "detector-interop": [
+      "agent_authority",
+      "transaction_integrity"
+    ],
+    "art5-safeguard": [
+      "customer_protection",
+      "disclosure"
+    ],
+    "swarm": [
+      "agent_authority",
+      "market_integrity"
+    ],
+    "affect": [
+      "customer_protection",
+      "care"
+    ],
+    "jail": [
+      "market_integrity",
+      "customer_protection"
+    ],
+    "memory-poisoning": [
+      "market_integrity",
+      "assurance"
+    ],
+    "oversight": [
+      "governance",
+      "customer_protection"
+    ],
+    "agent-identity": [
+      "actor_identity",
+      "agent_authority"
+    ],
+    "economic-behavior": [
+      "market_integrity",
+      "transaction_integrity"
+    ],
+    "collusion": [
+      "market_integrity",
+      "agent_authority"
+    ],
+    "deception": [
+      "customer_protection",
+      "market_integrity"
+    ],
+    "sycophancy": [
+      "customer_protection",
+      "care"
+    ],
+    "long-horizon-reliability": [
+      "continuity",
+      "assurance"
+    ],
+    "effect-binding": [
+      "provenance",
+      "transaction_integrity",
+      "change"
+    ]
+  },
+  "binding_to_harness": {
+    "GSPC_23_axes": [
+      "actor_identity",
+      "agent_authority",
+      "asset_classification",
+      "assurance",
+      "care",
+      "change",
+      "conformance",
+      "continuity",
+      "customer_protection",
+      "disclosure",
+      "governance",
+      "market_integrity",
+      "openness",
+      "provenance",
+      "safety",
+      "transaction_integrity"
+    ]
+  },
+  "version": "0.3"
+}
