@@ -203,7 +203,7 @@ export default function RelevanceMap({ embedded = false }: { embedded?: boolean;
         )}
 
         {embedded ? null : <div className="mt-10 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-xs text-gray-500 leading-relaxed">
-          The relevance map renders client-side as pure SVG on demand — no graph library loads until you pick an industry, keeping the OS zero-dependency. The full force-directed version (347-MCP fleet topology) and live gap-to-roadmap links switch on with the Layer 0 backend. Explore the fleet at <a href="/mcp-fleet" className="text-emerald-700 font-semibold">/mcp-fleet</a> or try the Council at <a href="/try" className="text-emerald-700 font-semibold">/try</a>.
+          The relevance map renders client-side as pure SVG on demand — no graph library loads until you pick an industry, keeping the OS zero-dependency. It shows relevance, not compliance verdicts, and its connector list is curated, not measured. To see what is actually measured and runs live, open <a href="/tools" className="text-emerald-700 font-semibold">/tools</a> or ask in the workspace at <a href="/dashboard?tab=home" className="text-emerald-700 font-semibold">/dashboard?tab=home</a>.
         </div>}
       </section>
     </div>
