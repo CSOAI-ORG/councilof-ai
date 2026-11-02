@@ -250,11 +250,17 @@ test("the commit board renders exactly its public canonical axes without promoti
     (row) => row.public_pages !== OWNER_GATED && row.kind === "declared-slot",
   ).length;
   assert.match(out["axes.html"], new RegExp(`<h1>All ${publicIds.length} GSPC axes</h1>`));
-  assert.match(out["axes.html"], new RegExp(`<h2>${publicSlots} declared subject slots</h2>`));
+  if (publicSlots > 0) {
+    assert.match(out["axes.html"], new RegExp(`<h2>${publicSlots} declared subject slots</h2>`));
+  } else {
+    assert.doesNotMatch(out["axes.html"], /declared subject slots/);
+  }
   // A MEASURED subject axis is not a declared slot: it has a real n over a frozen
   // sha-pinned bank, so it is filed under its own heading. That count is derived
-  // from the board as well, never typed.
-  const measuredSubjects = live.axes.filter((row) => row.kind === "measured-subject").length;
+  // from the public board rows as well, never typed.
+  const measuredSubjects = live.axes.filter(
+    (row) => row.public_pages !== OWNER_GATED && row.kind === "measured-subject",
+  ).length;
   assert.match(out["axes.html"], new RegExp(`<h2>${measuredSubjects} measured subject axes</h2>`));
 });
 
