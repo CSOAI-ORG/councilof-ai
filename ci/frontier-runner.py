@@ -213,7 +213,7 @@ def classify(model, scenario, cred):
             "https://api.deepseek.com/chat/completions",
             {"model": "deepseek-chat",
              "messages": [{"role": "user", "content": prompt}],
-             "temperature": 0, "max_tokens": 24},
+             "temperature": 0, "max_tokens": 512},
             {"Authorization": "Bearer " + cred},
         )
         return data["choices"][0]["message"]["content"]
