@@ -5,13 +5,17 @@ import { loadSlots } from './build-axis-reports.mjs';
 
 const read = path => JSON.parse(readFileSync(new URL(path, import.meta.url)));
 const registry = read('../council-os/axis-specialists/registry.json');
-const snapshot = read('../council-os/axis-specialists/board-2026-10-28.snapshot.json');
+const snapshot = read('../council-os/axis-specialists/board-2026-11-01.snapshot.json');
 const mcpTools = read('../functions/mcp/gspc-tools.json');
 const axes = snapshot.axes.map(row => row.axis);
 describe('all-axis charter integration', () => {
   it('connects exactly the source axes without changing their measurement or authority', async () => {
     const tree = buildTree({ registry, snapshot, sourceSlots: await loadSlots(), mcpTools });
-    expect(tree.get('index.json').coverage).toMatchObject({ specialists: 33, charter_connections: 33, review_connections: 33 });
+    expect(tree.get('index.json').coverage).toMatchObject({
+      specialists: axes.length,
+      charter_connections: axes.length,
+      review_connections: axes.length,
+    });
     for (const row of snapshot.axes) {
       const audit = tree.get(`${row.axis}.json`);
       expect(audit.source.axis_row).toEqual(row);

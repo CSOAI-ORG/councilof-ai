@@ -147,6 +147,25 @@ export const SKUS: Record<string, Sku> = {
       "Board stays free. Verify stays free. The only paid rail is pay-as-you-go x402 at the door — no processor is named or wired.",
   },
 
+  coverage_evidence: {
+    id: "coverage_evidence",
+    name: "Coverage Evidence Row (assembly)",
+    artifact:
+      "one assembled coverage-evidence row for a named asset from the dated coverage record " +
+      "(finance/full-spread PR #13): canonical identity, measurement state + method + measured_at, " +
+      "provenance digests, and the record's honest anchor state; never a grade or rank sale",
+    unit: "1 request (per asset)",
+    sells: "assembly",
+    prices: {
+      per_request: band(0.02, [0.02, 0.5], "X402_PRICE_COVERAGE_EVIDENCE_USD"),
+    },
+    rail: "x402",
+    notes:
+      "Assembly of already-measured coverage data (packaged with provenance), not a fresh chain read. " +
+      "Anchor is an owner-decision estimate consistent with request_attestation's per-request band; " +
+      "board and verification stay free; measurement is not certification.",
+  },
+
   // SKU — self-serve RAS fresh read (functions/api/ras/*: mcp-probe, x402-check, supply). One
   // live computation against a buyer-named target (an MCP discovery, one 402-challenge check, one
   // totalSupply read with its proof) and an Ed25519 receipt over the result. Deliberately NOT in

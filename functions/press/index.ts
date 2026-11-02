@@ -62,6 +62,14 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
 
   const notAnnounced = d.not_announced.map((n) => `<article><h3>${esc(n.subject)} — <span class="u">${esc(n.state)}</span></h3><p>${esc(n.why)}</p>${pre(n.proof, `Check for ${n.subject}`)}</article>`).join("\n");
 
+  const researchHtml = d.research_notes.map((note) => `<article>
+<h3>${esc(note.title)}</h3>
+<p class="d">Document date: ${esc(note.document_date)} · ${esc(note.kind)}</p>
+<p>${esc(note.summary)}</p><p class="n">${esc(note.scope)}</p>
+<p><a href="${esc(note.note_url)}">Read the research note</a> · <a href="${esc(note.data_url)}">Questions and sources (JSON)</a></p>
+<p><a href="${esc(note.next_step.url)}">${esc(note.next_step.label)}</a>. ${esc(note.next_step.terms)}</p>
+</article>`).join("\n");
+
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Press — Council of AI</title>
@@ -74,6 +82,11 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
 <meta property="og:title" content="Press — Council of AI">
 <meta property="og:description" content="What changed at the Council of AI, with the command that proves each line. Measurement, not certification.">
 <meta property="og:image" content="https://councilof.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://councilof.ai/press/">
+<meta name="twitter:title" content="Press — Council of AI">
+<meta name="twitter:description" content="What changed at the Council of AI, with the command that proves each line. Measurement, not certification.">
+<meta name="twitter:image" content="https://councilof.ai/og-image.png">
 <link rel="alternate" type="application/rss+xml" title="Corrections" href="https://councilof.ai/feeds/corrections.xml">
 <link rel="alternate" type="application/rss+xml" title="Signed cards" href="https://councilof.ai/feeds/cards.xml">
 <link rel="alternate" type="application/rss+xml" title="Public root" href="https://councilof.ai/feeds/roots.xml">
@@ -104,6 +117,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 <p class="lede">${esc(d.doctrine)}</p>
 <p class="lede">Window <b>${esc(d.window.from)} → ${esc(d.window.to)}</b>. ${esc(d.window.derivation)}</p>
 ${pre(d.window.proof, "Command that derives this window")}
+
+<section aria-labelledby="research-heading">
+<h2 id="research-heading">Research notes</h2>
+<p class="n">Document reviews and proposed checks, separate from measured results and commercial outcomes below.</p>
+${researchHtml}
+</section>
 
 <h2>Corrections issued in this window — ${esc(c.value)} of ${esc(c.total)} total</h2>
 <p>${esc(c.note)}</p>

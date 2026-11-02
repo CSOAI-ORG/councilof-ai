@@ -6,6 +6,9 @@ import {
   ShieldCheck,
   Swords,
 } from "lucide-react";
+import JSpaceTimeline from "@/components/JSpaceTimeline";
+import { decisionsToTimelineEvents } from "@/components/timeline/decisionToTimeline";
+import { useLedger } from "@/hooks/useLedger";
 
 export const ARENA_SCOREBOARD_ENDPOINT = "/api/arena/scoreboard";
 export const ARENA_SCOREBOARD_FALLBACK = "/signed/arena_scoreboard.json";
@@ -597,6 +600,63 @@ function PracticeArena() {
   );
 }
 
+/**
+ * The published decision ledger on the same log-scale timeline the legacy
+ * CouncilSpace page used. Same honest contract: real records only, and an
+ * explicit unreachable note when the upstream ledger cannot be read — never
+ * simulated events.
+ */
+function LedgerTimelineSection() {
+  const {
+    data: ledger,
+    error: ledgerError,
+    fetchedAt,
+  } = useLedger();
+  const records = (ledger?.records || []).slice(0, 3);
+  const hasEvents = records.length > 0;
+  return (
+    <section
+      aria-label="Published decision ledger timeline"
+      data-testid="arena-ledger-timeline"
+      className="mt-6 rounded-2xl border border-emerald-300/60 bg-emerald-50/40 p-4"
+    >
+      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-emerald-200 pb-2">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-800">
+            J-space · published timeline sample
+          </p>
+          <p className="mt-0.5 text-sm font-semibold text-emerald-950">
+            Dated decisions, with their source state visible
+          </p>
+        </div>
+        <div className="text-right text-xs text-emerald-900/80">
+          {fetchedAt
+            ? "current as of " +
+              new Date(fetchedAt).toUTCString().replace("GMT", "UTC")
+            : "loading…"}
+          <a
+            href="/live-ledger"
+            className="ml-2 font-semibold text-emerald-800 underline-offset-4 hover:underline focus-visible:underline"
+          >
+            Open the full ledger →
+          </a>
+        </div>
+      </div>
+      {ledgerError && (
+        <p className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs leading-relaxed text-amber-950">
+          Upstream unavailable ({ledgerError}). The ledger is not visible right
+          now — this is rendered honestly, not simulated.
+        </p>
+      )}
+      {hasEvents && (
+        <div className="mt-3 overflow-hidden rounded-lg">
+          <JSpaceTimeline events={decisionsToTimelineEvents(records)} />
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function DashboardArenaPane({
   initialData,
   fetchImpl = fetch,
@@ -688,6 +748,8 @@ export default function DashboardArenaPane({
       </header>
 
       <PracticeArena />
+
+      <LedgerTimelineSection />
 
       {state.phase === "loading" && (
         <p

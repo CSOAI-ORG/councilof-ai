@@ -1,0 +1,390 @@
+{
+ "schema": "csoai.watchdog-signal-index/0.1",
+ "as_of": "2026-10-30T05:10:40Z",
+ "run_id": "20261030T051040Z",
+ "run_artifact": "/interop/watchdog-intake/20261030T051040Z.json",
+ "measure": "PUBLIC SOURCE REACHABILITY AND PARSEABILITY — a count of sources probed",
+ "count_grammar": "n counts SOURCES PROBED, the same grammar as effect-binding's 'tool-call servers probed'. It is never pooled with bank-item n and never appears in a mean. REACHABLE means the source answered 200 with a documented shape; UNCHECKABLE means it answered but the body was not the documented shape; UNREACHABLE means it did not answer. These are DIFFERENT facts and are never summed into a single figure that would read like a score.",
+ "not_a": [
+  "a certification",
+  "a compliance determination",
+  "a vendor score",
+  "a ranking",
+  "an incident count for the world",
+  "a grade"
+ ],
+ "totals": {
+  "sources_pinned": 18,
+  "sources_probed": 18,
+  "reachable": 18,
+  "unreachable": 0,
+  "uncheckable": 0,
+  "grid_hits": 12
+ },
+ "grid_coverage": {
+  "article-50": [
+   "safe-repo"
+  ],
+  "article-53": [
+   "safe-repo"
+  ],
+  "charter": [
+   "safe-repo"
+  ],
+  "effect-binding": [
+   "atlas-current",
+   "cisa-kev",
+   "ghsa-api",
+   "mitre-cve",
+   "nvd-cve-api",
+   "osv-query",
+   "owasp-asvs"
+  ],
+  "hitl": [
+   "safe-repo"
+  ],
+  "jail": [
+   "atlas-current",
+   "atlas-manifest",
+   "owasp-llm-top10"
+  ],
+  "provenance": [
+   "depsdev",
+   "hf-models",
+   "in-toto",
+   "owasp-llm-top10",
+   "rekor-log",
+   "slsa"
+  ],
+  "provenance-controls": [
+   "in-toto",
+   "openssf-scorecard",
+   "rekor-log",
+   "slsa"
+  ],
+  "safety": [
+   "atlas-current",
+   "atlas-manifest",
+   "owasp-asvs",
+   "owasp-llm-top10"
+  ],
+  "serving-fidelity": [
+   "hf-models",
+   "openrouter"
+  ],
+  "supply-chain": [
+   "cisa-kev",
+   "depsdev",
+   "ghsa-api",
+   "go-vuln",
+   "nvd-cve-api",
+   "openssf-scorecard",
+   "osv-query"
+  ],
+  "swarm": [
+   "atlas-current",
+   "atlas-manifest"
+  ]
+ },
+ "signals": [
+  {
+   "source_id": "cisa-kev",
+   "name": "CISA Known Exploited Vulnerabilities catalog",
+   "kind": "advisory-feed",
+   "state": "REACHABLE",
+   "count": 1764,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "body_sha256": "38a7172a5f26470dc7632aaa1c6cff4a51fe7bfec8cdce978a19b816a751e34d"
+  },
+  {
+   "source_id": "nvd-cve-api",
+   "name": "NIST National Vulnerability Database CVE API 2.0",
+   "kind": "advisory-feed",
+   "state": "REACHABLE",
+   "count": 416948,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "body_sha256": "38e6cdc16848a9212ede62420a22fb44bba378a3aa3121a39361344b82516222"
+  },
+  {
+   "source_id": "ghsa-api",
+   "name": "GitHub Security Advisory Database API",
+   "kind": "advisory-feed",
+   "state": "REACHABLE",
+   "count": 30,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "body_sha256": "8346c45131537d2a8d546fa98997dd468c35fb0980ffb918d063d450a4075f07"
+  },
+  {
+   "source_id": "osv-query",
+   "name": "OSV.dev vulnerability query (npm ecosystem)",
+   "kind": "advisory-feed",
+   "state": "REACHABLE",
+   "count": 10,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "effect-binding",
+    "supply-chain"
+   ],
+   "body_sha256": "d300ec18551ce40170b8d055241c1f6096c676dae41ea8f4c976bda91c206819"
+  },
+  {
+   "source_id": "mitre-cve",
+   "name": "MITRE CVE Services API (single record)",
+   "kind": "advisory-feed",
+   "state": "REACHABLE",
+   "count": "CVE-2021-44228",
+   "count_kind": "value",
+   "http_status": 200,
+   "grid": [
+    "effect-binding"
+   ],
+   "body_sha256": "cae2ad45ea2739a59680c360555a538019b8f46199c797aed96fba49c073aa89"
+  },
+  {
+   "source_id": "go-vuln",
+   "name": "Go vulnerability database index",
+   "kind": "advisory-feed",
+   "state": "REACHABLE",
+   "count": 1443,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "supply-chain"
+   ],
+   "body_sha256": "8bc3c0c9112a422d1dc406e3ef3658c689ce1a6adca48ecc3d31b0164916c2b7"
+  },
+  {
+   "source_id": "depsdev",
+   "name": "deps.dev package API",
+   "kind": "advisory-feed",
+   "state": "REACHABLE",
+   "count": 15,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "supply-chain",
+    "provenance"
+   ],
+   "body_sha256": "528fd78b0b433653ef0c4ddcc3d86a6f144cfcbf3b3c0e9452098932745ed3ab"
+  },
+  {
+   "source_id": "hf-models",
+   "name": "Hugging Face model registry API",
+   "kind": "model-registry",
+   "state": "REACHABLE",
+   "count": 30,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "serving-fidelity",
+    "provenance"
+   ],
+   "body_sha256": "0d047cba6a11f16b5ddbc2b25e55250339ce3ddf39b26d08a2187531a5ff4cf3"
+  },
+  {
+   "source_id": "openrouter",
+   "name": "OpenRouter model catalog API",
+   "kind": "model-registry",
+   "state": "REACHABLE",
+   "count": 456,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "serving-fidelity"
+   ],
+   "body_sha256": "7b501cd7e8611a11e46e16b9cf7d50b657712e73df9f40f67ff0eead759071f3"
+  },
+  {
+   "source_id": "atlas-current",
+   "name": "MITRE ATLAS (adversarial ML threat matrix, current release)",
+   "kind": "threat-framework",
+   "state": "REACHABLE",
+   "count": 221,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "swarm",
+    "jail",
+    "safety",
+    "effect-binding"
+   ],
+   "body_sha256": "ac41ee9f99a47084ba5fdfc77ae83a28687e12390240fffeb37df7914ffe142d"
+  },
+  {
+   "source_id": "atlas-manifest",
+   "name": "MITRE ATLAS release manifest",
+   "kind": "threat-framework",
+   "state": "REACHABLE",
+   "count": 38,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "swarm",
+    "jail",
+    "safety"
+   ],
+   "body_sha256": "f8a72a0beecfa9e6f3e1aa2ee4c22899046037ed71328c5d01528709e8d6d820"
+  },
+  {
+   "source_id": "owasp-llm-top10",
+   "name": "OWASP Top 10 for LLM Applications",
+   "kind": "threat-framework",
+   "state": "REACHABLE",
+   "count": null,
+   "count_kind": "digest",
+   "http_status": 200,
+   "grid": [
+    "safety",
+    "jail",
+    "provenance"
+   ],
+   "body_sha256": "3119793148239835dadf3dfd89060b4643799cc17a024a831cc15f6965458366"
+  },
+  {
+   "source_id": "owasp-asvs",
+   "name": "OWASP Application Security Verification Standard",
+   "kind": "threat-framework",
+   "state": "REACHABLE",
+   "count": null,
+   "count_kind": "digest",
+   "http_status": 200,
+   "grid": [
+    "safety",
+    "effect-binding"
+   ],
+   "body_sha256": "0140389ca679b4e5c677862f75c3377b643194a94cd26da3fd88f6d0f5b96770"
+  },
+  {
+   "source_id": "rekor-log",
+   "name": "Sigstore Rekor transparency log",
+   "kind": "transparency-log",
+   "state": "REACHABLE",
+   "count": 3463517530,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "body_sha256": "d039b81ec7d1dcddae77176fed1e6596a5187a3f7881f9b0ecaa24da072eeafe"
+  },
+  {
+   "source_id": "openssf-scorecard",
+   "name": "OpenSSF Scorecard API (one repository)",
+   "kind": "supply-chain",
+   "state": "REACHABLE",
+   "count": 18,
+   "count_kind": "count",
+   "http_status": 200,
+   "grid": [
+    "supply-chain",
+    "provenance-controls"
+   ],
+   "body_sha256": "4966e6884da74d5c9b6d3b237b935c89b70c5cae6e241fde554d0f4f15a0075c"
+  },
+  {
+   "source_id": "safe-repo",
+   "name": "OpenSecureAI Alliance wg-safe (SAFE) reference",
+   "kind": "standard-body",
+   "state": "REACHABLE",
+   "count": null,
+   "count_kind": "digest",
+   "http_status": 200,
+   "grid": [
+    "charter",
+    "article-50",
+    "article-53",
+    "hitl"
+   ],
+   "body_sha256": "75e7b6e0ac150224843b78a7562a66157c95e5957fa6dcb9113a0a50abcf8a1a"
+  },
+  {
+   "source_id": "slsa",
+   "name": "SLSA provenance framework reference",
+   "kind": "standard-body",
+   "state": "REACHABLE",
+   "count": null,
+   "count_kind": "digest",
+   "http_status": 200,
+   "grid": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "body_sha256": "aeff12d58ae18e38178775a9514cba2bcc6f244f4d0d724a099531ca99118952"
+  },
+  {
+   "source_id": "in-toto",
+   "name": "in-toto attestation framework reference",
+   "kind": "standard-body",
+   "state": "REACHABLE",
+   "count": null,
+   "count_kind": "digest",
+   "http_status": 200,
+   "grid": [
+    "provenance",
+    "provenance-controls"
+   ],
+   "body_sha256": "af4afaeb45178ead52df28e3d867d64fddf1626ef4f2a0b256430a55c2375c2e"
+  }
+ ],
+ "unpinned_findings": [
+  {
+   "id": "aiid",
+   "name": "AI Incident Database",
+   "consequence": "AI incident coverage CANNOT be measured continuously from a public endpoint today. It is a real gap, and it is a gap in the SOURCE, not in our reader.",
+   "next": "Ask the AIID maintainers for a public incident JSON/CSV export path, or ingest their published Excel export on a slower cadence. Until then this row stays a published gap."
+  },
+  {
+   "id": "nvd-cve-feed",
+   "name": "NVD CVE 2.0 annual JSON feed",
+   "consequence": "Covered by the nvd-cve-api row. Not a gap; a scale mismatch, resolved by pinning the API.",
+   "next": "None. If a daily n is wanted, use the NVD API with a date window."
+  },
+  {
+   "id": "atlas-legacy",
+   "name": "MITRE ATLAS legacy dist/ATLAS.yaml",
+   "consequence": "Superseded by the atlas-current row, which is resolved from the release manifest.",
+   "next": "None."
+  },
+  {
+   "id": "npm-audit",
+   "name": "npm registry bulk advisories",
+   "consequence": "Not pinned as a GET source. npm advisories are already reachable through the pinned OSV and GHSA rows.",
+   "next": "Add as a POST source only if npm-specific coverage is ever required."
+  },
+  {
+   "id": "sigstore-tlog",
+   "name": "Sigstore transparency log (api.sigstore.dev)",
+   "consequence": "One transparency log is covered. The second host was not reachable here, so it is not claimed as covered.",
+   "next": "Re-probe from the scheduled host; a DNS failure at one machine is not proof the source is gone."
+  },
+  {
+   "id": "cert-eu",
+   "name": "ENISA/CERT-EU security advisories",
+   "consequence": "NOT covered. A real, named gap in EU-level advisory coverage.",
+   "next": "Look for a documented RSS/JSON feed from CERT-EU; until then, publish the gap."
+  },
+  {
+   "id": "eclipse-kev",
+   "name": "Eclipse Foundation security advisories",
+   "consequence": "NOT covered as a feed. Named gap.",
+   "next": "Check for a JSON/CSV export of the advisory list."
+  }
+ ]
+}

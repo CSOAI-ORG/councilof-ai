@@ -404,17 +404,17 @@
     "note": "Absence of a field means UNMEASURED. TIE is never a win. A withheld leader is a state, not a zero."
   },
   "totals": {
-    "axes": 33,
+    "axes": 34,
     "measured_axes": 23,
-    "unmeasured_axes": 10,
+    "unmeasured_axes": 11,
     "quotable_axes": 23,
-    "public_count": "33 axes · 23 measured",
+    "public_count": "34 axes · 23 measured",
     "separation_public_count": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
     "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axes with a RUN behind them; it is not a count of axes with a separated result. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
     "model_fleets": 14,
     "model_fleets_note": "Counts model-comparison AXES (one fleet per axis), not models. The number of distinct models measured is a different quantity, derived from the signed cards: /interop/models-measured.json (list at /models-measured/).",
     "fact_runs": 9,
-    "count_grammar": "33 axes are on the board; 23 of them carry a measurement and 10 are declared slots with no run behind them. The larger number counts slots, the smaller counts measurements — quote both or quote the smaller. A published slot exists so the gap is visible; it is not evidence of anything having been measured. A measurement is not a separated leader either: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED.",
+    "count_grammar": "34 axes are on the board; 23 of them carry a measurement and 11 are declared slots with no run behind them. The larger number counts slots, the smaller counts measurements — quote both or quote the smaller. A published slot exists so the gap is visible; it is not evidence of anything having been measured. A measurement is not a separated leader either: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED.",
     "by_family": {
       "gspc": {
         "axes": 15,
@@ -2352,6 +2352,31 @@
       "n_note": "HELD for spend: free credit only.",
       "method": "serving-fidelity v0.2",
       "method_sha": "18206f71",
+      "measurement_time": {
+        "state": "UNCHECKABLE",
+        "precision": "unknown",
+        "source": "/api/gspc",
+        "source_field": "none",
+        "note": "No structured measurement time is available; CURRENT admission must fail closed."
+      }
+    },
+    {
+      "axis": "watchdog-ingest",
+      "family": "subject",
+      "kind": "declared-slot",
+      "applies_to": "public-watchdog-and-incident-sources",
+      "bench": "pending frozen method + sha-pinned daily runs",
+      "task": "does the public watchdog and incident layer answer on a schedule, does each answer carry the shape its publisher documents, and which of our own axes does each source touch",
+      "n": 0,
+      "status": "UNMEASURED",
+      "colour": "hsl(310 10% 55%)",
+      "hue": 310,
+      "note": "DECLARED-UNMEASURED slot (2026-10-30). Nothing has been measured on this axis: n 0 is the literal truth, never a score. The daily intake run probes 18 public sources and publishes public/interop/watchdog-intake/_index.json — a DAILY PROBE OF THE PUBLIC LAYER, not a frozen n>=30 bank, so this slot stays UNMEASURED. When the daily runs are frozen, sha-pinned and pinned to a published run window, the axis becomes MEASURED with n counting SOURCES PROBED — the same grammar as effect-binding's 'tool-call servers probed', never pooled with bank-item n. The public watchdog gap this names: before 2026-10-30 the AI Incident Database was a ONE-SHOT PRESENCE PROBE (layer-o-presence.json ns_incidentdatabase_ai, QUALIFIED / presence UNMEASURED, as_of 2026-09-29) and NVD, CVE, OSV and GHSA had no entries at all.",
+      "method_status": "no-method: declared slot",
+      "n_note": "The daily intake run probes 18 public sources and publishes public/interop/watchdog-intake/_index.json. That is a DAILY PROBE OF THE PUBLIC LAYER, not a frozen n>=30 bank, so this slot stays UNMEASURED. When the daily runs are frozen, sha-pinned and pinned to a published run window, the axis becomes MEASURED with n counting SOURCES PROBED — the same grammar as effect-binding's 'tool-call servers probed', never pooled with bank-item n.",
+      "method": "watchdog_intake.py v0.1 — daily pinned-source intake",
+      "method_sha": "scripts/watchdog_intake.py",
+      "public_pages": "HIDDEN_PENDING_OWNER_GO",
       "measurement_time": {
         "state": "UNCHECKABLE",
         "precision": "unknown",

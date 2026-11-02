@@ -27,7 +27,19 @@ describe("evidence discovery metadata", () => {
         encodingFormat: "application/json",
         contentUrl: "https://councilof.ai/api/gspc",
       },
+      {
+        "@type": "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: "https://councilof.ai/signed/card_index.json",
+        name: "Signed card index (Ed25519-signed measurement cards)",
+      },
     ]);
+  });
+
+  it("identifies the board by its live dataset URL, not the 410 Zenodo DOI", () => {
+    const board = gspcBoardDataset(false);
+    expect(board.identifier).toBe("https://councilof.ai/api/gspc");
+    expect(JSON.stringify(board)).not.toContain("zenodo");
   });
 
   it("states the dated archive identity without claiming the current release", () => {

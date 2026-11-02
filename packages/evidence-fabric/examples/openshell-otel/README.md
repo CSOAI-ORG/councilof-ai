@@ -46,6 +46,32 @@ hashes. See `SHA256SUMS`.
 
 ## Limits
 
+### Optional policy-provenance export (29 October 2026)
+
+The historical renderer and retained collector files below remain unchanged. For a
+new export that also carries the policy input and source-report digests, run from
+`packages/evidence-fabric/`:
+
+```sh
+python3 render/openshell_otel.py examples/openshell-otel/data/openshell.events.jsonl > openshell-with-policy.otlp.json
+python3 -m pytest -q tests/test_openshell_otel.py
+```
+
+The `csoai.openshell-policy-provenance/0.1` export profile adds
+`csoai.policy.input_sha256`, `csoai.subject.declared_by` and `csoai.source.sha256`.
+It requires an OpenShell event with a valid event digest, policy-input reference and
+source-report digest; malformed later rows reject the whole export without partial
+stdout. Existing state labels, limits and timestamps are retained.
+
+This identifies the policy **input read by the adapter**. It does not establish the
+effective installed policy, principal identity, authority or containment. The new
+profile has offline regression coverage; a fresh collector readback of these added
+attributes has not been run. The historical collector result above applies only to
+its retained bytes. The general `render/otel.py` remains unchanged because retained
+SAFE readers pin its exact implementation and output.
+
+### Limits of the historical capture and collector run
+
 - One capture, one run. The network-proxy role ran without isolation (no network namespace or
   capabilities), and the "observed" side is our own flow observation, not an independent party.
 - The events are unsigned; the issuer `did:web:issuer.example` is a test identifier.
@@ -54,7 +80,7 @@ hashes. See `SHA256SUMS`.
   records, so they are not byte-identical to the raw collector output (raw readback sha256
   `27f71274fca9f8ef6eacffcd363bab868a61edab562ca52ef141dd80ecb68ccf`). The comparison is the same.
 - An older collector (otelcol-contrib v0.111.0) dropped `eventName`; v0.162.0 keeps it.
-- **Known gap:** the policy's own reference and hash (`subject.declared_by`) is not carried as an OTel
+- **Historical export gap:** the policy's own reference and hash (`subject.declared_by`) is not carried as an OTel
   attribute; only `csoai.declared_sha256` (a hash of the declared effect) is. A reader of the
   telemetry alone cannot tell which policy version produced the declared effect.
 - This shows the collector preserves the records. It says nothing about any SIEM or backend ingesting

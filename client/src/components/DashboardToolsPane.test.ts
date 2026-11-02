@@ -57,6 +57,7 @@ describe("dashboard MCP inventory", () => {
       "axis_interpretability-reproducibility",
       "axis_claim-maintenance",
       "axis_serving-fidelity",
+      "axis_watchdog-ingest",
     ]);
     expect(METERED_TOOLS).toEqual([
       "commission_card",
@@ -65,7 +66,7 @@ describe("dashboard MCP inventory", () => {
       "receipts_batch",
       "evidence_bundle",
     ]);
-    expect(PUBLISHED_TOOL_COUNT).toBe(52);
+    expect(PUBLISHED_TOOL_COUNT).toBe(53);
   });
 
   it("does not advertise the quarantined witness SKU", () => {

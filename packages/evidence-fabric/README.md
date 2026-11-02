@@ -96,6 +96,35 @@ A signature checked with a supplied DID document establishes consistency between
 
 ## Bridges: probes, ingesters, maintenance
 
+### Added handoffs (29 October 2026)
+
+`ingest/cisco_mcp_in.py` imports a retained Cisco MCP Scanner `--format raw` envelope.
+It is distinct from `ingest/sarif_in.py`: the scanner's documented envelope is JSON,
+not SARIF, and `--raw` produces a different shape. Supply the scanner version and the
+time the report was read; the envelope does not authenticate either.
+
+```sh
+python3 ingest/cisco_mcp_in.py REPORT.json --read-at 2026-10-29T00:00:00Z --scanner-version ACTUAL_RECORDED_VERSION > events.jsonl
+python3 -m pytest -q tests/test_cisco_mcp_in.py tests/test_openshell_otel.py
+```
+
+Every imported result stays UNMEASURED with no number and no executed control.
+The full per-item finding, requested analyzers and raw-report digest are retained.
+`is_safe: true`, skipped/error statuses and empty results never grant permission or
+become an independently measured result. Unknown envelope shapes and malformed rows
+are rejected before output. Tests use synthetic wire fixtures; no Cisco scanner or
+remote server was run, and no vendor review is implied. Source contract:
+[output-formats.md at 21a87b4b](https://github.com/cisco-ai-defense/mcp-scanner/blob/21a87b4bc818c2e279d9af6cf5b20ed386dfc9b5/docs/output-formats.md).
+
+`render/openshell_otel.py` adds the input-policy and source-report digests to a new
+OpenShell-specific OTLP export. It reuses the existing renderer without changing its
+hash-pinned bytes or frozen outputs. See the
+[retained capture and optional export](examples/openshell-otel/README.md).
+The input-policy digest is not an assertion about effective installed policy.
+
+The [integration reconciliation](../../docs/standards/osaia-safe-reverification/INTEGRATION-RECONCILIATION-20261029.md)
+maps these handoffs to existing adapters, approval records and remaining runtime checks.
+
 | Path | What |
 |---|---|
 | `probe/release_parity.py` | Compares the latest version on the package registry (PyPI or npm) with the repository's latest release tag. |
