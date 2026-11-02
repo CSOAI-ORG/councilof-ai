@@ -270,9 +270,16 @@ const RULES = [
     id: "false_art50_nov",
     // EUR-Lex: Art 50 applied 2 Aug 2026; some marking 2 Dec 2026; Annex III 2 Dec 2027.
     // "2 Nov 2026" / "November 2026 cliff" is a dead Digital-Omnibus rumour.
-    pattern: /2\s+Nov(?:ember)?\s+2026|November 2026 cliff/i,
-    nearAllow: /not 2 Nov|wrong date|EUR-Lex|2 August 2026|2 Aug 2026/i,
-    why: "EUR-Lex only: Art 50 applied 2 Aug 2026; marking grace 2 Dec 2026; Annex III 2 Dec 2027. There is no 2 Nov 2026 cliff.",
+    //
+    // 2026-11-02: this rule stopped the whole deploy. Every rendered page carries a read
+    // timestamp — "read 2 Nov 2026, 22:49 UTC", "as of 2 Nov 2026" — and on the day the
+    // clock reached 2 Nov 2026 all 745 pages matched the rumour. A timestamp is not a
+    // claim about Article 50, so the pattern now ignores a date followed by a clock time,
+    // and nearAllow carries the stamp shapes. The rumour itself is still caught: it is a
+    // sentence about what applies, and none of those shapes put "as of" in front of it.
+    pattern: /(?:2\s+Nov(?:ember)?\s+2026(?!\s*,?\s*\d{1,2}:\d{2})|November 2026 cliff)/i,
+    nearAllow: /not 2 Nov|wrong date|EUR-Lex|2 August 2026|2 Aug 2026|\bas of\s+2\s+Nov(?:ember)?\s+2026|\bread\s+2\s+Nov(?:ember)?\s+2026|\bupdated\s+2\s+Nov(?:ember)?\s+2026/i,
+    why: "EUR-Lex only: Art 50 applied 2 Aug 2026; marking grace 2 Dec 2026; Annex III 2 Dec 2027. There is no 2 Nov 2026 cliff. A read timestamp carrying the date is not a claim.",
   },
   {
     id: "hub_queue_stickers",
@@ -466,6 +473,8 @@ if (SELFTEST) {
     ["agent_instruction_leak", "In build — COBOL lineage. Apex 522. SPEC only, not a live mill", "/corrections/index.html"],
     ["agent_instruction_leak", "Slot 15 / human-vs-ai stay in-lane only.", "/corrections/index.html"],
     ["agent_instruction_leak", "This VM holds the planted key behind the public door", "/corrections/index.html"],
+    ["false_art50_nov", "Article 50 applies 2 Nov 2026", null],
+    ["false_art50_nov", "the November 2026 cliff", null],
   ];
   let bad = 0;
   // The corrections-ledger exemption is one built path, never a prefix or a lookalike.
