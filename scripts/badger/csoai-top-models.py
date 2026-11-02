@@ -7,7 +7,8 @@ discipline — quote the source, don't invent measurements, declare
 UNCHECKABLE for everything not directly probed.
 
 These are the SUBJECTS for the GSPC board — every model on the board
-needs a subject. The board is "22 axes measured against these models."
+needs a subject. The board measures declared axes against these models; live counts at
+councilof.ai/api/gspc.
 The top 100 are the natural first cohort.
 
 Source: HuggingFace open-llm-leaderboard + most-downloaded models + the
