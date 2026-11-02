@@ -899,18 +899,10 @@ def run(write: bool = True, only: set[str] | None = None) -> dict[str, Any]:
             write_json(os.path.join(PUBLIC_INTEROP, fname), runs[name])
         if only:
             # A partial re-run refreshes only the axes it names. The board-wide as_of
-            # stamp and untouched axes' entries are preserved, while the named axes'
-            # per-axis entries in financial-facts-as-of.json and _gspc_fin_as_of.ts
-            # are updated from the rewritten run artifacts so n/tally/as_of cannot drift.
-            existing_path = os.path.join(PUBLIC_INTEROP, "financial-facts-as-of.json")
-            if os.path.isfile(existing_path):
-                with open(existing_path, "r", encoding="utf-8") as f:
-                    merged = json.load(f)
-                merged_axes = dict(merged.get("axes") or {})
-                for name in only:
-                    merged_axes[name] = snapshot["axes"][name]
-                merged["axes"] = merged_axes
-                snapshot = merged
+            # stamp is deliberately left alone: moving it would date the other seven
+            # artifacts to a run that did not rewrite them.
+            print(f"wrote {len(mapping)} run artifact(s) for {sorted(only)}; board as_of left untouched")
+            return {"as_of": as_of, "reader_state": reader_state, "probe_count": probe_n, "runs": runs, "snapshot": snapshot}
         write_json(os.path.join(INTEROP, "financial-facts-as-of.json"), snapshot)
         write_json(os.path.join(PUBLIC_INTEROP, "financial-facts-as-of.json"), snapshot)
         os.makedirs(os.path.dirname(AS_OF_TS), exist_ok=True)
@@ -925,39 +917,11 @@ def run(write: bool = True, only: set[str] | None = None) -> dict[str, Any]:
     return {"as_of": as_of, "reader_state": reader_state, "probe_count": probe_n, "runs": runs, "snapshot": snapshot}
 
 
-def sync_as_of_from_committed_runs() -> dict[str, Any]:
-    existing_path = os.path.join(PUBLIC_INTEROP, "financial-facts-as-of.json")
-    with open(existing_path, "r", encoding="utf-8") as f:
-        snapshot = json.load(f)
-    for name, entry in list((snapshot.get("axes") or {}).items()):
-        ev_url = entry.get("evidence_url") or f"/interop/financial-measure-run-{name}.json"
-        run_path = os.path.join(REPO, "public", ev_url.lstrip("/"))
-        with open(run_path, "r", encoding="utf-8") as rf:
-            run_doc = json.load(rf)
-        snapshot["axes"][name] = {
-            "n": run_doc["n"],
-            "as_of": run_doc["as_of"],
-            "status": run_doc["status"],
-            "tally": run_doc.get("tally") or {},
-            "evidence_url": ev_url,
-        }
-    write_json(os.path.join(INTEROP, "financial-facts-as-of.json"), snapshot)
-    write_json(os.path.join(PUBLIC_INTEROP, "financial-facts-as-of.json"), snapshot)
-    tracked_ts = os.path.join(REPO, "functions", "api", "_gspc_fin_as_of.ts")
-    with open(tracked_ts, "w", encoding="utf-8") as f:
-        f.write(emit_as_of_ts(snapshot))
-    return snapshot
-
-
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--dry-run", action="store_true")
-    p.add_argument("--sync-as-of", action="store_true", help="sync financial-facts-as-of.json and _gspc_fin_as_of.ts from committed run artifacts")
     p.add_argument("--only", default="", help="comma-separated axis ids to rewrite; others are fetched but not written")
     args = p.parse_args(argv)
-    if args.sync_as_of:
-        sync_as_of_from_committed_runs()
-        return 0
     only = {a.strip() for a in args.only.split(",") if a.strip()} or None
     run(write=not args.dry_run, only=only)
     return 0

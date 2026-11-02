@@ -61,17 +61,18 @@ export const FINANCIAL_FACTS_AS_OF = {
       "evidence_url": "/interop/financial-measure-run-custody-disclosure.json"
     },
     "ai-adoption-components": {
-      "n": 2,
-      "as_of": "2026-09-17T12:32:42Z",
+      "n": 1,
+      "as_of": "2026-09-17T12:58:11Z",
       "status": "MEASURED",
       "tally": {
-        "MEASURED": 2
+        "UNCHECKABLE": 1,
+        "MEASURED": 1
       },
       "evidence_url": "/interop/financial-measure-run-ai-adoption-components.json"
     },
     "labour-components": {
       "n": 2,
-      "as_of": "2026-09-17T12:32:42Z",
+      "as_of": "2026-09-17T12:58:11Z",
       "status": "MEASURED",
       "tally": {
         "MEASURED": 2

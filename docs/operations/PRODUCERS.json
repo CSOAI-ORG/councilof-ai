@@ -263,7 +263,7 @@
       "id": "gspc-fact-table",
       "command": "node scripts/measurements/build-gspc-fact-table.mjs",
       "outputs": [
-        "public/interop/gspc-fact-table/gspc_measurements.jsonl",
+        "public/interop/gspc-fact-table/gspc_measurements/part-000.jsonl",
         "public/interop/gspc-fact-table/gspc_items.jsonl",
         "public/interop/gspc-fact-table/gspc_cells.jsonl",
         "public/interop/gspc-fact-table/MANIFEST.json"
@@ -271,7 +271,26 @@
       "mode": "delegate-to-check",
       "gated": true,
       "reason": "The per-cell mill evidence lives as 664 items-<axis>-<hash>.jsonl files whose NAME carries only a truncated axis and a content hash \u2014 the model is inside the file. A consumer cannot find a cell for a given model without opening every file, cannot join the cells without reading all of them, and cannot read the corpus as a table. This producer joins the cells into one long fact table (model, axis, item, outcome), the item universe it refers to, and an index of the cells it came from. It copies no number it did not read, and it says how many rows carry no model and no grade rather than dropping them.",
-      "check": "node scripts/measurements/build-gspc-fact-table.mjs --check --out public/interop/gspc-fact-table"
+      "check": "node scripts/measurements/build-gspc-fact-table.mjs --check --out public/interop/gspc-fact-table",
+      "outputs_note": "The measurements table is written in PARTS and the MANIFEST names them (tables.measurements.parts), so the parts are a function of the corpus size and cannot be listed here one by one. The producer's own --check compares every part against a fresh build, which is the check that runs in CI; the list above names the first part and the two single-file tables.",
+      "sharded_since": "2026-11-01: the single gspc_measurements.jsonl was 8.2 MiB and grew ~11 KB per card; one card PR of 1,500 cards took it to 24.4 MiB and the next reached 25.3 MiB, over Cloudflare Pages' 25 MiB per-file cap, so the deploy broke on a data arrival. The table is now written in parts of at most 8 MiB."
+    },
+    {
+      "id": "npm-publish-check",
+      "command": "node scripts/harness-x/npm-publish-live.mjs",
+      "outputs": [
+        "distribution/npm/npm-publish-check.json"
+      ],
+      "mode": "never-in-ci",
+      "gated": false,
+      "volatile": true,
+      "reason": "It measures the WORLD over the network \u2014 npm's latest dist-tag, the published tarball's own manifests, and the live door's tools/list \u2014 and stamps checked_at, so a byte-diff of a re-run would be a false red. It is a dated capture, not a derived artefact: it is never edited, and a NEW capture is written when npm publishes or the door moves. Its reader is scripts/llms-install.test.mjs, which holds the guide to it, so a published release can no longer be described in the guide by a hand-typed number.",
+      "derives_from": [
+        "https://registry.npmjs.org/csoai-gspc-mcp (dist-tags.latest, time[version], versions[version].dist)",
+        "the published tarball's own package/gspc-tools.json and package/paid-tools.json",
+        "POST https://councilof.ai/mcp \u2014 tools/list"
+      ],
+      "verified_2026_11_01": "ran 2026-11-01T11:52:52Z: published 0.2.4 (2026-10-28T16:48:34.768Z) carries 52 names (47 free + 5 metered); the live door served 53; the difference is one live-only name, axis_watchdog-ingest"
     }
   ],
   "not_yet_classified": {

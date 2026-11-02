@@ -6,7 +6,7 @@ published, submitted or registered. Every step is an owner action.
 Targets: 26. Owner approval needed: 25.
 Affected by the flagged CSOAI-ORG GitHub account (blocked, re-routed to CouncilofAI-CSOAI, or losing GitHub-based provenance): 13 (`mcp-registry-github`, `claude-plugin`, `cursor-plugin`, `grok-plugin`, `antigravity-plugin`, `gemini-extension`, `pypi-langchain-csoai`, `pypi-llama-index-tools-csoai`, `pypi-crewai-csoai`, `npm-ai-sdk-gspc`, `npm-mastra-gspc`, `docker-mcp-catalog`, `dify-plugin`).
 Remote server version: 1.4.4 (from `mcp/gspc-server/server.json`; `scripts/harness-x/check.mjs` requires it to equal the live serverInfo.version).
-Fleet: 53 tools (48 free, 5 x402-metered). Doctrine sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a`.
+Fleet: 53 tools (48 free, 5 x402-metered) at https://councilof.ai/mcp; https://councilof.ai/mcp/free serves the 48 free tools only. Doctrine sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a`.
 
 Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harness-x/check.mjs`.
 After any step: `python3 scripts/harness-x/parity_live.py` reads every live channel in `published_channels` and says
@@ -269,7 +269,7 @@ CONSISTENT / INCONSISTENT (quoting source and live) / UNCHECKABLE (staged daily:
 
 ## `working-group-resources`
 
-- Output: `public/working-groups/catalog.json`, `public/working-groups/index.html`, `distribution/working-groups/hf/index.html`, `distribution/working-groups/hf/catalog.json`, `distribution/working-groups/hf/README.md`, `distribution/working-groups/kaggle/working-groups.ipynb`, `distribution/working-groups/kaggle/kernel-metadata.template.json`, `distribution/working-groups/mcp-client.template.json`, `distribution/working-groups/LICENSE`, `distribution/working-groups/hf/LICENSE`, `distribution/working-groups/README.md`, `distribution/working-groups/manifest.json`
+- Output: `public/working-groups/catalog.json`, `public/working-groups/index.html`, `distribution/working-groups/hf/index.html`, `distribution/working-groups/hf/catalog.json`, `distribution/working-groups/hf/README.md`, `distribution/working-groups/kaggle/working-groups.ipynb`, `distribution/working-groups/kaggle/kernel-metadata.template.json`, `distribution/working-groups/mcp-client.template.json`, `distribution/working-groups/LICENSE`, `distribution/working-groups/hf/LICENSE`, `distribution/working-groups/README.md`, `distribution/working-groups/manifest.json`, `public/working-groups/controlai.html`, `public/working-groups/controlai.json`, `distribution/working-groups/hf/controlai.html`, `distribution/working-groups/hf/controlai.json`
 - Version source: `undefined`
 - Flagged-org impact: undefined
 
