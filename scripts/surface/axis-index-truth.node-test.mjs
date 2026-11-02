@@ -100,6 +100,9 @@ test("a declared slot row states its state and n, and claims no point leader", (
 test("an axis whose kind the board does not name is shown, but not counted into a group", () => {
   const b = board({ gated: [] });
   b.axes.push({ axis: "mystery-axis", family: "subject", status: "UNMEASURED", n: 0 });
+  // The board payload and its totals must agree or the generator refuses to render
+  // (LID_COUNT_MISMATCH), so a doctored payload updates its own totals too.
+  b.totals = { ...b.totals, public_count: "34 axes · 23 measured · 0 of 14 model-comparison axes separated a leader" };
   const html = renderAxesIndex(b);
   assert.match(html, /<h2>1 axes of an unnamed kind<\/h2>/);
   assert.match(html, /mystery-axis/);
@@ -138,6 +141,30 @@ test("the axes index page says 32 where the board serves 33, because one slot is
   assert.match(out["axes.html"], /<h1>All 32 GSPC axes<\/h1>/);
   // The lid is the board's own totals, left as served.
   assert.match(out["axes.html"], /33 axes · 23 measured/);
+});
+
+test("the index reconciles the board's totals with the rows it lists when slots are owner-held", () => {
+  const html = renderAll(board())["axes.html"];
+  // Two counts about one set, and the difference stated in neither's place is an error to the reader.
+  assert.match(html, /33 axes · 23 measured/);
+  assert.match(html, /<h1>All 32 GSPC axes<\/h1>/);
+  assert.match(
+    html,
+    /The board serves 33 axes; 1 is owner-gated pending go, so this page lists 32\./,
+  );
+  // The held axis is a count, never a leak.
+  assert.doesNotMatch(html, /slot-9/);
+});
+
+test("the index stays silent when the board totals equal the rows shown", () => {
+  const html = renderAll(board({ gated: [] }))["axes.html"];
+  assert.doesNotMatch(html, /owner-gated pending go/);
+});
+
+test("a totals row the reconciliation cannot explain refuses to render", () => {
+  const b = board();
+  b.totals = { ...b.totals, public_count: "40 axes · 23 measured" };
+  assert.throws(() => renderAll(b), /LID_COUNT_MISMATCH/);
 });
 
 test("the commit board renders exactly its public canonical axes without promoting the owner-held slots", async () => {
