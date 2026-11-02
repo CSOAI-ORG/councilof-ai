@@ -86,7 +86,7 @@ export default function WatchlistPane() {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           rows={2}
-          placeholder="Qwen/Qwen3.8-27B, openai/whisper-tiny"
+          aria-label="Model identifiers to watch" placeholder="Qwen/Qwen3.8-27B, openai/whisper-tiny"
           className="min-h-[3rem] w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
         />
         <div className="flex shrink-0 gap-2">
