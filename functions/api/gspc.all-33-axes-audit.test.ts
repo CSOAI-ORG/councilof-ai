@@ -233,7 +233,6 @@ const EXPECTED_SUBJECT_SLOTS = [
   "humanoid-deployment",
   "regulator-transparency",
   "interpretability-reproducibility",
-  "claim-maintenance",
   "serving-fidelity",
   "watchdog-ingest",
 ] as const;
@@ -248,8 +247,8 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     const axes = board.axes as Array<Record<string, any>>;
     expect(axes.map((a) => a.axis)).toEqual([...CANONICAL_AXES]);
     expect(board.totals.axes).toBe(CANONICAL_AXES.length);
-    expect(board.totals.quotable_axes).toBe(23);
-    expect(board.totals.measured_axes).toBe(23);
+    expect(board.totals.quotable_axes).toBe(24);
+    expect(board.totals.measured_axes).toBe(24);
     expect(board.totals.unmeasured_axes).toBe(EXPECTED_SUBJECT_SLOTS.length);
     expect(board.totals.comparison_axes).toBe(14);
     expect(board.totals.separated_leads).toBe(0);
@@ -371,7 +370,7 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     const rep = await invokeReports();
     expect(rep.totals).toEqual({
       axes: CANONICAL_AXES.length,
-      measured: 23,
+      measured: 24,
       unmeasured: EXPECTED_SUBJECT_SLOTS.length,
       model_comparison_axes: 14,
       separated: 0,
@@ -389,6 +388,7 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     expect(reportsIndex.counts.axes_by_kind).toEqual({
       "model-comparison": 14,
       "deterministic-facts": 9,
+      "measured-subject": 1,
       "declared-slot": EXPECTED_SUBJECT_SLOTS.length,
     });
     expect(reportsIndex.axes.map((a: { axis: string }) => a.axis)).toEqual([...CANONICAL_AXES]);
@@ -406,7 +406,7 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     const byFam = st.board.by_family.value;
     expect(byFam.gspc).toMatchObject({ axes: 15, measured: 15 });
     expect(byFam.financial).toMatchObject({ axes: 8, measured: 8 });
-    expect(byFam.subject).toMatchObject({ axes: EXPECTED_SUBJECT_SLOTS.length, measured: 0 });
+    expect(byFam.subject).toMatchObject({ axes: EXPECTED_SUBJECT_SLOTS.length + 1, measured: 1 });
     expect(byFam.gspc.axes + byFam.financial.axes + byFam.subject.axes).toBe(CANONICAL_AXES.length);
   });
 
