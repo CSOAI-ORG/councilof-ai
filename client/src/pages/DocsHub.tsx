@@ -70,8 +70,7 @@ export default function DocsHub() {
           </CardHeader>
           <CardContent className="text-sm">
             <p>
-              Streamable HTTP door (48 free tools, metered tools quote at the
-              402 challenge):
+              Streamable HTTP door — the free tools cost nothing; metered tools quote at the 402 challenge:
             </p>
             <CodeLine text={MCP_ADD} />
             <p className="mt-3">Or stdio via npm:</p>
@@ -186,6 +185,8 @@ export default function DocsHub() {
               this site shows no prices by rule.
             </p>
             <p className="mt-3">
+              Catalog of every metered endpoint, each with its live-quote link:{" "}
+              <InA to="/metered">/metered</InA>.{" "}
               Overview of the rail:{" "}
               <InA to="/dashboard?task=pricing-overview&tab=measured">
                 Council OS → pricing overview
