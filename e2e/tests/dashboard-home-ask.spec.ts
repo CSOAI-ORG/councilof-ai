@@ -2,6 +2,7 @@ import { test, expect, type Page, type Request } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { qualifyLocalFirstAskCompletion } from "../../scripts/review/first-ask-completion.mjs";
+import { CSOAI_STAFF_PROFILE } from "../../client/src/lib/csoaiStaffProfile";
 
 /**
  * The first question typed on the Council OS start screen gets an answer (tools audit, 6 Oct 2026).
@@ -451,7 +452,9 @@ for (const vp of VIEWPORTS) {
           fullAnswerRetained: (await page.getByTestId("talk-tool-card").textContent() ?? "")
             .replace(/\s+/g, " ").trim().includes(RESULT.summary.replace(/\s+/g, " ").trim()),
         });
-        expect(completionQualification, "Complete finite local fixture; raw browser verdict remains separate")
+        const qualificationReason = completionQualification && typeof completionQualification === "object" && "reason" in completionQualification && typeof completionQualification.reason === "string"
+          ? completionQualification.reason.slice(0, 160) : "missing qualifier reason";
+        expect(completionQualification, "Complete finite local fixture; raw browser verdict remains separate; " + qualificationReason)
           .toMatchObject({ accepted: true });
       } else {
         // BASE_URL uses the real endpoint: no local-fixture browser-error exception.
@@ -521,9 +524,10 @@ async function readyAsk(page: Page) {
   const pane = page.getByTestId("ask-pane");
   await expect(pane).toBeVisible({ timeout: 30_000 });
   await expect(pane.getByLabel("Your question", { exact: true })).toBeFocused({ timeout: 10_000 });
-  await expect(pane.getByTestId("ask-introduction")).toContainText("Hi, this is Council of AI. How can I help?");
+  await expect(pane.getByTestId("ask-introduction")).toContainText(CSOAI_STAFF_PROFILE.greeting);
+  await expect(pane.getByTestId("ask-introduction")).toContainText(CSOAI_STAFF_PROFILE.disclosure);
   await expect(pane.getByTestId("ask-introduction")).not.toContainText("MEOK");
-  await expect(pane.getByTestId("ask-introduction")).toContainText("saved customer cases are not connected here");
+  await expect(pane.getByTestId("ask-introduction")).toContainText("Company requests need a verified company connection; saved status is shown only after its checks succeed.");
   await expect(pane.getByTestId("ask-rule-based")).toContainText("never from an AI model");
   await expect(pane.getByRole("switch", { name: "Let it move the page for me" })).toHaveAttribute("aria-checked", "false");
   await expect(pane.getByRole("switch", { name: /^Voice\b/ })).toHaveAttribute("aria-checked", "false");
