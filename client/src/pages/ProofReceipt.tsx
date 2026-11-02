@@ -72,7 +72,7 @@ export default function ProofReceipt() {
         <textarea
           className="mt-6 w-full rounded-xl border border-slate-700 bg-slate-900 p-3 font-mono text-sm"
           rows={8}
-          placeholder="Paste text to hash…"
+          aria-label="Text to hash in a local receipt" placeholder="Paste text to hash…"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
