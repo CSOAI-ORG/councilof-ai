@@ -38,6 +38,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Capture bounded offline contract baseline
+        run: |
+          python3 scripts/stablecoin_failure_diagnostics.py \
+            --source-revision "$(git rev-parse HEAD)" \
+            --output "$RUNNER_TEMP/stablecoin-contract-baseline.json"
       - name: Refresh the full-universe source registry (weekly, keyless)
         # Sundays only (or manual dispatch): re-fetches the keyless DefiLlama
         # per-asset detail `url` for all 425 identities and re-registers issuer
@@ -56,7 +61,8 @@ jobs:
         run: |
           PYTHONPATH=scripts python3 -m unittest \
             scripts/test_stablecoin_deep_adapter.py \
-            scripts/test_stablecoin_promotion_queue.py
+            scripts/test_stablecoin_promotion_queue.py \
+            scripts/test_stablecoin_failure_diagnostics.py
           python3 scripts/build_stablecoin_promotion_queue.py --check
       - name: Land one reviewed rolling update
         env:
@@ -90,3 +96,21 @@ jobs:
           gh workflow run pr-gates.yml --repo "$GITHUB_REPOSITORY" --ref "$branch"
           gh pr merge "$url" --repo "$GITHUB_REPOSITORY" --squash --auto || echo "auto-merge unavailable; exact generated PR remains open for review: $url"
           echo "rolling evidence PR: $url"
+      # These steps retain only allowlisted projections. Never upload raw deep
+      # packs, provider errors, response bodies, mirrors or job logs on failure.
+      # failure() does not neutralize the original failed contract/publication gate.
+      - name: Project bounded failure diagnostics
+        if: failure()
+        run: |
+          python3 scripts/stablecoin_failure_diagnostics.py \
+            --source-revision "$(git rev-parse HEAD)" \
+            --baseline "$RUNNER_TEMP/stablecoin-contract-baseline.json" \
+            --output "$RUNNER_TEMP/stablecoin-failure-diagnostics.json"
+      - name: Retain bounded failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stablecoin-failure-diagnostics
+          path: ${{ runner.temp }}/stablecoin-failure-diagnostics.json
+          if-no-files-found: error
+          retention-days: 7
