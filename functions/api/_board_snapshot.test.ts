@@ -34,7 +34,19 @@ const DECLARED_IDS = [
   // Slot 34, ruled 2026-10-30: the public watchdog / incident-source intake.
   "watchdog-ingest",
 ] as const;
-const PROMOTED_IDS = ["claim-maintenance"] as const;
+const PROMOTED_IDS = [
+  "lab-practice",
+  "company-practice",
+  "measurer-integrity",
+  "harness-fidelity",
+  "interop-conformance",
+  "humanoid-deployment",
+  "regulator-transparency",
+  "interpretability-reproducibility",
+  "claim-maintenance",
+  "serving-fidelity",
+  "watchdog-ingest",
+] as const;
 const UNMEASURED_DECLARED_IDS = DECLARED_IDS.filter(
   (id) => !(PROMOTED_IDS as readonly string[]).includes(id),
 );
@@ -156,7 +168,7 @@ describe("signed board freeze vs live axis arrays", () => {
     const c = await (await (countersGet as unknown as () => Promise<Response>)()).json();
     const x = s.board.live_derivation_crosscheck;
     expect(x.signed_snapshot.source).toBe("public/signed/gspc-board.2026-09-29.signed.json");
-    expect(x.signed_snapshot_agrees).toBe(LIVE_AXES.every((a) => a.kind !== "declared-slot"));
+    expect(x.signed_snapshot_agrees).toBe(LIVE_AXES.every((a) => a.family !== "subject"));
     expect(x.signed_snapshot.claim_state).toBe("CURRENT");
     expect(x.history.map((h: { source: string }) => h.source)).toContain("public/signed/gspc-board.signed.json");
     expect(s.board.signature.signer).toBe("did:web:csoai.org#board-attestation-1");
