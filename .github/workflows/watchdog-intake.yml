@@ -1,0 +1,116 @@
+name: watchdog-intake
+
+# WHY THIS EXISTS (2026-11-02). The daily public-watchdog intake was a POD LOOP at 09:40Z:
+# scripts/pod-loops/watchdog-intake.sh, dispatched by scripts/pod-loops/scheduler.sh, landing
+# a watchdog/auto-<date> branch that the :50 land job merged path-restricted. The pod that
+# hosted the loops is gone, and the surviving compute pod's loop directories
+# (/workspace/lanes/{loops,logs,state}) are empty - so the daily reading of 18 public watchdog
+# and incident sources stopped without anyone noticing, and the estate kept only an on-demand
+# intake. The last run was 2026-10-30.
+#
+# THIS RUNS THE SAME SCRIPT on a runner that exists. Not a reimplementation: the loop below is
+# scripts/pod-loops/watchdog-intake.sh, with its own gate, its own HOLD-only routing queue and
+# its own path-restricted landing. The loop's verdict decides everything - a day that does not
+# pass the loop's own gate is a HOLD, and this workflow opens NO pull request for it.
+#
+# THE GATE, verbatim from the loop: the run artifact and the pointer must agree, every routing
+# row must be HOLD with may_apply false and no challenge opened, and the atom the public root
+# would sign must pass the PUBLISHER'S OWN admission check. So the estate never lands a day
+# that could never be signed into the root.
+#
+# IT NEVER PUSHES MASTER DIRECTLY. It opens a pull request whose diff is confined to
+# public/interop/watchdog-intake/**, and the required checks (gates, build, stamped-bytes,
+# hold-guard) are the gate. A deletion anywhere in that path is a HOLD, exactly as it is for
+# the pod's land job.
+#
+# IT MEASURES, IT DOES NOT CLAIM. Every source is probed and a source that does not answer is
+# recorded as UNCHECKABLE or UNREACHABLE - never as a zero. Every routing row is HOLD: the
+# human gate is not this workflow's to close, and no challenge is ever opened.
+
+on:
+  schedule:
+    - cron: "40 9 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: watchdog-intake
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run the estate's intake loop (the same script the pod ran)
+        env:
+          LANES: ${{ runner.temp }}/lanes
+          WATCHDOG_BARE: ${{ github.workspace }}/.git
+          WATCHDOG_CLONE: ${{ runner.temp }}/watchdog-lane
+          WATCHDOG_PUSH: "0"
+        run: |
+          set -euo pipefail
+          bash scripts/pod-loops/watchdog-intake.sh --now
+          echo "--- the loop's own verdict ---"
+          tail -3 "$LANES/logs/watchdog-intake.log"
+
+      - name: Publish the day as a path-restricted pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          LANE="${{ runner.temp }}/watchdog-lane"
+          LANES_DIR="${{ runner.temp }}/lanes"
+          PUB=public/interop/watchdog-intake
+          DATE=$(date -u +%F)
+          BRANCH="watchdog/auto-$DATE"
+
+          # THE LOOP'S VERDICT IS THE GATE. A day the loop did not READ is a HOLD, and a HOLD
+          # is not published. This workflow has no opinion of its own about the day's content.
+          if ! grep -q " READ " "$LANES_DIR/logs/watchdog-intake.log"; then
+            echo "the loop did not READ the day - nothing is published, nothing is claimed"
+            exit 0
+          fi
+
+          git checkout -B "$BRANCH"
+          mkdir -p "$PUB"
+          cp -R "$LANE/$PUB/." "$PUB/"
+          git add -- "$PUB"
+          if git diff --cached --quiet; then
+            echo "the day is byte-identical to master - nothing to publish"
+            exit 0
+          fi
+
+          # THE SAME RULES THE POD'S LAND JOB ENFORCED: the diff may only ADD and MODIFY under
+          # public/interop/watchdog-intake/, and it may never delete anything. Any other path,
+          # any deletion, and the day is a HOLD left for a human.
+          if git diff --cached --name-only | grep -v "^$PUB/"; then
+            echo "HOLD - the diff touches a path the intake may not touch"
+            exit 0
+          fi
+          if git diff --cached --diff-filter=D --name-only | grep .; then
+            echo "HOLD - the diff deletes a path; the intake only adds and modifies"
+            exit 0
+          fi
+
+          git -c user.name=csoai-watchdog-intake -c user.email=intake@csoai.org commit -q \
+            -m "watchdog/auto-$DATE: 18 public watchdog and incident sources probed, the day folded into the WG-SAFE routing queue (every row HOLD, may_apply false, no challenge opened)"
+          git push -q --force-with-lease origin "$BRANCH"
+
+          pr=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -z "$pr" ]; then
+            pr=$(gh pr create --repo "$REPO" --head "$BRANCH" --base master \
+                 --title "watchdog/auto-$DATE: the day's public watchdog intake and WG-SAFE routing queue" \
+                 --body "Produced by scripts/pod-loops/watchdog-intake.sh, the estate's own intake loop, run on a runner because the pod that hosted it is gone. Every routing row is HOLD, may_apply false, no challenge opened. The loop's own gate decided the day was publishable; the required checks are the gate for the merge." \
+                 --json number --jq '.number')
+          fi
+          echo "PR #$pr"
+          gh pr merge "$pr" --repo "$REPO" --squash --auto || true
