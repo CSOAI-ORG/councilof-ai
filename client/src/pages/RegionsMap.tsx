@@ -37,21 +37,30 @@ const TONE: Record<string, string> = {
   "Guidance": "bg-slate-100 text-slate-600",
 };
 
-export default function RegionsMap() {
-  useEffect(() => { document.title = "Regulatory map by region - EU / US / Global | CSOAI"; }, []);
+/**
+ * `embedded`: rendered as the "By region" tab of the World maps page (/map). The tab owns the
+ * heading and intro, so the page's own hero and document title stay off — the same contract as
+ * RelevanceMap's embedded mode.
+ */
+export default function RegionsMap({ embedded = false }: { embedded?: boolean } = {}) {
+  useEffect(() => {
+    if (!embedded) document.title = "Regulatory map by region - EU / US / Global | CSOAI";
+  }, [embedded]);
   const [r, setR] = useState("eu");
   const region = REGIONS.find((x) => x.id === r) || REGIONS[0];
   return (
-    <div className="min-h-screen bg-white">
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
-        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
-        <div className="relative max-w-6xl mx-auto px-6">
-          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - regulatory map</p>
-          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">What governs AI, by region</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Filter by EU, US, or Global and see the frameworks in force, what's phasing in, and the CSOAI bridge that covers each. For the city-to-bloc stack of any single place, use the jurisdiction engine.</p>
-        </div>
-      </section>
-      <section className="max-w-6xl mx-auto px-6 py-10">
+    <div className={embedded ? "bg-white" : "min-h-screen bg-white"}>
+      {embedded ? null : (
+        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
+          <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
+          <div className="relative max-w-6xl mx-auto px-6">
+            <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - regulatory map</p>
+            <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">What governs AI, by region</h1>
+            <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Filter by EU, US, or Global and see the frameworks in force, what's phasing in, and the CSOAI bridge that covers each. For the city-to-bloc stack of any single place, use the jurisdiction engine.</p>
+          </div>
+        </section>
+      )}
+      <section className={embedded ? "py-2" : "max-w-6xl mx-auto px-6 py-10"}>
         <div className="flex flex-wrap gap-2">
           {REGIONS.map((x) => (
             <button key={x.id} onClick={() => setR(x.id)} className={"rounded-full border px-5 py-2 text-sm font-bold transition-colors " + (r === x.id ? "border-emerald-400 bg-emerald-600 text-white" : "border-gray-200 text-gray-600 hover:bg-gray-50")}>{x.name}</button>
@@ -69,10 +78,14 @@ export default function RegionsMap() {
             </div>
           ))}
         </div>
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className={embedded ? "mt-4 flex flex-wrap gap-2" : "mt-8 flex flex-wrap gap-3"}>
           <a href="/law" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Your exact jurisdiction stack -&gt;</a>
-          <a href="/map" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The relevance map -&gt;</a>
-          <a href="/sectors" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">By sector -&gt;</a>
+          {embedded ? null : (
+            <>
+              <a href="/map?tab=bridges" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The relevance map -&gt;</a>
+              <a href="/sectors" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">By sector -&gt;</a>
+            </>
+          )}
         </div>
       </section>
     </div>
