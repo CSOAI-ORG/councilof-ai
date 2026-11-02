@@ -739,11 +739,11 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(api docs?|api documentation|endpoints?)\b/i,
   },
   {
-    label: "Daily measurement notes",
-    blurb: "What was measured today, said the same day it was measured.",
+    label: "GSPC daily reports",
+    blurb: "What changed each day, said the same day — the dated GSPC measurement reports, one per published day.",
     path: "/notes/daily",
     group: "record",
-    cues: /\b(daily notes|measurement notes|today'?s (?:notes|runs)|notes\/daily)\b/i,
+    cues: /\b(daily reports?|gspc daily|daily notes|measurement notes|what changed (?:today|yesterday|each day|daily)|today'?s (?:notes|runs|report)|notes\/daily)\b/i,
   },
   {
     label: "Reach",
