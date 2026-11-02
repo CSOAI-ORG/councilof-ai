@@ -44,9 +44,9 @@ const MOCK_COUNT = "22 axis · 22 measured (mock)";
 
 const comparison: GspcAxis[] = [
   { axis: "governance", kind: "model-comparison", n: 237, status: "MEASURED", separation: "UNTESTED", public_leader_state: "EXCLUDED_OWN_MODEL" },
-  { axis: "safety", kind: "model-comparison", n: 36, status: "MEASURED", separation: "TIE", leader: "mock-base:7b", accuracy: 0.944 },
+  { axis: "safety", kind: "model-comparison", n: 36, status: "MEASURED", separation: "TIE", public_leader_state: "PUBLIC", leader: "mock-base:7b", accuracy: 0.944 },
   { axis: "machinery-conformity", kind: "model-comparison", n: 40, status: "MEASURED", separation: "UNTESTED", public_leader_state: "NO_SIGNED_CARD" },
-  { axis: "swarm", kind: "model-comparison", n: 27, status: "MEASURED", separation: "SEPARATED", leader: "mock-swarm:3b", accuracy: 0.444 },
+  { axis: "swarm", kind: "model-comparison", n: 27, status: "MEASURED", separation: "SEPARATED", public_leader_state: "PUBLIC", leader: "mock-swarm:3b", accuracy: 0.444 },
   ...["provenance", "continuity", "conformance", "openness", "care", "cross-reality", "detector-interop", "art5-safeguard", "affect", "jail"].map(
     (axis, i): GspcAxis => ({ axis, kind: "model-comparison", n: 30 + i, status: "MEASURED", separation: "UNTESTED", public_leader_state: "EXCLUDED_OWN_MODEL" }),
   ),
@@ -466,5 +466,23 @@ describe("Last measured replaces the LIVE status word", () => {
     const details = html.slice(html.indexOf('data-testid="gspc-how-checked"'));
     expect(details).toContain("How this is checked");
     expect(details).toContain("The evidence root is signed separately from this live board.");
+  });
+});
+
+
+describe("qualified public results", () => {
+  it("distinguishes a reported tie from a separated leader and preserves the metric qualifier", () => {
+    const row = { ...comparison[1], accuracy_is: "lower bound" };
+    const html = renderToStaticMarkup(<BoardStrip axes={[row]} />);
+    expect(html).toContain("Reported result (tie)");
+    expect(html).toContain("lower bound");
+    expect(html).not.toContain("Separated leader:");
+    expect(renderToStaticMarkup(<BoardStrip axes={[comparison[3]]} />)).toContain("Separated leader:");
+  });
+  it("does not publish a name when eligibility is missing", () => {
+    const row = { ...comparison[1], public_leader_state: undefined, leader: "not-admitted:fixture" };
+    const html = renderToStaticMarkup(<BoardStrip axes={[row]} />);
+    expect(html).toContain("No public leader published.");
+    expect(html).not.toContain("not-admitted:fixture");
   });
 });
