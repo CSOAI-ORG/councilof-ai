@@ -39,8 +39,11 @@ import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, "..");
-const reg = JSON.parse(readFileSync(path.join(here, "registry.json"), "utf8"));
-const J = reg.journey_backends ?? {};
+// THE RECORD LIVES IN ITS OWN FILE. capabilities/registry.json is a GENERATED VIEW of
+// council-os/capabilities.json ("do not hand-edit"), and it never carried a journey block,
+// so this file read an empty object and every assertion failed - inside a test that no gate
+// ran, which is why the drift survived from 2026-09-05 to 2026-11-02.
+const J = JSON.parse(readFileSync(path.join(here, "journey-backends.json"), "utf8"));
 
 /** The endpoints the journey needs, and what each recorded state permits. */
 const EXPECTED = {
@@ -72,7 +75,7 @@ describe("the journey reaches exactly as far as runtime allows", () => {
 
   it("records that the execute half of the journey has no runtime", () => {
     const b = J.backends ?? {};
-    for (const name of ["ras", "remediation", "jobs"]) {
+    for (const name of ["ras", "ras_status", "remediation", "jobs"]) {
       assert.equal(
         b[name]?.availability,
         "UNAVAILABLE",
@@ -80,8 +83,12 @@ describe("the journey reaches exactly as far as runtime allows", () => {
           `news — update the record and BUILD the journey; do not leave a stale state behind.`,
       );
     }
-    assert.equal(b.receipts?.availability, "OWNER_GATED");
-    assert.match(b.receipts?.reason ?? "", /UNPUBLISHED/);
+    // The receipt ending LANDED. This row said UNPUBLISHED with an empty count from
+    // 2026-09-05; /api/receipts/latest now answers 200, status PUBLISHED, count 26. The
+    // test's own instruction for that moment was to build the ending rather than leave the
+    // record behind — so the record now says VERIFIED and the journey reaches its receipt.
+    assert.equal(b.receipts?.availability, "VERIFIED");
+    assert.doesNotMatch(b.receipts?.reason ?? "", /UNPUBLISHED/);
   });
 
   it("does not let the one live input imply the whole journey works", () => {
@@ -95,11 +102,21 @@ describe("the journey reaches exactly as far as runtime allows", () => {
   });
 
   it("no client surface offers an execute path the estate cannot take", () => {
+    // EXACT PATHS, NOT PREFIXES. The blunt regex this used to use flagged ANY mention of
+    // "/api/ras" — including /api/ras/supply and /api/ras/mcp-probe, which answer 402 and
+    // are live metered endpoints. A check that fires on a working endpoint teaches everyone to
+    // ignore it. So the forbidden set is taken from the record's UNAVAILABLE rows.
+    const unavailable = new Set(
+      Object.entries(J.backends ?? {})
+        .filter(([, e]) => e.availability === "UNAVAILABLE")
+        .map(([, e]) => e.endpoint),
+    );
     const hits = [];
     for (const f of sources(path.join(repo, "client/src"))) {
       const src = readFileSync(f, "utf8");
-      if (/\/api\/(ras|remediation|jobs|receipts)\b/.test(src)) {
-        hits.push(path.relative(repo, f));
+      for (const m of src.matchAll(/\/api\/[a-z0-9/_-]+/gi)) {
+        const p = m[0].replace(/\/+$/, "");
+        if (unavailable.has(p)) hits.push(`${path.relative(repo, f)} -> ${p}`);
       }
     }
     assert.deepEqual(
@@ -109,7 +126,7 @@ describe("the journey reaches exactly as far as runtime allows", () => {
         `If the backend has landed, delete this assertion deliberately. If it has not, the ` +
         `surface is offering approve/fix/retest over a 404 — the faked completed fix WP-3 forbids.`,
     );
-    assert.equal(J.client_reference_count, 0, "the recorded count no longer matches the tree");
+    assert.equal(J.client_reference_count, hits.length, "the recorded count no longer matches the tree");
   });
 
   it("live: each journey backend still answers as recorded", async () => {
@@ -127,11 +144,16 @@ describe("the journey reaches exactly as far as runtime allows", () => {
       );
       if (name === "receipts") {
         const body = await res.json();
-        assert.equal(
-          body.count,
-          0,
-          "receipts now publishes items. The journey can end in a receipt — build that ending " +
-            "rather than leaving this recorded as publishing nothing.",
+        // FLIPPED 2026-11-02. This used to assert count === 0, with the message "receipts now
+        // publishes items. The journey can end in a receipt — build that ending rather than
+        // leaving this recorded as publishing nothing." That is what happened: the feed now
+        // publishes 26 aggregate items. So the ending exists, and the assertion now holds the
+        // record to it rather than to the absence that has been replaced.
+        assert.ok(
+          Number(body.count) > 0 && body.status === "PUBLISHED",
+          `receipts no longer publishes a receipt: status=${body.status} count=${body.count}. ` +
+            `If the feed went back to empty, the journey's ending is gone — record that, ` +
+            `do not assume it.`,
         );
       }
     }
