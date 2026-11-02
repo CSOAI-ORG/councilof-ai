@@ -14,7 +14,7 @@
 //     org and are licensed CC-BY-4.0; the concept DOI is the same DOI GET
 //     /api/gspc publishes as the board's citable identifier.
 //   • 29 Sep 2026: every Zenodo record behind these DOIs answers HTTP 410 (Zenodo
-//     blocked the account; appeal pending). The DOIs stay as `identifier` (they are
+//     blocked the account; no appeal on record). The DOIs stay as `identifier` (they are
 //     the permanent names) but no `citation` URL points at doi.org while they do not
 //     resolve. See ZENODO_DOIS_RESOLVE and /interop/zenodo-status.json.
 //   • The concept DOI is attached to the BOARD only. Per-axis DOIs are attached
@@ -27,7 +27,7 @@ import { AXES } from "./gspcAxes";
 const BASE = "https://councilof.ai";
 
 /** The board's citable identifier, the DOI GET /api/gspc publishes for the board.
- *  Concept DOI (all-versions) of the GSPC corpus. Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. */
+ *  Concept DOI (all-versions) of the GSPC corpus. Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json). */
 export const GSPC_DOI = "10.5281/zenodo.21991104";
 
 /** False while Zenodo answers 410 for CSOAI's records (since 29 Sep 2026). Flip only after an
@@ -119,8 +119,8 @@ export function gspcBoardDataset(withParts = true): Record<string, unknown> {
     description:
       "Deterministic per-axis AI-governance measurement banks and their live results: per-item counts, leader accuracy, Wilson 95% intervals where n≥30, and McNemar-primary separation verdicts (ties stated as ties). Empty cells stay empty. The live count and stamps come from GET /api/gspc.",
     url: `${BASE}/gspc-scoreboard`,
-    identifier: GSPC_DOI,
-    ...(ZENODO_DOIS_RESOLVE ? { citation: `https://doi.org/${GSPC_DOI}` } : {}),
+    // The board's identifier is its own live dataset URL; the Zenodo concept DOI answers 410.
+    identifier: `${BASE}/api/gspc`,
     license: GSPC_LICENSE,
     isAccessibleForFree: true,
     creator: GSPC_CREATOR,
@@ -137,6 +137,12 @@ export function gspcBoardDataset(withParts = true): Record<string, unknown> {
     ],
     distribution: [
       { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${BASE}/api/gspc` },
+      {
+        "@type": "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: `${BASE}/signed/card_index.json`,
+        name: "Signed card index (Ed25519-signed measurement cards)",
+      },
     ],
   };
   if (withParts) node.hasPart = gspcAxisDatasets();

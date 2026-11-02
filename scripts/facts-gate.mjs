@@ -161,10 +161,15 @@ function historicalExemptions(facts) {
       throw new Error(`historical_count_exemptions: "${p}" is not one exact file path (no globs, no directories)`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || "")) throw new Error(`historical_count_exemptions: ${p} has no date`);
     if (typeof e.reason !== "string" || !e.reason.trim()) throw new Error(`historical_count_exemptions: ${p} has no reason`);
-    if (!Number.isInteger(e.historical_axes)) throw new Error(`historical_count_exemptions: ${p} has no historical_axes`);
+    // A dated record may quote MORE THAN ONE board count: a canonical view catalogues the board
+    // as it stood on several dated reads, each with its own as_of and source. So the recorded count
+    // may be one integer or a list of them, and the file is exempt for exactly those counts and
+    // for no other. A list is still an EXPLICIT, dated, per-file entry with a stated reason.
+    const counts = Array.isArray(e.historical_axes) ? e.historical_axes : [e.historical_axes];
+    if (!counts.length || counts.some((n) => !Number.isInteger(n))) throw new Error(`historical_count_exemptions: ${p} has no historical_axes`);
     if (LIVE_SURFACES_NEVER_EXEMPT.includes(p)) throw new Error(`historical_count_exemptions: ${p} is a live surface and may never be exempt`);
     if (map.has(p)) throw new Error(`historical_count_exemptions: ${p} listed twice`);
-    map.set(p, e.historical_axes);
+    map.set(p, counts);
   }
   return map;
 }
@@ -231,7 +236,7 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
   while ((m = COUNT_RE.exec(text))) {
     const n = Number(m[1]);
     if (n === liveCount) continue;
-    if (historicalAxes !== undefined && n === historicalAxes) continue;
+    if (historicalAxes !== undefined && historicalAxes.includes(n)) continue;
     // A measured/quotable-qualified count is a claim about the MEASURED count, not
     // the board total. ruleMeasuredOverclaim owns it.
     if (/^(?:measured|quotable)\s*$/i.test(m[2] || "")) continue;
@@ -796,11 +801,35 @@ async function selftest(facts) {
   {
     const grown = liveCount + 10;
     const listed = historicalExemptions(facts);
-    const [firstListed, firstCount] = [...listed.entries()][0] || [];
+    const [firstListed, firstCounts] = [...listed.entries()][0] || [];
+    const firstCount = Array.isArray(firstCounts) ? firstCounts[0] : firstCounts;
+    // The generic "exempt only for what it records" case has to use a count OUTSIDE the recorded
+    // set. When the first listed file records SEVERAL counts, firstCount + 1 can be one of them --
+    // and then the case would expect a violation that the exemption correctly allows.
+    const firstCountSet = Array.isArray(firstCounts) ? firstCounts : [firstCount];
+    const beyondRecorded = firstCountSet.length ? Math.max(...firstCountSet) + 1 : liveCount;
     const cases = [];
     if (firstListed) {
       cases.push([`listed historical file keeps its recorded ${firstCount}`, `{"note":"Board has ${firstCount} axes."}`, false, firstListed]);
-      cases.push(["VIOLATION: a listed file is exempt only for its recorded count", `{"note":"Board has ${firstCount + 1} axes."}`, true, firstListed]);
+      cases.push(["VIOLATION: a listed file is exempt only for the counts it records", `{"note":"Board has ${beyondRecorded} axes."}`, true, firstListed]);
+    }
+    // A dated record that quotes SEVERAL dated board counts is exempt for each of them and for
+    // no other. This case proves the list form in BOTH directions: it must pass for the counts
+    // the record actually carries, and it must still catch a count the record does not.
+    {
+      const twoFile = "interop/listed-two-dated-counts.json";
+      const twoFacts = { ...facts, counts: { ...facts.counts, historical_count_exemptions: { files: [{ path: twoFile, date: "2026-10-08", reason: "dated record quoting two dated reads", historical_axes: [22, 23] }] } } };
+      for (const [name, body, shouldFail] of [
+        ["a listed file keeps its FIRST recorded count", `{"note":"Board has 22 axes."}`, false],
+        ["a listed file keeps its SECOND recorded count", `{"note":"Board has 23 axes."}`, false],
+        ["VIOLATION: a listed file is exempt only for the counts it records", `{"note":"Board has 24 axes."}`, true],
+      ]) {
+        const v = [];
+        ruleAxisCount(twoFacts, twoFile, body, (x) => v.push(x), grown, body);
+        const ok = (v.length > 0) === shouldFail;
+        ok ? pass++ : fail++;
+        console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name} (board ${grown})`);
+      }
     }
     cases.push([`VIOLATION: an unlisted file with ${firstCount ?? liveCount} axes fails`, `{"note":"Board has ${firstCount ?? liveCount} axes."}`, true, "interop/new-unlisted-file.json"]);
     for (const live of LIVE_SURFACES_NEVER_EXEMPT)

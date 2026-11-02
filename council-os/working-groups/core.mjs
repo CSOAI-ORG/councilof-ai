@@ -22,6 +22,7 @@ export function validateCatalog(catalog) {
     if (!/^[a-zA-Z0-9_./-]+$/.test(doc.source?.path) || doc.source.path.includes("..") || doc.source.path.startsWith("/")) fail("source path");
     if (!Array.isArray(doc.history) || !doc.history.length || doc.history.at(-1).version !== doc.version) fail("history");
     if (!Array.isArray(doc.reviewers) || !Array.isArray(doc.deliverables)) fail("review fields");
+    if (doc.resources !== undefined && (!Array.isArray(doc.resources) || doc.resources.some(r=>typeof r.title!=="string" || !r.title.trim() || !/^\/working-groups\/[a-z0-9-]+\.(html|json)$/.test(r.url)))) fail("resource link");
     if (doc.status !== "draft" && (!doc.decision?.humanReviewReference || !doc.decision?.rationale || !Array.isArray(doc.decision?.dissent))) fail("missing human review reference");
     if (doc.discussionUrl !== null && !/^https:\/\/github\.com\/CSOAI-ORG\/councilof-ai\/discussions\/[0-9]+$/.test(doc.discussionUrl)) fail("discussion URL");
   }
@@ -47,6 +48,7 @@ export function reviewDraft(catalog, documentId, {observation = "", conflicts = 
     "# Review draft — " + doc.title, "",
     "Document: " + doc.id + " · version " + doc.version,
     "Group: " + doc.groupId, "Source: " + sourceUrl(doc), "",
+    ...(doc.resources??[]).map(r=>"Candidate evidence resource: https://councilof.ai"+r.url+" (requires site release; inspect pinned source before relying on it)"), "",
     "Status: UNSENT DRAFT. This file is not a submitted review, decision or appointment.", "",
     "## Observation and evidence", observation.trim() || "[Add public or synthetic evidence, exact revision, method and observed result.]",
     "", "## Competence and conflicts", conflicts.trim() || "[State relevant experience and conflicts; do not infer independence.]",

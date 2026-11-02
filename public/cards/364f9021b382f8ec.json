@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-24T09:38:26Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "amazon",
+      "surface": "safety_policy",
+      "url": "https://aws.amazon.com/ai/responsible-ai/",
+      "prev_sha256": "742788d018e67a1a0fef87d9e09aef91e592d3d08b2e1a1fec31ce831c66f5e1",
+      "new_sha256": "678621dd06eee1c6593f1f415772460c8aebe34abf992fed56e3917c700e9da2",
+      "prev_bytes_sha256": "0c73eb2e675240d81fb23309217bad889a62f123e8431c0b6109235a536c1cc8",
+      "new_bytes_sha256": "8417bbe3ca817264023cc213f7a94cad7c620f18ba09f2608ecc6b47a7439a5b",
+      "prev_fetched_at": "2026-09-14T10:50:55Z",
+      "fetched_at": "2026-10-24T09:38:26Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 453798,
+        "new": 435289
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": "Wed, 09 Sep 2026 22:33:02 GMT",
+        "new": "Fri, 16 Oct 2026 03:33:58 GMT"
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "364f9021b382f8ec5d9e8dbfd77704a38d41e82c7841ba64fc22390244d75380",
+    "sig_ed25519": "edbd0f1b97c6505e0c1bab2f67affecebbea9a4671aa718422137810d54fa5ef5b73d454b39957f8b6e95490f6bafae5c134e7fe7d923eba050611f74238a50f",
+    "source_urls": [
+      "https://aws.amazon.com/ai/responsible-ai/"
+    ],
+    "subject": "Amazon (AWS Bedrock / Nova) — safety_policy: bytes changed 2026-10-24",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:amazon",
+      "surface:safety_policy",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "c8e78ddba0dc717b6506c30135d1c186320d944ba9d0871979a3e7839332e973",
+    "a70b0f6c5b8ef2a8adfd405bf84e207da3b68a725cdb06b5fa82eb0bbff841fe",
+    "cecc9c7162ebe6ffd4de06bacc429447c71ade9e7ccf9b770efea142183d95e0",
+    "d18c1610228054b1291c02f338ec4d666a8e7f52eae35e12c2490ed2724a867d",
+    "6dbdbdf6941b3776eed0e472e7195e9cd16c5a78d23475deb2145edc5b4ad4e8",
+    "124eb2bf90b4282f8ccb601d606fd214652c89c66b8173e8d98d7659bacff5c8",
+    "9cad88c6e595775e1cf3891f06cfd9b6e6b6f5077d61e6ac892ff3a31495d7fc",
+    "176200b26fd094d89be6cbde327a448f84af31c04a433352c5835fc454314661",
+    "aa6ab9166acf4d7a92aa2743240915ead88e4fe0c3eada56656a50f2e0b69600"
+  ]
+}

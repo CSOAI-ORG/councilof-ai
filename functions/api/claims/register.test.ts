@@ -123,6 +123,40 @@ describe("GET /api/claims/register", () => {
     }
   });
 
+  it("prints every planned re-read as a date, and never a run outcome it cannot know", () => {
+    // 13 Oct 2026: the register read 0 subjects with a scheduled next read and 26 "DUE_NOT_RUN"
+    // while the scheduler's ledger held six planned reads and showed the 26 as run. It knew one
+    // of the four checks the scheduler plans per registry, and it named an outcome from a date.
+    const live = register.registries.filter((r) => r.status === "LIVE");
+    const checks = register.schedule.checks;
+    expect(checks.length).toBe(register.totals.scheduled_checks);
+    expect(register.totals.scheduled_checks_after_as_of + register.totals.scheduled_checks_on_or_before_as_of).toBe(
+      checks.length,
+    );
+    for (const c of checks) {
+      expect(live.map((r) => r.registry_id), `${c.registry_id} is scheduled but not LIVE`).toContain(c.registry_id);
+      expect(c.due).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(c.position).toBe(c.due > register.as_of.slice(0, 10) ? "AFTER_AS_OF" : "ON_OR_BEFORE_AS_OF");
+    }
+    for (const r of live) {
+      const mine = checks.filter((c) => c.registry_id === r.registry_id).map((c) => c.check);
+      for (const name of ["day-7", "day-30", "day-90"]) expect(mine, `${r.registry_id} has no ${name} read`).toContain(name);
+    }
+    for (const s of register.subjects) {
+      const next = checks.find((c) => c.registry_id === s.registry_id && c.position === "AFTER_AS_OF");
+      expect(s.next_scheduled_check?.due ?? null).toBe(next?.due ?? null);
+      expect(s.next_scheduled_check?.check ?? null).toBe(next?.check ?? null);
+      // The scheduler's word for "no run completed it" is not this file's to use.
+      expect(s.next_scheduled_read_state).not.toBe("DUE_NOT_RUN");
+    }
+    expect(register.totals.subjects_with_a_scheduled_next_read).toBe(
+      register.subjects.filter((s) => s.next_scheduled_check || s.next_scheduled_read_state === "SCHEDULED").length,
+    );
+    expect(Object.keys(register.totals).join(" ")).not.toMatch(/unrun/);
+    expect(register.schedule.executed_checks.authority).toMatch(/^https:\/\/.+\/claim-maintenance\/latest\.json$/);
+    expect(register.does_not_prove.join(" ")).toMatch(/scheduled check ran or will run/);
+  });
+
   it("says plainly what it is not, and alleges nothing about anyone", () => {
     const text = JSON.stringify(register).toLowerCase();
     for (const s of [
