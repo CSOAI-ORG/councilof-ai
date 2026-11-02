@@ -75,7 +75,7 @@ export default function EuActClassifier() {
         </div>
 
         <div className="mt-3 flex gap-2">
-          <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="Describe your AI system…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-4 py-3 text-sm text-emerald-50 placeholder-emerald-300/25 focus:border-emerald-400 focus:outline-none" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} aria-label="Describe the AI system to classify" placeholder="Describe your AI system…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-4 py-3 text-sm text-emerald-50 placeholder-emerald-300/25 focus:border-emerald-400 focus:outline-none" />
           <button onClick={() => run()} disabled={busy} className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400 disabled:opacity-50">{busy ? "Classifying…" : "Classify ▶"}</button>
         </div>
         <div className="mt-3 flex flex-wrap gap-2">{EXAMPLES.map((e) => (<button key={e} onClick={() => run(e)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-3 py-1 text-xs text-emerald-200/80 hover:bg-emerald-500/15">{e}</button>))}</div>
