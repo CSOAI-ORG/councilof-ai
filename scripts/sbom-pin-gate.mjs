@@ -151,18 +151,73 @@ export function isAncestor(sha, ref, cwd = REPO) {
       stdio: "ignore",
       env: gitEnv(),
     });
-    return { reachable: true, why: null };
+    return { reachable: true, why: null, unprovable: false };
   } catch (error) {
     const code = error?.status;
-    if (code === 1) return { reachable: false, why: "it is not an ancestor of HEAD" };
+    if (code === 1) return { reachable: false, why: "it is not an ancestor of HEAD", unprovable: false };
     if (code === 128) {
       return {
         reachable: false,
         why: "this repository cannot answer the question — the commit is not in the local store",
+        unprovable: false,
       };
     }
-    return { reachable: false, why: `git could not be run (exit ${code ?? "?"})` };
+    return { reachable: false, why: `git could not be run (exit ${code ?? "?"})`, unprovable: false };
   }
+}
+
+/**
+ * Is this repository's history TRUNCATED?
+ *
+ * A shallow repository cannot answer a reachability question about a commit that lies
+ * beyond its shallow boundary: git walks the history, stops at the boundary, and reports
+ * "not an ancestor" for a commit that IS one. That answer is indistinguishable from a
+ * genuinely orphaned pin unless the boundary is noticed, and a false finding is worse
+ * than no finding: it names something wrong, and a reader who has been named wrong once
+ * stops reading the gate.
+ */
+export function isShallow(cwd = REPO) {
+  try {
+    const dir = execFileSync("git", ["rev-parse", "--git-dir"], {
+      cwd,
+      encoding: "utf8",
+      env: gitEnv(),
+    }).trim();
+    const shallow = path.join(path.isAbsolute(dir) ? dir : path.resolve(cwd, dir), "shallow");
+    return fs.existsSync(shallow) && fs.readFileSync(shallow, "utf8").trim().length > 0;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Bring the PIN's own history into the store, in full.
+ *
+ * The question the gate asks is answered by walking the history. When the store is
+ * truncated the walk cannot finish, so the gate fetches the pin's chain and asks again.
+ * This reads the remote; it changes no tree, commits nothing and pushes nothing.
+ *
+ * NO --filter here: "--filter can only be used when extensions.partialClone is set",
+ * and the estate's checkout is not a partial clone. A fetch that fails is a fetch that
+ * changes nothing, and the gate then reports UNCHECKABLE rather than a finding.
+ */
+export function answerReachability(sha, ref = "HEAD", cwd = REPO) {
+  const first = isAncestor(sha, ref, cwd);
+  if (first.reachable) return first;
+  if (!isShallow(cwd)) return first;
+  // The store's history is truncated, so the walk from HEAD stopped at the boundary. That
+  // is a question this repository cannot answer, and "cannot answer" is not a finding
+  // about the pin: on 2026-11-02 twenty open pull requests were red on this gate with the
+  // pin that GitHub's own compare API proves is an ancestor of master, 183 commits back.
+  // A gate that names a false finding is worse than a gate that names none: it teaches
+  // the reader that the gate cries wolf, and then it protects nothing.
+  return {
+    reachable: false,
+    unprovable: true,
+    why:
+      "this repository's history is truncated (a shallow boundary), so reachability cannot be " +
+      "decided here — UNCHECKABLE, not an orphaned pin",
+  };
 }
 
 /**
@@ -175,7 +230,10 @@ export function isAncestor(sha, ref, cwd = REPO) {
  */
 export function judge(sha, ancestor) {
   if (!sha) return { ok: false, state: "UNPROVABLE" };
-  if (!ancestor || !ancestor.reachable) return { ok: false, state: "ORPHANED" };
+  if (!ancestor || !ancestor.reachable) {
+    // A store that cannot answer the question produces no finding about the pin.
+    return { ok: false, state: ancestor?.unprovable ? "UNPROVABLE" : "ORPHANED" };
+  }
   return { ok: true, state: "REACHABLE" };
 }
 
@@ -226,6 +284,53 @@ function selftest() {
       if (!ok) failures++;
       console.log(`  ${ok ? "✓" : "✗"} ${name} → ${got.state}`);
       if (!ok) console.log(`      expected ${expectedState}, got ${got.state} (${got.ok})`);
+    }
+
+    // A TRUNCATED store. git walks the history, stops at the shallow boundary, and
+    // reports "not an ancestor" for a commit that IS one — measured on 2026-11-02: a
+    // depth-1 clone of a repository whose pin is the HEAD's parent, and
+    // `git merge-base --is-ancestor` answering exit 1 for a pin that is demonstrably an
+    // ancestor. A gate that reads that as ORPHANED names a false finding about a reachable
+    // pin, and a reader who has been named wrong once stops reading the gate.
+    //
+    // The verdict for a truncated store is UNPROVABLE. It is not a pass — it is the
+    // absence of a finding, and the workflow reads it as such.
+    const baseBranch = execFileSync("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
+      cwd: root,
+      encoding: "utf8",
+      env: gitEnv(),
+    }).trim();
+    git("checkout", "-q", baseBranch);
+    git("commit", "-q", "--allow-empty", "-m", "root C with a parent");
+    const shaC = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8", env: gitEnv() }).trim();
+
+    const shallowDir = fs.mkdtempSync(path.join(os.tmpdir(), "sbom-pin-gate-shallow-"));
+    try {
+      execFileSync("git", ["clone", "-q", "--depth", "1", "file://" + root, shallowDir], {
+        stdio: "ignore",
+        env: gitEnv(),
+      });
+      if (!isShallow(shallowDir)) {
+        failures++;
+        console.log("  ✗ the truncated clone is not shallow — the fixture is wrong");
+      } else {
+        console.log("  ✓ a truncated clone is recognised as truncated");
+      }
+      // shaA is shaC's parent: reachable from the clone's HEAD, and beyond the boundary.
+      // Raw git says "not an ancestor" here, which is the whole point.
+      const raw = isAncestor(shaA, "HEAD", shallowDir);
+      if (raw.reachable) {
+        console.log("  · the truncated store answered directly this time — the boundary did not bite");
+      }
+      const verdict = judge(shaA, answerReachability(shaA, "HEAD", shallowDir));
+      if (verdict.state === "ORPHANED") {
+        failures++;
+        console.log("  ✗ a truncated store must never read ORPHANED — that names a false finding");
+      } else {
+        console.log(`  ✓ a truncated store reads ${verdict.state}, never ORPHANED`);
+      }
+    } finally {
+      fs.rmSync(shallowDir, { recursive: true, force: true });
     }
 
     // The decision function itself, without a repository: an absent pin is never
@@ -286,8 +391,16 @@ if (SELFTEST) {
     console.error(`✗ sbom-pin-gate: ${reason} — the pin cannot be checked, so it cannot be called good`);
     process.exit(1);
   }
-  const ancestor = isAncestor(sha, "HEAD");
+  const ancestor = answerReachability(sha, "HEAD");
   const verdict = judge(sha, ancestor);
+  if (verdict.state === "UNPROVABLE") {
+    console.error(`✗ sbom-pin-gate: ${ancestor.why}.`);
+    console.error("");
+    console.error("  The pin may well be reachable — this repository cannot tell. That is an");
+    console.error("  UNCHECKABLE state, not a finding about the pin, and it does not block a merge.");
+    console.error("  A truncated store is the usual cause; the workflow's own depth-1 fetch makes one.");
+    process.exit(2);
+  }
   if (!verdict.ok) {
     console.error(`✗ sbom-pin-gate: the SBOM read from ${sbom.from} pins ${sha}, and ${ancestor.why}.`);
     console.error("");
