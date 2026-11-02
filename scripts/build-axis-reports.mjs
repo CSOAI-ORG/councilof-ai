@@ -232,6 +232,15 @@ export async function buildTree({ repo = REPO_DEFAULT, slots, verify, now = null
       axisEntries.push(entry);
       continue;
     }
+    if (slot.kind === "measured-subject") {
+      // A MEASURED subject axis measures its own subject class, not model subjects: the
+      // bank holds one outcome per item in that class. There is no per-model card to join,
+      // so the index carries the axis's own n and its outcome breakdown and says so.
+      entry.status = "MEASURED";
+      entry.reason = "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report";
+      axisEntries.push(entry);
+      continue;
+    }
     if (slot.kind === "deterministic-facts") {
       entry.reason = "measures issuers, series or sources rather than model subjects; the signed card corpus holds no per-subject cell for this axis";
       axisEntries.push(entry);
