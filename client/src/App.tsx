@@ -87,6 +87,7 @@ const Settings = lazy(() => import("./pages/Settings"));
 const WatchdogSignup = lazy(() => import("./pages/WatchdogSignup"));
 const Admin = lazy(() => import("./pages/Admin"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
+const DocsHub = lazy(() => import("./pages/DocsHub"));
 const ApiKeys = lazy(() => import("./pages/ApiKeys"));
 const PDCACycles = lazy(() => import("./pages/PDCACycles"));
 const Billing = lazy(() => import("./pages/Billing"));
@@ -674,7 +675,7 @@ function AppShell() {
                   <Route path="/council-detail" component={CouncilDetail} />
                   <Route path="/council-licensing" component={CouncilLicensingLanding} />
                   <Route path="/courses/:id" component={CourseDetail} />
-                  <Route path="/docs" component={ContentReviewNotice} />
+                  <Route path="/docs" component={DocsHub} />
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/ei3" component={EI3} />
                   <Route path="/enterprise-plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>
