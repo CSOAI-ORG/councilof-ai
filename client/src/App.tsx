@@ -3,7 +3,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation, Redirect } from "wouter";
 import RequireAuth from "./components/RequireAuth";
 import { useEffect, useLayoutEffect, lazy, Suspense } from "react";
-import { applyHead, resolveHead } from "./lib/seoHead";
+import { maintainHead, resolveHead } from "./lib/seoHead";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
 // Keeps the prerendered page on screen while the first route chunk loads (CLS 0.33 -> ~0; see file).
@@ -88,6 +88,7 @@ const WatchdogSignup = lazy(() => import("./pages/WatchdogSignup"));
 const Admin = lazy(() => import("./pages/Admin"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
 const DocsHub = lazy(() => import("./pages/DocsHub"));
+const X402Catalog = lazy(() => import("./pages/X402Catalog"));
 const ApiKeys = lazy(() => import("./pages/ApiKeys"));
 const PDCACycles = lazy(() => import("./pages/PDCACycles"));
 const Billing = lazy(() => import("./pages/Billing"));
@@ -452,13 +453,14 @@ function ScrollToTop() {
  * client/src/lib/seoHead.ts resolves it synchronously from client/src/data/seo-head.json, the
  * route manifest and the publication manifest, so the prerender snapshot never carries the
  * shell title, a shared withdrawal title or the string "undefined". A page that knows better
- * (a note's own headline, the board's live count) still overwrites it after it mounts.
+ * (a note's own headline) can refine parametrised routes after it mounts. Reviewed
+ * static-route metadata stays consistent across search and social tags.
  * The canonical is the URL the edge serves ("<route>/"), matching the prerender's rewrite.
  */
 function RouteHead() {
   const [location] = useLocation();
   useLayoutEffect(() => {
-    applyHead(resolveHead(location));
+    return maintainHead(resolveHead(location));
   }, [location]);
   return null;
 }
@@ -675,6 +677,7 @@ function AppShell() {
                   <Route path="/council-licensing" component={CouncilLicensingLanding} />
                   <Route path="/courses/:id" component={CourseDetail} />
                   <Route path="/docs" component={DocsHub} />
+                  <Route path="/metered" component={X402Catalog} />
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/ei3" component={EI3} />
                   <Route path="/enterprise-plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>
@@ -891,6 +894,10 @@ function AppShell() {
                   <Route path="/blog/how-to-verify-an-ai-measurement">{() => <BlogPost slug="how-to-verify-an-ai-measurement" />}</Route>
                   <Route path="/blog/keeping-ai-claims-current">{() => <BlogPost slug="keeping-ai-claims-current" />}</Route>
                   <Route path="/blog/gspc-g2-comparison-group-2026-10-14">{() => <BlogPost slug="gspc-g2-comparison-group-2026-10-14" />}</Route>
+                  {/* Three 2026-11-01 series posts restored 2026-11-02 (client/src/data/blog-published.json). */}
+                  <Route path="/blog/we-attack-ourselves-every-night">{() => <BlogPost slug="we-attack-ourselves-every-night" />}</Route>
+                  <Route path="/blog/owasp-asi-ten-of-ten">{() => <BlogPost slug="owasp-asi-ten-of-ten" />}</Route>
+                  <Route path="/blog/the-leaderboard-illusion-is-real">{() => <BlogPost slug="the-leaderboard-illusion-is-real" />}</Route>
                   <Route path="/blog/:slug" component={ContentReviewNotice} />
                   <Route path="/models" component={ModelRegistry} />
                   <Route path="/framework-catalog" component={FrameworkCatalog} />
