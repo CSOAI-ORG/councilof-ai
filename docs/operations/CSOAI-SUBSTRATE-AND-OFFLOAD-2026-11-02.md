@@ -165,8 +165,11 @@ The machinery is proven; a fresh code is a ~20 s regeneration.
 ## 8. What this session did not do
 
 - It did not delete or truncate anything under `/Users/nicholas/csoai-work`.
-- It did not compute a sha256 for `oracle-lanes-20261102.tar`; the bytes are on the volume and the
-  stream completed, but the digest is not recorded and should be before that archive is trusted.
+- It did not compute a **source-side** sha256 for `oracle-lanes-20261102.tar`. The pod-side digest
+  IS recorded — `f8c6673b00434b0195bbef237759be82a251b89f894b0749f6baf2a166256a87`, published in
+  the HuggingFace manifest — and the stream completed, but it was never compared against a
+  digest recomputed from the Oracle's own copy. `psychogenicity` WAS compared both ways
+  (`c09678c4…` on both sides); this archive was not, and should be before it is trusted.
 - It did not enable the merge queue or change branch protection.
 - It did not move the estate's bulk to Hugging Face, because no working token exists on this
   machine.
