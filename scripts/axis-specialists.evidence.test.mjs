@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { auditSpecialist, buildTree, sha256 } from './axis-specialists.mjs';
 
 const registry = JSON.parse(readFileSync(new URL('../council-os/axis-specialists/registry.json', import.meta.url), 'utf8'));
-const snapshot = JSON.parse(readFileSync(new URL('../council-os/axis-specialists/board-2026-10-28.snapshot.json', import.meta.url), 'utf8'));
+const snapshot = JSON.parse(readFileSync(new URL('../council-os/axis-specialists/board-2026-11-01.snapshot.json', import.meta.url), 'utf8'));
 const mcpTools = JSON.parse(readFileSync(new URL('../functions/mcp/gspc-tools.json', import.meta.url), 'utf8'));
 const spec = registry.specialists.find((item) => item.axis === 'governance');
 const row = snapshot.axes.find((item) => item.axis === 'governance');
