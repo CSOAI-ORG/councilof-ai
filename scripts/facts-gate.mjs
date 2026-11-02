@@ -670,9 +670,14 @@ function selftestCases(N, M, U) {
   [`all ${N} axes are measured is ${U === 0 ? "honest" : "an OVERCLAIM"} (U = ${U})`, `<p>All ${N} axes are measured and signed.</p>`, U !== 0],
   [`VIOLATION: ${N + 8} measured axes (more than the board carries)`, `<p>The board publishes ${N + 8} measured axes.</p>`, true],
   // ── postfix measured grammar = the live totals.lid (2026-09-16, board 23 · 22) ──
-  ["live lid verbatim: N axes measured is a MEASURED claim, not a slot count", "<p>Lid: 15 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.</p>", false],
-  ["VIOLATION: postfix overclaim still fails", "<p>Board right now: 30 axes measured · 14 model fleets.</p>", true],
-  ["understatement passes (fewer than measured is safe)", "<p>The board carries 15 measured axes today.</p>", false],
+  // These three used to TYPE 15 and 30. When the board reached 34 measured, "30 axes
+  // measured" became an UNDERSTATEMENT - which the gate allows - so the case that had to
+  // fail stopped failing, and the selftest went red. The exact defect this gate exists to
+  // catch, reproduced inside the gate: a typed number goes stale and then means the
+  // opposite of what it meant. So all three read M off the observation now.
+  [`live lid verbatim: ${M} axes measured is a MEASURED claim, not a slot count`, `<p>Lid: ${M} axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.</p>`, false],
+  [`VIOLATION: postfix overclaim still fails (${M + 8} axes measured)`, `<p>Board right now: ${M + 8} axes measured · 14 model fleets.</p>`, true],
+  [`understatement passes (${Math.max(1, M - 8)} measured is fewer than ${M})`, `<p>The board carries ${Math.max(1, M - 8)} measured axes today.</p>`, false],
   ["VIOLATION: EAS asserted live", "<p>Every attestation is anchored on EAS today.</p>", true],
   ["honest EAS label", "<p>EVM · EAS BlackRock BUIDL 0x7712c3420573… UNMEASURED</p>", false],
   ["VIOLATION: ERC-3643 asserted live", "<p>We issue ERC-3643 credentials; issuance runs on the trusted-issuer bridge.</p>", true],
