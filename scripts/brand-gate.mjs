@@ -278,7 +278,7 @@ const RULES = [
     // and nearAllow carries the stamp shapes. The rumour itself is still caught: it is a
     // sentence about what applies, and none of those shapes put "as of" in front of it.
     pattern: /(?:2\s+Nov(?:ember)?\s+2026(?!\s*,?\s*\d{1,2}:\d{2})|November 2026 cliff)/i,
-    nearAllow: /not 2 Nov|wrong date|EUR-Lex|2 August 2026|2 Aug 2026|\bas of\s+2\s+Nov(?:ember)?\s+2026|\bread\s+2\s+Nov(?:ember)?\s+2026|\bupdated\s+2\s+Nov(?:ember)?\s+2026/i,
+    nearAllow: /not 2 Nov|wrong date|EUR-Lex|2 August 2026|2 Aug 2026|\bas of\s+2\s+Nov(?:ember)?\s+2026|\bread\s+2\s+Nov(?:ember)?\s+2026|\bupdated\s+2\s+Nov(?:ember)?\s+2026|\bchecked(?:\s+live)?\s+on\s+2\s+Nov(?:ember)?\s+2026|\bverified\s+on\s+2\s+Nov(?:ember)?\s+2026|\bindexed\s+on\s+2\s+Nov(?:ember)?\s+2026/i,
     why: "EUR-Lex only: Art 50 applied 2 Aug 2026; marking grace 2 Dec 2026; Annex III 2 Dec 2027. There is no 2 Nov 2026 cliff. A read timestamp carrying the date is not a claim.",
   },
   {
