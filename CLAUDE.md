@@ -7,18 +7,19 @@ Shared working agreement for ALL agents on this repo. Read this first.
   Vercel Git unlinked; leftover Vercel projects (`csoai-v2-app`, `councilof-ai-src`, …)
   **deleted 31 Aug 2026**. Do not `vercel deploy`. Do not wait for Vercel GitHub checks.
   Merge gate = GHA `deploy.yml` + `curl -I https://councilof.ai`.
-- Live board: `GET https://councilof.ai/api/gspc` → **22 slots · 22 measured · 0 UNMEASURED**.
+- Live board: `GET https://councilof.ai/api/gspc` → read `totals.public_count` on the day you
+  quote it. Do not freeze an axis count here: it moves when an axis is declared or measured.
   Cards: **THREE corpora, zero overlap** — say which one you mean, every time.
   Full map + the correct sentence: `council-os/CARD-CORPORA.md`. In short:
   · `public/cards-bundle.json` → `card_count` = every `public/cards/*.json` wrapper on
-    disk (**1072**, read 2026-09-05). Its own generator note: "signs nothing, measures
-    nothing." A build-time aggregate, not an attestation. Not in `/api/state`.
+    disk. Read the number from `public/cards-bundle.json` itself — do not type it here,
+    because it moves as master adds wrappers. Its own generator note: "signs nothing,
+    measures nothing." A build-time aggregate, not an attestation. Not in `/api/state`.
   · `public/root.json` → `card_count` = the `card_sha256` leaves under the SIGNED Merkle
-    root (**152**, verified 2026-09-05 in ALL THREE of the deployed `root.json`, the
-    committed `root.json` and `cards-bundle.json` → `root_card_count`, same
-    `merkle_root cf9f5488…`, same `as_of`). The 152/153 split this line used to record was
-    build-timing drift and has since closed; if the two disagree again that is timing, not
-    disagreement. `/api/state` → `public_root.card_count`, kind `catalogued`. Its OTS proof
+    root. Read it from `card_count` in that artifact (and from `root_card_count` in
+    `cards-bundle.json`), and compare the two `merkle_root` and `as_of` values; a split
+    between them is build-timing drift, not disagreement. `/api/state` →
+    `public_root.card_count`, kind `catalogued`. Its OTS proof
     covers `root.json` bytes only.
   · `public/signed/card_index.json` = the signed card index (**335**,
     `n_cards == n_cells == cards[].length`), of which **335 verify** —
@@ -33,7 +34,7 @@ Shared working agreement for ALL agents on this repo. Read this first.
   Stamp SIGNED (`did:web:csoai.org#board-attestation-1`).
 - csoai.org = Cloudflare Pages `csoai-site` (DID apex). `os`/`app`.csoai.org CNAME there.
 - Mailbox is **nicholas@csoai.org** on Namecheap Private Email (https://privateemail.com). GitHub sudo codes go there. **Do not use Gmail.**
-- Full eat: `~/_alignment/ALIGNMENT_2026-08-31.md` (Mac home, **not in this repo** — the repo's own `_alignment/` holds only the x402 census). Cursor feed grammar: cite live totals.public_count (22·22·0 after #1077).
+- Full eat: `~/_alignment/ALIGNMENT_2026-08-31.md` (Mac home, **not in this repo** — the repo's own `_alignment/` holds only the x402 census). Cursor feed grammar: cite live `totals.public_count` from `/api/gspc` on the day; never a frozen axis count.
 
 ## Deployed truth (build — still true)
 - Build from `client/` (Vite + React + wouter + Tailwind). Root `src/` is DEAD — ignore it.
