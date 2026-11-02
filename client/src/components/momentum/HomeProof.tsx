@@ -108,7 +108,7 @@ export default function HomeProof({ injected }: { injected?: MomentumRead }) {
                 ))}
               </ul>
               <p className="mt-5 text-xs leading-relaxed text-muted-foreground">
-                Each checked live on <time dateTime={listings[0].verified_at}>{fmtDay(listings[0].verified_at)}</time>; an index that stops naming us drops off.
+                Each checked live on <time dateTime={listings[0].verified_at}>{listings[0].verified_at.slice(0, 10)}</time> (UTC); an index that stops naming us drops off.
               </p>
               <p className="mt-1.5 text-xs font-semibold text-foreground/80" data-testid="home-listings-line">
                 {listing_line}
