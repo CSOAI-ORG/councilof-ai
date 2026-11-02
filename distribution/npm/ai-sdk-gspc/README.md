@@ -1,6 +1,6 @@
 # @csoai/ai-sdk-gspc
 
-Vercel AI SDK tool for the Council of AI GSPC board. Calls the Council of AI MCP door (https://councilof.ai/mcp, 53 tools (48 free, 5 x402-metered)) directly over HTTP;
+Vercel AI SDK tool for the Council of AI GSPC board. Calls the Council of AI MCP door (53 tools (48 free, 5 x402-metered) at https://councilof.ai/mcp; https://councilof.ai/mcp/free serves the 48 free tools only) directly over HTTP;
 zero runtime dependencies beyond the framework peer. One tool: GSPC board totals.
 
 ```js

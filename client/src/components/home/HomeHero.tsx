@@ -187,6 +187,24 @@ export default function HomeHero() {
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#04120c]/45 via-transparent to-transparent" />
           <p className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-[#04120c]/80 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-emerald-100 backdrop-blur-sm">Evidence you can inspect</p>
         </div>
+        <div className="mt-5 max-w-2xl text-sm leading-relaxed text-emerald-50/90" data-testid="hero-paid-services">
+          <p>Need an Article 50 pack, an evidence bundle or provider change history?</p>
+          <div className="mt-1 flex flex-col gap-x-6 sm:flex-row sm:flex-wrap">
+            <Link
+              href="/services/"
+              className="inline-flex min-h-11 items-center font-bold text-emerald-300 underline underline-offset-4 hover:text-emerald-200"
+            >
+              View paid services and x402 terms
+            </Link>
+            <Link
+              href="/contact/"
+              className="inline-flex min-h-11 items-center font-bold text-emerald-300 underline underline-offset-4 hover:text-emerald-200"
+            >
+              Request a GBP invoice by email
+            </Link>
+          </div>
+          <p>Scope and invoice terms are agreed by email. Opening these links does not place an order.</p>
+        </div>
       </div>
     </section>
   );

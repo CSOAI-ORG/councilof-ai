@@ -102,7 +102,7 @@ export const HEALTH_FACTS: HealthFact[] = [
     id: "index-rows",
     title: "Signed index rows",
     access: "signed coverage index · total_signed_rows",
-    href: "https://councilof.ai/signals/sov-signal.signed.json",
+    href: "https://councilof.ai/signals/coverage-index.signed.json",
     state: "present",
     means: "The coverage index counts rows. It never predicts.",
   },
