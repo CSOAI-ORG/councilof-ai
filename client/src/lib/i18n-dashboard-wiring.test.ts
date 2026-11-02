@@ -89,6 +89,18 @@ describe("dashboard menu localisation wiring", () => {
     expect(new Set(allPaths).size).toBe(allPaths.length);
   });
 
+  it("the H.I.M. door exists exactly once, with keys in every locale and an honest blurb", () => {
+    const himTabs = LOBBY_TABS.filter((t) => t.path === "/him");
+    expect(himTabs).toHaveLength(1);
+    expect(LOBBY_ROUTES.map((r) => r.path.replace(/\/$/, ""))).not.toContain("/him");
+    expect(himTabs[0].blurb).toMatch(/does not certify/i);
+    for (const locale of LOCALES) {
+      const tabs = dashboards[locale]["tabs"] as Record<string, Record<string, string>>;
+      expect(tabs["him"]?.label, `${locale} tabs.him.label`).toBeTruthy();
+      expect(tabs["him"]?.blurb, `${locale} tabs.him.blurb`).toBeTruthy();
+    }
+  });
+
   it("THE RULER is a playable card in the gallery with an honest reality line", () => {
     const card = PLAY_CARDS.find((c) => c.id === "ruler");
     expect(card).toBeTruthy();

@@ -71,6 +71,7 @@ export type LobbyTabId =
   | "learn"
   | "academy"
   | "ruler"
+  | "him"
   | "staff"
   | "research"
   | "play"
@@ -161,13 +162,21 @@ export const LOBBY_TABS: LobbyTab[] = [
     cues: /\b(academy|council academy|lessons?|curriculum)\b/i,
   },
   {
+    id: "him",
+    label: "H.I.M. review",
+    blurb:
+      "The human-in-the-loop layer by name: where an AI proposal stops, who decides, and which gates are live. A receipt records a decision; it does not certify it.",
+    path: "/him",
+    cues: /\b(him|h\.?i\.?m\.?|human in the loop|human review gate|named human)\b/i,
+  },
+  {
     id: "staff",
     label: "Staff & human review",
     blurb:
       "Ask the AI staff, inspect escalations, complete the live-record competency check, and see exactly whether human decisions are unlocked, signed and persisted.",
     path: "",
     kind: "native",
-    cues: /\b(staff|human review|human[- ]in[- ]the[- ]loop|hitl|h\.i\.m\.|competency (?:check|module)|review queue|operator decision)\b/i,
+    cues: /\b(staff|human review|human[- ]in[- ]the[- ]loop|hitl|competency (?:check|module)|review queue|operator decision)\b/i,
   },
   {
     id: "research",
@@ -1045,10 +1054,10 @@ const DASHBOARD_NAV_DEFINITION: {
     tabs: [
       { id: "learn", label: "Learning" },
       { id: "academy", label: "Academy" },
-      { id: "research", label: "Continuous research" },
-      { id: "space", label: "Model arena" },
       { id: "play", label: "Games" },
       { id: "ruler", label: "The Ruler" },
+      { id: "space", label: "Model arena" },
+      { id: "research", label: "Continuous research" },
     ],
   },
   {
@@ -1056,7 +1065,10 @@ const DASHBOARD_NAV_DEFINITION: {
     label: "Staff & human review",
     description:
       "Escalate an AI staff proposal to a named human, check competence against the live record, and inspect decision, signing and persistence gates.",
-    tabs: [{ id: "staff", label: "Staff & human review" }],
+    tabs: [
+      { id: "staff", label: "Staff & human review" },
+      { id: "him", label: "H.I.M. review" },
+    ],
   },
   {
     id: "sovx",
