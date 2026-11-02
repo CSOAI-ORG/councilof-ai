@@ -30,7 +30,7 @@ const CLAIM_EVENTS_HEAD = "/api/claims/events/head";
 const LIVE_STATE = "/api/state";
 const PUBLIC_CLAIMS = "/claims-register";
 /** The archival deposit. A DOI makes a document citable; it does not make it right. Since 29 Sep 2026
- *  the Zenodo record answers HTTP 410 (account blocked by Zenodo; appeal pending), so the DOI is
+ *  the Zenodo record answers HTTP 410 (account blocked by Zenodo; no appeal on record), so the DOI is
  *  printed as an identifier and the served document of record (the same bytes) is linked instead. */
 const DOI = "10.5281/zenodo.22901908";
 const CONCEPT_DOI = "10.5281/zenodo.22901781";
