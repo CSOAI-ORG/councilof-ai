@@ -122,6 +122,11 @@ while `runpodctl network-volume get euro-3` answered **404 not found** — reads
 vanished. A different pod, a different path, or the old ghost mount would each produce a
 different explanation; the errno and path decide it.
 
+**Section 9 says what the errno turned out to be, and corrects that root cause.** `mfs#euro-3`
+was never a missing volume: `euro-3` is the MooseFS **mount label**, not the volume name, and
+looking the volume up by label is what returned 404. The volume is `csoai-backup-ro`
+(`u6bcx7p3uc`, 800 GB) and it exists — at its quota.
+
 **But `/root` is the wrong place to keep anything.** It is the container disk, and it was
 recreated under a running container. The keeper of record belongs on `/workspace`.
 
@@ -156,7 +161,7 @@ The machinery is proven; a fresh code is a ~20 s regeneration.
 
 | # | Item | Why it is blocked |
 |---|---|---|
-| 1 | **A working Hugging Face token** | the only credential on this machine (`HUGGINGFACE_TOKEN`) answers **401** on `whoami-v2` — `Invalid username or password`. No token file in `~/.cache/huggingface`, `~/.huggingface`, `~/.config/huggingface`, the keychain, the repo, `csoai-work`, `~/.csoai`, `~/.runpod`, or the pod. Until one exists, the estate's bulk cannot be mirrored to the 10 TB public / 1 TB private storage |
+| 1 | ~~A working Hugging Face token~~ | **CLOSED 2 Nov** — the `HUGGINGFACE_TOKEN` env var is a **dead** token (401 on `whoami-v2`), but the working credential is in a FILE: `~/.cache/huggingface/token` (mode 600), org `csoai`, canPay. The bulk is published: private repo `csoai/estate-offload-20261102`, 3 archives + a `MANIFEST.json` carrying each file's sha256 |
 | 2 | **Approving the pod on Desktop Commander** | only the owner can add a device at `mcp.desktopcommander.app` |
 | 3 | **The merge queue on master** | `mergeQueue(branch:"master")` is `null` — it is **off**. The mutation is not in the schema this token can see, so the API cannot turn it on; it is a web-UI setting. Note also `required_approving_review_count: 0`: today a merge needs a PR and strict status checks, but **no human approval** |
 | 4 | **Reclaiming the Oracle's lane directories** | the bytes are verified on the RunPod, but the Oracle's cron lanes still point at the originals. Removing them needs the lanes re-pointed, and the sibling session's resolver owns part of that tree |
@@ -171,5 +176,59 @@ The machinery is proven; a fresh code is a ~20 s regeneration.
   digest recomputed from the Oracle's own copy. `psychogenicity` WAS compared both ways
   (`c09678c4…` on both sides); this archive was not, and should be before it is trusted.
 - It did not enable the merge queue or change branch protection.
-- It did not move the estate's bulk to Hugging Face, because no working token exists on this
-  machine.
+- It did not free any space on `csoai-backup-ro` or `council-os-benchmark-data-20261027`, both of
+  which are at quota (section 9). Their contents are not mine to reclaim.
+
+## 9. A correction: the "ghost volume" was never a ghost — it was a volume at quota
+
+On 2 Nov a sibling lane reported measuring, on this pod, "486 TB free but every write fails with
+*Disk quota exceeded*". That did not reproduce on `estate-scratch-20261028`. Enumerating the
+account's four RunPod network volumes and writing to a pod that mounts each one says what is
+actually going on:
+
+| Volume | Id | Quota | Mount | Write test |
+|---|---|---|---|---|
+| estate-scratch-20261028 | 08xza5ommr | 400 GB | mfs#euro-2 | 2 GB written at 1.8 GB/s, read back 2,147,483,648 bytes — **healthy** |
+| council-os-benchmark-data-20261027 | fbrt7yy9aq | 100 GB | mfs#euro-2 | **1 MB write fails: "Disk quota exceeded", readback 0 bytes** |
+| csoai-backup-ro | u6bcx7p3uc | 800 GB | mfs#euro-3 | **1 MB write fails: "Disk quota exceeded", readback 0 bytes** |
+| sov-workspace-mtl4 | ahqvo6d4f3 | 200 GB | CA-MTL-4 | not probed — no pod mounts it |
+
+**The correction.** The estate's recorded root cause for the dark substrate was that `mfs#euro-3`
+was "a stale FUSE handle to a volume 404 in the account". The volume was never missing.
+`runpodctl network-volume get euro-3` returned **404 because `euro-3` is the MooseFS MOUNT
+label, not the volume name** — the volume is `csoai-backup-ro`, id `u6bcx7p3uc`, 800 GB, and it
+exists. What it does is exactly what a missing volume looks like from the inside: **it is at its
+quota**. Every write fails with `Disk quota exceeded`; every read still works; and `df` reports
+the whole MooseFS pool (493 TB free, 78%) because the pool's free space is not this volume's
+quota.
+
+So the substrate was dark because the estate's storage was **full**, not because a volume had
+been deleted. The remedy applied was still the right one — the substrate now sits on
+`estate-scratch-20261028`, which has headroom and passes a 2 GB write-and-readback — but the
+recorded cause was wrong, and a cause recorded wrongly sends the next person to look in the wrong
+place. The same volume is where the estate's **13 GB of snapshots** and the old lane trees live,
+so "the backup volume is full" belongs in the estate's own storage record.
+
+**A second fence that never fires.** `busabase-instance.sh`'s `headroom_mb()` reads
+`/sys/fs/cgroup/memory.max`, a **cgroup v2** path. These pods are cgroup v1, where that file
+does not exist, so the function returns 999999 MB and `MIN_HEADROOM_MB` (900) never refuses a
+start. A fence that never fires protects nothing.
+
+**And the OOM reading, honestly.** The counters on the substrate pod read `oom_kill 0` and
+`failcnt 0`, so the cgroup OOM killer did not fire there. The accounting is degraded, though —
+`memory.usage_in_bytes` reads exactly equal to the 4 GB limit and `memory.stat` carries no
+`anon` or `slab_unreclaimable` rows — so those counters cannot rule out a host-level OOM either.
+What was measured directly is that `/opt` was empty and the node processes were gone. A missing
+runtime and a killed process are BOTH consistent with that, and only one of them is fixed by
+moving the runtime onto the volume. Both are now handled: the runtime lives on the volume, and
+`pod-supervisor.sh` restarts a writer whose port goes dark.
+
+**Do not `du -sh` the big trees under `/workspace`.** It buffers the whole tree and is the most
+likely thing to push a 4 GB cgroup pod over its limit. `find <dir> -type f | wc -l` streams and
+is safe.
+
+**Two pods that look like one.** `estate-scratch-20261028` and
+`council-os-benchmark-data-20261027` both mount `mfs#euro-2.runpod.net:9421` and share a
+filesystem HOST, but they are different volumes with different quotas and different contents: a
+marker file written on one is invisible on the other, in both directions. "Same MooseFS mount" is
+not "same volume", and "same volume" is not "has room".
