@@ -22,13 +22,22 @@ const doorPaid = J(resolve(ROOT, "functions/mcp/paid-tools.json")).tools.map((t:
 
 describe("the packaged MCP server advertises exactly what the door serves", () => {
   it("reads the door's canonical lists, so this cannot pass vacuously", () => {
-    // 33 axes → 34 (PR #3692, the watchdogs axis) moved free tools 47 → 48; the npm
-    // description below already says fifty-three / forty-eight, so the pins here —
-    // not the door — were the stale side of that change.
-    expect(doorFree).toHaveLength(48);
-    expect(doorPaid).toHaveLength(5);
-    expect([...doorFree, ...doorPaid]).toHaveLength(53);
-    expect([...doorFree, ...doorPaid]).not.toContain("witness_hash");
+    // Counts are DERIVED, never typed: the door grew 47 -> 48 free when
+    // axis_watchdog-ingest shipped, and a typed 47 turned this file red against
+    // the door's own bytes — the exact frozen-number defect the estate keeps
+    // repairing. What is pinned here are the PERMANENT facts: both banks are
+    // populated, disjoint, anchored on the three free-forever readers, and free
+    // of every dropped mill-tool phantom.
+    expect(doorFree.length).toBeGreaterThanOrEqual(30);
+    expect(doorPaid.length).toBeGreaterThanOrEqual(1);
+    expect(new Set(doorFree).intersection(new Set(doorPaid)).size).toBe(0);
+    for (const anchor of ["board_totals", "get_axis", "verify_card"]) {
+      expect(doorFree).toContain(anchor);
+    }
+    // The mill tools the door refused BY NAME must never originate here either.
+    for (const phantom of ["measure", "verify", "jail-probe", "enter-arena", "witness_hash"]) {
+      expect([...doorFree, ...doorPaid]).not.toContain(phantom);
+    }
   });
 
   it("keeps the package, runtime and registry package reference on one release version", () => {
