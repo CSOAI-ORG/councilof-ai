@@ -36,6 +36,16 @@ wallet_out=$(node scripts/wallet-credential-gate.mjs --selftest 2>&1 \
   && node scripts/wallet-credential-gate.mjs 2>&1) \
   || { echo "  ✖ wallet-credential-gate failed — its verdict:"; printf '%s\n' "$wallet_out" | tail -8 | sed 's/^/      /'; fail=1; }
 
+# ADDED 2026-11-02. The RUNTIME FLOOR was declared (package.json engines.node >= 20.0.0) and
+# enforced by nothing. A door-contract test was rewritten to use Set.prototype.intersection,
+# which shipped in Node 22: green on this desk (Node 22), red in CI (Node 20) with
+# "intersection is not a function". A green local run is not evidence when the desk and the gate
+# are different programs. The gate reads each package's OWN engines.node, so raising a floor is
+# growth and the rules above it go inert without anyone editing a list.
+node_out=$(node scripts/node-engine-floor-gate.mjs --selftest 2>&1 \
+  && node scripts/node-engine-floor-gate.mjs 2>&1) \
+  || { echo "  ✖ node-engine-floor-gate — its verdict:"; printf '%s\n' "$node_out" | tail -8 | sed 's/^/      /'; fail=1; }
+
 # The gate must be provably working before its verdict means anything — a gate
 # that has never gone red proves nothing about the tree it just passed.
 node scripts/facts-gate.mjs --selftest >/dev/null 2>&1 \
@@ -146,5 +156,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ wallet-credential-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate clean"
+echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate clean"
 exit 0
