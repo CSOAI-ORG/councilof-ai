@@ -21,7 +21,8 @@
   "axes_by_kind": {
    "model-comparison": 14,
    "deterministic-facts": 9,
-   "declared-slot": 11
+   "declared-slot": 10,
+   "measured-subject": 1
   },
   "axes_with_subject_reports": 9,
   "subjects_in_corpus": 64,
@@ -1026,12 +1027,12 @@
   },
   {
    "axis": "claim-maintenance",
-   "kind": "declared-slot",
+   "kind": "measured-subject",
    "family": "subject",
-   "bench": "pending gated re-read wave (>=30 claims)",
-   "task": "at each scheduled re-read, is a captured public claim still served unchanged, changed with disclosure, changed silently, withdrawn or unreachable; says nothing about whether the claim is true",
-   "status": "UNMEASURED",
-   "n": 0,
+   "bench": "claim-maintenance v0.2 re-read wave",
+   "task": "at each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true",
+   "status": "MEASURED",
+   "n": 174,
    "n_unit": null,
    "source_axes": [],
    "obligations": "UNMAPPED",
@@ -1041,7 +1042,7 @@
     "unmeasured": 0
    },
    "subject_reports": "none",
-   "reason": "Reported DISCOVERED-style as counts per subject class, never a ranking."
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
   },
   {
    "axis": "serving-fidelity",
@@ -5545,5 +5546,5 @@
  ],
  "canonical_rule": "canonical_sha256 = sha256(canonical JSON of this object minus generated_at and canonical_sha256; keys sorted, no whitespace)",
  "generated_at": "2026-08-19T09:24:39.174226+00:00",
- "canonical_sha256": "46ca5b0da547d3dd8979611548643e809761ced2c21fa0bf72670139313d4953"
+ "canonical_sha256": "4fc8f1af0b9ed9cdb069b45b2c867cb90198bb279b57a205675b6fb4436909f6"
 }
