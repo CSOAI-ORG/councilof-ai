@@ -1,6 +1,6 @@
 {
  "schema": "csoai.completion-audit/0.1",
- "measured_at": "2026-11-02T03:42:36Z",
+ "measured_at": "2026-11-02T04:37:05Z",
  "note": "Every LIVE line was probed against the live surface and carries the measured value and the receipt URL. An item is LIVE only if a probe saw it. Owner-gated items are named as owner-gated, never as done. This is a measurement of completion, not a claim of a market outcome: 'unicorn status' is a trajectory, not a claim, and nothing here asserts it.",
  "not_claimed": [
   "a customer",
@@ -59,7 +59,7 @@
   },
   {
    "id": "U-13a",
-   "item": "Agent skills published (12 skills)",
+   "item": "Agent skills published",
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
@@ -90,7 +90,7 @@
    "lane": "agent",
    "closer": "probe",
    "state": "OPEN",
-   "measured": "no namespace TXT is published (com.councilof.ai -> no TXT record; _namespace.com.councilof.ai -> no TXT record; _mcp.com.councilof.ai -> no TXT record) - publishing it needs DNS authority for the domain, which is the owner's",
+   "measured": "no namespace TXT is published (com.councilof.ai -> the name does not exist; _namespace.com.councilof.ai -> the name does not exist; _mcp.com.councilof.ai -> the name does not exist) - publishing it needs DNS authority for the domain, which is the owner's",
    "receipt": "dns:com.councilof.ai _namespace.com.councilof.ai _mcp.com.councilof.ai"
   },
   {
