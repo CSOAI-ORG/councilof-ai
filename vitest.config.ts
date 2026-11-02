@@ -52,6 +52,19 @@ export const NODE_TEST_FILES = [
   // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
   'council-os/gspc-pontius-boundary.test.mjs',
   'scripts/watchdog/source-status.test.mjs',
+  // 2026-11-02: six node:test files arrived via merged lanes outside the scoped vitest
+  // roots (client/src, functions, scripts), so CI never collected them — but the root
+  // npm test sweep does, and vitest cannot collect a node:test file. Each was verified
+  // green under node --test before registration; the pr-gates node --test step reads
+  // this same list, so coverage moves to the runner that can collect it. No
+  // apostrophes in comments here: the registry script extracts every quoted fragment
+  // of this block as a file path.
+  'capabilities/card-counts.test.mjs',
+  'capabilities/journey-backends.test.mjs',
+  'integrations/integrations.test.mjs',
+  'tests/population-delivery-verifier.test.mjs',
+  'actions/verify-card/run.test.mjs',
+  'actions/verify-card/workflow.test.mjs',
 ];
 
 export default defineConfig({
