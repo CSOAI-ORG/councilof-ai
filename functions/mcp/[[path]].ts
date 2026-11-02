@@ -26,6 +26,7 @@ import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
 import { recordUsage } from "../_lib/usage";
+import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
 export const MCP_HTTP_SERVER_VERSION = "1.4.4";
@@ -135,6 +136,7 @@ function buildMcp(
         "tools/list": { ttlMs: 300_000, cacheScope: "public" },
       },
     });
+    registerWorkingGroups(server);
     for (const { definition, inputSchema, outputSchema } of TOOLS) {
       server.registerTool(
         definition.name,
@@ -461,6 +463,7 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       tools: FREE_DEFINITIONS.map((d) => d.name),
       documentation: `${origin}/connect/claude/`,
       privacy: `${origin}/privacy-policy/`,
+      working_groups: WORKING_GROUP_ACCESS,
       board: `${origin}/api/gspc`,
       signed_cards: `${origin}/signed/card_index.json`,
       how_to_verify: `${origin}/signed/HOW-TO-VERIFY.md`,
@@ -485,6 +488,7 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
           "measurement, not certification; the catalog and verification remain free",
         catalog: `${origin}/api/x402`,
       },
+      working_groups: WORKING_GROUP_ACCESS,
       board: `${origin}/api/gspc`,
       signed_cards: `${origin}/signed/card_index.json`,
       how_to_verify: `${origin}/signed/HOW-TO-VERIFY.md`,

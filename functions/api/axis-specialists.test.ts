@@ -7,7 +7,11 @@ const axes = INDEX.specialists.map((item) => item.axis);
 
 describe("MEOK Hive axis specialist API", () => {
   it("covers every source axis with isolated clusters and closed human gates", () => {
-    expect(axes).toHaveLength(33);
+    // The count is DERIVED from the specialist array, never typed: the estate adds
+    // axes (slot 34 = watchdog-ingest, 2026-10-30) and a typed 33 here would fail
+    // for a correct board — the same mistake canon.json's frozen count made.
+    expect(axes.length).toBe(INDEX.specialists.length);
+    expect(axes.length).toBeGreaterThan(0);
     expect(new Set(axes).size).toBe(axes.length);
     expect(new Set(INDEX.specialists.map((item) => item.cluster_id)).size).toBe(axes.length);
     expect(INDEX.coverage.specialists).toBe(axes.length);

@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Anthropic — usage_policy: bytes changed 2026-10-28",
+ "as_of": "2026-10-28T12:24:15Z",
+ "source_urls": [
+  "https://www.anthropic.com/legal/aup"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "anthropic",
+  "surface": "usage_policy",
+  "url": "https://www.anthropic.com/legal/aup",
+  "prev_sha256": "6956ddc188e96bbacd6a4768c9ea524603324be845863926d0114c1658002ef1",
+  "new_sha256": "1917ed8485278dce21cc25fd55744bd791e48d0b4c437f90eb1623846f5b0d99",
+  "prev_bytes_sha256": "cf8efb88746a2b7be56d6322290304b7624265117e18d7aab5256e5302490f2c",
+  "new_bytes_sha256": "186fddfa1f05f0ecf74c1e015eb4a879b7a7643214ee66716725d093c694fe21",
+  "prev_fetched_at": "2026-10-26T11:15:10Z",
+  "fetched_at": "2026-10-28T12:24:15Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 1023214,
+   "new": 1022853
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "21cc8e58129989571075ba35ca4f8e5f3031bb776404dfcad9497e2947ec13e8",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:anthropic",
+  "surface:usage_policy",
+  "hash-only"
+ ]
+}

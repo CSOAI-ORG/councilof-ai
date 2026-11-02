@@ -1,0 +1,28 @@
+fixtures match SHA256SUMS: yes
+
+Cases
+ok   C01  pass                 admit   OK_CURRENT                 Positive control: current key, fresh lookup, valid signature
+ok   C02  pass                 admit   OK_HISTORICAL              Old key, signature timestamped inside its historical interval
+ok   C03  fail                 refuse  KEY_OUTSIDE_VALIDITY       Old key, signature timestamped after its interval closed
+ok   C04  could-not-determine  hold    STALE_LOOKUP               Stale lookup: history fetched 5 days before evaluation, bound 24 hours
+ok   C05  fail                 refuse  NO_LINEAGE                 Successor key listed by the source with no lineage statement
+ok   C06  pass                 admit   OK_HISTORICAL              Revoked key, signature timestamped before the revocation took effect
+ok   C07  fail                 refuse  KEY_REVOKED                Revoked key, signature timestamped after the revocation took effect
+ok   C08  could-not-determine  hold    SOURCE_UNAVAILABLE         Validation source unavailable
+ok   C09  could-not-determine  hold    NO_STATUS_SOURCE           Revocation status unknowable: source publishes no revocation list
+ok   C10  could-not-determine  hold    SIGNING_TIME_UNATTESTED    Old key, signing time only self-asserted (no timestamp token)
+
+Mutation controls
+ok   M01  fail                 refuse  BAD_SIGNATURE              C01: flip one byte of the statement signature
+ok   M02  could-not-determine  hold    STALE_LOOKUP               C01: move the evaluation instant 3 days later
+ok   M03  fail                 refuse  NO_LINEAGE                 C01: drop the lineage statement for k-2026
+ok   M04  fail                 refuse  BAD_LINEAGE                C01: flip one byte of the lineage signature
+ok   M05  fail                 refuse  KEY_OUTSIDE_VALIDITY       C02: close the anchor interval before the signing time
+ok   M06  fail                 refuse  BAD_TIMESTAMP              C02: move the timestamp token time by one second
+ok   M07  could-not-determine  hold    SIGNING_TIME_UNATTESTED    C02: remove the timestamp token
+ok   M08  could-not-determine  hold    REVOCATION_UNVERIFIABLE    C06: move the revocation effectiveFrom without re-signing
+ok   M09  could-not-determine  hold    SOURCE_UNAVAILABLE         C01: make the validation source unavailable
+ok   M10  could-not-determine  hold    NO_STATUS_SOURCE           C01: remove the revocation list from the source
+ok   M11  fail                 refuse  HISTORY_DIGEST_MISMATCH    C01: alter the history without updating the recorded digest
+
+21/21 match expected.json

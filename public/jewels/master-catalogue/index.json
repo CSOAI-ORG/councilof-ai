@@ -1,0 +1,3576 @@
+{
+ "schema": "csoai.master-catalogue/0.1",
+ "title": "CSOAI — Master Catalogue of All Jewels",
+ "edition": "2026-11-01",
+ "published_at": "2026-11-01T04:44:45.308Z",
+ "page": "https://councilof.ai/jewels/master-catalogue/",
+ "what_this_is": "The estate's master catalogue of every jewel, in one place: the 130-row state table with each row's claimed state, its state-checked state, and today's live read of the surface that row names. Supersedes the repository document docs/GSPC-MASTER-CATALOG-OF-ALL-JEWELS-2026-10-27.md, which was merged in PR #3531 on 2026-10-29 but was never published as a page a reader could reach.",
+ "what_this_is_not": [
+  "not a certification, a rank, a grade or a score",
+  "not a statement that any axis is MEASURED - the board carries its own status and this catalogue neither moves it nor pre-empts the decision that moves it",
+  "not a claim that any captured artefact is true; it records what was read, when, and what came back",
+  "not a completeness claim about the estate - it catalogues every jewel the state table names, plus the missing jewels the 2026-10-27 catalogue found, and a jewel on no list would not appear here"
+ ],
+ "not_a_certification": "This catalogue counts and quotes. It decides nothing about whether any measured claim is true, and it grants no status to any subject.",
+ "the_three_laws": [
+  "A signed artefact is not a true artefact. Signature and presence prove where bytes came from; they never prove the number inside.",
+  "The measurement must not manufacture the evidence it measures. Where finishing a jewel would mean minting the evidence, the jewel stays open and the blocker is named.",
+  "Absence is a state. A refused URL, an unreachable endpoint, an unmeasured axis: each is recorded in its own state and never converted to a zero, a failure or a score."
+ ],
+ "baseline": {
+  "state_table": {
+   "path": "docs/GSPC-JEWEL-STATE-TABLE-2026-10-27.md",
+   "url": "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/docs/GSPC-JEWEL-STATE-TABLE-2026-10-27.md",
+   "http": 200,
+   "bytes": 55915,
+   "sha256": "edace4852ff257217d216f2731bb2cfcefe4f379bfc63be617a9f664eeb74d2d",
+   "dated": "2026-10-27",
+   "note": "The 130 rows, their VERIFIED state, their evidence and their next step. Every row below is read from these exact bytes."
+  },
+  "prior_catalogue": {
+   "path": "docs/GSPC-MASTER-CATALOG-OF-ALL-JEWELS-2026-10-27.md",
+   "pull_request": 3531,
+   "merged_at": "2026-10-29T03:56:52Z",
+   "note": "Merged into the repository as a document. Never published as a page. This edition is that document, state-checked and made reachable."
+  },
+  "reads": [
+   {
+    "path": "out/docket-row-reread-20261030.json",
+    "observed_at": "2026-10-30T04:17:46.700Z",
+    "sha256": "0ff108177dba6c7c4e00e3d79214e7a9acba513ea10595438645f5e2e012a39f",
+    "level": "status",
+    "negative_control": {
+     "form": "path",
+     "path": "path:/__csoai-negative-control-never-exists__/",
+     "live_status": 404,
+     "required": "unreachable",
+     "passed": true
+    }
+   },
+   {
+    "path": "out/docket-row-reread-20261101.json",
+    "observed_at": "2026-11-01T04:32:57.274Z",
+    "sha256": "4f8c4fab13c8db00d0eb65bca69f7ee6a5bdcba3493b920a84c01f8392a8a4f8",
+    "level": "status + visible-text digest",
+    "negative_control": {
+     "form": "path",
+     "path": "path:/__csoai-negative-control-never-exists__/",
+     "live_status": 404,
+     "required": "unreachable",
+     "passed": true
+    }
+   }
+  ],
+  "published_reads": [
+   {
+    "path": "public/interop/subject-axis-live-20261027/docket-row-reread-20261030.json",
+    "url": "https://councilof.ai/interop/subject-axis-live-20261027/docket-row-reread-20261030.json",
+    "observed_at": "2026-10-30T04:17:46.700Z"
+   },
+   {
+    "path": "public/interop/subject-axis-live-20261027/docket-row-reread-20261101.json",
+    "url": "https://councilof.ai/interop/subject-axis-live-20261027/docket-row-reread-20261101.json",
+    "observed_at": "2026-11-01T04:32:57.274Z",
+    "sha256": "e2e31c44cb6580e8ad770607be3bfcf2ea2d5fbcab6a7aa0a30a9484b38f5d5b",
+    "note": "The sha256 is of the exact bytes published at this URL, so a reader can verify the published read against the catalogue that cites it."
+   }
+  ]
+ },
+ "method": {
+  "reader": "Node fetch, not Python urllib: councilof.ai returns 200 to Node/curl and 403 to urllib under the Cloudflare rule `public-data: no BIC`.",
+  "extractor": "csoai-visible-text/2",
+  "extractor_sha256": "10432c76c61b34ff9b726d2341844833b3e9a7fef19e5b77e5e545c45483559d",
+  "extractor_sha256_pinned_in": "public/spec/claim-maintenance/v0.2/reference/manifest.json",
+  "extractor_sha256_matches_pin": true,
+  "negative_control": {
+   "form": "path",
+   "host": "councilof.ai",
+   "path": "path:/__csoai-negative-control-never-exists__/",
+   "live_status": 404,
+   "required": "unreachable",
+   "passed": true
+  },
+  "timeout_ms": 25000,
+  "concurrency": 6,
+  "same_origin_rule": "A machine surface may not publish an absolute councilof.ai URL for a path the site does not serve. A same-origin path that is not served today is published in the estate's path:/ form with its live status beside it. Third-party URLs stay whole.",
+  "reproducible_from": [
+   "https://councilof.ai/jewels/master-catalogue/index.json",
+   "https://councilof.ai/interop/subject-axis-live-20261027/README.md"
+  ]
+ },
+ "live_state": {
+  "read_at": "2026-11-01T04:44:45.304Z",
+  "board": {
+   "url": "https://councilof.ai/api/gspc",
+   "http": 200,
+   "axes": 33,
+   "measured_axes": 23,
+   "unmeasured_axes": 10,
+   "public_count": "33 axes · 23 measured",
+   "separation": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED"
+  },
+  "unmeasured_axes": [
+   {
+    "axis": "lab-practice",
+    "family": "subject",
+    "kind": "declared-slot",
+    "status": "UNMEASURED",
+    "n": 0,
+    "accuracy": null
+   },
+   {
+    "axis": "company-practice",
+    "family": "subject",
+    "kind": "declared-slot",
+    "status": "UNMEASURED",
+    "n": 0,
+    "accuracy": null
+   },
+   {
+    "axis": "measurer-integrity",
+    "family": "subject",
+    "kind": "declared-slot",
+    "status": "UNMEASURED",
+    "n": 0,
+    "accuracy": null
+   },
+   {
+    "axis": "harness-fidelity",
+    "family": "subject",
+    "kind": "declared-slot",
+    "status": "UNMEASURED",
+    "n": 0,
+    "accuracy": null
+   },
+   {
+    "axis": "interop-conformance",
+    "family": "subject",
+    "kind": "declared-slot",
+    "status": "UNMEASURED",
+    "n": 0,
+    "accuracy": null
+   },
+   {
+    "axis": "humanoid-deployment",
+    "family": "subject",
+    "kind": "declared-slot",
+    "status": "UNMEASURED",
+    "n": 0,
+    "accuracy": null
+   },
+   {
+    "axis": "regulator-transparency",
+    "family": "subject",
+    "kind": "declared-slot",
+    "status": "UNMEASURED",
+    "n": 0,
+    "accuracy": null
+   },
+   {
+    "axis": "interpretability-reproducibility",
+    "family": "subject",
+    "kind": "declared-slot",
+    "status": "UNMEASURED",
+    "n": 0,
+    "accuracy": null
+   },
+   {
+    "axis": "claim-maintenance",
+    "family": "subject",
+    "kind": "declared-slot",
+    "status": "UNMEASURED",
+    "n": 0,
+    "accuracy": null
+   },
+   {
+    "axis": "serving-fidelity",
+    "family": "subject",
+    "kind": "declared-slot",
+    "status": "UNMEASURED",
+    "n": 0,
+    "accuracy": null
+   }
+  ],
+  "public_root": {
+   "url": "https://councilof.ai/root.json",
+   "http": 200,
+   "card_count": 331,
+   "as_of": "2026-10-31T17:48:12Z",
+   "merkle_root": "7806aeebd8c78ab5730f92379eff2c6d393c5a0e270eeb954dc8d747632afd63"
+  },
+  "corrections_ledger": {
+   "url": "https://councilof.ai/api/corrections",
+   "http": 200,
+   "entries": 93
+  },
+  "x402_catalogue": {
+   "url": "https://councilof.ai/api/x402",
+   "http": 200,
+   "resources": 29
+  },
+  "agent_skills": {
+   "url": "https://councilof.ai/.well-known/agent-skills/index.json",
+   "http": 200,
+   "published": 14,
+   "names": [
+    "gspc-board",
+    "east-west-crosswalk",
+    "card-status-link",
+    "benchmark-quality-register",
+    "article50-detect",
+    "eu-ai-act-screen",
+    "x402-discovery",
+    "estate-index",
+    "measurement-capsules",
+    "server-evidence",
+    "evidence-bundle",
+    "gspc-route",
+    "evidence-delivery",
+    "axis-specialist"
+   ]
+  },
+  "mechanism_coverage": {
+   "url": "https://councilof.ai/mechanism/coverage.json",
+   "http": 200,
+   "totals": {
+    "PREDICATE": 1,
+    "RELATED_MEASURE": 12,
+    "CROSSWALK_ONLY": 38,
+    "HASH_ONLY": 366
+   }
+  },
+  "claim_maintenance_register": {
+   "url": "https://councilof.ai/spec/claim-maintenance/register.json",
+   "http": 200,
+   "as_of": "2026-10-08T05:40:55Z",
+   "subjects": 28,
+   "claims": 99,
+   "by_state": {
+    "CLAIM_CAPTURED": 1,
+    "CLAIM_MEASURED": 33,
+    "UNMEASURED": 39,
+    "UNCHECKABLE": 26
+   }
+  },
+  "open_pull_requests": 134
+ },
+ "counts": {
+  "jewel_rows": 130,
+  "distinct_urls": 126,
+  "n_valid_2026_11_01": 89,
+  "n_unreachable_2026_11_01": 37,
+  "status_changed_vs_2026_10_27": 6,
+  "visible_text_changed_since_2026_10_30": 27,
+  "by_state_2026_10_27": {
+   "VERIFIED_CURRENT": 31,
+   "CONTRADICTED": 12,
+   "OWNER_GATED": 11,
+   "UNVERIFIED": 36,
+   "DEAD": 1,
+   "VERIFIED_STALE": 13,
+   "OPEN_VERIFIED": 20,
+   "CLOSING_SOON": 3,
+   "CLOSED": 3
+  }
+ },
+ "jewels": [
+  {
+   "id": "CJ-01",
+   "jewel": "Claim maintenance category (zero incumbents)",
+   "claimed_state_2026_10_26": "*LIVE page",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://councilof.ai/claim-maintenance/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 129322,
+     "visible_text_sha256_2026_11_01": "119a0d7a043c2db9b507e42488232fa28dda647e8e2396aa0ba9f4d938f506ae",
+     "ms": 319,
+     "error": null
+    },
+    {
+     "url": "path:/spec/claim-maintenanc",
+     "form": "path",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 14193,
+     "visible_text_sha256_2026_11_01": "834d0793c84c9fd40e43dbd0aa431d2a319c5ba02a39efaba3e6416e501fc6be",
+     "ms": 275,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "https://councilof.ai/claim-maintenance/ -> HTTP 200, page renders 'Claim maintenance' spec v0.1 + claim register (Subjects 28, Claims 99, Measured 33, Events 9, Corrections 93). path:/spec/claim-maintenanc",
+   "next_step": "Publish the spec version + register schema as the category's discoverable identifiers, and either drop the 'claimreg v1.",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-02",
+   "jewel": "Corrections ledger (93 entries)",
+   "claimed_state_2026_10_26": "*LIVE compounding",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://councilof.ai/api/corrections",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 248487,
+     "visible_text_sha256_2026_11_01": "61d2de9ed4aa0fb36c920fef772bdae24412a3e69001fe09dff06058f3ba912e",
+     "ms": 365,
+     "error": null
+    },
+    {
+     "url": "https://councilof.ai/claim-maintenance/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 129322,
+     "visible_text_sha256_2026_11_01": "119a0d7a043c2db9b507e42488232fa28dda647e8e2396aa0ba9f4d938f506ae",
+     "ms": 319,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "https://councilof.ai/api/corrections -> HTTP 200, jq '.corrections/length' = 93, signature_state='VALID', timing_fields.added='2026-09-26'. Cross-check on https://councilof.ai/claim-maintenance/ shows 'Corrections 93'. L",
+   "next_step": "Replace 'approve+publish #60-70' with 'publish #94-100 plus the weekly digest', since #60-70 are inside the live 93.",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-03",
+   "jewel": "FractalAI unsolicited conformant implementation",
+   "claimed_state_2026_10_26": "*ADOPTED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://registry.npmjs.org/@fractalai/pqc-agent-receipts-conformance",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 18523,
+     "visible_text_sha256_2026_11_01": "bf6613828a2a5ecaa824cebcec7d4d37c51bc17bc7dd564b6ec42f5fd6692e18",
+     "ms": 649,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Third-party npm registry, read live: https://registry.npmjs.org/@fractalai/pqc-agent-receipts-conformance -> HTTP 200, name '@fractalai/pqc-agent-receipts-conformance', author 'FractalAI', license Apache-2.0, latest 0.3.",
+   "next_step": "Publish only the exact README-grounded sentence on path:/spec/signed-receipts/ (currently 404 on that pat",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-04",
+   "jewel": "Independent implementation of capsule-00 (CounterProof)",
+   "claimed_state_2026_10_26": "*ADOPTED Oct 8",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Local estate primary source ~/mail-review-20261014-resident/bodies/INBOX-10124.txt: dated 'Thu, 8 Oct 2026', from 'brook li <hippoleyer@gmail.com>', subject 'Possible second implementation experiment for SCITT Measuremen",
+   "next_step": "Re-read PR #188 merged_at and diff once GitHub API quota resets, and record the implementer's independence_proven=false",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-05",
+   "jewel": "Third-party IETF citation of capsule draft (Gruszka -03)",
+   "claimed_state_2026_10_26": "*CITED Oct 19",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.ietf.org/archive/id/draft-gruszka-evaluation-receipt-mappings-03.txt",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 139085,
+     "visible_text_sha256_2026_11_01": "69dc251d1dd154dc271c60925d7f528d196be0fd53c0f71bf7f06df00f8041d2",
+     "ms": 320,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "CLAIM: Gruszka -03 cites our capsule draft. LIVE: https://www.ietf.org/archive/id/draft-gruszka-evaluation-receipt-mappings-03.txt -> HTTP 200, header 'K. Gruszka / b7n0de', date '12 October 2026' (not Oct 19). Its [CAPS",
+   "next_step": "Correct the row: the Gruszka -03 citation is of Mih's action-capsule-05, not our capsule-00; do not amplify 'cited' unti",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-06",
+   "jewel": "SCITT claim-card I-D (name free)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://da",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 0,
+     "live_bytes_2026_11_01": 0,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 5100,
+     "error": "TypeError"
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "The row's own step is 'OWNER: submit + list post THIS WEEK' — submitting an I-D needs the owner's IETF account and the list post is an outward email, so it must never be attempted by an agent. Live name check: https://da",
+   "next_step": "Owner submits the claim-card I-D (name confirmed free) and posts to scitt@ietf.org; agent must not submit or send — and",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-07",
+   "jewel": "Two I-Ds already on datatracker (framing-space, measurement-capsule)",
+   "claimed_state_2026_10_26": "*ON RECORD",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://datatracker.ietf.org/api/v1/doc/document/?name__startswith=draft-templeman",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 3788,
+     "visible_text_sha256_2026_11_01": "7b1e4c3fd2352fa24a6ca6ba0fd993fa848b38e21c5a8771bd15bf0c1738a456",
+     "ms": 474,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live datatracker API https://datatracker.ietf.org/api/v1/doc/document/?name__startswith=draft-templeman -> HTTP 200, total_count=2: 'draft-templeman-scitt-framing-space' rev=01 time=2026-09-27T04:37:55Z and 'draft-temple",
+   "next_step": "Keep quoting the exact draft names and their 27 Sep 2026 date; if WG-track adoption is wanted, the missing step is a WG",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-08",
+   "jewel": "W3C CG participant seat (publicly listed)",
+   "claimed_state_2026_10_26": "*LIVE",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.w3.org/community/agent-conformance/participants",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 403,
+     "live_bytes_2026_11_01": 5893,
+     "visible_text_sha256_2026_11_01": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+     "ms": 106,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Third-party live read https://www.w3.org/community/agent-conformance/participants -> HTTP 200 (34200 b). Page contains an entry '<p class=\"chair-name name\">Nicholas Templeman</p>' with '<p class=\"chair-affiliation rep\">c",
+   "next_step": "Contribute the discriminating-power fixtures to the group's own channel (the seat is proven; participation is not).",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-09",
+   "jewel": "W3C Agent Identity CG formalizes our posts into 6 rules",
+   "claimed_state_2026_10_26": "*ADOPTED Oct 1",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.w3.org/community/agent-identity/participants",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 403,
+     "live_bytes_2026_11_01": 5884,
+     "visible_text_sha256_2026_11_01": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+     "ms": 95,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Membership is real: https://www.w3.org/community/agent-identity/participants -> HTTP 200 (78413 b) lists 'Nicholas Templeman Individual CLA commitment but affiliated with csoai ltd'. But the CLAIM (that the CG formalised",
+   "next_step": "Do not cite '6 rules' until a CG output document naming our posts is produced; re-run the GitHub code search for org:w3c",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-10",
+   "jewel": "x402 Foundation engagement validated same-day (Base-ledger data)",
+   "claimed_state_2026_10_26": "*VALIDATED Oct 26",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://github.com/x402-foundation",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 209104,
+     "visible_text_sha256_2026_11_01": "ab14dde94e3c3c96fdf377d4e156389e4aa979466893bb2729f8d041fe547d4f",
+     "ms": 530,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Tried: https://github.com/x402-foundation -> HTTP 200; the org's repo list (foundation, tsc, wg-card-acceptance, wg-domain-discovery, wg-identity, wg-tax, x402) contains no councilof reference (grep count 0 on both /x402",
+   "next_step": "Re-check github.com/x402-foundation/wg-domain-discovery for our findings-note reference (the estate note 'drafts/X402-DO",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-11",
+   "jewel": "NIST AI Consortium LOI",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.nist.gov/artificial-intelligence/nist-ai-consortium",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 81544,
+     "visible_text_sha256_2026_11_01": "34519166ebbb143351e86809d3e7c3eaee3b978c2faf44f209ff754ba3f7e963",
+     "ms": 836,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "CLAIM: OPEN, 'submit by Nov 2 cohort (form window lapsed Sep 30)'. LIVE: https://www.nist.gov/artificial-intelligence/nist-ai-consortium -> HTTP 200, text reads 'NIST will accept letters of interest from new organization",
+   "next_step": "Correct the row to 'LOI sent 27 Sep + follow-up sent 14 Oct; webform resubmission outstanding'; the owner (not the agent",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-12",
+   "jewel": "NIST TEVV-Athlon comment (Oct 6)",
+   "claimed_state_2026_10_26": "*STAGED",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "The row's own step is 'owner send with Bailey+ASL-3+EvasionBench+Circle' — an outward signed comment that needs the human's credentials/company-email send, so it must never be attempted by an agent. Drafting material exi",
+   "next_step": "Owner to confirm the live TEVV-Athlon comment window on nist.gov and send the staged comment; agent must not send it.",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-13",
+   "jewel": "Circle 'trusted discovery: MISSING' capstone",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.circle.com/blog/building-the-open-agentic-economy",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 247391,
+     "visible_text_sha256_2026_11_01": "afdaec9f3e2824326ee96806c5b58fbe6a68792101626cc92180e8aa07e31233",
+     "ms": 250,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Third-party live read https://www.circle.com/blog/building-the-open-agentic-economy -> HTTP 200 (247420 b). Text extracted verbatim: 'The capstone: trusted discovery' / 'Trusted discovery: a multi-input ranking Missing S",
+   "next_step": "Cite the exact table row in the NIST comment and Series A pack; re-read the page for a post-12-Aug update before publish",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-14",
+   "jewel": "GLEIF Model (c) third-party attestation market",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.gleif.org/en",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 205526,
+     "visible_text_sha256_2026_11_01": "feb25e493d6a9ecc412e4be8c8c95e3a14fc838eeb255d75ca3006ec7452ae73",
+     "ms": 1710,
+     "error": null
+    },
+    {
+     "url": "https://www.gleif.org/en/lei-data",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 223022,
+     "visible_text_sha256_2026_11_01": "bbea95b316771fdb4073492772b9a66432be3764fc06971e366e0132cf018a1c",
+     "ms": 1962,
+     "error": null
+    },
+    {
+     "url": "https://search.gleif.org/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 810,
+     "visible_text_sha256_2026_11_01": "076b99e92b64fbe7f6a5cc839e9edb3896592878d019da09b51e9cf413ddd5c7",
+     "ms": 453,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Tried: https://www.gleif.org/en -> HTTP 200; https://www.gleif.org/en/lei-data -> HTTP 200; https://search.gleif.org/ -> HTTP 200; but every GLEIF page naming Model (c) returned HTTP 404 — /en/organization-data/gleif-org",
+   "next_step": "Locate the authoritative GLEIF Model (c) page (try api.gleif.org from a network that resolves it) before citing the mark",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-15",
+   "jewel": "DSRB (forming defence bank)",
+   "claimed_state_2026_10_26": "*WATCH",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.canada.ca/en/department-finance.html",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 42309,
+     "visible_text_sha256_2026_11_01": "4110d2a67ed0a315e7caa9d2f71c5657f2b356b84d6b058be251212d66d568dc",
+     "ms": 353,
+     "error": null
+    },
+    {
+     "url": "https://www.canada.ca/en/department-finance/news/2026/03/canada-announces-progress-to-est",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 14979,
+     "visible_text_sha256_2026_11_01": "eb64f5b3543ea205746d2cae25da6024e1d80e997564828d5d0cf678d7cbdeab",
+     "ms": 259,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Tried: https://www.canada.ca/en/department-finance.html -> HTTP 200 but no DSRB item on the landing page; the specific release URL https://www.canada.ca/en/department-finance/news/2026/03/canada-announces-progress-to-est",
+   "next_step": "Watch canada.ca/financial-administration and NATO communiques for a founding-instrument publication; until one appears,",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-16",
+   "jewel": "Appia Foundation (conformity assessment, whales on roster)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.linuxfoundation.org/press/linux-foundation-launches-appia-foundation-to-establish-standardized-conformity-specifications-across-the-ai-value-chain",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 100706,
+     "visible_text_sha256_2026_11_01": "0daa3c976000e9129307efe9ab3164ed0520a50d4b7b54886e52165ede349f57",
+     "ms": 287,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Third-party live read https://www.linuxfoundation.org/press/linux-foundation-launches-appia-foundation-to-establish-standardized-conformity-specifications-across-the-ai-value-chain -> HTTP 200 (100706 b) — the Appia Foun",
+   "next_step": "Draft the Appia membership inquiry for the owner to send (never the agent), and open the TRACE conformance-predicate PR",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-17",
+   "jewel": "TRACE (LF) composes SCITT/RATS/EAT/SLSA",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://github.com/aaif/project-proposals/issues/42",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 511744,
+     "visible_text_sha256_2026_11_01": "53c5804c5426230740fa3cac5474b167293c738693a83c5793c6700965246b9f",
+     "ms": 1395,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "CLAIM implies TRACE is an LF spec to contribute a conformance predicate to. LIVE: https://github.com/aaif/project-proposals/issues/42 -> HTTP 200 (550510 b), title '[Project Proposal] TRACE Specification' — it is an AAIF",
+   "next_step": "Re-title the row as 'TRACE AAIF proposal #42 (not yet reviewed)' and contribute the conformance predicate to the PROPOSA",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-18",
+   "jewel": "OSAIA shaping window (no officers published)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://osaia.org/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 705478,
+     "visible_text_sha256_2026_11_01": "66493c22f50f5cbb2cd0c047426c652c44f62141c134b8cf32f80f80f2ad5ee4",
+     "ms": 1511,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "CLAIM: an OSAIA shaping window with no officers published. LIVE: https://osaia.org/ -> HTTP 200 but the page is a Korean/Indonesian consumer-shopping storefront ('Sensa138 — Platform Game Online...', 'FEATURED SENSA138',",
+   "next_step": "Do not cite osaia.org as the OSAIA surface; find the correct alliance domain (the storefront is squatted/parked) or drop",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-19",
+   "jewel": "ITU Focus Group (free, open)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.itu.int/en/ITU-T/focusgroups/Pages/default.aspx",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 134408,
+     "visible_text_sha256_2026_11_01": "527b2f0c78d04d28a0d6a8cc9f8cb942afd98b6d7bef40c8ff7f2b4a0590f606",
+     "ms": 2641,
+     "error": null
+    },
+    {
+     "url": "https://www.itu.int/en/ITU-T/focusgroups/ai/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 404,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 674,
+     "visible_text_sha256_2026_11_01": "bf599881101ca656921c4dda25c47259ca8445011ad1fb0a1f39bf9132b0a072",
+     "ms": 365,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Tried: https://www.itu.int/en/ITU-T/focusgroups/Pages/default.aspx -> HTTP 200 (132687 b) — the FG index is live; https://www.itu.int/en/ITU-T/focusgroups/ai/ -> HTTP 404 and /focusgroups/ai/011/ -> HTTP 404 (no AI-speci",
+   "next_step": "Enumerate the live ITU-T FG list from the index and pick the exact FG, then the owner registers the seat (free) — agent",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-20",
+   "jewel": "UKAS AIMS technical-expert channel (free)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.ukas.com/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 273878,
+     "visible_text_sha256_2026_11_01": "d16865f970e37b8e1e189d37de2d98fa25e46c3cfcd38a8c29326320c7c03c95",
+     "ms": 289,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "The row's step is 'technicalresources@ukas.com expression' — an outward email requiring the owner's company-email send, so it must not be attempted. Live: https://www.ukas.com/ -> HTTP 200 (273076 b); the AI-management-s",
+   "next_step": "Owner sends the expression; agent confirms the live AIMS technical-expert page URL on ukas.com first so the email cites",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-21",
+   "jewel": "AIQI Consortium + free ISO 42001 course",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://aiqiconsortium.org/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 320692,
+     "visible_text_sha256_2026_11_01": "2a33559e8c98b780b915a6e3e1ff7363f4e2d3d948456bb2753f3310522e853a",
+     "ms": 900,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Third-party live read https://aiqiconsortium.org/ -> HTTP 200 (248608 b) — the consortium site is live and reachable. LOCAL estate CATALOG-OPENINGS-20261025.md lists AIQI as a course/bridge opportunity and the checklist'",
+   "next_step": "Owner joins AIQI and enrols in the free ISO 42001 course; the MOOC bridge (CJ-62) should reuse these modules rather than",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-22",
+   "jewel": "IETF 127 hackathon SCITT time-anchor",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.ietf.org/meeting/127/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 96611,
+     "visible_text_sha256_2026_11_01": "95099eafff2d3c26c90578a48ca802de073d5465c174dba92a768c58abac7b12",
+     "ms": 161,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live: https://www.ietf.org/meeting/127/ -> HTTP 200 (96435 b), 'IETF 127 San Francisco 14 Nov 2026 - 20 Nov 2026', 'IETF 127 starts Saturday 14 November and runs through Friday afternoon'. The hackathon/codesprint 'take",
+   "next_step": "Build the SCITT time-anchor implementation and Cedulon replay test vectors against draft-templeman-scitt-measurement-cap",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-23",
+   "jewel": "OpenID AuthZEN self-certification (automated, public)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://openid.net/groups/authzen/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 150213,
+     "visible_text_sha256_2026_11_01": "065189a38d4c9cc0522ef26fbe64d16bc2905a84cf4d2f18b8a5612ff222888f",
+     "ms": 1440,
+     "error": null
+    },
+    {
+     "url": "https://openid.net/certification/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 132985,
+     "visible_text_sha256_2026_11_01": "4ccfe193ef8e5f49e48619aa303c15c5fda6dfa83884d9df2e7b6a2e0503a7ae",
+     "ms": 181,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live: https://openid.net/groups/authzen/ -> HTTP 200 (150234 b) — 'AuthZEN Working Group - OpenID Foundation' is live; https://openid.net/certification/ -> HTTP 200 (132923 b) is the public certification surface. I searc",
+   "next_step": "Run the AuthZEN conformance suite against our claim-event/measurement-capsule profile and publish the result as an unsig",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-24",
+   "jewel": "x402scan validator self-cert",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.x402scan.com/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 2087045,
+     "visible_text_sha256_2026_11_01": "26e3716af91afa8aab39d59b81a0825592d24a15d830c2aabab4fd4389942b0b",
+     "ms": 1484,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live: https://www.x402scan.com/ -> HTTP 200 (2044462 b) — the index is live and greps for 'validator' return only unrelated paid-tool listings ('DNSSEC status for...', 'Checks up to 5 EU VAT...'), not a self-cert program",
+   "next_step": "Owner signs the SIWX challenge for the payTo wallet to set verified:true; the agent must not sign.",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-25",
+   "jewel": "Claude MCP directory (opened Sep 25)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://claude.ai/directory",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 403,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 147088,
+     "visible_text_sha256_2026_11_01": "3627393b4bb93c809b0e38d6a37ff4c1fd7f84f269037ef5c9a283671ecf4eec",
+     "ms": 264,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "https://claude.ai/directory -> HTTP 403 (login-walled, unauthenticated read refused) — I cannot confirm our listing's presence or state, and submission requires an Anthropic account/login = owner-side. The estate's own g",
+   "next_step": "Owner submits the paste-ready directory entry now that /mcp/free, /privacy/ and /docs/ are all live 200; agent prepares",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-26",
+   "jewel": "Docker MCP Catalog (remote, no Dockerfile)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://github.com/docker/mcp-registry",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 277053,
+     "visible_text_sha256_2026_11_01": "8c7319e2d21e5617f43c93f5e06bd9d2ec93fd5cfdd2174cbc6bb2b3c27bf8f6",
+     "ms": 481,
+     "error": null
+    },
+    {
+     "url": "https://github.com/docker/mcp-registry/tree/main/servers",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 427474,
+     "visible_text_sha256_2026_11_01": "ce818a4d5a12debc7c760d43b568b561efefd9a852a3e38006e5e7428545643d",
+     "ms": 599,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live third-party: https://github.com/docker/mcp-registry -> HTTP 200 (314474 b) and the servers tree https://github.com/docker/mcp-registry/tree/main/servers -> HTTP 200 (464932 b); grep for 'councilof' across both = 0 o",
+   "next_step": "Open the server.yaml PR against docker/mcp-registry with the remote server card URL path:/.well-known/mcp",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-27",
+   "jewel": "AgentCash marketplace (July)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://agentcash.dev/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 562456,
+     "visible_text_sha256_2026_11_01": "b618303c49291371f7ab6ffe5a7a45b995a5b673e51bdec459eaa93480528524",
+     "ms": 2179,
+     "error": null
+    },
+    {
+     "url": "https://agentcash.dev/docs/sell-to-agents",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 259992,
+     "visible_text_sha256_2026_11_01": "04f3fa8060c04009d4f16395bebb410d3f52ee99e26e2454097ed682c79894c9",
+     "ms": 1278,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live third-party: https://agentcash.dev/ -> HTTP 200 (562456 b) and the merchant onboarding page https://agentcash.dev/docs/sell-to-agents -> HTTP 200 (260351 b) — the marketplace and its 'sell to agents' path are live a",
+   "next_step": "Owner completes AgentCash merchant onboarding at agentcash.dev (not agentcash.com) after the x402scan origin verificatio",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-28",
+   "jewel": "ARD well-known file",
+   "claimed_state_2026_10_26": "*DEPLOYED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://councilof.ai/.well-known/ard.json",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 3275,
+     "visible_text_sha256_2026_11_01": "91f98016f84d9f972c283138c709c57968f2b51e1d4d5de56356ff7a8081da2c",
+     "ms": 318,
+     "error": null
+    },
+    {
+     "url": "https://agenticresourcediscovery.org/context/v1'",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 17366,
+     "visible_text_sha256_2026_11_01": "70ce6cdefaac01742a3349137f61eb31ef5bb0f0dd4a029889d5266c65e76dc8",
+     "ms": 239,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live third-party read: https://councilof.ai/.well-known/ard.json -> HTTP 200 (3275 b), specVersion '1.0', host identifier 'did:web:csoai.org', entries[0].@context 'https://agenticresourcediscovery.org/context/v1', identi",
+   "next_step": "Verify the linked server-card URL path:/.well-known/mcp/server-card.json is 200, then confirm HermesHub i",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-29",
+   "jewel": "IANA well-known URI (claim-card.json)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 69792,
+     "visible_text_sha256_2026_11_01": "f501eab4b9a72867f647bbaccc36847bb8faa638117309812c588aa8faf47bcd",
+     "ms": 1022,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live third-party: https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml -> HTTP 200 — IANA's well-known URI registry is live and reachable; grep for 'claim-card' in it returned 0 matches, i.e. the name c",
+   "next_step": "File the provisional well-known URI registration for claim-card.json pointing at the published spec page; owner submits",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-30",
+   "jewel": "Vendor media type application/vnd.csoai.claim-card+json",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.iana.org/assignments/media-types/media-types.xhtml",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 762029,
+     "visible_text_sha256_2026_11_01": "e66b9452b30dcb0a004b74041e7d51f5b28962a3b58648a8e1e1fe970527f9a4",
+     "ms": 1146,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live third-party: https://www.iana.org/assignments/media-types/media-types.xhtml -> HTTP 200 — IANA's media-type registry is live and reachable; grep for 'csoai' in it returned 0 matches, so 'application/vnd.csoai.claim-",
+   "next_step": "Ship the media-type template with a live sample body on the spec page, then owner files the IANA registration to take fi",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-31",
+   "jewel": "DID method registration",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://w3c-ccg.github.io/did-method-registry/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 312,
+     "visible_text_sha256_2026_11_01": "ff6158335e21ba4067a56e4673eef669ad9df3c52debe3c1d2e86c19821224e3",
+     "ms": 245,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live third-party: https://w3c-ccg.github.io/did-method-registry/ -> HTTP 200 (312 b); grep for 'csoai' = 0 matches, so did:csoai-class is NOT in the registry and the row is accurately OPEN. A W3C CCG registry PR is the s",
+   "next_step": "Prepare the did:csoai-class method specification and open the PR against w3c-ccg/did-method-registry.",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-32",
+   "jewel": "URN namespace urn:csoai",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.iana.org/assignments/urn-ns/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 4216,
+     "visible_text_sha256_2026_11_01": "54a9a5569764776df2f7ab2e41ee34b00aab97aa77194819e20e00f61fe91cf4",
+     "ms": 1060,
+     "error": null
+    },
+    {
+     "url": "https://www.iana.or",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 0,
+     "live_bytes_2026_11_01": 0,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 41,
+     "error": "TypeError"
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Tried the IANA URN namespace registry at four paths — https://www.iana.org/assignments/urn-ns/, .../urn-ns/urn-ns.xhtml, .../urn-ns/urn-ns.xml, .../urn-ns/urn-ns.csv — all HTTP 404 (the registry index https://www.iana.or",
+   "next_step": "Find the current IANA URN namespace registry URL from the assignments index and re-read it for 'csoai' before any urn:cs",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-33",
+   "jewel": "MCP com.councilof/* DNS namespace (fixes B-3)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live DNS read (dig +short TXT @8.8.8.8, with a working positive control: _dmarc.google.com -> 'v=DMARC1; p=reject; rua=mailto:mailauth-reports@google.com'): _mcp.com.councilof.ai -> no TXT record; _namespace.com.councilo",
+   "next_step": "Publish the MCP namespace TXT at the owner-specified _mcp.com.councilof.ai label naming com.councilof/*, then verify wit",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-34",
+   "jewel": "ERC-8004 Validation Registry (zero deployments)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.8004scan.io/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 299077,
+     "visible_text_sha256_2026_11_01": "dbaf955aa8e00b46ae05d0f46f1d1e4e97de34138f06203918942edc70b9e9b0",
+     "ms": 810,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live third-party: https://www.8004scan.io/ -> HTTP 200 (295303 b) and the page does expose a 'Validation Registry' section ('Identity, reputation and validation for trustless agents across 29 chains'), with '2 deployment",
+   "next_step": "Read the Validation Registry deployment count from the 8004scan UI section (API paths are 404) and only then assert 'zer",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-35",
+   "jewel": "Circle Marketplace census",
+   "claimed_state_2026_10_26": "*POD QUEUE",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.circle.com/agent-stack",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 262757,
+     "visible_text_sha256_2026_11_01": "dd2c6c1d483ab01343e8584b8901e7f9d510f3b02bef3939014b2d1eb3d85476",
+     "ms": 182,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live reachability: https://www.circle.com/agent-stack -> HTTP 200 (262750 b) — the page IS reachable from here, so the 'egress-walled here' premise no longer holds for this URL. But the census needs the marketplace's aut",
+   "next_step": "Owner submits the Circle Agent Marketplace form once with the truthful working offer; agent can census the public /agent",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-36",
+   "jewel": "EIC Pathfinder DeepRAP (€0.5–4M, Oct 28)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://eic.ecuropa",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 0,
+     "live_bytes_2026_11_01": 0,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 38,
+     "error": "TypeError"
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "DEADLINE: 28 Oct 2026 — this is TOMORROW, so the window is NOT closed and it DOES close within 7 days; it is the second-tightest live funding window in this lane. Live verification of the call failed: https://eic.ecuropa",
+   "next_step": "Owner decides by 17:00 Brussels on Wed 28 Oct whether to reverse the 7 Oct default no-go (no coordinator approached us);",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-37",
+   "jewel": "Innovate UK SME Champions (Nov 11)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "LOCAL primary source ~/business-20260930/10-revenue-pack/frontier-ai-sme-champions/DEADLINE.md, read live from the Innovation Funding Service competition page on 2026-09-30: competition 2584 'Frontier AI: SME Champions,",
+   "next_step": "Confirm the 30% match-funding gap is resolved (MORNING-REPORT-2026-10-01.md:47 records the draft as 'parked' because mat",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-38",
+   "jewel": "KTP R3 (Oct 14, ~85%)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "DEAD",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.ukri.org/opportunities/knowledge-transfer-partnerships/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 404,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 62887,
+     "visible_text_sha256_2026_11_01": "a3329c5d40db9a9da6497bcb52b06b013b122191599c3016c7774830b4f52710",
+     "ms": 396,
+     "error": null
+    },
+    {
+     "url": "https://www.ukri.or",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 0,
+     "live_bytes_2026_11_01": 0,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 44,
+     "error": "TypeError"
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "The row's own deadline is Oct 14 — 13 days before today (2026-10-27). That window has closed. Live attempts all failed: https://www.ukri.org/opportunities/knowledge-transfer-partnerships/ -> HTTP 404, https://www.ukri.or",
+   "next_step": "Close as missed (round closed 14 Oct); if a successor R4 appears, treat it as a new row with a fresh deadline rather tha",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-39",
+   "jewel": "Manifund regranting (rolling)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://manifund.org/about/open-call",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 44685,
+     "visible_text_sha256_2026_11_01": "31f5dd455eb39b5d731f7fdca2560c71c923c7de140c4cd1e5f7004dc2b844f8",
+     "ms": 991,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live third-party: https://manifund.org/about/open-call -> HTTP 200 (44685 b) — the open-call page is live and reachable, consistent with a rolling window. LOCAL estate SIGNUP-SHEET-2026-09-29.md row 23 'Manifund / rollin",
+   "next_step": "Owner creates the Manifund project account and publishes the drafted AI-safety regranting page; rolling window means no",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-40",
+   "jewel": "NLnet NGI Zero (€5–50k)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://nlnet.nl/propose/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 43376,
+     "visible_text_sha256_2026_11_01": "665a114829f201f55e71ae207d68eb56acfa252ed5423239b47596a5572e9612",
+     "ms": 500,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live third-party read https://nlnet.nl/propose/ -> HTTP 200 (43192 b); page text: 'Next deadline: November 3rd 2026 12:00 CET (noon) Through this form you can request financial support for your project'. This matches LOC",
+   "next_step": "Submit the NLnet proposal at https://nlnet.nl/propose/ BEFORE 3 Nov 12:00 CET — this is the only Part A funding row whos",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-41",
+   "jewel": "DSIT AI Assurance Fund £11M",
+   "claimed_state_2026_10_26": "*WATCH",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.gov.uk/ai-assurance-fund",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 404,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 52491,
+     "visible_text_sha256_2026_11_01": "6df5d744b9d99913162fce8e2b414285ba9b5f36653709e4b6aadbf397f464c8",
+     "ms": 211,
+     "error": null
+    },
+    {
+     "url": "https://www.gov.uk/government/collections/ai-assurance-fund",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 404,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 52491,
+     "visible_text_sha256_2026_11_01": "6df5d744b9d99913162fce8e2b414285ba9b5f36653709e4b6aadbf397f464c8",
+     "ms": 185,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Tried: https://www.gov.uk/ai-assurance-fund -> HTTP 404 and https://www.gov.uk/government/collections/ai-assurance-fund -> HTTP 404, so no live DSIT round-2 page could be read. LOCAL estate MORNING-ALIGNMENT-2026-08-26.m",
+   "next_step": "Keep the daily portal watch on gov.uk/dsit and treat the 11M figure as unverified until a live DSIT page states it; an o",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-42",
+   "jewel": "XRPL GLOW retro (pays completed work)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://xrpl.org/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 369265,
+     "visible_text_sha256_2026_11_01": "841d44ac3a2f3f4ea93da5abe5f401f7e6759af0d50b6be08149c6fddb81ea35",
+     "ms": 304,
+     "error": null
+    },
+    {
+     "url": "https://xrpl.org/ecosystem/projects/glow.html",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 339864,
+     "visible_text_sha256_2026_11_01": "a3799fbd643bd165fbbeafd27271925acce8d5723de1694f668ccea4d4ac2d78",
+     "ms": 473,
+     "error": null
+    },
+    {
+     "url": "https://xrpl.org/oss/glow.html",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 339862,
+     "visible_text_sha256_2026_11_01": "a3799fbd643bd165fbbeafd27271925acce8d5723de1694f668ccea4d4ac2d78",
+     "ms": 491,
+     "error": null
+    },
+    {
+     "url": "https://xrpl.org/ecosystem/gl",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 339864,
+     "visible_text_sha256_2026_11_01": "a3799fbd643bd165fbbeafd27271925acce8d5723de1694f668ccea4d4ac2d78",
+     "ms": 453,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Tried: https://xrpl.org/ -> HTTP 200 (361107 b) — the site is live; but the GLOW project page paths all 404: https://xrpl.org/ecosystem/projects/glow.html, https://xrpl.org/oss/glow.html and https://xrpl.org/ecosystem/gl",
+   "next_step": "Find the current GLOW programme URL from xrpl.org's live navigation, then confirm the retro terms and the RLUSD corpus a",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-43",
+   "jewel": "OSO metrics registration (retro clock)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.opensource.org/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 403,
+     "live_bytes_2026_11_01": 2876,
+     "visible_text_sha256_2026_11_01": "2c8416b30d487934a66e570e98efd93b71a47bc4e56991ddfd4e7054264b0bce",
+     "ms": 264,
+     "error": null
+    },
+    {
+     "url": "https://www.opensource.org/metrics",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 404,
+     "live_status_2026_11_01": 403,
+     "live_bytes_2026_11_01": 2876,
+     "visible_text_sha256_2026_11_01": "2c8416b30d487934a66e570e98efd93b71a47bc4e56991ddfd4e7054264b0bce",
+     "ms": 200,
+     "error": null
+    },
+    {
+     "url": "https://osmfoundation.org/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 44072,
+     "visible_text_sha256_2026_11_01": "e9f726fe909b5ce4a2c327222b9388407cca83849cf3817e70c81eb57b509921",
+     "ms": 343,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "The target could not be identified from the row alone. Live tries: https://www.opensource.org/ -> HTTP 200 (225880 b) but https://www.opensource.org/metrics -> HTTP 404; https://osmfoundation.org/ -> HTTP 200 (44462 b) b",
+   "next_step": "Name the actual OSO programme and its registration endpoint (one line) before this row can be actioned — as written it i",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-44",
+   "jewel": "Base Builder Code (ERC-8021)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://base.org/build",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 63739,
+     "visible_text_sha256_2026_11_01": "2430e92352ca33d8b7a33e6e205079114bbd541dd75ef1fc98033c86e7ccaa44",
+     "ms": 454,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live: https://base.org/build -> HTTP 200 (63739 b) — the Base Build page is live ('75M+ Agent TX', '22K+ x402 APIs') but a grep for 'builder code' across the served bytes returned 0 matches, so the Builder Code programme",
+   "next_step": "Confirm the correct ERC number for Base Builder Code from base.org's own documentation before any base.dev claim; the cl",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-45",
+   "jewel": "attestation-rail proof-pointer first attestation",
+   "claimed_state_2026_10_26": "*SPECCED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://eips.ethereum.org/EIPS/eip-7546",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 37746,
+     "visible_text_sha256_2026_11_01": "b62dfa7dca30e773ee6217fa7afe66cc6469e917448ade1bf3b7a13cee9a285d",
+     "ms": 262,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live: https://eips.ethereum.org/EIPS/eip-7546 -> HTTP 200 is 'ERC-7546: Upgradeable Clone for Scalable Contracts' — NOT the Ethereum Attestation Service (attestation-rail is EIP-7546 in the ERC series, but this served page is a diffe",
+   "next_step": "Pin the exact attestation-rail proof-pointer schema bytes (with a file hash) in the repo before the ignition batch; cite the correct",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-46",
+   "jewel": "Inngot Sollomon IP valuation",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.inngot.co.uk/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 0,
+     "live_bytes_2026_11_01": 0,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 135,
+     "error": "TypeError"
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "The row's step is 'order (~GBP795-1k) as equity diligence asset' — a paid instruction on the owner's money, and the valuation order also needs the owner's identity/engagement. https://www.inngot.co.uk/ did not resolve fr",
+   "next_step": "Owner decides whether to send the free suitability email (no payment) before authorising any GBP795-1k valuation order;",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-47",
+   "jewel": "UK IPO marks (4 classes £385)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.ipo.gov.uk/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 403,
+     "live_status_2026_11_01": 403,
+     "live_bytes_2026_11_01": 717744,
+     "visible_text_sha256_2026_11_01": "c4540f4120bda2b6bee0b339643d052574939eafa71b5b614c763fd5bfb148c5",
+     "ms": 218,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "A trademark filing is a legal act + payment, both owner-only. Live: https://www.ipo.gov.uk/ -> HTTP 403 (bot-blocked to unauthenticated reads) so the current fee list could not be confirmed live. LOCAL estate MOAT-AND-IP",
+   "next_step": "Owner re-drafts and files the e-TM3 with the 4 classes (GBP385 total per the local fee calculation) — the previous draft",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-48",
+   "jewel": "Dual-anchor timestamps (eIDAS QTSP + OpenTimestamps)",
+   "claimed_state_2026_10_26": "*RESEARCHED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://councilof.ai/root.json",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 25997,
+     "visible_text_sha256_2026_11_01": "179a22d776dccfa5d26d399683fa522069cf87f6519ada9e9b9db65b5a97f84a",
+     "ms": 68,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "Live anchor side confirmed: https://councilof.ai/root.json -> HTTP 200, card_count=325, as_of='2026-10-26T19:19:22Z', sig_ed25519 present, xrpl_basket_merkle='9c45aaf325e26c1856b4f148244ce546c680c21f463e9c2f5ef0590b935b6",
+   "next_step": "Verify the five upgraded Bitcoin attestations in the published proof manifest (OOTS calendar unreachable from here) and",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-49",
+   "jewel": "State of Claim Maintenance report #1",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "path:/state-of-claim-maintenance/",
+     "form": "path",
+     "recorded_status_2026_10_27": 404,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 14193,
+     "visible_text_sha256_2026_11_01": "834d0793c84c9fd40e43dbd0aa431d2a319c5ba02a39efaba3e6416e501fc6be",
+     "ms": 125,
+     "error": null
+    },
+    {
+     "url": "https://councilof.ai/reports/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 91119,
+     "visible_text_sha256_2026_11_01": "8dfd402e26eee37ce8c9136f09280640d7f59e29b385025a9ce3671f79f8b110",
+     "ms": 233,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "No such report is published. Live: path:/state-of-claim-maintenance/ -> HTTP 404; https://councilof.ai/reports/ -> HTTP 200 (a generic Reports index whose only 'claim maintenance' hits are navigation links",
+   "next_step": "Publish report #1 from the live register — and fix the stale scheduling claim first: 26 subjects have a DUE but UNRUN ne",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-50",
+   "jewel": "The Ecosystem Health Board",
+   "claimed_state_2026_10_26": "*PROTOTYPE BUILT",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "path:/ecosystem-health/",
+     "form": "path",
+     "recorded_status_2026_10_27": 404,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 14193,
+     "visible_text_sha256_2026_11_01": "834d0793c84c9fd40e43dbd0aa431d2a319c5ba02a39efaba3e6416e501fc6be",
+     "ms": 168,
+     "error": null
+    },
+    {
+     "url": "path:/health-board/",
+     "form": "path",
+     "recorded_status_2026_10_27": 404,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 14193,
+     "visible_text_sha256_2026_11_01": "834d0793c84c9fd40e43dbd0aa431d2a319c5ba02a39efaba3e6416e501fc6be",
+     "ms": 161,
+     "error": null
+    },
+    {
+     "url": "https://councilof.ai/reports/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 91119,
+     "visible_text_sha256_2026_11_01": "8dfd402e26eee37ce8c9136f09280640d7f59e29b385025a9ce3671f79f8b110",
+     "ms": 233,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json",
+   "evidence": "No prototype was found on any live or local surface. Live: path:/ecosystem-health/ -> HTTP 404, path:/health-board/ -> HTTP 404, https://councilof.ai/reports/ -> HTTP 200 (generic index, no",
+   "next_step": "Produce the prototype artifact (a local file with a hash) before calling it BUILT, then deploy it unsigned-labelled as t",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-51",
+   "jewel": "OpenShell→Cedar translator (unclaimed)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'OPEN — agent-side spike; upstream contribution to NVIDIA/OpenShell'. ACTUAL: the translator is BUILT, not open. Local repo ~/_work/councilof-ai/harness/openshell-cedar/ contains translate.py, roundtrip.p",
+   "next_step": "Stop calling this OPEN. Correct the checklist row to BUILT/PACKAGED (PyPI csoai-openshell-harness 0.1.1); open the upstr",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-52",
+   "jewel": "Open Agent Safety Platform (NVIDIA GA Sep 28)",
+   "claimed_state_2026_10_26": "*LIVE",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'LIVE — 6 adapters built from spec (validated)'. ACTUAL: no NVIDIA 'Open Agent Safety Platform' artefact exists in the estate. Grep of ~/_work/councilof-ai (all .ts/.tsx/.mjs/.json/.md, node_modules exclu",
+   "next_step": "Rewrite the row: name the real artefact (harness/openshell-adapter, OpenShell v0.1.4, 5 prover fixtures) and drop the un",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-53",
+   "jewel": "MS Agent Governance Toolkit (Cedar/Rego PDP)",
+   "claimed_state_2026_10_26": "*MERGE",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'MERGE — Harness X merge spike'. ACTUAL: the merge landed, so the state is stale. ~/_work/councilof-ai/scripts/harness-x/ is a full working tree, not a spike: check.mjs (51,604 bytes), connect-live.mjs, p",
+   "next_step": "Split the row: mark the harness-x merge DONE (cite check.mjs + commit 8e9df9fce) and re-open a separate row for the MS C",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-54",
+   "jewel": "ASSERT (MS spec-driven evals)",
+   "claimed_state_2026_10_26": "*MERGE",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'MERGE — claim-cards as ASSERT specs'. ACTUAL: no ASSERT-spec artefact found for claim-cards. What exists is only two unrelated scripts named for the word: ~/_work/councilof-ai/scripts/assert-dashboard-la",
+   "next_step": "Name the upstream ASSERT spec URL and the target artefact path (e.g. scripts/claim-cards-as-assert-specs/) so the merge",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-55",
+   "jewel": "Petri + Bloom (Anthropic auditing)",
+   "claimed_state_2026_10_26": "*MERGE",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://github.com/anthropics/petri",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 404,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 230615,
+     "visible_text_sha256_2026_11_01": "0cbf2b3703d46eae2a264a18db215ae928a2c53f30504b2dc2d201b840485d5c",
+     "ms": 248,
+     "error": null
+    },
+    {
+     "url": "https://github.com/an",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 167107,
+     "visible_text_sha256_2026_11_01": "e5f14cc4c9237a4bc6be82bcb024afb0bbd67b0ce4f5bd9528c2743692d2827c",
+     "ms": 507,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'MERGE — outputs wrapped as signed claims'. ACTUAL: no upstream Anthropic 'Petri' or 'Bloom' project found. https://github.com/anthropics/petri -> HTTP 404 'Page not found · GitHub'; https://github.com/an",
+   "next_step": "Resolve the exact upstream project URLs (or correct the names) — Anthropic's public auditing tooling was not locatable u",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-56",
+   "jewel": "Sigsum (witness-cosigned transparency log)",
+   "claimed_state_2026_10_26": "*MERGE",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'MERGE — third anchor class integration'. ACTUAL: upstream Sigsum is real and its official home is NOT GitHub: GitHub search 'sigsum' returns sigsum/sigsum (12 stars) with description 'Mirror only. Offici",
+   "next_step": "Read the canonical repo at git.glasklar.is/sigsum (not the GitHub mirror), then write the third-anchor integration note",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-57",
+   "jewel": "Agent Protocol (1.4k★ dormant 17mo, MIT)",
+   "claimed_state_2026_10_26": "*REVIVE",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'REVIVE — contribute measurement/corrections layer + conformance'. ACTUAL: upstream confirmed but the dormancy figure is stale. GitHub API search 'agent-protocol in:name' -> agi-inc/agent-protocol, starga",
+   "next_step": "Correct the dormancy to ~18-19 months and the org to agi-inc/agent-protocol; then check whether it is a fork of langchai",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-58",
+   "jewel": "colibri (pure-C local inference)",
+   "claimed_state_2026_10_26": "*WATCH",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'WATCH — Jev/Council-Lite reflex stack'. ACTUAL: upstream confirmed, and it is much larger than the row implies. GitHub API search 'colibri language:C sort:stars' -> JustVugg/colibri, stargazers_c",
+   "next_step": "Re-rate from WATCH to a tracked upstream at 44k★; verify the binary runs locally before designing the 'Council-OS-Lite sovere",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-59",
+   "jewel": "ShinkaEvolve + DreamerV3 chained loop",
+   "claimed_state_2026_10_26": "*BUILD",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'BUILD — 2-week held-out improvement gate'. ACTUAL: both upstreams confirmed live via GitHub API search: SakanaAI/ShinkaEvolve, stargazers_count 1482, pushed_at 2026-10-05T04:18:29Z, description 'ShinkaEv",
+   "next_step": "Name the gate harness that will hold out the improvement measurement (no local 'held-out improvement gate' artefact foun",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-60",
+   "jewel": "Evaluation Cards (Every-Eval-Ever schema)",
+   "claimed_state_2026_10_26": "*ADOPT",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'ADOPT — render our results in field format'. ACTUAL: the schema is real and already partially adopted internally, but it is not published on our live surface. Local artefacts: ~/_alignment/m2-verified-me",
+   "next_step": "Publish the adopted field format at a stable public path (e.g. /interop/evaluation-cards/ with the schema + one rendered",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-61",
+   "jewel": "Failing Instrument Challenge CTF",
+   "claimed_state_2026_10_26": "*BUILD",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'BUILD — fixture family v1 + canary law + sealed holdout'. ACTUAL: no fixture family, canary law or sealed holdout found. Grep of ~/_work/councilof-ai for 'failing instrument/canary law/sealed holdout' ->",
+   "next_step": "Create the artefact the row names — a fixtures/failing-instrument/v1/ family with a canary-law file and a sealed-holdout",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-62",
+   "jewel": "MOOC 'How to Measure AI' (7 modules)",
+   "claimed_state_2026_10_26": "*BUILD",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'BUILD — from real artifacts; AIQI bridge' for a 7-module MOOC. ACTUAL: the MOOC artefact that exists verifies FIVE modules, not seven. ~/_alignment/m2-verified-meok-gspc-20261026/capability-records/meok-",
+   "next_step": "Correct the module count to 5 and rename the MOOC to its actual title ('H.I.M. Human-in-the-Loop Gamified Micro-MOOC');",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-63",
+   "jewel": "H.I.M. judgement-stream product",
+   "claimed_state_2026_10_26": "*PROTOTYPE BUILT (5fcd202)",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'PROTOTYPE BUILT (5fcd202) — gate-card schema + calibration schema + stream prototype'. ACTUAL: the cited commit does not exist. In ~/_work/councilof-ai: 'git rev-parse --verify 5fcd202^{commit}' -> 'fata",
+   "next_step": "Replace the dead commit pointer 5fcd202 with the real artefact path (~/_alignment/m2-verified-meok-gspc-20261026/meok-33",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-64",
+   "jewel": "Small-world lab (stewardship league)",
+   "claimed_state_2026_10_26": "*SPECCED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'SPECCED — T-1 OpenTTD pilot with canary controls'. ACTUAL: no OpenTTD pilot artefact found. Grep of ~/_work/councilof-ai for 'openttd/small.world/smallworld' -> 1 file only: council-os/GAMES_SLATE.md, an",
+   "next_step": "Either write the small-world-lab spec as a named document (or state it lives in council-os/GAMES_SLATE.md) or change the",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-65",
+   "jewel": "Maternal Covenant (Article 1)",
+   "claimed_state_2026_10_26": "*DRAFTED",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'DRAFTED — publish as charter doctrine'. ACTUAL: the draft exists and is routed, but it is not published. LOCAL: ~/_work/councilof-ai/client/src/pages/MaternalCovenant.tsx, 37,277 bytes, and client/src/da",
+   "next_step": "Resolve the 308 on /maternal-covenant (follow the redirect target to confirm where it lands) and then publish the page s",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-66",
+   "jewel": "Token Morph (claims→evidence-assets)",
+   "claimed_state_2026_10_26": "*PROVEN LIVE Sep 22",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'PROVEN LIVE Sep 22 — claim-watch door + incident morphs'. ACTUAL: no Token Morph artefact found anywhere. Grep for 'Token Morph/token-morph' (case-insensitive) across ~/_work/councilof-ai -> 0 matches; a",
+   "next_step": "Remove the 'PROVEN LIVE Sep 22' claim or name the exact artefact and date that proves it; as of 2026-10-27 no Token Morp",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-67",
+   "jewel": "Measurement-Capsule intent-envelope schema v0.1",
+   "claimed_state_2026_10_26": "*BUILT",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'BUILT — contract pack v2 + Cedar authority eval'. ACTUAL: neither named component exists. The only 'Measurement-Capsule' artefact in the estate is a STRATEGY BRIEF, not a schema: ~/_work/councilof-ai/docs/BOND_VENTU",
+   "next_step": "Restate the row as 'DRAFTED (doctrine brief, docs/BOND_CAPSULE_2026-08-23.md)' or build the actual v0.1 schema + contrac",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-68",
+   "jewel": "Agent Payment Receipt Profile (ISO 20022 semantics)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'OPEN — crosswalk schema v0.1 + 4 venues'. ACTUAL: the OPEN state is accurate and confirmed. Grep of ~/_work/councilof-ai for 'iso.20022/pacs.008/payment receipt profile' -> only unrelated files (measurem",
+   "next_step": "Draft crosswalk schema v0.1 against the live 'receipts_batch' x402 resource (path:/api/x402) naming the 4",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-69",
+   "jewel": "Medicare incident card IM-2026-001",
+   "claimed_state_2026_10_26": "*DRAFTED",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'DRAFTED — owner publish (sourced record only)'. ACTUAL: no artefact carries the identifier IM-2026-001, but the underlying record DOES exist under a different name and is already PUBLISHED live — so the",
+   "next_step": "Reconcile the identifier (the artefact is a disclosure_lag measurement-capsule, not 'IM-2026-001') and get an explicit o",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-70",
+   "jewel": "Freeze-asymmetry card IM-2026-002 (Bitget/XRP)",
+   "claimed_state_2026_10_26": "*DRAFTED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'DRAFTED — native-vs-issuer-controlled asset measurement'. ACTUAL: no artefact found. Grep for 'IM-2026-001/IM-2026-002/Medicare incident/freeze-asymmetry' (case-insensitive) across ~/_work/councilof-ai -",
+   "next_step": "Locate or create the drafted freeze-asymmetry artefact and give it a resolvable id; if the draft was never written, chan",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-71",
+   "jewel": "Disclosure-lag canonical case (monitoring-disabled agents)",
+   "claimed_state_2026_10_26": "*FRESH Oct 20",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'FRESH Oct 20 — series entry + independent under-disclosure delta'. ACTUAL: the disclosure-lag corpus exists and is live, but the freshest record is dated 2026-09-28, and there is NO claim series entry fo",
+   "next_step": "Correct the freshness to 2026-09-28, add the missing series entry for the disclosure-lag case, and compute/publish the u",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-72",
+   "jewel": "Anthropic × UK AISI joint Mythos 5 analyses",
+   "claimed_state_2026_10_26": "*FRESH Oct 23",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'FRESH Oct 23 — lab+state co-published alignment analysis = cite'. ACTUAL: the date and subject are right; the word 'joint/co-published' is wrong — they are two SEPARATE analyses published the same day. L",
+   "next_step": "Cite them as two separate Oct 23 2026 analyses (AISI blog + Anthropic technical report), not a joint publication; 'co-pu",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-73",
+   "jewel": "White House Accord (6 labs, no criteria)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.presidency",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 0,
+     "live_bytes_2026_11_01": 0,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 67,
+     "error": "TypeError"
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'OPEN — publish criteria-shaped record into the gap'. ACTUAL: the underlying facts are CONFIRMED live, and the criteria-gap record is already built, so 'OPEN' is stale. Accord text: https://www.presidency",
+   "next_step": "Correct the count to 7 signatories and move the row off OPEN: the criteria-shaped record exists at measurement/filings/2",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-74",
+   "jewel": "Artificial Analysis Cyber Index Alliance (join invite)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://artificialanalysis.ai/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 1520403,
+     "visible_text_sha256_2026_11_01": "5da8740cc9de32e0be3f871a952d518a6ba094e2f3d5a35687212bfda57261ad",
+     "ms": 706,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'OPEN — reproduce methods + score the index itself'. ACTUAL: the upstream site is reachable (https://artificialanalysis.ai/ -> HTTP 200) and the estate treats Artificial Analysis as a competitor to be ind",
+   "next_step": "Locate the actual invitation/landing page URL and confirm whether an invite was received, before this row is actioned; a",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-75",
+   "jewel": "Cloudflare Monetization Gateway beta (x402/MCP/A2A)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://developers.cloudflare.com/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 201467,
+     "visible_text_sha256_2026_11_01": "a89e0e6572e21143ae34643aac2a13ece34b4189d0e2eab6f9a7f44606cbfe1b",
+     "ms": 393,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'OPEN — new census population: agent-payment audit'. ACTUAL: the product is confirmed live, and the estate already holds a dated record of it. LIVE: https://developers.cloudflare.com/ -> HTTP 200, left na",
+   "next_step": "Point the census at the Cloudflare Monetization Gateway docs surface and add it as a named population to the existing /a",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-76",
+   "jewel": "BoE Bailey 'rigorous testing, evidence, standards'",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.bankofengland.co.uk/speeches",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 77110,
+     "visible_text_sha256_2026_11_01": "47b80b88188896ff175fff3680374d95af2053b7587ba2d8a93fda6d88d42a53",
+     "ms": 630,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED — BoE evidence pack cover line'. ACTUAL: the quoted line could NOT be confirmed. https://www.bankofengland.co.uk/speeches -> HTTP 200 (72,851 bytes) but contains no 'Bailey' occurrence and no /s",
+   "next_step": "Produce the exact URL + date of the Bailey speech carrying that phrase (or the evidence-pack cover line in the estate),",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-77",
+   "jewel": "NIST NCCoE 600+ identity comments (webinar Oct 28)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.nccoe.nist.gov/projects/identity",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 403,
+     "live_bytes_2026_11_01": 5790,
+     "visible_text_sha256_2026_11_01": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+     "ms": 569,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'OPEN — authority-spine input + attend'. ACTUAL: the premise could not be checked. Every nccoe.nist.gov path tried returns HTTP 403 to this client: https://www.nccoe.nist.gov/projects/identity -> 403; htt",
+   "next_step": "Confirm the '600+ comments' count and the Oct 28 webinar time via a client that is not 403-blocked (browser or NIST news",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-78",
+   "jewel": "Mastercard Agent Pay for Machines on x402",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.mastercard.com/newsroom",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 8243,
+     "visible_text_sha256_2026_11_01": "6628e57030d448a4670ecdcc64aa8baf380756c423b849d095eb4085855d01f3",
+     "ms": 509,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'OPEN — sandbox probes + trust-layer measurement'. ACTUAL: no Mastercard agent-pay artefact could be located. https://www.mastercard.com/newsroom -> HTTP 200 but no 'agentic'/'agent pay' string matched. N",
+   "next_step": "Name the upstream Mastercard announcement/production URL and its API surface before probing; then run the probe against",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-79",
+   "jewel": "Visa + BILL + Billtrust live pilot",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.bill.com",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 410687,
+     "visible_text_sha256_2026_11_01": "13cbcd4c613ec910f886dec4f0c2ae2d03269ca3da7259718cb854787f1c5505",
+     "ms": 736,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED — Trusted Agent Protocol + Agentic Directory measurement'. ACTUAL: all three vendor sites are reachable but the specific pilot could not be confirmed. https://www.bill.com -> HTTP 200 (no 'trust",
+   "next_step": "Supply the pilot announcement URL and the exact name of the 'Trusted Agent Protocol' / 'Agentic Directory' surface, or d",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-80",
+   "jewel": "W3C State of the Web in the AI Era (TPAC Oct 29)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.w3.org/TPAC/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 403,
+     "live_bytes_2026_11_01": 5746,
+     "visible_text_sha256_2026_11_01": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+     "ms": 437,
+     "error": null
+    },
+    {
+     "url": "https://www.w3.org/2025/TPAC/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 403,
+     "live_bytes_2026_11_01": 5761,
+     "visible_text_sha256_2026_11_01": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+     "ms": 483,
+     "error": null
+    },
+    {
+     "url": "https://www.w3.org/2026/TPA",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 403,
+     "live_bytes_2026_11_01": 5755,
+     "visible_text_sha256_2026_11_01": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+     "ms": 469,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'OPEN — Agentic Web WG charter comment'. ACTUAL: the event/window could not be confirmed from W3C. Tried: https://www.w3.org/TPAC/ -> 404; https://www.w3.org/2025/TPAC/ -> 404; https://www.w3.org/2026/TPA",
+   "next_step": "Confirm the TPAC 2026 date and the 'Agentic Web WG' charter comment deadline from the W3C site directly; if the comment",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-81",
+   "jewel": "Anthropic third-party evaluator proposal (Dec 15)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.anthropic.com/research",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 363657,
+     "visible_text_sha256_2026_11_01": "8f5489e6f85279a7c3701b6c96220a604e6736ff25ce0823d8c6546df0c5cf62",
+     "ms": 892,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'OPEN — evaluator-ready response pack'. ACTUAL: no such proposal found. https://www.anthropic.com/research -> HTTP 200; searching the page for 'third-party' returns only 'third-party systems' (in a model-",
+   "next_step": "Locate the actual Anthropic proposal/RFP document with its exact title, URL and deadline year; a Dec 15 window is >7 day",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-82",
+   "jewel": "BridgeAI 'AI for Assurance and Compliance' (Dec 8)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.bridgeai.org",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 0,
+     "live_status_2026_11_01": 0,
+     "live_bytes_2026_11_01": 0,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 732,
+     "error": "TypeError"
+    },
+    {
+     "url": "https://bridgeai.org",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 0,
+     "live_bytes_2026_11_01": 0,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 478,
+     "error": "TypeError"
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'OPEN — application + concept note (monitor, test, verify, evidence)'. ACTUAL: the upstream could not be reached. https://www.bridgeai.org -> no connection (HTTP 000); https://bridgeai.org -> no connectio",
+   "next_step": "Resolve the correct BridgeAI URL (the .org domain does not resolve from here) and confirm the call's eligibility, deadli",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-83",
+   "jewel": "UN Scientific Panel: 'no reliable control methods exist'",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.un.org/en/scientific-panel-on-ai",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 403,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 65373,
+     "visible_text_sha256_2026_11_01": "dba8b2bd301ff942137a33287b8d24663e9382470975de1866568e7dc319be71",
+     "ms": 1041,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED — institutional charter citation'. ACTUAL: the exact sentence could NOT be confirmed and the primary page was unreachable. Tried: https://www.un.org/en/scientific-panel-on-ai -> HTTP 403; https:",
+   "next_step": "Obtain the panel's own report/charter text with a paragraph-level citation (page/section) for the exact sentence, via a",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-84",
+   "jewel": "SB 53 filings (36–45/100 transparency, median zero)",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "CONTRADICTED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED — claim-watch corpus ingestion'. ACTUAL: there is NO SB 53 ingestion in the claim-watch corpus. ~/_work/councilof-ai/public/claims/ contains 29 files across 5 registry families (claimreg-ai-assu",
+   "next_step": "Either ingest the SB 53 filer corpus into the claim-watch registry (so the 36–45/100 and median-zero figures are reprodu",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-85",
+   "jewel": "AISI Astra 29.2% (unreproducible)",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.aisi.gov.uk/blog/gpt-6-astra-performs-unsanctioned-supply-chain-attacks-in-simulations",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 38700,
+     "visible_text_sha256_2026_11_01": "c03097bccb749ab2a090069042421d13686806124b4634ee0ced7a527f6b35f2",
+     "ms": 528,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CONFIRMED live, exactly. https://www.aisi.gov.uk/blog/gpt-6-astra-performs-unsanctioned-supply-chain-attacks-in-simulations -> HTTP 200, title 'Blog Red Team / GPT-6 Astra performs unsanctioned supply-chain attacks in si",
+   "next_step": "Publish the recomputation path for the 29.2% figure (seeds, scenario set, model versions) as the checklist's agent step",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-86",
+   "jewel": "NYC Intro 2602 validator liability ($25k/instance)",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://council.nyc.gov/press/2026/09/25/3252/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 86785,
+     "visible_text_sha256_2026_11_01": "03fa5972550222fcfa2a84b9abab6ca5914169417e25e9d6a84d6e5064cab60f",
+     "ms": 1213,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CONFIRMED live, including the exact figure. https://council.nyc.gov/press/2026/09/25/3252/ -> HTTP 200: 'Introduction 2602, sponsored by Speaker Julie Menin, which would make it unlawful for any business to market, offer",
+   "next_step": "Build the validator defense-record artifact map the row promises, and label it accurately as a PROPOSED bill (press rele",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-87",
+   "jewel": "SAFA (labs' self-regulator)",
+   "claimed_state_2026_10_26": "*WATCH",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://safa.ai",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 114,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 657,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'WATCH — neutrality war front: independent vs lab-certified auditors'. ACTUAL: the entity could not be identified from any surface tried. https://safa.ai -> HTTP 200 but the fetched page yielded no 'self-",
+   "next_step": "Disambiguate SAFA (full name, founding document, member roster) and confirm it is not OSAIA; a 'neutrality war front' cl",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-88",
+   "jewel": "Merkle Tree Certificates (PLANTS)",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED — PQ signature-amortization pattern for receipts'. ACTUAL: no PLANTS artefact could be located. GitHub search for 'PLANTS merkle certificate post-quantum' -> no repository results returned; the",
+   "next_step": "Provide the PLANTS paper/spec URL; if it is the IETF 'Merkle Tree Certificates for Stateless Validation' draft, cite the",
+   "page_evidence_admitted": false,
+   "page_next_step_admitted": false
+  },
+  {
+   "id": "CJ-89",
+   "jewel": "Sigstore PQ pivot pending",
+   "claimed_state_2026_10_26": "*WATCH",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.sigstore.dev/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 4297,
+     "visible_text_sha256_2026_11_01": "9ca3892c58c2389cfbbb8a865d21a7d06d0b4896bcc12d7b86576bb51a583138",
+     "ms": 1128,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'WATCH — ML-DSA entry-format planning; hybrid dual-signing 2027'. ACTUAL: the pivot could not be confirmed as a pending upstream event. https://www.sigstore.dev/ -> HTTP 200 but the fetched HTML yields on",
+   "next_step": "Cite the upstream Sigstore PQ roadmap/issue that makes the pivot 'pending'; separately reconcile the estate, which ancho",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-90",
+   "jewel": "AP2 v0.2 → FIDO with PaymentReceipt primitive",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://ap2-protocol.org",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 52918,
+     "visible_text_sha256_2026_11_01": "2b6a74d88f6bd124e6818b2ea7f768a2efbb14266d3c4536fc153c5cc411e0fa",
+     "ms": 577,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED — receipt-semantics crosswalk'. ACTUAL: the upstream pairing is CONFIRMED live but the PaymentReceipt primitive is NOT part of it. https://ap2-protocol.org -> HTTP 200, page text includes 'FIDO",
+   "next_step": "Correct the row: AP2 v0.2 + FIDO = VERIFIED (cite ap2-protocol.org); 'PaymentReceipt' is our own naming and must be publ",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-91",
+   "jewel": "OIN licensee directory entry 0898 CSOAI LTD",
+   "claimed_state_2026_10_26": "*VERIFIED LIVE",
+   "state_2026_10_27": "VERIFIED_STALE",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://openinventionnetwork.com/community-of-lice",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 272339,
+     "visible_text_sha256_2026_11_01": "9e938e953055736d72a55cc1431a5fa4bba257c9a34e4e9c837b60a400a0f283",
+     "ms": 1024,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED LIVE — OIN licensee directory entry 0898 CSOAI LTD'. ACTUAL: the CSOAI listing is CONFIRMED live; the '0898' identifier is NOT published. LIVE: https://openinventionnetwork.com/community-of-lice",
+   "next_step": "Drop '0898' from the public claim (or mark it internal-only) and cite the two live URLs — openinventionnetwork.com/commu",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-92",
+   "jewel": "LOT Network member directory",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://lotnet.com/members/?dir=1&name_directory_startswith=C",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 304871,
+     "visible_text_sha256_2026_11_01": "2a969e993f009c0101853f25b8b6e9dfe2a1ac7c890b1c0f638177d40646a0ba",
+     "ms": 1903,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CONFIRMED live, with a date. https://lotnet.com/members/?dir=1&name_directory_startswith=C -> HTTP 200, member list contains 'CSOAI LTD 14 August 2026' (between 'CSJ Technology Group LLC 04 March 2021' and 'CTFO Inc 07 S",
+   "next_step": "Keep as the cited institutional proof; refresh the registry row's verified_on to 2026-10-27 and record the membership da",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-93",
+   "jewel": "C2PA contributor roster",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://c2pa.org/membership/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 254902,
+     "visible_text_sha256_2026_11_01": "af7f16e9f89391ff32423bf3cb7f0ad2d0b93cd9aaae591bb97f84e9588d7e56",
+     "ms": 1241,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CONFIRMED live. https://c2pa.org/membership/ -> HTTP 200 (254,915 bytes), and the membership page contains 'CSOAI LTD — Council for the Safety of Artific...' with a link to 'csoai.org' and a slug 'csoai_ltd_council_for_t",
+   "next_step": "Refresh the registry row's verified_on to 2026-10-27 and change the wording to 'C2PA member roster' to match what the pa",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-94",
+   "jewel": "AQUIX agent #539 with live telemetry",
+   "claimed_state_2026_10_26": "*VERIFIED (re-check pending)",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://aquix.ai/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 113424,
+     "visible_text_sha256_2026_11_01": "bc989031538f351e5c2b0e71e0df604350cccb42dd44174695b6c7e0bd57e3c2",
+     "ms": 1195,
+     "error": null
+    },
+    {
+     "url": "https://aquix.ai/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 113424,
+     "visible_text_sha256_2026_11_01": "bc989031538f351e5c2b0e71e0df604350cccb42dd44174695b6c7e0bd57e3c2",
+     "ms": 1195,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED (re-check pending)'. ACTUAL: the re-check FAILS. https://aquix.ai/ -> HTTP 200 but no 'csoai' or 'council of ai' string appears. AQUIX keys agents by 0x address, not by '#539': https://aquix.ai/",
+   "next_step": "Find the exact AQUIX agent address for CSOAI (the site indexes by 0x address, not ordinal) and cite that URL; if no CSOA",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-95",
+   "jewel": "gold-402 September Featured Pick",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://raw.githubusercontent.com/Haustorium12/gold-402/main/FEATURED.md",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 16756,
+     "visible_text_sha256_2026_11_01": "1bb21bffe35927a36a30924d971b12cf9e8147d7b5ecd59d225f8b33ae68af5c",
+     "ms": 615,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CONFIRMED live, with the exact write-up. https://raw.githubusercontent.com/Haustorium12/gold-402/main/FEATURED.md -> HTTP 200, section '## September 2026 — The Slate', entry: '**MCP Servers — [Council of AI GSPC MCP](htt",
+   "next_step": "Cite the September-2026 FEATURED.md section URL in the next outward piece; also correct the estate register's 'Lists ...",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-96",
+   "jewel": "SuperInstance 'csoai measures; candor governs'",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://superinstance.ai",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 1644,
+     "visible_text_sha256_2026_11_01": "f33cfa635c113ab1cb714fc874d5bca5a506c24ff145007cf818d1a23fc0c5e3",
+     "ms": 377,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED — collaboration candidate #1 (candor WAL)'. ACTUAL: the quoted phrase could NOT be confirmed. https://superinstance.ai -> HTTP 200 but the fetched page contains no 'csoai', 'council of ai', 'can",
+   "next_step": "Cite the exact SuperInstance page or repo file carrying 'csoai measures; candor governs' (or the consumer code that cite",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-97",
+   "jewel": "Aura-core fail-closed GSPC proxy",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://raw.githubusercontent.com/MVPuknowme/Aura-core/MVPuknowme/api/skygrid/gspc.mjs",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 3714,
+     "visible_text_sha256_2026_11_01": "ff5b456edf88e8ea34d8a137e47059e76224692903a156cac4140497544c3539",
+     "ms": 335,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CONFIRMED live, in the third party's own code. https://raw.githubusercontent.com/MVPuknowme/Aura-core/MVPuknowme/api/skygrid/gspc.mjs -> HTTP 200, verbatim: 'const PRODUCT = \"SKYGRID Emergency Data On-Ramp\"; const ROUTE",
+   "next_step": "Correct deepdive-claims-2026-09-29.json, which still marks Aura-core UNVERIFIED — the raw code is live and fail-closed t",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-98",
+   "jewel": "gentle-mesh A2A positioning RFC",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED — outreach candidate in spec lane'. ACTUAL: a gentle-mesh repo exists but the claimed A2A positioning RFC does not. GitHub API search 'gentle-mesh' -> 3 results, the only relevant one Rafaeldeli",
+   "next_step": "Cite the specific RFC file/URL in Rafaeldelinares/gentle-mesh that positions against CSOAI's measurement layer; until th",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-99",
+   "jewel": "arXiv 2609.14721 academic citation (template critique)",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "VERIFIED_CURRENT",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://arxiv.org/abs/2609.14721",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 40856,
+     "visible_text_sha256_2026_11_01": "e3988a95584b974bfdba217666ed8cc186a4ebf83c57d2aa6609742bf9e814b6",
+     "ms": 763,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CONFIRMED live, with the critique text. https://arxiv.org/abs/2609.14721 -> HTTP 200, title '[2609.14721] A Two-Dimensional Study of the Model Context Protocol: Publication and Adoption', 'Submitted on 13 Sep 2026]', [v1",
+   "next_step": "Publish the curation doctrine reply that the row promises as the agent step — answer the 295-repository/4.9% construct-v",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "CJ-100",
+   "jewel": "stork.ai editorial review (Oct 8)",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://stork.ai/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": 200,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 233236,
+     "visible_text_sha256_2026_11_01": "bd3fb7ae8d8f07e76bbdfa012190270ae3aa30e171e5fcfd0b6808b0f236e5a7",
+     "ms": 1018,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneB-CJ-51-CJ-100.json",
+   "evidence": "CHECKLIST SAYS: 'VERIFIED — editorial surface'. ACTUAL: the review could NOT be located. https://stork.ai/ -> HTTP 200, title 'Stork Wire — quality backlinks & AI visibility, on autopilot'. The site's blog sitemap https:",
+   "next_step": "Supply the exact stork.ai post URL for the Oct 8 review (or the newsletter/issue it appeared in — stork publishes a news",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-01",
+   "jewel": "BS EN/prEN 18283 bias standard comment (closes Nov 24)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://standardsdevelopment.bsigroup.com/projects/2026-00938",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 0,
+     "live_bytes_2026_11_01": 0,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 1791,
+     "error": "TypeError"
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://standardsdevelopment.bsigroup.com/projects/2026-00938 — 'Comment period start date: 01/10/2026 Comment period end date: 24/11/2026'; 'Source: CEN Committee: ART/1 - Artificial Intelligence'; draft ref BS EN 18283",
+   "next_step": "Register/login at BSI Standards Development and comment via https://standardsdevelopment.bsigroup.com/drafts/2026-00938/",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-02",
+   "jewel": "prEN ISO/IEC 42006 enquiry (closes Oct 29 — 3 DAYS)",
+   "claimed_state_2026_10_26": "*URGENT",
+   "state_2026_10_27": "CLOSING_SOON",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://genorma.com/en/standards/pren-iso-iec-42006",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 23725,
+     "visible_text_sha256_2026_11_01": "ee53d14847434018e3745b468f3bae3b1ac9ba3f1f273378603f623f063d66af",
+     "ms": 1061,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://genorma.com/en/standards/pren-iso-iec-42006 — 'Current stage: 40.20 DIS ballot initiated: 12 weeks Aug 6, 2026' (6 Aug 2026 + 12 weeks = 29 Oct 2026); BSI draft ref '23/30470941 DC — Draft BS EN ISO/IEC 42006' (h",
+   "next_step": "TODAY: open the BSI Standards Development project for BS EN ISO/IEC 42006 (23/30470941 DC) and submit the comment before",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-03",
+   "jewel": "ISO/IEC DIS 23282 NLP evaluation ballot (closes Nov 25)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://genorma.com/en/standards/iso-iec-dis-23282",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 22606,
+     "visible_text_sha256_2026_11_01": "98f6bea9e699577798f13befb53963f1eabfd8af544f24f2a0c8db452bdb1b25",
+     "ms": 1085,
+     "error": null
+    },
+    {
+     "url": "https://genorma.com/en/standards/pren-iso-iec-232",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 404,
+     "live_bytes_2026_11_01": 18672,
+     "visible_text_sha256_2026_11_01": "8183a95bbec972fa1b3c2de70832f030249f45dcea107a5ed91e2eaea30d2003",
+     "ms": 787,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://genorma.com/en/standards/iso-iec-dis-23282 — 'Current stage: 40.20 DIS ballot initiated: 12 weeks Sep 2, 2026' (2 Sep 2026 + 12 weeks = 25 Nov 2026); the CEN twin https://genorma.com/en/standards/pren-iso-iec-232",
+   "next_step": "Comment through BSI Standards Development before 25 Nov 2026 (note the CEN prEN twin closes 26 Nov 2026)",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-04",
+   "jewel": "BSI three new AI certification schemes (Oct 14)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "CLOSED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://groupsiteppdmig.bsigroup.com/en-GB/insights-and-media/media-centre/press-releases/2026/october/new-ai-schemes-launched-to-help-companies-demonstrate-responsible-deployment-manage-risk-and-meet-regulatory-and-mark",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 250586,
+     "visible_text_sha256_2026_11_01": "81baaab455d90ec36891b96ebd5cb38c8b003e324635ff3a1b613bf6a3bfdc3f",
+     "ms": 1260,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://groupsiteppdmig.bsigroup.com/en-GB/insights-and-media/media-centre/press-releases/2026/october/new-ai-schemes-launched-to-help-companies-demonstrate-responsible-deployment-manage-risk-and-meet-regulatory-and-mark",
+   "next_step": "14 October 2026 — that is the launch-announcement date, not an application deadline; the three schemes are open for busi",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-05",
+   "jewel": "AICPA × AIUC-1 joint agent certification (Oct 19)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "CLOSED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.aicpa-cima.com/news/article/auditors-meet-urgent-demand-for-ai-assurance-with-new-offering-from-aicpa-and-aiuc",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 290070,
+     "visible_text_sha256_2026_11_01": "04ae0676f9bc2c40ac18ea06141c7bd2814e8ea964391658f989699bd9e968c9",
+     "ms": 1293,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://www.aicpa-cima.com/news/article/auditors-meet-urgent-demand-for-ai-assurance-with-new-offering-from-aicpa-and-aiuc — 'NEW YORK and SAN FRANCISCO (Oct. 19th, 2026) – The American Institute of CPAs (AICPA) and Arti",
+   "next_step": "19 October 2026 — announcement date, not an application deadline; the joint certification is not live until early 2027",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-06",
+   "jewel": "EN 18286:2026 cited in OJEU (Oct 14)",
+   "claimed_state_2026_10_26": "*VERIFIED",
+   "state_2026_10_27": "CLOSED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://eur-lex.europa.eu/eli/dec_impl/2026/2274/oj",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 202,
+     "live_bytes_2026_11_01": 2035,
+     "visible_text_sha256_2026_11_01": null,
+     "ms": 334,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://eur-lex.europa.eu/eli/dec_impl/2026/2274/oj — 'Commission Implementing Decision (EU) 2026/2274 of 12 October 2026 on the harmonised standards for high-risk AI systems drafted in support of Regulation (EU) 2024/16",
+   "next_step": "14 October 2026 — OJEU publication date (OJ L, 2026/2274); decision dated 12 October 2026; now in force (not a window)",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-07",
+   "jewel": "International Programme on AI Evaluation (priority Nov 13, final Dec 11)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://ai-evaluation.org/apply",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 493282,
+     "visible_text_sha256_2026_11_01": "18e4e587f986a1eb88b8c8715ecb301926c0e80365f320cfcc75a336c2f1e70f",
+     "ms": 339,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://ai-evaluation.org/apply — 'We will select 40 fully funded participants - graduate and PhD students, researchers, and professionals from around the world'; 'Priority Deadline: November 13, 2026'; 'Final Deadline:",
+   "next_step": "Submit through ai-evaluation.org/apply before the 13 Nov 2026 priority deadline (CV, motivation statement, then intervie",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-08",
+   "jewel": "AWS Agentic AI CFP (Nov 4)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.amazon.science/research-awards/call-for-proposals/aws-agentic-ai-call-for-proposals-fall-2026",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 271240,
+     "visible_text_sha256_2026_11_01": "cb2d6af17588086326694da179fc5f87bbcb36615fd927a8619385eeffbc6041",
+     "ms": 360,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://www.amazon.science/research-awards/call-for-proposals/aws-agentic-ai-call-for-proposals-fall-2026 — 'Submission period: October 1 - November 4, 2026'; 'Unrestricted funds, no more than $70,000 USD on average'; 'A",
+   "next_step": "Owner to secure a UK academic PI (faculty member) and submit the 4-page proposal via the ARA portal before 4 Nov 2026 11",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-09",
+   "jewel": "Amazon ARA Multilingual & Contextual AI Evaluation (Nov 4)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.amazon.science/research-awards/call-for-proposals/multilingual-and-contextual-ai-evaluation-call-for-proposals-fall-2026",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 274968,
+     "visible_text_sha256_2026_11_01": "dea1f44bf6de6a5c2a2cf8e9a735fb3532fb25d85ef4f9c97f54e9a1c32df482",
+     "ms": 146,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://www.amazon.science/research-awards/call-for-proposals/multilingual-and-contextual-ai-evaluation-call-for-proposals-fall-2026 — 'Submission period: October 1 - November 4, 2026 (11:59PM Pacific Time)'; 'Unrestrict",
+   "next_step": "Owner to pair with an academic PI and submit via the ARA portal before 4 Nov 2026 11:59 PM PT (frame the work around und",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-10",
+   "jewel": "NSF 26-512 AI Datasets (Nov 4)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.nsf.gov/funding/opportunities/ai-datasets-unlocking-dataset-value-ai-enabled-scientific-discovery/nsf26-512/solicitation",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 91639,
+     "visible_text_sha256_2026_11_01": "0de2c6f585359820af6498e15ed1e351ced56349c55d81284df7ee8bf76eae05",
+     "ms": 274,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://www.nsf.gov/funding/opportunities/ai-datasets-unlocking-dataset-value-ai-enabled-scientific-discovery/nsf26-512/solicitation — 'Full Proposal Deadline(s) (due by 5 p.m. submitting organization's local time): Nove",
+   "next_step": "Owner to approach a US university/non-profit PI to lead and add CSOAI as a subaward partner (UEI, SAM registration and a",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-11",
+   "jewel": "NSF 26-513 State & Regional AI Infrastructure Hubs (Nov 4)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OWNER_GATED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.nsf.gov/funding/opportunities/us-national-science-foundation-state-regional-artificial/nsf26-513/solicitation",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 100451,
+     "visible_text_sha256_2026_11_01": "fe0dbf5c56585317379515219d6396efde648f331c3fd00dc843c0a7a542b26f",
+     "ms": 274,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://www.nsf.gov/funding/opportunities/us-national-science-foundation-state-regional-artificial/nsf26-513/solicitation — 'Full Proposal Deadline(s) (due by 5 p.m. submitting organization's local time): November 04, 20",
+   "next_step": "Owner to join a US-led hub consortium as a subaward partner before 4 Nov 2026 5 pm local — there is no UK-led route",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-12",
+   "jewel": "Innovate UK 'Efficient, Structured and Controllable AI' (Nov 18)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://apply-for-innovation-funding.service.gov.uk/competition/2582/overview/9fdb47a5-011c-4c47-ac5e-c426e295fe89",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 93799,
+     "visible_text_sha256_2026_11_01": "eeafe94f05a584582c285aac883ed9e891a57c80dcf20881ee338ec8ab4ee46f",
+     "ms": 268,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://apply-for-innovation-funding.service.gov.uk/competition/2582/overview/9fdb47a5-011c-4c47-ac5e-c426e295fe89 — 'Competition opens: Monday 12 October 2026'; 'Competition closes: Wednesday 18 November 2026 11:00am';",
+   "next_step": "Owner to start the IFS application now and submit before 18 Nov 2026 11:00 UK (declaration, UK SME financials, last-minu",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-13",
+   "jewel": "Innovate UK 'Frontier/Next-Gen AI Technologies' (Nov 11)",
+   "claimed_state_2026_10_26": "*UNVERIFIED",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://apply-for-innovation-funding.service.gov.uk/competition/2584/overview/4c7afb5d-4572-4ef2-9507-73ef2dec8ec8",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 94043,
+     "visible_text_sha256_2026_11_01": "b096e13cb7d7a1fe434a7d1db449ba3cb8d538711229dfe23355ac24f1ea1f99",
+     "ms": 244,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://apply-for-innovation-funding.service.gov.uk/competition/2584/overview/4c7afb5d-4572-4ef2-9507-73ef2dec8ec8 — 'Frontier AI: SME Champions, Phase 1'; 'Competition closes: Wednesday 11 November 2026 11:00am'; 'UK re",
+   "next_step": "Owner to correct the row title and start an IFS application for competition 2584 before 11 Nov 2026 11:00 GMT",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-14",
+   "jewel": "OpenAI Cybersecurity Grant Program (rolling)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://openai.com/index/openai-cybersecurity-grant-program/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 329382,
+     "visible_text_sha256_2026_11_01": "514c4c3f7c870a9de68ebaaf4cc2387e79c66a59a728e6cfe3077655208e41e8",
+     "ms": 539,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://openai.com/index/openai-cybersecurity-grant-program/ — 'We are launching the Cybersecurity Grant Program—a $1M initiative to boost and quantify AI-powered cybersecurity capabilities'; 'Update on February 5, 2026:",
+   "next_step": "Watch grants.openai.com for a cybersecurity program listing and confirm whether microgrants still exist before repeating",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-15",
+   "jewel": "Foresight AI for Science & Safety Nodes RFP (Oct 31)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "CLOSING_SOON",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://foresight.org/grants/ai-science-safety-nodes-rfp-local-compute/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 185112,
+     "visible_text_sha256_2026_11_01": "fe1a25c9886688daf66505c884f8ff0bc285cb954aa1f1a945b12517ced680be",
+     "ms": 486,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://foresight.org/grants/ai-science-safety-nodes-rfp-local-compute/ — 'The application deadline for this RFP is 31st October 2026 23:59 PDT'; 'Grants typically range from $30,000 to $100,000'; 'We accept applications",
+   "next_step": "Owner to submit the application package through the Foresight Institute portal before 31 Oct 2026 23:59 PDT (budget, mil",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-16",
+   "jewel": "HORIZON-BRIDGING-2027-01-13 EU Frontier AI Initiative RIA (Feb 2027)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://hadea.ec.europa.eu/calls-proposals/horizon-europe-digital-bridging-actions-2027_en",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 74061,
+     "visible_text_sha256_2026_11_01": "39fcde3094c683b8a39961d222295208c7a1ff1de3b97b01f0eafdd651f5c367",
+     "ms": 516,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://hadea.ec.europa.eu/calls-proposals/horizon-europe-digital-bridging-actions-2027_en — 'HORIZON-BRIDGING-2027-01 ... Publication date 13 October 2026 ... Opening date 20 October 2026 ... Deadline model Single-stage",
+   "next_step": "Start assembling the consortium and budget now, and pull the topic budget from the Funding & Tenders topic page once it",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-17",
+   "jewel": "AWS Agent Registry GA APIs",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 303950,
+     "visible_text_sha256_2026_11_01": "cc11c46bb65cc3963618d3ebf6c022787bdde50225179225a3855ba67f2a66c5",
+     "ms": 404,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/ — 'postDateTime':'2026-08-31T15:21:00Z'; headline 'AWS Agent Registry for centralized agent discovery and governance is now gener",
+   "next_step": "Register the estate's MCP servers, agents and skills in Agent Registry (Europe/Ireland) via console, CLI or SDK",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-18",
+   "jewel": "AAIF Sandbox phase + 4 new projects (Oct 22)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://aaif.io/blog/aaif-sandbox-phase",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 133934,
+     "visible_text_sha256_2026_11_01": "d8c6da72c14fe3287cb33215cad78485fb94a4700906ba2c5304d49b490417f8",
+     "ms": 1810,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://aaif.io/blog/aaif-sandbox-phase — 'Published Time: 2026-09-01'; 'Sandbox comes with a six-month checkpoint and a twelve-month window to apply for Growth. Miss it and the TC opens an archival discussion'; 'standar",
+   "next_step": "Submit the project proposal through aaif.io/submit-a-project (rolling — no deadline to beat)",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-19",
+   "jewel": "CDF AI SIG (Continuous Delivery Foundation)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://github.com/cdfoundation/AI",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 290489,
+     "visible_text_sha256_2026_11_01": "83e71c24db2e9ee48d1437f52d6c61dca479b5922f7934e9ec22f51b51bb7a4c",
+     "ms": 665,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://github.com/cdfoundation/AI — repo description 'This repo is for the AI Special Interest Group (SIG)'; README heading '# CI/CD Artificial Intelligence (AI) Special Interest Group' and 'This Special Interest Group",
+   "next_step": "Open an issue in github.com/cdfoundation/AI to join the SIG and stand for a working group",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-20",
+   "jewel": "Agentic SOC Alliance (15 founders)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://www.extrahop.com/agentic-soc-alliance",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 177418,
+     "visible_text_sha256_2026_11_01": "1feb7189f9788ab17e553c1711f89862f53039e53f70103b8bb4e201130d9b92",
+     "ms": 552,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://www.extrahop.com/agentic-soc-alliance — 'If your organization is helping shape that future, apply to join the Agentic SOC Alliance today' and 'Apply to Join' link; coverage 'Agentic SOC Alliance Wants To Set Rule",
+   "next_step": "Owner to submit the Alliance 'Apply to Join' form (organisation details and signature required)",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-21",
+   "jewel": "Prosus Vending Bench (Apache-2.0)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://github.com/ProsusAI/vending-bench",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 301215,
+     "visible_text_sha256_2026_11_01": "08d841aa6d75bbbdf72e0c509e1147d7e795e7036351e905ad5b2d415b1f017f",
+     "ms": 816,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://github.com/ProsusAI/vending-bench — 'An open source vending machine benchmark: a long-horizon agentic business simulation served over MCP, shipped as a Harbor task'; 'Start with €1,500. Run six vending machines a",
+   "next_step": "Run the estate's agent against the benchmark and compare the score with the published baselines",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-22",
+   "jewel": "NIST AITE programme",
+   "claimed_state_2026_10_26": "*UNVERIFIED",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://pages.nist.gov/ai-technology-evaluation/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 28752,
+     "visible_text_sha256_2026_11_01": "7c8a05b00231f37b3728a2cf766d2e934d5891823831a078943bf0e24ce80450",
+     "ms": 399,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://pages.nist.gov/ai-technology-evaluation/ — AITE is run by NIST's Technology Test and Evaluation Division; participation is open to data and model providers under the AITE Participation Agreement, with results pub",
+   "next_step": "Owner to email aite-poc@list.nist.gov requesting participation and to sign the AITE Participation Agreement — no deadlin",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-23",
+   "jewel": "AAIF Voice Agents Forum (SF, Nov 5)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://luma.com/voiceagentssf",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 162483,
+     "visible_text_sha256_2026_11_01": "7447514a3fc253b60442959f691642e27a3f7cc492a0d3974a48088a6c0fea64",
+     "ms": 764,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://luma.com/voiceagentssf — '\"startDate\":\"2026-11-05T09:00:00.000-08:00\"', '\"endDate\":\"2026-11-05T18:00:00.000-08:00\"', 'General Admission' price 300 USD, 'Early Bird Ticket' valid_end_at 2026-10-30T06:59:59Z, 'Gene",
+   "next_step": "Owner to buy early-bird tickets before 30 Oct 2026 06:59 UTC (payment required)",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-24",
+   "jewel": "AWS CDS Agentic AI Partner Hackathon (Oct 28)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "UNVERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://aws-cds-partner.devpost.com/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 403,
+     "live_bytes_2026_11_01": 5727,
+     "visible_text_sha256_2026_11_01": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+     "ms": 105,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://aws-cds-partner.devpost.com/ (fetched via r.jina.ai, 11,485 bytes) — '$40,000 in prizes', '1st Place $18,000 in cash', 'Create d opportunity ID through AWS Partner Central's AWS Customer Engagement (ACE) ... Mark",
+   "next_step": "Owner to read the live timeline inside the Devpost account (or ask the AWS CDS partner team for the submission close dat",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-25",
+   "jewel": "Agentic AI Hackathon 2026 (Ulster University)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://theamse.org/hackathon/AgenticAIHackathon2026",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 54615,
+     "visible_text_sha256_2026_11_01": "cb43448f6bc1084f8cb95888594835714c999bdbe3251a98de4d7117ddba94fc",
+     "ms": 1755,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://theamse.org/hackathon/AgenticAIHackathon2026 — 'Agentic AI Hackathon 2026 / Nov 21 – Nov 22, 2026 / Ulster University, UK / 2 nd International Hackathon / Organized by Ulster University, UK'; 'Round I (Idea / PPT",
+   "next_step": "Register the team and submit the Round I idea/PPT before 16 Nov 2026 22:00 — confirm the clock's timezone with the organ",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-26",
+   "jewel": "Bharat Agentic-AI Hackathon (Code for India)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://codeforindia.org/hackathon",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 53464,
+     "visible_text_sha256_2026_11_01": "084d77bdc5b80304bb909d312e35962f20396dc117357f2b8ff611a601d7c0ff",
+     "ms": 726,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://codeforindia.org/hackathon — 'Launches 15 August 2026 · 90 Days · Open Source'; 'Build open-source digital public goods for India's health. 90 days of building, from 15 August to 15 November 2026'; '₹18 lakh in p",
+   "next_step": "Owner to register on AgentFoundry.me and open-source the entry before 15 Nov 2026 (check the Apache-2.0/MIT contribution",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-27",
+   "jewel": "oneAPI DevSummit CFP (event Dec 1)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "CLOSING_SOON",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://uxlfoundation.org/events/oneapi-devsummit-hosted-by-uxl-foundation-2026/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 186589,
+     "visible_text_sha256_2026_11_01": "fa0d98a462f3442d948ece84ee1d7b3a7cde10ca25c4bd5d96c428155bb248db",
+     "ms": 454,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://uxlfoundation.org/events/oneapi-devsummit-hosted-by-uxl-foundation-2026/ — 'Call for Presentations CFP Close: Oct 31, 2026 Event Date: December 1st, 2026'; 'Open-source and community-driven initiatives'",
+   "next_step": "Owner to submit the talk abstract through the UXL Foundation CFP form before 31 Oct 2026",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-28",
+   "jewel": "AAMAS 2027 (Blue Sky Nov 5 / papers Nov 12)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://warwick.ac.uk/fac/sci/dcs/aamas2027/calls/call-for-blue-sky-ideas/",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 42057,
+     "visible_text_sha256_2026_11_01": "a4870ed4828e2f1bab0a9b06e27597f453324c970e8162970beda1459a57c854",
+     "ms": 263,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://warwick.ac.uk/fac/sci/dcs/aamas2027/calls/call-for-blue-sky-ideas/ — 'Author registration on Open Review: 20 Oct 2026'; 'Abstract submission: 5 Nov 2026'; 'Paper submission: 12 Nov 2026'; 'Camera-ready submission",
+   "next_step": "Register the author on OpenReview immediately (the 20 Oct registration date has passed), then submit the abstract by 5 N",
+   "page_evidence_admitted": false,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-29",
+   "jewel": "ICAART 2027 (workshop/abstract Dec 3)",
+   "claimed_state_2026_10_26": "*OPEN",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://icaart.scitevents.org/CallForPapers.aspx?y=2027",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 391907,
+     "visible_text_sha256_2026_11_01": "e9bfc776b627bdd2c5f8c8c6956fd497a0c80e7f9b28bd51e342212a65482e1e",
+     "ms": 3653,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://icaart.scitevents.org/CallForPapers.aspx?y=2027 — 'Workshop QAIO / DTT / LAIS / CyberAIS — Paper Submission: December 3, 2026'; 'Abstracts — Abstract Submission: December 3, 2026'; 'Position Papers / Regular Pape",
+   "next_step": "Submit via PRIMORIS by 3 Dec 2026 — or take the extended position-paper slot by 29 Oct 2026",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  },
+  {
+   "id": "N-30",
+   "jewel": "NIST SP 800-82r4 ipd comments (Nov 30)",
+   "claimed_state_2026_10_26": "*MARGINAL",
+   "state_2026_10_27": "OPEN_VERIFIED",
+   "live_read_2026_11_01": [
+    {
+     "url": "https://csrc.nist.gov/pubs/sp/800/82/r4/ipd",
+     "form": "absolute",
+     "recorded_status_2026_10_27": null,
+     "live_status_2026_11_01": 200,
+     "live_bytes_2026_11_01": 51273,
+     "visible_text_sha256_2026_11_01": "1fc7ed8a1b4cc46698fe438c1a0864ee080ec2701e4ad9f15a5e6fb3b0797fda",
+     "ms": 663,
+     "error": null
+    }
+   ],
+   "evidence_source": "https://councilof.ai/interop/subject-axis-live-20261027/audit-laneC-N-01-N-30-deadlines.json",
+   "evidence": "https://csrc.nist.gov/pubs/sp/800/82/r4/ipd — 'Date Published: September 21, 2026'; 'Comments Due: November 30, 2026'; 'The comment period on this initial public draft is open through November 30, 2026. We encourage you",
+   "next_step": "Draft the OT/PQC/AI-vulnerability comment rows and submit them with the NIST template before 30 Nov 2026",
+   "page_evidence_admitted": true,
+   "page_next_step_admitted": true
+  }
+ ],
+ "text_level_delta_since_2026_10_30": {
+  "what_this_is": "The first TEXT-level reading of the state table in this estate's history. The 30 October read was status-level, because the state table records HTTP status and bytes rather than a capture-time digest; that read computed a visible-text digest on every URL, so the 1 November read can be diffed against it at text level.",
+  "urls_compared": 126,
+  "status_changed": 0,
+  "visible_text_changed": 27,
+  "reading": "Text changed on a URL whose HTTP status did not change is a real change in what the surface says, and it is invisible to a status-level reading. It is not a ranking, a score or a verdict: it is the digest of the visible text, twice, on two dates.",
+  "entries": [
+   {
+    "url": "https://councilof.ai/claim-maintenance/",
+    "id": "CJ-01",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "29956371376ebd7332f6988f8a92a68a2f2cbba283bcccef5823affeef9a11bd",
+    "visible_text_sha256_2026_11_01": "119a0d7a043c2db9b507e42488232fa28dda647e8e2396aa0ba9f4d938f506ae",
+    "visible_text_bytes_2026_10_30": 19361,
+    "visible_text_bytes_2026_11_01": 19304
+   },
+   {
+    "url": "https://councilof.ai/api/corrections",
+    "id": "CJ-02",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "7e8c05bd5a7f6478f3b328799b75b37fa9c9f0a9f4964f464601bbf1e93dd5b1",
+    "visible_text_sha256_2026_11_01": "61d2de9ed4aa0fb36c920fef772bdae24412a3e69001fe09dff06058f3ba912e",
+    "visible_text_bytes_2026_10_30": 235889,
+    "visible_text_bytes_2026_11_01": 235889
+   },
+   {
+    "url": "https://github.com/x402-foundation",
+    "id": "CJ-10",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "a0b3e1b7f1ea7e18ae47beae2635bd49f682db80d70b6818ec48310985b9d21e",
+    "visible_text_sha256_2026_11_01": "ab14dde94e3c3c96fdf377d4e156389e4aa979466893bb2729f8d041fe547d4f",
+    "visible_text_bytes_2026_10_30": 3833,
+    "visible_text_bytes_2026_11_01": 4302
+   },
+   {
+    "url": "https://www.circle.com/blog/building-the-open-agentic-economy",
+    "id": "CJ-13",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "f72926389cacd9980c9d4ddab2933b39ad2fb3ce264ceedbbc9369dabb433a86",
+    "visible_text_sha256_2026_11_01": "afdaec9f3e2824326ee96806c5b58fbe6a68792101626cc92180e8aa07e31233",
+    "visible_text_bytes_2026_10_30": 24317,
+    "visible_text_bytes_2026_11_01": 24307
+   },
+   {
+    "url": "https://github.com/aaif/project-proposals/issues/42",
+    "id": "CJ-17",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "1cd40d5bb514a4340efc3dfa219bfae01cc069ba56cf894f6eb10a83895d4f8a",
+    "visible_text_sha256_2026_11_01": "53c5804c5426230740fa3cac5474b167293c738693a83c5793c6700965246b9f",
+    "visible_text_bytes_2026_10_30": 34602,
+    "visible_text_bytes_2026_11_01": 34566
+   },
+   {
+    "url": "https://osaia.org/",
+    "id": "CJ-18",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "cc0b5de75276ec5f001390a761f79ba3e56e74d2e40debddbffd585bf37beed7",
+    "visible_text_sha256_2026_11_01": "66493c22f50f5cbb2cd0c047426c652c44f62141c134b8cf32f80f80f2ad5ee4",
+    "visible_text_bytes_2026_10_30": 21175,
+    "visible_text_bytes_2026_11_01": 9101
+   },
+   {
+    "url": "https://openid.net/certification/",
+    "id": "CJ-23",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "098a3db3dc091b31f2a9996fcd615a210b251c41921dfbc2d03814747abef964",
+    "visible_text_sha256_2026_11_01": "4ccfe193ef8e5f49e48619aa303c15c5fda6dfa83884d9df2e7b6a2e0503a7ae",
+    "visible_text_bytes_2026_10_30": 8379,
+    "visible_text_bytes_2026_11_01": 8363
+   },
+   {
+    "url": "https://github.com/docker/mcp-registry",
+    "id": "CJ-26",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "392900350b7cffc647d8b0c2cb748a6959e5bc9ae57f29b88730498621fb7fa2",
+    "visible_text_sha256_2026_11_01": "8c7319e2d21e5617f43c93f5e06bd9d2ec93fd5cfdd2174cbc6bb2b3c27bf8f6",
+    "visible_text_bytes_2026_10_30": 6629,
+    "visible_text_bytes_2026_11_01": 6629
+   },
+   {
+    "url": "https://github.com/docker/mcp-registry/tree/main/servers",
+    "id": "CJ-26",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "bcfb066eb055bb8438bfcc920fd094ad8b5bb8a941bc5fd048d65fae90c3db77",
+    "visible_text_sha256_2026_11_01": "ce818a4d5a12debc7c760d43b568b561efefd9a852a3e38006e5e7428545643d",
+    "visible_text_bytes_2026_10_30": 5636,
+    "visible_text_bytes_2026_11_01": 5636
+   },
+   {
+    "url": "https://www.iana.org/assignments/media-types/media-types.xhtml",
+    "id": "CJ-30",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "931264f5488829b55939d212b90b1b09dbd3024e1148fb8416bdfbae9d9dd262",
+    "visible_text_sha256_2026_11_01": "e66b9452b30dcb0a004b74041e7d51f5b28962a3b58648a8e1e1fe970527f9a4",
+    "visible_text_bytes_2026_10_30": 205612,
+    "visible_text_bytes_2026_11_01": 205702
+   },
+   {
+    "url": "https://www.8004scan.io/",
+    "id": "CJ-34",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "4d5c829721d66b9c467a9ad9ed9cf41edf476687556fd0d2883db728e8a482ad",
+    "visible_text_sha256_2026_11_01": "dbaf955aa8e00b46ae05d0f46f1d1e4e97de34138f06203918942edc70b9e9b0",
+    "visible_text_bytes_2026_10_30": 14504,
+    "visible_text_bytes_2026_11_01": 16895
+   },
+   {
+    "url": "https://nlnet.nl/propose/",
+    "id": "CJ-40",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "ac8c7b4c9dc90aa3252bc9fcfa1018bb4e99ee8a19403c7461764924049f3607",
+    "visible_text_sha256_2026_11_01": "665a114829f201f55e71ae207d68eb56acfa252ed5423239b47596a5572e9612",
+    "visible_text_bytes_2026_10_30": 9294,
+    "visible_text_bytes_2026_11_01": 9302
+   },
+   {
+    "url": "https://councilof.ai/reports/",
+    "id": "CJ-49",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "490b4060d544141a791a8c69c2ac1bcbb59d5db1cb26949ef2afbb52149e24b1",
+    "visible_text_sha256_2026_11_01": "8dfd402e26eee37ce8c9136f09280640d7f59e29b385025a9ce3671f79f8b110",
+    "visible_text_bytes_2026_10_30": 7235,
+    "visible_text_bytes_2026_11_01": 7179
+   },
+   {
+    "url": "https://artificialanalysis.ai/",
+    "id": "CJ-74",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "c6eb37f8867ebf7acb6a5d282a8b5c3059013364e95bc1302ee6c5633549d8c4",
+    "visible_text_sha256_2026_11_01": "5da8740cc9de32e0be3f871a952d518a6ba094e2f3d5a35687212bfda57261ad",
+    "visible_text_bytes_2026_10_30": 12131,
+    "visible_text_bytes_2026_11_01": 12086
+   },
+   {
+    "url": "https://developers.cloudflare.com/",
+    "id": "CJ-75",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "d0c7d86653cc33e373a2dceb65734e9c21e85aeb74185b04b62f829777b1a67c",
+    "visible_text_sha256_2026_11_01": "a89e0e6572e21143ae34643aac2a13ece34b4189d0e2eab6f9a7f44606cbfe1b",
+    "visible_text_bytes_2026_10_30": 9668,
+    "visible_text_bytes_2026_11_01": 9694
+   },
+   {
+    "url": "https://council.nyc.gov/press/2026/09/25/3252/",
+    "id": "CJ-86",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "4687ac18fbf6aea39a42a9a69e65b933ff7ad47fa421d3f97af9dcb71ff2c2fe",
+    "visible_text_sha256_2026_11_01": "03fa5972550222fcfa2a84b9abab6ca5914169417e25e9d6a84d6e5064cab60f",
+    "visible_text_bytes_2026_10_30": 17465,
+    "visible_text_bytes_2026_11_01": 17464
+   },
+   {
+    "url": "https://lotnet.com/members/?dir=1&name_directory_startswith=C",
+    "id": "CJ-92",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "c1eec38ba7185f92d04b9698a185ed6a661a473778b95af8ef3d0fb08abe68dc",
+    "visible_text_sha256_2026_11_01": "2a969e993f009c0101853f25b8b6e9dfe2a1ac7c890b1c0f638177d40646a0ba",
+    "visible_text_bytes_2026_10_30": 22993,
+    "visible_text_bytes_2026_11_01": 22987
+   },
+   {
+    "url": "https://arxiv.org/abs/2609.14721",
+    "id": "CJ-99",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "4827aff4149c37749bd1e0fb3c28f1a5837c631c0946ea17d91b55cbd818f330",
+    "visible_text_sha256_2026_11_01": "e3988a95584b974bfdba217666ed8cc186a4ebf83c57d2aa6609742bf9e814b6",
+    "visible_text_bytes_2026_10_30": 4764,
+    "visible_text_bytes_2026_11_01": 4680
+   },
+   {
+    "url": "https://stork.ai/",
+    "id": "CJ-100",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "92665488a90526d3cc54e5343153fc524ff147752b4c7699ef7d2ca159cf8ddd",
+    "visible_text_sha256_2026_11_01": "bd3fb7ae8d8f07e76bbdfa012190270ae3aa30e171e5fcfd0b6808b0f236e5a7",
+    "visible_text_bytes_2026_10_30": 15336,
+    "visible_text_bytes_2026_11_01": 15400
+   },
+   {
+    "url": "https://genorma.com/en/standards/pren-iso-iec-42006",
+    "id": "N-02",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "b4e89a6686bc4725b29f7353c41e7f9f8ef48cf004c86d730f8d2d8795d46d15",
+    "visible_text_sha256_2026_11_01": "ee53d14847434018e3745b468f3bae3b1ac9ba3f1f273378603f623f063d66af",
+    "visible_text_bytes_2026_10_30": 2979,
+    "visible_text_bytes_2026_11_01": 2979
+   },
+   {
+    "url": "https://genorma.com/en/standards/iso-iec-dis-23282",
+    "id": "N-03",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "99bf76fdd263b40a3f6e3299e6abbaa5b9cb8597d7dba1eb9fceb9d55cb7092b",
+    "visible_text_sha256_2026_11_01": "98f6bea9e699577798f13befb53963f1eabfd8af544f24f2a0c8db452bdb1b25",
+    "visible_text_bytes_2026_10_30": 2616,
+    "visible_text_bytes_2026_11_01": 2616
+   },
+   {
+    "url": "https://genorma.com/en/standards/pren-iso-iec-232",
+    "id": "N-03",
+    "status_2026_10_30": 404,
+    "status_2026_11_01": 404,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "6945db5c18ae437423ad4e48acdc61cd0287387de7e72d183cc64ddef52dcb6c",
+    "visible_text_sha256_2026_11_01": "8183a95bbec972fa1b3c2de70832f030249f45dcea107a5ed91e2eaea30d2003",
+    "visible_text_bytes_2026_10_30": 1829,
+    "visible_text_bytes_2026_11_01": 1829
+   },
+   {
+    "url": "https://www.amazon.science/research-awards/call-for-proposals/aws-agentic-ai-call-for-proposals-fall-2026",
+    "id": "N-08",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "e6ef8282cddb6fa54bb2b2874044ebb8015a16e8d2e740a9fc25155700171989",
+    "visible_text_sha256_2026_11_01": "cb2d6af17588086326694da179fc5f87bbcb36615fd927a8619385eeffbc6041",
+    "visible_text_bytes_2026_10_30": 49530,
+    "visible_text_bytes_2026_11_01": 47381
+   },
+   {
+    "url": "https://www.amazon.science/research-awards/call-for-proposals/multilingual-and-contextual-ai-evaluation-call-for-proposals-fall-2026",
+    "id": "N-09",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "0528dc54aa961f9339a007c68d36c7e0ffd90ff25fd400998248c58414dc28d3",
+    "visible_text_sha256_2026_11_01": "dea1f44bf6de6a5c2a2cf8e9a735fb3532fb25d85ef4f9c97f54e9a1c32df482",
+    "visible_text_bytes_2026_10_30": 52238,
+    "visible_text_bytes_2026_11_01": 50089
+   },
+   {
+    "url": "https://github.com/ProsusAI/vending-bench",
+    "id": "N-21",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "96fd1acd24ec95b1a5bdbff146ed82ccf586a1862a28ecd47da79010dff412fb",
+    "visible_text_sha256_2026_11_01": "08d841aa6d75bbbdf72e0c509e1147d7e795e7036351e905ad5b2d415b1f017f",
+    "visible_text_bytes_2026_10_30": 10472,
+    "visible_text_bytes_2026_11_01": 10472
+   },
+   {
+    "url": "https://luma.com/voiceagentssf",
+    "id": "N-23",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "98db64fc62a47fa83be930c3070e5068fd8175dc1fcdc45df473fd9a334dd2cf",
+    "visible_text_sha256_2026_11_01": "7447514a3fc253b60442959f691642e27a3f7cc492a0d3974a48088a6c0fea64",
+    "visible_text_bytes_2026_10_30": 4835,
+    "visible_text_bytes_2026_11_01": 4876
+   },
+   {
+    "url": "https://icaart.scitevents.org/CallForPapers.aspx?y=2027",
+    "id": "N-29",
+    "status_2026_10_30": 200,
+    "status_2026_11_01": 200,
+    "status_changed": false,
+    "visible_text_sha256_2026_10_30": "6632104e2b35548c0e351eb12bbf848f5a4f3495f018cc9498e183d9d727200c",
+    "visible_text_sha256_2026_11_01": "e9bfc776b627bdd2c5f8c8c6956fd497a0c80e7f9b28bd51e342212a65482e1e",
+    "visible_text_bytes_2026_10_30": 51976,
+    "visible_text_bytes_2026_11_01": 52194
+   }
+  ]
+ },
+ "owner_gates": [
+  {
+   "gate": "Sign the wave-2 card and the five subject-axis banks",
+   "why": "signing mints public evidence; the estate's own rule leaves it to the owner",
+   "cost": "minutes once reviewed"
+  },
+  {
+   "gate": "Adjudicate materiality for the candidate claim deltas",
+   "why": "a byte delta triggers human materiality adjudication and is never an automated compliance verdict",
+   "cost": "one sitting"
+  },
+  {
+   "gate": "Promote the claim-maintenance axis to MEASURED",
+   "why": "the method is frozen and sha-pinned and n_valid meets the threshold, but the promotion is the owner's ruling and this catalogue does not pre-empt it",
+   "cost": "one ruling"
+  },
+  {
+   "gate": "Declare each subject axis's sampling frame",
+   "why": "a governance decision about what the estate claims to speak about",
+   "cost": "one page per axis"
+  },
+  {
+   "gate": "Publish the product Agent Skill (meok-canonical)",
+   "why": "the site publishes 14 skills and that one is not among them",
+   "cost": "small"
+  },
+  {
+   "gate": "Outward sends: I-D submissions, staged standards comments, the Zenodo appeal, grant applications, trademark filing",
+   "why": "each carries the owner's name, signature, legal undertaking or payment",
+   "cost": "see the rows"
+  }
+ ],
+ "related": [
+  "https://councilof.ai/claim-maintenance/",
+  "https://councilof.ai/spec/claim-maintenance/register.json",
+  "https://councilof.ai/api/gspc",
+  "https://councilof.ai/root.json",
+  "https://councilof.ai/interop/subject-axis-live-20261027/README.md",
+  "https://councilof.ai/jewels/master-catalogue/index.json"
+ ]
+}

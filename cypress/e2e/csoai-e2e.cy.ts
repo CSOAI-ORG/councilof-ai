@@ -289,3 +289,35 @@ describe('Performance', () => {
     });
   });
 });
+
+// ─── 12. MY RESULTS, LIVE HF 14-AXIS REPORT, ARTICLE-1 CARE, WATCHDOG & DEVTOOLS INSPECT ───
+describe('My Results Hub & DevTools Inspector (window.CSOAI_INSPECT)', () => {
+  it('/my-results loads all 7 interactive tabs, structured JSON-LD, and window.CSOAI_INSPECT with zero overflow or public prices', () => {
+    cy.visit('/my-results/');
+    cy.get('.tab-btn').should('have.length', 7);
+    cy.get('#csoai-structured-evidence-jsonld').should('exist');
+    cy.contains('Live Hugging Face Router 14-Axis Canonical Model-Comparison Matrix').should('be.visible');
+
+    // Switch through all 7 tabs and exercise interactive controls
+    cy.get('[data-tab="step-6-care-sandbox"]').click();
+    cy.get('#run-sandbox-btn').click();
+    cy.get('#sandbox-output-box').invoke('text').should('contain', 'GROUND_AND_SUPPORT');
+
+    cy.get('[data-tab="step-7-automation"]').click();
+    cy.get('#run-hitl-dispatch-btn').click();
+    cy.get('#hitl-dispatch-output').invoke('text').should('contain', 'AWAITING_OPERATOR_REVIEW');
+
+    cy.get('#run-watchdog-harness-btn').click();
+    cy.get('#watchdog-harness-output').invoke('text').should('contain', 'public-incident-vigilance');
+
+    cy.get('#run-live-inspect-btn').click();
+    cy.get('#live-inspect-output').invoke('text').should('contain', '"verdict": "PASS"');
+
+    cy.window().then((win: any) => {
+      expect(win.CSOAI_INSPECT).to.exist;
+      const audit = win.CSOAI_INSPECT.auditDomAndA11y();
+      expect(audit.verdict).to.equal('PASS');
+      expect(audit.public_price_strings_present).to.equal(false);
+    });
+  });
+});

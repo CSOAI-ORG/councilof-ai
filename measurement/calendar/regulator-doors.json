@@ -8,7 +8,8 @@
   "IN_EFFECT": "an application or publication date that has passed",
   "UNVERIFIED": "no official source stating a date could be read; date is null by rule, never guessed"
  },
- "verification_rule": "verification.lane_refetch records a second, independent fetch of the same official URL by the governor lane on 2026-09-14 (FOUND = the evidence text was present in the bytes). Items with lane_refetch NOT_DONE rest on one fetch only and say so.",
+ "verification_rule": "verification.lane_refetch records a second, independent fetch of the same official URL by the governor lane on 2026-09-14 (FOUND = the evidence text was present in the bytes). Items with lane_refetch NOT_DONE rest on one fetch only and say so. An entry re-read after 14 Sep states its own fetches in verification.method.",
+ "linked_from_rule": "Optional. The official page on which source_url was found as a link, for a source that is a file rather than a page. Re-open that page first and follow its link: a site can replace a linked file while the old file stays reachable at its old address (seen 13 Oct 2026 on uk-sovereign-ai-procurement-challenge-4-agents). The alert issue prints it above the file link.",
  "alerts": {
   "offsets_days": [7, 2, 0],
   "applies_to": "status VERIFIED with a date",
@@ -143,18 +144,19 @@
   },
   {
    "id": "uk-sovereign-ai-procurement-challenge-4-agents",
-   "regulator": "UK Sovereign AI (DSIT), challenge with NCSC",
+   "regulator": "UK Sovereign AI Fund (BIST, formerly DSIT), challenge owner NCSC",
    "instrument": "Sovereign AI R&D Procurement Scheme — Challenge 4: Enabling safe AI agent adoption (Batch 1)",
-   "door_type": "funding_competition",
+   "door_type": "procurement_competition",
    "date": "2026-10-16",
    "date_kind": "submission_deadline",
    "time_tz": null,
    "status": "VERIFIED",
-   "source_url": "https://cdn.prod.website-files.com/699b76e1c0f6def91adc6c77/6a91bbc9a127f0cbf855eab5_Competition%20Guidance%20SovAI%20Procurement%20.pdf",
-   "retrieved_at": "2026-09-14T10:45:33Z",
-   "evidence_quote": "The dates for this financial year are: Batch 1: Submit your proposal by 16 October 2026 to receive an outcome on 13 November",
-   "verification": {"method": "competition guidance PDF linked from sovereignai.gov.uk (hosted on that site's CDN)", "lane_refetch": "FOUND"},
-   "notes": "DISPUTED DATE: an older guidance PDF and press coverage said 1 October 2026. This date comes from the PDF the site links today. Suppliers must be on the Approved Supplier List first. Later batches were reported as 31 Dec 2026 and 26 Feb 2027 but are not listed here."
+   "source_url": "https://cdn.prod.website-files.com/699b76e1c0f6def91adc6c77/6a91bbc9a127f0cbf855eab5_88997fa64b36e2a85d673c6ccfb5c1eb_Competition%20Guidance%20SovAI%20Procurement%20.pdf",
+   "linked_from": "https://www.sovereignai.gov.uk/offer-beyond-investment",
+   "retrieved_at": "2026-10-13T08:09:08Z",
+   "evidence_quote": "Submit your proposal by 16 October 2026 to receive an outcome on 13 November",
+   "verification": {"method": "competition guidance PDF linked as 'download pdf' under Procurement on linked_from (hosted on that site's CDN); sha256 3085f011a7ca6aa3, PDF created 2026-09-20; second fetch from another machine at 2026-10-13T08:16:16Z returned the same sha256", "lane_refetch": "FOUND"},
+   "notes": "RE-READ 13 Oct 2026. The page now links a different guidance PDF (created 20 Sep 2026; CDN last-modified 2026-09-20T19:01:39Z). The file this entry cited until today (created 28 Aug 2026, sha256 d06481138bc8c040) is still served at its old address but is not linked from the page, so a fetch of the stored link alone read superseded bytes. The 16 October date is the same in both files. New in the current file: Batch 1 'Opens 15 September 2026'; a Full Application goes in 'in line with the Competition Dates'; 'The lead applicant must carry out at least 50% of the work.' It is a procurement competition for an R&D services contract ('This Scheme is a competitive procurement mechanism'), not a consultation and not a grant. Only suppliers on the Approved Supplier List can submit; the list is joined through an Expression of Interest form, which the guidance asks for 'at least two weeks before' a deadline. Later batches in the current file are 31 December 2026 and 26 February 2027; they are not listed here as doors. Kept from the 14 Sep read, not re-checked: an older guidance PDF and press coverage said 1 October 2026."
   },
   {
    "id": "ncsc-open-consultation",

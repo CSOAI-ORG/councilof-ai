@@ -1,0 +1,33 @@
+name: Key evidence profile replay
+on:
+  pull_request:
+    paths:
+      - 'harness/interop/key-evidence-profile/**'
+      - 'public/interop/key-evidence-profile/**'
+      - '.github/workflows/key-evidence-profile.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'harness/interop/key-evidence-profile/**'
+      - 'public/interop/key-evidence-profile/**'
+      - '.github/workflows/key-evidence-profile.yml'
+permissions:
+  contents: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r harness/interop/key-evidence-profile/requirements.txt
+      - name: Reproduce baseline and candidate controls
+        working-directory: harness/interop/key-evidence-profile
+        run: |
+          python upstream/trust/key-evidence-states-v0/check.py
+          python test_profile.py
+          python replay.py --check
+          python test_build.py
+          python build.py --check

@@ -218,7 +218,9 @@ jobs:
           fi
 
       - name: verify exact Hugging Face/Kaggle parity
-        if: steps.choose.outputs.parity == 'true' && !inputs.dry_run
+        # Other destinations can fail after these two publish. Still verify their
+        # public bytes and retain the parity result; the original failure stays red.
+        if: ${{ !cancelled() && steps.choose.outputs.parity == 'true' && !inputs.dry_run }}
         # Resolve Kaggle's highest Ready version explicitly: its unversioned download pointer can
         # remain stale after a version is Ready. Wait only when that newest Ready archive is behind.
         # Keep the wait below the 30-minute job ceiling so the report artifact is still uploaded on failure.
