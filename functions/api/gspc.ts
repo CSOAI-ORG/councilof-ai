@@ -793,11 +793,10 @@ export const onRequestGet: PagesFunction = async (context) => {
           },
           subject: {
             ...bySelectedFamily("subject"),
-            note: "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). Most are " +
-              "declared slots, UNMEASURED until a frozen sha-pinned bank with n_valid >= 30 passes the gate; " +
-              "one (claim-maintenance) is MEASURED that way, kind 'measured-subject', and still measures its " +
-              "own subject class rather than models, so it has no leader, no accuracy and no separation and " +
-              "joins no mean. Census checks are a DISCOVERED check grid, never scores here. No aggregate " +
+            note: "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). All 11 are " +
+              "MEASURED via frozen sha-pinned banks with n_valid >= 30 (kind 'measured-subject'), measuring " +
+              "their own subject class rather than models, so they have no leader, no accuracy and no separation " +
+              "and join no mean. Census checks are a DISCOVERED check grid, never scores here. No aggregate " +
               "score and no overall rank.",
           },
           financial: {
