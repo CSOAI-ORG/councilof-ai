@@ -109,6 +109,10 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   // render browser and the snapshot is refused as BAKED-FETCH-FAILURE (measured 2026-09-29).
   "/tool-commons",
   "/tool-commons/",
+  // 2026-11-02: /tool-commons and /mcp-tools are in-app redirects to /dashboard?tab=tools now
+  // (the orphan ToolCommons page folded into the workspace tools pane). They STAY in this skip
+  // list: a snapshot would bake the redirect target's dashboard under the wrong URL, and skipping
+  // leaves the SPA shell, which hydrates on the live host and lands the visitor on the pane.
   // /corrections is snapshotted again from 2026-09-30 (owner goal, journey A: a reader without
   // JavaScript, a crawler or an agent got an 11 KB shell with no entries). Its ledger read goes
   // through the /api/ proxy like every other route; a snapshot that bakes a fetch failure is still
