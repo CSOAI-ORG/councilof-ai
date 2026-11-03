@@ -286,6 +286,14 @@ jobs:
           node scripts/axis-state-gate.mjs --selftest
           node scripts/axis-state-gate.mjs dist/client --board-reference prerender-board-reference.json
 
+      # D17 (work plan): the board's run_attestation strings are claims about the run
+      # artefacts' bytes. This gate reads the bytes and blocks on drift — a typed value
+      # where a pointer belongs may not move silently.
+      - name: Fin run-attestation gate — board strings agree with the run artefacts
+        run: |
+          node scripts/gate-fin-run-attestation.mjs --selftest
+          node scripts/gate-fin-run-attestation.mjs
+
       - name: Dist bundle guard — stranger paths + API functions present
         run: |
           set -euo pipefail
