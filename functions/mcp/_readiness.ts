@@ -699,6 +699,10 @@ const FRAMEWORKS: Framework[] = [
 
 const FRAMEWORK_IDS = FRAMEWORKS.map((f) => f.id);
 
+/** The accepted framework ids, exported for surfaces that validate against the same enum
+ *  (the A2A skill framework-readiness validates here before calling readinessResult). */
+export const READINESS_FRAMEWORK_IDS: string[] = FRAMEWORK_IDS;
+
 /**
  * A small, honest sector pointer: which of the nine frameworks COMMONLY bind the sector. It is a
  * pointer to help the caller order their work, never a determination that a framework does or does

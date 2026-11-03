@@ -284,6 +284,36 @@ test.describe('Globe & Sovereign Surfaces', () => {
     await expect(page.getByTestId('world-panel-risk')).toContainText(/worked example/i);
   });
 
+  // P6 accessibility pass (2026-11-02): the tabs follow the WAI-ARIA tabs pattern —
+  // role=tablist/tab/tabpanel, aria-selected (not just aria-current), panels labelled by their
+  // tab, roving tabIndex, and Arrow/Home keys move selection and focus together.
+  test('World maps tabs follow the ARIA tabs pattern (roles, selection, keyboard)', async ({ page }) => {
+    await page.goto('/map?tab=bridges', { waitUntil: 'networkidle' });
+    const tablist = page.getByRole('tablist', { name: 'World map views' });
+    await expect(tablist).toBeVisible();
+    const tabs = tablist.getByRole('tab');
+    await expect(tabs).toHaveCount(3);
+    // Selection state lives on the tabs; exactly one is selected and it is the URL's tab.
+    await expect(page.getByTestId('world-tab-bridges')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByTestId('world-tab-regions')).toHaveAttribute('aria-selected', 'false');
+    // The active panel is a labelled tabpanel; roving tabIndex keeps one tab stop.
+    const panel = page.getByRole('tabpanel', { name: 'What governs what' });
+    await expect(panel).toBeVisible();
+    await expect(page.getByTestId('world-tab-bridges')).toHaveAttribute('tabindex', '0');
+    await expect(page.getByTestId('world-tab-regions')).toHaveAttribute('tabindex', '-1');
+    // Keyboard: ArrowRight from the selected tab moves selection AND focus.
+    await page.getByTestId('world-tab-bridges').focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(page).toHaveURL(/tab=regions/);
+    await expect(page.getByTestId('world-tab-regions')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByTestId('world-tab-regions')).toBeFocused();
+    await page.keyboard.press('ArrowRight');
+    await expect(page).toHaveURL(/tab=risk/);
+    await page.keyboard.press('Home');
+    await expect(page).toHaveURL(/tab=bridges/);
+    await expect(page.getByTestId('world-tab-bridges')).toBeFocused();
+  });
+
   test('Old map URLs redirect into their /map tab', async ({ page }) => {
     await page.goto('/regions', { waitUntil: 'networkidle' });
     await expect(page).toHaveURL(/\/map\?tab=regions/);
