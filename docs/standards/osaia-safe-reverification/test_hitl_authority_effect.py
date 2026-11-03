@@ -3,6 +3,16 @@ try:
     import jsonschema
 except ImportError as e:
     print('SKIP jsonschema unavailable:', e); sys.exit(2)
+# Probe with a MALFORMED value: an unarmed checker "conforms" everything (jsonschema
+# 4.26 with no date-time backend answers True even for 'not-a-date-time'), so a
+# well-formed probe cannot tell armed from absent.
+if jsonschema.FormatChecker().conforms('not-a-date-time', 'date-time'):
+    # jsonschema only enforces `format: date-time` when a real checker is installed
+    # (rfc3339-validator). Without it this suite half-runs: a VERIFIED record with an
+    # empty or malformed timestamp sails through and the failure reads as a schema
+    # bug instead of a missing dependency. Say so, and do not count the run.
+    print('SKIP date-time format checks unavailable (install rfc3339-validator==0.1.4): '
+          'without it malformed verification timestamps pass this suite'); sys.exit(2)
 ROOT=pathlib.Path(__file__).resolve().parent
 S=json.loads((ROOT/'hitl-authority-effect-v0.1.schema.json').read_text())
 E=json.loads((ROOT/'hitl-authority-effect.example.json').read_text())
