@@ -178,10 +178,12 @@ export function cardNote(state, { npmId, freeDoor, doorTools, preparedVersion })
  */
 export function doorInstallLine(state, { npmId, stdioLiteLine, freeDoor, doorTools, preparedVersion }) {
   const adv = stdioAdvertisement(state, { preparedVersion, doorTools });
-  const pinPart = adv.versionMismatch ? ` ${adv.versionMismatch}.` : "";
+  const pinPart = adv.versionMismatch
+    ? ` ${adv.versionMismatch.charAt(0).toUpperCase()}${adv.versionMismatch.slice(1)}.`
+    : "";
   return (
-    `npm ${npmId}@${state.version} (stdio-lite ${stdioLiteLine}) — it carries ${toolClause(state, doorTools)} ` +
-    `and ${state.deprecationPhrase} (measured ${state.measuredDay}).${pinPart} ` +
+    `npm ${npmId}@${state.version} (stdio-lite ${stdioLiteLine}): it carries ${toolClause(state, doorTools)}, ` +
+    `and it ${state.deprecationPhrase} (measured ${state.measuredDay}).${pinPart} ` +
     `Ask it for its tools/list, or use the free door ${freeDoor}`
   );
 }
