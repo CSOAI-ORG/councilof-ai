@@ -1,0 +1,24 @@
+name: hf-space-restart
+on:
+  workflow_dispatch:
+    inputs:
+      repo_id:
+        description: "HF Space repo id (owner/name)"
+        required: true
+        type: string
+permissions: {}
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restart Space via HF API
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          REPO_ID: ${{ github.event.inputs.repo_id }}
+        run: |
+          set -eu
+          code=$(curl -sS -o /tmp/hf.out -w '%{http_code}' -X POST \
+            -H "Authorization: Bearer $HF_TOKEN" \
+            "https://huggingface.co/api/spaces/$REPO_ID/restart")
+          echo "HTTP $code"; cat /tmp/hf.out
+          [ "$code" = "200" ] || [ "$code" = "202" ]
