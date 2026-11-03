@@ -26,6 +26,12 @@ import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
 // /first-fine-watch /xrpl-attest. They are registered below, along with the
 // surfaces this front-door pass promotes (/watchdog-hub, /workbench, /start).
 export const PRIMARY_PATHS = new Set<string>([
+  // Menu extension (PR 3730, 2 Nov): paths the Council OS menu actively promotes are
+  // registered here so they never wear the archive banner (see the invariant above).
+  "/him", // MEOK H.I.M. — the named human-in-the-loop front door
+  "/notes/daily", // GSPC daily reports index — the dated measurement record
+  "/stablecoins/deployments", // tokenised-asset deployments, as published
+  "/packs/eu-article-50", // the published Article 50 marking runbook
   "/estate", // the estate census; a primary index page, never an archived one
   "/compliance-training-world/catalog.html", // games-catalog entry; a catalogued path ships primary, never archived
   "/",
