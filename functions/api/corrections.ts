@@ -44,6 +44,27 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-1103-01",
+      "date": "2026-11-03",
+      "detected_at": "2026-11-01",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "A name-for-name audit on 2026-11-01 extracted the published 0.2.4 tarball's own manifests (gspc-tools.json, paid-tools.json) and diffed them against the live door's tools/list; the drift was re-measured on 2026-11-03",
+        "published_at is UNRECORDED: the deploy that first serves this corrected guide had not happened when this entry was written"
+      ],
+      "what_was_wrong": "public/llms-install.md — the agent-facing installation guide — typed tool counts as if they were stable facts: it advertised the npm release at '52 tool names' while the live door it installs against served 53 names from 2026-10-30 (axis_watchdog-ingest) and 54 names from 2026-11-02 (framework_readiness). An agent following the guide compared the door against a stale count and could conclude the deployment was wrong, when the typed number was. The same typed-count defect had already bitten the axes index (a lid saying 23 beside an h1 saying 22) and the tools-match-door test (expecting 47 free names the week the door reached 48).",
+      "how_caught": "An internal audit that ran the guide's own publication test: npm pack csoai-gspc-mcp@latest, extract the tarball's manifests, diff name-for-name against the live door's tools/list. The diff was empty on 2026-11-01 and the door grew two names by 2026-11-03, which made the typed '52' wrong twice in three days.",
+      "what_changed": "The guide no longer types tool counts at all. It points at the two sources of truth — the live door's tools/list and the published tarball's own manifests diffed name-for-name — and keeps the measured values only as dated history, explicitly marked as not the contract. The same de-typing landed in tools-match-door's test (counts derived; only the permanent facts pinned: disjoint banks, free-forever anchors, mill-tool phantoms absent) and in the axes-index generator (counts derived from the board, with a LID_COUNT_MISMATCH guard that refuses to render a totals row the page cannot explain).",
+      "status": "CORRECTED - at the producers",
+      "reached_the_public": true,
+      "evidence": [
+        "https://councilof.ai/mcp (tools/list, request time)",
+        "https://registry.npmjs.org/csoai-gspc-mcp (0.2.4, published 2026-10-28T16:48:34.768Z)",
+        "public/llms-install.md; scripts/derive-fin-run-attestation.mjs; scripts/surface/build-axis-pages.mjs; mcp/gspc-server/tools-match-door.test.ts"
+      ]
+    },
+    {
       "id": "C-2026-1006-13",
       "date": "2026-10-06",
       "detected_at": "2026-10-06",
