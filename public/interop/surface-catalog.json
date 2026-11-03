@@ -1,6 +1,6 @@
 {
   "schema": "csoai.surface-catalog/1",
-  "as_of": "2026-09-06",
+  "as_of": "2026-11-03",
   "purpose": "Every live public surface, machine-readable — the single catalog of all sites, endpoints, datasets and rails. Strangers and lanes quote from here; /api/state holds the counts.",
   "doctrine": "measurement not certification; never certify/accredit/enforce/endorse/tokenize.",
   "sites": {
@@ -43,6 +43,8 @@
   "public_artifacts": {
     "paper": "docs/operations/paper/FAIR_TIES_DRAFT_2026-08-26.md (v3)",
     "verifier": "scripts/verify_signed.py + action-verify-attestation",
+    "agent_skills": "/.well-known/agent-skills/index.json (15 Agent Skills, each with a digest; one SKILL.md per skill at /.well-known/agent-skills/<id>/SKILL.md - the A2A door POST /api/a2a executes them)",
+    "agent_discovery": "/.well-known/agent-card.json (A2A v1.0 card; names every skill) + /.well-known/agent.json + /.well-known/ai-catalog.json + /.well-known/api-catalog",
     "scorecard_engine": "harness/mcp/security-scorecard/{score.py,stat_suite.py,gate_sim.py}",
     "rwa_engine": "harness/rwa-attest/{rwa_attest.py,control_facts_measure.py,index_measure.py}"
   },

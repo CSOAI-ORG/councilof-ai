@@ -957,6 +957,9 @@ was a number that had stopped being true. Count the rows.
    `claude mcp add --transport http council-of-ai https://councilof.ai/mcp/free`
 2. A2A (agent to agent) — `POST https://councilof.ai/api/a2a`, JSON-RPC v1.0; SendMessage answers
    with the live lid derived from /api/gspc. The interface `/.well-known/agent-card.json` names.
+   Agent Skills: `GET https://councilof.ai/.well-known/agent-skills/index.json` lists the 15
+   executable skills, each with a digest and one `SKILL.md` at
+   `/.well-known/agent-skills/<id>/SKILL.md`; every skill names the exact call it makes.
 3. AG-UI (agent to user) — `GET https://councilof.ai/api/agui/gspc-state`, SSE STATE_DELTA +
    TEXT_MESSAGE_CONTENT derived from /api/gspc per request. Presentation transport: it renders
    the board and awards nothing. Human view of the same board: https://councilof.ai/dashboard
