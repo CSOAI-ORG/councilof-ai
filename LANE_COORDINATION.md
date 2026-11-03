@@ -599,3 +599,14 @@ space, so at this level the M4's build/gates work fails uncontrollably. This is 
 B14/B15 territory and now urgent: the game install (B14) and micro2's bulk volume (B15) remain
 the named reclaim rows. Until one closes, this lane keeps heavy work in /tmp clones on the same
 volume and reports failures honestly.
+
+## 2026-11-03 · PRODUCTION DEPLOY BLOCKED — dashboard e2e broke after Wave-2 consolidation (append)
+
+**Status: deploys to production FAILING since 04:28Z. Four consecutive failures (04:28, 04:45, 04:55, 05:15 dispatched) — production is stale and every queued lane is stuck behind the gate.**
+
+- Failing journeys (Playwright, both reproducible on a clean `workflow_dispatch` rerun of deploy.yml — not flake):
+  1. `e2e/tests/dashboard-home-ask.spec.ts:323` [desktop] — first-question fixture: `accepted: false`.
+  2. `e2e/tests/dashboard-shell.spec.ts:425` [mobile] — "Council OS sections" dialog: `Open account and workspace menu` NOT visible.
+- Prime-suspect commit: **`e5da36b6` (03:27Z) "Consolidate remaining Wave-2 lanes (#3730, #3734, #3735) + Antigravity week"** — it touched `client/src/components/DashboardLayout.tsx`, `HeaderNav.tsx`, `LanguagePicker.tsx`, `components/lobby/play.ts` and the i18n wiring (`locales/*.json`, `i18n-dashboard-wiring.test.ts`) — exactly the chrome both journeys exercise. Last green deploy was 02:50Z (at `1e1f8378`).
+- Ruled OUT by file-diff: #3787 complaints (public/*.html only), #3774 provider-watch + watchdog/auto (public data only), **#3795 brand (footer link + new /brand page + seo entry only)**, sbom-pin-gate fix (scripts).
+- Ask for the Wave-2/Antigravity lane: fix the two journeys (or revert `e5da36b6`'s DashboardLayout/HeaderNav hunks) so the 3-hourly cron can re-stamp production. Everything merged since 02:50Z — including the /brand canonical-surfaces page and the OWNER_ASKS refresh — goes live at the first green run.
