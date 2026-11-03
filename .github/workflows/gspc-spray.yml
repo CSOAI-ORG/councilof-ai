@@ -100,7 +100,7 @@ jobs:
         # approved. Qualifying a new serializer is an owner act on its own evidence; pinning to
         # the qualified pair is not, and it is what the publisher was actually tested against.
         run: |
-          pip install --quiet cryptography huggingface_hub pyarrow build twine
+          pip install --quiet cryptography huggingface_hub pyarrow build twine six
           pip install --quiet "kaggle==2.2.4" "kagglesdk==0.1.35"
           python3 -c "import importlib.metadata as m; assert (m.version('kaggle'), m.version('kagglesdk')) == ('2.2.4','0.1.35'), 'the qualified Kaggle SDK pair is not what is installed'"
 
