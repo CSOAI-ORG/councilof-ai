@@ -1,0 +1,13 @@
+{
+  "slug": "eu-ai-act-art50",
+  "title": "EU AI Act Article 50 — transparency & marking of AI-generated content",
+  "doctrine": "human-in-the-loop attestation of evidence — NOT conformity certification",
+  "segments": ["ai-platforms", "enterprise", "sme", "government", "fortune500", "banks", "lfx-orgs"],
+  "checkpoints": [
+    {"id": "art50.census-current", "requirement": "Generator content-marking census current within 30 days", "mode": "machine", "evidence": {"kind": "bundle", "obligation": "article-50"}},
+    {"id": "art50.marking-drift", "requirement": "Named providers' marking surfaces tracked for byte changes", "mode": "machine", "evidence": {"kind": "bundle", "obligation": "article-50", "subjectFilter": "art50_marking"}},
+    {"id": "art50.deployer-disclosure", "requirement": "Deployer's own end-user disclosure of AI-generated content", "mode": "human", "guidance": "Only the deployer can attest user-facing disclosure — no external measurement can observe it. Human evidence: policy URL + screenshot + owner name."},
+    {"id": "art50.deepfake-disclosure", "requirement": "Deepfake disclosure practices (Art 50(4)) where applicable", "mode": "human"},
+    {"id": "art50.accountable-owner", "requirement": "Named accountable owner signs this attestation cycle", "mode": "human"}
+  ]
+}
