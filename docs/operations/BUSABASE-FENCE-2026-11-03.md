@@ -120,3 +120,34 @@ Usage at the time of the audit: `busabase` 12.78 GB / 82,504 files · `lanes` 12
 - It did not change the estate's branch protection or the merge queue.
 - It did not delete anything under `/Users/nicholas/csoai-work` — that tree was reclaimed by the
   sibling lane that owns the resolver, after its own Hugging Face verification.
+
+## 5. The class: four stops, one rule
+
+Four separate mechanisms have now stopped work that was going well, and they are the same
+mechanism:
+
+| # | what stopped | the shape |
+|---|---|---|
+| 1 | the merge loop refused every round below 50 open PRs | a threshold the estate legitimately grows past |
+| 2 | the clawd reclaim compared **totals** between a source and a copy | a comparison whose local side can drift |
+| 3 | `board-production-anchor` on the build pod | a **local** checkout compared against the **live** board |
+| 4 | a green PR invalidated because the base moved underneath it | a comparison whose local side can go stale |
+
+The rule, which is the same grammar the board already uses for counts:
+
+> A comparison against a live source must first establish that the local artefact is CURRENT,
+> and a comparison whose local side can go stale must degrade to **"cannot answer"** — never to
+> **"fails"**. "The base moved" is not a content failure; it is the queue's job.
+
+`scripts/ops/pre-push-pod.sh` applies it to the gate path:
+
+- it **states the revision it is about to compare against** (`comparing HEAD <sha> against
+  origin/master <sha>`), so a stale local is visible in the gate's own output instead of being
+  invisible;
+- when the base has moved it says so **and says what to do** — re-sync and re-run — rather than
+  letting a live-vs-local mismatch surface as a content verdict;
+- `--resync` makes the hook fast-forward the branch onto `origin/master` first, and **fails the
+  push** if that rebase fails, so a stale tree is never silently gated.
+
+Installed on the build pod at `/root/.config/git/hooks/pre-push` with an absolute
+`core.hooksPath`, so the gate is now automatic there and fails closed.
