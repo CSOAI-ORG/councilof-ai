@@ -314,6 +314,7 @@ const LicensingAgreement = lazy(() => import("./pages/legal/LicensingAgreement")
 const LicenceManifest = lazy(() => import("./pages/LicenceManifest"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
 const PublicPrivacy = lazy(() => import("./pages/legal/PublicPrivacy"));
+const RefundPolicy = lazy(() => import("./pages/legal/RefundPolicy"));
 const Disclaimers = lazy(() => import("./pages/legal/Disclaimers"));
 const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
 const Council = lazy(() => import("./pages/Council"));
@@ -1132,6 +1133,8 @@ function AppShell() {
                   <Route path="/terms-of-service" component={TermsOfService} />
                   <Route path="/terms" component={TermsOfService} />
                   <Route path="/legal/terms" component={TermsOfService} />
+                  <Route path="/refund-policy" component={RefundPolicy} />
+                  <Route path="/refunds" component={RefundPolicy} />
                   <Route path="/disclaimers" component={Disclaimers} />
                   <Route path="/legal/disclaimers" component={Disclaimers} />
                   <Route path="/dpa" component={ContentReviewNotice} />
