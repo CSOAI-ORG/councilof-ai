@@ -29,6 +29,11 @@ export const NODE_TEST_FILES = [
   'scripts/contract-convergence.test.mjs',
   'scripts/feed-delivery-kit.test.mjs',
   'scripts/harness-x/render.test.mjs',
+  // The hygiene sweeper planner: a node:test file vitest cannot collect, named here so
+  // pr-gates.yml runs it under node --test (same reason as sitemap-withdrawal below).
+  // No apostrophes in these comments: the registry and the workflow extract entries by
+  // naive quote matching, and a stray quote inside the array corrupts the parsed list.
+  'scripts/hygiene/sweeper.node-test.mjs',
   'scripts/research/watch-sources.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
   'scripts/review/first-ask-completion.test.mjs',
@@ -52,13 +57,18 @@ export const NODE_TEST_FILES = [
   // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
   'council-os/gspc-pontius-boundary.test.mjs',
   'scripts/watchdog/source-status.test.mjs',
-  // 2026-11-02: six more node:test files arrived via merged lanes and were never
-  // registered, so `npm test` (root vitest) reported each as a failed suite
-  // ("No test suite found"). Each was verified green under `node --test` before
-  // registration; the pr-gates node --test step reads this same list, so coverage
-  // moves with the exclusion — nothing is hidden, it is run by the runner that can
-  // collect it. NOTE: no apostrophes in comments here — the registry script extracts
-  // every quoted fragment of this block as a file path.
+  // 2026-11-02: seven more node:test files that no gate ran. mcp/gspc-server/wired-tools was
+  // already excluded from vitest but was never executed anywhere; the other six were collected
+  // by a bare vitest run and reported as failed suites. Two of them were also RED: the
+  // journey-backends file had read a journey_backends block that the generated capability
+  // registry never carried, and card-counts caught CLAUDE.md pinning a card_count the estate's
+  // own rule forbids. A test nobody runs is a comment.
+  //
+  // NOTE FOR THE NEXT EDITOR: this list is read by a plain quote-scan, so a comment here must
+  // not contain a quoted word - a comment is not a path. scripts/node-test-registry.mjs now
+  // strips comments before reading, but the shell step in pr-gates.yml does not, so keep it
+  // plain anyway.
+  'mcp/gspc-server/wired-tools.test.mjs',
   'capabilities/card-counts.test.mjs',
   'capabilities/journey-backends.test.mjs',
   'integrations/integrations.test.mjs',
@@ -98,13 +108,6 @@ export default defineConfig({
     },
   },
   test: {
-    // 2026-11-02: the default 5s timeout predates the corpus. Whole-corpus walks (the
-    // 3,197-card mill set, byte-position tamper sweeps at 18s+, sitemap builds over 33k
-    // public files) blew it under full-suite parallel load, and per-test patches were
-    // turning into whack-a-mole — nine heavy tests each red only inside `npm test`.
-    // 20s covers every standalone-measured test with headroom; explicit per-test
-    // timeouts (reach 120s, sandbox-wall 120s, card corpus scaled) still override it.
-    testTimeout: 20_000,
     // packages/** runs under `node --test` (see each package's own test script);
     // vitest cannot collect a node:test file and reports "No test suite found",
     // which made `npm test` red for three suites that are green under their own
@@ -115,6 +118,6 @@ export default defineConfig({
     // copies resolve their fixture paths relative to dist/, so they fail on files that are
     // present in the source tree. dist/ is gitignored, so CI never saw it and only a local
     // run after a build went red, which reads like a broken test rather than a duplicate.
-    exclude: [...defaultExclude, 'dist/**', '**/dist/**', '**/.git-wt-*/**', 'docs/**/*.test.mjs', 'mcp/gspc-server/wired-tools.test.mjs', 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs', ...NODE_TEST_FILES],
+    exclude: [...defaultExclude, 'dist/**', '**/dist/**', '**/.git-wt-*/**', 'docs/**/*.test.mjs', 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs', ...NODE_TEST_FILES],
   },
 });

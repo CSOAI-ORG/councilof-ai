@@ -43,11 +43,41 @@ The truncated cells were hiding **116 surfaces the estate had already read**, 67
 
 | What | The 2026-11-01 edition said | Today | State |
 |---|---|---|---|
-| the board | 33 axes · 23 measured · 10 unmeasured | **34 axes · 23 measured · 11 unmeasured** | SUPERSEDED — a 34th axis, `watchdog-ingest`, was declared UNMEASURED by another lane |
+| the board | 33 axes · 23 measured · 10 unmeasured | **34 axes · 34 measured · 0 unmeasured** | SUPERSEDED THREE TIMES TODAY — a 34th axis (`watchdog-ingest`) was declared UNMEASURED at 04:33Z, `claim-maintenance` was promoted to MEASURED at 07:03Z, and the remaining subject axes acquired frozen sha-pinned banks with runs behind them. Each step is named, not dropped |
 | the public root | 331 leaves | **428 leaves** | SUPERSEDED — the root advanced; the edition did not |
 | the docket re-read | 126 URLs, 89 readable | **242 URLs, 156 readable** | SUPERSEDED — by a repaired defect, not by a change in the field |
 
 A dated record is not rewritten and the error is kept visible. The 2026-11-01 edition stands as it was published.
+
+## 2b. The board moved three times today, and the residue it left
+
+The first build of this edition read the board as **34 axes · 23 measured · 11 unmeasured**. The next read was
+**34 · 24 · 10** — **`claim-maintenance` moved to MEASURED** — and the reading at publication time is
+**34 · 34 · 0**: the remaining subject axes acquired frozen sha-pinned banks with runs behind them.
+
+The board is being actively re-measured by other lanes today. So the figure in this edition is a **reading at
+a stated timestamp**, the live board remains the authority, and the chain of readings is published rather than
+smoothed over.
+
+The axis on the board now carries:
+
+| field | value |
+|---|---|
+| status / kind | `MEASURED` · `measured-subject` |
+| method | `claim-maintenance v0.2` |
+| method_sha | `32470d102112154b14a4d5530d71d7a30ecc2acdc5cd8c906c21f672b1deeef7` |
+| bank | `public/interop/claim-maintenance-wave-2026-10-28.json` |
+| bank_sha256 | `a62b017a9081b817613c03887c3c6690597a2016ea175f9d95c211d593db0877` |
+| facts_as_of | `2026-10-28T06:05:00Z` |
+| n | 174 |
+
+**The residue.** The corrections ledger carries 93 entries. Four of them mention claim-maintenance — and all
+four are dated 29–30 September, concerning the claim-maintenance *category*'s re-read schedule and the
+23-axis count, not the axis's promotion. **None of them names this promotion.** So the promotion is visible
+on the board and absent from the dated ledger of changes.
+
+This catalogue records what the board says and does not assert who ruled it. The missing ledger entry is
+carried as an owner gate rather than quietly assumed away.
 
 ## 3. The second text-level diff, over the repaired table
 

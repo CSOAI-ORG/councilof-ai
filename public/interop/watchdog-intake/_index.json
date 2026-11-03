@@ -1,8 +1,8 @@
 {
  "schema": "csoai.watchdog-signal-index/0.1",
- "as_of": "2026-10-30T05:10:40Z",
- "run_id": "20261030T051040Z",
- "run_artifact": "/interop/watchdog-intake/20261030T051040Z.json",
+ "as_of": "2026-11-02T06:34:29Z",
+ "run_id": "20261102T063429Z",
+ "run_artifact": "/interop/watchdog-intake/20261102T063429Z.json",
  "measure": "PUBLIC SOURCE REACHABILITY AND PARSEABILITY — a count of sources probed",
  "count_grammar": "n counts SOURCES PROBED, the same grammar as effect-binding's 'tool-call servers probed'. It is never pooled with bank-item n and never appears in a mean. REACHABLE means the source answered 200 with a documented shape; UNCHECKABLE means it answered but the body was not the documented shape; UNREACHABLE means it did not answer. These are DIFFERENT facts and are never summed into a single figure that would read like a score.",
  "not_a": [
@@ -92,28 +92,28 @@
    "name": "CISA Known Exploited Vulnerabilities catalog",
    "kind": "advisory-feed",
    "state": "REACHABLE",
-   "count": 1764,
+   "count": 1766,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "38a7172a5f26470dc7632aaa1c6cff4a51fe7bfec8cdce978a19b816a751e34d"
+   "body_sha256": "3aa9cf3c01f116362a29d111702979175453c425e3733bde80fc4f6f8e2294e5"
   },
   {
    "source_id": "nvd-cve-api",
    "name": "NIST National Vulnerability Database CVE API 2.0",
    "kind": "advisory-feed",
    "state": "REACHABLE",
-   "count": 416948,
+   "count": 417788,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "38e6cdc16848a9212ede62420a22fb44bba378a3aa3121a39361344b82516222"
+   "body_sha256": "2a261f66a8b9483ff1adbbbe22003155d08b1b1f95056e76e326ed47a135ec2a"
   },
   {
    "source_id": "ghsa-api",
@@ -127,7 +127,7 @@
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "8346c45131537d2a8d546fa98997dd468c35fb0980ffb918d063d450a4075f07"
+   "body_sha256": "5b3c89e01c6bc08ee5a88d90b33ae625f3801bcd90f4dbb43b14d631f50c96a0"
   },
   {
    "source_id": "osv-query",
@@ -141,7 +141,7 @@
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "d300ec18551ce40170b8d055241c1f6096c676dae41ea8f4c976bda91c206819"
+   "body_sha256": "dc87d029891689fc1cf9f3a9b1ec77e5a3489d4cc833520180cb565ee9f2fd2d"
   },
   {
    "source_id": "mitre-cve",
@@ -195,20 +195,20 @@
     "serving-fidelity",
     "provenance"
    ],
-   "body_sha256": "0d047cba6a11f16b5ddbc2b25e55250339ce3ddf39b26d08a2187531a5ff4cf3"
+   "body_sha256": "56611fd7ad7855d961f10abc471998245b09f27ba958ca86056d9ca47589b21e"
   },
   {
    "source_id": "openrouter",
    "name": "OpenRouter model catalog API",
    "kind": "model-registry",
    "state": "REACHABLE",
-   "count": 456,
+   "count": 452,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "serving-fidelity"
    ],
-   "body_sha256": "7b501cd7e8611a11e46e16b9cf7d50b657712e73df9f40f67ff0eead759071f3"
+   "body_sha256": "ef757d41e9393595e2b91274837c82c0c548e30062148ed5aaeb5690dd8067fa"
   },
   {
    "source_id": "atlas-current",
@@ -275,14 +275,14 @@
    "name": "Sigstore Rekor transparency log",
    "kind": "transparency-log",
    "state": "REACHABLE",
-   "count": 3463517530,
+   "count": 3515963075,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "provenance",
     "provenance-controls"
    ],
-   "body_sha256": "d039b81ec7d1dcddae77176fed1e6596a5187a3f7881f9b0ecaa24da072eeafe"
+   "body_sha256": "b05efa74009f55029ab84ae869b5a8e9ff5c883e8713f123b8280caeb429c6d0"
   },
   {
    "source_id": "openssf-scorecard",
@@ -296,7 +296,7 @@
     "supply-chain",
     "provenance-controls"
    ],
-   "body_sha256": "4966e6884da74d5c9b6d3b237b935c89b70c5cae6e241fde554d0f4f15a0075c"
+   "body_sha256": "5a28b55faa76972cafee94a6491328fe7ddf9551d1b61225303222a064e92317"
   },
   {
    "source_id": "safe-repo",
@@ -347,8 +347,8 @@
   {
    "id": "aiid",
    "name": "AI Incident Database",
-   "consequence": "AI incident coverage CANNOT be measured continuously from a public endpoint today. It is a real gap, and it is a gap in the SOURCE, not in our reader.",
-   "next": "Ask the AIID maintainers for a public incident JSON/CSV export path, or ingest their published Excel export on a slower cadence. Until then this row stays a published gap."
+   "consequence": "AI incident coverage CANNOT be measured continuously from a public unauthenticated endpoint today. It is a real gap, and it is a gap in the SOURCE, not in our reader. A gap that is visible is a gap; a source that answers 200 with a body nobody can read is worse, because it reads as coverage.",
+   "next": "Ask the AIID maintainers for a public incident JSON/CSV export path or an integration account — their README names that route explicitly ('if you maintain a research or product integration and need a higher volume than a normal account, please get in touch'). Until then this row stays a published gap."
   },
   {
    "id": "nvd-cve-feed",

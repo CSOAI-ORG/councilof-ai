@@ -8250,6 +8250,34 @@
       "order": 47
     },
     {
+      "id": "framework_readiness",
+      "kind": "mcp_tool",
+      "name": "framework_readiness",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [
+        "framework"
+      ],
+      "order": 47
+    },
+    {
       "id": "axis_swarm",
       "kind": "mcp_tool",
       "name": "axis_swarm",
@@ -9377,6 +9405,47 @@
         "safe": true
       },
       "source": "functions/api/a2a/key.ts"
+    },
+    {
+      "id": "framework-readiness",
+      "kind": "a2a_skill",
+      "name": "Framework readiness checklist (deterministic)",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"<id>\"}} and the answer is computed in-process by the same module the MCP tool framework_readiness calls, so the two doors cannot disagree: per item, the published provision it is keyed to, a plain-words requirement summary, the evidence that would show readiness, and the question it opens for the caller's own compliance function. Optional sector and role are echoed as pointers and notes. There is no score and no pass or fail: a checklist lays out what evidence would be measured, it does not certify compliance, and it is not legal advice or a conformity assessment.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "tags": [
+        "eu-ai-act",
+        "dora",
+        "nis2",
+        "gdpr",
+        "iso-27001",
+        "nist-csf",
+        "soc2",
+        "pci-dss",
+        "cra",
+        "readiness",
+        "deterministic"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"eu-ai-act\"}}",
+        "SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"gdpr\",\"sector\":\"healthcare\"}}"
+      ]
     }
   ]
 }
