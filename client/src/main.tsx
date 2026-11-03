@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { trpc, createTRPCClient } from './lib/trpc';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
+import './lib/i18n';
 import './styles/index.css';
 
 // Create React Query client
