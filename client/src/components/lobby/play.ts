@@ -106,22 +106,6 @@ export const PLAY_CARDS: PlayCard[] = [
       "No playable route. A dramatised proof-of-concept page exists elsewhere on the site; it is a scripted demonstration, not a match, so it is not linked from here.",
   },
   {
-    id: "ruler",
-    title: "The Ruler — label beside the models",
-    blurb:
-      "Label the same frozen items the published models answered, and bet which seat is the model's. The other seat is a seeded simulation and the page says so on every reveal.",
-    image: "/images/coliseum_logic_duel.jpg",
-    alt: "A human and an AI facing each other across labelled items",
-    status: "route",
-    route: "/games/ruler",
-    chip: "playable now",
-    reality:
-      "You actually play: ten items per round, deterministic from the round seed, scored locally in your browser. " +
-      "Nothing is sent anywhere — results stay in this browser's session storage, and human results are not collected " +
-      "until the data-protection review completes. A played round is practice; it is not a measurement, and the " +
-      "simulated seat is not another person.",
-  },
-  {
     id: "literacy",
     title: "Council Academy",
     blurb:
