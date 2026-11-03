@@ -39,6 +39,7 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
+  actions: write          # dispatches the required gates for the day's pull request
 
 jobs:
   intake:
@@ -158,6 +159,19 @@ jobs:
             fi
           fi
           echo "PR #$pr"
+          # THE DAY'S PULL REQUEST NEEDS ITS GATES DISPATCHED BY HAND. GitHub does not emit
+          # pull_request events for work done with GITHUB_TOKEN, so a pull request opened by
+          # this workflow carries ZERO protected checks - and a pull request with no checks
+          # is not a gated pull request, whatever its merge button says. The estate already
+          # has the mechanism (TUI-1, 2026-09-13, in hub-queue-land.yml): pr-gates.yml already
+          # accepts workflow_dispatch, so the gates are dispatched at this branch and attach
+          # to the pull request's head. Branch protection is untouched, and nothing is faked.
+          if ! gh workflow run pr-gates.yml --ref "$BRANCH" 2>/dev/null; then
+            echo "::error::OPERATOR ACTION REQUIRED: PR #$pr was created but its protected checks could not be dispatched"
+            echo "::error::run: gh workflow run pr-gates.yml --ref $BRANCH"
+          else
+            echo "the required gates are dispatched at $BRANCH"
+          fi
           # NO SILENT NO-OP. The old line was `... --auto || true`, which swallowed every
           # failure - including "auto-merge is not enabled on this repository" - and left a
           # day's reading sitting on an open pull request with nothing to show for it.
