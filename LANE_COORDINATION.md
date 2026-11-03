@@ -531,3 +531,10 @@ awaits the one-time Authorize click (owner-gated, staged).
 - Claim scope: independent MEASUREMENT observations (probe v0, unsigned) — never certification, grading or sealing. 0 price tokens (mechanism/scope only).
 - Single-writer: this lane wrote only the files above by name. No `git add -A`, no OTS-stamped files touched.
 - Context: PR #2918 (Art50 probe service page) merged 2026-10-08T04:13Z and is live. Sweep dataset retained at ~/clawd/CSOAI/art50-campaign/art50_sweep.jsonl + COMPETITIVE_BATTLEMAP_2026-10-08.md (local, non-repo).
+
+
+## 2026-11-03 · antigravity lane — 34/34 GSPC live + HF/Kaggle/GitHub parity EXTERNALLY_VERIFIED + B7 secret sync + week plan (append)
+
+1. **GSPC 34/34 Live & Parity Verified**: `GET /api/gspc` is live with `34 axes · 34 measured` (`0` `UNMEASURED`). Executed `scripts/spray/gspc-spray.py` and `scripts/spray/verify-gspc-parity.py`: `csoai/gspc-board` (HF dataset & Space), `nicktempleman/csoai-gspc-living-board` (Kaggle), `nicktempleman/gspc-one` (Kaggle), and `CSOAI-ORG/gspc-board` (GitHub) all match `as_of 2026-11-01T15:09:42Z` (`state: EXTERNALLY_VERIFIED`, Merkle root `4e57607854be…`).
+2. **Actions Secrets Updated (B7)**: Synced the working Hugging Face token (`~/.cache/huggingface/token`, org `csoai`) into GitHub Actions secrets `HF_TOKEN`, `HUGGINGFACE_TOKEN`, and `HF_INFERENCE_TOKEN`, and refreshed `GSPC_BOARD_TOKEN`. Added `six` to `.github/workflows/gspc-one-publish.yml` alongside `#3789`.
+3. **M4 Disk Headroom & Week Plan**: Reclaimed `17 GiB` (`18.2+ GB` free, 41% capacity) on `/` from build/updater caches without touching any active lane checkouts. Week plan committed at `docs/operations/ANTIGRAVITY-LANE-WEEK-PLAN-2026-11-03.md`.
