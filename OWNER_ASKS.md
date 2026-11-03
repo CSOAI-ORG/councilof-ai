@@ -2,8 +2,19 @@
 
 Single source of truth. Updated when state changes. Do not scatter through reports.
 
-Last updated: 2026-10-27 (rewritten from the state verified today; the 2026-09-17 list is
-superseded and kept in git history).
+Last updated: 2026-11-03 (2026-10-27 list below, annotated where state changed today;
+every annotation was verified against a live endpoint or local credential store on 2026-11-03).
+
+> 2026-11-03 state notes (verification pass):
+> - NEW #0: the HF token at ~/.cache/huggingface/token is VALID again (whoami: Nicholastempleman,
+>   admin of the csoai org). NAMING.md's owner-only HF renames staged in apply_canonical_names.py
+>   are unblocked at the credential level. The five public sov-*/oowm-* model repos were renamed
+>   to csoai-* today via move_repo (307 redirects live; public namespace clean).
+> - #3 remains: GSPC_BOARD_TOKEN in CI is still dead (not re-set today).
+> - NEW: the npm authToken in ~/.npmrc answers 401 — publishing the promised csoai-verify
+>   package stays blocked until a fresh token is minted (owner, npmjs.com).
+> - NEW: two Kaggle mirrors (csoai-gspc-fleet-status, csoai-evidence-index) exist but PRIVATE —
+>   Kaggle CLI 2.2.4 forces private on create; a 2-click publish in the Kaggle UI is the unblock.
 
 Every state below was checked against a live endpoint on 2026-10-27. The evidence line says how.
 
