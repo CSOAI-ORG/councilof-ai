@@ -112,7 +112,9 @@ jobs:
         run: |
           set -euo pipefail
           test -n "${KAGGLE_ACCESS_TOKEN:-}" || { echo "KAGGLE_ACCESS_TOKEN absent"; exit 1; }
-          pip install --quiet kaggle
+          pip install --quiet six python-dateutil
+          pip install --quiet "kaggle==2.2.4" "kagglesdk==0.1.35"
+          python3 -c "import importlib.metadata as m; assert (m.version('kaggle'), m.version('kagglesdk')) == ('2.2.4','0.1.35'), 'qualified Kaggle SDK pair not installed'"
           mkdir -p ~/.kaggle && chmod 700 ~/.kaggle
           printf '%s' "$KAGGLE_ACCESS_TOKEN" > ~/.kaggle/access_token
           chmod 600 ~/.kaggle/access_token
@@ -151,12 +153,26 @@ jobs:
         run: |
           set -euo pipefail
           K="${{ steps.p.outputs.kernel }}"
+          empty_polls=0
           for i in $(seq 1 320); do
-            st=$(kaggle kernels status "$K" 2>/dev/null || true)
+            st=$(kaggle kernels status "$K" 2>&1 || true)
             [ $((i % 10)) -eq 1 ] && echo "poll $i: $st"
+            if [ -z "$st" ]; then
+              empty_polls=$((empty_polls + 1))
+              if [ "$empty_polls" -ge 3 ]; then
+                echo "state=failed" >> "$GITHUB_OUTPUT"
+                echo "FATAL: 3 consecutive empty status polls for $K"
+                exit 1
+              fi
+            else
+              empty_polls=0
+            fi
             case "$st" in
-              *COMPLETE*) echo "state=complete" >> "$GITHUB_OUTPUT"; exit 0 ;;
-              *ERROR*|*CANCEL*) echo "state=failed" >> "$GITHUB_OUTPUT"; echo "RUN FAILED: $st"; exit 0 ;;
+              *COMPLETE*|*complete*) echo "state=complete" >> "$GITHUB_OUTPUT"; exit 0 ;;
+              *ERROR*|*CANCEL*|*error*|*cancel*|*ModuleNotFoundError*|*Unauthorized*|*401*|*403*)
+                echo "state=failed" >> "$GITHUB_OUTPUT"
+                echo "RUN FAILED: $st"
+                exit 1 ;;
             esac
             sleep 60
           done
