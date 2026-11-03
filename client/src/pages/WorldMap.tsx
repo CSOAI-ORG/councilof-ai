@@ -89,15 +89,40 @@ export default function WorldMap() {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-8">
-        <nav aria-label="World map views" className="flex flex-wrap gap-2" data-testid="world-tabs">
+        {/* ARIA tabs pattern (P6 accessibility pass, 2026-11-02): role=tablist/tab/tabpanel,
+            aria-selected + aria-controls instead of the looser aria-current, roving tabIndex and
+            Arrow/Home/End keys per WAI-ARIA. The URL stays the source of truth (?tab=), so the
+            keyboard and a screen-reader rotation behave exactly like a click. */}
+        <div
+          role="tablist"
+          aria-label="World map views"
+          className="flex flex-wrap gap-2"
+          data-testid="world-tabs"
+          onKeyDown={(e) => {
+            const idx = TABS.findIndex((t) => t.id === active);
+            let next = -1;
+            if (e.key === "ArrowRight") next = (idx + 1) % TABS.length;
+            else if (e.key === "ArrowLeft") next = (idx - 1 + TABS.length) % TABS.length;
+            else if (e.key === "Home") next = 0;
+            else if (e.key === "End") next = TABS.length - 1;
+            if (next < 0) return;
+            e.preventDefault();
+            selectTab(TABS[next].id);
+            document.getElementById(`world-tab-${TABS[next].id}`)?.focus();
+          }}
+        >
           {TABS.map((t) => {
             const selected = t.id === active;
             return (
               <button
                 key={t.id}
                 type="button"
+                role="tab"
+                id={`world-tab-${t.id}`}
                 onClick={() => selectTab(t.id)}
-                aria-current={selected ? "page" : undefined}
+                aria-selected={selected}
+                aria-controls={`world-panel-${t.id}`}
+                tabIndex={selected ? 0 : -1}
                 data-testid={`world-tab-${t.id}`}
                 className={
                   "inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-bold transition-colors " +
@@ -110,12 +135,19 @@ export default function WorldMap() {
               </button>
             );
           })}
-        </nav>
+        </div>
         <p className="mt-3 text-sm leading-relaxed text-gray-500" data-testid="world-tab-blurb">
           {TABS.find((t) => t.id === active)?.blurb}
         </p>
 
-        <div className="mt-6" data-testid={`world-panel-${active}`}>
+        <div
+          role="tabpanel"
+          id={`world-panel-${active}`}
+          aria-labelledby={`world-tab-${active}`}
+          tabIndex={-1}
+          className="mt-6 focus-visible:outline-none"
+          data-testid={`world-panel-${active}`}
+        >
           {active === "bridges" ? <RelevanceMap embedded /> : null}
           {active === "regions" ? <RegionsMap embedded /> : null}
           {active === "risk" ? <RiskHeatmap embedded /> : null}
