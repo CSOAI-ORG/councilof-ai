@@ -61,6 +61,48 @@ $ curl -s -X POST https://councilof.ai/api/verify \
 {"state": "VALID", "cryptographic_state": "VALID", ...}
 ```
 
+## Step 5 — prove inclusion WITHOUT trusting anyone (executed 2026-11-03)
+
+The verifier's word is one thing; mathematics is another. `GET /api/proof?sha=<leaf>`
+returns the audit path — free, no credentials. For the same leaf:
+
+```
+proof entries: 9 sibling digests · index 427 · claimed root 4e57607854be...e08aa0
+```
+
+Recomputation (plain `sha256(concat)`, no domain separation — the public root's own
+scheme, unlike the capsule trees' RFC-6962 prefixes):
+
+```python
+h = bytes.fromhex(leaf)
+idx = index
+for sib in proof:                       # 9 sibling digests
+    sib = bytes.fromhex(sib)
+    h = hashlib.sha256(h + sib).digest() if idx % 2 == 0 else hashlib.sha256(sib + h).digest()
+    idx //= 2
+print(h.hex() == claimed_root)          # True
+```
+
+Executed output: `plain concat: True`. The root is reproducible from the leaf and
+the published siblings — inclusion does not rest on our API's say-so.
+
+## Step 6 — two card corpora, two verifiers (a distinction worth its own section)
+
+The estate serves TWO artifact classes and they verify differently:
+
+| corpus | where | what it is | verification |
+|---|---|---|---|
+| public-root leaves | `/cards/<sha16>.json` | content-addressed leaves of the Merkle root | digest recomputation (step 3) + inclusion proof (step 5) |
+| signed measurement cards | `/signed/cards/<sha64>.json` | Ed25519-signed measurement cards (the 335-card signed index) | signature check by `verify-card.mjs` or `/api/verify` |
+
+`verify-card.mjs` (226 lines, MIT, zero dependencies, plain Node) verifies the
+**signed-card** corpus — feeding it a public-root leaf answers `UNCHECKABLE: not a
+card`, which is correct, not a failure. Executed: `node verify-card.mjs
+signed-card.json` → `VALID 1 · INVALID 0 · UNCHECKABLE 0`. Its header documents the
+subtlest trap in the whole estate: CPython renders integral floats as `0.0` while
+every JS/Go/JCS canonicalizer writes `0`, so a naive JS verifier false-fails about a
+third of the cards — the shipped verifier handles it.
+
 ## The two traps a stranger hits (documented so the next one does not stop here)
 
 1. **Naive hash fails, by design.** `sha256(card.json)` (the served file) does NOT
