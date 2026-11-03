@@ -50,8 +50,11 @@ AXIS_LEGAL = {
 
 def _load_reg():
     if os.path.exists(REG):
-        try: return json.load(open(REG))
-        except Exception: pass
+        try:
+            with open(REG, encoding="utf-8") as stream:
+                return json.load(stream)
+        except (OSError, ValueError, RecursionError):
+            pass
     return {"kind": "empty", "clusters": {}, "sov_index_signal": None}
 
 def specialists():
