@@ -95,6 +95,10 @@ const EXISTING = [
   // /alliance-map published a register of other organisations' claims for one morning.
   // Maintaining that register is the alliance's job, not ours; our own membership is a
   // row on /memberships, which is what the page was reached for.
+  // /games 404s: only /games/ruler answers under /games*, and the Ruler is the canonical
+  // game door (menu audit 2 Nov 2026). The bare hub path lands on the real game.
+  "/games                /games/ruler         308",
+  "/games/               /games/ruler         308",
   "/alliance-map          /memberships         308",
   "/alliance-map/         /memberships         308",
   // Withdrawn 6 Oct 2026 for breaking standing doctrine. /authority handed out embeddable
