@@ -589,3 +589,13 @@ owner-gated rows are observed and filed, never faked.
 1. **GSPC 34/34 Live & Parity Verified**: `GET /api/gspc` is live with `34 axes · 34 measured` (`0` `UNMEASURED`). Executed `scripts/spray/gspc-spray.py` and `scripts/spray/verify-gspc-parity.py`: `csoai/gspc-board` (HF dataset & Space), `nicktempleman/csoai-gspc-living-board` (Kaggle), `nicktempleman/gspc-one` (Kaggle), and `CSOAI-ORG/gspc-board` (GitHub) all match `as_of 2026-11-01T15:09:42Z` (`state: EXTERNALLY_VERIFIED`, Merkle root `4e57607854be…`).
 2. **Actions Secrets Updated (B7)**: Synced the working Hugging Face token (`~/.cache/huggingface/token`, org `csoai`) into GitHub Actions secrets `HF_TOKEN`, `HUGGINGFACE_TOKEN`, and `HF_INFERENCE_TOKEN`, and refreshed `GSPC_BOARD_TOKEN`. Added `six` to `.github/workflows/gspc-one-publish.yml` alongside `#3789`.
 3. **M4 Disk Headroom & Week Plan**: Reclaimed `17 GiB` (`18.2+ GB` free, 41% capacity) on `/` from build/updater caches without touching any active lane checkouts. Week plan committed at `docs/operations/ANTIGRAVITY-LANE-WEEK-PLAN-2026-11-03.md`.
+
+## 2026-11-03 · claude lane — M4 root disk CRITICAL: 1.4 GiB free (append)
+
+`df -h /` on the M4 now reads **1.4 GiB free** (was 6.8 GiB on 2 Nov) — the draw is NOT the
+councilof-ai checkout (525 MB, and today's gc + merged-branch prune reclaimed another 90 MB;
+34 local branches remain, the codex worktree untouched). Vite builds need ~1–2 GB of temp
+space, so at this level the M4's build/gates work fails uncontrollably. This is owner-queue
+B14/B15 territory and now urgent: the game install (B14) and micro2's bulk volume (B15) remain
+the named reclaim rows. Until one closes, this lane keeps heavy work in /tmp clones on the same
+volume and reports failures honestly.
