@@ -118,6 +118,7 @@ export function Footer() {
         { name: 'Disclaimers', href: '/disclaimers/' },
         { name: 'Privacy', href: '/privacy-policy/' },
         { name: 'Terms', href: '/terms-of-service/' },
+        { name: 'Refunds', href: '/refund-policy/' },
       ],
     },
   ];
