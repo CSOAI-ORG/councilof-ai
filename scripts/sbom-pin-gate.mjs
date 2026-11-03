@@ -156,10 +156,15 @@ export function isAncestor(sha, ref, cwd = REPO) {
     const code = error?.status;
     if (code === 1) return { reachable: false, why: "it is not an ancestor of HEAD", unprovable: false };
     if (code === 128) {
+      // 128 is git saying "I cannot answer" — the object is not in this store. That is the
+      // SAME class of fact as a truncated store: an absence of evidence, not evidence of
+      // absence. Reporting it as ORPHANED named a false finding and BLOCKED a merge, which
+      // is the outcome this gate exists to avoid. The gate's own header has always said
+      // that 1 and 128 are different verdicts; this is where that promise is kept.
       return {
         reachable: false,
         why: "this repository cannot answer the question — the commit is not in the local store",
-        unprovable: false,
+        unprovable: true,
       };
     }
     return { reachable: false, why: `git could not be run (exit ${code ?? "?"})`, unprovable: false };
@@ -191,26 +196,75 @@ export function isShallow(cwd = REPO) {
 }
 
 /**
- * Bring the PIN's own history into the store, in full.
+ * Is the pinned commit object in this store at all?
  *
- * The question the gate asks is answered by walking the history. When the store is
- * truncated the walk cannot finish, so the gate fetches the pin's chain and asks again.
- * This reads the remote; it changes no tree, commits nothing and pushes nothing.
+ * "I do not have it" and "it is not related" are different facts, and a gate that does not
+ * know which one it is looking at cannot report either honestly.
+ */
+export function objectPresent(sha, cwd = REPO) {
+  try {
+    execFileSync("git", ["cat-file", "-e", sha + "^{commit}"], {
+      cwd,
+      stdio: "ignore",
+      env: gitEnv(),
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * How many commits this store can walk back from HEAD.
  *
- * NO --filter here: "--filter can only be used when extensions.partialClone is set",
- * and the estate's checkout is not a partial clone. A fetch that fails is a fetch that
- * changes nothing, and the gate then reports UNCHECKABLE rather than a finding.
+ * A truncated store answers with a smaller number, which is the visible symptom of a
+ * history that cannot be walked to its end.
+ */
+export function countReachable(cwd = REPO) {
+  try {
+    return execFileSync("git", ["rev-list", "--count", "HEAD"], {
+      cwd,
+      encoding: "utf8",
+      env: gitEnv(),
+    }).trim();
+  } catch {
+    return "unknown";
+  }
+}
+
+/**
+ * The reachability answer, as a VERDICT the workflow can act on.
+ *
+ * Two ways this repository cannot answer, and both are UNCHECKABLE rather than a finding:
+ *
+ *   - the store's history is TRUNCATED (a shallow boundary): git walks back from HEAD,
+ *     stops at the boundary, and reports "not an ancestor" for a commit that IS one. On
+ *     2026-11-02 twenty open pull requests were red on this gate with the pin that
+ *     GitHub's own compare API proves is an ancestor of master, 183 commits back. A gate
+ *     that names a false finding is worse than a gate that names none: it teaches the
+ *     reader that the gate cries wolf, and then it protects nothing.
+ *
+ *   - the PIN ITSELF is not in the store (git exit 128): an absence of evidence, which is
+ *     not evidence of absence.
+ *
+ * A genuine "not an ancestor" — the pin is here, the history is complete, and the walk
+ * finished without reaching it — is the only thing this gate calls ORPHANED, and the only
+ * thing that blocks a merge.
+ *
+ * This reads the store. It changes no tree, commits nothing and pushes nothing.
  */
 export function answerReachability(sha, ref = "HEAD", cwd = REPO) {
   const first = isAncestor(sha, ref, cwd);
   if (first.reachable) return first;
-  if (!isShallow(cwd)) return first;
+  // The pin itself is not in this store (git exit 128): the question cannot be asked here.
+  if (first.unprovable) return first;
   // The store's history is truncated, so the walk from HEAD stopped at the boundary. That
   // is a question this repository cannot answer, and "cannot answer" is not a finding
   // about the pin: on 2026-11-02 twenty open pull requests were red on this gate with the
   // pin that GitHub's own compare API proves is an ancestor of master, 183 commits back.
   // A gate that names a false finding is worse than a gate that names none: it teaches
   // the reader that the gate cries wolf, and then it protects nothing.
+  if (!isShallow(cwd)) return first;
   return {
     reachable: false,
     unprovable: true,
@@ -274,7 +328,7 @@ function selftest() {
     const cases = [
       ["a pin to HEAD is reachable", shaB, { reachable: true, why: null }, "REACHABLE"],
       ["a pin to a commit that is present but NOT an ancestor is orphaned", shaA, { reachable: false, why: "it is not an ancestor of HEAD" }, "ORPHANED"],
-      ["a pin to a commit nobody has cannot be proven reachable", absent, { reachable: false, why: "this repository cannot answer the question — the commit is not in the local store" }, "ORPHANED"],
+      ["a pin to a commit nobody has cannot be proven reachable", absent, { reachable: false, why: "this repository cannot answer the question — the commit is not in the local store" }, "UNPROVABLE"],
     ];
 
     let failures = 0;
@@ -403,6 +457,12 @@ if (SELFTEST) {
   }
   if (!verdict.ok) {
     console.error(`✗ sbom-pin-gate: the SBOM read from ${sbom.from} pins ${sha}, and ${ancestor.why}.`);
+    // THE FACTS. A gate that says "not an ancestor" without saying whether the object is
+    // even in the store, or whether the graph it is reading is truncated, makes a claim it
+    // cannot support - and the next reader has to rediscover the whole investigation.
+    console.error(`  state: ${verdict.state}  ·  store truncated: ${isShallow() ? "yes" : "no"}` +
+      `  ·  pinned object present: ${objectPresent(sha) ? "yes" : "no"}` +
+      `  ·  commits reachable from HEAD: ${countReachable()}`);
     console.error("");
     console.error("  In CI this reads as 'sbom FAILED — SBOM held; previous output preserved',");
     console.error("  because pr-gates checks out the PR's merge ref and this commit is not in it.");
