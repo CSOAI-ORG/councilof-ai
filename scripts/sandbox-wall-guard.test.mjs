@@ -63,10 +63,11 @@ describe("sandbox-wall-guard", () => {
     expect(r.stdout).toContain("REFUSED SANDBOX_SCHEMA");
   });
 
-  // 20s: the scan walks all of public/ (which grows with every published card and page) and
-  // runs ~8s on a full tree. The 5s default made this the only red in the suite with zero
-  // violations — a timing failure masquerading as a content one.
-  it("the measurement surfaces in this repo carry no sandbox bytes; known exceptions are exactly the named ones", { timeout: 20_000 }, () => {
+  // 120s (2026-11-03 re-land): the scan walks all of public/ (which grows with every published
+  // card and page — cards-bundle is a 6,074-row aggregate now) and ran past 20s under
+  // full-suite parallel load with the root volume at 1.4 GiB free. Zero violations today; the
+  // budget must fit the corpus, not the corpus the budget.
+  it("the measurement surfaces in this repo carry no sandbox bytes; known exceptions are exactly the named ones", { timeout: 120_000 }, () => {
     const r = scan(["public", "functions", "client/src"]);
     expect(r.violations.map((v) => `${v.rule} ${v.where} ${v.match}`)).toEqual([]);
     // Record names, not a count: a swap (one exception fixed, another added) must show up here.
