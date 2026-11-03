@@ -22,6 +22,7 @@ const WORKFLOWS = [
     path: ".github/workflows/kaggle-community-cells.yml",
     relative: "../.github/workflows/kaggle-community-cells.yml",
     checkout: "      - uses: actions/checkout@v4",
+<<<<<<< HEAD
     // Re-pinned to the workflow as it LANDED. The contract and the workflow were added
     // in the same commit, and the pin was written against an earlier draft of the file
     // (6,373 bytes) while the reviewed-and-landed file is 6,464 bytes — so the pin never
@@ -29,6 +30,8 @@ const WORKFLOWS = [
     // still carry the weight: exactly one checkout row, the reviewed deploy-head
     // expression, and the whole-file inversion proving that removing ONLY the two added
     // lines restores a specific, named image.
+=======
+>>>>>>> origin/master
     before: { bytes: 6340, sha256: "9e0d0cbfe8d903a1afe79a7609726c2a07bac808a56fe733aa643bec4b666809" },
     after: { bytes: 6464, sha256: "c08c0b9bc4a2fd563591d06d1038fbb53da2962d1d7a0d10627ba97c066b58eb" },
   },
