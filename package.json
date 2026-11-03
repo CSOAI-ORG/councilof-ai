@@ -11,6 +11,7 @@
     "guard:sitemap-truth": "node --test scripts/sitemap-withdrawal.node-test.mjs && node scripts/sitemap-truth-gate.mjs --selftest && node scripts/sitemap-truth-gate.mjs && node scripts/reach/entity-sitemap-gate.mjs --selftest && node scripts/reach/entity-sitemap-gate.mjs",
     "guard:stablecoin-readiness": "PYTHONPATH=scripts python3 -m unittest scripts/test_stablecoin_readiness.py && python3 scripts/readers/stablecoin-cohort-integrity.test.py && python3 scripts/check_stablecoin_readiness.py && python3 scripts/build_regulatory_register_baseline.py --check",
     "guard:mill-receipt-readiness": "node scripts/build-mill-receipt-readiness.mjs --check",
+    "guard:fin-attestation": "node scripts/gate-fin-run-attestation.mjs --selftest && node scripts/gate-fin-run-attestation.mjs",
     "guard:dashboard-lazy-chunks": "node scripts/assert-dashboard-lazy-chunks.mjs --selftest && node scripts/assert-dashboard-lazy-chunks.mjs dist/client",
     "guard:content-promise": "node scripts/content-promise-gate.mjs --selftest && node scripts/content-promise-gate.mjs dist/client",
     "guard:council-truth": "node scripts/council-runtime-truth-gate.mjs --selftest && node scripts/council-runtime-truth-gate.mjs && node scripts/arena-route-truth-guard.mjs --selftest && node scripts/arena-route-truth-guard.mjs",
