@@ -1,4 +1,4 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect, request, type APIResponse } from '@playwright/test';
 
 /**
  * Walk the published x402 catalog like an unauthenticated buyer. These checks only issue GETs:
@@ -26,6 +26,34 @@ function fill(raw: string, leafSha: string): string {
     if (hint === 'iso') return ['2026-11-01', '2026-11-03'][Math.min(isoIndex++, 1)];
     return FILL[hint] ?? token;
   });
+}
+
+type NoSaleContract = {
+  status?: number;
+  body?: {
+    preview_only?: boolean;
+    state?: string;
+    payment?: {
+      requested?: boolean;
+      sent_to_facilitator?: boolean;
+      settled?: boolean;
+    };
+  };
+};
+
+async function matchesNoSaleContract(response: APIResponse, contract?: NoSaleContract): Promise<boolean> {
+  if (
+    response.status() !== 200 ||
+    contract?.status !== 200 ||
+    contract.body?.preview_only !== true ||
+    contract.body.state !== 'UNMEASURED'
+  ) return false;
+  const body = await response.json().catch(() => null) as NoSaleContract['body'] | null;
+  return body?.preview_only === true &&
+    body.state === 'UNMEASURED' &&
+    body.payment?.requested === false &&
+    body.payment?.sent_to_facilitator === false &&
+    body.payment?.settled === false;
 }
 
 test('a discovering agent can read the catalog and use each published door and preview', async () => {
@@ -60,6 +88,12 @@ test('a discovering agent can read the catalog and use each published door and p
     const leafSha = root.card_sha256?.[0] ?? '';
     expect(leafSha).toMatch(/^[0-9a-f]{64}$/);
 
+    const manifestResponse = await api.get('/.well-known/x402.json');
+    expect(manifestResponse.status()).toBe(200);
+    const manifest = await manifestResponse.json() as {
+      resources?: { url: string; no_sale?: NoSaleContract }[];
+    };
+
     const failures: string[] = [];
     for (const row of catalog.resources) {
       for (const [field, raw] of [['resource', row.resource], ['free_preview', row.free_preview]] as const) {
@@ -78,8 +112,12 @@ test('a discovering agent can read the catalog and use each published door and p
         }
         const response = await api.get(url);
         if (field === 'resource') {
+          if (response.status() === 200) {
+            const manifestRow = manifest.resources?.find((item) => fill(item.url, leafSha) === url);
+            if (await matchesNoSaleContract(response, manifestRow?.no_sale)) continue;
+          }
           if (response.status() !== 402) {
-            failures.push(`${row.id}.resource answered ${response.status()}, not 402: ${url}`);
+            failures.push(row.id + '.resource answered ' + response.status() + ' without an explicit no-sale contract: ' + url);
             continue;
           }
           if (!response.headers()['payment-required']) {
@@ -119,18 +157,6 @@ test('every advertised door follows its challenge or explicit no-sale contract',
     const leafSha = root.card_sha256?.[0] ?? '';
     const m = await (await api.get('/.well-known/x402.json')).json();
     const failures: string[] = [];
-    type NoSaleContract = {
-      status?: number;
-      body?: {
-        preview_only?: boolean;
-        state?: string;
-        payment?: {
-          requested?: boolean;
-          sent_to_facilitator?: boolean;
-          settled?: boolean;
-        };
-      };
-    };
     for (const r of m.resources as {
       url: string;
       paid_for: string | null;
@@ -146,21 +172,7 @@ test('every advertised door follows its challenge or explicit no-sale contract',
 
       // The published manifest permits a no-sale 200 only when the read is UNMEASURED.
       // Verify it is explicitly preview-only and that no payment was requested or settled.
-      if (res.status() === r.no_sale?.status && r.no_sale.body?.preview_only === true) {
-        const body = await res.json().catch(() => null) as NoSaleContract['body'] | null;
-        const expected = r.no_sale.body;
-        const payment = body?.payment;
-        if (
-          body?.preview_only !== true ||
-          body?.state !== expected.state ||
-          payment?.requested !== false ||
-          payment?.sent_to_facilitator !== false ||
-          payment?.settled !== false
-        ) {
-          failures.push(`${r.url} returned 200 without matching the explicit no-sale contract`);
-        }
-        continue;
-      }
+      if (await matchesNoSaleContract(res, r.no_sale)) continue;
       failures.push(`${r.url} answered ${res.status()} without a matching challenge or no-sale contract`);
     }
     expect(failures, `\n  ${failures.join('\n  ')}\n`).toEqual([]);
