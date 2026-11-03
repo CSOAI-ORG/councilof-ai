@@ -6,15 +6,15 @@ const sections = [
   {
     title: "Scope",
     body:
-      "This policy covers paid purchases made through Paddle (the merchant of record) for CSOAI Ltd services: measurement booking (RAS Booking Desk) and assessment packs. " +
+      "This policy covers paid purchases of CSOAI Ltd services: measurement booking (RAS Booking Desk) and assessment packs. " +
       "Free services — measurement verification (/gspc-verify, /root.json, /api/proof?sha=, /api/verify, /api/receipts/verify) and the public measurement board — are never charged and are outside this policy. " +
-      "Per-call machine access is billed via the x402 protocol at the moment of the call; it is not subscription billing and is non-refundable once an artifact has been issued.",
+      "Per-call machine access is pay-as-you-go at the 402 (x402, settled at call time); it is not subscription billing and is non-refundable once an artifact has been issued.",
   },
   {
     title: "14-day statutory withdrawal (UK & EU consumers)",
     body:
       "If you are a UK or EU consumer, you have the right to withdraw from a purchase within 14 days of the charge, without giving a reason. " +
-      "Write to nicholas@csoai.org with your Paddle order number. If the service has already been fully performed at your express request during the withdrawal period, we may deduct a proportionate amount for what was delivered.",
+      "Write to nicholas@csoai.org with your order number. If the service has already been fully performed at your express request during the withdrawal period, we may deduct a proportionate amount for what was delivered.",
   },
   {
     title: "Measurement bookings (RAS)",
@@ -33,7 +33,7 @@ const sections = [
   {
     title: "How refunds are issued",
     body:
-      "Paddle is the merchant of record: refunds are processed by Paddle to the original payment method, typically within 5–10 business days. " +
+      "Refunds go to the original payment method via the checkout provider of record, typically within 5–10 business days. " +
       "Email nicholas@csoai.org first — most issues resolve without a formal refund. We never take money from anything we rank, and no refund, discount, or payment changes a measurement outcome. Public measurements stay public; corrections are published, not hidden.",
   },
 ];
@@ -45,7 +45,7 @@ export default function RefundPolicy() {
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold tracking-tight mb-4">Refund Policy</h1>
           <p className="text-lg text-muted-foreground max-w-3xl">
-            CSOAI Ltd sells measurement bookings and assessment packs through Paddle. Verification is free, forever.
+            CSOAI Ltd sells measurement bookings and assessment packs. Verification is free, forever.
             This policy explains when and how payments are refunded.
           </p>
           <p className="text-sm text-muted-foreground mt-4">Last updated: 3 November 2026</p>
