@@ -85,6 +85,13 @@ if [ -z "$BASE" ]; then
     BASE=origin/HEAD
   fi
 fi
+# The named base must be in THIS store. The lane SHARES the bare repo's objects, so a commit
+# the bare repo has is already here; if the caller's base is not among them, the source's own
+# HEAD is the honest fallback.
+if ! git -C "$LANE" rev-parse --verify -q "$BASE^{commit}" >/dev/null 2>&1; then
+  line "base $BASE is not in this store - falling back to origin/HEAD"
+  BASE=origin/HEAD
+fi
 git -C "$LANE" checkout -q -f -B "$BRANCH" "$BASE" >>"$RUNLOG" 2>&1 || { line "FAIL checkout $BRANCH at $BASE in $LANE"; exit 4; }
 rev=$(git -C "$LANE" rev-parse --short HEAD)
 for f in scripts/watchdog_intake.py scripts/watchdog_charter_feed.py scripts/readers/watchdog_intake_reader.py; do
