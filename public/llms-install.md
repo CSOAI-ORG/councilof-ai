@@ -35,19 +35,19 @@ shown here). Every release published to npm so far carries fewer tools than the
 remote, so this guide no longer gives a local configuration: use the remote above,
 or the free read-only door https://councilof.ai/mcp/free.
 
-The latest published release is `0.2.4` (published 2026-10-28T16:48:34.768Z). Its
-published tarball carries 52 tool names — 47 free + 5 metered — measured from the
-tarball's own manifests on 2026-11-01, not from this repository. It is **not** marked
-deprecated on npm, which is why `npm view csoai-gspc-mcp@latest deprecated` prints
-nothing: deprecation is not the signal here, the name comparison is.
+**Typed tool counts have been removed from this guide** — three releases in a row
+they froze red the week after being written (the door grew 52 → 53 → 54 with
+`axis_watchdog-ingest` and `framework_readiness`), so the guide no longer competes
+with the sources of truth. Read the counts where they live:
 
-That release is **not** name-for-name identical to the live door. The live door
-served 53 names at the same moment: the published tarball is one name short, and
-the name it lacks is `axis_watchdog-ingest`, which the door added after `0.2.4`
-was published. No published name is missing from the door. Re-run the comparison
-— `npm pack csoai-gspc-mcp@latest`, extract `gspc-tools.json` and
-`paid-tools.json`, diff against the door's `tools/list` — whenever either side
-moves, and treat the diff, not npm's deprecation flag, as the signal.
+- the live door: `tools/list` on `https://councilof.ai/mcp` — the contract, at request time;
+- the published tarball: `npm pack csoai-gspc-mcp@latest`, then diff its
+  `gspc-tools.json` + `paid-tools.json` against that `tools/list`.
+
+The comparison, not npm's deprecation flag (which prints nothing here), is the
+signal. As of 2026-11-03 the door served 54 names and the `0.2.4` tarball 52
+(`axis_watchdog-ingest`, `framework_readiness` are door-side); expect both numbers
+to move and treat a diff, not this sentence, as the fact.
 
 The repository currently prepares `0.2.5`, but that source version is **not a
 published npm release** until `npm view csoai-gspc-mcp@0.2.5 version` confirms that
