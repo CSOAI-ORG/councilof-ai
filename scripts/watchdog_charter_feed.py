@@ -6,7 +6,7 @@ charter of wg-safe so then all humans in the loop can deal with [it]?"
 
 The honest answer before this script was: the index existed and the charter existed, and
 NOTHING JOINED THEM. public/interop/watchdog-intake/_index.json is a per-source state table.
-The WG-SAFE charter (OpenSecureAIAlliance/wg-safe) is a set of obligations. The estate's
+Council proposes a local routing profile for WG-SAFE discussion; it is not an adopted Alliance obligation. The estate's
 human-in-the-loop path is /api/hitl with a HOLD gate on every consequential action. Three
 documents, no seam between them.
 
@@ -55,8 +55,7 @@ INTEROP = ROOT / "public" / "interop" / "watchdog-intake"
 # ── the charter obligations this estate tracks, and what each one means here ─────────────
 #
 # These are the obligations the estate's own /api/evidence-bundle surface accepts. The
-# list is the estate's, not a re-derivation: the obligation set is the thing the WG-SAFE
-# working group is chartered to make explicit, and the estate publishes against it.
+# list is Council's routing taxonomy, not the Alliance's mandate or an interpretation of law.
 #
 # "grid" names the estate's own axis ids that bear on the obligation. "ask" is the
 # question a human is being asked to answer — a QUESTION, never a verdict to confirm.
@@ -76,7 +75,7 @@ OBLIGATIONS = {
         "source_kind": "standard-body",
     },
     "charter": {
-        "label": "WG-SAFE charter — runtime enforcement and human oversight",
+        "label": "Council-proposed mapping for WG-SAFE review — runtime enforcement and human oversight",
         "grid": ["hitl", "effect-binding"],
         "ask": "does the authority chain for the subject still bind — invocation, effect and "
                "verification as separate objects — and is the human gate still HOLD",
@@ -138,6 +137,9 @@ def build(index: dict) -> dict:
                 "source_state": sig.get("state"),
                 "obligation": oid,
                 "obligation_label": spec["label"],
+                **({"mapping_authority": "COUNCIL_PROPOSAL_ONLY", "external_adoption_inferred": False,
+                    "external_reference": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/main/CHARTER.md"}
+                   if oid == "charter" else {}),
                 "axis_touched": sorted(set(sig.get("grid") or []) & set(spec["grid"])),
                 "observed_count": sig.get("count"),
                 "observed_count_kind": sig.get("count_kind"),

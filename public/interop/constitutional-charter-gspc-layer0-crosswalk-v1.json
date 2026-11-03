@@ -7,7 +7,6 @@
     "operational_charter_version": "0.1.0",
     "operational_charter_articles_count": 22,
     "operational_charter_sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
-    "source_52_article_profile_url": "https://councilof.ai/constitutional-harness/",
     "source_52_article_count": 52,
     "operational_controls_count": 16,
     "held_source_articles": [
@@ -16,6 +15,8 @@
       48
     ],
     "source_profile_sha256": "6f19cf922e18139417dfcd7044f3236359a0bc416de890d5efe0ef3792ecfef6",
+    "source_pin_state": "HISTORICAL_METADATA_ONLY_ORIGINAL_NOT_AVAILABLE",
+    "source_metadata_record": "https://github.com/CSOAI-ORG/councilof-ai/blob/83865d51a64942ed67119414e3330f2fbf2b7388/public/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
     "amendments_log_url": "https://councilof.ai/.well-known/charter-amendments.json",
     "amendments_log_sha256": "3333f3ec725d8a7113a8a3caefde0086392e2578cb0981c6412da44086e6f8f3"
   },
@@ -24,7 +25,7 @@
     "operational_controls_mapped": 16,
     "operational_articles_mapped": 22,
     "source_charter_articles_indexed": 52,
-    "distinct_gspc_axes_covered_by_charter": 33,
+    "distinct_gspc_axes_covered_by_charter": 34,
     "external_github_layer0_targets": 20,
     "first_principles_precedents": 7,
     "newtons_third_law_reactions": 8
@@ -62,7 +63,8 @@
     "reserve-attestation",
     "safety",
     "serving-fidelity",
-    "swarm"
+    "swarm",
+    "watchdog-ingest"
   ],
   "outside_in_end_user_inspection": [
     {
@@ -86,20 +88,20 @@
         "scripts/hitl/hitl_probe.py (MCP 2025-11-25 elicitation decline/cancel & secret-in-form probe)",
         "packages/evidence-fabric/ (OTel, OCSF 1.9, SARIF 2.1.0, in-toto v1)"
       ],
-      "friction_found_from_their_perspective": "The 22-article operational charter, the 52-article source charter (CH-01..CH-16), the 33 GSPC axes, and the HITL elicitation/escalation gates lived in separate files without a single machine-readable crosswalk.",
-      "upgrade_delivered": "Unified all 16 controls (CH-01..CH-16), 22 operational articles, 52 source articles, 33 GSPC axes, and HITL/H.I.M. gates into `public/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json`."
+      "friction_found_from_their_perspective": "The 22-article operational charter, the 52-article source charter (CH-01..CH-16), the GSPC axes, and the HITL elicitation/escalation gates lived in separate files without a single machine-readable crosswalk.",
+      "upgrade_delivered": "Unified all 16 controls (CH-01..CH-16), 22 operational articles, 52 source articles, registered GSPC axes, and HITL/H.I.M. gates into `public/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json`."
     },
     {
       "persona_id": "PERSONA-03-IPO-UNDERWRITER-DO-INSURER",
       "role": "IPO Underwriter, D&O Insurer & Institutional Investor",
       "what_they_inspect_first": [
         "https://councilof.ai/interop/s1-ipo-measurement-readiness-v1.json",
-        "https://councilof.ai/api/gspc (33 axes · 23 measured · 0 separated · 7 TIE · 7 UNTESTED)",
+        "https://councilof.ai/api/gspc (see totals and separation in the current board response)",
         "https://councilof.ai/interop/claim-maintenance-wave-2026-10-28.json (182 claims: 110 CHANGED, 52 WITHDRAWN)",
         "https://councilof.ai/api/press.json and /api/corrections"
       ],
       "friction_found_from_their_perspective": "S-1 prospectuses (such as Anthropic PBC Form S-1 CIK 0002130357) disclose 90+ pages of risk factors including internal testing blind spots, psychological manipulation risks, and agent liability, needed an explicit 33-axis crosswalk to live independent measurements.",
-      "upgrade_delivered": "Built and verified `s1-ipo-measurement-readiness-v1.json` mapping all 33 canonical GSPC axes to real SEC Form S-1, 10-K, and 8-K risk domains with one-line curl verification commands."
+      "upgrade_delivered": "Built and verified `s1-ipo-measurement-readiness-v1.json` mapping the 33 axes of that historical S-1 artifact to real SEC Form S-1, 10-K, and 8-K risk domains with one-line curl verification commands."
     },
     {
       "persona_id": "PERSONA-04-STATUTORY-AUDITOR-REGULATOR",
@@ -120,7 +122,7 @@
         "https://councilof.ai/axis/care.html (CareBench: protect x help, fleet_mean=0.293, cvar05_harm=0.9895)",
         "https://councilof.ai/interop/psychosis-delusion-guard-bank-v1.json (CARE-PSY-v1, n=36)",
         "https://councilof.ai/interop/care-article1-open-research-registry-v1.json (18 open sources, v1.1)",
-        "https://councilof.ai/os (Council OS 33-axis browser surface)"
+        "https://councilof.ai/os (Council OS axis browser)"
       ],
       "friction_found_from_their_perspective": "Users facing multi-turn sycophancy or AI delusion reinforcement needed a deterministic benchmark (CARE-PSY-v1) and a multi-perspective routing architecture that protects without cold over-refusal.",
       "upgrade_delivered": "Shipped `CARE-PSY-v1` (n=36), 4-perspective MEOK router with Stateless Epistemic Re-Anchoring, Turn-of-Flip (ToF) persistence tracking, and `MoDPO-CVaR` tail-harm weighting."
@@ -204,8 +206,10 @@
       ],
       "operational_charter_articles": [
         7,
-        10
+        10,
+        15
       ],
+      "projection_boundary": "SovSpace may show dependencies before commitment; it is not the receipt or the authority to execute.",
       "gspc_axes": [
         "cross-reality",
         "effect-binding",
@@ -358,8 +362,10 @@
         "care",
         "affect",
         "claim-maintenance",
-        "regulator-transparency"
+        "regulator-transparency",
+        "watchdog-ingest"
       ],
+      "watchdog_scope": "Evidence of a published problem-reporting route is relevant to appeal. It does not establish a response, resolution, or permission to act.",
       "hitl_and_layer0_enforcement": "Every denial, hold, or three-state verify verdict (`VALID | INVALID | UNCHECKABLE`) provides an explicit one-line reason and evidence pointer."
     },
     {
@@ -743,7 +749,7 @@
     {
       "institution": "Moody's Manuals (founded 1909 by John Moody)",
       "first_principles_origin": "Started by one founder compiling public railroad bond statistics and balance-sheet ratios from public filings without asking any railroad company for permission.",
-      "csoai_structural_lesson": "SEC Form S-1, 10-K, 10-Q, and 8-K filings are public domain. CSOAI's `s1-ipo-measurement-readiness-v1.json` and `sec-tracker-1` bind public SEC risk disclosures directly to our 33 GSPC axes without waiting for vendor permission."
+      "csoai_structural_lesson": "SEC Form S-1, 10-K, 10-Q, and 8-K filings are public domain. CSOAI's `s1-ipo-measurement-readiness-v1.json` and `sec-tracker-1` bind public SEC risk disclosures to the 33 axes in that SEC profile without waiting for vendor permission."
     },
     {
       "institution": "IETF & W3C ('Rough Consensus and Running Code' / RFC 8615 /.well-known/)",
@@ -775,7 +781,7 @@
     {
       "reaction_id": "NEWTON-01-S1-OR-SEC-FILING",
       "external_action": "A frontier AI lab or infrastructure vendor files an SEC Form S-1, 10-K, 10-Q, or 8-K disclosing model, safety, governance, or compute risks (e.g., Anthropic Form S-1 CIK 0002130357).",
-      "equal_and_opposite_csoai_reaction": "Automatically index the filing via `sec-tracker-1`, map every disclosed risk factor to the 33 canonical GSPC axes (`s1-ipo-measurement-readiness-v1.json`), and publish the live `MEASURED` vs `UNMEASURED` state with a one-line `curl` verification command.",
+      "equal_and_opposite_csoai_reaction": "Automatically index the filing via `sec-tracker-1`, map every disclosed risk factor to the the 33 axes in the dated SEC profile (`s1-ipo-measurement-readiness-v1.json`), and publish the live `MEASURED` vs `UNMEASURED` state with a one-line `curl` verification command.",
       "charter_controls": [
         "CH-06",
         "CH-07",
@@ -905,5 +911,5 @@
       "hitl_gate": "Owner review on corrections ledger and charter amendment log."
     }
   ],
-  "crosswalk_sha256": "de57c8e5a6f28f541823b394a0a6f8f5ee7802a52fed4ff6a3fcc375a67ba4d5"
+  "crosswalk_sha256": "9bf0d1fe04dcf7da50692b2a2077ff1fa17efd7bb1f2797f0296913fb7e7f952"
 }

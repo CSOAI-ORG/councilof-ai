@@ -75,6 +75,18 @@ class TestRelevanceIsMechanical(unittest.TestCase):
     def test_a_source_off_every_obligation_grid_raises_nothing(self):
         self.assertEqual(wcf.obligations_for(INDEX["signals"][2]), [])
 
+    def test_charter_rows_cannot_speak_for_the_alliance(self):
+        fixture = {**INDEX, "signals": [{**INDEX["signals"][0], "grid": ["effect-binding", "provenance"]}]}
+        rows = wcf.build(fixture)["rows"]
+        charter = next(row for row in rows if row["obligation"] == "charter")
+        self.assertEqual(charter["mapping_authority"], "COUNCIL_PROPOSAL_ONLY")
+        self.assertIn("Council-proposed", charter["obligation_label"])
+        self.assertIs(charter["external_adoption_inferred"], False)
+        self.assertEqual(charter["human_decision"], "HOLD")
+        self.assertIs(charter["may_apply"], False)
+        self.assertIs(charter["challenge_opened"], False)
+        self.assertFalse(any("mapping_authority" in row for row in rows if row is not charter))
+
     def test_the_rule_is_reproducible(self):
         # The same source must raise the same obligations every time — relevance that
         # drifts between runs is relevance that cannot be audited.
