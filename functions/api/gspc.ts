@@ -653,7 +653,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     doi: "10.5281/zenodo.21991104",
     doi_note: "GSPC Methodology and the Frozen Corpus Anchor (the canonical methodology record — one citable spine, HB.0). Supersedes the stale 21755656 (an unrelated EAT-benchmark dataset).",
     // 29 Sep 2026: the Zenodo record behind this DOI answers HTTP 410 (account blocked by Zenodo;
-    // appeal pending). The identifier stays; this block says it does not currently resolve.
+    // no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json)). The identifier stays; this block says it does not currently resolve.
     ...zenodoDoiStatus({
       url: METHODOLOGY_LIVE_URL,
       relation: "the live methodology page; not the deposit's bytes (no byte-identical copy of the deposited files is served)",
