@@ -447,8 +447,12 @@ test("one workspace keeps the composer and account access while a tool pane is o
   // Account access remains available through Sections while navigation starts minimized.
   await page.getByRole("button", { name: "Open workspace navigation", exact: true }).click();
   if (isMobile) {
+    // The workspace drawer is the menu dialog: role="dialog" with aria-label="Menu"
+    // (client/src/components/DashboardLayout.tsx). The 3 Nov localisation wave renamed
+    // it from "Council OS sections" when the menu title became "Menu"; this test names
+    // the dialog the drawer actually has, not the name it used to carry.
     await expect(
-      page.getByRole("dialog", { name: "Council OS sections" })
+      page.getByRole("dialog", { name: "Menu" })
         .getByLabel("Open account and workspace menu"),
     ).toBeVisible();
   } else {
