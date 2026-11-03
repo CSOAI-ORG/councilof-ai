@@ -113,6 +113,7 @@ const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
 const Resources = lazy(() => import("./pages/Resources"));
 const About = lazy(() => import("./pages/About"));
+const Him = lazy(() => import("./pages/Him"));
 const Team = lazy(() => import("./pages/Team"));
 const FirstFineWatch = lazy(() => import("./pages/FirstFineWatch"));
 const EunomiaData = lazy(() => import("./pages/EunomiaData"));
@@ -854,6 +855,7 @@ function AppShell() {
                   <Route path="/resources" component={Resources} />
                   <Route path="/payg" component={Payg} />
                   <Route path="/about" component={About} />
+                  <Route path="/him" component={Him} />
                   <Route path="/team" component={Team} />
                   <Route path="/first-fine-watch" component={FirstFineWatch} />
                   <Route path="/eunomia-data" component={EunomiaData} />
