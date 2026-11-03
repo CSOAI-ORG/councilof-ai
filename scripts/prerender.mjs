@@ -197,7 +197,7 @@ function discover() {
     "/industries/transportation", "/industries/retail", "/industries/education",
     "/industries/energy",
     "/library/axes",
-    "/verify", "/os", "/assess", "/academy", "/compare", "/layer0",
+    "/verify", "/os", "/him", "/assess", "/academy", "/compare", "/layer0",
     "/trust-center", "/network", "/hive", "/methodology", "/honesty",
     "/dashboard", "/login", "/start", "/about", "/insurers",
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
