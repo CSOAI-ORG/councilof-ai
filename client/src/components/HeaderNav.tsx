@@ -34,7 +34,6 @@ export const navigation: NavGroup[] = [
     submenu: [
       { section: 'The board', name: 'The GSPC board', href: '/board/', description: 'Every published axis. Counts and the stamp date come from GET /api/gspc — never typed into a page' },
       { name: 'Arena practice world', href: '/gspc-arena', description: 'Practice and historical replay, separate from the current signed Elo reference' },
-      { name: 'The Ruler — label beside the models', href: '/games/ruler', description: "Playable now: label frozen items and bet which seat is the model's. Local practice; nothing is sent" },
       { name: 'Arena — current reference', href: '/board/?set=arena', description: 'The dated signed Elo reference, its measured and empty rows, and its source file' },
       { name: 'Arena — live training', href: '/gspc-arena?view=training', description: 'Runs in progress. Practice stays practice and is never quoted' },
       { name: 'Measured models', href: '/models', description: 'Published model results, with ties and untested comparisons shown' },
@@ -157,7 +156,6 @@ export const navigation: NavGroup[] = [
       { section: 'Read', name: 'The Library — full archive', href: '/library', description: 'Everything we have published, dated and organized by sector' },
       { name: 'Questions people ask', href: '/faq/', description: 'The plain-English answers, including the refusals' },
       { section: 'Academy', name: 'Council Academy', href: '/academy', description: 'Learn the statute and the method. Completion-record issuance is not currently open' },
-      { name: 'H.I.M. — the human in the loop', href: '/him', description: 'Where an AI proposal stops, and a named human decides' },
       { name: 'Accreditation — what we are not', href: '/accreditation', description: 'There is no accreditation chain behind us, and we say so' },
     ],
   },

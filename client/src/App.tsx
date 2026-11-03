@@ -88,7 +88,6 @@ const WatchdogSignup = lazy(() => import("./pages/WatchdogSignup"));
 const Admin = lazy(() => import("./pages/Admin"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
 const DocsHub = lazy(() => import("./pages/DocsHub"));
-const Brand = lazy(() => import("./pages/Brand"));
 const X402Catalog = lazy(() => import("./pages/X402Catalog"));
 const ApiKeys = lazy(() => import("./pages/ApiKeys"));
 const PDCACycles = lazy(() => import("./pages/PDCACycles"));
@@ -113,7 +112,6 @@ const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
 const Resources = lazy(() => import("./pages/Resources"));
 const About = lazy(() => import("./pages/About"));
-const Him = lazy(() => import("./pages/Him"));
 const Team = lazy(() => import("./pages/Team"));
 const FirstFineWatch = lazy(() => import("./pages/FirstFineWatch"));
 const EunomiaData = lazy(() => import("./pages/EunomiaData"));
@@ -315,7 +313,6 @@ const LicensingAgreement = lazy(() => import("./pages/legal/LicensingAgreement")
 const LicenceManifest = lazy(() => import("./pages/LicenceManifest"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
 const PublicPrivacy = lazy(() => import("./pages/legal/PublicPrivacy"));
-const RefundPolicy = lazy(() => import("./pages/legal/RefundPolicy"));
 const Disclaimers = lazy(() => import("./pages/legal/Disclaimers"));
 const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
 const Council = lazy(() => import("./pages/Council"));
@@ -677,7 +674,6 @@ function AppShell() {
                   <Route path="/council-licensing" component={CouncilLicensingLanding} />
                   <Route path="/courses/:id" component={CourseDetail} />
                   <Route path="/docs" component={DocsHub} />
-                  <Route path="/brand" component={Brand} />
                   <Route path="/metered" component={X402Catalog} />
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/ei3" component={EI3} />
@@ -856,7 +852,6 @@ function AppShell() {
                   <Route path="/resources" component={Resources} />
                   <Route path="/payg" component={Payg} />
                   <Route path="/about" component={About} />
-                  <Route path="/him" component={Him} />
                   <Route path="/team" component={Team} />
                   <Route path="/first-fine-watch" component={FirstFineWatch} />
                   <Route path="/eunomia-data" component={EunomiaData} />
@@ -1135,8 +1130,6 @@ function AppShell() {
                   <Route path="/terms-of-service" component={TermsOfService} />
                   <Route path="/terms" component={TermsOfService} />
                   <Route path="/legal/terms" component={TermsOfService} />
-                  <Route path="/refund-policy" component={RefundPolicy} />
-                  <Route path="/refunds" component={RefundPolicy} />
                   <Route path="/disclaimers" component={Disclaimers} />
                   <Route path="/legal/disclaimers" component={Disclaimers} />
                   <Route path="/dpa" component={ContentReviewNotice} />
