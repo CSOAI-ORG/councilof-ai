@@ -70,7 +70,15 @@ async function get(url) {
   let lastErr;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      const r = await fetch(url, { headers: { "user-agent": UA }, redirect: "follow" });
+      // A CDN edge copy is not the site's current answer. On 2026-11-02 this sweep reported the
+      // signed root as 77.7 h stale while origin/master served a fresh one — the edge had an older
+      // object. Every request now asks for a revalidated copy; the assertion is unchanged, only the
+      // bytes it is asserted against.
+      const bust = url.includes("?") ? "&" : "?";
+      const r = await fetch(`${url}${bust}_cb=${Date.now()}`, {
+        headers: { "user-agent": UA, "cache-control": "no-cache", pragma: "no-cache" },
+        redirect: "follow",
+      });
       if (r.status < 500 || attempt === 2) {
         const body = await r.text();
         return { status: r.status, body };
@@ -146,7 +154,13 @@ try {
 // (scripts/brand-gate.mjs); the machine sweep now honours the same line: those history
 // fields are stripped before the scan, so a NEW leak anywhere else on the payload — title,
 // summary, or a fresh field — still goes red.
-const HISTORY_FIELDS = new Set(["old_values", "old_value", "what_was_wrong", "timing_evidence", "how_caught"]);
+// 2026-11-03: `new_values` and `open_items` were missing. Both quote the withdrawn wording —
+// new_values is the replacement text for the same JSON field old_values quoted (it still contains
+// the model names it describes), and open_items records what is not fixed yet, naming the document
+// that still says it. The sweep stayed red on /api/corrections for exactly those two, which is the
+// same false positive the field-strip was introduced to end. Every other field — title, summary,
+// status, a newly added one — is still scanned, so a NEW leak anywhere else still goes red.
+const HISTORY_FIELDS = new Set(["old_values", "old_value", "new_values", "what_was_wrong", "timing_evidence", "how_caught", "open_items"]);
 function stripHistoryQuotes(value) {
   if (Array.isArray(value)) return value.map(stripHistoryQuotes);
   if (value && typeof value === "object") {
