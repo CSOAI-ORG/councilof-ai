@@ -76,6 +76,7 @@ export const NODE_TEST_FILES = [
   'tests/population-delivery-verifier.test.mjs',
   'actions/verify-card/run.test.mjs',
   'actions/verify-card/workflow.test.mjs',
+  'scripts/derive-fin-run-attestation.test.mjs',
 ];
 
 export default defineConfig({
