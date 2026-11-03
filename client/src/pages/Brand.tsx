@@ -27,8 +27,8 @@ export default function Brand() {
     <div className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="text-3xl font-semibold tracking-tight">Canonical surfaces</h1>
       <p className="mt-2 text-muted-foreground">
-        Council of AI (CSOAI Ltd, UK Companies House 16939677) operates only the
-        surfaces below. Anything else using the name is not us.
+        Council of AI (CSOAI Ltd, UK Companies House 16939677) operates the
+        surfaces below — anything else using the name is not us.
       </p>
 
       <Card className="mt-6">
