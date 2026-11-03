@@ -89,13 +89,27 @@ jobs:
         if: steps.produce.outcome == 'success'
         run: node scripts/harness-x/npm-guide-facts.mjs --write
 
+      # Every OTHER surface that states the npm release's state is derived from the same
+      # capture, so a new capture invalidates them too. Left out, this workflow would land a
+      # capture that makes llms.txt and the two discovery documents stale — and pr-gates runs
+      # `node scripts/llms-txt.mjs --check`, so the PR would go red on a fact it just moved.
+      #
+      # The derivation lives in ONE place (scripts/harness-x/npm-release-state.mjs): the guide's
+      # block, llms.txt's two sentences, the discovery documents' note and the live door's install
+      # line all read the same capture.
+      - name: Regenerate the other derived npm surfaces
+        if: steps.produce.outcome == 'success'
+        run: |
+          node scripts/llms-txt.mjs
+          node scripts/harness-x/render.mjs
+
       - name: Decide whether there is anything to land
         id: decide
         if: steps.produce.outcome == 'success'
         run: |
           if git diff --quiet; then
             echo "landed=0" >> "$GITHUB_OUTPUT"
-            echo "the capture and the guide already agree — nothing to land"
+            echo "the capture and every derived surface already agree — nothing to land"
           else
             echo "landed=1" >> "$GITHUB_OUTPUT"
             git --no-pager diff --stat
@@ -112,12 +126,21 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BR"
-          git add distribution/npm/npm-publish-check.json llms-install.md public/llms-install.md
-          git commit -m "npm-capture: re-derive the guide's npm facts from a fresh capture (${STAMP})"
+          git add distribution/npm/npm-publish-check.json llms-install.md public/llms-install.md \
+                  public/llms.txt public/llms-full.txt \
+                  public/.well-known/mcp.json public/.well-known/mcp/server-card.json \
+                  distribution/MANIFEST.json
+          git commit -m "npm-capture: re-derive the npm facts from a fresh capture (${STAMP})"
           git push origin "HEAD:$BR"
           URL=$(gh pr create --base master --head "$BR" \
-            --title "npm-capture: re-derive the guide's npm facts from a fresh capture (${STAMP})" \
-            --body "The estate's own producer wrote a new dated capture, and the install guide's npm-facts block was regenerated FROM it by scripts/harness-x/npm-guide-facts.mjs. The block is derived, not authored: every number and name in it is read from distribution/npm/npm-publish-check.json.
+            --title "npm-capture: re-derive the npm facts from a fresh capture (${STAMP})" \
+            --body "The estate's own producer wrote a new dated capture, and every surface that states the npm package's release state was regenerated FROM it.
+
+          The derivation is one module (scripts/harness-x/npm-release-state.mjs) over one dated capture (distribution/npm/npm-publish-check.json):
+          - the install guide's npm-facts block (scripts/harness-x/npm-guide-facts.mjs);
+          - llms.txt's two npm sentences (scripts/llms-txt.mjs);
+          - the two discovery documents' stdio note (scripts/harness-x/render.mjs);
+          - the live door's install line (functions/mcp/[[path]].ts).
 
           The capture is dated and was not edited. The published release is NOT advertised as the contract — the prepared source version is moved separately, because a published version cannot be re-published.
 
