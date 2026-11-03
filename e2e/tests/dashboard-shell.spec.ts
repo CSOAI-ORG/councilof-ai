@@ -185,6 +185,45 @@ test("a question typed on Get results keeps its answer panel mounted (no self-ab
   expect(aborted, "the TalkPanel run must not be aborted by its own page").toEqual([]);
 });
 
+test("the run-a-tool strip deep-links into the tools pane with the tool preselected", async ({ page }) => {
+  // P6 (2026-11-02): the start screen's Run-a-tool strip is the front door to the executable
+  // fleet. Each chip is a plain link to /dashboard?tab=tools&tool=<name>; this holds the flow
+  // end to end — strip renders on home, the chip carries the exact deep link, and following it
+  // lands the tool pane inside the shell. The runner itself is shown in its honest
+  // no-network state (the static server serves no /mcp), which is exactly what structure-only
+  // assertions may claim here.
+  await openTab(page, "home");
+  const strip = page.getByTestId("ws-runnow");
+  await expect(strip, "the run-a-tool strip renders on the start screen").toBeVisible();
+  await expect(strip.getByRole("heading", { name: "Run a live tool now" })).toBeVisible();
+
+  // The curated chips exist and every chip href points at the tools pane with a tool param.
+  const chips = strip.getByRole("listitem").locator("a");
+  const chipCount = await chips.count();
+  expect(chipCount, "at least one curated chip plus the All chip").toBeGreaterThanOrEqual(2);
+  for (let i = 0; i < chipCount; i++) {
+    const href = await chips.nth(i).getAttribute("href");
+    expect(href ?? "", `chip ${i} href`).toMatch(/^\/dashboard\?tab=tools(&tool=[a-z0-9_]+)?$/);
+  }
+  // The named chip's deep link carries its tool, and the All chip carries none.
+  const named = strip.getByTestId("ws-runnow-board_totals");
+  await expect(named).toHaveAttribute("href", "/dashboard?tab=tools&tool=board_totals");
+  await expect(strip.getByTestId("ws-runnow-all")).toHaveAttribute("href", "/dashboard?tab=tools");
+
+  // Follow the chip like a reader would: the tools pane becomes the active canvas.
+  await named.click();
+  await expect(page).toHaveURL(/\/dashboard\?tab=tools&tool=board_totals/);
+  await expect(
+    page.getByTestId("dashboard-tool-canvas"),
+    "the tool pane canvas is the active workspace canvas",
+  ).toBeVisible();
+  // Keyboard: the chip is a real link, reachable and labelled by its tool title (not just the id).
+  await openTab(page, "home");
+  const chipAgain = page.getByTestId("ws-runnow-board_totals");
+  await chipAgain.focus();
+  await expect(chipAgain).toBeFocused();
+});
+
 test("the canonical dashboard accepts its optional trailing slash", async ({
   page,
 }) => {

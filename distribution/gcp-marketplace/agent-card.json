@@ -272,6 +272,28 @@
         "SendMessage with Part.data {\"skill\":\"axis-specialist\",\"input\":{\"axis\":\"governance\"}}",
         "GET /api/axis-specialists/governance"
       ]
+    },
+    {
+      "id": "framework-readiness",
+      "name": "Framework readiness checklist (deterministic)",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"<id>\"}} and the answer is computed in-process by the same module the MCP tool framework_readiness calls, so the two doors cannot disagree: per item, the published provision it is keyed to, a plain-words requirement summary, the evidence that would show readiness, and the question it opens for the caller's own compliance function. Optional sector and role are echoed as pointers and notes. There is no score and no pass or fail: a checklist lays out what evidence would be measured, it does not certify compliance, and it is not legal advice or a conformity assessment.",
+      "tags": [
+        "eu-ai-act",
+        "dora",
+        "nis2",
+        "gdpr",
+        "iso-27001",
+        "nist-csf",
+        "soc2",
+        "pci-dss",
+        "cra",
+        "readiness",
+        "deterministic"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"eu-ai-act\"}}",
+        "SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"gdpr\",\"sector\":\"healthcare\"}}"
+      ]
     }
   ],
   "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",
@@ -282,11 +304,5 @@
     "conformity-assessment",
     "legal-determination",
     "enforcement"
-  ],
-  "signatures": [
-    {
-      "protected": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2NhcmQtYXR0ZXN0YXRpb24tMiIsInR5cCI6IkpPU0UifQ",
-      "signature": "hSeV6JnTjcG9rJadJRtMsnyzcQ9yvt22TgnzkXBZAtc1eJTTSUNFDx5aDU48aeu9oDDUSq2nZbSg0F3xydFDDw"
-    }
   ]
 }
