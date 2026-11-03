@@ -455,6 +455,16 @@ jobs:
           # needs a partial clone, and this checkout is not one.
           git fetch --no-tags origin 10046fd8b60d75be66bd1f9dbf54155cca26dec3
           test "$(git rev-parse 10046fd8b60d75be66bd1f9dbf54155cca26dec3^{commit})" = 10046fd8b60d75be66bd1f9dbf54155cca26dec3
+          # Defence in depth for the same trap. The fetch above no longer truncates the
+          # graph, but if anything ELSE in this job ever makes the checkout shallow, every
+          # gate after this step reads a truncated history and the sbom-pin gate cannot
+          # tell "not an ancestor" from "could not finish the walk". Fail here, loudly,
+          # with the numbers, rather than letting a later gate name a false finding.
+          if [ "$(git rev-parse --is-shallow-repository)" != "false" ]; then
+            echo "::error::this job's checkout is SHALLOW - the gates after this step would read a truncated graph"
+            echo "reachable from HEAD: $(git rev-list --count HEAD) commit(s); .git/shallow holds $(grep -c . .git/shallow 2>/dev/null || echo 0) boundary commit(s)"
+            exit 1
+          fi
           node --version
           python3 scripts/test_anthropic_gspc_worker.py
           node --experimental-vm-modules --unhandled-rejections=strict scripts/test_paid_delivery_records.mjs
