@@ -1,22 +1,36 @@
-name: evidence-bundle-freshness
-# Weekly watchdog over the four obligation evidence bundles (article-50, article-53,
-# dora, cra): the newest relevant card in each must be within 14 days, else the gate
-# fails. EMPTY is a reported state, never a failure; UNREADABLE fails (a watchdog
-# that cannot see must say so). Preview reads only: nothing paid, nothing signed.
-# Measurement, never certification.
+name: Evidence Bundle Freshness Gate
+# TWO LAYERS, deliberately: layer 1 reads the COMMITTED bundle bytes (deterministic,
+# network-free — it can only see what the repo holds); layer 2 probes the LIVE served
+# endpoint (catches what layer 1 cannot: a deploy serving stale bytes while the repo
+# is fresh). Two layers, one 14-day floor. Layer 2 states: FRESH / EMPTY (an answer,
+# never a failure) / STALE (fails) / UNREADABLE (fails — a watchdog that cannot see
+# must say so). Measurement, never certification.
+
 on:
   schedule:
-    - cron: "0 9 * * 1" # Mondays 09:00 UTC
-  workflow_dispatch: {}
-permissions: { contents: read }
-concurrency: { group: evidence-bundle-freshness, cancel-in-progress: false }
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "public/cards-bundle.json"
+      - "functions/api/_obligations.ts"
+      - "functions/api/evidence-bundle.ts"
+      - "scripts/check-evidence-bundle-freshness.mjs"
+      - ".github/workflows/evidence-bundle-freshness.yml"
+
+permissions:
+  contents: read
+
 jobs:
   freshness:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - name: Read the four bundles and hold the 14-day floor
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: "Layer 1 (build state): Art-50, Art-53, DORA, CRA bundle card freshness (<= 14 days)"
+        run: node scripts/check-evidence-bundle-freshness.mjs --max-age-days 14
+      - name: "Layer 2 (served state): probe the LIVE endpoint — a deploy can serve stale bytes while the committed ones are fresh"
         run: python3 scripts/evidence_bundle_freshness.py
