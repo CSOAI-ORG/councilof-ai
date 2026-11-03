@@ -377,7 +377,7 @@ export default function DashboardLayout({
           <aside
             ref={desktopNavigationRef}
             className="flex w-60 shrink-0 flex-col border-r border-emerald-950/10 bg-white"
-            aria-label="Menu"
+            aria-label="Council OS sections"
           >
             <div className="px-5 pb-3 pt-5">
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Council OS</p>
@@ -417,7 +417,7 @@ export default function DashboardLayout({
               ref={drawerRef}
               role="dialog"
               aria-modal="true"
-              aria-label="Menu"
+              aria-label="Council OS sections"
               className="fixed inset-y-0 left-0 z-[61] flex w-[min(20rem,86vw)] flex-col bg-white shadow-2xl"
             >
               <div className="flex h-14 items-center justify-between border-b border-border px-4">
