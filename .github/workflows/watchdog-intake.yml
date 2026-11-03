@@ -75,10 +75,26 @@ jobs:
 
           # THE LOOP'S VERDICT IS THE GATE. A day the loop did not READ is a HOLD, and a HOLD
           # is not published. This workflow has no opinion of its own about the day's content.
-          if ! grep -q " READ " "$LANES_DIR/logs/watchdog-intake.log"; then
+          LOG="$LANES_DIR/logs/watchdog-intake.log"
+          if ! grep -q " READ " "$LOG"; then
             echo "the loop did not READ the day - nothing is published, nothing is claimed"
             exit 0
           fi
+
+          # COUNTS ARE DERIVED, NEVER TYPED. The message below used to say "18 public
+          # watchdog and incident sources probed" in the clear, because 18 was true on the
+          # day it was written. A number in a commit message is a claim about a measurement
+          # nobody re-read, and the estate's rule is that a count is derived from the
+          # measurement or it is not said at all. The loop's own READ line carries both
+          # numbers; they are read from it, never typed here.
+          READ_LINE=$(grep " READ " "$LOG" | tail -1)
+          PROBED=$(printf '%s' "$READ_LINE" | sed -n 's/.*probed=\([0-9][0-9]*\).*/\1/p')
+          ROWS=$(printf '%s' "$READ_LINE" | sed -n 's/.*rows=\([0-9][0-9]*\).*/\1/p')
+          if [ -z "$PROBED" ] || [ -z "$ROWS" ]; then
+            echo "HOLD - the loop's READ line carries no probed/rows count, so the day's numbers cannot be stated"
+            exit 0
+          fi
+          echo "the day: probed=$PROBED rows=$ROWS"
 
           git checkout -B "$BRANCH"
           mkdir -p "$PUB"
@@ -102,15 +118,31 @@ jobs:
           fi
 
           git -c user.name=csoai-watchdog-intake -c user.email=intake@csoai.org commit -q \
-            -m "watchdog/auto-$DATE: 18 public watchdog and incident sources probed, the day folded into the WG-SAFE routing queue (every row HOLD, may_apply false, no challenge opened)"
+            -m "watchdog/auto-$DATE: $PROBED public watchdog and incident sources probed, the day folded into the WG-SAFE routing queue ($ROWS rows, every row HOLD, may_apply false, no challenge opened)"
           git push -q --force-with-lease origin "$BRANCH"
 
           pr=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
           if [ -z "$pr" ]; then
-            pr=$(gh pr create --repo "$REPO" --head "$BRANCH" --base master \
+            # `gh pr create` has NO --json flag - it prints the new PR's URL on stdout. The
+            # first version of this step asked for `--json number --jq '.number'` and died
+            # with "unknown flag: --json" AFTER the day's branch had already been pushed,
+            # so the day landed on a branch with no pull request and nothing said so.
+            url=$(gh pr create --repo "$REPO" --head "$BRANCH" --base master \
                  --title "watchdog/auto-$DATE: the day's public watchdog intake and WG-SAFE routing queue" \
-                 --body "Produced by scripts/pod-loops/watchdog-intake.sh, the estate's own intake loop, run on a runner because the pod that hosted it is gone. Every routing row is HOLD, may_apply false, no challenge opened. The loop's own gate decided the day was publishable; the required checks are the gate for the merge." \
-                 --json number --jq '.number')
+                 --body "Produced by scripts/pod-loops/watchdog-intake.sh, the estate's own intake loop, run on a runner because the pod that hosted it is gone. $PROBED public watchdog and incident sources probed; $ROWS routing rows, every one HOLD, may_apply false, no challenge opened. The loop's own gate decided the day was publishable; the required checks are the gate for the merge.")
+            pr=$(printf '%s' "$url" | sed -n 's#.*/pull/\([0-9][0-9]*\).*#\1#p')
+            if [ -z "$pr" ]; then
+              echo "::error::the day's branch $BRANCH is pushed but its pull request number could not be read from: $url"
+              exit 1
+            fi
           fi
           echo "PR #$pr"
-          gh pr merge "$pr" --repo "$REPO" --squash --auto || true
+          # NO SILENT NO-OP. The old line was `... --auto || true`, which swallowed every
+          # failure - including "auto-merge is not enabled on this repository" - and left a
+          # day's reading sitting on an open pull request with nothing to show for it.
+          if gh pr merge "$pr" --repo "$REPO" --squash --auto; then
+            echo "auto-merge enabled - the required checks (gates, build, stamped-bytes, hold-guard) are the gate"
+          else
+            echo "::warning::auto-merge could NOT be enabled for PR #$pr"
+            echo "::warning::the day is pushed and the pull request is open; it needs the merge queue or a human"
+          fi
