@@ -59,6 +59,21 @@ export default function DashboardToolsPane() {
             <strong className="text-foreground">RUNTIME_OBSERVED</strong>. It is
             never promoted to MEASURED, REPRODUCED or SIGNED by this interface.
           </p>
+          {/* The governance library lives on /tools (one row per framework the readiness
+              checklist accepts); the workspace pane names it one click away so a reader here
+              knows the framework group exists without hunting the marketing page. */}
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Working through a framework? The{" "}
+            <a
+              href="/tools#governance-library"
+              className="font-semibold text-emerald-800 underline underline-offset-2 hover:text-emerald-900"
+              data-testid="tools-pane-govlib-link"
+            >
+              governance library
+            </a>{" "}
+            lists one readiness checklist per framework — deterministic, free, never a
+            determination.
+          </p>
         </div>
         <a
           href="/mcp"
