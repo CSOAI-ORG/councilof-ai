@@ -31,7 +31,9 @@ RULES this script enforces on itself
   * Each push prints the LIVE URL and re-reads it until the as_of appears there, or reports that it did not.
   * No prices. Never "certified", "BFT" or "sovereign" — the README is scanned before anything is pushed.
   * Owner-gated actions are not taken: no accounts, no payments, no deletions outside the snapshot folder
-    each surface owns, no email. npm is reported as BLOCKED (WebAuthn account needs a Bypass-2FA token).
+    each surface owns, no email. This script does not publish npm; its BLOCKED row describes only
+    this script. npm-gspc-release.yml owns trusted OIDC publication; inspect that run and registry
+    readback for the package release state.
 
 Measurement, not certification.
 """
@@ -2018,9 +2020,9 @@ def spray_pypi(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict
 
 def spray_npm(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
     return [result("npm", "BLOCKED", f"https://www.npmjs.com/package/{NPM_PACKAGE}",
-                   detail="the npm account is WebAuthn (not TOTP): `npm publish --otp=` can never work and web login returns "
-                          "EOTP. Owner action: mint a granular access token with Bypass 2FA at npmjs.com → Access Tokens, "
-                          "store it as the NPM_TOKEN secret; this script does not attempt npm until then.")]
+                   detail="this script does not publish npm. BLOCKED describes this spray path, not the registry release state. "
+                          "The separate .github/workflows/npm-gspc-release.yml publishes through trusted OIDC; "
+                          "inspect that workflow run and the npm registry readback to establish the published version.")]
 
 
 SURFACES = {"hf": spray_hf, "kaggle": spray_kaggle, "github": spray_github, "zenodo": spray_zenodo,
