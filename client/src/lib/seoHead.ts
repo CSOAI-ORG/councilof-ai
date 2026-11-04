@@ -163,7 +163,7 @@ const FAMILIES: Family[] = [
     lead: (n) => `${n}. Every signed finding for this measured model: the axis, the run, the regulator it maps to, and the card behind each row. Read from the findings index.`,
   },
   {
-    pattern: "/mcp/:slug",
+    pattern: "/mcps/:slug",
     name: (p) => `MCP server: ${slugTitle(p)}`,
     lead: (n) => `${n}, one entry in the Council of AI MCP registry: what it does, the frameworks it maps to, its language and source. A listing, not a reachability test.`,
   },

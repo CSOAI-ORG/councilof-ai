@@ -35,6 +35,15 @@ type Item = {
   opens_question: string;
 };
 
+type EstateLink = {
+  /** The page's own words for itself. */
+  label: string;
+  /** Origin-relative href — this estate's published page, verified against the router. */
+  href: string;
+  /** What the reader finds there, honestly. */
+  what: string;
+};
+
 type Framework = {
   id: string;
   label: string;
@@ -42,6 +51,9 @@ type Framework = {
   what: string;
   /** Published sources a reader can check without an account. */
   provenance: string[];
+  /** This estate's own overview pages for the framework (P8 follow-up, 2026-11-03). Only pages
+   *  the router actually serves; a framework with no dedicated page names the catalog instead. */
+  estate_links: EstateLink[];
   items: Item[];
 };
 
@@ -53,7 +65,13 @@ const FRAMEWORKS: Framework[] = [
     provenance: [
       "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
       "https://artificialintelligenceact.eu/ (independent implementation tracker)",
+    ],    estate_links: [
+      { label: "Readiness hub", href: "/readiness", what: "The estate's AI Act readiness walk-through: what phases in when, with pointers per obligation." },
+      { label: "Checklist", href: "/eu-ai-act-checklist", what: "A printable checklist companion to this tool's items." },
+      { label: "GPAI obligations", href: "/gpai", what: "The general-purpose AI model duties, separated from deployer duties." },
+      { label: "Penalties", href: "/penalties", what: "The fine regime, stated with its articles." },
     ],
+
     items: [
       {
         id: "euai-1",
@@ -134,7 +152,10 @@ const FRAMEWORKS: Framework[] = [
     provenance: [
       "https://eur-lex.europa.eu/eli/reg/2022/2554/oj",
       "https://www.eiopa.europa.eu/digital-operational-resilience-act-dora_en",
+    ],    estate_links: [
+      { label: "DORA overview", href: "/dora", what: "The estate's DORA page: pillars, timelines and who is in scope, in plain words." },
     ],
+
     items: [
       {
         id: "dora-1",
@@ -205,7 +226,10 @@ const FRAMEWORKS: Framework[] = [
     provenance: [
       "https://eur-lex.europa.eu/eli/dir/2022/2555/oj",
       "https://digital-strategy.ec.europa.eu/en/policies/nis2-directive",
+    ],    estate_links: [
+      { label: "NIS2 overview", href: "/nis2", what: "The estate's NIS2 page: essential vs important entities and the twenty-one measures." },
     ],
+
     items: [
       {
         id: "nis2-1",
@@ -276,7 +300,10 @@ const FRAMEWORKS: Framework[] = [
     provenance: [
       "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
       "https://edpb.europa.eu/ (guidance of the European Data Protection Board)",
+    ],    estate_links: [
+      { label: "Jurisdiction engine", href: "/law", what: "The city-to-bloc law stack builder — GDPR appears in every stack it renders." },
     ],
+
     items: [
       {
         id: "gdpr-1",
@@ -347,7 +374,10 @@ const FRAMEWORKS: Framework[] = [
     provenance: [
       "https://www.iso.org/standard/27001",
       "https://www.iso27001security.com/ (independent control reference)",
+    ],    estate_links: [
+      { label: "Framework catalog", href: "/framework-catalog", what: "The estate's catalog of frameworks it publishes pages for; ISO/IEC 42001 (the AI management-system sibling) is covered there." },
     ],
+
     items: [
       {
         id: "iso-1",
@@ -418,7 +448,11 @@ const FRAMEWORKS: Framework[] = [
     provenance: [
       "https://www.nist.gov/cyberframework",
       "https://nvlpubs.nist.gov/nistpubs/CSIP/NIST.CSIP.29.pdf (implementation examples)",
+    ],    estate_links: [
+      { label: "NIST AI RMF guide", href: "/nist-ai-rmf", what: "The estate's guide to the AI Risk Management Framework — the AI sibling of the CSF, same Generate-Functions family." },
+      { label: "NIST vs EU AI Act", href: "/nist-vs-eu-ai-act", what: "How the NIST framework family maps against the AI Act's articles." },
     ],
+
     items: [
       {
         id: "csf-1",
@@ -489,7 +523,10 @@ const FRAMEWORKS: Framework[] = [
     provenance: [
       "https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-trust-services",
       "https://www.aicpa.org/ (Trust Services Criteria 2017, revised 2022)",
+    ],    estate_links: [
+      { label: "Framework catalog", href: "/framework-catalog", what: "The estate's catalog of frameworks it publishes pages for." },
     ],
+
     items: [
       {
         id: "soc2-1",
@@ -560,7 +597,10 @@ const FRAMEWORKS: Framework[] = [
     provenance: [
       "https://www.pcisecuritystandards.org/standards/pci-dss/",
       "https://www.pcisecuritystandards.org/document_library/ (official standard and SAQs)",
+    ],    estate_links: [
+      { label: "Framework catalog", href: "/framework-catalog", what: "The estate's catalog of frameworks it publishes pages for." },
     ],
+
     items: [
       {
         id: "pci-1",
@@ -631,7 +671,11 @@ const FRAMEWORKS: Framework[] = [
     provenance: [
       "https://eur-lex.europa.eu/eli/reg/2024/2847/oj",
       "https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act",
+    ],    estate_links: [
+      { label: "CRA overview", href: "/cra", what: "The estate's Cyber Resilience Act page: products with digital elements, support periods, reporting duties." },
+      { label: "CRA readiness kit", href: "/cra-readiness", what: "The estate's CRA preparation kit page." },
     ],
+
     items: [
       {
         id: "cra-1",
@@ -759,6 +803,9 @@ export function readinessResult(args: Record<string, unknown>): {
     item_count: fw.items.length,
     items: fw.items,
     provenance: fw.provenance,
+    // This estate's own overview pages for the framework, verified against the router. Guidance
+    // links, not evidence links: a page explaining a framework is not a measurement of anything.
+    estate_links: fw.estate_links,
     ...(sector ? { sector } : {}),
     ...(hint
       ? {
@@ -806,6 +853,10 @@ export async function readinessToolResult(args: Record<string, unknown>): Promis
   }
   lines.push("Sources a reader can check without an account:");
   for (const s of p.provenance as string[]) lines.push(`  ${s}`);
+  if (Array.isArray(p.estate_links) && p.estate_links.length) {
+    lines.push("", "This estate's own overview pages (guidance, not evidence):");
+    for (const l of p.estate_links as EstateLink[]) lines.push(`  ${l.href} — ${l.label}: ${l.what}`);
+  }
   lines.push("", "A checklist is preparation, never a determination: nothing here states or implies the caller's status under any framework. Not legal advice.");
   return {
     content: [{ type: "text", text: lines.join("\n") }],
