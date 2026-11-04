@@ -183,10 +183,24 @@ describe("GET /api/model-lifecycle — the ledger is what it claims to be", () =
     expect((ledger as unknown as { certification: boolean }).certification).toBe(false);
     expect(ledger.not_this.length).toBeGreaterThan(0);
     expect(ledger.not_claimed.length).toBeGreaterThan(0);
-    // The ledger may SAY it is not a ranking; it may not BE one.
-    const blob = JSON.stringify(ledger).toLowerCase();
-    expect(blob.includes("is ranked") || blob.includes("are ranked")).toBe(false);
-    expect(blob.includes("certifies")).toBe(false);
+    // The ledger may SAY it is not a ranking; it may not BE one. A bare substring scan cannot
+    // tell those apart — "No model is ranked, scored, graded, certified or approved here" is the
+    // disclaimer, and it trips the same scan as a ranking claim would. So every sentence that
+    // mentions a ranking must also deny one.
+    for (const sentence of JSON.stringify(ledger).split(/[.;]/)) {
+      if (/\b(is|are) ranked\b/i.test(sentence)) {
+        expect(
+          /\b(no|not|never)\b/i.test(sentence),
+          `a sentence ranks without denying it: ${sentence.slice(0, 120)}`,
+        ).toBe(true);
+      }
+    }
+    // And no row carries a rank, a score or a grade field at all.
+    for (const r of ledger.rows) {
+      expect(Object.keys(r)).not.toContain("rank");
+      expect(Object.keys(r.estate)).not.toContain("score");
+      expect(Object.keys(r.estate)).not.toContain("grade");
+    }
   });
 
   it("the upstream read keeps its source, its date, and the vendor's own wording", () => {
