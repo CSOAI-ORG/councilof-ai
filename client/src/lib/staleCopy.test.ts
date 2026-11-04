@@ -80,10 +80,18 @@ describe("stale copy honesty", () => {
     expect(card.capabilities.free_tools).toBe(lock.free.length);
     expect(card.capabilities.tools).toEqual(fleet);
     expect(card.description).toContain(`server ${registry.version}`);
-    // While every published npm release is deprecated on npm (scripts/harness-x/render.mjs
-    // NPM_STDIO_ADVERTISED), the card withholds the stdio pin and names the free door instead.
+    // The card withholds the stdio pin while the published release is not the contract, and the
+    // note is DERIVED from the dated capture (scripts/harness-x/npm-release-state.mjs). The old
+    // gate matched the words "deprecated on npm" — a claim that was FALSE from 2 Nov 2026 on,
+    // because npm deprecates 0.1.0-0.2.2 and the estate's 0.2.5 is not deprecated.
     if (card.endpoints.mcp.stdio === null) {
-      expect(card.endpoints.mcp.stdio_note).toMatch(/deprecated on npm.*use the free door https:\/\/councilof\.ai\/mcp\/free/);
+      expect(card.endpoints.mcp.stdio_note).toMatch(
+        /^npm csoai-gspc-mcp: the latest published release is 0\.2\.5 .*is not marked deprecated on npm;/,
+      );
+      expect(card.endpoints.mcp.stdio_note).toContain(
+        "the prepared release 0.2.6 is not on npm yet (npm's latest published release is 0.2.5)",
+      );
+      expect(card.endpoints.mcp.stdio_note).toMatch(/[Uu]se the free door https:\/\/councilof\.ai\/mcp\/free/);
       expect(card.endpoints.mcp.free).toBe("https://councilof.ai/mcp/free");
     } else {
       expect(card.endpoints.mcp.stdio).toBe(
