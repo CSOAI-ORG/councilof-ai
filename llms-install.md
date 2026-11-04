@@ -70,6 +70,7 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
 {
   "free": [
     "board_totals",
+    "board_counts",
     "get_axis",
     "verify_card",
     "list_cards",
