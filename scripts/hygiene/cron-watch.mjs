@@ -62,7 +62,9 @@ for (const repo of REPOS) {
 console.log(JSON.stringify({ checked: REPOS, offenders, apply }, null, 1));
 
 if (apply) {
-  const existing = JSON.parse(gh(["issue", "list", "--repo", ISSUE_REPO, "--state", "open", "--search", `in:title "${ISSUE_TITLE}"`, "--json number,title"]));
+  // gh issue search treats the query as space-separated terms: embedded quotes or a
+  // trailing colon break the parse outright (the first apply run died on exactly this).
+  const existing = JSON.parse(gh(["issue", "list", "--repo", ISSUE_REPO, "--state", "open", "--search", "in:title cron-watch silently stopped", "--json", "number,title"]));
   const body =
     `Automated cron-health sweep (${new Date().toISOString()}). Scheduled workflows whose last\n` +
     `schedule-event run exceeds ${budgetHours}h, or that have a schedule but have never fired it.\n` +
