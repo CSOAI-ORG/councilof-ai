@@ -66,7 +66,7 @@ export default function Traction() {
   const usdc = live.revenue ? `$${(live.revenue.atomic / 1_000_000).toFixed(2)}` : undefined;
 
   return <section className="min-h-screen bg-slate-950 text-slate-100">
-    <Helmet><title>Operation and external use | Council of AI</title><meta name="description" content="Inspect Council of AI's operating measurement infrastructure, documented external use, published software and datasets, and separate commercial evidence." /></Helmet>
+    <Helmet><title>Operation and external use | Council of AI</title><meta name="description" content="Explore Council of AI's evidence services, operating infrastructure, documented external use and business model. Information for organisations, partners and investors." /></Helmet>
     <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,.18),transparent_36%)]">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <p className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-300">Operating work and documented external use</p>
@@ -77,7 +77,19 @@ export default function Traction() {
       </div>
     </section>
 
-    <section className="mx-auto max-w-6xl px-5 py-12">
+    <section id="for-organisations" aria-labelledby="organisation-jobs" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-12">
+      <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">From public evidence to a defined decision</p>
+      <h2 id="organisation-jobs" className="mt-3 text-2xl font-bold">What your organisation can use today</h2>
+      <p className="mt-4 max-w-3xl leading-7 text-slate-300">Council of AI helps people inspect what an AI measurement establishes, trace it to its source and carry that evidence into their own work. Start with the question you need to answer.</p>
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <Step n="01" title="Engineering and agent teams" body="Connect through MCP or the API, inspect a dated result and verify its record from your own workflow. Published code and instructions support a first integration." href="/connect/" />
+        <Step n="02" title="Evaluation and research teams" body="Read frozen tests, grading rules, source data and correction history. Use the published scope to decide which results are relevant to your investigation." href="/methodology" />
+        <Step n="03" title="Buyers and procurement teams" body="Enquire about an existing evidence bundle, Article 50 marking-check pack or provider-diff feed. Agree the subject, dates, deliverable and invoice terms before ordering." href="/services/" />
+      </div>
+      <p className="mt-5 text-sm leading-6 text-slate-300">Council OS brings the board, verification and evidence tools into one <Link href="/dashboard" className="text-emerald-300 underline">workspace</Link>. Fresh measurement runs are available to discuss; online booking is not live.</p>
+    </section>
+
+    <section className="mx-auto max-w-6xl px-5 pb-12">
       <h2 className="text-2xl font-bold">Operating measurement and evidence infrastructure</h2>
       <p className="mt-4 max-w-3xl leading-7 text-slate-300">The public board, verification tools, evidence interfaces and corrections ledger are available to inspect. Each measurement retains its method, date and evidence state. Measurement is not certification.</p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -97,6 +109,16 @@ export default function Traction() {
       <div><h3 className="text-xl font-bold">Distribution with attribution</h3><p className="mt-4 leading-7 text-slate-300">The wider publishing estate includes Council, MEOK and shared material. Read each dated cohort separately. Download events can include mirrors, automated workflows and repeated fetches; they do not identify unique users or customers.</p><p className="mt-4 leading-7 text-slate-300">The documented examples above show specific outside activity. They do not turn the unmeasured stages of the estate-wide adoption census into totals.</p><Link href="/reach/" className="mt-5 inline-block font-semibold text-emerald-300 underline">Inspect distribution sources and measurement limits</Link></div>
     </div></section>
 
+    <section id="business-model" aria-labelledby="business-model-h" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-12">
+      <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">How the work is supported</p>
+      <h2 id="business-model-h" className="mt-3 text-2xl font-bold">Open evidence, with defined paid services</h2>
+      <div className="mt-6 grid gap-6 md:grid-cols-2">
+        <div className="rounded-2xl border border-slate-700 p-6"><h3 className="text-lg font-bold">Inspect and verify freely</h3><p className="mt-3 leading-7 text-slate-300">Public methods, the board and free record verification let a reader assess the work before commissioning anything. Published software and datasets carry their own licence and reuse conditions.</p></div>
+        <div className="rounded-2xl border border-slate-700 p-6"><h3 className="text-lg font-bold">Pay for an agreed service</h3><p className="mt-3 leading-7 text-slate-300">The service catalogue identifies metered evidence endpoints and previews. Organisations can also discuss a GBP invoice for the named evidence products. Scope, availability and delivery terms are confirmed in writing.</p></div>
+      </div>
+      <p className="mt-5 max-w-4xl leading-7 text-slate-300">A score is never sold. Payment does not determine a finding or confer regulatory approval. Relationships and conflicts belong alongside the evidence. Read our <Link href="/independence/" className="text-emerald-300 underline">independence and conflicts statement</Link> and <Link href="/services/" className="text-emerald-300 underline">current service catalogue</Link>.</p>
+    </section>
+
     <section id="commercial-evidence" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-12">
       <h2 className="text-2xl font-bold">Commercial evidence</h2>
       <p className="mt-4 max-w-3xl leading-7 text-slate-300">Technical use and commercial demand are different observations. These public counters cover the stated payment and commission records, not a full set of company accounts. Repeat demand and accepted outside deliveries remain separate evidence to establish.</p>
@@ -108,7 +130,20 @@ export default function Traction() {
       <p className="mt-5 text-sm leading-6 text-slate-300">No company or standalone IP valuation is established by these counters. A valuation must define the assets and rights in scope, financial assumptions, method and date.</p>
     </section>
 
-    <section className="mx-auto max-w-6xl px-5 pb-14"><h2 className="text-2xl font-black">The diligence path</h2><div className="mt-5 grid gap-4 md:grid-cols-3"><Step n="01" title="Inspect" body="Read the published methods, source records and dated external-use examples." href="/methodology" /><Step n="02" title="Verify" body="Check a signed card and inspect corrections before relying on a claim." href="/gspc-verify" /><Step n="03" title="Discuss a defined need" body="Agree a system, evidence question, delivery scope and terms before commissioning work." href="/contact/?arm=run" /></div></section>
+    <section id="partners" aria-labelledby="partners-h" className="scroll-mt-24 border-y border-white/10 bg-slate-900/70">
+      <div className="mx-auto max-w-6xl scroll-mt-24 px-5 py-12">
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">For partners and investors</p>
+        <h2 id="partners-h" className="mt-3 text-2xl font-black">Understand the organisation behind the tools</h2>
+        <p className="mt-4 max-w-3xl leading-7 text-slate-300">The asset base combines working software, published measurement methods, datasets and evidence-handling practice. The links on this page connect those assets to dated outside use and separate commercial records, so a conversation can start from the work itself.</p>
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          <div><h3 className="text-lg font-bold">Explore a technical or delivery partnership</h3><p className="mt-3 leading-7 text-slate-300">Bring one workflow, evidence question or integration need. We can discuss a bounded scope, each party's responsibilities, available capacity and how the result would be reviewed.</p><Link href="/contact/?arm=pilot" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-300 underline">Discuss a scoped pilot</Link></div>
+          <div><h3 className="text-lg font-bold">Discuss the business and growth</h3><p className="mt-3 leading-7 text-slate-300">Investors and prospective operating partners can ask about the product model, team needs, commercial evidence and the records required for diligence. Financial assumptions and asset ownership need their own review alongside technical evidence.</p><Link href="/contact/" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-300 underline">Contact the company</Link></div>
+        </div>
+        <p className="mt-6 text-sm leading-6 text-slate-400">External participation and submitted contributions are recorded separately on <Link href="/memberships/" className="text-emerald-300 underline">our participation page</Link>. Each relationship is described with its source and scope.</p>
+      </div>
+    </section>
+
+    <section className="mx-auto max-w-6xl px-5 py-14"><h2 className="text-2xl font-black">The diligence path</h2><div className="mt-5 grid gap-4 md:grid-cols-3"><Step n="01" title="Inspect" body="Read the published methods, source records and dated external-use examples." href="/methodology" /><Step n="02" title="Verify" body="Check a signed card and inspect corrections before relying on a claim." href="/gspc-verify" /><Step n="03" title="Discuss a defined need" body="Agree a system, evidence question, delivery scope and terms before commissioning work." href="/contact/?arm=run" /></div></section>
   </section>;
 }
 

@@ -35,6 +35,7 @@ export function Footer() {
       title: 'Product',
       links: [
         { name: 'Check a record', href: '/gspc-verify/' },
+        { name: 'Services and buying', href: '/services/' },
         { name: 'Measurement enquiries', href: '/assess/' },
         { name: 'Board', href: '/dashboard/?tab=board' },
         { name: 'Connect tools to your AI', href: '/tools/' },
@@ -105,6 +106,7 @@ export function Footer() {
       links: [
         { name: 'About', href: '/about/' },
         { name: 'Operation and external use', href: '/traction/' },
+        { name: 'Partners and investors', href: '/traction/#partners' },
         { name: 'Brand & impostor notice', href: '/brand/' },
         { name: 'Evidence and reuse rights', href: '/licensing-agreement/#rights' },
         { name: 'Independence and conflicts', href: '/independence/' },
