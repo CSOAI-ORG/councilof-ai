@@ -30,6 +30,7 @@ or client.
 
 ## Optional local stdio package (not the contract; use the remote)
 
+<!-- mcp-npm-facts:start -->
 The package identity is `csoai-gspc-mcp` (not the stale scoped name previously
 shown here). Every release published to npm so far carries fewer tools than the
 remote, so this guide no longer gives a local configuration: use the remote above,
@@ -53,6 +54,7 @@ The repository currently prepares `0.2.6`, but that source version is **not a
 published npm release** until `npm view csoai-gspc-mcp@0.2.6 version` confirms that
 exact version. Do not install or advertise any published release as the contract
 before that independent check.
+<!-- mcp-npm-facts:end -->
 
 ## Exact reviewed tool catalog
 

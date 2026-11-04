@@ -732,9 +732,20 @@ describe("GET /mcp — the one-command install is at the point of discovery", ()
     expect(g.install).toBeTruthy();
     // ONE default line, and it is the free door (no key, read-only). Nothing else claims "default".
     expect(g.install.default).toBe(`claude mcp add --transport http council-of-ai ${ORIGIN}/mcp/free`);
-    expect(Object.values(g.install).filter((v) => /\/mcp\/free\b/.test(String(v)))).toHaveLength(1);
-    // The npm stdio package is labelled as the lighter, separately versioned implementation.
-    expect(g.install.stdio_lite).toMatch(/^deprecated on npm; npx -y csoai-gspc-mcp \(stdio-lite \d+\.\d+\.x: fewer tools/);
+    // Only the DEFAULT names the free door as an install. The stdio line may name it as the
+    // alternative ("or use the free door") — that is a pointer, not a second install instruction,
+    // and counting every value that merely mentions the door would forbid saying where to go.
+    const installCommands = [g.install.default, g.install.this_door, g.install.no_install_at_all, g.install.python];
+    expect(installCommands.filter((v) => /\/mcp\/free\b/.test(String(v)))).toHaveLength(1);
+    // The npm stdio package is labelled as the lighter, separately versioned implementation, and
+    // the label is DERIVED from the dated capture: the published release's version, its tool count
+    // against the door's, and npm's deprecation flag. The old wording ("deprecated on npm") was
+    // FALSE from 2 Nov 2026 on — npm deprecates 0.1.0-0.2.2, and 0.2.5 is not deprecated.
+    expect(g.install.stdio_lite).toMatch(
+      /^npm csoai-gspc-mcp@0\.2\.5 \(stdio-lite 0\.2\.x\): it carries 53 tool names against the 54 the door serves/,
+    );
+    expect(g.install.stdio_lite).toContain("is not marked deprecated on npm");
+    expect(g.install.stdio_lite).toContain("The prepared release 0.2.6 is not on npm yet");
     expect(g.install.claude_code).toBeUndefined();
     expect(g.install.any_client).toBeUndefined();
     expect(g.install.no_install_at_all).toMatch(/api\/gspc/);
