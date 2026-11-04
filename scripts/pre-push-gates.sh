@@ -131,11 +131,48 @@ node scripts/price-gate.mjs --json-only >/dev/null 2>&1 \
 # BEFORE it was force-pushed still holds the orphaned commit as an object, so "can I read it?"
 # is green locally while the merge ref CI checks out does not contain it. Object presence is
 # not reachability.
-sbom_out=$(python3 scripts/gen_sbom.py --check 2>&1 \
-  && node scripts/sbom-pin-gate.mjs --selftest 2>&1 \
-  && node scripts/sbom-pin-gate.mjs 2>&1) \
-  || { echo "  ✖ sbom: the SBOM does not pin a reachable commit — its verdict:"; \
-       printf '%s\n' "$sbom_out" | tail -14 | sed 's/^/      /'; fail=1; }
+#
+# ADDED 2026-11-03. The local gate and CI disagreed about ONE fact, and the disagreement was
+# costing the whole estate at once: a pinned generation commit that this store cannot read.
+# CI runs scripts/sbom-pin-gate.mjs and accepts its exit 2 (UNPROVABLE) as non-blocking,
+# because an unreadable pin is an ABSENCE OF EVIDENCE, not a finding about the SBOM. This
+# gate ran `gen_sbom.py --check` FIRST and blocked on it, so a push was refused for a commit
+# that a fresh clone simply does not have — while CI, the gate that actually decides the
+# merge, called the same state fine. A gate that blocks where CI does not is not stricter, it
+# is broken: it refuses work the estate has already accepted.
+#
+# THREE STATES, kept apart:
+#   gen_sbom --check exit 0  the SBOM matches the tree          -> pass
+#                       2    the SBOM does not match the tree     -> BLOCK (a real finding)
+#                       3    the pinned history is unreadable     -> report it; not a finding
+#   sbom-pin-gate        0    reachable                           -> pass
+#                       1    orphaned                            -> BLOCK
+#                       2    unprovable                          -> report it; not a finding
+sbom_rc=0
+sbom_out=$(python3 scripts/gen_sbom.py --check 2>&1) || sbom_rc=$?
+if [ "$sbom_rc" -eq 2 ]; then
+  echo "  ✖ sbom: the SBOM does not match the tree — its verdict:"
+  printf '%s\n' "$sbom_out" | tail -14 | sed 's/^/      /'; fail=1
+elif [ "$sbom_rc" -eq 3 ]; then
+  echo "  · sbom: UNCHECKABLE — the pinned generation commit is not readable in this store."
+  echo "      Not a finding about the SBOM, and not a reason to refuse the push. CI accepts it:"
+  printf '%s\n' "$sbom_out" | tail -3 | sed 's/^/      /'
+elif [ "$sbom_rc" -ne 0 ]; then
+  echo "  ✖ sbom: the check could not run (exit $sbom_rc) — its verdict:"
+  printf '%s\n' "$sbom_out" | tail -14 | sed 's/^/      /'; fail=1
+fi
+if ! node scripts/sbom-pin-gate.mjs --selftest >/dev/null 2>&1; then
+  echo "  ✖ sbom: the pin gate's own selftest failed — the gate is broken"; fail=1
+fi
+pin_rc=0
+pin_out=$(node scripts/sbom-pin-gate.mjs 2>&1) || pin_rc=$?
+if [ "$pin_rc" -eq 2 ]; then
+  echo "  · sbom: UNPROVABLE — the pinned commit cannot be checked here. Not a finding; CI accepts it:"
+  printf '%s\n' "$pin_out" | tail -6 | sed 's/^/      /'
+elif [ "$pin_rc" -ne 0 ]; then
+  echo "  ✖ sbom: the SBOM does not pin a reachable commit — its verdict:"
+  printf '%s\n' "$pin_out" | tail -14 | sed 's/^/      /'; fail=1
+fi
 
 # ADDED 2026-09-20. workflow_run couples follow-on workflows to deploy.yml by its
 # `name:` STRING. A rename lane changed deploy.yml's name without touching the five
