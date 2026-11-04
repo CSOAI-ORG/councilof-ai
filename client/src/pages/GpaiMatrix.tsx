@@ -96,7 +96,7 @@ export default function GpaiMatrix() {
           content="Explore published evidence and tool references for EU AI Act provisions, with GPAI coverage, source dates and measurement limits."
         />
       </Helmet>
-      <section className="mx-auto max-w-4xl">
+      <section className="mx-auto min-w-0 max-w-4xl [overflow-wrap:anywhere]">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber-700">
           {matrix?.layer ?? "Council of AI — Global Regulation Atlas"} · evidence snapshot{" "}
           {matrix?.as_of ? `· source date ${matrix.as_of}` : err ? "· UNCHECKABLE" : matrix ? "· source date not supplied" : "· loading…"}
