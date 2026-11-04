@@ -49,6 +49,7 @@ jobs:
   npm-capture-refresh:
     runs-on: ubuntu-latest
     permissions:
+      actions: write # dispatch the existing required PR gates for the bot branch
       contents: write
       pull-requests: write
     steps:
@@ -97,6 +98,12 @@ jobs:
       # The derivation lives in ONE place (scripts/harness-x/npm-release-state.mjs): the guide's
       # block, llms.txt's two sentences, the discovery documents' note and the live door's install
       # line all read the same capture.
+      # llms-txt derives this commit's board through esbuild; setup-node alone
+      # does not install the lockfile dependencies needed by that generator.
+      - name: Install generator dependencies
+        if: steps.produce.outcome == 'success'
+        run: npm ci --no-audit --no-fund
+
       - name: Regenerate the other derived npm surfaces
         if: steps.produce.outcome == 'success'
         run: |

@@ -6356,10 +6356,10 @@
       "path": "/api/subscribe",
       "method": "GET",
       "name": "Subscribe",
-      "description": "",
-      "description_state": "UNDOCUMENTED",
+      "description": "POST /api/subscribe — the newsletter signup behind the homepage daily-report band and the footer email capture.",
+      "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "NOT_IMPLEMENTED",
+      "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
       "surfaces": [
@@ -6369,7 +6369,7 @@
         "method": "GET",
         "request": "/api/subscribe",
         "expect_status": [
-          501
+          200
         ],
         "safe": true
       },
@@ -6381,10 +6381,10 @@
       "path": "/api/subscribe",
       "method": "POST",
       "name": "Subscribe (POST)",
-      "description": "",
-      "description_state": "UNDOCUMENTED",
+      "description": "POST /api/subscribe — the newsletter signup behind the homepage daily-report band and the footer email capture.",
+      "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "NOT_IMPLEMENTED",
+      "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
       "surfaces": [
@@ -6394,7 +6394,7 @@
         "method": "POST",
         "request": "/api/subscribe",
         "expect_status": [
-          501
+          200
         ],
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
@@ -7622,7 +7622,11 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
+<<<<<<< HEAD
       "order": 51
+=======
+      "order": 50
+>>>>>>> origin/master
     },
     {
       "id": "axis_affect",
@@ -8454,7 +8458,11 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
+<<<<<<< HEAD
       "order": 47
+=======
+      "order": 46
+>>>>>>> origin/master
     },
     {
       "id": "axis_swarm",
@@ -8535,6 +8543,32 @@
       "order": 1
     },
     {
+      "id": "axis_watchdog-ingest",
+      "kind": "mcp_tool",
+      "name": "axis_watchdog-ingest",
+      "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [],
+      "order": 47
+    },
+    {
       "id": "board_totals",
       "kind": "mcp_tool",
       "name": "board_totals",
@@ -8587,7 +8621,11 @@
       "required_args": [
         "subject"
       ],
+<<<<<<< HEAD
       "order": 50
+=======
+      "order": 49
+>>>>>>> origin/master
     },
     {
       "id": "evidence_bundle",
@@ -8616,7 +8654,11 @@
       "required_args": [
         "obligation"
       ],
+<<<<<<< HEAD
       "order": 54
+=======
+      "order": 53
+>>>>>>> origin/master
     },
     {
       "id": "evidence_bundle_preview",
@@ -8673,6 +8715,34 @@
         "framework"
       ],
       "order": 49
+    },
+    {
+      "id": "framework_readiness",
+      "kind": "mcp_tool",
+      "name": "framework_readiness",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [
+        "framework"
+      ],
+      "order": 48
     },
     {
       "id": "get_axis",
@@ -8861,7 +8931,11 @@
       "required_args": [
         "from"
       ],
+<<<<<<< HEAD
       "order": 53
+=======
+      "order": 52
+>>>>>>> origin/master
     },
     {
       "id": "route",
@@ -8916,7 +8990,11 @@
       "required_args": [
         "asset"
       ],
+<<<<<<< HEAD
       "order": 52
+=======
+      "order": 51
+>>>>>>> origin/master
     },
     {
       "id": "server_evidence",

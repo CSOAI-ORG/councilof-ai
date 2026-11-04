@@ -32,26 +32,24 @@ or client.
 
 <!-- mcp-npm-facts:start -->
 The package identity is `csoai-gspc-mcp` (not the stale scoped name previously
-shown here). Every release published to npm so far carries fewer tools than the
-remote, so this guide no longer gives a local configuration: use the remote above,
-or the free read-only door https://councilof.ai/mcp/free.
+shown here). The latest measured release carries the same tool names as the remote.
+This guide gives the remote configuration above; alternatively use
+the free read-only door https://councilof.ai/mcp/free.
 
-The latest published release is `0.2.5` (published 2026-11-01T15:07:36.724Z). Its published tarball carries
-53 tool names — 48 free + 5 metered — measured from the tarball's own manifests
-on 2026-11-03, not from this repository. It is **not** marked deprecated on npm, which is why
+The latest published release is `0.2.6` (published 2026-11-03T07:47:12.182Z). Its published tarball carries
+54 tool names — 49 free + 5 metered — measured from the tarball's own manifests
+on 2026-11-04, not from this repository. It is **not** marked deprecated on npm, which is why
 `npm view csoai-gspc-mcp@latest deprecated` prints nothing: deprecation is not the
 signal here, the name comparison is.
 
-That release is **not** name-for-name identical to the live door. The live door
-served 54 names at the same moment: the published tarball is one name short, and
-the name it lacks is `framework_readiness`, which the door added after `0.2.5` was published. No
-published name is missing from the door. Re-run the comparison — `npm pack
+That release carries the same 54 tool names as the live door. The live door
+served 54 names at the same moment. Re-run the comparison — `npm pack
 csoai-gspc-mcp@latest`, extract `gspc-tools.json` and `paid-tools.json`, diff
 against the door's `tools/list` — whenever either side moves, and treat the diff,
 not npm's deprecation flag, as the signal.
 
-The repository currently prepares `0.2.6`, but that source version is **not a
-published npm release** until `npm view csoai-gspc-mcp@0.2.6 version` confirms that
+The repository currently prepares `0.2.7`, but that source version is **not a
+published npm release** until `npm view csoai-gspc-mcp@0.2.7 version` confirms that
 exact version. Do not install or advertise any published release as the contract
 before that independent check.
 <!-- mcp-npm-facts:end -->

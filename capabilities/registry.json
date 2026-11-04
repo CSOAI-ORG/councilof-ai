@@ -2806,10 +2806,10 @@
         "http"
       ],
       "title": "Subscribe",
-      "description": "",
+      "description": "POST /api/subscribe — the newsletter signup behind the homepage daily-report band and the footer email capture.",
       "endpoint": "/api/subscribe",
       "method": "GET",
-      "lifecycle": "NOT_IMPLEMENTED",
+      "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
     },
@@ -2819,10 +2819,10 @@
         "http"
       ],
       "title": "Subscribe (POST)",
-      "description": "",
+      "description": "POST /api/subscribe — the newsletter signup behind the homepage daily-report band and the footer email capture.",
       "endpoint": "/api/subscribe",
       "method": "POST",
-      "lifecycle": "NOT_IMPLEMENTED",
+      "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
     },
@@ -3808,6 +3808,7 @@
       ],
       "title": "axis_swarm",
       "description": "The swarm axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+<<<<<<< HEAD
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -3834,6 +3835,21 @@
       ],
       "title": "board_counts",
       "description": "The estate's published counts as one labelled table from https://councilof.ai/api/counts: board slots and measurements, frozen-bank models, own model tags, card-matrix models, the signed public root and the signed card index — each with its source file, its as_of, what it means and how to quote it. A failed or self-disagreeing read is a NOT_READ state, never a zero. Figures are never summed or reconciled; where two surfaces disagree, the disagreement is the finding. Quote the one figure whose meaning answers the question, and carry its source and as_of. Measurement, not certification.",
+=======
+>>>>>>> origin/master
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "axis_watchdog-ingest",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "axis_watchdog-ingest",
+      "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",

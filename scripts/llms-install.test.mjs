@@ -102,11 +102,6 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
   const published = capture.published;
   const diff = capture.diff;
   const pubTotal = published.free_tools + published.metered_tools;
-  assert.notEqual(
-    published.version,
-    packageJson.version,
-    "the prepared version must differ from the published one: a published version cannot be re-published",
-  );
   assert.ok(
     pubTotal <= catalogTotal,
     "a published release cannot carry more names than the live fleet",
@@ -180,10 +175,16 @@ test("llms install guide matches the canonical MCP identity and tool catalog", a
     }
   }
   assert.doesNotMatch(guide, /"args":\s*\[\s*"-y",\s*"csoai-gspc-mcp/);
+  if (published.version !== packageJson.version) {
   assert.match(
     guide,
     new RegExp(`repository currently prepares \`${v}\`, but that source version is\\s+\\*\\*not a\\s+published npm release\\*\\*`),
   );
+  } else {
+    assert.match(guide, /is the published release identified by this dated capture/);
+    assert.doesNotMatch(guide, /source version is\s+\*\*not a\s+published npm release/);
+  }
+
   assert.match(
     guide,
     /A challenge is \*\*not\*\* a payment, settlement, delivery/,

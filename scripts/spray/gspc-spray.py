@@ -1149,6 +1149,8 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
 
 A dated export of the Council of AI public GSPC measurement board. Each row describes one declared axis: what was measured, the evidence type, the published result and its limitations. Use it to explore coverage and inspect evidence in a notebook.
 
+Council of AI is an operating AI measurement and evidence organisation run by CSOAI Ltd. Its [external-use and distribution records](https://councilof.ai/traction/) distinguish documented technical reuse from download counters.
+
 [Explore the interactive board](https://huggingface.co/spaces/csoai/gspc-board) · [Live source JSON]({BOARD_URL}) · [Verify a signed record — free]({VERIFY_URL}) · [Methodology](https://councilof.ai/methodology/)
 
 {overview}
