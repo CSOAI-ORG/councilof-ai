@@ -127,8 +127,11 @@ that freezes a count or introduces a second verifier.
 
 - Chrome Web Store: developer account + upload (steps in the extension README).
 - council-of-ai-grok 0.1.2: push the staged proposal patch once the org is reachable (HELD).
-- npm: `csoai-gspc-mcp@0.2.2` and `csoai-governance-mcp` are marked deprecated on npm while the
-  server card pins the former; publishing a new version is an owner action (HELD).
+- npm: `csoai-gspc-mcp@0.2.2` and `csoai-governance-mcp` are marked deprecated on npm. The
+  estate's later `csoai-gspc-mcp` releases (0.2.5, measured 2026-11-03) are NOT deprecated, but
+  they carry fewer tool names than the HTTP door serves and the prepared 0.2.6 is not on npm yet,
+  so the server card pins no stdio version and names the free door instead; publishing a release
+  that carries the served tool set is an owner action (HELD).
 - Decide whether `public/openapi.json` should be retired in favour of `/api/openapi.json`.
 
 
