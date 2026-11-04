@@ -831,7 +831,7 @@ export default function GspcScoreboard() {
             Verify a card — free, in your browser →
           </Link>
           <Link href="/honesty" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
-            The honesty gate — our own losses →
+            Review measurement scope and limitations →
           </Link>
           <a href="/api/reported" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
             REPORTED — third-party context, cited →
