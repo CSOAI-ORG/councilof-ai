@@ -1455,7 +1455,7 @@ export default function MeasurementBoard() {
           The three frontier models every deployer asks about first are absent
           from this board, and the page says so on arrival instead of hiding
           the gap in a footnote. The absence is the offer: a signed card for
-          any hosted model, commissioned from $10. */}
+          any hosted model, commissioned through the x402 rail. */}
       <aside
         data-testid="board-commission-callout"
         role="note"
@@ -1469,7 +1469,7 @@ export default function MeasurementBoard() {
             className="font-bold text-amber-300 underline decoration-amber-500/60 underline-offset-4 hover:text-amber-200"
             data-testid="board-callout-cta"
           >
-            Commission a signed card for any hosted model from $10.
+            Commission a signed card for any hosted model through the x402 rail.
           </a>{" "}
           The gap is the product.
         </p>
