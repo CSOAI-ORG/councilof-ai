@@ -1,9 +1,10 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import { parseGpaiMatrix, safeToolHref, type Matrix, type ProvisionRow } from "@/lib/gpaiMatrix";
 
 /**
- * /gpai — the GPAI compliance matrix: EU AI Act provisions × what this estate's
+ * /gpai — the GPAI evidence matrix: EU AI Act provisions × what this estate's
  * free tooling can actually check today.
  *
  * ONE AUTHORITY. Every provision id, label, status and count on this page is read at
@@ -19,47 +20,6 @@ import { Link } from "wouter";
  * UNMEASURED is a first-class answer. Measurement, not certification.
  */
 
-type ToolRef = { tool: string; href: string; kind: string; note: string };
-type LabelSource = { from: string; label: string };
-type ProvisionRow = {
-  provision_id: string;
-  instrument: string;
-  provision_class: string;
-  title_or_label_from_artifacts: LabelSource[] | null;
-  tooling_wired: ToolRef[];
-  status: "WIRED" | "PARTIAL" | "UNMEASURED";
-  evidence: string[];
-};
-type Matrix = {
-  schema: string;
-  layer: string;
-  title: string;
-  as_of: string | null;
-  grounded_in: { path: string; sha256: string; role: string }[];
-  instrument_scope: {
-    name: string;
-    celex: string;
-    instrument_label: string;
-    frozen_identifier_count: number;
-    inventory_frozen_provision_counter: number;
-    inventory_state: string;
-    inventory_limitation: string | null;
-    corpus_root_recomputed: boolean;
-    corpus_root: string;
-    deadline_register_rows_naming_this_instrument: number;
-  };
-  status_vocabulary: Record<string, string>;
-  counts: { total: number; WIRED: number; PARTIAL: number; UNMEASURED: number };
-  truth_boundaries: string[];
-  provisions: ProvisionRow[];
-  gpai_code_of_practice: {
-    note: string;
-    honest_sentence: string | null;
-    artifacts: { path: string; sha256: string; as_of?: string; measured?: Record<string, unknown> }[];
-  };
-  discovery_doors: ToolRef[];
-};
-
 const STATUS_STYLE: Record<string, string> = {
   WIRED: "bg-emerald-50 text-emerald-800 border-emerald-200",
   PARTIAL: "bg-amber-50 text-amber-800 border-amber-200",
@@ -68,14 +28,16 @@ const STATUS_STYLE: Record<string, string> = {
 
 /** Wouter Link for app routes; plain anchor for files and API paths. */
 function MatrixLink({ href, children }: { href: string; children: ReactNode }) {
+  const safeHref = safeToolHref(href);
+  if (!safeHref) return <span>{children}</span>;
   const isAppPage =
     href.startsWith("/") && !href.startsWith("/api/") && !/\.(json|html)$/.test(href) && !href.startsWith("/.well-known") && !href.startsWith("/packs/");
   return isAppPage ? (
-    <Link href={href} className="text-amber-700 underline underline-offset-2 hover:text-amber-600">
+    <Link href={safeHref} className="text-amber-700 underline underline-offset-2 hover:text-amber-600">
       {children}
     </Link>
   ) : (
-    <a href={href} className="text-amber-700 underline underline-offset-2 hover:text-amber-600">
+    <a href={safeHref} className="text-amber-700 underline underline-offset-2 hover:text-amber-600">
       {children}
     </a>
   );
@@ -95,18 +57,21 @@ function StatusPill({ status }: { status: string }) {
 export default function GpaiMatrix() {
   const [matrix, setMatrix] = useState<Matrix | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
   const [showUnmeasured, setShowUnmeasured] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
+    setErr(null);
+    setMatrix(null);
     fetch("/interop/gpai-matrix.json")
       .then(async (r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
-      .then((d: Matrix) => {
-        if (!cancelled && d?.schema === "csoai.gpai-matrix/0.1") setMatrix(d);
-        else if (!cancelled) setErr("payload schema is not csoai.gpai-matrix/0.1");
+      .then((d: unknown) => {
+        const validated = parseGpaiMatrix(d);
+        if (!cancelled) setMatrix(validated);
       })
       .catch((e: Error) => {
         if (!cancelled) setErr(e.message || "UNCHECKABLE");
@@ -114,7 +79,7 @@ export default function GpaiMatrix() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [attempt]);
 
   const wired = matrix?.provisions.filter((p) => p.status === "WIRED") ?? [];
   const partial = matrix?.provisions.filter((p) => p.status === "PARTIAL") ?? [];
@@ -125,33 +90,38 @@ export default function GpaiMatrix() {
   return (
     <section className="min-h-screen bg-stone-50 px-5 py-16 text-stone-800">
       <Helmet>
-        <title>GPAI compliance matrix | Council of AI — Global Regulation Atlas</title>
+        <title>GPAI evidence matrix | Council of AI — Global Regulation Atlas</title>
         <meta
           name="description"
-          content="Per-provision grounding matrix for EU AI Act GPAI provider obligations: what this estate's free verification tooling can check today, and what is UNMEASURED. Generated from the frozen regulatory inventory — measurement, not certification."
+          content="Explore published evidence and tool references for EU AI Act provisions, with GPAI coverage, source dates and measurement limits."
         />
       </Helmet>
-      <section className="mx-auto max-w-4xl">
+      <section className="mx-auto min-w-0 max-w-4xl [overflow-wrap:anywhere]">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-amber-700">
-          {matrix?.layer ?? "Council of AI — Global Regulation Atlas"} · generated matrix{" "}
-          {matrix?.as_of ? `· as_of ${matrix.as_of}` : err ? "· UNCHECKABLE" : "· loading…"}
+          {matrix?.layer ?? "Council of AI — Global Regulation Atlas"} · evidence snapshot{" "}
+          {matrix?.as_of ? `· source date ${matrix.as_of}` : err ? "· UNCHECKABLE" : matrix ? "· source date not supplied" : "· loading…"}
         </p>
-        <h1 className="mt-3 text-4xl font-black tracking-tight text-stone-900">GPAI compliance matrix</h1>
+        <h1 className="mt-3 text-4xl font-black tracking-tight text-stone-900">GPAI evidence matrix</h1>
         <p className="mt-4 leading-7 text-stone-600">
-          General-purpose AI model provider obligations under Regulation (EU) 2024/1689 — Articles 53–55, plus the
-          Commission's voluntary GPAI Code of Practice — turned into a question this site can actually answer:{" "}
-          <strong>per provision, what can you check today through this estate's free tooling, and what is not
-          measured at all?</strong> Every row below is generated from artifacts on this commit (the frozen
-          417-provision inventory and the estate's served registers); nothing on this page is a hand-typed
-          obligation list. Measurement, not certification — a WIRED row means tooling exists, never that a duty is
-          satisfied.
+          Explore published evidence and tools related to EU AI Act provisions, including general-purpose
+          AI model providers and the voluntary GPAI Code of Practice. Each row identifies its source records
+          and current coverage. <strong>WIRED means a tool is referenced; it does not establish that a legal
+          duty is satisfied.</strong> Applicability and the adequacy of evidence require separate review.
         </p>
 
+        <nav aria-label="Evidence next steps" className="mt-6 flex flex-wrap gap-3 text-sm">
+          <MatrixLink href="/reports/daily-signal/index.html">Daily evidence reports</MatrixLink>
+          <MatrixLink href="/gpai-evidence">Explore GPAI evidence packs</MatrixLink>
+          <MatrixLink href="/services/">Services and free previews</MatrixLink>
+          <MatrixLink href="/gspc-verify">Verify a record</MatrixLink>
+        </nav>
+
         {err ? (
-          <p className="mt-8 rounded-xl border border-rose-200 bg-rose-50 p-4 font-mono text-sm text-rose-700">
-            Matrix UNCHECKABLE ({err}). No rows are shown rather than guessed rows — regenerate the matrix with{" "}
-            <code className="font-mono">node scripts/surface/build-gpai-matrix.mjs</code>.
-          </p>
+          <div role="alert" className="mt-8 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+            <p>The evidence matrix is currently unavailable. No coverage figures can be shown from this response.</p>
+            <p className="mt-2">You can still open the reports, services and verifier above.</p>
+            <button type="button" onClick={() => setAttempt(v => v + 1)} className="mt-3 rounded border border-rose-400 px-3 py-2 font-semibold">Try again</button>
+          </div>
         ) : !matrix || !scope ? (
           <p className="mt-8 font-mono text-sm text-stone-500">Loading matrix…</p>
         ) : (
@@ -172,7 +142,7 @@ export default function GpaiMatrix() {
                 <p className="mt-2 font-mono text-[11px] leading-5 text-stone-500">{scope.corpus_root}</p>
               </div>
               <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
-                <div className="font-mono text-xs uppercase tracking-wide text-stone-500">Exposure</div>
+                <div className="font-mono text-xs uppercase tracking-wide text-stone-500">Published coverage</div>
                 <div className="mt-3 flex flex-wrap gap-3 text-center">
                   <div className="min-w-[7rem] flex-1 rounded-xl border border-emerald-200 bg-emerald-50 p-3">
                     <div className="font-mono text-2xl font-bold text-emerald-800">{matrix.counts.WIRED}</div>
@@ -189,7 +159,7 @@ export default function GpaiMatrix() {
                 </div>
                 <p className="mt-3 text-sm leading-6 text-stone-600">
                   of {matrix.counts.total} frozen {scope.instrument_label} identifiers. Ties are ties; UNMEASURED is
-                  a first-class answer, not a failure to count.
+                  recorded separately from completed measurements.
                 </p>
               </div>
             </div>
@@ -207,7 +177,7 @@ export default function GpaiMatrix() {
 
             {/* WIRED rows in full. */}
             <h2 className="mt-12 text-xl font-bold text-stone-900">
-              WIRED — {matrix.counts.WIRED} provision{matrix.counts.WIRED === 1 ? "" : "s"} with live tooling today
+              WIRED — {matrix.counts.WIRED} provision{matrix.counts.WIRED === 1 ? "" : "s"} with published tool references
             </h2>
             <div className="mt-4 grid gap-4">
               {wired.map((p) => (
@@ -236,13 +206,13 @@ export default function GpaiMatrix() {
               UNMEASURED — {matrix.counts.UNMEASURED} of {matrix.counts.total} identifiers
             </h2>
             <p className="mt-2 text-sm leading-6 text-stone-600">
-              These provisions exist in this estate only as a frozen identifier and SHA-256 in the hash manifest. No
-              published artifact names them, no tooling touches them, and this page will not pretend otherwise.
-              Their labels are <code className="font-mono text-xs">null</code> because no artifact on this commit
-              carries a title for them.
+              This snapshot retains these provision identifiers and their hashes without a linked measurement.
+              Missing labels and evidence remain visible so you can distinguish recorded identifiers from
+              requirements that have actually been assessed.
             </p>
             <button
               type="button"
+              aria-expanded={showUnmeasured}
               onClick={() => setShowUnmeasured((v) => !v)}
               className="mt-3 rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100"
             >
@@ -321,7 +291,7 @@ export default function GpaiMatrix() {
                             ))}
                           </span>
                         ) : (
-                          <span className="text-stone-400">none — UNMEASURED</span>
+                          <span className="text-stone-400">No tool reference</span>
                         )}
                       </td>
                     </tr>
@@ -331,7 +301,7 @@ export default function GpaiMatrix() {
             </div>
 
             {/* Discovery doors — machine entry points. */}
-            <h2 className="mt-12 text-xl font-bold text-stone-900">Discovery doors</h2>
+            <h2 className="mt-12 text-xl font-bold text-stone-900">Data and source records</h2>
             <div className="mt-4 grid gap-3">
               {matrix.discovery_doors.map((d) => (
                 <div key={d.href} className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm">
@@ -345,7 +315,7 @@ export default function GpaiMatrix() {
             </div>
 
             {/* Truth boundaries — the inventory's own, plus the matrix's. */}
-            <h2 className="mt-12 text-xl font-bold text-stone-900">Truth boundaries</h2>
+            <h2 className="mt-12 text-xl font-bold text-stone-900">Scope and limitations</h2>
             <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-stone-600">
               {matrix.truth_boundaries.map((t, i) => (
                 <li key={i}>{t}</li>
@@ -354,20 +324,17 @@ export default function GpaiMatrix() {
 
             {/* What this page is not. */}
             <section className="mt-12 rounded-2xl border border-dashed border-stone-300 bg-stone-100 p-6">
-              <h2 className="text-xl font-bold text-stone-900">What this page is not</h2>
+              <h2 className="text-xl font-bold text-stone-900">Using this evidence</h2>
               <p className="mt-3 text-sm leading-6 text-stone-600">
-                Not a compliance determination, not legal advice, not certification, accreditation or a notified-body
-                opinion — this estate measures, signs and re-attests; it does not certify anyone. WIRED means
-                tooling exists today; it never means a provision is satisfied. PARTIAL means tracked or mapped, not
-                measured. The deep follow-up is corpus re-grounding: the inventory's own truth boundary says the
-                exact source-text bytes behind the frozen hashes are unresolved, so provision wording must be
-                re-derived from EUR-Lex official sources before any per-paragraph claim — that work is out of scope
-                for this matrix.
+                The matrix describes published evidence and tool references. It does not determine legal
+                applicability or compliance. The inventory retains provision hashes, while the original
+                source-text bytes remain unresolved. Consult the current official text and review the
+                scope of each record before relying on it for a particular obligation.
               </p>
             </section>
 
             <p className="mt-10 text-sm text-stone-500">
-              Data free, proofs paid. Verify a signed card at{" "}
+              Verification is free. Check a signed record at{" "}
               <Link href="/gspc-verify" className="text-amber-700 underline">
                 /gspc-verify
               </Link>
@@ -409,7 +376,7 @@ function ProvisionCard({ p }: { p: ProvisionRow }) {
           ))}
         </ul>
       ) : (
-        <p className="mt-2 text-sm text-stone-500">No artifact on this commit carries a title for this provision.</p>
+        <p className="mt-2 text-sm text-stone-500">This snapshot does not provide a title for this provision.</p>
       )}
       <p className="mt-2 text-xs leading-5 text-stone-500">
         <span className="font-mono uppercase tracking-wide">Provision class:</span> {p.provision_class}
