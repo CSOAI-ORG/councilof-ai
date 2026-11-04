@@ -12,10 +12,11 @@
  *   5. Honest `EMPTY` / `NOT_MEASURED` / `BAD_ARGUMENTS` / `UNREACHABLE` handling (never zero-as-fail).
  */
 
-import { describe, it } from "node:test";
+import { describe, it } from "vitest";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   TRUST_QUERY_TOOL_NAMES,
   trustQueryResult,
@@ -36,25 +37,89 @@ import {
   index_edition,
 } from "./_index-edition.ts";
 
-const EDITION_2026_11_03 = JSON.parse(
-  readFileSync(
-    resolve("/Users/nicholas/ZCodeProject/build/out/trust-index/edition-2026-11-03.json"),
-    "utf8",
-  ),
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = resolve(__dirname, "../..");
+
+function loadJsonOrFallback<T>(candidates: string[], fallback: T): T {
+  for (const p of candidates) {
+    if (existsSync(p)) {
+      return JSON.parse(readFileSync(p, "utf8")) as T;
+    }
+  }
+  return fallback;
+}
+
+const EDITION_2026_11_03 = loadJsonOrFallback(
+  [resolve("/Users/nicholas/ZCodeProject/build/out/trust-index/edition-2026-11-03.json")],
+  {
+    schema: "csoai.trust-index-edition/0.1",
+    edition_id: "2026-11-03",
+    as_of: "2026-11-03T03:15:00Z",
+    merkle_root: "a14bd010bc4fd1ef5c3d95f861d8e4e0ab52bc3798c53f9d29ef18b6200b31a2",
+    prev_edition_root: "74f632b8f59326ef34901bc451ef9a0c8d12b34c567890abcdef1234567890ab",
+    draft_artifact: true,
+    draft_notes: ["DRAFT EDITION — pre-mint staging, not yet anchored to public root."],
+    not_a_certification: true,
+    subjects_total: 64,
+    deltas_vs_prev: { added: 2, removed: 0, state_changed: 1 },
+    entries: [
+      {
+        subject: "councilof.ai",
+        url: "https://councilof.ai/api/evidence-bundle",
+        rail: "x402",
+        checks: {
+          "x402.challenge": { status: "MEASURED", state: "VALID_402" },
+          "x402.listing-parity": {
+            status: "MEASURED",
+            state: "MATCH",
+            amount_atomic: "50000",
+            asset: "USDC",
+            network: "eip155:8453",
+          },
+        },
+      },
+    ],
+  },
 );
 
-const X402_LATEST = JSON.parse(
-  readFileSync(
+const X402_LATEST = loadJsonOrFallback(
+  [
+    resolve(REPO_ROOT, "public/interop/x402-trust/latest.json"),
     resolve("/Users/nicholas/councilof-ai-ops/public/interop/x402-trust/latest.json"),
-    "utf8",
-  ),
+  ],
+  {
+    schema: "csoai.x402-trust/0.1",
+    as_of: "2026-10-24T00:00:00Z",
+    n_measured: 94,
+    n_total: 100,
+    entries: [
+      {
+        subject: "councilof.ai",
+        url: "https://councilof.ai/api/evidence-bundle",
+        rail: "x402",
+        checks: { "x402.challenge": { status: "MEASURED", state: "VALID_402" } },
+      },
+    ],
+  },
 );
 
-const MCP_LATEST = JSON.parse(
-  readFileSync(
+const MCP_LATEST = loadJsonOrFallback(
+  [
+    resolve(REPO_ROOT, "public/interop/mcp-trust/latest.json"),
     resolve("/Users/nicholas/councilof-ai-ops/public/interop/mcp-trust/latest.json"),
-    "utf8",
-  ),
+  ],
+  {
+    schema: "csoai.mcp-trust/0.1",
+    as_of: "2026-11-02T00:00:00Z",
+    entries: [
+      {
+        subject: "councilof.ai",
+        url: "https://councilof.ai/mcp",
+        rail: "mcp",
+        checks: { "mcp.tools-list": { status: "MEASURED", state: "CONSISTENT" } },
+      },
+    ],
+  },
 );
 
 function makeMockFetch(overrides: Record<string, { status: number; body: unknown }> = {}) {
