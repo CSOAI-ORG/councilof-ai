@@ -34,3 +34,11 @@ The initial reference sources are `docs/PLUGINS.md`, `docs/ACADEMY-GSPC-33-AXIS-
 `node --test scripts/evidence-learning-contract.node-test.mjs`
 
 The portable contract tests cover exact public GET allowlisting, credential omission, schema/count validation, dynamic axis rosters, wrong-axis scenario rejection, educational progress, source-only coaching context and draft HOLD/no-send/no-execution invariants. Browser QA is performed in the private Site with the same component bytes. The complete monorepo build and protected CI are not established by these local checks and must pass before merge. Merge and deployment are not requested by this draft PR.
+
+## Journey revision — component 0.2.0
+
+The component now resumes the selected axis and step, preserves per-axis proposals, pins each proposal to an explicit public-source capture and migrates old local backups. Background refresh updates source status without replacing the active practice/proposal panel. Rebinding a draft to a newer source is explicit. Draft completeness errors identify missing fields and receive focus; incomplete drafts can still be inspected as incomplete. Export adds a SHA-256 content-revision identifier without claiming a signature or receipt. The source cache remains dated metadata and never becomes a current measurement assertion after a failed refresh.
+
+The tablist now has one active tab stop, labelled panels and keyboard navigation. Container queries support narrow host panels independently of viewport size. The native module loader offers recovery after a failed load. The existing navigation regression expectation includes the new Learn destination; no validation is weakened.
+
+Design references consulted: W3C APG Tabs Pattern (https://www.w3.org/WAI/ARIA/apg/patterns/tabs/), WAI form notifications (https://www.w3.org/WAI/tutorials/forms/notifications/) and WCAG status-message guidance (https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html). These inform the implementation and are not a conformance claim.
