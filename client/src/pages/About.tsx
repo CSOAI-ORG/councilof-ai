@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import AboutNumbers from "@/components/about/AboutNumbers";
+import ExternalUseEvidence from "@/components/ExternalUseEvidence";
 import { useBoardCount } from "@/lib/boardCount";
 import { useEstateFacts } from "@/lib/estateFacts";
 
@@ -171,10 +172,10 @@ export default function About() {
   // scripts/derive-chain-facts.mjs re-verifying every published body.
   const facts = useEstateFacts();
   useEffect(() => {
-    document.title = "About the Council of AI — a UK measurement body | Council of AI";
+    document.title = "About | Council of AI";
     let m = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
     if (!m) { m = document.createElement("meta"); m.name = "description"; document.head.appendChild(m); }
-    m.content = "Council of AI (CSOAI Ltd, UK Companies House 16939677) publishes independent AI measurements: frozen banks, deterministic grading, signed evidence, a derived third-party model register, public corrections and free verification. Measurement, not certification.";
+    m.content = "Council of AI is an operating UK AI measurement and evidence organisation. Inspect its methods, assets, documented external use and accountable company.";
   }, []);
   return (
     <div className="min-h-screen bg-white">
@@ -186,7 +187,7 @@ export default function About() {
             AI measurements you can inspect and challenge
           </h1>
           <p className="text-lg text-gray-300 leading-relaxed mb-8" data-testid="about-accountable-entity">
-            Council of AI is operated by <strong className="text-white">CSOAI Ltd</strong>, UK Companies House{" "}
+            Council of AI is an operating UK AI measurement and evidence organisation run by <strong className="text-white">CSOAI Ltd</strong>, UK Companies House{" "}
             <a
               href="https://find-and-update.company-information.service.gov.uk/company/16939677"
               className="text-emerald-300 underline"
@@ -208,6 +209,10 @@ export default function About() {
         </div>
       </div>
 
+      <div className="surface-base border-b border-border py-12 sm:py-16">
+        <div className="container max-w-6xl"><ExternalUseEvidence compact id="about-external-use" /></div>
+      </div>
+
       <section className="bg-white py-16 sm:py-20" aria-labelledby="about-evidence-maintenance">
         <div className="container max-w-4xl">
           <h2 id="about-evidence-maintenance" className="text-3xl sm:text-4xl font-bold mb-6">
@@ -217,7 +222,7 @@ export default function About() {
             CSOAI develops and maintains GSPC, software for inspecting evidence about AI systems and reviewing claims when systems change. The practical question is simple: what was checked, what changed, and what does the evidence still support?
           </p>
           <p className="text-lg text-gray-600 leading-relaxed mb-6">
-            Two dated milestones show this work in practice.
+            Earlier method-development milestones show how this work progressed.
           </p>
           <p className="text-lg text-gray-600 leading-relaxed mb-6">
             On 18 October 2026, the author of a SAFE candidate evidence template{" "}
@@ -572,7 +577,7 @@ export default function About() {
               </div>
               <p className="text-gray-600 font-semibold">
                 Withheld cards a signature actually attests. The rest are disclosed in an unsigned
-                manifest — see <Link href="/honesty" className="underline">the honesty gate</Link>
+                manifest — see <Link href="/honesty" className="underline">measurement scope and limitations</Link>
               </p>
             </Card>
           </div>
@@ -782,7 +787,7 @@ export default function About() {
                 scoring code, so anyone can recompute what we claim or dispute an answer key. And we
                 publish the results that go against us: our own models sit below the base models
                 they were built on in our own signed arena reference. That is on{" "}
-                <Link href="/honesty" className="text-emerald-700 underline">the honesty gate</Link>,
+                <Link href="/honesty" className="text-emerald-700 underline">measurement scope and limitations</Link>,
                 read live from the artifact rather than typed.
               </p>
             </Card>

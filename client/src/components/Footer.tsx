@@ -70,10 +70,11 @@ export function Footer() {
       title: 'Evidence',
       links: [
         { name: 'Measurement data (JSON)', href: '/api/gspc', external: true },
+        { name: 'GSPC Master dataset', href: 'https://huggingface.co/datasets/csoai/gspc-master', external: true },
         { name: 'Metered evidence catalog (live quotes)', href: '/metered/' },
         { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
         { name: 'Methodology', href: '/methodology/' },
-        { name: 'What we cannot measure yet', href: '/honesty/' },
+        { name: 'Measurement scope and limitations', href: '/honesty/' },
         // The readable ledger page (renders /api/corrections), not raw JSON.
         { name: 'Corrections', href: '/corrections/' },
         { name: 'How far this reaches', href: '/reach/' },
@@ -103,6 +104,7 @@ export function Footer() {
       title: 'Company',
       links: [
         { name: 'About', href: '/about/' },
+        { name: 'Operation and external use', href: '/traction/' },
         { name: 'Brand & impostor notice', href: '/brand/' },
         { name: 'Evidence and reuse rights', href: '/licensing-agreement/#rights' },
         { name: 'Independence and conflicts', href: '/independence/' },
@@ -118,6 +120,7 @@ export function Footer() {
         { name: 'Disclaimers', href: '/disclaimers/' },
         { name: 'Privacy', href: '/privacy-policy/' },
         { name: 'Terms', href: '/terms-of-service/' },
+        { name: 'Refunds', href: '/refund-policy/' },
       ],
     },
   ];
@@ -170,7 +173,7 @@ export function Footer() {
             <span className="text-xl font-bold">CSOAI</span>
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
-            UK AI measurement infrastructure operated by CSOAI Ltd. We publish records you can check. Measurement is not certification.
+            An operating UK AI measurement and evidence organisation run by CSOAI Ltd. We publish records you can check. Measurement is not certification.
           </p>
           <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
