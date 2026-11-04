@@ -119,6 +119,17 @@ export default function Services() {
         </div>
       </section>
 
+      <section aria-labelledby="services-scope-h" className="mx-auto max-w-6xl px-6 pt-10">
+        <h2 id="services-scope-h" className="scroll-mt-24 text-2xl font-bold">Agree the evidence you need before ordering</h2>
+        <p className="mt-3 max-w-3xl leading-7 text-slate-300">A useful order starts with a named subject and a decision the evidence should inform. The written scope should make these three things clear.</p>
+        <ol className="mt-6 grid list-none gap-4 p-0 md:grid-cols-3">
+          <li className="rounded-2xl border border-slate-700 bg-slate-900/40 p-5"><h3 className="text-lg font-bold">1. The question and source</h3><p className="mt-3 leading-7 text-slate-300">Identify the public output or system, the relevant dates and the product. An Article 50 pack records marking checks; an evidence bundle collects published evidence for a subject; a provider-diff feed reports provider changes and signed history where available.</p></li>
+          <li className="rounded-2xl border border-slate-700 bg-slate-900/40 p-5"><h3 className="text-lg font-bold">2. The agreed deliverable</h3><p className="mt-3 leading-7 text-slate-300">Confirm which records, source references, check results and limitations will be included, their format, the delivery date and permitted use. Separate existing published evidence from any new measurement being discussed.</p></li>
+          <li className="rounded-2xl border border-slate-700 bg-slate-900/40 p-5"><h3 className="text-lg font-bold">3. Review and acceptance</h3><p className="mt-3 leading-7 text-slate-300">Agree how to check that the deliverable matches its scope and how to raise a missing record or correction. Findings may include gaps or unresolved questions. Payment does not change the measurement result.</p></li>
+        </ol>
+        <p className="mt-5 text-sm leading-6 text-slate-400">For technical integrations, start with the <a href="/connect/" className="text-emerald-300 underline">connection guide</a>. For the organisation, outside use and commercial model, read <a href="/traction/#business-model" className="text-emerald-300 underline">how the work is supported</a>.</p>
+      </section>
+
       <section id="supported-feeds" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-12">
         {load.state === "loading" ? (
           <p role="status" className="text-slate-400">Loading the service catalogue…</p>

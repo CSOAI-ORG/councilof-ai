@@ -86,3 +86,26 @@ test('homepage report link avoids a hardcoded axis count or guaranteed daily del
   assert.match(text, /coverage, publication date and evidence status/);
   assert.match(text, /https:\/\/huggingface.co\/datasets\/csoai\/gspc-daily-reports/);
 });
+
+
+test('legacy benchmark pages retain recorded qualifications without editorial slogans', () => {
+  const care = source('public/carebench.html');
+  const xr = source('public/xrbench.html');
+  assert.doesNotMatch(care + xr, /the honest statement|the honest state|truthful count|measured live, not asserted/i);
+  assert.match(care, /measured at n = 1491, not quotable/);
+  assert.match(care, /Implementation status — 9 of 10 complete/);
+  assert.match(xr, /MEASURED at n = 32 and below that floor/);
+  assert.match(xr, /Implementation status — 5 of 10 complete/);
+  assert.match(xr, /not a live availability check/);
+});
+
+test('public deployment comparison excludes operator instructions and gap-as-product copy', () => {
+  const text = source('public/genai-mil.html');
+  assert.doesNotMatch(text, /That gap is us|honest state today|frontier-inference key|queued as an owner step|queued, not done/);
+  assert.match(text, /Behavioural evaluation addresses a separate question/);
+  assert.match(text, /not a live inventory of current measurement coverage/);
+  assert.match(text, /not zero scores or failing grades/);
+  assert.match(text, /UNCHECKABLE/);
+  assert.match(text, /UNMEASURED/);
+  assert.match(text, /FR2533155773/);
+});

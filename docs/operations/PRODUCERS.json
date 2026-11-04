@@ -6,6 +6,19 @@
   "extending": "Add an entry, run `node scripts/producers-check.mjs` locally, and only set gated:true once it passes on a clean tree. Never set gated:true on a producer that stamps a timestamp or a random id into its output, and never on one that signs.",
   "producers": [
     {
+      "id": "evidence-event-spec",
+      "command": "node scripts/build-evidence-event-spec.mjs",
+      "check": "node scripts/build-evidence-event-spec.mjs --check",
+      "outputs": [
+        "public/spec/evidence-event/v0.1/index.html",
+        "public/spec/evidence-event/v0.1/schema.json"
+      ],
+      "mode": "delegate-to-check",
+      "gated": true,
+      "verified_2026_11_04": "Both published outputs match the local source schema and deterministic documentation; offline, no clock, randomness or signing.",
+      "note": "Publishes the evidence-fabric schema at its existing $id without changing historical identifiers. Vite copies these public files into dist/client; the parity check rejects missing or altered publication bytes."
+    },
+    {
       "id": "agent-card-jws-input",
       "command": "python3 scripts/adapters/agent_card_jws.py",
       "outputs": [
