@@ -1,0 +1,58 @@
+--- a/src/midojo/runtimes/openshell/__init__.py
++++ b/src/midojo/runtimes/openshell/__init__.py
+@@ -257,6 +257,10 @@
+ # ---------------------------------------------------------------------------
+ # Runtime
+ # ---------------------------------------------------------------------------
++
++
++class EvidenceCollectionError(RuntimeError):
++    """Runtime evidence is unavailable or incomplete; do not grade this evaluation."""
+ 
+ 
+ class OpenShellRuntime:
+@@ -519,7 +523,7 @@
+             "OpenShell log sync marker did not arrive within %.0fs; network evidence may be incomplete",
+             _LOG_SYNC_BUDGET_SECONDS,
+         )
+-        return messages
++        raise EvidenceCollectionError("OpenShell log sync is incomplete; do not grade this evaluation")
+ 
+     def _fetch_ocsf(self) -> OCSFEvents:
+         """Fetch and parse the evaluation's OCSF events, with caching."""
+@@ -529,10 +533,10 @@
+         messages: list[str] = []
+         try:
+             messages = self._sync_ocsf_messages()
+-        except Exception as exc:
+-            logging.getLogger(__name__).warning(
+-                "OCSF log fetch failed — security predicates will degrade to False: %s", exc
+-            )
++        except EvidenceCollectionError:
++            raise
++        except Exception:
++            raise EvidenceCollectionError("OpenShell log collection failed; do not grade this evaluation") from None
+ 
+         self._cached_ocsf = parse_ocsf_lines(messages)
+         return self._cached_ocsf
+@@ -544,6 +548,8 @@
+         diff_result = self._exec(["find", _WORKDIR, "-type", "f", "-newer", "/tmp/.midojo_baseline"])
+         all_result = self._exec(["find", _WORKDIR, "-type", "f"])
+ 
++        if diff_result.exit_code != 0 or all_result.exit_code != 0:
++            raise EvidenceCollectionError("OpenShell file listing failed; do not grade this evaluation")
+         current = {ln.strip() for ln in all_result.stdout.splitlines() if ln.strip()}
+ 
+         files_created: list[str] = []
+@@ -559,8 +565,9 @@
+             else:
+                 files_created.append(fpath)
+                 cat = self._exec(["cat", fpath])
+-                if cat.exit_code == 0:
+-                    new_file_contents[fpath] = cat.stdout
++                if cat.exit_code != 0:
++                    raise EvidenceCollectionError("OpenShell file content collection failed; do not grade this evaluation")
++                new_file_contents[fpath] = cat.stdout
+ 
+         files_deleted = [p for p in seeded if p not in current]
+ 
