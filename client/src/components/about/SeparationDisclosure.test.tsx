@@ -63,6 +63,28 @@ describe("SeparationDisclosure", () => {
     expect(html).toContain("family size");
   });
 
+  it("UNTESTED axes carry the board's own wait-state, read verbatim; an absent reason reads 'not stated'", () => {
+    const axes = [
+      axis({ axis: "jail", separation: "UNTESTED", method_status: "legacy: 27 distinct prompts, n<30" }),
+      axis({ axis: "swarm", separation: "UNTESTED", method_status: "legacy: bank sha points to retired bank" }),
+      axis({ axis: "governance", separation_p: 0.03 }),
+    ];
+    const html = render(
+      <SeparationDisclosure variant="live" defaultOpen data={payload(axes)} />,
+    );
+    expect(html).toContain("waiting on: legacy: 27 distinct prompts, n&lt;30"); // verbatim, escaped
+    expect(html).toContain("waiting on: legacy: bank sha points to retired bank");
+    expect(html).toContain("sep-disclosure-untested-jail");
+    // a TIE axis is not an UNTESTED axis; the two lists never borrow from each other
+    expect(html).not.toContain("sep-disclosure-untested-governance");
+  });
+
+  it("an UNTESTED axis with no stated reason reads 'not stated', never an invented one", () => {
+    const axes = [axis({ axis: "swarm", separation: "UNTESTED", method_status: undefined, note: undefined })];
+    const html = render(<SeparationDisclosure variant="live" defaultOpen data={payload(axes)} />);
+    expect(html).toContain("waiting on: <span>not stated</span>");
+  });
+
   it("TIE axes with no published p are listed, never dropped", () => {
     const rows = tieRows([axis({ separation_p: undefined }), axis({ axis: "continuity", separation_p: 0.2 })]);
     expect(rows).toHaveLength(2);

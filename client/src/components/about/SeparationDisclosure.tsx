@@ -47,6 +47,27 @@ export function tieRows(axes: GspcAxis[]): { axis: string; n: number | null; p: 
     }));
 }
 
+/**
+ * UNTESTED comparison axes — measured, but no separation test is published — with what the
+ * board itself says they are waiting on. The reason is the payload's own method_status (or
+ * status note); it is READ, never paraphrased, and a row that carries no stated reason shows
+ * "not stated" — an absent reason is not invented here, because "why" is exactly the field
+ * a reader is asking for.
+ */
+export function untestedRows(axes: GspcAxis[]): { axis: string; waitingOn: string | null }[] {
+  return axes
+    .filter((a) => a.status === "MEASURED" && a.separation === "UNTESTED")
+    .map((a) => ({
+      axis: typeof a.axis === "string" ? a.axis : "",
+      waitingOn:
+        typeof a.method_status === "string" && a.method_status.trim()
+          ? a.method_status.trim()
+          : typeof a.note === "string" && a.note.trim()
+            ? a.note.trim()
+            : null,
+    }));
+}
+
 const fmtP = (p: number): string => (p < 0.001 ? p.toExponential(2) : p.toFixed(3));
 const fmtT = (t: number): string => (t < 0.001 ? t.toExponential(2) : t.toFixed(4));
 
@@ -118,6 +139,10 @@ function LiveVariant({ injected }: { injected?: GspcPayload | null }) {
     [rows, familySize],
   );
   const unread = rows.filter((r) => r.p === null);
+  const untested = useMemo(
+    () => (Array.isArray(data?.axes) ? untestedRows(data!.axes as GspcAxis[]) : []),
+    [data],
+  );
   return (
     <div data-testid="sep-disclosure-live">
       <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
@@ -172,6 +197,21 @@ function LiveVariant({ injected }: { injected?: GspcPayload | null }) {
         <p className="mt-2 text-[12px] text-muted-foreground" data-testid="sep-disclosure-live-unread">
           TIE axes with no published p (listed, never dropped): {unread.map((r) => r.axis).join(", ")}.
         </p>
+      ) : null}
+      {untested.length > 0 && !error ? (
+        <div className="mt-3" data-testid="sep-disclosure-live-untested">
+          <p className="text-[12px] font-bold text-foreground">
+            Untested axes — measured, but no separation test is published. What the board says each is waiting on:
+          </p>
+          <ul className="mt-1 space-y-0.5 font-mono text-[12px] text-muted-foreground">
+            {untested.map((r) => (
+              <li key={r.axis} data-testid={`sep-disclosure-untested-${r.axis}`}>
+                <span className="font-bold text-foreground">{r.axis}</span> — waiting on:{" "}
+                {r.waitingOn ?? <span>not stated</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
       <RuleChips familySize={familySize} />
     </div>
