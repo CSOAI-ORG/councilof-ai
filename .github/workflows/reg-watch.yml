@@ -8,7 +8,12 @@ name: Reg-watch — regulation-change detector (living loop)
 on:
   schedule:
     - cron: "45 6 * * *"   # daily 06:45 UTC
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      derived_reports_only:
+        description: Run only the derived report publication job
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -91,6 +96,7 @@ jobs:
           PR_URL=$(gh pr create --base master --head "$BRANCH" --title "Daily evidence report ${REPORT_DAY}" --body-file "$RUNNER_TEMP/daily-evidence-pr.md")
           gh pr merge "$PR_URL" --auto --merge
   reg-watch:
+    if: ${{ github.event_name != 'workflow_dispatch' || !inputs.derived_reports_only }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
