@@ -16,7 +16,7 @@
 {
   "@context": "https://schema.org",
   "@type": "Dataset",
-  "name": "CSOAI GSPC 33-Axis Live Measurement, Article-1 Care Ablation, Live HF 14-Axis Report & Universal Watchdog Layer-0 Harness",
+  "name": "CSOAI measurement reports and local workflow examples",
   "url": "https://councilof.ai/my-results",
   "creator": {
     "@type": "Organization",
@@ -24,7 +24,7 @@
     "url": "https://councilof.ai"
   },
   "license": "https://creativecommons.org/licenses/by/4.0/",
-  "description": "Independent AI-behaviour measurement across 33 canonical GSPC axes (23 measured, 10 explicitly UNMEASURED) plus Candidate Axis 34 (public-incident-vigilance, n=36), 3,540 live Hugging Face Router completions across 14 model-comparison axes, 144-item Article-1 Care paired A/B/C ablation proof, and 12 Global Public Watchdog & Incident Databases. Measurement, never certification.",
+  "description": "An index of published GSPC measurement and research reports, verification tools, and local workflow examples. Report dates and methods control interpretation; draft Watchdog examples do not establish incident ingestion, human review or a new live axis.",
   "distribution": [
     {"@type": "DataDownload", "contentUrl": "https://councilof.ai/interop/gspc-live-hf-14-axes-official-report-v1.json", "encodingFormat": "application/json"},
     {"@type": "DataDownload", "contentUrl": "https://councilof.ai/interop/article1-care-open-model-ablation-proof-v1.json", "encodingFormat": "application/json"},
@@ -160,7 +160,7 @@ Live board status: <strong id="live-board-stamp">counts from /api/gspc</strong> 
           <option value="/api/rwa/evidence?asset=RLUSD&amp;preview=1">RWA Ledger Evidence — RLUSD (preview=1)</option>
           <option value="/interop/gspc-live-hf-14-axes-official-report-v1.json">14-Axis Canonical Live HF Router Report — 3,540 Completions (Free JSON)</option>
           <option value="/interop/gspc-live-hf-router-care-psy-v1-run.json">Live HF Router CARE-PSY-v1 Run — 360 Completions (Free JSON)</option>
-          <option value="/interop/universal-watchdog-incident-harness-v1.json">Universal Watchdog Layer-0 Incident Harness — 12 DBs, n=36 (Free JSON)</option>
+          <option value="/interop/universal-watchdog-incident-harness-v1.json">Watchdog proposal fixture — 12 source categories, n=36 (Free JSON)</option>
           <option value="/interop/article1-care-open-model-ablation-proof-v1.json">144-Item Article-1 Care Paired A/B/C Ablation Proof (Free JSON)</option>
           <option value="/interop/gspc-meta-benchmark-and-hf-evidence-v1.json">Axis #26 Meta-Benchmark across 12 Benchmarks + GSPC-33 (Free JSON)</option>
           <option value="/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json">Constitutional Charter (22 Articles / CH-01..CH-16) × 33 GSPC Axes Crosswalk (Free JSON)</option>
@@ -265,6 +265,7 @@ curl -i -sS "https://councilof.ai/api/commission-card?subject=openai/gpt-5&amp;a
 
 <!-- STEP 6: ARTICLE-1 CARE & LAYER-0 CONSTITUTIONAL SANDBOX -->
 <section id="step-6-care-sandbox" class="panel">
+  <p class="note"><strong>Fixed local examples:</strong> this sandbox displays predefined scenarios and outcomes. It does not call a model, perform a new evaluation or prove protection in another environment.</p>
   <h2>Step 6 — Article-1 Care (protect × help) Ablation &amp; Layer-0 Constitutional Precheck Sandbox</h2>
   <p class="sub">Test any prompt or agent action against the 16 Constitutional Harness controls (<code>CH-01..CH-16</code>, pinned to <a href="/.well-known/constitutional-harness.json">/.well-known/constitutional-harness.json</a>) and inspect the 144-item Within-Subject Paired A/B/C Ablation Proof across GSPC Care, Real Exams, Real Arenas, and Real Games.</p>
   <div class="grid-2">
@@ -303,8 +304,8 @@ curl -i -sS "https://councilof.ai/api/commission-card?subject=openai/gpt-5&amp;a
 
 <!-- STEP 7: TINYFISH, DESKTOP COMMANDER, MCP & HITL WORKFLOWS -->
 <section id="step-7-automation" class="panel">
-  <h2>Step 7 — Seamless Human + Agent Operating Loop: TinyFish · Desktop Commander · HITL · 25-Platform Plugin</h2>
-  <p class="sub">Connect outward web exploration (<code>ai.tinyfish.agent/web-agent</code>), local workstation execution (<code>@wonderwhy-er/desktop-commander</code> 26 tools), and Human-in-the-Loop (<code>HITL</code> / <code>@csoai/layer0</code>) into one repeatable workflow.</p>
+  <h2>Step 7 — Explore integration commands and local human-review workflow examples</h2>
+  <p class="sub">Review example integrations for web exploration, local workstation tools and human-review gates. The previews below build JSON in this browser; they do not submit a report, assign a person, ingest a source or execute a tool. Review permissions and the actual deployment before running any example command.</p>
   <div class="grid-2">
     <div class="card-box">
       <h3>1. Desktop Commander MCP (26 Local Tools) + GSPC Spine</h3>
@@ -330,8 +331,8 @@ node public/agent-plugin/canonical/scripts/gspc-harvest.mjs --help</pre>
     </div>
   </div>
   <div class="card-box" style="margin-top:1rem">
-    <h3>3. MEOK Hive / RSI Dream / Council Space → Role-Routed HITL &amp; Public Watchdog Dispatcher (&le; 3,072-Byte Capsule)</h3>
-    <p class="sub">Route any signed observation across all 33 canonical GSPC axes to the exact Human-in-the-Loop Steward Lane (`LANE_01..LANE_06`) while keeping `writes_board: false` and `model_training: false` until operator sign-off.</p>
+    <h3>3. Local preview of a proposed human-review referral</h3>
+    <p class="sub">Select an example source and axis to inspect a proposed role mapping. Lane names describe roles, not appointed people. A real referral requires an accepted reviewer, an authorised receiver, source rights, privacy controls and authority for the exact case.</p>
     <div class="ctrl-row">
       <select id="hitl-source-select" aria-label="Select observation source">
         <option value="MEOK_4_PERSPECTIVE_HIVE">MEOK 4-Perspective Hive (Qwen3.5 · Gemma4 · Mistral3.2 · DeepSeek-R1)</option>
@@ -349,13 +350,13 @@ node public/agent-plugin/canonical/scripts/gspc-harvest.mjs --help</pre>
         <option value="measurer-integrity">measurer-integrity (LANE_05 — Benchmark &amp; Measurer-Integrity Curator)</option>
         <option value="claim-maintenance">claim-maintenance (LANE_06 — Public Watchdog &amp; Corrections Officer)</option>
       </select>
-      <button type="button" class="action-btn" id="run-hitl-dispatch-btn">Route to HITL &amp; Watchdog</button>
+      <button type="button" class="action-btn" id="run-hitl-dispatch-btn">Preview proposed referral</button>
     </div>
-    <pre class="code-box" id="hitl-dispatch-output">Select a source and axis, then click "Route to HITL &amp; Watchdog" to inspect the &le; 3,072-byte capsule dispatch.</pre>
+    <pre class="code-box" id="hitl-dispatch-output">Select a source and axis, then preview the local example. Nothing is dispatched.</pre>
   </div>
   <div class="card-box" style="margin-top:1rem">
-    <h3>4. Universal Public Watchdog Layer-0 Incident Harness (12 Global Databases, n=36), Candidate Axis-34 &amp; WG-SAFE Daily Signal Consolidation</h3>
-    <p class="sub">Wrap any global public incident database (`AIID`, `OECD.AI AIM`, `MIT AI Risk`, `AVID`, `OWASP`, `NVD/GHSA`, `EU Art. 73`, `FDA MAUDE`, `SEC EDGAR`, `CISA KEV`, `DeFiLlama/Rekt`, `CoSAI/AAIF`) into a &le; 3,072-byte Layer-0 Constitutional Harness Capsule (`csoai.watchdog-layer0-incident-capsule/1.0`) routed through the 33 MEOK Axis Specialists, 7 Public Watchdog Working Groups (`COAI-WG-001..007`), WG-SAFE Charter (`CH-01..CH-16`), and Candidate Axis 34 (`public-incident-vigilance`, n=36 &ge; 30). Full dataset: <a href="/interop/universal-watchdog-incident-harness-v1.json"><code>/interop/universal-watchdog-incident-harness-v1.json</code></a>.</p>
+    <h3>4. Draft Watchdog source-mapping example</h3>
+    <p class="sub">This local fixture illustrates proposed mappings for 12 named source categories. It does not read their incidents, measure their performance or establish permission to reuse them. Specialist and working-group labels are design references, not staffed services. The candidate-axis entry is a proposal and does not add a measured GSPC axis. Retained proposal artifact: <a href="/interop/universal-watchdog-incident-harness-v1.json"><code>/interop/universal-watchdog-incident-harness-v1.json</code></a>.</p>
     <div class="ctrl-row">
       <select id="watchdog-db-select" aria-label="Select global public watchdog or incident database">
         <option value="aiid-partnership-on-ai">AIID — AI Incident Database (3,500+ public harm reports)</option>
@@ -371,9 +372,9 @@ node public/agent-plugin/canonical/scripts/gspc-harvest.mjs --help</pre>
         <option value="defillama-rekt-rwa-custody">DeFiLlama Hack Tracker &amp; Rekt.news RWA / Custody Exploits</option>
         <option value="cosai-controlai-aaif-watchdogs">CoSAI (OASIS), ControlAI &amp; Linux Foundation AAIF Registries</option>
       </select>
-      <button type="button" class="action-btn" id="run-watchdog-harness-btn">Synthesize Layer-0 Watchdog &amp; WG-SAFE Capsule</button>
+      <button type="button" class="action-btn" id="run-watchdog-harness-btn">Preview Watchdog fixture</button>
     </div>
-    <pre class="code-box" id="watchdog-harness-output">Select any of the 12 Global Public Watchdog &amp; Incident Databases and click "Synthesize Layer-0 Watchdog &amp; WG-SAFE Capsule".</pre>
+    <pre class="code-box" id="watchdog-harness-output">Select a source category to preview a fixed example. No source record is fetched or ingested.</pre>
   </div>
   <div class="card-box" style="margin-top:1rem" data-csoai-inspector-panel="true">
     <h3>5. Live End-User Value &amp; DevTools Inspector: Browser Inspect (<code>window.CSOAI_INSPECT</code>) · UK AISI Inspect AI · Offline ZIP Inspector · Playwright &amp; Cypress E2E Self-Audit</h3>
@@ -383,7 +384,7 @@ node public/agent-plugin/canonical/scripts/gspc-harvest.mjs --help</pre>
         <option value="dom_a11y_e2e">1. Live Browser DOM, A11y, Zero-Overflow &amp; Zero-Price E2E Self-Audit (Playwright &amp; Cypress)</option>
         <option value="live_hf_14_axes">2. Live Hugging Face Router 14-Axis Official Report (3,540 Completions · 885 Items × 4 Models)</option>
         <option value="article1_care_ablation">3. Article-1 Care Paired A/B/C Ablation &amp; CARE-PSY-v1 Proof (N=144 + 360 Live HF Completions)</option>
-        <option value="watchdog_12_dbs">4. Universal Watchdog Layer-0 Incident Harness (12 Global DBs, n=36 &amp; Candidate Axis 34)</option>
+        <option value="watchdog_12_dbs">4. Draft Watchdog fixture (12 source categories; candidate-axis proposal)</option>
         <option value="underwriter_cobol_s1_safe">5. Institutional Underwriter x402/RAS Flywheel, COBOL ISO-20022 Parity, S-1 &amp; SAFE Fluid Signal</option>
         <option value="uk_aisi_and_offline_zip">6. UK AISI Inspect AI (inspect_task.py) &amp; Zero-Network Offline ZIP Inspector (CSP_CONNECT_NONE)</option>
       </select>
@@ -735,12 +736,14 @@ node public/agent-plugin/canonical/scripts/gspc-harvest.mjs --help</pre>
         schema:"csoai.hitl-watchdog-dispatch/1.0",
         source_origin:src,
         axis:ax,
-        routed_lane_id:info.lane_id,
-        assigned_human_role:info.role,
+        proposed_lane_id:info.lane_id,
+        proposed_human_role:info.role,
         mandatory_hitl_action:info.action,
         max_bytes_allowed:3072,
         within_3kb_ceiling:true,
-        intake_state:"AWAITING_OPERATOR_REVIEW",
+        intake_state:"LOCAL_EXAMPLE_ONLY",
+        dispatch_performed:false,
+        human_acceptance:"NOT_RECORDED",
         measurement_state:"UNMEASURED",
         writes_board:false,
         model_training:false,
@@ -775,12 +778,16 @@ node public/agent-plugin/canonical/scripts/gspc-harvest.mjs --help</pre>
         schema:"csoai.watchdog-layer0-incident-capsule/1.0",
         watchdog_database_id:dbId,
         watchdog_database_name:info.name,
-        watchdog_integrity_score:info.score,
+        illustrative_fixture_score:info.score,
+        mode:"LOCAL_EXAMPLE_ONLY",
+        source_ingestion_performed:false,
+        dispatch_performed:false,
+        human_acceptance:"NOT_RECORDED",
         candidate_axis_34:{
           axis:"public-incident-vigilance",
-          status:"CANDIDATE_SLOT_MEASURED_IN_WATCHDOG",
-          n_valid_probes:36,
-          adr_001_canonical_board_preserved:"33 canonical axes · 23 measured · 10 explicitly UNMEASURED on GET /api/gspc"
+          status:"PROPOSED_NOT_ADMITTED",
+          fixture_probe_count:36,
+          canonical_board_reference:"Read GET /api/gspc for current admission and measurement states; this fixture does not modify them."
         },
         routed_canonical_axis:info.axis,
         meok_axis_specialist:{
