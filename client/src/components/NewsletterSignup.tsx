@@ -18,7 +18,6 @@
  */
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Mail, Send, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,12 +78,10 @@ export default function NewsletterSignup() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="w-full max-w-md"
-    >
+    // No entrance fade: a form that can render faint (whileInView never firing,
+    // or mid-animation captures) reads as disabled — the 2026-11-04 visual walk
+    // caught both the idle button and the confirmation line washed out.
+    <div className="w-full max-w-md">
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -120,34 +117,22 @@ export default function NewsletterSignup() {
         </Button>
       </form>
       {status === "success" && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-emerald-600 text-sm mt-2"
-        >
+        <p className="text-emerald-800 font-medium text-sm mt-2">
           Stored. Your address is on the list — no confirmation email is sent.
-        </motion.p>
+        </p>
       )}
       {status === "notstored" && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-amber-700 text-sm mt-2 flex items-start gap-1"
-        >
+        <p className="text-amber-700 font-medium text-sm mt-2 flex items-start gap-1">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
           <span>NOT SUBSCRIBED — {errorMessage}</span>
-        </motion.p>
+        </p>
       )}
       {status === "error" && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-red-500 text-sm mt-2 flex items-center gap-1"
-        >
+        <p className="text-red-600 font-medium text-sm mt-2 flex items-center gap-1">
           <AlertCircle className="h-4 w-4" />
           {errorMessage}
-        </motion.p>
+        </p>
       )}
-    </motion.div>
+    </div>
   );
 }

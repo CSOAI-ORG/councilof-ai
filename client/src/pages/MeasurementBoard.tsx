@@ -87,7 +87,7 @@ const GLOSSARY: TermDef[] = [
   {
     term: "n",
     short:
-      "How many things were actually measured. A score over ten items is a much weaker claim than the same score over three hundred, which is why n is always shown next to it.",
+      "The number of observations included in the result. Interpret it alongside the sampling method, exclusions and reported uncertainty.",
   },
   {
     term: "confidence range",
@@ -102,7 +102,7 @@ const GLOSSARY: TermDef[] = [
   {
     term: "signed card",
     short:
-      "A small file recording one measurement, stamped with a cryptographic signature. Anyone can re-check the stamp offline, without asking us and without trusting us.",
+      "A compact measurement record with a cryptographic signature that can be verified offline using the published verification key. A valid signature establishes integrity, not the correctness of the result.",
   },
   {
     term: "frozen bank",
@@ -1100,7 +1100,7 @@ function CustodyPanel() {
       <p className="mt-2 max-w-3xl text-sm text-gray-700">
         Every measured row above names a published evidence or run artifact. Where a{" "}
         <Term def={GLOSSARY.find((g) => g.term === "signed card")!.short}>signed card</Term> is
-        actually linked, a stranger can verify that card offline. Seven current financial rows
+        linked, you can verify that card offline. Seven current financial rows
         instead link to content-addressed but unsigned run artifacts; a content ID is not a
         signature, and this page keeps that difference visible.
       </p>
@@ -1112,8 +1112,8 @@ function CustodyPanel() {
           </dt>
           <dd className="mt-1 font-mono text-2xl text-gray-900">{listed ?? "…"}</dd>
           <p className="mt-1 text-xs text-gray-600">
-            Frozen at the number that could actually be verified. A larger figure was published
-            once and withdrawn, because a flag in a file saying “signed” is not a signature.
+            This index uses the verified count. An earlier larger count was withdrawn because
+            a signature label alone did not establish cryptographic verification.
           </p>
         </div>
         <div className="rounded-xl border border-gray-200 p-4">
@@ -1122,20 +1122,20 @@ function CustodyPanel() {
           </dt>
           <dd className="mt-1 font-mono text-2xl text-gray-900">{chain?.length ?? "…"}</dd>
           <p className="mt-1 text-xs text-gray-600">
-            Each card names its parent, so the whole run of them can be walked end to end. A card
-            quietly removed would break the walk.
+            Parent references support end-to-end chain inspection. Missing positions can be
+            identified when checking the published chain.
           </p>
         </div>
         <div className="rounded-xl border border-gray-200 p-4">
           <dt className="text-xs font-bold uppercase tracking-wide text-gray-500">
-            Bodies we do not publish
+            Private record contents
           </dt>
           <dd className="mt-1 font-mono text-2xl text-gray-900">
             {chain?.bodies_withheld ?? "…"}
           </dd>
           <p className="mt-1 text-xs text-gray-600">
-            Their contents stay private, but their positions are listed, so we cannot make one
-            disappear without it showing.
+            Record contents remain private. Published positions allow reviewers to inspect
+            chain continuity without accessing those contents.
           </p>
         </div>
       </dl>
@@ -1237,7 +1237,7 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
   {
     path: "/interop/evm-control-facts.json",
     what: "The same style of control-fact reading, on a different kind of public ledger.",
-    why: "Published and signed, and referenced by no page at all.",
+    why: "Published signed record available here for independent inspection.",
     status:
       "Signed. The attestation back end for this kind of ledger is not built, so nothing is attested there.",
   },
@@ -1246,43 +1246,43 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
     what:
       "How much of each register was actually covered — which named instruments were read and which could not be located.",
     why:
-      "This is the file that turns a headline into an honest one, and nothing links to it. Coverage is the difference between “we measured this family” and “we measured the part of it we could find”.",
+      "Identifies the instruments included in the review and those that could not be located. Results apply to that documented coverage, not automatically to the entire instrument family.",
     status: "Published.",
   },
   {
     path: "/interop/rwa-attest-index.json",
     what: "The index of attestation records produced for named financial instruments.",
-    why: "Reachable only through a bulk API endpoint. No page renders it.",
+    why: "Published index available through this direct link and the bulk API.",
     status: "Published.",
   },
   {
     path: "/interop/attestation-corpus.json",
     what: "The corpus of attestations gathered across rails.",
-    why: "Reachable only through a bulk API endpoint.",
+    why: "Machine-readable supporting record available through this direct link and the bulk API.",
     status: "Published.",
   },
   {
     path: "/interop/eas-attestation-batch.json",
     what: "A prepared batch of attestation payloads for a third-party attestation service.",
-    why: "Reachable only through a bulk API endpoint.",
+    why: "Machine-readable supporting record available through this direct link and the bulk API.",
     status: "Payloads are prepared. Nothing has been published to that service.",
   },
   {
     path: "/interop/jailbreak-asr-evidence-pack.json",
     what: "The per-model evidence behind the escape-detection work.",
-    why: "Signed, dated, and linked from nowhere.",
+    why: "Dated signed record linked here for independent review.",
     status: "Signed and published.",
   },
   {
     path: "/interop/jail-peritem-v3.json",
     what: "The item-by-item detail behind one board row, at the granularity a challenger needs.",
-    why: "Signed, dated, and linked from nowhere.",
+    why: "Dated signed record linked here for independent review.",
     status: "Signed and published.",
   },
   {
     path: "/interop/mcp-security-scorecard.json",
     what: "A security scorecard over tool servers, a measurement in its own right.",
-    why: "Reachable only through a bulk API endpoint.",
+    why: "Machine-readable supporting record available through this direct link and the bulk API.",
     status: "Published.",
   },
   {
@@ -1290,20 +1290,20 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
     what:
       "A record of searching five stores for the card bodies that would settle the disputed card count — and finding none.",
     why:
-      "This is a published negative result, which is exactly the kind of thing that should be easy to find and was impossible to find.",
-    status: "Published. The result was zero, and it is recorded as zero.",
+      "Preserves the historical negative result and the scope of the card-store verification.",
+    status: "Published historical result: zero matching card bodies found in the stated search.",
   },
   {
     path: "/interop/rwa-registry.json",
     what: "The register of named financial instruments the financial rows draw from.",
-    why: "Referenced in the data layer, rendered on no page.",
+    why: "Source register supporting the financial data views.",
     status:
-      "Published, and carrying no timestamp of any kind — so nothing derived from it can honestly claim a date.",
+      "Published without a source timestamp. Its measurement date is not established.",
   },
   {
     path: "/interop/index-reference-reverify.json",
     what: "A re-check of the public reference series behind the candidate index rows.",
-    why: "Not listed in the estate's own surface catalogue, and linked from nowhere.",
+    why: "Supporting re-verification record, linked here for inspection.",
     status: "Published.",
   },
   {
@@ -1317,7 +1317,7 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
     path: "/signed/chain.json",
     what: "The full chain of card positions, including the ones whose contents are withheld.",
     why:
-      "The verification instructions tell a stranger to walk this chain, and no page linked it until now.",
+      "Use this chain with the published verification instructions to inspect record continuity.",
     status: "Published.",
   },
 ];
@@ -1337,14 +1337,13 @@ function NoRoutePanel() {
         Explore supporting records and methods
       </h2>
       <p className="mt-2 max-w-3xl text-sm text-gray-800">
-        These surfaces exist and are public. None of them had a route from the board, which means a
-        reader who started at a headline number could not get to them — and a surface a reader
-        cannot find is functionally unpublished. They are listed here with what each one measures
-        and the honest state of the rail behind it.
+        Review the supporting records behind the measurement sets. Each link identifies the
+        record's purpose, publication status and relevant limitations. Signed records, unsigned
+        evidence and prepared but unpublished payloads remain separate.
       </p>
       {catalog?.as_of && (
         <p className="mt-2 text-xs text-gray-700">
-          Cross-checked against the estate's own machine-readable catalogue of surfaces, dated{" "}
+          Cross-referenced with the published machine-readable catalogue, dated{" "}
           <span className="font-mono">{catalog.as_of}</span> —{" "}
           <a href="/interop/surface-catalog.json" className="underline">
             /interop/surface-catalog.json
@@ -1360,7 +1359,7 @@ function NoRoutePanel() {
               <th className="px-4 py-2 font-semibold">Surface</th>
               <th className="px-4 py-2 font-semibold">What it measures</th>
               <th className="px-4 py-2 font-semibold">About this record</th>
-              <th className="px-4 py-2 font-semibold">Honest state</th>
+              <th className="px-4 py-2 font-semibold">Publication status</th>
             </tr>
           </thead>
           <tbody>
@@ -1403,9 +1402,9 @@ export default function MeasurementBoard() {
   );
 
   useEffect(() => {
-    document.title = "The measurement board — every set, what it measures, what it does not";
+    document.title = "AI measurement board | Council of AI";
     setMetaDescription(
-      "One navigable board across every axis set this estate publishes. Each set states what it measures, over what, when, what it establishes and what it does not; evidence links preserve their actual signed or unsigned state.",
+      "Explore published AI measurements, methods, coverage and supporting evidence. Each result identifies its scope, date and limitations; signed and unsigned records are clearly distinguished.",
     );
     // The navigation's arena link must open the current signed reference, not
     // the separate historical practice replay. Keep the first server render
@@ -1451,27 +1450,23 @@ export default function MeasurementBoard() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      {/* ── commission callout (Oct 31 audit) ────────────────────────────────
-          The three frontier models every deployer asks about first are absent
-          from this board, and the page says so on arrival instead of hiding
-          the gap in a footnote. The absence is the offer: a signed card for
-          any hosted model, commissioned through the x402 rail. */}
+      {/* Service enquiries are separate from the published measurements below. */}
       <aside
         data-testid="board-commission-callout"
         role="note"
-        aria-label="Commission a signed measurement"
-        className="mb-8 rounded-2xl border-2 border-amber-400 bg-[#04120c] p-4 sm:p-5 shadow-[0_18px_40px_-24px_rgba(0,0,0,.6)]"
+        aria-label="Measurement services"
+        className="mb-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 sm:p-5"
       >
-        <p className="text-base leading-relaxed text-amber-50 sm:text-lg">
-          GPT, Claude and Gemini are UNMEASURED here — yet.{" "}
+        <p className="text-base leading-relaxed text-emerald-950">
+          Need evidence for a specific model or system?{" "}
           <a
             href="/services/"
-            className="font-bold text-amber-300 underline decoration-amber-500/60 underline-offset-4 hover:text-amber-200"
+            className="font-semibold text-emerald-800 underline underline-offset-4 hover:text-emerald-950"
             data-testid="board-callout-cta"
           >
-            Commission a signed card for any hosted model through the x402 rail.
+            Explore measurement services.
           </a>{" "}
-          The gap is the product.
+          Results apply to the subjects, methods and dates shown below.
         </p>
       </aside>
 
@@ -1486,10 +1481,9 @@ export default function MeasurementBoard() {
         {/* dated freshness on the first screen: read live from /api/gspc, never typed */}
         <BoardFreshness />
         <p className="mt-3 max-w-3xl text-base text-gray-700">
-          We publish several different measuring instruments. Each one asks a different set of
-          questions, of different things, on different dates — so each one carries its own count,
-          and those counts are not supposed to match. Pick a set below before you meet a number.
-          Every set states what it establishes and, just as plainly, what it does not.
+          Explore the published measurement sets below. Each covers a defined subject, method
+          and period, with its own sample size and supporting evidence. Counts from different
+          sets are not directly comparable. Review the scope and limitations alongside each result.
         </p>
         <p className="mt-3 max-w-3xl rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
           <strong className="font-semibold">About the dates on this page.</strong> A date shown

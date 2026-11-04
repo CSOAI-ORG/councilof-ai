@@ -35,6 +35,7 @@ export function Footer() {
       title: 'Product',
       links: [
         { name: 'Check a record', href: '/gspc-verify/' },
+        { name: 'Services and buying', href: '/services/' },
         { name: 'Measurement enquiries', href: '/assess/' },
         { name: 'Board', href: '/dashboard/?tab=board' },
         { name: 'Connect tools to your AI', href: '/tools/' },
@@ -70,11 +71,11 @@ export function Footer() {
       title: 'Evidence',
       links: [
         { name: 'Measurement data (JSON)', href: '/api/gspc', external: true },
-        { name: 'Complete dataset — GSPC Master', href: 'https://huggingface.co/datasets/csoai/gspc-master', external: true },
+        { name: 'GSPC Master dataset', href: 'https://huggingface.co/datasets/csoai/gspc-master', external: true },
         { name: 'Metered evidence catalog (live quotes)', href: '/metered/' },
         { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
         { name: 'Methodology', href: '/methodology/' },
-        { name: 'What we cannot measure yet', href: '/honesty/' },
+        { name: 'Measurement scope and limitations', href: '/honesty/' },
         // The readable ledger page (renders /api/corrections), not raw JSON.
         { name: 'Corrections', href: '/corrections/' },
         { name: 'How far this reaches', href: '/reach/' },
@@ -105,6 +106,7 @@ export function Footer() {
       links: [
         { name: 'About', href: '/about/' },
         { name: 'Operation and external use', href: '/traction/' },
+        { name: 'Partners and investors', href: '/traction/#partners' },
         { name: 'Brand & impostor notice', href: '/brand/' },
         { name: 'Evidence and reuse rights', href: '/licensing-agreement/#rights' },
         { name: 'Independence and conflicts', href: '/independence/' },
