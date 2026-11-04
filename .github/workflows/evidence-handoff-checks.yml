@@ -91,8 +91,12 @@ jobs:
           packages/evidence-fabric/tests/test_doctrine.py
           packages/evidence-fabric/tests/test_event.py
           packages/evidence-fabric/tests/test_verify_qualification.py
-      - name: Full registry routing projection controls
-        run: python packages/evidence-fabric/test_regulation_projection.py
+      - name: Full registry routing and GPAI packet controls
+        run: |
+          python packages/evidence-fabric/test_regulation_projection.py
+          python packages/evidence-fabric/test_gpai_packet.py
+      - name: Exact deadline mapping controls
+        run: node --test scripts/build-daily-signal.node-test.mjs
       - name: Check retained SDK evidence from the receiver side
         run: >-
           python packages/evidence-fabric/verify_qualification.py

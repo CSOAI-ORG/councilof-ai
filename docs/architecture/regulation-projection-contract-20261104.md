@@ -148,3 +148,76 @@ unreviewed/stale mappings, context binding and human-assistance separation.
 The implementation proves a complete routing projection over the supplied
 registry. It does not prove current law, global completeness, legal applicability,
 model safety, commercial delivery, customer demand or production operation.
+
+## Runnable GPAI documentary packet checks
+
+The companion `packages/evidence-fabric/gpai_packet.py` performs real offline
+artifact-availability and SHA-256 checks for nine named documentary evidence
+slots. This closes a bounded file-checking gap; it does not interpret the
+documents or test the underlying legal duties.
+
+| Slot | Supplied documentary artifact |
+|---|---|
+| 53.1.a | Technical documentation |
+| 53.1.b | Information for downstream system providers |
+| 53.1.c | Copyright policy |
+| 53.1.d | Training-content summary |
+| 54.1 | Authorised-representative mandate |
+| 55.1.a | Model-evaluation records |
+| 55.1.b | Systemic-risk assessment and mitigation records |
+| 55.1.c | Serious-incident records |
+| 55.1.d | Cybersecurity records |
+
+Article references are the Commission's [Article 53](https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-53),
+[Article 54](https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-54) and
+[Article 55](https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-55) pages.
+The slots are nonexhaustive: the presence of a file does not establish that a
+provision applies, that its contents meet any requirement, or that associated
+actions such as notification actually occurred. Article 54's mandate slot does
+not stand for every duty in that article.
+
+The caller supplies a packet manifest containing:
+
+- `packet_id` and timezone-aware `checked_at`; the timestamp is recorded as
+  `CALLER_SUPPLIED_INSPECTION_TIME`, not a trusted timestamp or external anchor.
+- `legal_source.version_label`, `source_bytes_sha256` and `retrieval_record_ref`.
+  The last two may be null. A digest, when supplied, is a declaration only: this
+  offline tool does not fetch or verify the legal source. An unverified version
+  must be labelled as such by the caller.
+- `slots`, an array of `{slot_id, path, expected_sha256, applicability}`.
+  `path` is a relative file path within the explicit packet root. Null path and
+  null expected digest record absence. Applicability defaults only through an
+  explicit `{state: "UNKNOWN"}` declaration. `APPLICABLE` or `NOT_APPLICABLE`
+  requires `review_event_id`, `reviewer_ref` and `reason`; these are preserved
+  external declarations, not authenticated human decisions.
+
+Every run emits all nine slots. A missing declaration or missing file remains
+visible. A matching file produces `PARTIAL`; missing, changed, unreadable,
+oversized or unsafe files produce `UNCHECKABLE`. No slot emits a legal outcome.
+The summary separates matching slots from unique matched digests, so reusing
+one file in nine slots cannot appear to be nine distinct artifacts.
+
+Artifact files are opened read-only using directory-relative descriptors and
+no-follow flags. Absolute paths, parent traversal, backslash paths, symlinks,
+directories and other nonregular files are refused. Nonblocking open prevents
+a named pipe from hanging the checker. A 64 MiB per-file limit bounds work, and
+metadata changes during a read cause an explicit uncertain result. These checks
+do not execute files, parse document contents, contact remote services or verify
+cryptographic authorship. They do not constitute a hostile-filesystem sandbox.
+
+```bash
+python3 -m unittest discover -s packages/evidence-fabric -p test_gpai_packet.py -v
+python3 packages/evidence-fabric/gpai_packet.py \
+  --packet /path/to/packet-manifest.json \
+  --root /path/to/authorized-document-packet \
+  --out /path/to/new-artifact-check.json
+```
+
+The tests create synthetic files only inside temporary directories and delete
+them afterwards. They include deliberate byte tampering, wrong expected hashes,
+all nine slots, absent files, duplicate/unknown declarations, traversal,
+symlinks, directories, a named pipe, size limits and timestamp binding. Matching
+bytes never change `UNKNOWN` applicability or establish a legal outcome. Output
+records are validated by the existing evidence-fabric validator and remain
+unsigned. The checker is a candidate until integrated and released through the
+repository's existing process.
