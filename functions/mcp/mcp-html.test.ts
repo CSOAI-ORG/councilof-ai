@@ -46,13 +46,6 @@ describe("GET /mcp answers a browser with a page and everything else with the di
     // against the door's, and npm's deprecation flag. The repository's prepared version is a
     // separate fact; it must never silently replace the captured published version.
     expect(html).toContain("claude mcp add --transport http council-of-ai https://councilof.ai/mcp/free");
-<<<<<<< HEAD
-    expect(html).toMatch(
-      /npm csoai-gspc-mcp@0\.2\.5 \(stdio-lite 0\.2\.x\): it carries 53 tool names against the 55 the door serves/,
-    );
-    expect(html).toContain("is not marked deprecated on npm");
-    expect(html).toContain("The prepared release 0.2.6 is not on npm yet");
-=======
     expect(html).toContain(`npm csoai-gspc-mcp@${NPM_CAPTURE.published.version} (stdio-lite `);
     expect(html).toContain(`${NPM_CAPTURE.published.total_tools} tool names`);
     expect(html).toContain(NPM_CAPTURE.published.deprecated ? "is marked deprecated on npm" : "is not marked deprecated on npm");
@@ -63,7 +56,6 @@ describe("GET /mcp answers a browser with a page and everything else with the di
     } else {
       expect(html).not.toContain("The prepared release");
     }
->>>>>>> origin/master
     expect(html).not.toMatch(/\$\s?\d/);
   });
 });
