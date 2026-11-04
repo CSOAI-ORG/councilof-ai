@@ -351,6 +351,19 @@ function DownloadCard({ fleet, board }: { fleet: FleetDoc | null; board: BoardDo
           <span className="text-gray-600">— binds the per-item rows by hash</span>
         </li>
         <li>
+          {/* Deep link (Grafana's context-preserving rule): the verifier seeds itself with this
+              exact signed record and re-runs the check in the reader's own browser, so "verify"
+              is one click from the thing being verified — not a second hunt for the bytes. */}
+          <a
+            href={`/gspc-verify/?card=${encodeURIComponent(ROWS_RECORD_SIGNED_URL)}`}
+            className="font-semibold text-gray-900 underline"
+            data-testid="verify-rows-record-deeplink"
+          >
+            Check it in this browser
+          </a>{" "}
+          <span className="text-gray-600">— seed the record verifier with these exact bytes (nothing is uploaded)</span>
+        </li>
+        <li>
           <a href="/root.json" className="font-semibold text-gray-900 underline">
             Signed public root
           </a>
