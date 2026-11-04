@@ -46,7 +46,7 @@ describe("GET /mcp answers a browser with a page and everything else with the di
     // deprecates 0.1.0-0.2.2 and the estate's 0.2.5 is not deprecated.
     expect(html).toContain("claude mcp add --transport http council-of-ai https://councilof.ai/mcp/free");
     expect(html).toMatch(
-      /npm csoai-gspc-mcp@0\.2\.5 \(stdio-lite 0\.2\.x\): it carries 53 tool names against the 54 the door serves/,
+      /npm csoai-gspc-mcp@0\.2\.5 \(stdio-lite 0\.2\.x\): it carries 53 tool names against the 55 the door serves/,
     );
     expect(html).toContain("is not marked deprecated on npm");
     expect(html).toContain("The prepared release 0.2.6 is not on npm yet");

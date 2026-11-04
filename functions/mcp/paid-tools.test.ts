@@ -742,7 +742,7 @@ describe("GET /mcp — the one-command install is at the point of discovery", ()
     // against the door's, and npm's deprecation flag. The old wording ("deprecated on npm") was
     // FALSE from 2 Nov 2026 on — npm deprecates 0.1.0-0.2.2, and 0.2.5 is not deprecated.
     expect(g.install.stdio_lite).toMatch(
-      /^npm csoai-gspc-mcp@0\.2\.5 \(stdio-lite 0\.2\.x\): it carries 53 tool names against the 54 the door serves/,
+      /^npm csoai-gspc-mcp@0\.2\.5 \(stdio-lite 0\.2\.x\): it carries 53 tool names against the 55 the door serves/,
     );
     expect(g.install.stdio_lite).toContain("is not marked deprecated on npm");
     expect(g.install.stdio_lite).toContain("The prepared release 0.2.6 is not on npm yet");
