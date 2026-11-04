@@ -17,6 +17,13 @@ import { verifyCardHref } from "@/lib/cardParam";
 import { isOwnModel, ROWS_RECORD_SIGNED_URL } from "@/lib/livingBoard";
 import LivingBoard, { BoardFreshness } from "@/components/gspc/LivingBoard";
 import BoardField from "@/components/gspc/BoardField";
+// The generated per-axis model rankings (schema csoai.axis-rankings/0.1), built by
+// scripts/build-axis-rankings.py from the published per-item rows plus the dated
+// frontier run. Every leaderboard number below renders from this artifact — the
+// same nothing-typed rule as the rest of the page. The ?url import gives the
+// verify footnote a link to the exact deployed bytes.
+import axisRankingsDoc from "@/data/axis-rankings.json";
+import axisRankingsUrl from "@/data/axis-rankings.json?url";
 
 /**
  * /board — one board a person can actually navigate.
@@ -653,6 +660,247 @@ function RowDetail({
   );
 }
 
+// ───────────────────────────────────────────────── axis model leaderboards
+
+/** Shape of the generated artifact (csoai.axis-rankings/0.1). The JSON is the
+ *  authority; these interfaces only describe what this page reads from it. */
+interface AxisRankingModel {
+  rank: number;
+  arm: string;
+  accuracy: number;
+  k: number;
+  n: number;
+  ci95: [number, number];
+  mcnemar_vs_top: number | null;
+  discordant_vs_top?: { b10_top_correct_arm_wrong: number; c01_arm_correct_top_wrong: number } | null;
+  paired_items_vs_top?: number;
+  band: "SEPARATED_LEADER" | "TIE_BAND" | "SEPARATED";
+  verdict: string;
+  measured_on: string;
+  frontier: boolean;
+  provider?: string;
+  grading?: string;
+}
+
+interface AxisRanking {
+  n: number;
+  dataset: string;
+  bench: string;
+  task: string;
+  colour: string;
+  measured_on: string;
+  rows_sha256: string;
+  excluded_own_arms: number;
+  note?: string;
+  frontier_alignment?: Record<string, number>;
+  models: AxisRankingModel[];
+}
+
+interface AxisRankingsDoc {
+  schema: string;
+  generated_at: string;
+  sha256: { algorithm: string; recipe: string; hex: string };
+  axes: Record<string, AxisRanking>;
+}
+
+const RANKINGS = axisRankingsDoc as unknown as AxisRankingsDoc;
+
+const hasLeaderboard = (axisId: string): boolean =>
+  Object.prototype.hasOwnProperty.call(RANKINGS.axes, axisId);
+
+/** Exact McNemar p, shown to four places; smaller than that reads "< 0.0001"
+ *  rather than a rounded 0.0, which would print a nonzero test as zero. */
+const fmtMcNemarP = (p: number | null): string =>
+  p === null ? "—" : p < 0.0001 ? "< 0.0001" : p.toFixed(4);
+
+/** A measurement older than 30 days is still shown — it is just shown amber,
+ *  the same way the rest of this estate treats stale dating. */
+const MEASUREMENT_STALE_MS = 30 * 24 * 60 * 60 * 1000;
+const isStaleMeasurement = (measuredOn: string, now: number): boolean => {
+  const t = Date.parse(measuredOn);
+  return Number.isFinite(t) && now - t > MEASUREMENT_STALE_MS;
+};
+
+const BAND_CHIP: Record<AxisRankingModel["band"], { label: string; className: string }> = {
+  SEPARATED_LEADER: {
+    label: "SEPARATED LEADER",
+    className: "border-[#04624a] bg-[#04624a] text-emerald-50",
+  },
+  SEPARATED: {
+    label: "SEPARATED",
+    className: "border-emerald-600 bg-emerald-50 text-emerald-900",
+  },
+  TIE_BAND: {
+    label: "TIE",
+    className: "border-gray-300 bg-gray-100 text-gray-600",
+  },
+};
+
+/** The toggle. Renders nothing where the artifact has no ranking for the axis
+ *  (jail has no published per-item rows, so it has no leaderboard and no toggle). */
+function LeaderboardToggle({
+  axis,
+  open,
+  onToggle,
+}: {
+  axis: string;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  if (!hasLeaderboard(axis)) return null;
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle();
+      }}
+      data-testid={`leaderboard-toggle-${axis}`}
+      aria-expanded={open}
+      className="inline-flex min-h-[44px] items-center gap-1 px-1 font-mono text-[11px] font-bold uppercase tracking-wide text-emerald-800 underline decoration-emerald-400 underline-offset-2 hover:text-emerald-950"
+    >
+      LEADERBOARD {open ? "▾" : "▸"}
+    </button>
+  );
+}
+
+/** The ranked table itself: rank, model, accuracy with its Wilson interval, the
+ *  exact McNemar p against the top arm, the band the test supports, and the date
+ *  the rows were measured. Every cell is read from the artifact. */
+function LeaderboardPanel({ axis }: { axis: string }) {
+  const ranking = RANKINGS.axes[axis];
+  if (!ranking) return null;
+  const now = Date.now();
+  return (
+    <div
+      className="border-t border-gray-200 bg-gray-50 px-4 py-4"
+      data-testid={`leaderboard-${axis}`}
+    >
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h4 className="text-xs font-bold uppercase tracking-wide text-gray-500">
+          Model leaderboard — {ranking.task}
+        </h4>
+        <span className="font-mono text-[11px] text-gray-600">
+          n = {ranking.n} bank items · rows measured {ranking.measured_on} ·{" "}
+          <span className="font-mono">{ranking.dataset}</span>
+        </span>
+      </div>
+
+      <div className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-white">
+        <table className="w-full min-w-[680px] text-left text-sm">
+          <thead className="border-b border-gray-200 bg-gray-50 text-[11px] uppercase tracking-wide text-gray-600">
+            <tr>
+              <th className="px-3 py-2 font-semibold">#</th>
+              <th className="px-3 py-2 font-semibold">Model</th>
+              <th className="px-3 py-2 text-right font-semibold">Accuracy (95% CI)</th>
+              <th className="px-3 py-2 text-right font-semibold" title="Exact McNemar test against the top arm, two-sided, on paired items">
+                vs top p
+              </th>
+              <th className="px-3 py-2 font-semibold">Band</th>
+              <th className="px-3 py-2 text-right font-semibold">Measured</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ranking.models.map((m) => {
+              const stale = isStaleMeasurement(m.measured_on, now);
+              const band = BAND_CHIP[m.band] ?? BAND_CHIP.TIE_BAND;
+              return (
+                <tr
+                  key={m.arm}
+                  data-testid={`leaderboard-row-${axis}-${m.rank}`}
+                  className={`border-b border-gray-100 ${m.frontier ? "bg-emerald-50/40" : ""}`}
+                >
+                  <td className="px-3 py-2 font-mono tabular-nums text-gray-700">{m.rank}</td>
+                  <td className="px-3 py-2">
+                    <span className="font-semibold text-gray-900">{m.arm}</span>
+                    {m.frontier && (
+                      <span
+                        className="ml-2 rounded-full border border-emerald-600 bg-white px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-emerald-800"
+                        title={`measured ${m.measured_on} · provider ${m.provider ?? "declared in the artifact"}`}
+                      >
+                        NEW
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-3 py-2 text-right font-mono tabular-nums text-gray-900">
+                    {pct(m.accuracy)}
+                    <span className="block text-[10px] text-gray-500">
+                      {m.k}/{m.n} · {pct(m.ci95[0])}–{pct(m.ci95[1])}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2 text-right font-mono tabular-nums text-gray-700">
+                    {fmtMcNemarP(m.mcnemar_vs_top)}
+                  </td>
+                  <td className="px-3 py-2">
+                    <span
+                      className={`inline-block rounded-full border px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${band.className}`}
+                      title={m.verdict}
+                    >
+                      {band.label}
+                    </span>
+                  </td>
+                  <td
+                    className={`px-3 py-2 text-right font-mono tabular-nums text-xs ${stale ? "text-amber-700" : "text-gray-700"}`}
+                    title={stale ? "measured more than 30 days ago" : undefined}
+                  >
+                    {m.measured_on}
+                    {m.frontier && (
+                      <span className="block text-[10px] text-gray-500">{m.provider}</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {ranking.frontier_alignment && (
+        <p className="mt-2 text-[11px] text-gray-600">
+          The NEW arm joined this axis only because its rows align item-for-item with the frozen
+          bank: {ranking.frontier_alignment.matched_items}/{ranking.frontier_alignment.frontier_rows}{" "}
+          items matched, {ranking.frontier_alignment.unmatched_items} unmatched,{" "}
+          {ranking.frontier_alignment.error_rows} transport errors,{" "}
+          {ranking.frontier_alignment.gold_mismatches_vs_frozen} gold-label mismatches — counts read
+          from the artifact, not asserted here.
+        </p>
+      )}
+
+      <p className="mt-2 text-[11px] text-gray-600">
+        Bands come from the exact two-sided McNemar test on paired items: a top arm is a
+        SEPARATED LEADER only if the test separates it from every other arm at α=0.05; TIE means
+        the test does not establish a difference (a tie is not equality). Arms the test separates
+        below the top are marked SEPARATED. Own/tuned arms ({ranking.excluded_own_arms} on this
+        axis) are excluded before comparison, as the board serves them.
+        {ranking.note ? ` ${ranking.note}` : ""}
+      </p>
+
+      <p
+        className="mt-2 border-t border-gray-200 pt-2 text-[11px] text-gray-600"
+        data-testid={`leaderboard-verify-${axis}`}
+      >
+        Verify this table: sha256{" "}
+        <code className="break-all font-mono text-[10px] text-gray-800">{RANKINGS.sha256.hex}</code>{" "}
+        ({RANKINGS.sha256.recipe}) over the generated artifact{" "}
+        <a href={axisRankingsUrl} className="font-semibold text-emerald-800 underline" target="_blank" rel="noreferrer">
+          axis-rankings.json
+        </a>
+        , generated {RANKINGS.generated_at} by{" "}
+        <span className="font-mono text-[10px]">scripts/build-axis-rankings.py</span> from the
+        published per-item rows. Independent checks:{" "}
+        <a href="/verifier/" className="font-semibold text-emerald-800 underline">
+          the /verifier toolkit
+        </a>{" "}
+        ·{" "}
+        <a href={ROWS_RECORD_SIGNED_URL} className="font-semibold text-emerald-800 underline">
+          per-item rows (signed record)
+        </a>
+        .
+      </p>
+    </div>
+  );
+}
+
 // ────────────────────────────────────────────────────────────────── the table
 
 type SortKey = "name" | "status" | "n" | "headline";
@@ -669,6 +917,9 @@ function SetTable({
   cardsByAxis: Record<string, CardRef[]>;
 }) {
   const [open, setOpen] = useState<string | null>(null);
+  // Which row's leaderboard is expanded. Independent of the row detail, so a
+  // reader can hold both the row's own record and the model ranking at once.
+  const [lbOpen, setLbOpen] = useState<string | null>(null);
 
   const field = <BoardField rows={rows} setId={setId} />;
 
@@ -699,6 +950,16 @@ function SetTable({
                 </span>
               </div>
             </button>
+            {hasLeaderboard(r.id) && (
+              <div className="border-t border-gray-100 px-4 py-1 text-sm">
+                <LeaderboardToggle
+                  axis={r.id}
+                  open={lbOpen === r.id}
+                  onToggle={() => setLbOpen(lbOpen === r.id ? null : r.id)}
+                />
+              </div>
+            )}
+            {lbOpen === r.id && <LeaderboardPanel axis={r.id} />}
             {rowHasCardQuestion(r) && (
               <div className="border-t border-gray-100 px-4 py-1 text-sm">
                 <RowVerify row={r} setId={setId} />
@@ -767,6 +1028,16 @@ function SetTable({
                 </td>
                 <td className="px-4 py-2 text-emerald-700">
                   {open === r.id ? "close" : `open (${r.evidence.length})`}
+                  {hasLeaderboard(r.id) && (
+                    <>
+                      {" · "}
+                      <LeaderboardToggle
+                        axis={r.id}
+                        open={lbOpen === r.id}
+                        onToggle={() => setLbOpen(lbOpen === r.id ? null : r.id)}
+                      />
+                    </>
+                  )}
                   {rowHasCardQuestion(r) && (
                     <>
                       {" · "}
@@ -775,6 +1046,13 @@ function SetTable({
                   )}
                 </td>
               </tr>
+              {lbOpen === r.id && (
+                <tr>
+                  <td colSpan={6} className="p-0">
+                    <LeaderboardPanel axis={r.id} />
+                  </td>
+                </tr>
+              )}
               {open === r.id && (
                 <tr>
                   <td colSpan={6} className="p-0">
@@ -1173,6 +1451,30 @@ export default function MeasurementBoard() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
+      {/* ── commission callout (Oct 31 audit) ────────────────────────────────
+          The three frontier models every deployer asks about first are absent
+          from this board, and the page says so on arrival instead of hiding
+          the gap in a footnote. The absence is the offer: a signed card for
+          any hosted model, commissioned from $10. */}
+      <aside
+        data-testid="board-commission-callout"
+        role="note"
+        aria-label="Commission a signed measurement"
+        className="mb-8 rounded-2xl border-2 border-amber-400 bg-[#04120c] p-4 sm:p-5 shadow-[0_18px_40px_-24px_rgba(0,0,0,.6)]"
+      >
+        <p className="text-base leading-relaxed text-amber-50 sm:text-lg">
+          GPT, Claude and Gemini are UNMEASURED here — yet.{" "}
+          <a
+            href="/services/"
+            className="font-bold text-amber-300 underline decoration-amber-500/60 underline-offset-4 hover:text-amber-200"
+            data-testid="board-callout-cta"
+          >
+            Commission a signed card for any hosted model from $10.
+          </a>{" "}
+          The gap is the product.
+        </p>
+      </aside>
+
       {/* ── the headline sentence: what ranks what ─────────────────────────── */}
       <header>
         <p className="text-xs font-bold uppercase tracking-widest text-emerald-700">
