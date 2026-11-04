@@ -46,3 +46,20 @@ test('learning imports reject malformed sources and authority-shaped objects',as
  assert.throws(()=>validateLearningBackup({...value,progress:{'axis:evidence-scope:1':{correct:'yes',selected:1,attempts:1}}}));
  assert.throws(()=>validateLearningBackup({...value,shots:[{url:'https://evil.test',readAt:'2026-11-04',sha256:'a'.repeat(64),totals:{axes:1,measured_axes:1,unmeasured_axes:0}}]}));
 });
+test('a source cache preserves dates, strips unrelated fields and stays a source capture',async()=>{
+ const {captureForStorage}=await import('../public/evidence-learning/contract.mjs');
+ const capture=captureForStorage({url:'https://councilof.ai/api/gspc',readAt:'2026-11-04T06:00:00Z',sha256:'a'.repeat(64),raw:'UNRELATED_RAW',data:{...board,unrelated:'UNRELATED_DATA'}});
+ assert.equal(capture.readAt,'2026-11-04T06:00:00Z');assert.doesNotMatch(JSON.stringify(capture),/UNRELATED_RAW|UNRELATED_DATA/);assert.throws(()=>captureForStorage({...capture,url:'https://evil.test'}));
+});
+test('draft completeness is separate from receiver and execution authority',async()=>{
+ const {reviewReadiness}=await import('../public/evidence-learning/contract.mjs');assert.equal(reviewReadiness({},null).ready,false);
+ const capture={url:'https://councilof.ai/api/gspc',readAt:'2026-11-04T06:00:00Z',sha256:'a'.repeat(64),data:board};const proposal={task:'Public task',target:'Pinned artifact',change:'Bounded proposal'};
+ assert.equal(reviewReadiness(proposal,capture).ready,true);assert.equal(makeReviewDraft({axis:'governance',capture,proposal,learning:{}}).review.execution_allowed,false);
+});
+test('old backups migrate without losing proposals or progress',async()=>{
+ const {normalizeLearningState,VERSION}=await import('../public/evidence-learning/contract.mjs');const old={component_version:'0.1.0',progress:{},proposals:{governance:{task:'Saved task'}},shots:[]};const migrated=normalizeLearningState(old);assert.equal(migrated.component_version,VERSION);assert.equal(migrated.proposals.governance.task,'Saved task');assert.deepEqual(migrated.ui,{axis:'governance',stage:'observe'});
+});
+test('resuming preserves the selected axis and step and rejects inconsistent learning answers',async()=>{
+ const {normalizeLearningState,VERSION}=await import('../public/evidence-learning/contract.mjs');const s=normalizeLearningState({component_version:VERSION,progress:{},proposals:{},shots:[],ui:{axis:'safety',stage:'propose'}});assert.equal(s.ui.axis,'safety');assert.equal(s.ui.stage,'propose');assert.throws(()=>normalizeLearningState({...s,progress:{'safety:evidence-scope:1':{correct:true,selected:0,attempts:1}}}));
+});
+test('background refresh does not replace the proposal source binding',()=>{const s=readFileSync(new URL('../public/evidence-learning/element.js',import.meta.url),'utf8');assert.match(s,/paintSource\(background\)/);assert.match(s,/proposalCapture\(\)/);assert.match(s,/case'pin-source'/);assert.match(s,/aria-controls="stage-panel"/);assert.match(s,/tabindex="\$\{this.stage===id\?'0':'-1'\}"/);assert.match(s,/this\.bound=true/);});
