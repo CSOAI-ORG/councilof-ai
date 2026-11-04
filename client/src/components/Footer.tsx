@@ -103,6 +103,7 @@ export function Footer() {
       title: 'Company',
       links: [
         { name: 'About', href: '/about/' },
+        { name: 'Brand & impostor notice', href: '/brand/' },
         { name: 'Evidence and reuse rights', href: '/licensing-agreement/#rights' },
         { name: 'Independence and conflicts', href: '/independence/' },
         { name: 'Contact', href: '/contact/' },
@@ -117,6 +118,7 @@ export function Footer() {
         { name: 'Disclaimers', href: '/disclaimers/' },
         { name: 'Privacy', href: '/privacy-policy/' },
         { name: 'Terms', href: '/terms-of-service/' },
+        { name: 'Refunds', href: '/refund-policy/' },
       ],
     },
   ];
