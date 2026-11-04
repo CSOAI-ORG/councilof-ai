@@ -32,9 +32,9 @@ import type { Slide } from "@/components/scrollworld";
 
 export const VERIFIABLE_TRUST_HERO = {
   kicker: "The science of verifiable trust",
-  title: "AI measurement with traceable evidence",
+  title: "Published evidence, clear scope and documented limitations",
   lede:
-    "Council of AI publishes measurement methods, source records, comparison limits and corrections. Explore how these elements support the review and verification of a result.",
+    "Assess a measurement through its method, evidence and limitations. Review unmeasured subjects, statistical ties and published corrections alongside the results. This page explains those boundaries.",
   bg: {
     src: "/images/coliseum_logic_duel.jpg",
     alt: "A human and an AI facing each other across a chessboard, judged by a fixed rule",
@@ -47,10 +47,10 @@ export const VERIFIABLE_TRUST_HERO = {
 
 export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   {
-    kicker: "Evidence quality",
-    title: "Published methods and verifiable records",
+    kicker: "The crisis",
+    title: "What makes a measurement independently inspectable?",
     body:
-      "A useful evidence record identifies the method, inputs, grading rules and result. Signatures help check record integrity and attribution. Published methods allow reviewers to inspect the scoring approach and its limitations.",
+      "Review three separate questions: is the result bound to a preserved record, is its method available for inspection, and can its scoring be reproduced? A signature helps establish integrity; it does not by itself establish correctness. Grading methods should disclose their limits and possible correlated errors.",
     points: [
       { tag: "pain", text: "Unsigned cells and point-in-time claims with nothing behind them" },
       { tag: "pain", text: "Private test sets nobody outside can run" },
@@ -64,7 +64,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     kicker: "Anchored to statute",
     title: "We do not invent safety definitions",
     body:
-      "The instrument references a frozen corpus of 417 statutory provisions. Each result is tied to a defined version, so reviewers can identify the source text used. Changes to that text are tracked separately from the original measurement.",
+      "The instrument maps onto a frozen corpus of 417 statutory provisions rather than onto our own idea of what good looks like. Frozen means held at a version, so a card issued today still means the same thing when someone reads it next year — and when the underlying text does move, that is a drift event we publish, not a footnote we bury.",
     points: [
       { tag: "pain", text: "Safety scores defined by whoever is selling a house metric" },
       { tag: "benefit", text: "Each measurement cites the provision and the version behind it" },
@@ -79,7 +79,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     },
   },
   {
-    kicker: "Measurement scope and limitations",
+    kicker: "Publication requirements",
     title: "If a rule cannot parse it, we refuse to score it",
     body:
       "Three things stop a number reaching the board. Too small a sample, and it is not quoted at all. No statistical separation between the leader and the field, and the result is printed as a tie rather than a win. No deterministic predicate able to read the response, and it is reported UNMEASURED — never silently counted as a wrong answer, which would flatter the grader at the model's expense.",
@@ -95,7 +95,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   },
   {
     kicker: "Slot fourteen, precisely",
-    title: "Jail-axis results and comparison limits",
+    title: "The awkward slot is measured. Its separation is a tie.",
     body:
       "It would be tidier to say the fourteenth slot is gated and unmeasured. It is not true. Jail — whether a model can be talked past its own guardrails — is measured across 71 gold items on a seven-model fleet. Its separation is TIE on the live board, so we refuse to rank on it and never compare it against the canonical axis measured on the full fleet. A tie is not a separated leader — the discipline is in the label, not in the blank.",
     points: [
@@ -110,7 +110,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   },
   {
     kicker: "Breaking the mirror",
-    title: "Human baselines and comparable test conditions",
+    title: "A ruler with no human end drifts, and every model agrees it hasn't",
     body:
       "If machines set the tests and machines grade the answers, the errors are correlated all the way down and nothing in the loop can see it. So the instrument is anchored against human performance on the same items, under consent-gated conditions. It is slower, it is more expensive, and it is the only thing that keeps the scale attached to reality.",
     points: [
@@ -126,13 +126,13 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   },
   {
     kicker: "The refutation ledger",
-    title: "A public record of corrections",
+    title: "A public, append-only log of our own corrections",
     body:
-      "The public corrections record identifies changes to previous findings, their causes and supporting evidence. Review the status and provenance of each entry; publication alone does not establish an append-only storage guarantee.",
+      "A leaderboard wants permanent results and no retractions. We do the opposite: every correction we make to our own published work goes into a signed, append-only record with the root cause attached. Old entries are never edited away — they are superseded in public, so you can always see what we said, when, and what changed our mind.",
     points: [
       { tag: "pain", text: "Quiet edits that make yesterday's number vanish without trace" },
-      { tag: "benefit", text: "Dated corrections with source references and stated verification status" },
-      { tag: "benefit", text: "Review earlier findings alongside their superseding records" },
+      { tag: "benefit", text: "Every correction dated, signed and traceable to its cause" },
+      { tag: "benefit", text: "Superseded entries preserved — append-only, never overwritten" },
       { tag: "usp", text: "We publish retractions of our own strongest claims, not just of typos" },
     ],
     href: "/refutation-ledger",
@@ -166,7 +166,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     points: [
       { tag: "pain", text: "Architecture diagrams quietly promoted into safety guarantees" },
       { tag: "benefit", text: "A design figure labelled as design, everywhere it appears" },
-      { tag: "benefit", text: "The supporting measurement is linked from the retraction" },
+      { tag: "benefit", text: "The measurement that killed the claim is published with the retraction" },
       { tag: "usp", text: "The strongest claim we ever made about ourselves is the one we withdrew first" },
     ],
     href: "/refutation-ledger",
@@ -187,7 +187,7 @@ export const VERIFIABLE_TRUST_NOT_CLAIMED = [
 ];
 
 export const VERIFIABLE_TRUST_RELATED = [
-  { href: "/refutation-ledger", label: "The refutation ledger", what: "Dated corrections and retractions with supporting records." },
+  { href: "/refutation-ledger", label: "The refutation ledger", what: "Every correction and retraction, append-only and signed." },
   { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and measurement scope and limitations." },
   { href: "/gspc-scoreboard", label: "The live board", what: "Every slot with its sample size and separation status — measured and unmeasured alike, counted live from GET /api/gspc." },
   { href: "/live-ledger", label: "The living ledger", what: "How a measurement stays current when the statute moves." },

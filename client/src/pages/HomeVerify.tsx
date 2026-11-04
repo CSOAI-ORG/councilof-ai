@@ -148,10 +148,10 @@ export default function HomeVerify() {
           report is published publicly; the signup rides the real /api/subscribe handler. */}
       <div className="section-shell pt-10" data-testid="home-daily-report-band">
         <div className="surface-raised border border-border rounded-lg p-6 sm:p-8">
-          <h2 className="text-xl font-bold mb-2">The 33-axis daily report — signed, dated, public.</h2>
+          <h2 className="text-xl font-bold mb-2">Measurement reports and evidence updates</h2>
           <p className="text-muted-foreground text-sm mb-4 max-w-2xl">
-            Every axis, every leaderboard change, every correction — one signed report a day,
-            published before we pitch anything. Read today&apos;s issue or have it find you.
+            Read published measurement summaries and corrections. Each report identifies its
+            coverage, publication date and evidence status; refer to the board for current results.
           </p>
           <div className="flex flex-wrap gap-3 items-center">
             <a
@@ -160,7 +160,7 @@ export default function HomeVerify() {
               rel="noopener noreferrer"
               className="inline-flex items-center rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold hover:opacity-90 transition"
             >
-              Read today&apos;s report
+              Read published reports
             </a>
             <a href="/board/" className="text-sm underline underline-offset-4 hover:text-primary">
               or go straight to the board

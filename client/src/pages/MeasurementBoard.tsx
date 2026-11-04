@@ -87,7 +87,7 @@ const GLOSSARY: TermDef[] = [
   {
     term: "n",
     short:
-      "How many things were actually measured. A score over ten items is a much weaker claim than the same score over three hundred, which is why n is always shown next to it.",
+      "The number of observations included in the result. Interpret it alongside the sampling method, exclusions and reported uncertainty.",
   },
   {
     term: "confidence range",
@@ -102,7 +102,7 @@ const GLOSSARY: TermDef[] = [
   {
     term: "signed card",
     short:
-      "A small file recording one measurement, stamped with a cryptographic signature. Anyone can re-check the stamp offline, without asking us and without trusting us.",
+      "A compact measurement record with a cryptographic signature that can be verified offline using the published verification key. A valid signature establishes integrity, not the correctness of the result.",
   },
   {
     term: "frozen bank",
@@ -1100,7 +1100,7 @@ function CustodyPanel() {
       <p className="mt-2 max-w-3xl text-sm text-gray-700">
         Every measured row above names a published evidence or run artifact. Where a{" "}
         <Term def={GLOSSARY.find((g) => g.term === "signed card")!.short}>signed card</Term> is
-        actually linked, a stranger can verify that card offline. Seven current financial rows
+        linked, you can verify that card offline. Seven current financial rows
         instead link to content-addressed but unsigned run artifacts; a content ID is not a
         signature, and this page keeps that difference visible.
       </p>
@@ -1112,8 +1112,8 @@ function CustodyPanel() {
           </dt>
           <dd className="mt-1 font-mono text-2xl text-gray-900">{listed ?? "…"}</dd>
           <p className="mt-1 text-xs text-gray-600">
-            The published index lists records covered by its verification process.
-            Earlier count corrections remain available in the corrections ledger.
+            This index uses the verified count. An earlier larger count was withdrawn because
+            a signature label alone did not establish cryptographic verification.
           </p>
         </div>
         <div className="rounded-xl border border-gray-200 p-4">
@@ -1122,20 +1122,20 @@ function CustodyPanel() {
           </dt>
           <dd className="mt-1 font-mono text-2xl text-gray-900">{chain?.length ?? "…"}</dd>
           <p className="mt-1 text-xs text-gray-600">
-            Each card references its parent, allowing readers to check the recorded
-            chain and identify a missing link.
+            Parent references support end-to-end chain inspection. Missing positions can be
+            identified when checking the published chain.
           </p>
         </div>
         <div className="rounded-xl border border-gray-200 p-4">
           <dt className="text-xs font-bold uppercase tracking-wide text-gray-500">
-            Bodies we do not publish
+            Private record contents
           </dt>
           <dd className="mt-1 font-mono text-2xl text-gray-900">
             {chain?.bodies_withheld ?? "…"}
           </dd>
           <p className="mt-1 text-xs text-gray-600">
-            The contents are withheld. Listed positions allow readers to inspect
-            the chain structure without access to the private bodies.
+            Record contents remain private. Published positions allow reviewers to inspect
+            chain continuity without accessing those contents.
           </p>
         </div>
       </dl>
@@ -1224,7 +1224,7 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
     what:
       "The ledger attestation work: a record attached to a public ledger so that a third party can see a measurement existed at a point in time.",
     why:
-      "The provenance-controls row links to signed ledger evidence. Seven other financial rows link to separate content-addressed, unsigned run artifacts.",
+      "Reachable from the site header and footer, and from nothing on the board. The provenance-controls row points at the signed ledger evidence; seven other financial rows point at separate content-addressed, unsigned run artifacts.",
     status: "Proven on a test network. Attaching to the main network is planned and is not done.",
   },
   {
@@ -1237,7 +1237,7 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
   {
     path: "/interop/evm-control-facts.json",
     what: "The same style of control-fact reading, on a different kind of public ledger.",
-    why: "Published signed control-fact record; review its scope and source references.",
+    why: "Published signed record available here for independent inspection.",
     status:
       "Signed. The attestation back end for this kind of ledger is not built, so nothing is attested there.",
   },
@@ -1246,43 +1246,43 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
     what:
       "How much of each register was actually covered — which named instruments were read and which could not be located.",
     why:
-      "Identifies which instruments were covered, so a result can be read within the scope of the records located.",
+      "Identifies the instruments included in the review and those that could not be located. Results apply to that documented coverage, not automatically to the entire instrument family.",
     status: "Published.",
   },
   {
     path: "/interop/rwa-attest-index.json",
     what: "The index of attestation records produced for named financial instruments.",
-    why: "Machine-readable index available for inspection.",
+    why: "Published index available through this direct link and the bulk API.",
     status: "Published.",
   },
   {
     path: "/interop/attestation-corpus.json",
     what: "The corpus of attestations gathered across rails.",
-    why: "Machine-readable source record available for inspection.",
+    why: "Machine-readable supporting record available through this direct link and the bulk API.",
     status: "Published.",
   },
   {
     path: "/interop/eas-attestation-batch.json",
     what: "A prepared batch of attestation payloads for a third-party attestation service.",
-    why: "Machine-readable source record available for inspection.",
+    why: "Machine-readable supporting record available through this direct link and the bulk API.",
     status: "Payloads are prepared. Nothing has been published to that service.",
   },
   {
     path: "/interop/jailbreak-asr-evidence-pack.json",
     what: "The per-model evidence behind the escape-detection work.",
-    why: "Dated signed record with the underlying evaluation detail.",
+    why: "Dated signed record linked here for independent review.",
     status: "Signed and published.",
   },
   {
     path: "/interop/jail-peritem-v3.json",
     what: "The item-by-item detail behind one board row, at the granularity a challenger needs.",
-    why: "Dated signed record with the underlying evaluation detail.",
+    why: "Dated signed record linked here for independent review.",
     status: "Signed and published.",
   },
   {
     path: "/interop/mcp-security-scorecard.json",
     what: "A security scorecard over tool servers, a measurement in its own right.",
-    why: "Machine-readable source record available for inspection.",
+    why: "Machine-readable supporting record available through this direct link and the bulk API.",
     status: "Published.",
   },
   {
@@ -1290,34 +1290,34 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
     what:
       "A record of searching five stores for the card bodies that would settle the disputed card count — and finding none.",
     why:
-      "Documents the search scope and its negative result; this finding is retained with the supporting record.",
-    status: "Published. The result was zero, and it is recorded as zero.",
+      "Preserves the historical negative result and the scope of the card-store verification.",
+    status: "Published historical result: zero matching card bodies found in the stated search.",
   },
   {
     path: "/interop/rwa-registry.json",
     what: "The register of named financial instruments the financial rows draw from.",
-    why: "Source register used by the financial measurement rows.",
+    why: "Source register supporting the financial data views.",
     status:
-      "Published without a timestamp; this record does not establish a measurement date.",
+      "Published without a source timestamp. Its measurement date is not established.",
   },
   {
     path: "/interop/index-reference-reverify.json",
     what: "A re-check of the public reference series behind the candidate index rows.",
-    why: "Supporting re-verification record for the named reference series.",
+    why: "Supporting re-verification record, linked here for inspection.",
     status: "Published.",
   },
   {
     path: "/interop/sbom-councilof-ai.json",
     what: "The software bill of materials for this site.",
     why:
-      "Published software inventory, linked here at its corrected path.",
+      "Listed in the surface catalogue under a misspelt path, so a machine following the catalogue gets a 404.",
     status: "Published at the corrected path.",
   },
   {
     path: "/signed/chain.json",
     what: "The full chain of card positions, including the ones whose contents are withheld.",
     why:
-      "Use the published verification instructions to inspect the chain and its listed positions.",
+      "Use this chain with the published verification instructions to inspect record continuity.",
     status: "Published.",
   },
 ];
@@ -1337,13 +1337,13 @@ function NoRoutePanel() {
         Explore supporting records and methods
       </h2>
       <p className="mt-2 max-w-3xl text-sm text-gray-800">
-        Open supporting evidence, source registers and verification instructions. Each record
-        below identifies its purpose and publication state. Review the record itself for its
-        method, date and current verification status.
+        Review the supporting records behind the measurement sets. Each link identifies the
+        record's purpose, publication status and relevant limitations. Signed records, unsigned
+        evidence and prepared but unpublished payloads remain separate.
       </p>
       {catalog?.as_of && (
         <p className="mt-2 text-xs text-gray-700">
-          Cross-checked against the estate's own machine-readable catalogue of surfaces, dated{" "}
+          Cross-referenced with the published machine-readable catalogue, dated{" "}
           <span className="font-mono">{catalog.as_of}</span> —{" "}
           <a href="/interop/surface-catalog.json" className="underline">
             /interop/surface-catalog.json
@@ -1402,9 +1402,9 @@ export default function MeasurementBoard() {
   );
 
   useEffect(() => {
-    document.title = "The measurement board — every set, what it measures, what it does not";
+    document.title = "AI measurement board | Council of AI";
     setMetaDescription(
-      "One navigable board across every axis set this estate publishes. Each set states what it measures, over what, when, what it establishes and what it does not; evidence links preserve their actual signed or unsigned state.",
+      "Explore published AI measurements, methods, coverage and supporting evidence. Each result identifies its scope, date and limitations; signed and unsigned records are clearly distinguished.",
     );
     // The navigation's arena link must open the current signed reference, not
     // the separate historical practice replay. Keep the first server render
@@ -1450,22 +1450,23 @@ export default function MeasurementBoard() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      {/* Measurement enquiries are scoped separately from published board results. */}
+      {/* Service enquiries are separate from the published measurements below. */}
       <aside
         data-testid="board-commission-callout"
         role="note"
-        aria-label="Commission a signed measurement"
-        className="mb-8 rounded-2xl border-2 border-amber-400 bg-[#04120c] p-4 sm:p-5 shadow-[0_18px_40px_-24px_rgba(0,0,0,.6)]"
+        aria-label="Measurement services"
+        className="mb-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 sm:p-5"
       >
-        <p className="text-base leading-relaxed text-amber-50 sm:text-lg">
-          Request a scoped AI measurement with published methods and a signed evidence record.{" "}
+        <p className="text-base leading-relaxed text-emerald-950">
+          Need evidence for a specific model or system?{" "}
           <a
             href="/services/"
-            className="font-bold text-amber-300 underline decoration-amber-500/60 underline-offset-4 hover:text-amber-200"
+            className="font-semibold text-emerald-800 underline underline-offset-4 hover:text-emerald-950"
             data-testid="board-callout-cta"
           >
-            Discuss your measurement requirements.
+            Explore measurement services.
           </a>{" "}
+          Results apply to the subjects, methods and dates shown below.
         </p>
       </aside>
 
@@ -1480,9 +1481,9 @@ export default function MeasurementBoard() {
         {/* dated freshness on the first screen: read live from /api/gspc, never typed */}
         <BoardFreshness />
         <p className="mt-3 max-w-3xl text-base text-gray-700">
-          Explore published measurement sets, their results and supporting evidence. Each set
-          identifies its subject, method, measurement date and coverage. Select a set to review
-          its findings and limitations; counts from different sets describe different scopes.
+          Explore the published measurement sets below. Each covers a defined subject, method
+          and period, with its own sample size and supporting evidence. Counts from different
+          sets are not directly comparable. Review the scope and limitations alongside each result.
         </p>
         <p className="mt-3 max-w-3xl rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
           <strong className="font-semibold">About the dates on this page.</strong> A date shown
@@ -1781,7 +1782,8 @@ export default function MeasurementBoard() {
       <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-bold text-gray-900">Words used on this page</h2>
         <p className="mt-1 text-sm text-gray-600">
-          Definitions for the measurement and verification terms used on this board.
+          If a term appears above and is not explained here, that is a defect — tell us and we will
+          either define it or stop using it.
         </p>
         <dl className="mt-4 grid gap-4 sm:grid-cols-2">
           {GLOSSARY.map((g) => (
@@ -1800,7 +1802,7 @@ export default function MeasurementBoard() {
           of questions on a date — it does not describe anyone's compliance with any law.
         </p>
         <p className="mt-2">
-          Questions or corrections?{" "}
+          Something here wrong?{" "}
           <Link href="/challenge" className="font-semibold text-emerald-700 underline">
             Challenge a measurement
           </Link>{" "}

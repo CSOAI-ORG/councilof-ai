@@ -51,7 +51,7 @@ export const navigation: NavGroup[] = [
       { name: 'Stablecoin readiness', href: '/stablecoins', description: 'A frozen discovery index with measurement, signature, root, witness and settlement state kept separate' },
       { name: 'Wrapper parity', href: '/wrappers', description: 'Wrapped supply against the escrow that backs it, at named blocks — read, not rated; native and custodial wrappers stay indexed' },
       { name: 'Financial-verification board', href: '/eunomia', description: 'Financial-verification axis, signed, across a two-tier fleet' },
-      { name: 'Signed registers', href: '/registers', description: 'The financial-axis register — a stranger can re-derive every row' },
+      { name: 'Signed registers', href: '/registers', description: 'Published financial-axis records and their verification details' },
       { name: 'First-Fine Watch', href: '/first-fine-watch', description: 'Signed enforcement record: EU AI Act fines and the deadlines behind them' },
       { name: 'Financial-axis data feed', href: '/eunomia-data', description: 'x402 data-only lane — enforcement record + deadline calendar, never scores' },
       { name: 'Financial-axis catalogue', href: '/financial-catalog', description: 'Every surface, API, HF mirror, A2A card and MCP tool — catalogued and linked' },

@@ -62,7 +62,7 @@ const VERIFICATION_LINKS = [
   {
     label: "In-browser card verification",
     url: "/gspc-verify",
-    desc: "Verify any signed card's Ed25519 signature without trusting us.",
+    desc: "Verify a supported signed card’s Ed25519 signature independently.",
   },
   {
     label: "Anchor posture (what is signed, what is anchored)",
