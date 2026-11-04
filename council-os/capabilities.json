@@ -447,6 +447,29 @@
       ]
     },
     {
+      "id": "board-counts",
+      "kind": "a2a_skill",
+      "name": "board-counts",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "a2a"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      }
+    },
+    {
       "id": "card-status-link",
       "kind": "a2a_skill",
       "name": "Card status link",

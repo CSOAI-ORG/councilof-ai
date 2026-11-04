@@ -8,6 +8,8 @@
 import { BOARD_URL, boardView } from "./lib/board.mjs";
 import { STATES, parseInput, verifyOffline, checkInclusion, inclusionSha } from "./lib/gspcVerify.mjs";
 
+const COUNTS_URL = "https://councilof.ai/api/counts";
+
 const $ = (id) => document.getElementById(id);
 
 async function fetchJson(url) {
@@ -59,6 +61,51 @@ async function loadBoard() {
   } catch (e) {
     $("lid").textContent = `UNCHECKABLE — GET /api/gspc could not be reached (${e?.message ?? e}).`;
     $("axes").hidden = true;
+  }
+}
+
+/* ----------------------------------------------------------------- counts */
+/* The count grammar door (functions/api/counts.ts): every published count labelled with its
+   source, state and quote rule. Rendered with the door's own rules — a NOT_READ row is a read
+   that failed, never a zero; figures are never summed here either. */
+function renderCounts(doc) {
+  const tbody = $("counts-table").querySelector("tbody");
+  tbody.textContent = "";
+  for (const f of Array.isArray(doc.figures) ? doc.figures : []) {
+    const tr = document.createElement("tr");
+    const cells = [
+      f.name ?? "?",
+      f.state === "READ" ? String(f.value) : "not read",
+      f.state ?? "NOT_READ",
+      f.source ?? "",
+    ];
+    cells.forEach((v, i) => {
+      const td = document.createElement("td");
+      td.textContent = v;
+      if (i === 2) td.className = f.state === "READ" ? "state" : "withheld";
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  }
+  $("counts-table").hidden = !(Array.isArray(doc.figures) && doc.figures.length > 0);
+  $("counts-note").textContent = doc.grammar
+    ? "Quote the ONE figure whose meaning answers the question, with its source and as_of attached."
+    : "";
+}
+
+async function loadCounts() {
+  $("counts-note").textContent = "";
+  try {
+    const { status, body } = await fetchJson(COUNTS_URL);
+    if (status !== 200 || !body) {
+      $("counts-note").textContent = `UNCHECKABLE — GET /api/counts returned HTTP ${status}. Nothing is shown in its place.`;
+      $("counts-table").hidden = true;
+      return;
+    }
+    renderCounts(body);
+  } catch (e) {
+    $("counts-note").textContent = `UNCHECKABLE — GET /api/counts could not be reached (${e?.message ?? e}).`;
+    $("counts-table").hidden = true;
   }
 }
 
@@ -117,7 +164,10 @@ async function runVerify() {
   }
 }
 
-$("reload").addEventListener("click", loadBoard);
+$("reload").addEventListener("click", () => {
+  loadBoard();
+  loadCounts();
+});
 $("check").addEventListener("click", () => runVerify().catch((e) => {
   $("verdict").hidden = false;
   $("v-state").textContent = STATES.UNCHECKABLE;
@@ -125,3 +175,4 @@ $("check").addEventListener("click", () => runVerify().catch((e) => {
   $("v-reason").textContent = `The check could not run: ${e?.message ?? e}. That is a statement about this check, not about the card.`;
 }));
 loadBoard();
+loadCounts();
