@@ -230,7 +230,7 @@ const glossaryTerms: GlossaryTerm[] = [
   {
     term: "Council of Safety",
     definition:
-      "A proposed governance design using 33 specialist software roles. These roles organise review perspectives; they do not establish 33 independent agents, appointed human reviewers or an operating governing body. Current measurement scope is recorded separately on the GSPC board.",
+      "A proposed governance design using 33 specialist software roles. These roles organise review perspectives; their independence is not established, and they do not constitute appointed human reviewers or an operating governing body. Current measurement scope is recorded separately on the GSPC board.",
     category: "Governance",
     relatedTerms: ["CSOAI", "Governance", "Designed 33-seat Council"],
   },
