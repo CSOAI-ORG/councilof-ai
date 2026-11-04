@@ -73,10 +73,50 @@ $ curl -s -X POST https://councilof.ai/api/verify \
    send any browser/curl User-Agent, or use curl. Logged as an owner-side WAF
    exception request — an evidence door should not depend on a UA string.
 
+## Step 5 — prove inclusion WITHOUT trusting anyone (executed 2026-11-03)
+
+The verifier's word is one thing; mathematics is another. `GET /api/proof?sha=<leaf>`
+returns the audit path — free, no credentials. For the same leaf: 9 sibling digests,
+index 427, claimed root `4e57607854be...e08aa0`.
+
+```python
+h = bytes.fromhex(leaf)
+idx = index
+for sib in proof:                       # 9 sibling digests
+    sib = bytes.fromhex(sib)
+    h = hashlib.sha256(h + sib).digest() if idx % 2 == 0 else hashlib.sha256(sib + h).digest()
+    idx //= 2
+print(h.hex() == claimed_root)          # True
+```
+
+Executed output: `plain concat: True`. The public root's scheme is plain
+`sha256(concat)` with no domain separation (unlike the capsule trees' RFC-6962
+prefixes). The root is reproducible from the leaf and the published siblings —
+inclusion does not rest on our API's say-so.
+
+## Step 6 — two card corpora, two verifications (a distinction worth its own section)
+
+The estate serves TWO artifact classes and they verify differently:
+
+| corpus | where | what it is | verification |
+|---|---|---|---|
+| public-root leaves | `/cards/<sha16>.json` | content-addressed leaves of the Merkle root | digest recomputation (step 3) + inclusion proof (step 5) |
+| signed measurement cards | `/signed/cards/<sha64>.json` | Ed25519-signed measurement cards (the 335-card signed index) | signature check by `verify-card.mjs` or `/api/verify` |
+
+`verify-card.mjs` (226 lines, MIT, zero dependencies, plain Node) verifies the
+**signed-card** corpus — feeding it a public-root leaf answers `UNCHECKABLE: not a
+card`, which is correct, not a failure. Executed: `node verify-card.mjs
+signed-card.json` → `VALID 1 · INVALID 0 · UNCHECKABLE 0`. Its header documents the
+subtlest trap in the estate: CPython renders integral floats as `0.0` while every
+JS/Go/JCS canonicalizer writes `0`, so a naive JS verifier false-fails about a third
+of the cards — the shipped verifier handles it.
+
 ## Scope and honesty
 
 - This rehearsal covers the **digest chain** (root → leaf → card bytes → recomputed
-  digest) and the **signature verdict** (VALID from the free verifier). It does not
+  digest), the **inclusion proof** (audit path → root, recomputed), and the
+  **signature verdict** (VALID from the free verifier; the standalone
+  `verify-card.mjs` on the signed-card corpus). It does not
   re-implement Ed25519 verification locally — that is the verifier's job, and the
   standalone `verify-card.mjs` (no dependencies, plain Node) is the local route.
 - The worked example used the newest leaf on the day. Any leaf works; the chain is
