@@ -108,6 +108,10 @@ export default function Traction() {
         <h3 className="text-lg font-bold">A public API contract reused in an external catalogue</h3>
         <p className="mt-3 leading-7 text-slate-300">API Evangelist generated an OpenAPI overlay from Council of AI's published read-surfaces contract. The <a href="https://apis.io/overlays/councilof-ai/councilof-ai-gspc-read-surfaces-overlay/" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">APIs.io record</a> dates the generated artifact to 19 September 2026 and identifies it as an external derivative. This supports discoverability and reuse of the contract; it is not a customer deployment, endorsement or validation of the measurement service.</p>
       </aside>
+      <aside className="mt-4 rounded-xl border border-slate-700 p-5" aria-label="Automated external endpoint tasks">
+        <h3 className="text-lg font-bold">Read tasks recorded by an external agent directory</h3>
+        <p className="mt-3 leading-7 text-slate-300">On 3 November 2026, <a href="https://agentpeering.com/agents/councilof.ai/council-of-ai-measurement-agent" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">AgentPeering's public record</a> reports two graded read tasks for the GSPC board and east-west crosswalk. A third Article 50 detection request was invalid and was not graded. Its <a href="https://agentpeering.com/docs/scoring#agent-tests" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">method</a> uses LLM-generated and LLM-graded preview tasks. These are bounded automated endpoint observations, not customer acceptance or independent validation of the measurement method. Sources reviewed 4 November 2026.</p>
+      </aside>
     </div>
 
     <section className="border-y border-white/10 bg-slate-900/70"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-2">
