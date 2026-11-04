@@ -19,9 +19,10 @@
  *                 given a discordance and a skew), labelled arithmetic, never a measurement.
  *
  * ADOPTION STATE, SHOWN NOT ASSUMED. A pre-registration only binds if it exists before the data.
- * Until the owner adopts it, every variant says PROPOSED — not in force. It never claims the rule
- * has been applied to any verdict: today that would be false (0 separated), and the day it changes
- * this line is what keeps the claim honest.
+ * The rule was PROPOSED from 2026-11-04 03:24Z and the owner adopted it the same day; every
+ * variant now says IN FORCE · adopted 2026-11-04, and the adoption date is what separates a
+ * pre-registration from a post-hoc rule. It never claims the rule has produced a verdict: today
+ * that would be false (0 separated) — the rule binds the FIRST separated verdict when it comes.
  *
  * NOTHING IS TYPED. Family size comes from the payload's totals (the same four separation fields
  * the home page reads). If the board is unread, the static rule text still renders and the live
@@ -74,8 +75,8 @@ const fmtT = (t: number): string => (t < 0.001 ? t.toExponential(2) : t.toFixed(
 function RuleChips({ familySize }: { familySize: number | null }) {
   return (
     <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px]">
-      <span className="rounded-full border border-amber-500/60 bg-amber-100 px-2 py-0.5 font-bold text-amber-950 dark:border-amber-400/60 dark:bg-amber-900/50 dark:text-amber-100" data-testid="sep-disclosure-adoption">
-        PROPOSED · not in force until adopted
+      <span className="rounded-full border border-emerald-600/60 bg-emerald-100 px-2 py-0.5 font-bold text-emerald-950 dark:border-emerald-400/60 dark:bg-emerald-900/50 dark:text-emerald-100" data-testid="sep-disclosure-adoption">
+        IN FORCE · adopted 2026-11-04
       </span>
       <span className="font-mono text-muted-foreground">
         family rule: Holm step-down, α {ALPHA} · family size {familySize === null ? <span>not read</span> : <span className="font-bold text-foreground">{familySize}</span>}
@@ -146,9 +147,10 @@ function LiveVariant({ injected }: { injected?: GspcPayload | null }) {
   return (
     <div data-testid="sep-disclosure-live">
       <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
-        Under the proposed family rule, each published TIE p-value is shown against the Holm step it must clear for
-        its rank in the family (smallest p first). Nothing here upgrades a TIE: a p below its step still needs the
-        owner's adoption of the rule, and a separated verdict has never been published on this board.
+        Under the family rule (adopted 2026-11-04), each published TIE p-value is shown against the Holm step it
+        must clear for its rank in the family (smallest p first). Nothing here upgrades a TIE: a step cleared is
+        the necessary condition for a SEPARATED verdict, not the verdict itself — and a separated verdict has
+        never been published on this board.
       </p>
       {error && !data ? (
         <p className="mt-2 text-[13px] text-muted-foreground" role="status">
@@ -179,7 +181,7 @@ function LiveVariant({ injected }: { injected?: GspcPayload | null }) {
                   <td className="border-b border-border/60 py-1 pr-3">{fmtT(r.threshold)}</td>
                   <td className="border-b border-border/60 py-1">
                     <span className="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-bold text-sky-900 dark:bg-sky-900/60 dark:text-sky-100">
-                      {clears ? "clears this step — verdict still awaits adoption" : "does not clear its step"}
+                      {clears ? "clears its step under the family rule" : "does not clear its step"}
                     </span>
                   </td>
                 </tr>

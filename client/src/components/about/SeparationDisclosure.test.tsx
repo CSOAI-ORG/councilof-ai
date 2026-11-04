@@ -26,7 +26,7 @@ describe("SeparationDisclosure", () => {
   it("closed by default; opening is the reader's action", () => {
     const html = render(<SeparationDisclosure variant="live" data={null} />);
     expect(html).toContain("The family rule a separated leader must clear");
-    expect(html).not.toContain("PROPOSED");
+    expect(html).not.toContain("IN FORCE · adopted 2026-11-04");
   });
 
   it("static variant: the rule, the 14-step table, and the honest ~51% odds line", () => {
@@ -35,7 +35,7 @@ describe("SeparationDisclosure", () => {
     expect(html).toContain("51%");
     expect(html).toContain("1 of 14");
     expect(html).toContain("14 of 14");
-    expect(html).toContain("PROPOSED · not in force until adopted");
+    expect(html).toContain("IN FORCE · adopted 2026-11-04");
   });
 
   it("live variant with an unread board: says so, shows nothing in its place", () => {
@@ -59,7 +59,7 @@ describe("SeparationDisclosure", () => {
     // governance at 0.03: rank-2 Holm step for a 3-axis family is 0.05/2=0.025 → 0.03 misses.
     expect(html).toContain("does not clear its step");
     // provenance 0.004 clears rank-1 step 0.05/3≈0.01667 — but the verdict sentence stays honest.
-    expect(html).toContain("clears this step — verdict still awaits adoption");
+    expect(html).toContain("clears its step under the family rule");
     expect(html).toContain("family size");
   });
 
