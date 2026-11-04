@@ -45,9 +45,14 @@ function guarded(pr) {
  * number, headRefName, title, draft, state, mergedAt/closedAt). `now` is a Date or ms.
  *
  * Returns { supersede, millAutoMerge, gc, skipped }:
- *   supersede    [{number, family, keep}]  older open siblings of a family that has a
- *                 newer open sibling — close them; each newer run of these automations
- *                 writes the same output paths, so an old branch can only regress master.
+ *   supersede    [{number, family, keep, mergedKeep?}]  older open siblings of a family
+ *                 that has a newer sibling — close them; each newer run of these
+ *                 automations writes the same output paths, so an old branch can only
+ *                 regress master. `keep` is the superseding PR number: a newer OPEN
+ *                 sibling, or — with `mergedKeep: true` — the family's newest MERGED PR,
+ *                 because master already holds that run and any older open branch is
+ *                 debris even if it is the only open one (the daily automations reopen
+ *                 their old PRs; observed 2026-11-03 02:47Z).
  *   millAutoMerge [number]  open mill landings that are the family's newest (supersede
  *                 would leave exactly these) — the caller still has to verify checks are
  *                 all green before enabling auto-merge; this list is the eligibility,
@@ -79,13 +84,37 @@ export function plan({ open = [], closed = [], now }) {
     byFamily.get(pr.family).push(pr);
   }
 
+  // A family's newest MERGED PR is also a superseder: master already holds that run's
+  // data, so any older OPEN sibling of it is debris no matter how many open siblings
+  // there are. This matters because the daily automations REOPEN their old PRs (observed
+  // 2026-11-03 02:47Z on the canary family, five PRs reopened en masse a day after the
+  // manual pass closed them) — close-only passes lose that war; the plan has to know
+  // that a merged-newest sibling already won.
+  const newestMerged = new Map();
+  for (const pr of closed) {
+    if (pr.state !== "MERGED" && !(pr.state === "CLOSED" && pr.mergedAt)) continue;
+    if (guarded(pr)) continue;
+    const family = familyOf(pr.headRefName);
+    if (!family) continue;
+    const n = pr.number;
+    if (!newestMerged.has(family) || newestMerged.get(family) < n) newestMerged.set(family, n);
+  }
+
   for (const [family, prs] of byFamily) {
     prs.sort((a, b) => b.number - a.number); // automation opens sequentially: newest = highest number
     const keep = prs[0];
+    const mergedFloor = newestMerged.get(family) ?? 0;
+    const supersedeByNumber = new Map();
     for (const older of prs.slice(1)) {
-      plan.supersede.push({ number: older.number, family, keep: keep.number });
+      supersedeByNumber.set(older.number, { number: older.number, family, keep: keep.number });
     }
-    if (family === "mill") plan.millAutoMerge.push(keep.number);
+    for (const pr of prs) {
+      if (pr.number < mergedFloor) {
+        supersedeByNumber.set(pr.number, { number: pr.number, family, keep: mergedFloor, mergedKeep: true });
+      }
+    }
+    plan.supersede.push(...supersedeByNumber.values());
+    if (family === "mill" && keep.number > mergedFloor) plan.millAutoMerge.push(keep.number);
   }
 
   for (const pr of closed) {
