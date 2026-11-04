@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { toolSummary } from "@/lib/mcpTools";
 import { useBoardCount } from "@/lib/boardCount";
+import { BUYING_ENQUIRIES } from "@/lib/buying";
 
 /**
  * /products — four SKUs, one workspace (Council OS).
@@ -34,14 +35,14 @@ export const SKUS = [
     name: "Ledger",
     href: "/contact?arm=ledger",
     tag: "Enquiry",
-    what: "Signed evidence feed and packs for insurers and procurement. Never a purchased public rank.",
+    what: "Evidence products for a named subject or period: Article 50 marking-check packs, published evidence bundles and provider-diff feeds. Scope and invoice terms are agreed by email.",
   },
   {
     id: "data",
     name: "Data",
     href: "/contact?arm=data",
     tag: "Enquiry",
-    what: "Licensed corpus: traces, preference pairs, safety incidents. A vendor may buy data. A vendor can never buy a score.",
+    what: "Discuss reuse of a named published dataset. Licence rights, source permissions and commercial terms depend on the component and version. A data enquiry does not reserve or license a corpus. A vendor can never buy a score.",
   },
 ] as const;
 
@@ -141,6 +142,13 @@ export default function Products() {
         measurement requirement. Each service identifies its deliverable and coverage.
         Payment does not change a measurement result.
       </p>
+
+      <section aria-labelledby="products-buying-h" className="mt-8 rounded-2xl border border-emerald-400/30 bg-emerald-950/30 p-6">
+        <h2 id="products-buying-h" className="text-xl font-bold">Ask for a defined evidence product</h2>
+        <p className="mt-3 max-w-3xl leading-7 text-slate-300">These existing products can be discussed for a GBP invoice. Name the subject, dates and intended use; we confirm the available deliverable and terms before an order. Each link prepares an enquiry.</p>
+        <div className="mt-4 flex flex-wrap gap-3">{BUYING_ENQUIRIES.map((product) => <Link key={product.product} href={product.href} className="inline-flex min-h-11 items-center rounded-lg border border-emerald-400/50 px-4 py-2 font-semibold text-emerald-200 hover:bg-emerald-400/10">{product.label}</Link>)}</div>
+        <Link href="/services/#services-scope-h" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-300 underline">What to agree in the written scope</Link>
+      </section>
 
       {/* Public runtime doors and source integrations. Source-only projects say so: a
           repository is inspectable, but it is not a browser-store or host installation. */}
