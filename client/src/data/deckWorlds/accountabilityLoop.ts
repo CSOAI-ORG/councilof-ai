@@ -129,7 +129,7 @@ export const LOOP_NOT_CLAIMED = [
 
 export const LOOP_RELATED = [
   { href: "/watchdog/report", label: "The public intake", what: "Where a report starts — state one, the part that runs." },
-  { href: "/honesty", label: "The honesty gate", what: "How we treat findings against ourselves." },
+  { href: "/honesty", label: "Measurement scope and limitations", what: "How results are reviewed and corrections are published." },
   { href: "/statute-to-predicate", label: "From statute to predicate", what: "How a provision becomes a test a stranger can run." },
   { href: "/firewall-charter", label: "The firewall charter", what: "We measure and sign; we never operate the fix." },
 ];
