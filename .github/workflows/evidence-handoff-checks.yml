@@ -91,6 +91,8 @@ jobs:
           packages/evidence-fabric/tests/test_doctrine.py
           packages/evidence-fabric/tests/test_event.py
           packages/evidence-fabric/tests/test_verify_qualification.py
+      - name: Full registry routing projection controls
+        run: python packages/evidence-fabric/test_regulation_projection.py
       - name: Check retained SDK evidence from the receiver side
         run: >-
           python packages/evidence-fabric/verify_qualification.py
@@ -104,3 +106,4 @@ jobs:
           python test_hitl_authority_effect_v0_2.py
           python test_approval_dependency_binding.py
           python test_discriminating_power.py
+

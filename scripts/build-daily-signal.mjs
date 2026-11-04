@@ -1,195 +1,182 @@
 #!/usr/bin/env node
 /**
- * build-daily-signal.mjs — the daily bind: regulations × deadlines × measured axes × claims.
+ * Daily regulatory-clock projection. This is a source join, never a legal or
+ * measurement assessment. No network, signing, model calls or paid delivery.
  *
- * Joins four REAL artifacts that already exist on disk — never invents a mapping:
- *   1. public/regulatory-clock.json          — dated obligations w/ jurisdiction + confidence + sell note
- *   2. tui3-crosswalk/regulatory-crosswalk-*.json — frameworks → provisions → gspc_axes (the join key)
- *   3. board state (public/cards matrix / API snapshot passed in, or --board <file>) — MEASURED per axis
- *   4. public/spec/claim-maintenance/register.json — corrections ledger as_of
+ * node scripts/build-daily-signal.mjs --as-of 2026-11-04 [--check]
+ *   [--board snapshot.json] [--crosswalk crosswalk.json] [--mappings mapping.json]
  *
- * Emits (deterministic, canonical JSON, stable across runs on unchanged inputs):
- *   public/reports/daily-signal/<YYYY-MM-DD>.json   — that day's signal
- *   public/reports/daily-signal/latest.json         — rolling latest
- *
- * Registers the artifact in the claim-maintenance pattern: every emitted file carries
- * `as_of`, `inputs` (paths + sha256), and `unmapped` sections that state absences rather
- * than papering over them. No prices, no tiers, no payment-processor names (owner ruling
- * 2026-09-06). Machine access to this artifact is sold per-call via the existing x402 SKUs;
- * the rendered artifact on the site is free.
- *
- * Usage:
- *   node scripts/build-daily-signal.mjs                 # write today's signal + latest
- *   node scripts/build-daily-signal.mjs --check         # CI: committed files must match
- *   node scripts/build-daily-signal.mjs --as-of <ISO>   # deterministic rerun (tests)
- *   node scripts/build-daily-signal.mjs --board <file>  # board snapshot JSON ({axis: status})
- *   node scripts/build-daily-signal.mjs --horizon 90    # days-ahead window (default 90)
+ * A reviewed mapping declaration must bind event_sha256 (eventKey below), the
+ * exact crosswalk file SHA-256, framework_id (or framework_sha256 for legacy
+ * rows without IDs) and explicit provision_ids. Missing
+ * declarations stay UNMAPPED; matching an instrument name is insufficient.
+ * No stamped file may be overwritten. Outputs use the existing daily-signal
+ * report schema; they are not evidence-fabric process events or signed cards.
  */
-import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { createHash } from 'node:crypto';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { dirname, join, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CLOCK = join(ROOT, "public/regulatory-clock.json");
-const CROSSWALK_DIR = join(ROOT, "tui3-crosswalk");
-const CLAIMS_REGISTER = join(ROOT, "public/spec/claim-maintenance/register.json");
-const OUT_DIR = join(ROOT, "public/reports/daily-signal");
-
-function flag(name) {
-  const i = process.argv.indexOf(`--${name}`);
-  return i > -1 ? process.argv[i + 1] : null;
+export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+function ordered(value) {
+  if (Array.isArray(value)) return value.map(ordered);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(k => [k, ordered(value[k])]));
+  return value;
 }
-const CHECK = process.argv.includes("--check");
-const HORIZON = Number(flag("horizon") ?? 90);
-const AS_OF = flag("as-of") ?? new Date().toISOString().slice(0, 10);
-
-const sha256 = (s) => createHash("sha256").update(s, "utf8").digest("hex");
-const canonical = (o) => JSON.stringify(o, null, 1) + "\n";
-
-function loadJson(p) {
-  return existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : null;
+// Deterministic JSON for this report, not a claim to implement RFC 8785.
+export const encode = value => JSON.stringify(ordered(value), null, 1) + '\n';
+export const eventKey = event => sha256(encode(event));
+const present = x => typeof x === 'string' && x.trim().length > 0;
+const hex = x => typeof x === 'string' && /^[a-f0-9]{64}$/.test(x);
+function day(value, label) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value ?? '')) throw new Error(`${label}: expected YYYY-MM-DD`);
+  const ms = Date.parse(value + 'T00:00:00Z');
+  if (!Number.isFinite(ms) || new Date(ms).toISOString().slice(0, 10) !== value) throw new Error(`${label}: invalid date`);
+  return ms;
 }
-
-function shaOfFile(p) {
-  return existsSync(p) ? sha256(readFileSync(p, "utf8")) : null;
-}
-
-// ---- inputs --------------------------------------------------------------
-const clock = loadJson(CLOCK);
-if (!clock) {
-  console.error("✗ daily-signal: public/regulatory-clock.json missing — nothing to bind");
-  process.exit(1);
-}
-
-// newest crosswalk in tui3-crosswalk/
-const crosswalkFiles = readdirSync(CROSSWALK_DIR)
-  .filter((f) => f.startsWith("regulatory-crosswalk-") && f.endsWith(".json"))
-  .sort();
-const crosswalkPath = join(CROSSWALK_DIR, crosswalkFiles[crosswalkFiles.length - 1] ?? "");
-const crosswalk = loadJson(crosswalkPath);
-
-// board state: prefer --board snapshot; else derive from public/cards card-matrix if present
-let board = null;
-const boardFlag = flag("board");
-const matrixPath = join(ROOT, "public/signed/card-matrix.json");
-if (boardFlag && existsSync(boardFlag)) board = loadJson(boardFlag);
-else if (existsSync(matrixPath)) {
-  const m = loadJson(matrixPath);
-  board = {};
-  for (const cell of m.cells ?? []) {
-    const axis = (cell.axis ?? "").replace(/^gspc-/, "");
-    board[axis] = board[axis] === "MEASURED" || cell.card ? "MEASURED" : board[axis] ?? null;
+function catalogState(board, axis) {
+  if (board === null) return 'SOURCE_ABSENT';
+  if (Array.isArray(board.cells)) {
+    const cells = board.cells.filter(c => c.axis === axis || c.axis === `gspc-${axis}`);
+    if (cells.some(c => present(c.card) || (c.card && typeof c.card === 'object'))) return 'CARD_REFERENCE_PRESENT';
+    return cells.length ? 'NO_CARD_REFERENCE' : 'AXIS_NOT_LISTED';
   }
+  const raw = board[axis];
+  if (raw === 'MEASURED') return 'REPORTED_MEASURED';
+  if (raw === 'UNMEASURED') return 'REPORTED_UNMEASURED';
+  return raw === undefined ? 'AXIS_NOT_LISTED' : 'UNRECOGNISED_STATE';
 }
 
-// claims register: corrections ledger as_of
-const claimsReg = loadJson(CLAIMS_REGISTER);
-const claimsAsOf = claimsReg?.as_of ?? null;
-const claimsSubjects = Array.isArray(claimsReg?.subjects) ? claimsReg.subjects.length : null;
+export function buildDailySignal({clock, crosswalk = null, board = null, claims = null,
+  mappings = null, asOf, horizon = 90, generatedFrom = {}}) {
+  const today = day(asOf, 'as-of');
+  if (!Number.isInteger(horizon) || horizon < 0 || horizon > 3660) throw new Error('horizon: expected integer 0..3660');
+  if (!clock || !Array.isArray(clock.events)) throw new Error('clock.events must be an array');
+  if (crosswalk !== null && !Array.isArray(crosswalk.frameworks)) throw new Error('crosswalk.frameworks must be an array');
+  if (board !== null && (typeof board !== 'object' || Array.isArray(board))) throw new Error('board must be an object');
+  if (mappings !== null && !Array.isArray(mappings.mappings)) throw new Error('mappings.mappings must be an array');
 
-// ---- the join ------------------------------------------------------------
-// frameworks indexed by short_name and by instrument substring
-const fwIndex = [];
-for (const f of crosswalk?.frameworks ?? []) {
-  fwIndex.push({ ...f, _short: (f.short_name ?? "").toLowerCase() });
-}
-function matchFramework(event) {
-  const instr = (event.instrument ?? "").toLowerCase();
-  if (!instr) return null;
-  const hit = fwIndex.find(
-    (f) => instr.includes(f._short) || (f.instrument && instr.includes(f.instrument.toLowerCase().slice(0, 24)))
-  );
-  return hit ?? null;
-}
-
-const today = new Date(AS_OF + "T00:00:00Z");
-const horizonDate = new Date(today.getTime() + HORIZON * 86400000);
-const daysUntil = (date) => Math.round((new Date(date + "T00:00:00Z") - today) / 86400000);
-
-const signals = [];
-const unmapped = [];
-for (const ev of clock.events ?? []) {
-  const du = daysUntil(ev.date);
-  if (du < 0 || du > HORIZON) continue;
-  const fw = matchFramework(ev);
-  const axes = [];
-  const provisions = [];
-  if (fw) {
-    for (const p of fw.provisions ?? []) {
-      provisions.push({ id: p.id, title: p.title, effective: p.effective, status: p.status });
-      for (const ax of p.gspc_axes ?? []) if (!axes.includes(ax)) axes.push(ax);
+  const declarations = new Map();
+  for (const m of mappings?.mappings ?? []) {
+    if (!hex(m.event_sha256)) throw new Error('mapping event_sha256 must be 64 lowercase hex');
+    if (declarations.has(m.event_sha256)) throw new Error('duplicate event mapping');
+    declarations.set(m.event_sha256, m);
+  }
+  const signals = [], invalidEvents = [], excludedEvents = [];
+  const seen = new Set();
+  for (const [sourceIndex, ev] of clock.events.entries()) {
+    if (!ev || typeof ev !== 'object' || Array.isArray(ev)) {
+      invalidEvents.push({source_index: sourceIndex, reason: 'event must be an object'}); continue;
     }
+    const key = eventKey(ev);
+    if (seen.has(key)) throw new Error(`duplicate clock event ${key}`);
+    seen.add(key);
+    let deadline;
+    try { deadline = day(ev.date, 'clock event date'); }
+    catch (e) { invalidEvents.push({event_sha256: key, source_index: sourceIndex, date: ev.date ?? null, reason: e.message}); continue; }
+    const daysUntil = (deadline - today) / 86400000;
+    if (daysUntil < 0 || daysUntil > horizon) {
+      excludedEvents.push({event_sha256: key, source_index: sourceIndex, date: ev.date, reason: daysUntil < 0 ? 'BEFORE_WINDOW' : 'AFTER_WINDOW'}); continue;
+    }
+    let mappingState = 'UNMAPPED', reason = 'No reviewed event-to-provision mapping declaration';
+    let framework = null, provisions = [], declaration = null;
+    const m = declarations.get(key);
+    if (m) {
+      if (m.status !== 'REVIEWED' || !present(m.reviewer) || !present(m.review_ref)) {
+        mappingState = 'UNREVIEWED'; reason = 'Review declaration incomplete';
+      } else if (!crosswalk || !hex(m.crosswalk_sha256) || m.crosswalk_sha256 !== generatedFrom.crosswalk?.sha256) {
+        mappingState = 'STALE_OR_UNAVAILABLE'; reason = 'Exact crosswalk source digest does not match';
+      } else {
+        if (present(m.framework_id) === hex(m.framework_sha256)) throw new Error('mapping needs exactly one framework_id or framework_sha256');
+        const matches = crosswalk.frameworks.filter(f => present(m.framework_id)
+          ? present(f.id) && f.id === m.framework_id : sha256(encode(f)) === m.framework_sha256);
+        if (matches.length !== 1) throw new Error('reviewed mapping framework_id is absent or ambiguous');
+        const f = matches[0];
+        if (!Array.isArray(m.provision_ids) || !m.provision_ids.length || new Set(m.provision_ids).size !== m.provision_ids.length) throw new Error('reviewed mapping needs unique explicit provision_ids');
+        provisions = m.provision_ids.map(id => {
+          const hits = (f.provisions ?? []).filter(p => present(p.id) && p.id === id);
+          if (hits.length !== 1) throw new Error(`reviewed mapping provision ${id} is absent or ambiguous`);
+          const p = hits[0];
+          if (p.gspc_axes !== undefined && (!Array.isArray(p.gspc_axes) || p.gspc_axes.some(a => !present(a)))) throw new Error('provision axes must be nonempty strings');
+          return {id: p.id, title: p.title ?? null, axes: [...new Set(p.gspc_axes ?? [])].sort()};
+        }).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+        framework = {id: f.id ?? null, sha256: sha256(encode(f)), instrument: f.instrument ?? null, short_name: f.short_name ?? null, source_url: f.source_url ?? null};
+        mappingState = 'REVIEWED_DECLARATION'; reason = 'Exact event and crosswalk bytes bound to explicit provisions';
+        declaration = {reviewer: m.reviewer, review_ref: m.review_ref, identity_verified: false};
+      }
+    }
+    const axes = [...new Set(provisions.flatMap(p => p.axes))].sort();
+    signals.push({event_sha256: key, source_index: sourceIndex, date: ev.date, days_until: daysUntil,
+      jurisdiction: ev.jur ?? null, instrument: ev.instrument ?? null, provision: ev.provision ?? null,
+      binds: ev.binds ?? null, requires: ev.requires ?? null, confidence: ev.confidence ?? null,
+      source_status: 'CLOCK_ASSERTION_NOT_REVALIDATED', mapping: {state: mappingState, reason, declaration},
+      framework_matched: framework, mapped_provisions: provisions,
+      gspc_axes: axes.map(axis => ({axis, catalog_state: catalogState(board, axis), evidence_assessment: 'NOT_ASSESSED'})),
+      evidence_coverage: null,
+      limitations: ['Mapping is not applicability or obligation satisfaction.', 'Board labels and card references are not verified measurement results.']});
   }
-  const axisStates = axes.map((ax) => ({
-    axis: ax,
-    board: board?.[ax] ?? "UNMEASURED",
-  }));
-  const measured = axisStates.filter((a) => a.board === "MEASURED").length;
-  const signal = {
-    date: ev.date,
-    days_until: du,
-    jurisdiction: ev.jur ?? null,
-    instrument: ev.instrument ?? null,
-    provision: ev.provision ?? null,
-    binds: ev.binds ?? null,
-    requires: ev.requires ?? null,
-    confidence: ev.confidence ?? null,
-    framework_matched: fw ? { short_name: fw.short_name ?? null, legal_status: fw.legal_status ?? null, source_url: fw.source_url ?? null } : null,
-    gspc_axes: axisStates,
-    evidence_coverage: axes.length ? `${measured}/${axes.length} MEASURED` : "UNMAPPED",
-    signal: ev.sell ?? null,
-    tier: ev.tier ?? null,
+  const orphaned = [...declarations.keys()].filter(key => !seen.has(key)).sort();
+  const unmapped = signals.filter(s => s.mapping.state !== 'REVIEWED_DECLARATION').map(s => ({event_sha256: s.event_sha256, date: s.date, instrument: s.instrument, reason: s.mapping.reason}));
+  return {schema: 'csoai.daily-signal/0.1', as_of: asOf, horizon_days: horizon, generated_from: generatedFrom,
+    headline: {clock_events: clock.events.length, events_in_horizon: signals.length, mapped_events: signals.length - unmapped.length, unmapped_events: unmapped.length, invalid_events: invalidEvents.length, excluded_events: excludedEvents.length},
+    signals: signals.sort((a, b) => a.days_until - b.days_until || (a.event_sha256 < b.event_sha256 ? -1 : a.event_sha256 > b.event_sha256 ? 1 : 0)),
+    unmapped, invalid_events: invalidEvents, excluded_events: excludedEvents, orphaned_mapping_event_ids: orphaned,
+    corrections: {register_state: claims === null ? 'ABSENT' : 'PRESENT', register_as_of: claims?.as_of ?? null,
+      subjects_listed: Array.isArray(claims?.subjects) ? claims.subjects.length : null, delta_state: 'NOT_COMPUTED'},
+    limitations: ['Only this clock snapshot and stated time window are covered; not a global regulatory census.',
+      'Dates, legal assertions and review identities have not been independently validated by this builder.',
+      'No legal conclusion, signing, payment, delivery or execution authority is established.']};
+}
+
+export function main(argv = process.argv.slice(2), root = resolve(dirname(fileURLToPath(import.meta.url)), '..')) {
+  const opts = {}, allowed = new Set(['as-of', 'horizon', 'board', 'crosswalk', 'mappings']);
+  let check = false;
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === '--check') { check = true; continue; }
+    const name = argv[i].replace(/^--/, '');
+    if (!argv[i].startsWith('--') || !allowed.has(name) || !argv[i + 1] || argv[i + 1].startsWith('--') || name in opts) throw new Error(`invalid or repeated option ${argv[i]}`);
+    opts[name] = argv[++i];
+  }
+  if (!opts['as-of']) throw new Error('--as-of YYYY-MM-DD is required for reproducible output');
+  day(opts['as-of'], 'as-of');
+  const generatedFrom = {};
+  const read = (role, file, required = false) => {
+    if (!file || !existsSync(file)) {
+      if (required) throw new Error(`${role}: file missing: ${file}`);
+      generatedFrom[role] = {path: file ? relative(root, file) : null, sha256: null, state: 'ABSENT'}; return null;
+    }
+    const bytes = readFileSync(file);
+    generatedFrom[role] = {path: relative(root, file), sha256: sha256(bytes), state: 'READ'};
+    return JSON.parse(bytes.toString('utf8'));
   };
-  if (fw || axes.length) signals.push(signal);
-  else unmapped.push({ date: ev.date, instrument: ev.instrument, reason: "no crosswalk framework match" });
-}
-
-// corrections ledger delta
-const corrections = claimsAsOf
-  ? { register_as_of: claimsAsOf, subjects_maintained: claimsSubjects }
-  : { register: "absent" };
-
-const inputs = {
-  "public/regulatory-clock.json": shaOfFile(CLOCK),
-  [`tui3-crosswalk/${crosswalkFiles[crosswalkFiles.length - 1] ?? "none"}`]: shaOfFile(crosswalkPath),
-  "public/signed/card-matrix.json": shaOfFile(matrixPath),
-  "public/spec/claim-maintenance/register.json": shaOfFile(CLAIMS_REGISTER),
-};
-
-const out = {
-  schema: "csoai.daily-signal/0.1",
-  as_of: AS_OF,
-  horizon_days: HORIZON,
-  generated_from: inputs,
-  headline: {
-    obligations_in_horizon: signals.length,
-    unmapped_events: unmapped.length,
-    axes_measured: Object.values(board ?? {}).filter((s) => s === "MEASURED").length,
-    corrections_ledger_as_of: claimsAsOf,
-  },
-  signals: signals.sort((a, b) => a.days_until - b.days_until),
-  unmapped,
-  corrections,
-  ruling_note: "Rendered copy carries no prices, tiers, or payment-processor names. Machine access to this artifact is sold per-call via the live 402 challenge.",
-};
-
-const bytes = canonical(out);
-const dayFile = join(OUT_DIR, `${AS_OF}.json`);
-const latestFile = join(OUT_DIR, "latest.json");
-
-if (CHECK) {
-  const a = existsSync(dayFile) ? readFileSync(dayFile, "utf8") : null;
-  const b = existsSync(latestFile) ? readFileSync(latestFile, "utf8") : null;
-  if (a === bytes && b === bytes) {
-    console.log(`✓ daily-signal --check: current (${signals.length} signals, ${unmapped.length} unmapped)`);
-    process.exit(0);
+  const cwDir = join(root, 'tui3-crosswalk');
+  const cwFiles = existsSync(cwDir) ? readdirSync(cwDir).filter(f => /^regulatory-crosswalk-.*\.json$/.test(f)).sort() : [];
+  const cwPath = opts.crosswalk ? resolve(root, opts.crosswalk) : cwFiles.length ? join(cwDir, cwFiles.at(-1)) : null;
+  const input = {
+    clock: read('clock', join(root, 'public/regulatory-clock.json'), true),
+    crosswalk: read('crosswalk', cwPath, Boolean(opts.crosswalk)),
+    board: read('board', resolve(root, opts.board ?? 'public/signed/card-matrix.json'), Boolean(opts.board)),
+    mappings: read('mappings', opts.mappings ? resolve(root, opts.mappings) : null, Boolean(opts.mappings)),
+    claims: read('claims', join(root, 'public/spec/claim-maintenance/register.json')),
+    asOf: opts['as-of'], horizon: Number(opts.horizon ?? 90), generatedFrom,
+  };
+  const out = buildDailySignal(input), bytes = encode(out);
+  const outDir = join(root, 'public/reports/daily-signal');
+  const targets = [join(outDir, `${out.as_of}.json`), join(outDir, 'latest.json')];
+  if (check) {
+    if (!targets.every(p => existsSync(p) && readFileSync(p, 'utf8') === bytes)) throw new Error('committed daily signal differs from source projection');
+  } else {
+    // Preflight both files before any write. Existing timestamp proofs are immutable.
+    if (targets.some(p => existsSync(`${p}.ots`))) throw new Error('refusing to overwrite stamped daily signal');
+    mkdirSync(outDir, {recursive: true});
+    for (const file of targets) writeFileSync(file, bytes);
   }
-  console.error(`✗ daily-signal --check: committed files do not match a rerun — run node scripts/build-daily-signal.mjs`);
-  process.exit(1);
+  return out;
 }
-
-mkdirSync(OUT_DIR, { recursive: true });
-writeFileSync(dayFile, bytes);
-writeFileSync(latestFile, bytes);
-console.log(`✓ daily-signal: ${AS_OF} — ${signals.length} obligations in ${HORIZON}-day horizon, ${unmapped.length} unmapped, evidence coverage per event; wrote ${AS_OF}.json + latest.json`);
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  try {
+    const out = main();
+    console.log(`daily-signal: ${out.as_of}, ${out.headline.events_in_horizon} clock events, ${out.headline.unmapped_events} unmapped; evidence not assessed`);
+  } catch (e) { console.error(`daily-signal: ${e.message}`); process.exitCode = 1; }
+}
