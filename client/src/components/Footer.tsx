@@ -70,11 +70,11 @@ export function Footer() {
       title: 'Evidence',
       links: [
         { name: 'Measurement data (JSON)', href: '/api/gspc', external: true },
-        { name: 'Complete dataset — GSPC Master', href: 'https://huggingface.co/datasets/csoai/gspc-master', external: true },
+        { name: 'GSPC Master dataset', href: 'https://huggingface.co/datasets/csoai/gspc-master', external: true },
         { name: 'Metered evidence catalog (live quotes)', href: '/metered/' },
         { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
         { name: 'Methodology', href: '/methodology/' },
-        { name: 'What we cannot measure yet', href: '/honesty/' },
+        { name: 'Measurement scope and limitations', href: '/honesty/' },
         // The readable ledger page (renders /api/corrections), not raw JSON.
         { name: 'Corrections', href: '/corrections/' },
         { name: 'How far this reaches', href: '/reach/' },

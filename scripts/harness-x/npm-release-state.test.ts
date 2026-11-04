@@ -122,6 +122,27 @@ describe("npm release state — one capture, one sentence, five surfaces", () =>
     expect(llms).not.toContain("The published npm release is marked deprecated on npm");
   });
 
+  it("a published matching pin reports dated tool-name parity without implying behavior parity", () => {
+    // A matching name set supplies no tools/call or transport-behavior evidence.
+    // Use a separate fixture so this branch stays covered when the prepared version moves.
+    const matchingCapture = structuredClone(capture);
+    matchingCapture.published.total_tools = matchingCapture.live_door.total_tools;
+    matchingCapture.diff.live_only = [];
+    matchingCapture.diff.published_only = [];
+    const matchingState = npmReleaseState(matchingCapture);
+    const sentence = llmsStdioSentence(matchingState, {
+      doorTools: matchingState.capturedDoorTools,
+      freeDoor,
+      preparedVersion: matchingState.version,
+    });
+    expect(sentence).toContain(`measured ${matchingState.measuredDay}`);
+    expect(sentence).toContain(`the same ${matchingState.publishedTools} tool names`);
+    expect(sentence).toContain("This dated comparison is of tool names");
+    expect(sentence).toContain("does not establish equivalent tool behavior");
+    expect(sentence).not.toContain("matches the remote contract");
+    expect(sentence).not.toContain("Until a published release");
+  });
+
   it("no public surface states the deprecation claim in the form that is false", () => {
     // The false form is "marked deprecated on npm" WITHOUT a "not" in front of it. The derived
     // form is "is NOT marked deprecated on npm", so the lookbehind is what separates them: a
