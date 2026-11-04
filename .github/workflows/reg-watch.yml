@@ -73,12 +73,24 @@ jobs:
           git add -- public/reports/daily-signal/
           python3 - <<'PY'
           import re, subprocess
-          paths = subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines()
+          # NUL records preserve spaces/newlines in names. Disable rename detection
+          # so a moved historical report is an explicit deletion plus addition.
+          raw = subprocess.check_output(['git', 'diff', '--cached', '--name-status', '-z', '--no-renames'])
+          records = raw.split(b'\0')[:-1] if raw else []
+          if (raw and not raw.endswith(b'\0')) or len(records) % 2:
+              raise SystemExit('Refusing malformed staged status records')
           allowed = re.compile(r'public/reports/daily-signal/(?:[0-9]{4}-[0-9]{2}-[0-9]{2}\.(?:json|md)|latest\.(?:json|md)|index\.(?:json|html)|findings\.json)')
-          if any(not allowed.fullmatch(path) for path in paths):
-              raise SystemExit('Refusing unexpected generated path')
-          if subprocess.check_output(['git', 'diff', '--cached', '--diff-filter=D', '--name-only'], text=True).strip():
-              raise SystemExit('Refusing report archive deletion')
+          dated_source = re.compile(r'public/reports/daily-signal/[0-9]{4}-[0-9]{2}-[0-9]{2}\.json')
+          for raw_status, raw_path in zip(records[::2], records[1::2]):
+              status, path = raw_status.decode('ascii'), raw_path.decode('utf-8')
+              if not allowed.fullmatch(path):
+                  raise SystemExit('Refusing unexpected generated path')
+              if status == 'D':
+                  raise SystemExit('Refusing report archive deletion')
+              if status not in ('A', 'M'):
+                  raise SystemExit('Refusing unexpected staged change type')
+              if dated_source.fullmatch(path) and status != 'A':
+                  raise SystemExit('Refusing modification of a retained dated source report')
           PY
           if git diff --cached --quiet; then
             echo "No derived report changes."
