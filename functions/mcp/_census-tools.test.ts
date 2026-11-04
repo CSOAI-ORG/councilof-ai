@@ -324,7 +324,7 @@ describe("index_edition", () => {
 describe("hf-mirror-gate F2 (T18-card-wrapper-mirror)", () => {
   it("verifies all 4 pinned Article 50 card wrappers against mocked or live HF resolve", async () => {
     const scriptPath = existsSync(resolve(REPO_ROOT, "scripts/hf-mirror-gate.mjs"))
-      ? "../../scripts/hf-mirror-gate.mjs"
+      ? "../../scripts/hf-mirror-gate.f2-patch.mjs"
       : "./hf-mirror-gate.f2-patch.mjs";
     const { PINNED_ART50_SAMPLE_CARDS, verifySampleCard } = await import(scriptPath);
     assert.equal(PINNED_ART50_SAMPLE_CARDS.length, 4);
