@@ -92,14 +92,24 @@ describe("npm release state — one capture, one sentence, five surfaces", () =>
     expect(flag.note).not.toMatch(/Every published npm release is marked deprecated/);
   });
 
-  it("both discovery documents carry the derived note", () => {
-    const expected = cardNote(state, { npmId, freeDoor, doorTools, preparedVersion });
-    expect(readJson("public/.well-known/mcp.json").servers[0].stdio_note).toBe(expected);
-    expect(readJson("public/.well-known/mcp/server-card.json").endpoints.mcp.stdio_note).toBe(expected);
-    // The pin stays withheld while the prepared release is not on npm and the published release
-    // does not carry the served tool set — both MEASURED, neither typed.
-    expect(readJson("public/.well-known/mcp.json").servers[0].stdio).toBeNull();
-    expect(expected).toContain("the prepared release 0.2.6 is not on npm yet");
+  it("both discovery documents reflect the measured publication state", () => {
+    const discovery = readJson("public/.well-known/mcp.json").servers[0];
+    const card = readJson("public/.well-known/mcp/server-card.json").endpoints.mcp;
+    const ready = capture.published.version === preparedVersion &&
+      !capture.published.deprecated && capture.published.total_tools === doorTools &&
+      capture.diff.live_only.length === 0 && capture.diff.published_only.length === 0;
+    expect(discovery.stdio).toBe(ready ? `npx -y ${npmId}@${preparedVersion}` : null);
+    if (ready) {
+      expect(discovery.stdio_note).toBeUndefined();
+      expect(card.stdio_note).toBeUndefined();
+    } else {
+      const expected = cardNote(state, { npmId, freeDoor, doorTools, preparedVersion });
+      expect(discovery.stdio_note).toBe(expected);
+      expect(card.stdio_note).toBe(expected);
+      if (capture.published.version !== preparedVersion) {
+        expect(expected).toContain(`the prepared release ${preparedVersion} is not on npm yet`);
+      }
+    }
   });
 
   it("llms.txt carries the derived sentences", () => {

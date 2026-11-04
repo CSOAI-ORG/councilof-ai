@@ -1,5 +1,11 @@
 # CSOAI LTD — valuation, 5 September 2026
 
+> **Historical correction — 4 November 2026.** The September analysis below is preserved for provenance and is superseded as a statement of current value. Its figures and assumptions are historical model outputs, not a current independent appraisal, valuation range or asking price. See [current operating evidence](https://councilof.ai/traction) for dated measurements and their scope; this correction establishes no fresh monetary value.
+>
+> **Corrections to sections 3, 5 and 6:** a COCOMO replacement-cost estimate is not a valuation floor or guaranteed recoverable value. The supporting record reviewed here does not substantiate the historical claim of independent verification. One settled receipt does not make the VC method computable: attributable revenue and supported terminal forecasts, exit multiple, time horizon, required return and investment assumptions are still needed. A receipt count multiplied by one SKU price is not a reliable revenue measure across different transactions; use reconciled transaction amounts. Earlier numerical outputs must not be uplifted mechanically for additional packages, downloads or signatures. The Goldseam profile referenced by the companion data-room index identifies IP; it is not an independent monetary valuation.
+
+---
+
 **Company:** CSOAI LTD, UK **16939677**, Active, private limited, incorporated **2 January 2026**,
 3rd Floor 86-90 Paul Street, London EC2A 4NE.
 Source: <https://find-and-update.company-information.service.gov.uk/company/16939677> (probed 2026-09-05, HTTP 200).

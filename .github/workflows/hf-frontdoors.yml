@@ -1,0 +1,151 @@
+name: HF public front pages
+
+# Publish the existing organisation page and board dataset card from their
+# reviewed monorepo sources. The board Space has its own surface-sync workflow.
+on:
+  push:
+    branches: [master]
+    paths:
+      - spaces/README/README.md
+      - spaces/README/index.html
+      - scripts/hf/templates/gspc-board.md
+      - scripts/hf/polish_frontdoors.py
+      - scripts/hf/test_polish_frontdoors.py
+      - .github/workflows/hf-frontdoors.yml
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Existing public front page to maintain"
+        type: choice
+        options: [both, organisation, dataset]
+        default: both
+      dry_run:
+        description: "Preview without publishing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hf-frontdoors
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      github.repository == 'CSOAI-ORG/councilof-ai' &&
+      github.ref == 'refs/heads/master' &&
+      github.event.repository.default_branch == 'master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            scripts/hf/polish_frontdoors.py
+            scripts/hf/test_polish_frontdoors.py
+            scripts/hf/templates/gspc-board.md
+            scripts/hf/templates/gspc-benchmark-suite.md
+            scripts/gspc-one/HF_README.md
+            spaces/README/README.md
+            spaces/README/index.html
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Hub client
+        run: python -m pip install --quiet "huggingface_hub==1.26.0"
+
+      - name: Verify presentation and provenance guards
+        run: python scripts/hf/test_polish_frontdoors.py
+
+      - name: Preview selected public pages, then publish with readback
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          REQUESTED_TARGET: ${{ inputs.target }}
+          REQUESTED_DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          case "$EVENT_NAME" in
+            push) target=both; dry_run=false ;;
+            workflow_dispatch)
+              target="${REQUESTED_TARGET:-both}"
+              dry_run="${REQUESTED_DRY_RUN:-true}"
+              ;;
+            *) echo "Unsupported event" >&2; exit 2 ;;
+          esac
+          case "$target" in
+            both) targets=(--target organisation --target dataset) ;;
+            organisation) targets=(--target organisation) ;;
+            dataset) targets=(--target dataset) ;;
+            *) echo "Unsupported public-page target" >&2; exit 2 ;;
+          esac
+          case "$dry_run" in
+            true|false) ;;
+            *) echo "Invalid dry_run value" >&2; exit 2 ;;
+          esac
+          if [ "$dry_run" = false ] && [ -z "${HF_TOKEN:-}" ]; then
+            echo "HF_TOKEN is unavailable; refusing publication" >&2
+            exit 2
+          fi
+          report="$RUNNER_TEMP/hf-frontdoors"
+          mkdir -p "$report"
+          git rev-parse HEAD > "$report/source-commit.txt"
+          python scripts/hf/polish_frontdoors.py "${targets[@]}" --out "$report/preview"
+          if [ "$dry_run" = false ]; then
+            # The publisher re-reads the public parent, preserves its metadata and
+            # snapshot provenance, then uses a parent-commit lease. Concurrent
+            # dataset publication may cause a safe refusal; never force a write.
+            python scripts/hf/polish_frontdoors.py "${targets[@]}" --out "$report/published" --publish
+          fi
+
+      - name: Check publication evidence before retaining it
+        id: evidence
+        if: always()
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          root = Path(os.environ["RUNNER_TEMP"]) / "hf-frontdoors"
+          if not root.exists():
+              raise SystemExit(0)
+          allowed = {"source-commit.txt"}
+          for phase in ("preview", "published"):
+              allowed.add(f"{phase}/receipt.json")
+              for target in ("organisation", "dataset"):
+                  for name in ("README.md", "previous-README.md"):
+                      allowed.add(f"{phase}/{target}/{name}")
+              allowed.add(f"{phase}/organisation/index.html")
+          token = os.environ.get("HF_TOKEN", "").encode()
+          for path in root.rglob("*"):
+              if path.is_symlink():
+                  raise SystemExit("Refusing a symlink in publication evidence")
+              if not path.is_file():
+                  continue
+              if path.relative_to(root).as_posix() not in allowed:
+                  raise SystemExit("Unexpected file in publication evidence")
+              data = path.read_bytes()
+              if (token and token in data) or re.search(rb"hf_[A-Za-z0-9]{20,}", data):
+                  raise SystemExit("Refusing credential-like content in publication evidence")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write("safe=true\n")
+          PY
+
+      - name: Retain preview and verified publication receipts
+        if: always() && steps.evidence.outputs.safe == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf-frontdoors-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/hf-frontdoors/
+          if-no-files-found: error
+          retention-days: 30
