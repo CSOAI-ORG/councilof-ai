@@ -14,7 +14,7 @@ export default function VerifiableTrust() {
       jsonLd={{
         "@context": "https://schema.org",
         "@type": "Article",
-        headline: "The science of verifiable trust — negative space and the refutation ledger",
+        headline: "Verifiable measurement methods, source records and corrections",
         publisher: { "@type": "Organization", name: "CSOAI Ltd", url: "https://councilof.ai", identifier: "UK Companies House 16939677" },
         about: "Measurement discipline: honesty gating, honest ties, and published retractions.",
       }}

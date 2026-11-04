@@ -479,7 +479,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "claimguard",
     label: "Measurement scope",
     blurb:
-      "Where our own systems lose our own arena — the ladder, published. Measurement, never a badge.",
+      "Published internal model results, measurement coverage and verification limits.",
     path: "/honesty",
     cues: /\b(honesty|honest|claimguard|claim.?guard|claim check|verify claim|ladder)\b/i,
   },
@@ -650,7 +650,7 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
   },
   {
     label: "Refutation ledger",
-    blurb: "Killed hypotheses, with the artefacts that killed them.",
+    blurb: "Reviewed research claims, experimental findings and supporting records.",
     path: "/refutation-ledger",
     group: "receipts",
     cues: /\b(refutation(?:s)? ledger|killed hypotheses)\b/i,

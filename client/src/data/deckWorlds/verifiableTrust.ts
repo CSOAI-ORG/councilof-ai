@@ -64,7 +64,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     kicker: "Anchored to statute",
     title: "We do not invent safety definitions",
     body:
-      "The instrument maps onto a frozen corpus of 417 statutory provisions rather than onto our own idea of what good looks like. Frozen means held at a version, so a card issued today still means the same thing when someone reads it next year — and when the underlying text does move, that is a drift event we publish, not a footnote we bury.",
+      "The instrument references a frozen corpus of 417 statutory provisions. Each result is tied to a defined version, so reviewers can identify the source text used. Changes to that text are tracked separately from the original measurement.",
     points: [
       { tag: "pain", text: "Safety scores defined by whoever is selling a house metric" },
       { tag: "benefit", text: "Each measurement cites the provision and the version behind it" },
@@ -95,7 +95,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   },
   {
     kicker: "Slot fourteen, precisely",
-    title: "The awkward slot is measured. Its separation is a tie.",
+    title: "Jail-axis results and comparison limits",
     body:
       "It would be tidier to say the fourteenth slot is gated and unmeasured. It is not true. Jail — whether a model can be talked past its own guardrails — is measured across 71 gold items on a seven-model fleet. Its separation is TIE on the live board, so we refuse to rank on it and never compare it against the canonical axis measured on the full fleet. A tie is not a separated leader — the discipline is in the label, not in the blank.",
     points: [
@@ -110,7 +110,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   },
   {
     kicker: "Breaking the mirror",
-    title: "A ruler with no human end drifts, and every model agrees it hasn't",
+    title: "Human baselines and comparable test conditions",
     body:
       "If machines set the tests and machines grade the answers, the errors are correlated all the way down and nothing in the loop can see it. So the instrument is anchored against human performance on the same items, under consent-gated conditions. It is slower, it is more expensive, and it is the only thing that keeps the scale attached to reality.",
     points: [
@@ -166,7 +166,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     points: [
       { tag: "pain", text: "Architecture diagrams quietly promoted into safety guarantees" },
       { tag: "benefit", text: "A design figure labelled as design, everywhere it appears" },
-      { tag: "benefit", text: "The measurement that killed the claim is published with the retraction" },
+      { tag: "benefit", text: "The supporting measurement is linked from the retraction" },
       { tag: "usp", text: "The strongest claim we ever made about ourselves is the one we withdrew first" },
     ],
     href: "/refutation-ledger",
