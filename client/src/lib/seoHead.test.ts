@@ -77,7 +77,7 @@ describe("resolveHead — every layer of the fallback chain", () => {
   });
 
   it("parametrised families derive from the URL and stay inside the length bands", () => {
-    for (const p of ["/gspc/provenance", "/for/regulator", "/vs/vanta", "/model/gpt-5", "/mcp/some-server", "/library/regulation", "/answers/iso42001-vs-etsi304223"]) {
+    for (const p of ["/gspc/provenance", "/for/regulator", "/vs/vanta", "/model/gpt-5", "/mcps/some-server", "/library/regulation", "/answers/iso42001-vs-etsi304223"]) {
       const h = resolveHead(p);
       expect(h.source, p).toBe("family");
       expect(GENERIC_TITLES.has(h.title)).toBe(false);
