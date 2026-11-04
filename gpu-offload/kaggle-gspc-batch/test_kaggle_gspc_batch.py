@@ -227,6 +227,24 @@ class T(unittest.TestCase):
         finally:
             os.remove(out_tsv)
 
+    def test_census_batch_001_manifest_and_kernel_build(self):
+        """D1/W3: batches/CENSUS-BATCH-001.tsv passes dedup_guard, covers 16 models across 3 shards, and builds deterministically."""
+        tsv_path = f"{HERE}/batches/CENSUS-BATCH-001.tsv"
+        self.assertTrue(os.path.isfile(tsv_path))
+        self.assertEqual(dedup_guard.check(tsv_path), [])
+        allr = runner.read_batch(tsv_path, "all", 3)
+        parts = [runner.read_batch(tsv_path, s, 3) for s in "abc"]
+        self.assertEqual(len(allr), 16)
+        self.assertEqual([r["tag"] for p in parts for r in p], [r["tag"] for r in allr])
+        for r in allr:
+            self.assertIsNotNone(runner.parse_hf_gguf_tag(r["tag"]))
+        d = tempfile.mkdtemp()
+        subprocess.check_call([
+            sys.executable, f"{HERE}/build_kernel.py",
+            "--batch", "CENSUS-BATCH-001", "--shard", "a", "--out", d
+        ])
+        self.assertTrue(os.path.isfile(f"{d}/kernel.py"))
+
 
 if __name__ == "__main__":
     unittest.main()
