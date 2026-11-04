@@ -4,6 +4,10 @@ on:
   pull_request:
     paths:
       - 'packages/evidence-fabric/**'
+      - 'scripts/surface/build-gpai-matrix.mjs'
+      - 'public/interop/gpai-matrix.json'
+      - 'client/src/pages/GpaiMatrix.tsx'
+      - 'client/src/lib/gpaiMatrix*'
       - 'harness/langchain-authority/**'
       - 'harness/authority_adapters/**'
       - 'docs/standards/osaia-safe-reverification/**'
@@ -12,6 +16,10 @@ on:
     branches: [master]
     paths:
       - 'packages/evidence-fabric/**'
+      - 'scripts/surface/build-gpai-matrix.mjs'
+      - 'public/interop/gpai-matrix.json'
+      - 'client/src/pages/GpaiMatrix.tsx'
+      - 'client/src/lib/gpaiMatrix*'
       - 'harness/langchain-authority/**'
       - 'harness/authority_adapters/**'
       - 'docs/standards/osaia-safe-reverification/**'
@@ -97,6 +105,8 @@ jobs:
           python packages/evidence-fabric/test_gpai_packet.py
       - name: Exact deadline mapping controls
         run: node --test scripts/build-daily-signal.node-test.mjs scripts/build-daily-product.node-test.mjs scripts/build-axis-reports.ownership.test.mjs
+      - name: Verify committed GPAI matrix against its exact source artifacts
+        run: node scripts/surface/build-gpai-matrix.mjs --check
       - name: Verify committed daily archive outputs
         run: node scripts/build-daily-product.mjs --check
       - name: Check retained SDK evidence from the receiver side
