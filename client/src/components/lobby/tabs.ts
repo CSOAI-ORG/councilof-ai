@@ -69,6 +69,7 @@ export type LobbyTabId =
   | "workbench"
   | "software"
   | "learn"
+  | "evidence-learning"
   | "academy"
   | "ruler"
   | "him"
@@ -142,6 +143,14 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(my results?|my requests?|my orders?|my jobs?|status of my|receipt status)\b/i,
+  },
+  {
+    id: "evidence-learning",
+    label: "Evidence & learning",
+    blurb: "Read public GSPC evidence, practise source-scope decisions and prepare a local human-review draft. No external action.",
+    path: "",
+    kind: "native",
+    cues: /\b(evidence learning|evidence and learning|evidence literacy|learning bridge)\b/i,
   },
   {
     id: "learn",
@@ -1060,6 +1069,7 @@ const DASHBOARD_NAV_DEFINITION: {
       "Learn how each test works, replay recorded model rounds, practise, and inspect continuous research.",
     tabs: [
       { id: "learn", label: "Learning" },
+      { id: "evidence-learning", label: "Evidence & learning" },
       { id: "academy", label: "Academy" },
       { id: "play", label: "Games" },
       { id: "ruler", label: "The Ruler" },
