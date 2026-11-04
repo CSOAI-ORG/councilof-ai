@@ -191,8 +191,9 @@ The caller supplies a packet manifest containing:
   requires `review_event_id`, `reviewer_ref` and `reason`; these are preserved
   external declarations, not authenticated human decisions.
 
-Every run emits all nine slots. A missing declaration or missing file remains
-visible. A matching file produces `PARTIAL`; missing, changed, unreadable,
+Every successfully validated packet with an accessible root emits all nine
+slots. Malformed packets and invalid path declarations are rejected before
+output. A missing declaration or missing file remains visible. A matching file produces `PARTIAL`; missing, changed, unreadable,
 oversized or unsafe files produce `UNCHECKABLE`. No slot emits a legal outcome.
 The summary separates matching slots from unique matched digests, so reusing
 one file in nine slots cannot appear to be nine distinct artifacts.
