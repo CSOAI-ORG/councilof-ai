@@ -68,8 +68,10 @@ function listPulls(state) {
   }));
 }
 
-const SUPERSEDE_COMMENT = (keep) =>
-  `Closing as superseded: the newest open run of this family is #${keep}. Each run writes the same output paths, so an older conflicting branch can only regress master. Nothing is lost — the source datasets retain everything (mill landings stay staged; probes regenerate from the live doors). Standing rule: issue #3746.`;
+const SUPERSEDE_COMMENT = (s) =>
+  s.mergedKeep
+    ? `Closing as superseded: this family's newest run is #${s.keep}, already MERGED — master holds that run's data, so this older branch can only regress it. Nothing is lost — the source datasets retain everything (mill landings stay staged; probes regenerate from the live doors). Standing rule: issue #3746.`
+    : `Closing as superseded: the newest open run of this family is #${s.keep}. Each run writes the same output paths, so an older conflicting branch can only regress master. Nothing is lost — the source datasets retain everything (mill landings stay staged; probes regenerate from the live doors). Standing rule: issue #3746.`;
 
 const summary = { supersedeClosed: [], millAutoMerge: [], gcDeleted: [], skipped: [], dryRun: mode === "dry-run" };
 
@@ -79,9 +81,9 @@ const p = plan({ open, closed, now: Date.now() });
 
 // ── supersede-close ─────────────────────────────────────────────────────────
 for (const s of p.supersede) {
-  console.log(`[sweeper] supersede: close #${s.number} (newest of ${s.family} is #${s.keep})`);
+  console.log(`[sweeper] supersede: close #${s.number} (newest of ${s.family} is #${s.keep}${s.mergedKeep ? ", merged" : ""})`);
   if (mode === "apply") {
-    gh(["pr", "close", String(s.number), "--repo", REPO, "--comment", SUPERSEDE_COMMENT(s.keep)]);
+    gh(["pr", "close", String(s.number), "--repo", REPO, "--comment", SUPERSEDE_COMMENT(s)]);
     summary.supersedeClosed.push(s.number);
   } else {
     summary.supersedeClosed.push(s.number);
