@@ -59,7 +59,7 @@ describe("traction public-truth contract", () => {
 
   it("keeps status and scope visible in both compact and full evidence views", () => {
     for (const compact of [true, false]) {
-      const html = renderToStaticMarkup(createElement(Router, { ssrPath: "/traction" }, createElement(ExternalUseEvidence, { compact })));
+      const html = renderToStaticMarkup(createElement(Router, { ssrPath: "/traction", children: createElement(ExternalUseEvidence, { compact }) }));
       expect(html.match(/<article /g)).toHaveLength(3);
       expect(html).toMatch(/datetime="2026-11-04"/i);
       expect(html).toContain("open and unmerged on 4 November 2026");
