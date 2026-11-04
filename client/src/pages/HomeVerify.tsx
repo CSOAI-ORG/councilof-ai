@@ -14,6 +14,7 @@
  *                         separation line, and the model count (derived from the signed cards by
  *                         scripts/build-models-measured.mjs; list at /models-measured/).
  *   5. HomeProofPoints  - nine concrete safeguards, each linked to its public proof.
+ *   5b. External use    - dated outside activity, shared with /traction and /about.
  *   6. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
  *                         the regulator and the agent.
  *   4b. HomeLast30Days - dated list of merged changes, each linked to its PR. No typed counts.
@@ -26,7 +27,7 @@
  * (client/src/components/about/AboutNumbers.tsx). The composer and the talk panel stay on
  * /dashboard, where "Ask" leads. Bands retired on 2026-09-23 remain on /how-we-work.
  *
- * NO NUMBER ON THIS PAGE IS TYPED. Board figures come from GET /api/gspc, the model count from
+ * LIVE TOTALS ARE NOT TYPED. Board figures come from GET /api/gspc, the model count from
  * /interop/models-measured.json, the proof figures from GET /api/momentum. Each shows an em dash
  * (or nothing) until it lands and says so in words if it never does.
  */
@@ -40,6 +41,7 @@ import HomeProofPoints from "@/components/home/HomeProofPoints";
 import HomeWaysIn from "@/components/home/HomeWaysIn";
 import HomeLast30Days from "@/components/home/HomeLast30Days";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
+import ExternalUseEvidence from "@/components/ExternalUseEvidence";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
 
@@ -121,7 +123,7 @@ export default function HomeVerify() {
   useEffect(() => {
     document.title = "UK AI measurement infrastructure — Council of AI";
     setMetaDescription(
-      "UK AI measurement infrastructure operated by CSOAI Ltd. Read current measurements, verify signed evidence for free and inspect the public corrections ledger.",
+      "An operating UK AI measurement and evidence organisation. Inspect published results, documented external use, free verification and public corrections.",
     );
   }, []);
 
@@ -134,6 +136,9 @@ export default function HomeVerify() {
       <HomeHumanReview />
       <LiveBoardGlance />
       <HomeProofPoints />
+      <div className="surface-base border-t border-border">
+        <div className="section-shell py-12 sm:py-16"><ExternalUseEvidence compact id="home-external-use" /></div>
+      </div>
       <HomeWaysIn />
       <HomeLast30Days />
 
@@ -157,10 +162,13 @@ export default function HomeVerify() {
       <section aria-label="Who runs Council of AI" className="surface-base border-t border-border" data-testid="home-company-strip">
         <div className="section-shell flex flex-col gap-3 py-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="home-accountable-entity">
-            Council of AI is UK AI measurement infrastructure operated by CSOAI Ltd (UK Companies House 16939677),
+            Council of AI is an operating UK AI measurement and evidence organisation run by CSOAI Ltd (UK Companies House 16939677),
             founded by Nicholas Templeman. We measure; we do not certify, and verification is free.
           </p>
           <div className="flex flex-wrap gap-x-6 text-sm font-bold">
+            <Link href="/traction/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
+              Operation and external use →
+            </Link>
             <Link href="/about/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
               Who we are →
             </Link>

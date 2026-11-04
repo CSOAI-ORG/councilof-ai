@@ -10,6 +10,7 @@
  */
 
 import { BUYING_FAQ_ANSWER } from "@/lib/buying";
+import { OPERATING_ORGANISATION_SUMMARY, EXTERNAL_USE_SUMMARY } from "@/data/external-use";
 
 /** `id` overrides the positional q<n> anchor where other surfaces link the entry by name. */
 export type FaqItem = { q: string; a: string; url?: string; id?: string };
@@ -26,7 +27,7 @@ export interface FaqSection {
 export const FAQ_ITEMS: FaqItem[] = [
   {
     q: "What is Council of AI?",
-    a: "Council of AI is an independent measurement body for AI behaviour. We run AI systems against frozen, published tests drawn from real statute, grade the answers with deterministic code, and publish the result with its attestation state — including the parts we could not measure.",
+    a: `${OPERATING_ORGANISATION_SUMMARY} Each result identifies its method, scope, date and attestation state, including what could not be measured.`,
     url: "/about",
   },
   {
@@ -45,9 +46,9 @@ export const FAQ_ITEMS: FaqItem[] = [
     url: "/methodology",
   },
   {
-    q: "Are you a credit-rating agency, a notified body, or a SaaS vendor?",
-    a: "None of those. We are a measurement body: we measure, sign and preserve evidence. We are not regulated as a credit-rating agency, we hold no notified-body designation, and we do not sell software subscriptions. Verify is free forever.",
-    url: "/about",
+    q: "What public evidence shows outside use of Council's work?",
+    a: `${EXTERNAL_USE_SUMMARY} The dated sources and their limits are on our operation and external-use page. These examples do not establish institutional adoption or paying customers.`,
+    url: "/traction/#external-use",
   },
   {
     q: "What is the difference between MEASURED, UNMEASURED and REPORTED?",
@@ -99,12 +100,12 @@ export const FAQ_SECTIONS: FaqSection[] = [
   {
     id: "what-we-are",
     title: "What we are",
-    items: [FAQ_ITEMS[0], FAQ_ITEMS[1], FAQ_ITEMS[7], FAQ_ITEMS[2]],
+    items: [FAQ_ITEMS[0], FAQ_ITEMS[1], FAQ_ITEMS[7], FAQ_ITEMS[2], FAQ_ITEMS[4]],
   },
   {
     id: "what-we-are-not",
     title: "What we are not",
-    items: [FAQ_ITEMS[3], FAQ_ITEMS[4], FAQ_ITEMS[5]],
+    items: [FAQ_ITEMS[3], FAQ_ITEMS[5]],
   },
   {
     id: "how-to-verify",
