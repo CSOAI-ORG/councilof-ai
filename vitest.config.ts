@@ -34,6 +34,7 @@ export const NODE_TEST_FILES = [
   // No apostrophes in these comments: the registry and the workflow extract entries by
   // naive quote matching, and a stray quote inside the array corrupts the parsed list.
   'scripts/hygiene/sweeper.node-test.mjs',
+  'scripts/regulator-census-redirects.test.mjs',
   'scripts/research/watch-sources.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
   'scripts/review/first-ask-completion.test.mjs',

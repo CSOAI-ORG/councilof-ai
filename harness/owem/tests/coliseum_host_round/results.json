@@ -1,0 +1,260 @@
+{
+  "date": "2026-11-03",
+  "classification": "Owner-operated engineering qualification; unsigned observations. No live deployment or third-party acceptance implied.",
+  "public_specimen": {
+    "revision": "dd12610905ffd14d7adf9c811c15ce7915de2966",
+    "sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+    "bytes": 1428
+  },
+  "native_host": {
+    "time": "2026-11-03T06:40:21.137145+00:00",
+    "native_client": "2.1.296 (Claude Code)",
+    "gate_sha256": "060bea0631495a4aec1f302a23e47393fe01cc676c109f75a5ac297cd66d98e7",
+    "real_vendor_inference": false,
+    "test_provider": "loopback scripted tool proposals",
+    "real_client_real_bash": true,
+    "installed_plugin_claim": false,
+    "cases": [
+      {
+        "case": "deny",
+        "host_exit": 0,
+        "hook_events": [
+          {
+            "event": "PreToolUse",
+            "tool": "Bash",
+            "decision": "deny"
+          }
+        ],
+        "tool_results": [
+          {
+            "native_tool_result": "toolu_deny",
+            "reported_error": true,
+            "recorded_guard_reason": true
+          }
+        ],
+        "observer": {
+          "exists": false,
+          "correct": false
+        }
+      },
+      {
+        "case": "allow",
+        "host_exit": 0,
+        "hook_events": [
+          {
+            "event": "PreToolUse",
+            "tool": "Bash",
+            "decision": "abstain"
+          }
+        ],
+        "tool_results": [
+          {
+            "native_tool_result": "toolu_allow",
+            "reported_error": false,
+            "recorded_guard_reason": false
+          }
+        ],
+        "observer": {
+          "exists": true,
+          "correct": true
+        }
+      }
+    ],
+    "passed": true
+  },
+  "two_mac_browser": {
+    "at": "2026-11-03T06:52:48.014Z",
+    "passed": true,
+    "checks": [
+      "keyboard click → M4 OOWM classification → authenticated M2 subprocess → same matched task in H.I.M. qualification copy",
+      "reopen uses read-only lookup; no re-execution",
+      "withheld fixture worker: no false success; saved bytes still readable",
+      "restoring worker cannot execute a previously unanswered job during read-only lookup",
+      "a distinct fresh request succeeds after restoring only the fixture worker",
+      "390px panel fits",
+      "no live studio, provider, or production task POST"
+    ],
+    "results": [
+      {
+        "request_id": "25faeaa3cc8e43a7aef281aaf10fdd99",
+        "worker": "owem.gov.saved-record-check",
+        "state": "MATCH",
+        "saved_file_readable": true,
+        "worker_complete": true,
+        "bytes": 1428,
+        "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+        "replayed": false,
+        "message": "The worker and receiver found the expected saved bytes.",
+        "scope": "qualification copy; no production Hive or human approval"
+      },
+      {
+        "request_id": "25faeaa3cc8e43a7aef281aaf10fdd99",
+        "worker": "owem.gov.saved-record-check",
+        "state": "MATCH",
+        "saved_file_readable": true,
+        "worker_complete": true,
+        "bytes": 1428,
+        "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+        "replayed": true,
+        "message": "The worker and receiver found the expected saved bytes.",
+        "scope": "qualification copy; no production Hive or human approval"
+      },
+      {
+        "request_id": "22ae3f6e56dc4279b73706865611845b",
+        "state": "WORKER_UNAVAILABLE",
+        "saved_file_readable": true,
+        "worker_complete": false,
+        "message": "Worker unavailable; your saved result is still readable.",
+        "scope": "qualification copy; no production Hive or human approval"
+      },
+      {
+        "request_id": "22ae3f6e56dc4279b73706865611845b",
+        "state": "OUTCOME_UNKNOWN",
+        "saved_file_readable": true,
+        "worker_complete": false,
+        "message": "Outcome unknown; check this task ID. Do not retry automatically.",
+        "scope": "qualification copy; no production Hive or human approval"
+      },
+      {
+        "request_id": "041722f7d44b4899b59aafae7618a016",
+        "worker": "owem.gov.saved-record-check",
+        "state": "MATCH",
+        "saved_file_readable": true,
+        "worker_complete": true,
+        "bytes": 1428,
+        "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+        "replayed": false,
+        "message": "The worker and receiver found the expected saved bytes.",
+        "scope": "qualification copy; no production Hive or human approval"
+      }
+    ],
+    "observed_posts": [
+      "/qualification/new",
+      "/qualification/last",
+      "/qualification/new",
+      "/qualification/last",
+      "/qualification/new"
+    ],
+    "other_page_diagnostics": [],
+    "scope": "Actual two Macs and native browser; ephemeral isolated copy of served H.I.M., per-test protocol adapter, existing SSH with strict host keys. NOT the private production gateway, inference, or a signed worker identity."
+  },
+  "linux_operator_relay": {
+    "request": {
+      "artifact": "public-governance-example",
+      "expected_bytes": 1428,
+      "expected_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+      "expires_s": 1793690101,
+      "issued_s": 1793688301,
+      "nonce": "4aeaf04e6e68d3f92dc5710f4b89f59a",
+      "request_id": "4c45e07bdca24314aecd9b1a6ba72d8e",
+      "worker": "owem.gov.saved-record-check"
+    },
+    "first_reply": {
+      "new_execution": true,
+      "receipt": {
+        "bytes": 1428,
+        "observed_s": 1793688350,
+        "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+        "request_id": "4c45e07bdca24314aecd9b1a6ba72d8e",
+        "request_sha256": "7631978eaefe53bcf0bbd0d310ce7ab1f18ec190d09127d7bee4b3524e67db8b",
+        "state": "MATCH",
+        "worker": "owem.gov.saved-record-check"
+      }
+    },
+    "receiver_checks": {
+      "at": "2026-11-03T06:46:42.454663+00:00",
+      "source_commit": "911160dc55532beb91f44f331e9dffd10688956e",
+      "scope": "Operator-relayed qualification; M4 OOWM classifier, separate Linux host, independent M4 file. Not a live private gateway or H.I.M. invocation.",
+      "outputs": {
+        "worker-reply": {
+          "bytes": 1428,
+          "message": "The worker and receiver found the expected saved bytes.",
+          "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+          "replayed": false,
+          "request_id": "4c45e07bdca24314aecd9b1a6ba72d8e",
+          "saved_file_readable": true,
+          "state": "MATCH",
+          "worker": "owem.gov.saved-record-check",
+          "worker_complete": true
+        },
+        "retained-replay": {
+          "bytes": 1428,
+          "message": "The worker and receiver found the expected saved bytes.",
+          "observed_sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+          "replayed": true,
+          "request_id": "4c45e07bdca24314aecd9b1a6ba72d8e",
+          "saved_file_readable": true,
+          "state": "MATCH",
+          "worker": "owem.gov.saved-record-check",
+          "worker_complete": true
+        },
+        "unanswered": {
+          "message": "No worker reply. The saved result is still readable.",
+          "request_id": "4c45e07bdca24314aecd9b1a6ba72d8e",
+          "saved_file_readable": true,
+          "state": "NO_WORKER_REPLY",
+          "worker_complete": false
+        },
+        "wrong-id": {
+          "state": "REFUSED",
+          "reason": "wrong task, worker or request binding",
+          "worker_complete": false
+        },
+        "wrong-worker": {
+          "state": "REFUSED",
+          "reason": "wrong task, worker or request binding",
+          "worker_complete": false
+        },
+        "wrong-hash": {
+          "state": "REFUSED",
+          "reason": "contradictory worker result",
+          "worker_complete": false
+        },
+        "prior-reply-not-current": {
+          "state": "REFUSED",
+          "reason": "invalid observation time",
+          "worker_complete": false
+        }
+      }
+    },
+    "replay_check": "A separate invocation returned the same receipt with new_execution=false; the Linux SQLite worker table contained one reservation. Rebinding the same ID with a different nonce was refused."
+  },
+  "unit_cases": {
+    "count": 16,
+    "exit": 0,
+    "names": [
+      "test_changed_worker_bytes_not_success",
+      "test_concurrent_single_winner",
+      "test_corrupt_cached_reply_refused",
+      "test_expired_job_refused",
+      "test_future_job_refused",
+      "test_held_reservation_not_retried",
+      "test_malformed_input_refused",
+      "test_no_follow_file_symlink",
+      "test_no_reply_retains_file",
+      "test_no_user_paths_or_capabilities",
+      "test_rebound_id_refused",
+      "test_receiver_changed_copy_rejected",
+      "test_replay_retains_not_fresh",
+      "test_same_bytes_match",
+      "test_untrusted_transport_refused",
+      "test_wrong_row_binding_refused"
+    ]
+  },
+  "observer_limitations": [
+    "The first browser observer attempted to parse innerText from a collapsed details element; it failed after the first actual worker reply. The corrected observer waits for the correlated result and reads textContent. An additional fixture reservation from the first run is retained.",
+    "Native Claude Code received scripted responses from loopback; no public provider, real admin merge or externally enrolled human was involved. The gate is a rule over one command string, not a general sandbox.",
+    "H.I.M. testing used a temporary copy and qualification endpoints. The M4-to-M2 path was automatic over existing SSH; the additional Linux result was operator-relayed via Desktop Commander. Neither was the canonical live micro gateway.",
+    "SQLite is a private per-worker fixture spool. Stale or unconfirmed results are not approvals. Content hashes are byte-integrity evidence, not a substitute for transport or device identity."
+  ],
+  "postchecks": {
+    "m2_completed_task_ids_in_final_run": [
+      "25faeaa3cc8e43a7aef281aaf10fdd99",
+      "041722f7d44b4899b59aafae7618a016"
+    ],
+    "m2_no_reservation_for_unavailable_task": "22ae3f6e56dc4279b73706865611845b",
+    "m2_worker_restored": true,
+    "unrelated_live_studio_after": "PAUSED; 0 pending; external peers NOT_CONNECTED; provider disabled; human execution not joined.",
+    "temporary_listener": "terminated; no new production daemon"
+  }
+}
