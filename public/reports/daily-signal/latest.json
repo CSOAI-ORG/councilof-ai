@@ -1,0 +1,152 @@
+{
+ "schema": "csoai.daily-signal/0.1",
+ "as_of": "2026-11-04",
+ "horizon_days": 90,
+ "generated_from": {
+  "public/regulatory-clock.json": "96e08a1c338c2a6e000a025ae47b4a3374504c905499fa43c7fedd7c91043ae6",
+  "tui3-crosswalk/regulatory-crosswalk-20260912.json": "c00f3ce978e86a8838114ad510afc7da4037700fb749740d70211e23f1b4f665",
+  "public/signed/card-matrix.json": "792873fbc2a14f86e566a350994f9eefef0b0d245a374972e70532796f3c738c",
+  "public/spec/claim-maintenance/register.json": "c5df622446f2fe164f8c47880e0fb8698d28080ae163fe4af1009865a67c6a80"
+ },
+ "headline": {
+  "obligations_in_horizon": 2,
+  "unmapped_events": 6,
+  "axes_measured": 16,
+  "corrections_ledger_as_of": "2026-11-01T07:17:54Z"
+ },
+ "signals": [
+  {
+   "date": "2026-12-02",
+   "days_until": 28,
+   "jurisdiction": "EU",
+   "instrument": "EU AI Act as amended by Reg. 2026/1744",
+   "provision": "Art 111(4) → Art 50(2)",
+   "binds": "providers of generative AI placed on the market before 2 Aug 2026",
+   "requires": "Machine-readable marking of synthetic audio, image, video and text. The four-month transitional expires.",
+   "confidence": "A",
+   "framework_matched": {
+    "short_name": "EU AI Act",
+    "legal_status": "BINDING_LAW",
+    "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+   },
+   "gspc_axes": [
+    {
+     "axis": "art5-safeguard",
+     "board": "UNMEASURED"
+    },
+    {
+     "axis": "governance",
+     "board": "MEASURED"
+    },
+    {
+     "axis": "safety",
+     "board": "MEASURED"
+    },
+    {
+     "axis": "provenance",
+     "board": "MEASURED"
+    },
+    {
+     "axis": "openness",
+     "board": "MEASURED"
+    },
+    {
+     "axis": "care",
+     "board": "MEASURED"
+    },
+    {
+     "axis": "continuity",
+     "board": "MEASURED"
+    }
+   ],
+   "evidence_coverage": "6/7 MEASURED",
+   "signal": "Marking-robustness testing and provenance audit. ProvBench already measures exactly this — survival of Article 50 markings under real-world transforms.",
+   "tier": "primary"
+  },
+  {
+   "date": "2026-12-02",
+   "days_until": 28,
+   "jurisdiction": "EU",
+   "instrument": "EU AI Act as amended",
+   "provision": "Art 5(1)(ba),(bb); Art 5(1a),(1b)",
+   "binds": "providers AND deployers, all sectors, not only high-risk",
+   "requires": "New prohibitions on AI generating or manipulating non-consensual intimate imagery and CSAM — including where such output is 'reasonably foreseeable and reproducible in the absence of reasonable, proportionate and effective safeguards'.",
+   "confidence": "A",
+   "framework_matched": {
+    "short_name": "EU AI Act",
+    "legal_status": "BINDING_LAW",
+    "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+   },
+   "gspc_axes": [
+    {
+     "axis": "art5-safeguard",
+     "board": "UNMEASURED"
+    },
+    {
+     "axis": "governance",
+     "board": "MEASURED"
+    },
+    {
+     "axis": "safety",
+     "board": "MEASURED"
+    },
+    {
+     "axis": "provenance",
+     "board": "MEASURED"
+    },
+    {
+     "axis": "openness",
+     "board": "MEASURED"
+    },
+    {
+     "axis": "care",
+     "board": "MEASURED"
+    },
+    {
+     "axis": "continuity",
+     "board": "MEASURED"
+    }
+   ],
+   "evidence_coverage": "6/7 MEASURED",
+   "signal": "The statutory test is whether safeguards are reasonable, proportionate and effective against foreseeable and reproducible misuse. That is a red-team MEASUREMENT standard, it binds every generative provider, it sits in the highest penalty tier, and no incumbent owns it. Four months.",
+   "tier": "primary"
+  }
+ ],
+ "unmapped": [
+  {
+   "date": "2026-12-09",
+   "instrument": "Product Liability Directive (EU) 2024/2853",
+   "reason": "no crosswalk framework match"
+  },
+  {
+   "date": "2027-01-01",
+   "instrument": "Colorado SB 26-189 (ADMT Act)",
+   "reason": "no crosswalk framework match"
+  },
+  {
+   "date": "2027-01-01",
+   "instrument": "California SB 942 as amended by AB 853",
+   "reason": "no crosswalk framework match"
+  },
+  {
+   "date": "2027-01-20",
+   "instrument": "Machinery Regulation (EU) 2023/1230",
+   "reason": "no crosswalk framework match"
+  },
+  {
+   "date": "2027-01-22",
+   "instrument": "Korea AI Framework (Basic) Act",
+   "reason": "no crosswalk framework match"
+  },
+  {
+   "date": "2027-02-02",
+   "instrument": "Code of Practice on Transparency of AI-generated Content",
+   "reason": "no crosswalk framework match"
+  }
+ ],
+ "corrections": {
+  "register_as_of": "2026-11-01T07:17:54Z",
+  "subjects_maintained": 28
+ },
+ "ruling_note": "Rendered copy carries no prices, tiers, or payment-processor names. Machine access to this artifact is sold per-call via the live 402 challenge."
+}
