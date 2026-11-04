@@ -130,3 +130,14 @@ test('legacy framework rows without IDs require an exact object digest selector'
   m.framework_sha256 = '0'.repeat(64);
   assert.throws(() => buildDailySignal(a), /absent or ambiguous/);
 });
+
+test('retained dated reports cannot be silently rewritten or move latest on conflict', () => fixture(dir => {
+  main(['--as-of', '2026-11-04'], dir);
+  const file = join(dir, 'public/reports/daily-signal/2026-11-04.json');
+  const latest = join(dir, 'public/reports/daily-signal/latest.json');
+  const before = readFileSync(file), latestBefore = readFileSync(latest);
+  writeFileSync(join(dir, 'public/regulatory-clock.json'), encode({events: [{...event, date: '2026-12-03'}]}));
+  assert.throws(() => main(['--as-of', '2026-11-04'], dir), /retained daily report/);
+  assert.deepEqual(readFileSync(file), before);
+  assert.deepEqual(readFileSync(latest), latestBefore);
+}));

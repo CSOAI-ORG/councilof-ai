@@ -25,6 +25,8 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // `node --test` in its own step, so excluding them here removes no coverage.
 export const NODE_TEST_FILES = [
   'scripts/build-daily-signal.node-test.mjs',
+  'scripts/build-daily-product.node-test.mjs',
+  'scripts/build-axis-reports.ownership.test.mjs',
   'scripts/build-axis-reports.slots.test.mjs',
   'scripts/build-models-measured.test.mjs',
   'scripts/contract-convergence.test.mjs',

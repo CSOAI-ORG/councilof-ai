@@ -169,6 +169,9 @@ export function main(argv = process.argv.slice(2), root = resolve(dirname(fileUR
   } else {
     // Preflight both files before any write. Existing timestamp proofs are immutable.
     if (targets.some(p => existsSync(`${p}.ots`))) throw new Error('refusing to overwrite stamped daily signal');
+    if (existsSync(targets[0]) && readFileSync(targets[0], 'utf8') !== bytes) {
+      throw new Error('refusing to rewrite a retained daily report; preserve it and record a reviewed correction');
+    }
     mkdirSync(outDir, {recursive: true});
     for (const file of targets) writeFileSync(file, bytes);
   }

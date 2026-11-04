@@ -96,7 +96,9 @@ jobs:
           python packages/evidence-fabric/test_regulation_projection.py
           python packages/evidence-fabric/test_gpai_packet.py
       - name: Exact deadline mapping controls
-        run: node --test scripts/build-daily-signal.node-test.mjs
+        run: node --test scripts/build-daily-signal.node-test.mjs scripts/build-daily-product.node-test.mjs scripts/build-axis-reports.ownership.test.mjs
+      - name: Verify committed daily archive outputs
+        run: node scripts/build-daily-product.mjs --check
       - name: Check retained SDK evidence from the receiver side
         run: >-
           python packages/evidence-fabric/verify_qualification.py
