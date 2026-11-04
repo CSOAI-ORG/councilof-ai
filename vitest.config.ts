@@ -34,6 +34,7 @@ export const NODE_TEST_FILES = [
   // No apostrophes in these comments: the registry and the workflow extract entries by
   // naive quote matching, and a stray quote inside the array corrupts the parsed list.
   'scripts/hygiene/sweeper.node-test.mjs',
+  'scripts/regulator-census-redirects.test.mjs',
   'scripts/research/watch-sources.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
   'scripts/review/first-ask-completion.test.mjs',
@@ -109,6 +110,11 @@ export default defineConfig({
     },
   },
   test: {
+    // 2026-11-03 re-land (lost in the wave-2 consolidation): the default 5s timeout
+    // predates the corpus — 3,197-card mill sets, 18s byte-position tamper sweeps and
+    // 33k-file sitemap builds blew it under full-suite parallel load. 20s covers every
+    // standalone-measured test with headroom; explicit per-test timeouts still win.
+    testTimeout: 20_000,
     // packages/** runs under `node --test` (see each package's own test script);
     // vitest cannot collect a node:test file and reports "No test suite found",
     // which made `npm test` red for three suites that are green under their own
