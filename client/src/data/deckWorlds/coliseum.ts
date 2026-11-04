@@ -143,21 +143,21 @@ export const COLISEUM_SLIDES: Slide[] = [
     video: { src: "/videos/proving-ground.mp4", poster: "/videos/proving-ground.jpg", title: "The Proving Ground — how we test containment" },
   },
   {
-    kicker: "The public watchdog",
-    title: "Anyone can report it. We measure it. The provider gets to answer.",
+    kicker: "The public Watchdog",
+    title: "Inspect dated public claims. Incident intake is not open.",
     body:
-      "When an AI behaves badly in the real world, the report should not vanish into a vendor's support queue. Anyone can raise one here. We turn the allegation into a measurement, put the finding to the provider for reply before anything is published, and then publish what the measurement actually showed. We map behaviour to provisions; we do not make legal rulings — that is a regulator's job.",
+      "The public Watchdog currently lists dated public claims and their sources. It does not accept or triage incident reports or publish incident findings. Council OS is not an open report form. Use the corrections ledger to challenge an existing published record. A future incident service would require an accepted human review rota, privacy controls, source permissions and a published response scope.",
     points: [
-      { tag: "pain", text: "Real-world harms disappear into a private inbox" },
-      { tag: "benefit", text: "A public route from \"this looks wrong\" to a measured, signed finding" },
-      { tag: "benefit", text: "Providers get a right of reply before publication, every time" },
-      { tag: "usp", text: "We map reports to provisions — we never issue a legal verdict of our own" },
+      { tag: "pain", text: "Public claims can change; keep their sources and dates inspectable" },
+      { tag: "benefit", text: "Read the dated public claims register and source history" },
+      { tag: "benefit", text: "Challenge an existing published record through corrections" },
+      { tag: "usp", text: "No public incident intake or triaged case service is operating" },
     ],
     href: "/watchdog",
-    cta: "Open the watchdog",
+    cta: "Inspect public claims",
     image: {
       src: "/images/public_watchdog_intake.jpg",
-      alt: "The public watchdog reporting funnel, open to everyone",
+      alt: "A public register of dated claims and source links",
     },
   },
   {
@@ -207,6 +207,6 @@ export const COLISEUM_NOT_CLAIMED = [
 export const COLISEUM_RELATED = [
   { href: "/gspc-arena", label: "Council Space", what: "Watch models face the same frozen tests, head to head." },
   { href: "/dashboard?tab=board", label: "The live board", what: "Every slot, every sample size, every separation status — counted live from GET /api/gspc, never typed." },
-  { href: "/watchdog", label: "The public watchdog", what: "Report AI behaviour that looks wrong — and see what happens next." },
+  { href: "/watchdog", label: "The public Watchdog", what: "Inspect dated public claims and their sources; public incident intake is not open." },
   { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and what we refuse to score." },
 ];
