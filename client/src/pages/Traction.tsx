@@ -102,7 +102,13 @@ export default function Traction() {
       <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm"><Link href="/board" className="text-emerald-300 underline">Read the board</Link><Link href="/methodology" className="text-emerald-300 underline">Read the methods</Link><Link href="/about/#numbers" className="text-emerald-300 underline">Inspect operational figures and dates</Link></div>
     </section>
 
-    <div id="external-use" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-14"><ExternalUseEvidence inverted /></div>
+    <div id="external-use" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-14">
+      <ExternalUseEvidence inverted />
+      <aside className="mt-6 rounded-xl border border-slate-700 p-5" aria-label="Additional external artifact">
+        <h3 className="text-lg font-bold">A public API contract reused in an external catalogue</h3>
+        <p className="mt-3 leading-7 text-slate-300">API Evangelist generated an OpenAPI overlay from Council of AI's published read-surfaces contract. The <a href="https://apis.io/overlays/councilof-ai/councilof-ai-gspc-read-surfaces-overlay/" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">APIs.io record</a> dates the generated artifact to 19 September 2026 and identifies it as an external derivative. This supports discoverability and reuse of the contract; it is not a customer deployment, endorsement or validation of the measurement service.</p>
+      </aside>
+    </div>
 
     <section className="border-y border-white/10 bg-slate-900/70"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-2">
       <div><p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">Published software, methods and datasets</p><h2 className="mt-3 text-2xl font-black">An inspectable portfolio</h2><p className="mt-4 leading-7 text-slate-300">GSPC combines measurement instruments, software, datasets and evidence-handling methods. Public code and publication histories let a reviewer examine how the work developed. Rights, licence terms and commercial reuse depend on the specific component and version.</p><Link href="/licensing-agreement" className="mt-5 inline-block font-semibold text-emerald-300 underline">Inspect licensing and reuse conditions</Link></div>
