@@ -120,7 +120,7 @@ export default function Services() {
       </section>
 
       <section aria-labelledby="services-scope-h" className="mx-auto max-w-6xl px-6 pt-10">
-        <h2 id="services-scope-h" className="text-2xl font-bold">Agree the evidence you need before ordering</h2>
+        <h2 id="services-scope-h" className="scroll-mt-24 text-2xl font-bold">Agree the evidence you need before ordering</h2>
         <p className="mt-3 max-w-3xl leading-7 text-slate-300">A useful order starts with a named subject and a decision the evidence should inform. The written scope should make these three things clear.</p>
         <ol className="mt-6 grid list-none gap-4 p-0 md:grid-cols-3">
           <li className="rounded-2xl border border-slate-700 bg-slate-900/40 p-5"><h3 className="text-lg font-bold">1. The question and source</h3><p className="mt-3 leading-7 text-slate-300">Identify the public output or system, the relevant dates and the product. An Article 50 pack records marking checks; an evidence bundle collects published evidence for a subject; a provider-diff feed reports provider changes and signed history where available.</p></li>
