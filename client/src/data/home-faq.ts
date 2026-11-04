@@ -37,7 +37,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "What is a measurement card?",
-    a: "A measurement card is a signed record under a kilobyte: axis, model, accuracy, issuer, timestamp and the hash of the previous card. It is small enough to email or attach to a filing; it does not live on our server for us to quietly amend later.",
+    a: "A measurement card records a scoped result with its method, subject, date and evidence references. Published formats differ; use the verification instructions for the specific card. A valid signature detects changes to signed bytes. It does not make the hosting immutable or establish that the underlying claim is true.",
     url: "/gspc-verify",
   },
   {
@@ -57,7 +57,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "How do I verify a measurement card without an account?",
-    a: "Fetch our public key from /.well-known/did.json, canonicalise the card body, take the SHA-256, then verify the Ed25519 signature. A zero-dependency JavaScript verifier ships at /signed/verify-card.mjs. No login, no fee, no contact with us.",
+    a: "Open /gspc-verify and follow the instructions for the card’s format and published signing key. The result can be VALID, INVALID or UNCHECKABLE; read what was checked and any missing evidence. Verification is free and needs no account. A signature check is separate from reproducing the measurement or confirming the claim.",
     url: "/gspc-verify",
   },
   {
@@ -75,7 +75,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "Who pays Council of AI, and who never pays?",
-    a: "No company we measure pays for its place on the board, its score, or its removal. Members of the public never pay. Who funds us, and any in-kind support, is set out on /independence/; where a fact is not yet published there, that page says so.",
+    a: "A company cannot buy its place on the board, its score or its removal. Public reading and verification are free; optional evidence products have their own terms. Funding and in-kind support disclosures are at /independence/, including facts not yet published. The buying answer below explains the available paid routes.",
     url: "/independence/",
   },
   {
