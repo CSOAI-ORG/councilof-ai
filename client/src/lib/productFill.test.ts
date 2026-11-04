@@ -23,6 +23,8 @@ describe("Product fill — one cell, many views", () => {
     const blob = JSON.stringify({ FILL_ROWS, FILL_RULING, FILL_PIPELINE });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos|sov3/i);
     expect(blob).not.toMatch(/we (?:issue|mint|underwrite) (?:a )?(?:bond|security)/i);
-    expect(products).toContain("ProductFill");
+    // Internal assembly rules are source documentation, not customer product copy.
+    expect(products).not.toContain("<ProductFill");
+    expect(products).not.toContain("<EmptySlots");
   });
 });
