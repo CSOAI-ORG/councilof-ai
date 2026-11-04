@@ -1,0 +1,31 @@
+# agents.txt — https://councilof.ai
+# Cf. emerging "agents.txt" spec (Aug 2025)
+# Declares: how AI agents (not crawlers) may interact with this site.
+
+Site-Name: Council of AI (CSOAI Ltd)
+Canonical: https://councilof.ai
+Contact: nicholas@csoai.org
+Identity: did:web:csoai.org
+
+Accept-Agent-Types: retrieval, summarization, citation, verification, measurement-consumption
+Reject-Agent-Types: impersonation, transaction-execution, personal-data-collection
+
+Allowed-Actions:
+  - read /llms.txt, /llms-full.txt, /sitemap.xml, /catalog.json
+  - read the board: GET /api/gspc (keyless, CORS-open)
+  - verify any signed card: /gspc-verify, /signed/HOW-TO-VERIFY.md, /root.json, /api/proof?sha=
+  - read /api/proof/preview and the metered catalog at /metered before any paid call
+  - pay a metered call ONLY against the exact accepts[] of a live 402 challenge (USDC on Base); the challenge is the quote
+  - cite any surface with canonical URL + attribution; quote the claim boundary from /llms.txt verbatim
+
+Restricted-Actions:
+  - write to any surface
+  - claim results that the page does not publish
+  - present any artifact as a certification, grade, ranking or endorsement (we measure; we never certify)
+  - sign or counter-sign any record on our behalf
+  - state a price on any page (amounts live only in live 402 challenges)
+
+# MCP server: https://councilof.ai/mcp (48 free tools) and /mcp/free · registry name: ai.councilof/gspc
+# npm: csoai-gspc-mcp · PyPI: csoai-gspc
+Rate-Limit-RPM: 60
+Rate-Limit-Burst: 10
