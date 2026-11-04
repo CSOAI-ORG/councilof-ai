@@ -3235,6 +3235,29 @@
           },
           "error": {
             "type": "string"
+          },
+          "estate_links": {
+            "type": "array",
+            "description": "This estate's own overview pages for the framework, each verified against the router: label, origin-relative href, and what the reader finds there. Guidance links, not evidence links.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "href": {
+                  "type": "string"
+                },
+                "what": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "href",
+                "what"
+              ]
+            }
           }
         },
         "required": [
