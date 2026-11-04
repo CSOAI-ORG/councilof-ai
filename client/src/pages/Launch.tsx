@@ -266,7 +266,7 @@ export default function Launch() {
           </Link>
           {" · "}
           <Link href="/honesty" className="text-emerald-700 underline">
-            Honesty gate
+            Measurement scope
           </Link>
           {" · "}
           <Link href="/board" className="text-emerald-700 underline">

@@ -188,7 +188,7 @@ export const VERIFIABLE_TRUST_NOT_CLAIMED = [
 
 export const VERIFIABLE_TRUST_RELATED = [
   { href: "/refutation-ledger", label: "The refutation ledger", what: "Every correction and retraction, append-only and signed." },
-  { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and the honesty gate." },
+  { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and measurement scope and limitations." },
   { href: "/gspc-scoreboard", label: "The live board", what: "Every slot with its sample size and separation status — measured and unmeasured alike, counted live from GET /api/gspc." },
   { href: "/live-ledger", label: "The living ledger", what: "How a measurement stays current when the statute moves." },
 ];

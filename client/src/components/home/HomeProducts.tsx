@@ -115,6 +115,7 @@ export default function HomeProducts() {
           <p className="t-lede mt-4 text-muted-foreground">
             Compare AI systems, verify a record, connect your tools or commission a run. Every card below opens a working part of Council of AI.
           </p>
+          <p className="mt-5 text-sm leading-7 text-muted-foreground">Evaluating Council of AI for your organisation? <Link href="/traction/#for-organisations" className="font-bold text-emerald-800 underline underline-offset-4 dark:text-emerald-300">See the business, outside use and ways to work together</Link>.</p>
         </div>
         <ul className="mt-10 grid list-none gap-5 p-0 md:grid-cols-2 lg:grid-cols-3">
           {PRODUCTS.map((product) => (

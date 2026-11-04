@@ -456,19 +456,21 @@ export default function About() {
                   <div className="w-1 h-20 bg-emerald-200 mt-2"></div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
-                  <h3 className="text-2xl font-bold mb-4">👁️ Watchdog: a public intake</h3>
+                  <h3 className="text-2xl font-bold mb-4">👁️ Watchdog: inspect public claims</h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
-                    There is a public intake for behaviour that looks wrong, at{" "}
-                    <Link href="/dashboard/?tab=watchdog" className="text-emerald-700 underline">the Watchdog pane of Council OS</Link>.
-                    What it is: somewhere to report, that anyone can use. What it is not: a published
-                    incident register — we do not yet operate one, and a triaged public register of
-                    reports is <strong>not yet available</strong>. We also hold nobody accountable:
-                    we measure, and only a regulator can approve, ban, fine or clear anything.
+                    The public Watchdog is a read-only register of dated public claims and their
+                    sources. It is <strong>not an incident-reporting service</strong>: Council does
+                    not currently accept or triage public incident reports, and the Watchdog pane
+                    in Council OS is not an open intake form. Do not send personal or incident
+                    details there. <Link href="/watchdog/" className="text-emerald-700 underline">Inspect the public claims register</Link>,
+                    or use the <Link href="/corrections/" className="text-emerald-700 underline">corrections ledger</Link>
+                    to challenge an existing published record. Council measures evidence; it does
+                    not make legal or regulatory decisions.
                   </p>
                   <p className="text-sm text-gray-600">
-                    <strong>Why it matters:</strong> an intake with no register behind it is worth
-                    less than one with, and pretending otherwise is the kind of claim this page
-                    exists to retire.
+                    A public incident service will require an accepted human review rota, privacy
+                    controls, source permissions and a published response scope. Those controls are
+                    not in place, so incident intake remains closed.
                   </p>
                 </Card>
               </div>
@@ -575,7 +577,7 @@ export default function About() {
               </div>
               <p className="text-gray-600 font-semibold">
                 Withheld cards a signature actually attests. The rest are disclosed in an unsigned
-                manifest — see <Link href="/honesty" className="underline">the honesty gate</Link>
+                manifest — see <Link href="/honesty" className="underline">measurement scope and limitations</Link>
               </p>
             </Card>
           </div>
@@ -785,7 +787,7 @@ export default function About() {
                 scoring code, so anyone can recompute what we claim or dispute an answer key. And we
                 publish the results that go against us: our own models sit below the base models
                 they were built on in our own signed arena reference. That is on{" "}
-                <Link href="/honesty" className="text-emerald-700 underline">the honesty gate</Link>,
+                <Link href="/honesty" className="text-emerald-700 underline">measurement scope and limitations</Link>,
                 read live from the artifact rather than typed.
               </p>
             </Card>

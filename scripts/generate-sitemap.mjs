@@ -437,6 +437,8 @@ const DELISTED = new Map([
   ["/grants/nlnet-ngi0-entrust", "noindex"],
   ["/grants/sloan-foundation", "noindex"],
   ["/gspc-leaderboard", "noindex"],
+  ["/health-inventory", "noindex: public page reviewed 2026-11-04"],
+  ["/stablewatch", "noindex: public page reviewed 2026-11-04"],
   ["/livecam", "noindex"],
   ["/mcpbench", "noindex"],
   ["/ossbench", "noindex"],
