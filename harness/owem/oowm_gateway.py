@@ -50,8 +50,11 @@ AXIS_LEGAL = {
 
 def _load_reg():
     if os.path.exists(REG):
-        try: return json.load(open(REG))
-        except Exception: pass
+        try:
+            with open(REG, encoding="utf-8") as stream:
+                return json.load(stream)
+        except (OSError, ValueError, RecursionError):
+            pass
     return {"kind": "empty", "clusters": {}, "sov_index_signal": None}
 
 def specialists():
@@ -146,32 +149,54 @@ def sov_signal():
             "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
 
 def answer(question):
+    """Describe one stored register snapshot; this route dispatches no worker."""
+    if not isinstance(question, str) or not question.strip():
+        return {"state": "INVALID_INPUT", "worker_dispatched": False,
+                "answer": "Supply a non-empty question to inspect the stored register."}
     reg = _load_reg()
-    cl = reg.get("clusters", {})
+    available = (isinstance(reg, dict) and isinstance(reg.get("clusters"), dict)
+                 and reg.get("kind") != "empty")
+    if available:
+        clusters = reg["clusters"]
+        # Reject malformed rows rather than publishing partial coverage as complete.
+        available = all(isinstance(row, dict) and isinstance(row.get("owem", {}), dict)
+                        for row in clusters.values())
+    if not available:
+        clusters = {}
+    def value(v):
+        return v if type(v) in (int, float) and 0 <= v <= 1 else None
+    records = [value(row.get("owem", {}).get("sov_score")) for row in clusters.values()]
+    scores = [v for v in records if v is not None]
+    index = round(sum(scores) / len(scores), 4) if scores else None
     axes = classify(question)
     rows, parts = [], []
-    for ax in axes:
-        c = cl.get(ax, {})
-        baseline = c.get("registry_baseline")
-        sov = c.get("owem", {}).get("sov_score")
-        gap = c.get("gap_sov_vs_baseline")
-        desc = AXIS_DESCRIPTIONS.get(ax, ("", []))[0]
-        rows.append({"axis": ax, "measures": desc,
-                     "registry_baseline": baseline, "sov_score": sov, "gap": gap,
-                     "champion": c.get("owem", {}).get("sov_model"),
-                     "legal": AXIS_LEGAL.get(ax)})
-        parts.append(
-            "%s: %s (regulatory baseline %.3f, sovereign score %s)" % (
-                ax, desc, baseline if baseline is not None else -1,
-                ("%.3f" % sov) if sov is not None else "unmeasured"))
-    idx = sov_index()
-    return {"question": question, "matched_axes": axes, "rows": rows,
-            "sov_index_signal": idx["sov_index_signal"], "measured_axes": idx["measured_axes"],
-            "total_axes": idx["total_axes"],
-            "answer": ("I run one OOWM/OWEM cluster per GSPC axis and measure each against its "
-                       "regulatory baseline. On your '%s', the estate sovereign signal is %.3f "
-                       "across %d/%d axes. Focused: " % (question, idx["sov_index_signal"],
-                       idx["measured_axes"], idx["total_axes"]) + "; ".join(parts))}
+    for axis in axes:
+        item = clusters.get(axis, {})
+        owem = item.get("owem", {})
+        score, baseline = value(owem.get("sov_score")), value(item.get("registry_baseline"))
+        retained = (owem.get("remeasure_unmeasured") is True or owem.get("n_scored") == 0
+                    or item.get("trend") == "unmeasured-this-loop")
+        state = ("REGISTRY_UNAVAILABLE" if not available else "NO_RECORDED_SCORE" if score is None
+                 else "LAST_KNOWN_ONLY" if retained else "RECORDED_NOT_RETESTED")
+        desc = AXIS_DESCRIPTIONS.get(axis, ("", []))[0]
+        rows.append({"axis": axis, "measures": desc, "registry_baseline": baseline,
+                     "sov_score": score, "gap": item.get("gap_sov_vs_baseline"),
+                     "champion": owem.get("sov_model"), "legal": AXIS_LEGAL.get(axis),
+                     "score_state": state})
+        parts.append("%s: %s; stored score %s (%s), baseline %s" % (
+            axis, desc, "unavailable" if score is None else format(score, ".3f"),
+            state, "unavailable" if baseline is None else format(baseline, ".3f")))
+    state = "REGISTRY_UNAVAILABLE" if not available else "REGISTER_READ" if scores else "NO_RECORDED_SCORES"
+    return {"question": question, "matched_axes": axes, "rows": rows, "state": state,
+            "sov_index_signal": index, "measured_axes": len(scores) if available else None,
+            "total_axes": len(clusters) if available else None, "worker_dispatched": False,
+            "measurement_basis": "stored registry only; not a live measurement or worker response",
+            "answer": ("No worker was called. " +
+                       ("The register is unavailable. " if not available else
+                        "No score is recorded. " if index is None else
+                        "Stored index %.3f across %d/%d registered axes. " % (index, len(scores), len(clusters)))
+                       + "; ".join(parts))}
+
 
 class H(http.server.BaseHTTPRequestHandler):
     def log_message(self, *a): pass
@@ -202,7 +227,7 @@ class H(http.server.BaseHTTPRequestHandler):
 def agent_card():
     return {"name": "csoai-oowm-gateway", "displayName": "CSOAI OOWM Gateway",
             "description": "One AI in chat OOWM to all — one OOWM+OWEM cluster per GSPC axis; "
-                           "fans any question across the clusters and returns the estate sovereign signal.",
+                           "classifies a query and reads the stored axis register; it does not dispatch workers.",
             "interface": "A2A", "capabilities": {"tools": ["oowm_query", "oowm_clusters", "oowm_index"]},
             "url": None, "provider": "councilof.ai", "contacts": [], "skills": []}
 
@@ -210,7 +235,7 @@ def mcp(body):
     method = body.get("method")
     if method == "tools/list":
         return {"jsonrpc": "2.0", "id": body.get("id"), "result": {"tools": [
-            {"name": "oowm_query", "description": "Chat to all OOWM/OWEM axis clusters — classify a question, return per-axis sov signal + estate index.",
+            {"name": "oowm_query", "description": "Read stored, axis-matched scores and the stored index; this tool does not dispatch a worker.",
              "inputSchema": {"type": "object", "properties": {"question": {"type": "string"}}, "required": ["question"]}},
             {"name": "oowm_clusters", "description": "List every axis cluster (oowm + owem) with its sovereign score.",
              "inputSchema": {"type": "object", "properties": {}}},
