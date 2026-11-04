@@ -52,31 +52,67 @@ function loadJsonOrFallback<T>(candidates: string[], fallback: T): T {
 const EDITION_2026_11_03 = loadJsonOrFallback(
   [resolve("/Users/nicholas/ZCodeProject/build/out/trust-index/edition-2026-11-03.json")],
   {
-    schema: "csoai.trust-index-edition/0.1",
-    edition_id: "2026-11-03",
-    as_of: "2026-11-03T03:15:00Z",
-    merkle_root: "a14bd010bc4fd1ef5c3d95f861d8e4e0ab52bc3798c53f9d29ef18b6200b31a2",
-    prev_edition_root: "74f632b8f59326ef34901bc451ef9a0c8d12b34c567890abcdef1234567890ab",
+    index: "gspc-trust-index",
+    rail: "x402",
+    edition: "2026-11-03",
+    cut_at: "2026-11-03T02:49:55.465Z",
+    merkle_root: "a14bd010ca2d90ead8158422ed9e90f17d866b23e7398fdb565e13fe9d1b0267",
+    previous_edition: {
+      edition: "2026-11-02-v0.1",
+      merkle_root: "6f128d445e7c44fd95272cb53e69dfd71b3707569f6e304ef06dff6fc2d83ae4",
+    },
     draft_artifact: true,
     draft_notes: ["DRAFT EDITION — pre-mint staging, not yet anchored to public root."],
     not_a_certification: true,
-    subjects_total: 64,
-    deltas_vs_prev: { added: 2, removed: 0, state_changed: 1 },
     entries: [
       {
-        subject: "councilof.ai",
-        url: "https://councilof.ai/api/evidence-bundle",
-        rail: "x402",
-        checks: {
-          "x402.challenge": { status: "MEASURED", state: "VALID_402" },
-          "x402.listing-parity": {
-            status: "MEASURED",
-            state: "MATCH",
-            amount_atomic: "50000",
-            asset: "USDC",
-            network: "eip155:8453",
+        subject: "agent-kiosk.vercel.app",
+        url: "https://agent-kiosk.vercel.app/v1/github-intel",
+        checks: [
+          {
+            id: "x402.challenge-correctness",
+            state: "MEASURED",
+            outcome: "CHALLENGE_OK",
+            as_of: "2026-11-03T02:49:55.465Z",
           },
-        },
+        ],
+      },
+      {
+        subject: "agent-kiosk.vercel.app",
+        url: "https://agent-kiosk.vercel.app/v1/token-due-diligence",
+        checks: [
+          {
+            id: "x402.challenge-correctness",
+            state: "MEASURED",
+            outcome: "CHALLENGE_OK",
+            as_of: "2026-11-03T02:49:55.465Z",
+          },
+        ],
+      },
+      {
+        subject: "agentpay.agentpay-apis.workers.dev",
+        url: "https://agentpay.agentpay-apis.workers.dev/extract/v1/page",
+        checks: [
+          {
+            id: "x402.listing-parity",
+            state: "MEASURED",
+            outcome: "MISMATCH",
+            diffs: ["network eip155:8453≠base"],
+            as_of: "2026-11-03T02:49:55.465Z",
+          },
+        ],
+      },
+      {
+        subject: "agentreferee.ai",
+        url: "https://agentreferee.ai/join/weighted",
+        checks: [
+          {
+            id: "x402.challenge-correctness",
+            state: "MEASURED",
+            outcome: "CHALLENGE_OK",
+            as_of: "2026-11-03T02:49:55.465Z",
+          },
+        ],
       },
     ],
   },
@@ -258,7 +294,7 @@ describe("index_edition", () => {
     );
     assert.equal(res.state, "PUBLISHED");
     assert.equal(res.edition, "2026-11-03");
-    assert.equal(res.entry_count, 64);
+    assert.equal(res.entry_count, EDITION_2026_11_03.entries.length);
     assert.equal(res.merkle_root, EDITION_2026_11_03.merkle_root);
     assert.equal(res.draft_artifact, true);
     assert.deepEqual(res.draft_notes, EDITION_2026_11_03.draft_notes);
