@@ -196,7 +196,7 @@ export function llmsStdioSentence(state, { doorTools, freeDoor, preparedVersion 
   const adv = stdioAdvertisement(state, { preparedVersion, doorTools });
   const gapPart = state.liveOnly.length ? ` ${missingNamesPhrase(state)}` : "";
   const tail = adv.advertise
-    ? " It now carries the door's tool set, so a local install matches the remote contract; the free door stays the no-install path."
+    ? " This dated comparison is of tool names; it does not establish equivalent tool behavior between a local install and the remote door. The free door stays the no-install path."
     : ` Until a published release carries the door's tool set, use ${freeDoor}.`;
   return (
     `The latest published npm release is ${state.version} (published ${state.publishedAt}, ` +
