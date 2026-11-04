@@ -8,6 +8,9 @@
  *
  * THE ORDER IS THE ARGUMENT, and each figure is printed once:
  *   1. HomeHero         - six visual stories: measure, verify, work, connect, maintain, correct.
+ *   1.5 LivingBoardStrip - the compact LIVE board (owner, 1 Nov 2026): the model-comparison
+ *                          axes at their top accuracy with their separation chips, straight
+ *                          from GET /api/gspc; it renders nothing when the read fails.
  *   2. HomeProducts     - nine concise routes into the working products and services.
  *   3. HomeHumanReview  - the actual escalation, competence, authority and receipt workflow.
  *   4. LiveBoardGlance  - the live GSPC board: every axis with its state, the count line with its
@@ -33,6 +36,8 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
 import HomeHero from "@/components/home/HomeHero";
+import LivingBoardStrip from "@/components/home/LivingBoardStrip";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import LiveBoardGlance from "@/components/home/LiveBoardGlance";
 import HomeProducts from "@/components/home/HomeProducts";
 import HomeHumanReview from "@/components/home/HomeHumanReview";
@@ -130,6 +135,40 @@ export default function HomeVerify() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
 
       <HomeHero />
+      {/* The compact LIVE board (owner, 1 Nov 2026): under the hero, above every other band.
+          It reads GET /api/gspc through the shared feed and draws nothing at all when the
+          read fails — a missing board never breaks the front door. */}
+      <div className="section-shell pt-6 sm:pt-8" data-testid="home-living-strip">
+        <LivingBoardStrip />
+      </div>
+
+      {/* Daily report + newsletter band (owner, 1 Nov 2026): the 33-axis signed daily
+          report is published publicly; the signup rides the real /api/subscribe handler. */}
+      <div className="section-shell pt-10" data-testid="home-daily-report-band">
+        <div className="surface-raised border border-border rounded-lg p-6 sm:p-8">
+          <h2 className="text-xl font-bold mb-2">The 33-axis daily report — signed, dated, public.</h2>
+          <p className="text-muted-foreground text-sm mb-4 max-w-2xl">
+            Every axis, every leaderboard change, every correction — one signed report a day,
+            published before we pitch anything. Read today&apos;s issue or have it find you.
+          </p>
+          <div className="flex flex-wrap gap-3 items-center">
+            <a
+              href="https://huggingface.co/datasets/csoai/gspc-daily-reports"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold hover:opacity-90 transition"
+            >
+              Read today&apos;s report
+            </a>
+            <a href="/board/" className="text-sm underline underline-offset-4 hover:text-primary">
+              or go straight to the board
+            </a>
+          </div>
+          <div className="mt-5 max-w-md">
+            <NewsletterSignup />
+          </div>
+        </div>
+      </div>
       <HomeProducts />
       <HomeHumanReview />
       <LiveBoardGlance />
