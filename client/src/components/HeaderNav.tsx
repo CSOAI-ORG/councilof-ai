@@ -115,7 +115,7 @@ export const navigation: NavGroup[] = [
       { name: 'Find published results', href: '/dashboard?tab=home', description: 'Type a model, server or record and see what is already measured, free' },
       { section: 'Panes', name: 'Live board', href: '/dashboard?tab=board', description: 'The living GSPC board, with in-lane measurements beside it — never mixed into board totals' },
       { name: 'Verify a card', href: '/dashboard?tab=verify', description: 'The offline verifier, in the workspace' },
-      { name: 'Request a fresh run', href: '/dashboard?tab=measured', description: 'Ask for a new measurement of a model or server, paid from your own wallet; invoiced work is arranged by email. Checking stays free.' },
+      { name: 'Request a fresh run', href: '/dashboard?tab=measured', description: 'Discuss a new measurement of a model or server. Fresh-run booking is not live; scope and availability are agreed by email. Checking stays free.' },
       { name: 'Model arena', href: '/dashboard?tab=space', description: 'Replays of recorded model rounds, graded by fixed rules. Not a live contest' },
       { name: 'Models', href: '/models', description: 'What we measured, and what it scored' },
       { name: 'Tools', href: '/tools', description: 'The published MCP surface, runnable' },
@@ -151,6 +151,7 @@ export const navigation: NavGroup[] = [
     submenu: [
       { section: 'Who we are', name: 'About', href: '/about/', description: 'An operating UK AI measurement and evidence organisation, run by CSOAI Ltd' },
       { name: 'Operation and external use', href: '/traction/', description: 'Operating infrastructure, dated outside evidence and the separate commercial position' },
+      { name: 'Partners and investors', href: '/traction/#partners', description: 'The business model, evidence for diligence and a route to discuss working together' },
       { name: 'Team', href: '/team', description: 'The people, and the AI agents you can ask (labelled as AI)' },
       { name: 'Independence and conflicts', href: '/independence/', description: 'Who runs us, who pays, and where we have an interest' },
       { name: 'Contact', href: '/contact/', description: 'CSOAI Ltd, UK company 16939677' },
