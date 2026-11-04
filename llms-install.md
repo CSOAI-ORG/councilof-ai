@@ -22,7 +22,7 @@ npm package, API key, or OAuth:
 }
 ```
 
-Reconnect and confirm that Cline's server panel discovers the exact 12 names below
+Reconnect and confirm that Cline's server panel discovers the tool names listed below
 (`tools/list` at the protocol level) before relying on the integration. The remote
 is the canonical service; it is also suitable for MCP clients that support remote
 Streamable HTTP configuration. This is not a claim of support for every AI platform
