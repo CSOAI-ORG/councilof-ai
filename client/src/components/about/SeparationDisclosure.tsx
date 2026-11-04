@@ -37,15 +37,27 @@ export type SeparationDisclosureVariant = "static" | "live" | "explorer";
 
 const ALPHA = 0.05;
 
-/** TIE axes with a published separation p. Axes without one are listed as not read, not dropped. */
-export function tieRows(axes: GspcAxis[]): { axis: string; n: number | null; p: number | null }[] {
+/** TIE axes with a published separation p. Axes without one are listed as not read, not dropped.
+ *  cliff_delta is the generated effect size the board serves beside the MDE (GET /api/gspc →
+ *  mde.effect), read with the same discipline: absent is "not read", never a zero. */
+export function tieRows(axes: GspcAxis[]): {
+  axis: string;
+  n: number | null;
+  p: number | null;
+  delta: number | null;
+}[] {
   return axes
     .filter((a) => a.status === "MEASURED" && a.separation === "TIE")
-    .map((a) => ({
-      axis: typeof a.axis === "string" ? a.axis : "",
-      n: typeof a.n === "number" && Number.isFinite(a.n) ? a.n : null,
-      p: typeof a.separation_p === "number" && Number.isFinite(a.separation_p) ? a.separation_p : null,
-    }));
+    .map((a) => {
+      const effect = (a as { effect?: { cliff_delta?: unknown } }).effect;
+      const raw = effect && typeof effect === "object" ? (effect as { cliff_delta?: unknown }).cliff_delta : undefined;
+      return {
+        axis: typeof a.axis === "string" ? a.axis : "",
+        n: typeof a.n === "number" && Number.isFinite(a.n) ? a.n : null,
+        p: typeof a.separation_p === "number" && Number.isFinite(a.separation_p) ? a.separation_p : null,
+        delta: typeof raw === "number" && Number.isFinite(raw) ? raw : null,
+      };
+    });
 }
 
 /**
@@ -164,6 +176,9 @@ function LiveVariant({ injected }: { injected?: GspcPayload | null }) {
               <th className="border-b border-border py-1 pr-3 font-semibold">axis</th>
               <th className="border-b border-border py-1 pr-3 font-semibold">n</th>
               <th className="border-b border-border py-1 pr-3 font-semibold">published p</th>
+              <th className="border-b border-border py-1 pr-3 font-semibold" title="Cliff's delta, paired binary: (leader-only − comparator-only) / paired items; positive favours the leader. Generated from the published per-item rows.">
+                Cliff's δ
+              </th>
               <th className="border-b border-border py-1 pr-3 font-semibold">must clear (Holm)</th>
               <th className="border-b border-border py-1 font-semibold">under the family rule</th>
             </tr>
@@ -178,6 +193,7 @@ function LiveVariant({ injected }: { injected?: GspcPayload | null }) {
                   </td>
                   <td className="border-b border-border/60 py-1 pr-3">{r.n ?? <span>not read</span>}</td>
                   <td className="border-b border-border/60 py-1 pr-3">{fmtP(r.p as number)}</td>
+                  <td className="border-b border-border/60 py-1 pr-3">{r.delta === null ? <span>not read</span> : (r.delta > 0 ? "+" : "") + r.delta.toFixed(3)}</td>
                   <td className="border-b border-border/60 py-1 pr-3">{fmtT(r.threshold)}</td>
                   <td className="border-b border-border/60 py-1">
                     <span className="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-bold text-sky-900 dark:bg-sky-900/60 dark:text-sky-100">
