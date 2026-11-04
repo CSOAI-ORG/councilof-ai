@@ -43,7 +43,7 @@ jobs:
       - name: Deliberate broken-control sensitivity
         run: node scripts/test-council-panel-controls.mjs
       - name: Compose both existing MCP resources and protocol guards
-        run: npx vitest run functions/mcp/working-groups.test.ts functions/mcp/mcp-protocol.test.ts
+        run: npx vitest run functions/mcp/working-groups.test.ts functions/mcp/mcp-protocol.test.ts functions/mcp/mcp-free-door.test.ts
       - name: Validate loopback preview launcher
         run: python3 -B scripts/serve-council-native-panel.py --help
       - name: Retain exact preview bytes and their source identity

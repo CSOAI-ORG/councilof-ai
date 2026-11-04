@@ -7,6 +7,7 @@ const displayToken = new URLSearchParams(location.hash.slice(1)).get('display');
 let app: App | null = null, hostReady = false, task: TaskProjection | null = null;
 let controller: AbortController | null = null, generation = 0, busy = false, importedGeneration = 0;
 let channel: BroadcastChannel | null = null, screenWindow: Window | null = null;
+let hostBoard: ReturnType<typeof publicBoard> = null;
 const notice = (text: string) => { $('notice').textContent = text; };
 const txt = (tag: string, text: string, cls = '') => { const e = document.createElement(tag); e.textContent = text; if (cls) e.className = cls; return e; };
 function chooseTab(id: string, focus = false) {
@@ -30,6 +31,7 @@ function render() {
   $('referee').textContent = 'Trace referee: '+(s?.traceCheck ?? 'no task observed.')+' · deterministic event checks, not a model safety score.';
   $('task-error').textContent = task?.run.error ?? (task?.run.confirm ? 'This task requires a separate decision. No confirmation or payment is sent by this panel.' : '');
   const lessonId=suggestedLesson(task?.run.tools??[],task?.run.status??'idle');const lesson=LESSONS.find(l=>l.id===lessonId);$('learning-nudge').hidden=!lesson;$('learning-nudge-text').textContent=lesson?'Suggested for this task: '+lesson.title:'';
+  $('board-context').textContent = task ? 'No board record returned for this task. Earlier task counts are not reused.' : hostBoard ? `Host-delivered board: ${hostBoard.axes} axes · ${hostBoard.measured} measured · ${hostBoard.unmeasured} unmeasured. Published context, not a score for this chat.` : 'No board record loaded. This is reference context, not a score for your conversation.';
   const list=$('tool-list');list.replaceChildren();
   for (const tool of task?.run.tools ?? []) {
     const li=txt('li','');li.append(txt('strong',tool.name+' — '+tool.status),txt('p',clip(tool.summary,2000)||'Waiting for the tool’s result.','muted'));
@@ -99,7 +101,7 @@ $('benchmark-file').addEventListener('change',async()=>{
     const text=new TextDecoder('utf-8',{fatal:true}).decode(bytes);const data=JSON.parse(text);
     const rows=benchmarkRows(data);const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');
     if(revision!==importedGeneration)return;
-    for(const row of rows){const card=txt('article','','bench');card.append(txt('span',row.framework+' · imported, unverified','eyebrow'),txt('h3',row.task),txt('p',row.model,'muted'),txt('strong',String(row.value)),txt('p',row.metric),txt('small',`Task version: ${row.revision} · samples: ${row.samples===null?'not supplied':row.samples}`));$('benchmark-rows').append(card);}
+    for(const row of rows){const card=txt('article','','bench');card.append(txt('span',row.framework+' · imported, unverified','eyebrow'),txt('h3',row.task),txt('p',row.model+(row.adapter?' · adapter: '+row.adapter:''),'muted'),txt('strong',String(row.value)),txt('p',row.metric),txt('small',`Task version: ${row.revision} · samples: ${row.samples===null?'not supplied':row.samples}`));$('benchmark-rows').append(card);}
     $('benchmark-status').textContent=`${rows.length} metric rows read locally. No benchmark was run. File SHA-256: ${hash}. Metrics retain their original scales; no combined score was invented.`;
   }catch(e){$('benchmark-status').textContent=e instanceof Error?e.message:'This file could not be read.';}
 });
@@ -172,7 +174,7 @@ function acceptHostResult(result:unknown){
   const d=rec(result);let value=d?.structuredContent;
   if(!value&&Array.isArray(d?.content)){const block=d.content.find((x:unknown)=>rec(x)?.type==='text');if(typeof block?.text==='string'&&block.text.length<=100000){try{value=JSON.parse(block.text);}catch{value={text:block.text};}}}
   $('host-record').textContent=JSON.stringify(value??{note:'No supported host result received.'},null,2).slice(0,20000);
-  const board=publicBoard(value);if(board)$('board-context').textContent=`Host-delivered board: ${board.axes} axes · ${board.measured} measured · ${board.unmeasured} unmeasured. This is published context, not a score for this chat.`;
+  hostBoard=publicBoard(value);render();
 }
 async function connectHost(){
   app=new App({name:'Council of AI · MEOK',version:'0.1.0'},{},{autoResize:true});
@@ -184,5 +186,19 @@ async function connectHost(){
   finally{clearTimeout(timer);}
 }
 if(displayToken)startDisplay(displayToken);else{render();if(native)void connectHost();}
-const heartbeat=setInterval(()=>{if(channel)channel.postMessage(screenSnapshot(task));},2000);
-window.addEventListener('pagehide',()=>{generation++;importedGeneration++;controller?.abort();stopScreen();clearInterval(heartbeat);void app?.close();},{once:true});
+let heartbeat: ReturnType<typeof setInterval> | null = null;
+function startHeartbeat(){if(heartbeat===null)heartbeat=setInterval(()=>{if(channel)channel.postMessage(screenSnapshot(task));},2000);}
+startHeartbeat();
+window.addEventListener('pagehide',()=>{
+  // The page may survive in bfcache. Reset state before invalidating callbacks.
+  if(busy)task?.interrupt('Observation interrupted by navigation. The remote outcome may be unknown; no task is retried.');
+  busy=false;const pending=controller;controller=null;generation++;importedGeneration++;
+  pending?.abort(new Error('Navigation interrupted observation.'));stopScreen();
+  if(heartbeat!==null){clearInterval(heartbeat);heartbeat=null;}
+  hostReady=false;void app?.close();app=null;render();
+});
+window.addEventListener('pageshow',event=>{
+  if(!event.persisted)return;
+  startHeartbeat();render();notice('View restored. Interrupted work was not retried; explicitly start a new question when ready.');
+  if(native&&!displayToken)void connectHost();
+});

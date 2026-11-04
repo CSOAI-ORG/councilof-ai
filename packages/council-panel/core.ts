@@ -53,32 +53,50 @@ export class TaskProjection {
       answer: this.run.text, events: this.events, grantsAuthority: false, signatureStatus: 'UNSIGNED' };
   }
 }
-export type BenchRow = { framework: string; task: string; model: string; revision: string; metric: string; value: number; samples: number | null; state: string };
+export type BenchRow = { framework: string; task: string; model: string; adapter: string | null; revision: string; metric: string; value: number; samples: number | null; state: string };
 const count = (v: unknown) => typeof v === 'number' && Number.isSafeInteger(v) && v >= 0 ? v : null;
+/** Resolve only explicit model identifiers; adapter names are not model identity. */
+export function harnessModel(data: Record<string, any>): string {
+  const named = clip(data.model_name, 160).trim(); if (named) return named;
+  const args = rec(data.config)?.model_args; const object = rec(args);
+  if (object) for (const key of ['pretrained', 'model', 'model_name']) {
+    const value = clip(object[key], 160).trim(); if (value) return value;
+  }
+  if (typeof args === 'string' && args.length <= 10000) {
+    for (const part of args.split(',')) {
+      const at = part.indexOf('='); if (at < 0) continue;
+      if (['pretrained','model','model_name'].includes(part.slice(0, at).trim())) {
+        const value = part.slice(at+1).trim().replace(/^['"]|['"]$/g, '');
+        if (value) return value.slice(0,160);
+      }
+    }
+  }
+  return 'Unspecified model';
+}
 /** Local-only import of selected summary fields. Does not run/score a model or trust file claims. */
 export function benchmarkRows(value: unknown): BenchRow[] {
   const d = rec(value); if (!d) throw new Error('Expected a benchmark JSON object.');
   const rows: BenchRow[] = [];
-  const add = (framework: string, task: unknown, model: unknown, revision: unknown, metric: string, v: unknown, samples: unknown) => {
-    if (rows.length >= 200) throw new Error('Too many metric rows.');
+  const add = (framework: string, task: unknown, model: unknown, revision: unknown, metric: string, v: unknown, samples: unknown, adapter: string | null = null) => {
     if (typeof v !== 'number' || !Number.isFinite(v)) return;
+    if (rows.length >= 200) throw new Error('More than 200 metric rows: the entire import was refused; no results were silently omitted.');
     rows.push({ framework, task: clip(task, 120) || 'Unspecified task', model: clip(model, 160) || 'Unspecified model',
-      revision: typeof revision === 'number' ? String(revision) : clip(revision, 100) || 'Not supplied', metric: metric.slice(0, 120),
+      adapter, revision: typeof revision === 'number' ? String(revision) : clip(revision, 100) || 'Not supplied', metric: metric.slice(0, 120),
       value: v, samples: count(samples), state: 'IMPORTED_UNVERIFIED' });
   };
   if (rec(d.eval) && rec(d.results) && Array.isArray(d.results.scores)) {
     if (d.status !== 'success') throw new Error('Inspect run is not marked successful; do not present it as a completed benchmark.');
-    for (const score of d.results.scores.slice(0, 50)) {
+    for (const score of d.results.scores) {
       const s = rec(score); if (!s) continue;
       for (const [name, item] of Object.entries(rec(s.metrics) ?? {})) add('Inspect', d.eval.task, d.eval.model, d.eval.task_version,
         `${clip(s.name, 80) || 'scorer'} / ${name}`, rec(item)?.value, d.results.completed_samples);
     }
   } else if (rec(d.results) && rec(d.config) && rec(d.versions)) {
-    for (const [task, metrics] of Object.entries(d.results).slice(0, 50)) {
+    for (const [task, metrics] of Object.entries(d.results)) {
       for (const [metric, v] of Object.entries(rec(metrics) ?? {})) {
         if (metric === 'alias' || metric.includes('stderr')) continue;
         const sample = rec(rec(d['n-samples'])?.[task]);
-        add('lm-evaluation-harness', task, d.config.model, d.versions[task], metric, v, sample?.effective ?? sample?.original);
+        add('lm-evaluation-harness', task, harnessModel(d), d.versions[task], metric, v, sample?.effective ?? sample?.original, clip(d.config.model,120) || null);
       }
     }
   } else throw new Error('Supported summaries: Inspect JSON and lm-evaluation-harness results JSON. No conversion was guessed.');
