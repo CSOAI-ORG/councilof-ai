@@ -159,7 +159,7 @@ $('screen-open').addEventListener('click',()=>{
   $('screen-stop').toggleAttribute('disabled',false);$('screen-note').textContent='A read-only window is open. Move it to your extended display. Only status and tool names are shared.';
 });
 function startDisplay(token:string){
-  $('workspace').hidden=true;$('screen-mode').hidden=false;
+  $('workspace').hidden=true;$('screen-mode').hidden=false;$('council-app').style.maxWidth='none';$('council-app').style.padding='0';
   if(!/^[0-9a-f-]{36}$/.test(token)||!('BroadcastChannel'in window)){ $('screen-state').textContent='Invalid or unsupported display session';return; }
   const receive=new BroadcastChannel('council-screen-'+token);let last=0,closed=false;
   receive.onmessage=e=>{

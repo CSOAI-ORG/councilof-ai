@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-11-04T07:43:30.808396+00:00",
+  "observedAt": "2026-11-04T08:05:57.422235+00:00",
   "baseHead": "df02a4d419d2c77c5042afb66d5548e58888752b",
   "state": "REVIEW_FINDINGS_FIXED_AND_RETESTED_NOT_DEPLOYED",
   "reviewFindings": [
@@ -16,9 +16,9 @@
     "In-flight state reset before history-cache restore; no automatic task retry."
   ],
   "tests": {
-    "unitAndMcpSdk": 56,
+    "unitAndMcpSdk": 57,
     "browser": {
-      "observedAt": "2026-11-04T07:41:48.905Z",
+      "observedAt": "2026-11-04T08:00:57.625Z",
       "passed": true,
       "checks": [
         "open-does-not-start-monitoring-or-contact-service",
@@ -54,10 +54,28 @@
       "pageErrors": [],
       "requestCount": 10,
       "scope": "Actual bundled UI and MCP Apps SDK in Chrome. Owned host fixture and controlled service events, not ChatGPT or Claude native account installation."
+    },
+    "negativeControls": {
+      "scope": "Deliberately broken temporary copies; no shipped source changed.",
+      "results": [
+        {
+          "control": "task-binding-bypass",
+          "detectedByAssertion": true,
+          "status": 1
+        },
+        {
+          "control": "source-freshness-bypass",
+          "detectedByAssertion": true,
+          "status": 1
+        }
+      ]
     }
   },
-  "htmlSha256": "150ea8f70a265f0227bfbcbac6483f87a0e7d0c93e7ae7a3405d31f08efb2d1c",
+  "htmlSha256": "74e35303567f7d4698184089235b4d7d3282a96b2b674a844b9c5502df40089c",
   "bfcacheTestBoundary": "Browser lifecycle-event regression, not an outside user acceptance or all-browser cache test.",
   "productionChanged": false,
-  "nativeSignedInHostAccepted": false
+  "nativeSignedInHostAccepted": false,
+  "reviewCorrectionHead": "e6625a71d984e6b3ba41bf17340a69ca69ec1f36",
+  "singleMainLandmark": true,
+  "releaseGateCorrection": "Use one main landmark with mutually exclusive workspace/display regions; gate unchanged."
 }
