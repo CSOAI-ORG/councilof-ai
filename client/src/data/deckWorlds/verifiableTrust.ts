@@ -32,9 +32,9 @@ import type { Slide } from "@/components/scrollworld";
 
 export const VERIFIABLE_TRUST_HERO = {
   kicker: "The science of verifiable trust",
-  title: "What we refuse to measure is why the rest can be believed",
+  title: "AI measurement with traceable evidence",
   lede:
-    "Any lab can publish the numbers that flatter it. A measurement body is only as credible as the limits it enforces on itself in public — the empty cells, the honest ties, the retractions of its own best figures. This page is about the negative space.",
+    "Council of AI publishes measurement methods, source records, comparison limits and corrections. Explore how these elements support the review and verification of a result.",
   bg: {
     src: "/images/coliseum_logic_duel.jpg",
     alt: "A human and an AI facing each other across a chessboard, judged by a fixed rule",
@@ -47,10 +47,10 @@ export const VERIFIABLE_TRUST_HERO = {
 
 export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   {
-    kicker: "The crisis",
-    title: "Certification theatre: unsigned claims, hidden methods, models grading models",
+    kicker: "Evidence quality",
+    title: "Published methods and verifiable records",
     body:
-      "Most AI assurance fails in the same three places. The result is unsigned, so it can be restated later. The method is private, so it cannot be argued with. And the grading is done by a model, which means the grader's blind spots quietly become the scoreboard. Unsigned measurement dies the moment someone disputes it.",
+      "A useful evidence record identifies the method, inputs, grading rules and result. Signatures help check record integrity and attribution. Published methods allow reviewers to inspect the scoring approach and its limitations.",
     points: [
       { tag: "pain", text: "Unsigned cells and point-in-time claims with nothing behind them" },
       { tag: "pain", text: "Private test sets nobody outside can run" },
@@ -79,7 +79,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     },
   },
   {
-    kicker: "The honesty gate",
+    kicker: "Measurement scope and limitations",
     title: "If a rule cannot parse it, we refuse to score it",
     body:
       "Three things stop a number reaching the board. Too small a sample, and it is not quoted at all. No statistical separation between the leader and the field, and the result is printed as a tie rather than a win. No deterministic predicate able to read the response, and it is reported UNMEASURED — never silently counted as a wrong answer, which would flatter the grader at the model's expense.",
@@ -126,13 +126,13 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   },
   {
     kicker: "The refutation ledger",
-    title: "A public, append-only log of our own corrections",
+    title: "A public record of corrections",
     body:
-      "A leaderboard wants permanent results and no retractions. We do the opposite: every correction we make to our own published work goes into a signed, append-only record with the root cause attached. Old entries are never edited away — they are superseded in public, so you can always see what we said, when, and what changed our mind.",
+      "The public corrections record identifies changes to previous findings, their causes and supporting evidence. Review the status and provenance of each entry; publication alone does not establish an append-only storage guarantee.",
     points: [
       { tag: "pain", text: "Quiet edits that make yesterday's number vanish without trace" },
-      { tag: "benefit", text: "Every correction dated, signed and traceable to its cause" },
-      { tag: "benefit", text: "Superseded entries preserved — append-only, never overwritten" },
+      { tag: "benefit", text: "Dated corrections with source references and stated verification status" },
+      { tag: "benefit", text: "Review earlier findings alongside their superseding records" },
       { tag: "usp", text: "We publish retractions of our own strongest claims, not just of typos" },
     ],
     href: "/refutation-ledger",
@@ -187,8 +187,8 @@ export const VERIFIABLE_TRUST_NOT_CLAIMED = [
 ];
 
 export const VERIFIABLE_TRUST_RELATED = [
-  { href: "/refutation-ledger", label: "The refutation ledger", what: "Every correction and retraction, append-only and signed." },
-  { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and the honesty gate." },
+  { href: "/refutation-ledger", label: "The refutation ledger", what: "Dated corrections and retractions with supporting records." },
+  { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and measurement scope and limitations." },
   { href: "/gspc-scoreboard", label: "The live board", what: "Every slot with its sample size and separation status — measured and unmeasured alike, counted live from GET /api/gspc." },
   { href: "/live-ledger", label: "The living ledger", what: "How a measurement stays current when the statute moves." },
 ];

@@ -159,5 +159,5 @@ export const PREDICATE_RELATED = [
   { href: "/methodology", label: "The method in full", what: "Determinism, n≥30, and why no model ever judges another." },
   { href: "/metrology", label: "The metrology apparatus", what: "The procedural-environment doctrine — published as design, not as shipped." },
   { href: "/gspc-verify", label: "Verify a card", what: "Run the chain yourself, in your browser, with no account." },
-  { href: "/honesty", label: "The honesty gate", what: "Where our own fine-tunes lose our own arena, published in full." },
+  { href: "/honesty", label: "Measurement scope and limitations", what: "Where our own fine-tunes lose our own arena, published in full." },
 ];

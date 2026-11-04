@@ -575,7 +575,7 @@ export default function About() {
               </div>
               <p className="text-gray-600 font-semibold">
                 Withheld cards a signature actually attests. The rest are disclosed in an unsigned
-                manifest — see <Link href="/honesty" className="underline">the honesty gate</Link>
+                manifest — see <Link href="/honesty" className="underline">measurement scope and limitations</Link>
               </p>
             </Card>
           </div>
@@ -785,7 +785,7 @@ export default function About() {
                 scoring code, so anyone can recompute what we claim or dispute an answer key. And we
                 publish the results that go against us: our own models sit below the base models
                 they were built on in our own signed arena reference. That is on{" "}
-                <Link href="/honesty" className="text-emerald-700 underline">the honesty gate</Link>,
+                <Link href="/honesty" className="text-emerald-700 underline">measurement scope and limitations</Link>,
                 read live from the artifact rather than typed.
               </p>
             </Card>

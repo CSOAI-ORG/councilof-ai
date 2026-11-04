@@ -1451,11 +1451,7 @@ export default function MeasurementBoard() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      {/* ── commission callout (Oct 31 audit) ────────────────────────────────
-          The three frontier models every deployer asks about first are absent
-          from this board, and the page says so on arrival instead of hiding
-          the gap in a footnote. The absence is the offer: a signed card for
-          any hosted model, commissioned through the x402 rail. */}
+      {/* Measurement enquiries are scoped separately from published board results. */}
       <aside
         data-testid="board-commission-callout"
         role="note"
@@ -1463,15 +1459,14 @@ export default function MeasurementBoard() {
         className="mb-8 rounded-2xl border-2 border-amber-400 bg-[#04120c] p-4 sm:p-5 shadow-[0_18px_40px_-24px_rgba(0,0,0,.6)]"
       >
         <p className="text-base leading-relaxed text-amber-50 sm:text-lg">
-          GPT, Claude and Gemini are UNMEASURED here — yet.{" "}
+          Request a scoped AI measurement with published methods and a signed evidence record.{" "}
           <a
             href="/services/"
             className="font-bold text-amber-300 underline decoration-amber-500/60 underline-offset-4 hover:text-amber-200"
             data-testid="board-callout-cta"
           >
-            Commission a signed card for any hosted model through the x402 rail.
+            Discuss your measurement requirements.
           </a>{" "}
-          The gap is the product.
         </p>
       </aside>
 
@@ -1486,10 +1481,9 @@ export default function MeasurementBoard() {
         {/* dated freshness on the first screen: read live from /api/gspc, never typed */}
         <BoardFreshness />
         <p className="mt-3 max-w-3xl text-base text-gray-700">
-          We publish several different measuring instruments. Each one asks a different set of
-          questions, of different things, on different dates — so each one carries its own count,
-          and those counts are not supposed to match. Pick a set below before you meet a number.
-          Every set states what it establishes and, just as plainly, what it does not.
+          Explore published measurement sets, their results and supporting evidence. Each set
+          identifies its subject, method, measurement date and coverage. Select a set to review
+          its findings and limitations; counts from different sets describe different scopes.
         </p>
         <p className="mt-3 max-w-3xl rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700">
           <strong className="font-semibold">About the dates on this page.</strong> A date shown

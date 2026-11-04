@@ -7,7 +7,7 @@ import { ANCHORING_CLAIM } from "@/data/anchoringClaim";
 import FaqBlock from "@/components/FaqBlock";
 
 /**
- * /honesty — the honesty gate: what this estate publishes against itself.
+ * /honesty — measurement scope and limitations: what this estate publishes against itself.
  *
  * WHAT CHANGED AND WHY (copy-truth sweep, 2026-08-26)
  * This page used to be one story — our fine-tunes losing our own arena — told with a
@@ -38,14 +38,14 @@ interface EloRow {
 const ARTICLE_LD = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "The honesty gate — what Council of AI publishes against itself",
+  headline: "Measurement scope and limitations",
   datePublished: "2026-08-18",
   dateModified: "2026-08-26",
   url: "https://councilof.ai/honesty",
   publisher: { "@type": "Organization", name: "CSOAI Ltd", url: "https://councilof.ai", identifier: "UK Companies House 16939677" },
   author: { "@type": "Organization", name: "CSOAI Ltd", url: "https://councilof.ai" },
   description:
-    "Council of AI publishes the results that embarrass it: its own fine-tunes below base models in its own signed arena reference, the cards it withholds and the exact limit of what the chain proves about them, the board slots it has not measured, and a corrections ledger that includes a verification of its own that could not observe failure.",
+    "Council of AI publishes measurement coverage, internal model evaluation results, verification boundaries and corrections with links to their source records.",
 };
 
 
@@ -53,7 +53,7 @@ const ARTICLE_LD = {
 const HONESTY_FAQ = [
   {
     q: "Do Council of AI's own models beat the bases they started from?",
-    a: "No. On the signed arena reference at /arena/elo_reference.json, our own council models sit below the bases we started from. That finding is read from the published artifact at load time — not typed — and it is the most credible thing we can publish because it contradicts our own product narrative.",
+    a: "In the signed arena reference at /arena/elo_reference.json, our Council model variants perform below their base models. The page reads the results from that published record; the finding applies to the evaluated variants and run.",
   },
   {
     q: "What does the cryptographic chain prove — and where does it stop?",
@@ -126,7 +126,7 @@ function OurFineTunes() {
           On the reference as published, {ours.length === 1 ? "our one council model sits" : `all ${ours.length} of our council models sit`}{" "}
           below the leading base model. The gap between the top of the ladder and our lowest
           adapter is <strong>{Math.round(best.elo - worstOurs.elo)} Elo</strong>. We built them.
-          We measure them. They lose. We publish it.
+          These results apply to the evaluated variants and the published reference run.
         </p>
       )}
       <div className="mt-4 overflow-x-auto">
@@ -183,9 +183,9 @@ export default function Honesty() {
   const facts = useEstateFacts();
 
   useEffect(() => {
-    document.title = "The honesty gate — what we publish against ourselves | Council of AI";
+    document.title = "Measurement scope and limitations | Council of AI";
     setMetaDescription(
-      "The honesty gate: our own fine-tunes below base models in our own signed arena reference, the cards we withhold and the exact limit of what the chain proves, the board slots we have not measured, and our public corrections ledger. Live counts: GET /api/gspc and GET /api/state.",
+      "Review Council of AI measurement coverage, internal model results, verification limits and published corrections, with links to the source evidence.",
     );
   }, []);
 
@@ -194,41 +194,38 @@ export default function Honesty() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_LD) }} />
       <div className="mx-auto max-w-3xl px-5 py-14">
         <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700">
-          The honesty gate
+          Measurement scope and limitations
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          What we publish against ourselves.
+          Measurement scope and limitations
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-slate-700">
-          An instrument that will say anything measures nothing. So this page collects the results
-          that embarrass us, the gaps we have not closed, and the exact points where our own
-          cryptography stops proving things. Every number on it is read from a published artifact
-          at load time; none is typed.
+          Review the scope of our published measurements, including internal model results,
+          coverage limits and verification boundaries. Results are read from their published
+          source records. Our corrections ledger records changes to previous findings.
         </p>
 
         {/* ── 1. our own fine-tunes lose ─────────────────────────────── */}
-        <h2 id="council-inhouse-ft" className="mt-12 text-xl font-bold">1. Our own models lose our own arena</h2>
+        <h2 id="council-inhouse-ft" className="mt-12 text-xl font-bold">1. Internal model evaluation results</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
-          We built council models on small base models. They are beaten by the bases we started
-          from. This is the most credible thing we can publish, because it contradicts our own
-          product narrative — and because you can fetch the artifact and check it without us.
+          In the published arena reference, our Council model variants perform below the base
+          models used to develop them. The source record is available for inspection, with
+          results scoped to that evaluation.
         </p>
         <OurFineTunes />
         <p className="mt-4 leading-relaxed text-slate-700">
-          <strong>What it does mean:</strong> adapter-souping weak bases does not beat the base, and
-          the measurement rail works — it caught us.{" "}
-          <strong>What it does not mean:</strong> that the instruments are broken. The instrument
-          that shows us losing is the same one we publish. The honest next step is base model plus
-          statute retrieval, not weight-merging weak specialists.
+          <strong>Interpretation:</strong> these model variants did not improve on their base
+          models in this evaluation. The source record supports that finding within the
+          tested scope; it does not establish performance on other tasks or deployments.
         </p>
         <p className="mt-3 leading-relaxed text-slate-700">
-          One ceiling, stated before anyone else states it for us: this instrument governs
-          provenance, not correctness. An attested answer is attested, never verified. Our own
-          fine-tunes are the proof — they are signed, and they still lose.
+          A signature supports record integrity and attribution. It does not establish the
+          correctness of an answer or the performance of a model. Read the result together
+          with its method, sample and measurement date.
         </p>
 
         {/* ── 2. what the chain does not prove ───────────────────────── */}
-        <h2 className="mt-12 text-xl font-bold">2. Where our cryptography stops</h2>
+        <h2 className="mt-12 text-xl font-bold">2. Record verification and its limits</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
           {facts.verifiedSentence}
           {facts.provenanceNote}
@@ -237,9 +234,8 @@ export default function Honesty() {
           <p className="font-semibold">The limit, stated precisely.</p>
           <p className="mt-2">{facts.withheldSentence}</p>
           <p className="mt-2">
-            We publish that distinction because the alternative is letting a complete-looking
-            manifest do work a signature has not done — which is the exact class of defect this
-            estate keeps finding in itself. The full position manifest is published at{" "}
+            Manifest coverage and signature verification are separate checks.
+            The full position manifest is published at{" "}
             <code>/signed/chain.json</code> as a card-shaped, Ed25519-signed envelope — verify
             it yourself with <code>/signed/verify-card.mjs</code>, unchanged, under the same
             pinned key as every card. The derived counts are at{" "}
@@ -331,7 +327,7 @@ export default function Honesty() {
         </ul>
         <p className="mt-4 text-sm">
           <Link href="/refutation-ledger" className="text-emerald-700 underline">
-            The refutation ledger — claims we published, tested, and killed
+            The refutation ledger — reviewed claims and published corrections
           </Link>
         </p>
 

@@ -197,5 +197,5 @@ export const METROLOGY_RELATED = [
   { href: "/gspc-scoreboard", label: "The live board", what: "What is actually measured today, with every sample size and status." },
   { href: "/gspc-arena", label: "Council Space", what: "Models facing the same frozen tests, head to head." },
   { href: "/methodology", label: "The method", what: "Determinism, n≥30, and why no model ever judges another." },
-  { href: "/verifiable-trust", label: "The science of verifiable trust", what: "The negative space — what we refuse to measure, and why." },
+  { href: "/verifiable-trust", label: "The science of verifiable trust", what: "Measurement methods, verification boundaries and published corrections." },
 ];
