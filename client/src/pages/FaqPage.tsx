@@ -14,7 +14,7 @@ import { FAQ_ITEMS, FAQ_SECTIONS } from "@/data/home-faq";
  * Each answer: 40–60 words, one living URL, no second question inside.
  */
 
-const LAST_REVIEWED = "2026-10-06";
+const LAST_REVIEWED = "2026-11-04";
 
 export default function FaqPage() {
   useEffect(() => {
@@ -130,7 +130,7 @@ export default function FaqPage() {
                 <li key={idx} className="flex gap-2">
                   <span className="text-primary font-medium">{idx + 1}.</span>
                   <a
-                    href={`#q${idx + 1}`}
+                    href={`#${item.id ?? `q${idx + 1}`}`}
                     className="hover:text-foreground transition-colors line-clamp-1"
                   >
                     {item.q}
@@ -194,14 +194,14 @@ export default function FaqPage() {
         {/* Footer disclaimer */}
         <footer className="mt-12 pt-6 border-t border-border">
           <p className="text-sm text-muted-foreground text-center">
-            If this page disagrees with{" "}
+            For current board measurements and counts, read{" "}
             <a
               href="https://councilof.ai/api/gspc"
               className="font-medium text-primary hover:underline"
             >
               GET /api/gspc
-            </a>
-            , the API wins.
+            </a>{" "}
+            and its stated scope, date and limitations.
           </p>
           <p className="mt-2 text-xs text-muted-foreground text-center">
             Last reviewed: {LAST_REVIEWED}
