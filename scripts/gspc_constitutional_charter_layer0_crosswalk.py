@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-CSOAI Unified Constitutional Charter × 33-Axis GSPC × HITL × Layer-0 Master Crosswalk
+CSOAI Unified Constitutional Charter × GSPC × HITL × Layer-0 Master Crosswalk
 ======================================================================================
 
-Bridges CSOAI's frozen constitutional charters, 33 GSPC measurement axes, Human-in-the-Loop
+Bridges CSOAI's frozen constitutional charters, the registered GSPC measurement axes, Human-in-the-Loop
 (HITL / H.I.M.) escalation gates, Layer-0 harness (`packages/layer0-js` & `packages/evidence-fabric`),
 20 target external GitHub repositories, 7 first-principles institutional precedents, and
 Newton's Third Law Reaction Matrix ("for every external action, an equal and opposite
@@ -27,6 +27,7 @@ from typing import Any, Dict, List
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OPERATIONAL_CHARTER_PATH = REPO_ROOT / "public" / ".well-known" / "constitutional-harness.json"
 SOURCE_CHARTER_PROFILE_PATH = REPO_ROOT / "public" / "constitutional-harness" / "charter-v0.1.json"
+AXIS_REGISTRY_PATH = REPO_ROOT / "council-os" / "axis-specialists" / "registry.json"
 AMENDMENTS_LOG_PATH = REPO_ROOT / "public" / ".well-known" / "charter-amendments.json"
 DEFAULT_OUTPUT_PATH = REPO_ROOT / "public" / "interop" / "constitutional-charter-gspc-layer0-crosswalk-v1.json"
 
@@ -75,11 +76,11 @@ def build_outside_in_end_user_inspection() -> List[Dict[str, Any]]:
                 "packages/evidence-fabric/ (OTel, OCSF 1.9, SARIF 2.1.0, in-toto v1)",
             ],
             "friction_found_from_their_perspective": (
-                "The 22-article operational charter, the 52-article source charter (CH-01..CH-16), the 33 GSPC axes, "
+                "The 22-article operational charter, the 52-article source charter (CH-01..CH-16), the GSPC axes, "
                 "and the HITL elicitation/escalation gates lived in separate files without a single machine-readable crosswalk."
             ),
             "upgrade_delivered": (
-                "Unified all 16 controls (CH-01..CH-16), 22 operational articles, 52 source articles, 33 GSPC axes, "
+                "Unified all 16 controls (CH-01..CH-16), 22 operational articles, 52 source articles, registered GSPC axes, "
                 "and HITL/H.I.M. gates into `public/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json`."
             ),
         },
@@ -88,7 +89,7 @@ def build_outside_in_end_user_inspection() -> List[Dict[str, Any]]:
             "role": "IPO Underwriter, D&O Insurer & Institutional Investor",
             "what_they_inspect_first": [
                 "https://councilof.ai/interop/s1-ipo-measurement-readiness-v1.json",
-                "https://councilof.ai/api/gspc (33 axes · 23 measured · 0 separated · 7 TIE · 7 UNTESTED)",
+                "https://councilof.ai/api/gspc (see totals and separation in the current board response)",
                 "https://councilof.ai/interop/claim-maintenance-wave-2026-10-28.json (182 claims: 110 CHANGED, 52 WITHDRAWN)",
                 "https://councilof.ai/api/press.json and /api/corrections",
             ],
@@ -98,7 +99,7 @@ def build_outside_in_end_user_inspection() -> List[Dict[str, Any]]:
                 "needed an explicit 33-axis crosswalk to live independent measurements."
             ),
             "upgrade_delivered": (
-                "Built and verified `s1-ipo-measurement-readiness-v1.json` mapping all 33 canonical GSPC axes to "
+                "Built and verified `s1-ipo-measurement-readiness-v1.json` mapping the 33 axes of that historical S-1 artifact to "
                 "real SEC Form S-1, 10-K, and 8-K risk domains with one-line curl verification commands."
             ),
         },
@@ -127,7 +128,7 @@ def build_outside_in_end_user_inspection() -> List[Dict[str, Any]]:
                 "https://councilof.ai/axis/care.html (CareBench: protect x help, fleet_mean=0.293, cvar05_harm=0.9895)",
                 "https://councilof.ai/interop/psychosis-delusion-guard-bank-v1.json (CARE-PSY-v1, n=36)",
                 "https://councilof.ai/interop/care-article1-open-research-registry-v1.json (18 open sources, v1.1)",
-                "https://councilof.ai/os (Council OS 33-axis browser surface)",
+                "https://councilof.ai/os (Council OS axis browser)",
             ],
             "friction_found_from_their_perspective": (
                 "Users facing multi-turn sycophancy or AI delusion reinforcement needed a deterministic benchmark "
@@ -145,7 +146,7 @@ def build_charter_controls_to_gspc_and_hitl_map() -> List[Dict[str, Any]]:
     """
     Maps all 16 Operational Constitutional Harness Controls (CH-01..CH-16),
     all 22 Operational Charter Articles, and the 52 Source Charter Articles
-    to all 33 canonical GSPC measurement axes and their Human-in-the-Loop (HITL) gates.
+    to the registered GSPC measurement axes and their Human-in-the-Loop (HITL) gates.
     """
     return [
         {
@@ -185,7 +186,8 @@ def build_charter_controls_to_gspc_and_hitl_map() -> List[Dict[str, Any]]:
             "control_id": "CH-04",
             "name": "Pre-effect commitment",
             "source_charter_articles": [2, 24, 25, 27],
-            "operational_charter_articles": [7, 10],
+            "operational_charter_articles": [7, 10, 15],
+            "projection_boundary": "SovSpace may show dependencies before commitment; it is not the receipt or the authority to execute.",
             "gspc_axes": ["cross-reality", "effect-binding", "machinery-conformity", "humanoid-deployment"],
             "hitl_and_layer0_enforcement": (
                 "Consequential tool calls (`execute_*`, `deploy_*`, `transfer_*`) require pre-effect SHA-256 "
@@ -265,7 +267,8 @@ def build_charter_controls_to_gspc_and_hitl_map() -> List[Dict[str, Any]]:
             "name": "Appeal and understandable reasons",
             "source_charter_articles": [18, 26, 41],
             "operational_charter_articles": [17, 18],
-            "gspc_axes": ["care", "affect", "claim-maintenance", "regulator-transparency"],
+            "gspc_axes": ["care", "affect", "claim-maintenance", "regulator-transparency", "watchdog-ingest"],
+            "watchdog_scope": "Evidence of a published problem-reporting route is relevant to appeal. It does not establish a response, resolution, or permission to act.",
             "hitl_and_layer0_enforcement": (
                 "Every denial, hold, or three-state verify verdict (`VALID | INVALID | UNCHECKABLE`) provides "
                 "an explicit one-line reason and evidence pointer."
@@ -550,7 +553,7 @@ def build_first_principles_institutional_precedents() -> List[Dict[str, Any]]:
             ),
             "csoai_structural_lesson": (
                 "SEC Form S-1, 10-K, 10-Q, and 8-K filings are public domain. CSOAI's `s1-ipo-measurement-readiness-v1.json` "
-                "and `sec-tracker-1` bind public SEC risk disclosures directly to our 33 GSPC axes without waiting "
+                "and `sec-tracker-1` bind public SEC risk disclosures to the 33 axes in that SEC profile without waiting "
                 "for vendor permission."
             ),
         },
@@ -624,7 +627,7 @@ def build_newtons_third_law_reaction_matrix() -> List[Dict[str, Any]]:
             "external_action": "A frontier AI lab or infrastructure vendor files an SEC Form S-1, 10-K, 10-Q, or 8-K disclosing model, safety, governance, or compute risks (e.g., Anthropic Form S-1 CIK 0002130357).",
             "equal_and_opposite_csoai_reaction": (
                 "Automatically index the filing via `sec-tracker-1`, map every disclosed risk factor to the "
-                "33 canonical GSPC axes (`s1-ipo-measurement-readiness-v1.json`), and publish the live `MEASURED` "
+                "the 33 axes in the dated SEC profile (`s1-ipo-measurement-readiness-v1.json`), and publish the live `MEASURED` "
                 "vs `UNMEASURED` state with a one-line `curl` verification command."
             ),
             "charter_controls": ["CH-06", "CH-07", "CH-13"],
@@ -717,14 +720,33 @@ def build_newtons_third_law_reaction_matrix() -> List[Dict[str, Any]]:
     ]
 
 
+def historical_profile_summary(path: Path) -> dict:
+    # Preserved from the pre-change public crosswalk, not extracted from the
+    # operational HTML (which is a DIFFERENT document) or from our output.
+    historical = {
+        "source_52_article_count": 52, "operational_controls_count": 16,
+        "held_source_articles": [19, 42, 48],
+        "source_profile_sha256": "6f19cf922e18139417dfcd7044f3236359a0bc416de890d5efe0ef3792ecfef6",
+    }
+    provenance = "https://github.com/CSOAI-ORG/councilof-ai/blob/83865d51a64942ed67119414e3330f2fbf2b7388/public/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json"
+    try:
+        raw = path.read_bytes()
+    except FileNotFoundError:
+        return {**historical, "source_pin_state": "HISTORICAL_METADATA_ONLY_ORIGINAL_NOT_AVAILABLE", "source_metadata_record": provenance}
+    if hashlib.sha256(raw).hexdigest() != historical["source_profile_sha256"]:
+        raise ValueError("Historical source profile bytes differ from their preserved digest")
+    obj = json.loads(raw)
+    if (obj["source_catalogue"]["article_count"], len(obj["controls"]), [r["article_id"] for r in obj["held_articles"]]) != (historical["source_52_article_count"], historical["operational_controls_count"], historical["held_source_articles"]):
+        raise ValueError("Historical source profile differs from preserved metadata")
+    return {**historical, "source_pin_state": "ORIGINAL_BYTES_MATCH", "source_metadata_record": provenance}
+
+
 def build_master_crosswalk() -> Dict[str, Any]:
     op_charter_raw = OPERATIONAL_CHARTER_PATH.read_bytes()
     op_charter = json.loads(op_charter_raw)
     op_charter_sha = hashlib.sha256(op_charter_raw).hexdigest()
 
-    src_profile_raw = SOURCE_CHARTER_PROFILE_PATH.read_bytes()
-    src_profile = json.loads(src_profile_raw)
-    src_profile_sha = hashlib.sha256(src_profile_raw).hexdigest()
+    profile = historical_profile_summary(SOURCE_CHARTER_PROFILE_PATH)
 
     amendments_raw = AMENDMENTS_LOG_PATH.read_bytes()
     amendments_sha = hashlib.sha256(amendments_raw).hexdigest()
@@ -743,6 +765,16 @@ def build_master_crosswalk() -> Dict[str, Any]:
         }
     )
 
+    registry_rows = json.loads(AXIS_REGISTRY_PATH.read_bytes())["specialists"]
+    registry_axes = [row["axis"] for row in registry_rows]
+    if not registry_axes or len(set(registry_axes)) != len(registry_axes):
+        raise ValueError("Empty or duplicate specialist registry axes")
+    if set(registry_axes) != set(all_mapped_axes):
+        raise ValueError(f"Charter axis mismatch: missing={sorted(set(registry_axes)-set(all_mapped_axes))}, extra={sorted(set(all_mapped_axes)-set(registry_axes))}")
+    mapped_articles = {n for row in controls_map for n in row["operational_charter_articles"]}
+    if mapped_articles != {article["article"] for article in op_charter["articles"]}:
+        raise ValueError("Operational charter articles differ from mapped article identifiers")
+
     body: Dict[str, Any] = {
         "schema": "csoai.constitutional-charter-gspc-layer0-crosswalk/1.0",
         "issuer": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
@@ -752,19 +784,15 @@ def build_master_crosswalk() -> Dict[str, Any]:
             "operational_charter_version": op_charter["version"],
             "operational_charter_articles_count": len(op_charter["articles"]),
             "operational_charter_sha256": op_charter_sha,
-            "source_52_article_profile_url": "https://councilof.ai/constitutional-harness/",
-            "source_52_article_count": src_profile["source_catalogue"]["article_count"],
-            "operational_controls_count": len(src_profile["controls"]),
-            "held_source_articles": [h["article_id"] for h in src_profile["held_articles"]],
-            "source_profile_sha256": src_profile_sha,
+            **profile,
             "amendments_log_url": "https://councilof.ai/.well-known/charter-amendments.json",
             "amendments_log_sha256": amendments_sha,
         },
         "counts": {
             "outside_in_personas_inspected": len(personas),
             "operational_controls_mapped": len(controls_map),
-            "operational_articles_mapped": len(op_charter["articles"]),
-            "source_charter_articles_indexed": src_profile["source_catalogue"]["article_count"],
+            "operational_articles_mapped": len(mapped_articles),
+            "source_charter_articles_indexed": profile["source_52_article_count"],
             "distinct_gspc_axes_covered_by_charter": len(all_mapped_axes),
             "external_github_layer0_targets": len(gh_targets),
             "first_principles_precedents": len(precedents),
