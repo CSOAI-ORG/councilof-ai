@@ -64,6 +64,12 @@ import { createHash } from "node:crypto";
 import path from "path";
 import { fileURLToPath } from "url";
 import { isPlaceholderLink } from "./internal-links-check.mjs";
+import {
+  CAPTURE_PATH,
+  llmsStdioSentence,
+  llmsStdioShort,
+  npmReleaseState,
+} from "./harness-x/npm-release-state.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CHECK = process.argv.includes("--check");
@@ -447,6 +453,20 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     DISTRIBUTION_SECTION: distributionSection(), OTS_SECTION: otsSection(),
     EVIDENCE_RECORDS_SECTION: evidenceRecordsSection(),
     DATED_MILL_ROOT_LINE: datedMillRootLine(),
+    // The npm package's release state, DERIVED from the dated capture. It was typed prose here
+    // once ("the published npm release is marked deprecated on npm"), and it was false: npm
+    // deprecates 0.1.0-0.2.2, and the estate's later releases (0.2.5) are not deprecated. The
+    // capture measures the flag; the module owns the sentence; this file only places it.
+    ...(() => {
+      const state = npmReleaseState(readJSON(CAPTURE_PATH));
+      const doorTools = mcpCounts().total;
+      const freeDoor = `${SITE}/mcp/free`;
+      const preparedVersion = readJSON("mcp/gspc-server/package.json").version;
+      return {
+        NPM_STDIO_SENTENCE: llmsStdioSentence(state, { doorTools, freeDoor, preparedVersion }),
+        NPM_STDIO_SHORT: llmsStdioShort(state, { doorTools, freeDoor }),
+      };
+    })(),
     ...(() => {
       const m = mcpCounts();
       return { MCP_TOOLS: m.total, MCP_FREE: m.free, MCP_PAID: m.paid,

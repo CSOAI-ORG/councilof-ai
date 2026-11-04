@@ -18,6 +18,8 @@ import {
 import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/server/validators/cf-worker";
 import GSPC_TOOLS from "./gspc-tools.json";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
+import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
+import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
@@ -57,6 +59,39 @@ export const TOOL_COUNTS = toolCountSentence(FREE_TOOL_COUNT, PAID_TOOL_COUNT);
 export const STDIO_LITE_LINE = `${String(STDIO_PACKAGE.version).split(".").slice(0, 2).join(".")}.x`;
 
 /**
+ * The npm package's release state, DERIVED from the dated capture
+ * (distribution/npm/npm-publish-check.json, written by scripts/harness-x/npm-publish-live.mjs).
+ *
+ * It used to be typed prose here — "deprecated on npm; npx -y csoai-gspc-mcp (stdio-lite …: fewer
+ * tools…)" — and it was FALSE: npm deprecates 0.1.0-0.2.2, and the estate's own later releases
+ * (0.2.5) are not deprecated. The reason the stdio line is still a warning is a DIFFERENT measured
+ * one: the repository prepares 0.2.6, npm's latest published release is 0.2.5, and the published
+ * tarball carries 53 tool names against the 54 this door serves.
+ *
+ * The fallback below is a sentence that makes NO claim it cannot back, so a damaged capture
+ * degrades the line instead of taking the door down. The capture's health is a GATE
+ * (scripts/llms-txt.mjs --check and scripts/harness-x/render.mjs --check both read it), and
+ * functions/mcp/npm-release-state.test.ts asserts this line equals the derived one, so the
+ * fallback can never be the silent answer.
+ */
+function stdioInstallLine(origin: string): string {
+  try {
+    return doorInstallLine(npmReleaseState(NPM_CAPTURE), {
+      npmId: "csoai-gspc-mcp",
+      stdioLiteLine: STDIO_LITE_LINE,
+      freeDoor: `${origin}/mcp/free`,
+      doorTools: FREE_TOOL_COUNT + PAID_TOOL_COUNT,
+      preparedVersion: STDIO_PACKAGE.version,
+    });
+  } catch {
+    return (
+      `npm csoai-gspc-mcp@${STDIO_PACKAGE.version} (stdio-lite ${STDIO_LITE_LINE}: versioned separately ` +
+      `from this door; ask it for its tools/list, or use the free door ${origin}/mcp/free)`
+    );
+  }
+}
+
+/**
  * GET /mcp install block. ONE default line, and it is the free door: no key, no sign-in, read-only.
  * The metered door and the npm stdio package are alternatives, each labelled for what it is.
  */
@@ -64,8 +99,7 @@ export function fullDoorInstall(origin: string): Record<string, string> {
   return {
     default: `claude mcp add --transport http council-of-ai ${origin}/mcp/free`,
     this_door: `claude mcp add --transport http council-of-ai-metered ${origin}/mcp (the ${FREE_TOOL_COUNT} free tools plus ${PAID_TOOL_COUNT} x402 tools)`,
-    // Every published npm release is marked deprecated on npm (T14, 6 Oct 2026); say so first.
-    stdio_lite: `deprecated on npm; npx -y csoai-gspc-mcp (stdio-lite ${STDIO_LITE_LINE}: fewer tools, versioned separately; ask it for its tools/list)`,
+    stdio_lite: stdioInstallLine(origin),
     no_install_at_all: "curl -s https://councilof.ai/api/gspc",
     python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
   };
