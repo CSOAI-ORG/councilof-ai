@@ -1,0 +1,13 @@
+identity:
+  name: board_counts
+  author: csoai
+  label:
+    en_US: "The count grammar — every published count, labelled"
+description:
+  human:
+    en_US: "The estate's published counts as one labelled table from https://councilof.ai/api/counts: board slots and measurements, frozen-bank models, own model tags, card-matrix models, the signed public root and the signed card index — each with its source file, its as_of, what it means and how to quote it."
+  llm: "The estate's published counts as one labelled table from https://councilof.ai/api/counts: board slots and measurements, frozen-bank models, own model tags, card-matrix models, the signed public root and the signed card index — each with its source file, its as_of, what it means and how to quote it. A failed or self-disagreeing read is a NOT_READ state, never a zero. Figures are never summed or reconciled; where two surfaces disagree, the disagreement is the finding. Quote the one figure whose meaning answers the question, and carry its source and as_of. Measurement, not certification."
+parameters: []
+extra:
+  python:
+    source: tools/board_counts.py
