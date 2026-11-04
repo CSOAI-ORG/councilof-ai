@@ -1112,8 +1112,8 @@ function CustodyPanel() {
           </dt>
           <dd className="mt-1 font-mono text-2xl text-gray-900">{listed ?? "…"}</dd>
           <p className="mt-1 text-xs text-gray-600">
-            Frozen at the number that could actually be verified. A larger figure was published
-            once and withdrawn, because a flag in a file saying “signed” is not a signature.
+            The published index lists records covered by its verification process.
+            Earlier count corrections remain available in the corrections ledger.
           </p>
         </div>
         <div className="rounded-xl border border-gray-200 p-4">
@@ -1122,8 +1122,8 @@ function CustodyPanel() {
           </dt>
           <dd className="mt-1 font-mono text-2xl text-gray-900">{chain?.length ?? "…"}</dd>
           <p className="mt-1 text-xs text-gray-600">
-            Each card names its parent, so the whole run of them can be walked end to end. A card
-            quietly removed would break the walk.
+            Each card references its parent, allowing readers to check the recorded
+            chain and identify a missing link.
           </p>
         </div>
         <div className="rounded-xl border border-gray-200 p-4">
@@ -1134,8 +1134,8 @@ function CustodyPanel() {
             {chain?.bodies_withheld ?? "…"}
           </dd>
           <p className="mt-1 text-xs text-gray-600">
-            Their contents stay private, but their positions are listed, so we cannot make one
-            disappear without it showing.
+            The contents are withheld. Listed positions allow readers to inspect
+            the chain structure without access to the private bodies.
           </p>
         </div>
       </dl>
@@ -1224,7 +1224,7 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
     what:
       "The ledger attestation work: a record attached to a public ledger so that a third party can see a measurement existed at a point in time.",
     why:
-      "Reachable from the site header and footer, and from nothing on the board. The provenance-controls row points at the signed ledger evidence; seven other financial rows point at separate content-addressed, unsigned run artifacts.",
+      "The provenance-controls row links to signed ledger evidence. Seven other financial rows link to separate content-addressed, unsigned run artifacts.",
     status: "Proven on a test network. Attaching to the main network is planned and is not done.",
   },
   {
@@ -1237,7 +1237,7 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
   {
     path: "/interop/evm-control-facts.json",
     what: "The same style of control-fact reading, on a different kind of public ledger.",
-    why: "Published and signed, and referenced by no page at all.",
+    why: "Published signed control-fact record; review its scope and source references.",
     status:
       "Signed. The attestation back end for this kind of ledger is not built, so nothing is attested there.",
   },
@@ -1246,43 +1246,43 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
     what:
       "How much of each register was actually covered — which named instruments were read and which could not be located.",
     why:
-      "This is the file that turns a headline into an honest one, and nothing links to it. Coverage is the difference between “we measured this family” and “we measured the part of it we could find”.",
+      "Identifies which instruments were covered, so a result can be read within the scope of the records located.",
     status: "Published.",
   },
   {
     path: "/interop/rwa-attest-index.json",
     what: "The index of attestation records produced for named financial instruments.",
-    why: "Reachable only through a bulk API endpoint. No page renders it.",
+    why: "Machine-readable index available for inspection.",
     status: "Published.",
   },
   {
     path: "/interop/attestation-corpus.json",
     what: "The corpus of attestations gathered across rails.",
-    why: "Reachable only through a bulk API endpoint.",
+    why: "Machine-readable source record available for inspection.",
     status: "Published.",
   },
   {
     path: "/interop/eas-attestation-batch.json",
     what: "A prepared batch of attestation payloads for a third-party attestation service.",
-    why: "Reachable only through a bulk API endpoint.",
+    why: "Machine-readable source record available for inspection.",
     status: "Payloads are prepared. Nothing has been published to that service.",
   },
   {
     path: "/interop/jailbreak-asr-evidence-pack.json",
     what: "The per-model evidence behind the escape-detection work.",
-    why: "Signed, dated, and linked from nowhere.",
+    why: "Dated signed record with the underlying evaluation detail.",
     status: "Signed and published.",
   },
   {
     path: "/interop/jail-peritem-v3.json",
     what: "The item-by-item detail behind one board row, at the granularity a challenger needs.",
-    why: "Signed, dated, and linked from nowhere.",
+    why: "Dated signed record with the underlying evaluation detail.",
     status: "Signed and published.",
   },
   {
     path: "/interop/mcp-security-scorecard.json",
     what: "A security scorecard over tool servers, a measurement in its own right.",
-    why: "Reachable only through a bulk API endpoint.",
+    why: "Machine-readable source record available for inspection.",
     status: "Published.",
   },
   {
@@ -1290,34 +1290,34 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
     what:
       "A record of searching five stores for the card bodies that would settle the disputed card count — and finding none.",
     why:
-      "This is a published negative result, which is exactly the kind of thing that should be easy to find and was impossible to find.",
+      "Documents the search scope and its negative result; this finding is retained with the supporting record.",
     status: "Published. The result was zero, and it is recorded as zero.",
   },
   {
     path: "/interop/rwa-registry.json",
     what: "The register of named financial instruments the financial rows draw from.",
-    why: "Referenced in the data layer, rendered on no page.",
+    why: "Source register used by the financial measurement rows.",
     status:
-      "Published, and carrying no timestamp of any kind — so nothing derived from it can honestly claim a date.",
+      "Published without a timestamp; this record does not establish a measurement date.",
   },
   {
     path: "/interop/index-reference-reverify.json",
     what: "A re-check of the public reference series behind the candidate index rows.",
-    why: "Not listed in the estate's own surface catalogue, and linked from nowhere.",
+    why: "Supporting re-verification record for the named reference series.",
     status: "Published.",
   },
   {
     path: "/interop/sbom-councilof-ai.json",
     what: "The software bill of materials for this site.",
     why:
-      "Listed in the surface catalogue under a misspelt path, so a machine following the catalogue gets a 404.",
+      "Published software inventory, linked here at its corrected path.",
     status: "Published at the corrected path.",
   },
   {
     path: "/signed/chain.json",
     what: "The full chain of card positions, including the ones whose contents are withheld.",
     why:
-      "The verification instructions tell a stranger to walk this chain, and no page linked it until now.",
+      "Use the published verification instructions to inspect the chain and its listed positions.",
     status: "Published.",
   },
 ];
@@ -1337,10 +1337,9 @@ function NoRoutePanel() {
         Explore supporting records and methods
       </h2>
       <p className="mt-2 max-w-3xl text-sm text-gray-800">
-        These surfaces exist and are public. None of them had a route from the board, which means a
-        reader who started at a headline number could not get to them — and a surface a reader
-        cannot find is functionally unpublished. They are listed here with what each one measures
-        and the honest state of the rail behind it.
+        Open supporting evidence, source registers and verification instructions. Each record
+        below identifies its purpose and publication state. Review the record itself for its
+        method, date and current verification status.
       </p>
       {catalog?.as_of && (
         <p className="mt-2 text-xs text-gray-700">
@@ -1360,7 +1359,7 @@ function NoRoutePanel() {
               <th className="px-4 py-2 font-semibold">Surface</th>
               <th className="px-4 py-2 font-semibold">What it measures</th>
               <th className="px-4 py-2 font-semibold">About this record</th>
-              <th className="px-4 py-2 font-semibold">Honest state</th>
+              <th className="px-4 py-2 font-semibold">Publication status</th>
             </tr>
           </thead>
           <tbody>
@@ -1782,8 +1781,7 @@ export default function MeasurementBoard() {
       <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-bold text-gray-900">Words used on this page</h2>
         <p className="mt-1 text-sm text-gray-600">
-          If a term appears above and is not explained here, that is a defect — tell us and we will
-          either define it or stop using it.
+          Definitions for the measurement and verification terms used on this board.
         </p>
         <dl className="mt-4 grid gap-4 sm:grid-cols-2">
           {GLOSSARY.map((g) => (
@@ -1802,7 +1800,7 @@ export default function MeasurementBoard() {
           of questions on a date — it does not describe anyone's compliance with any law.
         </p>
         <p className="mt-2">
-          Something here wrong?{" "}
+          Questions or corrections?{" "}
           <Link href="/challenge" className="font-semibold text-emerald-700 underline">
             Challenge a measurement
           </Link>{" "}

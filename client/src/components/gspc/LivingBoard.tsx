@@ -398,9 +398,9 @@ function NewOnTheBoard() {
     <div className="mt-4 rounded-xl border border-dashed border-gray-300 p-3 text-sm text-gray-700" data-testid="new-on-board">
       <h3 className="text-xs font-bold uppercase tracking-wide text-gray-600">New on the board</h3>
       <p className="mt-1">
-        No dated feed yet. Admission records for newly measured models carry no date, and an admitted card does
-        not change the board above, so there is nothing honest to list here. Every measured model, with its
-        signed cards, is on{" "}
+        A chronological feed is unavailable because admission records do not carry dates.
+        Admission alone does not change the board above. Explore measured models and their
+        signed cards in{" "}
         <Link href="/models-measured" className="underline">
           the measured-models list
         </Link>
