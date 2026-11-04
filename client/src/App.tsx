@@ -138,6 +138,7 @@ const GpaiEvidencePack = lazy(() => import("./pages/GpaiEvidencePack"));
 const CraReadinessKit = lazy(() => import("./pages/CraReadinessKit"));
 const CountdownPage = lazy(() => import("./pages/CountdownPage"));
 const Art50 = lazy(() => import("./pages/Art50"));
+const GpaiMatrix = lazy(() => import("./pages/GpaiMatrix"));
 const ProofReceipt = lazy(() => import("./pages/ProofReceipt"));
 const ProofOfReceipt = lazy(() => import("./pages/ProofOfReceipt"));
 const FeedLaunchPack = lazy(() => import("./pages/FeedLaunchPack"));
@@ -1215,6 +1216,7 @@ function AppShell() {
                   <Route path="/yield" component={YieldDashboard} />
                   <Route path="/countdown" component={CountdownPage} />
                   <Route path="/art50" component={Art50} />
+                  <Route path="/gpai" component={GpaiMatrix} />
                   <Route path="/receipt" component={ProofReceipt} />
                   <Route path="/proof-receipt" component={ProofOfReceipt} />
                   {/* /feed stays a retired door (council-runtime-truth-gate): the Stablewatch
