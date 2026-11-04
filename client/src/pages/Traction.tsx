@@ -66,7 +66,7 @@ export default function Traction() {
   const usdc = live.revenue ? `$${(live.revenue.atomic / 1_000_000).toFixed(2)}` : undefined;
 
   return <section className="min-h-screen bg-slate-950 text-slate-100">
-    <Helmet><title>Operation and external use | Council of AI</title><meta name="description" content="Explore Council of AI's evidence services, operating infrastructure, documented external use and business model. Information for organisations, partners and investors." /></Helmet>
+    <Helmet><title>Operation and external use | Council of AI</title><meta name="description" content="Council of AI's evidence services, operating infrastructure, external use and business model. Information for organisations, partners and investors." /></Helmet>
     <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,.18),transparent_36%)]">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <p className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-300">Operating work and documented external use</p>
