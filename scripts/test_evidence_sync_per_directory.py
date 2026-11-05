@@ -19,6 +19,9 @@ push stubbed — and assert that:
   4. a rejection from one directory does not stop the next one from being attempted.
 """
 import importlib.util, os, sys
+from unittest.mock import patch
+from pathlib import Path
+import json, tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = os.path.join(HERE, "pod-loops", "evidence_sync.py")
@@ -100,8 +103,8 @@ def test_an_over_limit_directory_is_not_pushed_and_the_ots_manifest_is():
             raise SystemExit("evidence-sync: commit HTTP 400: too many files per directory")
         return None
 
-    es.commit = fake_commit
-    results = es.commit_grouped(rels, files, "tok", "msg", plan)
+    with patch.object(es, "commit", fake_commit):
+        results = es.commit_grouped(rels, files, "tok", "msg", plan)
     assert "interop/mill-cards-unsigned" not in attempted, attempted
     assert "interop/mill-evidence" not in attempted, attempted
     assert "interop/ots" in attempted, attempted
@@ -123,11 +126,95 @@ def test_a_rejected_directory_does_not_stop_the_next_one():
             raise SystemExit("evidence-sync: commit HTTP 500: transient")
         return None
 
-    es.commit = failing_commit
-    results = es.commit_grouped(rels2, files2, "tok", "msg", plan2)
+    with patch.object(es, "commit", failing_commit):
+        results = es.commit_grouped(rels2, files2, "tok", "msg", plan2)
     assert "cards" in attempted and "interop/ots" in attempted, attempted
     assert results["cards"]["state"] == "REJECTED"
     assert results["interop/ots"]["state"] == "SYNCED"
+
+
+
+def test_replacements_at_limit_do_not_count_as_new_files():
+    tree={f'cards/f{i}.json':('old',None) for i in range(10000)}
+    p=es.plan_by_directory(['cards/f1.json'],tree,{'cards/f1.json':'fixture'})[0]
+    assert p['new_files']==0 and p['mirror_files_after']==10000 and not p['over_limit']
+
+
+def test_duplicate_and_traversal_paths_are_refused():
+    for paths in [['cards/x','cards/x'],['../x'],['/x'],['cards//x'],['cards/../x']]:
+        try:es.plan_by_directory(paths,{},dict.fromkeys(paths))
+        except ValueError:continue
+        raise AssertionError('Unsafe plan accepted')
+
+
+def test_tampered_plan_is_refused_before_any_write():
+    files={'cards/x':'fixture'};p=es.plan_by_directory(list(files),{},files);p[0]['over_limit']=True
+    with patch.object(es,'commit',side_effect=AssertionError('must never write')):
+        try:es.commit_grouped(list(files),files,'fixture','test',p)
+        except ValueError:return
+    raise AssertionError('Inconsistent plan accepted')
+
+
+def test_denied_authorization_stops_other_directories():
+    files={'cards/x':'fixture','proofs/x':'fixture'};p=es.plan_by_directory(list(files),{},files);attempts=[]
+    def deny(*args):attempts.append(1);raise SystemExit('HTTP 403: private synthetic response')
+    with patch.object(es,'commit',deny):out=es.commit_grouped(list(files),files,'synthetic-token','test',p)
+    assert len(attempts)==1 and out['proofs']['state']=='NOT_ATTEMPTED'
+    assert 'synthetic-token'not in json.dumps(out) and 'private synthetic response'not in json.dumps(out)
+
+
+def test_unknown_programming_failure_is_not_silently_swallowed():
+    files={'cards/x':'fixture'};p=es.plan_by_directory(list(files),{},files)
+    with patch.object(es,'commit',side_effect=ValueError('fixture bug')):
+        try:es.commit_grouped(list(files),files,'fixture','test',p)
+        except ValueError:return
+    raise AssertionError('Programming failure hidden')
+
+
+def _main_fixture(mode):
+    with tempfile.TemporaryDirectory()as temp:
+        root=Path(temp);f=root/'a.json';g=root/'b.json';f.write_text('safe-a');g.write_text('safe-b')
+        manifest=root/'manifest.json';manifest.write_text('{}');receipt=root/'receipt.json'
+        files={'cards/a.json':f,'interop/ots/b.json':g};remote={};attempts=[];probes=[]
+        if mode=='partial':remote={f'cards/old{i}':('different',None) for i in range(10000)}
+        def send(rels,*args):
+            attempts.extend(rels)
+            for relative in rels:remote[relative]=(es.git_blob_sha(files[relative].read_bytes()),None)
+        def probe(_files,rels,n):probes.extend(rels[:n]);return ['fixture failure']if mode=='bad-anon'else []
+        args=['evidence_sync.py','--apply','--manifest',str(manifest),'--receipt',str(receipt),'--probe','1']
+        code=0
+        with patch.object(sys,'argv',args),patch.dict(os.environ,{'HF_TOKEN':'synthetic-fixture'}),patch.object(es,'local_files',return_value=files),patch.object(es,'remote_tree',side_effect=lambda *a,**k:dict(remote)),patch.object(es,'commit',send),patch.object(es,'anon_probe',probe):
+            try:es.main()
+            except SystemExit as error:code=error.code
+        return code,json.loads(receipt.read_text()),attempts,probes
+
+
+def test_main_partial_sync_keeps_publication_blocked_and_probes_success():
+    code,receipt,attempts,probes=_main_fixture('partial')
+    assert code==6 and receipt['state']=='PARTIAL_SYNC' and receipt['uploaded']is None
+    assert attempts==['interop/ots/b.json'] and probes==['interop/ots/b.json']
+    assert receipt['directories']['cards']['state']=='OVER_DIRECTORY_LIMIT'
+    assert receipt['verified_matching']==1 and receipt['remaining']==1
+
+
+def test_main_full_sync_probes_each_successful_directory():
+    code,receipt,attempts,probes=_main_fixture('complete')
+    assert code==0 and receipt['state']=='IN_SYNC' and receipt['uploaded']==2
+    assert set(probes)==set(attempts) and len(probes)==2
+
+
+def test_main_anonymous_failure_is_not_success():
+    code,receipt,_,_=_main_fixture('bad-anon')
+    assert code==7 and receipt['state']=='ANON_READBACK_FAILED' and receipt['uploaded']is None
+
+
+def test_lost_remote_readback_preserves_unknown_upload_count():
+    with tempfile.TemporaryDirectory()as temp:
+        root=Path(temp);f=root/'a';f.write_text('safe');m=root/'m.json';m.write_text('{}');receipt=root/'r.json'
+        with patch.object(sys,'argv',['sync','--apply','--manifest',str(m),'--receipt',str(receipt)]),patch.dict(os.environ,{'HF_TOKEN':'fixture'}),patch.object(es,'local_files',return_value={'cards/a':f}),patch.object(es,'remote_tree',side_effect=[{},SystemExit('HTTP 503')]),patch.object(es,'commit',return_value=None):
+            try:es.main()
+            except SystemExit as error:assert error.code==6
+        result=json.loads(receipt.read_text());assert result['state']=='READBACK_UNAVAILABLE'and result['uploaded']is None
 
 
 if __name__ == "__main__":
