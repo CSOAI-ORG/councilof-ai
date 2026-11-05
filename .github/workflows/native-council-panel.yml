@@ -5,6 +5,7 @@ on:
     paths:
       - 'packages/council-panel/**'
       - 'public/native-panel/**'
+      - 'public/academy/exercises/exercises.json'
       - 'scripts/*council*native*panel*'
       - 'scripts/test-council-panel-controls.mjs'
       - 'client/src/lib/aguiTalk.ts'
@@ -14,8 +15,10 @@ on:
       - 'package-lock.json'
       - '.github/workflows/native-council-panel.yml'
       - '.github/workflows/deploy.yml'
+      - '.github/workflows/pr-gates.yml'
       - 'docs/operations/PRODUCERS.json'
       - 'scripts/surface/native-panel-release.node-test.mjs'
+  merge_group:
   workflow_dispatch:
 
 permissions:
@@ -47,6 +50,21 @@ jobs:
         run: node scripts/test-council-native-panel.mjs
       - name: Deliberate broken-control sensitivity
         run: node scripts/test-council-panel-controls.mjs
+      - name: Install Chromium for owned browser fixtures
+        timeout-minutes: 3
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Actual bundled panel and native host journeys
+        id: panel_browser
+        timeout-minutes: 3
+        run: node packages/council-panel/browser.test.cjs
+      - name: Retain owned browser journey evidence
+        if: ${{ always() && (steps.panel_browser.outcome == 'success' || steps.panel_browser.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-native-panel-browser-evidence
+          retention-days: 14
+          if-no-files-found: warn
+          path: evidence/browser/
       - name: Compose both existing MCP resources and protocol guards
         run: npx vitest run functions/mcp/working-groups.test.ts functions/mcp/mcp-protocol.test.ts functions/mcp/mcp-free-door.test.ts
       - name: Validate loopback preview launcher
