@@ -24,7 +24,7 @@ node packages/council-panel/browser.test.cjs
 node packages/council-panel/live-check.cjs --live
 ```
 
-The build uses the repository's existing esbuild. The self-contained MCP Apps SDK `2.0.4` is vendored from its npm distribution and SHA-256 checked before bundling. Its upstream license and package metadata are retained in `vendor/`. There are no runtime CDN scripts or new root dependency installs. The generated HTML and JSON resource are checked in; the client build checks regeneration before deployment. No private credential, paid provider or model download is required for these tests.
+The build uses the repository's existing esbuild. The self-contained MCP Apps SDK `2.0.4` is vendored from its npm distribution and SHA-256 checked before bundling. Its upstream license and package metadata are retained in `vendor/`. There are no runtime CDN scripts or new root dependency installs. The generated HTML and JSON resource are checked in; the mandatory producer check and protected production build check regeneration before deployment. No private credential, paid provider or model download is required for these tests.
 
 The browser test uses the real bundled SDK with an **owned protocol host fixture**, not a signed-in ChatGPT/Claude account. SDK registration tests use the actual installed MCP server SDK. The explicit live test runs the real staged panel against the deployed Council read-only AG-UI path. These are different acceptance scopes.
 

@@ -13,6 +13,9 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/native-council-panel.yml'
+      - '.github/workflows/deploy.yml'
+      - 'docs/operations/PRODUCERS.json'
+      - 'scripts/surface/native-panel-release.node-test.mjs'
   workflow_dispatch:
 
 permissions:
@@ -36,6 +39,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: npm ci
+      - name: Native release wiring stays enforced
+        run: node --test scripts/surface/native-panel-release.node-test.mjs
       - name: Generated UI must match reviewed source
         run: node scripts/build-council-native-panel.mjs --check
       - name: Unit, Academy and actual MCP SDK checks
