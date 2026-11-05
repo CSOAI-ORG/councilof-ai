@@ -5,6 +5,8 @@ on:
   pull_request:
   schedule:
     - cron: "17 6 * * *"   # daily — deploys can regress this without a code change
+  workflow_dispatch: {}    # manual daily gate — the schedule above has never fired
+                           # (cron-watch finding, 2026-11-04); dispatch runs it now
 
 jobs:
   # Selftest proves the gate can fail before trusting it to pass. Always required.
