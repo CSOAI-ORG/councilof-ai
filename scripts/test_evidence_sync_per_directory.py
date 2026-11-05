@@ -22,6 +22,7 @@ import importlib.util, os, sys
 from unittest.mock import patch
 from pathlib import Path
 import json, tempfile
+import urllib.error
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = os.path.join(HERE, "pod-loops", "evidence_sync.py")
@@ -215,6 +216,44 @@ def test_lost_remote_readback_preserves_unknown_upload_count():
             try:es.main()
             except SystemExit as error:assert error.code==6
         result=json.loads(receipt.read_text());assert result['state']=='READBACK_UNAVAILABLE'and result['uploaded']is None
+
+
+def test_verification_exceptions_replace_stale_success_receipts():
+    for mode, expected_state, expected_code in (
+        ('anonymous-network-after-upload', 'ANON_READBACK_FAILED', 7),
+        ('anonymous-network-check-mode', 'ANON_READBACK_FAILED', 7),
+        ('malformed-tree-after-upload', 'READBACK_UNAVAILABLE', 6),
+    ):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source = root / 'a.json'; source.write_text('safe')
+            manifest = root / 'manifest.json'; manifest.write_text('{}')
+            receipt = root / 'receipt.json'
+            receipt.write_text(json.dumps({'state': 'IN_SYNC', 'at': 'previous-run', 'uploaded': 10}))
+            matching = {'cards/a.json': (es.git_blob_sha(source.read_bytes()), None)}
+            listing = [matching] if mode == 'anonymous-network-check-mode' else [{}, matching]
+            if mode == 'malformed-tree-after-upload':
+                listing[1] = json.JSONDecodeError('private response', '?', 0)
+            argv = ['sync', '--manifest', str(manifest), '--receipt', str(receipt)]
+            if mode != 'anonymous-network-check-mode':
+                argv.append('--apply')
+            with patch.object(sys, 'argv', argv), \
+                    patch.dict(os.environ, {'HF_TOKEN': 'offline-fixture'}, clear=True), \
+                    patch.object(es, 'local_files', return_value={'cards/a.json': source}), \
+                    patch.object(es, 'remote_tree', side_effect=listing), \
+                    patch.object(es, 'commit', return_value=None), \
+                    patch.object(es, 'anon_probe', side_effect=urllib.error.URLError('private response')), \
+                    patch.object(es, 'req', side_effect=AssertionError('network forbidden')):
+                try:
+                    es.main()
+                except SystemExit as error:
+                    assert error.code == expected_code
+                else:
+                    raise AssertionError('verification failure returned success')
+            result = json.loads(receipt.read_text())
+            assert result['state'] == expected_state and result['uploaded'] is None
+            assert result['at'] != 'previous-run'
+            assert 'private response' not in json.dumps(result)
 
 
 if __name__ == "__main__":

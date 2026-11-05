@@ -285,7 +285,7 @@ def main():
         try:
             tree = remote_tree(prefixes, token)
             left = diff(files, tree)
-        except (SystemExit, urllib.error.URLError, TimeoutError):
+        except (SystemExit, OSError, ValueError):
             rec.update(state='READBACK_UNAVAILABLE', uploaded=None)
             _w(a.receipt, rec)
             raise SystemExit(6)
@@ -303,7 +303,12 @@ def main():
             if matching:
                 sample.append(matching[0])
         sample.extend(relative for relative in verified[:a.probe] if relative not in sample)
-        bad = anon_probe(files, sample, len(sample))
+        try:
+            bad = anon_probe(files, sample, len(sample))
+        except OSError:
+            rec.update(state='ANON_READBACK_FAILED', uploaded=None)
+            _w(a.receipt, rec)
+            raise SystemExit(7)
         rec['anon_readback_ok'] = len(sample) - len(bad)
         if bad:
             rec.update(state='ANON_READBACK_FAILED', uploaded=None)
@@ -325,7 +330,12 @@ def main():
         print(f"✓ evidence-sync: all {len(d)} selected files verified; {len(sample)} anonymous readbacks")
         return
     sample = d if d else random.sample(sorted(files), min(a.probe, len(files)))
-    bad = anon_probe(files, sample, a.probe)
+    try:
+        bad = anon_probe(files, sample, a.probe)
+    except OSError:
+        rec.update(state='ANON_READBACK_FAILED', uploaded=None)
+        _w(a.receipt, rec)
+        raise SystemExit(7)
     if bad:
         print(f"✗ evidence-sync: anonymous read-back failed for {len(bad)}: {bad[:3]}"); rec["state"] = "ANON_READBACK_FAILED"; _w(a.receipt, rec); sys.exit(7)
     rec.update(state="IN_SYNC", uploaded=len(d), anon_readback_ok=min(a.probe, len(sample)))
