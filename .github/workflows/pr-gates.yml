@@ -235,7 +235,7 @@ jobs:
             exit 0
           fi
           changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|packages/evidence-fabric/schema/evidence-event-0\.1\.schema\.json$|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|packages/council-panel/|packages/evidence-fabric/schema/evidence-event-0\.1\.schema\.json$|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$|\.github/workflows/native-council-panel\.yml$|\.github/workflows/deploy\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -839,6 +839,13 @@ jobs:
           node --test scripts/claims/reread-extractor.node-test.mjs scripts/claims/reread-presence.node-test.mjs
           node scripts/claim-maintenance-register.mjs --check
           python3 -m pytest -q scripts/claims/test_maintenance_due.py
+          # The evidence mirror is a git repository on HuggingFace, and git refuses a push that leaves any
+          # directory holding more than 10,000 files. Two directories of the mirror reached that cliff on
+          # 1 Nov 2026 and the sync pushed every differing file in ONE commit, so the whole push was rejected
+          # and the OTS manifest, the card wrappers and the proofs stopped publishing with them. This test
+          # proves the per-directory commit plan: an over-cap directory fails alone and is named with the
+          # count that broke it, while the directories that fit still publish.
+          python3 -m pytest -q scripts/test_evidence_sync_per_directory.py
           # Canary privacy, safe capture retention and verified PR proposal (offline only).
           python3 -B scripts/canary/test_canary.py
           python3 -B scripts/canary/test_canary_delivery.py

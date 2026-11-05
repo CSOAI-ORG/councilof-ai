@@ -304,6 +304,18 @@
         "POST https://councilof.ai/mcp — tools/list"
       ],
       "verified_2026_11_01": "ran 2026-11-01T11:52:52Z: published 0.2.4 (2026-10-28T16:48:34.768Z) carries 52 names (47 free + 5 metered); the live door served 53; the difference is one live-only name, axis_watchdog-ingest"
+    },
+    {
+      "id": "native-council-panel",
+      "command": "node scripts/build-council-native-panel.mjs",
+      "check": "node scripts/build-council-native-panel.mjs --check",
+      "outputs": [
+        "public/native-panel/index.html",
+        "public/native-panel/resource.json"
+      ],
+      "mode": "delegate-to-check",
+      "gated": true,
+      "note": "Exact deterministic bundle/resource parity using the existing esbuild and SHA-pinned licensed MCP Apps SDK. Also checked before the protected production build; no root dependency input or stamped SBOM changes."
     }
   ],
   "not_yet_classified": {
