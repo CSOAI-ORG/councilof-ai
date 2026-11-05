@@ -128,7 +128,9 @@ jobs:
           npm run ts-ratchet
 
       - name: Build client
-        run: npm run build:client
+        run: |
+          node scripts/build-council-native-panel.mjs --check
+          npm run build:client
 
       # The host deliberately keeps an honest 404 catch-all. Materialise the canonical
       # workspace before the fast shell gate so a cold /dashboard request tests the same

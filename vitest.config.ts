@@ -52,6 +52,7 @@ export const NODE_TEST_FILES = [
   'scripts/surface/prerender-io.test.mjs',
   'scripts/surface/render-board-reference.test.mjs',
   'scripts/surface/public-copy.node-test.mjs',
+  'scripts/surface/reviewed-blog-publication.node-test.mjs',
   'spaces/gspc-board/table.node-test.mjs',
   // node:test file. vitest cannot collect it and reports it as a FAILED SUITE
   // ("No test suite found in file ..."), so it is named here: pr-gates.yml reads
