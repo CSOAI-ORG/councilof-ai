@@ -235,7 +235,7 @@ jobs:
             exit 0
           fi
           changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|packages/evidence-fabric/schema/evidence-event-0\.1\.schema\.json$|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -509,6 +509,24 @@ jobs:
         run: |
           npx playwright install --with-deps chromium
           npm run prerender:dashboard
+
+      - name: GPAI matrix and daily evidence journeys — desktop and mobile
+        id: gpai_evidence_journey
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/surface/build-gpai-matrix.mjs --check
+          node scripts/build-daily-product.mjs --check
+          npx playwright test --config e2e/playwright.gpai-evidence.config.ts
+
+      - name: Retain GPAI and daily evidence journey results
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.gpai_evidence_journey.outcome == 'success' || steps.gpai_evidence_journey.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: gpai-evidence-journey-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/gpai-evidence/**
+          retention-days: 7
+          if-no-files-found: warn
 
       - name: Axis specialists — charter and human review journey
         id: axis_specialist_journey
@@ -936,3 +954,4 @@ jobs:
         run: |
           node scripts/link-gate.mjs --selftest
           node scripts/link-gate.mjs dist/client
+

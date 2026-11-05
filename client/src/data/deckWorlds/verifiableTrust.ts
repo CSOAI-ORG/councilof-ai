@@ -32,9 +32,9 @@ import type { Slide } from "@/components/scrollworld";
 
 export const VERIFIABLE_TRUST_HERO = {
   kicker: "The science of verifiable trust",
-  title: "What we refuse to measure is why the rest can be believed",
+  title: "Published evidence, clear scope and documented limitations",
   lede:
-    "Any lab can publish the numbers that flatter it. A measurement body is only as credible as the limits it enforces on itself in public — the empty cells, the honest ties, the retractions of its own best figures. This page is about the negative space.",
+    "Assess a measurement through its method, evidence and limitations. Review unmeasured subjects, statistical ties and published corrections alongside the results. This page explains those boundaries.",
   bg: {
     src: "/images/coliseum_logic_duel.jpg",
     alt: "A human and an AI facing each other across a chessboard, judged by a fixed rule",
@@ -48,9 +48,9 @@ export const VERIFIABLE_TRUST_HERO = {
 export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   {
     kicker: "The crisis",
-    title: "Certification theatre: unsigned claims, hidden methods, models grading models",
+    title: "What makes a measurement independently inspectable?",
     body:
-      "Most AI assurance fails in the same three places. The result is unsigned, so it can be restated later. The method is private, so it cannot be argued with. And the grading is done by a model, which means the grader's blind spots quietly become the scoreboard. Unsigned measurement dies the moment someone disputes it.",
+      "Review three separate questions: is the result bound to a preserved record, is its method available for inspection, and can its scoring be reproduced? A signature helps establish integrity; it does not by itself establish correctness. Grading methods should disclose their limits and possible correlated errors.",
     points: [
       { tag: "pain", text: "Unsigned cells and point-in-time claims with nothing behind them" },
       { tag: "pain", text: "Private test sets nobody outside can run" },
@@ -79,7 +79,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     },
   },
   {
-    kicker: "The honesty gate",
+    kicker: "Publication requirements",
     title: "If a rule cannot parse it, we refuse to score it",
     body:
       "Three things stop a number reaching the board. Too small a sample, and it is not quoted at all. No statistical separation between the leader and the field, and the result is printed as a tie rather than a win. No deterministic predicate able to read the response, and it is reported UNMEASURED — never silently counted as a wrong answer, which would flatter the grader at the model's expense.",
@@ -188,7 +188,7 @@ export const VERIFIABLE_TRUST_NOT_CLAIMED = [
 
 export const VERIFIABLE_TRUST_RELATED = [
   { href: "/refutation-ledger", label: "The refutation ledger", what: "Every correction and retraction, append-only and signed." },
-  { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and the honesty gate." },
+  { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and measurement scope and limitations." },
   { href: "/gspc-scoreboard", label: "The live board", what: "Every slot with its sample size and separation status — measured and unmeasured alike, counted live from GET /api/gspc." },
   { href: "/live-ledger", label: "The living ledger", what: "How a measurement stays current when the statute moves." },
 ];

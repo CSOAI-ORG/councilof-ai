@@ -20,6 +20,7 @@
 
 import { verifyCard, anchorsFromDid, type Anchor, type CardState, type CardVerdict } from "../../../functions/_lib/cardVerify";
 import { isCardV0, verifyCardV0 } from "../../../functions/_lib/cardV0Verify";
+import { isSignedRun, verifySignedRunDoc } from "../../../functions/_lib/signedRunVerify";
 
 export interface RecordVerdict {
   lines: { label: string; ok: boolean | null; detail: string; code: string }[];
@@ -121,6 +122,22 @@ export async function verifyRecord(raw: string): Promise<RecordVerdict> {
       reasons: ["parse_error"],
       family: "unknown",
       lines: [{ label: "Parse", ok: false, code: "parse_error", detail: "Not valid JSON — nothing was checked." }],
+    };
+  }
+
+  // Use the same signed-run verifier as POST /api/verify. The sidecar's artifact digest
+  // is a reference to separate bytes, not evidence that those bytes were checked here.
+  if (isSignedRun(rec)) {
+    const v = await verifySignedRunDoc(rec);
+    return {
+      valid: v.state === "VALID",
+      state: v.state,
+      reasons: v.reasons,
+      family: v.family,
+      lines: [
+        { label: "Parse", ok: true, code: "parse_ok", detail: "Valid JSON: a signed evidence record." },
+        ...v.checks.map((c) => ({ label: c.check, ok: c.ok, detail: c.detail, code: c.code })),
+      ],
     };
   }
 
