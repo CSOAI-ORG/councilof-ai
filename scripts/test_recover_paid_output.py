@@ -10,6 +10,7 @@ from pathlib import Path
 import stat
 import sys
 import tempfile
+import threading
 import unittest
 from contextlib import redirect_stdout, redirect_stderr
 
@@ -145,6 +146,27 @@ class RecoveryControls(unittest.TestCase):
             output=Path(directory)/"original.bin"
             with redirect_stdout(io.StringIO()),redirect_stderr(io.StringIO()):
                 self.assertEqual(recovery.main(["--input",str(path),"--transaction",TX,"--resource",RESOURCE,"--output",str(output)]),2)
+            self.assertFalse(output.exists())
+            self.assertFalse(output.with_name(output.name+".receipt.json").exists())
+
+
+    def test_16_fifo_cli_refused_without_blocking_or_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/"not-a-regular-export";os.mkfifo(path,0o600)
+            output=Path(directory)/"original.bin";result={}
+            def call():
+                with redirect_stdout(io.StringIO()),redirect_stderr(io.StringIO()):
+                    result["code"]=recovery.main(["--input",str(path),"--transaction",TX,
+                                                  "--resource",RESOURCE,"--output",str(output)])
+            worker=threading.Thread(target=call,daemon=True);worker.start();worker.join(.5)
+            blocked=worker.is_alive()
+            if blocked:
+                # Release the old blocking implementation before reporting its regression.
+                writer=os.open(path,os.O_WRONLY|os.O_NONBLOCK)
+                os.close(writer);worker.join(1)
+            self.assertFalse(worker.is_alive(),"FIFO reader cleanup must finish")
+            self.assertFalse(blocked,"input open must refuse a FIFO without waiting for a writer")
+            self.assertEqual(result.get("code"),2)
             self.assertFalse(output.exists())
             self.assertFalse(output.with_name(output.name+".receipt.json").exists())
 

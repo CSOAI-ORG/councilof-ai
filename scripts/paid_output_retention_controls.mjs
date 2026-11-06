@@ -269,7 +269,7 @@ if (process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href) {
   execFileSync('python3',['-B','scripts/test_recover_paid_output.py','--fixture-stdin'],
     {input:JSON.stringify(result.recoveryFixture),stdio:['pipe','inherit','inherit'],timeout:15000});
   console.log('RETENTION_RESULT='+JSON.stringify({offline:true,node_controls:result.cases.length,
-    python_controls:15,passed:result.cases.length+15,cases:result.cases,
+    python_controls:16,passed:result.cases.length+16,cases:result.cases,
     helper_sha256:crypto.createHash('sha256').update(raw).digest('hex'),
     network_calls:0,payment_calls:0,signing_calls:0,production_changed:false}));
 }

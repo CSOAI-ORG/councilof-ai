@@ -166,7 +166,7 @@ def main(argv=None):
     parser.add_argument("--output", required=True, help="New body file; parent must exist")
     args = parser.parse_args(argv)
     try:
-        fd = os.open(args.input, os.O_RDONLY | os.O_NOFOLLOW)
+        fd = os.open(args.input, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
         with os.fdopen(fd, "rb") as source:
             require(stat.S_ISREG(os.fstat(source.fileno()).st_mode), "export must be a regular file")
             raw = source.read(MAX_EXPORT + 1)
