@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { execFileSync } from 'node:child_process';
+import { exportColiseum } from '../scripts/build-coliseum-mirror.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,7 +16,30 @@ const sourceRevision = (() => {
 })();
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    {
+      name: 'csoai-coliseum-mirror',
+      apply: 'build',
+      // Export the same emitted bytes after all output files exist, before the
+      // existing shell postprocessors. Root dependency inputs stay unchanged.
+      writeBundle: {
+        order: 'post',
+        sequential: true,
+        async handler() {
+          const receipt = await exportColiseum({
+            buildDir: path.resolve(__dirname, '../dist/client'),
+            outputDir: path.resolve(__dirname, '../dist/hf-coliseum'),
+            licensePath: path.resolve(__dirname, '../LICENSE'),
+            sourceCommit: sourceRevision,
+          });
+          console.log('Coliseum mirror: ' + Object.keys(receipt.files).length +
+            ' files, source ' + receipt.source_commit);
+        },
+      },
+    },
+  ],
   define: {
     'import.meta.env.VITE_SOURCE_REVISION': JSON.stringify(sourceRevision),
   },
