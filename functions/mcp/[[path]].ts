@@ -30,6 +30,7 @@ import { READINESS_TOOL_NAMES, readinessToolResult } from "./_readiness";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
 import { recordUsage } from "../_lib/usage";
 import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
+import { registerCouncilPanel, withCouncilPanel } from "./_panel";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
 export const MCP_HTTP_SERVER_VERSION = "1.4.4";
@@ -134,7 +135,7 @@ const BROWSER_ORIGINS = [...HOSTS, "chatgpt.com", "claude.ai"];
 // The measurement-capsule readers (measurement_index, verify_capsule, server_evidence) are ordinary
 // free tools in gspc-tools.json since 2026-09-26, when /measurement-capsules/ was published; the
 // MEASUREMENT_CAPSULE_TOOLS env gate that held them back is gone. One list, one fleet (the lock).
-const DEFINITIONS = [...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[];
+const DEFINITIONS = ([...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[]).map(withCouncilPanel);
 // The free door's registry: the same definitions, filtered. Never a second catalog.
 export const FREE_DEFINITIONS = DEFINITIONS.filter((d) => !PAID_TOOL_NAMES.has(d.name));
 // The SDK's no-eval adapter retains the canonical JSON Schema. No parallel catalog.
@@ -172,6 +173,7 @@ function buildMcp(
       },
     });
     registerWorkingGroups(server);
+    registerCouncilPanel(server);
     for (const { definition, inputSchema, outputSchema } of TOOLS) {
       server.registerTool(
         definition.name,
@@ -183,6 +185,7 @@ function buildMcp(
           // readOnlyHint for the free readers; the paid tools spend the caller's funds when called
           // with x_payment, so they are neither read-only nor idempotent (paid-tools.json).
           ...(definition.annotations ? { annotations: definition.annotations } : {}),
+          ...(definition._meta ? { _meta: definition._meta } : {}),
         },
         (args) =>
           // door.paid guards the dispatch as well as the registry: the free door never reaches

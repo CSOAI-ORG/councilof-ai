@@ -38,7 +38,7 @@ export const DEEPER: { href: string; title: string; body: string }[] = [
   },
   {
     href: "/corrections/",
-    title: "What we got wrong",
+    title: "Published corrections",
     body: "The public ledger: what was wrong, how it was caught, what changed, and the date. Signed records are superseded, never edited.",
   },
   {
