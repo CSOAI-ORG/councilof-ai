@@ -8,9 +8,10 @@ as the source in `mcp/gspc-server/`.
 
 ## Tools
 
-Forty-nine free tools require no account, key or payment:
+Fifty free tools require no account, key or payment:
 
 - `board_totals` — read live board totals with their source kind and `as_of` date.
+- `board_counts` — read the count grammar: every published count labelled with its source, `as_of` and how to quote it; figures are never summed or reconciled.
 - `get_axis` — read one axis row, including sample size, interval and MEASURED/UNMEASURED state.
 - `verify_card` — recompute a card ID and verify its Ed25519 signature under the pinned Council key.
 - `list_cards` — compare the published card index with the card-store listing without reconciling them.

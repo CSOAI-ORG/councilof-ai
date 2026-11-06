@@ -18,6 +18,7 @@ import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 import { MDE_STATES, UNDERPOWERED_STATE, applyUnderpowered, measuredOnModel, withPower } from "./_gspc_power";
 import { withMeasurementTime } from "./_gspc_measurement_time";
 import { headFromGet } from "./_head";
+import { etagFor, ifNoneMatchSatisfied } from "./_etag";
 
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
@@ -40,7 +41,9 @@ const withMethodStatus = (a: AxisScore): AxisScore => {
   if (a.family === "financial") return { ...a, method_status: `legacy: n ${a.n}` };
   return { ...a, method_status: "meets-rule" };
 };
-const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D].map(withMethodStatus);
+// Exported for functions/api/counts.ts, whose count grammar must derive from the SAME axis rows
+// as the board door — one composition, so the two doors cannot drift (never re-declared elsewhere).
+export const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN, ...AXES_D].map(withMethodStatus);
 
 const round = (x: number, p = 4) => Math.round(x * 10 ** p) / 10 ** p;
 
@@ -1167,16 +1170,24 @@ export const onRequestGet: PagesFunction = async (context) => {
   }
 
   publicBody = publicBody ?? makePublicBody();
-  const response = new Response(JSON.stringify(publicBody, null, 2), {
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "public, max-age=300",
-      "access-control-allow-origin": "*",
-    },
-  });
-  // Populate the edge cache without making the caller wait for it.
-  context.waitUntil(cache.put(cacheKey, response.clone()));
-  return response;
+  const servedBody = JSON.stringify(publicBody, null, 2);
+  // Conditional GET: the etag IS the hash of these bytes, so it changes exactly when the board
+  // does (functions/api/_etag.ts). A reader that names this etag in If-None-Match is told 304
+  // without the 61 KB — the served bytes and the validator can never disagree, because one is
+  // the hash of the other.
+  const etag = await etagFor(servedBody);
+  const commonHeaders: Record<string, string> = {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "public, max-age=300",
+    "access-control-allow-origin": "*",
+    etag,
+  };
+  // Populate the edge cache with the 200 either way, without making the caller wait for it.
+  context.waitUntil(cache.put(cacheKey, new Response(servedBody, { headers: commonHeaders })));
+  if (ifNoneMatchSatisfied(context.request.headers.get("if-none-match"), etag)) {
+    return new Response(null, { status: 304, headers: commonHeaders });
+  }
+  return new Response(servedBody, { headers: commonHeaders });
 };
 
 // HEAD answers what GET answers, with no body (functions/api/_head.ts); without it a HEAD falls

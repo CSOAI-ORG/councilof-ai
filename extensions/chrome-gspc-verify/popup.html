@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>GSPC — live board · verify a card</title>
+  <title>GSPC — live board · counts · verify a card</title>
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
@@ -24,6 +24,18 @@
     </div>
     <p id="board-note" class="muted"></p>
     <button id="reload" type="button">Reload board</button>
+  </section>
+
+  <section id="counts" aria-labelledby="counts-h">
+    <h2 id="counts-h">Count grammar</h2>
+    <p class="muted">Authority: <a href="https://councilof.ai/api/counts" target="_blank" rel="noopener">GET councilof.ai/api/counts</a> — every published count, labelled with its source and <code>as_of</code>. Figures are never summed; a NOT_READ row is a read that failed, not a zero.</p>
+    <div class="tablewrap">
+      <table id="counts-table" hidden>
+        <thead><tr><th>figure</th><th>value</th><th>state</th><th>source</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p id="counts-note" class="muted"></p>
   </section>
 
   <section id="verify" aria-labelledby="verify-h">

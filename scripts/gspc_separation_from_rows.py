@@ -333,6 +333,22 @@ def axis_power(res_ext, distinct_items, alpha=ALPHA, power=POWER):
     disc = res_ext["b10"] + res_ext["c01"]
     psi = disc / paired if paired else 0.0
     mde, state = mcnemar_mde(paired, psi, alpha, power)
+    # Effect sizes beside the p-value (2026-11-04): a TIE with a large point gap and a TIE with a
+    # vanishing gap are visibly different states, and a p-value alone cannot say which is which.
+    #   cliff_delta — paired binary form, (b10 - c01) / paired, in [-1, 1]; positive favours the
+    #                 leader. Always computable when a paired item exists.
+    #   paired_odds_ratio — b10 / c01. Undefined when the comparator never won a discordant item
+    #                 (division by zero) — published as null with its state, never as a number.
+    b10, c01 = res_ext["b10"], res_ext["c01"]
+    if paired == 0:
+        delta, or_, effect_state = None, None, "UNDEFINED"
+    else:
+        delta = round((b10 - c01) / paired, 4)
+        if c01 == 0:
+            or_, effect_state = None, "UNDEFINED"
+        else:
+            or_ = round(b10 / c01, 4)
+            effect_state = "MEASURED"
     return {
         "distinct_items": distinct_items,
         "paired_items": paired,
@@ -340,6 +356,9 @@ def axis_power(res_ext, distinct_items, alpha=ALPHA, power=POWER):
         "discordance_rate": round(psi, 4),
         "mde": mde,
         "mde_state": state,
+        "cliff_delta": delta,
+        "paired_odds_ratio": or_,
+        "effect_state": effect_state,
     }
 
 
@@ -376,7 +395,11 @@ def write_power_module(repo, rows_dir, revision):
                   "with the same test body, not a normal approximation; rounded up to 0.001. Our own models are "
                   "removed before comparison, as for separation. NOT_REACHABLE means no difference up to the "
                   "observed discordance reaches 80% power, so there is no MDE to state; UNDEFINED means no "
-                  "paired item is discordant, so the test has nothing to count.",
+                  "paired item is discordant, so the test has nothing to count. Effect sizes (2026-11-04): "
+                  "cliff_delta is the paired binary form (b10 - c01) / paired in [-1, 1], positive favouring "
+                  "the leader; paired_odds_ratio is b10 / c01, null with state UNDEFINED when the comparator "
+                  "never won a discordant item. Both are computed from the same hash-verified rows as the "
+                  "test, published beside the p-value — never instead of it.",
         "fleet": {**fleet,
                   "rule": "Counted from the model ids present in the published rows. Base models are compared; "
                           "our own models (system-prompt overlays on stock base models, not trained weights) "
