@@ -30,7 +30,34 @@ actually uploaded, so the bundle stays self-consistent.
 import argparse, json, os, sys, time
 from pathlib import Path
 
-LANES = Path(os.environ.get("LANES", "/workspace/lanes"))
+
+def resolve_lanes() -> Path:
+    """The lanes root, resolved the way lib.sh resolves it.
+
+    The pod's persistent volume is /workspace/lanes. A host that keeps its lanes under
+    $HOME passes LANES=..., and lib.sh EXPORTS that, so a loop's upload inherits it. When
+    this script is run on its own, the root is detected rather than assumed: the hardcoded
+    default used to make the uploader try to create /workspace/out on a host that has no
+    /workspace, and the upload died with a permission error AFTER the rows were written.
+    """
+    env = os.environ.get("LANES", "").strip()
+    if env:
+        return Path(env)
+    candidates = [Path("/workspace/lanes")]
+    try:
+        candidates.append(Path.home() / "lanes")
+    except (RuntimeError, OSError):
+        pass
+    for cand in candidates:
+        if cand.is_dir():
+            return cand
+    raise SystemExit(
+        "hf_upload.py: LANES is unset and no lanes root was found "
+        "(looked for /workspace/lanes and $HOME/lanes); nothing was uploaded."
+    )
+
+
+LANES = resolve_lanes()
 QUEUE = LANES / "out" / "pending-upload.jsonl"
 
 
