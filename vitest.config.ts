@@ -37,6 +37,10 @@ export const NODE_TEST_FILES = [
   // No apostrophes in these comments: the registry and the workflow extract entries by
   // naive quote matching, and a stray quote inside the array corrupts the parsed list.
   'scripts/hygiene/sweeper.node-test.mjs',
+  // The cron-health watch decisions: a node:test file vitest cannot collect, named here so
+  // pr-gates.yml runs it under node --test. It proves the watch catches a dead schedule,
+  // passes a live one, and finds a schedule run buried behind pull_request runs.
+  'scripts/hygiene/cron-watch.node-test.mjs',
   'scripts/regulator-census-redirects.test.mjs',
   'scripts/research/watch-sources.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
