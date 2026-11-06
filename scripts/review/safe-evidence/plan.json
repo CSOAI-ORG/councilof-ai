@@ -1,0 +1,414 @@
+{
+  "schema": "csoai.engineering-queue-projection/1",
+  "originating_register": "Council-of-AI-SAFE-Five-Company-Opportunity-Register-2026-11-04.xlsx",
+  "scope": "Concise engineering projection of the existing 45-item research register; original row identifiers and qualification boundaries retained. Not a new normative catalogue or permission grant.",
+  "opportunities": [
+    {
+      "id": "SAFE-01",
+      "priority": "P0",
+      "area": "SAFE / LF",
+      "opening": "Current SAFE 1.0 reconciliation",
+      "acceptance": "Map every residual proposal to the current SAFE 1.0 clause, exact rationale and positive/negative case; omit already-adopted text.",
+      "gate": "Existing SAFE/Council contributor, governance and disclosure owners; no unilateral upstream adoption.",
+      "sources": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/main/SAFE.md"
+    },
+    {
+      "id": "SAFE-02",
+      "priority": "P0",
+      "area": "SAFE / LF",
+      "opening": "Independent small-operator checker",
+      "acceptance": "A second operator reproduces manifest and signature checks and all negative cases without author assistance.",
+      "gate": "Existing SAFE/Council contributor, governance and disclosure owners; no unilateral upstream adoption.",
+      "sources": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/main/SAFE.md"
+    },
+    {
+      "id": "SAFE-03",
+      "priority": "P1",
+      "area": "SAFE / LF",
+      "opening": "Unavailable and withheld evidence",
+      "acceptance": "Withheld records stay protected; absent, unavailable and not-applicable evidence remain distinct and never become a pass.",
+      "gate": "Existing SAFE/Council contributor, governance and disclosure owners; no unilateral upstream adoption.",
+      "sources": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/main/SAFE.md"
+    },
+    {
+      "id": "SAFE-04",
+      "priority": "P0",
+      "area": "SAFE / LF",
+      "opening": "Successor implementation references",
+      "acceptance": "Link superseded #2911/#2913 to merged #2915 while keeping byte integrity, issuer authentication and current authority separate.",
+      "gate": "Existing SAFE/Council contributor, governance and disclosure owners; no unilateral upstream adoption.",
+      "sources": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/main/SAFE.md"
+    },
+    {
+      "id": "SAFE-05",
+      "priority": "P1",
+      "area": "SAFE / LF",
+      "opening": "Claim freshness and revalidation",
+      "acceptance": "A material dependency or policy change marks affected claims review-due without rewriting the original or automatically restoring permission.",
+      "gate": "Existing SAFE/Council contributor, governance and disclosure owners; no unilateral upstream adoption.",
+      "sources": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/main/SAFE.md"
+    },
+    {
+      "id": "SAFE-06",
+      "priority": "P1",
+      "area": "SAFE / LF",
+      "opening": "Incident reporting and disclosure",
+      "acceptance": "A private intake drill preserves original incident versus replay, notification clocks, redactions, responsible owner and permitted public derivative.",
+      "gate": "Existing SAFE/Council contributor, governance and disclosure owners; no unilateral upstream adoption.",
+      "sources": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/main/SAFE.md"
+    },
+    {
+      "id": "SAFE-07",
+      "priority": "P0",
+      "area": "SAFE / LF",
+      "opening": "Verified governance roles",
+      "acceptance": "Confirm named roles from current official governance records; membership is not endorsement or a self-appointed steering seat.",
+      "gate": "Existing SAFE/Council contributor, governance and disclosure owners; no unilateral upstream adoption.",
+      "sources": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/main/SAFE.md"
+    },
+    {
+      "id": "SAFE-08",
+      "priority": "P2",
+      "area": "SAFE / LF",
+      "opening": "LFX project administration",
+      "acceptance": "Approved LFX role, meeting and CLA workflow records actual permissions, reviewer consent and accountable role changes.",
+      "gate": "Existing SAFE/Council contributor, governance and disclosure owners; no unilateral upstream adoption.",
+      "sources": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/main/SAFE.md"
+    },
+    {
+      "id": "NV-01",
+      "priority": "P0",
+      "area": "NVIDIA",
+      "opening": "OCSF-native integrity",
+      "acceptance": "Use the existing OCSF record_integrity direction: altered/reordered records fail, an unknown signing key is not authenticated, disabled mode unchanged.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/NVIDIA/OpenShell/issues/5177"
+    },
+    {
+      "id": "NV-02",
+      "priority": "P1",
+      "area": "NVIDIA",
+      "opening": "Serialization and producer trust",
+      "acceptance": "Two independent implementations produce identical canonical fingerprints; supplied keys cannot silently become trusted issuers.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/NVIDIA/OpenShell/issues/5177"
+    },
+    {
+      "id": "NV-03",
+      "priority": "P1",
+      "area": "NVIDIA",
+      "opening": "Loss, restart and chain completeness",
+      "acceptance": "Record export loss and restart explicitly; incomplete suffix needs a trusted terminal/head reference, not merely a hash-chain assertion.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/NVIDIA/OpenShell/issues/5177"
+    },
+    {
+      "id": "NV-04",
+      "priority": "P1",
+      "area": "NVIDIA",
+      "opening": "Trace and effect correlation",
+      "acceptance": "Preserve call/request/trace correlation across enforcement and delivery; distinguish different 403 causes and an incomplete HTTP 200 response.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/NVIDIA/OpenShell/issues/5177"
+    },
+    {
+      "id": "NV-05",
+      "priority": "P1",
+      "area": "NVIDIA",
+      "opening": "Effective policy at execution",
+      "acceptance": "The approved policy digest and backend effective policy match at execution; scope changes demand fresh approval.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/NVIDIA/OpenShell/issues/5177"
+    },
+    {
+      "id": "NV-06",
+      "priority": "P1",
+      "area": "NVIDIA",
+      "opening": "Neutral NOOA demonstration",
+      "acceptance": "Demonstrate a neutral NOOA workflow with cancellation, loss and result replay; no keyword-derived legal verdict.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/NVIDIA/OpenShell/issues/5177"
+    },
+    {
+      "id": "NV-07",
+      "priority": "P2",
+      "area": "NVIDIA",
+      "opening": "Domain-specific safety evaluation",
+      "acceptance": "Evaluate a rights-cleared pinned safety model on held-out domain data; retain false positives, false negatives, coverage, uncertainty and drift.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/NVIDIA/OpenShell/issues/5177"
+    },
+    {
+      "id": "NV-08",
+      "priority": "P1",
+      "area": "NVIDIA",
+      "opening": "Per-artifact license gates",
+      "acceptance": "Pin separate code, weight and dataset terms; never republish gated or restricted material as though all assets were Apache-licensed.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/NVIDIA/OpenShell/issues/5177"
+    },
+    {
+      "id": "CI-01",
+      "priority": "P0",
+      "area": "Cisco",
+      "opening": "Truthful named gateway",
+      "acceptance": "A named MEOK gateway retains its real identity, session/call/trace identifiers and subagent lineage rather than impersonating another host.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/cisco-ai-defense/defenseclaw/issues/1394"
+    },
+    {
+      "id": "CI-02",
+      "priority": "P1",
+      "area": "Cisco",
+      "opening": "Scoped delegated principal",
+      "acceptance": "Reject an untrusted or out-of-scope principal assertion; a gateway service account never silently becomes a person or administrator.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/cisco-ai-defense/defenseclaw/issues/1394"
+    },
+    {
+      "id": "CI-03",
+      "priority": "P0",
+      "area": "Cisco",
+      "opening": "Effective component policy digest",
+      "acceptance": "Changing the co-installed component manifest changes effective policy identity in both decision records; existing bundles without it stay unchanged.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/cisco-ai-defense/defenseclaw/issues/1394"
+    },
+    {
+      "id": "CI-04",
+      "priority": "P1",
+      "area": "Cisco",
+      "opening": "Atomic opaque bundle delivery",
+      "acceptance": "Signed opaque component files arrive byte-exact and roll back atomically after failed apply; each component checks its own trust root.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/cisco-ai-defense/defenseclaw/issues/1394"
+    },
+    {
+      "id": "CI-05",
+      "priority": "P1",
+      "area": "Cisco",
+      "opening": "Fail-mode and recovery qualification",
+      "acceptance": "Test normal, mode-switch, unavailable gateway and recovery in an owned host; compare verdict to effect and disclose intended fail-open modes.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/cisco-ai-defense/defenseclaw/issues/1394"
+    },
+    {
+      "id": "CI-06",
+      "priority": "P2",
+      "area": "Cisco",
+      "opening": "Incident-linked operator learning",
+      "acceptance": "Lessons reference the actual OS, connector and recovery evidence; practice completion does not grant policy permission.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/cisco-ai-defense/defenseclaw/issues/1394"
+    },
+    {
+      "id": "CI-07",
+      "priority": "P2",
+      "area": "Cisco",
+      "opening": "Scoped Antares evaluation",
+      "acceptance": "A licensed code-vulnerability evaluation discloses task/language limits and benign/unsafe errors; no general safety claim.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/cisco-ai-defense/defenseclaw/issues/1394"
+    },
+    {
+      "id": "RH-01",
+      "priority": "P0",
+      "area": "Red Hat / asago",
+      "opening": "Evidence completeness before grading",
+      "acceptance": "Read errors, incomplete markers and failed find/cat must not become valid dependent grades; the requested tri-state design must preserve independently decidable checks.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/asago-ai/midojo/issues/187"
+    },
+    {
+      "id": "RH-02",
+      "priority": "P0",
+      "area": "Red Hat / asago",
+      "opening": "Idempotent evidence delivery",
+      "acceptance": "Same record ID and same body returns the original; changed body conflicts; retry evidence delivery, never reexecute the tool.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/asago-ai/midojo/issues/187"
+    },
+    {
+      "id": "RH-03",
+      "priority": "P1",
+      "area": "Red Hat / asago",
+      "opening": "Escaped payload exposure",
+      "acceptance": "Escaped quotes/newlines/Unicode retain exposure after versioned normalization; keep original bytes, malformed cases and N/A denominators explicit.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/asago-ai/midojo/issues/187"
+    },
+    {
+      "id": "RH-04",
+      "priority": "P1",
+      "area": "Red Hat / asago",
+      "opening": "Independent grading control",
+      "acceptance": "The evaluated agent cannot read hidden truth or modify the grader; collection failure remains unknown rather than a pass.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/asago-ai/midojo/issues/187"
+    },
+    {
+      "id": "RH-05",
+      "priority": "P1",
+      "area": "Red Hat / asago",
+      "opening": "Multi-turn evidence continuity",
+      "acceptance": "A two-turn run retains per-call turn attribution within one evaluation; no ambiguous timestamp-only joins.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/asago-ai/midojo/issues/187"
+    },
+    {
+      "id": "RH-06",
+      "priority": "P2",
+      "area": "Red Hat / asago",
+      "opening": "Judge calibration",
+      "acceptance": "Compare judges on identical inputs with disjoint calibration and evaluation; retain total/stage latency and invalid outputs.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/asago-ai/midojo/issues/187"
+    },
+    {
+      "id": "RH-07",
+      "priority": "P1",
+      "area": "Red Hat / asago",
+      "opening": "Policy-to-effect verification",
+      "acceptance": "An irrelevant-file read is denied at the executor and the intended read succeeds; do not widen policy after approval or mix provisioning into the patch.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/asago-ai/midojo/issues/187"
+    },
+    {
+      "id": "RH-08",
+      "priority": "P2",
+      "area": "Red Hat / asago",
+      "opening": "Durable evidence export",
+      "acceptance": "Restart cannot lose or duplicate records; durable exports carry source manifests and explicitly incomplete states using the existing Store abstraction.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/asago-ai/midojo/issues/187"
+    },
+    {
+      "id": "CR-01",
+      "priority": "P0",
+      "area": "CrowdStrike",
+      "opening": "Use the current contribution route",
+      "acceptance": "Use the current hosted-product/external-adapter or security-fix route; do not submit new features to a maintenance-only repository.",
+      "gate": "Actual tenant owner, least-privilege scopes and disclosure rights; synthetic checks alone are not product acceptance.",
+      "sources": "https://github.com/CrowdStrike/falcon-mcp/blob/main/README.md"
+    },
+    {
+      "id": "CR-02",
+      "priority": "P1",
+      "area": "CrowdStrike",
+      "opening": "Read-only agent evidence adapter",
+      "acceptance": "Read-only export retains IDs, revisions, confidence and evidence gaps without host or detection mutation.",
+      "gate": "Actual tenant owner, least-privilege scopes and disclosure rights; synthetic checks alone are not product acceptance.",
+      "sources": "https://github.com/CrowdStrike/falcon-mcp/blob/main/README.md"
+    },
+    {
+      "id": "CR-03",
+      "priority": "P1",
+      "area": "CrowdStrike",
+      "opening": "Unavailable is not zero activity",
+      "acceptance": "400, 404, denied scope and unsupported tenant version become unavailable\u2014not zero activity or no risk.",
+      "gate": "Actual tenant owner, least-privilege scopes and disclosure rights; synthetic checks alone are not product acceptance.",
+      "sources": "https://github.com/CrowdStrike/falcon-mcp/blob/main/README.md"
+    },
+    {
+      "id": "CR-04",
+      "priority": "P1",
+      "area": "CrowdStrike",
+      "opening": "Keep collection separate from mutation",
+      "acceptance": "Only allowlisted read tools are registered/callable; forbidden mutation cannot be invoked through a dynamic dispatch route.",
+      "gate": "Actual tenant owner, least-privilege scopes and disclosure rights; synthetic checks alone are not product acceptance.",
+      "sources": "https://github.com/CrowdStrike/falcon-mcp/blob/main/README.md"
+    },
+    {
+      "id": "CR-05",
+      "priority": "P2",
+      "area": "CrowdStrike",
+      "opening": "Calibrated uncertainty",
+      "acceptance": "Use lawful held-out labels; disclose calibration, FP/FN, coverage and distribution shift rather than treating fluent reasoning as confidence.",
+      "gate": "Actual tenant owner, least-privilege scopes and disclosure rights; synthetic checks alone are not product acceptance.",
+      "sources": "https://github.com/CrowdStrike/falcon-mcp/blob/main/README.md"
+    },
+    {
+      "id": "PA-01",
+      "priority": "P1",
+      "area": "Palantir",
+      "opening": "Native evaluation export",
+      "acceptance": "Retain native evaluation model/function/scenario/version/sample provenance without inventing a universal rescored grade.",
+      "gate": "Actual tenant owner, least-privilege scopes and disclosure rights; synthetic checks alone are not product acceptance.",
+      "sources": "https://github.com/palantir/palantir-mcp/blob/develop/README.md"
+    },
+    {
+      "id": "PA-02",
+      "priority": "P1",
+      "area": "Palantir",
+      "opening": "Simulation is not production effect",
+      "acceptance": "Simulated Ontology edits never create production-effect receipts; any authorised real effect requires independent readback.",
+      "gate": "Actual tenant owner, least-privilege scopes and disclosure rights; synthetic checks alone are not product acceptance.",
+      "sources": "https://github.com/palantir/palantir-mcp/blob/develop/README.md"
+    },
+    {
+      "id": "PA-03",
+      "priority": "P2",
+      "area": "Palantir",
+      "opening": "Tenant-scoped OSDK connection",
+      "acceptance": "Tenant OAuth is least-privilege; cross-tenant data and credentials cannot enter receipts; denied access remains unverified.",
+      "gate": "Actual tenant owner, least-privilege scopes and disclosure rights; synthetic checks alone are not product acceptance.",
+      "sources": "https://github.com/palantir/palantir-mcp/blob/develop/README.md"
+    },
+    {
+      "id": "PA-04",
+      "priority": "P1",
+      "area": "Palantir",
+      "opening": "Contextual Assist learning",
+      "acceptance": "Contextual Assist documentation cites exact learning sources and review-due status; no false provider course completion.",
+      "gate": "Actual tenant owner, least-privilege scopes and disclosure rights; synthetic checks alone are not product acceptance.",
+      "sources": "https://github.com/palantir/palantir-mcp/blob/develop/README.md"
+    },
+    {
+      "id": "PA-05",
+      "priority": "P2",
+      "area": "Palantir",
+      "opening": "Accountable review export",
+      "acceptance": "Downstream review retains actor, scope and history, distinguishing human, automated, unavailable and withheld decisions.",
+      "gate": "Actual tenant owner, least-privilege scopes and disclosure rights; synthetic checks alone are not product acceptance.",
+      "sources": "https://github.com/palantir/palantir-mcp/blob/develop/README.md"
+    },
+    {
+      "id": "X-01",
+      "priority": "P0",
+      "area": "Cross-ecosystem",
+      "opening": "Artifact rights and reuse",
+      "acceptance": "Every reused code/model/data/report artifact has exact rights, revision, notices and permitted use; unknown rights remain held.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/CSOAI-ORG/councilof-ai/pull/3905"
+    },
+    {
+      "id": "X-02",
+      "priority": "P1",
+      "area": "Cross-ecosystem",
+      "opening": "Scenario-linked human learning",
+      "acceptance": "Measure learning effects using scenario decisions, errors, latency and retention; engagement alone is not causal oversight improvement.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/CSOAI-ORG/councilof-ai/pull/3905"
+    },
+    {
+      "id": "X-03",
+      "priority": "P0",
+      "area": "Cross-ecosystem",
+      "opening": "Genuine current authority",
+      "acceptance": "A genuine current owner authorises one exact action; altered target, expiry, revocation and replay are refused with independent effect evidence.",
+      "gate": "Genuine owner-controlled identity, scoped executor and independent effect readback; no agent-created approval.",
+      "sources": "https://github.com/CSOAI-ORG/councilof-ai/pull/3905"
+    },
+    {
+      "id": "X-04",
+      "priority": "P1",
+      "area": "Cross-ecosystem",
+      "opening": "Independent and native-host acceptance",
+      "acceptance": "Obtain a separate organisation rerun and named signed-in-host acceptance; the author\u2019s second device is not independent acceptance.",
+      "gate": "Existing implementation/maintainer owner; exact pinned sources, licence and scoped tests before adoption or release.",
+      "sources": "https://github.com/CSOAI-ORG/councilof-ai/pull/3905"
+    }
+  ],
+  "originating_register_bytes_verified": false,
+  "provenance_note": "Queue transcribed from the retained parsed research register. Original workbook bytes were not independently hashed in this engineering run; no workbook digest is claimed."
+}
