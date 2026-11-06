@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import ts from "typescript";
+import { createHash } from "node:crypto";
 
 export function appRoutePaths(source) {
   const file = ts.createSourceFile(
@@ -231,6 +232,7 @@ export function publishedEntityCases(root) {
         id: `entity:${family}:${encodeURIComponent(name)}`,
         kind: "published-entity",
         family,
+        entityName: name,
         url: prefix + encodeURIComponent(name),
         state: "published-example",
         source,
@@ -315,6 +317,7 @@ export function publishedEntityCases(root) {
     ts.ScriptKind.TS,
   );
   const axes = [];
+  const hiddenAxes = new Set();
   for (const item of board.statements) {
     if (
       !ts.isImportDeclaration(item) ||
@@ -326,6 +329,36 @@ export function publishedEntityCases(root) {
     if (!bindings || !ts.isNamedImports(bindings))
       throw new Error("Cannot discover served board axis imports");
     const module = `functions/api/${item.moduleSpecifier.text.slice(2)}.ts`;
+    const axisFile = ts.createSourceFile(
+      module,
+      read(module),
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.TS,
+    );
+    const hidden = (node) => {
+      if (ts.isObjectLiteralExpression(node)) {
+        const value = (key) =>
+          node.properties.find(
+            (p) =>
+              ts.isPropertyAssignment(p) &&
+              (ts.isIdentifier(p.name) || ts.isStringLiteral(p.name)) &&
+              p.name.text === key,
+          )?.initializer;
+        const flag = value("public_pages"),
+          axis = value("axis");
+        if (
+          flag &&
+          ts.isStringLiteral(flag) &&
+          flag.text === "HIDDEN_PENDING_OWNER_GO" &&
+          axis &&
+          ts.isStringLiteral(axis)
+        )
+          hiddenAxes.add(axis.text);
+      }
+      ts.forEachChild(node, hidden);
+    };
+    hidden(axisFile);
     for (const binding of bindings.elements)
       axes.push(
         ...literalCollection(
@@ -336,11 +369,73 @@ export function publishedEntityCases(root) {
       );
   }
   add(
-    "boardAxisLabels",
+    "publicBoardAxisDetails",
     "/gspc/",
-    axes,
+    axes.filter((axis) => !hiddenAxes.has(axis)),
     "functions/api/gspc.ts imports AXES_* arrays; labels only",
   );
+  const answers = json("client/src/data/answers.json");
+  const notes = json("client/src/data/evidence-notes.json").notes;
+  const servers = json("client/src/data/mcpRegistry.json").servers;
+  const hiveNames = literalCollection(
+    read("client/src/data/hive-frameworks.ts"),
+    "HIVE",
+    "name",
+  );
+  const hiveSlugs = literalCollection(
+    read("client/src/data/hive-frameworks.ts"),
+    "HIVE",
+    "slug",
+  );
+  const sectorTitles = literalCollection(
+    read("client/src/data/library-ia.ts"),
+    "SECTORS",
+    "title",
+  );
+  const sectorIds = literalCollection(
+    read("client/src/data/library-ia.ts"),
+    "SECTORS",
+    "id",
+  );
+  for (const item of cases) {
+    const name = item.entityName;
+    if (item.family === "answers")
+      item.expected = {
+        heading: answers.find((row) => row.slug === name).title,
+      };
+    if (item.family === "notes")
+      item.expected = { heading: notes.find((row) => row.id === name).title };
+    if (item.family === "mcpServers")
+      item.expected = {
+        heading: servers.find((row) => row.slug === name).name,
+      };
+    if (item.family === "hiveFrameworks")
+      item.expected = { heading: hiveNames[hiveSlugs.indexOf(name)] };
+    if (item.family === "librarySectors")
+      item.expected = {
+        heading: sectorTitles[sectorIds.indexOf(name)],
+        headingLevel: 2,
+      };
+    if (item.family === "approvedBlogs")
+      item.expected = {
+        heading: blog.find((row) => row.slug === name).headline,
+      };
+    if (item.family === "publicBoardAxisDetails")
+      item.expected =
+        name === "jail"
+          ? { heading: "Jail folder", jailFolder: true }
+          : { axis: name };
+    if (item.family === "modelsWithPublicNames") {
+      const rows = findings.findings.filter((row) => row.model === name);
+      if (!rows.length)
+        throw new Error(`Published model has no supporting findings: ${name}`);
+      item.expected = {
+        heading: name,
+        model: name,
+        findingLinks: rows.map((row) => row.measurement.card_url),
+      };
+    }
+  }
   return {
     cases,
     families,
@@ -348,6 +443,8 @@ export function publishedEntityCases(root) {
       modelsNotPubliclyNamedOrWithoutFindings:
         findings.models.length - publicModels.length,
       boardAxisLabelsAreNotNewMeasurements: true,
+      declaredBoardAxisLabels: axes.length,
+      ownerGatedAxisDetails: [...hiddenAxes],
     },
   };
 }
@@ -623,6 +720,14 @@ export function surfaceInventory(root) {
     const pathname =
       new URL(item.url, "https://councilof.ai").pathname.replace(/\/+$/, "") ||
       "/";
+    const entity = entities.cases.find(
+      (row) =>
+        (new URL(row.url, "https://councilof.ai").pathname.replace(
+          /\/+$/,
+          "",
+        ) || "/") === pathname,
+    );
+    if (entity?.expected) item.expected = entity.expected;
     const route = app.records.find((record) => record.path === pathname);
     if (route?.expectedTerminal) item.expectedTerminal = route.expectedTerminal;
     if (route?.publicationState === "withdrawn-notice")
@@ -647,6 +752,19 @@ export function surfaceInventory(root) {
           ))
       )
         item.expectedTerminal = "published-html-tombstone";
+      if (/^public\/interop\/.*\/mirrors\/.*\.html$/.test(file)) {
+        item.execution = "artifact-read";
+        item.artifact = {
+          source: file,
+          sha256: createHash("sha256")
+            .update(fs.readFileSync(path.join(root, file)))
+            .digest("hex"),
+          classification:
+            item.expectedTerminal === "published-html-tombstone"
+              ? "source-declared-tombstone"
+              : "frozen-http-capture",
+        };
+      }
     }
   }
   return {
@@ -665,6 +783,8 @@ export function surfaceInventory(root) {
     sitemapBrowserURLs: sitemap.browser.length,
     additionalSitemapAliasCases: sitemapAliases.length,
     httpResources: sitemap.http,
+    artifactReads: cases.filter((item) => item.execution === "artifact-read")
+      .length,
     cases,
   };
 }

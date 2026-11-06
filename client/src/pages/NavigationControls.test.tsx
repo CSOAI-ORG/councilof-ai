@@ -91,7 +91,7 @@ describe("real routed navigation controls", () => {
       "/interop/council-independence.json",
     ],
     ["Council detail", CouncilDetail, "/training"],
-    ["Early access", EarlyAccessLanding, "/signup"],
+    ["Start with evidence", EarlyAccessLanding, "/gspc-verify"],
     ["EI3", EI3, "/board"],
     ["Drift audit", DriftProduct, "/contact?subject=drift-audit"],
     ["MCP catalogue", MCPRegistry, "/api-docs"],
