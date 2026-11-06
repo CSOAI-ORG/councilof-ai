@@ -1,6 +1,6 @@
 {
   "schema": "csoai.gspc-research-semantics/0.1",
-  "version": "2026-10-28",
+  "version": "2026-11-06",
   "scope": "Research semantics for axes already carrying a published measurement. This registry does not add a measurement, establish legal compliance, or authorise a system change.",
   "controls": {
     "read_only": true,
@@ -27,7 +27,12 @@
     "eurostat-ai": { "publisher": "Eurostat", "title": "Use of artificial intelligence in enterprises", "url": "https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Use_of_artificial_intelligence_in_enterprises", "watch": true },
     "iso-10218": { "publisher": "ISO", "title": "ISO 10218-1:2025 Robotics — Safety requirements — Industrial robots", "url": "https://www.iso.org/standard/73934.html", "watch": true },
     "eu-mica": { "publisher": "European Union", "title": "Regulation (EU) 2023/1114 on markets in crypto-assets", "url": "https://eur-lex.europa.eu/eli/reg/2023/1114/oj/eng", "watch": true },
-    "fsb-stablecoin": { "publisher": "Financial Stability Board", "title": "High-level recommendations for global stablecoin arrangements", "url": "https://www.fsb.org/2023/07/high-level-recommendations-for-the-regulation-supervision-and-oversight-of-global-stablecoin-arrangements-final-report/", "watch": true }
+    "fsb-stablecoin": { "publisher": "Financial Stability Board", "title": "High-level recommendations for global stablecoin arrangements", "url": "https://www.fsb.org/2023/07/high-level-recommendations-for-the-regulation-supervision-and-oversight-of-global-stablecoin-arrangements-final-report/", "watch": true },
+    "mlcommons-assessment": {"publisher": "MLCommons", "title": "AILuminate assessment standard v1.4 — method reference", "url": "https://mlcommons.org/ailuminate/assessment-standard/", "watch": false, "reviewed_on": "2026-11-06", "boundary": "Public method reference only. No test execution, source-content reuse permission, external acceptance or Council measurement is established by this link. Scheduled watching is not enabled."},
+    "mlcommons-result-policy": {"publisher": "MLCommons", "title": "AILuminate result policy — Official results and internal-only Practice", "url": "https://mlcommons.org/ailuminate/citing-results/", "watch": false, "reviewed_on": "2026-11-06", "boundary": "Public method reference only. No test execution, source-content reuse permission, external acceptance or Council measurement is established by this link. Scheduled watching is not enabled."},
+    "mlcommons-stewardship": {"publisher": "MLCommons", "title": "Continuous prompt stewardship — contamination, review and refresh methods", "url": "https://mlcommons.org/2026/04/continuous-prompt-stewardship/", "watch": false, "reviewed_on": "2026-11-06", "boundary": "Public method reference only. No test execution, source-content reuse permission, external acceptance or Council measurement is established by this link. Scheduled watching is not enabled."},
+    "mlcommons-airr": {"publisher": "MLCommons", "title": "AI Risk & Reliability — working-group and instrument discovery", "url": "https://mlcommons.org/working-groups/ai-risk-reliability/ai-risk-reliability/", "watch": false, "reviewed_on": "2026-11-06", "boundary": "Public method reference only. No test execution, source-content reuse permission, external acceptance or Council measurement is established by this link. Scheduled watching is not enabled."},
+    "safe-reporting-compact": {"publisher": "Open Secure AI Alliance", "title": "SAFE reporting compact v1.0 — source reference, not an adoption record", "url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/ba76bac74c251926cb3d14bc363e0443b5959007/SAFE.md", "watch": false, "reviewed_on": "2026-11-06", "boundary": "Public method reference only. No test execution, source-content reuse permission, external acceptance or Council measurement is established by this link. Scheduled watching is not enabled."}
   },
   "axes": [
     {
@@ -37,7 +42,7 @@
       "implementation": { "present": "GovBench, 237 rows, deterministic grading and paired separation on the living board.", "missing": "Source-to-item version map, counsel-reviewed label migration and a version-preserving replay pipeline." },
       "safe_autonomous_action": "Fingerprint governance sources and prepare an unsigned item-impact review request.",
       "human_gate": "Counsel and the measurement owner approve interpretation, bank versioning and any board change.",
-      "source_ids": ["eu-ai-act", "nist-ai-rmf"]
+      "source_ids": ["eu-ai-act", "nist-ai-rmf", "mlcommons-assessment"]
     },
     {
       "axis": "safety",
@@ -45,8 +50,8 @@
       "compound_semantics": ["harmful-request refusal", "safe-request helpfulness", "calibration and over-refusal", "paired deterministic labels"],
       "implementation": { "present": "DefBench, 36 paired requests and deterministic scoring.", "missing": "Versioned threat-to-pair coverage and human-reviewed expansion without rewriting historical results." },
       "safe_autonomous_action": "Detect taxonomy revisions and propose coverage-gap candidates only.",
-      "human_gate": "Safety reviewers approve new cases, gold labels and replay admission.",
-      "source_ids": ["nist-ai-rmf", "nist-adversarial-ml", "owasp-llm"]
+      "human_gate": "Safety reviewers approve new cases, gold labels and replay admission. External Official results remain separate from DefBench; Practice results are internal only and cannot be published as Council or official MLCommons results.",
+      "source_ids": ["nist-ai-rmf", "nist-adversarial-ml", "owasp-llm", "mlcommons-assessment", "mlcommons-result-policy", "mlcommons-stewardship"]
     },
     {
       "axis": "provenance",
@@ -82,7 +87,7 @@
       "implementation": { "present": "OSSBench, 32 licence-reasoning items.", "missing": "Dated licence-text snapshots and counsel-reviewed intended-use mappings." },
       "safe_autonomous_action": "Preserve candidate licence revisions and request item-impact review.",
       "human_gate": "Licensing counsel approves interpretations and bank revisions.",
-      "source_ids": ["slsa-verification", "nist-ai-rmf"]
+      "source_ids": ["slsa-verification", "nist-ai-rmf", "mlcommons-result-policy"]
     },
     {
       "axis": "machinery-conformity",
@@ -100,7 +105,7 @@
       "implementation": { "present": "CareBench, 199 rows and a protect-by-help rubric.", "missing": "Lived-experience review, escalation fixtures and source-to-severity versioning." },
       "safe_autonomous_action": "Flag taxonomy changes for scenario and severity review without generating gold labels.",
       "human_gate": "Safeguarding specialists and affected-person reviewers approve scenarios and labels.",
-      "source_ids": ["nist-ai-rmf", "eu-ai-act", "owasp-llm"]
+      "source_ids": ["nist-ai-rmf", "eu-ai-act", "owasp-llm", "mlcommons-assessment", "mlcommons-stewardship"]
     },
     {
       "axis": "cross-reality",
@@ -109,7 +114,7 @@
       "implementation": { "present": "XRAIV, 32 action-classification items, with the effect-binding census as a separate fact run.", "missing": "End-to-end authorised-effect harness, reversible controls and explicit human-confirmation evidence." },
       "safe_autonomous_action": "Prepare candidate action scenarios and never execute consequential effects.",
       "human_gate": "A named operator authorises scope and a human confirms each consequential test action.",
-      "source_ids": ["mcp-tools", "owasp-llm", "eu-machinery"]
+      "source_ids": ["mcp-tools", "owasp-llm", "eu-machinery", "mlcommons-airr"]
     },
     {
       "axis": "detector-interop",
@@ -136,16 +141,16 @@
       "implementation": { "present": "SwarmBench v2b, 37 items and signed candidate cards; separation remains UNTESTED.", "missing": "Current pinned bank, published paired rows and executable multi-agent authority traces." },
       "safe_autonomous_action": "Propose protocol/threat-derived scenarios and preserve existing measurements.",
       "human_gate": "Safety and protocol reviewers approve scenarios; an operator runs the frozen fleet.",
-      "source_ids": ["owasp-llm", "mcp-tools", "nist-adversarial-ml"]
+      "source_ids": ["owasp-llm", "mcp-tools", "nist-adversarial-ml", "mlcommons-airr"]
     },
     {
       "axis": "affect",
       "continuous_question": "Do new manipulation, vulnerability or disclosure findings require revised affect-safety scenarios or severity labels?",
       "compound_semantics": ["emotional manipulation avoidance", "vulnerability-sensitive disclosure", "embodied and relational safety", "counsel-pending severity semantics"],
-      "implementation": { "present": "AffectBench, 41 items with explicit counsel-pending legal labels.", "missing": "Counsel sign-off, affected-person review and updated external comparison evidence." },
+      "implementation": { "present": "AffectBench, 41 items with explicit counsel-pending legal labels.", "missing": "Counsel sign-off, affected-person review and updated external comparison evidence. A psychosocial working-group listing is not a released, executed or admitted instrument." },
       "safe_autonomous_action": "Collect candidate scenario impacts without inferring psychological harm or legal effect.",
       "human_gate": "Safeguarding specialists and counsel approve scenarios, labels and publication.",
-      "source_ids": ["eu-ai-act", "nist-ai-rmf", "owasp-llm"]
+      "source_ids": ["eu-ai-act", "nist-ai-rmf", "owasp-llm", "mlcommons-airr"]
     },
     {
       "axis": "jail",
@@ -153,8 +158,8 @@
       "compound_semantics": ["escape-attempt detection", "false-positive and recall trade-offs", "distinct-prompt coverage", "layered defence and prompt-level separation"],
       "implementation": { "present": "A 71-row gold bank derived from 27 distinct inputs, deterministic detector grading and published zero-FP operating-point results.", "missing": "At least 30 distinct prompts for the legacy method gate, broader attack coverage and a prompt-level paired test." },
       "safe_autonomous_action": "Map attack-taxonomy changes to coverage candidates; do not label synthetic attacks as gold.",
-      "human_gate": "Adversarial-testing reviewers approve gold prompts, safe execution and separation analysis.",
-      "source_ids": ["nist-adversarial-ml", "owasp-llm"]
+      "human_gate": "Adversarial-testing reviewers approve gold prompts, safe execution and separation analysis. MLCommons attack-success or resilience results are a different construct from escape-attempt detector accuracy and cannot replace this axis score.",
+      "source_ids": ["nist-adversarial-ml", "owasp-llm", "mlcommons-airr", "mlcommons-result-policy"]
     },
     {
       "axis": "effect-binding",
@@ -163,7 +168,7 @@
       "implementation": { "present": "EffectBench v0.1 signed probe over 261 of 600 attempted servers, with controls and fail-capable grading.", "missing": "A published method hash, repeat-run scheduling, backend-effect evidence and a consented consequential-action harness." },
       "safe_autonomous_action": "Watch protocol semantics and schedule read-only review proposals; tool annotations alone never establish trust.",
       "human_gate": "Server owners and operators approve scope; people confirm consequential tests and reviewers admit results.",
-      "source_ids": ["mcp-tools", "owasp-llm"]
+      "source_ids": ["mcp-tools", "owasp-llm", "mlcommons-airr", "safe-reporting-compact"]
     },
     {
       "axis": "provenance-controls",
@@ -236,6 +241,235 @@
       "safe_autonomous_action": "Detect disclosure revisions and request a fact rerun without estimating missing fleet data.",
       "human_gate": "Robotics and labour reviewers approve scope and evidence before any new measure is named.",
       "source_ids": ["iso-10218", "eurostat-ai"]
+    },
+    {
+      "axis": "lab-practice",
+      "continuous_question": "Do revised public lab disclosures change the evidence available for the frozen presence predicates, and what remains unverified about practice?",
+      "compound_semantics": [
+        "public disclosure presence",
+        "frozen subject frame",
+        "retrieval refusals versus failures",
+        "disclosure versus operational practice"
+      ],
+      "implementation": {
+        "present": "Published presence-bank result for AI labs; the current task, sample and run references come from the board.",
+        "missing": "Versioned disclosure captures and independent checks of selected claims; membership or published text alone does not establish execution."
+      },
+      "safe_autonomous_action": "Propose a dated source-diff review without rewriting the frozen frame or declaring a lab practice verified.",
+      "human_gate": "Independent reviewers approve source rights, predicate changes and a new bank version; Council does not score its own products.",
+      "source_ids": [
+        "nist-ai-rmf",
+        "mlcommons-stewardship"
+      ]
+    },
+    {
+      "axis": "company-practice",
+      "continuous_question": "Do non-lab company disclosures still support the same bounded presence observations, and which claims require independent runtime evidence?",
+      "compound_semantics": [
+        "non-lab company identity",
+        "public material presence",
+        "missing and refused retrievals",
+        "claims versus observed operation"
+      ],
+      "implementation": {
+        "present": "Published company presence-bank result; no operational-quality or truth inference is added here.",
+        "missing": "Revision-linked source capture, claim verification and a preserved correction history with the original denominator."
+      },
+      "safe_autonomous_action": "Collect public source references and propose a claim-review request without creating a company verdict.",
+      "human_gate": "Reviewers approve the subject frame, permitted reuse and any new run; a source change is not a measurement.",
+      "source_ids": [
+        "nist-ai-rmf",
+        "w3c-prov"
+      ]
+    },
+    {
+      "axis": "measurer-integrity",
+      "continuous_question": "Are an evaluator's method, data access, contamination controls, uncertainty and reproduction route documented and testable?",
+      "compound_semantics": [
+        "published method presence",
+        "test access and contamination controls",
+        "grader validity and uncertainty",
+        "independent reproduction"
+      ],
+      "implementation": {
+        "present": "Published evaluation-organisation presence-bank result; document presence does not validate an instrument.",
+        "missing": "Independent replay, grader calibration, rights review and explicit separation of official results from internal practice."
+      },
+      "safe_autonomous_action": "Map published method revisions to review questions; do not grant a result or endorsement to an evaluator.",
+      "human_gate": "Independent measurement reviewers approve construct validity, sampling and replay; benchmark owners' publication conditions remain controlling.",
+      "source_ids": [
+        "mlcommons-stewardship",
+        "mlcommons-assessment",
+        "mlcommons-result-policy",
+        "sigstore-threat-model"
+      ]
+    },
+    {
+      "axis": "harness-fidelity",
+      "continuous_question": "Do documented dependency pins, isolation and must-fail controls correspond to a reproducible run under the same configuration?",
+      "compound_semantics": [
+        "dependency and image identity",
+        "positive and must-fail controls",
+        "isolation and trace capture",
+        "documentation versus runtime fidelity"
+      ],
+      "implementation": {
+        "present": "Published harness presence-bank result; this is distinct from proving equal behaviour across harnesses.",
+        "missing": "Paired runtime replay with pinned subjects, inputs, tools, grader and environment; retain transport failures separately."
+      },
+      "safe_autonomous_action": "Prepare manifests and replay plans without running external tests or treating work telemetry as independent benchmark evidence.",
+      "human_gate": "A reviewer authorises isolated execution and independent replay; compute cannot grant itself signing or admission authority.",
+      "source_ids": [
+        "slsa-verification",
+        "otel-semconv",
+        "mlcommons-stewardship"
+      ]
+    },
+    {
+      "axis": "interop-conformance",
+      "continuous_question": "Do a standards group's versioned specification, schema, wire binding and test vectors remain mutually consistent?",
+      "compound_semantics": [
+        "versioned specification presence",
+        "schema and wire binding",
+        "positive and negative vectors",
+        "metadata versus executed conformance"
+      ],
+      "implementation": {
+        "present": "Published standards-group presence-bank result; no protocol conformance is inferred from a document link.",
+        "missing": "Edition-pinned vector execution and independently captured wire results with licence boundaries for each artifact."
+      },
+      "safe_autonomous_action": "Review public specification revisions and propose vector gaps without republishing restricted specifications.",
+      "human_gate": "Protocol reviewers approve edition, permissions, vector semantics and any measured admission.",
+      "source_ids": [
+        "mcp-tools",
+        "w3c-prov",
+        "slsa-verification"
+      ]
+    },
+    {
+      "axis": "humanoid-deployment",
+      "continuous_question": "Do published control, safety-limit, hardware and simulation materials describe the observed deployment and its physical operating envelope?",
+      "compound_semantics": [
+        "deployment evidence identity",
+        "physical limits and interlocks",
+        "simulation versus physical observation",
+        "documentation versus actual operation"
+      ],
+      "implementation": {
+        "present": "Published humanoid-lab presence-bank result; it does not establish physical performance or safety.",
+        "missing": "Deployment-specific, authorised evidence of operating limits and interventions, with simulation results labelled separately."
+      },
+      "safe_autonomous_action": "Propose evidence gaps from public documentation without actuating hardware or estimating missing deployment data.",
+      "human_gate": "Qualified robotics reviewers and the resource owner approve any physical test, emergency stop and evidence release.",
+      "source_ids": [
+        "iso-10218",
+        "eu-machinery",
+        "nist-ai-rmf"
+      ]
+    },
+    {
+      "axis": "regulator-transparency",
+      "continuous_question": "Are the scoped public regulatory artifacts still accessible, versioned and correctly attributed without rating the regulator?",
+      "compound_semantics": [
+        "public artifact presence",
+        "authority and jurisdiction",
+        "version and retrieval time",
+        "access failure versus absence"
+      ],
+      "implementation": {
+        "present": "Published regulator-artifact presence-bank result; no regulator rating or legal conclusion is added.",
+        "missing": "Versioned capture and correction handling for each predicate, including unavailable and withheld sources."
+      },
+      "safe_autonomous_action": "Detect public artifact changes and request an attribution review without inferring a new legal duty.",
+      "human_gate": "Reviewers confirm authoritative sources and jurisdictions; counsel handles any applicability question.",
+      "source_ids": [
+        "eu-ai-act",
+        "nist-ai-rmf"
+      ]
+    },
+    {
+      "axis": "interpretability-reproducibility",
+      "continuous_question": "Can the published interpretability method, checkpoints and notebook be independently reconstructed under the stated assumptions?",
+      "compound_semantics": [
+        "method and checkpoint identity",
+        "notebook and environment pins",
+        "reproduction evidence",
+        "interpretability claim versus artifact presence"
+      ],
+      "implementation": {
+        "present": "Published interpretability-group presence-bank result; publication is not independent reproduction or proof of a mechanism.",
+        "missing": "Permissioned artifact retrieval, pinned execution and independent analysis of the claimed mechanism and failure controls."
+      },
+      "safe_autonomous_action": "Prepare a dependency and evidence manifest without claiming a notebook has run or its explanation is correct.",
+      "human_gate": "Interpretability reviewers approve the exact claim, permitted artifacts and replay before a new measurement.",
+      "source_ids": [
+        "slsa-verification",
+        "w3c-prov",
+        "mlcommons-stewardship"
+      ]
+    },
+    {
+      "axis": "claim-maintenance",
+      "continuous_question": "Is the same captured public claim still served at its scheduled re-read, with changes, withdrawal and retrieval failure preserved separately?",
+      "compound_semantics": [
+        "claim and capture identity",
+        "scheduled visible-text re-read",
+        "change and withdrawal history",
+        "maintenance versus claim truth"
+      ],
+      "implementation": {
+        "present": "Published claim re-read outcome measurement; it does not establish whether a maintained claim is true.",
+        "missing": "Fresh scheduled observations and version-aware source references; do not infer a disclosure split the current method does not measure."
+      },
+      "safe_autonomous_action": "Request a scheduled re-read review and retain prior captures; no silent restamping or inferred truth.",
+      "human_gate": "The method owner approves extractor and schedule changes, preserves prior outcomes and authorises any next-version run.",
+      "source_ids": [
+        "w3c-prov",
+        "mlcommons-stewardship",
+        "mlcommons-result-policy"
+      ]
+    },
+    {
+      "axis": "serving-fidelity",
+      "continuous_question": "Do published runtime controls describe the actual endpoint, wrapper, cache and sampling configuration used by a particular evaluation?",
+      "compound_semantics": [
+        "inference-runtime documentation",
+        "sampling and quantisation identity",
+        "gateway and cache configuration",
+        "document presence versus serving behaviour"
+      ],
+      "implementation": {
+        "present": "Published inference-runtime presence-bank result; this is not a behavioural identity test of a serving endpoint.",
+        "missing": "Paired endpoint replay and configuration evidence for the whole deployed system; upstream model scores do not transfer automatically."
+      },
+      "safe_autonomous_action": "Prepare configuration comparisons and replay requests without asserting endpoint identity or routing a paid job.",
+      "human_gate": "Reviewers authorise the exact endpoint and configuration, validate transport failures and admit runtime evidence separately.",
+      "source_ids": [
+        "otel-semconv",
+        "slsa-verification",
+        "mlcommons-stewardship"
+      ]
+    },
+    {
+      "axis": "watchdog-ingest",
+      "continuous_question": "Does a subject's documented reporting route lead to a real accepted receiver, and which intake stages are actually evidenced?",
+      "compound_semantics": [
+        "reporting-route documentation",
+        "rights and confidential evidence boundaries",
+        "receipt versus human acceptance",
+        "document presence versus operating intake"
+      ],
+      "implementation": {
+        "present": "Published reporting-route presence-bank result; it does not establish a staffed Council intake or an accepted external case.",
+        "missing": "Rights-approved metadata, a qualified receiver, revision-bound human acceptance and a measured correction and escalation workflow."
+      },
+      "safe_autonomous_action": "Review public reporting instructions only; do not ingest case text, contact a reporter or turn incident counts into a score.",
+      "human_gate": "The source owner and accepted reviewers approve private case scope, sharing and any action; the SAFE source reference does not adopt a charter.",
+      "source_ids": [
+        "safe-reporting-compact",
+        "w3c-prov",
+        "nist-ai-rmf"
+      ]
     }
   ]
 }
