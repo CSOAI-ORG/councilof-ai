@@ -89,15 +89,15 @@ export default function Landing() {
             <span className="text-xs text-muted-foreground hidden sm:inline">Council of AIs</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/watchdog">
-              <Button variant="ghost" size="sm">Watchdog</Button>
-            </Link>
-            <Link href="/">
-              <Button size="sm">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/watchdog">Watchdog</Link>
+            </Button>
+            <Button asChild size="sm">
+              <Link href="/">
                 Dashboard
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </nav>
@@ -128,18 +128,18 @@ export default function Landing() {
               </p>
               
               <div className="flex flex-wrap gap-4 mb-8">
-                <Link href="/">
-                  <Button size="lg" className="gap-2">
+                <Button asChild size="lg" className="gap-2">
+                  <Link href="/">
                     Get Started Free
                     <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link href="/watchdog-signup">
-                  <Button size="lg" variant="outline" className="gap-2">
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="gap-2">
+                  <Link href="/watchdog-signup">
                     <Eye className="h-4 w-4" />
                     Become a Watchdog
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
               
               {/* Stats */}
@@ -276,12 +276,12 @@ export default function Landing() {
           </div>
           
           <div className="text-center">
-            <Link href="/watchdog-signup">
-              <Button size="lg" className="gap-2">
+            <Button asChild size="lg" className="gap-2">
+              <Link href="/watchdog-signup">
                 Sign Up to Become a Watchdog
                 <ChevronRight className="h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
             <p className="text-sm text-muted-foreground mt-4">
               <span className="font-semibold text-primary">{loiCount}+</span> people have already signed up
             </p>
@@ -399,18 +399,18 @@ export default function Landing() {
               wanting to protect humanity, CSOAI is for you.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/assess">
-                <Button size="lg" className="gap-2">
+              <Button asChild size="lg" className="gap-2">
+                <Link href="/assess">
                   Get measured
                   <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/watchdog-signup">
-                <Button size="lg" variant="outline" className="gap-2">
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="gap-2">
+                <Link href="/watchdog-signup">
                   Become a Watchdog
                   <Eye className="h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </div>

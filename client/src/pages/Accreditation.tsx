@@ -117,12 +117,17 @@ export default function Accreditation() {
               of conformity.&rdquo;
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/training">
-                <Button size="lg" variant="secondary" className="bg-white text-blue-900 hover:bg-gray-100">
+              <Button
+                asChild
+                size="lg"
+                variant="secondary"
+                className="bg-white text-blue-900 hover:bg-gray-100"
+              >
+                <Link href="/training">
                   Start training
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
               <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-blue-800" disabled title="No file is published for this yet.">Standards file not published yet</Button>
             </div>
           </div>
@@ -211,12 +216,12 @@ export default function Accreditation() {
                 <p className="text-sm text-gray-600 mb-4">
                   SOAI-PDCA Continuous Improvement Framework
                 </p>
-                <Link href="/soai-pdca">
-                  <Button variant="outline" size="sm" className="w-full">
+                <Button asChild variant="outline" size="sm" className="w-full">
+                  <Link href="/soai-pdca">
                     Learn About SOAI-PDCA
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
 
@@ -231,12 +236,12 @@ export default function Accreditation() {
                   combining AI-powered safety oversight with the proven Plan-Do-Check-Act cycle
                   for continuous improvement and regulatory compliance.
                 </p>
-                <Link href="/soai-pdca">
-                  <Button size="lg" className="bg-green-600 hover:bg-green-700">
+                <Button asChild size="lg" className="bg-green-600 hover:bg-green-700">
+                  <Link href="/soai-pdca">
                     Explore the SOAI-PDCA Framework
                     <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
@@ -370,12 +375,17 @@ export default function Accreditation() {
             </div>
 
             <div className="text-center">
-              <Link href="/enterprise-onboarding">
-                <Button size="lg" variant="secondary" className="bg-white text-blue-900 hover:bg-gray-100">
+              <Button
+                asChild
+                size="lg"
+                variant="secondary"
+                className="bg-white text-blue-900 hover:bg-gray-100"
+              >
+                <Link href="/enterprise-onboarding">
                   Request Enterprise Demo
                   <ExternalLink className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -392,17 +402,20 @@ export default function Accreditation() {
             field in tech.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/training">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Link href="/training">
                 Start Free Training
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/certification">
-              <Button size="lg" variant="outline" className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50">
-                View Assessment Exams
-              </Button>
-            </Link>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
+            >
+              <Link href="/certification">View Assessment Exams</Link>
+            </Button>
           </div>
         </div>
       </section>

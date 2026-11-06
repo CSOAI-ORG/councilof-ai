@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: './tests',
   // These suites own built-checkout fixtures and local servers in their dedicated configs.
   // Keep them out of this broad deployed-site suite.
-  testIgnore: /(dashboard-shell|gpai-daily-evidence)\.spec\.ts/,
+  testIgnore: /(dashboard-shell|gpai-daily-evidence|surface-sweep)\.spec\.ts/,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

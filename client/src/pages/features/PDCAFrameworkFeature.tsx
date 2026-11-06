@@ -117,18 +117,18 @@ export default function PDCAFrameworkFeature() {
               with specialized Safety Oversight for AI (SOAI) principles.
             </p>
             <div className="flex gap-4 justify-center">
-              <Link href="/courses">
-                <Button size="lg">
+              <Button asChild size="lg">
+                <Link href="/courses">
                   Start Learning
                   <BookOpen className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/watchdog">
-                <Button size="lg" variant="outline">
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/watchdog">
                   See It in Action
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </div>
@@ -334,18 +334,18 @@ export default function PDCAFrameworkFeature() {
               through our comprehensive training programs.
             </p>
             <div className="flex gap-4 justify-center">
-              <Link href="/courses">
-                <Button size="lg">
+              <Button asChild size="lg">
+                <Link href="/courses">
                   Browse Courses
                   <BookOpen className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/features/training-certification">
-                <Button size="lg" variant="outline">
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/features/training-certification">
                   View training
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </div>

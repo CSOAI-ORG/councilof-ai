@@ -464,16 +464,12 @@ export default function MembershipAgreement() {
                   Become part of the global movement for responsible AI governance.
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <Link href="/pricing">
-                    <Button size="lg">
-                      View Membership Options
-                    </Button>
-                  </Link>
-                  <Link href="/charter">
-                    <Button variant="outline" size="lg">
-                      Read the Charter
-                    </Button>
-                  </Link>
+                  <Button asChild size="lg">
+                    <Link href="/pricing">View Membership Options</Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg">
+                    <Link href="/charter">Read the Charter</Link>
+                  </Button>
                 </div>
               </CardContent>
             </Card>

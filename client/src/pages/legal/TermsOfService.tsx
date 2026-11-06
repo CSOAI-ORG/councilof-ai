@@ -558,16 +558,12 @@ export default function TermsOfService() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center mt-6">
-                  <Link href="/privacy-policy">
-                    <Button variant="outline">
-                      Privacy Policy
-                    </Button>
-                  </Link>
-                  <Link href="/charter">
-                    <Button>
-                      Read the Charter
-                    </Button>
-                  </Link>
+                  <Button asChild variant="outline">
+                    <Link href="/privacy-policy">Privacy Policy</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link href="/charter">Read the Charter</Link>
+                  </Button>
                 </div>
               </CardContent>
             </Card>

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useClipboardCopy } from "@/hooks/useClipboardCopy";
 import { FOCUS, MEASURE, TYPE } from "./glass";
 
 /**
@@ -29,73 +29,90 @@ export function PaneHead({
   return (
     <header>
       <p className={TYPE.section}>{eyebrow}</p>
-      <h2 className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">{title}</h2>
-      {children && <div className={`mt-2 ${MEASURE} ${TYPE.body}`}>{children}</div>}
+      <h2 className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">
+        {title}
+      </h2>
+      {children && (
+        <div className={`mt-2 ${MEASURE} ${TYPE.body}`}>{children}</div>
+      )}
     </header>
   );
 }
 
 /** Loading / failed states for a pane that reads the live board. Never a stale number. */
-export function WireNotice({ phase, error }: { phase: "loading" | "failed"; error?: string }) {
+export function WireNotice({
+  phase,
+  error,
+}: {
+  phase: "loading" | "failed";
+  error?: string;
+}) {
   if (phase === "loading") {
     return (
-      <p className={`mt-6 rounded-xl border border-slate-900/10 bg-white/80 px-4 py-3 ${TYPE.muted}`}>
+      <p
+        className={`mt-6 rounded-xl border border-slate-900/10 bg-white/80 px-4 py-3 ${TYPE.muted}`}
+      >
         Reading <code className="font-mono text-[11px]">GET /api/gspc</code>…
       </p>
     );
   }
   return (
     <div className="mt-6 rounded-xl border border-amber-600/35 bg-amber-50 px-4 py-3.5">
-      <p className="text-[13px] font-semibold text-amber-900">The live board did not answer.</p>
-      <p className={`mt-1.5 ${MEASURE} text-[12px] leading-relaxed text-amber-900/90`}>
-        This pane builds from <code className="font-mono text-[11px]">GET /api/gspc</code> and has no
-        offline copy on purpose — an artefact assembled from a stale snapshot while looking live is
-        the same defect as quoting a score an axis never earned. Nothing is shown until the board
-        answers.
+      <p className="text-[13px] font-semibold text-amber-900">
+        The live board did not answer.
       </p>
-      {error && <p className="mt-2 font-mono text-[11px] text-amber-900/80">{error}</p>}
+      <p
+        className={`mt-1.5 ${MEASURE} text-[12px] leading-relaxed text-amber-900/90`}
+      >
+        This pane builds from{" "}
+        <code className="font-mono text-[11px]">GET /api/gspc</code> and has no
+        offline copy on purpose — an artefact assembled from a stale snapshot
+        while looking live is the same defect as quoting a score an axis never
+        earned. Nothing is shown until the board answers.
+      </p>
+      {error && (
+        <p className="mt-2 font-mono text-[11px] text-amber-900/80">{error}</p>
+      )}
     </div>
   );
 }
 
 /** Selectable takeaway text with an honest copy control. */
 export function CopyBlock({ text, label }: { text: string; label: string }) {
-  const [said, setSaid] = useState<"" | "copied" | "blocked">("");
-  const copy = useCallback(() => {
-    const done = (s: "copied" | "blocked") => {
-      setSaid(s);
-      setTimeout(() => setSaid(""), 2200);
-    };
-    try {
-      const p = navigator.clipboard?.writeText(text);
-      if (p && typeof p.then === "function") p.then(() => done("copied"), () => done("blocked"));
-      else done(navigator.clipboard ? "copied" : "blocked");
-    } catch {
-      done("blocked");
-    }
-  }, [text]);
+  const { state, copy } = useClipboardCopy(text);
 
   return (
     <div className="mt-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className={TYPE.section}>{label}</span>
         <span className="flex items-center gap-2">
-          {said === "copied" && <span className="text-[11px] font-semibold text-emerald-800">Copied</span>}
-          {said === "blocked" && (
-            <span className="text-[11px] font-semibold text-amber-800">
-              Clipboard blocked — select the text
-            </span>
-          )}
+          <span
+            role="status"
+            className={`text-xs font-semibold ${state === "blocked" ? "text-amber-800" : "text-emerald-800"}`}
+          >
+            {state === "copied"
+              ? "Copied"
+              : state === "blocked"
+                ? "Copy could not be confirmed — select and copy the text below."
+                : state === "copying"
+                  ? "Copying…"
+                  : ""}
+          </span>
           <button
             type="button"
-            onClick={copy}
-            className={`rounded-lg border border-slate-900/12 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
+            onClick={() => void copy()}
+            disabled={state === "copying"}
+            className={`min-h-11 rounded-lg border border-slate-900/12 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-900/5 disabled:opacity-60 motion-reduce:transition-none ${FOCUS}`}
           >
             Copy
           </button>
         </span>
       </div>
-      <pre tabIndex={0} className="mt-2 max-h-80 overflow-auto rounded-xl border border-slate-900/10 bg-slate-50 p-4 font-mono text-[11.5px] leading-relaxed text-slate-800">
+      <pre
+        tabIndex={0}
+        aria-label={label}
+        className="mt-2 max-h-80 overflow-auto rounded-xl border border-slate-900/10 bg-slate-50 p-4 font-mono text-xs leading-relaxed text-slate-800"
+      >
         <code>{text}</code>
       </pre>
     </div>
@@ -119,7 +136,9 @@ export function Field({
 }) {
   return (
     <label htmlFor={id} className="block">
-      <span className="block text-[12.5px] font-semibold text-slate-900">{label}</span>
+      <span className="block text-[12.5px] font-semibold text-slate-900">
+        {label}
+      </span>
       {hint && <span className={`mt-0.5 block ${TYPE.fine}`}>{hint}</span>}
       <input
         id={id}

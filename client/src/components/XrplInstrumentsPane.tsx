@@ -33,9 +33,15 @@ type XrplAsset = {
  * supply_state, e.g. UNMEASURED) and UNCHECKABLE when it gives none. Never a bare dash: a dash
  * reads as blank, and blank is not a measurement state.
  */
-export function xrplFigure(value: number | null | undefined, state: string | undefined): string {
-  if (typeof value === "number" && Number.isFinite(value)) return value.toLocaleString();
-  return typeof state === "string" && state.trim() ? state.trim() : "UNCHECKABLE";
+export function xrplFigure(
+  value: number | null | undefined,
+  state: string | undefined,
+): string {
+  if (typeof value === "number" && Number.isFinite(value))
+    return value.toLocaleString();
+  return typeof state === "string" && state.trim()
+    ? state.trim()
+    : "UNCHECKABLE";
 }
 
 type XrplDoc = {
@@ -52,7 +58,11 @@ export default function XrplInstrumentsPane() {
 
   useEffect(() => {
     fetch("/api/xrpl")
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("GET /api/xrpl HTTP " + r.status))))
+      .then((r) =>
+        r.ok
+          ? r.json()
+          : Promise.reject(new Error("GET /api/xrpl HTTP " + r.status)),
+      )
       .then((d) => {
         setDoc(d);
         setAssets(Array.isArray(d.assets) ? d.assets : []);
@@ -60,20 +70,32 @@ export default function XrplInstrumentsPane() {
       .catch((e) => setErr(String(e)));
   }, []);
 
-  const signed = assets ? assets.filter((a) => a.sig_ed25519 != null).length : null;
+  const signed = assets
+    ? assets.filter((a) => a.sig_ed25519 != null).length
+    : null;
 
   if (err) {
     return (
       <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800">
-        UNREACHABLE — {err}. The catalogue reader did not answer; no cached table is shown.
+        <h2 className="text-lg font-black">XRPL instruments</h2>
+        <p role="alert" className="mt-2">
+          UNREACHABLE — {err}. The catalogue reader did not answer; no cached
+          table is shown.
+        </p>
       </div>
     );
   }
   if (!assets) {
     return (
       <div className="p-6">
-        <div className="h-40 animate-pulse rounded-2xl bg-emerald-50" />
-        <p className="mt-2 text-sm text-gray-500">Loading /api/xrpl…</p>
+        <h2 className="text-lg font-black text-gray-900">XRPL instruments</h2>
+        <div
+          aria-hidden="true"
+          className="mt-2 h-40 animate-pulse rounded-2xl bg-emerald-50"
+        />
+        <p role="status" className="mt-2 text-sm text-gray-500">
+          Loading /api/xrpl…
+        </p>
       </div>
     );
   }
@@ -83,13 +105,14 @@ export default function XrplInstrumentsPane() {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-lg font-black text-gray-900">XRPL instruments</h2>
         <p className="font-mono text-xs text-gray-500">
-          as_of {doc?.as_of || "…"} · n={doc?.n ?? "…"} · signed {signed ?? "…"}/{assets.length}
+          as_of {doc?.as_of || "…"} · n={doc?.n ?? "…"} · signed {signed ?? "…"}
+          /{assets.length}
         </p>
       </div>
       <p className="mt-1 text-sm text-gray-600">
-        The XRPL public-root catalogue: {assets.length} assets,{" "}
-        {signed ?? "…"} with <code>sig_ed25519</code>. An unsigned asset is{" "}
-        <em>unsigned</em> — say so, never a fabricated signature. Not a GSPC grade.
+        The XRPL public-root catalogue: {assets.length} assets, {signed ?? "…"}{" "}
+        with <code>sig_ed25519</code>. An unsigned asset is <em>unsigned</em> —
+        say so, never a fabricated signature. Not a GSPC grade.
       </p>
       <div className="mt-4 overflow-x-auto">
         <table className="w-full text-left text-sm">
@@ -106,13 +129,24 @@ export default function XrplInstrumentsPane() {
           </thead>
           <tbody>
             {assets.map((a) => (
-              <tr key={a.symbol || a.sha256} className="border-b border-gray-100">
-                <td className="py-2 pr-4 font-mono font-bold text-gray-900">{a.symbol}</td>
+              <tr
+                key={a.symbol || a.sha256}
+                className="border-b border-gray-100"
+              >
+                <td className="py-2 pr-4 font-mono font-bold text-gray-900">
+                  {a.symbol}
+                </td>
                 <td className="py-2 pr-4 text-gray-700">{a.issuer}</td>
                 <td className="py-2 pr-4 text-gray-700">{a.kind}</td>
-                <td className="py-2 pr-4 tabular-nums text-gray-700">{xrplFigure(a.holders, a.holders_state)}</td>
-                <td className="py-2 pr-4 tabular-nums text-gray-700">{xrplFigure(a.supply, a.supply_state)}</td>
-                <td className="py-2 pr-4 text-gray-600">{a.verified_via || "—"}</td>
+                <td className="py-2 pr-4 tabular-nums text-gray-700">
+                  {xrplFigure(a.holders, a.holders_state)}
+                </td>
+                <td className="py-2 pr-4 tabular-nums text-gray-700">
+                  {xrplFigure(a.supply, a.supply_state)}
+                </td>
+                <td className="py-2 pr-4 text-gray-600">
+                  {a.verified_via || "—"}
+                </td>
                 <td className="py-2">
                   {a.sig_ed25519 ? (
                     <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-700">
@@ -131,8 +165,9 @@ export default function XrplInstrumentsPane() {
       </div>
       <p className="mt-4 text-xs text-gray-500">
         Per-asset evidence card = the <code>rwa_evidence</code> x402 door (free{" "}
-        <code>?preview=1</code> state; the settled card is paid at the 402 — the amount appears
-        only in the challenge). Verification stays free. Never a grade.
+        <code>?preview=1</code> state; the settled card is paid at the 402 — the
+        amount appears only in the challenge). Verification stays free. Never a
+        grade.
       </p>
     </div>
   );

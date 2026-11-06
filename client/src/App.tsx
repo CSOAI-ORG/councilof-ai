@@ -2,7 +2,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation, Redirect } from "wouter";
 import RequireAuth from "./components/RequireAuth";
-import { useEffect, useLayoutEffect, lazy, Suspense } from "react";
+import { useEffect, useLayoutEffect, useRef, lazy, Suspense } from "react";
 import { maintainHead, resolveHead } from "./lib/seoHead";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
@@ -162,8 +162,6 @@ const ConformityRoute = lazy(() => import("./pages/ConformityRoute"));
 const Contact = lazy(() => import("./pages/Contact"));
 const CouncilDetail = lazy(() => import("./pages/CouncilDetail"));
 const CouncilLicensingLanding = lazy(() => import("./pages/CouncilLicensingLanding"));
-const CourseDetail = lazy(() => import("./pages/CourseDetail"));
-const EarlyAccessLanding = lazy(() => import("./pages/EarlyAccessLanding"));
 const EI3 = lazy(() => import("./pages/EI3"));
 const EUAIActClassifier = lazy(() => import("./pages/EUAIActClassifier"));
 const FrameworkDetail = lazy(() => import("./pages/FrameworkDetail"));
@@ -410,7 +408,12 @@ import CookieConsent from "./components/CookieConsent";
 
 function ScrollToTop() {
   const [location] = useLocation();
+  const previousRoute = useRef(location);
   useEffect(() => {
+    if (previousRoute.current !== location) {
+      previousRoute.current = location;
+      document.getElementById("main-content")?.focus({ preventScroll: true });
+    }
     // A link with a fragment (/how-we-work/#machine-surface) lands on that section. Until 6 Oct 2026
     // this effect always scrolled to the top, so it undid the browser's own jump to the anchor and
     // every deep link opened at the page head. Lazy pages mount after this effect runs, so the
@@ -634,6 +637,7 @@ function AppShell() {
                 <ArchivedBanner />
                 <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
                   <MainLandmarkContext.Provider value={true}>
+                  <ErrorBoundary resetKey={path} contained>
                   <Suspense fallback={<PrerenderedMainFallback />}><Switch>
                   <Route path="/" component={HomeVerify} />
                   <Route path="/home-v2" component={ContentReviewNotice} />
@@ -676,11 +680,11 @@ function AppShell() {
                   <Route path="/contact" component={Contact} />
                   <Route path="/council-detail" component={CouncilDetail} />
                   <Route path="/council-licensing" component={CouncilLicensingLanding} />
-                  <Route path="/courses/:id" component={CourseDetail} />
+                  <Route path="/courses/:id">{() => <DashboardDoor defaultTab="learn" />}</Route>
                   <Route path="/docs" component={DocsHub} />
                   <Route path="/brand" component={Brand} />
                   <Route path="/metered" component={X402Catalog} />
-                  <Route path="/early-access" component={EarlyAccessLanding} />
+                  <Route path="/early-access">{() => <DashboardDoor defaultTab="home" />}</Route>
                   <Route path="/ei3" component={EI3} />
                   <Route path="/enterprise-plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>
                   <Route path="/eu-ai-act-classifier" component={EUAIActClassifier} />
@@ -1239,6 +1243,7 @@ function AppShell() {
                   <Route path="/sovereign-twin">{() => <Redirect to="/me" />}</Route>
                   <Route component={NotFound} />
                   </Switch></Suspense>
+                  </ErrorBoundary>
                   </MainLandmarkContext.Provider>
                 </main>
                 <Footer />

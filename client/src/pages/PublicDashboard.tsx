@@ -205,17 +205,24 @@ export default function PublicDashboard() {
             Training and signed records are free. We measure. We do not certify.
           </p>
           <div className="flex gap-4 justify-center">
-            <Link href="/academy">
-              <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-cyan-600">
+            <Button
+              asChild
+              size="lg"
+              className="bg-gradient-to-r from-emerald-600 to-cyan-600"
+            >
+              <Link href="/academy">
                 Start Free Training
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/about">
-              <Button size="lg" variant="outline" className="border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
-                Learn More
-              </Button>
-            </Link>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+            >
+              <Link href="/about">Learn More</Link>
+            </Button>
           </div>
         </div>
       </section>

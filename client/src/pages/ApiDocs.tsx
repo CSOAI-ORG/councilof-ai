@@ -11,8 +11,7 @@ import {
   Globe,
   ArrowRight,
 } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { useClipboardCopy } from "@/hooks/useClipboardCopy";
 
 /**
  * /api-docs — the REAL public API.
@@ -27,15 +26,17 @@ import { toast } from "sonner";
 
 const BASE = "https://councilof.ai/api/gspc";
 
-export default function ApiDocs() {
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+export function ApiExampleCopy({ text, id }: { text: string; id: string }) {
+  const { state, copy } = useClipboardCopy(text);
+  return <>
+    <Button variant="ghost" size="sm" className="absolute right-2 top-2 min-h-11 min-w-11 gap-2" aria-label={state === "copied" ? `Copied the ${id} example` : `Copy the ${id} example`} disabled={state === "copying"} onClick={() => void copy()}>
+      {state === "copied" ? <CheckCircle className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+    </Button>
+    <p role="status" className="mb-2 pr-14 text-xs text-muted-foreground">{state === "copied" ? "Copied to clipboard." : state === "blocked" ? "Copy could not be confirmed — select and copy the example below." : state === "copying" ? "Copying…" : ""}</p>
+  </>;
+}
 
-  const copyToClipboard = (code: string, id: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(id);
-    toast.success("Copied to clipboard");
-    setTimeout(() => setCopiedCode(null), 2000);
-  };
+export default function ApiDocs() {
 
   const curlExample = `# The living board (keyless — no auth header). Counts: totals.public_count
 curl https://councilof.ai/api/gspc
@@ -179,11 +180,11 @@ console.log({
             </div>
           </Link>
           <div className="flex items-center gap-3">
-            <a href={BASE} target="_blank" rel="noopener noreferrer">
-              <Button size="sm" className="gap-2">
+            <Button asChild size="sm" className="gap-2">
+              <a href={BASE} target="_blank" rel="noopener noreferrer">
                 Open /api/gspc <ArrowRight className="w-4 h-4" />
-              </Button>
-            </a>
+              </a>
+            </Button>
           </div>
         </div>
       </nav>
@@ -278,19 +279,7 @@ console.log({
                 ].map(({ id, code }) => (
                   <TabsContent key={id} value={id}>
                     <div className="relative">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="absolute top-2 right-2 gap-2"
-                        aria-label={copiedCode === id ? `Copied the ${id} example` : `Copy the ${id} example`}
-                        onClick={() => copyToClipboard(code, id)}
-                      >
-                        {copiedCode === id ? (
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
-                      </Button>
+                      <ApiExampleCopy text={code} id={id} />
                       <pre tabIndex={0} className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
                         <code>{code}</code>
                       </pre>
@@ -311,19 +300,7 @@ console.log({
             </CardHeader>
             <CardContent>
               <div className="relative mb-6">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute top-2 right-2 gap-2"
-                  aria-label={copiedCode === "response" ? "Copied the response example" : "Copy the response example"}
-                  onClick={() => copyToClipboard(responseExample, "response")}
-                >
-                  {copiedCode === "response" ? (
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </Button>
+                <ApiExampleCopy text={responseExample} id="response" />
                 <pre tabIndex={0} className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
                   <code>{responseExample}</code>
                 </pre>
@@ -368,22 +345,24 @@ console.log({
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">See the board it powers</h2>
             <div className="flex items-center justify-center gap-4">
-              <Link href="/dashboard?tab=leaderboard">
-                <Button size="lg" className="gap-2">
+              <Button asChild size="lg" className="gap-2">
+                <Link href="/dashboard?tab=leaderboard">
                   GSPC board v2 <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link href="/methodology">
-                <Button size="lg" variant="outline" className="gap-2">
-                  How it is measured
-                </Button>
-              </Link>
-              <a href="https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" variant="outline" className="gap-2">
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="gap-2">
+                <Link href="/methodology">How it is measured</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="gap-2">
+                <a
+                  href="https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Globe className="w-4 h-4" />
                   Source snapshot (archived)
-                </Button>
-              </a>
+                </a>
+              </Button>
             </div>
           </div>
         </div>

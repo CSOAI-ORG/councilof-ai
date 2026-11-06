@@ -103,17 +103,14 @@ export default function ComparisonPage() {
             use.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/traction">
-              <Button size="lg">
-                Inspect the operating evidence{" "}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="/services">
-              <Button variant="outline" size="lg">
-                Discuss a defined engagement
-              </Button>
-            </Link>
+            <Button asChild size="lg">
+              <Link href="/traction">
+                Inspect the operating evidence <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/services">Discuss a defined engagement</Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -314,14 +311,14 @@ export default function ComparisonPage() {
           enquiry routes and the scope to agree.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link href="/quickstart">
-            <Button variant="outline">Try the public workflow</Button>
-          </Link>
-          <Link href="/services">
-            <Button>
+          <Button asChild variant="outline">
+            <Link href="/quickstart">Try the public workflow</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/services">
               Explore services <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </section>
     </div>

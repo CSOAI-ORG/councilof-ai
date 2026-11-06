@@ -57,12 +57,12 @@ export default function EI3() {
             Describe the system. Get a signed card. Not a certificate. We do not remediate. Verification stays free.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <a href="/board">
-              <Button className="bg-emerald-700 text-white hover:bg-emerald-800">Read the board</Button>
-            </a>
-            <a href="/firewall-charter">
-              <Button variant="outline">Measurement / remediation firewall</Button>
-            </a>
+            <Button asChild className="bg-emerald-700 text-white hover:bg-emerald-800">
+              <a href="/board">Read the board</a>
+            </Button>
+            <Button asChild variant="outline">
+              <a href="/firewall-charter">Measurement / remediation firewall</a>
+            </Button>
           </div>
         </section>
       </div>

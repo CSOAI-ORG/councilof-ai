@@ -655,7 +655,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/early-access",
   "comp": "EarlyAccessLanding",
-  "title": "Early Access Landing"
+  "title": "Start with public evidence"
  },
  {
   "path": "/east-west",

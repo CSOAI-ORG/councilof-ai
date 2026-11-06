@@ -599,16 +599,21 @@ export default function About() {
             and verification is free forever.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/academy">
-              <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
-                Start Training Today
-              </Button>
-            </Link>
-            <Link href="/academy">
-              <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
-                Open the academy
-              </Button>
-            </Link>
+            <Button
+              asChild
+              size="lg"
+              className="bg-emerald-700 hover:bg-emerald-800 text-white"
+            >
+              <Link href="/academy">Start Training Today</Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white"
+            >
+              <Link href="/academy">Open the academy</Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -804,21 +809,31 @@ export default function About() {
               Checking our evidence is free forever. Existing paid work is issuance and evidence assembly — including Article 50 marking evidence, evidence bundles and supported feeds — never a better grade, a ranking position or a certificate.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact/?arm=invoice&product=evidence-bundle">
-                <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
+              <Button
+                asChild
+                size="lg"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white"
+              >
+                <Link href="/contact/?arm=invoice&product=evidence-bundle">
                   Enquire about an evidence bundle
-                </Button>
-              </Link>
-              <Link href="/services/">
-                <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
-                  Browse supported evidence doors
-                </Button>
-              </Link>
-              <Link href="/gspc-verify">
-                <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
-                  Verify free
-                </Button>
-              </Link>
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="/services/">Browse supported evidence doors</Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="/gspc-verify">Verify free</Link>
+              </Button>
             </div>
           </Card>
         </div>

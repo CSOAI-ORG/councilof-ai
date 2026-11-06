@@ -18,6 +18,7 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import { createFirstAskHttpFixture } from "./first-ask-http-fixture.mjs";
+import { builtRetirementRedirects } from "./support/staticRedirects.mjs";
 
 const root = path.resolve(process.argv[2] ?? "dist/client");
 const port = Number(process.argv[3] ?? 4180);
@@ -60,7 +61,11 @@ function resolveFile(pathname) {
   // Contain the resolution inside root: a traversal must not escape dist/client.
   const target = path.resolve(root, "." + decoded);
   if (target !== root && !target.startsWith(root + path.sep)) return null;
-  for (const candidate of [target, path.join(target, "index.html"), target + ".html"]) {
+  for (const candidate of [
+    target,
+    path.join(target, "index.html"),
+    target + ".html",
+  ]) {
     if (isFile(candidate)) return candidate;
   }
   return null;
@@ -73,14 +78,23 @@ function etagFor(file) {
 }
 
 if (!isFile(path.join(root, "index.html"))) {
-  console.error(`[static-server] FATAL: no index.html under ${root} — build:client has not run`);
+  console.error(
+    `[static-server] FATAL: no index.html under ${root} — build:client has not run`,
+  );
   process.exit(1);
 }
 
 const firstAskFixture = createFirstAskHttpFixture();
+const retirementRedirects = builtRetirementRedirects(root);
 const server = http.createServer((req, res) => {
   if (firstAskFixture(req, res)) return;
   const pathname = new URL(req.url, `http://${host}:${port}`).pathname;
+  const retired = retirementRedirects.get(pathname);
+  if (retired) {
+    res.writeHead(retired.status, { location: retired.location });
+    res.end();
+    return;
+  }
   const file = resolveFile(pathname) ?? path.join(root, "index.html");
   const ext = path.extname(file).toLowerCase();
   // Deliberately NO cache-control, matching `serve`: an ETag alone, letting the browser
@@ -106,7 +120,9 @@ const server = http.createServer((req, res) => {
 });
 
 server.on("error", (err) => {
-  console.error(`[static-server] listen failed on ${host}:${port}: ${err.message}`);
+  console.error(
+    `[static-server] listen failed on ${host}:${port}: ${err.message}`,
+  );
   process.exit(1);
 });
 

@@ -65,7 +65,8 @@ export function askOnHome(
   },
 ): boolean {
   if (ctx.activePane || ctx.hasConversation || !ctx.talk) return false;
-  if (isExplicitNavigationCommand(text) && (matchTab(text) || matchRoute(text))) return false;
+  if (isExplicitNavigationCommand(text) && (matchTab(text) || matchRoute(text)))
+    return false;
   const question = text.trim();
   if (!question) return false;
   (ctx.record ?? recordActivity)({ kind: "ask", label: question });
@@ -138,18 +139,24 @@ export default function DashboardWorkspace({
   }, []);
 
   useEffect(() => {
+    let pendingStore: Storage | undefined;
     try {
-      const raw = localStorage.getItem(CANDIDATE_PENDING_KEY);
+      pendingStore = window.localStorage;
+      const raw = pendingStore.getItem(CANDIDATE_PENDING_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as { observation?: unknown };
         const observation = normalizeCandidateObservation(
           parsed?.observation ?? parsed,
         );
         if (observation) setCandidate(observation);
-        localStorage.removeItem(CANDIDATE_PENDING_KEY);
       }
     } catch {
-      localStorage.removeItem(CANDIDATE_PENDING_KEY);
+      // A denied read is optional local context, never a failed workspace.
+    }
+    try {
+      pendingStore?.removeItem(CANDIDATE_PENDING_KEY);
+    } catch {
+      // Cleanup can be denied independently from reading. Keep the workspace usable.
     }
 
     const receive = (event: MessageEvent) => {
@@ -195,7 +202,9 @@ export default function DashboardWorkspace({
       // A Council OS pane (/dashboard?tab=…) opens as itself. dashboardViewHref refuses to frame
       // /dashboard and falls back to Everything A–Z, which is where "show the system card" and
       // "show the regulation feed" used to land (tools audit, 6 Oct 2026).
-      setLocation(path.startsWith("/dashboard?") ? path : dashboardViewHref(path, label));
+      setLocation(
+        path.startsWith("/dashboard?") ? path : dashboardViewHref(path, label),
+      );
     },
     [navigate, setLocation],
   );
@@ -245,13 +254,24 @@ export default function DashboardWorkspace({
   useEffect(() => {
     const hasNewTurn = chat.turnCount > seenTurns.current;
     seenTurns.current = chat.turnCount;
-    if (!hasNewTurn || !activePane || !window.matchMedia("(max-width: 1279px)").matches) return;
+    if (
+      !hasNewTurn ||
+      !activePane ||
+      !window.matchMedia("(max-width: 1279px)").matches
+    )
+      return;
 
     const turns = chat.active?.turns ?? [];
     const latest = turns[turns.length - 1];
-    const question = [...turns].reverse().find((turn) => turn.role === "user")?.text ?? "";
+    const question =
+      [...turns].reverse().find((turn) => turn.role === "user")?.text ?? "";
     // Pane-navigation commands should leave the newly opened pane in view.
-    if (latest?.role !== "council" || (isExplicitNavigationCommand(question) && (matchTab(question) || matchRoute(question)))) return;
+    if (
+      latest?.role !== "council" ||
+      (isExplicitNavigationCommand(question) &&
+        (matchTab(question) || matchRoute(question)))
+    )
+      return;
     // The desktop rail shows this answer already; on smaller screens its only
     // home is the closed History drawer. Open that drawer when the answer lands.
     setHistoryOpen(true);
@@ -294,9 +314,13 @@ export default function DashboardWorkspace({
                       Workspace, tasks and chat history
                     </DialogTitle>
                     <DialogDescription className="sr-only">
-                      Review the current workspace, task activity and local chat threads.
+                      Review the current workspace, task activity and local chat
+                      threads.
                     </DialogDescription>
-                    <DashboardRightRail chat={chat} className="w-full border-l-0" />
+                    <DashboardRightRail
+                      chat={chat}
+                      className="w-full border-l-0"
+                    />
                   </DialogContent>
                 </Dialog>
               );

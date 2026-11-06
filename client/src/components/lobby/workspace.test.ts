@@ -44,6 +44,29 @@ describe("the local workspace", () => {
     OS_PREF_KEYS.forEach((k) => expect(store.has(k)).toBe(false));
   });
 
+  it("forgets the actual start page and shared shortcuts while retaining run evidence metadata", () => {
+    store.set("coai:workspace-start-tab", "tools");
+    store.set("coai:recents", "[]");
+    store.set("coai.tool-receipts/1", "retained local log");
+    forgetOsPreferences();
+    expect(store.has("coai:workspace-start-tab")).toBe(false);
+    expect(store.has("coai:recents")).toBe(false);
+    expect(store.get("coai.tool-receipts/1")).toBe("retained local log");
+  });
+
+  it("continues clearing other keys when one preference cannot be removed", () => {
+    OS_PREF_KEYS.forEach((key) => store.set(key, "x"));
+    vi.stubGlobal("localStorage", {
+      getItem: (key: string) => store.get(key) ?? null,
+      removeItem: (key: string) => { if (key === WORKSPACE_KEY) throw new Error("blocked"); store.delete(key); },
+    });
+    const removed = forgetOsPreferences();
+    expect(removed).not.toContain(WORKSPACE_KEY);
+    expect(removed).toContain("coai:recents");
+    expect(store.get(WORKSPACE_KEY)).toBe("x");
+    expect(store.has("coai:recents")).toBe(false);
+  });
+
   it("the activity log records events newest-first and never persists them", () => {
     recordActivity({ kind: "pane", label: "Live board", tabId: "board" });
     recordActivity({ kind: "route", label: "Methodology", path: "/methodology" });

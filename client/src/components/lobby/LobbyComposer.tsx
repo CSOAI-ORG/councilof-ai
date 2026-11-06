@@ -376,7 +376,7 @@ export default function LobbyComposer({
           "How it answers" toggle stays clickable and aria-describedby stays intact. */}
       <p id="coai-lobby-chat-note" className={`mt-2 ${TYPE.fine}`}>
         <span className={turns.length > 0 && !noteOpen ? "sr-only" : undefined}>
-          Answers come only from published measurements; nothing you paste is uploaded.
+          Questions are sent to the Council API for an answer from published sources.
         </span>{" "}
         <button
           type="button"

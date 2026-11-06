@@ -433,19 +433,15 @@ export default function LicensingAgreement() {
                   Verification stays free. Fees and rights require a countersigned manifest.
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <Link href="/licence-manifest">
-                    <Button size="lg">Request a manifest</Button>
-                  </Link>
-                  <Link href="/gspc-verify">
-                    <Button variant="outline" size="lg">
-                      Verify a card — free
-                    </Button>
-                  </Link>
-                  <Link href="/contact">
-                    <Button variant="outline" size="lg">
-                      Talk to us
-                    </Button>
-                  </Link>
+                  <Button asChild size="lg">
+                    <Link href="/licence-manifest">Request a manifest</Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg">
+                    <Link href="/gspc-verify">Verify a card — free</Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg">
+                    <Link href="/contact">Talk to us</Link>
+                  </Button>
                 </div>
               </CardContent>
             </Card>

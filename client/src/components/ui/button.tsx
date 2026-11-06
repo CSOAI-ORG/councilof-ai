@@ -9,7 +9,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex max-w-full items-center justify-center gap-2 whitespace-normal sm:whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 max-w-full items-center justify-center gap-2 whitespace-normal sm:whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -98,6 +98,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           aria-busy={loading || undefined}
           aria-describedby={ariaDescribedBy}
           {...props}
+          tabIndex={isDisabled ? -1 : props.tabIndex}
+          onClickCapture={(event: React.MouseEvent<HTMLButtonElement>) => {
+            if (isDisabled) { event.preventDefault(); event.stopPropagation(); return }
+            props.onClickCapture?.(event)
+          }}
+          onKeyDownCapture={(event: React.KeyboardEvent<HTMLButtonElement>) => {
+            if (isDisabled && (event.key === "Enter" || event.key === " ")) {
+              event.preventDefault(); event.stopPropagation(); return
+            }
+            props.onKeyDownCapture?.(event)
+          }}
         >
           {children}
         </Slot>

@@ -262,27 +262,24 @@ export default function DriftProduct() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3 pt-2">
-                  <a href="/corpus-watch/delta-report-2026-08-01.md" download>
-                    <Button variant="outline" size="sm">
+                  <Button asChild variant="outline" size="sm">
+                    <a href="/corpus-watch/delta-report-2026-08-01.md" download>
                       <Download className="mr-2 h-4 w-4" />
                       Report (.md)
-                    </Button>
-                  </a>
-                  <a
-                    href="/corpus-watch/delta-report-2026-08-01.md.sig"
-                    download
-                  >
-                    <Button variant="outline" size="sm">
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" size="sm">
+                    <a href="/corpus-watch/delta-report-2026-08-01.md.sig" download>
                       <Download className="mr-2 h-4 w-4" />
                       Signature (.sig)
-                    </Button>
-                  </a>
-                  <a href="/corpus-watch/corpus-watch-ed25519.pub" download>
-                    <Button variant="outline" size="sm">
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" size="sm">
+                    <a href="/corpus-watch/corpus-watch-ed25519.pub" download>
                       <Download className="mr-2 h-4 w-4" />
                       Public key
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -410,14 +407,9 @@ export default function DriftProduct() {
                   <div className="text-xs text-gray-500 mb-4">
                     {p.probes} probes · {p.reports}
                   </div>
-                  <Link href="/contact?subject=drift-audit">
-                    <Button
-                      className="w-full"
-                      variant={p.featured ? "default" : "outline"}
-                    >
-                      Request audit
-                    </Button>
-                  </Link>
+                  <Button asChild className="w-full" variant={p.featured ? "default" : "outline"}>
+                    <Link href="/contact?subject=drift-audit">Request audit</Link>
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -445,24 +437,24 @@ export default function DriftProduct() {
             legal compliance.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact?subject=drift-audit">
-              <Button
-                size="lg"
-                className="bg-white text-emerald-700 hover:bg-gray-100 px-8 py-6 text-lg font-bold rounded-xl"
-              >
-                Request drift audit
-              </Button>
-            </Link>
-            <a href="/corpus-watch/delta-report-2026-08-01.md" download>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold rounded-xl"
-              >
+            <Button
+              asChild
+              size="lg"
+              className="bg-white text-emerald-700 hover:bg-gray-100 px-8 py-6 text-lg font-bold rounded-xl"
+            >
+              <Link href="/contact?subject=drift-audit">Request drift audit</Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold rounded-xl"
+            >
+              <a href="/corpus-watch/delta-report-2026-08-01.md" download>
                 <Download className="mr-2 h-5 w-5" />
                 Download the signed report
-              </Button>
-            </a>
+              </a>
+            </Button>
           </div>
           <div className="mt-8 flex items-center justify-center gap-2 text-emerald-100/70 text-sm">
             <AlertTriangle className="h-4 w-4" />

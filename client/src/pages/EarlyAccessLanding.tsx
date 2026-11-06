@@ -1,236 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { CheckCircle, Zap, Users, Shield, TrendingUp, Clock } from 'lucide-react';
+import { ArrowRight, BookOpen, CheckCircle2, Code2, Search } from 'lucide-react';
 import { Link } from 'wouter';
+import { Button } from '@/components/ui/button';
 
+const destinations = [
+  { title: 'Check a published record', href: '/gspc-verify', icon: CheckCircle2, action: 'Verify a card', description: 'Inspect a signed measurement card and its verification result. Read the source, scope and limitations beside the record.' },
+  { title: 'Explore the measurement board', href: '/dashboard?tab=board', icon: Search, action: 'Open the board', description: 'Browse the published axes, evidence states and dates. Follow the underlying method and records for the result you need.' },
+  { title: 'Connect your tools', href: '/tools', icon: Code2, action: 'Read the setup guide', description: 'Find the MCP endpoint, client instructions and public tool catalogue. Choose a tool and inspect its inputs before running it.' },
+];
+
+/** The old local-only waitlist acknowledged an email without sending or storing it. */
 export default function EarlyAccessLanding() {
-  useEffect(() => {
-    document.title = 'Early Access - CSOAI AI Safety Platform';
-  }, []);
-
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setEmail('');
-      setSubmitted(false);
-    }, 3000);
-  };
-
-  const fadeInUp = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 },
-  };
-
   return (
-    <div className="w-full bg-white">
-      {/* Hero Section */}
-      <section className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50 flex items-center justify-center px-4 py-20">
-        <div className="max-w-4xl mx-auto w-full text-center">
-          <motion.div {...fadeInUp}>
-            <div className="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-              🚀 Limited Early Access Available
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              Be First to Access AI Safety Analyst Training
-            </h1>
-            <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join the movement. Get exclusive early access to the CSOAI measurement credential, Council training, and our complete AI safety platform.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white rounded-2xl shadow-xl p-8 md:p-12 max-w-md mx-auto mb-12"
-          >
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Early Access Benefits</h3>
-            <ul className="space-y-3 mb-8 text-left">
-              <li className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-                <span className="text-gray-700">Full access to every feature</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-                <span className="text-gray-700">Lifetime founding member status</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-                <span className="text-gray-700">Priority support & training</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-                <span className="text-gray-700">Direct access to our team</span>
-              </li>
-            </ul>
-
-            {!submitted ? (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-                <Button
-                  type="submit"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 font-semibold text-lg"
-                >
-                  Get Early Access
-                </Button>
-              </form>
-            ) : (
-              <div className="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 text-center">
-                <CheckCircle className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
-                <p className="text-emerald-700 font-semibold">Thank you! Check your email for next steps.</p>
-              </div>
-            )}
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-gray-600 text-sm"
-          >
-            Limited to first 1,000 members • No credit card required
-          </motion.p>
+    <div className="bg-[#fbfcf9] text-[#10291f]">
+      <section className="border-b border-emerald-900/10 px-5 py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-800">Start with Council of AI</p>
+          <h1 className="mt-5 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">Start with evidence you can check.</h1>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">Public measurements and card verification are open to everyone. Choose a starting point, inspect the published sources and continue in Council OS.</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button size="lg" asChild><Link href="/dashboard">Open Council OS <ArrowRight aria-hidden="true" /></Link></Button>
+            <Button size="lg" variant="outline" asChild><Link href="/gspc-verify">Verify a published card</Link></Button>
+          </div>
+          <p className="mt-5 text-sm text-slate-600">Free public access. No account is needed to read the board or verify a card.</p>
         </div>
       </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <motion.div {...fadeInUp} className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">What You Get</h2>
-            <p className="text-xl text-gray-600">Everything needed to master AI safety compliance</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: <Shield className="h-8 w-8" />,
-                title: 'Measurement Credential',
-                description: 'Professional training in AI safety, compliance frameworks, and incident analysis. Course completion attests training, not conformity. Valid for 3 years.'
-              },
-              {
-                icon: <Users className="h-8 w-8" />,
-                title: 'Council Training',
-                description: 'Learn from the designed council consensus model. Master multi-stakeholder decision making in AI governance.'
-              },
-              {
-                icon: <Zap className="h-8 w-8" />,
-                title: 'Watchdog Platform',
-                description: 'Report and analyze AI safety incidents. Contribute to public transparency database.'
-              },
-              {
-                icon: <TrendingUp className="h-8 w-8" />,
-                title: 'Career Opportunities',
-                description: 'Access to job board with AI safety analyst positions from enterprises worldwide.'
-              },
-              {
-                icon: <Clock className="h-8 w-8" />,
-                title: 'Self-Paced Learning',
-                description: 'Complete training at your own pace with lifetime access to course materials.'
-              },
-              {
-                icon: <CheckCircle className="h-8 w-8" />,
-                title: 'Community Access',
-                description: 'Join 10,000+ AI safety professionals. Network, learn, and grow together.'
-              },
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <Card className="p-6 h-full hover:shadow-lg transition-shadow">
-                  <div className="text-emerald-600 mb-4">{feature.icon}</div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
-                </Card>
-              </motion.div>
-            ))}
+      <section aria-labelledby="start-options" className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
+        <h2 id="start-options" className="text-2xl font-semibold tracking-tight">What would you like to do?</h2>
+        <div className="mt-7 grid gap-5 md:grid-cols-3">
+          {destinations.map(({ title, href, icon: Icon, action, description }) => (
+            <article key={href} className="flex flex-col rounded-2xl border border-emerald-900/15 bg-white p-6">
+              <Icon aria-hidden="true" className="h-6 w-6 text-emerald-800" />
+              <h3 className="mt-5 text-xl font-semibold leading-7">{title}</h3>
+              <p className="mt-3 flex-1 text-sm leading-7 text-slate-600">{description}</p>
+              <Button variant="outline" className="mt-6 self-start" asChild><Link href={href}>{action} <ArrowRight aria-hidden="true" /></Link></Button>
+            </article>
+          ))}
+        </div>
+        <div className="mt-8 grid gap-6 rounded-2xl border border-emerald-900/15 bg-emerald-50/50 p-6 sm:p-8 md:grid-cols-2">
+          <div>
+            <h2 className="text-xl font-semibold">Need a scoped measurement?</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600">Use the measurement enquiry to describe the system, version and evidence you need.</p>
+            <Link href="/assess/" className="mt-4 inline-flex min-h-11 items-center gap-2 font-semibold text-emerald-900 underline underline-offset-4">Make an enquiry <ArrowRight aria-hidden="true" className="h-4 w-4" /></Link>
+          </div>
+          <div>
+            <h2 className="flex items-center gap-2 text-xl font-semibold"><BookOpen aria-hidden="true" className="h-5 w-5" /> Practise with published cases</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600">Explore the practice workspace. Practice activity is separate from a published, signed measurement.</p>
+            <Link href="/dashboard?tab=learn" className="mt-4 inline-flex min-h-11 items-center gap-2 font-semibold text-emerald-900 underline underline-offset-4">Open practice <ArrowRight aria-hidden="true" className="h-4 w-4" /></Link>
           </div>
         </div>
-      </section>
-
-      {/* What Early Access Includes */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <motion.div {...fadeInUp} className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">What Early Access Includes</h2>
-            <p className="text-xl text-gray-600">Full access to every feature for early members</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'Analyst',
-                description: 'Perfect for individuals',
-                features: ['Measurement Credential', 'Training Courses', 'Watchdog Access', 'Community']
-              },
-              {
-                name: 'Enterprise',
-                description: 'For organizations',
-                features: ['Team Accounts (5)', 'Council', 'API Access', 'Priority Support']
-              },
-              {
-                name: 'Government',
-                description: 'For regulatory bodies',
-                features: ['Unlimited Users', 'Full API', 'Custom Integration', 'Dedicated Support']
-              },
-            ].map((plan, index) => (
-              <motion.div
-                key={plan.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <Card className={`p-8 h-full flex flex-col ${index === 1 ? 'border-2 border-emerald-600 shadow-lg' : ''}`}>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                  <p className="text-gray-600 mb-6">{plan.description}</p>
-                  <ul className="space-y-3 mb-8 flex-1">
-                    {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-center gap-2">
-                        <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <a href="/start" className={`w-full py-3 font-semibold ${index === 1 ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
-                    Get Started
-                  </a>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div {...fadeInUp}>
-            <h2 className="text-4xl font-bold mb-6">Ready to Lead AI Safety?</h2>
-            <p className="text-xl mb-8 opacity-90">Join 10,000+ professionals building the future of AI governance</p>
-            <Link href="/signup">
-              <Button className="bg-white text-emerald-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
-                Get Early Access Now
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
+        <p className="mt-8 text-sm leading-7 text-slate-600">Measurement, not certification. Check the scope and limitations of each record before relying on it.</p>
       </section>
     </div>
   );

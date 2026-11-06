@@ -257,16 +257,22 @@ export default function CouncilDetail() {
             Review the proposed workflow, then inspect the measurements that currently constrain its claims.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/training">
-              <Button size="lg" variant="secondary" className="bg-white text-emerald-600 hover:bg-gray-100">
-                Explore Training
-              </Button>
-            </Link>
-            <Link href="/council">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-emerald-500">
-                Read Current Status
-              </Button>
-            </Link>
+            <Button
+              asChild
+              size="lg"
+              variant="secondary"
+              className="bg-white text-emerald-600 hover:bg-gray-100"
+            >
+              <Link href="/training">Explore Training</Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-white text-white hover:bg-emerald-500"
+            >
+              <Link href="/council">Read Current Status</Link>
+            </Button>
           </div>
         </div>
       </section>
