@@ -4,7 +4,7 @@ A native MCP Apps view over the **existing** Council tools and AG-UI event strea
 
 ## What is implemented
 
-- A `ui://council/live-panel/1` resource with the standard `text/html;profile=mcp-app` MIME type, attached to existing `board_totals`, `get_axis`, `verify_card` and `server_evidence` tools. Tool names, arguments, handlers and count remain unchanged. `board_totals` has an OpenAI thread entrypoint with the Council/MEOK title; opening it reads the public board, not a private conversation.
+- A `ui://council/live-panel/1` resource with the standard `text/html;profile=mcp-app` MIME type, attached to existing `board_totals`, `get_axis`, `verify_card` and `server_evidence` tools. Tool names, arguments, handlers and count remain unchanged. `board_totals` advertises OpenAI thread and global entrypoints with the Council/MEOK title; opening it reads the public board, not a private conversation.
 - Activity, Evidence, Benchmarks, Academy and Connections views. Explicit user questions go to the fixed public `/api/agui/run` endpoint. The existing `aguiTalk` stream/parser/reducer is reused. Per-request run/thread identity is checked; missing terminal events, changed identities and malformed streams are not presented as completed. No automatic retry, page-execution consent, paid-tool confirmation or payment is sent.
 - The installed MCP Apps SDK provides the host bridge, user-requested follow-up explanation and file download. A connected host receives only the selected observation when the user asks for an explanation. No hidden reasoning, unrelated conversations, keystrokes, private platform Academy database or other host tools are read.
 - Local-only imports for Inspect and lm-evaluation-harness JSON summaries. Model/task labels, versions, original metric values and sample counts remain separate. Imported values are labelled unverified. No benchmark runs, combined safety percentage or proof of training is invented.
@@ -30,7 +30,7 @@ The browser test uses the real bundled SDK with an **owned protocol host fixture
 
 ## Platform connection and release
 
-This change adds presentation metadata to the existing `/mcp` and `/mcp/free` doors, not another public MCP server. After the protected master/GitHub Actions release, a supporting host must refresh its connection and discover the UI resource. OpenAI's `thread` entrypoint and portable MCP Apps rendering are host-dependent. No vendor directory submission, native ChatGPT/Claude installation, accreditation or all-platform interception is established by source tests.
+This change adds presentation metadata to the existing `/mcp` and `/mcp/free` doors, not another public MCP server. After the protected master/GitHub Actions release, a supporting host must refresh its connection and discover the UI resource. OpenAI's `thread` and `global` entrypoints and portable MCP Apps rendering are host-dependent. Global metadata requests a sidebar app but does not prove that a signed-in host has installed or displayed it. No vendor directory submission, native ChatGPT/Claude installation, accreditation or all-platform interception is established by source tests.
 
 For a text-only client, existing tool results remain unchanged. In a UI host without follow-up messaging or downloads, the request fails visibly rather than claiming delivery. A native sandbox cannot use the local second-screen channel; the view directs the user to the standalone workspace.
 
