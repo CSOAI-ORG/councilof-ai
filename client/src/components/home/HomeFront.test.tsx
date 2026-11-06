@@ -196,10 +196,29 @@ describe("LiveBoardGlance", () => {
     const html = render(<LiveBoardGlance data={boardWithAxes} models={models} />);
     // Grafana: linked views must preserve context — a tile that leads nowhere is a hole.
     for (const axis of ["mock-a", "mock-b", "mock-c", "mock-d"]) {
-      expect(html).toContain(`href="/gspc/${axis}/"`);
+      expect(html).toContain(`href="/axis/${axis}"`);
       expect(html).toContain(`data-axis-link="${axis}"`);
     }
     // The owner-held axis is not on the page, so it gets no link either.
+    expect(html).not.toContain("regulator-transparency");
+  });
+
+  it("opens measured subject tiles through the generated axis pages", () => {
+    const payload: GspcPayload = {
+      ...boardWithAxes,
+      axes: [
+        { axis: "lab-practice", family: "subject", kind: "measured-subject", status: "MEASURED", n: 37 },
+        { axis: "claim-maintenance", family: "subject", kind: "measured-subject", status: "MEASURED", n: 174 },
+        { axis: "regulator-transparency", family: "subject", kind: "measured-subject", status: "MEASURED", n: 41, public_pages: "HIDDEN_PENDING_OWNER_GO" },
+      ],
+    };
+    const html = render(<LiveBoardGlance data={payload} models={models} />);
+    // /gspc/:axis only has a legacy prerender list; subject axes have /axis/:axis pages.
+    for (const axis of ["lab-practice", "claim-maintenance"]) {
+      expect(html).toContain(`href="/axis/${axis}"`);
+      expect(html).not.toContain(`href="/gspc/${axis}/"`);
+      expect(html).toContain(`data-axis-link="${axis}"`);
+    }
     expect(html).not.toContain("regulator-transparency");
   });
 

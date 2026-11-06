@@ -147,7 +147,7 @@ function TileItem({ t }: { t: Tile }) {
             the reader back into the whole board and makes them find the row again.
             The axis name now links straight to that axis, keeping the axis with it. */}
         <a
-          href={`/gspc/${encodeURIComponent(t.axis)}/`}
+          href={`/axis/${encodeURIComponent(t.axis)}`}
           className="block truncate text-[13px] font-bold leading-tight text-foreground underline-offset-2 hover:underline"
           title={t.axis}
           data-axis-link={t.axis}
