@@ -37,7 +37,7 @@ export function prepareWorkStep(args, now = new Date().toISOString()) {
 }
 
 export async function submitWorkStep(args, {
-  endpoint,
+  endpoint = '',
   fetchImpl = fetch,
   now = new Date().toISOString(),
   timeoutMs = 5000,
@@ -51,6 +51,7 @@ export async function submitWorkStep(args, {
   try {
     const response = await fetchImpl(new URL(`${endpoint.replace(/\/+$/, '')}/api/workstream-telemetry`), {
       method: 'POST',
+      redirect: 'error',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(entry),
       signal: AbortSignal.timeout(timeoutMs),
@@ -78,13 +79,26 @@ export function readCapabilitySnapshot(directory, filename, fields) {
   const unavailable = reason => ({ state: 'UNCHECKABLE', reason, source, data: null, limitations: snapshotLimits });
   let fd;
   try {
-    fd = fs.openSync(path.join(directory, filename), 'r');
+    // Named pipes must not block the stdio process before fstat can reject them.
+    if (!Number.isInteger(fs.constants.O_NONBLOCK) || !Number.isInteger(fs.constants.O_NOFOLLOW)) return unavailable('SNAPSHOT_OPEN_NOT_SUPPORTED');
+    fd = fs.openSync(path.join(directory, filename), fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOFOLLOW);
     const before = fs.fstatSync(fd);
     if (!before.isFile()) return unavailable('ARTIFACT_NOT_REGULAR_FILE');
     if (before.size > 4 * 1024 * 1024) return unavailable('ARTIFACT_TOO_LARGE');
-    const bytes = fs.readFileSync(fd);
+    // A file can grow after the initial stat. Read no more than the limit plus
+    // one sentinel byte, rather than allocating/reading until an unbounded EOF.
+    const cap = 4 * 1024 * 1024;
+    const buffer = Buffer.alloc(cap + 1);
+    let length = 0;
+    while (length <= cap) {
+      const count = fs.readSync(fd, buffer, length, cap + 1 - length, length);
+      if (count === 0) break;
+      length += count;
+    }
+    if (length > cap) return unavailable('ARTIFACT_TOO_LARGE');
+    const bytes = buffer.subarray(0, length);
     const after = fs.fstatSync(fd);
-    if (before.size !== after.size || before.mtimeMs !== after.mtimeMs) return unavailable('ARTIFACT_CHANGED_DURING_READ');
+    if (before.size !== after.size || before.mtimeMs !== after.mtimeMs || length !== before.size) return unavailable('ARTIFACT_CHANGED_DURING_READ');
     const parsed = JSON.parse(bytes.toString('utf8'));
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return unavailable('ARTIFACT_OBJECT_REQUIRED');
     const data = {};

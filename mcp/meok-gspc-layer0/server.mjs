@@ -163,8 +163,15 @@ rl.on('line', async (line) => {
   try {
     req = JSON.parse(trimmed);
   } catch {
+    process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } }) + '\n');
     return;
   }
+  if (!req || typeof req !== 'object' || Array.isArray(req) || req.jsonrpc !== '2.0' || typeof req.method !== 'string' ||
+      (Object.hasOwn(req, 'id') && typeof req.id !== 'string' && !Number.isSafeInteger(req.id))) {
+    process.stdout.write(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32600, message: 'Invalid Request' } }) + '\n');
+    return;
+  }
+  if (!Object.hasOwn(req, 'id')) return; // Notifications never receive responses.
   const { id, method, params } = req;
   if (method === 'notifications/initialized') return;
 

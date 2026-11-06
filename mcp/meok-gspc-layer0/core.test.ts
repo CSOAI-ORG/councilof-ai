@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import fs, { appendFileSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { createServer } from 'node:http';
-import { spawn } from 'node:child_process';
+import { execFileSync, spawn, spawnSync } from 'node:child_process';
 import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 import { prepareWorkStep, submitWorkStep, readCapabilitySnapshot } from './core.mjs';
@@ -13,7 +13,7 @@ const args = { platform: 'fixture-executor', task_summary: 'Isolated fixture com
 const now = '2026-11-06T00:00:00Z';
 const dirs: string[] = [];
 const directory = () => { const p = mkdtempSync(join(tmpdir(), 'meok-source-fixture-')); dirs.push(p); return p; };
-afterEach(() => { for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); });
+afterEach(() => { vi.restoreAllMocks(); for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); });
 
 describe('Caller outcomes and transport are separate evidence', () => {
   it('keeps an omitted exit code unknown and a caller axis tag unvalidated', () => {
@@ -56,6 +56,22 @@ describe('Caller outcomes and transport are separate evidence', () => {
       expect(fetchImpl).toHaveBeenCalledOnce(); // No retry or invented local append.
     }
   });
+
+  it('never follows a telemetry redirect to a successful login page', async () => {
+    const visited: string[] = [];
+    const server = createServer((req, res) => {
+      visited.push(`${req.method} ${req.url}`); req.resume();
+      if (req.url === '/api/workstream-telemetry') { res.writeHead(302, { location: '/login' }); res.end(); }
+      else { res.writeHead(200); res.end('login page'); }
+    });
+    await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+    try {
+      const address = server.address() as { port: number };
+      const result = await submitWorkStep({ ...args, exit_code: 0 }, { endpoint: `http://127.0.0.1:${address.port}`, now });
+      expect(result.recording.state).toBe('UNCONFIRMED');
+      expect(visited).toEqual(['POST /api/workstream-telemetry']);
+    } finally { await new Promise<void>(resolve => server.close(() => resolve())); }
+  });
 });
 
 describe('Capability readers retain unavailable and static-snapshot states', () => {
@@ -79,6 +95,28 @@ describe('Capability readers retain unavailable and static-snapshot states', () 
     expect(value.limitations.join(' ')).toContain('does not establish current workers');
     expect(readFileSync(join(dir, filename), 'utf8')).toBe(bytes);
   });
+  it.skipIf(process.platform === 'win32')('rejects symlinks and a FIFO without blocking the MCP process', () => {
+    const dir = directory(); const target = join(dir, 'real.json');
+    writeFileSync(target, '{"summary":{}}'); symlinkSync(target, join(dir, filename));
+    expect(readCapabilitySnapshot(dir, filename, fields).state).toBe('UNCHECKABLE');
+    rmSync(join(dir, filename)); execFileSync('mkfifo', [join(dir, filename)]);
+    const script = 'const m=await import(process.argv[1]);process.stdout.write(JSON.stringify(m.readCapabilitySnapshot(process.argv[2],process.argv[3],{summary:"summary"})));';
+    const child = spawnSync(process.execPath, ['--input-type=module', '-e', script, new URL('./core.mjs', import.meta.url).href, dir, filename], { timeout: 2000, encoding: 'utf8' });
+    expect(child.error).toBeUndefined();
+    expect(child.status).toBe(0);
+    expect(JSON.parse(child.stdout)).toMatchObject({ state: 'UNCHECKABLE', reason: 'ARTIFACT_NOT_REGULAR_FILE', data: null });
+  });
+  it('caps a file that grows after its initial stat instead of reading to unbounded EOF', () => {
+    const dir = directory(); const file = join(dir, filename); writeFileSync(file, '{"summary":{}}');
+    const originalStat = fs.fstatSync.bind(fs);
+    vi.spyOn(fs, 'fstatSync').mockImplementationOnce((fd: any) => {
+      const before = originalStat(fd); appendFileSync(file, Buffer.alloc(4 * 1024 * 1024 + 100)); return before as any;
+    });
+    const reads = vi.spyOn(fs, 'readSync');
+    expect(readCapabilitySnapshot(dir, filename, fields)).toMatchObject({ state: 'UNCHECKABLE', reason: 'ARTIFACT_TOO_LARGE', data: null });
+    const bytesRead = reads.mock.results.reduce((sum, result) => sum + (result.type === 'return' ? Number(result.value) : 0), 0);
+    expect(bytesRead).toBe(4 * 1024 * 1024 + 1);
+  });
 });
 
 it('the candidate MCP entry preserves tool IDs and exposes unknown outcomes and missing artifacts over stdio', async () => {
@@ -94,7 +132,7 @@ it('the candidate MCP entry preserves tool IDs and exposes unknown outcomes and 
     env: { ...process.env, HIM_URL: `http://127.0.0.1:${address.port}`, MEOK_CAPABILITY_DIR: directory() },
     stdio: ['pipe', 'pipe', 'pipe'],
   });
-  const pending = new Map<number, (reply: any) => void>();
+  const pending = new Map<number | null, (reply: any) => void>();
   const lines = createInterface({ input: child.stdout });
   lines.on('line', line => { const reply = JSON.parse(line); pending.get(reply.id)?.(reply); pending.delete(reply.id); });
   let id = 0;
@@ -102,6 +140,12 @@ it('the candidate MCP entry preserves tool IDs and exposes unknown outcomes and 
     const key = ++id; pending.set(key, resolve); child.stdin.write(JSON.stringify({ jsonrpc: '2.0', id: key, method, params }) + '\n');
   });
   try {
+    const invalidEnvelope = new Promise<any>(resolve => { pending.set(null, resolve); child.stdin.write('null\n'); });
+    expect((await invalidEnvelope).error.code).toBe(-32600);
+    const invalidJson = new Promise<any>(resolve => { pending.set(null, resolve); child.stdin.write('{broken\n'); });
+    expect((await invalidJson).error.code).toBe(-32700);
+    const invalidId = new Promise<any>(resolve => { pending.set(null, resolve); child.stdin.write('{"jsonrpc":"2.0","id":null,"method":"tools/list"}\n'); });
+    expect((await invalidId).error.code).toBe(-32600);
     const list = (await rpc('tools/list')).result.tools;
     expect(list.map((tool: any) => tool.name)).toEqual(['meok_gspc_evaluate_work_step', 'meok_route_to_clan', 'meok_workstream_benchmark_report', 'meok_layer0_flywheel_status', 'meok_fleet_catalog', 'him_say', 'zcode_desktop']);
     expect(JSON.stringify(list)).not.toMatch(/20,600|414 suites|77-artefact|3\.2 TB/);
