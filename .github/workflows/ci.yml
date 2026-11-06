@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  # Bot-created daily-index PRs dispatch the real required build without bypassing protection.
+  workflow_dispatch:
   push:
     branches: [main, master]
   pull_request:
