@@ -26,8 +26,7 @@ import {
   openAsk,
   readRecents,
   recentDestination,
-  recordRecent,
-  togglePin,
+  setRecentPin,
 } from "./askBus";
 
 type Scope = "all" | PaletteKind;
@@ -150,14 +149,10 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
       !recentDestination(selected.href)
     )
       return;
-    let ok = saved
-      ? true
-      : recordRecent({
-          href: selected.href,
-          title: selected.title,
-          crumb: selected.crumb,
-        });
-    if (ok) ok = togglePin(selected.href);
+    const ok = setRecentPin(
+      { href: selected.href, title: selected.title, crumb: selected.crumb },
+      !saved?.pinned,
+    );
     setRecents(readRecents());
     setNotice(
       ok
@@ -219,7 +214,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
           className="fixed left-1/2 top-[6vh] z-[91] flex max-h-[88dvh] w-[calc(100%-1.5rem)] max-w-2xl -translate-x-1/2 flex-col overflow-hidden rounded-2xl border border-border bg-background text-foreground shadow-2xl sm:top-[10vh] sm:max-h-[80dvh]"
           data-testid="command-palette"
         >
-          <div className="flex items-start justify-between border-b border-border px-4 py-3">
+          <div className="flex shrink-0 items-start justify-between border-b border-border px-4 py-3">
             <div>
               <Dialog.Title className="text-sm font-semibold">
                 Search Council OS and the website
@@ -238,7 +233,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
               Esc
             </Dialog.Close>
           </div>
-          <div className="flex items-center gap-3 px-4">
+          <div className="flex shrink-0 items-center gap-3 px-4">
             <Search
               className="h-5 w-5 shrink-0 text-emerald-800"
               aria-hidden="true"
@@ -266,7 +261,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
             />
           </div>
           <div
-            className="flex flex-wrap items-center gap-1 border-y border-border bg-muted/30 px-3 py-2"
+            className="flex shrink-0 flex-wrap items-center gap-1 border-y border-border bg-muted/30 px-3 py-2"
             aria-label="Search categories"
           >
             {SCOPES.map((s) => (
@@ -276,7 +271,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
                 aria-pressed={scope === s.id}
                 onClick={() => setScope(s.id)}
                 className={
-                  "min-h-10 rounded-lg px-3 text-xs font-semibold " +
+                  "min-h-11 rounded-lg px-3 text-xs font-semibold " +
                   (scope === s.id
                     ? "bg-emerald-800 text-white "
                     : "text-muted-foreground hover:bg-muted ") +
@@ -292,7 +287,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
               disabled={refreshing}
               aria-label="Refresh tool and test catalogue"
               className={
-                "ml-auto inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-xs text-muted-foreground hover:bg-muted disabled:opacity-50 " +
+                "ml-auto inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-xs text-muted-foreground hover:bg-muted disabled:opacity-50 " +
                 FOCUS
               }
             >
@@ -307,7 +302,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
             </button>
           </div>
           <p
-            className="px-4 pb-1 pt-3 text-xs font-medium text-muted-foreground"
+            className="shrink-0 px-4 pb-1 pt-3 text-xs font-medium text-muted-foreground"
             role="status"
           >
             {!q.trim() && scope === "all" && recents.length
@@ -377,7 +372,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
               </li>
             ) : null}
           </ul>
-          <div className="flex min-h-12 flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-2">
+          <div className="flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-2">
             <span className="text-xs text-muted-foreground">
               {paletteToolSourceState() === "read"
                 ? "Free tool catalogue read · execution is a separate action"
@@ -395,7 +390,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
                 }
                 data-testid="palette-pin"
                 className={
-                  "inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-xs font-semibold hover:bg-muted " +
+                  "inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-xs font-semibold hover:bg-muted " +
                   FOCUS
                 }
               >
@@ -409,13 +404,16 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
             ) : null}
           </div>
           {notice ? (
-            <p className="px-4 pb-2 text-xs text-emerald-900" role="status">
+            <p
+              className="shrink-0 px-4 pb-2 text-xs text-emerald-900"
+              role="status"
+            >
               {notice}
             </p>
           ) : null}
           <p
             id={id + "-help"}
-            className="border-t border-border px-4 py-2 text-[11px] leading-5 text-muted-foreground"
+            className="shrink-0 border-t border-border px-4 py-2 text-[11px] leading-5 text-muted-foreground"
           >
             ↑↓ to move · Enter to open · Shift+Enter to ask · Esc to close.
             Shortcuts save destinations, not your tool inputs.

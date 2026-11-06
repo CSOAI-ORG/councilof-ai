@@ -192,8 +192,8 @@ export function recordRecent(r: Omit<Recent, "at" | "pinned">): boolean {
   const next: Recent[] = [
     {
       href,
-      title: r.title.slice(0, 160),
-      crumb: r.crumb.slice(0, 160),
+      title: prev?.pinned ? prev.title : r.title.slice(0, 160),
+      crumb: prev?.pinned ? prev.crumb : r.crumb.slice(0, 160),
       at: Date.now(),
       pinned: prev?.pinned ?? false,
     },
@@ -211,6 +211,38 @@ export function togglePin(href: string): boolean {
     return false;
   return write(
     store.rows.map((x) => (x.href === safe ? { ...x, pinned: !x.pinned } : x)),
+  );
+}
+
+/** Explicit pinning keeps the selected entity's label, independent of page-title tracking. */
+export function setRecentPin(
+  r: Pick<Recent, "href" | "title" | "crumb">,
+  pinned: boolean,
+): boolean {
+  const href = recentDestination(r.href);
+  const store = readStore();
+  if (
+    !href ||
+    !store.writable ||
+    typeof r.title !== "string" ||
+    typeof r.crumb !== "string"
+  )
+    return false;
+  const next: Recent[] = [
+    {
+      href,
+      title: r.title.slice(0, 160),
+      crumb: r.crumb.slice(0, 160),
+      at: Date.now(),
+      pinned,
+    },
+    ...store.rows.filter((row) => row.href !== href),
+  ];
+  return write(
+    [
+      ...next.filter((row) => row.pinned),
+      ...next.filter((row) => !row.pinned).slice(0, MAX),
+    ].sort((a, b) => b.at - a.at),
   );
 }
 

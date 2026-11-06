@@ -322,5 +322,28 @@ export function crumbFor(
     if (h && (u.replace(/\/$/, "") === h || u === h + "/"))
       return { title: it.title, crumb: it.crumb };
   }
+  // Deep links remain intelligible after reload, before the live catalogue has arrived.
+  // These labels describe requested navigation; they make no availability/measurement claim.
+  try {
+    const url = new URL(pathWithQuery, "https://councilof.ai");
+    const tool = url.searchParams.get("tool");
+    const axis = url.searchParams.get("axis");
+    if (
+      url.pathname.replace(/\/$/, "") === "/dashboard" &&
+      url.searchParams.get("tab") === "tools" &&
+      tool &&
+      /^[a-zA-Z0-9_.-]{1,120}$/.test(tool)
+    ) {
+      return {
+        title:
+          tool === "get_axis" && axis && /^[a-z0-9_-]{1,120}$/.test(axis)
+            ? `${axisTitle(axis)} — axis lookup`
+            : tool,
+        crumb: "Council OS › Tools",
+      };
+    }
+  } catch {
+    /* An unknown destination keeps its page's own fallback label. */
+  }
   return null;
 }
