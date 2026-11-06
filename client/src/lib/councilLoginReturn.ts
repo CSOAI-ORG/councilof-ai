@@ -2,6 +2,11 @@
 export const COUNCIL_DEFAULT_LOGIN_RETURN = "/dashboard";
 export const COMPANY_CASE_ID_MAX_LENGTH = 256;
 const COMPANY_WORKSPACE = "/dashboard/?workspace=company";
+// Navigation only. These pages still enforce the existing signed session and API grants.
+const ACCOUNT_RETURN_PATHS = new Set([
+  "/settings", "/settings/billing", "/settings/notifications", "/workbench",
+  "/my-applications", "/admin", "/api-keys",
+]);
 
 function boundedCaseId(value: string): boolean {
   return value.length > 0 && value.length <= COMPANY_CASE_ID_MAX_LENGTH && value.trim() === value && !/[\u0000-\u001f\u007f-\u009f]/.test(value);
@@ -14,9 +19,11 @@ export function companyWorkspaceHref(caseId?: string): string {
   return `/dashboard/?${query.toString()}`;
 }
 
-/** Only the company workspace's two navigation keys may survive a login return. */
+/** Known account destinations carry no query payload; Company keeps its existing two keys. */
 export function safeCouncilLoginReturn(value: string | null | undefined): string {
   if (!value || value.length > 4096 || /[\\\u0000-\u0020\u007f]/.test(value)) return COUNCIL_DEFAULT_LOGIN_RETURN;
+  const accountPath = value.replace(/\/$/, "");
+  if (ACCOUNT_RETURN_PATHS.has(accountPath)) return accountPath;
   const path = value.split("?")[0];
   if (path !== "/dashboard" && path !== "/dashboard/") return COUNCIL_DEFAULT_LOGIN_RETURN;
   let target: URL;

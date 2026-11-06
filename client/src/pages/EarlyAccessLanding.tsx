@@ -224,11 +224,12 @@ export default function EarlyAccessLanding() {
           <motion.div {...fadeInUp}>
             <h2 className="text-4xl font-bold mb-6">Ready to Lead AI Safety?</h2>
             <p className="text-xl mb-8 opacity-90">Join 10,000+ professionals building the future of AI governance</p>
-            <Link href="/signup">
-              <Button className="bg-white text-emerald-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
-                Get Early Access Now
-              </Button>
-            </Link>
+            <Button
+              asChild
+              className="bg-white text-emerald-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold"
+            >
+              <Link href="/signup">Get Early Access Now</Link>
+            </Button>
           </motion.div>
         </div>
       </section>

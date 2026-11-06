@@ -465,17 +465,15 @@ export default function FoundingCouncilAgreement() {
                   Join the first 50 leaders shaping the future of AI governance. Limited positions available.
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <Link href="/pricing">
-                    <Button size="lg" className="bg-amber-500 hover:bg-amber-600">
+                  <Button asChild size="lg" className="bg-amber-500 hover:bg-amber-600">
+                    <Link href="/pricing">
                       <Crown className="h-4 w-4 mr-2" />
                       Apply to Founding Council
-                    </Button>
-                  </Link>
-                  <Link href="/charter">
-                    <Button variant="outline" size="lg">
-                      Read the Charter
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg">
+                    <Link href="/charter">Read the Charter</Link>
+                  </Button>
                 </div>
               </CardContent>
             </Card>

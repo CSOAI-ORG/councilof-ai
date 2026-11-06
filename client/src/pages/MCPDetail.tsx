@@ -40,9 +40,9 @@ export default function MCPDetail() {
         <Card className="p-10 max-w-md text-center">
           <h1 className="text-2xl font-bold mb-2">MCP not found</h1>
           <p className="text-gray-600 mb-6">No MCP server matches “{slug}”.</p>
-          <Link href="/mcps">
-            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Browse all MCPs</Button>
-          </Link>
+          <Button asChild className="bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Link href="/mcps">Browse all MCPs</Link>
+          </Button>
         </Card>
       </div>
     );
@@ -102,15 +102,24 @@ export default function MCPDetail() {
 
         <div className="flex flex-wrap gap-3 mb-12">
           {publicSourceUrl(server.url) ? (
-            <a href={publicSourceUrl(server.url)!} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline"><Github className="h-4 w-4 mr-2" /> View source <ExternalLink className="h-3 w-3 ml-1.5" /></Button>
-            </a>
+            <Button asChild variant="outline">
+              <a
+                href={publicSourceUrl(server.url)!}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github className="h-4 w-4 mr-2" /> View source{" "}
+                <ExternalLink className="h-3 w-3 ml-1.5" />
+              </a>
+            </Button>
           ) : (
             <span className="self-center text-sm text-gray-500">{DARK_SOURCE_NOTE}</span>
           )}
-          <Link href="/gspc-verify/">
-            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Verify a signed record <ArrowRight className="h-4 w-4 ml-2" /></Button>
-          </Link>
+          <Button asChild className="bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Link href="/gspc-verify/">
+              Verify a signed record <ArrowRight className="h-4 w-4 ml-2" />
+            </Link>
+          </Button>
         </div>
 
         {server.frameworks.length > 0 && (

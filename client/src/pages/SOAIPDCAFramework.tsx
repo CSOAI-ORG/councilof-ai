@@ -658,12 +658,12 @@ export default function SOAIPDCAFramework() {
                         <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
                         <p className="text-gray-600 mb-4">{item.description}</p>
                         {/* nav-integrity: each step already carried a `link`; the button ignored it. */}
-                        <a href={item.link}>
-                          <Button variant="outline" size="sm">
+                        <Button asChild variant="outline" size="sm">
+                          <a href={item.link}>
                             {item.action}
                             <ArrowRight className="ml-2 h-4 w-4" />
-                          </Button>
-                        </a>
+                          </a>
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -686,11 +686,12 @@ export default function SOAIPDCAFramework() {
               Download comprehensive guides, templates, and case studies
             </p>
             <div className="grid md:grid-cols-2 gap-4 mb-6">
-              <Link href="/pdca-simulator">
-                <Button
-                  size="lg"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 h-auto py-4"
-                >
+              <Button
+                asChild
+                size="lg"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 h-auto py-4"
+              >
+                <Link href="/pdca-simulator">
                   <div className="text-left w-full">
                     <div className="font-semibold text-lg">🎮 Try Interactive Simulator</div>
                     <div className="text-xs text-emerald-100 mt-1">
@@ -698,8 +699,8 @@ export default function SOAIPDCAFramework() {
                     </div>
                   </div>
                   <ArrowRight className="ml-4 h-6 w-6 flex-shrink-0" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
               {[
                 { name: 'Complete Implementation Guide', size: '8.2 MB' },
                 { name: 'All Templates (ZIP)', size: '4.5 MB' },

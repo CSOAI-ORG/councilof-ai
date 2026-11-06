@@ -121,18 +121,27 @@ export default function Council() {
               Everything below is the design visualization, not measured production behaviour.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/interop/council-independence.json">
-                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Button
+                asChild
+                size="lg"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                <Link href="/interop/council-independence.json">
                   <Eye className="mr-2 h-5 w-5" />
                   Inspect the experiment
-                </Button>
-              </Link>
-              <Link href="/refutation-ledger">
-                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-white/30 text-white hover:bg-white/10"
+              >
+                <Link href="/refutation-ledger">
                   <Eye className="mr-2 h-5 w-5" />
                   View the Refutation Ledger
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </div>
@@ -404,12 +413,12 @@ export default function Council() {
               </div>
 
               <div className="mt-8">
-                <Link href="/training">
-                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button asChild className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                  <Link href="/training">
                     Explore Analyst Training
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </motion.div>
 
@@ -526,18 +535,27 @@ export default function Council() {
               experiment. No membership, certification, or live Council service is offered here.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/methodology">
-                <Button size="lg" className="bg-white text-emerald-700 hover:bg-gray-100">
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-emerald-700 hover:bg-gray-100"
+              >
+                <Link href="/methodology">
                   Read the methodology
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/transparency">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white/10"
+              >
+                <Link href="/transparency">
                   <BarChart3 className="mr-2 h-4 w-4" />
                   View the Transparency Registry
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </div>

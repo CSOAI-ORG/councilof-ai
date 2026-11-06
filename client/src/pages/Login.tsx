@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useSearch } from 'wouter';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -60,7 +60,7 @@ export default function Login() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+        <span role="status" aria-label="Checking your session"><Loader2 aria-hidden="true" className="h-8 w-8 animate-spin text-green-600" /></span>
       </div>
     );
   }
@@ -75,9 +75,9 @@ export default function Login() {
             <span className="text-3xl font-bold text-gray-900">CSOAI</span>
           </div>
 
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Welcome back to your Council assistant
-          </h1>
+          </h2>
 
           <p className="text-lg text-gray-600 mb-8">
             Sign in to your AI governance workspace — your Council assistant, published governance
@@ -123,9 +123,9 @@ export default function Login() {
             <div className="mx-auto mb-4 h-16 w-16 bg-green-100 rounded-full flex items-center justify-center">
               <Shield className="h-8 w-8 text-green-600" />
             </div>
-            <CardTitle className="text-2xl">Sign In to CSOAI</CardTitle>
+            <h1 className="text-2xl font-semibold">Sign in to Council OS</h1>
             <CardDescription>
-              Access your Council OS
+              Use your existing Council account.
             </CardDescription>
           </CardHeader>
 
@@ -192,23 +192,11 @@ export default function Login() {
               <a href="/dashboard">Browse public results</a>
             </Button>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500">New to CSOAI?</span>
-              </div>
-            </div>
-
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full"
-              onClick={() => setLocation('/signup')}
-              disabled={isSubmitting}
-            >
-              Create Free Account
+            <p className="text-center text-sm leading-6 text-gray-600">
+              New here? The public board and card verification are free to use without an account.
+            </p>
+            <Button variant="outline" size="lg" className="w-full" asChild>
+              <a href="/gspc-verify">Verify a published card</a>
             </Button>
 
             <p className="text-xs text-center text-gray-500">

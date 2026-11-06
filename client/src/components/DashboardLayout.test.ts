@@ -28,22 +28,33 @@ describe("dashboard consolidation details", () => {
   });
 
   it("registers Evidence Delivery as a native pane with explicit host submission", () => {
-    expect(tabById("evidence-delivery")).toMatchObject({ kind: "native", path: "" });
+    expect(tabById("evidence-delivery")).toMatchObject({
+      kind: "native",
+      path: "",
+    });
     expect(hasPane("evidence-delivery")).toBe(true);
-    const source = readFileSync(resolve(__dirname, "./gspc/CouncilEvidenceDeliveryPane.tsx"), "utf8");
+    const source = readFileSync(
+      resolve(__dirname, "./gspc/CouncilEvidenceDeliveryPane.tsx"),
+      "utf8",
+    );
     expect(source).toContain("Submit unsigned draft to Council A2A");
     expect(source).toContain('fetcher("/api/a2a"');
     expect(source).not.toContain("fetcher(handoff.transport");
   });
 
-  it("pins embedded page controls to the canvas corner — no floating Workspace button to clear", () => {
+  it("keeps embedded page controls in a normal-flow toolbar with touch targets", () => {
     // 27 Sep 2026: the floating mobile "Workspace" button left the canvas; the History
     // control now lives in the section bar, so the controls no longer need a top-16 offset.
     const source = readFileSync(
       resolve(__dirname, "./DashboardEmbeddedView.tsx"),
       "utf8",
     );
-    expect(source).toContain("right-3 top-3");
+    expect(source).toMatch(
+      /<div className="flex flex-wrap items-center justify-end[^\"]*border-b/,
+    );
+    expect(source).toMatch(/className="inline-flex min-h-11[^\"]*"/);
+    expect(source).toMatch(/className="inline-flex h-11 w-11[^\"]*"/);
+    expect(source).not.toContain("absolute right-3 top-3");
     expect(source).not.toContain("top-16");
     const workspace = readFileSync(
       resolve(__dirname, "./DashboardWorkspace.tsx"),
@@ -53,7 +64,10 @@ describe("dashboard consolidation details", () => {
   });
 
   it("renders the one site header, eight sections with icons and no second tab strip", () => {
-    const layout = readFileSync(resolve(__dirname, "./DashboardLayout.tsx"), "utf8");
+    const layout = readFileSync(
+      resolve(__dirname, "./DashboardLayout.tsx"),
+      "utf8",
+    );
     expect(layout).toMatch(/<Header inApp \/>/);
     for (const group of DASHBOARD_NAV_GROUPS) {
       // An absent Record key crashes the entire shell with React error #130.

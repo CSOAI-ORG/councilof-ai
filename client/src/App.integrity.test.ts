@@ -50,4 +50,9 @@ describe("App.tsx is intact", () => {
     expect(src).toMatch(/<Route path="\/lookup">\s*\{\(\) => <Redirect to="\/gspc-verify" \/>\}\s*<\/Route>/);
     expect(src).toMatch(/<Route path="\/ceremony">\s*\{\(\) => <Redirect to="\/events\/three-root-ceremony" \/>\}\s*<\/Route>/);
   });
+
+  it("folds legacy course enrollment into the existing practice workspace", () => {
+    expect(src).toContain('<Route path="/courses/:id">{() => <DashboardDoor defaultTab="learn" />}</Route>');
+    expect(src).not.toContain('<Route path="/courses/:id" component={CourseDetail} />');
+  });
 });

@@ -80,11 +80,14 @@ export default function MCPRegistry() {
 
           {/* Developer path. The "Get a free API key" signup button was removed 2026-09-26. */}
           <div className="flex flex-wrap gap-3 mt-8">
-            <Link href="/api-docs">
-              <Button size="lg" variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
-                Read the API docs
-              </Button>
-            </Link>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+            >
+              <Link href="/api-docs">Read the API docs</Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -233,14 +236,18 @@ export default function MCPRegistry() {
             entries. Verification is free and needs no account.
           </p>
           <div className="flex flex-wrap gap-3 mt-6">
-            <Link href="/gspc-verify">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Button
+              asChild
+              size="lg"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              <Link href="/gspc-verify">
                 Verify a signed record <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="/api-docs">
-              <Button size="lg" variant="outline">Read the API docs</Button>
-            </Link>
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/api-docs">Read the API docs</Link>
+            </Button>
           </div>
         </div>
       </div>

@@ -86,16 +86,12 @@ export default function Careers() {
               We will define the scope, evidence and terms before any work begins.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <a href="#positions">
-                <Button size="lg">
-                  View Collaboration Areas
-                </Button>
-              </a>
-              <Link href="/about">
-                <Button variant="outline" size="lg">
-                  Learn About Us
-                </Button>
-              </Link>
+              <Button asChild size="lg">
+                <a href="#positions">View Collaboration Areas</a>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link href="/about">Learn About Us</Link>
+              </Button>
             </div>
           </motion.div>
         </div>
@@ -247,12 +243,12 @@ export default function Careers() {
               Tell us the question, the evidence you can bring, what another person should be able
               to reproduce, and the time or funding constraints. Please do not send sensitive data.
             </p>
-            <a href="mailto:research@csoai.org?subject=Reproducible%20research%20proposal">
-              <Button size="lg" variant="outline">
+            <Button asChild size="lg" variant="outline">
+              <a href="mailto:research@csoai.org?subject=Reproducible%20research%20proposal">
                 Propose a collaboration
                 <Send className="ml-2 h-4 w-4" />
-              </Button>
-            </a>
+              </a>
+            </Button>
           </motion.div>
         </div>
       </section>
@@ -269,16 +265,12 @@ export default function Careers() {
                   proposing work. A useful challenge to the evidence is a contribution too.
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <a href="#positions">
-                    <Button size="lg">
-                      View Collaboration Areas
-                    </Button>
-                  </a>
-                  <Link href="/training">
-                    <Button variant="outline" size="lg">
-                      Start Free Training
-                    </Button>
-                  </Link>
+                  <Button asChild size="lg">
+                    <a href="#positions">View Collaboration Areas</a>
+                  </Button>
+                  <Button asChild variant="outline" size="lg">
+                    <Link href="/training">Start Free Training</Link>
+                  </Button>
                 </div>
               </CardContent>
             </Card>

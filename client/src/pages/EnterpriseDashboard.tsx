@@ -114,18 +114,26 @@ export default function EnterpriseDashboard() {
                   icon={<Download className="h-4 w-4" />}
                 />
               )}
-              <Link href="/ai-systems">
-                <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+              <Button
+                asChild
+                variant="outline"
+                className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+              >
+                <Link href="/ai-systems">
                   <Shield className="mr-2 h-4 w-4" />
                   Manage AI Systems
-                </Button>
-              </Link>
-              <Link href="/pdca">
-                <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+              >
+                <Link href="/pdca">
                   <Activity className="mr-2 h-4 w-4" />
                   PDCA Cycles
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

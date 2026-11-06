@@ -471,17 +471,24 @@ export default function ProsperityFund() {
             <span className="text-emerald-300 font-semibold"> 10 million participants by 2030.</span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/watchdog">
-              <Button size="lg" className="bg-white text-emerald-600 hover:bg-gray-100 px-8">
+            <Button
+              asChild
+              size="lg"
+              className="bg-white text-emerald-600 hover:bg-gray-100 px-8"
+            >
+              <Link href="/watchdog">
                 Become a Watchdog Analyst
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/academy">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8">
-                Start Free Training
-              </Button>
-            </Link>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-white text-white hover:bg-white/10 px-8"
+            >
+              <Link href="/academy">Start Free Training</Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -570,17 +577,19 @@ export default function ProsperityFund() {
             or simply want to learn more—there's a place for you in building shared AI prosperity.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/dashboard?task=pricing-overview&tab=measured">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8">
+            <Button
+              asChild
+              size="lg"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-8"
+            >
+              <Link href="/dashboard?task=pricing-overview&tab=measured">
                 How the Free Rail Works
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/charter">
-              <Button size="lg" variant="outline" className="px-8">
-                Read the Charter
-              </Button>
-            </Link>
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="px-8">
+              <Link href="/charter">Read the Charter</Link>
+            </Button>
           </div>
         </div>
       </section>
