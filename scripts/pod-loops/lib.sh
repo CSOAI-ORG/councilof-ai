@@ -1,14 +1,35 @@
 #!/bin/bash
 # Shared shell for the pod loops. Sourced, never executed.
-# Layout (all under /workspace, the persistent volume; nothing under /opt is touched):
-#   /workspace/lanes/loops/   the scripts (this dir)
-#   /workspace/lanes/logs/    one log per loop, one line per run, UTC-stamped
-#   /workspace/lanes/out/     outputs (snapshots, jsonl, summaries); never deleted by any loop
-#   /workspace/lanes/state/   idempotence stamps and "last seen" values
-#   /workspace/lanes/.secrets/hf_token   legacy public-loop upload token (owner-placed, 0600)
+# Layout (a LANES root; the pod's is /workspace/lanes, the persistent volume; nothing under /opt is touched):
+#   $LANES/loops/   the scripts (this dir)
+#   $LANES/logs/    one log per loop, one line per run, UTC-stamped
+#   $LANES/out/     outputs (snapshots, jsonl, summaries); never deleted by any loop
+#   $LANES/state/   idempotence stamps and "last seen" values
+#   $LANES/.secrets/hf_token   legacy public-loop upload token (owner-placed, 0600)
 # The private-intake heartbeat does not call hf_token_present(). Its uploader
-# exclusively opens /workspace/lanes/.secrets/runpod-intake-hf-token.
-LANES=${LANES:-/workspace/lanes}
+# exclusively opens $LANES/.secrets/runpod-intake-hf-token.
+#
+# 3 Nov 2026: LANES used to default to /workspace/lanes whatever the host was. On a host
+# that keeps its lanes under $HOME and has no /workspace volume, every run wrote its
+# outputs to a path nobody reads and reported zero rows — a misconfiguration that looked
+# like an empty measurement. Detect the root instead of assuming it, and refuse to run
+# when there is none. An explicit LANES=... is still honoured as given.
+if [ -z "${LANES:-}" ]; then
+  if [ -d /workspace/lanes ]; then
+    LANES=/workspace/lanes
+  elif [ -d "$HOME/lanes" ]; then
+    LANES="$HOME/lanes"
+  else
+    echo "lib.sh: LANES is unset and no lanes root was found (looked for /workspace/lanes and \$HOME/lanes)." >&2
+    echo "lib.sh: set LANES=/path/to/lanes and re-run. Nothing was written." >&2
+    exit 78
+  fi
+fi
+# EXPORTED, so every child process inherits the resolved root. It was not: the loops that
+# publish call scripts/pod-loops/hf_upload.py, which had its own /workspace/lanes default,
+# and on a host without that volume the upload died on a permission error after the rows
+# were already written — the run looked published and was not.
+export LANES
 LOOPS=$LANES/loops
 LOGS=$LANES/logs
 OUT=$LANES/out
@@ -68,4 +89,8 @@ repo_sparse_ensure() {
 
 # Third-party Python packages for the loops live on /workspace so a container wipe cannot remove them
 # (25 Sep 2026: huggingface_hub et al. vanished with /root). List: requirements-pod.txt; lock: /workspace/tools/pylib.lock
-export PYTHONPATH=/workspace/tools/pylib${PYTHONPATH:+:$PYTHONPATH}
+# That path is pod-shaped. A host without it keeps its own site-packages, so the path is added only
+# when it is there — prepending a directory that does not exist would only shadow nothing and hide it.
+if [ -d /workspace/tools/pylib ]; then
+  export PYTHONPATH=/workspace/tools/pylib${PYTHONPATH:+:$PYTHONPATH}
+fi

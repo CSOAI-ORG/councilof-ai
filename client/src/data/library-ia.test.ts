@@ -1,12 +1,21 @@
 import { describe, expect, it } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
-import { isLibraried, libraryItems, WITHDRAWN_PATHS } from "./library-ia";
+import { isLibraried, isPrimaryPath, libraryItems, WITHDRAWN_PATHS } from "./library-ia";
 import { ROUTE_MANIFEST } from "./route-manifest";
 import { buildDashboardCatalogue } from "../components/DashboardCataloguePane";
 
 const app = readFileSync(resolve(__dirname, "../App.tsx"), "utf8");
 const homeBoard = readFileSync(resolve(__dirname, "../components/home/HomeGspcBoard.tsx"), "utf8");
+
+describe("current Public Watchdog route", () => {
+  it("keeps the live dashboard out of archive treatment", () => {
+    expect(app).toContain('<Route path="/watchdog" component={Watchdog} />');
+    expect(isPrimaryPath("/watchdog")).toBe(true);
+    expect(isLibraried("/watchdog")).toBe(false);
+    expect(isLibraried("/watchdog/")).toBe(false);
+  });
+});
 
 describe("live GSPC axis routes", () => {
   it("does not mark the board's promoted axis detail pages as archived", () => {
