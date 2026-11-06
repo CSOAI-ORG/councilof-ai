@@ -23,9 +23,9 @@ export default function HomeDemoLoop() {
         <HomeUnderstand
           title="Twenty seconds on the instrument"
           items={[
-            "The board, the verifier and get-measured — the three doors a stranger actually uses.",
-            "A filled cell is a measurement. A dash is honest emptiness.",
-            { kind: "usp", text: "Nothing in the loop is a certificate or a badge you can buy. A rank is never sold." },
+            "Explore the measurement board, verify a record or review measurement services.",
+            "Read each result with its scope and status. A dash does not mean a zero score.",
+            { kind: "usp", text: "Measurement is not certification. Payment does not determine a ranking." },
           ]}
         />
       </div>

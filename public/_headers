@@ -163,6 +163,10 @@
   Content-Type: application/json
   Cache-Control: public, max-age=3600
 
+# The exact published evidence-event contract; schema bytes come from its one source.
+/spec/evidence-event/v0.1/schema.json
+  Content-Type: application/schema+json; charset=utf-8
+
 # Evidence copies of third-party pages (a report's mirrors/ folder: Paxos, Ripple, rwa.xyz and
 # others, captured so a finding can be re-read). They are not our pages; no search engine should
 # index them under this domain. Added 2026-09-24; the sitemap leaves them out by the same pattern.
