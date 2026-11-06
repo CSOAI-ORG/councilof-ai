@@ -58,6 +58,9 @@ export default function BoardField({ rows, setId }: { rows: AxisRow[]; setId: st
   const comparable = rows.filter((r) => r.separation !== null);
   const measured = rows.filter((r) => r.status === "MEASURED");
   const slots = rows.filter((r) => r.status === "UNMEASURED");
+  const signed = rows.filter((r) => r.runAttestation === "ED25519_SIGNED").length;
+  const hashed = rows.filter((r) => r.runAttestation === "CONTENT_ADDRESSED_UNSIGNED").length;
+  const unsigned = rows.filter((r) => r.runAttestation === null).length;
   const separated = comparable.filter((r) => r.separation === "SEPARATED").length;
   const ties = comparable.filter((r) => r.separation === "TIE").length;
   const untested = comparable.filter((r) => r.separation === "UNTESTED").length;
@@ -82,6 +85,24 @@ export default function BoardField({ rows, setId }: { rows: AxisRow[]; setId: st
         Every bar is a 95% range on the same 0–100% axis; the tick is the point estimate. Where ranges
         overlap, nothing separates — a TIE is the test declining to separate, not two models being equal.
       </p>
+
+      {(signed > 0 || hashed > 0) && (
+        <p
+          className="mt-1.5 font-mono text-[11px] text-gray-600"
+          data-testid={`board-field-${setId}-attestation`}
+          data-signed={signed}
+          data-content-addressed={hashed}
+          data-no-run-signature={unsigned}
+        >
+          Run attestation: {signed} Ed25519-signed · {hashed} content-addressed
+          {unsigned > 0 ? ` · ${unsigned} declare none` : ""}. A content-addressed run proves the bytes
+          were not altered after the fact; it does not prove who produced them.{" "}
+          <Link href="/methodology/" className="underline">
+            What each state means
+          </Link>
+          .
+        </p>
+      )}
 
       <div className="mt-3 overflow-x-auto">
       <ul className="min-w-[30rem] space-y-1.5">
