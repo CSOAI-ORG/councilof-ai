@@ -55,20 +55,19 @@ describe("public entry surfaces use the supply-led evidence hierarchy", () => {
     expect(positions.every((position) => position >= 0)).toBe(true);
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
 
-    // And measurement still precedes commissioning on the front door itself. HomeNavigator
-    // moved to /how-we-work on 2026-09-23 (the home page was 27,743px tall, so its lower bands
-    // were published to almost nobody). What this assertion has always been about is the ORDER
-    // of the supply-led hierarchy, so it is pinned where each band now renders: the front door
-    // still leads with what is measured before it asks for anything, and the directory of every
-    // door comes last on the page that carries it.
-    // The image-led front door added products, the human-review workflow and linked proof points.
-    // Keep the same supply-led argument explicit: measurement and its working tools come before
-    // the live board and proof, and the ways in remain last. Every band must be present, so a
-    // missing band cannot pass as indexOf -1 sorting first.
+    // HomeNavigator remains on /how-we-work. The shorter front door still puts published
+    // results before services or commissioning, then the method/evidence argument before
+    // connections and optional updates. Require every mounted band exactly once: a missing
+    // band must not pass as indexOf -1, and duplicate board/service pitches must not return.
     const home = source("HomeVerify.tsx");
-    const bands = ["<HomeHero", "<HomeProducts", "<HomeHumanReview", "<LiveBoardGlance", "<HomeProofPoints", "<HomeWaysIn"].map((b) => home.indexOf(b));
+    const components = ["HomeHero", "HomeResults", "HomeProducts", "HomeEvidence", "HomeDevelopers", "HomeUpdates"];
+    const bands = components.map((component) => home.indexOf(`<${component}`));
     expect(bands.every((i) => i >= 0)).toBe(true);
     expect(bands).toEqual([...bands].sort((a, b) => a - b));
+    for (const component of components) {
+      expect(home.match(new RegExp(`<${component}\\b`, "g"))).toHaveLength(1);
+    }
+    expect(home).not.toMatch(/<(?:LiveBoardGlance|HomeWaysIn|HomeHumanReview|HomeProofPoints)\b/);
 
     const deep = source("HowWeWork.tsx");
     expect(deep.indexOf("<HomeStrengths")).toBeLessThan(deep.indexOf("<HomeNavigator"));
