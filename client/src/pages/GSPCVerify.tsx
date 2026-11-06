@@ -284,8 +284,8 @@ export default function GSPCVerify() {
             Every check ends in one of three results: <strong>VALID</strong> (the completed record
             checks passed), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
             <strong>UNCHECKABLE</strong> (the check could not be completed). Could-not-check is never
-            reported as a failure. Read the signature result separately: a hash-only VALID result is
-            labelled unsigned and does not prove who wrote the record.
+            reported as a failure. VALID requires a successful signature check; a matching hash
+            alone is insufficient. Read the signature result and its stated limitations.
           </p>
           <details className="mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-white/[0.035] px-4 py-3">
             <summary className="cursor-pointer text-sm font-semibold text-emerald-200">

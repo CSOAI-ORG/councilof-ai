@@ -235,7 +235,7 @@ jobs:
             exit 0
           fi
           changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|packages/council-panel/|packages/evidence-fabric/schema/evidence-event-0\.1\.schema\.json$|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$|\.github/workflows/native-council-panel\.yml$|\.github/workflows/deploy\.yml$)' || true)
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|mcp/meok-gspc-layer0/|packages/council-panel/|packages/evidence-fabric/schema/evidence-event-0\.1\.schema\.json$|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$|\.github/workflows/native-council-panel\.yml$|\.github/workflows/deploy\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -420,7 +420,7 @@ jobs:
         # exactly what the door serves; it carried TYPED counts (47/5/52) that the 34th axis
         # moved to 48/5/53, and because no gate ran this file, the drift sat on master
         # unobserved. A test nobody runs is a comment.
-        run: npx vitest run client/src functions scripts mcp/gspc-server measurement/commissioned
+        run: npx vitest run client/src functions scripts mcp/gspc-server mcp/meok-gspc-layer0 measurement/commissioned
 
       # node:test files that vitest cannot collect (vitest.config.ts NODE_TEST_FILES). They used to be
       # reported by vitest as failed suites and so never actually ran. The list is read from the config
@@ -625,6 +625,19 @@ jobs:
       - name: Council truth gate — no simulated BFT or phantom engine doors
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:council-truth
+
+      # client/src/pages/ClaimsRegister.tsx says, in its own header comment,
+      # "scripts/claims-register-lint.mjs fails the build on any drift between the
+      # two". Nothing ran it. No workflow, no npm script, no reference anywhere —
+      # so the page's second lock against silently dropping a claim (the original
+      # defect: a fifth status rendered 19 of 20 claims on a site whose banner is
+      # "UNMEASURED shown honestly") was a sentence in a comment.
+      #
+      # It reads two files, writes nothing, and needs no network and no token,
+      # so it belongs on the PR rather than on a schedule.
+      - name: Claims register lint — the page must render every claim the register holds
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/claims-register-lint.mjs
 
       - name: Stablecoin readiness gate — indexed is never measured
         if: steps.scope.outputs.gated == 'true'
