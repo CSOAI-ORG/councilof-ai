@@ -28,5 +28,8 @@ class PreflightTests(unittest.TestCase):
     def test_rejects_resource_change(self):
         self.doc['resource']['url'] += '?asset=other'
         with self.assertRaises(ValueError): self.run_check(self.doc)
+    def test_rejects_malformed_resource(self):
+        self.doc['resource'] = 'not-an-object'
+        with self.assertRaises(ValueError): self.run_check(self.doc)
 
 if __name__ == '__main__': unittest.main()
