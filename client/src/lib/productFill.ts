@@ -109,7 +109,7 @@ export const FILL_ROWS: FillRow[] = [
     id: "corrections",
     layer: "ledger",
     title: "Corrections ledger",
-    fills: "What we got wrong, how it was caught, the dated fix. The uncopyable honesty asset.",
+    fills: "Dated corrections, their causes and supporting evidence for changes to published findings.",
     never: "A GSPC score. An XRPL product. A highlight reel.",
     href: "/api/corrections",
     status: "live",

@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button";
 const TRAINING_HOWTO_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "How to train as a CSOAI AI Safety Analyst",
-  description: "A typical 8-week study timeline to earn a signed training record, from free Watchdog training through to the final assessment.",
+  name: "Legacy CSOAI training outline — withdrawn",
+  description: "A historical study outline retained for review. It is not a current course offer or completion schedule. Completion-record issuance is not open; see the Council Academy for current learning materials and status.",
   step: [
     { "@type": "HowToStep", position: 1, name: "Week 1 — Watchdog Training", text: "Complete free Watchdog modules (4 hours). Understand AI safety basics and incident identification." },
     { "@type": "HowToStep", position: 2, name: "Week 2-3 — Fundamentals Module 1", text: "Study EU AI Act and NIST AI RMF basics. Complete quizzes and case studies." },
     { "@type": "HowToStep", position: 3, name: "Week 4-5 — Fundamentals Module 2", text: "Learn TC260, compliance principles, and review case studies." },
     { "@type": "HowToStep", position: 4, name: "Week 6-7 — Practice & Review", text: "Take unlimited practice exams, review weak areas, and prepare for the final assessment." },
-    { "@type": "HowToStep", position: 5, name: "Week 8 — Complete Training", text: "Complete your final assessment and receive a signed training record — attests learning, never conformity." },
+    { "@type": "HowToStep", position: 5, name: "Week 8 — Historical assessment proposal", text: "This proposed assessment date is not a confirmed service. Completion-record issuance is not open; consult the Council Academy for current status." },
   ],
 };
 
@@ -27,7 +27,7 @@ const TRAINING_BREADCRUMB_SCHEMA = {
 };
 
 export default function TrainingHowItWorks() {
-  useEffect(() => { document.title = "CSOAI Training Guide — earn your record in 8 weeks"; }, []);
+  useEffect(() => { document.title = "Legacy training outline — withdrawn | Council of AI"; }, []);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const trainingLevels = [
@@ -143,7 +143,7 @@ export default function TrainingHowItWorks() {
     },
     {
       aspect: "Validity",
-      details: "Certificate valid for 2 years, renewal available"
+      details: "Completion-record issuance is not open. A validity period or renewal service is not confirmed."
     }
   ];
 
@@ -162,7 +162,7 @@ export default function TrainingHowItWorks() {
     },
     {
       question: "How long is the credential valid?",
-      answer: "Measurement credentials are valid for 2 years. You can renew by taking a 30-minute renewal assessment or by completing continuing education credits. A credential records completed training — it is not a certification and it attests nothing about a system's conformity."
+      answer: "Completion-record issuance is not open. The legacy two-year validity and renewal proposal is not a confirmed service. See the Council Academy's completion-record section for the current specification and issuance status. A completion record would describe a reproduced measurement, not certify competence or conformity."
     },
     {
       question: "Can I move from Fundamentals to Professional?",
@@ -190,7 +190,13 @@ export default function TrainingHowItWorks() {
         <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-4xl font-bold mb-4">Training Guide</h1>
           <p className="text-xl text-emerald-100">
-            Master AI safety through our comprehensive, self-paced training program designed for everyone
+            Legacy outline retained for review. This page is withdrawn from the public training route.
+          </p>
+          <p className="mt-4 text-emerald-100">
+            The programmes, instructors, assessments and study dates below are not confirmed offers.
+            Completion-record issuance is not open. Read the{" "}
+            <a href="/academy#completion-records" className="font-semibold underline">current Academy status</a>
+            {" "}and browse its published learning materials.
           </p>
         </div>
       </div>
@@ -265,7 +271,7 @@ export default function TrainingHowItWorks() {
 
         {/* Study Timeline */}
         <div className="mb-20">
-          <h2 className="text-3xl font-bold mb-8 text-center">Typical Study Timeline</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Historical Study Outline — Not a Completion Schedule</h2>
           <div className="space-y-6">
             <Card className="p-6 border-2 border-emerald-200">
               <div className="flex items-start gap-4">
@@ -308,7 +314,7 @@ export default function TrainingHowItWorks() {
                 <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold flex-shrink-0">Week 8</div>
                 <div>
                   <h4 className="font-bold text-emerald-900 mb-1">Complete training</h4>
-                  <p className="text-gray-700">Schedule and take your 90-minute proctored exam. Get results instantly.</p>
+                  <p className="text-gray-700">This historical assessment proposal is not a booking service. See the Academy for current learning materials and completion-record status.</p>
                 </div>
               </div>
             </Card>
@@ -344,17 +350,17 @@ export default function TrainingHowItWorks() {
 
         {/* CTA Section */}
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Start Your Training?</h2>
+          <h2 className="text-3xl font-bold mb-4">Explore the Council Academy</h2>
           <p className="text-lg mb-8 text-emerald-100">
-            Begin with free Watchdog training today. No credit card required.
+            Browse published learning materials and check completion-record issuance status.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
               className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold"
-              onClick={() => window.location.href = "/training"}
+              onClick={() => window.location.href = "/academy"}
             >
-              Start Free Training
+              Open the Academy
             </Button>
             <Button
               size="lg"

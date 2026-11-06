@@ -96,6 +96,14 @@ const publishedAt = registry.time?.[latest];
 if (!publishedAt) throw new Error(`the registry carries no publish time for ${latest}`);
 const tarballUrl = registry.versions?.[latest]?.dist?.tarball;
 if (!tarballUrl) throw new Error(`the registry carries no tarball URL for ${latest}`);
+// DEPRECATION IS A MEASUREMENT, NOT A PROSE CLAIM. The guide used to SAY "it is not
+// marked deprecated on npm" while the capture carried no deprecation field at all, so
+// the sentence was a typed belief that nothing could falsify -- and the estate's own
+// doctrine says deprecation is NOT the signal, the name comparison is. It is read
+// from the registry's own version document, so the record can now show a deprecation
+// the guide would have denied.
+const deprecatedText = registry.versions?.[latest]?.deprecated;
+const deprecated = typeof deprecatedText === "string" && deprecatedText.length > 0;
 
 const dir = mkdtempSync(join(tmpdir(), "npm-publish-live-"));
 try {
@@ -129,6 +137,8 @@ try {
       published_at: publishedAt,
       tarball: tarballUrl,
       tarball_sha256: sha256,
+      deprecated,
+      deprecated_reason: deprecated ? deprecatedText : null,
       free_tools: freeNames.length,
       metered_tools: meteredNames.length,
       total_tools: freeNames.length + meteredNames.length,

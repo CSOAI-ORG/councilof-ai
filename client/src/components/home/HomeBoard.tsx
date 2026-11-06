@@ -31,7 +31,7 @@ export default function HomeBoard({ highlight }: { highlight?: string | null }) 
         className="mt-4"
         title="How to read this table"
         items={[
-          "A filled row is a measurement. A dash is honest emptiness.",
+          "Published results link to their evidence. A dash indicates no measurement.",
           "The count line is living GET /api/gspc — we do not type it into the page.",
           { kind: "usp", text: "Position is layout, not a purchased rank." },
         ]}
