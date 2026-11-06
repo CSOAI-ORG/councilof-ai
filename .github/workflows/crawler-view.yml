@@ -5,8 +5,14 @@ on:
   pull_request:
   schedule:
     - cron: "17 6 * * *"   # daily — deploys can regress this without a code change
-  workflow_dispatch: {}    # manual daily gate — the schedule above has never fired
-                           # (cron-watch finding, 2026-11-04); dispatch runs it now
+  workflow_dispatch: {}    # manual daily gate — runs the same check on demand
+                           # (the schedule has fired every day: 70 schedule runs, the
+                           # newest 2026-11-05T14:44:11Z, arriving hours late because
+                           # GitHub cron drops under load. An earlier note here said
+                           # "the schedule above has never fired" — that came from
+                           # cron-watch's client-side event filter, which saw no
+                           # schedule event inside the 30 newest runs of any event and
+                           # called a live schedule dead. Fixed 2026-11-06.)
 
 jobs:
   # Selftest proves the gate can fail before trusting it to pass. Always required.
