@@ -47,6 +47,22 @@ test('measurement time displays source precision and does not substitute the ret
  const source=readFileSync(new URL('../public/evidence-learning/element.js',import.meta.url),'utf8');
  assert.match(source,/measurementTimeLabel\(row\.measurement_time\)/);
 });
+test('the rendered observation distinguishes measurement time from the source read',async()=>{
+ const priorElement=globalThis.HTMLElement,priorRegistry=globalThis.customElements;
+ globalThis.HTMLElement=class {};globalThis.customElements={get:()=>true};
+ try {
+  const {CouncilEvidenceLearning}=await import('../public/evidence-learning/element.js');
+  const view={capture:{data:{totals:board.totals},readAt:'2026-11-06T06:00:00Z',sha256:'a'.repeat(64)},data:{shots:[]},readState:'SOURCE_READ'};
+  const row={...board.axes[0],measurement_time:{state:'EXACT',observed_at:'2026-09-16T11:06:53Z'}};
+  const html=CouncilEvidenceLearning.prototype.observe.call(view,row);
+  assert.match(html,/Measurement date: 2026-09-16T11:06:53Z \(exact time reported\)/);
+  assert.match(html,/Retrieval time below is a separate date/);
+  assert.doesNotMatch(html,/Measurement date: Not supplied/);
+ } finally {
+  if(priorElement===undefined)delete globalThis.HTMLElement;else globalThis.HTMLElement=priorElement;
+  if(priorRegistry===undefined)delete globalThis.customElements;else globalThis.customElements=priorRegistry;
+ }
+});
 test('UI has no external execution client and stops polling when hidden or disconnected',()=>{
  const s=readFileSync(new URL('../public/evidence-learning/element.js',import.meta.url),'utf8');assert.doesNotMatch(s,/method:\s*['"](?:POST|PUT|PATCH|DELETE)['"]|sendBeacon|WebSocket/);assert.match(s,/visibilityState==='visible'/);assert.match(s,/disconnectedCallback/);assert.match(s,/60000/);assert.match(s,/NOT_QUALIFIED|Not qualified/);assert.match(s,/this\.data\.proposals\[this\.axis\]/);
 });
