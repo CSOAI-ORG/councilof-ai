@@ -22,9 +22,13 @@ import { headFromGet } from "./_head";
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
 // in but absent from the data, so the board reported 14 — the un-swept state.
-// method_status (Measure ruling 2026-10-16, AXES-33-SPEC.md): each live axis either meets the rule
+// method_status (Measure ruling 2026-10-16): each live axis either meets the rule
 // (frozen sha-pinned bank or method, n_valid >= 30) or names its exact gap. Fact-axis gaps read n off
 // the row, never typed. Remediation is queued in bank-next-version. The measured count is unchanged.
+// This ruling was cited as AXES-33-SPEC.md. That document was never committed to any branch, so
+// the citation pointed at nothing a reader could open. The rule it states is enforced at
+// pull-request time by scripts/board-production-anchor.mjs, which refuses a promotion without a
+// frozen sha-pinned bank, method_status "meets-rule" and n >= 30.
 const LEGACY_GAP: Record<string, string> = {
   jail: "27 distinct prompts, n<30",
   swarm: "bank sha points to retired bank",

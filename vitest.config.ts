@@ -24,6 +24,9 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // every PR. They are named one by one, not globbed, and pr-gates.yml runs exactly this list under
 // `node --test` in its own step, so excluding them here removes no coverage.
 export const NODE_TEST_FILES = [
+  'scripts/build-daily-signal.node-test.mjs',
+  'scripts/build-daily-product.node-test.mjs',
+  'scripts/build-axis-reports.ownership.test.mjs',
   'scripts/build-axis-reports.slots.test.mjs',
   'scripts/build-models-measured.test.mjs',
   'scripts/contract-convergence.test.mjs',
@@ -34,6 +37,10 @@ export const NODE_TEST_FILES = [
   // No apostrophes in these comments: the registry and the workflow extract entries by
   // naive quote matching, and a stray quote inside the array corrupts the parsed list.
   'scripts/hygiene/sweeper.node-test.mjs',
+  // The cron-health watch decisions: a node:test file vitest cannot collect, named here so
+  // pr-gates.yml runs it under node --test. It proves the watch catches a dead schedule,
+  // passes a live one, and finds a schedule run buried behind pull_request runs.
+  'scripts/hygiene/cron-watch.node-test.mjs',
   'scripts/regulator-census-redirects.test.mjs',
   'scripts/research/watch-sources.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
@@ -48,6 +55,8 @@ export const NODE_TEST_FILES = [
   'scripts/surface/facts-scope.test.mjs',
   'scripts/surface/prerender-io.test.mjs',
   'scripts/surface/render-board-reference.test.mjs',
+  'scripts/surface/public-copy.node-test.mjs',
+  'scripts/surface/reviewed-blog-publication.node-test.mjs',
   'spaces/gspc-board/table.node-test.mjs',
   // node:test file. vitest cannot collect it and reports it as a FAILED SUITE
   // ("No test suite found in file ..."), so it is named here: pr-gates.yml reads
