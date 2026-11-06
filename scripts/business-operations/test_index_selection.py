@@ -45,11 +45,11 @@ def reading(name, url, timeout):
                 indexes.collect(self.reader, ['Typo'])
             fetch.assert_not_called()
 
-    def test_no_selection_preserves_existing_both_index_behavior(self):
+    def test_no_selection_only_contacts_payai(self):
         manifest = {'status': 'OBSERVED', 'data': {'resources': [{'url':'https://councilof.ai/api/a'}]}, 'sha256': 'x'}
         with patch.object(indexes, 'fetch', return_value=manifest):
-            with self.assertRaisesRegex(RuntimeError, 'unwanted index'):
-                indexes.collect(self.reader)
+            result = indexes.collect(self.reader)
+        self.assertEqual([r['index'] for r in result['indexes']], ['PayAI'])
 
     def test_scheduled_selection_has_own_state_and_child_arguments(self):
         state = Path(self.temp.name) / 'state'
@@ -60,13 +60,13 @@ def reading(name, url, timeout):
         with patch.object(indexes.subprocess, 'run', side_effect=run):
             with patch.object(sys, 'argv', ['indexes.py', '--state', str(state), '--reader', str(self.reader)]):
                 indexes.main()
-            with patch.object(sys, 'argv', ['indexes.py', '--state', str(state), '--reader', str(self.reader), '--index', 'PayAI']):
+            with patch.object(sys, 'argv', ['indexes.py', '--state', str(state), '--reader', str(self.reader), '--index', 'Other']):
                 indexes.main()
         outputs = list(state.glob('indexes*.json'))
         self.assertEqual(len(outputs), 2)
-        self.assertTrue((state / 'indexes.json').exists())
-        self.assertEqual(calls[1][-2:], ['--index', 'PayAI'])
-        self.assertNotIn('--index', calls[0])
+        self.assertFalse((state / 'indexes.json').exists())
+        self.assertEqual(calls[0][-2:], ['--index', 'PayAI'])
+        self.assertEqual(calls[1][-2:], ['--index', 'Other'])
 
     def test_failed_selected_scan_retains_its_last_good_observation(self):
         state = Path(self.temp.name) / 'state'
