@@ -1,0 +1,1280 @@
+{
+  "schema": "csoai.opportunity-registry/0.1",
+  "scope": "Public source metadata only. A source fetch or fingerprint is not a programme eligibility decision, participation, funding award, product evaluation or GSPC measurement.",
+  "scheduler": {
+    "path": ".github/workflows/reg-watch.yml",
+    "daily_cron_utc": "45 6 * * *",
+    "hourly_integration_cron_utc": "45 0-5,7-23 * * *",
+    "integration_route_ids": [
+      "R07",
+      "R08",
+      "R09",
+      "R13"
+    ],
+    "boundary": "Schedule declared in source; execution and publication require their own dated receipts. Hourly reads inspect public documentation only; no third-party code or models run."
+  },
+  "last_capture": {
+    "started_at": "2026-11-06T06:24:45.170Z",
+    "completed_at": "2026-11-06T06:25:16.226Z",
+    "scope": "all",
+    "method_sha256": "94d2818bb61ac78a6a51e9442eef53f24b3f0c2634dfb0ee808f5bef887c893c",
+    "executor": "LOCAL_READONLY_TRIAL",
+    "workflow_run_url": null,
+    "artifact_url": null,
+    "route_count": 29,
+    "source_count": 54,
+    "successful": 50,
+    "uncheckable": 4,
+    "unreachable": 0
+  },
+  "routes": [
+    {
+      "route_id": "R01",
+      "name": "MilaniX / Verisuff",
+      "kind": "Partnership",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://milanix.vercel.app/",
+        "https://milanix.vercel.app/review"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://milanix.vercel.app/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:45.689Z",
+          "last_success_at": "2026-11-06T06:24:45.689Z",
+          "http_status": 200,
+          "content_sha256": "2c8ec87ede5c06fb6bcba445dcb8135aec3290d84b7284a8dad73032182869b4",
+          "baseline_sha256": "2c8ec87ede5c06fb6bcba445dcb8135aec3290d84b7284a8dad73032182869b4",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://milanix.vercel.app/review",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:45.969Z",
+          "last_success_at": "2026-11-06T06:24:45.969Z",
+          "http_status": 200,
+          "content_sha256": "cb9e4844f4d3f5dcd2e82116ea8ec18250889e74341dda7e4ef49460af74134f",
+          "baseline_sha256": "cb9e4844f4d3f5dcd2e82116ea8ec18250889e74341dda7e4ef49460af74134f",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R02",
+      "name": "IETF 127 Hackathon / SCITT",
+      "kind": "Open technical event",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://www.ietf.org/meeting/hackathons/127-hackathon/",
+        "https://wiki.ietf.org/en/meeting/127/hackathon"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [
+        {
+          "axis": "interop-conformance",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/interop-conformance-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://www.ietf.org/meeting/hackathons/127-hackathon/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:46.129Z",
+          "last_success_at": "2026-11-06T06:24:46.129Z",
+          "http_status": 200,
+          "content_sha256": "c72a81367875dd2dd28c1236e716d91b098b5d7f52badc95dfb021cd0bf7bfb5",
+          "baseline_sha256": "c72a81367875dd2dd28c1236e716d91b098b5d7f52badc95dfb021cd0bf7bfb5",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://wiki.ietf.org/en/meeting/127/hackathon",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:46.479Z",
+          "last_success_at": "2026-11-06T06:24:46.479Z",
+          "http_status": 200,
+          "content_sha256": "24f040d02a618075b5df4176f9ecfeb22a08c73f7c9d59f89aa34c2bbb022fd7",
+          "baseline_sha256": "24f040d02a618075b5df4176f9ecfeb22a08c73f7c9d59f89aa34c2bbb022fd7",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R03",
+      "name": "NIST AI Consortium",
+      "kind": "Research consortium",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://www.nist.gov/artificial-intelligence/nist-ai-consortium/ai-consortium-faqs",
+        "https://www.nist.gov/artificial-intelligence/nist-ai-consortium/submit-letter-interest-join-nist-ai-consortium"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [
+        {
+          "axis": "regulator-transparency",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/regulator-transparency-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://www.nist.gov/artificial-intelligence/nist-ai-consortium/ai-consortium-faqs",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:47.680Z",
+          "last_success_at": "2026-11-06T06:24:47.680Z",
+          "http_status": 200,
+          "content_sha256": "a0024be172509e4a21f0edc953ab2f60b80e75f24db75ebdd09dced530d3fbba",
+          "baseline_sha256": "a0024be172509e4a21f0edc953ab2f60b80e75f24db75ebdd09dced530d3fbba",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://www.nist.gov/artificial-intelligence/nist-ai-consortium/submit-letter-interest-join-nist-ai-consortium",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:47.890Z",
+          "last_success_at": "2026-11-06T06:24:47.890Z",
+          "http_status": 200,
+          "content_sha256": "ebb7e0b1612ef362550d8c9b8b0e8939f0704117f022b246b4af3876cff435e6",
+          "baseline_sha256": "ebb7e0b1612ef362550d8c9b8b0e8939f0704117f022b246b4af3876cff435e6",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R04",
+      "name": "Global AI Assurance Sandbox",
+      "kind": "Testing and commercial partner matching",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://aiverifyfoundation.sg/ai-assurance/sandbox/"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://aiverifyfoundation.sg/ai-assurance/sandbox/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:50.239Z",
+          "last_success_at": "2026-11-06T06:24:50.239Z",
+          "http_status": 200,
+          "content_sha256": "bed58a0ae3a87257deff016374bc7847e5739b7a0dc6ad895a5f62020d245634",
+          "baseline_sha256": "bed58a0ae3a87257deff016374bc7847e5739b7a0dc6ad895a5f62020d245634",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R05",
+      "name": "BridgeAI Deployment Catalyst: AI for assurance and compliance",
+      "kind": "Competitive grant",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://www.ukri.org/opportunity/bridgeai-deployment-catalyst-ai-for-assurance-and-compliance/",
+        "https://apply-for-innovation-funding.service.gov.uk/competition/2597/overview/7ec02a95-73e5-4928-8104-67a9f1b279e3"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://www.ukri.org/opportunity/bridgeai-deployment-catalyst-ai-for-assurance-and-compliance/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:50.525Z",
+          "last_success_at": "2026-11-06T06:24:50.525Z",
+          "http_status": 200,
+          "content_sha256": "6c9867b39cfbba8f230480edf501be23ddcf46bc1b38861eb399f0e4fe51d8a7",
+          "baseline_sha256": "6c9867b39cfbba8f230480edf501be23ddcf46bc1b38861eb399f0e4fe51d8a7",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://apply-for-innovation-funding.service.gov.uk/competition/2597/overview/7ec02a95-73e5-4928-8104-67a9f1b279e3",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:50.729Z",
+          "last_success_at": "2026-11-06T06:24:50.729Z",
+          "http_status": 200,
+          "content_sha256": "f7e73cdf70b02b054e9353d393c73be90e4ea5dedefec573531c7776d66a2e51",
+          "baseline_sha256": "f7e73cdf70b02b054e9353d393c73be90e4ea5dedefec573531c7776d66a2e51",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R06",
+      "name": "NPL Centre for AI Measurement",
+      "kind": "Collaboration EOI; future grant",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://www.npl.co.uk/events/centre-for-ai-measurement-official-launch",
+        "https://npl.tfaforms.net/114",
+        "https://questions-statements.parliament.uk/written-questions/detail/2026-07-20/HL2306"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://www.npl.co.uk/events/centre-for-ai-measurement-official-launch",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:51.095Z",
+          "last_success_at": "2026-11-06T06:24:51.095Z",
+          "http_status": 200,
+          "content_sha256": "5ad30cc0f261809fb42fd4705b72a0678b6dd26276e8e31053dcdbb2957cb7be",
+          "baseline_sha256": "5ad30cc0f261809fb42fd4705b72a0678b6dd26276e8e31053dcdbb2957cb7be",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://npl.tfaforms.net/114",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:51.395Z",
+          "last_success_at": "2026-11-06T06:24:51.395Z",
+          "http_status": 200,
+          "content_sha256": "644a532818bbede0b45524ad2d900653e1e35ec4bf19cbd7e0cfb5fe7e7af89b",
+          "baseline_sha256": "644a532818bbede0b45524ad2d900653e1e35ec4bf19cbd7e0cfb5fe7e7af89b",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://questions-statements.parliament.uk/written-questions/detail/2026-07-20/HL2306",
+          "state": "UNCHECKABLE",
+          "attempted_at": "2026-11-06T06:24:51.557Z",
+          "last_success_at": null,
+          "http_status": 403,
+          "content_sha256": null,
+          "baseline_sha256": null,
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "HTTP_STATUS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R07",
+      "name": "Alan Turing Institute TEA",
+      "kind": "Open-source integration",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://www.turing.ac.uk/research/research-projects/trustworthy-and-ethical-assurance-tea",
+        "https://assuranceplatform.azurewebsites.net/docs/platform-guide/publishing-and-discover",
+        "https://github.com/alan-turing-institute/AssurancePlatform"
+      ],
+      "declared_read_interval_hours": 1,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://www.turing.ac.uk/research/research-projects/trustworthy-and-ethical-assurance-tea",
+          "state": "UNCHECKABLE",
+          "attempted_at": "2026-11-06T06:24:51.663Z",
+          "last_success_at": null,
+          "http_status": 403,
+          "content_sha256": null,
+          "baseline_sha256": null,
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "HTTP_STATUS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://assuranceplatform.azurewebsites.net/docs/platform-guide/publishing-and-discover",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:51.857Z",
+          "last_success_at": "2026-11-06T06:24:51.857Z",
+          "http_status": 200,
+          "content_sha256": "fdcd84e8b057b729c1a15da87a011f75f2e67ef7c54e16006b3d6a81900b82bd",
+          "baseline_sha256": "fdcd84e8b057b729c1a15da87a011f75f2e67ef7c54e16006b3d6a81900b82bd",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://github.com/alan-turing-institute/AssurancePlatform",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:52.653Z",
+          "last_success_at": "2026-11-06T06:24:52.653Z",
+          "http_status": 200,
+          "content_sha256": "275ae1c15641393ee2caa61d2ddf76bae33795befac2cb114c4469c8563fefd9",
+          "baseline_sha256": "275ae1c15641393ee2caa61d2ddf76bae33795befac2cb114c4469c8563fefd9",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R08",
+      "name": "Langfuse",
+      "kind": "API integration",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://langfuse.com/docs/evaluation/evaluation-methods/scores-via-sdk",
+        "https://langfuse.com/docs/api-and-data-platform/features/public-api"
+      ],
+      "declared_read_interval_hours": 1,
+      "related_evidence": [
+        {
+          "axis": "claim-maintenance",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/claim-maintenance-wave-2026-10-30.json",
+          "observed_at": "2026-10-30T05:03:17.173Z",
+          "scope": "Active rev2 lineage only; Oct28 duplicate historical rows are not ten distinct maintained claims."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://langfuse.com/docs/evaluation/evaluation-methods/scores-via-sdk",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:53.147Z",
+          "last_success_at": "2026-11-06T06:24:53.147Z",
+          "http_status": 200,
+          "content_sha256": "b2acf05391114bf69aa3623d4280c8110fce5ce5626520a73f5703bc380d191f",
+          "baseline_sha256": "b2acf05391114bf69aa3623d4280c8110fce5ce5626520a73f5703bc380d191f",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://langfuse.com/docs/api-and-data-platform/features/public-api",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:53.854Z",
+          "last_success_at": "2026-11-06T06:24:53.854Z",
+          "http_status": 200,
+          "content_sha256": "419ea4fee215f0cc184c6fc3d89e3b136e86573cb570a1f8e233f7c2e6facb2f",
+          "baseline_sha256": "419ea4fee215f0cc184c6fc3d89e3b136e86573cb570a1f8e233f7c2e6facb2f",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R09",
+      "name": "OpenTelemetry GenAI",
+      "kind": "Telemetry adapter and standards contribution",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/README.md",
+        "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+      ],
+      "declared_read_interval_hours": 1,
+      "related_evidence": [
+        {
+          "axis": "interop-conformance",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/interop-conformance-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        },
+        {
+          "axis": "interop-conformance",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/interop-conformance-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/README.md",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:54.297Z",
+          "last_success_at": "2026-11-06T06:24:54.297Z",
+          "http_status": 200,
+          "content_sha256": "883fec6758521e3829e486884afc1428c5f42004c1373d54b0b7ef3bb212c2d0",
+          "baseline_sha256": "883fec6758521e3829e486884afc1428c5f42004c1373d54b0b7ef3bb212c2d0",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:54.513Z",
+          "last_success_at": "2026-11-06T06:24:54.513Z",
+          "http_status": 200,
+          "content_sha256": "aa774db919656f900f1bc66eb0e1786a7846cb25c60d93d6b647c899356376aa",
+          "baseline_sha256": "aa774db919656f900f1bc66eb0e1786a7846cb25c60d93d6b647c899356376aa",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R10",
+      "name": "CoSAI",
+      "kind": "Open technical workstreams",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://www.coalitionforsecureai.org/get-involved/",
+        "https://www.coalitionforsecureai.org/about/"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://www.coalitionforsecureai.org/get-involved/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:54.765Z",
+          "last_success_at": "2026-11-06T06:24:54.765Z",
+          "http_status": 200,
+          "content_sha256": "f42476d1b2b43d03b6ab0daab64e071bef7da832221d915f5461a2124e5a4ce7",
+          "baseline_sha256": "f42476d1b2b43d03b6ab0daab64e071bef7da832221d915f5461a2124e5a4ce7",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://www.coalitionforsecureai.org/about/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:54.793Z",
+          "last_success_at": "2026-11-06T06:24:54.793Z",
+          "http_status": 200,
+          "content_sha256": "d452264b1809977019b8d26e8cd10f06fd92b377cd1e501440e8cf854bac23b4",
+          "baseline_sha256": "d452264b1809977019b8d26e8cd10f06fd92b377cd1e501440e8cf854bac23b4",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R11",
+      "name": "FINOS AI Governance Framework",
+      "kind": "Open framework contribution",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://github.com/finos/ai-governance-framework/blob/main/GOVERNANCE.md",
+        "https://ai.finos.org/join-us/"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://github.com/finos/ai-governance-framework/blob/main/GOVERNANCE.md",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:55.229Z",
+          "last_success_at": "2026-11-06T06:24:55.229Z",
+          "http_status": 200,
+          "content_sha256": "c16cb29e1ef8dfdfa5c8ac89b4a5d6c5e4e4e69e2f4c55a6ef50b0ba0feaf9d0",
+          "baseline_sha256": "c16cb29e1ef8dfdfa5c8ac89b4a5d6c5e4e4e69e2f4c55a6ef50b0ba0feaf9d0",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://ai.finos.org/join-us/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:56.083Z",
+          "last_success_at": "2026-11-06T06:24:56.083Z",
+          "http_status": 200,
+          "content_sha256": "82178a747326252878d854e5a086503c65ba9e5e003088d4f4da07f2451ef407",
+          "baseline_sha256": "82178a747326252878d854e5a086503c65ba9e5e003088d4f4da07f2451ef407",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R12",
+      "name": "MLCommons AI Risk and Reliability",
+      "kind": "Open working group",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://mlcommons.org/get-involved/",
+        "https://mlcommons.org/working-groups/ai-risk-reliability/ai-risk-reliability/"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [
+        {
+          "axis": "measurer-integrity",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/measurer-integrity-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://mlcommons.org/get-involved/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:56.281Z",
+          "last_success_at": "2026-11-06T06:24:56.281Z",
+          "http_status": 200,
+          "content_sha256": "3973d713382c8b1b80610054fbe959a10c9ae823b4ce7d682acad32a7b47834f",
+          "baseline_sha256": "3973d713382c8b1b80610054fbe959a10c9ae823b4ce7d682acad32a7b47834f",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://mlcommons.org/working-groups/ai-risk-reliability/ai-risk-reliability/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:56.353Z",
+          "last_success_at": "2026-11-06T06:24:56.353Z",
+          "http_status": 200,
+          "content_sha256": "d40472467dc887820bc00dbdaac5f9197f13b84e65c022ea614283c97e26ed61",
+          "baseline_sha256": "d40472467dc887820bc00dbdaac5f9197f13b84e65c022ea614283c97e26ed61",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R13",
+      "name": "AI Verify / Project Moonshot",
+      "kind": "Open-source integration",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://aiverifyfoundation.sg/tools/moonshot/",
+        "https://aiverifyfoundation.sg/about-aivf/faq/"
+      ],
+      "declared_read_interval_hours": 1,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://aiverifyfoundation.sg/tools/moonshot/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:24:57.852Z",
+          "last_success_at": "2026-11-06T06:24:57.852Z",
+          "http_status": 200,
+          "content_sha256": "b6890aa6bf7d6cf938561199016c35c349bcaaf46276be01983f2740c116f1e8",
+          "baseline_sha256": "b6890aa6bf7d6cf938561199016c35c349bcaaf46276be01983f2740c116f1e8",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://aiverifyfoundation.sg/about-aivf/faq/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:01.404Z",
+          "last_success_at": "2026-11-06T06:25:01.404Z",
+          "http_status": 200,
+          "content_sha256": "4e6dbeed0eae78204e48b833ce320fe6dea4301ad29e797e568828ef18397aa1",
+          "baseline_sha256": "4e6dbeed0eae78204e48b833ce320fe6dea4301ad29e797e568828ef18397aa1",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R14",
+      "name": "OpenSSF / Sigstore",
+      "kind": "Open working group and proof integration",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://openssf.org/community/openssf-working-groups/",
+        "https://www.sigstore.dev/community"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [
+        {
+          "axis": "interop-conformance",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/interop-conformance-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://openssf.org/community/openssf-working-groups/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:02.569Z",
+          "last_success_at": "2026-11-06T06:25:02.569Z",
+          "http_status": 200,
+          "content_sha256": "bfbe54276f5f7d6683b3aa09f77925d1217deb6daf10769506d271411a78707d",
+          "baseline_sha256": "bfbe54276f5f7d6683b3aa09f77925d1217deb6daf10769506d271411a78707d",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://www.sigstore.dev/community",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:03.440Z",
+          "last_success_at": "2026-11-06T06:25:03.440Z",
+          "http_status": 200,
+          "content_sha256": "d95640d7b2330ee325fa3c57776bc1e280ae7d85ccc7c5e7922143221a9080f2",
+          "baseline_sha256": "d95640d7b2330ee325fa3c57776bc1e280ae7d85ccc7c5e7922143221a9080f2",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R15",
+      "name": "OWASP AI Exchange / GenAI",
+      "kind": "Open technical contribution",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://owaspai.org/contribute/",
+        "https://www.owasp.community/policy/project"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [
+        {
+          "axis": "interop-conformance",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/interop-conformance-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://owaspai.org/contribute/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:03.629Z",
+          "last_success_at": "2026-11-06T06:25:03.629Z",
+          "http_status": 200,
+          "content_sha256": "2b955d1df273165d7111b37f47704cf742f5eadab189d928f9a6d6d6bb4d7886",
+          "baseline_sha256": "2b955d1df273165d7111b37f47704cf742f5eadab189d928f9a6d6d6bb4d7886",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://www.owasp.community/policy/project",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:04.854Z",
+          "last_success_at": "2026-11-06T06:25:04.854Z",
+          "http_status": 200,
+          "content_sha256": "2a3ef6e61de1e407aa04854d19ec9b0e56a469d79408c72782a1788191651192",
+          "baseline_sha256": "2a3ef6e61de1e407aa04854d19ec9b0e56a469d79408c72782a1788191651192",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R16",
+      "name": "AI Alliance working-group collaboration",
+      "kind": "Selective collaboration",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://thealliance.ai/join",
+        "https://help.thealliance.ai/are-there-fees-for-joining-the-ai-alliance"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://thealliance.ai/join",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:04.964Z",
+          "last_success_at": "2026-11-06T06:25:04.964Z",
+          "http_status": 200,
+          "content_sha256": "77e85cf0ecbba6acd626a1a3bcac39071b7a9c8d2da9560c4aceaa6eb0f89e94",
+          "baseline_sha256": "77e85cf0ecbba6acd626a1a3bcac39071b7a9c8d2da9560c4aceaa6eb0f89e94",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://help.thealliance.ai/are-there-fees-for-joining-the-ai-alliance",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:05.083Z",
+          "last_success_at": "2026-11-06T06:25:05.083Z",
+          "http_status": 200,
+          "content_sha256": "b135427591b24743fab4e3aa0af8340b79c3e1d368c5d3278436a10da0a111f2",
+          "baseline_sha256": "b135427591b24743fab4e3aa0af8340b79c3e1d368c5d3278436a10da0a111f2",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R17",
+      "name": "IEEE IES Generative AI Challenge 2027",
+      "kind": "Research challenge",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://ai.ieee-ies.org/",
+        "https://ai.ieee-ies.org/rules-and-guidelines/index.html",
+        "https://ai.ieee-ies.org/qa/index.html"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://ai.ieee-ies.org/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:05.405Z",
+          "last_success_at": "2026-11-06T06:25:05.405Z",
+          "http_status": 200,
+          "content_sha256": "7a5d46d948c032a3cdd4c39ebf31218d57f8ec87ff131949de7df4cb0214d205",
+          "baseline_sha256": "7a5d46d948c032a3cdd4c39ebf31218d57f8ec87ff131949de7df4cb0214d205",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://ai.ieee-ies.org/rules-and-guidelines/index.html",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:05.530Z",
+          "last_success_at": "2026-11-06T06:25:05.530Z",
+          "http_status": 200,
+          "content_sha256": "47c6bd5529fa0520071ddfdbe2dcc770d0dc8f323930dd4d6fd25ef6974656c1",
+          "baseline_sha256": "47c6bd5529fa0520071ddfdbe2dcc770d0dc8f323930dd4d6fd25ef6974656c1",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://ai.ieee-ies.org/qa/index.html",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:05.715Z",
+          "last_success_at": "2026-11-06T06:25:05.715Z",
+          "http_status": 200,
+          "content_sha256": "dee2d4bd568fd763665a65d13f9cb24b1af9c23d67f2666dc629a5714ce6dbb4",
+          "baseline_sha256": "dee2d4bd568fd763665a65d13f9cb24b1af9c23d67f2666dc629a5714ce6dbb4",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R18",
+      "name": "CSIRO / Data61 responsible AI",
+      "kind": "R&D partnership",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://www.csiro.au/en/research/technology-space/ai/ways-to-work-with-us-in-rai"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://www.csiro.au/en/research/technology-space/ai/ways-to-work-with-us-in-rai",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:09.384Z",
+          "last_success_at": "2026-11-06T06:25:09.384Z",
+          "http_status": 200,
+          "content_sha256": "b7dad1a934041ce1c6c6d5adbb134a937b859630f588f594e63c87cbb486d507",
+          "baseline_sha256": "b7dad1a934041ce1c6c6d5adbb134a937b859630f588f594e63c87cbb486d507",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R19",
+      "name": "ICO Regulatory Sandbox",
+      "kind": "Regulatory support",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://ico.org.uk/for-organisations/advice-and-services/regulatory-sandbox/the-guide-to-the-sandbox/who-can-apply-to-the-sandbox/",
+        "https://ico.org.uk/for-organisations/advice-and-services/regulatory-sandbox/the-guide-to-the-sandbox/how-can-we-apply-to-the-sandbox/"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [
+        {
+          "axis": "regulator-transparency",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/regulator-transparency-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://ico.org.uk/for-organisations/advice-and-services/regulatory-sandbox/the-guide-to-the-sandbox/who-can-apply-to-the-sandbox/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:09.585Z",
+          "last_success_at": "2026-11-06T06:25:09.585Z",
+          "http_status": 200,
+          "content_sha256": "629810e1776a326cb06042f636e317ff03842c8ea14a6028384008c3aaa45ff9",
+          "baseline_sha256": "629810e1776a326cb06042f636e317ff03842c8ea14a6028384008c3aaa45ff9",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://ico.org.uk/for-organisations/advice-and-services/regulatory-sandbox/the-guide-to-the-sandbox/how-can-we-apply-to-the-sandbox/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:09.756Z",
+          "last_success_at": "2026-11-06T06:25:09.756Z",
+          "http_status": 200,
+          "content_sha256": "7a3faace8983cd6f35d4f9b1635f0cf2eaf584263c0c1b550f9ee0ea3c4665ea",
+          "baseline_sha256": "7a3faace8983cd6f35d4f9b1635f0cf2eaf584263c0c1b550f9ee0ea3c4665ea",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R20",
+      "name": "FCA Permanent Digital Sandbox",
+      "kind": "Testing and ecosystem support",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://www.fca.org.uk/firms/innovation/digital-sandbox"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [
+        {
+          "axis": "regulator-transparency",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/regulator-transparency-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://www.fca.org.uk/firms/innovation/digital-sandbox",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:11.506Z",
+          "last_success_at": "2026-11-06T06:25:11.506Z",
+          "http_status": 200,
+          "content_sha256": "c62701ae5efcc929555a93b63406083cbb7a0da1d85ed7ef26215585eaa74611",
+          "baseline_sha256": "c62701ae5efcc929555a93b63406083cbb7a0da1d85ed7ef26215585eaa74611",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R21",
+      "name": "Knowledge Transfer Partnership Round 4",
+      "kind": "Academic-business grant partnership",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://www.ukri.org/opportunity/knowledge-transfer-partnership-2026-to-2027-round-4/"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://www.ukri.org/opportunity/knowledge-transfer-partnership-2026-to-2027-round-4/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:11.821Z",
+          "last_success_at": "2026-11-06T06:25:11.821Z",
+          "http_status": 200,
+          "content_sha256": "8eb4247316ec37c989cbf6c06b96f8ce8e765f762ba62c22592bfa01c2b24638",
+          "baseline_sha256": "8eb4247316ec37c989cbf6c06b96f8ce8e765f762ba62c22592bfa01c2b24638",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R22",
+      "name": "EIC Accelerator 2027",
+      "kind": "Competitive deep-tech funding",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://eic.ec.europa.eu/eic-funding-opportunities/eic-accelerator_en",
+        "https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/europe-world/international-cooperation/association-horizon-europe/united-kingdom_en"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://eic.ec.europa.eu/eic-funding-opportunities/eic-accelerator_en",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:12.113Z",
+          "last_success_at": "2026-11-06T06:25:12.113Z",
+          "http_status": 200,
+          "content_sha256": "b5cb2c43135e31d6016c561fcc78abe3bf541983f07059b5e72cbcd3f92865ba",
+          "baseline_sha256": "b5cb2c43135e31d6016c561fcc78abe3bf541983f07059b5e72cbcd3f92865ba",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/europe-world/international-cooperation/association-horizon-europe/united-kingdom_en",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:12.282Z",
+          "last_success_at": "2026-11-06T06:25:12.282Z",
+          "http_status": 200,
+          "content_sha256": "b97123e3e02db3fd2ecd4149938d30185da8a58e599d3d2da05591e050959483",
+          "baseline_sha256": "b97123e3e02db3fd2ecd4149938d30185da8a58e599d3d2da05591e050959483",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R23",
+      "name": "AI-on-Demand platform",
+      "kind": "Tool and dataset distribution",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://research.aiodp.eu/",
+        "https://digital-strategy.ec.europa.eu/en/news/commission-launches-ai-tools-online-platform-researchers-and-industry"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://research.aiodp.eu/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:12.863Z",
+          "last_success_at": "2026-11-06T06:25:12.863Z",
+          "http_status": 200,
+          "content_sha256": "faef646220c9e6264cc33df18060659def9d953233ce60ded08109122ec471da",
+          "baseline_sha256": "faef646220c9e6264cc33df18060659def9d953233ce60ded08109122ec471da",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://digital-strategy.ec.europa.eu/en/news/commission-launches-ai-tools-online-platform-researchers-and-industry",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:13.576Z",
+          "last_success_at": "2026-11-06T06:25:13.576Z",
+          "http_status": 200,
+          "content_sha256": "de6f9834ade196c5639746d3757f929785108894a4da4f038b75535e353ac4cc",
+          "baseline_sha256": "de6f9834ade196c5639746d3757f929785108894a4da4f038b75535e353ac4cc",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R24",
+      "name": "Apply AI Alliance / Stakeholders Catalogue",
+      "kind": "Community and discoverability",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://futurium.ec.europa.eu/en/apply-ai-alliance",
+        "https://futurium.ec.europa.eu/en/apply-ai-alliance/stakeholders-catalogue"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://futurium.ec.europa.eu/en/apply-ai-alliance",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:13.740Z",
+          "last_success_at": "2026-11-06T06:25:13.740Z",
+          "http_status": 200,
+          "content_sha256": "caa457fc23ab956ef80c361dae70f251f14ce986421208265d87f39d6d1a7ada",
+          "baseline_sha256": "caa457fc23ab956ef80c361dae70f251f14ce986421208265d87f39d6d1a7ada",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://futurium.ec.europa.eu/en/apply-ai-alliance/stakeholders-catalogue",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:14.462Z",
+          "last_success_at": "2026-11-06T06:25:14.462Z",
+          "http_status": 200,
+          "content_sha256": "1258d7e6ca44520c199f004667e4cef571231b93a89c2bac83f72e1e8ca57b5f",
+          "baseline_sha256": "1258d7e6ca44520c199f004667e4cef571231b93a89c2bac83f72e1e8ca57b5f",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R25",
+      "name": "TEF-Health Call2",
+      "kind": "Testing services",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://tefhealth.eu/calls/2"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://tefhealth.eu/calls/2",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:14.922Z",
+          "last_success_at": "2026-11-06T06:25:14.922Z",
+          "http_status": 200,
+          "content_sha256": "72f4685f7b39586b0b0676826ddad275e8da5de1bb0e115d3716b31f9ac83d4e",
+          "baseline_sha256": "72f4685f7b39586b0b0676826ddad275e8da5de1bb0e115d3716b31f9ac83d4e",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R26",
+      "name": "NVIDIA Inception",
+      "kind": "Startup support",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://www.nvidia.com/en-us/startups/"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [
+        {
+          "axis": "measurer-integrity",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/measurer-integrity-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://www.nvidia.com/en-us/startups/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:15.058Z",
+          "last_success_at": "2026-11-06T06:25:15.058Z",
+          "http_status": 200,
+          "content_sha256": "76f87592db7302c0d83f52fa08e62b18eefb37bfd8f68aaf36ede38370732709",
+          "baseline_sha256": "76f87592db7302c0d83f52fa08e62b18eefb37bfd8f68aaf36ede38370732709",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R27",
+      "name": "AWS Activate",
+      "kind": "Cloud credits",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://aws.amazon.com/startups/credits/"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [
+        {
+          "axis": "company-practice",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/company-practice-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://aws.amazon.com/startups/credits/",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:15.356Z",
+          "last_success_at": "2026-11-06T06:25:15.356Z",
+          "http_status": 200,
+          "content_sha256": "073b70e352cf4cdbc1848347625a6610421b83d1b6c84aa7273b0ddbd122a331",
+          "baseline_sha256": "073b70e352cf4cdbc1848347625a6610421b83d1b6c84aa7273b0ddbd122a331",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R28",
+      "name": "Google for Startups Cloud Program",
+      "kind": "Cloud credits",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://cloud.google.com/startup",
+        "https://cloud.google.com/startup/benefits"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [],
+      "observations": [
+        {
+          "source_url": "https://cloud.google.com/startup",
+          "state": "UNCHECKABLE",
+          "attempted_at": "2026-11-06T06:25:15.728Z",
+          "last_success_at": null,
+          "http_status": 200,
+          "content_sha256": null,
+          "baseline_sha256": null,
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "BODY_LIMIT",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://cloud.google.com/startup/benefits",
+          "state": "UNCHECKABLE",
+          "attempted_at": "2026-11-06T06:25:15.833Z",
+          "last_success_at": null,
+          "http_status": 301,
+          "content_sha256": null,
+          "baseline_sha256": null,
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "REDIRECT_NOT_FOLLOWED",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    },
+    {
+      "route_id": "R29",
+      "name": "Microsoft for Startups",
+      "kind": "Cloud credits and support",
+      "catalogued_on": "2026-11-06",
+      "source_urls": [
+        "https://learn.microsoft.com/en-us/startups/microsoft-for-startups/overview",
+        "https://learn.microsoft.com/en-us/startups/microsoft-for-startups/application"
+      ],
+      "declared_read_interval_hours": 24,
+      "related_evidence": [
+        {
+          "axis": "company-practice",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/11ee19cd5ae7cb70da348f3b996b016a2e91ddb7/public/interop/axis-banks/company-practice-20261102.json",
+          "observed_at": "2026-10-28T04:25:30.845Z",
+          "scope": "Declared link-class string presence in frozen public bytes; not product quality, source truth or programme eligibility."
+        }
+      ],
+      "observations": [
+        {
+          "source_url": "https://learn.microsoft.com/en-us/startups/microsoft-for-startups/overview",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:16.036Z",
+          "last_success_at": "2026-11-06T06:25:16.036Z",
+          "http_status": 200,
+          "content_sha256": "fbc90345ddd327863b7bcb8868e0cb4c49f98f2314354b2bc0815d2675a19d1e",
+          "baseline_sha256": "fbc90345ddd327863b7bcb8868e0cb4c49f98f2314354b2bc0815d2675a19d1e",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        },
+        {
+          "source_url": "https://learn.microsoft.com/en-us/startups/microsoft-for-startups/application",
+          "state": "FIRST_CAPTURE",
+          "attempted_at": "2026-11-06T06:25:16.226Z",
+          "last_success_at": "2026-11-06T06:25:16.226Z",
+          "http_status": 200,
+          "content_sha256": "d60387c45ae7b481adcddd4793b6fa1ed47206604aee717f56d397a1828fddec",
+          "baseline_sha256": "d60387c45ae7b481adcddd4793b6fa1ed47206604aee717f56d397a1828fddec",
+          "pending_sha256": null,
+          "pending_since": null,
+          "reason": "FIRST_SUCCESS",
+          "workflow_run_url": null,
+          "artifact_url": null
+        }
+      ]
+    }
+  ]
+}

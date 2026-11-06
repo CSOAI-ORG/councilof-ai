@@ -90,6 +90,69 @@ function measuredWhen(value?: Record<string, string>): string {
   return value.observed_at ?? value.observed_on ?? value.not_after ?? value.state ?? "UNCHECKABLE";
 }
 
+type OpportunityObservation = { source_url: string; state: string; attempted_at: string | null; last_success_at: string | null; http_status: number | null; content_sha256: string | null; reason: string; workflow_run_url: string | null; artifact_url: string | null };
+type OpportunityRoute = { route_id: string; name: string; kind: string; declared_read_interval_hours: number; source_urls: string[]; observations: OpportunityObservation[]; related_evidence: { axis: string; url: string; observed_at: string; scope: string }[] };
+type OpportunityReply = { schema: string; routes: OpportunityRoute[]; last_capture: { completed_at: string; executor: string; route_count: number; source_count: number; successful: number; uncheckable: number; unreachable: number; workflow_run_url: string | null; artifact_url: string | null } | null };
+
+function publicSourceLink(value: string): string | undefined {
+  try { const url = new URL(value); return url.protocol === "https:" && !url.username && !url.password ? url.href : undefined; }
+  catch { return undefined; }
+}
+
+function sourceAge(readAt: string | null, interval: number, now: number): string {
+  if (!readAt) return "Never successfully read by this monitor";
+  const age = now - Date.parse(readAt);
+  if (!Number.isFinite(age) || age < 0) return "Source clock uncheckable";
+  return age > interval * 3600000 ? "Older than the declared read interval" : "Within the declared read interval";
+}
+
+function ResearchOpportunities() {
+  const [data, setData] = useState<OpportunityReply | null>(null);
+  const [error, setError] = useState("");
+  const [filter, setFilter] = useState("");
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => { const timer = window.setInterval(() => setNow(Date.now()), 60000); return () => window.clearInterval(timer); }, []);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/interop/opportunity-registry.json", { signal: controller.signal, headers: { accept: "application/json" } })
+      .then(async response => {
+        const value = await response.json() as OpportunityReply;
+        if (!response.ok || value.schema !== "csoai.opportunity-registry/0.1" || !Array.isArray(value.routes) || value.routes.length !== 29 ||
+            new Set(value.routes.map(r => r.route_id)).size !== 29 || value.routes.some(r => !Array.isArray(r.observations) || !Array.isArray(r.related_evidence))) {
+          throw new Error("Public source catalogue unavailable. No current checks are assumed.");
+        }
+        setData(value);
+      }).catch(reason => { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "Public source catalogue unavailable."); });
+    return () => controller.abort();
+  }, []);
+  const routes = data?.routes.filter(r => [r.route_id, r.name, r.kind].join(" ").toLowerCase().includes(filter.toLowerCase())) ?? [];
+  return <section className="mt-6 rounded-2xl border border-slate-900/10 bg-white p-5 shadow-sm" aria-label="External research routes and public source checks">
+    <h3 className="text-lg font-semibold text-slate-950">External research routes and integrations</h3>
+    <p className="mt-2 text-sm text-slate-600">A public source catalogue, not a list of eligible applications or measured organisations. Source reads check availability and body fingerprints; they do not verify programme eligibility, funding, participation or product behaviour. Raw body changes can include page chrome or transient tokens; no semantic change is inferred. Related GSPC evidence keeps its original subject, date and scope.</p>
+    <p className="mt-2 text-sm text-slate-600">Declared workflow schedule: all 29 routes daily at 06:45 UTC; R07–R09 and R13 documentation hourly at :45, with the daily run filling 06:45. This is a schedule in source, not proof of execution or continuous publication. Changes go through review and protected release checks.</p>
+    {error && <p role="alert" className="mt-3 text-sm text-amber-900">{error}</p>}
+    {!data && !error && <p role="status" className="mt-3 text-sm">Reading the public source catalogue…</p>}
+    {data && <>
+      <p className="mt-3 text-sm text-slate-700">{data.routes.length} research routes · {data.routes.reduce((n, r) => n + r.source_urls.length, 0)} public source URLs. Private contacts, application records and budgets are not included.</p>
+      <p className="mt-2 text-sm text-slate-600">Last published capture: {data.last_capture ? `${data.last_capture.completed_at} · ${data.last_capture.executor} · ${data.last_capture.successful}/${data.last_capture.source_count} sources returned comparable bytes in that capture; ${data.last_capture.uncheckable} uncheckable; ${data.last_capture.unreachable} unreachable.` : "No capture receipt published."} This capture may cover only the four integrations; individual source times below control freshness.</p>
+      {data.last_capture?.workflow_run_url && <p className="mt-2 text-sm"><a className="underline" href={publicSourceLink(data.last_capture.workflow_run_url)} target="_blank" rel="noopener noreferrer">Capture workflow run</a>{" · "}<a className="underline" href={publicSourceLink(data.last_capture.artifact_url ?? "")} target="_blank" rel="noopener noreferrer">Retained run artifacts</a></p>}
+      <label className="mt-4 block text-sm">Filter research routes<input className="mt-1 block w-full rounded border p-2" value={filter} onChange={e => setFilter(e.target.value)} placeholder="Programme, integration or route ID" /></label>
+      <div className="mt-4 space-y-2">{routes.map(r => <details className="rounded-lg border p-3" key={r.route_id}>
+        <summary className="cursor-pointer text-sm"><strong>{r.route_id} · {r.name}</strong>{" · "}{r.kind}{" · "}{r.declared_read_interval_hours === 1 ? "hourly documentation reads declared" : "daily source reads declared"}</summary>
+        <ul className="mt-3 space-y-3 text-xs text-slate-600">{r.observations.map(o => <li className="break-words rounded bg-slate-50 p-3" key={o.source_url}>
+          <a className="underline" href={publicSourceLink(o.source_url)} target="_blank" rel="noopener noreferrer">{o.source_url}</a>
+          <p className="mt-1">Source state: {o.state} · HTTP {o.http_status ?? "not observed"} · {o.reason.replaceAll("_", " ").toLowerCase()}</p>
+          <p>Last attempt: {o.attempted_at ?? "not attempted"}. Last successful body read: {o.last_success_at ?? "none"}. {sourceAge(o.last_success_at, r.declared_read_interval_hours, now)}.</p>
+          {o.content_sha256 && <p className="font-mono">Last successful body SHA-256: {o.content_sha256}</p>}
+          {o.workflow_run_url && <p><a className="underline" href={publicSourceLink(o.workflow_run_url)} target="_blank" rel="noopener noreferrer">Observation run</a>{" · "}<a className="underline" href={publicSourceLink(o.artifact_url ?? "")} target="_blank" rel="noopener noreferrer">Artifacts</a></p>}
+        </li>)}</ul>
+        {r.related_evidence.length > 0 && <div className="mt-3 text-xs text-slate-600"><strong>Related historical evidence — different scope</strong>{r.related_evidence.map((e, i) => <p className="mt-2" key={`${e.axis}-${i}`}><a className="underline" href={publicSourceLink(e.url)} target="_blank" rel="noopener noreferrer">{e.axis}</a>{" · "}{e.observed_at}. {e.scope} This does not make this research route measured.</p>)}</div>}
+      </details>)}</div>
+      {routes.length === 0 && <p className="mt-3 text-sm">No research route matches this filter.</p>}
+    </>}
+  </section>;
+}
+
 export default function DashboardResearchPane() {
   const [reply, setReply] = useState<ResearchReply | null>(null);
   const [error, setError] = useState("");
@@ -169,6 +232,8 @@ export default function DashboardResearchPane() {
           ))}
         </ol>
       </section>
+
+      <ResearchOpportunities />
 
       <section aria-label="Public incident source coverage" className="mt-6 rounded-2xl border border-slate-900/10 bg-white p-5 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -283,3 +348,4 @@ export default function DashboardResearchPane() {
     </div>
   );
 }
+
