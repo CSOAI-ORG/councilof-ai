@@ -60,6 +60,7 @@ const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GspcConsole = lazy(() => import("./pages/GspcConsole"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
+const GpaiMatrix = lazy(() => import("./pages/GpaiMatrix"));
 const Penalties = lazy(() => import("./pages/Penalties"));
 const NistVsEuAct = lazy(() => import("./pages/NistVsEuAct"));
 const Iso42001VsEuAct = lazy(() => import("./pages/Iso42001VsEuAct"));
@@ -955,7 +956,7 @@ function AppShell() {
                   <Route path="/registry" component={ContentReviewNotice} />
                   <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
                   <Route path="/checklist" component={EUActChecklist} />
-                  <Route path="/gpai" component={GpaiObligations} />
+                  <Route path="/gpai" component={GpaiMatrix} />
                   <Route path="/foundation-models" component={GpaiObligations} />
                   <Route path="/penalties" component={Penalties} />
                   <Route path="/uk-ai-regulation">{() => <JurisdictionAct jx="uk" />}</Route>

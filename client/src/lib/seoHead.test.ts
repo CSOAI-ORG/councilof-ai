@@ -252,3 +252,18 @@ describe("applyHead writes title, description, OG and canonical into a document"
     } finally { vi.unstubAllGlobals(); }
   });
 });
+
+
+describe("reviewed blog titles remain distinct from archived routes", () => {
+  it("an approved article gets its own head before the component mounts", () => {
+    const h = resolveHead("/blog/how-to-verify-an-ai-measurement/?from=index");
+    expect(h.source).toBe("family");
+    expect(h.title).not.toMatch(/withdrawn/i);
+    expect(h.description).not.toMatch(/withdrawn from/);
+    expect(h.canonical).toBe("https://councilof.ai/blog/how-to-verify-an-ai-measurement/");
+  });
+  it("the archive index and unreviewed articles retain their withdrawal", () => {
+    for (const p of ["/blog", "/blog/proof-of-ai", "/blog/not-an-approved-post"])
+      expect(resolveHead(p).source, p).toBe("withdrawn");
+  });
+});
