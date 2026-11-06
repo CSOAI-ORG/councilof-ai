@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { familyOf, plan } from "./sweeper-plan.mjs";
+import { familyOf, plan, logPayloadsIn, uniqueRows, supersedeVerdict, gcVerdict } from "./sweeper-plan.mjs";
 
 const NOW = Date.parse("2026-11-02T09:00:00Z");
 const pr = (over = {}) => ({
@@ -72,8 +72,8 @@ test("plan: branch GC only for CLOSED unmerged family PRs older than 7 days", ()
   // 3425: closed yesterday → too young. 3421: merged → GitHub's call, never GC'd.
   // 3417 and 3423: family branches, unmerged, closed >7d → GC (sorted by number).
   assert.deepEqual(p.gc, [
-    { number: 3417, branch: "x402-door-conformance/2026-10-23T1203Z" },
-    { number: 3423, branch: "mill/land-hfjobs-40005642177" },
+    { number: 3417, branch: "x402-door-conformance/2026-10-23T1203Z", family: "x402", headSha: null },
+    { number: 3423, branch: "mill/land-hfjobs-40005642177", family: "mill", headSha: null },
   ]);
 });
 
@@ -133,4 +133,103 @@ test("plan: a mill keep NEWER than the merged floor still arms auto-merge; an ol
   const older = plan({ open: [pr({ number: 3900, headRefName: "mill/land-hfjobs-39000000000" })], closed, now: NOW });
   assert.deepEqual(older.millAutoMerge, []); // master already holds 4000 — landing 3900 would regress it
   assert.deepEqual(older.supersede, [{ number: 3900, family: "mill", keep: 4000, mergedKeep: true }]);
+});
+
+// ── the append-log gate (issue #3800) ────────────────────────────────────────
+//
+// MEASURED 3 Nov 2026, from the PR head refs (which survive a branch delete):
+//   #3392  22 rows   #3565  30 rows   #3676  30 rows
+//   rows in #3392 that are NOT in #3565: 8
+// The canary payload is an APPEND LOG, so closing #3392 as "superseded" drops
+// eight dated observations — and the sweeper then deleted its branch too, so
+// the only copy of those rows went with it.
+//
+// The gate is STRUCTURAL: a family member that changes a .jsonl file is
+// contributing to a log; one that changes only .json snapshots is replacing a
+// capture. The x402 family must keep closing (issue #3746's ruling), so the
+// tests below pin BOTH halves.
+
+test("logPayloadsIn: a .jsonl payload is a log; a .json snapshot is not", () => {
+  assert.deepEqual(
+    logPayloadsIn([
+      "public/interop/silent-route-canary-2026-09/baseline.jsonl",
+      "public/interop/x402-door-conformance-2026-09/card-x402-door-conformance-summary-unsigned.json",
+      "public/interop/x402-door-conformance-2026-09/mirrors/door-0-challenge.json",
+    ]),
+    ["public/interop/silent-route-canary-2026-09/baseline.jsonl"],
+  );
+  assert.deepEqual(logPayloadsIn([]), []);
+  assert.deepEqual(logPayloadsIn(["a/b.json", "c/d.meta.json"]), []);
+});
+
+test("uniqueRows: the rows the keeper does not have", () => {
+  assert.deepEqual(uniqueRows(["a", "b"], ["a", "b", "c"]), []);
+  assert.deepEqual(uniqueRows(["a", "b"], ["b", "c"]), ["a"]);
+  assert.deepEqual(uniqueRows([], ["a"]), []);
+});
+
+test("supersedeVerdict: an append log with rows the keeper lacks is NOT closed", () => {
+  const older = Array.from({ length: 22 }, (_, i) => `row-${i}`);
+  const keeper = Array.from({ length: 30 }, (_, i) => `row-${i + 8}`);
+  const verdict = supersedeVerdict({
+    payloads: [{ path: "public/interop/silent-route-canary-2026-09/baseline.jsonl", olderRows: older, keeperRows: keeper }],
+  });
+  assert.equal(verdict.ok, false);
+  assert.equal(verdict.uniqueRows, 8);
+  assert.match(verdict.reason, /append log/);
+  assert.match(verdict.reason, /8 row\(s\)/);
+});
+
+test("supersedeVerdict: the keeper holding every row means the close is safe", () => {
+  const older = Array.from({ length: 22 }, (_, i) => `row-${i}`);
+  const keeper = Array.from({ length: 30 }, (_, i) => `row-${i}`);
+  const verdict = supersedeVerdict({
+    payloads: [{ path: "p/baseline.jsonl", olderRows: older, keeperRows: keeper }],
+  });
+  assert.equal(verdict.ok, true);
+});
+
+test("supersedeVerdict: an UNREADABLE payload is unprovable, and unprovable never closes", () => {
+  const verdict = supersedeVerdict({
+    payloads: [{ path: "p/baseline.jsonl", olderRows: null, keeperRows: null }],
+  });
+  assert.equal(verdict.ok, false);
+  assert.match(verdict.reason, /unprovable/);
+});
+
+test("supersedeVerdict: a REPLACE family (no .jsonl payload) still closes — #3746 stands", () => {
+  // The x402 family rewrites 30 .json files and changes no .jsonl at all, so
+  // there is no log to compare and the ruling that superseded probe runs get
+  // closed keeps working.
+  assert.deepEqual(logPayloadsIn(["public/interop/x402-door-conformance-2026-09/artefact-manifest.json"]), []);
+  assert.equal(supersedeVerdict({ payloads: [] }).ok, true);
+});
+
+test("gcVerdict: a branch that still holds rows master lacks is not deleted", () => {
+  const verdict = gcVerdict({
+    payloads: [{ path: "p/baseline.jsonl", olderRows: ["day-1", "day-2"], keeperRows: ["day-2"] }],
+  });
+  assert.equal(verdict.ok, false);
+  assert.match(verdict.reason, /append log/);
+  assert.equal(gcVerdict({ payloads: [] }).ok, true);
+});
+
+test("plan: a GC entry carries the family and the head SHA, so the branch can be questioned", () => {
+  const p = plan({
+    open: [],
+    closed: [
+      pr({
+        number: 3392,
+        headRefName: "canary-push/39749682201",
+        state: "CLOSED",
+        closedAt: "2026-09-20T00:00:00Z",
+        headSha: "edfc0897d76ada382fa273b415fe512c15cda12c",
+      }),
+    ],
+    now: NOW,
+  });
+  assert.equal(p.gc.length, 1);
+  assert.equal(p.gc[0].family, "canary");
+  assert.equal(p.gc[0].headSha, "edfc0897d76ada382fa273b415fe512c15cda12c");
+  assert.equal(p.gc[0].branch, "canary-push/39749682201");
 });
