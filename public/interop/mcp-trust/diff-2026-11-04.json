@@ -1,0 +1,32 @@
+{
+  "kind": "csoai.mcp-trust-diff/0.1",
+  "state": "MEASURED",
+  "as_of": "2026-11-04T04:34:49Z",
+  "previous": "2026-11-02.json",
+  "previous_as_of": "2026-11-02T12:50:46Z",
+  "bucket_deltas": {
+    "alive_not_mcp": 12,
+    "auth_challenged_401_403": 1010,
+    "auth_scheme_bearer_or_oauth": 959,
+    "auth_scheme_other": 1,
+    "auth_scheme_unspecified": 50,
+    "dead_404_or_unreachable": 76,
+    "initialize_ok_open": 93,
+    "initialize_ok_tools_listed": 737,
+    "listed_no_reply": 0,
+    "other_error": 28,
+    "rate_limited": 1,
+    "registry_rows_seen": 6443,
+    "servers_reporting_tools": 737,
+    "tools_listed_total": 6847,
+    "tools_median_per_answering_server": 0.0,
+    "total": 1959,
+    "unique_hosts_enumerated": 1959,
+    "x402_challenged_402": 3
+  },
+  "hosts_added": "UNCHECKABLE \u2014 per-host rows are operator-side, never published",
+  "hosts_dropped": "UNCHECKABLE \u2014 per-host rows are operator-side, never published",
+  "bucket_migrations": "UNCHECKABLE \u2014 counts-only diff cannot track a host across buckets",
+  "doctrine": "Measurement, never certification. A bucket is never a grade, rank or certificate. A 401/402 challenge is a term sheet \u2014 an invoice, not delivery. UNREACHABLE is never FAIL. Host details withheld by design; methodology published. Counts derived, never typed.",
+  "note": "a PARTIAL round is a slice: slice-vs-slice deltas never show population change; cap change 500\u21922459: deltas compare different slices, never the population"
+}
