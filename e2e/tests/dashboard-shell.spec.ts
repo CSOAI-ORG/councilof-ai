@@ -1138,14 +1138,31 @@ test.describe("Munder actual provider qualification", () => {
         "Explicit bounded hosted qualification only; fixtures remain the offline gate.");
       test.setTimeout(90_000);
       // Serve only the candidate HTML/assets under the already CORS-qualified
-      // browser origins. The MEOK request is NOT intercepted or mocked.
+      // browser origins. The existing MEOK response is never mocked.
       await page.route(surface.origin + "/**", async route => {
         const url = new URL(route.request().url());
         const response = await route.fetch({ url: surface.local + url.pathname + url.search });
         await route.fulfill({ response });
       });
+      // This exact page-level pass-through overrides the shell harness's
+      // context-wide HF block. It does not mock, proxy or rewrite the provider.
+      await page.route(MUNDER_PROVIDER, route => route.continue());
       let calls = 0;
+      const network: unknown[] = [], consoleErrors: string[] = [];
       page.on("request", r => { if (r.url() === MUNDER_PROVIDER && r.method() === "POST") calls++; });
+      page.on("requestfailed", r => {
+        if (r.url() === MUNDER_PROVIDER) network.push({ event: "requestfailed", method: r.method(), error: r.failure()?.errorText });
+      });
+      page.on("response", r => {
+        if (r.url() === MUNDER_PROVIDER) network.push({ event: "response", status: r.status(), headers: {
+          contentType: r.headers()["content-type"], allowOrigin: r.headers()["access-control-allow-origin"],
+        } });
+      });
+      page.on("console", message => {
+        if (message.type() === "error" && /CORS|meok|hf\.space|net::/.test(message.text()))
+          { if (consoleErrors.length < 16) consoleErrors.push(message.text().slice(0, 2000)); }
+      });
+      try {
       await page.goto(surface.origin + surface.path, { waitUntil: "domcontentloaded" });
       const game = page.getByTestId("munder-live-duel");
       await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
@@ -1169,6 +1186,17 @@ test.describe("Munder actual provider qualification", () => {
       await expect(game).toContainText("Both moves are now recorded");
       expect(calls).toBe(1);
       await page.screenshot({ path: info.outputPath("munder-real-provider.png"), fullPage: true });
+      } finally {
+        const retained = await page.evaluate(key => sessionStorage.getItem(key), MUNDER_LIVE_KEY).catch(() => null);
+        const status = await page.getByTestId("munder-status").textContent().catch(() => null);
+        const diagnostic = { qualification: "candidate browser; one unmocked request maximum; no retry",
+          surface: surface.name, source: process.env.GITHUB_SHA, requests: calls, status, network, consoleErrors,
+          retained: retained ? JSON.parse(retained) : null };
+        await info.attach("munder-real-provider-diagnostics", {
+          body: Buffer.from(JSON.stringify(diagnostic, null, 2)), contentType: "application/json",
+        });
+        console.log("MUNDER_PROVIDER_DIAGNOSTIC " + JSON.stringify(diagnostic));
+      }
     });
   }
 });
