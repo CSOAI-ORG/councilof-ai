@@ -383,6 +383,20 @@ Re-read it live; do not quote these figures without the state and coverage besid
 - Per-entity shares (CSOAI Ltd and MEOK AI Labs publish from one account and are labelled, never
   filtered) are on the artifact at `by_entity`; the estate total is every row.
 
+## Published interop files (every file under /interop/, with its digest)
+
+Derived at generation from https://councilof.ai/interop/file-index.json (same bytes on disk at
+public/interop/file-index.json, schema csoai.interop-file-index/0.1, artifact as_of 2026-11-06T07:17:52Z). It is a
+MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
+the SHA-256 of the bytes and how the file is served.
+
+- Files indexed: 16,329. Bytes indexed: 258,794,832.
+- By how they are served: 13,238 hf-mirror; 3,091 pages.
+- hf-mirror: served by a 302 redirect to the HuggingFace evidence mirror (scripts/deploy-exclusions.json); the path is real and fetchable
+- pages: served by the site build
+- To check one file: fetch its path and hash it. A match means you hold the bytes the estate
+  published. The index says a file is PRESENT and IDENTICAL to what is served — not that it is
+  measured, signed, certified or true.
 ## Signed evidence records (evidence linked from the board, never counted into it)
 
 Derived at generation from https://councilof.ai/evidence/published-records.json (same bytes on disk at
