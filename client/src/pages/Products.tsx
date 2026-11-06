@@ -1,8 +1,7 @@
 import { Link } from "wouter";
 import { toolSummary } from "@/lib/mcpTools";
-import EmptySlots from "@/components/EmptySlots";
-import ProductFill from "@/components/ProductFill";
 import { useBoardCount } from "@/lib/boardCount";
+import { BUYING_ENQUIRIES } from "@/lib/buying";
 
 /**
  * /products — four SKUs, one workspace (Council OS).
@@ -36,21 +35,21 @@ export const SKUS = [
     name: "Ledger",
     href: "/contact?arm=ledger",
     tag: "Enquiry",
-    what: "Signed evidence feed and packs for insurers and procurement. Never a purchased public rank.",
+    what: "Evidence products for a named subject or period: Article 50 marking-check packs, published evidence bundles and provider-diff feeds. Scope and invoice terms are agreed by email.",
   },
   {
     id: "data",
     name: "Data",
     href: "/contact?arm=data",
     tag: "Enquiry",
-    what: "Licensed corpus: traces, preference pairs, safety incidents. A vendor may buy data. A vendor can never buy a score.",
+    what: "Discuss reuse of a named published dataset. Licence rights, source permissions and commercial terms depend on the component and version. A data enquiry does not reserve or license a corpus. A vendor can never buy a score.",
   },
 ] as const;
 
 const ENGINE = [
   { k: "Signed", v: "Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md). Every published card carries its signature bytes, the public key and the preimage rule, and verifies offline with the zero-dependency verifier at /signed/verify-card.mjs — no account, no permission." },
-  { k: "Three-state", v: "pass / fail / UNMEASURED — what we cannot measure is published, not hidden" },
-  { k: "Live-sourced", v: "board numbers from GET /api/gspc, card-chain numbers from GET /api/state — both carry the artifact and the date they were read from. No page types a count." },
+  { k: "Result status", v: "pass / fail / UNMEASURED, with measurement status and verification status reported separately" },
+  { k: "Live-sourced", v: "Board and card-chain figures are read from the published APIs, with source records and measurement dates." },
   {
     k: "Method-bound",
     v: "unparsed counts incorrect · no model judges another · no model-comparison axis is quoted below n=30, and an axis whose n counts something other than bank items says what it counts",
@@ -62,7 +61,7 @@ const FREE_RAIL = [
   { name: "The live board", href: "/gspc-scoreboard", what: "Living board GET /api/gspc — counts derived from the committed axis arrays. Check GET /api/state for whether the preserved signed board snapshot agrees with those live rows." },
   { name: "The API", href: "/api/gspc", what: "The same board, machine-readable. Agents welcome.", external: true },
   { name: "The method", href: "/methodology", what: "The frozen rules every number above is computed under." },
-  { name: "Choose an actual job", href: "/dashboard?task=pricing-overview&tab=measured", what: "Free verification, existing RWA or Article 50 evidence, provider history, or a scoped commission. Paid routes disclose the exact amount only in their live 402 challenge." },
+  { name: "Explore services and pricing", href: "/dashboard?task=pricing-overview&tab=measured", what: "Free verification, existing RWA or Article 50 evidence, provider history, or a scoped commission. Paid routes disclose the exact amount only in their live 402 challenge." },
   { name: "Live board badge", href: "/badge/board.svg", what: "One SVG that re-renders from the live board — embed it anywhere, it never types a number." },
   
 ];
@@ -133,16 +132,23 @@ export default function Products() {
     <div className="min-h-screen bg-[#03110b]">
     <section className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">
-        Council of AI — verify free · jobs by artefact · enterprise on enquiry
+        Council of AI — verification, measurement and evidence services
       </p>
       <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight sm:text-4xl">
         Verify for free. Choose the work you need.
       </h1>
       <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-300">
-        Retrieve existing evidence, inspect provider history, or commission a scoped
-        receipt. We sell the artefact — never the score, never a certificate, never
-        to anyone we rank.
+        Retrieve existing evidence, inspect provider history, or discuss a scoped
+        measurement requirement. Each service identifies its deliverable and coverage.
+        Payment does not change a measurement result.
       </p>
+
+      <section aria-labelledby="products-buying-h" className="mt-8 rounded-2xl border border-emerald-400/30 bg-emerald-950/30 p-6">
+        <h2 id="products-buying-h" className="text-xl font-bold">Ask for a defined evidence product</h2>
+        <p className="mt-3 max-w-3xl leading-7 text-slate-300">These existing products can be discussed for a GBP invoice. Name the subject, dates and intended use; we confirm the available deliverable and terms before an order. Each link prepares an enquiry.</p>
+        <div className="mt-4 flex flex-wrap gap-3">{BUYING_ENQUIRIES.map((product) => <Link key={product.product} href={product.href} className="inline-flex min-h-11 items-center rounded-lg border border-emerald-400/50 px-4 py-2 font-semibold text-emerald-200 hover:bg-emerald-400/10">{product.label}</Link>)}</div>
+        <Link href="/services/#services-scope-h" className="mt-4 inline-flex min-h-11 items-center font-semibold text-emerald-300 underline">What to agree in the written scope</Link>
+      </section>
 
       {/* Public runtime doors and source integrations. Source-only projects say so: a
           repository is inspectable, but it is not a browser-store or host installation. */}
@@ -179,7 +185,7 @@ export default function Products() {
           {/* DERIVED, because this page's own ENGINE block says "No page types a count" and this
               heading typed one. Four is right today; it is right because SKUS has four entries,
               not because the word was typed. Add a fifth and the heading follows instead of lying. */}
-          The {SKUS.length} SKUs
+          Our {SKUS.length} products and services
         </h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">
           {SKUS.map((p) => (
@@ -201,8 +207,6 @@ export default function Products() {
         </ul>
       </section>
 
-      <ProductFill tone="dark" />
-      <EmptySlots tone="dark" />
 
       <section aria-labelledby="engine-h" className="mt-12">
         <h2 id="engine-h" className="text-xl font-bold text-emerald-300">The engine</h2>

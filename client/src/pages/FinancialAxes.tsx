@@ -263,7 +263,7 @@ export default function FinancialAxes() {
             The full board{board.gspc_family ? ` — behavioural half, ${board.gspc_family.sentence}` : ` — ${board.public_count}`} →
           </Link>
           <Link href="/honesty" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
-            The honesty gate — our own losses →
+            Review measurement scope and limitations →
           </Link>
           <Link href="/methodology" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
             How we measure →

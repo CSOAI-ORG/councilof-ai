@@ -22,6 +22,9 @@ TARGETS = {
     "gspc-one": ("csoai/gspc-one", "dataset", "scripts/gspc-one/HF_README.md"),
 }
 GSPC_ONE_CONFIG = "configs:\n- config_name: default\n  data_files:\n  - split: train\n    path: gspc-one.json\n  field: rows"
+BRAND_BANNER_URL = "https://huggingface.co/datasets/csoai/brand-assets/resolve/main/csoai-banner-1280x256.png"
+OVERVIEW_START = "<!-- gspc-overview:start -->"
+OVERVIEW_END = "<!-- gspc-overview:end -->"
 
 
 def front_matter(text: str) -> tuple[str, str]:
@@ -31,9 +34,47 @@ def front_matter(text: str) -> tuple[str, str]:
     return match.group(1), match.group(2).lstrip("\n")
 
 
+def brand_banner(text: str) -> str | None:
+    if BRAND_BANNER_URL not in text:
+        return None
+    blocks = [block for block in re.findall(
+        r'(?m)^<p align="center">\n[ \t]*<img [^\n]*>\n</p>', text,
+    ) if BRAND_BANNER_URL in block]
+    if text.count(BRAND_BANNER_URL) != 1 or len(blocks) != 1:
+        raise ValueError("Ambiguous or incomplete brand banner; manual review required")
+    return blocks[0]
+
+
+def snapshot_overview(text: str) -> str | None:
+    if "gspc-overview:" not in text:
+        return None
+    if (text.count("gspc-overview:") != 2
+            or text.count(OVERVIEW_START) != 1 or text.count(OVERVIEW_END) != 1
+            or text.index(OVERVIEW_START) >= text.index(OVERVIEW_END)):
+        raise ValueError("Ambiguous or incomplete snapshot overview; manual review required")
+    return text[text.index(OVERVIEW_START):text.index(OVERVIEW_END) + len(OVERVIEW_END)]
+
+
+def preserve_live_sections(current_body: str, body: str) -> str:
+    """Keep live branding and dated generated counts verbatim, without duplicating them."""
+    banner, desired_banner = brand_banner(current_body), brand_banner(body)
+    if banner:
+        body = body.replace(desired_banner, banner, 1) if desired_banner else f"{banner}\n\n{body}"
+    overview, desired_overview = snapshot_overview(current_body), snapshot_overview(body)
+    if overview:
+        if desired_overview:
+            body = body.replace(desired_overview, overview, 1)
+        else:
+            heading = re.search(r"(?m)^## ", body)
+            if not heading:
+                raise ValueError("No section heading for preserved snapshot overview; manual review required")
+            body = body[:heading.start()] + overview + "\n\n" + body[heading.start():]
+    return body
+
+
 def render_card(target: str, current: str, snapshot: dict | None = None) -> str:
     """Preserve existing metadata; only Space title/description are presentation edits."""
-    fm, _ = front_matter(current)
+    fm, current_body = front_matter(current)
     template = (ROOT / TARGETS[target][2]).read_text(encoding="utf-8")
     if target == "dataset":
         found = re.findall(
@@ -72,6 +113,8 @@ def render_card(target: str, current: str, snapshot: dict | None = None) -> str:
             fm, count = re.subn(rf"(?m)^{key}: .+$", lambda _: f"{key}: {value[1]}", fm)
             if count != 1:
                 raise ValueError(f"Existing metadata lacks a unique {key}")
+    if target in ("organisation", "dataset"):
+        body = preserve_live_sections(current_body, body)
     return f"---\n{fm}\n---\n\n{body.rstrip()}\n"
 
 

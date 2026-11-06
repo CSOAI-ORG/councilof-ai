@@ -233,16 +233,16 @@ export default function GpaiEvidencePack() {
         <section className="mb-12">
           <div className="flex flex-wrap gap-3">
             <Link
-              href="/assess"
+              href="/dashboard?tab=measured"
               className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-emerald-400"
             >
-              Start a signed assessment →
+              Review existing commission terms →
             </Link>
             <Link
-              href="/contact"
+              href="/contact/?arm=run"
               className="rounded-lg border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-200 hover:bg-white/5"
             >
-              Enterprise pack — talk to us →
+              Discuss a scoped evidence pack →
             </Link>
             <Link
               href="/gspc"
@@ -252,8 +252,9 @@ export default function GpaiEvidencePack() {
             </Link>
           </div>
           <p className="text-zinc-500 text-xs mt-3">
-            No public prices. A grade is never sold — pricing for the enterprise pack lives behind the
-            enterprise door, and it never changes a verdict.
+            Commission terms cover a receipt and references to existing cards where available.
+            A fresh model measurement or GPAI evidence scope must be confirmed by email.
+            Opening either route does not book a run or place an order.
           </p>
         </section>
 
