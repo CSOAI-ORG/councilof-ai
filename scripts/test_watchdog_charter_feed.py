@@ -235,6 +235,31 @@ class TestAxisReports(unittest.TestCase):
         self.assertEqual(h["correction_history"]["row_count_delta"],0)
         self.current["axes"][a]["comparison_identity"]["method_sha"]="f"*64
         self.assertEqual(self.history()["rows"][0]["observed_metric_direction"],"NOT_COMPARED")
+    def test_context_only_variations_are_not_unchanged_evidence(self):
+        import copy
+        axis=self.names[0]
+        template=copy.deepcopy(self.reports)
+        for side in ("current","previous"):
+            template[side]["axes"][axis].update(n=10,accuracy=0.8)
+        self.reports=copy.deepcopy(template)
+        baseline={r["axis"]:r for r in self.history()["rows"]}[axis]
+        self.assertEqual(baseline["event"],"UNCHANGED_EVIDENCE")
+        self.assertEqual(baseline["observed_metric_direction"],"UNCHANGED")
+        self.assertEqual(baseline["changed_fields"],[])
+        for field,value in [("bank_sha256","e"*64),("method_sha","f"*64),
+                            ("model_versions",["fixture-v2"]),("applies_to","fixture-other-scope")]:
+            with self.subTest(context_field=field):
+                self.reports=copy.deepcopy(template)
+                self.reports["current"]["axes"][axis]["comparison_identity"][field]=value
+                row={r["axis"]:r for r in self.history()["rows"]}[axis]
+                self.assertEqual(row["event"],"INCOMPARABLE_VARIATION")
+                self.assertEqual(row["comparison_state"],"CONTEXT_VARIATION")
+                self.assertEqual(row["changed_fields"],[])
+                self.assertNotEqual(row["previous_context_sha256"],row["current_context_sha256"])
+                self.assertEqual(row["observed_metric_direction"],"NOT_COMPARED")
+                self.assertEqual(row["human_decision"],"HOLD")
+                self.assertFalse(row["may_apply"]);self.assertFalse(row["approval_may_be_inferred"])
+                self.assertFalse(row["challenge_opened"])
     def test_zero_or_changed_sample_count_is_not_numeric_regression(self):
         a=self.names[0]
         self.current["axes"][a].update(accuracy=0.1,n=0)

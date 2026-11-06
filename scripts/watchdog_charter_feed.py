@@ -385,10 +385,10 @@ def axis_report_history(registry, charter_map, reports):
             event = "PREVIOUS_UNRESOLVED"
         elif old is None:
             event = "AXIS_ADDED"
-        elif not changed:
-            event = "UNCHANGED_EVIDENCE"
         elif context == "CONTEXT_VARIATION":
             event = "INCOMPARABLE_VARIATION"
+        elif not changed:
+            event = "UNCHANGED_EVIDENCE"
         elif new.get("kind") == old.get("kind") == "model-comparison" and new.get("separation") != old.get("separation"):
             event = ("SOURCE_DECLARED_SEPARATION_GAINED" if new.get("separation") == "SEPARATED" else
                      "SOURCE_DECLARED_SEPARATION_LOST" if old.get("separation") == "SEPARATED" else
