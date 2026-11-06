@@ -4,6 +4,7 @@ import {
   clearToolReceipts,
   exportToolReceipts,
   listToolReceipts,
+  subscribeToolReceipts,
   RECEIPTS_CAP,
   type ToolReceipt,
 } from "@/lib/toolReceipts";
@@ -23,7 +24,10 @@ export default function ToolReceiptsPane() {
   const [confirmClear, setConfirmClear] = useState(false);
 
   useEffect(() => {
-    setReceipts(listToolReceipts());
+    const refresh = () => setReceipts(listToolReceipts());
+    const unsubscribe = subscribeToolReceipts(refresh);
+    refresh();
+    return unsubscribe;
   }, []);
 
   const refresh = () => setReceipts(listToolReceipts());

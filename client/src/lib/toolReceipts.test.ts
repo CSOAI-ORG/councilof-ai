@@ -6,7 +6,7 @@
  * (not_signed_evidence on every record, args hashed and never stored) and the
  * mechanics (ring buffer cap, clear, export shape, stable argument hashing).
  */
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   RECEIPTS_CAP,
   RECEIPTS_KEY,
@@ -17,6 +17,7 @@ import {
   listToolReceipts,
   recordToolReceipt,
   stableArgsString,
+  subscribeToolReceipts,
 } from "./toolReceipts";
 
 beforeEach(() => localStorage.clear());
@@ -83,5 +84,66 @@ describe("toolReceipts", () => {
     expect(fnv1aHex("abc")).toBe(fnv1aHex("abc"));
     expect(fnv1aHex("abc").startsWith("fnv1a:")).toBe(true);
     expect(fnv1aHex("abc")).not.toBe(fnv1aHex("abd"));
+  });
+});
+
+describe("tool receipt updates", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("notifies this tab after successful writes and clear, then unsubscribes", () => {
+    const changed = vi.fn();
+    const unsubscribe = subscribeToolReceipts(changed);
+    try {
+      recordToolReceipt({ tool: "get_root", argsHash: "x", outcome: "VALID" });
+      expect(changed).toHaveBeenCalledTimes(1);
+      clearToolReceipts();
+      expect(changed).toHaveBeenCalledTimes(2);
+      unsubscribe();
+      recordToolReceipt({ tool: "get_root", argsHash: "x", outcome: "VALID" });
+      expect(changed).toHaveBeenCalledTimes(2);
+    } finally {
+      unsubscribe();
+    }
+  });
+
+  it("observes other-tab receipt writes and clear-all while ignoring unrelated stores", () => {
+    const changed = vi.fn();
+    const unsubscribe = subscribeToolReceipts(changed);
+    try {
+      window.dispatchEvent(new StorageEvent("storage", { key: "unrelated", storageArea: localStorage }));
+      window.dispatchEvent(new StorageEvent("storage", { key: RECEIPTS_KEY, storageArea: sessionStorage }));
+      expect(changed).not.toHaveBeenCalled();
+      window.dispatchEvent(new StorageEvent("storage", { key: RECEIPTS_KEY, storageArea: localStorage }));
+      window.dispatchEvent(new StorageEvent("storage", { key: null, storageArea: localStorage }));
+      expect(changed).toHaveBeenCalledTimes(2);
+    } finally {
+      unsubscribe();
+    }
+  });
+
+  it("does not announce persistence when the browser refuses the write", () => {
+    const changed = vi.fn();
+    const unsubscribe = subscribeToolReceipts(changed);
+    try {
+      vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+        throw new DOMException("Storage full", "QuotaExceededError");
+      });
+      expect(recordToolReceipt({ tool: "get_root", argsHash: "x", outcome: "VALID" })).toBeNull();
+      expect(changed).not.toHaveBeenCalled();
+    } finally {
+      unsubscribe();
+    }
+  });
+
+  it("ignores incomplete cached rows and exports only the receipt fields", () => {
+    const receipt = recordToolReceipt({ tool: "get_root", argsHash: "x", outcome: "VALID" })!;
+    localStorage.setItem(RECEIPTS_KEY, JSON.stringify([
+      null, { tool: "missing fields" }, { ...receipt, at: null },
+      { ...receipt, args_hash: null }, { ...receipt, not_signed_evidence: false },
+      { ...receipt, door: "/unexpected" }, { ...receipt, outcome: [] },
+      { ...receipt, raw_arguments: "PRIVATE CONTENT MUST NOT APPEAR" },
+    ]));
+    expect(listToolReceipts()).toEqual([receipt]);
+    expect(exportToolReceipts()).not.toContain("PRIVATE");
   });
 });
