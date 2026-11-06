@@ -7,6 +7,19 @@
  */
 export const DELIVERY_RECORD_SCHEMA = "csoai.x402.delivery-record/0.1";
 export const DELIVERY_KEY_PREFIX = "delivery:tx:";
+// Private values in the existing namespace; receipt and delivery metadata stay body-free.
+export const RETAINED_OUTPUT_SCHEMA = "csoai.x402.prepared-output/0.1";
+export const RETAINED_OUTPUT_KEY_PREFIX = "delivery:body:v1:tx:";
+export const RETAINED_OUTPUT_MAX_BYTES = 1024 * 1024;
+export const RETAINED_OUTPUT_MAX_HEADER_BYTES = 8192;
+export const RETAINED_OUTPUT_HEADERS = [
+  "content-type", "content-disposition", "content-language", "content-encoding",
+  "etag", "last-modified", "x-csoai-card-sha256", "x-csoai-feed-sha256",
+  "x-csoai-sig-ed25519", "x-csoai-did", "x-csoai-payload-sha256",
+  "x-payment-response", "payment-response",
+] as const;
+export const retainedOutputTxKey = (transaction: string): string =>
+  `${RETAINED_OUTPUT_KEY_PREFIX}${transaction}`;
 
 export type DeliveryRecord = {
   schema: typeof DELIVERY_RECORD_SCHEMA;
@@ -135,10 +148,9 @@ function storageBudget() {
   };
 }
 
-export async function storeDeliveryRecord(kv: KvLike | undefined, record: DeliveryRecord): Promise<DeliveryStoreResult> {
+async function storeDeliveryWithinBudget(kv: KvLike | undefined, record: DeliveryRecord, budget: ReturnType<typeof storageBudget>): Promise<DeliveryStoreResult> {
   if (!kv) return { stored: false, existing: false, conflict: false, reason: "no REVENUE_KV bound", key: null };
   const key = deliveryTxKey(record.transaction);
-  const budget = storageBudget();
   try {
     const current = await budget.run(() => kv.get(key), "get");
     if (current !== null) {
@@ -159,7 +171,13 @@ export async function storeDeliveryRecord(kv: KvLike | undefined, record: Delive
         reason: unknown ? "KV put deadline exceeded; write outcome UNKNOWN, may commit later; no automatic retry" : "KV storage deadline exceeded before a write; no put attempted", key };
     }
     return { stored: false, existing: false, conflict: false, reason: `kv write failed: ${(e as Error).message}`, key };
-  } finally { budget.clear(); }
+  }
+}
+
+export async function storeDeliveryRecord(kv: KvLike | undefined, record: DeliveryRecord): Promise<DeliveryStoreResult> {
+  const budget = storageBudget();
+  try { return await storeDeliveryWithinBudget(kv, record, budget); }
+  finally { budget.clear(); }
 }
 
 export async function readDeliveryByTransaction(kv: KvLike | undefined, transaction: string): Promise<DeliveryRecord | null> {
@@ -198,27 +216,89 @@ function deliveryHeaders(response: Response, state: string, paymentResponse?: st
   return headers;
 }
 
+
+/** Private prepared-output envelope. It is unsigned and is never included in receipt JSON.
+ * KV get/put remains non-atomic; recovery must compare this envelope with delivery metadata.
+ * No TTL, automatic deletion, retention SLA or customer-access capability is introduced.
+ */
+async function retainOutputWithinBudget(kv: KvLike, record: DeliveryRecord,
+  response: Response, bytes: Uint8Array, budget: ReturnType<typeof storageBudget>, paymentResponse?: string): Promise<string> {
+  if (bytes.byteLength > RETAINED_OUTPUT_MAX_BYTES) return "NOT_RETAINED_TOO_LARGE";
+  const headerSource = new Headers(response.headers);
+  if (paymentResponse) headerSource.set("x-payment-response", paymentResponse);
+  const headers = RETAINED_OUTPUT_HEADERS
+    .filter(name => headerSource.has(name))
+    .map(name => [name, headerSource.get(name)!]);
+  if (new TextEncoder().encode(JSON.stringify({ status_text: response.statusText, headers })).byteLength > RETAINED_OUTPUT_MAX_HEADER_BYTES)
+    return "NOT_RETAINED_HEADERS_TOO_LARGE";
+  try {
+    const key = retainedOutputTxKey(record.transaction);
+    // Never replace an earlier/orphaned body or backfill a previous metadata-only delivery.
+    if (await budget.run(() => kv.get(key), "get") !== null) return "CONFLICT";
+    let binary = "";
+    for (let offset = 0; offset < bytes.length; offset += 8192)
+      binary += String.fromCharCode(...bytes.subarray(offset, offset + 8192));
+    const envelope = {
+      schema: RETAINED_OUTPUT_SCHEMA,
+      transaction: record.transaction, resource: record.resource,
+      delivery_tx_key: deliveryTxKey(record.transaction),
+      response_sha256: record.response_sha256, response_bytes: bytes.byteLength,
+      content_type: record.content_type,
+      status: response.status, status_text: response.statusText, headers,
+      delivered_at: record.delivered_at, body_base64: btoa(binary), signed: false,
+      claim_boundary: "Private exact prepared HTTP body. Unsigned server bookkeeping; not proof of buyer receipt, acceptance or payment finality. Operator recovery only.",
+    };
+    await budget.run(() => kv.put(key, JSON.stringify(envelope)), "put");
+    return "RETAINED";
+  } catch (error) {
+    if (error instanceof DeliveryStorageTimeout)
+      return error.phase === "put" && error.invoked ? "UNKNOWN" : "NOT_RETAINED_DEADLINE";
+    return "ERROR";
+  }
+}
+
+function retentionHeaders(response: Response, state: string): Headers {
+  const headers = new Headers(response.headers);
+  const name = "x-csoai-output-retention-state";
+  headers.set(name, state);
+  const exposed = (headers.get("access-control-expose-headers") || "").split(",").map(v => v.trim()).filter(Boolean);
+  if (!exposed.some(v => v.toLowerCase() === name)) exposed.push(name);
+  headers.set("access-control-expose-headers", exposed.join(", "));
+  return headers;
+}
+
 /** Call only at an inspected successful paid-output seam, never on status alone.
  * Finite, already-prepared response bytes are consumed once and returned unchanged.
- * No settlement, signing, fetch or original-body retention is performed here.
+ * Original bodies up to the engineering cap are retained privately in the existing KV.
+ * Settlement, signing and HTTP output bytes are unchanged; retention is reported separately.
  */
 export async function recordPaidResponse(response: Response, opts: PaidResponseOptions): Promise<Response> {
   if (!opts.confirmedPaid || !opts.successfulOutput || !response.ok || !response.body) return response;
   const bytes = new Uint8Array(await response.arrayBuffer());
   const transaction = typeof opts.transaction === "string" ? opts.transaction.trim() : "";
   let state = transaction ? (opts.kv ? "ERROR" : "UNRECORDED_NO_STORE") : "UNRECORDED_NO_TRANSACTION";
+  let retention = transaction ? (opts.kv ? "ERROR" : "NOT_RETAINED_NO_STORE") : "NOT_RETAINED_NO_TRANSACTION";
   if (transaction && opts.kv) {
+    let budget: ReturnType<typeof storageBudget> | undefined;
     try {
       const hash = await crypto.subtle.digest("SHA-256", bytes);
       const response_sha256 = Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, "0")).join("");
-      const result = await storeDeliveryRecord(opts.kv, buildDeliveryRecord({
+      const record = buildDeliveryRecord({
         transaction, resource: opts.resource, response_sha256, response_bytes: bytes.byteLength,
         content_type: response.headers.get("content-type") || "",
-      }));
+      });
+      // One anchored 250ms budget for metadata AND body I/O, never a timer per helper.
+      budget = storageBudget();
+      const result = await storeDeliveryWithinBudget(opts.kv, record, budget);
       state = result.write_outcome_unknown ? "UNKNOWN" : result.stored ? "WRITTEN" : result.conflict ? "CONFLICT" : result.existing ? "ALREADY_RECORDED" : "ERROR";
-    } catch { state = "ERROR"; }
+      retention = result.write_outcome_unknown ? "UNKNOWN" : result.conflict ? "CONFLICT" :
+        result.existing ? "EXISTING_UNCHECKED" : result.stored
+          ? await retainOutputWithinBudget(opts.kv, record, response, bytes, budget, opts.paymentResponse) : "ERROR";
+    } catch { state = "ERROR"; retention = "ERROR"; }
+    finally { budget?.clear(); }
   }
-  return new Response(bytes, { status: response.status, statusText: response.statusText, headers: deliveryHeaders(response, state, opts.paymentResponse) });
+  const result = new Response(bytes, { status: response.status, statusText: response.statusText, headers: deliveryHeaders(response, state, opts.paymentResponse) });
+  return new Response(result.body, { status: result.status, statusText: result.statusText, headers: retentionHeaders(result, retention) });
 }
 
 /** A verified settlement followed by failed output is not successful delivery.
