@@ -2,7 +2,7 @@
 """GSPC batch runner for a Kaggle GPU kernel (Measure's G3-Kaggle method).
 
 Runs inside the kernel. Compute only: it never signs, never writes a board, and
-never contacts anything except registry.ollama.ai (pull) and loopback Ollama.
+contacts registry.ollama.ai (ollama pulls), huggingface.co (hf:-sourced weights, commit+sha256 pinned, SKIPPED on move) and loopback Ollama.
 For each batch model: pull, re-check the full manifest sha256 against the batch
 pin (a moved digest is SKIPPED, never re-pinned), generate pinned configs with
 the frozen playlist generator, run every axis with the serial worker, and gate
@@ -324,16 +324,46 @@ def main() -> int:
     k = 0
     for r in rows:
         tag, want = r["tag"], r["ollama_manifest_sha256"]
-        m = tag.split(":", 1)[1] if tag.startswith("ollama:") else tag
+        hf_source = None
+        if tag.startswith("hf:"):
+            # hf:<org>/<repo>@<revision>:<gguf-file> - weights from huggingface.co,
+            # pinned by the GGUF file's sha256 (moved = SKIPPED, never re-pinned).
+            spec = tag[3:]
+            try:
+                repo_rev, fname = spec.split(":", 1)
+                repo_id, rev = repo_rev.split("@", 1)
+            except ValueError:
+                rec["skipped"].append({"model": spec, "why": "HF_TAG_MALFORMED"}); continue
+            hf_source = {"repo_id": repo_id, "rev": rev, "fname": fname}
+            m = "hf-" + slug(spec)[:48]
+        else:
+            m = tag.split(":", 1)[1] if tag.startswith("ollama:") else tag
         log(f"PULL {m}")
-        if subprocess.run([ollama, "pull", m], env=env_o).returncode:
-            rec["skipped"].append({"model": m, "why": "PULL_FAIL"}); continue
-        n_, t_ = (m.split(":", 1) + ["latest"])[:2]
+        if hf_source:
+            url = f"https://huggingface.co/{hf_source['repo_id']}/resolve/{hf_source['rev']}/{hf_source['fname']}"
+            gguf_path = f"{models_dir}/hf-{slug(spec)[:48]}.gguf"
+            try:
+                import urllib.request as _u
+                _u.urlretrieve(url, gguf_path)
+            except Exception as e:
+                rec["skipped"].append({"model": spec, "why": "HF_PULL_FAIL", "detail": str(e)[:120]}); continue
+            got_gguf = sha(gguf_path)
+            if got_gguf != want:
+                rec["skipped"].append({"model": spec, "why": "DIGEST_CHANGED", "pinned": want, "got": got_gguf})
+                os.remove(gguf_path); continue
+            mf = gguf_path + ".modelfile"
+            with open(mf, "w") as f:
+                f.write(f"FROM {gguf_path}\n")
+            if subprocess.run([ollama, "create", m, "-f", mf], env=env_o).returncode:
+                rec["skipped"].append({"model": spec, "why": "OLLAMA_CREATE_FAIL"}); continue
+        else:
+            if subprocess.run([ollama, "pull", m], env=env_o).returncode:
+                rec["skipped"].append({"model": m, "why": "PULL_FAIL"}); continue
+            n_, t_ = (m.split(":", 1) + ["latest"])[:2]
         mp = f"{models_dir}/manifests/registry.ollama.ai/library/{n_}/{t_}"
         got = sha(mp)
-        if got != want:
+        if got != want and not hf_source:
             rec["skipped"].append({"model": m, "why": "DIGEST_CHANGED", "pinned": want, "got": got})
-            log(f"DIGEST_CHANGED {m}: pinned={want[:12]} got={got[:12]}, skipped")
             subprocess.run([ollama, "rm", m], env=env_o)
             continue
         log(f"SMOKE {m}")
