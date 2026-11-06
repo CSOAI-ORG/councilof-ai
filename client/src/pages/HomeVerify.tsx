@@ -8,12 +8,16 @@
  *
  * THE ORDER IS THE ARGUMENT, and each figure is printed once:
  *   1. HomeHero         - six visual stories: measure, verify, work, connect, maintain, correct.
+ *   1.5 LivingBoardStrip - the compact LIVE board (owner, 1 Nov 2026): the model-comparison
+ *                          axes at their top accuracy with their separation chips, straight
+ *                          from GET /api/gspc; it renders nothing when the read fails.
  *   2. HomeProducts     - nine concise routes into the working products and services.
  *   3. HomeHumanReview  - the actual escalation, competence, authority and receipt workflow.
  *   4. LiveBoardGlance  - the live GSPC board: every axis with its state, the count line with its
  *                         separation line, and the model count (derived from the signed cards by
  *                         scripts/build-models-measured.mjs; list at /models-measured/).
  *   5. HomeProofPoints  - nine concrete safeguards, each linked to its public proof.
+ *   5b. External use    - dated outside activity, shared with /traction and /about.
  *   6. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
  *                         the regulator and the agent.
  *   4b. HomeLast30Days - dated list of merged changes, each linked to its PR. No typed counts.
@@ -26,13 +30,15 @@
  * (client/src/components/about/AboutNumbers.tsx). The composer and the talk panel stay on
  * /dashboard, where "Ask" leads. Bands retired on 2026-09-23 remain on /how-we-work.
  *
- * NO NUMBER ON THIS PAGE IS TYPED. Board figures come from GET /api/gspc, the model count from
+ * LIVE TOTALS ARE NOT TYPED. Board figures come from GET /api/gspc, the model count from
  * /interop/models-measured.json, the proof figures from GET /api/momentum. Each shows an em dash
  * (or nothing) until it lands and says so in words if it never does.
  */
 import { useEffect } from "react";
 import { Link } from "wouter";
 import HomeHero from "@/components/home/HomeHero";
+import LivingBoardStrip from "@/components/home/LivingBoardStrip";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import LiveBoardGlance from "@/components/home/LiveBoardGlance";
 import HomeProducts from "@/components/home/HomeProducts";
 import HomeHumanReview from "@/components/home/HomeHumanReview";
@@ -40,6 +46,7 @@ import HomeProofPoints from "@/components/home/HomeProofPoints";
 import HomeWaysIn from "@/components/home/HomeWaysIn";
 import HomeLast30Days from "@/components/home/HomeLast30Days";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
+import ExternalUseEvidence from "@/components/ExternalUseEvidence";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
 
@@ -121,7 +128,7 @@ export default function HomeVerify() {
   useEffect(() => {
     document.title = "UK AI measurement infrastructure — Council of AI";
     setMetaDescription(
-      "UK AI measurement infrastructure operated by CSOAI Ltd. Read current measurements, verify signed evidence for free and inspect the public corrections ledger.",
+      "An operating UK AI measurement and evidence organisation. Inspect published results, documented external use, free verification and public corrections.",
     );
   }, []);
 
@@ -130,10 +137,47 @@ export default function HomeVerify() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
 
       <HomeHero />
+      {/* The compact LIVE board (owner, 1 Nov 2026): under the hero, above every other band.
+          It reads GET /api/gspc through the shared feed and draws nothing at all when the
+          read fails — a missing board never breaks the front door. */}
+      <div className="section-shell pt-6 sm:pt-8" data-testid="home-living-strip">
+        <LivingBoardStrip />
+      </div>
+
+      {/* Daily report + newsletter band (owner, 1 Nov 2026): the 33-axis signed daily
+          report is published publicly; the signup rides the real /api/subscribe handler. */}
+      <div className="section-shell pt-10" data-testid="home-daily-report-band">
+        <div className="surface-raised border border-border rounded-lg p-6 sm:p-8">
+          <h2 className="text-xl font-bold mb-2">Measurement reports and evidence updates</h2>
+          <p className="text-muted-foreground text-sm mb-4 max-w-2xl">
+            Read published measurement summaries and corrections. Each report identifies its
+            coverage, publication date and evidence status; refer to the board for current results.
+          </p>
+          <div className="flex flex-wrap gap-3 items-center">
+            <a
+              href="https://huggingface.co/datasets/csoai/gspc-daily-reports"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold hover:opacity-90 transition"
+            >
+              Read published reports
+            </a>
+            <a href="/board/" className="text-sm underline underline-offset-4 hover:text-primary">
+              or go straight to the board
+            </a>
+          </div>
+          <div className="mt-5 max-w-md">
+            <NewsletterSignup />
+          </div>
+        </div>
+      </div>
       <HomeProducts />
       <HomeHumanReview />
       <LiveBoardGlance />
       <HomeProofPoints />
+      <div className="surface-base border-t border-border">
+        <div className="section-shell py-12 sm:py-16"><ExternalUseEvidence compact id="home-external-use" /></div>
+      </div>
       <HomeWaysIn />
       <HomeLast30Days />
 
@@ -157,10 +201,13 @@ export default function HomeVerify() {
       <section aria-label="Who runs Council of AI" className="surface-base border-t border-border" data-testid="home-company-strip">
         <div className="section-shell flex flex-col gap-3 py-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="home-accountable-entity">
-            Council of AI is UK AI measurement infrastructure operated by CSOAI Ltd (UK Companies House 16939677),
+            Council of AI is an operating UK AI measurement and evidence organisation run by CSOAI Ltd (UK Companies House 16939677),
             founded by Nicholas Templeman. We measure; we do not certify, and verification is free.
           </p>
           <div className="flex flex-wrap gap-x-6 text-sm font-bold">
+            <Link href="/traction/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
+              Operation and external use →
+            </Link>
             <Link href="/about/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
               Who we are →
             </Link>
