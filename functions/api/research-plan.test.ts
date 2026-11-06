@@ -101,7 +101,7 @@ describe("GSPC continuous research semantics", () => {
     expect(unavailable.body.plans).toEqual([]);
 
     const expanded = board();
-    expanded.axes.push({ axis: "new-measured-axis", status: "MEASURED", kind: "deterministic-facts", task: "new task" });
+    expanded.axes.push({ ...expanded.axes[0], axis: "new-measured-axis", status: "MEASURED", kind: "deterministic-facts", task: "new task" });
     expanded.totals.axes += 1;
     expanded.totals.measured_axes += 1;
     stub(expanded);
