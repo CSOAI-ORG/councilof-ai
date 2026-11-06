@@ -447,9 +447,15 @@ test("one workspace keeps the composer and account access while a tool pane is o
   // Account access remains available through Sections while navigation starts minimized.
   await page.getByRole("button", { name: "Open workspace navigation", exact: true }).click();
   if (isMobile) {
+    // The drawer's accessible name is now i18n'd (dashboard.title, default "Menu"), so the
+    // product property is pinned instead of a translated string: the navigation dialog must
+    // contain account access while a tool pane is open.
+    const navDrawer = page
+      .getByRole("dialog")
+      .filter({ has: page.getByLabel("Open account and workspace menu") });
+    await expect(navDrawer, "one navigation dialog carries account access").toHaveCount(1);
     await expect(
-      page.getByRole("dialog", { name: "Council OS sections" })
-        .getByLabel("Open account and workspace menu"),
+      navDrawer.getByLabel("Open account and workspace menu"),
     ).toBeVisible();
   } else {
     await expect(
