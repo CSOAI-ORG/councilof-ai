@@ -1,6 +1,6 @@
 {
   "schema": "csoai.opportunity-registry/0.1",
-  "scope": "Public source metadata only. A source fetch or fingerprint is not a programme eligibility decision, participation, funding award, product evaluation or GSPC measurement.",
+  "scope": "Public source metadata only. A source fetch or fingerprint is not a programme eligibility decision, participation, funding award, product evaluation or GSPC measurement. These hosted observations retain their original capture times; catalogue publication policy was reviewed separately. Publication is held for the canonical outward writer.",
   "scheduler": {
     "path": ".github/workflows/reg-watch.yml",
     "daily_cron_utc": "45 6 * * *",
@@ -11,20 +11,20 @@
       "R09",
       "R13"
     ],
-    "boundary": "Schedule declared in source; execution and publication require their own dated receipts. Hourly reads inspect public documentation only; no third-party code or models run."
+    "boundary": "Schedule declared in source. This metadata job only captures and retains artifacts; it cannot publish. The canonical outward writer must gate the exact artifact at 100%, record it in the existing canonical sent log, and open a protected PR. Repeated runs start from the last reviewed catalogue; cross-run change confirmation is not guaranteed without a retained, reviewed baseline."
   },
   "last_capture": {
-    "started_at": "2026-11-06T06:24:45.170Z",
-    "completed_at": "2026-11-06T06:25:16.226Z",
+    "started_at": "2026-11-06T06:43:21.976Z",
+    "completed_at": "2026-11-06T06:43:47.466Z",
     "scope": "all",
     "method_sha256": "94d2818bb61ac78a6a51e9442eef53f24b3f0c2634dfb0ee808f5bef887c893c",
-    "executor": "LOCAL_READONLY_TRIAL",
-    "workflow_run_url": null,
-    "artifact_url": null,
+    "executor": "GITHUB_ACTIONS",
+    "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+    "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts",
     "route_count": 29,
     "source_count": 54,
-    "successful": 50,
-    "uncheckable": 4,
+    "successful": 48,
+    "uncheckable": 6,
     "unreachable": 0
   },
   "routes": [
@@ -42,31 +42,31 @@
       "observations": [
         {
           "source_url": "https://milanix.vercel.app/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:45.689Z",
-          "last_success_at": "2026-11-06T06:24:45.689Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:22.205Z",
+          "last_success_at": "2026-11-06T06:43:22.205Z",
           "http_status": 200,
           "content_sha256": "2c8ec87ede5c06fb6bcba445dcb8135aec3290d84b7284a8dad73032182869b4",
           "baseline_sha256": "2c8ec87ede5c06fb6bcba445dcb8135aec3290d84b7284a8dad73032182869b4",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://milanix.vercel.app/review",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:45.969Z",
-          "last_success_at": "2026-11-06T06:24:45.969Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:22.372Z",
+          "last_success_at": "2026-11-06T06:43:22.372Z",
           "http_status": 200,
           "content_sha256": "cb9e4844f4d3f5dcd2e82116ea8ec18250889e74341dda7e4ef49460af74134f",
           "baseline_sha256": "cb9e4844f4d3f5dcd2e82116ea8ec18250889e74341dda7e4ef49460af74134f",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -91,31 +91,31 @@
       "observations": [
         {
           "source_url": "https://www.ietf.org/meeting/hackathons/127-hackathon/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:46.129Z",
-          "last_success_at": "2026-11-06T06:24:46.129Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:22.446Z",
+          "last_success_at": "2026-11-06T06:43:22.446Z",
           "http_status": 200,
-          "content_sha256": "c72a81367875dd2dd28c1236e716d91b098b5d7f52badc95dfb021cd0bf7bfb5",
+          "content_sha256": "c9a5cb2b79a545520582af59c0e628c7d5e65d7ae816cd91c0bfccb41266054d",
           "baseline_sha256": "c72a81367875dd2dd28c1236e716d91b098b5d7f52badc95dfb021cd0bf7bfb5",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "c9a5cb2b79a545520582af59c0e628c7d5e65d7ae816cd91c0bfccb41266054d",
+          "pending_since": "2026-11-06T06:43:22.446Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://wiki.ietf.org/en/meeting/127/hackathon",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:46.479Z",
-          "last_success_at": "2026-11-06T06:24:46.479Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:22.722Z",
+          "last_success_at": "2026-11-06T06:43:22.722Z",
           "http_status": 200,
-          "content_sha256": "24f040d02a618075b5df4176f9ecfeb22a08c73f7c9d59f89aa34c2bbb022fd7",
+          "content_sha256": "10233c1b057e27b7b72ade66a1a3dcd7dcb001a468a175ae30292a61cc9d5ab2",
           "baseline_sha256": "24f040d02a618075b5df4176f9ecfeb22a08c73f7c9d59f89aa34c2bbb022fd7",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "10233c1b057e27b7b72ade66a1a3dcd7dcb001a468a175ae30292a61cc9d5ab2",
+          "pending_since": "2026-11-06T06:43:22.722Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -140,31 +140,31 @@
       "observations": [
         {
           "source_url": "https://www.nist.gov/artificial-intelligence/nist-ai-consortium/ai-consortium-faqs",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:47.680Z",
-          "last_success_at": "2026-11-06T06:24:47.680Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:23.468Z",
+          "last_success_at": "2026-11-06T06:43:23.468Z",
           "http_status": 200,
-          "content_sha256": "a0024be172509e4a21f0edc953ab2f60b80e75f24db75ebdd09dced530d3fbba",
+          "content_sha256": "7f3c063d9212100077c05191cfe97dff0e1d272086104ba320cff698fa44bb8b",
           "baseline_sha256": "a0024be172509e4a21f0edc953ab2f60b80e75f24db75ebdd09dced530d3fbba",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "7f3c063d9212100077c05191cfe97dff0e1d272086104ba320cff698fa44bb8b",
+          "pending_since": "2026-11-06T06:43:23.468Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://www.nist.gov/artificial-intelligence/nist-ai-consortium/submit-letter-interest-join-nist-ai-consortium",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:47.890Z",
-          "last_success_at": "2026-11-06T06:24:47.890Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:24.155Z",
+          "last_success_at": "2026-11-06T06:43:24.155Z",
           "http_status": 200,
-          "content_sha256": "ebb7e0b1612ef362550d8c9b8b0e8939f0704117f022b246b4af3876cff435e6",
+          "content_sha256": "ba055408df397b0db596628a73383db5f5151d89106db58b5b271349cf6e3048",
           "baseline_sha256": "ebb7e0b1612ef362550d8c9b8b0e8939f0704117f022b246b4af3876cff435e6",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "ba055408df397b0db596628a73383db5f5151d89106db58b5b271349cf6e3048",
+          "pending_since": "2026-11-06T06:43:24.155Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -181,17 +181,17 @@
       "observations": [
         {
           "source_url": "https://aiverifyfoundation.sg/ai-assurance/sandbox/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:50.239Z",
-          "last_success_at": "2026-11-06T06:24:50.239Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:25.631Z",
+          "last_success_at": "2026-11-06T06:43:25.631Z",
           "http_status": 200,
-          "content_sha256": "bed58a0ae3a87257deff016374bc7847e5739b7a0dc6ad895a5f62020d245634",
+          "content_sha256": "d02e3f20c5555d7b2f7625fdc7f566b20efb8b93662f8db7da1e3b744ee742b1",
           "baseline_sha256": "bed58a0ae3a87257deff016374bc7847e5739b7a0dc6ad895a5f62020d245634",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "d02e3f20c5555d7b2f7625fdc7f566b20efb8b93662f8db7da1e3b744ee742b1",
+          "pending_since": "2026-11-06T06:43:25.631Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -209,31 +209,31 @@
       "observations": [
         {
           "source_url": "https://www.ukri.org/opportunity/bridgeai-deployment-catalyst-ai-for-assurance-and-compliance/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:50.525Z",
-          "last_success_at": "2026-11-06T06:24:50.525Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:26.391Z",
+          "last_success_at": "2026-11-06T06:43:26.391Z",
           "http_status": 200,
-          "content_sha256": "6c9867b39cfbba8f230480edf501be23ddcf46bc1b38861eb399f0e4fe51d8a7",
+          "content_sha256": "3e50c226b035570c340087344a72b14b722e03f9515a1e6a50bdc25542d8df81",
           "baseline_sha256": "6c9867b39cfbba8f230480edf501be23ddcf46bc1b38861eb399f0e4fe51d8a7",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "3e50c226b035570c340087344a72b14b722e03f9515a1e6a50bdc25542d8df81",
+          "pending_since": "2026-11-06T06:43:26.391Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://apply-for-innovation-funding.service.gov.uk/competition/2597/overview/7ec02a95-73e5-4928-8104-67a9f1b279e3",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:50.729Z",
-          "last_success_at": "2026-11-06T06:24:50.729Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:26.892Z",
+          "last_success_at": "2026-11-06T06:43:26.892Z",
           "http_status": 200,
           "content_sha256": "f7e73cdf70b02b054e9353d393c73be90e4ea5dedefec573531c7776d66a2e51",
           "baseline_sha256": "f7e73cdf70b02b054e9353d393c73be90e4ea5dedefec573531c7776d66a2e51",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -252,36 +252,36 @@
       "observations": [
         {
           "source_url": "https://www.npl.co.uk/events/centre-for-ai-measurement-official-launch",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:51.095Z",
-          "last_success_at": "2026-11-06T06:24:51.095Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:28.027Z",
+          "last_success_at": "2026-11-06T06:43:28.027Z",
           "http_status": 200,
-          "content_sha256": "5ad30cc0f261809fb42fd4705b72a0678b6dd26276e8e31053dcdbb2957cb7be",
+          "content_sha256": "958b3610961657be82e59f9d938bd1150256d8ba7b4c4f53aafdce915a045475",
           "baseline_sha256": "5ad30cc0f261809fb42fd4705b72a0678b6dd26276e8e31053dcdbb2957cb7be",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "958b3610961657be82e59f9d938bd1150256d8ba7b4c4f53aafdce915a045475",
+          "pending_since": "2026-11-06T06:43:28.027Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://npl.tfaforms.net/114",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:51.395Z",
-          "last_success_at": "2026-11-06T06:24:51.395Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:28.679Z",
+          "last_success_at": "2026-11-06T06:43:28.679Z",
           "http_status": 200,
-          "content_sha256": "644a532818bbede0b45524ad2d900653e1e35ec4bf19cbd7e0cfb5fe7e7af89b",
+          "content_sha256": "574a464194170d02a2baabac6d8c812901e262641f5005d352c5cd3268d0601f",
           "baseline_sha256": "644a532818bbede0b45524ad2d900653e1e35ec4bf19cbd7e0cfb5fe7e7af89b",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "574a464194170d02a2baabac6d8c812901e262641f5005d352c5cd3268d0601f",
+          "pending_since": "2026-11-06T06:43:28.679Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://questions-statements.parliament.uk/written-questions/detail/2026-07-20/HL2306",
           "state": "UNCHECKABLE",
-          "attempted_at": "2026-11-06T06:24:51.557Z",
+          "attempted_at": "2026-11-06T06:43:28.746Z",
           "last_success_at": null,
           "http_status": 403,
           "content_sha256": null,
@@ -289,8 +289,8 @@
           "pending_sha256": null,
           "pending_since": null,
           "reason": "HTTP_STATUS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -310,7 +310,7 @@
         {
           "source_url": "https://www.turing.ac.uk/research/research-projects/trustworthy-and-ethical-assurance-tea",
           "state": "UNCHECKABLE",
-          "attempted_at": "2026-11-06T06:24:51.663Z",
+          "attempted_at": "2026-11-06T06:43:28.892Z",
           "last_success_at": null,
           "http_status": 403,
           "content_sha256": null,
@@ -318,36 +318,36 @@
           "pending_sha256": null,
           "pending_since": null,
           "reason": "HTTP_STATUS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://assuranceplatform.azurewebsites.net/docs/platform-guide/publishing-and-discover",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:51.857Z",
-          "last_success_at": "2026-11-06T06:24:51.857Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:29.332Z",
+          "last_success_at": "2026-11-06T06:43:29.332Z",
           "http_status": 200,
           "content_sha256": "fdcd84e8b057b729c1a15da87a011f75f2e67ef7c54e16006b3d6a81900b82bd",
           "baseline_sha256": "fdcd84e8b057b729c1a15da87a011f75f2e67ef7c54e16006b3d6a81900b82bd",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://github.com/alan-turing-institute/AssurancePlatform",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:52.653Z",
-          "last_success_at": "2026-11-06T06:24:52.653Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:29.901Z",
+          "last_success_at": "2026-11-06T06:43:29.901Z",
           "http_status": 200,
-          "content_sha256": "275ae1c15641393ee2caa61d2ddf76bae33795befac2cb114c4469c8563fefd9",
+          "content_sha256": "b704a89aba8cb78ebb051a23a96da2acf84b0c85b637eeaf978547c28ce95def",
           "baseline_sha256": "275ae1c15641393ee2caa61d2ddf76bae33795befac2cb114c4469c8563fefd9",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "b704a89aba8cb78ebb051a23a96da2acf84b0c85b637eeaf978547c28ce95def",
+          "pending_since": "2026-11-06T06:43:29.901Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -372,31 +372,31 @@
       "observations": [
         {
           "source_url": "https://langfuse.com/docs/evaluation/evaluation-methods/scores-via-sdk",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:53.147Z",
-          "last_success_at": "2026-11-06T06:24:53.147Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:30.183Z",
+          "last_success_at": "2026-11-06T06:43:30.183Z",
           "http_status": 200,
           "content_sha256": "b2acf05391114bf69aa3623d4280c8110fce5ce5626520a73f5703bc380d191f",
           "baseline_sha256": "b2acf05391114bf69aa3623d4280c8110fce5ce5626520a73f5703bc380d191f",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://langfuse.com/docs/api-and-data-platform/features/public-api",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:53.854Z",
-          "last_success_at": "2026-11-06T06:24:53.854Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:30.251Z",
+          "last_success_at": "2026-11-06T06:43:30.251Z",
           "http_status": 200,
           "content_sha256": "419ea4fee215f0cc184c6fc3d89e3b136e86573cb570a1f8e233f7c2e6facb2f",
           "baseline_sha256": "419ea4fee215f0cc184c6fc3d89e3b136e86573cb570a1f8e233f7c2e6facb2f",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -427,31 +427,31 @@
       "observations": [
         {
           "source_url": "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/README.md",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:54.297Z",
-          "last_success_at": "2026-11-06T06:24:54.297Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:30.521Z",
+          "last_success_at": "2026-11-06T06:43:30.521Z",
           "http_status": 200,
-          "content_sha256": "883fec6758521e3829e486884afc1428c5f42004c1373d54b0b7ef3bb212c2d0",
+          "content_sha256": "12b88eb59ea9ecf120358f3dca268e0358e8de3ef3d6df24fdbba63125f37546",
           "baseline_sha256": "883fec6758521e3829e486884afc1428c5f42004c1373d54b0b7ef3bb212c2d0",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "12b88eb59ea9ecf120358f3dca268e0358e8de3ef3d6df24fdbba63125f37546",
+          "pending_since": "2026-11-06T06:43:30.521Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:54.513Z",
-          "last_success_at": "2026-11-06T06:24:54.513Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:30.678Z",
+          "last_success_at": "2026-11-06T06:43:30.678Z",
           "http_status": 200,
           "content_sha256": "aa774db919656f900f1bc66eb0e1786a7846cb25c60d93d6b647c899356376aa",
           "baseline_sha256": "aa774db919656f900f1bc66eb0e1786a7846cb25c60d93d6b647c899356376aa",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -469,31 +469,31 @@
       "observations": [
         {
           "source_url": "https://www.coalitionforsecureai.org/get-involved/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:54.765Z",
-          "last_success_at": "2026-11-06T06:24:54.765Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:30.898Z",
+          "last_success_at": "2026-11-06T06:43:30.898Z",
           "http_status": 200,
-          "content_sha256": "f42476d1b2b43d03b6ab0daab64e071bef7da832221d915f5461a2124e5a4ce7",
+          "content_sha256": "e6e3edec66396797d3cfb116a677e3c05fa3af51d9e9d4b938d40e266ed2bc26",
           "baseline_sha256": "f42476d1b2b43d03b6ab0daab64e071bef7da832221d915f5461a2124e5a4ce7",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "e6e3edec66396797d3cfb116a677e3c05fa3af51d9e9d4b938d40e266ed2bc26",
+          "pending_since": "2026-11-06T06:43:30.898Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://www.coalitionforsecureai.org/about/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:54.793Z",
-          "last_success_at": "2026-11-06T06:24:54.793Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:30.929Z",
+          "last_success_at": "2026-11-06T06:43:30.929Z",
           "http_status": 200,
-          "content_sha256": "d452264b1809977019b8d26e8cd10f06fd92b377cd1e501440e8cf854bac23b4",
+          "content_sha256": "d4b86c4148c252800d10b911466e5240093df4f7dcfd167f3ca5ebb66f1dc0ab",
           "baseline_sha256": "d452264b1809977019b8d26e8cd10f06fd92b377cd1e501440e8cf854bac23b4",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "d4b86c4148c252800d10b911466e5240093df4f7dcfd167f3ca5ebb66f1dc0ab",
+          "pending_since": "2026-11-06T06:43:30.929Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -511,31 +511,31 @@
       "observations": [
         {
           "source_url": "https://github.com/finos/ai-governance-framework/blob/main/GOVERNANCE.md",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:55.229Z",
-          "last_success_at": "2026-11-06T06:24:55.229Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:31.291Z",
+          "last_success_at": "2026-11-06T06:43:31.291Z",
           "http_status": 200,
-          "content_sha256": "c16cb29e1ef8dfdfa5c8ac89b4a5d6c5e4e4e69e2f4c55a6ef50b0ba0feaf9d0",
+          "content_sha256": "ce924a4acdca53e8860c6137eae60a8a584a5202ed3b6f076a77d49d07f51c0c",
           "baseline_sha256": "c16cb29e1ef8dfdfa5c8ac89b4a5d6c5e4e4e69e2f4c55a6ef50b0ba0feaf9d0",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "ce924a4acdca53e8860c6137eae60a8a584a5202ed3b6f076a77d49d07f51c0c",
+          "pending_since": "2026-11-06T06:43:31.291Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://ai.finos.org/join-us/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:56.083Z",
-          "last_success_at": "2026-11-06T06:24:56.083Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:31.799Z",
+          "last_success_at": "2026-11-06T06:43:31.799Z",
           "http_status": 200,
           "content_sha256": "82178a747326252878d854e5a086503c65ba9e5e003088d4f4da07f2451ef407",
           "baseline_sha256": "82178a747326252878d854e5a086503c65ba9e5e003088d4f4da07f2451ef407",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -560,31 +560,31 @@
       "observations": [
         {
           "source_url": "https://mlcommons.org/get-involved/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:56.281Z",
-          "last_success_at": "2026-11-06T06:24:56.281Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:32.068Z",
+          "last_success_at": "2026-11-06T06:43:32.068Z",
           "http_status": 200,
-          "content_sha256": "3973d713382c8b1b80610054fbe959a10c9ae823b4ce7d682acad32a7b47834f",
+          "content_sha256": "e182e969e49d3ce640986ac4500a0433398632dbd480b6a47f41e61d84a6a141",
           "baseline_sha256": "3973d713382c8b1b80610054fbe959a10c9ae823b4ce7d682acad32a7b47834f",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "e182e969e49d3ce640986ac4500a0433398632dbd480b6a47f41e61d84a6a141",
+          "pending_since": "2026-11-06T06:43:32.068Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://mlcommons.org/working-groups/ai-risk-reliability/ai-risk-reliability/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:56.353Z",
-          "last_success_at": "2026-11-06T06:24:56.353Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:32.131Z",
+          "last_success_at": "2026-11-06T06:43:32.131Z",
           "http_status": 200,
-          "content_sha256": "d40472467dc887820bc00dbdaac5f9197f13b84e65c022ea614283c97e26ed61",
+          "content_sha256": "7d0a1e142cfb24ee4893352d21eb56e77ed37256f44c366b54a72b5c9c38f32c",
           "baseline_sha256": "d40472467dc887820bc00dbdaac5f9197f13b84e65c022ea614283c97e26ed61",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "7d0a1e142cfb24ee4893352d21eb56e77ed37256f44c366b54a72b5c9c38f32c",
+          "pending_since": "2026-11-06T06:43:32.131Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -602,31 +602,31 @@
       "observations": [
         {
           "source_url": "https://aiverifyfoundation.sg/tools/moonshot/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:24:57.852Z",
-          "last_success_at": "2026-11-06T06:24:57.852Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:33.393Z",
+          "last_success_at": "2026-11-06T06:43:33.393Z",
           "http_status": 200,
-          "content_sha256": "b6890aa6bf7d6cf938561199016c35c349bcaaf46276be01983f2740c116f1e8",
+          "content_sha256": "3c306fd8a7fca56786273baf950d642957fd587934b8ba15e901b814df39c1e0",
           "baseline_sha256": "b6890aa6bf7d6cf938561199016c35c349bcaaf46276be01983f2740c116f1e8",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "3c306fd8a7fca56786273baf950d642957fd587934b8ba15e901b814df39c1e0",
+          "pending_since": "2026-11-06T06:43:33.393Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://aiverifyfoundation.sg/about-aivf/faq/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:01.404Z",
-          "last_success_at": "2026-11-06T06:25:01.404Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:34.651Z",
+          "last_success_at": "2026-11-06T06:43:34.651Z",
           "http_status": 200,
-          "content_sha256": "4e6dbeed0eae78204e48b833ce320fe6dea4301ad29e797e568828ef18397aa1",
+          "content_sha256": "68846fdcbee80504f71c0cf4fa29c8f3b1453c6f746b4fb25fc061929c203ab8",
           "baseline_sha256": "4e6dbeed0eae78204e48b833ce320fe6dea4301ad29e797e568828ef18397aa1",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "68846fdcbee80504f71c0cf4fa29c8f3b1453c6f746b4fb25fc061929c203ab8",
+          "pending_since": "2026-11-06T06:43:34.651Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -651,31 +651,31 @@
       "observations": [
         {
           "source_url": "https://openssf.org/community/openssf-working-groups/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:02.569Z",
-          "last_success_at": "2026-11-06T06:25:02.569Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:34.803Z",
+          "last_success_at": "2026-11-06T06:43:34.803Z",
           "http_status": 200,
           "content_sha256": "bfbe54276f5f7d6683b3aa09f77925d1217deb6daf10769506d271411a78707d",
           "baseline_sha256": "bfbe54276f5f7d6683b3aa09f77925d1217deb6daf10769506d271411a78707d",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://www.sigstore.dev/community",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:03.440Z",
-          "last_success_at": "2026-11-06T06:25:03.440Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:34.953Z",
+          "last_success_at": "2026-11-06T06:43:34.953Z",
           "http_status": 200,
           "content_sha256": "d95640d7b2330ee325fa3c57776bc1e280ae7d85ccc7c5e7922143221a9080f2",
           "baseline_sha256": "d95640d7b2330ee325fa3c57776bc1e280ae7d85ccc7c5e7922143221a9080f2",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -700,31 +700,31 @@
       "observations": [
         {
           "source_url": "https://owaspai.org/contribute/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:03.629Z",
-          "last_success_at": "2026-11-06T06:25:03.629Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:35.528Z",
+          "last_success_at": "2026-11-06T06:43:35.528Z",
           "http_status": 200,
           "content_sha256": "2b955d1df273165d7111b37f47704cf742f5eadab189d928f9a6d6d6bb4d7886",
           "baseline_sha256": "2b955d1df273165d7111b37f47704cf742f5eadab189d928f9a6d6d6bb4d7886",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://www.owasp.community/policy/project",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:04.854Z",
-          "last_success_at": "2026-11-06T06:25:04.854Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:36.206Z",
+          "last_success_at": "2026-11-06T06:43:36.206Z",
           "http_status": 200,
-          "content_sha256": "2a3ef6e61de1e407aa04854d19ec9b0e56a469d79408c72782a1788191651192",
+          "content_sha256": "33ae589b64722a754480996d5a224a269e169ef11bdd0e8648f6cae09c7aafb5",
           "baseline_sha256": "2a3ef6e61de1e407aa04854d19ec9b0e56a469d79408c72782a1788191651192",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "33ae589b64722a754480996d5a224a269e169ef11bdd0e8648f6cae09c7aafb5",
+          "pending_since": "2026-11-06T06:43:36.206Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -742,31 +742,31 @@
       "observations": [
         {
           "source_url": "https://thealliance.ai/join",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:04.964Z",
-          "last_success_at": "2026-11-06T06:25:04.964Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:36.338Z",
+          "last_success_at": "2026-11-06T06:43:36.338Z",
           "http_status": 200,
           "content_sha256": "77e85cf0ecbba6acd626a1a3bcac39071b7a9c8d2da9560c4aceaa6eb0f89e94",
           "baseline_sha256": "77e85cf0ecbba6acd626a1a3bcac39071b7a9c8d2da9560c4aceaa6eb0f89e94",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://help.thealliance.ai/are-there-fees-for-joining-the-ai-alliance",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:05.083Z",
-          "last_success_at": "2026-11-06T06:25:05.083Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:36.633Z",
+          "last_success_at": "2026-11-06T06:43:36.633Z",
           "http_status": 200,
           "content_sha256": "b135427591b24743fab4e3aa0af8340b79c3e1d368c5d3278436a10da0a111f2",
           "baseline_sha256": "b135427591b24743fab4e3aa0af8340b79c3e1d368c5d3278436a10da0a111f2",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -785,45 +785,45 @@
       "observations": [
         {
           "source_url": "https://ai.ieee-ies.org/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:05.405Z",
-          "last_success_at": "2026-11-06T06:25:05.405Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:36.753Z",
+          "last_success_at": "2026-11-06T06:43:36.753Z",
           "http_status": 200,
           "content_sha256": "7a5d46d948c032a3cdd4c39ebf31218d57f8ec87ff131949de7df4cb0214d205",
           "baseline_sha256": "7a5d46d948c032a3cdd4c39ebf31218d57f8ec87ff131949de7df4cb0214d205",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://ai.ieee-ies.org/rules-and-guidelines/index.html",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:05.530Z",
-          "last_success_at": "2026-11-06T06:25:05.530Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:36.812Z",
+          "last_success_at": "2026-11-06T06:43:36.812Z",
           "http_status": 200,
           "content_sha256": "47c6bd5529fa0520071ddfdbe2dcc770d0dc8f323930dd4d6fd25ef6974656c1",
           "baseline_sha256": "47c6bd5529fa0520071ddfdbe2dcc770d0dc8f323930dd4d6fd25ef6974656c1",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://ai.ieee-ies.org/qa/index.html",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:05.715Z",
-          "last_success_at": "2026-11-06T06:25:05.715Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:36.867Z",
+          "last_success_at": "2026-11-06T06:43:36.867Z",
           "http_status": 200,
           "content_sha256": "dee2d4bd568fd763665a65d13f9cb24b1af9c23d67f2666dc629a5714ce6dbb4",
           "baseline_sha256": "dee2d4bd568fd763665a65d13f9cb24b1af9c23d67f2666dc629a5714ce6dbb4",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -840,17 +840,17 @@
       "observations": [
         {
           "source_url": "https://www.csiro.au/en/research/technology-space/ai/ways-to-work-with-us-in-rai",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:09.384Z",
-          "last_success_at": "2026-11-06T06:25:09.384Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:39.579Z",
+          "last_success_at": "2026-11-06T06:43:39.579Z",
           "http_status": 200,
-          "content_sha256": "b7dad1a934041ce1c6c6d5adbb134a937b859630f588f594e63c87cbb486d507",
+          "content_sha256": "f3bfef7c1927dfa9b5c967165b9fe407c525fba9ed7ffcfb2769e1c0cee03db2",
           "baseline_sha256": "b7dad1a934041ce1c6c6d5adbb134a937b859630f588f594e63c87cbb486d507",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "f3bfef7c1927dfa9b5c967165b9fe407c525fba9ed7ffcfb2769e1c0cee03db2",
+          "pending_since": "2026-11-06T06:43:39.579Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -875,31 +875,31 @@
       "observations": [
         {
           "source_url": "https://ico.org.uk/for-organisations/advice-and-services/regulatory-sandbox/the-guide-to-the-sandbox/who-can-apply-to-the-sandbox/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:09.585Z",
+          "state": "UNCHECKABLE",
+          "attempted_at": "2026-11-06T06:43:39.639Z",
           "last_success_at": "2026-11-06T06:25:09.585Z",
-          "http_status": 200,
+          "http_status": 403,
           "content_sha256": "629810e1776a326cb06042f636e317ff03842c8ea14a6028384008c3aaa45ff9",
           "baseline_sha256": "629810e1776a326cb06042f636e317ff03842c8ea14a6028384008c3aaa45ff9",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "HTTP_STATUS",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://ico.org.uk/for-organisations/advice-and-services/regulatory-sandbox/the-guide-to-the-sandbox/how-can-we-apply-to-the-sandbox/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:09.756Z",
+          "state": "UNCHECKABLE",
+          "attempted_at": "2026-11-06T06:43:39.660Z",
           "last_success_at": "2026-11-06T06:25:09.756Z",
-          "http_status": 200,
+          "http_status": 403,
           "content_sha256": "7a3faace8983cd6f35d4f9b1635f0cf2eaf584263c0c1b550f9ee0ea3c4665ea",
           "baseline_sha256": "7a3faace8983cd6f35d4f9b1635f0cf2eaf584263c0c1b550f9ee0ea3c4665ea",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "HTTP_STATUS",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -923,17 +923,17 @@
       "observations": [
         {
           "source_url": "https://www.fca.org.uk/firms/innovation/digital-sandbox",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:11.506Z",
-          "last_success_at": "2026-11-06T06:25:11.506Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:40.129Z",
+          "last_success_at": "2026-11-06T06:43:40.129Z",
           "http_status": 200,
-          "content_sha256": "c62701ae5efcc929555a93b63406083cbb7a0da1d85ed7ef26215585eaa74611",
+          "content_sha256": "8086c5a2289d8e86765053fee91bb9d49817b563925c18c3811c3f0b762210f5",
           "baseline_sha256": "c62701ae5efcc929555a93b63406083cbb7a0da1d85ed7ef26215585eaa74611",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "8086c5a2289d8e86765053fee91bb9d49817b563925c18c3811c3f0b762210f5",
+          "pending_since": "2026-11-06T06:43:40.129Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -950,17 +950,17 @@
       "observations": [
         {
           "source_url": "https://www.ukri.org/opportunity/knowledge-transfer-partnership-2026-to-2027-round-4/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:11.821Z",
-          "last_success_at": "2026-11-06T06:25:11.821Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:40.902Z",
+          "last_success_at": "2026-11-06T06:43:40.902Z",
           "http_status": 200,
-          "content_sha256": "8eb4247316ec37c989cbf6c06b96f8ce8e765f762ba62c22592bfa01c2b24638",
+          "content_sha256": "162a94d76229352be61f355959ff1ea857cf31f26862be057fb282bdf50e9b98",
           "baseline_sha256": "8eb4247316ec37c989cbf6c06b96f8ce8e765f762ba62c22592bfa01c2b24638",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "162a94d76229352be61f355959ff1ea857cf31f26862be057fb282bdf50e9b98",
+          "pending_since": "2026-11-06T06:43:40.902Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -978,31 +978,31 @@
       "observations": [
         {
           "source_url": "https://eic.ec.europa.eu/eic-funding-opportunities/eic-accelerator_en",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:12.113Z",
-          "last_success_at": "2026-11-06T06:25:12.113Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:41.087Z",
+          "last_success_at": "2026-11-06T06:43:41.087Z",
           "http_status": 200,
           "content_sha256": "b5cb2c43135e31d6016c561fcc78abe3bf541983f07059b5e72cbcd3f92865ba",
           "baseline_sha256": "b5cb2c43135e31d6016c561fcc78abe3bf541983f07059b5e72cbcd3f92865ba",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://research-and-innovation.ec.europa.eu/strategy/strategy-research-and-innovation/europe-world/international-cooperation/association-horizon-europe/united-kingdom_en",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:12.282Z",
-          "last_success_at": "2026-11-06T06:25:12.282Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:43.856Z",
+          "last_success_at": "2026-11-06T06:43:43.856Z",
           "http_status": 200,
-          "content_sha256": "b97123e3e02db3fd2ecd4149938d30185da8a58e599d3d2da05591e050959483",
+          "content_sha256": "07fadd67b6d2a8f32185ac051c0d1a4caf3152b16267550a23b04015b09fb81d",
           "baseline_sha256": "b97123e3e02db3fd2ecd4149938d30185da8a58e599d3d2da05591e050959483",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "07fadd67b6d2a8f32185ac051c0d1a4caf3152b16267550a23b04015b09fb81d",
+          "pending_since": "2026-11-06T06:43:43.856Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -1020,31 +1020,31 @@
       "observations": [
         {
           "source_url": "https://research.aiodp.eu/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:12.863Z",
-          "last_success_at": "2026-11-06T06:25:12.863Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:44.651Z",
+          "last_success_at": "2026-11-06T06:43:44.651Z",
           "http_status": 200,
-          "content_sha256": "faef646220c9e6264cc33df18060659def9d953233ce60ded08109122ec471da",
+          "content_sha256": "7008fb628fa83c267138e8b9d1dfcbaa3bea3e83dd8669848f03452c3fb82741",
           "baseline_sha256": "faef646220c9e6264cc33df18060659def9d953233ce60ded08109122ec471da",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "7008fb628fa83c267138e8b9d1dfcbaa3bea3e83dd8669848f03452c3fb82741",
+          "pending_since": "2026-11-06T06:43:44.651Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://digital-strategy.ec.europa.eu/en/news/commission-launches-ai-tools-online-platform-researchers-and-industry",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:13.576Z",
-          "last_success_at": "2026-11-06T06:25:13.576Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:44.918Z",
+          "last_success_at": "2026-11-06T06:43:44.918Z",
           "http_status": 200,
           "content_sha256": "de6f9834ade196c5639746d3757f929785108894a4da4f038b75535e353ac4cc",
           "baseline_sha256": "de6f9834ade196c5639746d3757f929785108894a4da4f038b75535e353ac4cc",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -1062,31 +1062,31 @@
       "observations": [
         {
           "source_url": "https://futurium.ec.europa.eu/en/apply-ai-alliance",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:13.740Z",
-          "last_success_at": "2026-11-06T06:25:13.740Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:45.221Z",
+          "last_success_at": "2026-11-06T06:43:45.221Z",
           "http_status": 200,
           "content_sha256": "caa457fc23ab956ef80c361dae70f251f14ce986421208265d87f39d6d1a7ada",
           "baseline_sha256": "caa457fc23ab956ef80c361dae70f251f14ce986421208265d87f39d6d1a7ada",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://futurium.ec.europa.eu/en/apply-ai-alliance/stakeholders-catalogue",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:14.462Z",
-          "last_success_at": "2026-11-06T06:25:14.462Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:45.359Z",
+          "last_success_at": "2026-11-06T06:43:45.359Z",
           "http_status": 200,
           "content_sha256": "1258d7e6ca44520c199f004667e4cef571231b93a89c2bac83f72e1e8ca57b5f",
           "baseline_sha256": "1258d7e6ca44520c199f004667e4cef571231b93a89c2bac83f72e1e8ca57b5f",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -1103,17 +1103,17 @@
       "observations": [
         {
           "source_url": "https://tefhealth.eu/calls/2",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:14.922Z",
-          "last_success_at": "2026-11-06T06:25:14.922Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:46.534Z",
+          "last_success_at": "2026-11-06T06:43:46.534Z",
           "http_status": 200,
-          "content_sha256": "72f4685f7b39586b0b0676826ddad275e8da5de1bb0e115d3716b31f9ac83d4e",
+          "content_sha256": "c6b51a96d948583f3b3cd15192b6eb6a77006d6b984ba8c989b98ace00d10c95",
           "baseline_sha256": "72f4685f7b39586b0b0676826ddad275e8da5de1bb0e115d3716b31f9ac83d4e",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "c6b51a96d948583f3b3cd15192b6eb6a77006d6b984ba8c989b98ace00d10c95",
+          "pending_since": "2026-11-06T06:43:46.534Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -1137,17 +1137,17 @@
       "observations": [
         {
           "source_url": "https://www.nvidia.com/en-us/startups/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:15.058Z",
-          "last_success_at": "2026-11-06T06:25:15.058Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:46.779Z",
+          "last_success_at": "2026-11-06T06:43:46.779Z",
           "http_status": 200,
-          "content_sha256": "76f87592db7302c0d83f52fa08e62b18eefb37bfd8f68aaf36ede38370732709",
+          "content_sha256": "741ffaa4e71ce1f3975ccaff2ce507d0a222b210e4b6d3c9abb0a5aa839a7ceb",
           "baseline_sha256": "76f87592db7302c0d83f52fa08e62b18eefb37bfd8f68aaf36ede38370732709",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "741ffaa4e71ce1f3975ccaff2ce507d0a222b210e4b6d3c9abb0a5aa839a7ceb",
+          "pending_since": "2026-11-06T06:43:46.779Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -1171,17 +1171,17 @@
       "observations": [
         {
           "source_url": "https://aws.amazon.com/startups/credits/",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:15.356Z",
-          "last_success_at": "2026-11-06T06:25:15.356Z",
+          "state": "UNCONFIRMED",
+          "attempted_at": "2026-11-06T06:43:46.922Z",
+          "last_success_at": "2026-11-06T06:43:46.922Z",
           "http_status": 200,
-          "content_sha256": "073b70e352cf4cdbc1848347625a6610421b83d1b6c84aa7273b0ddbd122a331",
+          "content_sha256": "edfb735e1eedba7585907f60efc40af410f38e15d4fb02dd548e31b4524b1573",
           "baseline_sha256": "073b70e352cf4cdbc1848347625a6610421b83d1b6c84aa7273b0ddbd122a331",
-          "pending_sha256": null,
-          "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "pending_sha256": "edfb735e1eedba7585907f60efc40af410f38e15d4fb02dd548e31b4524b1573",
+          "pending_since": "2026-11-06T06:43:46.922Z",
+          "reason": "CHANGE_NEEDS_CONFIRMATION",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -1200,7 +1200,7 @@
         {
           "source_url": "https://cloud.google.com/startup",
           "state": "UNCHECKABLE",
-          "attempted_at": "2026-11-06T06:25:15.728Z",
+          "attempted_at": "2026-11-06T06:43:47.156Z",
           "last_success_at": null,
           "http_status": 200,
           "content_sha256": null,
@@ -1208,13 +1208,13 @@
           "pending_sha256": null,
           "pending_since": null,
           "reason": "BODY_LIMIT",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://cloud.google.com/startup/benefits",
           "state": "UNCHECKABLE",
-          "attempted_at": "2026-11-06T06:25:15.833Z",
+          "attempted_at": "2026-11-06T06:43:47.240Z",
           "last_success_at": null,
           "http_status": 301,
           "content_sha256": null,
@@ -1222,8 +1222,8 @@
           "pending_sha256": null,
           "pending_since": null,
           "reason": "REDIRECT_NOT_FOLLOWED",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     },
@@ -1248,31 +1248,31 @@
       "observations": [
         {
           "source_url": "https://learn.microsoft.com/en-us/startups/microsoft-for-startups/overview",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:16.036Z",
-          "last_success_at": "2026-11-06T06:25:16.036Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:47.348Z",
+          "last_success_at": "2026-11-06T06:43:47.348Z",
           "http_status": 200,
           "content_sha256": "fbc90345ddd327863b7bcb8868e0cb4c49f98f2314354b2bc0815d2675a19d1e",
           "baseline_sha256": "fbc90345ddd327863b7bcb8868e0cb4c49f98f2314354b2bc0815d2675a19d1e",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         },
         {
           "source_url": "https://learn.microsoft.com/en-us/startups/microsoft-for-startups/application",
-          "state": "FIRST_CAPTURE",
-          "attempted_at": "2026-11-06T06:25:16.226Z",
-          "last_success_at": "2026-11-06T06:25:16.226Z",
+          "state": "UNCHANGED",
+          "attempted_at": "2026-11-06T06:43:47.466Z",
+          "last_success_at": "2026-11-06T06:43:47.466Z",
           "http_status": 200,
           "content_sha256": "d60387c45ae7b481adcddd4793b6fa1ed47206604aee717f56d397a1828fddec",
           "baseline_sha256": "d60387c45ae7b481adcddd4793b6fa1ed47206604aee717f56d397a1828fddec",
           "pending_sha256": null,
           "pending_since": null,
-          "reason": "FIRST_SUCCESS",
-          "workflow_run_url": null,
-          "artifact_url": null
+          "reason": "SAME_BODY",
+          "workflow_run_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839",
+          "artifact_url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42176137839#artifacts"
         }
       ]
     }

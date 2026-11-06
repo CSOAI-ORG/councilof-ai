@@ -19,10 +19,6 @@ on:
         description: Only capture opportunity metadata; skip both heavy jobs and all promotion
         type: boolean
         default: false
-      promote_opportunities:
-        description: Explicitly permit a manual opportunity data review PR; capture_only overrides this
-        type: boolean
-        default: false
       derived_reports_only:
         description: Run only the derived report publication job
         type: boolean
@@ -209,15 +205,14 @@ jobs:
 
   opportunity-source-metadata:
     name: Bounded public opportunity source metadata
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.opportunity_only || inputs.capture_only || inputs.promote_opportunities }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.opportunity_only || inputs.capture_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 18
     concurrency:
       group: opportunity-source-metadata
       cancel-in-progress: false
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -225,32 +220,17 @@ jobs:
           node-version: "22"
       - name: Test source limits, privacy, missingness and schedule isolation
         run: node --test scripts/research/watch-sources.test.mjs
-      - name: Select bounded scope and retain the prior pending observation
+      - name: Select bounded scope from the reviewed catalogue
         env:
-          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}
           SOURCE_SCHEDULE: ${{ github.event.schedule }}
-          CAPTURE_ONLY: ${{ github.event_name == 'workflow_dispatch' && (inputs.capture_only || !inputs.promote_opportunities) }}
         run: |
           set -euo pipefail
           SCOPE=all
           if [ "$SOURCE_SCHEDULE" = "45 0-5,7-23 * * *" ]; then SCOPE=integrations; fi
           echo "OPPORTUNITY_SCOPE=$SCOPE" >> "$GITHUB_ENV"
-          BRANCH="automation/opportunity-source-$(date -u +%F)"
-          echo "OPPORTUNITY_BRANCH=$BRANCH" >> "$GITHUB_ENV"
+          # Start from committed, reviewed data. Artifacts from a preceding run
+          # are not automatically imported or treated as a confirmed baseline.
           cp public/interop/opportunity-registry.json "$RUNNER_TEMP/opportunity-input.json"
-          # Read data only from the existing review branch; never execute its code.
-          # A manual capture-only validation uses only the dispatched ref's data.
-          if [ "$CAPTURE_ONLY" != "true" ] && git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
-            git fetch --depth 1 origin "$BRANCH"
-            git show FETCH_HEAD:public/interop/opportunity-registry.json > "$RUNNER_TEMP/opportunity-prior.json"
-            node --input-type=module - "$RUNNER_TEMP/opportunity-input.json" "$RUNNER_TEMP/opportunity-prior.json" <<'JS'
-          import { readFileSync, writeFileSync } from 'node:fs';
-          import { mergeOpportunityBaseline } from './scripts/research/watch-sources.mjs';
-          const [current, previous] = process.argv.slice(2);
-          const value = mergeOpportunityBaseline(JSON.parse(readFileSync(current)), JSON.parse(readFileSync(previous)));
-          writeFileSync(current, JSON.stringify(value, null, 2) + '\n');
-          JS
-          fi
       - name: Capture public metadata without running third-party code or models
         run: |
           node scripts/research/watch-sources.mjs --opportunities \
@@ -264,40 +244,7 @@ jobs:
           path: ${{ runner.temp }}/opportunity-registry.json
           if-no-files-found: error
           retention-days: 30
-      - name: Submit one data-only review PR per UTC day; never merge
-        if: ${{ github.event_name != 'workflow_dispatch' || (inputs.promote_opportunities && !inputs.capture_only) }}
-        env:
-          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN }}
+      - name: Hold publication for the canonical outward writer
         run: |
-          set -euo pipefail
-          if [ -z "$GH_TOKEN" ]; then
-            echo "::warning::Publication held: SNAPSHOT_PR_TOKEN is absent. Capture remains in run artifacts."
-            exit 0
-          fi
-          STATE=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$OPPORTUNITY_BRANCH" --state all --json state --jq '.[0].state // ""')
-          if [ "$STATE" = "MERGED" ] || [ "$STATE" = "CLOSED" ]; then
-            echo "This day's review PR is already closed. Later captures remain artifacts until the next UTC day."
-            exit 0
-          fi
-          if git ls-remote --exit-code --heads origin "$OPPORTUNITY_BRANCH" >/dev/null 2>&1; then
-            git fetch --depth 1 origin "$OPPORTUNITY_BRANCH"
-            git switch -c "$OPPORTUNITY_BRANCH" FETCH_HEAD
-          else
-            git switch -c "$OPPORTUNITY_BRANCH"
-          fi
-          cp "$RUNNER_TEMP/opportunity-registry.json" public/interop/opportunity-registry.json
-          git add -- public/interop/opportunity-registry.json
-          test "$(git diff --cached --name-only)" = "public/interop/opportunity-registry.json"
-          git config user.name "Codex"
-          git config user.email "codex@users.noreply.github.com"
-          git commit -m "Record bounded public opportunity source observations"
-          git push origin "$OPPORTUNITY_BRANCH"
-          if [ "$STATE" != "OPEN" ]; then
-            cat > "$RUNNER_TEMP/opportunity-pr.md" <<'BODY'
-          Refresh only public source metadata for the reviewed 29-route catalogue. Capture times, successful body digests, unavailable reads and confirmed fingerprint changes are separate facts. No programme eligibility, application, funding, product measurement or board admission is inferred. Source bodies and response headers are not retained.
-
-          The workflow run and retained artifacts are referenced in the packet. Publication awaits the repository's normal checks and authorized human merge. Later captures after this day's PR is closed remain artifacts until the next UTC day. No automatic merge or deployment is requested.
-          BODY
-            gh pr create --repo "$GITHUB_REPOSITORY" --base master --head "$OPPORTUNITY_BRANCH" \
-              --title "Public opportunity source observations $(date -u +%F)" --body-file "$RUNNER_TEMP/opportunity-pr.md"
-          fi
+          echo "::notice::Publication HELD. The canonical outward writer must gate the exact captured artifact at 100%, add its record to the existing canonical sent log, and open a protected review PR. This read-only job does not publish, push a branch, create a PR or write a sent log."
+          echo "Cross-run change confirmation is not guaranteed without a retained, reviewed baseline. Captures and their original times remain in run artifacts."

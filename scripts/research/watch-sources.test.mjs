@@ -244,37 +244,51 @@ test("valid UTC suffix and fractional variants use chronological time comparison
   assert.throws(() => validateOpportunityRegistry(value), /REGISTRY_INVALID/);
 });
 
-test("the existing workflow isolates hourly/manual capture from both heavy jobs and publication", () => {
+test("the existing workflow isolates hourly and manual metadata capture from heavy jobs", () => {
   const workflow = readFileSync(new URL("../../.github/workflows/reg-watch.yml", import.meta.url), "utf8");
-  const block = (id) => workflow.split(`  ${id}:\n`)[1].split(/\n  [a-z][a-z-]*:\n/)[0];
+  const block = (id) => workflow.split("  " + id + ":\n")[1].split(/\n  [a-z][a-z-]*:\n/)[0];
   const guard = (id) => block(id).match(/^    if: \$\{\{ (.*) \}\}$/m)[1];
-  const execute = (expression, github, inputs) => Function("github", "inputs", `return Boolean(${expression});`)(github, inputs);
-  for (const id of ["daily-evidence-product", "reg-watch"]) {
-    assert.equal(execute(guard(id), { event_name: "schedule", event: { schedule: "45 0-5,7-23 * * *" } }, {}), false);
-    assert.equal(execute(guard(id), { event_name: "schedule", event: { schedule: "45 6 * * *" } }, {}), true);
-    assert.equal(execute(guard(id), { event_name: "workflow_dispatch", event: {} }, { opportunity_only: true, capture_only: true }), false);
-    assert.equal(execute(guard(id), { event_name: "workflow_dispatch", event: {} }, { opportunity_only: false, capture_only: true, derived_reports_only: false }), false);
-    assert.equal(execute(guard(id), { event_name: "workflow_dispatch", event: {} }, { opportunity_only: false, capture_only: false, derived_reports_only: false }), true);
+  const execute = (expression, github, inputs) => Function("github", "inputs", "return Boolean(" + expression + ");")(github, inputs);
+  for (const schedule of ["45 6 * * *", "45 0-5,7-23 * * *"]) {
+    const event = { event_name: "schedule", event: { schedule } };
+    assert.equal(execute(guard("daily-evidence-product"), event, {}), schedule === "45 6 * * *");
+    assert.equal(execute(guard("reg-watch"), event, {}), schedule === "45 6 * * *");
+    assert.equal(execute(guard("opportunity-source-metadata"), event, {}), true);
   }
-  assert.equal(execute(guard("daily-evidence-product"), { event_name: "workflow_dispatch", event: {} }, { capture_only: false, derived_reports_only: true }), true);
-  assert.equal(execute(guard("reg-watch"), { event_name: "workflow_dispatch", event: {} }, { capture_only: false, derived_reports_only: true }), false);
-  assert.equal(execute(guard("opportunity-source-metadata"), { event_name: "workflow_dispatch", event: {} }, { capture_only: true, derived_reports_only: true }), true);
-  const promotion = block("opportunity-source-metadata").match(/^        if: \$\{\{ (.*) \}\}$/m)[1];
-  assert.equal(execute(promotion, { event_name: "workflow_dispatch" }, { opportunity_only: true, capture_only: true }), false);
-  assert.equal(execute(promotion, { event_name: "schedule" }, {}), true);
-  for (const opportunity_only of [false, true]) for (const capture_only of [false, true]) for (const promote_opportunities of [false, true]) for (const derived_reports_only of [false, true]) {
-    const inputs = { opportunity_only, capture_only, promote_opportunities, derived_reports_only }, event = { event_name: "workflow_dispatch", event: {} };
+  for (const opportunity_only of [false, true]) for (const capture_only of [false, true]) for (const derived_reports_only of [false, true]) {
+    const inputs = { opportunity_only, capture_only, derived_reports_only }, event = { event_name: "workflow_dispatch", event: {} };
     assert.equal(execute(guard("daily-evidence-product"), event, inputs), !opportunity_only && !capture_only);
     assert.equal(execute(guard("reg-watch"), event, inputs), !opportunity_only && !capture_only && !derived_reports_only);
-    assert.equal(execute(guard("opportunity-source-metadata"), event, inputs), opportunity_only || capture_only || promote_opportunities);
-    assert.equal(execute(promotion, event, inputs), promote_opportunities && !capture_only);
+    assert.equal(execute(guard("opportunity-source-metadata"), event, inputs), opportunity_only || capture_only);
   }
+  assert.doesNotMatch(workflow, /promote_opportunities/);
   assert.doesNotMatch(workflow, /^\s*gh\s+pr\s+(merge|close)\b/m);
   assert.match(workflow, /- cron: "45 0-5,7-23 \* \* \*"/);
   assert.match(workflow, /capture_only:[\s\S]*?default: false/);
   assert.match(workflow, /concurrency:\n      group: opportunity-source-metadata/);
 });
 
+test("metadata job is read-only and publication stays with the canonical exact-packet gate and sent log", () => {
+  const workflow = readFileSync(new URL("../../.github/workflows/reg-watch.yml", import.meta.url), "utf8");
+  const job = workflow.split("  opportunity-source-metadata:\n")[1];
+  const readOnly = (value) => {
+    assert.match(value, /permissions:\n      contents: read\n/);
+    assert.doesNotMatch(value, /contents:\s*write|pull-requests:\s*write|issues:\s*write/);
+    assert.doesNotMatch(value, /\bgit\s+push\b|\bgh\s+pr\s+(create|edit|update|merge|close)\b/);
+    assert.doesNotMatch(value, /SNAPSHOT_PR_TOKEN|secrets\.|CAPTURE_ONLY|OPPORTUNITY_BRANCH/);
+  };
+  readOnly(job);
+  for (const command of ["git push origin HEAD", "gh pr create", "gh pr edit", "gh pr update", "gh pr merge", "gh pr close"]) {
+    assert.throws(() => readOnly(job + "\n        run: " + command + "\n"));
+  }
+  assert.match(job, /Publication HELD/);
+  assert.match(job, /gate the exact captured artifact at 100%/);
+  assert.match(job, /existing canonical sent log/);
+  assert.match(job, /protected review PR/);
+  assert.match(job, /Cross-run change confirmation is not guaranteed/);
+  assert.match(job, /actions\/upload-artifact@v4/);
+  assert.doesNotMatch(job, /git fetch|git show|git switch|git commit|gh issue/);
+});
 
 test("transport absence is unreachable; an HTTP response with unusable bytes is uncheckable", () => {
   assert.equal(opportunityObservation(obs(), { ok: false, status: null, reason: "FETCH_OR_TIMEOUT" }, at).state, "UNREACHABLE");
