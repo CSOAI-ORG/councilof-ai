@@ -1,6 +1,8 @@
 import { useSyncExternalStore } from "react";
 import { LEFT_KEY, RIGHT_KEY } from "./rails";
 import type { LobbyTabId } from "./tabs";
+import { RECENTS_KEY, RECENTS_EVENT } from "@/components/ask/askBus";
+import { START_KEY } from "@/components/gspc/workspaceMenu";
 
 /**
  * workspace — the Council OS account model, stated honestly.
@@ -54,16 +56,19 @@ export const OS_PREF_KEYS = [
   LEFT_KEY,
   RIGHT_KEY,
   "coai.lobby.audience",
+  START_KEY,
+  RECENTS_KEY,
 ] as const;
 
 /** Remove every stored OS preference. Returns the keys it removed. */
 export function forgetOsPreferences(): readonly string[] {
-  try {
-    OS_PREF_KEYS.forEach((k) => localStorage.removeItem(k));
-    return OS_PREF_KEYS;
-  } catch {
-    return [];
+  const removed: string[] = [];
+  for (const key of OS_PREF_KEYS) {
+    try { localStorage.removeItem(key); if (localStorage.getItem(key) === null) removed.push(key); }
+    catch { /* A failure for one key must not skip the remaining preferences. */ }
   }
+  if (typeof window !== "undefined") window.dispatchEvent(new Event(RECENTS_EVENT));
+  return removed;
 }
 
 // ── the session activity log ──────────────────────────────────────────────────

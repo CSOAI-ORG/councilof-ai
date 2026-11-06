@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import X402PayButton, {
   type X402ExecutionResult,
 } from "@/components/X402PayButton";
@@ -8,6 +8,8 @@ import {
   CheckCircle2,
   ChevronRight,
   Copy,
+  Download,
+  Search,
   LockKeyhole,
   Play,
   RefreshCw,
@@ -410,8 +412,12 @@ export function resultOutcome(result: RunnerToolResult): string | null {
   const payload = result.structuredContent;
   if (!payload || typeof payload !== "object" || Array.isArray(payload))
     return null;
-  const status = (payload as { status?: unknown }).status;
-  return typeof status === "string" && status.trim() ? status.trim() : null;
+  const fields = payload as Record<string, unknown>;
+  for (const key of ["status", "state", "verdict"]) {
+    const value = fields[key];
+    if (typeof value === "string" && value.trim()) return value.trim();
+  }
+  return null;
 }
 
 export type OutputHeader = {
@@ -447,10 +453,10 @@ const HEADER_TONE: Record<OutputHeader["tone"], { border: string; bg: string }> 
   problem: { border: "border-rose-700/20", bg: "bg-rose-50" },
 };
 
-/** The tool the runner opens on: the one asked for, else board_totals, else the first listed. */
+/** An explicit request must match the catalogue; defaults apply only without a requested name. */
 function firstTool(tools: RunnerTool[], initialToolName?: string): RunnerTool | null {
+  if (initialToolName) return tools.find((tool) => tool.name === initialToolName) ?? null;
   return (
-    tools.find((tool) => tool.name === initialToolName) ||
     tools.find((tool) => tool.name === "board_totals") ||
     tools[0] ||
     null
@@ -493,16 +499,76 @@ function StateBadge({
   );
 }
 
+export type ToolAccessFilter = "all" | "free" | "metered";
+
+/** Search only the catalogue the endpoint supplied; choosing a filter never executes a tool. */
+export function filterTools(tools: RunnerTool[], query: string, access: ToolAccessFilter): RunnerTool[] {
+  const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  return tools.filter((tool) => {
+    if (access === "free" && isPaidTool(tool)) return false;
+    if (access === "metered" && !isPaidTool(tool)) return false;
+    const text = `${tool.name} ${TOOL_META[tool.name]?.label ?? ""} ${tool.description}`.toLowerCase();
+    return words.every((word) => text.includes(word));
+  });
+}
+
+/** Parsed response JSON, not a reconstruction of signed artifact bytes or request arguments. */
+export function toolResponseJson(result: RunnerToolResult): string {
+  try {
+    return JSON.stringify(result.raw ?? result.structuredContent ?? { text: result.text }, null, 2);
+  } catch {
+    return JSON.stringify({ text: result.text }, null, 2);
+  }
+}
+
+function ReadableToolResponse({ result }: { result: RunnerToolResult }) {
+  const payload = result.structuredContent;
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-slate-800">{result.text || "The endpoint returned no response text."}</p>;
+  }
+  const fields = Object.entries(payload as Record<string, unknown>);
+  return (
+    <div className="space-y-4">
+      {fields.length ? <dl className="divide-y divide-slate-200">
+        {fields.map(([key, value]) => <div key={key} className="grid gap-1 py-3 sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)] sm:gap-4">
+          <dt className="break-words text-xs font-semibold text-slate-600">{key.replace(/_/g, " ")}</dt>
+          <dd className="min-w-0 break-words text-sm text-slate-900">
+            {value !== null && typeof value === "object" ? (
+              <details>
+                <summary className="min-h-11 cursor-pointer py-2 text-xs font-semibold text-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">Inspect {Array.isArray(value) ? `${value.length} returned items` : "returned fields"}</summary>
+                <pre tabIndex={0} className="max-h-72 overflow-auto rounded-lg bg-slate-950 p-3 text-xs text-slate-100"><code>{JSON.stringify(value, null, 2)}</code></pre>
+              </details>
+            ) : value === null ? <span className="text-slate-500">null — no value supplied</span> : String(value)}
+          </dd>
+        </div>)}
+      </dl> : <p className="text-sm text-slate-600">The endpoint returned an empty structured object.</p>}
+      {result.text ? <details><summary className="min-h-11 cursor-pointer py-2 text-xs font-semibold text-slate-700">Response text</summary><pre tabIndex={0} className="max-h-80 overflow-auto whitespace-pre-wrap break-words text-xs text-slate-700">{result.text}</pre></details> : null}
+    </div>
+  );
+}
+
+type RunnerExecution = {
+  result: RunnerToolResult;
+  observedAt: string;
+  durationMs: number;
+  toolName: string;
+  contextVersion: number;
+  paymentContext?: PaymentContext;
+};
+
 export default function ToolRunner({
   initialToolName,
   initialArguments,
   catalogue,
+  onToolSelect,
 }: {
   initialToolName?: string;
   initialArguments?: Record<string, string | boolean>;
   /** A tools/list result the host already holds (server rendering, tests). When given, the runner
    *  shows it instead of calling tools/list again. Nothing is invented: it is that list or none. */
   catalogue?: RunnerTool[];
+  /** User-selected tool identity only. Draft arguments never cross this callback. */
+  onToolSelect?: (toolName: string) => void;
 }) {
   const [tools, setTools] = useState<RunnerTool[]>(catalogue ?? []);
   const [listState, setListState] = useState<
@@ -517,19 +583,36 @@ export default function ToolRunner({
     return first ? prefillToolDraft(first, initialArguments) : {};
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [output, setOutput] = useState<{
-    result: RunnerToolResult;
-    observedAt: string;
-    paymentContext?: PaymentContext;
-  } | null>(null);
+  const [storedOutput, setOutput] = useState<RunnerExecution | null>(null);
   const [busy, setBusy] = useState(false);
-  const [copied, setCopied] = useState<"" | "copied" | "blocked">("");
+  const [copied, setCopied] = useState<"" | "copying" | "copied" | "blocked">("");
+  const [outputView, setOutputView] = useState<"readable" | "json">("readable");
+  const [downloadError, setDownloadError] = useState("");
+  const [query, setQuery] = useState("");
+  const [access, setAccess] = useState<ToolAccessFilter>("all");
+  const runnerId = useId();
   const [reloadKey, setReloadKey] = useState(0);
   const mountedRef = useRef(true);
   const activeNameRef = useRef<string | null>(null);
   const draftVersionRef = useRef(0);
   const paymentContextRef = useRef<PaymentContext | null>(null);
   const paidRetryInFlightRef = useRef(false);
+  const runInFlightRef = useRef(false);
+  const handledReloadRef = useRef(0);
+  const copyAttemptRef = useRef(0);
+  const outputRef = useRef<RunnerExecution | null>(null);
+  const intentRef = useRef({ initialToolName, initialArguments, catalogue });
+  // Invalidate synchronously during navigation, before an old promise can settle.
+  if (intentRef.current.initialToolName !== initialToolName ||
+      intentRef.current.initialArguments !== initialArguments ||
+      intentRef.current.catalogue !== catalogue) {
+    intentRef.current = { initialToolName, initialArguments, catalogue };
+    draftVersionRef.current += 1;
+    paymentContextRef.current = null;
+    copyAttemptRef.current += 1;
+  }
+  const output = storedOutput?.contextVersion === draftVersionRef.current ? storedOutput : null;
+  outputRef.current = output;
 
   useEffect(() => {
     mountedRef.current = true;
@@ -537,18 +620,32 @@ export default function ToolRunner({
       mountedRef.current = false;
       draftVersionRef.current += 1;
       paymentContextRef.current = null;
+      copyAttemptRef.current += 1;
     };
   }, []);
 
   useEffect(() => {
     if (catalogue) {
-      activeNameRef.current = active?.name ?? null;
+      const first = firstTool(catalogue, initialToolName);
+      activeNameRef.current = first?.name ?? null;
+      draftVersionRef.current += 1;
+      paymentContextRef.current = null;
+      setListState("catalogued");
+      setListReason("");
+      setTools(catalogue);
+      setActive(first);
+      setDraft(first ? prefillToolDraft(first, initialArguments) : {});
+      setOutput(null);
+      setErrors({});
       return;
     }
     let cancelled = false;
     setListState("loading");
     setListReason("");
-    listTools().then((reply) => {
+    const force = reloadKey !== handledReloadRef.current;
+    handledReloadRef.current = reloadKey;
+    const listing = force ? listTools("/mcp", { force: true }) : listTools();
+    listing.then((reply) => {
       if (cancelled) return;
       if (reply.state !== "ok") {
         setListState("unreachable");
@@ -578,15 +675,16 @@ export default function ToolRunner({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [catalogue, initialArguments, initialToolName, reloadKey]);
 
+  const filteredTools = useMemo(() => filterTools(tools, query, access), [tools, query, access]);
   const groups = useMemo(
     () => [
       {
         label: "Free reads & verification",
-        tools: tools.filter((tool) => !isPaidTool(tool)),
+        tools: filteredTools.filter((tool) => !isPaidTool(tool)),
       },
-      { label: "Metered evidence paths", tools: tools.filter(isPaidTool) },
+      { label: "Metered evidence paths", tools: filteredTools.filter(isPaidTool) },
     ],
-    [tools],
+    [filteredTools],
   );
 
   const properties = active?.inputSchema?.properties || {};
@@ -601,9 +699,15 @@ export default function ToolRunner({
     setErrors({});
     setOutput(null);
     setCopied("");
+    copyAttemptRef.current += 1;
+    setOutputView("readable");
+    setDownloadError("");
+    onToolSelect?.(tool.name);
   }
 
   function setField(name: string, value: FieldDraft) {
+    copyAttemptRef.current += 1;
+    setCopied("");
     draftVersionRef.current += 1;
     paymentContextRef.current = null;
     setOutput(null);
@@ -628,17 +732,23 @@ export default function ToolRunner({
   );
 
   async function run() {
-    if (!active || busy) return;
+    if (!active || busy || runInFlightRef.current || paidRetryInFlightRef.current) return;
     const tool = active;
     const parsed = coerceToolArguments(tool, draft);
     if ("errors" in parsed) {
       setErrors(parsed.errors);
       return;
     }
+    runInFlightRef.current = true;
     setErrors({});
     paymentContextRef.current = null;
     setOutput(null);
     setBusy(true);
+    copyAttemptRef.current += 1;
+    setCopied("");
+    setOutputView("readable");
+    setDownloadError("");
+    const started = performance.now();
     const version = draftVersionRef.current;
     const paymentContext = createPaymentContext(
       tool.name,
@@ -671,10 +781,21 @@ export default function ToolRunner({
         setOutput({
           result,
           observedAt: new Date().toISOString(),
+          durationMs: Math.max(0, Math.round(performance.now() - started)),
+          toolName: tool.name,
+          contextVersion: version,
           paymentContext,
         });
       }
+    } catch {
+      if (mountedRef.current && paymentContextMatches(paymentContext, activeNameRef.current, draftVersionRef.current)) {
+        setOutput({
+          result: { ok: false, state: "unreachable", text: "The tool call did not complete. Its result is unknown." },
+          observedAt: new Date().toISOString(), durationMs: Math.max(0, Math.round(performance.now() - started)), toolName: tool.name, contextVersion: version,
+        });
+      }
     } finally {
+      runInFlightRef.current = false;
       if (mountedRef.current) setBusy(false);
     }
   }
@@ -704,6 +825,11 @@ export default function ToolRunner({
     }
 
     paidRetryInFlightRef.current = true;
+    const started = performance.now();
+    copyAttemptRef.current += 1;
+    setCopied("");
+    setOutputView("readable");
+    setDownloadError("");
     // Consume this challenge before the await. Even two callbacks in the same
     // render cannot replay one approval twice.
     paymentContextRef.current = null;
@@ -734,7 +860,7 @@ export default function ToolRunner({
           draftVersionRef.current,
         )
       ) {
-        setOutput({ result, observedAt: new Date().toISOString() });
+        setOutput({ result, observedAt: new Date().toISOString(), durationMs: Math.max(0, Math.round(performance.now() - started)), toolName: context.toolName, contextVersion: context.draftVersion });
       }
       const outcome = resultOutcome(result);
       const structured =
@@ -763,28 +889,48 @@ export default function ToolRunner({
           ? `The paid retry returned ${outcome}, not DELIVERED.`
           : result.text || "The paid retry returned no delivery state.",
       };
+    } catch {
+      return { status: "failed", detail: "The paid request did not complete. Delivery and settlement are unknown; inspect the wallet, chain and facilitator before another payment." };
     } finally {
       paidRetryInFlightRef.current = false;
       if (mountedRef.current) setBusy(false);
     }
   }
 
-  function copyOutput() {
-    if (!output) return;
-    const done = (next: "copied" | "blocked") => {
-      setCopied(next);
-      window.setTimeout(() => setCopied(""), 1800);
-    };
+  async function copyOutput() {
+    const selected = output;
+    if (!selected) return;
+    const attempt = ++copyAttemptRef.current;
+    setCopied("copying");
+    const current = () => mountedRef.current && copyAttemptRef.current === attempt && outputRef.current === selected;
     try {
-      const request = navigator.clipboard?.writeText(output.result.text);
-      if (!request) done("blocked");
-      else
-        request.then(
-          () => done("copied"),
-          () => done("blocked"),
-        );
+      if (!navigator.clipboard?.writeText) throw new Error("clipboard unavailable");
+      await navigator.clipboard.writeText(toolResponseJson(selected.result));
+      if (current()) setCopied("copied");
     } catch {
-      done("blocked");
+      if (current()) setCopied("blocked");
+    }
+  }
+
+  function downloadOutput() {
+    if (!output) return;
+    setDownloadError("");
+    let url: string | null = null;
+    let link: HTMLAnchorElement | null = null;
+    try {
+      url = URL.createObjectURL(new Blob([toolResponseJson(output.result)], { type: "application/json" }));
+      link = document.createElement("a");
+      link.href = url;
+      link.download = `csoai-${output.toolName.replace(/[^a-z0-9_-]/gi, "-")}-response.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      const release = url;
+      window.setTimeout(() => URL.revokeObjectURL(release), 2000);
+    } catch {
+      link?.remove();
+      try { if (url) URL.revokeObjectURL(url); } catch { /* No successful export is claimed. */ }
+      setDownloadError("The download could not start. Open Response JSON and copy the visible response instead.");
     }
   }
 
@@ -793,6 +939,13 @@ export default function ToolRunner({
       className="overflow-hidden rounded-2xl border border-slate-900/10 bg-white shadow-[0_18px_50px_-38px_rgba(4,18,12,.55)]"
       aria-labelledby="mcp-runner-title"
     >
+      <style>{`
+        .csoai-tool-runner-choices { max-height: 14rem; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; }
+        @media (min-width: 64rem) {
+          .csoai-tool-runner-nav { display: flex; flex-direction: column; align-self: start; min-height: 0; max-height: 36rem; }
+          .csoai-tool-runner-choices { flex: 1 1 auto; min-height: 0; max-height: none; }
+        }
+      `}</style>
       <header className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-900/10 bg-slate-50/80 px-5 py-4">
         <div className="flex min-w-0 items-start gap-3">
           <span
@@ -817,13 +970,14 @@ export default function ToolRunner({
         </div>
         <div className="flex items-center gap-2">
           <StateBadge state={listState} count={tools.length} />
-          {listState === "unreachable" ? (
+          {!catalogue ? (
             <button
               type="button"
+              disabled={listState === "loading" || busy}
               onClick={() => setReloadKey((value) => value + 1)}
               className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-900/10 bg-white px-2.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
             >
-              <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" /> Retry
+              <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" /> {listState === "unreachable" ? "Retry catalogue" : "Refresh catalogue"}
             </button>
           ) : null}
         </div>
@@ -861,13 +1015,27 @@ export default function ToolRunner({
       ) : (
         <div className="grid min-h-[34rem] lg:grid-cols-[17rem_minmax(0,1fr)]">
           <nav
-            className="border-b border-slate-900/10 bg-slate-50/55 p-3 lg:border-b-0 lg:border-r"
+            className="csoai-tool-runner-nav border-b border-slate-900/10 bg-slate-50/55 p-3 lg:border-b-0 lg:border-r"
             aria-label="Callable MCP tools"
           >
+            <div className="mb-4 space-y-3">
+              <label htmlFor={`${runnerId}-tool-search`} className="block text-xs font-semibold text-slate-800">Find a tool</label>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-slate-500" aria-hidden="true" />
+                <input id={`${runnerId}-tool-search`} type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Name or purpose" className="min-h-11 w-full rounded-lg border border-slate-300 bg-white pl-9 pr-3 text-sm text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600" />
+              </div>
+              <label htmlFor={`${runnerId}-tool-access`} className="block text-xs font-semibold text-slate-800">Access</label>
+              <select id={`${runnerId}-tool-access`} value={access} onChange={(event) => setAccess(event.target.value as ToolAccessFilter)} className="min-h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900">
+                <option value="all">All tools</option><option value="free">Free reads and verification</option><option value="metered">Metered paths</option>
+              </select>
+              <p role="status" className="text-xs text-slate-600">{filteredTools.length} of {tools.length} catalogued tools shown.</p>
+              {!filteredTools.length ? <div className="rounded-lg border border-dashed border-slate-300 p-3"><p className="text-sm text-slate-700">No tools match these filters.</p><button type="button" onClick={() => { setQuery(""); setAccess("all"); }} className="mt-2 min-h-11 text-xs font-semibold text-emerald-900 underline">Clear filters</button></div> : null}
+            </div>
+            <div className="csoai-tool-runner-choices pr-1">
             {groups.map((group) =>
               group.tools.length ? (
                 <div key={group.label} className="mb-5 last:mb-0">
-                  <p className="px-2 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                  <p className="px-2 text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
                     {group.label}
                   </p>
                   <div className="mt-1.5 space-y-1">
@@ -883,7 +1051,7 @@ export default function ToolRunner({
                           type="button"
                           onClick={() => pick(tool)}
                           aria-current={selected ? "page" : undefined}
-                          className={`flex w-full items-center gap-2 rounded-xl px-2.5 py-2.5 text-left transition ${selected ? "bg-[#04624a] text-white shadow-sm" : "text-slate-700 hover:bg-white hover:text-slate-950"}`}
+                          className={`flex min-h-11 w-full items-center gap-2 rounded-xl px-2.5 py-2.5 text-left transition ${selected ? "bg-[#04624a] text-white shadow-sm" : "text-slate-700 hover:bg-white hover:text-slate-950"}`}
                         >
                           <span
                             className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-mono text-xs font-bold ${selected ? "bg-white/12" : "bg-emerald-50 text-emerald-800"}`}
@@ -895,7 +1063,7 @@ export default function ToolRunner({
                               {meta.label}
                             </span>
                             <code
-                              className={`block truncate text-[9px] ${selected ? "text-emerald-50/90" : "text-slate-500"}`}
+                              className={`block truncate text-xs ${selected ? "text-emerald-50/90" : "text-slate-500"}`}
                             >
                               {tool.name}
                             </code>
@@ -911,6 +1079,7 @@ export default function ToolRunner({
                 </div>
               ) : null,
             )}
+            </div>
           </nav>
 
           {active ? (
@@ -938,6 +1107,11 @@ export default function ToolRunner({
               <p className="mt-3 max-w-3xl text-xs leading-relaxed text-slate-700">
                 {active.description}
               </p>
+
+              <details className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-3">
+                <summary className="min-h-11 cursor-pointer py-3 text-xs font-semibold text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">Input schema from tools/list</summary>
+                {active.inputSchema ? <pre tabIndex={0} className="mb-3 max-h-72 overflow-auto rounded-lg bg-slate-950 p-3 text-xs text-slate-100"><code>{JSON.stringify(active.inputSchema, null, 2)}</code></pre> : <p className="pb-3 text-xs text-slate-600">This tool did not advertise an input schema.</p>}
+              </details>
 
               {isPaidTool(active) ? (
                 <div className="mt-4 flex gap-2.5 rounded-xl border border-amber-700/20 bg-amber-50 px-3.5 py-3">
@@ -1221,49 +1395,51 @@ export default function ToolRunner({
                           </p>
                         ) : null}
                         <p className="mt-0.5 text-[10px] text-slate-600">
-                          {active.name} · {output.observedAt}
+                          {output.toolName} · completed <time dateTime={output.observedAt}>{output.observedAt}</time> · {output.durationMs} ms
                           {resultOutcome(output.result)
                             ? ` · outcome ${resultOutcome(output.result)}`
                             : ""}
                         </p>
+                        <p className="mt-2 break-words text-sm font-semibold text-slate-900">Returned outcome: {resultOutcome(output.result) ?? "not declared by the tool"}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       {copied ? (
-                        <span className="text-[10px] font-semibold text-slate-600">
-                          {copied === "copied" ? "Copied" : "Clipboard blocked"}
+                        <span role="status" className="max-w-xs text-xs font-semibold text-slate-600">
+                          {copied === "copying" ? "Copying…" : copied === "copied" ? "Response JSON copied." : "Copy could not be confirmed. Open Response JSON, select its text and copy it manually."}
                         </span>
                       ) : null}
                       <button
                         type="button"
                         onClick={copyOutput}
-                        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-900/10 bg-white px-2.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
+                        disabled={copied === "copying"}
+                        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-slate-900/10 bg-white px-2.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
                       >
-                        <Copy className="h-3.5 w-3.5" aria-hidden="true" /> Copy
+                        <Copy className="h-3.5 w-3.5" aria-hidden="true" /> Copy JSON
                       </button>
+                      <button type="button" onClick={downloadOutput} className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 text-xs font-semibold text-slate-700"><Download className="h-4 w-4" aria-hidden="true" /> Download JSON</button>
                     </div>
                   </header>
-                  {output.result.text.length > 4000 ? (
-                    <details className="bg-[#04120c]">
-                      <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-emerald-50">
-                        View complete machine response ({output.result.text.length.toLocaleString()} characters)
-                      </summary>
-                      <pre className="max-h-[30rem] overflow-auto p-4 font-mono text-[11.5px] leading-relaxed text-emerald-50">
-                        <code>{output.result.text}</code>
-                      </pre>
-                    </details>
-                  ) : (
-                    <pre className="max-h-[30rem] overflow-auto bg-[#04120c] p-4 font-mono text-[11.5px] leading-relaxed text-emerald-50">
-                      <code>{output.result.text}</code>
-                    </pre>
-                  )}
+                  <div role="tablist" aria-label="Tool response view" className="flex gap-1 border-y border-slate-200 bg-white px-3 py-2">
+                    {(["readable", "json"] as const).map((view) => <button key={view} id={`${runnerId}-${view}-tab`} type="button" role="tab" aria-selected={outputView === view} aria-controls={`${runnerId}-response-panel`} tabIndex={outputView === view ? 0 : -1} data-output-view={view} onClick={() => setOutputView(view)} onKeyDown={(event) => {
+                      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+                      event.preventDefault();
+                      const next = event.key === "Home" ? "readable" : event.key === "End" ? "json" : view === "readable" ? "json" : "readable";
+                      setOutputView(next);
+                      event.currentTarget.parentElement?.querySelector<HTMLButtonElement>(`[data-output-view="${next}"]`)?.focus();
+                    }} className={`min-h-11 rounded-lg px-3 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 ${outputView === view ? "bg-emerald-50 text-emerald-950" : "text-slate-600 hover:bg-slate-50"}`}>{view === "readable" ? "Readable" : "Response JSON"}</button>)}
+                  </div>
+                  <div id={`${runnerId}-response-panel`} role="tabpanel" aria-labelledby={`${runnerId}-${outputView}-tab`} className="min-w-0 p-4">
+                    {outputView === "readable" ? <ReadableToolResponse result={output.result} /> : <pre tabIndex={0} className="max-h-[30rem] overflow-auto rounded-lg bg-[#04120c] p-4 font-mono text-xs leading-relaxed text-emerald-50"><code>{toolResponseJson(output.result)}</code></pre>}
+                  </div>
+                  {downloadError ? <p role="status" className="px-4 pb-3 text-xs text-amber-900">{downloadError}</p> : null}
                   <footer className="border-t border-slate-900/10 bg-slate-50 px-4 py-2.5 text-[10px] leading-relaxed text-slate-600">
                     Source:{" "}
                     <code className="font-mono">POST {MCP_RPC_ENDPOINT}</code> ·
                     executor: public MCP endpoint · this state describes this
                     call only. A successful call does not make its payload
                     MEASURED, REPRODUCED or SIGNED unless the returned evidence
-                    independently says so.
+                    independently says so. Copy and download contain this call’s parsed response only; they do not confirm that a response was saved elsewhere. The local receipts log is separate.
                   </footer>
                 </section>
                 );
@@ -1272,12 +1448,18 @@ export default function ToolRunner({
           ) : (
             <div className="p-6" role="status">
               <div className="rounded-xl border border-dashed border-slate-900/15 bg-slate-50 p-6 text-center">
+                {initialToolName ? <>
+                  <p className="text-sm font-semibold text-slate-900">Requested tool is not advertised.</p>
+                  <p className="mt-2 break-words text-xs text-slate-700"><code>{initialToolName}</code> is unavailable in the current tools/list response from <code>{MCP_RPC_ENDPOINT}</code>.</p>
+                  <p className="mt-2 text-xs text-slate-600">No other tool was selected or run. Browse the catalogue and choose a tool to continue.</p>
+                </> : <>
                 <p className="text-sm font-semibold text-slate-900">
                   tools/list returned an empty catalogue.
                 </p>
                 <p className="mt-1 text-xs text-slate-600">
                   CATALOGUED · 0. No fallback tools are invented in the browser.
                 </p>
+                </>}
               </div>
             </div>
           )}
