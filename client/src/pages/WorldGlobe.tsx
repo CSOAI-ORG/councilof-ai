@@ -292,12 +292,12 @@ export default function WorldGlobe() {
         <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the council globe</p>
         <h1 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">AI governance, layered on the world</h1>
         <p className="mt-2 max-w-2xl text-emerald-50/80">Every framework lives where it is made. Spin the globe, toggle the layers, click any node to see what it governs and jump straight into the OS.</p>
-        <p role="note" className="mt-3 max-w-2xl text-sm text-amber-100/90">Illustrative swarm demo only. No real system is stopped and no signed receipt is created.</p>
+        <p role="note" className="mt-3 max-w-2xl text-sm text-amber-100/90">Swarm and Watchdog illustrations use demo values and local browser entries. They do not show verified incidents, real system control or signed receipts.</p>
         <div className="mt-4 flex flex-wrap gap-2">
           <button onClick={() => setMode((m) => (m === "3d" ? "2d" : "3d"))} className="rounded-full border border-sky-400/50 bg-sky-500/10 px-4 py-1.5 text-sm font-bold text-sky-200 hover:bg-sky-500/20">{mode === "3d" ? "◉ 3D globe" : "◍ 2D classic"}</button>
           <button onClick={() => setLayers((l) => ({ ...l, fw: !l.fw }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.fw ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Frameworks</button>
           <button onClick={() => setLayers((l) => ({ ...l, council: !l.council }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.council ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Council of AI</button>
-          <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Watchdog heat</button>
+          <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Illustrative Watchdog layer</button>
           <button onClick={() => setLayers((l) => ({ ...l, ontology: !l.ontology, fw: true }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.ontology ? "border-violet-400 bg-violet-600 text-white" : "border-white/20 text-white/60")}>Ontology</button>
           <button onClick={() => setLayers((l) => ({ ...l, hive: !l.hive }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.hive ? "border-sky-400 bg-sky-600 text-white" : "border-white/20 text-white/60")}>Hive coverage{hiveAccounts.length ? " (" + hiveAccounts.length + ")" : ""}</button>
           <button onClick={() => setSpin((s) => !s)} className="rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10">{spin ? "Pause" : "Spin"}</button>
@@ -337,6 +337,7 @@ export default function WorldGlobe() {
               const n = wc[h.id] || 0; const t = n / wmax; const sc = 0.6 + q.depth * 0.6; const rad = (5 + t * 22) * sc;
               return (
                 <g key={"w-" + h.id}>
+                  <title>{`Illustrative Watchdog value ${n}; not a verified incident count`}</title>
                   <circle cx={q.x} cy={q.y} r={rad} fill={"rgba(245,158,11," + (0.10 + 0.30 * t).toFixed(2) + ")"} />
                   <circle cx={q.x} cy={q.y} r={rad * 0.5} fill={"rgba(239,68,68," + (0.15 + 0.35 * t).toFixed(2) + ")"} />
                   <circle cx={q.x} cy={q.y} r={2.4 * sc} fill="#fbbf24" />
@@ -399,7 +400,7 @@ export default function WorldGlobe() {
                 <a href="/law" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">Law by jurisdiction -&gt;</a>
                 <a href="/regions" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">By region -&gt;</a>
                 <a href="/temples" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">Temples -&gt;</a>
-                <a href="/watchdog-map" className="rounded-lg border border-amber-400/30 px-3 py-1.5 font-semibold text-amber-200 hover:bg-white/10">Watchdog heat-map -&gt;</a>
+                <a href="/watchdog-map" className="rounded-lg border border-amber-400/30 px-3 py-1.5 font-semibold text-amber-200 hover:bg-white/10">Illustrative Watchdog map -&gt;</a>
               </div>
             </div>
           )}
