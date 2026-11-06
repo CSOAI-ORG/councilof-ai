@@ -190,9 +190,9 @@ export default function CouncilEvidenceDeliveryPane() {
     >
       <header className="flex flex-wrap items-center gap-3 border-b border-border px-4 py-3">
         <div className="min-w-0 flex-1">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-800">
+          <h1 className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-800">
             Council OS / Evidence Delivery
-          </p>
+          </h1>
           <p className="mt-1 text-xs text-muted-foreground">
             Local evidence and MEOK H.I.M. review. Submission returns an
             unsigned A2A Message; it does not measure, sign, anchor or durably

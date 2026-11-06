@@ -162,8 +162,6 @@ const ConformityRoute = lazy(() => import("./pages/ConformityRoute"));
 const Contact = lazy(() => import("./pages/Contact"));
 const CouncilDetail = lazy(() => import("./pages/CouncilDetail"));
 const CouncilLicensingLanding = lazy(() => import("./pages/CouncilLicensingLanding"));
-const CourseDetail = lazy(() => import("./pages/CourseDetail"));
-const EarlyAccessLanding = lazy(() => import("./pages/EarlyAccessLanding"));
 const EI3 = lazy(() => import("./pages/EI3"));
 const EUAIActClassifier = lazy(() => import("./pages/EUAIActClassifier"));
 const FrameworkDetail = lazy(() => import("./pages/FrameworkDetail"));
@@ -686,7 +684,7 @@ function AppShell() {
                   <Route path="/docs" component={DocsHub} />
                   <Route path="/brand" component={Brand} />
                   <Route path="/metered" component={X402Catalog} />
-                  <Route path="/early-access" component={EarlyAccessLanding} />
+                  <Route path="/early-access">{() => <DashboardDoor defaultTab="home" />}</Route>
                   <Route path="/ei3" component={EI3} />
                   <Route path="/enterprise-plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>
                   <Route path="/eu-ai-act-classifier" component={EUAIActClassifier} />

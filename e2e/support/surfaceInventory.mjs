@@ -50,9 +50,21 @@ export function appRoutePaths(source) {
             : null;
         const component =
           expression && ts.isIdentifier(expression) ? expression.text : null;
+        let authWrapper = false;
+        const inspectWrapper = (child) => {
+          if (
+            (ts.isJsxSelfClosingElement(child) ||
+              ts.isJsxOpeningElement(child)) &&
+            child.tagName.getText(file) === "RequireAuth"
+          )
+            authWrapper = true;
+          ts.forEachChild(child, inspectWrapper);
+        };
+        if (ts.isJsxOpeningElement(node)) inspectWrapper(node.parent);
         records.push({
           path: literal.text,
           component,
+          authWrapper,
           expectedTerminal:
             component === "NotFound"
               ? "declared-not-found"
@@ -114,6 +126,76 @@ export function lobbyTabIds(source) {
       throw new Error("Lobby tab has no literal id");
     return prop.initializer.text;
   });
+}
+
+/** Read the actual tab paths and compatibility aliases; do not accept a transient Home pane. */
+export function workspaceContracts(source, nativeIds) {
+  const file = ts.createSourceFile(
+    "tabs.ts",
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+  );
+  let tabs, aliases;
+  const visit = (node) => {
+    if (ts.isVariableDeclaration(node)) {
+      if (node.name.getText(file) === "LOBBY_TABS") tabs = node.initializer;
+      if (node.name.getText(file) === "aliases") aliases = node.initializer;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(file);
+  if (
+    !tabs ||
+    !ts.isArrayLiteralExpression(tabs) ||
+    !aliases ||
+    !ts.isObjectLiteralExpression(aliases)
+  )
+    throw new Error(
+      "Workspace contract discovery requires literal tabs and aliases",
+    );
+  const properties = (node) =>
+    Object.fromEntries(
+      node.properties.filter(ts.isPropertyAssignment).map((property) => {
+        const key = ts.isStringLiteral(property.name)
+          ? property.name.text
+          : property.name.getText(file);
+        return [
+          key,
+          ts.isStringLiteral(property.initializer)
+            ? property.initializer.text
+            : null,
+        ];
+      }),
+    );
+  const aliasMap = properties(aliases);
+  if (Object.values(aliasMap).some((value) => value === null))
+    throw new Error("Nonliteral workspace alias");
+  const rows = tabs.elements.map((node) => {
+    if (!ts.isObjectLiteralExpression(node))
+      throw new Error("Nonliteral workspace contract");
+    return properties(node);
+  });
+  return Object.fromEntries(
+    [...new Set([...rows.map((row) => row.id), ...nativeIds])].map((id) => {
+      const pane = aliasMap[id] ?? id;
+      const row = rows.find((item) => item.id === pane);
+      return [
+        id,
+        {
+          pane,
+          framePath:
+            !nativeIds.includes(pane) && row?.path
+              ? row.path
+              : pane === "console"
+                ? "/gspc-console/"
+                : null,
+          frameHeading:
+            pane === "console" ? "Every published score, model by model" : null,
+        },
+      ];
+    }),
+  );
 }
 
 export function publicHtmlPaths(root) {
@@ -682,6 +764,20 @@ export function surfaceInventory(root) {
     ),
   );
   const workspaceIds = [...new Set([...tabs, ...panes])];
+  const workspace = workspaceContracts(
+    fs.readFileSync(
+      path.join(root, "client/src/components/lobby/tabs.ts"),
+      "utf8",
+    ),
+    panes,
+  );
+  for (const contract of Object.values(workspace)) {
+    const route = app.records.find(
+      (row) => row.path === contract.framePath?.replace(/\/$/, ""),
+    );
+    if (route?.authWrapper && route.path !== "/assess")
+      contract.authReturn = route.path;
+  }
   const html = publicHtmlPaths(path.join(root, "public"));
   const entities = publishedEntityCases(root);
   const sitemap = sitemapSurfaceInventory(root, app.paths, html);
@@ -694,6 +790,7 @@ export function surfaceInventory(root) {
       id: `tab:${id}`,
       kind: "tab",
       url: `/dashboard?tab=${encodeURIComponent(id)}`,
+      workspace: workspace[id],
     })),
     {
       id: "workspace:company",
@@ -720,6 +817,8 @@ export function surfaceInventory(root) {
     const pathname =
       new URL(item.url, "https://councilof.ai").pathname.replace(/\/+$/, "") ||
       "/";
+    if (pathname === "/early-access")
+      item.workspace = { pane: "home", canonicalRetirement: true };
     const entity = entities.cases.find(
       (row) =>
         (new URL(row.url, "https://councilof.ai").pathname.replace(

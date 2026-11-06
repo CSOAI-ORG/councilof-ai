@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Frame, type Page } from "@playwright/test";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
@@ -69,6 +69,11 @@ for (const surface of cases) {
     const errors: string[] = [],
       proxyErrors: string[] = [];
     let blockedExternal = 0;
+    const documents: Array<{ url: string; status: number }> = [];
+    page.on("response", (response) => {
+      if (response.request().isNavigationRequest())
+        documents.push({ url: response.url(), status: response.status() });
+    });
     page.on("pageerror", (error) => errors.push(error.message));
     await page.routeWebSocket(/.*/, (socket) => {
       blockedExternal++;
@@ -147,8 +152,8 @@ for (const surface of cases) {
       return route.continue();
     });
 
-    const inspect = () =>
-      page.evaluate(() => {
+    const inspect = (context: Page | Frame = page) =>
+      context.evaluate(() => {
         const visible = (node: Element) =>
           Boolean(node.getClientRects().length);
         const body = document.body.innerText.trim();
@@ -211,6 +216,26 @@ for (const surface of cases) {
       });
 
     const assertIdentity = async () => {
+      if (surface.kind === "company-signed-out") {
+        const company = page.getByTestId("company-case-panel");
+        await expect(company).toBeVisible();
+        await expect(
+          company.getByText(
+            "Sign in to open your authorized company workspace.",
+            { exact: true },
+          ),
+        ).toBeVisible();
+        const login = new URL(
+          (await company
+            .getByRole("link", { name: "Sign in to Council", exact: true })
+            .getAttribute("href"))!,
+          origin,
+        );
+        expect(login.pathname.replace(/\/$/, "")).toBe("/login");
+        expect(login.searchParams.get("next")).toBe(
+          "/dashboard/?workspace=company",
+        );
+      }
       if (surface.kind === "unknown") {
         await expect(page).toHaveTitle(/Page not found/i);
         await expect(page.locator('head meta[name="robots"]')).toHaveAttribute(
@@ -296,8 +321,8 @@ for (const surface of cases) {
         ).toHaveCount(0);
     };
 
-    const settleVisibleImages = () =>
-      page.waitForFunction(
+    const settleVisibleImages = (context: Page | Frame = page) =>
+      context.waitForFunction(
         () =>
           [...document.images].every((img) => {
             const box = img.getBoundingClientRect(),
@@ -322,30 +347,38 @@ for (const surface of cases) {
         null,
         { timeout: 5_000 },
       );
-    const assertHealth = async (phase: string) => {
-      await expect(page.locator("body")).not.toHaveText(/^\s*$/);
-      await expect(
-        page.locator("h1:visible,h2:visible,[role=heading]:visible").first(),
-      ).toBeVisible();
-      await expect(page).toHaveTitle(/\S/);
-      await assertIdentity();
+    const genericNotFound =
+      /^(?:404(?:\b.*)?|(?:page|route|mcp|model|answer|note|course|system|record)?\s*not found[.!]?)$/i;
+    const documentHealth = async (
+      context: Page | Frame,
+      phase: string,
+      headingRequired = true,
+    ) => {
+      await expect(context.locator("body")).not.toHaveText(/^\s*$/);
+      if (headingRequired)
+        await expect(
+          context
+            .locator("h1:visible,h2:visible,[role=heading]:visible")
+            .first(),
+        ).toBeVisible();
+      await expect.poll(() => context.title()).toMatch(/\S/);
       await expect
-        .poll(async () => (await inspect()).contentLength, {
+        .poll(async () => (await inspect(context)).contentLength, {
           message: "substantive main content must settle",
         })
         .toBeGreaterThan(30);
       await expect
-        .poll(async () => (await inspect()).bodyLength)
+        .poll(async () => (await inspect(context)).bodyLength)
         .toBeGreaterThan(60);
-      await settleVisibleImages();
-      const state = await inspect();
+      await settleVisibleImages(context);
+      const state = await inspect(context);
       await testInfo.attach(`health-${phase}`, {
         body: JSON.stringify({
           surface,
           state,
           errors,
           proxyErrors,
-          landed: page.url(),
+          landed: context.url(),
           context:
             "Exact frozen build board; other APIs unavailable, external and non-read execution blocked",
           boardFixture: board.metadata,
@@ -364,8 +397,193 @@ for (const surface of cases) {
       ).toEqual([]);
       expect(errors, "no uncaught JavaScript errors").toEqual([]);
       expect(proxyErrors, "canonical resource proxy must succeed").toEqual([]);
-      expect(new URL(page.url()).origin).toBe(origin);
+      expect(new URL(context.url()).origin).toBe(origin);
+      if (context !== page)
+        await expect(
+          context
+            .locator('h1:visible,[role="heading"][aria-level="1"]:visible')
+            .filter({ hasText: genericNotFound }),
+          "published child must not be a generic not-found shell",
+        ).toHaveCount(0);
       return state;
+    };
+
+    // Await the requested pane, not a valid-looking server-rendered Home fallback.
+    const settleWorkspace = async () => {
+      const contract = surface.workspace;
+      if (!contract) return;
+      if (contract.canonicalRetirement) {
+        await expect
+          .poll(() => new URL(page.url()).pathname.replace(/\/$/, ""))
+          .toBe("/dashboard");
+        await expect
+          .poll(() => new URL(page.url()).searchParams.get("tab"))
+          .toBe("home");
+      }
+      await expect(
+        page.getByTestId(
+          contract.pane === "home"
+            ? "gspc-workspace-home"
+            : `dashboard-pane-${contract.pane}`,
+        ),
+      ).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByTestId("dashboard-pane-loading")).toHaveCount(0);
+      if (contract.pane !== "home")
+        await expect(page.getByTestId("dashboard-tool-canvas")).toBeVisible();
+    };
+    const paneFrame = async (): Promise<Frame | null> => {
+      const contract = surface.workspace;
+      if (!contract?.framePath) return null;
+      const pane = page.getByTestId(`dashboard-pane-${contract.pane}`);
+      // Known local pages must actually load. A readable parent placeholder proves no child health.
+      const element = pane.locator("iframe");
+      await expect(element).toHaveCount(1);
+      await expect(element).toBeVisible();
+      await expect(page.getByTestId("dashboard-embedded-loading")).toHaveCount(
+        0,
+        { timeout: 15_000 },
+      );
+      await expect(page.getByTestId("dashboard-embedded-error")).toHaveCount(0);
+      const requestedDocument = new URL(
+        (await element.getAttribute("src"))!,
+        origin,
+      ).href;
+      const frame = await (await element.elementHandle())!.contentFrame();
+      expect(
+        frame,
+        "owned pane iframe must have a document context",
+      ).not.toBeNull();
+      await expect
+        .poll(() => {
+          const url = new URL(frame!.url());
+          return {
+            origin: url.origin,
+            path: url.pathname.replace(/\/$/, ""),
+            embed: url.searchParams.get("embed"),
+          };
+        })
+        .toEqual({
+          origin,
+          path: contract.authReturn
+            ? "/login"
+            : contract.framePath.replace(/\/$/, ""),
+          embed: "1",
+        });
+      if (contract.authReturn) {
+        await expect(
+          frame!.getByRole("heading", {
+            level: 1,
+            name: "Sign in to Council OS",
+            exact: true,
+          }),
+        ).toBeVisible();
+        await expect
+          .poll(() => new URL(frame!.url()).searchParams.get("next"), {
+            message:
+              "signed-out embedded account page must retain its safe return context",
+          })
+          .toBe(contract.authReturn);
+      }
+      await expect
+        .poll(
+          () =>
+            [...documents]
+              .reverse()
+              .find((document) => document.url === requestedDocument)?.status,
+          {
+            message:
+              "published same-origin child document must have a successful HTTP response",
+          },
+        )
+        .toBeLessThan(400);
+      if (contract.frameHeading)
+        await expect(
+          frame!.getByRole("heading", {
+            level: 1,
+            name: contract.frameHeading,
+            exact: true,
+          }),
+        ).toBeVisible();
+      return frame;
+    };
+    const assertHealth = async (phase: string) => {
+      await settleWorkspace();
+      await assertIdentity();
+      const frame = await paneFrame();
+      if (frame) await documentHealth(frame, `${phase}-child`);
+      return documentHealth(page, phase, surface.workspace?.pane !== "console");
+    };
+    const scrollTo = (context: Page | Frame, target: string, top: number) =>
+      context.evaluate(
+        ({ top, target }) => {
+          const element =
+            target === "window" ? window : document.querySelector(target);
+          if (!element)
+            throw new Error(
+              "Primary scroll canvas disappeared; coverage incomplete",
+            );
+          element.scrollTo({ top, behavior: "instant" });
+        },
+        { top, target },
+      );
+    const coverScroll = async (context: Page | Frame, label: string) => {
+      const coverage = {
+        complete: false,
+        maxSteps: 300,
+        maxMs: 20_000,
+        context: context.url(),
+        target: (await context.evaluate(primaryScrollMetrics)).target,
+        stops: [] as Array<{
+          position: number;
+          height: number;
+          viewport: number;
+          overflow: number;
+        }>,
+      };
+      const started = Date.now();
+      let bottomSeen = false;
+      try {
+        await scrollTo(context, coverage.target, 0);
+        while (true) {
+          await settleVisibleImages(context);
+          const metrics = await context.evaluate(primaryScrollMetrics);
+          expect(
+            metrics.target,
+            "primary canvas must remain stable during coverage",
+          ).toBe(coverage.target);
+          coverage.stops.push(metrics);
+          expect(
+            metrics.overflow,
+            `no horizontal overflow at viewport stop ${coverage.stops.length}`,
+          ).toBeLessThanOrEqual(1);
+          expect(
+            (await inspect(context)).broken,
+            `no broken image at viewport stop ${coverage.stops.length}`,
+          ).toEqual([]);
+          const next = nextViewportStop(metrics, {
+            steps: coverage.stops.length,
+            elapsedMs: Date.now() - started,
+            maxSteps: coverage.maxSteps,
+            maxMs: coverage.maxMs,
+          });
+          if (next.done && bottomSeen) {
+            coverage.complete = true;
+            break;
+          }
+          bottomSeen = next.done;
+          if (!next.done) await scrollTo(context, coverage.target, next.target);
+          await page.waitForTimeout(next.done ? 100 : 40);
+        }
+      } finally {
+        await testInfo.attach(`scroll-coverage${label}`, {
+          body: JSON.stringify({
+            ...coverage,
+            elapsedMs: Date.now() - started,
+          }),
+          contentType: "application/json",
+        });
+      }
+      return coverage;
     };
 
     const response = await page.goto(surface.url, {
@@ -376,74 +594,11 @@ for (const surface of cases) {
     await page.waitForTimeout(350);
     const initial = await assertHealth("initial"),
       landed = page.url();
-    const scrollCoverage = {
-      complete: false,
-      maxSteps: 300,
-      maxMs: 20_000,
-      target: (await page.evaluate(primaryScrollMetrics)).target,
-      stops: [] as Array<{
-        position: number;
-        height: number;
-        viewport: number;
-        overflow: number;
-      }>,
-    };
-    const scrollStarted = Date.now();
-    let bottomSeen = false;
-    try {
-      const scrollTo = (top: number) =>
-        page.evaluate(
-          ({ top, target }) => {
-            const element =
-              target === "window" ? window : document.querySelector(target);
-            if (!element)
-              throw new Error(
-                "Primary scroll canvas disappeared; coverage incomplete",
-              );
-            element.scrollTo({ top, behavior: "instant" });
-          },
-          { top, target: scrollCoverage.target },
-        );
-      await scrollTo(0);
-      while (true) {
-        await settleVisibleImages();
-        const metrics = await page.evaluate(primaryScrollMetrics);
-        expect(
-          metrics.target,
-          "primary canvas must remain stable during coverage",
-        ).toBe(scrollCoverage.target);
-        scrollCoverage.stops.push(metrics);
-        expect(
-          metrics.overflow,
-          `no horizontal overflow at viewport stop ${scrollCoverage.stops.length}`,
-        ).toBeLessThanOrEqual(1);
-        expect(
-          (await inspect()).broken,
-          `no broken image at viewport stop ${scrollCoverage.stops.length}`,
-        ).toEqual([]);
-        const next = nextViewportStop(metrics, {
-          steps: scrollCoverage.stops.length,
-          elapsedMs: Date.now() - scrollStarted,
-          maxSteps: scrollCoverage.maxSteps,
-          maxMs: scrollCoverage.maxMs,
-        });
-        if (next.done && bottomSeen) {
-          scrollCoverage.complete = true;
-          break;
-        }
-        bottomSeen = next.done;
-        if (!next.done) await scrollTo(next.target);
-        await page.waitForTimeout(next.done ? 100 : 40);
-      }
-    } finally {
-      await testInfo.attach("scroll-coverage", {
-        body: JSON.stringify({
-          ...scrollCoverage,
-          elapsedMs: Date.now() - scrollStarted,
-        }),
-        contentType: "application/json",
-      });
-    }
+    const scrollCoverage = await coverScroll(page, "");
+    const child = await paneFrame();
+    const childScrollCoverage = child
+      ? await coverScroll(child, "-child")
+      : null;
     const bottom = await assertHealth("bottom");
     await expect(page).toHaveURL(landed);
     const reloadedResponse = await page.reload({
@@ -452,6 +607,17 @@ for (const surface of cases) {
     });
     expect(reloadedResponse?.status()).toBeLessThan(400);
     const reloaded = await assertHealth("reload");
+    await expect(page).toHaveURL(landed);
+    // Repeat full health after reload at both ends, retaining the same pane/child identity.
+    // Mid-page images were visited above; the full long-page traversal is not repeated.
+    const reloadedChild = await paneFrame();
+    if (reloadedChild) {
+      const metrics = await reloadedChild.evaluate(primaryScrollMetrics);
+      await scrollTo(reloadedChild, metrics.target, metrics.height);
+    }
+    const reloadedMetrics = await page.evaluate(primaryScrollMetrics);
+    await scrollTo(page, reloadedMetrics.target, reloadedMetrics.height);
+    const reloadedBottom = await assertHealth("reload-bottom");
     await expect(page).toHaveURL(landed);
     await testInfo.attach("surface-context", {
       body: JSON.stringify({
@@ -464,6 +630,8 @@ for (const surface of cases) {
         bottom,
         reloaded,
         scrollCoverage,
+        childScrollCoverage,
+        reloadedBottom,
       }),
       contentType: "application/json",
     });

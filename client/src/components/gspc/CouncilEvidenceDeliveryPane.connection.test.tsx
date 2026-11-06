@@ -95,6 +95,8 @@ afterEach(async () => {
 describe("Evidence Delivery bounded bridge connection", () => {
   it("waits for a real bridge message rather than treating iframe load as connected", async () => {
     await mount();
+    const heading = host.querySelector("h1")!;
+    expect(heading.textContent).toBe("Council OS / Evidence Delivery");
     expect(state()).toBe("CONNECTING");
     expect(host.querySelector('[role="status"]')!.textContent).toContain(
       "does not confirm a connection",
@@ -107,6 +109,7 @@ describe("Evidence Delivery bounded bridge connection", () => {
     expect(host.querySelector('[role="alert"]')).toBeNull();
     await advance(1);
     expect(state()).toBe("UNREACHABLE");
+    expect(host.querySelector("h1")).toBe(heading);
     expect(host.querySelector('[role="alert"]')!.textContent).toContain(
       "did not confirm a connection within 15 seconds",
     );

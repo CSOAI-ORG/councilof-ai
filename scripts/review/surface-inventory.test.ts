@@ -11,6 +11,7 @@ import {
   classifySitemapURLs,
   rejectGenericNotFound,
   surfaceInventory,
+  workspaceContracts,
 } from "../../e2e/support/surfaceInventory.mjs";
 
 describe("surface coverage is derived from declarations", () => {
@@ -81,6 +82,54 @@ describe("surface coverage is derived from declarations", () => {
         '// hidden: Fake\nconst PANES = {console: Console, "terminal": Terminal};',
       ),
     ).toEqual(["console", "terminal"]);
+  });
+
+  it("waits for source-owned pane identities and follows actual compatibility aliases", () => {
+    const contracts = workspaceContracts(
+      `
+      const LOBBY_TABS = [{id:"home",path:""},{id:"academy",path:"/academy"},{id:"results",path:"/old"},{id:"board",path:"/gspc"}];
+      function normalizeLobbyTabId(id) { const aliases = {results:"board"}; return aliases[id] || id; }
+    `,
+      ["board", "console"],
+    );
+    expect(contracts.academy).toMatchObject({
+      pane: "academy",
+      framePath: "/academy",
+    });
+    expect(contracts.results).toMatchObject({ pane: "board", framePath: null });
+    expect(contracts.home).toMatchObject({ pane: "home", framePath: null });
+    expect(contracts.console).toMatchObject({
+      pane: "console",
+      framePath: "/gspc-console/",
+      frameHeading: "Every published score, model by model",
+    });
+    const inventory = surfaceInventory(
+      path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../.."),
+    );
+    expect(
+      inventory.cases.find((row) => row.id === "tab:him")?.workspace,
+    ).toMatchObject({ pane: "him", framePath: "/him" });
+    expect(
+      inventory.cases.find((row) => row.id === "tab:workbench")?.workspace,
+    ).toMatchObject({
+      pane: "workbench",
+      framePath: "/workbench",
+      authReturn: "/workbench",
+    });
+    expect(
+      appRoutePaths(
+        '<><Route path="/private">{() => <RequireAuth><Private /></RequireAuth>}</Route><Route path="/public" component={Public}/><Route component={Missing}/></>',
+      ).records.map((row) => row.authWrapper),
+    ).toEqual([true, false]);
+    for (const row of inventory.cases.filter(
+      (row) =>
+        new URL(row.url, "https://councilof.ai").pathname.replace(/\/$/, "") ===
+        "/early-access",
+    ))
+      expect(row.workspace).toEqual({
+        pane: "home",
+        canonicalRetirement: true,
+      });
   });
 
   it("covers every current App path, all tabs, every public HTML document and the unknown fallback", () => {

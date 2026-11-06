@@ -21,6 +21,8 @@ export function builtRetirementRedirects(dist) {
     [
       ["/advisory", "advisory.ts"],
       ["/advisory/", "advisory/index.ts"],
+      ["/early-access", "early-access.ts"],
+      ["/early-access/", "early-access/index.ts"],
     ].map(([url, file]) => [
       url,
       {

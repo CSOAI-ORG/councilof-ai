@@ -46,13 +46,32 @@ describe("App.tsx is intact", () => {
 
   it("keeps public trust routes on their operative pages", () => {
     expect(src).toContain('<Route path="/press" component={PublicPress} />');
-    expect(src).toContain('<Route path="/privacy-policy" component={PublicPrivacy} />');
-    expect(src).toMatch(/<Route path="\/lookup">\s*\{\(\) => <Redirect to="\/gspc-verify" \/>\}\s*<\/Route>/);
-    expect(src).toMatch(/<Route path="\/ceremony">\s*\{\(\) => <Redirect to="\/events\/three-root-ceremony" \/>\}\s*<\/Route>/);
+    expect(src).toContain(
+      '<Route path="/privacy-policy" component={PublicPrivacy} />',
+    );
+    expect(src).toMatch(
+      /<Route path="\/lookup">\s*\{\(\) => <Redirect to="\/gspc-verify" \/>\}\s*<\/Route>/,
+    );
+    expect(src).toMatch(
+      /<Route path="\/ceremony">\s*\{\(\) => <Redirect to="\/events\/three-root-ceremony" \/>\}\s*<\/Route>/,
+    );
   });
 
   it("folds legacy course enrollment into the existing practice workspace", () => {
-    expect(src).toContain('<Route path="/courses/:id">{() => <DashboardDoor defaultTab="learn" />}</Route>');
-    expect(src).not.toContain('<Route path="/courses/:id" component={CourseDetail} />');
+    expect(src).toContain(
+      '<Route path="/courses/:id">{() => <DashboardDoor defaultTab="learn" />}</Route>',
+    );
+    expect(src).not.toContain(
+      '<Route path="/courses/:id" component={CourseDetail} />',
+    );
+  });
+
+  it("preserves the retired early-access door in client navigation", () => {
+    expect(src).toContain(
+      '<Route path="/early-access">{() => <DashboardDoor defaultTab="home" />}</Route>',
+    );
+    expect(src).not.toContain(
+      '<Route path="/early-access" component={EarlyAccessLanding} />',
+    );
   });
 });
