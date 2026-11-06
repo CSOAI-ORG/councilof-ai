@@ -24,6 +24,11 @@ export default function ToolReceiptsPane() {
 
   useEffect(() => {
     setReceipts(listToolReceipts());
+    // Live refresh (QA fix, 2026-11-04): the receipts lib signals after every record/clear, so a
+    // run that happens while this pane is mounted appears without a remount.
+    const refresh = () => setReceipts(listToolReceipts());
+    window.addEventListener("coai:receipts-changed", refresh);
+    return () => window.removeEventListener("coai:receipts-changed", refresh);
   }, []);
 
   const refresh = () => setReceipts(listToolReceipts());

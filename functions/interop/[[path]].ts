@@ -8,6 +8,36 @@ const INVALID_PATH = /^\/interop\/[A-Za-z0-9_./-]+\.invalid$/;
 const MIRROR_PATH = /^\/interop\/[^/]+\/mirrors\//;
 const CAPTURE_POLICY = "sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:";
 
+/**
+ * Is the capture policy ALREADY on this response?
+ *
+ * MEASURED 2026-11-06 on the live site. `public/_headers` sets
+ * `Content-Security-Policy: sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:`
+ * for `/interop/:report/mirrors/*`, and _headers DOES reach a response that passes through a
+ * Pages Function -- so `ctx.next()` already returns the capture policy. This function then
+ * appended the same policy to it, and the live header shipped as:
+ *
+ *   sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:, sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:
+ *
+ * That is the same duplicate-header class the estate already ruled on for _headers
+ * ("Listing both a splat and the exact path made Cloudflare Pages apply BOTH, and the header
+ * shipped as `text/plain; charset=utf-8, text/plain; charset=utf-8` -- a duplicated value that a
+ * strict parser is entitled to reject"). It was not caught here because both copies are identical
+ * and a CSP is not a Content-Type, so nothing downstream complained.
+ *
+ * A browser applies the INTERSECTION of a repeated policy, so the page was held to the
+ * intersection of the policy with itself -- the same enforcement, but a header that says it
+ * twice and that a strict parser is entitled to reject.
+ *
+ * So the fix is IDEMPOTENCE, not a different policy: apply the capture policy once, and only
+ * when the response does not already carry it. The two directives that make this policy the
+ * capture policy are `sandbox` and `default-src 'none'`; a response carrying both already has it.
+ */
+function capturePolicyApplied(existing: string | null): boolean {
+  if (!existing) return false;
+  return existing.includes("sandbox") && existing.includes("default-src 'none'");
+}
+
 type ArchiveMember = { sha256: string; bytes: number; body_base64: string };
 type Archive = {
   schema: string;
@@ -38,7 +68,10 @@ export const onRequest: PagesFunction<AssetEnv> = async (ctx) => {
   const path = url.pathname;
   // Captured third-party HTML is retained evidence, not an application on our
   // origin. Preserve its exact body while blocking scripts, forms and remote
-  // resources. _headers does not cover responses passing through Functions.
+  // resources. _headers ALSO sets this policy for /interop/:report/mirrors/*, and
+  // _headers reaches responses that pass through a Function -- so the policy can
+  // already be here. Applying it twice ships a duplicated header value, so it is
+  // applied only when it is not already present.
   if (MIRROR_PATH.test(path)) {
     const response = await ctx.next();
     const headers = new Headers(response.headers);
@@ -47,7 +80,9 @@ export const onRequest: PagesFunction<AssetEnv> = async (ctx) => {
     headers.set("referrer-policy", "no-referrer");
     if (headers.get("content-type")?.toLowerCase().includes("text/html")) {
       const existing = headers.get("content-security-policy");
-      headers.set("content-security-policy", existing ? `${existing}, ${CAPTURE_POLICY}` : CAPTURE_POLICY);
+      if (!capturePolicyApplied(existing)) {
+        headers.set("content-security-policy", existing ? `${existing}, ${CAPTURE_POLICY}` : CAPTURE_POLICY);
+      }
     }
     return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
   }
