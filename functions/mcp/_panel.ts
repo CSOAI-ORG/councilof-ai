@@ -8,7 +8,7 @@ export function withCouncilPanel<T extends Tool>(definition: T): T {
   return { ...definition, ...(definition.name === 'board_totals' ? { title: 'Council of AI · MEOK companion' } : {}), _meta: {
     ...definition._meta,
     ui: { resourceUri: PANEL_URI },
-    ...(definition.name === 'board_totals' ? { 'openai/ui': { entrypoints: [{ type: 'thread' }] } } : {}),
+    ...(definition.name === 'board_totals' ? { 'openai/ui': { entrypoints: [{ type: 'thread' }, { type: 'global' }] } } : {}),
   } };
 }
 export function registerCouncilPanel(server: McpServer): void {
