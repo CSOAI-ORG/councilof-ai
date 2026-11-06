@@ -12,7 +12,9 @@ CAP_ATOMIC = 20000  # 0.02 USDC, 6 decimals; one diagnostic challenge
 
 def check(raw):
     doc = json.loads(raw)
-    if doc.get('x402Version') != 2 or doc.get('resource', {}).get('url') != RESOURCE:
+    if not isinstance(doc, dict) or not isinstance(doc.get('resource'), dict):
+        raise ValueError('invalid challenge')
+    if doc.get('x402Version') != 2 or doc['resource'].get('url') != RESOURCE:
         raise ValueError('unexpected x402 version or resource')
     options = doc.get('accepts')
     if not isinstance(options, list) or len(options) != 1 or not isinstance(options[0], dict):
