@@ -703,8 +703,7 @@ function AppShell() {
                   <Route path="/how-it-works/enterprise" component={EnterpriseHowItWorks} />
                   <Route path="/how-it-works/training" component={ContentReviewNotice} />
                   <Route path="/landscape" component={Landscape} />
-                  <Route path="/mcp" component={MCPRegistry} />
-                  <Route path="/mcp/:slug" component={MCPDetail} />
+                  <Route path="/mcps/:slug" component={MCPDetail} />
                   <Route path="/mcps" component={MCPRegistry} />
                   <Route path="/old-home" component={ContentReviewNotice} />
                   <Route path="/opengridworks" component={OpenGridWorks} />
