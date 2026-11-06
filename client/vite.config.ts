@@ -47,7 +47,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, 'index.html'),
+        index: path.resolve(__dirname, 'index.html'),
         coliseum: path.resolve(__dirname, 'hf-coliseum.html'),
       },
       output: {
