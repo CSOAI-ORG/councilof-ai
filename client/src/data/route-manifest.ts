@@ -1383,11 +1383,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Maternal Covenant"
  },
  {
-  "path": "/mcp",
-  "comp": "MCPRegistry",
-  "title": "MCPRegistry"
- },
- {
   "path": "/mcp-tools",
   "comp": "Redirect",
   "title": "Mcp Tools"
