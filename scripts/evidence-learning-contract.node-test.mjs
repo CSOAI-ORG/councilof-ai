@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {publicURL,readPublic,validateBoard,validateScenario,changedTotals,LESSONS,practiceKey,practiceScore,makeReviewDraft,coachingContext} from '../public/evidence-learning/contract.mjs';
+import {publicURL,readPublic,validateBoard,validateScenario,changedTotals,measurementTimeLabel,LESSONS,practiceKey,practiceScore,makeReviewDraft,coachingContext} from '../public/evidence-learning/contract.mjs';
 const board={schema:'csoai.gspc-axes/0.5',axes:[{axis:'governance',task:'A bounded task',status:'MEASURED',n:30}],totals:{axes:1,measured_axes:1,unmeasured_axes:0}};
 test('reader allows only exact public sources and one exact axis',()=>{
  assert.equal(publicURL('/api/gspc'),'https://councilof.ai/api/gspc');
@@ -32,9 +32,36 @@ test('review drafts always hold and cannot convert learning into authority',()=>
 });
 test('source-only coaching context does not include private hub notes or proposal data',()=>{
  const c=coachingContext('governance',{readAt:'2026-11-04',data:board,notes:'PRIVATE_SENTINEL'});assert.match(c,/A bounded task/);assert.doesNotMatch(c,/PRIVATE_SENTINEL/);assert.match(c,/Propose changes only/);
+ assert.match(c,/Measurement time: Not supplied or uncheckable/);assert.match(c,/Retrieval does not refresh a measurement/);
+ const dated=structuredClone(board);dated.axes[0].measurement_time={state:'DAY',observed_on:'2026-08-12'};
+ assert.match(coachingContext('governance',{readAt:'2026-11-06',data:dated}),/Measurement time: 2026-08-12 \(day precision\)/);
 });
 test('comparison preserves unknown and uses consistent denominators',()=>{
  const x=changedTotals({totals:{axes:33,measured_axes:23,unmeasured_axes:10}},{totals:{axes:34,measured_axes:34,unmeasured_axes:0}});assert.deepEqual(x.map(x=>x.difference),[1,11,-10]);assert.equal(changedTotals(null,{totals:{axes:2}})[0].difference,null);
+});
+test('measurement time displays source precision and does not substitute the retrieval time',()=>{
+ assert.equal(measurementTimeLabel({state:'EXACT',observed_at:'2026-09-16T11:06:53Z'}),'2026-09-16T11:06:53Z (exact time reported)');
+ assert.equal(measurementTimeLabel({state:'DAY',observed_on:'2026-08-12'}),'2026-08-12 (day precision)');
+ assert.equal(measurementTimeLabel({state:'NOT_AFTER',not_after:'2026-08-19T09:24:39.162060+00:00'}),'Not after 2026-08-19T09:24:39.162060+00:00 (exact time unknown)');
+ for(const t of [null,{state:'UNCHECKABLE'},{state:'EXACT',observed_at:'bad'},{state:'EXACT',observed_at:'2026-02-30T10:00:00Z'},{state:'DAY',observed_on:'2026-02-30'},{state:'DAY',observed_on:'2026-99-99'},{state:'NOT_AFTER',not_after:'2026-08-19'}])assert.equal(measurementTimeLabel(t),'Not supplied or uncheckable');
+ const source=readFileSync(new URL('../public/evidence-learning/element.js',import.meta.url),'utf8');
+ assert.match(source,/measurementTimeLabel\(row\.measurement_time\)/);
+});
+test('the rendered observation distinguishes measurement time from the source read',async()=>{
+ const priorElement=globalThis.HTMLElement,priorRegistry=globalThis.customElements;
+ globalThis.HTMLElement=class {};globalThis.customElements={get:()=>true};
+ try {
+  const {CouncilEvidenceLearning}=await import('../public/evidence-learning/element.js');
+  const view={capture:{data:{totals:board.totals},readAt:'2026-11-06T06:00:00Z',sha256:'a'.repeat(64)},data:{shots:[]},readState:'SOURCE_READ'};
+  const row={...board.axes[0],measurement_time:{state:'EXACT',observed_at:'2026-09-16T11:06:53Z'}};
+  const html=CouncilEvidenceLearning.prototype.observe.call(view,row);
+  assert.match(html,/Measurement date: 2026-09-16T11:06:53Z \(exact time reported\)/);
+  assert.match(html,/Retrieval time below is a separate date/);
+  assert.doesNotMatch(html,/Measurement date: Not supplied/);
+ } finally {
+  if(priorElement===undefined)delete globalThis.HTMLElement;else globalThis.HTMLElement=priorElement;
+  if(priorRegistry===undefined)delete globalThis.customElements;else globalThis.customElements=priorRegistry;
+ }
 });
 test('UI has no external execution client and stops polling when hidden or disconnected',()=>{
  const s=readFileSync(new URL('../public/evidence-learning/element.js',import.meta.url),'utf8');assert.doesNotMatch(s,/method:\s*['"](?:POST|PUT|PATCH|DELETE)['"]|sendBeacon|WebSocket/);assert.match(s,/visibilityState==='visible'/);assert.match(s,/disconnectedCallback/);assert.match(s,/60000/);assert.match(s,/NOT_QUALIFIED|Not qualified/);assert.match(s,/this\.data\.proposals\[this\.axis\]/);
@@ -63,3 +90,4 @@ test('resuming preserves the selected axis and step and rejects inconsistent lea
  const {normalizeLearningState,VERSION}=await import('../public/evidence-learning/contract.mjs');const s=normalizeLearningState({component_version:VERSION,progress:{},proposals:{},shots:[],ui:{axis:'safety',stage:'propose'}});assert.equal(s.ui.axis,'safety');assert.equal(s.ui.stage,'propose');assert.throws(()=>normalizeLearningState({...s,progress:{'safety:evidence-scope:1':{correct:true,selected:0,attempts:1}}}));
 });
 test('background refresh does not replace the proposal source binding',()=>{const s=readFileSync(new URL('../public/evidence-learning/element.js',import.meta.url),'utf8');assert.match(s,/paintSource\(background\)/);assert.match(s,/proposalCapture\(\)/);assert.match(s,/case'pin-source'/);assert.match(s,/aria-controls="stage-panel"/);assert.match(s,/tabindex="\$\{this.stage===id\?'0':'-1'\}"/);assert.match(s,/this\.bound=true/);});
+
