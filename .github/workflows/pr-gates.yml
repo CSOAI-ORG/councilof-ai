@@ -517,6 +517,15 @@ jobs:
           python3 scripts/sync_hf_coliseum.py --artifact dist/hf-coliseum --expected-sha "$GITHUB_SHA" --verify-only
           node scripts/brand-gate.mjs dist/hf-coliseum
 
+      - name: Retain the verified Coliseum candidate from this single build
+        if: steps.scope.outputs.gated == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coliseum-candidate-${{ github.sha }}-${{ github.run_attempt }}
+          path: dist/hf-coliseum/
+          if-no-files-found: error
+          retention-days: 7
+
       - name: HF mirror gate — excluded dirs must exist on HF before merge
         if: steps.scope.outputs.gated == 'true'
         run: |

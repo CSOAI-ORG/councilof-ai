@@ -4,6 +4,7 @@ import { readFile, writeFile, mkdir, copyFile, readdir, lstat, rm } from "node:f
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 
 const sha = bytes => createHash("sha256").update(bytes).digest("hex");
 const safePath = p => typeof p === "string" && /^(?:assets\/|fonts\/|images\/)[A-Za-z0-9_./-]+$/.test(p)
@@ -95,7 +96,8 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const receipt = await exportColiseum({
     buildDir: path.join(root, "dist/client"), outputDir: path.join(root, "dist/hf-coliseum"),
     licensePath: path.join(root, "LICENSE"),
-    sourceCommit: process.env.GITHUB_SHA || process.env.CF_PAGES_COMMIT_SHA || "",
+    sourceCommit: process.env.GITHUB_SHA || process.env.CF_PAGES_COMMIT_SHA ||
+      execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(),
   });
   console.log("Coliseum mirror: " + Object.keys(receipt.files).length + " files, source " + receipt.source_commit);
 }

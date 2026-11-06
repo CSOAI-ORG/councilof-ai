@@ -3,14 +3,21 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { execFileSync } from 'node:child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const sourceRevision = (() => {
+  const declared = process.env.GITHUB_SHA || process.env.CF_PAGES_COMMIT_SHA;
+  if (declared) return declared;
+  try { return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: path.resolve(__dirname, '..'), encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); }
+  catch { return 'development-unpublished'; }
+})();
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   define: {
-    'import.meta.env.VITE_SOURCE_REVISION': JSON.stringify(process.env.GITHUB_SHA || process.env.CF_PAGES_COMMIT_SHA || 'development-unpublished'),
+    'import.meta.env.VITE_SOURCE_REVISION': JSON.stringify(sourceRevision),
   },
   root: path.resolve(__dirname),
   publicDir: '../public',
