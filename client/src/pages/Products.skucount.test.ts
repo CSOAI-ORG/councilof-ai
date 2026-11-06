@@ -11,8 +11,8 @@ describe("/products types no count", () => {
   const src = readFileSync(new URL("./Products.tsx", import.meta.url), "utf8");
 
   it("derives the SKU heading from the array", () => {
-    expect(src).toMatch(/The \{SKUS\.length\} SKUs/);
-    expect(src).not.toMatch(/>The four SKUs</);
+    expect(src).toMatch(/Our \{SKUS\.length\} products and services/);
+    expect(src).not.toMatch(/(?:The|Our) (?:four|4) (?:SKUs|products and services)/);
   });
 
   it("has the four commercial arms today — and would still be honest with five", () => {
