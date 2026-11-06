@@ -3,13 +3,12 @@
 import argparse
 from datetime import datetime, timezone, timedelta
 import fcntl
-import hashlib
 import importlib.util
 import json
 from pathlib import Path
 import subprocess
 import sys
-from observe import fetch, stamp, write_json
+from observe import fetch, stamp, write_json, index_selection_suffix
 
 
 def collect(reader_path, selected_indexes=None):
@@ -67,7 +66,7 @@ def main():
     # Keep independently selected scans in separate files: one index's fresh
     # result must never suppress or replace another index's scheduled scan.
     selection = sorted(set(args.index)) if args.index else ['PayAI']
-    suffix = '-' + hashlib.sha256(json.dumps(selection).encode()).hexdigest()[:12] if selection else ''
+    suffix = index_selection_suffix(selection)
     with (args.state / ('indexes' + suffix + '.lock')).open('a') as lock:
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
