@@ -494,9 +494,19 @@ jobs:
           node scripts/review/published-pins-liveness.mjs --selftest
           node scripts/review/published-pins-liveness.mjs --root . --record-only
 
+      - name: Coliseum publisher offline controls
+        if: steps.scope.outputs.gated == 'true'
+        run: python3 scripts/test_sync_hf_coliseum.py
+
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
+
+      - name: Verify same-build Coliseum artifact
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          python3 scripts/sync_hf_coliseum.py --artifact dist/hf-coliseum --expected-sha "$GITHUB_SHA" --verify-only
+          node scripts/brand-gate.mjs dist/hf-coliseum
 
       - name: HF mirror gate — excluded dirs must exist on HF before merge
         if: steps.scope.outputs.gated == 'true'
@@ -549,7 +559,7 @@ jobs:
       - name: Council OS first question — desktop and mobile
         id: council_os_first_question
         if: steps.scope.outputs.gated == 'true'
-        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries|workflow entry and header remain usable at (375|894|1024|1280|1440|1536)px$|Boss.s Chair resume'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries|workflow entry and header remain usable at (375|894|1024|1280|1440|1536)px$|Boss.s Chair resume|Munder live'
 
       - name: Retain Council OS first-question premerge evidence
         if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
@@ -562,6 +572,26 @@ jobs:
             test-results/**/agui-local-trace.json
             test-results/**/*.png
           retention-days: 3
+          if-no-files-found: warn
+
+      # Two bounded real-provider requests, with no retry or external world effect.
+      # Candidate HTML/assets stay local; only the existing MEOK endpoint is live.
+      - name: Coliseum candidate browsers with the real MEOK provider
+        id: coliseum_actual_provider
+        if: steps.scope.outputs.gated == 'true'
+        env:
+          MUNDER_LIVE_PROVIDER: "1"
+        run: >-
+          npm run test:e2e:shell -- e2e/tests/dashboard-shell.spec.ts
+          --grep 'Munder actual provider' --project=desktop --retries=0
+
+      - name: Retain Coliseum real-provider candidate evidence
+        if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.coliseum_actual_provider.outcome == 'success' || steps.coliseum_actual_provider.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coliseum-actual-provider-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/
+          retention-days: 7
           if-no-files-found: warn
 
       # --selftest first: a gate that has never been seen failing is decoration,
@@ -625,6 +655,19 @@ jobs:
       - name: Council truth gate — no simulated BFT or phantom engine doors
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:council-truth
+
+      # client/src/pages/ClaimsRegister.tsx says, in its own header comment,
+      # "scripts/claims-register-lint.mjs fails the build on any drift between the
+      # two". Nothing ran it. No workflow, no npm script, no reference anywhere —
+      # so the page's second lock against silently dropping a claim (the original
+      # defect: a fifth status rendered 19 of 20 claims on a site whose banner is
+      # "UNMEASURED shown honestly") was a sentence in a comment.
+      #
+      # It reads two files, writes nothing, and needs no network and no token,
+      # so it belongs on the PR rather than on a schedule.
+      - name: Claims register lint — the page must render every claim the register holds
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/claims-register-lint.mjs
 
       - name: Stablecoin readiness gate — indexed is never measured
         if: steps.scope.outputs.gated == 'true'

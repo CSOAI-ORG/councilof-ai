@@ -132,6 +132,14 @@ jobs:
           node scripts/build-council-native-panel.mjs --check
           npm run build:client
 
+      - name: Verify the one-build Coliseum mirror
+        run: >-
+          python3 scripts/sync_hf_coliseum.py --artifact dist/hf-coliseum
+          --expected-sha "$GITHUB_SHA" --verify-only
+
+      - name: Brand gate for the generated Coliseum mirror
+        run: node scripts/brand-gate.mjs dist/hf-coliseum
+
       # The host deliberately keeps an honest 404 catch-all. Materialise the canonical
       # workspace before the fast shell gate so a cold /dashboard request tests the same
       # file that Pages will serve instead of relying on SPA-rewrite behaviour.
@@ -479,6 +487,16 @@ jobs:
         env:
           FLEET_LOCK_LIVE: "1"
         run: npx vitest run functions/mcp/tool-fleet.lock.test.ts
+
+      # Retain the exact mirror produced by the SAME Vite build above. The existing
+      # guarded HF writer consumes this only after this deployment succeeds.
+      - name: Retain the built Coliseum mirror for the existing HF writer
+        uses: actions/upload-artifact@v4
+        with:
+          name: coliseum-mirror-${{ github.sha }}
+          path: dist/hf-coliseum/
+          if-no-files-found: error
+          retention-days: 7
 
       # csoai.org is the static apex (csoai-site-deploy.yml ← csoai-static-deploy2).
       # Do NOT redeploy the SPA to csoai-site — that overwrites did:web:csoai.org.

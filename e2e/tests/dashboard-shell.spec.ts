@@ -1014,3 +1014,161 @@ test("Boss's Chair resume accepts one answer from a stale rendered callback batc
     return raw ? JSON.parse(raw).decisions : null;
   }, BOSS_CHAIR_RESUME_KEY)).toEqual(["resolve"]);
 });
+
+
+/** Both public entries use the same emitted Munder component.
+ * The provider here is a deterministic HTTP FIXTURE, not a model/learning result. */
+const MUNDER_LIVE_KEY = "csoai.munder-live-practice/1";
+const MUNDER_PROVIDER = "https://nicholastempleman-meok-sov6-abstraction-overlay.hf.space/v1/chat/completions";
+const MUNDER_MODEL = "meok-sov6-abstraction-v3-light-overlay-on-qwen2.5-1.5b-instruct";
+for (const entry of ["Council OS", "HF mirror"] as const) {
+  async function openMunder(page: Page) {
+    if (entry === "Council OS") await openTab(page, "space");
+    else await page.goto("http://127.0.0.1:4181/", { waitUntil: "domcontentloaded" });
+    const game = page.getByTestId("munder-live-duel");
+    await expect(game.getByRole("button", { name: "Start Munder with MEOK", exact: true })).toBeEnabled();
+    return game;
+  }
+
+  test("Munder live " + entry + " plays eight approved rounds and exports qualified data", async ({ page }, info) => {
+    test.skip(entry === "HF mirror" && !!process.env.BASE_URL, "Local generated artifact is tested by the hosted build; production readback is separate.");
+    test.setTimeout(120_000);
+    const calls: unknown[] = [], errors: string[] = [];
+    page.on("pageerror", e => errors.push(e.message));
+    await page.route(MUNDER_PROVIDER, async route => {
+      const body = route.request().postDataJSON();
+      calls.push(body);
+      const retained = await page.evaluate(key => JSON.parse(sessionStorage.getItem(key)!), MUNDER_LIVE_KEY);
+      expect(retained.rounds.at(-1).intent.body).toBe(route.request().postData());
+      expect(retained.rounds.at(-1).human).toBe("resolve");
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({
+        id: "chatcmpl-browser-" + calls.length, model: MUNDER_MODEL,
+        choices: [{ finish_reason: "stop", message: { role: "assistant", content: '{"action":"resolve"}' } }],
+      }) });
+    });
+    const game = await openMunder(page);
+    expect(calls).toHaveLength(0);
+    await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
+    for (let i = 0; i < 8; i++) {
+      await expect(game.getByTestId("munder-round")).toContainText("case " + (i + 1) + "/8");
+      await game.getByRole("button", { name: "Choose resolve", exact: true }).click();
+      await game.getByRole("button", { name: "Ask MEOK for its move", exact: true }).click();
+      await expect(game.getByTestId("munder-proposal")).toHaveText("resolve");
+      const before = await page.evaluate(key => JSON.parse(sessionStorage.getItem(key)!).rounds.at(-1).approvedAt, MUNDER_LIVE_KEY);
+      expect(before).toBeNull();
+      await game.getByRole("button", { name: "Approve MEOK move in this game", exact: true }).click();
+      if (i < 7) await game.getByRole("button", { name: "Next Munder case", exact: true }).click();
+    }
+    await expect(game.getByTestId("munder-complete")).toContainText("Munder game complete");
+    expect(calls).toHaveLength(8);
+    for (const body of calls as any[]) {
+      expect(body.model).toBe(MUNDER_MODEL);
+      expect(body).not.toHaveProperty("critical");
+      expect(body).not.toHaveProperty("participantChoice");
+    }
+    const downloadPromise = page.waitForEvent("download");
+    await game.getByRole("button", { name: "Download session data", exact: true }).click();
+    const download = await downloadPromise, stream = await download.createReadStream();
+    if (!stream) throw Error("Missing downloaded session data");
+    const chunks: Buffer[] = []; for await (const chunk of stream) chunks.push(Buffer.from(chunk));
+    const report = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+    expect(report.summary.completed).toBe(8);
+    expect(report.qualification).toMatchObject({ signed: false, graphAdmitted: false,
+      measuredHumanLearning: false, authenticatedR3TaskOrNativeEffect: false, automaticTrainingReuse: false });
+    expect(report.rows[0].response.sha256).toMatch(/^[a-f0-9]{64}$/);
+    await info.attach("munder-browser-fixture-report", { body: Buffer.from(JSON.stringify(report, null, 2)), contentType: "application/json" });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(game.getByTestId("munder-complete")).toBeVisible();
+    expect(calls).toHaveLength(8);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+    await page.screenshot({ path: info.outputPath("munder-complete.png"), fullPage: true });
+    expect(errors).toEqual([]);
+  });
+
+  test("Munder live " + entry + " holds unavailable replies across reload without a simulated fallback", async ({ page }) => {
+    test.skip(entry === "HF mirror" && !!process.env.BASE_URL, "Local generated artifact only.");
+    test.setTimeout(120_000);
+    let calls = 0;
+    await page.route(MUNDER_PROVIDER, async route => {
+      calls++; await route.fulfill({ status: 503, contentType: "text/plain", body: "unavailable" });
+    });
+    const game = await openMunder(page);
+    await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
+    await game.getByRole("button", { name: "Choose escalate", exact: true }).click();
+    await game.getByRole("button", { name: "Ask MEOK for its move", exact: true }).click();
+    await expect(game).toContainText("This request is held");
+    await expect(game.getByTestId("munder-proposal")).toHaveCount(0);
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(game).toContainText("This request is held");
+    await expect(game.getByRole("button", { name: "Ask MEOK for its move", exact: true })).toHaveCount(0);
+    expect(calls).toBe(1);
+  });
+
+  test("Munder live " + entry + " refuses a new request when request custody cannot be saved", async ({ page }) => {
+    test.skip(entry === "HF mirror" && !!process.env.BASE_URL, "Local generated artifact only.");
+    test.setTimeout(120_000);
+    let calls = 0;
+    await page.route(MUNDER_PROVIDER, async route => { calls++; await route.abort(); });
+    const game = await openMunder(page);
+    await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
+    await game.getByRole("button", { name: "Choose resolve", exact: true }).click();
+    await page.evaluate(key => {
+      const previous = Storage.prototype.setItem;
+      Storage.prototype.setItem = function (name, value) {
+        if (this === sessionStorage && name === key) throw new DOMException("full", "QuotaExceededError");
+        return previous.call(this, name, value);
+      };
+    }, MUNDER_LIVE_KEY);
+    await game.getByRole("button", { name: "Ask MEOK for its move", exact: true }).click();
+    await expect(game).toContainText("could not be saved");
+    await expect(game.getByTestId("munder-proposal")).toHaveCount(0);
+    expect(calls).toBe(0);
+  });
+}
+
+
+test.describe("Munder actual provider qualification", () => {
+  test.describe.configure({ retries: 0 });
+  for (const surface of [
+    { name: "Council OS", origin: "https://councilof.ai", local: "http://127.0.0.1:4180", path: "/dashboard?tab=space" },
+    { name: "HF mirror", origin: "https://csoai-council-coliseum.static.hf.space", local: "http://127.0.0.1:4181", path: "/" },
+  ]) {
+    test("Munder actual provider " + surface.name + " proposes and applies one fictional move", async ({ page }, info) => {
+      test.skip(process.env.MUNDER_LIVE_PROVIDER !== "1" || info.project.name !== "desktop",
+        "Explicit bounded hosted qualification only; fixtures remain the offline gate.");
+      test.setTimeout(90_000);
+      // Serve only the candidate HTML/assets under the already CORS-qualified
+      // browser origins. The MEOK request is NOT intercepted or mocked.
+      await page.route(surface.origin + "/**", async route => {
+        const url = new URL(route.request().url());
+        const response = await route.fetch({ url: surface.local + url.pathname + url.search });
+        await route.fulfill({ response });
+      });
+      let calls = 0;
+      page.on("request", r => { if (r.url() === MUNDER_PROVIDER && r.method() === "POST") calls++; });
+      await page.goto(surface.origin + surface.path, { waitUntil: "domcontentloaded" });
+      const game = page.getByTestId("munder-live-duel");
+      await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
+      await game.getByRole("button", { name: "Choose resolve", exact: true }).click();
+      await game.getByRole("button", { name: "Ask MEOK for its move", exact: true }).click();
+      await expect(game.getByTestId("munder-proposal")).toHaveText(/^(resolve|escalate)$/, { timeout: 25_000 });
+      const proposal = await page.evaluate(key => JSON.parse(sessionStorage.getItem(key)!), MUNDER_LIVE_KEY);
+      expect(proposal.rounds[0].approvedAt).toBeNull();
+      expect(JSON.parse(proposal.rounds[0].proof.body).model).toBe(MUNDER_MODEL);
+      await game.getByRole("button", { name: "Approve MEOK move in this game", exact: true }).click();
+      const applied = await page.evaluate(key => JSON.parse(sessionStorage.getItem(key)!), MUNDER_LIVE_KEY);
+      expect(applied.rounds[0].approvedAt).toBeTruthy();
+      expect(calls).toBe(1);
+      await info.attach("munder-real-provider-candidate-browser", {
+        body: Buffer.from(JSON.stringify({
+          qualification: "candidate build served at allowed origin; real existing HF provider; automated fictional practice; not a deployed-site or human-learning result",
+          surface: surface.name, source: process.env.GITHUB_SHA, requests: calls, session: applied,
+        }, null, 2)), contentType: "application/json",
+      });
+      await page.reload({ waitUntil: "domcontentloaded" });
+      await expect(game).toContainText("Both moves are now recorded");
+      expect(calls).toBe(1);
+      await page.screenshot({ path: info.outputPath("munder-real-provider.png"), fullPage: true });
+    });
+  }
+});

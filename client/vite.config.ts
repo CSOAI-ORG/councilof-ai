@@ -9,6 +9,9 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  define: {
+    'import.meta.env.VITE_SOURCE_REVISION': JSON.stringify(process.env.GITHUB_SHA || process.env.CF_PAGES_COMMIT_SHA || 'development-unpublished'),
+  },
   root: path.resolve(__dirname),
   publicDir: '../public',
   resolve: {
@@ -36,6 +39,10 @@ export default defineConfig({
     manifest: true,
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        coliseum: path.resolve(__dirname, 'hf-coliseum.html'),
+      },
       output: {
         // One-time filename salt (r2) to abandon a poisoned immutable-cache set.
         // 2026-08-11: a deploy-skew window served index.html (200, text/html) for
