@@ -17,12 +17,19 @@ stays empty.
 
 ## Canonical company summary
 
-Council of AI is the public measurement service operated by CSOAI Ltd, a company incorporated in
-England and Wales on 2 January 2026 (Companies House 16939677), founded by Nicholas Templeman. It
-publishes independent measurement and claim-maintenance infrastructure for AI systems, agents and
-the endpoints they call: published test instruments, signed records, free verification, a dated
-corrections ledger and machine-readable interfaces. CSOAI measures; it does not certify, accredit or
-issue legal-compliance determinations.
+Council of AI is an operating AI measurement and evidence organisation, operated by CSOAI Ltd,
+a company incorporated in England and Wales on 2 January 2026 (Companies House 16939677), founded
+by Nicholas Templeman. It runs published test instruments and maintains signed records, free
+verification, a dated corrections ledger and machine-readable interfaces for AI systems, agents
+and the endpoints they call. CSOAI measures; it does not certify, accredit or issue legal-compliance
+determinations.
+
+Documented external use: https://councilof.ai/traction/#external-use. This source-linked record
+separates externally operated code execution, implementation of proposals and use of research,
+with dates and limits for each example. Read the individual records before making an adoption
+claim. Package-download events measure technical distribution; they are not unique people,
+customers or independently verified deployments. Operating evidence and company/IP valuation
+are separate assessments.
 
 For operating figures, fetch the named live endpoints rather than freezing a search snippet. The
 417-entry legal corpus is a provision-hash manifest, not a claim that 417 provisions are active
@@ -34,7 +41,8 @@ must not be rewritten as one.
 
 ## 1. CURRENT MEASUREMENT COVERAGE
 
-The GSPC board: **34 axes · 34 measured** = 14 model-comparison + 9 deterministic-fact.
+The GSPC board: **34 axes · 34 measured**. Read each row's kind and method alongside the totals;
+model-comparison, deterministic-fact and measured-subject rows answer different questions.
 Measurement, not certification. Anyone can re-check.
 
 ### 1a. What MEASURED means here, and what it does not mean
@@ -934,7 +942,7 @@ translated without our permission: https://councilof.ai/spec/claim-maintenance/v
   · version index (a published version is never edited; v0.2 supersedes by existing):
     https://councilof.ai/spec/claim-maintenance/
   · cite as: Council of AI. Claim Maintenance, version 0.1. CSOAI Ltd, 2026-09-22.
-    DOI 10.5281/zenodo.22901908 · all versions 10.5281/zenodo.22901781 — UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (status UNCHECKABLE; see https://councilof.ai/interop/zenodo-status.json).
+    DOI 10.5281/zenodo.22901908 · all versions 10.5281/zenodo.22901781 — these records returned HTTP 410; see the dated record-level checks at https://councilof.ai/interop/zenodo-status.json.
     The deposited bytes and the served bytes are identical (same SHA-256), which is why the DOI is
     recorded in a sidecar rather than written into the document of record.
 
@@ -1052,7 +1060,7 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-03T07:20:10Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-04T05:33:23Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
 - Detached OpenTimestamps proofs that actually deserialize: 694. The manifest is built by
