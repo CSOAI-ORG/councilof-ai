@@ -82,3 +82,35 @@ test("plan: a closed PR with no parseable closedAt is never GC'd", () => {
   const p = plan({ open: [], closed, now: NOW });
   assert.deepEqual(p.gc, []);
 });
+
+test("plan: a MERGED-newest sibling supersedes older OPEN siblings even when it is the only one", () => {
+  // Observed 2026-11-03 02:47Z: the canary automations reopened five old PRs a day after
+  // the manual pass closed them, while the family's newest run (#3700) was already merged.
+  const open = [
+    pr({ number: 3392, headRefName: "canary-push/39749682201" }),
+    pr({ number: 3676, headRefName: "canary-push/41189892109" }),
+  ];
+  const closed = [
+    pr({ number: 3700, state: "MERGED", headRefName: "canary-push/41298060049", mergedAt: "2026-11-02T05:00:00Z", closedAt: "2026-11-02T05:00:00Z" }),
+  ];
+  const p = plan({ open, closed, now: NOW });
+  assert.deepEqual(p.supersede, [
+    { number: 3392, family: "canary", keep: 3700, mergedKeep: true },
+    { number: 3676, family: "canary", keep: 3700, mergedKeep: true },
+  ]);
+  // a canary never arms auto-merge, merged floor or not
+  assert.deepEqual(p.millAutoMerge, []);
+});
+
+test("plan: a mill keep NEWER than the merged floor still arms auto-merge; an older one does not", () => {
+  const open = [pr({ number: 4100, headRefName: "mill/land-hfjobs-41000000000" })];
+  const closed = [
+    pr({ number: 4000, state: "MERGED", headRefName: "mill/land-hfjobs-40040082463", mergedAt: "2026-11-02T05:00:00Z", closedAt: "2026-11-02T05:00:00Z" }),
+  ];
+  const newer = plan({ open, closed, now: NOW });
+  assert.deepEqual(newer.millAutoMerge, [4100]);
+  assert.deepEqual(newer.supersede, []);
+  const older = plan({ open: [pr({ number: 3900, headRefName: "mill/land-hfjobs-39000000000" })], closed, now: NOW });
+  assert.deepEqual(older.millAutoMerge, []); // master already holds 4000 — landing 3900 would regress it
+  assert.deepEqual(older.supersede, [{ number: 3900, family: "mill", keep: 4000, mergedKeep: true }]);
+});

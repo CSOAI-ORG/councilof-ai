@@ -1,0 +1,141 @@
+{
+ "kind": "csoai.cold-start-stranger-survey/0.1",
+ "as_of": "2026-11-04T02:52:38Z",
+ "base": "https://councilof.ai",
+ "work_plan_row": "W9 \u2014 every published artefact gets a cold-start stranger path",
+ "summary": {
+  "artefacts": 18,
+  "pass": 18,
+  "fail": 0,
+  "uncheckable": 0
+ },
+ "rows": [
+  {
+   "artefact": "public root",
+   "url": "/root.json",
+   "verdict": "PASS",
+   "seconds": 0.25,
+   "detail": "merkle 4e57607854be\u2026 \u00b7 428 cards \u00b7 as_of 2026-11-01T15:09:42Z"
+  },
+  {
+   "artefact": "GSPC board",
+   "url": "/api/gspc",
+   "verdict": "PASS",
+   "seconds": 0.49,
+   "detail": "totals: 34 axes \u00b7 34 measured \u00b7 rows with status MEASURED: 34"
+  },
+  {
+   "artefact": "corrections register",
+   "url": "/api/corrections",
+   "verdict": "PASS",
+   "seconds": 0.21,
+   "detail": "93 entries \u00b7 latest id present=True"
+  },
+  {
+   "artefact": "signed card index",
+   "url": "/signed/card_index.json",
+   "verdict": "PASS",
+   "seconds": 0.33,
+   "detail": "n_cards=335 == n_cells=335 is True"
+  },
+  {
+   "artefact": "cards bundle",
+   "url": "/cards-bundle.json",
+   "verdict": "PASS",
+   "seconds": 2.73,
+   "detail": "card_count=6074 (build aggregate, signs nothing)"
+  },
+  {
+   "artefact": "DID document",
+   "url": "/.well-known/did.json",
+   "verdict": "PASS",
+   "seconds": 0.1,
+   "detail": "7 verification methods \u00b7 board-attestation-1 present=True"
+  },
+  {
+   "artefact": "OTS manifest",
+   "url": "/interop/ots/manifest.json",
+   "verdict": "PASS",
+   "seconds": 0.47,
+   "detail": "677 proofs \u00b7 sampled 3 subjects present beside: 3"
+  },
+  {
+   "artefact": "witness pointer",
+   "url": "/interop/root-witness-pointer.json",
+   "verdict": "PASS",
+   "seconds": 0.16,
+   "detail": "drift.status=MATCH \u00b7 sidecar present"
+  },
+  {
+   "artefact": "capsule latest",
+   "url": "/measurement-capsules/latest.json",
+   "verdict": "PASS",
+   "seconds": 0.23,
+   "detail": "as_of 2026-10-28T08:30:40Z \u00b7 named index reachable"
+  },
+  {
+   "artefact": "presence ledger",
+   "url": "/interop/nsite-presence-ledger.json",
+   "verdict": "PASS",
+   "seconds": 1.8,
+   "detail": "counts.rows=2202 == actual 2202 is True"
+  },
+  {
+   "artefact": "state surface",
+   "url": "/api/state",
+   "verdict": "PASS",
+   "seconds": 0.11,
+   "detail": "answered and self-describing"
+  },
+  {
+   "artefact": "living card registry",
+   "url": "/api/cards",
+   "verdict": "PASS",
+   "seconds": 0.13,
+   "detail": "answered and self-describing"
+  },
+  {
+   "artefact": "hub cards",
+   "url": "/api/hub-cards",
+   "verdict": "PASS",
+   "seconds": 0.5,
+   "detail": "answered and self-describing"
+  },
+  {
+   "artefact": "worker ledger",
+   "url": "/api/worker/ledger",
+   "verdict": "PASS",
+   "seconds": 0.28,
+   "detail": "answered and self-describing"
+  },
+  {
+   "artefact": "receipts aggregate",
+   "url": "/api/receipts/latest",
+   "verdict": "PASS",
+   "seconds": 1.05,
+   "detail": "answered and self-describing"
+  },
+  {
+   "artefact": "sitemap",
+   "url": "/sitemap.xml",
+   "verdict": "PASS",
+   "seconds": 0.16,
+   "detail": "74373 bytes, expected structure present=True"
+  },
+  {
+   "artefact": "security.txt",
+   "url": "/.well-known/security.txt",
+   "verdict": "PASS",
+   "seconds": 0.05,
+   "detail": "185 bytes, expected structure present=True"
+  },
+  {
+   "artefact": "openapi",
+   "url": "/openapi.json",
+   "verdict": "PASS",
+   "seconds": 0.39,
+   "detail": "answered and self-describing"
+  }
+ ],
+ "not_a_claim": "A PASS records that the artefact answered and was internally self-describing at read time. It is not certification of the underlying measurement and not an endorsement."
+}

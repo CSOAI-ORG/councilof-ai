@@ -12,6 +12,7 @@
 <h1>/interop — live / unsigned banks</h1>
 <p class="meta">Council of AI (CSOAI). Measurement, not certification. Verify free. Board counts come from <a href="https://councilof.ai/api/gspc">GET /api/gspc</a> (live <code>totals.public_count</code>) — do not freeze a table here.</p>
 <p>Machine-readable leaves under <code>public/interop/</code>. Full markdown index: <a href="./README.md">README.md</a>.</p>
+<p>Every file in this corpus, with its path, its size, its sha256 and how it is served: <a href="./file-index.json">file-index.json</a>. The index carries its own file count and as_of.</p>
 <ul>
 <li><a href="/interop/a2a-jcs-2026-09-27/">a2a-jcs-2026-09-27/</a> — our canonicalisers run against the A2A TCK RFC 8785 vectors (a2a-tck PR #228): results, failure classes, and the census verdict-change check</li>
 <li><a href="/spec/signed-receipts/">signed-receipts/v1</a> — the specification's canonical home. The independent conformance suite <code>@fractalai/pqc-agent-receipts-conformance</code> (npm 0.3.1) includes a profile, <code>a2a-receipt-ml-dsa-65</code>, that reuses the CSOAI <code>signed-receipts/v1</code> receipt object with an ML-DSA-65 signature.</li>
