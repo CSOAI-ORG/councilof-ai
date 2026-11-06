@@ -190,3 +190,36 @@ describe("published commercial descriptions", () => {
     expect(card.freeForever).toBe(false);
   });
 });
+
+
+describe("asset coverage evidence journey", () => {
+  const coverage: ManifestResource = {
+    method: "GET",
+    url: "https://councilof.ai/api/coverage-evidence?asset=tether",
+    paid_for: "assembly",
+    free_preview: "https://councilof.ai/api/coverage-evidence?asset=tether&preview=1",
+    description: "Coverage evidence assembled from the dated record. Evidence packs UNSIGNED until signing runs.",
+  };
+
+  it("renders the published asset coverage door with its own preview and evidence limits", () => {
+    const current = buildCatalogue({
+      ...manifest,
+      resources: [...manifest.resources, coverage],
+    });
+    expect(current.ungrouped).toEqual([]);
+    expect(current.groups.flatMap((g) => g.cards)).toHaveLength(manifest.resources.length + 1);
+    const card = current.groups.find((g) => g.group.id === "finance-rwa")?.cards
+      .find((c) => c.path === "/api/coverage-evidence");
+    expect(card?.url).toBe(coverage.url);
+    expect(card?.freePreview).toBe(coverage.free_preview);
+    expect(card?.measures).toBe(coverage.description);
+    expect(card?.freeForever).toBe(false);
+  });
+
+  it("requires the exact endpoint so an unknown similarly named door stays visible as ungrouped", () => {
+    expect(groupFor("/api/coverage-evidence?asset=1&preview=1")).toBe("finance-rwa");
+    for (const path of ["/api/coverage-evidence-extra", "/api/coverage-evidence/unknown"]) {
+      expect(buildCatalogue({ resources: [{ url: path }] }).ungrouped).toEqual([path]);
+    }
+  });
+});
