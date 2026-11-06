@@ -67,7 +67,7 @@ describe("image-led homepage upgrade", () => {
     }
   });
 
-  it("links the real human-review workflow and states its gates without overclaiming", () => {
+  it("links decision recording while keeping identity, authority and effects separate", () => {
     expect(HUMAN_REVIEW_STEPS.map((step) => step.id)).toEqual([
       "challenge",
       "competency",
@@ -77,12 +77,12 @@ describe("image-led homepage upgrade", () => {
     const html = render(<HomeHumanReview />);
     expect(html.match(/data-human-review-step=/g)).toHaveLength(4);
     expect(html).toContain('href="/dashboard?tab=staff"');
-    expect(html).toContain("AI can propose. A named human decides.");
-    expect(html).toContain("configured operator authority");
+    expect(html).toContain("AI proposes. Review and record the decision.");
+    expect(html).toContain("An operator records the decision");
     expect(html).toContain("again before a decision");
-    expect(html).toContain("signed only when the signing key is configured");
-    expect(html).toContain("persisted only when the decision store is bound");
-    expect(html).toContain("does not certify that the decision was right");
+    expect(html).toContain("does not verify the person");
+    expect(html).toContain("does not authorize or perform the proposed action");
+    expect(html).toContain("does not prove the proposed action happened");
     expect(html).not.toMatch(UNSUPPORTED);
   });
 
