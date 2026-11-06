@@ -878,3 +878,139 @@ for (const width of [375, 894, 1024, 1280, 1440, 1536]) {
     ).toBeLessThanOrEqual(1);
   });
 }
+
+
+/** Resume the existing native practice pane; these are browser controls, not learning evidence. */
+const BOSS_CHAIR_RESUME_KEY = "csoai.boss-chair-practice/1";
+
+function bossChairPractice(page: Page) {
+  return page.getByTestId("dashboard-pane-space").getByTestId("council-practice-arena");
+}
+
+async function bossChairLeaveAndReturn(page: Page) {
+  const navigation = page.getByRole("navigation", { name: "Learn pages" });
+  await navigation.getByRole("link", { name: "Learning", exact: true }).click();
+  await expect(page.getByTestId("dashboard-pane-learn")).toBeVisible();
+  await navigation.getByRole("link", { name: "Model arena", exact: true }).click();
+  await expect(bossChairPractice(page)).toBeVisible();
+  await expect(bossChairPractice(page).getByRole("button", { name: "Resolve within scope", exact: true })).toBeEnabled();
+}
+
+test("Boss's Chair resume keeps pane navigation, reload and new scenarios inside Council OS", async ({ page }) => {
+  test.setTimeout(120_000);
+  const { pageErrors } = await collectErrors(page);
+  const modelRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.method() === "POST" &&
+        /\/api\/(?:chat|agui\/run)(?:\/|$)|\/hosted\/tasks\/|api\.runpod\./.test(request.url())) {
+      modelRequests.push(request.url());
+    }
+  });
+
+  await openTab(page, "space");
+  const practice = bossChairPractice(page);
+  const resolve = practice.getByRole("button", { name: "Resolve within scope", exact: true });
+  await expect(resolve).toBeEnabled();
+  await resolve.focus();
+  await page.keyboard.press("Enter");
+  await practice.getByRole("button", { name: "Escalate to a person", exact: true }).click();
+  await expect(practice).toContainText("round 3/8");
+  await expect.poll(async () => page.evaluate((key) => {
+    const raw = sessionStorage.getItem(key);
+    return raw ? JSON.parse(raw).decisions : null;
+  }, BOSS_CHAIR_RESUME_KEY)).toEqual(["resolve", "escalate"]);
+  const saved = await page.evaluate((key) => sessionStorage.getItem(key), BOSS_CHAIR_RESUME_KEY);
+  expect(JSON.parse(saved!).decisions).toEqual(["resolve", "escalate"]);
+
+  await bossChairLeaveAndReturn(page);
+  await expect(practice).toContainText("round 3/8");
+  expect(await page.evaluate((key) => sessionStorage.getItem(key), BOSS_CHAIR_RESUME_KEY)).toBe(saved);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(practice).toContainText("round 3/8");
+  await expect(resolve).toBeEnabled();
+
+  for (let i = 0; i < 6; i++) {
+    await resolve.click();
+    if (i < 5) await expect(practice).toContainText("round " + (i + 4) + "/8");
+  }
+  await expect(practice).toContainText("Scenario complete");
+  await practice.getByRole("button", { name: /New seeded scenario/ }).click();
+  await expect(practice).toContainText("seed 43");
+  await expect(practice).toContainText("round 1/8");
+  await bossChairLeaveAndReturn(page);
+  await expect(practice).toContainText("seed 43");
+  await expect(practice).toContainText("round 1/8");
+  const next = await page.evaluate((key) => JSON.parse(sessionStorage.getItem(key)!), BOSS_CHAIR_RESUME_KEY);
+  expect(next.decisions).toEqual([]);
+  await expect(page).toHaveURL(/\/dashboard\/?\?tab=space/);
+  await expect(practice.locator("iframe")).toHaveCount(0);
+  expect(modelRequests).toEqual([]);
+  expect(pageErrors).toEqual([]);
+});
+
+test("Boss's Chair resume refuses invalid saves and remains playable when storage fails", async ({ page }) => {
+  test.setTimeout(120_000);
+  await openTab(page, "space");
+  const rejected = '{"schema":"future/2","decisions":[]}';
+  await page.evaluate(({ key, raw }) => sessionStorage.setItem(key, raw),
+    { key: BOSS_CHAIR_RESUME_KEY, raw: rejected });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  const practice = bossChairPractice(page);
+  const resolve = practice.getByRole("button", { name: "Resolve within scope", exact: true });
+  await expect(practice).toContainText("does not match the current cases");
+  expect(await page.evaluate((key) => sessionStorage.getItem(key), BOSS_CHAIR_RESUME_KEY)).toBe(rejected);
+  await resolve.click();
+  await expect(practice).toContainText("round 2/8");
+  await expect.poll(async () => page.evaluate((key) => {
+    const raw = sessionStorage.getItem(key);
+    return raw ? JSON.parse(raw).decisions : null;
+  }, BOSS_CHAIR_RESUME_KEY)).toEqual(["resolve"]);
+  const previous = await page.evaluate((key) => sessionStorage.getItem(key), BOSS_CHAIR_RESUME_KEY);
+  expect(JSON.parse(previous!).decisions).toEqual(["resolve"]);
+
+  await page.evaluate((key) => {
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (name: string, value: string) {
+      if (this === window.sessionStorage && name === key) {
+        throw new DOMException("Storage full", "QuotaExceededError");
+      }
+      return original.call(this, name, value);
+    };
+  }, BOSS_CHAIR_RESUME_KEY);
+  await practice.getByRole("button", { name: "Escalate to a person", exact: true }).click();
+  await expect(practice).toContainText("round 3/8");
+  await expect(practice).toContainText("Leaving this pane will lose this attempt");
+  expect(await page.evaluate((key) => sessionStorage.getItem(key), BOSS_CHAIR_RESUME_KEY)).toBe(previous);
+
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "sessionStorage", {
+      configurable: true,
+      get() { throw new DOMException("Storage denied", "SecurityError"); },
+    });
+  });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(resolve).toBeEnabled();
+  await resolve.click();
+  await expect(practice).toContainText("round 2/8");
+  await expect(practice).toContainText("Leaving this pane will lose this attempt");
+});
+
+test("Boss's Chair resume accepts one answer from a stale rendered callback batch", async ({ page }) => {
+  test.setTimeout(120_000);
+  await openTab(page, "space");
+  const practice = bossChairPractice(page);
+  await expect(practice.getByRole("button", { name: "Resolve within scope", exact: true })).toBeEnabled();
+  await practice.evaluate((element) => {
+    const buttons = Array.from(element.querySelectorAll("button"));
+    const resolve = buttons.find((button) => button.textContent?.includes("Resolve within scope"));
+    const escalate = buttons.find((button) => button.textContent?.includes("Escalate to a person"));
+    if (!resolve || !escalate) throw new Error("Missing practice choices");
+    resolve.click();
+    escalate.click();
+  });
+  await expect(practice).toContainText("round 2/8");
+  await expect.poll(async () => page.evaluate((key) => {
+    const raw = sessionStorage.getItem(key);
+    return raw ? JSON.parse(raw).decisions : null;
+  }, BOSS_CHAIR_RESUME_KEY)).toEqual(["resolve"]);
+});
