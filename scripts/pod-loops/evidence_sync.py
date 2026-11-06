@@ -187,6 +187,21 @@ def plan_by_directory(rels, tree, files):
         if relative not in files:
             raise ValueError('Selected file absent from build')
         groups.setdefault(directory, []).append(relative)
+    # The ORPHANS: the mirror holds files this build does not have. They are not
+    # selected, so they are never written, and a plan grants no permission to
+    # prune them — so they accumulate. MEASURED 6 Nov 2026: the mirror held
+    # 9,920 files in interop/mill-cards-unsigned and 9,795 in interop/mill-evidence
+    # where the build holds 3,656 and 4,472; 14,127 of them are orphans whose
+    # admission evidence this tree does not hold. They consumed the budget the
+    # build's own files needed: adding 1,270 files to 9,920 is 11,190, over the
+    # 10,000 limit, so the directory was not written at all and the legitimate
+    # files were never published. The orphan count is what makes that visible.
+    orphan_counts = {}
+    for relative in tree:
+        if relative in files:
+            continue
+        directory = dir_of(relative)
+        orphan_counts[directory] = orphan_counts.get(directory, 0) + 1
     plan = []
     for directory, selected in sorted(groups.items()):
         selected = sorted(selected)
@@ -195,7 +210,8 @@ def plan_by_directory(rels, tree, files):
         after = before + new
         plan.append({'directory': directory, 'files': selected,
                      'mirror_files_before': before, 'new_files': new,
-                     'mirror_files_after': after, 'over_limit': after > HF_MAX_FILES_PER_DIR})
+                     'mirror_files_after': after, 'over_limit': after > HF_MAX_FILES_PER_DIR,
+                     'orphan_files': orphan_counts.get(directory, 0)})
     return plan
 
 
@@ -219,7 +235,7 @@ def commit_grouped(rels, files, token, message, plan):
     for row in plan:
         if sorted(row.get('files', [])) != sorted(actual[row['directory']]):
             raise ValueError('Plan file set differs')
-        for field in ('mirror_files_before', 'new_files', 'mirror_files_after'):
+        for field in ('mirror_files_before', 'new_files', 'mirror_files_after', 'orphan_files'):
             if type(row.get(field)) is not int or row[field] < 0:
                 raise ValueError('Plan count must be a nonnegative integer')
         if row['new_files'] > len(row['files']) or row['mirror_files_before'] + row['new_files'] != row['mirror_files_after']:
@@ -230,7 +246,8 @@ def commit_grouped(rels, files, token, message, plan):
     stopped = False
     for row in sorted(plan, key=lambda x: x['directory']):
         directory = row['directory']
-        common = {'selected_files': len(row['files']), 'mirror_files_after': row['mirror_files_after'], 'readback_verified': False}
+        common = {'selected_files': len(row['files']), 'mirror_files_after': row['mirror_files_after'],
+                  'orphan_files': row.get('orphan_files', 0), 'readback_verified': False}
         if stopped:
             outcomes[directory] = {**common, 'state': 'NOT_ATTEMPTED', 'detail': 'Earlier authorization or rate-limit refusal; no alternate route attempted'}
         elif row['over_limit']:
@@ -266,8 +283,13 @@ def main():
     token = os.environ.get("HF_TOKEN") if a.apply else None
     tree = remote_tree(prefixes, token)
     d = diff(files, tree)
-    print(f"evidence-sync: {len(files)} local files under {sorted(prefixes)}; dataset holds {len(tree)}; differing {len(d)}")
-    rec = {"schema": "csoai.evidence-sync/1", "dataset": REPO, "local": len(files), "remote": len(tree), "differing_before": len(d)}
+    # The ORPHANS the mirror holds and this build does not. A plan grants no
+    # permission to prune them, so they accumulate and they consume the
+    # per-directory budget the build's own files need. Naming the count is what
+    # turns that from an invisible drift into a measured one.
+    orphan_total = len(set(tree) - set(files))
+    print(f"evidence-sync: {len(files)} local files under {sorted(prefixes)}; dataset holds {len(tree)}; differing {len(d)}; orphans (mirror holds, build does not) {orphan_total}")
+    rec = {"schema": "csoai.evidence-sync/1", "dataset": REPO, "local": len(files), "remote": len(tree), "differing_before": len(d), "orphan_files": orphan_total}
     if d and not a.apply:
         print(f"✗ evidence-sync: {REPO} trails this build by {len(d)} file(s), e.g. {d[:3]}; the redirects would serve stale bytes")
         rec["state"] = "TRAILING"; _w(a.receipt, rec); sys.exit(3)
