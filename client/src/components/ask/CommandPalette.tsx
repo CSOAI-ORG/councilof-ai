@@ -355,7 +355,16 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
                   <span className="block break-words text-sm font-semibold">
                     {row.title}
                   </span>
-                  <span className="mt-0.5 block line-clamp-2 text-xs leading-5 text-muted-foreground">
+                  <span
+                    className="mt-0.5 text-xs leading-5 text-muted-foreground"
+                    style={{
+                      display: "-webkit-box",
+                      WebkitBoxOrient: "vertical",
+                      WebkitLineClamp: 2,
+                      maxHeight: "2.5rem",
+                      overflow: "hidden",
+                    }}
+                  >
                     {row.description}
                   </span>
                 </span>
