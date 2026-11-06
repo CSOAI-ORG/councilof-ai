@@ -1,7 +1,7 @@
 {
   "schema": "csoai.paid-client-response-source-validation/1",
-  "tests_run": 14,
-  "passed": 14,
+  "tests_run": 16,
+  "passed": 16,
   "failures": 0,
   "controls": [
     "exact-original-utf8-whitespace-download",
@@ -17,7 +17,9 @@
     "page-origin-rechecked-after-wallet-await",
     "caller-url-mutation-does-not-change-dispatched-resource",
     "unconfirmed-payment-removed-from-auto-pay-walk",
-    "credential-url-and-fragment-refused-before-dispatch"
+    "credential-url-and-fragment-refused-before-dispatch",
+    "unreadable-output-still-carries-reported-payment-freshness",
+    "delivery-without-reported-success-is-not-payment-freshness"
   ],
   "fixture_wallet_boundary": true,
   "real_wallet_signatures": 0,
@@ -25,20 +27,25 @@
   "real_payments": 0,
   "source_files": {
     "client/src/lib/payEveryDoor.ts": {
-      "bytes": 30959,
-      "sha256": "18e757bba70db8cbd3e8200bdff0477c830e961b2ff3f1a762c32e01948be399"
+      "bytes": 31397,
+      "sha256": "349886b49228ee01e8d4cc9b2e2d5dd23e5c176eb27bbf39584f84b4ed32f10a"
     },
     "client/src/lib/payEveryDoor.test.ts": {
-      "bytes": 36710,
-      "sha256": "76885c24a02ff050546307f2303ca063b0ceffeb3689657d7289a0fdd66465a2"
+      "bytes": 36944,
+      "sha256": "10e82969de7923bb709c3a06fd7e485a116a45c29e4bd1abc147ed4c1eecc3e0"
     },
     "client/src/pages/PayEveryDoor.tsx": {
-      "bytes": 42084,
-      "sha256": "ddabd6e5d74615fffe5eaf8ef24f6fb92fbb2861425f52068f610ed01ca7d911"
+      "bytes": 42041,
+      "sha256": "3b5d9a092b2f4dec8f64bd9a17479bb2fd185490344684edb646241b7fc45ab9"
+    },
+    "client/src/pages/PayEveryDoor.test.tsx": {
+      "bytes": 24626,
+      "sha256": "2ffbae94080b420a296a9e40d564506b6b0fbcd37bed0e2bfef26c7c0d38e54e"
     }
   },
-  "linux_receipt_sha256": "aa40389b3eb406eceeeca06f0c6061f3948a58ff40d668e2d277c6e9de52572a",
-  "hosted_client_tests": "Authored; normal hosted checks pending at source publication.",
+  "linux_receipt_sha256": "c096549c2ce01d2cd6e8c91e06f4ce957a0635fe07504042dac7868a547c14b8",
+  "hosted_client_tests": "Updated; normal hosted checks pending at source publication.",
   "buyer_owned_server_recovery": false,
-  "account_wallet_lifecycle_binding": false
+  "account_wallet_lifecycle_binding": false,
+  "settlement_freshness": "Route-reported success and transaction remain independent of output readability; no independent chain verification is inferred."
 }

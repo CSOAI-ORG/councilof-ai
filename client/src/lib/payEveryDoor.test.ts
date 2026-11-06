@@ -19,6 +19,7 @@ import {
   listingFor,
   payDoor,
   paidOutputBlob,
+  reportedSuccessfulSettlement,
   quoteDoor,
   relayedFetch,
   remainingDoors,
@@ -340,6 +341,7 @@ describe("three outcomes and no fourth", () => {
     if (out.kind === "maybe-settled") {
       expect(out.paymentResponse).toBe("opaque-route-echo");
       expect(out.settlement).toBeNull();
+      expect(reportedSuccessfulSettlement({kind:"delivered",paymentResponse:null,settlement:null})).toBeNull();
       expect(out.body).toEqual(failureBody);
     }
   });
@@ -647,6 +649,7 @@ describe("paid response byte and uncertainty custody", () => {
     expect(state.kind).toBe("maybe-settled");
     if(state.kind==="maybe-settled") {
       expect(state.settlement?.transaction).toBe(receipt.transaction);
+      expect(reportedSuccessfulSettlement(state)?.transaction).toBe(receipt.transaction);
       expect(state.paymentResponse).toBe(btoa(JSON.stringify(receipt)));
     }
     expect(fetchImpl).toHaveBeenCalledTimes(1);

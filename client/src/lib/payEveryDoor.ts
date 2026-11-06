@@ -241,7 +241,7 @@ export function unsettledReason(body: unknown): string {
  * Keep observed payment headers even when response bytes are unreadable.
  */
 export const MAYBE_SETTLED_LINE =
-  "Payment may have settled: the signed payment was sent, and the door did not deliver. Check your wallet (or the transaction) before you pay again.";
+  "Payment may have settled: the signed payment was sent, and delivery could not be confirmed. Check your wallet (or the transaction) before you pay again.";
 
 /** The refund path a door states in an undelivered body (functions/api/art50/marking-evidence.ts `refund`), or null. */
 export function refundLine(body: unknown): string | null {
@@ -329,6 +329,14 @@ export type DoorState =
   | { kind: "wrong-network"; detail: string }
   | { kind: "no-wallet" }
   | { kind: "error"; detail: string };
+
+/** A route-reported payment is independent of whether its output was readable. */
+export function reportedSuccessfulSettlement(state: DoorState | undefined): Settlement | null {
+  if (!state || (state.kind !== "delivered" && state.kind !== "maybe-settled")) return null;
+  const value = state.settlement;
+  return value?.success === true && typeof value.transaction === "string" && value.transaction.trim()
+    ? value : null;
+}
 
 /** The zero address: buildTypedData's preflight signer, as X402PayButton uses it. */
 const PREFLIGHT_SIGNER = "0x0000000000000000000000000000000000000000";

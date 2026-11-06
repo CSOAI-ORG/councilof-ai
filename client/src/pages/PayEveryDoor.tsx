@@ -28,6 +28,7 @@ import {
   listingFor,
   payDoor,
   paidOutputBlob,
+  reportedSuccessfulSettlement,
   type PaidOutput,
   quoteDoor,
   relayedFetch,
@@ -193,8 +194,9 @@ const DELIST_RISK_TEXT = "delist risk";
  * on this page in this session shows that settle instead: it is newer than anything on record.
  */
 export function SettleCell({ settle, state, now }: { settle: SettleReading; state: DoorState; now: number }) {
-  if (state.kind === "delivered" && state.settlement?.success === true && state.settlement.transaction) {
-    const tx = state.settlement.transaction;
+  const currentSettlement = reportedSuccessfulSettlement(state);
+  if (currentSettlement) {
+    const tx = currentSettlement.transaction;
     return (
       <p className="text-[11px] leading-relaxed text-emerald-800" data-testid="pay-status-settle" data-risk="false">
         <span className="font-semibold">Settled this session</span>
@@ -678,7 +680,7 @@ export default function PayEveryDoor() {
   const atRisk = doors
     ? visible.filter((d) => {
       const state = states[d.url];
-      const observed = state?.kind === "delivered" && state.settlement?.success === true && state.settlement.transaction;
+      const observed = reportedSuccessfulSettlement(state);
       return !observed && delistRisk(settleFor(d, settlesValue).lastSettle, now);
     }).length
     : null;
