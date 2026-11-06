@@ -57,8 +57,7 @@ boundary is changed. Monitoring the pod from outside remains necessary to detect
 pod or scheduler downtime.
 
 `indexes.py` reuses the monorepo's `scripts/interop/x402-bazaar-audit.py` reader,
-shipped with the installed release and included in its hash manifest. It walks
-both PayAI and Coinbase CDP through their advertised totals, comparing observed
+shipped with the installed release and included in its hash manifest. By default the collector walks PayAI only through its advertised total, comparing observed
 entries with the live x402 catalogue. Multi-page offset reads are mutable and do
 not prove absence; unseen routes stay indeterminate. An hourly cron checks whether a daily scan is due;
 failed scans retry no more than once per six hours, retain last-good results as
@@ -74,7 +73,7 @@ python3 scripts/business-operations/indexes.py --state /tmp/csoai-observations -
 
 Omit `--collect` to store this selected scan in a selection-specific state
 file. Selected scans cannot suppress the schedule or replace the historical
-result of the default all-index scan. Index names are those exposed by the
+result of another selected scan. The default uses selection-specific PayAI state, leaving earlier all-index state untouched. Index names are those exposed by the
 installed reader; repeat `--index` to select more than one.
 
 Source-change flags remain pending across later unchanged or failed reads. After
