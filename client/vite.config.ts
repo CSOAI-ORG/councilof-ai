@@ -3,12 +3,46 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { execFileSync } from 'node:child_process';
+import { exportColiseum } from '../scripts/build-coliseum-mirror.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const sourceRevision = (() => {
+  const declared = process.env.GITHUB_SHA || process.env.CF_PAGES_COMMIT_SHA;
+  if (declared) return declared;
+  try { return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: path.resolve(__dirname, '..'), encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); }
+  catch { return 'development-unpublished'; }
+})();
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    {
+      name: 'csoai-coliseum-mirror',
+      apply: 'build',
+      // Export the same emitted bytes after all output files exist, before the
+      // existing shell postprocessors. Root dependency inputs stay unchanged.
+      writeBundle: {
+        order: 'post',
+        sequential: true,
+        async handler() {
+          const receipt = await exportColiseum({
+            buildDir: path.resolve(__dirname, '../dist/client'),
+            outputDir: path.resolve(__dirname, '../dist/hf-coliseum'),
+            licensePath: path.resolve(__dirname, '../LICENSE'),
+            sourceCommit: sourceRevision,
+          });
+          console.log('Coliseum mirror: ' + Object.keys(receipt.files).length +
+            ' files, source ' + receipt.source_commit);
+        },
+      },
+    },
+  ],
+  define: {
+    'import.meta.env.VITE_SOURCE_REVISION': JSON.stringify(sourceRevision),
+  },
   root: path.resolve(__dirname),
   publicDir: '../public',
   resolve: {
@@ -36,6 +70,10 @@ export default defineConfig({
     manifest: true,
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
+      input: {
+        index: path.resolve(__dirname, 'index.html'),
+        coliseum: path.resolve(__dirname, 'hf-coliseum.html'),
+      },
       output: {
         // One-time filename salt (r2) to abandon a poisoned immutable-cache set.
         // 2026-08-11: a deploy-skew window served index.html (200, text/html) for
