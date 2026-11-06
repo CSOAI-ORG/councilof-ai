@@ -23,6 +23,15 @@ const FAMILY_PATTERNS = [
   { id: "coverage", re: /^hf\/coverage-\d{8}T\d+$/ },
 ];
 
+// Append-family: every run APPENDS unique lines to the same file, so an older open PR
+// carries data master does not have, and closing it LOSES that data until someone
+// hand-recovers it — which is exactly what happened (2026-11-03, lane/canary-recover-
+// six-days: six days of captures the supersede rule closed had to be restored by hand,
+// and the canary automation's reopens were its correct defence). These families are
+// NEVER supersede-closed and NEVER auto-merged by this sweeper; their lifecycle belongs
+// to their owning automation.
+const APPEND_FAMILY = new Set(["canary"]);
+
 // Belt-and-braces: these streams are watcher-owned and promotion-gated; a future family
 // regex accident must not be able to touch them even if they ever look like a family.
 const NEVER_TOUCH = new Set(["public-root/pending", "art50-index/pending"]);
@@ -101,6 +110,10 @@ export function plan({ open = [], closed = [], now }) {
   }
 
   for (const [family, prs] of byFamily) {
+    if (APPEND_FAMILY.has(family)) {
+      plan.skipped.push(...prs.map((p) => ({ number: p.number, reason: "append-family — older runs carry unique data; never supersede-closed" })));
+      continue;
+    }
     prs.sort((a, b) => b.number - a.number); // automation opens sequentially: newest = highest number
     const keep = prs[0];
     const mergedFloor = newestMerged.get(family) ?? 0;
