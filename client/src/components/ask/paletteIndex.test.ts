@@ -3,7 +3,7 @@
  * The fixture rows carry the field names GET /api/gspc serves ({axis, task, status, …}).
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { axisTitle, boardAxisItems, buildIndex, loadBoardAxes, resetPaletteIndexForTest, search } from "./paletteIndex";
+import { axisTitle, boardAxisItems, buildIndex, loadBoardAxes, loadPaletteTools, paletteKind, paletteIndex, resetPaletteIndexForTest, search, toolPaletteItems } from "./paletteIndex";
 
 const BOARD = {
   axes: [
@@ -17,7 +17,7 @@ const BOARD = {
 afterEach(() => resetPaletteIndexForTest());
 
 describe("command palette — the board's tests", () => {
-  it("one entry per test, labelled '<Test> — test on the board', opening the board, no numbers", () => {
+  it("one entry per test opens its exact axis input without inventing a score or auto-running", () => {
     const items = boardAxisItems(BOARD);
     expect(items.map((i) => i.title)).toEqual([
       "Governance — test on the board",
@@ -26,7 +26,11 @@ describe("command palette — the board's tests", () => {
       "AI adoption components — test on the board",
     ]);
     for (const it of items) {
-      expect(it.href).toBe("/dashboard/?tab=board");
+      const url = new URL(it.href, "https://councilof.ai");
+      expect(url.searchParams.get("tab")).toBe("tools");
+      expect(url.searchParams.get("tool")).toBe("get_axis");
+      expect(url.searchParams.get("axis")).toBe(it.id.slice("axis:".length));
+      expect(url.searchParams.has("run")).toBe(false);
       expect(`${it.title} ${it.description}`).not.toMatch(/\d\.\d|%/);
     }
     expect(axisTitle("cross-reality")).toBe("Cross reality");
@@ -45,6 +49,25 @@ describe("command palette — the board's tests", () => {
     expect(await loadBoardAxes(down)).toEqual([]);
     expect(boardAxisItems({ totals: {} })).toEqual([]);
     expect(boardAxisItems(null)).toEqual([]);
+  });
+});
+
+describe("free tools join the finder only from their own catalogue", () => {
+  it("preserves the exact callable name and never promotes discovery to measurement", async () => {
+    const list = vi.fn(async () => ({ state: "ok" as const, tools: [{ name: "verify_card", description: "Verify a signed record" }, { name: "verify_card", description: "duplicate" }] }));
+    const rows = await loadPaletteTools(list);
+    expect(list).toHaveBeenCalledWith("/mcp/free", { force: false });
+    expect(rows).toHaveLength(1);
+    expect(rows[0].href).toBe("/dashboard?tab=tools&tool=verify_card");
+    expect(paletteKind(rows[0])).toBe("tool");
+    expect(search("verify", paletteIndex()).map(row => row.id)).toContain("tool:verify_card");
+  });
+  it("a failed refresh removes old catalogue hits, keeping ordinary pages searchable", async () => {
+    await loadPaletteTools(vi.fn(async () => ({ state: "ok" as const, tools: [{ name: "example", description: "A public tool" }] })));
+    await loadPaletteTools(vi.fn(async () => ({ state: "unreachable" as const, reason: "offline" })), true);
+    expect(paletteIndex().some(row => row.id === "tool:example")).toBe(false);
+    expect(buildIndex().length).toBeGreaterThan(0);
+    expect(toolPaletteItems({ state: "unreachable", reason: "offline" })).toEqual([]);
   });
 });
 

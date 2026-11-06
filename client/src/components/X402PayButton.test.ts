@@ -146,8 +146,8 @@ describe("ToolRunner paid retry", () => {
     expect(runnerSource).not.toContain(
       'onPaid={(body) => setField("x_payment", body)}',
     );
-    expect(runnerSource).toContain(
-      "setOutput({ result, observedAt: new Date().toISOString() })",
+    expect(runnerSource).toMatch(
+      /setOutput\(\{ result, observedAt: new Date\(\)\.toISOString\(\),[^}]*toolName: context\.toolName,[^}]*contextVersion: context\.draftVersion \}\)/,
     );
     expect(runnerSource).toContain('if (outcome === "DELIVERED")');
     expect(runnerSource).toContain("structured.payment_response_header");

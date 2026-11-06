@@ -2,6 +2,7 @@ import { Link, useLocation } from 'wouter';
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, Award, MessageSquareText } from 'lucide-react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 // Signed-in only, and it pulls the tRPC notification client: loaded on demand, not in every first paint.
 const NotificationCenter = lazy(() => import('@/pages/NotificationCenter').then((m) => ({ default: m.NotificationCenter })));
 import { useAuth } from '@/contexts/AuthContext';
