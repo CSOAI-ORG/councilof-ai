@@ -20,6 +20,7 @@
  * Hugging Face remains a public distribution surface, not a second authority.
  */
 import { useEffect, useId, useState, type ReactNode } from "react";
+import { axisHref } from "@/lib/axisHref";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import { axisRunEvidence } from "../board/runEvidence";
 import { axisMeta } from "../../lib/axisRegulation";
@@ -270,7 +271,7 @@ function AxisName({ a }: { a: GspcAxis }) {
     return <span className="text-sm font-bold text-slate-900 dark:text-emerald-50">{label}</span>;
   }
   return (
-    <a href={`/gspc/${encodeURIComponent(a.axis)}/`} className="text-sm font-bold text-slate-900 hover:text-emerald-800 dark:text-emerald-50 dark:hover:text-emerald-300">
+    <a href={axisHref(a) ?? undefined} className="text-sm font-bold text-slate-900 hover:text-emerald-800 dark:text-emerald-50 dark:hover:text-emerald-300">
       {label}
     </a>
   );
@@ -375,7 +376,7 @@ export function BoardStrip({
                   </td>
                   <td className={td}>
                     {a.kind === "model-comparison" ? (
-                      <a href={`/gspc/${encodeURIComponent(a.axis)}/`} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
+                      <a href={axisHref(a) ?? undefined} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
                         Axis detail
                       </a>
                     ) : (
