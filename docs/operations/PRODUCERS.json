@@ -1,6 +1,6 @@
 {
   "schema": "csoai.producers/0.1",
-  "as_of": "2026-11-06T03:30:00Z",
+  "as_of": "2026-11-06T04:05:00Z",
   "why": "On 2026-09-06 public/interop/agent-card-jws-input.json described a card nobody served. Its producer was correct; nothing re-ran it. The whole gates job was red for every lane until someone noticed. This manifest names source -> producer -> output so CI can notice instead.",
   "how_to_read": "Each entry names what a producer WRITES and how to prove the committed bytes still match. `gated: true` entries are enforced by scripts/producers-check.mjs in CI. `gated: false` entries record WHY they cannot be, which is the more useful half. Two of the three x402-census entries carry `becomes_gated_when` instead of `gated: true`: their --check has nothing to compare until a second round exists, and a check that cannot fail is not a gate. Their `selftest` command runs on every PR instead, and that is the half that can go red today.",
   "extending": "Add an entry, run `node scripts/producers-check.mjs` locally, and only set gated:true once it passes on a clean tree. Never set gated:true on a producer that stamps a timestamp or a random id into its output, and never on one that signs.",
@@ -332,6 +332,19 @@
       "mode": "delegate-to-check",
       "gated": true,
       "note": "Exact deterministic bundle/resource parity using the existing esbuild and SHA-pinned licensed MCP Apps SDK. Also checked before the protected production build; no root dependency input or stamped SBOM changes."
+    },
+    {
+      "id": "institutional-rails",
+      "command": "python3 scripts/institutional_rails.py",
+      "check": "python3 scripts/institutional_rails.py --check",
+      "outputs": [
+        "public/interop/institutional-rails/v0.1"
+      ],
+      "mode": "delegate-to-check",
+      "gated": false,
+      "reason": "The producer is sound and its catalogue IS committed (data/institutional-rails/rails.json, events.source.jsonl, watch-universe.json, code-plane-baseline-2026-10-01.json). The script never fetches, deploys, signs, anchors, schedules, pays, trades or contacts a third party, so it is safe to run unattended. Its OUTPUT was never committed: public/interop/institutional-rails/v0.1 does not exist in the repo, so --check reports DRIFT on all 18 files it would write. Gating it today would paint every lane red over a first publication, not over drift. The decision is PUBLISH or DELETE the builder, and it belongs to the owner: the source is described as curated primary-source evidence, which is not the same as reviewed for publication.",
+      "becomes_gated_when": "the v0.1 output is committed (run: python3 scripts/institutional_rails.py, then commit public/interop/institutional-rails/v0.1/), after which --check is a true drift gate and this entry can be flipped to gated: true with no other change.",
+      "observed_2026_11_06": "--check reports DRIFT on 18 files; the output directory is absent from the repo; the catalogue and the builder are both present and run offline"
     }
   ],
   "not_yet_classified": {
