@@ -66,6 +66,17 @@ historical, and have a 15-minute process timeout. No challenge, purchase, listin
 submission or upload is made. `indexes.json` records attempts and last-good
 observation separately. This does not classify index metadata as current or stale.
 
+To scan only PayAI against the live catalogue without writing state:
+
+```sh
+python3 scripts/business-operations/indexes.py --state /tmp/csoai-observations --collect --index PayAI
+```
+
+Omit `--collect` to store this selected scan in a selection-specific state
+file. Selected scans cannot suppress the schedule or replace the historical
+result of the default all-index scan. Index names are those exposed by the
+installed reader; repeat `--index` to select more than one.
+
 Source-change flags remain pending across later unchanged or failed reads. After
 reviewing the changed official text, an operator can clear that source's `changed`
 flag in `sources.json` while holding `observer.lock`; preserve the last-good hash
