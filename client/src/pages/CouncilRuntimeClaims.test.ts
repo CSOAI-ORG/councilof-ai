@@ -16,6 +16,7 @@ const pageNames = [
   "TryCouncil.tsx",
   "ComplianceHowItWorks.tsx",
   "AltPage.tsx",
+  "WorldGlobe.tsx",
 ] as const;
 
 const sources = Object.fromEntries(
@@ -123,6 +124,16 @@ describe("council runtime claim boundary", () => {
     expect(sources["AltPage.tsx"]).not.toContain("multi-agent consensus");
     expect(sources["AltPage.tsx"]).not.toContain("Ed25519-signed verdicts");
     expect(sources["AltPage.tsx"]).not.toContain("signs every verdict");
+  });
+
+  it("labels the globe swarm as an unsigned illustration rather than a signed halt", () => {
+    const globe = sources["WorldGlobe.tsx"];
+    expect(globe).toContain("Illustrative swarm demo only.");
+    expect(globe).toContain("No real system is stopped and no signed receipt is created.");
+    expect(globe).toContain("Demo complete — unsigned");
+    for (const claim of ["Stopped — signed", "STOPPED — before it happened.", "Signed to Layer 0.", "Layer 0 signed.", "world|halt+quarantine+regovern|"]) {
+      expect(globe).not.toContain(claim);
+    }
   });
 
   it("keeps the public PQC claim planned rather than built", () => {
