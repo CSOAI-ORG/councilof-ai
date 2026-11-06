@@ -21,6 +21,7 @@
  *   {{DISTRIBUTION_SECTION}}                                          public/interop/distribution-latest.json
  *   {{OTS_SECTION}}                                                   public/interop/ots/manifest.json
  *   {{EVIDENCE_RECORDS_SECTION}}                                      public/evidence/published-records.json (scripts/pubbus)
+ *   {{FILE_INDEX_SECTION}}                                          public/interop/file-index.json -> the published interop tree
  *   {{DATED_MILL_ROOT_LINE}}                                          public/interop/card-root-latest.json -> immutable root bytes
  *
  * The separation fields were the exception that mattered most. Both files said "N axes measured"
@@ -437,6 +438,45 @@ function datedMillRootLine() {
   return `- Dated immutable mill-card root (as of ${root.as_of}, ${root.n_leaves} leaves): ${SITE}${rootUrl} (SHA-256 ${digest}). ${proofState}`;
 }
 
+// The interop file index: every file the estate publishes under /interop/, with its size, its
+// SHA-256 and how it is served. It was published on 2026-11-03 so a reader can NAME any published
+// file and CHECK its bytes — but a published artefact nobody can name is the same defect as a
+// missing one, so the index needs a door of its own here, not only a page that links to it.
+//
+// Every figure below is substituted at build time from the index's own counts. None is typed:
+// a typed count is a count nothing retires, which is the failure this whole file exists to stop.
+// If the artifact does not carry a count, this THROWS — absence is a state, never a zero.
+//
+// WHAT THE INDEX IS NOT. It is a measurement of the published tree: it says a file is present and
+// that its bytes are the ones served. It says nothing about whether a file is measured, signed,
+// certified, or true, and a row in it is never an endorsement of anything.
+function fileIndexSection() {
+  const ix = readJSON("public/interop/file-index.json");
+  const c = ix.counts || {};
+  for (const k of ["files", "bytes"]) {
+    if (c[k] === undefined || c[k] === null) {
+      throw new Error(`interop file index carries no counts.${k} — absent is not zero`);
+    }
+  }
+  const by = c.by_served || {};
+  const kinds = Object.keys(by).sort();
+  if (!kinds.length) throw new Error("interop file index carries no counts.by_served — absent is not zero");
+  const legend = ix.served_legend || {};
+  const served = kinds.map((k) => `${fmtN(by[k])} ${k}`).join("; ");
+  const legendLines = kinds.map((k) => `- ${k}: ${legend[k] || "see the index's own served_legend"}`);
+  return `Derived at generation from ${SITE}/interop/file-index.json (same bytes on disk at
+public/interop/file-index.json, schema ${ix.schema}, artifact as_of ${ix.as_of}). It is a
+MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
+the SHA-256 of the bytes and how the file is served.
+
+- Files indexed: ${fmtN(c.files)}. Bytes indexed: ${fmtN(c.bytes)}.
+- By how they are served: ${served}.
+${legendLines.join("\n")}
+- To check one file: fetch its path and hash it. A match means you hold the bytes the estate
+  published. The index says a file is PRESENT and IDENTICAL to what is served — not that it is
+  measured, signed, certified or true.`;
+}
+
 function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
   const map = {
     LID: t.lid,                                  // verbatim, never re-phrased
@@ -452,6 +492,7 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     UNTESTED_SEPARATIONS: t.untested_separations, COMPARISON_AXES: t.comparison_axes,
     DISTRIBUTION_SECTION: distributionSection(), OTS_SECTION: otsSection(),
     EVIDENCE_RECORDS_SECTION: evidenceRecordsSection(),
+    FILE_INDEX_SECTION: fileIndexSection(),
     DATED_MILL_ROOT_LINE: datedMillRootLine(),
     // The npm package's release state, DERIVED from the dated capture. It was typed prose here
     // once ("the published npm release is marked deprecated on npm"), and it was false: npm
