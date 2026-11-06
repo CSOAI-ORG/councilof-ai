@@ -22,10 +22,12 @@ type Server = {
 const ALL = (registry.servers as Server[]) || [];
 
 export default function MCPDetail() {
-  useEffect(() => { document.title = "MCP server — CSOAI | CSOAI"; }, []);
-  const [, params] = useRoute("/mcp/:slug");
+  const [, params] = useRoute<{ slug: string }>("/mcps/:slug");
   const slug = params?.slug || "";
   const server = useMemo(() => ALL.find((s) => s.slug === slug), [slug]);
+  useEffect(() => {
+    document.title = server ? `${server.name} MCP server | Council of AI` : "MCP server not found | Council of AI";
+  }, [server]);
 
   const related = useMemo(() => {
     if (!server) return [];
@@ -38,7 +40,7 @@ export default function MCPDetail() {
         <Card className="p-10 max-w-md text-center">
           <h1 className="text-2xl font-bold mb-2">MCP not found</h1>
           <p className="text-gray-600 mb-6">No MCP server matches “{slug}”.</p>
-          <Link href="/mcp">
+          <Link href="/mcps">
             <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Browse all MCPs</Button>
           </Link>
         </Card>
@@ -68,7 +70,7 @@ export default function MCPDetail() {
   return (
     <div className="min-h-screen bg-white">
       <div className="container max-w-4xl py-10">
-        <Link href="/mcp">
+        <Link href="/mcps">
           <span className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-emerald-600 cursor-pointer mb-6">
             <ArrowLeft className="h-4 w-4" /> All {registry.total} MCPs
           </span>
@@ -83,7 +85,7 @@ export default function MCPDetail() {
         <div className="flex flex-wrap gap-2 mb-8">
           <Badge variant="outline">{server.category}</Badge>
           {server.frameworks.map((fw) => (
-            <Link key={fw} href={`/mcp?framework=${encodeURIComponent(fw)}`}>
+            <Link key={fw} href={`/mcps?framework=${encodeURIComponent(fw)}`}>
               <Badge className="bg-blue-50 text-blue-700 border-blue-200 cursor-pointer">{fw}</Badge>
             </Link>
           ))}
@@ -119,7 +121,7 @@ export default function MCPDetail() {
                 <h3 className="font-bold mb-1">Framework-mapped evidence</h3>
                 <p className="text-sm text-gray-600">
                   This registry entry maps the server to {server.frameworks.join(", ")}. That mapping is not a compliance determination, and a signed result must be verified from the specific response. See the
-                  the CSOAI Charter on the <Link href="/crosswalks"><span className="text-emerald-700 underline cursor-pointer">Crosswalks</span></Link> page.
+                  CSOAI Charter on the <Link href="/crosswalks"><span className="text-emerald-700 underline cursor-pointer">Crosswalks</span></Link> page.
                 </p>
               </div>
             </div>
@@ -131,7 +133,7 @@ export default function MCPDetail() {
             <h2 className="text-lg font-bold mb-4">Related tools in {server.category}</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {related.map((r) => (
-                <Link key={r.slug} href={`/mcp/${r.slug}`}>
+                <Link key={r.slug} href={`/mcps/${r.slug}`}>
                   <Card className="p-4 h-full hover:border-emerald-400 transition-colors cursor-pointer">
                     <h3 className="font-semibold text-sm mb-1">{r.name}</h3>
                     <p className="text-xs text-gray-500 line-clamp-2">{r.description}</p>
