@@ -164,3 +164,28 @@ Sources: [canonical MCP remote](https://councilof.ai/mcp) ·
 [Cline remote-server configuration](https://github.com/cline/cline/blob/main/docs/mcp/mcp-overview.mdx) ·
 [monorepo](https://github.com/CSOAI-ORG/councilof-ai) ·
 [free verifier method](https://councilof.ai/signed/HOW-TO-VERIFY.md)
+
+## Cite the board from your own agent-card
+
+MEOK's H.I.M. agent-card (`https://meok.ai/.well-known/agent-card.json`) ships
+GSPC skills that quote the signed board verbatim and say UNMEASURED where no
+measurement exists. Any agent-card can do the same in one paste — the pattern is
+free, and every copy distributes verifiable measurement:
+
+```json
+{
+  "id": "board-totals",
+  "name": "Board totals",
+  "description": "LIVE board totals — axis slots, measured count, unmeasured count, and the separation state across the model-comparison axes. Quoted verbatim from the signed board.",
+  "tags": ["measurement", "gspc", "board"],
+  "examples": ["what does the board say", "how many axes are measured"],
+  "verify": "https://councilof.ai/gspc-verify/",
+  "source": "https://councilof.ai/api/gspc"
+}
+```
+
+Rules of the pattern: quote the board verbatim or say UNMEASURED — never a
+paraphrase, never a score; carry a `verify` link so every claim is checkable in
+one click; and never grade your own product with the board you cite (the judge is
+never the subject). The free verifier (`/api/verify`, `verify-card.mjs`) is the
+check; the Merkle root is the commitment.
