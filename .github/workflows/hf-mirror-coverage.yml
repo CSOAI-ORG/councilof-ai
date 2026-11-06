@@ -1,0 +1,22 @@
+name: hf-mirror-coverage
+# Weekly: every public-root leaf must resolve on the HF mirror. The chain a stranger
+# walks is root.json -> /cards/<sha16>.json -> mirror -> verifier; a trailing mirror
+# breaks the middle of it silently (it happened: 68 of 331 leaves, 29 Oct - 1 Nov,
+# found by audit and repaired by hf-evidence-sync — this gate exists so it cannot
+# accumulate quietly again). A missing leaf exits 3; an unreadable surface exits 4.
+on:
+  schedule:
+    - cron: "41 7 * * 3" # Wednesdays 07:41 UTC (off the hour, clear of the other watchers)
+  workflow_dispatch: {}
+permissions: { contents: read }
+concurrency: { group: hf-mirror-coverage, cancel-in-progress: false }
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Compare every public-root leaf against the mirror tree
+        run: python3 scripts/hf_mirror_coverage.py
