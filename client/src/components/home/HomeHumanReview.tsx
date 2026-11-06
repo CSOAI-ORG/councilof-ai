@@ -9,17 +9,17 @@ export const HUMAN_REVIEW_STEPS = [
   {
     id: "competency",
     title: "The reviewer reads the live record",
-    body: "The reviewer completes the relevant competency module. The server checks the answer against the current board when it is submitted and again before a decision.",
+    body: "A short reading check uses the current board. The answer is checked when it is submitted and again before a decision.",
   },
   {
     id: "decision",
-    title: "A named human decides with authority",
-    body: "APPROVED, HOLD or REJECTED requires the deployment's configured operator authority. Without it, the decision path stays deliberately locked.",
+    title: "An operator records the decision",
+    body: "Choose APPROVED, HOLD or REJECTED when the review service is available. The record captures the decision and the operator name supplied; it does not verify the person's identity or authority.",
   },
   {
     id: "receipt",
-    title: "The receipt states what actually happened",
-    body: "A receipt is signed only when the signing key is configured, and persisted only when the decision store is bound. It records a decision; it does not certify that the decision was right.",
+    title: "A receipt preserves the decision",
+    body: "The result shows whether the decision was saved and signed. A receipt does not prove the proposed action happened or that the decision was right.",
   },
 ] as const;
 
@@ -37,10 +37,10 @@ export default function HomeHumanReview() {
           <div>
             <p className="t-kicker text-amber-300">Human in the loop · H.I.M.</p>
             <h2 id="home-human-review-h" className="t-band mt-3 text-white">
-              AI can propose. A named human decides.
+              AI proposes. Review and record the decision.
             </h2>
             <p className="t-lede mt-4 text-emerald-100/75">
-              A measurement records what was observed. It does not grant permission to act. Council OS keeps the escalation, competence check, operator gate and receipt in one inspectable workflow.
+              Inspect the proposal and evidence, check your understanding, and keep a record of the decision. Recording a decision does not authorize or perform the proposed action.
             </p>
             <Link
               href="/dashboard?tab=staff"
@@ -50,7 +50,7 @@ export default function HomeHumanReview() {
               Open staff &amp; human review →
             </Link>
             <p className="mt-4 max-w-xl text-xs leading-relaxed text-emerald-100/60">
-              The console reads the deployment's live gates. It never turns a missing operator token, signing key or decision store into a green light.
+              The console shows the review service's current availability and each receipt's status. Human identity, permission to act and the outcome need separate verification.
             </p>
           </div>
           <ol className="grid list-none gap-3 p-0 sm:grid-cols-2">
