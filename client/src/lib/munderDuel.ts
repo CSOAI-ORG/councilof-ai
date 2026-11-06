@@ -48,6 +48,7 @@ export function modelRequest(round: PracticeRound, requestId: string): string {
 }
 export function parseModelMove(raw: string): ModelMove {
   if (!raw || new TextEncoder().encode(raw).byteLength > MAX_REPLY_BYTES) fail("MEOK response exceeds the game limit.");
+  try {
   const outer = z.object({
     id: z.string().regex(/^[A-Za-z0-9_.:-]{1,200}$/), model: z.literal(MEOK_MODEL),
     choices: z.array(z.object({ finish_reason: z.literal("stop"),
@@ -55,6 +56,9 @@ export function parseModelMove(raw: string): ModelMove {
   }).parse(JSON.parse(raw));
   const move = z.object({ action: decision }).strict().parse(JSON.parse(outer.choices[0].message.content));
   return { action: move.action, responseId: outer.id, model: outer.model };
+  } catch {
+    fail("MEOK returned an unsupported game proposal. No move was applied.");
+  }
 }
 function checked(s: MunderSession, caseId: number) {
   const row = s.rounds.at(-1)!;

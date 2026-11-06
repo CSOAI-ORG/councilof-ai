@@ -16,6 +16,17 @@ function pending() {
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 describe("real MEOK Munder game contract", () => {
+  it("keeps rejected provider payloads and internal aliases out of the public error", () => {
+    const wrong = { ...JSON.parse(answer()), model: "private-token-fixture" };
+    let message = "";
+    try { parseModelMove(JSON.stringify(wrong)); }
+    catch (error) { message = (error as Error).message; }
+    expect(message).toContain("unsupported game proposal");
+    expect(message).not.toContain("private-token-fixture");
+    expect(message).not.toContain(MEOK_MODEL);
+    expect(message.length).toBeLessThan(150);
+  });
+
   it("completes eight participant-approved moves using actual response bytes, without a simulated seat", () => {
     let s = makeMunderSession("test", 42, t);
     for (let i = 0; i < 8; i++) {

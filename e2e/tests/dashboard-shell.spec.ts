@@ -1200,3 +1200,27 @@ test.describe("Munder actual provider qualification", () => {
     });
   }
 });
+
+
+
+test("Munder live gallery door opens the native game and holds model access until asked", async ({ page }) => {
+  test.setTimeout(120_000);
+  let calls = 0;
+  await page.route(MUNDER_PROVIDER, async route => { calls++; await route.abort(); });
+  await openTab(page, "play");
+  const card = page.getByTestId("dashboard-pane-play").locator("li").filter({
+    has: page.getByRole("heading", { name: "The Coliseum", exact: true }),
+  });
+  await expect(card).toContainText("Munder");
+  const door = card.getByRole("link", { name: "Open in workspace", exact: true });
+  await expect(door).toHaveAttribute("href", "/dashboard?tab=space");
+  await door.click();
+  await expect(page).toHaveURL(/\/dashboard\/?\?tab=space/);
+  const game = page.getByTestId("dashboard-pane-space").getByTestId("munder-live-duel");
+  await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
+  await game.getByRole("button", { name: "Choose resolve", exact: true }).click();
+  await expect(game).toContainText("Your move: resolve");
+  await expect(game.locator("iframe")).toHaveCount(0);
+  expect(calls).toBe(0);
+});
+
