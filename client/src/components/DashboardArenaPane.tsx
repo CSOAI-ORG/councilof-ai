@@ -215,6 +215,65 @@ export function scorePracticeDecisions(
   };
 }
 
+export type PracticeSnapshot = {
+  seed: number;
+  decisions: PracticeDecision[];
+};
+
+export const PRACTICE_SESSION_STORAGE_KEY = "csoai.boss-chair-practice/1";
+const PRACTICE_SNAPSHOT_SCHEMA = "csoai.boss-chair-practice/1";
+
+/** Private, tab-local practice only; cached scores or evidence flags are never accepted. */
+export function decodePracticeSnapshot(raw: string | null): PracticeSnapshot | null {
+  if (!raw || raw.length > 16384) return null;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
+    const value = parsed as Record<string, unknown>;
+    const keys = Object.keys(value);
+    if (keys.length !== 4 || keys.some((key) =>
+      !["schema", "seed", "scenarioKey", "decisions"].includes(key))) return null;
+    if (value.schema !== PRACTICE_SNAPSHOT_SCHEMA ||
+      typeof value.seed !== "number" || !Number.isSafeInteger(value.seed) ||
+      value.seed < 0 || value.seed > 0xffffffff) return null;
+    const rounds = generatePracticeRounds(value.seed);
+    if (value.scenarioKey !== JSON.stringify(rounds) ||
+      !Array.isArray(value.decisions) || value.decisions.length > rounds.length ||
+      !value.decisions.every((choice) => choice === "resolve" || choice === "escalate")) return null;
+    return { seed: value.seed, decisions: [...value.decisions] as PracticeDecision[] };
+  } catch {
+    return null;
+  }
+}
+
+export function encodePracticeSnapshot(snapshot: PracticeSnapshot): string | null {
+  try {
+    const raw = JSON.stringify({
+      schema: PRACTICE_SNAPSHOT_SCHEMA,
+      seed: snapshot.seed,
+      scenarioKey: JSON.stringify(generatePracticeRounds(snapshot.seed)),
+      decisions: snapshot.decisions,
+    });
+    return decodePracticeSnapshot(raw) ? raw : null;
+  } catch {
+    return null;
+  }
+}
+
+/** An answer belongs to the rendered seed and round; a stale callback cannot skip a case. */
+export function advancePracticeSnapshot(
+  snapshot: PracticeSnapshot,
+  expectedSeed: number,
+  expectedRound: number,
+  decision: PracticeDecision,
+): PracticeSnapshot {
+  if (snapshot.seed !== expectedSeed || snapshot.decisions.length !== expectedRound ||
+    !Number.isSafeInteger(expectedRound) || expectedRound < 0 ||
+    expectedRound >= generatePracticeRounds(snapshot.seed).length ||
+    (decision !== "resolve" && decision !== "escalate")) return snapshot;
+  return { seed: snapshot.seed, decisions: [...snapshot.decisions, decision] };
+}
+
 type LoadState =
   | { phase: "loading" }
   | { phase: "ready"; board: ArenaScoreboard }
@@ -443,10 +502,48 @@ function ModelReading({
   );
 }
 
-function PracticeArena() {
-  const [seed, setSeed] = useState(42);
-  const [decisions, setDecisions] = useState<PracticeDecision[]>([]);
+export function PracticeArena() {
+  const [practice, setPractice] = useState<PracticeSnapshot>({ seed: 42, decisions: [] });
+  const { seed, decisions } = practice;
+  const [practiceLoaded, setPracticeLoaded] = useState(false);
+  const [saveRequested, setSaveRequested] = useState(false);
+  const [saveNotice, setSaveNotice] = useState("Reading this tab's saved practice…");
   const rounds = useMemo(() => generatePracticeRounds(seed), [seed]);
+
+  // Restore after mount so server-rendered markup and the first client render agree.
+  useEffect(() => {
+    try {
+      const raw = window.sessionStorage.getItem(PRACTICE_SESSION_STORAGE_KEY);
+      const restored = decodePracticeSnapshot(raw);
+      if (restored) {
+        setPractice(restored);
+        setSaveNotice("Practice restored for this tab. This is not verified evidence.");
+      } else {
+        setSaveNotice(raw
+          ? "The saved attempt does not match the current cases. A new practice attempt is ready."
+          : "Practice will be saved for this tab after your first choice.");
+      }
+    } catch {
+      setSaveNotice("This browser cannot save practice. Leaving this pane will lose this attempt.");
+    }
+    setPracticeLoaded(true);
+  }, []);
+
+  // Do not overwrite an unread or rejected save merely by opening the pane.
+  useEffect(() => {
+    if (!practiceLoaded || !saveRequested) return;
+    const raw = encodePracticeSnapshot(practice);
+    if (!raw) {
+      setSaveNotice("This attempt could not be saved. Leaving this pane will lose it.");
+      return;
+    }
+    try {
+      window.sessionStorage.setItem(PRACTICE_SESSION_STORAGE_KEY, raw);
+      setSaveNotice("Practice saved for this tab. You can leave this pane and return.");
+    } catch {
+      setSaveNotice("This browser cannot save practice. Leaving this pane will lose this attempt.");
+    }
+  }, [practice, practiceLoaded, saveRequested]);
   const opponentDecisions = useMemo(
     () => simulatePracticeDecisions(rounds, 0.7, seed),
     [rounds, seed],
@@ -466,13 +563,17 @@ function PracticeArena() {
     : null;
 
   function choose(decision: PracticeDecision) {
-    if (!currentRound) return;
-    setDecisions((current) => [...current, decision]);
+    if (!practiceLoaded || !currentRound) return;
+    setPractice((current) =>
+      advancePracticeSnapshot(current, seed, decisions.length, decision),
+    );
+    setSaveRequested(true);
   }
 
   function reset(nextSeed = seed) {
-    setSeed(nextSeed);
-    setDecisions([]);
+    if (!practiceLoaded) return;
+    setPractice({ seed: Math.trunc(nextSeed) >>> 0, decisions: [] });
+    setSaveRequested(true);
   }
 
   return (
@@ -503,6 +604,9 @@ function PracticeArena() {
             person. You and a deterministic simulated agent face the same seeded
             cases.
           </p>
+          <p role="status" aria-live="polite" className="mt-2 text-xs text-slate-300">
+            {saveNotice}
+          </p>
 
           {currentRound ? (
             <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.06] p-5">
@@ -516,6 +620,7 @@ function PracticeArena() {
                 <button
                   type="button"
                   onClick={() => choose("resolve")}
+                  disabled={!practiceLoaded}
                   className="min-h-12 rounded-xl border border-white/15 bg-white/5 px-4 text-sm font-semibold text-white transition hover:border-white/30 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
                 >
                   Resolve within scope
@@ -523,6 +628,7 @@ function PracticeArena() {
                 <button
                   type="button"
                   onClick={() => choose("escalate")}
+                  disabled={!practiceLoaded}
                   className="min-h-12 rounded-xl bg-emerald-300 px-4 text-sm font-semibold text-slate-950 transition hover:bg-emerald-200 focus:outline-none focus:ring-2 focus:ring-white"
                 >
                   Escalate to a person
