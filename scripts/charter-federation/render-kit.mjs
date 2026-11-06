@@ -15,7 +15,11 @@ export function charterKit(read, doctrine) {
     if (input.path.startsWith('/') || input.path.includes('..') || sha(read(input.path)) !== input.sha256) throw Error('Stale charter input: ' + input.path);
   }
   if (data.inputs.groups.path !== 'council-os/working-groups.json' || data.inputs.tracker.path !== 'council-os/working-group-tracker.json') throw Error('Public export requires canonical working-group inputs');
-  const publicHtml = name => read(prefix + name).replace('</footer>', '<p class="small">Doctrine SHA-256: ' + doctrine.sha256 + '. Measurement, not certification.</p></footer>');
+  const publicHtml = name => read(prefix + name)
+    .replace('</title>', '</title><meta name="description" content="' + (name === 'discussion.html'
+      ? 'Prepare an unsent review of Council of AI charter sources and working-group proposals. Source records, adoption and authority remain separate.'
+      : 'Inspect charter sources, frozen provision identifiers and working-group proposals. Source references do not establish legal applicability or adoption.') + '">')
+    .replace('</footer>', '<p class="small">Doctrine SHA-256: ' + doctrine.sha256 + '. Measurement, not certification.</p></footer>');
   const index = publicHtml('tracker.html'), discussion = publicHtml('discussion.html');
   const manifest = json({schema:'council.charter-projection/0.1', register_sha256:envelope.sha256, register_file_sha256:sha(bytes), charter_sha256:data.charter_sha256, tracker_sha256:data.inputs.tracker.sha256, doctrine_sha256:doctrine.sha256, authority:false, sources:data.sources.length, frozen_identifiers:data.provisions.length});
   const notebook = {nbformat:4,nbformat_minor:5,metadata:{kernelspec:{display_name:'Python 3',language:'python',name:'python3'},language_info:{name:'python',version:'3'}},cells:[
