@@ -17,8 +17,8 @@ def collect(reader_path, selected_indexes=None):
     reader = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(reader)
     if selected_indexes is None:
-        targets = reader.INDEXES
-    else:
+        selected_indexes = ['PayAI']
+    if selected_indexes is not None:
         requested = set(selected_indexes)
         available = {name for name, _url in reader.INDEXES}
         unknown = requested - available
@@ -66,7 +66,7 @@ def main():
     args.state.mkdir(parents=True, exist_ok=True)
     # Keep independently selected scans in separate files: one index's fresh
     # result must never suppress or replace another index's scheduled scan.
-    selection = sorted(set(args.index)) if args.index else None
+    selection = sorted(set(args.index)) if args.index else ['PayAI']
     suffix = '-' + hashlib.sha256(json.dumps(selection).encode()).hexdigest()[:12] if selection else ''
     with (args.state / ('indexes' + suffix + '.lock')).open('a') as lock:
         try:
