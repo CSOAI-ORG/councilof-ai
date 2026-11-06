@@ -139,6 +139,16 @@ node scripts/brand-gate.mjs public >/dev/null 2>&1 \
   || { echo "  ✖ brand-gate: a forbidden display string is in public/"; \
        node scripts/brand-gate.mjs public 2>&1 | tail -8; fail=1; }
 
+# ADDED 2026-11-06. The link gate reads a link in a MACHINE surface — it walks
+# .json files only — so an href in an HTML page is invisible to it. The
+# homepage's nine dead axis links survived every green build that way. This
+# gate reads the axis route map and checks every axis link in every published
+# page. It is fast (no network, no build) and its selftest reproduces the
+# historical defect before its verdict is trusted.
+axis_route_out=$(node scripts/surface/axis-route-gate.mjs --selftest 2>&1 \
+  && node scripts/surface/axis-route-gate.mjs public 2>&1) \
+  || { echo "  ✖ axis-route-gate — its verdict:"; printf '%s\n' "$axis_route_out" | tail -10 | sed 's/^/      /'; fail=1; }
+
 # ADDED 2026-09-05. price-gate joined the deploy as a blocking step and immediately
 # stopped one: 60 published_price findings, every one of them a NUMBER in a public
 # JSON file (.well-known/*, interop/x402-*), none in HTML. That is the machine
@@ -230,5 +240,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate clean"
+echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate clean"
 exit 0
