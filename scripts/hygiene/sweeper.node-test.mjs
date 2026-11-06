@@ -84,8 +84,28 @@ test("plan: a closed PR with no parseable closedAt is never GC'd", () => {
 });
 
 test("plan: a MERGED-newest sibling supersedes older OPEN siblings even when it is the only one", () => {
-  // Observed 2026-11-03 02:47Z: the canary automations reopened five old PRs a day after
-  // the manual pass closed them, while the family's newest run (#3700) was already merged.
+  // Observed 2026-11-03 02:47Z: the x402 automations reopen their old PRs when stale, while
+  // the family's newest merged run already holds the same-path data master serves.
+  const open = [
+    pr({ number: 3437, headRefName: "x402-door-conformance/2026-10-24T1135Z" }),
+    pr({ number: 3706, headRefName: "x402-door-conformance/2026-11-01T1347Z" }),
+  ];
+  const closed = [
+    pr({ number: 3777, state: "MERGED", headRefName: "x402-door-conformance/2026-11-02T1631Z", mergedAt: "2026-11-03T05:00:00Z", closedAt: "2026-11-03T05:00:00Z" }),
+  ];
+  const p = plan({ open, closed, now: NOW });
+  assert.deepEqual(p.supersede, [
+    { number: 3437, family: "x402", keep: 3777, mergedKeep: true },
+    { number: 3706, family: "x402", keep: 3777, mergedKeep: true },
+  ]);
+  // a probe never arms auto-merge, merged floor or not
+  assert.deepEqual(p.millAutoMerge, []);
+});
+
+test("plan: canary is append-family — NEVER supersede-closed, never merged, always skipped visibly", () => {
+  // 2026-11-03: lane/canary-recover-six-days restored six days of captures the supersede
+  // rule closed — canary captures APPEND unique lines per run, so an older open canary PR
+  // carries data master lacks, and the automation's reopens were its correct defence.
   const open = [
     pr({ number: 3392, headRefName: "canary-push/39749682201" }),
     pr({ number: 3676, headRefName: "canary-push/41189892109" }),
@@ -94,12 +114,12 @@ test("plan: a MERGED-newest sibling supersedes older OPEN siblings even when it 
     pr({ number: 3700, state: "MERGED", headRefName: "canary-push/41298060049", mergedAt: "2026-11-02T05:00:00Z", closedAt: "2026-11-02T05:00:00Z" }),
   ];
   const p = plan({ open, closed, now: NOW });
-  assert.deepEqual(p.supersede, [
-    { number: 3392, family: "canary", keep: 3700, mergedKeep: true },
-    { number: 3676, family: "canary", keep: 3700, mergedKeep: true },
-  ]);
-  // a canary never arms auto-merge, merged floor or not
+  assert.deepEqual(p.supersede, []);
   assert.deepEqual(p.millAutoMerge, []);
+  assert.deepEqual(p.skipped, [
+    { number: 3392, reason: "append-family — older runs carry unique data; never supersede-closed" },
+    { number: 3676, reason: "append-family — older runs carry unique data; never supersede-closed" },
+  ]);
 });
 
 test("plan: a mill keep NEWER than the merged floor still arms auto-merge; an older one does not", () => {
