@@ -20,6 +20,36 @@
 export const RECEIPTS_KEY = "coai.tool-receipts/1";
 export const RECEIPTS_CAP = 200;
 
+const RECEIPTS_UPDATED_EVENT = "csoai:tool-receipts-updated";
+
+function notifyToolReceipts(): void {
+  try {
+    if (typeof window !== "undefined") window.dispatchEvent(new Event(RECEIPTS_UPDATED_EVENT));
+  } catch {
+    // Observing a local log must never change the tool's outcome.
+  }
+}
+
+/** Observe this tab's writes and other tabs' changes without polling or a server. */
+export function subscribeToolReceipts(onChange: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  const onStorage = (event: StorageEvent) => {
+    if (event.key !== RECEIPTS_KEY && event.key !== null) return;
+    try {
+      if (event.storageArea && event.storageArea !== window.localStorage) return;
+    } catch {
+      return;
+    }
+    onChange();
+  };
+  window.addEventListener(RECEIPTS_UPDATED_EVENT, onChange);
+  window.addEventListener("storage", onStorage);
+  return () => {
+    window.removeEventListener(RECEIPTS_UPDATED_EVENT, onChange);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
 export type ToolReceipt = {
   /** ISO-8601 timestamp of the moment the result came back. */
   at: string;
@@ -80,10 +110,21 @@ function readAll(): ToolReceipt[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter(
-      (r): r is ToolReceipt =>
-        !!r && typeof r === "object" && typeof (r as ToolReceipt).tool === "string",
-    );
+    return parsed.slice(-RECEIPTS_CAP).flatMap((value): ToolReceipt[] => {
+      if (!value || typeof value !== "object" || Array.isArray(value)) return [];
+      const r = value as Record<string, unknown>;
+      if (typeof r.at !== "string" || r.at.length > 64 || !Number.isFinite(Date.parse(r.at)) ||
+          typeof r.tool !== "string" || !r.tool || r.tool.length > 200 ||
+          (r.door !== "/mcp" && r.door !== "/mcp/free") ||
+          typeof r.args_hash !== "string" || !r.args_hash || r.args_hash.length > 128 ||
+          typeof r.outcome !== "string" || !r.outcome || r.outcome.length > 128 ||
+          r.not_signed_evidence !== true) return [];
+      // Project the complete display shape; arbitrary cached fields are not receipts.
+      return [{
+        at: r.at, tool: r.tool, door: r.door, args_hash: r.args_hash,
+        outcome: r.outcome, not_signed_evidence: true,
+      }];
+    });
   } catch {
     return [];
   }
@@ -117,6 +158,7 @@ export function recordToolReceipt(input: {
     const list = readAll();
     list.push(receipt);
     writeAll(list);
+    notifyToolReceipts();
     return receipt;
   } catch {
     return null;
@@ -126,6 +168,7 @@ export function recordToolReceipt(input: {
 export function clearToolReceipts(): void {
   try {
     localStorage.removeItem(RECEIPTS_KEY);
+    notifyToolReceipts();
   } catch {
     // a blocked store is already "cleared" as far as this page can know
   }
