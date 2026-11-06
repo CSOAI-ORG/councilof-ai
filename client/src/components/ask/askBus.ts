@@ -22,18 +22,29 @@ export const ASK_MOBILE_QUERY = "(max-width: 640px)";
 /** The human entry routes (#3057): /, /tools and the Council OS home tab. */
 export function isAskEntryRoute(location: string, search: string): boolean {
   const path = location.replace(/\/+$/, "") || "/";
-  const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
-  const home = path === "/dashboard" && !params.has("view") && (!params.get("tab") || params.get("tab") === "home");
+  const params = new URLSearchParams(
+    search.startsWith("?") ? search.slice(1) : search,
+  );
+  const home =
+    path === "/dashboard" &&
+    !params.has("view") &&
+    (!params.get("tab") || params.get("tab") === "home");
   return path === "/" || path === "/tools" || home;
 }
 
 /** Opening Ask is always a deliberate action; hydration and navigation keep the page unobstructed. */
-export function shouldAutoOpenAsk(_location: string, _search: string, _mobile: boolean): boolean {
+export function shouldAutoOpenAsk(
+  _location: string,
+  _search: string,
+  _mobile: boolean,
+): boolean {
   return false;
 }
 
 export function openAsk(question?: string): void {
-  window.dispatchEvent(new CustomEvent<AskOpenDetail>(ASK_OPEN, { detail: { question } }));
+  window.dispatchEvent(
+    new CustomEvent<AskOpenDetail>(ASK_OPEN, { detail: { question } }),
+  );
 }
 
 export function openPalette(): void {
@@ -49,44 +60,163 @@ export type Recent = {
   pinned?: boolean;
 };
 
-const KEY = "coai:recents";
+export const RECENTS_KEY = "coai:recents";
+export const RECENTS_EVENT = "council:recents";
 const MAX = 12;
 
+function unsafePathChars(text: string, spaces = false): boolean {
+  return Array.from(text).some((c) => {
+    const code = c.charCodeAt(0);
+    return code === 92 || code === 127 || code <= (spaces ? 32 : 31);
+  });
+}
+
+function publicPath(path: string): boolean {
+  try {
+    let decoded = path;
+    for (let i = 0; i < 3; i++) {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    }
+    return !decoded.startsWith("//") && !unsafePathChars(decoded, true);
+  } catch {
+    return false;
+  }
+}
+
+/** Save destinations, never pasted inputs, card bodies, payment payloads or question queries. */
+export function recentDestination(href: string): string | null {
+  if (
+    typeof href !== "string" ||
+    href.length > 4096 ||
+    !href.startsWith("/") ||
+    href.startsWith("//") ||
+    unsafePathChars(href)
+  )
+    return null;
+  try {
+    const url = new URL(href, "https://councilof.ai");
+    if (url.origin !== "https://councilof.ai" || !publicPath(url.pathname))
+      return null;
+    let path = url.pathname;
+    while (path.endsWith("/")) path = path.slice(0, -1);
+    if (path !== "/dashboard") return url.pathname;
+    const safe = new URLSearchParams();
+    for (const key of ["tab", "tool", "axis"]) {
+      const value = url.searchParams.get(key);
+      if (value && /^[a-zA-Z0-9_.-]{1,120}$/.test(value)) safe.set(key, value);
+    }
+    const view = url.searchParams.get("view");
+    if (view !== null) {
+      if (
+        !view.startsWith("/") ||
+        view.startsWith("//") ||
+        unsafePathChars(view)
+      )
+        return null;
+      const nested = new URL(view, url.origin);
+      if (nested.origin !== url.origin || !publicPath(nested.pathname))
+        return null;
+      safe.set("view", nested.pathname);
+    }
+    return "/dashboard" + (safe.size ? "?" + safe : "");
+  } catch {
+    return null;
+  }
+}
+
+type RecentStore = { rows: Recent[]; writable: boolean };
+function readStore(): RecentStore {
+  try {
+    const raw = window.localStorage.getItem(RECENTS_KEY);
+    if (raw === null) return { rows: [], writable: true };
+    if (raw.length > 512_000) return { rows: [], writable: false };
+    const list: unknown = JSON.parse(raw);
+    if (!Array.isArray(list)) return { rows: [], writable: false };
+    const seen = new Set<string>();
+    const rows: Recent[] = list.slice(0, 256).flatMap((r) => {
+      if (
+        !r ||
+        typeof r !== "object" ||
+        typeof r.title !== "string" ||
+        typeof r.crumb !== "string" ||
+        typeof r.at !== "number" ||
+        !Number.isFinite(r.at)
+      )
+        return [];
+      const href = recentDestination(r.href);
+      if (!href || seen.has(href)) return [];
+      seen.add(href);
+      return [
+        {
+          href,
+          title: r.title.slice(0, 160),
+          crumb: r.crumb.slice(0, 160),
+          at: r.at,
+          pinned: r.pinned === true,
+        },
+      ];
+    });
+    return { rows, writable: true };
+  } catch {
+    return { rows: [], writable: false };
+  }
+}
+
 export function readRecents(): Recent[] {
-  try {
-    const raw = window.localStorage.getItem(KEY);
-    const list = raw ? (JSON.parse(raw) as Recent[]) : [];
-    return Array.isArray(list) ? list.filter((r) => r && typeof r.href === "string" && r.href.startsWith("/")) : [];
-  } catch {
-    return [];
-  }
+  return readStore().rows;
 }
 
-function write(list: Recent[]): void {
+function write(list: Recent[]): boolean {
   try {
-    window.localStorage.setItem(KEY, JSON.stringify(list));
+    const bytes = JSON.stringify(list);
+    window.localStorage.setItem(RECENTS_KEY, bytes);
+    if (window.localStorage.getItem(RECENTS_KEY) !== bytes) return false;
   } catch {
-    /* storage blocked: recents stay empty */
+    return false;
   }
-  window.dispatchEvent(new CustomEvent("council:recents"));
+  window.dispatchEvent(new CustomEvent(RECENTS_EVENT));
+  return true;
 }
 
-/** Record a visit. Pinned rows are kept; unpinned rows roll off after MAX. */
-export function recordRecent(r: Omit<Recent, "at" | "pinned">): void {
-  if (!r.href.startsWith("/")) return;
-  const list = readRecents();
-  const prev = list.find((x) => x.href === r.href);
-  const rest = list.filter((x) => x.href !== r.href);
-  const next = [{ ...r, at: Date.now(), pinned: prev?.pinned ?? false }, ...rest];
+/** Record a metadata-only visit. Failed or corrupt reads never authorize replacing the store. */
+export function recordRecent(r: Omit<Recent, "at" | "pinned">): boolean {
+  const href = recentDestination(r.href);
+  if (!href || typeof r.title !== "string" || typeof r.crumb !== "string")
+    return false;
+  const store = readStore();
+  if (!store.writable) return false;
+  const prev = store.rows.find((x) => x.href === href);
+  const rest = store.rows.filter((x) => x.href !== href);
+  const next: Recent[] = [
+    {
+      href,
+      title: r.title.slice(0, 160),
+      crumb: r.crumb.slice(0, 160),
+      at: Date.now(),
+      pinned: prev?.pinned ?? false,
+    },
+    ...rest,
+  ];
   const pinned = next.filter((x) => x.pinned);
   const unpinned = next.filter((x) => !x.pinned).slice(0, MAX);
-  write([...pinned, ...unpinned].sort((a, b) => b.at - a.at));
+  return write([...pinned, ...unpinned].sort((a, b) => b.at - a.at));
 }
 
-export function togglePin(href: string): void {
-  write(readRecents().map((x) => (x.href === href ? { ...x, pinned: !x.pinned } : x)));
+export function togglePin(href: string): boolean {
+  const safe = recentDestination(href);
+  const store = readStore();
+  if (!safe || !store.writable || !store.rows.some((x) => x.href === safe))
+    return false;
+  return write(
+    store.rows.map((x) => (x.href === safe ? { ...x, pinned: !x.pinned } : x)),
+  );
 }
 
-export function removeRecent(href: string): void {
-  write(readRecents().filter((x) => x.href !== href));
+export function removeRecent(href: string): boolean {
+  const safe = recentDestination(href);
+  const store = readStore();
+  if (!safe || !store.writable) return false;
+  return write(store.rows.filter((x) => x.href !== safe));
 }

@@ -39,6 +39,7 @@ import GetResults from "./GetResults";
 import CorpusCount from "./CorpusCount";
 import { correctionHeadline, correctionHref } from "@/lib/correctionHeadline";
 import ModelCountKey from "@/components/ModelCountKey";
+import WorkspaceShortcuts from "./WorkspaceShortcuts";
 
 const nf = new Intl.NumberFormat("en-GB");
 
@@ -631,6 +632,8 @@ export default function GspcWorkspaceHome({
 
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
         <GetResults onAsk={onAsk ? askLookup : undefined} />
+
+        <WorkspaceShortcuts />
 
         <RunNowStrip />
         <p className="mt-3 text-sm text-muted-foreground">

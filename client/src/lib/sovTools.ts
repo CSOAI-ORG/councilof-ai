@@ -50,9 +50,13 @@ export type ToolListing =
 const LIST_CACHE_TTL_MS = 60_000;
 const listCache = new Map<McpDoor, { at: number; listing: ToolListing }>();
 
-export async function listTools(door: McpDoor = "/mcp"): Promise<ToolListing> {
+export async function listTools(
+  door: McpDoor = "/mcp",
+  options: { force?: boolean } = {},
+): Promise<ToolListing> {
   const hit = listCache.get(door);
-  if (hit && Date.now() - hit.at < LIST_CACHE_TTL_MS) return hit.listing;
+  // A deliberate retry must reach the door even when the previous failure is cached.
+  if (!options.force && hit && Date.now() - hit.at < LIST_CACHE_TTL_MS) return hit.listing;
   try {
     const d = await mcpRpc(
       "tools/list",

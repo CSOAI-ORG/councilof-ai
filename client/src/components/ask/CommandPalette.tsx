@@ -1,202 +1,427 @@
-/**
- * CommandPalette — ⌘K / Ctrl-K. Search every destination the site's navigation promotes, each hit
- * with its location breadcrumb; pinned and recent pages first; and a last row that hands the query
- * to Ask GSPC (Shift+Enter from anywhere, or Enter when nothing matches). The Cloudflare pattern:
- * no query dead-ends. Search here is substring matching over the index; nothing is sent anywhere
- * until you choose Ask, and Ask is the deterministic talk router, not a model.
- */
+/** Search published pages, workspace panes, board tests and free tools. */
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
-import { ArrowRight, CornerDownLeft, MessageSquareText, Pin, PinOff, Search, X } from "lucide-react";
-import { PALETTE_INDEX_EVENT, paletteIndex, search, type PaletteItem } from "@/components/ask/paletteIndex";
-import { openAsk, readRecents, togglePin, type Recent } from "@/components/ask/askBus";
-import CorpusChip from "@/components/CorpusChip";
+import * as Dialog from "@radix-ui/react-dialog";
+import {
+  ArrowRight,
+  MessageSquareText,
+  Pin,
+  PinOff,
+  RefreshCw,
+  Search,
+} from "lucide-react";
+import {
+  PALETTE_INDEX_EVENT,
+  loadBoardAxes,
+  loadPaletteTools,
+  paletteIndex,
+  paletteKind,
+  paletteToolSourceState,
+  search,
+  type PaletteKind,
+} from "./paletteIndex";
+import {
+  RECENTS_EVENT,
+  RECENTS_KEY,
+  openAsk,
+  readRecents,
+  recentDestination,
+  recordRecent,
+  togglePin,
+} from "./askBus";
 
-type Row =
-  | { kind: "item"; item: PaletteItem; key: string }
-  | { kind: "recent"; recent: Recent; key: string }
-  | { kind: "ask"; key: string };
-
-const FOCUS = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600";
+type Scope = "all" | PaletteKind;
+type Row = {
+  key: string;
+  title: string;
+  crumb: string;
+  description: string;
+  href?: string;
+  external?: boolean;
+  ask?: boolean;
+};
+const SCOPES: { id: Scope; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "workspace", label: "Workspaces" },
+  { id: "tool", label: "Free tools" },
+  { id: "axis", label: "Tests" },
+  { id: "page", label: "Pages" },
+];
+const FOCUS =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600";
 
 export default function CommandPalette({ onClose }: { onClose: () => void }) {
   const [q, setQ] = useState("");
+  const [scope, setScope] = useState<Scope>("all");
   const [active, setActive] = useState(0);
-  const [recents, setRecents] = useState<Recent[]>(() => readRecents());
-  // The board's test names join the index once GET /api/gspc has been read; search again then.
-  const [indexVersion, setIndexVersion] = useState(0);
-  useEffect(() => {
-    const bump = () => setIndexVersion((v) => v + 1);
-    window.addEventListener(PALETTE_INDEX_EVENT, bump);
-    return () => window.removeEventListener(PALETTE_INDEX_EVENT, bump);
-  }, []);
+  const [recents, setRecents] = useState(readRecents);
+  const [version, setVersion] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+  const [notice, setNotice] = useState("");
   const input = useRef<HTMLInputElement>(null);
-  const listId = useId();
-  const returnTo = useRef<Element | null>(typeof document !== "undefined" ? document.activeElement : null);
-
+  const list = useRef<HTMLUListElement>(null);
+  const id = useId();
+  const returnTo = useRef<Element | null>(
+    typeof document !== "undefined" ? document.activeElement : null,
+  );
   useEffect(() => {
-    input.current?.focus();
-    const onRecents = () => setRecents(readRecents());
-    window.addEventListener("council:recents", onRecents);
+    const bump = () => setVersion((v) => v + 1);
+    const changed = () => setRecents(readRecents());
+    const storage = (e: StorageEvent) => {
+      if (e.key === RECENTS_KEY || e.key === null) changed();
+    };
+    window.addEventListener(PALETTE_INDEX_EVENT, bump);
+    window.addEventListener(RECENTS_EVENT, changed);
+    window.addEventListener("storage", storage);
+    void loadPaletteTools();
     return () => {
-      window.removeEventListener("council:recents", onRecents);
-      (returnTo.current as HTMLElement | null)?.focus?.();
+      window.removeEventListener(PALETTE_INDEX_EVENT, bump);
+      window.removeEventListener(RECENTS_EVENT, changed);
+      window.removeEventListener("storage", storage);
     };
   }, []);
-
+  const matches = useMemo(() => {
+    const items = paletteIndex().filter(
+      (it) => scope === "all" || paletteKind(it) === scope,
+    );
+    return q.trim() ? search(q, items, 200) : items;
+  }, [q, scope, version]);
   const rows: Row[] = useMemo(() => {
-    const out: Row[] = [];
-    if (!q.trim()) {
-      const pinned = recents.filter((r) => r.pinned);
-      const rest = recents.filter((r) => !r.pinned).slice(0, 6);
-      for (const r of [...pinned, ...rest]) out.push({ kind: "recent", recent: r, key: `r:${r.href}` });
-      if (!out.length) for (const it of paletteIndex().slice(0, 6)) out.push({ kind: "item", item: it, key: `i:${it.id}` });
-      return out;
-    }
-    for (const it of search(q)) out.push({ kind: "item", item: it, key: `i:${it.id}` });
-    out.push({ kind: "ask", key: "ask" });
-    return out;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [q, recents, indexVersion]);
-
-  useEffect(() => setActive(0), [q]);
-
-  const go = (href: string, external?: boolean) => {
-    onClose();
-    if (external || !href.startsWith("/")) window.location.assign(href);
-    else navigate(href);
-  };
+    const result: Row[] =
+      !q.trim() && scope === "all" && recents.length
+        ? [
+            ...recents.filter((r) => r.pinned),
+            ...recents.filter((r) => !r.pinned).slice(0, 6),
+          ]
+            .slice(0, 16)
+            .map((r) => ({
+              ...r,
+              key: "recent:" + r.href,
+              description: r.pinned
+                ? "Pinned in this browser"
+                : "Recently opened in this browser",
+            }))
+        : matches.slice(0, 12).map((it) => ({ ...it, key: it.id }));
+    if (q.trim())
+      result.push({
+        key: "ask",
+        title: "Ask GSPC: “" + q.trim() + "”",
+        crumb: "Ask from published sources",
+        description: "Shift+Enter · Your question is sent to the Council API.",
+        ask: true,
+      });
+    return result;
+  }, [matches, q, scope, recents]);
+  const index = Math.max(0, Math.min(active, rows.length - 1));
+  const selected = rows[index];
+  const saved = selected?.href
+    ? recents.find((r) => r.href === recentDestination(selected.href!))
+    : null;
+  useEffect(() => {
+    setActive(0);
+    setNotice("");
+  }, [q, scope]);
+  useEffect(() => {
+    list.current
+      ?.querySelector<HTMLElement>('[data-result-index="' + index + '"]')
+      ?.scrollIntoView?.({ block: "nearest" });
+  }, [index]);
   const ask = () => {
-    const text = q.trim();
+    const question = q.trim();
     onClose();
-    openAsk(text || undefined);
+    openAsk(question || undefined);
   };
-  const choose = (r: Row | undefined) => {
-    if (!r) return;
-    if (r.kind === "ask") ask();
-    else if (r.kind === "recent") go(r.recent.href);
-    else go(r.item.href, r.item.external);
+  const choose = (row?: Row) => {
+    if (!row) return;
+    if (row.ask) {
+      ask();
+      return;
+    }
+    if (!row.href) return;
+    onClose();
+    if (row.external || !row.href.startsWith("/"))
+      window.location.assign(row.href);
+    else navigate(row.href);
   };
-
+  const pin = () => {
+    if (
+      !selected?.href ||
+      selected.external ||
+      !recentDestination(selected.href)
+    )
+      return;
+    let ok = saved
+      ? true
+      : recordRecent({
+          href: selected.href,
+          title: selected.title,
+          crumb: selected.crumb,
+        });
+    if (ok) ok = togglePin(selected.href);
+    setRecents(readRecents());
+    setNotice(
+      ok
+        ? saved?.pinned
+          ? "Shortcut unpinned."
+          : "Shortcut pinned in this browser."
+        : "This browser could not save the shortcut. You can still open it.",
+    );
+  };
+  const refresh = async () => {
+    setRefreshing(true);
+    try {
+      await Promise.allSettled([
+        loadBoardAxes(fetch, true),
+        loadPaletteTools(undefined, true),
+      ]);
+    } finally {
+      setRefreshing(false);
+      setVersion((v) => v + 1);
+    }
+  };
   const onKey = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
+    if (e.nativeEvent.isComposing) return;
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
-      onClose();
-    } else if (e.key === "ArrowDown") {
+      setActive(
+        e.key === "ArrowDown"
+          ? Math.min(rows.length - 1, index + 1)
+          : Math.max(0, index - 1),
+      );
+    } else if ((e.key === "Home" || e.key === "End") && e.altKey) {
       e.preventDefault();
-      setActive((a) => Math.min(rows.length - 1, a + 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActive((a) => Math.max(0, a - 1));
+      setActive(e.key === "Home" ? 0 : rows.length - 1);
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (e.shiftKey) ask();
-      else choose(rows[active]);
+      else choose(selected);
     }
   };
-
-  const hasHits = rows.some((r) => r.kind === "item");
-
   return (
-    <div className="fixed inset-0 z-[90] flex items-start justify-center bg-slate-950/40 px-4 pt-[10vh]" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div role="dialog" aria-modal="true" aria-label="Search pages and ask" className="w-full max-w-xl overflow-hidden rounded-2xl border border-border bg-background text-foreground shadow-2xl" data-testid="command-palette">
-        <div className="flex items-center gap-2 border-b border-border px-3">
-          <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-          <label htmlFor="palette-input" className="sr-only">
-            Search pages, or ask
-          </label>
-          <input
-            id="palette-input"
-            ref={input}
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            onKeyDown={onKey}
-            aria-controls={listId}
-            aria-describedby={`${listId}-help`}
-            autoComplete="off"
-            placeholder="Search pages, or ask about the board, a card or a server"
-            className="min-h-12 min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
-          />
-          <button type="button" onClick={onClose} aria-label="Close" className={`inline-flex h-11 w-11 items-center justify-center rounded-lg hover:bg-muted ${FOCUS}`}>
-            <X className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
-        <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-2 2xl:hidden">
-          <span className="text-xs text-muted-foreground">Corpus in view</span>
-          <CorpusChip className="inline-flex" />
-        </div>
-        <ul id={listId} aria-label="Results" aria-live="polite" className="max-h-[60vh] overflow-y-auto p-2">
-          {!q.trim() ? (
-            <li className="px-2 pb-1 pt-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              {recents.length ? "Pinned and recent (this browser only)" : "Start here"}
-            </li>
-          ) : null}
-          {rows.map((r, i) => {
-            const on = i === active;
-            const base = `flex w-full items-start gap-2 rounded-lg px-2 py-2 text-left ${on ? "bg-emerald-50 dark:bg-emerald-950" : ""}`;
-            if (r.kind === "ask")
-              return (
-                <li key={r.key} className="border-t border-border pt-1">
-                  <button type="button" onMouseEnter={() => setActive(i)} onClick={ask} className={`${base} ${FOCUS}`} data-testid="palette-ask" aria-current={on || undefined}>
-                  <MessageSquareText className="mt-0.5 h-4 w-4 shrink-0 text-emerald-800 dark:text-emerald-300" aria-hidden="true" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-semibold">
-                      Ask GSPC: &ldquo;{q.trim()}&rdquo;
-                    </span>
-                    <span className="block text-xs text-muted-foreground">
-                      {hasHits ? "Shift+Enter" : "Enter"} · answered from signed records, or &ldquo;not measured&rdquo;
-                    </span>
-                  </span>
-                  <CornerDownLeft className="mt-1 h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
-                  </button>
-                </li>
-              );
-            if (r.kind === "recent")
-              return (
-                <li key={r.key} onMouseEnter={() => setActive(i)} className={base}>
-                  <button type="button" onClick={() => choose(r)} className={`min-w-0 flex-1 text-left ${FOCUS}`} aria-current={on || undefined}>
-                    <span className="block text-xs text-muted-foreground">{r.recent.crumb}</span>
-                    <span className="block truncate text-sm font-semibold">{r.recent.title}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      togglePin(r.recent.href);
-                      setRecents(readRecents());
-                    }}
-                    aria-label={r.recent.pinned ? `Unpin ${r.recent.title}` : `Pin ${r.recent.title}`}
-                    aria-pressed={Boolean(r.recent.pinned)}
-                    className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg hover:bg-muted ${FOCUS}`}
-                    data-testid="palette-pin"
-                  >
-                    {r.recent.pinned ? <PinOff className="h-4 w-4" aria-hidden="true" /> : <Pin className="h-4 w-4" aria-hidden="true" />}
-                  </button>
-                </li>
-              );
-            return (
-              <li key={r.key}>
-                <button type="button" onMouseEnter={() => setActive(i)} onClick={() => choose(r)} className={`${base} ${FOCUS}`} aria-current={on || undefined}>
+    <Dialog.Root
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[90] bg-slate-950/45 backdrop-blur-sm" />
+        <Dialog.Content
+          aria-label="Search pages and ask"
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            input.current?.focus();
+          }}
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+            (returnTo.current as HTMLElement | null)?.focus?.();
+          }}
+          className="fixed left-1/2 top-[6vh] z-[91] flex max-h-[88dvh] w-[calc(100%-1.5rem)] max-w-2xl -translate-x-1/2 flex-col overflow-hidden rounded-2xl border border-border bg-background text-foreground shadow-2xl sm:top-[10vh] sm:max-h-[80dvh]"
+          data-testid="command-palette"
+        >
+          <div className="flex items-start justify-between border-b border-border px-4 py-3">
+            <div>
+              <Dialog.Title className="text-sm font-semibold">
+                Search Council OS and the website
+              </Dialog.Title>
+              <Dialog.Description className="mt-1 text-xs text-muted-foreground">
+                Find a workspace, published test, free tool or page.
+              </Dialog.Description>
+            </div>
+            <Dialog.Close
+              aria-label="Close"
+              className={
+                "ml-3 inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-xs font-semibold hover:bg-muted " +
+                FOCUS
+              }
+            >
+              Esc
+            </Dialog.Close>
+          </div>
+          <div className="flex items-center gap-3 px-4">
+            <Search
+              className="h-5 w-5 shrink-0 text-emerald-800"
+              aria-hidden="true"
+            />
+            <label htmlFor={id + "-input"} className="sr-only">
+              Search pages, or ask
+            </label>
+            <input
+              id={id + "-input"}
+              ref={input}
+              role="combobox"
+              aria-expanded="true"
+              aria-autocomplete="list"
+              aria-controls={id}
+              aria-activedescendant={
+                selected ? id + "-row-" + index : undefined
+              }
+              aria-describedby={id + "-help"}
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              onKeyDown={onKey}
+              autoComplete="off"
+              placeholder="Try safety, verify_card or corrections"
+              className="min-h-14 min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
+            />
+          </div>
+          <div
+            className="flex flex-wrap items-center gap-1 border-y border-border bg-muted/30 px-3 py-2"
+            aria-label="Search categories"
+          >
+            {SCOPES.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                aria-pressed={scope === s.id}
+                onClick={() => setScope(s.id)}
+                className={
+                  "min-h-10 rounded-lg px-3 text-xs font-semibold " +
+                  (scope === s.id
+                    ? "bg-emerald-800 text-white "
+                    : "text-muted-foreground hover:bg-muted ") +
+                  FOCUS
+                }
+              >
+                {s.label}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => void refresh()}
+              disabled={refreshing}
+              aria-label="Refresh tool and test catalogue"
+              className={
+                "ml-auto inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-xs text-muted-foreground hover:bg-muted disabled:opacity-50 " +
+                FOCUS
+              }
+            >
+              <RefreshCw
+                className={
+                  "h-3.5 w-3.5 " +
+                  (refreshing ? "animate-spin motion-reduce:animate-none" : "")
+                }
+                aria-hidden="true"
+              />
+              Refresh
+            </button>
+          </div>
+          <p
+            className="px-4 pb-1 pt-3 text-xs font-medium text-muted-foreground"
+            role="status"
+          >
+            {!q.trim() && scope === "all" && recents.length
+              ? "Pinned and recent · this browser"
+              : Math.min(matches.length, 12) +
+                " of " +
+                matches.length +
+                " matching destinations"}
+          </p>
+          <ul
+            ref={list}
+            id={id}
+            role="listbox"
+            aria-label="Results"
+            className="min-h-0 flex-1 overflow-y-auto p-2"
+          >
+            {rows.map((row, i) => (
+              <li
+                key={row.key}
+                id={id + "-row-" + i}
+                role="option"
+                aria-selected={i === index}
+                data-result-index={i}
+                onMouseEnter={() => setActive(i)}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => choose(row)}
+                className={
+                  "flex min-h-16 cursor-pointer items-start gap-3 rounded-xl px-3 py-3 " +
+                  (i === index
+                    ? "bg-emerald-50 text-emerald-950 dark:bg-emerald-950 dark:text-emerald-100"
+                    : "hover:bg-muted") +
+                  (row.ask ? " mt-1 border-t border-border" : "")
+                }
+              >
+                {row.ask ? (
+                  <MessageSquareText
+                    className="mt-1 h-4 w-4 shrink-0"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <ArrowRight
+                    className="mt-1 h-4 w-4 shrink-0 text-emerald-700"
+                    aria-hidden="true"
+                  />
+                )}
                 <span className="min-w-0 flex-1">
-                  <span className="block text-xs text-muted-foreground">{r.item.crumb}</span>
-                  <span className="block text-sm font-semibold">{r.item.title}</span>
-                  {r.item.description ? <span className="block truncate text-xs text-muted-foreground">{r.item.description}</span> : null}
+                  <span className="block text-[11px] text-muted-foreground">
+                    {row.crumb}
+                  </span>
+                  <span className="block break-words text-sm font-semibold">
+                    {row.title}
+                  </span>
+                  <span className="mt-0.5 block line-clamp-2 text-xs leading-5 text-muted-foreground">
+                    {row.description}
+                  </span>
                 </span>
-                <ArrowRight className="mt-1 h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
-                </button>
               </li>
-            );
-          })}
-          {q.trim() && !hasHits ? (
-            <li className="px-2 py-2 text-xs text-muted-foreground" data-testid="palette-empty">
-              No page title or description contains &ldquo;{q.trim()}&rdquo;. Ask GSPC can still answer it from the signed records, or say it
-              is not measured.
-            </li>
+            ))}
+            {!matches.length && q.trim() ? (
+              <li
+                role="presentation"
+                className="px-3 py-2 text-xs text-muted-foreground"
+                data-testid="palette-empty"
+              >
+                No matching destination in this category. Try All or choose Ask
+                GSPC.
+              </li>
+            ) : null}
+          </ul>
+          <div className="flex min-h-12 flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-2">
+            <span className="text-xs text-muted-foreground">
+              {paletteToolSourceState() === "read"
+                ? "Free tool catalogue read · execution is a separate action"
+                : paletteToolSourceState() === "unreachable"
+                  ? "Free tool catalogue unreachable · page search still works"
+                  : "Reading free tool catalogue…"}
+            </span>
+            {selected?.href && !selected.external ? (
+              <button
+                type="button"
+                onClick={pin}
+                aria-pressed={Boolean(saved?.pinned)}
+                aria-label={
+                  (saved?.pinned ? "Unpin " : "Pin ") + selected.title
+                }
+                data-testid="palette-pin"
+                className={
+                  "inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-xs font-semibold hover:bg-muted " +
+                  FOCUS
+                }
+              >
+                {saved?.pinned ? (
+                  <PinOff className="h-3.5 w-3.5" aria-hidden="true" />
+                ) : (
+                  <Pin className="h-3.5 w-3.5" aria-hidden="true" />
+                )}
+                {saved?.pinned ? "Unpin shortcut" : "Pin shortcut"}
+              </button>
+            ) : null}
+          </div>
+          {notice ? (
+            <p className="px-4 pb-2 text-xs text-emerald-900" role="status">
+              {notice}
+            </p>
           ) : null}
-        </ul>
-        <p id={`${listId}-help`} className="border-t border-border px-3 py-2 text-xs text-muted-foreground">
-          ↑↓ to move · Enter to open · Shift+Enter to ask · Esc to close. Recents and pins stay in this browser.
-        </p>
-      </div>
-    </div>
+          <p
+            id={id + "-help"}
+            className="border-t border-border px-4 py-2 text-[11px] leading-5 text-muted-foreground"
+          >
+            ↑↓ to move · Enter to open · Shift+Enter to ask · Esc to close.
+            Shortcuts save destinations, not your tool inputs.
+          </p>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }
