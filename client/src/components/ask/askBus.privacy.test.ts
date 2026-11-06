@@ -6,6 +6,7 @@ import {
   readRecents,
   recentDestination,
   recordRecent,
+  setRecentPin,
   togglePin,
 } from "./askBus";
 
@@ -215,5 +216,31 @@ describe("defensive recents storage", () => {
     } finally {
       window.removeEventListener(RECENTS_EVENT, changed);
     }
+  });
+
+  it("pins the selected entity atomically and keeps its label when page tracking supplies a generic title", () => {
+    expect(setRecentPin(entry, true)).toBe(true);
+    expect(
+      recordRecent({
+        href: entry.href,
+        title: "Council OS: the GSPC workspace",
+        crumb: "/dashboard",
+      }),
+    ).toBe(true);
+    expect(readRecents()[0]).toMatchObject({
+      title: entry.title,
+      crumb: entry.crumb,
+      pinned: true,
+    });
+    expect(
+      setRecentPin(
+        { ...entry, title: "A deliberately renamed shortcut" },
+        false,
+      ),
+    ).toBe(true);
+    expect(readRecents()[0]).toMatchObject({
+      title: "A deliberately renamed shortcut",
+      pinned: false,
+    });
   });
 });
