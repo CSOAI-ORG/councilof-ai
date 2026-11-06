@@ -80,7 +80,8 @@ function measuredContext(axis: JsonObject) {
     "accuracy_is", "separation", "separation_basis", "separation_untested_reason",
     "fleet_mean", "dataset", "dataset_url", "dataset_url_state", "evidence_url",
     "coverage", "coverage_note", "measurement_time", "run_attestation",
-    "public_leader_state", "method_status", "note",
+    "public_leader_state", "method_status", "note", "applies_to",
+    "rate", "rate_scale", "rate_rule", "method", "method_sha", "bank", "bank_sha256",
   ];
   const context: JsonObject = {
     classification: "PUBLISHED_BOARD_MEASUREMENT",
