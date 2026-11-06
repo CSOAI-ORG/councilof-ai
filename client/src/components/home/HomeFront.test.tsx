@@ -104,12 +104,13 @@ const models = { third_party_models: 123, own_models_excluded: 7 };
 describe("HomeHero", () => {
   it("opens on a plain measurement proposition, with no figure and no banned string", () => {
     const html = render(<HomeHero />);
-    expect(html).toContain("See how AI behaves. Check the evidence yourself.");
-    expect(html).toContain("Published tasks, fixed grading rules");
-    expect(html).toContain("ties, gaps and untested work visible");
+    expect(html).toContain("See how AI behaves.");
+    expect(html).toContain("Check the evidence yourself.");
+    expect(html).toContain("Independent measurements of AI models, agents");
+    expect(html).toContain("understand their limits");
     expect(html).toContain("Measurement, not certification.");
-    expect(html).toContain('aria-roledescription="carousel"');
-    expect(html.match(/data-hero-dot=/g)).toHaveLength(6);
+    expect(html).not.toContain('aria-roledescription="carousel"');
+    expect(html).not.toContain("data-hero-dot");
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html).not.toContain("Every result is signed");
     expect(html).not.toMatch(/model fleets tested|first in market|most advanced/i);
@@ -124,22 +125,22 @@ describe("HomeHero", () => {
     expect(html).toContain('data-testid="hero-cta-agents"');
   });
 
-  it("has exactly one primary CTA, Live board, with Verify as the outlined secondary", () => {
+  it("has exactly one primary CTA, Explore the results, with Verify as the outlined secondary", () => {
     const html = render(<HomeHero />);
     expect(html.match(/data-cta="primary"/g)).toHaveLength(1);
     expect(html.match(/data-cta="secondary"/g)).toHaveLength(1);
     // Only the primary carries the filled button style.
-    expect(html.match(/bg-emerald-400 px-6/g)).toHaveLength(1);
+    expect(html.match(/hp-button-primary/g)).toHaveLength(1);
     const tag = (id: string) => html.match(new RegExp(`<a[^>]*data-testid="${id}"[^>]*>([^<]*)<`)) ?? [];
     const [board, boardText] = tag("hero-cta-board");
-    expect(board).toContain('href="/board"');
+    expect(board).toContain('href="#board"');
     expect(board).toContain('data-cta="primary"');
-    expect(boardText).toBe("Live board");
+    expect(boardText.trim()).toBe("Explore the results");
     const [check, checkText] = tag("hero-cta-check");
     expect(check).toContain('href="/gspc-verify"');
     expect(check).toContain('data-cta="secondary"');
     expect(check).not.toContain("bg-emerald-400 px-6");
-    expect(checkText).toBe("Verify a record");
+    expect(checkText.trim()).toBe("Verify a record");
   });
 });
 
@@ -195,9 +196,21 @@ describe("LiveBoardGlance", () => {
   it("deep-links every tile to its own axis, carrying the axis with the reader", () => {
     const html = render(<LiveBoardGlance data={boardWithAxes} models={models} />);
     // Grafana: linked views must preserve context — a tile that leads nowhere is a hole.
-    for (const axis of ["mock-a", "mock-b", "mock-c", "mock-d"]) {
+    //
+    // The route is derived from the board's own kind, not typed per tile. This
+    // assertion used to require `/gspc/${axis}/` for ALL four tiles, which
+    // asserted the defect: a fact-run or subject axis has no prerendered
+    // /gspc/<axis>/ page, so nine measured-subject axes on the live homepage
+    // were linked to a 404. A model-comparison axis keeps the /gspc/ deep dive;
+    // every other kind goes to the axis page the estate publishes.
+    for (const axis of ["mock-a", "mock-b"]) {
       expect(html).toContain(`href="/gspc/${axis}/"`);
       expect(html).toContain(`data-axis-link="${axis}"`);
+    }
+    for (const axis of ["mock-c", "mock-d"]) {
+      expect(html).toContain(`href="/axis/${axis}/"`);
+      expect(html).toContain(`data-axis-link="${axis}"`);
+      expect(html).not.toContain(`href="/gspc/${axis}/"`);
     }
     // The owner-held axis is not on the page, so it gets no link either.
     expect(html).not.toContain("regulator-transparency");
