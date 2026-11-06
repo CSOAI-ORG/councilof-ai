@@ -2,6 +2,7 @@
 // Captures console errors, verifies the 3D globe signals ready, exercises real interactions,
 // and checks the cross-surface handoffs. Run: E2E_BASE=https://csoai.org node scripts/sov-stack-e2e.mjs
 import { createRequire } from "module";
+import { installGlobeDriveSpy, readGlobeDriveCommands } from "./sov-stack-globe-spy.mjs";
 const { chromium } = createRequire(import.meta.url)("playwright");
 // RETARGETED 2026-08-26. The default pointed at a host this repo does not deploy, so a
 // local run measured somebody else's site (or, for the Vercel default, a host that has
@@ -21,24 +22,6 @@ const NOISE = [
   /font-size:0;color:transparent NaN/i, // Cesium canvas font probe
 ];
 function isNoise(text) { return NOISE.some((re) => re.test(text)); }
-
-// Find the embedded globe3d frame. csoai.org wraps the globe in an
-// <iframe src=".../globe3d.html">. p.frames() on a heavy SPA misses
-// some same-origin child frames; the reliable path is the iframe
-// element handle's .contentFrame(), which returns the Frame directly.
-async function findGlobeFrameFromElement(p) {
-  const handle = await p.$('iframe[src*="globe3d"]');
-  if (!handle) return null;
-  // Wait for the contentDocument to be fully loaded
-  await p.waitForFunction(
-    () => {
-      const el = document.querySelector('iframe[src*="globe3d"]');
-      return el && el.contentDocument && el.contentDocument.readyState === "complete";
-    },
-    { timeout: 30000 },
-  ).catch(() => null);
-  return await handle.contentFrame().catch(() => null);
-}
 
 async function page() {
   const p = await b.newPage();
@@ -149,9 +132,11 @@ async function clickWhenActionable(p, selector, timeoutMs = 30000) {
     if (input) {
       const visible = await input.isVisible().catch(() => false);
       if (visible) {
+        const errorsBefore = errs.length;
         await input.fill("show the frameworks in Japan");
         await p.keyboard.press("Enter");
         await p.waitForTimeout(1500);
+        ok("/globe ask no-crash", errs.length === errorsBefore, "real input interaction");
       } else {
         console.log("~ /globe ask no-crash — SKIPPED: input present but not visible");
       }
@@ -160,7 +145,6 @@ async function clickWhenActionable(p, selector, timeoutMs = 30000) {
       // Only a real interaction earns a pass. The unconditional ok(true) that used to sit
       // here asserted nothing and counted toward the green total — a fake pass is worse than
       // a skip, because it makes the number look like evidence when it is not.
-      ok("/globe ask no-crash", true);
     }
   } catch (e) {
     ok("/globe ask no-crash", false, "input fill failed: " + String(e.message).slice(0, 80));
@@ -254,26 +238,24 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
 // 7) DRIVE-COMMAND SPY — /globe threat button drives the 3D globe (flyTo + neutralize).
 {
   const { p, errs } = await page();
+  await installGlobeDriveSpy(p);
   await go(p, BASE + "/globe");
   await waitForHydration(p);
-  // This spied on postMessage from a PARENT page into the globe iframe. /globe is now the
-  // globe itself at top level, so there is no parent to post and no cross-frame hop to
-  // observe — the mechanism cannot fire by construction, which is why it returned [].
-  //
-  // Cross-frame command delivery was asserted on /brief (flyTo + bftSpiral) until /brief was
-  // withdrawn on 6 Oct 2026; /simulate and /intel, which also used to, are retired too. No live
-  // public route embeds the globe in an iframe any more, so that hop has no surface to measure
-  // (block 8 records the gap). Rather than assert a hop that does not exist here, this reports
-  // the architectural reason.
-  const childFrame = await findGlobeFrameFromElement(p);
-  if (childFrame) {
-    await childFrame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-    await clickWhenActionable(p, 'button:has-text("Rogue swarm")');
-    await p.waitForTimeout(3200);
-    const cmds = await childFrame.evaluate(() => window.__spy || []);
-    ok("/globe threat drives globe", cmds.includes("flyTo") || cmds.includes("neutralize"), "got: " + JSON.stringify(cmds));
+  // Observe the layout served on this run. Some releases render a top-level globe;
+  // others embed it in an iframe that can be replaced during SPA hydration.
+  // Instrument before navigation and resolve the current frame when reading delivery.
+  if (await p.locator('iframe[src*="globe3d"]').count()) {
+    try {
+      await clickWhenActionable(p, 'button:has-text("Rogue swarm")');
+      await p.waitForTimeout(3200);
+      const cmds = await readGlobeDriveCommands(p);
+      ok("/globe threat drives globe", cmds.includes("flyTo") || cmds.includes("neutralize"), "got: " + JSON.stringify(cmds));
+    } catch (e) {
+      // Keep the failure and emit the remaining results instead of crashing the run.
+      ok("/globe threat drives globe", false, String(e.message).slice(0, 160));
+    }
   } else {
-    console.log("~ /globe threat drives globe — SKIPPED: globe is top-level here, no parent→iframe hop exists. No live surface has one since /brief was withdrawn.");
+    console.log("~ /globe threat drives globe — UNMEASURED: no embedded globe frame found on this run");
   }
   await p.close();
 }
