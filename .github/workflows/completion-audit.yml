@@ -83,10 +83,13 @@ jobs:
           pr=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open \
                 --json number --jq '.[0].number // empty')
           if [ -z "$pr" ]; then
-            pr=$(gh pr create --repo "$REPO" --head "$BRANCH" --base master \
+            # gh pr create has no --json on the runner's gh build (unknown flag: --json —
+            # found 2026-11-04 by the first dispatch this workflow ever received); it
+            # prints the PR URL, so the number comes from that.
+            pr_url=$(gh pr create --repo "$REPO" --head "$BRANCH" --base master \
                  --title "completion audit: re-measured against the live surface" \
-                 --body "Automated re-measurement by scripts/completion_audit.py. The probes read the live surface; the required checks are the gate." \
-                 --json number --jq '.number')
+                 --body "Automated re-measurement by scripts/completion_audit.py. The probes read the live surface; the required checks are the gate.")
+            pr="${pr_url##*/}"
           fi
           echo "PR #$pr"
           gh pr merge "$pr" --repo "$REPO" --squash --auto || true

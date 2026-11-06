@@ -623,7 +623,7 @@ function LiveBoard() {
         <RotatingHighlight {...SECTION_TITLES.board} />
       </Heading>
       <Body>
-        A filled cell is a measurement. A dash is honest emptiness. Every figure in this band is read
+        Published results link to their evidence. A dash indicates no measurement. Every figure in this band is read
         live from <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/gspc</code> as
         the page loads — we do not type numbers into a page, because a typed number is the first
         thing to go stale.
