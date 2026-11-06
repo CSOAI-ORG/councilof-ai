@@ -626,6 +626,19 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:council-truth
 
+      # client/src/pages/ClaimsRegister.tsx says, in its own header comment,
+      # "scripts/claims-register-lint.mjs fails the build on any drift between the
+      # two". Nothing ran it. No workflow, no npm script, no reference anywhere —
+      # so the page's second lock against silently dropping a claim (the original
+      # defect: a fifth status rendered 19 of 20 claims on a site whose banner is
+      # "UNMEASURED shown honestly") was a sentence in a comment.
+      #
+      # It reads two files, writes nothing, and needs no network and no token,
+      # so it belongs on the PR rather than on a schedule.
+      - name: Claims register lint — the page must render every claim the register holds
+        if: steps.scope.outputs.gated == 'true'
+        run: node scripts/claims-register-lint.mjs
+
       - name: Stablecoin readiness gate — indexed is never measured
         if: steps.scope.outputs.gated == 'true'
         run: npm run guard:stablecoin-readiness
