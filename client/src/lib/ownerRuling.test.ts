@@ -174,7 +174,7 @@ describe("route titles obey the ruling and type no count", () => {
  * JSON-LD is the copy a search engine reads, and the body-text checks above cannot see it: a price
  * there is written `price: "99"` with the currency in a SEPARATE key, so no currency-symbol regex
  * matches it. MCPDetail.tsx carried `price: "99", priceCurrency: "USD", category: "subscription"`
- * on the /mcp/:slug route — one page per MCP server in the registry, every one of them advertising
+ * on the /mcps/:slug route — one page per MCP server in the registry, every one of them advertising
  * a $99 subscription for a free, permissively-licensed package. Structured data gets its own check.
  */
 describe("structured data offers nothing we do not sell", () => {
