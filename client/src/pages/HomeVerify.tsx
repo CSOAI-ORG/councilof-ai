@@ -1,64 +1,23 @@
-/**
- * Home - the front door, rebuilt 2026-09-30 on the owner's review of the live page.
- *
- * WHAT THE OWNER FOUND (30 Sep): confusing, duplicated content; none of our images; the live
- * board not on the page; the company line sitting mid-page; and the fleets tile ("14") read as
- * a model count when we have measured far more models than that (the figure was
- * totals.model_fleets, a count of model-comparison AXES).
- *
- * THE ORDER IS THE ARGUMENT, and each figure is printed once:
- *   1. HomeHero         - six visual stories: measure, verify, work, connect, maintain, correct.
- *   1.5 LivingBoardStrip - the compact LIVE board (owner, 1 Nov 2026): the model-comparison
- *                          axes at their top accuracy with their separation chips, straight
- *                          from GET /api/gspc; it renders nothing when the read fails.
- *   2. HomeProducts     - nine concise routes into the working products and services.
- *   3. HomeHumanReview  - the actual escalation, competence, authority and receipt workflow.
- *   4. LiveBoardGlance  - the live GSPC board: every axis with its state, the count line with its
- *                         separation line, and the model count (derived from the signed cards by
- *                         scripts/build-models-measured.mjs; list at /models-measured/).
- *   5. HomeProofPoints  - nine concrete safeguards, each linked to its public proof.
- *   5b. External use    - dated outside activity, shared with /traction and /about.
- *   6. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
- *                         the regulator and the agent.
- *   4b. HomeLast30Days - dated list of merged changes, each linked to its PR. No typed counts.
- *   7. Proof strip      - four live figures from GET /api/momentum, then "More numbers".
- *   8. Company strip    - the accountable entity and "Who we are".
- *
- * WHAT LEFT THE FRONT DOOR, AND WHERE IT WENT (align, do not delete): the full momentum band,
- * HomeProof, HomeCredibility, HomeWeakScore, the separation explanation, the memberships and the
- * participation record, and the "keep going" hand-off all moved to /about/#numbers
- * (client/src/components/about/AboutNumbers.tsx). The composer and the talk panel stay on
- * /dashboard, where "Ask" leads. Bands retired on 2026-09-23 remain on /how-we-work.
- *
- * LIVE TOTALS ARE NOT TYPED. Board figures come from GET /api/gspc, the model count from
- * /interop/models-measured.json, the proof figures from GET /api/momentum. Each shows an em dash
- * (or nothing) until it lands and says so in words if it never does.
- */
+/** Council of AI front door: one proposition, one results surface, distinct next steps. */
 import { useEffect } from "react";
-import { Link } from "wouter";
 import HomeHero from "@/components/home/HomeHero";
-import LivingBoardStrip from "@/components/home/LivingBoardStrip";
-import NewsletterSignup from "@/components/NewsletterSignup";
-import LiveBoardGlance from "@/components/home/LiveBoardGlance";
+import HomeResults from "@/components/home/HomeResults";
 import HomeProducts from "@/components/home/HomeProducts";
-import HomeHumanReview from "@/components/home/HomeHumanReview";
-import HomeProofPoints from "@/components/home/HomeProofPoints";
-import HomeWaysIn from "@/components/home/HomeWaysIn";
-import HomeLast30Days from "@/components/home/HomeLast30Days";
-import MomentumStrip from "@/components/momentum/MomentumStrip";
-import ExternalUseEvidence from "@/components/ExternalUseEvidence";
+import HomeEvidence from "@/components/home/HomeEvidence";
+import HomeDevelopers from "@/components/home/HomeDevelopers";
+import HomeUpdates from "@/components/home/HomeUpdates";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
+import "@/styles/home-page.css";
 
-/** The proof strip: the four figures a first-time visitor cares about. The rest are on /about/#numbers. */
-export const HOME_PROOF_IDS = ["signed_cards", "corrections", "mcp_tools", "hf_datasets"];
+// Retained for source consumers; the detailed proof figures remain on /about/#numbers.
+export const HOME_PROOF_IDS = [
+  "signed_cards",
+  "corrections",
+  "mcp_tools",
+  "hf_datasets",
+];
 
-/**
- * schema.org for the front door. Four nodes an answer engine can use without reading the page:
- * who we are, what the software does, the board as a Dataset (DERIVED from the axis registry, so
- * no bank is asserted that the single source of truth does not carry), and the five questions a
- * reader arrives with, answered. No prices, no ratings, no conformity claim.
- */
 const HOME_LD = {
   "@context": "https://schema.org",
   "@graph": [
@@ -126,97 +85,24 @@ const HOME_LD = {
 
 export default function HomeVerify() {
   useEffect(() => {
-    document.title = "UK AI measurement infrastructure — Council of AI";
+    document.title = "Independent AI measurement & evidence — Council of AI";
     setMetaDescription(
-      "An operating UK AI measurement and evidence organisation. Inspect published results, documented external use, free verification and public corrections.",
+      "Explore published measurements of AI models and agents, inspect the evidence and verify signed records. Independent measurement, public corrections and free verification.",
     );
   }, []);
 
   return (
-    <div data-testid="home-verify">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
-
+    <div className="home-page" data-testid="home-verify">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }}
+      />
       <HomeHero />
-      {/* The compact LIVE board (owner, 1 Nov 2026): under the hero, above every other band.
-          It reads GET /api/gspc through the shared feed and draws nothing at all when the
-          read fails — a missing board never breaks the front door. */}
-      <div className="section-shell pt-6 sm:pt-8" data-testid="home-living-strip">
-        <LivingBoardStrip />
-      </div>
-
-      {/* Daily report + newsletter band (owner, 1 Nov 2026): the 33-axis signed daily
-          report is published publicly; the signup rides the real /api/subscribe handler. */}
-      <div className="section-shell pt-10" data-testid="home-daily-report-band">
-        <div className="surface-raised border border-border rounded-lg p-6 sm:p-8">
-          <h2 className="text-xl font-bold mb-2">Measurement reports and evidence updates</h2>
-          <p className="text-muted-foreground text-sm mb-4 max-w-2xl">
-            Read published measurement summaries and corrections. Each report identifies its
-            coverage, publication date and evidence status; refer to the board for current results.
-          </p>
-          <div className="flex flex-wrap gap-3 items-center">
-            <a
-              href="https://huggingface.co/datasets/csoai/gspc-daily-reports"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold hover:opacity-90 transition"
-            >
-              Read published reports
-            </a>
-            <a href="/board/" className="text-sm underline underline-offset-4 hover:text-primary">
-              or go straight to the board
-            </a>
-          </div>
-          <div className="mt-5 max-w-md">
-            <NewsletterSignup />
-          </div>
-        </div>
-      </div>
+      <HomeResults />
       <HomeProducts />
-      <HomeHumanReview />
-      <LiveBoardGlance />
-      <HomeProofPoints />
-      <div className="surface-base border-t border-border">
-        <div className="section-shell py-12 sm:py-16"><ExternalUseEvidence compact id="home-external-use" /></div>
-      </div>
-      <HomeWaysIn />
-      <HomeLast30Days />
-
-      {/* Proof: four live figures a first-time visitor can open at the source. Everything else is
-          behind "More numbers", on /about/#numbers. The board's own figures are in the board band
-          above and are not repeated here. */}
-      <section aria-label="Live figures" className="surface-sunken border-t border-border" data-testid="home-proof-strip">
-        <div className="section-shell pb-10 pt-2 sm:pb-14">
-          <MomentumStrip variant="panel" title="The work, counted live at the source" ids={HOME_PROOF_IDS} />
-          <a
-            href="/about/#numbers"
-            className="inline-flex min-h-11 items-center text-base font-bold text-emerald-800 underline underline-offset-4 dark:text-emerald-300"
-            data-testid="home-more-numbers"
-          >
-            More numbers →
-          </a>
-        </div>
-      </section>
-
-      {/* The accountable entity: always visible, never mid-flow (owner, 30 Sep 2026). */}
-      <section aria-label="Who runs Council of AI" className="surface-base border-t border-border" data-testid="home-company-strip">
-        <div className="section-shell flex flex-col gap-3 py-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="home-accountable-entity">
-            Council of AI is an operating UK AI measurement and evidence organisation run by CSOAI Ltd (UK Companies House 16939677),
-            founded by Nicholas Templeman. We measure; we do not certify, and verification is free.
-          </p>
-          <div className="flex flex-wrap gap-x-6 text-sm font-bold">
-            <Link href="/traction/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
-              Operation and external use →
-            </Link>
-            <Link href="/about/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
-              Who we are →
-            </Link>
-            <Link href="/how-we-work" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
-              How we work →
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HomeEvidence />
+      <HomeDevelopers />
+      <HomeUpdates />
     </div>
   );
 }
