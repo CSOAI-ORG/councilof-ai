@@ -195,9 +195,21 @@ describe("LiveBoardGlance", () => {
   it("deep-links every tile to its own axis, carrying the axis with the reader", () => {
     const html = render(<LiveBoardGlance data={boardWithAxes} models={models} />);
     // Grafana: linked views must preserve context — a tile that leads nowhere is a hole.
-    for (const axis of ["mock-a", "mock-b", "mock-c", "mock-d"]) {
+    //
+    // The route is derived from the board's own kind, not typed per tile. This
+    // assertion used to require `/gspc/${axis}/` for ALL four tiles, which
+    // asserted the defect: a fact-run or subject axis has no prerendered
+    // /gspc/<axis>/ page, so nine measured-subject axes on the live homepage
+    // were linked to a 404. A model-comparison axis keeps the /gspc/ deep dive;
+    // every other kind goes to the axis page the estate publishes.
+    for (const axis of ["mock-a", "mock-b"]) {
       expect(html).toContain(`href="/gspc/${axis}/"`);
       expect(html).toContain(`data-axis-link="${axis}"`);
+    }
+    for (const axis of ["mock-c", "mock-d"]) {
+      expect(html).toContain(`href="/axis/${axis}/"`);
+      expect(html).toContain(`data-axis-link="${axis}"`);
+      expect(html).not.toContain(`href="/gspc/${axis}/"`);
     }
     // The owner-held axis is not on the page, so it gets no link either.
     expect(html).not.toContain("regulator-transparency");

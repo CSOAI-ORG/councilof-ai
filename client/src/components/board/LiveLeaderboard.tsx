@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { axisHref } from "@/lib/axisHref";
 import {
   countLine,
   hasFigure,
@@ -288,7 +289,7 @@ function AxisResult({ a }: { a: GspcAxis }) {
         Ordering is layout, not a purchased rank. A TIE is never a win. Ask below about this row, or open the axis.
       </p>
       <p className="mt-2 text-sm">
-        <a href={`/gspc/${encodeURIComponent(a.axis)}`} className="font-semibold text-emerald-800 hover:underline">
+        <a href={axisHref(a) ?? undefined} className="font-semibold text-emerald-800 hover:underline">
           Open {a.axis} →
         </a>
       </p>
