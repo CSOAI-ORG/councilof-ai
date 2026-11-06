@@ -62,8 +62,8 @@ entries with the live x402 catalogue. Multi-page offset reads are mutable and do
 not prove absence; unseen routes stay indeterminate. An hourly cron checks whether a daily scan is due;
 failed scans retry no more than once per six hours, retain last-good results as
 historical, and have a 15-minute process timeout. No challenge, purchase, listing
-submission or upload is made. `indexes.json` records attempts and last-good
-observation separately. This does not classify index metadata as current or stale.
+submission or upload is made. The selection-specific `indexes-<hash>.json` records attempts and last-good
+observation separately; the business report reads the PayAI selection and reports unavailable until it exists. Legacy `indexes.json` is retained as historical state. This does not classify index metadata as current or stale.
 
 To scan only PayAI against the live catalogue without writing state:
 
