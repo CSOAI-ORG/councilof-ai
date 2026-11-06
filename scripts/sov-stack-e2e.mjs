@@ -2,7 +2,7 @@
 // Captures console errors, verifies the 3D globe signals ready, exercises real interactions,
 // and checks the cross-surface handoffs. Run: E2E_BASE=https://csoai.org node scripts/sov-stack-e2e.mjs
 import { createRequire } from "module";
-import { installGlobeDriveSpy, readGlobeDriveCommands } from "./sov-stack-globe-spy.mjs";
+import { installGlobeDriveSpy, readGlobeDriveCommands, waitForGlobeDriveReady } from "./sov-stack-globe-spy.mjs";
 const { chromium } = createRequire(import.meta.url)("playwright");
 // RETARGETED 2026-08-26. The default pointed at a host this repo does not deploy, so a
 // local run measured somebody else's site (or, for the Vercel default, a host that has
@@ -71,35 +71,12 @@ async function waitForHydration(p, minChars = 800, timeoutMs = 15000) {
     .catch(() => null);
 }
 
-// Click an action button once it is visible AND enabled. The SPA's overlay
-// buttons can be present in the DOM but covered by a transient hydration
-// layer for 1-3s; the default 30s click wait is the wrong tool — the button
-// is not "not found", it is "not actionable yet". Wait for the actionable
-// state, then click with a generous timeout.
-//
-// selector can be a CSS selector OR a comma-separated list of Playwright
-// `:has-text("X")` pseudo-selectors. We use Playwright's locator API for both
-// the wait and the click, which understands `:has-text` natively.
+// Click the observed action once. The caller waits for application readiness;
+// native locator actionability alone cannot prove that React handlers exist.
 async function clickWhenActionable(p, selector, timeoutMs = 30000) {
-  const loc = p.locator(selector.split(",")[0].trim());
-  try {
-    await loc.waitFor({ state: "visible", timeout: timeoutMs });
-  } catch (_) { return null; }
-  // If the comma-joined form had multiple options, prefer the first visible one
-  const candidates = selector.split(",").map((s) => p.locator(s.trim()));
-  let target = loc;
-  for (const c of candidates) {
-    if (await c.count() > 0 && await c.first().isVisible().catch(() => false)) {
-      target = c.first();
-      break;
-    }
-  }
-  try {
-    await target.click({ timeout: 10000 });
-    return target;
-  } catch (_) {
-    return target;
-  }
+  // Locator.click waits for actionability; failure must reach the assertion.
+  // Never report a successful interaction after swallowing a click error.
+  await p.locator(selector).first().click({ timeout: timeoutMs });
 }
 
 // 1) /globe — 3D globe, mode toggle, agentic ask, threat
@@ -108,16 +85,8 @@ async function clickWhenActionable(p, selector, timeoutMs = 30000) {
   await go(p, BASE + "/globe");
   let ready = false; p.on("console", () => {});
   await p.waitForTimeout(2500);
-  // ARCHITECTURE CHANGED, and these assertions encoded the old one.
-  // /globe used to be a WRAPPER page holding an <iframe src="globe3d"> plus a 2D/3D toggle.
-  // It now 308s to /globe3d and renders the globe DIRECTLY — one canvas, no iframe, no
-  // toggle. The capability is intact and live (417 frozen provisions, 6 anchor nodes,
-  // 291 MCP servers catalogued render on it); only the packaging moved.
-  //
-  // So these check the capability rather than the wrapper. What is NOT being quietly
-  // dropped: the 2D-classic view no longer exists on this route. That is recorded here
-  // rather than deleted, because a test removed in silence is how a surface disappears
-  // without anyone deciding to remove it.
+  // Releases have served both a top-level globe and an embedded globe with a
+  // 2D/3D toggle. Check the current surface instead of asserting an old layout.
   const has3d = (await p.$$("canvas")).length > 0 || (await p.$('iframe[src*="globe3d"]')) !== null;
   ok("/globe 3d renders", !!has3d, `url=${p.url()}`);
   ok(
@@ -150,9 +119,8 @@ async function clickWhenActionable(p, selector, timeoutMs = 30000) {
     ok("/globe ask no-crash", false, "input fill failed: " + String(e.message).slice(0, 80));
   }
   // toggle to 2D → SVG should appear
-  // The 2D-classic toggle was removed with the wrapper page (see above). If it ever returns,
-  // this asserts it works; while it is absent, that absence is reported as a skip, not a pass
-  // and not a failure — the same UNMEASURED discipline used on the model boards.
+  // When the current route has a 2D toggle, exercise it. Otherwise keep the
+  // unexercised interaction out of the passing assertion count.
   const toggle = await p.$('button:has-text("2D classic"), button:has-text("3D globe")');
   if (toggle) {
     await toggle.click();
@@ -246,7 +214,10 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   // Instrument before navigation and resolve the current frame when reading delivery.
   if (await p.locator('iframe[src*="globe3d"]').count()) {
     try {
+      await waitForGlobeDriveReady(p);
       await clickWhenActionable(p, 'button:has-text("Rogue swarm")');
+      await p.getByRole("button", { name: /Council responding|Swarm demo running|Demo complete|Stopped/ })
+        .first().waitFor({ state: "visible", timeout: 5000 });
       await p.waitForTimeout(3200);
       const cmds = await readGlobeDriveCommands(p);
       ok("/globe threat drives globe", cmds.includes("flyTo") || cmds.includes("neutralize"), "got: " + JSON.stringify(cmds));
@@ -261,12 +232,8 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
 }
 
 // 8) /brief "Convene the council" drive-command spy — RETIRED with /brief (withdrawn 6 Oct 2026,
-// see block 4). It was the last live surface that embedded the globe in an iframe and drove it
-// across frames (flyTo + layer0/bftSpiral). The capability is now UNMEASURED, not passing: the
-// remaining callers of client/src/lib/globeDrive.ts are /globe, where the globe is top-level
-// (block 7), and CouncilSpace, dead code behind the /gspc-arena door /simulate leads to (block 3).
-// Recorded here so the coverage gap is a visible decision, not a silent deletion. If a public
-// page embeds the globe again, reinstate this spy on it.
+// see block 4). Its old flyTo + layer0/bftSpiral interaction is no longer exercised.
+// Block 7 independently checks command delivery on the current /globe surface.
 
 // 9+10) /simulate drive-command spies — RETIRED with the surface (see block 3). There is no
 // globe iframe behind the /simulate door anymore, so these could only ever report
