@@ -283,6 +283,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Mcp Trust Board"
  },
  {
+  "path": "/brand",
+  "comp": "Brand",
+  "title": "Brand"
+ },
+ {
   "path": "/bulk-import",
   "comp": "BulkAISystemImport",
   "title": "Bulk AISystem Import"
@@ -1108,6 +1113,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "High Risk Systems"
  },
  {
+  "path": "/him",
+  "comp": "Him",
+  "title": "Him"
+ },
+ {
   "path": "/hive",
   "comp": "FrameworkHive",
   "title": "Framework Hive"
@@ -1371,11 +1381,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/maternal-covenant",
   "comp": "MaternalCovenant",
   "title": "Maternal Covenant"
- },
- {
-  "path": "/mcp",
-  "comp": "MCPRegistry",
-  "title": "MCPRegistry"
  },
  {
   "path": "/mcp-tools",
