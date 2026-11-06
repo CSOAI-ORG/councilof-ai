@@ -39,6 +39,7 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
+  actions: write          # dispatches the required gates for the day's pull request
 
 jobs:
   intake:
@@ -57,7 +58,13 @@ jobs:
           WATCHDOG_PUSH: "0"
         run: |
           set -euo pipefail
-          bash scripts/pod-loops/watchdog-intake.sh --now
+          # THE DAY'S PRODUCERS ARE MASTER'S. The lane's origin is this workspace, and a
+          # workspace carries only the ref it was dispatched from, so the loop's base has to
+          # be NAMED: master's commit, read here. The lane SHARES this workspace's object
+          # store, so that commit is already in the lane's store and needs no fetch.
+          MASTER_SHA=$(git rev-parse origin/master)
+          echo "the day's producers are master's: $MASTER_SHA"
+          WATCHDOG_BASE="$MASTER_SHA" bash scripts/pod-loops/watchdog-intake.sh --now
           echo "--- the loop's own verdict ---"
           tail -3 "$LANES/logs/watchdog-intake.log"
 
@@ -75,12 +82,31 @@ jobs:
 
           # THE LOOP'S VERDICT IS THE GATE. A day the loop did not READ is a HOLD, and a HOLD
           # is not published. This workflow has no opinion of its own about the day's content.
-          if ! grep -q " READ " "$LANES_DIR/logs/watchdog-intake.log"; then
+          LOG="$LANES_DIR/logs/watchdog-intake.log"
+          if ! grep -q " READ " "$LOG"; then
             echo "the loop did not READ the day - nothing is published, nothing is claimed"
             exit 0
           fi
 
-          git checkout -B "$BRANCH"
+          # COUNTS ARE DERIVED, NEVER TYPED. The message below used to say "18 public
+          # watchdog and incident sources probed" in the clear, because 18 was true on the
+          # day it was written. A number in a commit message is a claim about a measurement
+          # nobody re-read, and the estate's rule is that a count is derived from the
+          # measurement or it is not said at all. The loop's own READ line carries both
+          # numbers; they are read from it, never typed here.
+          READ_LINE=$(grep " READ " "$LOG" | tail -1)
+          PROBED=$(printf '%s' "$READ_LINE" | sed -n 's/.*probed=\([0-9][0-9]*\).*/\1/p')
+          ROWS=$(printf '%s' "$READ_LINE" | sed -n 's/.*rows=\([0-9][0-9]*\).*/\1/p')
+          if [ -z "$PROBED" ] || [ -z "$ROWS" ]; then
+            echo "HOLD - the loop's READ line carries no probed/rows count, so the day's numbers cannot be stated"
+            exit 0
+          fi
+          echo "the day: probed=$PROBED rows=$ROWS"
+
+          # THE DAY LANDS ON MASTER. The branch is created from master's commit, not from
+          # the workspace's HEAD, so the pull request is the day and nothing else.
+          MASTER_SHA=$(git rev-parse origin/master)
+          git checkout -B "$BRANCH" "$MASTER_SHA"
           mkdir -p "$PUB"
           cp -R "$LANE/$PUB/." "$PUB/"
           git add -- "$PUB"
@@ -89,28 +115,74 @@ jobs:
             exit 0
           fi
 
-          # THE SAME RULES THE POD'S LAND JOB ENFORCED: the diff may only ADD and MODIFY under
-          # public/interop/watchdog-intake/, and it may never delete anything. Any other path,
-          # any deletion, and the day is a HOLD left for a human.
-          if git diff --cached --name-only | grep -v "^$PUB/"; then
-            echo "HOLD - the diff touches a path the intake may not touch"
+          git -c user.name=csoai-watchdog-intake -c user.email=intake@csoai.org commit -q \
+            -m "watchdog/auto-$DATE: $PROBED public watchdog and incident sources probed, the day folded into the WG-SAFE routing queue ($ROWS rows, every row HOLD, may_apply false, no challenge opened)"
+
+          # THE SAME RULES THE POD'S LAND JOB ENFORCED: the pull request may only ADD and
+          # MODIFY under public/interop/watchdog-intake/, and it may never delete anything.
+          # Any other path, any deletion, and the day is a HOLD left for a human.
+          #
+          # THE CHECK IS AGAINST THE PULL REQUEST, NOT THE STAGING AREA. The first version
+          # checked `git diff --cached`, which sees only what THIS step staged - and a
+          # branch created from the workspace's HEAD carries everything else that HEAD
+          # had. So a day published from a branch that was not master rode that branch's
+          # changes into the pull request, under a check that had already passed: on
+          # 2026-11-03 the day's pull request carried this workflow and this loop along
+          # with the day's data. The pull request's real content is the branch's diff
+          # against master, and that is what is checked here - after the commit, so the
+          # diff is the pull request's.
+          CHANGED=$(git diff --name-only "$MASTER_SHA...HEAD")
+          if printf '%s\n' "$CHANGED" | grep -v "^$PUB/" | grep .; then
+            echo "HOLD - the pull request touches a path the intake may not touch"
             exit 0
           fi
-          if git diff --cached --diff-filter=D --name-only | grep .; then
-            echo "HOLD - the diff deletes a path; the intake only adds and modifies"
+          if git diff --name-only --diff-filter=D "$MASTER_SHA...HEAD" | grep .; then
+            echo "HOLD - the pull request deletes a path; the intake only adds and modifies"
             exit 0
           fi
 
-          git -c user.name=csoai-watchdog-intake -c user.email=intake@csoai.org commit -q \
-            -m "watchdog/auto-$DATE: 18 public watchdog and incident sources probed, the day folded into the WG-SAFE routing queue (every row HOLD, may_apply false, no challenge opened)"
           git push -q --force-with-lease origin "$BRANCH"
 
           pr=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
           if [ -z "$pr" ]; then
-            pr=$(gh pr create --repo "$REPO" --head "$BRANCH" --base master \
+            # `gh pr create` has NO --json flag - it prints the new PR's URL on stdout. The
+            # first version of this step asked for `--json number --jq '.number'` and died
+            # with "unknown flag: --json" AFTER the day's branch had already been pushed,
+            # so the day landed on a branch with no pull request and nothing said so.
+            url=$(gh pr create --repo "$REPO" --head "$BRANCH" --base master \
                  --title "watchdog/auto-$DATE: the day's public watchdog intake and WG-SAFE routing queue" \
-                 --body "Produced by scripts/pod-loops/watchdog-intake.sh, the estate's own intake loop, run on a runner because the pod that hosted it is gone. Every routing row is HOLD, may_apply false, no challenge opened. The loop's own gate decided the day was publishable; the required checks are the gate for the merge." \
-                 --json number --jq '.number')
+                 --body "Produced by scripts/pod-loops/watchdog-intake.sh, the estate's own intake loop, run on a runner because the pod that hosted it is gone. $PROBED public watchdog and incident sources probed; $ROWS routing rows, every one HOLD, may_apply false, no challenge opened. The loop's own gate decided the day was publishable; the required checks are the gate for the merge.")
+            pr=$(printf '%s' "$url" | sed -n 's#.*/pull/\([0-9][0-9]*\).*#\1#p')
+            if [ -z "$pr" ]; then
+              echo "::error::the day's branch $BRANCH is pushed but its pull request number could not be read from: $url"
+              exit 1
+            fi
           fi
           echo "PR #$pr"
-          gh pr merge "$pr" --repo "$REPO" --squash --auto || true
+          # THE DAY'S PULL REQUEST NEEDS ITS GATES DISPATCHED BY HAND. GitHub does not emit
+          # pull_request events for work done with GITHUB_TOKEN, so a pull request opened by
+          # this workflow carries ZERO protected checks - and a pull request with no checks
+          # is not a gated pull request, whatever its merge button says. The estate already
+          # has the mechanism (TUI-1, 2026-09-13, in hub-queue-land.yml): pr-gates.yml already
+          # accepts workflow_dispatch, so the gates are dispatched at this branch and attach
+          # to the pull request's head. Branch protection is untouched, and nothing is faked.
+          # Both workflows are needed: pr-gates does not publish the required CI/build check.
+          # Dispatch failures leave the PR available but fail this producer visibly.
+          if ! gh workflow run pr-gates.yml --repo "$REPO" --ref "$BRANCH" -f "pr=$pr"; then
+            echo "::error::PR #$pr was created but pr-gates could not be dispatched"
+            exit 1
+          fi
+          if ! gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"; then
+            echo "::error::PR #$pr was created but the required CI/build check could not be dispatched"
+            exit 1
+          fi
+          echo "pr-gates and CI/build dispatched at $BRANCH; protected checks remain required"
+          # NO SILENT NO-OP. The old line was `... --auto || true`, which swallowed every
+          # failure - including "auto-merge is not enabled on this repository" - and left a
+          # day's reading sitting on an open pull request with nothing to show for it.
+          if gh pr merge "$pr" --repo "$REPO" --squash --auto; then
+            echo "auto-merge enabled - the required checks (gates, build, stamped-bytes, hold-guard) are the gate"
+          else
+            echo "::warning::auto-merge could NOT be enabled for PR #$pr"
+            echo "::warning::the day is pushed and the pull request is open; it needs the merge queue or a human"
+          fi

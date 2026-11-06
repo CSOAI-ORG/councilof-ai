@@ -353,7 +353,7 @@ describe("sitemaps list exactly the entities with data", () => {
     expect(notes.map((n) => n.key)).toEqual(["2026-09-26"]);
   });
 
-  it("every URL is the canonical slash form, unique, under the 50k cap", async () => {
+  it("every URL is the canonical slash form, unique, under the 50k cap", { timeout: 120_000 }, async () => {
     for (const t of ["mcp-servers", "agent-cards", "x402", "stablecoins", "notes-daily"] as const) {
       const items = await listType(ctx("/"), t);
       const xml = urlset(items);

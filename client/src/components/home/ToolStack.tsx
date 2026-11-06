@@ -89,7 +89,7 @@ const TOOLS: Tool[] = [
     pain:
       "Otherwise you compare suppliers on scorecards that quietly leave out the tests they did badly on.",
     ticks: [
-      "A filled cell is a measurement. A dash is honest emptiness.",
+      "Published results link to their evidence. A dash indicates no measurement.",
       "The count line is printed once on this page, on the living board above — never typed here.",
       "A TIE stays a TIE. It is never dressed up as a win.",
     ],

@@ -25,6 +25,7 @@ import head from "../data/seo-head.json";
 import { ROUTE_MANIFEST } from "../data/route-manifest";
 import { prettifyTitle, SECTORS } from "../data/library-ia";
 import { isWithdrawnPath } from "./publicationState";
+import { reviewedBlogRecord } from "./reviewedBlog";
 
 export interface HeadEntry {
   title: string;
@@ -255,6 +256,14 @@ export function resolveHead(path: string, opts: { name?: string } = {}): Resolve
     ogDescription: description,
     source,
   });
+
+  // Resolve only already-approved articles from the lightweight source index.
+  // A family head permits the article to refine its own headline after mount;
+  // the shell must not restore a generic withdrawal title over real content.
+  const reviewedPost = reviewedBlogRecord(p);
+  if (reviewedPost) {
+    return finish(fitTitle(reviewedPost.headline), fitDescription(reviewedPost.description), "family");
+  }
 
   // A withdrawn route says so even when the map has an entry for it: the map describes the page
   // that was promised, the publication manifest says what is actually served.

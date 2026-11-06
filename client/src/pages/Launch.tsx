@@ -62,7 +62,7 @@ const VERIFICATION_LINKS = [
   {
     label: "In-browser card verification",
     url: "/gspc-verify",
-    desc: "Verify any signed card's Ed25519 signature without trusting us.",
+    desc: "Verify a supported signed card’s Ed25519 signature independently.",
   },
   {
     label: "Anchor posture (what is signed, what is anchored)",
@@ -266,7 +266,7 @@ export default function Launch() {
           </Link>
           {" · "}
           <Link href="/honesty" className="text-emerald-700 underline">
-            Honesty gate
+            Measurement scope
           </Link>
           {" · "}
           <Link href="/board" className="text-emerald-700 underline">
