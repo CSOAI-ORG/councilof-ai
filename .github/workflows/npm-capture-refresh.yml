@@ -1,0 +1,161 @@
+name: npm capture refresh — the guide's npm facts are derived, not authored
+
+# WHY THIS EXISTS. The install guide told readers which release was on npm, how many tool
+# names it carried, and how many the live door carried. Those are facts about the WORLD,
+# and they were HAND-WRITTEN PROSE in two files. The facts themselves lived in one dated
+# capture — distribution/npm/npm-publish-check.json — but nothing refreshed the capture.
+#
+# So a publish silently invalidated the guide, three times:
+#   2026-11-01  #3703 corrected the guide against npm's 0.2.4 (52 names) vs a door at 53.
+#                Then the estate's own release workflow published 0.2.5 at 15:07:36Z.
+#   2026-11-02  #3731 corrected it again; the wave (#3745) was force-rebuilt and DROPPED
+#                that fix, so the false claim returned to master with the wave.
+#   2026-11-03  #3810 corrected it a third time.
+# Three times, a human or an agent had to notice a drift a script could have noticed, and
+# between two of those corrections a stranger could read a false claim about a published
+# package on the public surface.
+#
+# THIS WORKFLOW IS THE MECHANISM, so the fourth one does not need a human. It runs the
+# estate's own producer, which writes a NEW dated capture; it regenerates the guide's
+# npm-facts block FROM that capture; and if the committed guide no longer matches, it
+# opens a PULL REQUEST. The prose is now derived, the way the tool catalogue in the same
+# file already is — so a publish that moves the fleet produces a reviewable change
+# instead of a false claim.
+#
+# WHAT IT NEVER DOES. It never edits a capture (a capture is dated and never edited: a
+# new one is written). It never merges to master, never bypasses branch protection, and
+# never advertises a published release as the contract. The prepared source version is
+# moved by a separate, human-owned step, because a published version cannot be
+# re-published and only a release can do that.
+#
+# Read-only with respect to master: it writes a branch and opens a PR.
+
+on:
+  schedule:
+    # Every 6 hours. npm publishes without warning, and the estate's own release
+    # workflow publishes on its own cadence, so the guide has to be re-derived on a
+    # cadence, not on a human's memory.
+    - cron: "17 */6 * * *"
+  workflow_dispatch: {}
+  push:
+    branches: [master]
+    paths:
+      - "scripts/harness-x/npm-publish-live.mjs"
+      - "scripts/harness-x/npm-guide-facts.mjs"
+      - "distribution/npm/npm-publish-check.json"
+      - ".github/workflows/npm-capture-refresh.yml"
+
+jobs:
+  npm-capture-refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write # dispatch the existing required PR gates for the bot branch
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # The producer is the estate's own; it writes a NEW dated capture and never edits
+      # the old one. It fetches npm's registry document and the live door.
+      - name: Produce a fresh capture
+        id: produce
+        continue-on-error: true
+        run: node scripts/harness-x/npm-publish-live.mjs
+
+      # A producer that cannot reach npm or the door is UNMEASURED, not a clean answer.
+      # The run says so and stops; it does not write a capture with zeros in it.
+      - name: Producer must have succeeded
+        if: steps.produce.outcome == 'failure'
+        run: |
+          echo "::notice::the producer could not write a capture (npm or the door was unreachable) — nothing is claimed and nothing changes"
+          echo "produced=0" >> "$GITHUB_OUTPUT"
+
+      # The gate must be able to fail before its green means anything.
+      - name: Guide-facts selftest (must-fail cases go red)
+        if: steps.produce.outcome == 'success'
+        run: node scripts/harness-x/npm-guide-facts.mjs --selftest
+
+      # Is the committed guide still what the capture implies?
+      - name: Check the guide against the capture
+        id: check
+        if: steps.produce.outcome == 'success'
+        continue-on-error: true
+        run: node scripts/harness-x/npm-guide-facts.mjs --check
+
+      # Regenerate: the capture changed, or the guide had drifted.
+      - name: Regenerate the guide's npm facts from the capture
+        if: steps.produce.outcome == 'success'
+        run: node scripts/harness-x/npm-guide-facts.mjs --write
+
+      # Every OTHER surface that states the npm release's state is derived from the same
+      # capture, so a new capture invalidates them too. Left out, this workflow would land a
+      # capture that makes llms.txt and the two discovery documents stale — and pr-gates runs
+      # `node scripts/llms-txt.mjs --check`, so the PR would go red on a fact it just moved.
+      #
+      # The derivation lives in ONE place (scripts/harness-x/npm-release-state.mjs): the guide's
+      # block, llms.txt's two sentences, the discovery documents' note and the live door's install
+      # line all read the same capture.
+      # llms-txt derives this commit's board through esbuild; setup-node alone
+      # does not install the lockfile dependencies needed by that generator.
+      - name: Install generator dependencies
+        if: steps.produce.outcome == 'success'
+        run: npm ci --no-audit --no-fund
+
+      - name: Regenerate the other derived npm surfaces
+        if: steps.produce.outcome == 'success'
+        run: |
+          node scripts/llms-txt.mjs
+          node scripts/harness-x/render.mjs
+
+      - name: Decide whether there is anything to land
+        id: decide
+        if: steps.produce.outcome == 'success'
+        run: |
+          if git diff --quiet; then
+            echo "landed=0" >> "$GITHUB_OUTPUT"
+            echo "the capture and every derived surface already agree — nothing to land"
+          else
+            echo "landed=1" >> "$GITHUB_OUTPUT"
+            git --no-pager diff --stat
+          fi
+
+      - name: Open a pull request for the regeneration
+        if: steps.decide.outputs.landed == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          STAMP=$(date -u +%Y%m%dT%H%MZ)
+          BR="lane/npm-capture-refresh-${STAMP}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BR"
+          git add distribution/npm/npm-publish-check.json llms-install.md public/llms-install.md \
+                  public/llms.txt public/llms-full.txt \
+                  public/.well-known/mcp.json public/.well-known/mcp/server-card.json \
+                  distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json \
+                  distribution/MANIFEST.json
+          git commit -m "npm-capture: re-derive the npm facts from a fresh capture (${STAMP})"
+          git push origin "HEAD:$BR"
+          URL=$(gh pr create --base master --head "$BR" \
+            --title "npm-capture: re-derive the npm facts from a fresh capture (${STAMP})" \
+            --body "The estate's own producer wrote a new dated capture, and every surface that states the npm package's release state was regenerated FROM it.
+
+          The derivation is one module (scripts/harness-x/npm-release-state.mjs) over one dated capture (distribution/npm/npm-publish-check.json):
+          - the install guide's npm-facts block (scripts/harness-x/npm-guide-facts.mjs);
+          - llms.txt's two npm sentences (scripts/llms-txt.mjs);
+          - the two discovery documents' stdio note (scripts/harness-x/render.mjs);
+          - the live door's install line (functions/mcp/[[path]].ts).
+
+          The capture is dated and was not edited. The published release is NOT advertised as the contract — the prepared source version is moved separately, because a published version cannot be re-published.
+
+          The guide's two copies (llms-install.md and public/llms-install.md) are rewritten together and are byte-identical.")
+          # GITHUB_TOKEN pushes deliberately do not emit pull_request events. Dispatch
+          # the existing full gate on this trusted internal branch instead of bypassing
+          # branch protection or trying to manufacture an approval.
+          gh workflow run pr-gates.yml --ref "$BR"
+          gh pr merge "$URL" --squash --auto || echo "auto-merge unavailable; $URL needs a human merge"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"

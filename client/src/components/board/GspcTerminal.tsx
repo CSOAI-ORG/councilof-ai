@@ -36,8 +36,10 @@ export {
 const GSPC_URL = "/api/gspc";
 const ELO_URL = "/arena/elo_reference.json";
 const CARD_INDEX_URL = "/signed/card_index.json";
-// The free MCP door, not the npm package: every published npm release is marked deprecated on npm and
-// carries fewer tools (T14, 6 Oct 2026).
+// The free MCP door, not the npm package: the published release carries fewer tool names than the
+// door serves, and the release this repository prepares is not on npm yet. Both are measured
+// (distribution/npm/npm-publish-check.json) — the reason used to be typed as "every published npm
+// release is marked deprecated on npm", which was false from 2 Nov 2026 on.
 const MCP_LINE = "MCP (free, no key): https://councilof.ai/mcp/free";
 
 /** Board axis id → per-axis Elo key. Only these board axes carry a per-model ranking. */
