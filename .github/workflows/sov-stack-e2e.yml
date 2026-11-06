@@ -37,6 +37,8 @@ jobs:
           npm init -y >/dev/null 2>&1 || true
           npm i -D playwright@1.61.1 >/dev/null 2>&1
           npx playwright install --with-deps chromium
+      - name: Check globe probe replacement and missing-delivery fixtures
+        run: node --test scripts/sov-stack-globe-spy.node-test.mjs
       # deploy.yml has already finished; wait only for alias propagation.
       - name: Let the Pages alias settle
         if: github.event_name == 'workflow_run'
