@@ -283,6 +283,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Mcp Trust Board"
  },
  {
+  "path": "/brand",
+  "comp": "Brand",
+  "title": "Brand"
+ },
+ {
   "path": "/bulk-import",
   "comp": "BulkAISystemImport",
   "title": "Bulk AISystem Import"
@@ -994,8 +999,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/gpai",
-  "comp": "GpaiObligations",
-  "title": "Gpai Obligations"
+  "comp": "GpaiMatrix",
+  "title": "Gpai Matrix"
  },
  {
   "path": "/gpai-evidence",
@@ -1106,6 +1111,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/high-risk-ai-systems",
   "comp": "HighRiskSystems",
   "title": "High Risk Systems"
+ },
+ {
+  "path": "/him",
+  "comp": "Him",
+  "title": "Him"
  },
  {
   "path": "/hive",
@@ -1786,6 +1796,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/rediscovered",
   "comp": "Lineage",
   "title": "Lineage"
+ },
+ {
+  "path": "/refund-policy",
+  "comp": "RefundPolicy",
+  "title": "Refund Policy"
+ },
+ {
+  "path": "/refunds",
+  "comp": "RefundPolicy",
+  "title": "Refund Policy"
  },
  {
   "path": "/refutation-ledger",
