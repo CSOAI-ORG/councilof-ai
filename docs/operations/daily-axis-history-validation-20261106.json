@@ -1,0 +1,105 @@
+{
+  "schema": "codex.daily-report-source-validation/1",
+  "actor": "Codex",
+  "autoMerge": false,
+  "scope": "CSOAI-ORG/councilof-ai",
+  "passed": true,
+  "receipt": {
+    "path": "/tmp/codex-reporting-source-controls-pass2-20261106/CONTROL_RESULT.json",
+    "bytes": 3933,
+    "sha256": "eac2ab41fd93486adf9bd9de34201969911e766d19afe6861615ab0d5eea5be8"
+  },
+  "controls": [
+    {
+      "suite": "private",
+      "exit_code": 0,
+      "stop_reason": null,
+      "peak_rss_bytes": 26361856,
+      "elapsed_seconds": 0.5072155760135502,
+      "log_sha256": "33ff17daf47f7632dbb627c7120d55fd98a03fd93705619b26896d0014548698",
+      "tests": {
+        "suite": "private",
+        "run": 32,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 32,
+        "canonical_smoke": null
+      }
+    },
+    {
+      "suite": "public",
+      "exit_code": 0,
+      "stop_reason": null,
+      "peak_rss_bytes": 21925888,
+      "elapsed_seconds": 0.3958777819061652,
+      "log_sha256": "02032cbc7a5b843ab6d78e2f7246667730a69a7a363c00aa1f78f9735cf9011d",
+      "tests": {
+        "suite": "public",
+        "run": 26,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 26,
+        "canonical_smoke": {
+          "canonical_axes": 34,
+          "exact_axis_set": true,
+          "all_hold": true,
+          "all_unavailable_not_zero": true,
+          "no_numeric_comparison": true
+        }
+      }
+    },
+    {
+      "suite": "bash-syntax",
+      "exit_code": 0,
+      "stop_reason": null,
+      "peak_rss_bytes": 782336,
+      "elapsed_seconds": 0.029052506084553897,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": null
+    }
+  ],
+  "source_files": [
+    {
+      "path": "candidate-public/scripts/watchdog_charter_feed.py",
+      "bytes": 26432,
+      "sha256": "502b1417dca66df061e4dcb559ec1840f8608bb8045862d639863d50c0b0c93b"
+    },
+    {
+      "path": "candidate-public/scripts/test_watchdog_charter_feed.py",
+      "bytes": 14148,
+      "sha256": "3de65f6435a095396b3035f03efa40f163f920b9f62a51793f663cc1c68ac6ae"
+    },
+    {
+      "path": "candidate-public/scripts/pod-loops/watchdog-intake.sh",
+      "bytes": 10041,
+      "sha256": "358252fe0e27b879d16985d0de7e3e953a2f15cccfd8c5187cd9b0fcd92c3efb"
+    }
+  ],
+  "canonical_inputs": {
+    "git_base": "185eef60c25f7f7fcf3dd4bc3610aca1d115985d",
+    "sha256": {
+      "registry": "fc915e79716acf0fb5df638838e0bfcb47114920d0f0cdf5b6a7784257dbb8bc",
+      "charter_map": "3cf5ee5aab1a1f363e539c5dcfbb6180e934d8b23fe3f3c108e2fa8898409cff"
+    }
+  },
+  "prior_fixture_failure": {
+    "path": "/tmp/codex-reporting-source-controls-20261106/CONTROL_RESULT.json",
+    "bytes": 3024,
+    "sha256": "de0f72d259bad7a812c1999b4f1b6cd2e0c90dcec189954f30b9b8eb3c5393c1"
+  },
+  "effects": {
+    "real_network": 0,
+    "signing": 0,
+    "generator": 0,
+    "publisher": 0,
+    "loop": 0,
+    "scheduler_changes": 0
+  },
+  "limitations": [
+    "Source PR only; no runtime adoption or publication.",
+    "Signature status/hash binding is not cryptographic verification.",
+    "Human HOLD, incomparable evidence and exact caller Git registry/map dependency retained."
+  ]
+}

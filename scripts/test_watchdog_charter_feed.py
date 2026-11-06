@@ -167,5 +167,109 @@ class TestTheQueueIsCountableWithoutBeingAScore(unittest.TestCase):
             self.assertEqual(row["source_digest"], "a" * 64)
 
 
+
+class TestAxisReports(unittest.TestCase):
+    def setUp(self):
+        self.names = ["axis-" + str(i) for i in range(34)]
+        self.registry={"schema":"csoai.axis-specialist-registry/1.0","specialists":[{"axis":a,"reviewer_role":"declared reviewer"} for a in self.names]}
+        self.charter={"schema":"council.axis-charter-map/1.0","axes":[{"axis":a,"articles":[1,2]} for a in self.names],"provenance":"fixture cross-reference only"}
+        self.context={"kind":"model-comparison","bank_sha256":"a"*64,"method_sha":"b"*64,
+                      "model_versions":["fixture-v1"],"applies_to":"fixture-subject","n_note":"paired cases"}
+        self.current={"axes":{a:{"kind":"model-comparison","status":"MEASURED","n":0,"measurement_time":{"state":"DAY","observed_on":"2026-08-12"},
+                                "separation":"TIE","comparison_identity":dict(self.context)} for a in self.names}}
+        import copy
+        self.previous=copy.deepcopy(self.current)
+        self.reports={"state":"READ_HASH_BOUND_METADATA","previous_state":"EXACT_PREVIOUS_BYTES",
+                      "current":self.current,"previous":self.previous,
+                      "current_ref":{"sha256":"c"*64},"previous_ref":{"sha256":"d"*64}}
+    def history(self):return wcf.axis_report_history(self.registry,self.charter,self.reports)
+    def test_all34_unique_with_hold_and_no_appointment(self):
+        h=self.history();self.assertEqual(len(h["rows"]),34)
+        self.assertEqual(len({r["axis"] for r in h["rows"]}),34)
+        for r in h["rows"]:
+            self.assertEqual(r["human_decision"],"HOLD");self.assertFalse(r["may_apply"])
+            self.assertFalse(r["challenge_opened"]);self.assertFalse(r["approval_may_be_inferred"])
+            self.assertEqual(r["reviewer_acceptance"],"NOT_ESTABLISHED")
+            self.assertEqual(r["current"]["n"],0)
+            self.assertEqual(r["current"]["measurement_time"]["observed_on"],"2026-08-12")
+    def test_tampered_axis_metadata_cannot_pass_build_boundary(self):
+        import copy
+        for field,value in [("human_decision","ALLOW"),("may_apply",True),
+                            ("approval_may_be_inferred",True),("challenge_opened",True)]:
+            h=copy.deepcopy(self.history());h["rows"][0][field]=value
+            with self.assertRaises(ValueError):wcf.build(INDEX,h)
+    def test_source_population_stays_separate(self):
+        original=wcf.build(INDEX);combined=wcf.build(INDEX,self.history())
+        self.assertEqual(original["rows"],combined["rows"])
+        self.assertEqual(original["totals"]["rows"],combined["totals"]["rows"])
+        self.assertEqual(combined["totals"]["gspc_axis_report_rows"],34)
+    def test_gain_loss_tie_and_incompatible_variation(self):
+        a,b,c,d=self.names[:4]
+        self.current["axes"][a]["separation"]="SEPARATED"
+        self.previous["axes"][b]["separation"]="SEPARATED"
+        self.previous["axes"][c]["separation"]="UNTESTED"
+        self.current["axes"][d]["separation"]="SEPARATED"
+        self.current["axes"][d]["comparison_identity"]["method_sha"]="e"*64
+        rows={r["axis"]:r for r in self.history()["rows"]}
+        self.assertEqual(rows[a]["event"],"SOURCE_DECLARED_SEPARATION_GAINED")
+        self.assertEqual(rows[b]["event"],"SOURCE_DECLARED_SEPARATION_LOST")
+        self.assertEqual(rows[c]["event"],"SOURCE_DECLARED_TIE")
+        self.assertEqual(rows[d]["event"],"INCOMPARABLE_VARIATION")
+    def test_absent_current_axis_and_unknown_previous_are_explicit(self):
+        self.current["axes"].pop(self.names[0])
+        self.reports["previous_state"]="PREVIOUS_REFERENCE_UNBOUND"
+        h=self.history()
+        self.assertEqual(h["coverage"]["current_rows_missing"],[self.names[0]])
+        self.assertEqual(h["rows"][1]["event"],"PREVIOUS_UNRESOLVED")
+        self.assertEqual(h["coverage"]["rows"],34)
+    def test_duplicate_registry_refused(self):
+        self.registry["specialists"].append(dict(self.registry["specialists"][0]))
+        with self.assertRaises(ValueError):self.history()
+    def test_numeric_regression_needs_identical_context_and_corrections_keep_zero(self):
+        a=self.names[0]
+        self.current["axes"][a].update(kind="model-comparison",accuracy=0.2,n=10)
+        self.previous["axes"][a].update(kind="model-comparison",accuracy=0.8,n=10)
+        self.current["corrections"]={"ledger_rows":0};self.previous["corrections"]={"ledger_rows":0}
+        h=self.history()
+        self.assertEqual(h["rows"][0]["observed_metric_direction"],"OBSERVED_DECREASE")
+        self.assertEqual(h["correction_history"]["row_count_delta"],0)
+        self.current["axes"][a]["comparison_identity"]["method_sha"]="f"*64
+        self.assertEqual(self.history()["rows"][0]["observed_metric_direction"],"NOT_COMPARED")
+    def test_zero_or_changed_sample_count_is_not_numeric_regression(self):
+        a=self.names[0]
+        self.current["axes"][a].update(accuracy=0.1,n=0)
+        self.previous["axes"][a].update(accuracy=0.9,n=0)
+        self.assertEqual(self.history()["rows"][0]["observed_metric_direction"],"NOT_COMPARED")
+        self.current["axes"][a]["n"]=5;self.previous["axes"][a]["n"]=10
+        self.assertEqual(self.history()["rows"][0]["observed_metric_direction"],"NOT_COMPARED")
+    def test_exact_bytes_required_for_previous_join(self):
+        import json,hashlib
+        day="2026-11-06";previous="2026-11-05";rev="a"*40
+        old={"schema":"csoai.daily-report/0.1","report_date":previous,"axes":{}}
+        old_raw=json.dumps(old).encode()
+        current={"schema":"csoai.daily-report/0.1","report_date":day,"axes":{},
+                 "changes_vs_previous":{"previous_report":previous},
+                 "source_hashes":{"previous_report":{"sha256":"0"*64}}}
+        raw=json.dumps(current).encode()
+        sig={"schema":"csoai.daily-report-sig/0.1","signed_file":f"daily-report-{day}.json",
+             "signed_file_sha256":hashlib.sha256(raw).hexdigest(),"signature":None}
+        def read(url):
+            if "/api/datasets/" in url:return json.dumps({"sha":rev}).encode()
+            if url.endswith(f"{previous}.json"):return old_raw
+            if url.endswith(".sig"):return json.dumps(sig).encode()
+            return raw
+        result=wcf.published_reports(day,read)
+        self.assertEqual(result["previous_state"],"PREVIOUS_BYTES_CONFLICT")
+        self.assertIsNone(result["previous"])
+    def test_retrieval_error_does_not_become_zero(self):
+        def fail(url):raise TimeoutError()
+        r=wcf.published_reports("2026-11-06",fail)
+        self.assertEqual(r["state"],"UNAVAILABLE")
+        self.reports=r
+        h=self.history();self.assertEqual(len(h["coverage"]["current_rows_missing"]),34)
+    def test_nonfinite_and_duplicate_metadata_refused(self):
+        for raw in [b'{"x":1e999}',b'{"x":1,"x":2}']:
+            with self.assertRaises(ValueError):wcf.strict_report(raw)
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

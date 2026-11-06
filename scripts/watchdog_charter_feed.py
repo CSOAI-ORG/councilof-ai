@@ -46,6 +46,9 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import math
+import re
+from urllib.request import urlopen
 import pathlib
 import sys
 
@@ -118,7 +121,7 @@ def load_index(path: pathlib.Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def build(index: dict) -> dict:
+def build(index: dict, axis_reports=None) -> dict:
     now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0)
     rows = []
 
@@ -223,7 +226,216 @@ def build(index: dict) -> dict:
             "the human saw, so a later reader can recompute the row from the same bytes."
         ),
     }
+    if axis_reports is not None:
+        axis_rows = axis_reports.get("rows")
+        if (not isinstance(axis_rows, list) or not axis_rows
+                or any(not isinstance(row, dict) or row.get("human_decision") != "HOLD"
+                       or row.get("may_apply") is not False or row.get("approval_may_be_inferred") is not False
+                       or row.get("challenge_opened") is not False for row in axis_rows)
+                or len({row.get("axis") for row in axis_rows}) != len(axis_rows)):
+            raise ValueError("axis metadata cannot grant authority or duplicate axes")
+        body["gspc_axis_reports"] = axis_reports
+        body["totals"]["gspc_axis_report_rows"] = len(axis_reports["rows"])
+        body["count_grammar"] += " GSPC axis-report rows are a separate metadata population; they are never pooled with source-obligation rows or any axis n."
     return body
+
+
+
+# First-party measurement-report metadata only. This is not incident ingestion,
+# a process-event store, a statistical grader, or human appointment/authority.
+REPORT_REPO = "csoai/gspc-daily-reports"
+MAX_REPORT_BYTES = 2 * 1024 * 1024
+
+def strict_report(raw):
+    def pairs(items):
+        out = {}
+        for key, value in items:
+            if key in out:
+                raise ValueError("duplicate JSON key")
+            out[key] = value
+        return out
+    def bad(_):
+        raise ValueError("nonfinite JSON number")
+    def number(text):
+        value = float(text)
+        if not math.isfinite(value):
+            raise ValueError("nonfinite JSON number")
+        return value
+    doc = json.loads(raw.decode("utf-8"), object_pairs_hook=pairs,
+                     parse_constant=bad, parse_float=number)
+    if not isinstance(doc, dict):
+        raise ValueError("JSON object required")
+    return doc
+
+def report_day(value):
+    if not isinstance(value, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        raise ValueError("invalid report day")
+    if dt.date.fromisoformat(value).isoformat() != value:
+        raise ValueError("invalid report day")
+    return value
+
+def public_bytes(url):
+    with urlopen(url, timeout=10) as response:
+        raw = response.read(MAX_REPORT_BYTES + 1)
+    if len(raw) > MAX_REPORT_BYTES:
+        raise ValueError("source byte bound")
+    return raw
+
+def published_reports(day, read=public_bytes):
+    """Pin one existing public repository revision. Errors remain explicit gaps."""
+    report_day(day)
+    result = {"state": "UNAVAILABLE", "requested_day": day, "current": None,
+              "previous": None, "current_ref": None, "previous_ref": None,
+              "previous_state": "UNAVAILABLE", "limitations": []}
+    try:
+        metadata = strict_report(read(f"https://huggingface.co/api/datasets/{REPORT_REPO}"))
+        revision = metadata.get("sha")
+        if not isinstance(revision, str) or not re.fullmatch(r"[a-f0-9]{40}", revision):
+            raise ValueError("invalid repository revision")
+        def fetch(d, ext):
+            url = f"https://huggingface.co/datasets/{REPORT_REPO}/resolve/{revision}/reports/{d}/daily-report-{d}.{ext}"
+            return read(url), url
+        raw, url = fetch(day, "json")
+        doc = strict_report(raw)
+        if doc.get("schema") != "csoai.daily-report/0.1" or doc.get("report_date") != day or not isinstance(doc.get("axes"), dict):
+            raise ValueError("report identity invalid")
+        sig_raw, _ = fetch(day, "sig")
+        sig = strict_report(sig_raw)
+        if (sig.get("schema") != "csoai.daily-report-sig/0.1"
+                or sig.get("signed_file") != f"daily-report-{day}.json"
+                or sig.get("signed_file_sha256") != sha256_hex(raw)):
+            raise ValueError("report signature metadata hash mismatch")
+        result.update(state="READ_HASH_BOUND_METADATA", current=doc,
+            current_ref={"url": url, "revision": revision, "sha256": sha256_hex(raw),
+                         "bytes": len(raw), "report_day": day,
+                         "generated_at": doc.get("generated_at"),
+                         "signature_state": "PRESENT_NOT_VERIFIED" if sig.get("signature") else "UNSIGNED_HASH_BOUND"})
+        previous = (doc.get("changes_vs_previous") or {}).get("previous_report")
+        expected = ((doc.get("source_hashes") or {}).get("previous_report")
+                    or (doc.get("changes_vs_previous") or {}).get("previous_report_ref") or {})
+        if previous is None:
+            result["previous_state"] = "PREVIOUS_UNAVAILABLE"
+        elif not isinstance(expected, dict) or not re.fullmatch(r"[a-f0-9]{64}", str(expected.get("sha256", ""))):
+            result["previous_state"] = "PREVIOUS_REFERENCE_UNBOUND"
+        else:
+            report_day(previous)
+            if previous >= day:
+                raise ValueError("previous date is not older")
+            old_raw, old_url = fetch(previous, "json")
+            old = strict_report(old_raw)
+            result["previous_ref"] = {"url": old_url, "revision": revision,
+                                     "sha256": sha256_hex(old_raw), "expected_sha256": expected["sha256"],
+                                     "bytes": len(old_raw), "report_day": previous}
+            if sha256_hex(old_raw) != expected["sha256"]:
+                result["previous_state"] = "PREVIOUS_BYTES_CONFLICT"
+            elif old.get("schema") != "csoai.daily-report/0.1" or old.get("report_date") != previous or not isinstance(old.get("axes"), dict):
+                result["previous_state"] = "PREVIOUS_IDENTITY_INVALID"
+            else:
+                result.update(previous=old, previous_state="EXACT_PREVIOUS_BYTES")
+    except Exception as exc:
+        # Never turn unavailable/private/invalid source data into zero events.
+        result["limitations"].append("Report retrieval/identity gap: " + type(exc).__name__)
+    return result
+
+def axis_report_history(registry, charter_map, reports):
+    if registry.get("schema") != "csoai.axis-specialist-registry/1.0":
+        raise ValueError("canonical registry schema mismatch")
+    if not isinstance(charter_map, dict) or charter_map.get("schema") != "council.axis-charter-map/1.0":
+        raise ValueError("charter cross-reference schema mismatch")
+    specialists = registry.get("specialists")
+    if not isinstance(specialists, list):
+        raise ValueError("canonical specialist registry absent")
+    names = [s.get("axis") if isinstance(s, dict) else None for s in specialists]
+    if not names or any(not isinstance(a, str) or not a for a in names) or len(set(names)) != len(names):
+        raise ValueError("canonical specialist registry ambiguous")
+    mappings = charter_map.get("axes") if isinstance(charter_map, dict) else None
+    if not isinstance(mappings, list):
+        mappings = []
+    mapped = {}
+    for item in mappings:
+        if not isinstance(item, dict) or not isinstance(item.get("axis"), str) or item["axis"] in mapped:
+            raise ValueError("charter cross-reference ambiguous")
+        mapped[item["axis"]] = item.get("articles")
+    current = reports.get("current") if reports.get("state") == "READ_HASH_BOUND_METADATA" else None
+    previous = reports.get("previous") if reports.get("previous_state") == "EXACT_PREVIOUS_BYTES" else None
+    current_axes = (current or {}).get("axes") or {}
+    previous_axes = (previous or {}).get("axes") or {}
+    fields = ("kind", "status", "n", "measurement_time", "evidence_date",
+              "separation", "leader", "accuracy", "interval")
+    rows = []
+    for specialist, name in zip(specialists, names):
+        new, old = current_axes.get(name), previous_axes.get(name)
+        if new is not None and not isinstance(new, dict):
+            new = None
+        if old is not None and not isinstance(old, dict):
+            old = None
+        old_context = (old or {}).get("comparison_identity")
+        new_context = (new or {}).get("comparison_identity")
+        required = ("kind", "bank_sha256", "method_sha", "model_versions", "applies_to", "n_note")
+        complete = (isinstance(old_context, dict) and isinstance(new_context, dict)
+            and all(bool(ctx.get(k)) for ctx in (old_context,new_context) for k in required)
+            and all(isinstance(ctx.get(k),str) and re.fullmatch(r"[a-f0-9]{64}",ctx[k])
+                    for ctx in (old_context,new_context) for k in ("bank_sha256","method_sha")))
+        context = ("IDENTICAL_DECLARED_CONTEXT" if complete and old_context == new_context else
+                   "CONTEXT_VARIATION" if complete else "UNRESOLVED_CONTEXT_BINDINGS")
+        changed = [k for k in fields if old is not None and new is not None and old.get(k) != new.get(k)]
+        if new is None:
+            event = "CURRENT_AXIS_UNAVAILABLE"
+        elif previous is None:
+            event = "PREVIOUS_UNRESOLVED"
+        elif old is None:
+            event = "AXIS_ADDED"
+        elif not changed:
+            event = "UNCHANGED_EVIDENCE"
+        elif context == "CONTEXT_VARIATION":
+            event = "INCOMPARABLE_VARIATION"
+        elif new.get("kind") == old.get("kind") == "model-comparison" and new.get("separation") != old.get("separation"):
+            event = ("SOURCE_DECLARED_SEPARATION_GAINED" if new.get("separation") == "SEPARATED" else
+                     "SOURCE_DECLARED_SEPARATION_LOST" if old.get("separation") == "SEPARATED" else
+                     "SOURCE_DECLARED_TIE" if new.get("separation") == "TIE" else "SOURCE_DECLARED_LABEL_CHANGED")
+        else:
+            event = "SOURCE_OBSERVATION_CHANGED"
+        numeric_change = "NOT_COMPARED"
+        if (context == "IDENTICAL_DECLARED_CONTEXT" and new is not None and old is not None
+                and new.get("kind") == old.get("kind") == "model-comparison"
+                and type(new.get("n")) is int and type(old.get("n")) is int
+                and new["n"] == old["n"] and new["n"] > 0):
+            before, after = old.get("accuracy"), new.get("accuracy")
+            if type(before) in (int,float) and type(after) in (int,float) and math.isfinite(before) and math.isfinite(after):
+                numeric_change = "OBSERVED_DECREASE" if after < before else "OBSERVED_INCREASE" if after > before else "UNCHANGED"
+        rows.append({"row_id": "gspc-axis::" + name, "observed_metric_direction": numeric_change, "axis": name,
+            "reviewer_role": specialist.get("reviewer_role"),
+            "reviewer_acceptance": "NOT_ESTABLISHED", "event": event,
+            "comparison_state": context, "changed_fields": changed,
+            "previous": {k: old.get(k) for k in fields} if old is not None else None,
+            "current": {k: new.get(k) for k in fields} if new is not None else None,
+            "previous_context_sha256": sha256_hex(json.dumps(old_context,sort_keys=True).encode()) if old_context else None,
+            "current_context_sha256": sha256_hex(json.dumps(new_context,sort_keys=True).encode()) if new_context else None,
+            "charter_articles": mapped.get(name),
+            "charter_reference_state": "INTERNAL_CROSS_REFERENCE_NOT_EXTERNAL_ADOPTION" if name in mapped else "UNMAPPED",
+            "measurement_admission": "NOT_ESTABLISHED_BY_REPORT_COMPARISON",
+            "human_decision": "HOLD", "may_apply": False,
+            "approval_may_be_inferred": False, "challenge_opened": False,
+            "question_for_the_human": "Review source changes, scope, stale evidence and unresolved bindings before relying on this axis."})
+    before_count = ((previous or {}).get("corrections") or {}).get("ledger_rows")
+    after_count = ((current or {}).get("corrections") or {}).get("ledger_rows")
+    count_known = type(before_count) is int and type(after_count) is int and before_count >= 0 and after_count >= 0
+    correction_history = {"state": "COMPARED_SOURCE_ROW_COUNTS" if count_known else "UNAVAILABLE",
+        "previous_rows": before_count if count_known else None, "current_rows": after_count if count_known else None,
+        "row_count_delta": after_count-before_count if count_known else None,
+        "axis_assignment": "NOT_ESTABLISHED_BY_AGGREGATE_LEDGER_COUNTS"}
+    return {"correction_history": correction_history, "coverage": {"canonical_axes": len(names), "rows": len(rows),
+                         "current_rows_missing": [r["axis"] for r in rows if r["current"] is None],
+                         "axes_removed_from_registry": sorted(set(previous_axes)-set(names)),
+                         "unexpected_current_axes": sorted(set(current_axes)-set(names))},
+            "current_report": reports.get("current_ref"), "previous_report": reports.get("previous_ref"),
+            "previous_state": reports.get("previous_state"), "source_state": reports.get("state"),
+            "charter_provenance": charter_map.get("provenance") if isinstance(charter_map,dict) else None,
+            "rows": rows, "limitations": list(reports.get("limitations") or []) + [
+                "These are first-party measurement source observations, not incident counts or new GSPC scores.",
+                "A generated report date does not refresh measurement_time; source-declared separation is not fresh statistical admission.",
+                "Internal charter cross-references do not establish external WG-SAFE adoption, human staffing or action authority.",
+                "Unknown or missing context stays unresolved; incompatible banks/methods/versions/scopes are not pooled."]}
 
 
 def main() -> int:
@@ -231,6 +443,10 @@ def main() -> int:
     ap.add_argument("--index", default=str(INTEROP / "_index.json"))
     ap.add_argument("--out", default=str(INTEROP / "charter-feed.json"))
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--report-day")
+    ap.add_argument("--offline-reports", action="store_true")
+    ap.add_argument("--registry", default=str(ROOT / "council-os/axis-specialists/registry.json"))
+    ap.add_argument("--charter-map", default=str(ROOT / "council-os/axis-specialists/charter-map.json"))
     args = ap.parse_args()
 
     index_path = pathlib.Path(args.index)
@@ -238,7 +454,13 @@ def main() -> int:
         print(f"charter-feed: no signal index at {index_path} — run scripts/watchdog_intake.py first", file=sys.stderr)
         return 2
 
-    feed = build(load_index(index_path))
+    index = load_index(index_path)
+    registry = strict_report(pathlib.Path(args.registry).read_bytes())
+    charter_map = strict_report(pathlib.Path(args.charter_map).read_bytes())
+    day = report_day(args.report_day or str(index.get("as_of") or dt.datetime.now(dt.timezone.utc).isoformat())[:10])
+    reports = ({"state":"UNAVAILABLE","previous_state":"UNAVAILABLE","limitations":["Report reads explicitly offline."]}
+               if args.offline_reports else published_reports(day))
+    feed = build(index, axis_report_history(registry, charter_map, reports))
     t = feed["totals"]
     print(f"charter-feed {feed['as_of']} — {t['rows']} routing rows from {t['sources_considered']} sources")
     for bucket, n in sorted(t["by_bucket"].items()):
