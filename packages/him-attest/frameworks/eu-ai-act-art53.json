@@ -1,0 +1,14 @@
+{
+  "slug": "eu-ai-act-art53",
+  "title": "EU AI Act Article 53 — GPAI provider documentation duties",
+  "doctrine": "human-in-the-loop attestation of evidence — NOT conformity certification",
+  "segments": ["ai-platforms", "enterprise", "government"],
+  "checkpoints": [
+    {"id": "art53.provider-docs-tracked", "requirement": "Public documentation surfaces (model cards, usage policy, safety policy) tracked with signed byte-change cards", "mode": "machine", "evidence": {"kind": "bundle", "obligation": "article-53", "subjectFilter": "model_cards|usage_policy|safety_policy"}},
+    {"id": "art53.provider-diff-current", "requirement": "Provider-diff daily capture current", "mode": "machine", "evidence": {"kind": "bundle", "obligation": "article-53", "subjectFilter": "provider-diff"}},
+    {"id": "art53.training-summary", "requirement": "Training-content summary published by the provider (Art 53(1)(d))", "mode": "human", "guidance": "Only the provider can attest the existence/adequacy of their own summary. Machine evidence can show the surface changed; adequacy is human."},
+    {"id": "art53.copyright-policy", "requirement": "Copyright policy in place (Art 53(1)(c))", "mode": "human"},
+    {"id": "art53.downstream-info", "requirement": "Downstream-provider information supplied (Art 53(1)(b))", "mode": "human"},
+    {"id": "art53.accountable-owner", "requirement": "Named accountable owner signs this attestation cycle", "mode": "human"}
+  ]
+}
