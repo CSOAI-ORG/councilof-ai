@@ -1,0 +1,44 @@
+{
+  "schema": "csoai.paid-client-response-source-validation/1",
+  "tests_run": 14,
+  "passed": 14,
+  "failures": 0,
+  "controls": [
+    "exact-original-utf8-whitespace-download",
+    "402-after-possible-settle-stays-unconfirmed",
+    "402-without-receipt-is-not-definite-unsettled",
+    "malformed-success-retains-received-bytes-without-delivery-claim",
+    "known-settlement-survives-body-stream-failure",
+    "v2-payment-response-header-is-kept",
+    "redirect-is-manual-without-ambient-credentials",
+    "one-failed-network-dispatch-is-never-retried",
+    "external-origin-is-refused-before-wallet",
+    "changed-quoted-resource-is-refused-before-wallet",
+    "page-origin-rechecked-after-wallet-await",
+    "caller-url-mutation-does-not-change-dispatched-resource",
+    "unconfirmed-payment-removed-from-auto-pay-walk",
+    "credential-url-and-fragment-refused-before-dispatch"
+  ],
+  "fixture_wallet_boundary": true,
+  "real_wallet_signatures": 0,
+  "network_calls": 0,
+  "real_payments": 0,
+  "source_files": {
+    "client/src/lib/payEveryDoor.ts": {
+      "bytes": 30959,
+      "sha256": "18e757bba70db8cbd3e8200bdff0477c830e961b2ff3f1a762c32e01948be399"
+    },
+    "client/src/lib/payEveryDoor.test.ts": {
+      "bytes": 36710,
+      "sha256": "76885c24a02ff050546307f2303ca063b0ceffeb3689657d7289a0fdd66465a2"
+    },
+    "client/src/pages/PayEveryDoor.tsx": {
+      "bytes": 42084,
+      "sha256": "ddabd6e5d74615fffe5eaf8ef24f6fb92fbb2861425f52068f610ed01ca7d911"
+    }
+  },
+  "linux_receipt_sha256": "aa40389b3eb406eceeeca06f0c6061f3948a58ff40d668e2d277c6e9de52572a",
+  "hosted_client_tests": "Authored; normal hosted checks pending at source publication.",
+  "buyer_owned_server_recovery": false,
+  "account_wallet_lifecycle_binding": false
+}
