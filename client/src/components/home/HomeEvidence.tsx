@@ -52,15 +52,15 @@ export default function HomeEvidence() {
             <figure>
               <img
                 src="/images/home/evidence-card-800.webp"
-                alt="A measurement record held up for inspection"
+                alt="Illustration of a measurement record held up for inspection"
                 width={800}
                 height={450}
                 loading="lazy"
                 decoding="async"
               />
               <figcaption>
-                A signature binds a record to its signer. It does not prove the
-                measurement is right.
+                Illustration. A signature binds a record to its signer. It does
+                not prove the measurement is right.
               </figcaption>
             </figure>
           </div>
