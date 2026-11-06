@@ -1040,7 +1040,7 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-06T02:57:43Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-06T04:24:35Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
 - Detached OpenTimestamps proofs that actually deserialize: 695. The manifest is built by
@@ -1085,6 +1085,20 @@ Each record below is a dated account of what public sources state, with its sour
 - COBOL copybook decoding test corpus — records whose correct values are known by construction, with must-fail controls; CC0. Held private while results against open-source decoders wait for each project's maintainers to have seen them: the dataset address does not open yet, so it is not linked here. Measured results are published through the records feed below the day the hold lifts.
 - All of the signed records above, plus corrections and daily notes, as a feed: https://councilof.ai/feeds/records.xml (Atom) — https://councilof.ai/feeds/records.json (JSON Feed)
 
+## 10d. PUBLISHED INTEROP FILES — every file under /interop/, with its digest
+
+Derived at generation from https://councilof.ai/interop/file-index.json (same bytes on disk at
+public/interop/file-index.json, schema csoai.interop-file-index/0.1, artifact as_of 2026-11-06T07:17:52Z). It is a
+MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
+the SHA-256 of the bytes and how the file is served.
+
+- Files indexed: 16,329. Bytes indexed: 258,794,832.
+- By how they are served: 13,238 hf-mirror; 3,091 pages.
+- hf-mirror: served by a 302 redirect to the HuggingFace evidence mirror (scripts/deploy-exclusions.json); the path is real and fetchable
+- pages: served by the site build
+- To check one file: fetch its path and hash it. A match means you hold the bytes the estate
+  published. The index says a file is PRESENT and IDENTICAL to what is served — not that it is
+  measured, signed, certified or true.
 ## 11. WE HOLD NO CERTIFICATION UNDER ANY STATUTORY SCHEME
 
 A regulated category adjacent to ours now exists in US state law.
