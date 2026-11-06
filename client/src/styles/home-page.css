@@ -980,7 +980,7 @@
     max-width: 1260px;
   }
   .hp-hero h1 {
-    font-size: 70px;
+    font-size: 60px;
   }
   .hp-hero-art {
     min-height: 485px;
@@ -1382,4 +1382,76 @@
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* Keep evidence labels readable rather than squeezing fourteen axes into one line. */
+.home-page .hp-results [data-testid="living-board-rows"] {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.home-page .hp-results [data-separation] > span {
+  gap: 6px;
+}
+.home-page .hp-results [data-separation] > span > span {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.home-page .hp-service > p,
+.home-page .hp-method-steps p {
+  font-size: 14px;
+}
+.home-page .hp-service-bottom > a,
+.home-page .hp-text-link {
+  font-size: 13px;
+}
+.home-page .hp-service-bottom > span,
+.home-page .hp-board-context p {
+  font-size: 11px;
+}
+.home-page .hp-external article p {
+  font-size: 13px;
+}
+.home-page .hp-external article li a {
+  font-size: 12px;
+}
+.home-page .hp-human-note > div > p:not(.hp-eyebrow),
+.home-page .hp-code-note {
+  font-size: 12px;
+}
+.home-page .hp-update-grid > div > p:not(.hp-eyebrow) {
+  font-size: 14px;
+}
+.home-page .hp-editorial-links p {
+  font-size: 13px;
+}
+@media (max-width: 1100px) {
+  .home-page .hp-results [data-testid="living-board-rows"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 800px) {
+  .home-page .hp-results [data-testid="living-board-rows"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 540px) {
+  .home-page .hp-results [data-testid="living-board-rows"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .home-page .hp-service > p,
+  .home-page .hp-method-steps p {
+    font-size: 14px;
+  }
+  .home-page .hp-board-context p {
+    font-size: 11px;
+  }
+}
+
+.home-page .hp-step-number {
+  white-space: nowrap;
+  flex: 0 0 24px;
+}
+
+.home-page .hp-code-content[data-example="http"],
+.home-page .hp-code-content[data-example="skills"] {
+  min-height: 140px;
 }

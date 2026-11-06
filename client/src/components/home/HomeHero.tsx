@@ -37,14 +37,16 @@ export default function HomeHero() {
             <a
               href="#board"
               className="hp-button hp-button-primary"
-              data-testid="hero-cta-board" data-cta="primary"
+              data-testid="hero-cta-board"
+              data-cta="primary"
             >
               Explore the results <ArrowDown size={17} aria-hidden="true" />
             </a>
             <Link
               href="/gspc-verify"
               className="hp-button hp-button-light"
-              data-testid="hero-cta-check" data-cta="secondary"
+              data-testid="hero-cta-check"
+              data-cta="secondary"
             >
               Verify a record <ArrowUpRight size={17} aria-hidden="true" />
             </Link>

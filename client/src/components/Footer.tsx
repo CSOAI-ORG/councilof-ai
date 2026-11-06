@@ -4,6 +4,7 @@
  */
 
 import { Link, useLocation } from 'wouter';
+import { CouncilBrand } from './brand/CouncilBrand';
 import { BookOpen, Mail } from 'lucide-react';
 import EmailOff from './EmailOff';
 import { CONTACT_MAILBOX } from '@/lib/buying';
@@ -165,6 +166,7 @@ export function Footer() {
         {/* Brand + socials */}
         <div className={homepage ? "mb-7 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8" : "mb-10 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6"}>
           <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+            {homepage ? <CouncilBrand size="sm" /> : <>
             <svg viewBox="0 0 100 100" className="h-9 w-9" aria-hidden="true">
               <defs>
                 <linearGradient id="footerShieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -192,6 +194,7 @@ export function Footer() {
               </g>
             </svg>
             <span className="text-xl font-bold">CSOAI</span>
+            </>}
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
             An operating UK AI measurement and evidence organisation run by CSOAI Ltd. We publish records you can check. Measurement is not certification.

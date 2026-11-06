@@ -73,7 +73,12 @@ export default function HomeUpdates() {
             </a>
           </div>
         </div>
-        <p className="hp-archive-link"><a href="/how-we-work/" className="hp-text-link">Explore the full evidence workflow and archive <ArrowUpRight size={15} aria-hidden="true" /></a></p>
+        <p className="hp-archive-link">
+          <a href="/how-we-work/" className="hp-text-link">
+            Explore the full evidence workflow and archive{" "}
+            <ArrowUpRight size={15} aria-hidden="true" />
+          </a>
+        </p>
         <div className="hp-enquiry">
           <div>
             <p className="hp-eyebrow">A question about your own system?</p>

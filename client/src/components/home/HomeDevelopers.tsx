@@ -35,18 +35,22 @@ export const CONNECTIONS = [
 
 export default function HomeDevelopers() {
   const [selected, setSelected] = useState(0);
-  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">(
-    "idle",
-  );
+  const [copyResult, setCopyResult] = useState<{
+    code: string;
+    state: "copied" | "failed";
+  } | null>(null);
   const connection = CONNECTIONS[selected];
+  const copyState =
+    copyResult?.code === connection.code ? copyResult.state : "idle";
   async function copy() {
+    const code = connection.code;
     try {
       if (!navigator.clipboard?.writeText)
         throw new Error("Clipboard unavailable");
-      await navigator.clipboard.writeText(connection.code);
-      setCopyState("copied");
+      await navigator.clipboard.writeText(code);
+      setCopyResult({ code, state: "copied" });
     } catch {
-      setCopyState("failed");
+      setCopyResult({ code, state: "failed" });
     }
   }
   return (
@@ -113,14 +117,18 @@ export default function HomeDevelopers() {
                 aria-controls="home-connection-code"
                 onClick={() => {
                   setSelected(index);
-                  setCopyState("idle");
+                  setCopyResult(null);
                 }}
               >
                 {item.label}
               </button>
             ))}
           </div>
-          <div className="hp-code-content" id="home-connection-code">
+          <div
+            className="hp-code-content"
+            data-example={connection.id}
+            id="home-connection-code"
+          >
             <pre tabIndex={0} aria-label={`${connection.label} example`}>
               <code>{connection.code}</code>
             </pre>
