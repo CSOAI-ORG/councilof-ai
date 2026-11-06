@@ -118,4 +118,33 @@ describe("GSPC continuous research semantics", () => {
     missingSource.axes[0].source_ids = ["invented-source"];
     expect(validRegistryForTest(missingSource)).toBe(false);
   });
+
+  it("retains public reference restrictions without leaking arbitrary source fields or implying a configured watch", async () => {
+    const plan = registry.axes[0];
+    const sources = registry.sources as Record<string, Record<string, unknown>>;
+    const snapshots = plan.source_ids.map(id => [id, structuredClone(sources[id])] as const);
+    try {
+      for (const id of plan.source_ids) {
+        Object.assign(sources[id], {
+          watch: false, reviewed_on: "2026-11-06", boundary: "Practice outputs stay internal.",
+          rights_url: "https://example.test/terms", version: "1.4", license: "Declared terms",
+          private_note: "fixture-private-value", automatic_submission: true,
+        });
+      }
+      stub();
+      const { response, body } = await get(`/api/research-plan?axis=${plan.axis}`);
+      expect(response.status).toBe(200);
+      expect(body.plans[0].research_state).toBe("REFERENCE_ONLY");
+      expect(body.plans[0].sources[0]).toMatchObject({
+        watch: false, reviewed_on: "2026-11-06", boundary: "Practice outputs stay internal.",
+        rights_url: "https://example.test/terms", version: "1.4", license: "Declared terms",
+      });
+      expect(JSON.stringify(body)).not.toContain("fixture-private-value");
+      expect(body.plans[0].sources[0]).not.toHaveProperty("automatic_submission");
+      expect(body.controls.candidate_is_measurement).toBe(false);
+      expect(body.watch.candidate_submission).toBe("NONE");
+    } finally {
+      for (const [id, original] of snapshots) sources[id] = original;
+    }
+  });
 });
