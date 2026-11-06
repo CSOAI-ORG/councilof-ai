@@ -490,7 +490,7 @@ export function registerCouncilAuthContractCases(test: UnitCase) {
   });
 
   test("external, protocol-relative, escaped-host and unsupported destinations are rejected", () => {
-    for (const target of ["https://evil.example/dashboard", "//evil.example/dashboard", "/\\evil.example/dashboard", "javascript:alert(1)", "/settings", "/private/../dashboard/?workspace=company", "/dashboard%2f?workspace=company", "/dashboard/?workspace=company#fragment", "/dashboard/?workspace=company\n", "/dashboard//?workspace=company"]) {
+    for (const target of ["https://evil.example/dashboard", "//evil.example/dashboard", "/\\evil.example/dashboard", "javascript:alert(1)", "/settings/unknown", "/settings?token=unit-secret", "/private/../dashboard/?workspace=company", "/dashboard%2f?workspace=company", "/dashboard/?workspace=company#fragment", "/dashboard/?workspace=company\n", "/dashboard//?workspace=company"]) {
       assert.equal(safeCouncilLoginReturn(target), "/dashboard", target);
     }
   });

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import {
   buyerRequestPath,
   buyerTestOrigin,
@@ -63,14 +65,16 @@ describe("buyer checks stay on their selected test origin", () => {
   });
 });
 
-it("npm browser commands select the intended Playwright config", () => {
-  const pkg = JSON.parse(
-    readFileSync(new URL("../../package.json", import.meta.url), "utf8"),
-  );
-  expect(pkg.scripts["test:e2e"]).toBe(
-    "playwright test --config e2e/playwright.config.ts",
-  );
-  expect(pkg.scripts["test:e2e:ui"]).toBe(
-    "playwright test --config e2e/playwright.config.ts --ui",
-  );
+it("default browser commands discover the configured project and test directory", () => {
+  const root = fileURLToPath(new URL("../../", import.meta.url));
+  const pkg = JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8"));
+  expect(pkg.scripts["test:e2e"]).toBe("playwright test");
+  expect(pkg.scripts["test:e2e:ui"]).toBe("playwright test --ui");
+  const output = execFileSync(process.execPath, [
+    fileURLToPath(new URL("../../node_modules/@playwright/test/cli.js", import.meta.url)),
+    "test", "--list", "--project=chromium", "pre-deploy-smoke.spec.ts", "--reporter=list",
+  ], { cwd: root, encoding: "utf8", timeout: 30_000 });
+  expect(output).toContain("[chromium]");
+  expect(output).toContain("pre-deploy-smoke.spec.ts");
+  expect(output).toMatch(/Total: [1-9]\d* tests in 1 file/);
 });

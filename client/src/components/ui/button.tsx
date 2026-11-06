@@ -99,11 +99,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           aria-describedby={ariaDescribedBy}
           {...props}
           tabIndex={isDisabled ? -1 : props.tabIndex}
-          onClickCapture={(event) => {
+          onClickCapture={(event: React.MouseEvent<HTMLButtonElement>) => {
             if (isDisabled) { event.preventDefault(); event.stopPropagation(); return }
             props.onClickCapture?.(event)
           }}
-          onKeyDownCapture={(event) => {
+          onKeyDownCapture={(event: React.KeyboardEvent<HTMLButtonElement>) => {
             if (isDisabled && (event.key === "Enter" || event.key === " ")) {
               event.preventDefault(); event.stopPropagation(); return
             }

@@ -1,7 +1,10 @@
 import { test, expect } from "@playwright/test";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { surfaceInventory } from "../support/surfaceInventory.mjs";
+import {
+  surfaceInventory,
+  rejectGenericNotFound,
+} from "../support/surfaceInventory.mjs";
 
 const root = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -197,6 +200,17 @@ for (const surface of inventory.cases) {
       })
       .toBeGreaterThan(60);
     const before = await inspect();
+    if (rejectGenericNotFound(surface)) {
+      await expect(
+        page
+          .locator('h1:visible,[role="heading"][aria-level="1"]:visible')
+          .filter({
+            hasText:
+              /^(?:404(?:\b.*)?|(?:page|route|mcp|model|answer|note|course|system|record)?\s*not found[.!]?)$/i,
+          }),
+        "known published page must not fall through to a not-found screen",
+      ).toHaveCount(0);
+    }
     await testInfo.attach("surface-initial-context", {
       body: JSON.stringify(
         {
