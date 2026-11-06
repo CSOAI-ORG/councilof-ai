@@ -324,12 +324,10 @@ function object(value: unknown): value is Record<string, unknown> {
 /**
  * True when a GET is a browser page load: `text/html` is accepted and preferred over JSON.
  *
- * WHY. /mcp/ is a sitemap URL (App.tsx declares a /mcp route) and the address people are told
- * to paste into a client, so people open it in a browser. It used to answer every GET with the
- * discovery JSON: no title, no lang, no heading (ux-gauntlet 2026-09-26). Agents DO read that JSON
- * (llms.txt tells them to quote paid_tools.names from it), so it stays exactly where it is for any
- * request that does not ask for HTML (curl's default, fetch's default, SDK clients). Only a
- * browser navigation, which sends Accept: text/html first, gets the same document as a page.
+ * WHY. /mcp is both the protocol endpoint and the address people open in a browser. Keep the
+ * human catalogue under /mcps so it cannot shadow this function. Agents read the JSON discovery
+ * document (llms.txt points them to paid_tools.names); browser navigation gets the same endpoint
+ * information rendered as an accessible page.
  */
 export function prefersHtml(accept: string | null): boolean {
   const a = (accept ?? "").toLowerCase();
