@@ -30,6 +30,7 @@ import { READINESS_TOOL_NAMES, readinessToolResult } from "./_readiness";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
 import { recordUsage } from "../_lib/usage";
 import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
+import { registerCouncilPanel, withCouncilPanel } from "./_panel";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
 export const MCP_HTTP_SERVER_VERSION = "1.4.4";
@@ -134,7 +135,7 @@ const BROWSER_ORIGINS = [...HOSTS, "chatgpt.com", "claude.ai"];
 // The measurement-capsule readers (measurement_index, verify_capsule, server_evidence) are ordinary
 // free tools in gspc-tools.json since 2026-09-26, when /measurement-capsules/ was published; the
 // MEASUREMENT_CAPSULE_TOOLS env gate that held them back is gone. One list, one fleet (the lock).
-const DEFINITIONS = [...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[];
+const DEFINITIONS = ([...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[]).map(withCouncilPanel);
 // The free door's registry: the same definitions, filtered. Never a second catalog.
 export const FREE_DEFINITIONS = DEFINITIONS.filter((d) => !PAID_TOOL_NAMES.has(d.name));
 // The SDK's no-eval adapter retains the canonical JSON Schema. No parallel catalog.
@@ -172,6 +173,7 @@ function buildMcp(
       },
     });
     registerWorkingGroups(server);
+    registerCouncilPanel(server);
     for (const { definition, inputSchema, outputSchema } of TOOLS) {
       server.registerTool(
         definition.name,
@@ -183,6 +185,7 @@ function buildMcp(
           // readOnlyHint for the free readers; the paid tools spend the caller's funds when called
           // with x_payment, so they are neither read-only nor idempotent (paid-tools.json).
           ...(definition.annotations ? { annotations: definition.annotations } : {}),
+          ...(definition._meta ? { _meta: definition._meta } : {}),
         },
         (args) =>
           // door.paid guards the dispatch as well as the registry: the free door never reaches
@@ -321,12 +324,10 @@ function object(value: unknown): value is Record<string, unknown> {
 /**
  * True when a GET is a browser page load: `text/html` is accepted and preferred over JSON.
  *
- * WHY. /mcp/ is a sitemap URL (App.tsx declares a /mcp route) and the address people are told
- * to paste into a client, so people open it in a browser. It used to answer every GET with the
- * discovery JSON: no title, no lang, no heading (ux-gauntlet 2026-09-26). Agents DO read that JSON
- * (llms.txt tells them to quote paid_tools.names from it), so it stays exactly where it is for any
- * request that does not ask for HTML (curl's default, fetch's default, SDK clients). Only a
- * browser navigation, which sends Accept: text/html first, gets the same document as a page.
+ * WHY. /mcp is both the protocol endpoint and the address people open in a browser. Keep the
+ * human catalogue under /mcps so it cannot shadow this function. Agents read the JSON discovery
+ * document (llms.txt points them to paid_tools.names); browser navigation gets the same endpoint
+ * information rendered as an accessible page.
  */
 export function prefersHtml(accept: string | null): boolean {
   const a = (accept ?? "").toLowerCase();
