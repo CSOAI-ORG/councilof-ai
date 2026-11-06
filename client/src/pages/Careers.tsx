@@ -40,13 +40,13 @@ const collaborationPrinciples = [
   { icon: Clock, title: "Bounded scope", description: "Agree the question, evidence and finish line before work begins" },
   { icon: BookOpen, title: "Open methods", description: "Prefer publishable methods, test vectors and transparent limitations" },
   { icon: Users, title: "Named contribution", description: "Credit work clearly and preserve authorship and provenance" },
-  { icon: Shield, title: "Evidence first", description: "A signature proves the record; it does not turn a result into certification" }
+  { icon: Shield, title: "Evidence first", description: "A signature checks record integrity and the signing key; factual claims need their own evidence" }
 ];
 
 const values = [
   {
     title: "Independence",
-    description: "We maintain complete independence from AI vendors, ensuring unbiased oversight and trust."
+    description: "Funding, vendor relationships and relevant interests must be disclosed. Published methods, evidence and corrections let others inspect our work."
   },
   {
     title: "Transparency",

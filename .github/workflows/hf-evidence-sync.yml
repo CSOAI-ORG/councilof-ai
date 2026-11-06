@@ -25,6 +25,14 @@ on:
         description: "Check only, do not upload (true/false)"
         type: boolean
         default: false
+      target:
+        description: "Publish scope (full mirror or a fixed metadata selection)"
+        type: choice
+        options:
+          - full
+          - ots-manifest
+          - publication-metadata-20261104
+        default: full
 
 concurrency:
   group: hf-evidence-sync
@@ -40,6 +48,44 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Select fixed sync scope
+        id: sync_scope
+        env:
+          SYNC_TARGET: ${{ github.event_name == 'workflow_dispatch' && inputs.target || 'full' }}
+        run: |
+          set -euo pipefail
+          case "$SYNC_TARGET" in
+            full)
+              echo "manifest=scripts/deploy-exclusions.json" >> "$GITHUB_OUTPUT"
+              ;;
+            ots-manifest)
+              # Replace only the generated manifest; do not add, move or delete proof files.
+              test -f public/interop/ots/manifest.json
+              manifest="$RUNNER_TEMP/hf-evidence-ots-manifest.json"
+              printf '%s\n' '{"entries":[{"path":"interop/ots/manifest.json","kind":"file"}]}' > "$manifest"
+              echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+              ;;
+            publication-metadata-20261104)
+              # Fixed publication records only; retain their exact checkout bytes.
+              for path in \
+                interop/ots/manifest.json \
+                cards/3de61df398d42cef.json \
+                cards/559071cdbffd73ad.json \
+                interop/ots/ots-stamp-batch-2026-11-03.json
+              do
+                test -f "public/$path"
+              done
+              manifest="$RUNNER_TEMP/hf-evidence-publication-metadata-20261104.json"
+              printf '%s\n' '{"entries":[{"path":"interop/ots/manifest.json","kind":"file"},{"path":"cards/3de61df398d42cef.json","kind":"file"},{"path":"cards/559071cdbffd73ad.json","kind":"file"},{"path":"interop/ots/ots-stamp-batch-2026-11-03.json","kind":"file"}]}' > "$manifest"
+              echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "::error::Unknown sync target"
+              exit 1
+              ;;
+          esac
+          echo "target=$SYNC_TARGET" >> "$GITHUB_OUTPUT"
+
       - name: Check HF_TOKEN is available
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -52,27 +98,41 @@ jobs:
 
       - name: Sync to HF (check mode)
         if: inputs.dry_run == true || github.event_name == 'workflow_dispatch' && inputs.dry_run != false
+        env:
+          SYNC_MANIFEST: ${{ steps.sync_scope.outputs.manifest }}
         run: |
           python3 scripts/pod-loops/evidence_sync.py \
             --public-dir public \
-            --manifest scripts/deploy-exclusions.json \
+            --manifest "$SYNC_MANIFEST" \
             --probe 20
 
       - name: Sync to HF (apply mode)
         if: inputs.dry_run != true && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false))
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          SYNC_MANIFEST: ${{ steps.sync_scope.outputs.manifest }}
         run: |
           set -euo pipefail
           python3 scripts/pod-loops/evidence_sync.py \
             --apply \
             --public-dir public \
-            --manifest scripts/deploy-exclusions.json \
+            --manifest "$SYNC_MANIFEST" \
             --message "sync from councilof.ai build ${GITHUB_SHA::12}" \
             --probe 20
 
+      - name: Verify all publication metadata anonymously
+        if: steps.sync_scope.outputs.target == 'publication-metadata-20261104' && inputs.dry_run != true && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false))
+        env:
+          SYNC_MANIFEST: ${{ steps.sync_scope.outputs.manifest }}
+        run: |
+          # With no remaining differences, check mode probes all four selected files.
+          python3 scripts/pod-loops/evidence_sync.py \
+            --public-dir public \
+            --manifest "$SYNC_MANIFEST" \
+            --probe 4
+
       - name: Verify upload with spot-check
-        if: inputs.dry_run != true && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false))
+        if: steps.sync_scope.outputs.target == 'full' && inputs.dry_run != true && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false))
         run: |
           set -euo pipefail
           echo "Spot-checking uploaded files..."
