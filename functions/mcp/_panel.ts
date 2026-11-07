@@ -1,14 +1,14 @@
 /** Native MCP Apps view for existing tools. No extra tool, authority or catalog count. */
 import type { McpServer, Tool } from '@modelcontextprotocol/server';
 import RESOURCE from '../../public/native-panel/resource.json';
-export const PANEL_URI = 'ui://council/live-panel/1';
+export const PANEL_URI = 'ui://council/live-panel/2';
 const PRESENTED = new Set(['board_totals', 'get_axis', 'verify_card', 'server_evidence']);
 export function withCouncilPanel<T extends Tool>(definition: T): T {
   if (!PRESENTED.has(definition.name)) return definition;
   return { ...definition, ...(definition.name === 'board_totals' ? { title: 'Council of AI · MEOK companion' } : {}), _meta: {
     ...definition._meta,
     ui: { resourceUri: PANEL_URI },
-    ...(definition.name === 'board_totals' ? { 'openai/ui': { entrypoints: [{ type: 'thread' }] } } : {}),
+    ...(definition.name === 'board_totals' ? { 'openai/ui': { entrypoints: [{ type: 'global' }, { type: 'thread' }] } } : {}),
   } };
 }
 export function registerCouncilPanel(server: McpServer): void {
