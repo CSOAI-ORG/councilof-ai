@@ -127,6 +127,36 @@ class Register:
         return sum(1 for i in self.items if i["severity"] == severity)
 
 
+def route_404_finding(url: str, status: int) -> str | None:
+    """A required route that answers 404 is a defect: the reader asked for a page the
+    estate says it serves, and it is not there.
+
+    THE 404 PAGE IS NOT A REQUIRED ROUTE. It exists to be missing — a 404 is the correct
+    answer there, and a checker that reports it as a missing route punishes a repair. That
+    is not hypothetical: on 2026-11-07 the meok lane fixed its 404 page from answering 200
+    (a soft 404) to answering 404 with the page, and this rule then reported the FIX as a
+    HIGH regression.
+    """
+    if status == 404 and not url.rstrip("/").endswith("/404"):
+        return "route is a 404"
+    return None
+
+
+def soft_404_finding(origin: str, missing_status: int) -> str | None:
+    """A MISSING URL that answers 200 makes the URL look present.
+
+    It is measured on a path that DOES NOT EXIST, never on /404. The old rule measured
+    /404, which made it unsatisfiable in both directions: /404 answering 200 was called a
+    soft 404, and /404 answering 404 was called a missing route — so on 2026-11-07 this
+    checker raised a finding on ALL THREE domains, every one of them false. The status of
+    the 404 path says nothing about whether a missing URL looks present; only the missing
+    URL's own status does.
+    """
+    if missing_status == 200:
+        return "a missing URL answers HTTP 200 (soft 404)"
+    return None
+
+
 def audit_routes(reg: Register) -> None:
     # councilof.ai is the measurement surface and carries every core route.
     # csoai.org is its mirror and meok.ai is a different product: it is NOT
@@ -143,14 +173,17 @@ def audit_routes(reg: Register) -> None:
             reg.add("critical", url, "the route did not answer")
         elif status >= 500:
             reg.add("critical", url, f"server error {status}")
-        elif status == 404:
-            reg.add("high", url, "route is a 404")
-    # A soft 404: the /404 path answering 200 makes a missing URL look present.
+        else:
+            issue = route_404_finding(url, status)
+            if issue:
+                reg.add("high", url, issue)
+    # A soft 404, measured on a MISSING path: that is the only place "a missing URL looks
+    # present" can be observed. The 404 page's own status is not evidence either way.
     for origin in ORIGINS:
-        st, _, _ = get(origin + "/404")
-        if st == 200:
-            reg.add("medium", origin + "/404", "the 404 path answers HTTP 200 (soft 404)", "status=200")
         st, _, body = get(origin + "/nonexistent-audit-probe-zzz")
+        issue = soft_404_finding(origin, st)
+        if issue:
+            reg.add("medium", origin, issue, f"status={st} on a missing path")
         t = body.decode("utf-8", "replace")
         if st == 404:
             m = re.search(r'<meta[^>]+name=["\']robots["\'][^>]*content=["\']([^"\']+)', t, re.I)
@@ -492,6 +525,32 @@ def selftest() -> int:
     check("a qualifier before its own number still governs", not found, str(found))
     found = run("12 model-comparison axes — 13 axes", fleet=14)
     check("and a wrong number beside it is still caught", len(found) == 1, str(found))
+
+    # 7. THE 404 FAMILY. The old rules measured /404 twice and could not both be
+    #    satisfied: /404 answering 200 was called "the 404 path answers HTTP 200 (soft
+    #    404)", and /404 answering 404 was called "route is a 404" HIGH. So the checker
+    #    raised a finding on ALL THREE domains, every one of them false — and when the meok
+    #    lane CORRECTLY changed its 404 page from a soft 200 to a real 404 with the page,
+    #    the audit reported the repair as a HIGH regression. A checker that punishes the
+    #    fix teaches the reader to ignore it.
+    check("a missing URL answering 404 raises no soft-404 finding",
+          soft_404_finding("https://x/", 404) is None, str(soft_404_finding("https://x/", 404)))
+    check("a missing URL answering 200 IS a soft 404",
+          soft_404_finding("https://x/", 200) is not None, str(soft_404_finding("https://x/", 200)))
+    check("a missing URL answering 500 is not reported as a soft 404",
+          soft_404_finding("https://x/", 500) is None, str(soft_404_finding("https://x/", 500)))
+    check("the 404 page answering 404 is NOT a missing route",
+          route_404_finding("https://meok.ai/404", 404) is None,
+          str(route_404_finding("https://meok.ai/404", 404)))
+    check("the 404 page answering 200 is not a missing route either",
+          route_404_finding("https://councilof.ai/404", 200) is None,
+          str(route_404_finding("https://councilof.ai/404", 200)))
+    check("a required route answering 404 is still caught",
+          route_404_finding("https://councilof.ai/board/", 404) == "route is a 404",
+          str(route_404_finding("https://councilof.ai/board/", 404)))
+    check("a required route answering 200 raises nothing",
+          route_404_finding("https://councilof.ai/board/", 200) is None,
+          str(route_404_finding("https://councilof.ai/board/", 200)))
 
     failed = 0
     for name, ok, detail in cases:
