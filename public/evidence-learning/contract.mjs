@@ -22,8 +22,15 @@ export async function readPublic(path,{fetcher=fetch,signal}={}) {
   const url=publicURL(path);
   const r=await fetcher(url,{method:'GET',credentials:'omit',redirect:'error',cache:'no-store',headers:{accept:'application/json'},signal});
   if(!r.ok)throw Error('Public source returned HTTP '+r.status+'.');
-  const raw=await r.text();if(raw.length>2_000_000)throw Error('Source exceeds the bounded read size.');
-  return {data:JSON.parse(raw),raw,url,readAt:new Date().toISOString()};
+  if(r.redirected||(r.url&&r.url!==url))throw Error('Public source redirect is not allowed.');
+  if(!/^application\/(?:json|[a-z0-9!#$&^_.+-]+\+json)(?:\s*;|\s*$)/i.test(r.headers?.get?.('content-type')||''))throw Error('Public source must return JSON.');
+  if(!r.body?.getReader)throw Error('Public source has no readable body.');
+  const reader=r.body.getReader(),chunks=[];let bytes=0;
+  try{for(;;){const part=await reader.read();if(part.done)break;bytes+=part.value.byteLength;if(bytes>2_000_000){await reader.cancel();throw Error('Source exceeds the bounded read size.');}chunks.push(part.value)}}finally{reader.releaseLock()}
+  const held=new Uint8Array(bytes);let offset=0;for(const chunk of chunks){held.set(chunk,offset);offset+=chunk.byteLength}
+  const raw=new TextDecoder('utf-8',{fatal:true}).decode(held);
+  const sha256=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',held))).map(x=>x.toString(16).padStart(2,'0')).join('');
+  return {data:JSON.parse(raw),raw,sha256,url,readAt:new Date().toISOString()};
 }
 export function validateScenario(value,axis) {
   if(value?.schema!=='csoai.learning-scenarios/0.1'||!Array.isArray(value.scenarios))throw Error('Scenario source is unavailable or unrecognised.');
@@ -85,4 +92,5 @@ export function normalizeLearningState(value){
  let lastSource=null;if(v.lastSource)lastSource=captureForStorage(v.lastSource);
  return {component_version:VERSION,progress:structuredClone(v.progress),proposals:structuredClone(v.proposals),shots:structuredClone(v.shots),pins,lastSource,ui};
 }
+
 
