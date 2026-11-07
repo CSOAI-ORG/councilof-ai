@@ -1,0 +1,46 @@
+$ python3 scripts/rekor_inclusion_verify.py --offline --entry-file public/interop/rekor-root-dedb49d0.json --pubkey-file evidence/transparency-augmentation-2026-09-20/fixtures/rekor-log-pubkey.pem --verify-root public/root.json
+{
+ "overall": "INVALID",
+ "checks": [
+  {
+   "check": "log_identity",
+   "verdict": "VALID",
+   "detail": "entry.logID binds the same SPKI key used for SET and checkpoint verification",
+   "log_id": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d"
+  },
+  {
+   "check": "set",
+   "verdict": "VALID",
+   "detail": "ECDSA P-256/SHA-256 over JCS({body,integratedTime,logID,logIndex})",
+   "integratedTime": 1789456425
+  },
+  {
+   "check": "inclusion",
+   "verdict": "VALID",
+   "detail": "RFC6962 audit path: leaf@index 2719646948 of tree size 2719646959 reaches rootHash",
+   "leaf_sha256": "330d12ba36c055849c6a11c64bd289723aee1d20794cfee847127e7c11cf6c04",
+   "rootHash": "0f8bd31c5b25951bb399097188fe19e5a53f3441042f8a6acc7136fb0aec3ee6",
+   "treeSize": 2719646959
+  },
+  {
+   "check": "checkpoint",
+   "verdict": "VALID",
+   "detail": "note signed by 'rekor.sigstore.dev'; key hint matches; signed root == proof root",
+   "origin": "rekor.sigstore.dev - 1193050959916656506",
+   "checkpoint_size": 2719646959,
+   "size_matches_proof": true
+  },
+  {
+   "check": "root_hash",
+   "verdict": "INVALID",
+   "detail": "SHA-256 of root file not found in entry body (neither as spec.data.hash.value nor embedded)",
+   "file_sha256": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
+   "entry_hash": "b62206132400e286c8251f61163aadfc38ae409d2013d327faa52e8a71462acd"
+  }
+ ],
+ "scope": "timestamped existence of these exact entry bytes in the Rekor log — nothing more; never a certification",
+ "uuid": "108e9186e8c5677a330d12ba36c055849c6a11c64bd289723aee1d20794cfee847127e7c11cf6c04",
+ "rekor": "https://rekor.sigstore.dev",
+ "expected_log_id": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d"
+}
+exit=1

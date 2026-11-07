@@ -1,0 +1,53 @@
+{
+  "name": "Council of AI \u2014 get_card",
+  "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. Three states: VALID (fetched), INVALID (not a leaf of the live root), UNCHECKABLE (fetch failed). Not a GSPC measurement-card.",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/llms.txt",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "get_card",
+      "name": "get_card",
+      "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. Three states: VALID (fetched), INVALID (not a leaf of the live root), UNCHECKABLE (fetch failed). Not a GSPC measurement-card.",
+      "tags": [
+        "measurement",
+        "mcp"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"get_card\",\"input\":{}}",
+        "POST https://councilof.ai/mcp"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment"
+  ],
+  "mcp_tool": "get_card",
+  "paid": false,
+  "did": "did:web:councilof.ai:agents:get_card"
+}

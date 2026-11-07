@@ -1,0 +1,97 @@
+{
+  "authority": {
+    "dependency_registration": true,
+    "effect_authority": false,
+    "endorsement": false,
+    "gspc_measurement": false,
+    "source_truth": false
+  },
+  "capability_id": "hub-cards",
+  "implementation": {
+    "fixture_path": "scripts/layer0/hub-cards-ledger-dependency-fixture.ts",
+    "fixture_sha256": "a06aa2bb067ee85c30e5b49589e491fe06edc7efc2939a931836ed1e7f88a249",
+    "handler_path": "functions/api/hub-cards.ts",
+    "handler_sha256": "2a85165af1067c80d5fbf6ea8095c47bbe31e6c58a76b35b15b8b255a66a4868"
+  },
+  "inputs": {
+    "baseline_source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "changed_source_sha256": "4e3ba8c3900ed82d64a3ad70f578ff2a6ea3d0329ea3ba4a44edb0ee8d51cd90",
+    "invariant_hub_index_sha256": "4561c5b4193aeb45e1d9dea4764f6d867ad4af1aac998e71422644f2a75b8255",
+    "invariant_other_ledger_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "invariant_tree_sha256": "787d5d45453450a31506eb94308d96e98ee7e62eb68f3ea941ad5e5721e6b348"
+  },
+  "law": "This receipt proves output dependence on the named ledger bytes only.",
+  "method": "synthetic fetch fixture; change only the named local ledger",
+  "outputs": {
+    "baseline_counts": {
+      "cells": 1,
+      "complete": true,
+      "duplicates_collapsed": 0,
+      "indexes_all_read": true,
+      "indexes_discovered": true,
+      "indexes_read": 1,
+      "indexes_total": 1,
+      "indexes_unread": [],
+      "measured": 1,
+      "other": 0,
+      "read_so_far": {
+        "cells": 1,
+        "measured": 1,
+        "other": 0,
+        "unmeasured": 0
+      },
+      "rows_served_by_indexes": 1,
+      "superseded_excluded": 0,
+      "superseded_ledger_read": true,
+      "supersessions_resolved": true,
+      "supersessions_unresolved": [],
+      "unmeasured": 0,
+      "withdrawals_resolved": true,
+      "withdrawals_unresolved": [],
+      "withdrawn_excluded": 0,
+      "withdrawn_ledger_read": true
+    },
+    "baseline_sha256": "35243021fef2e4c1de0c36fa36ef427a74c9abd336457d8a873abf5030226f36",
+    "changed": true,
+    "changed_counts": {
+      "cells": 0,
+      "complete": true,
+      "duplicates_collapsed": 0,
+      "indexes_all_read": true,
+      "indexes_discovered": true,
+      "indexes_read": 1,
+      "indexes_total": 1,
+      "indexes_unread": [],
+      "measured": 0,
+      "other": 0,
+      "read_so_far": {
+        "cells": 0,
+        "measured": 0,
+        "other": 0,
+        "unmeasured": 0
+      },
+      "rows_served_by_indexes": 1,
+      "superseded_excluded": 0,
+      "superseded_ledger_read": true,
+      "supersessions_resolved": true,
+      "supersessions_unresolved": [],
+      "unmeasured": 0,
+      "withdrawals_resolved": true,
+      "withdrawals_unresolved": [],
+      "withdrawn_excluded": 1,
+      "withdrawn_ledger_read": true
+    },
+    "changed_sha256": "d19f33414bc73fab7b1e5e15aecfa193b28200f915809c9c02b15cb5bb94fff0",
+    "replay_sha256": "35243021fef2e4c1de0c36fa36ef427a74c9abd336457d8a873abf5030226f36",
+    "replay_stable": true
+  },
+  "schema": "csoai.layer0-dependency-fixture/0.1",
+  "scope_match_required": true,
+  "source_id": "csoai-hub-card-withdrawals",
+  "source_scope": "https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl",
+  "state": "VERIFIED_DIRECT_DEPENDENCY",
+  "watch": {
+    "kind": "http_artifact",
+    "url": "https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl"
+  }
+}

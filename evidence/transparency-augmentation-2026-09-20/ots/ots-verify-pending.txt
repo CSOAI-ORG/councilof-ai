@@ -1,0 +1,45 @@
+# OTS VERIFY: fresh fixture proof (expect PENDING — calendar attestations only)
+retrieved_at=2026-09-20T01:58:10Z
+$ ots verify -f fixtures/card-00a52180-measurement-card.json ots/card-00a52180-measurement-card.json.ots
+Calendar https://bob.btc.calendar.opentimestamps.org: Pending confirmation in Bitcoin blockchain
+Calendar https://finney.calendar.eternitywall.com: Pending confirmation in Bitcoin blockchain
+Calendar https://alice.btc.calendar.opentimestamps.org: Pending confirmation in Bitcoin blockchain
+exit=1
+
+$ ots info ots/card-00a52180-measurement-card.json.ots
+File sha256 hash: 1a621d17ec38d82210c8ae65391fd7b4826d9adb18857cd4f8aa9572ec544683
+Timestamp:
+ -> append 29f306e3aaee344a
+    sha256
+    append 452a55923f11e9411f71438ed087c072
+    sha256
+    append bb1c97e49a21503a65a060cfca9ef81641332a6fa18c5ddff89b8675d889b23c
+    sha256
+    append 847dc7851e13939a3ceed35b7dcae3f6af606c92641e456e03fdc531cf27007f
+    sha256
+    prepend 6aaf3d98
+    append 6cacbdf948983202
+    verify PendingAttestation('https://bob.btc.calendar.opentimestamps.org')
+ -> append 6a8904cd179a00c1124515d0aae5bdbf
+    sha256
+    prepend 70578bd78147559c4912ba2acbaf55e9cbb186496a6584cc5cb96d3e9406e584
+    sha256
+    append ece6ed69d838507e92be08f2ad8fbf6da88224d0407379b623b85c67f077474b
+    sha256
+    append 70797a481ea9b1368722a7442abe84f247a276d9edfd7741ce24f294225cb3e4
+    sha256
+    prepend 6aaf3d99
+    append 238e375dcdd15d9f
+    verify PendingAttestation('https://finney.calendar.eternitywall.com')
+ -> append 8e1ca72562eb2f43
+    sha256
+    append 0383123cbb97c070f65fce56a9abf605
+    sha256
+    prepend 72eeed424fcc41b9cc868d94f6090806716f05243d4cfdc59f6776b0edbd2302
+    sha256
+    append 7f436a20dd9f153a107f79103a32b7138e85e9a13b5a0a1ee05119995afb6aeb
+    sha256
+    prepend 6aaf3d96
+    append b55b6ad426382ad6
+    verify PendingAttestation('https://alice.btc.calendar.opentimestamps.org')
+

@@ -1,0 +1,57 @@
+{
+  "as_of": "2026-09-19T16:20:21.032609+00:00",
+  "checks": {
+    "coordination_handoff": "PASS",
+    "fleet_status": {
+      "M2": {
+        "as_of": "2026-09-19T16:20:22.242749+00:00",
+        "condor": {
+          "error_type": "ConnectionRefusedError",
+          "port": 8088,
+          "status": "UNREACHABLE"
+        },
+        "host": "M2",
+        "hummingbot": {
+          "error_type": "ConnectionRefusedError",
+          "port": 8000,
+          "status": "UNREACHABLE"
+        },
+        "scope": "unauthenticated HTTP reachability only"
+      },
+      "M4": {
+        "as_of": "2026-09-19T16:20:22.239643+00:00",
+        "condor": {
+          "http_status": 200,
+          "port": 8088
+        },
+        "host": "M4",
+        "hummingbot": {
+          "http_status": 200,
+          "port": 8000
+        },
+        "scope": "unauthenticated HTTP reachability only"
+      }
+    },
+    "shadow_evidence": {
+      "historical_rows": 418,
+      "integrity": "MATCH",
+      "live_execution_allowed": false,
+      "missing_combinations": [
+        [
+          "ONDO/USDC",
+          "kraken"
+        ]
+      ],
+      "profitability_tested": false,
+      "usable_combinations": 11
+    }
+  },
+  "protocol_version": "2025-11-25",
+  "status": "PASS",
+  "tools": [
+    "coordination_handoff",
+    "fleet_status",
+    "shadow_evidence"
+  ],
+  "unknown_tool_rejected": true
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "csoai.witness-description-reconciliation/0.1",
+  "state": "REVIEW_CANDIDATE_NOT_PUBLIC_WITNESS",
+  "observed_at": "2026-09-19T04:59:38.903840+00:00",
+  "root_artifact_sha256": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
+  "prior_witness_body_sha256": "eff684ac62db63aefabfdb16cd93a13e3951c3bc687248c3c7e439f684eb1776",
+  "reported_ots_sha256": "60ee5331703e9f723ab1689d5b96f4cdd8ce4710802a6c2a7af4431fdd30fbf9",
+  "observed_ots_sha256": "d88a9f574337b1f391554cf2847791152695271860534475c4c1adfa2b22d705",
+  "proof_subject_binding_matches": true,
+  "signature_state": "VALID_UNDER_CURRENT_DID_KEY",
+  "observed_bitcoin_attestations": [
+    {
+      "type": "BitcoinBlockHeaderAttestation",
+      "height": 967150
+    },
+    {
+      "type": "BitcoinBlockHeaderAttestation",
+      "height": 967098
+    },
+    {
+      "type": "BitcoinBlockHeaderAttestation",
+      "height": 967093
+    },
+    {
+      "type": "BitcoinBlockHeaderAttestation",
+      "height": 967093
+    }
+  ],
+  "header_replay": {
+    "schema": "csoai.ots-header-replay/0.1",
+    "observed_at": "2026-09-19T04:43:48.857729+00:00",
+    "proof_sha256": "d88a9f574337b1f391554cf2847791152695271860534475c4c1adfa2b22d705",
+    "height": 967093,
+    "header_source": "https://blockstream.info/api",
+    "independent_chain_validation": false,
+    "signed_or_submitted": false,
+    "state": "PROOF_PATH_VALID_AGAINST_PROVIDER_RETURNED_HEADER",
+    "block_hash": "000000000000000000010339a41298628851d62d73ebf8b1ceffcd2e8517e0ec",
+    "header_sha256": "72b46e6247e5c717746e1952bc1841e1c3734bf100751057a5facedb515cdea8",
+    "block_time_unix": 1789457932,
+    "not_exact_signing_time": true,
+    "verification_result": 1789457932
+  },
+  "limits": [
+    "No new root, signature, stamp or anchor was created.",
+    "Verification used one provider-returned header, not independent chain validation.",
+    "Current DID key verification does not validate historical trust rotation.",
+    "Proof upgrade changes .ots bytes; a successor witness description must retain its own version history.",
+    "No conclusion about separate card corpora follows from this root proof."
+  ]
+}

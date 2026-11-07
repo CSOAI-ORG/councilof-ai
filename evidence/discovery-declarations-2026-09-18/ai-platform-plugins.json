@@ -1,0 +1,217 @@
+{
+  "schema": "csoai.plugin-manifests/0.1",
+  "as_of": "20260905T052000Z",
+  "principle": "Every AI platform can plug into csoai: governance + measurement.",
+  "total_platforms": 15,
+  "total_manifests": 24,
+  "platforms": [
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "vendor": "OpenAI",
+      "manifests": [
+        {
+          "format": "openai-functions",
+          "url": "https://councilof.ai/.well-known/openai-functions.json"
+        },
+        {
+          "format": "openai-tools",
+          "url": "https://councilof.ai/.well-known/openai-tools.json"
+        },
+        {
+          "format": "openai-assistants",
+          "url": "https://councilof.ai/.well-known/openai-assistants.json"
+        },
+        {
+          "format": "openai-responses",
+          "url": "https://councilof.ai/.well-known/openai-responses.json"
+        },
+        {
+          "format": "openai-plugin-manifest",
+          "url": "https://councilof.ai/interop/chatgpt-plugin.json"
+        }
+      ]
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "vendor": "Anthropic",
+      "manifests": [
+        {
+          "format": "anthropic-messages",
+          "url": "https://councilof.ai/.well-known/anthropic-messages.json"
+        },
+        {
+          "format": "anthropic-tools",
+          "url": "https://councilof.ai/.well-known/anthropic-tools.json"
+        },
+        {
+          "format": "anthropic-extended-thinking",
+          "url": "https://councilof.ai/.well-known/anthropic-extended-thinking.json"
+        }
+      ]
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "vendor": "Google",
+      "manifests": [
+        {
+          "format": "gemini-api",
+          "url": "https://councilof.ai/.well-known/gemini-api.json"
+        },
+        {
+          "format": "gemini-grounding",
+          "url": "https://councilof.ai/.well-known/gemini-grounding.json"
+        }
+      ]
+    },
+    {
+      "id": "copilot",
+      "name": "Copilot",
+      "vendor": "Microsoft",
+      "manifests": [
+        {
+          "format": "microsoft-365-copilot-plugin",
+          "url": "https://councilof.ai/.well-known/microsoft-copilot.json"
+        }
+      ]
+    },
+    {
+      "id": "grok",
+      "name": "Grok",
+      "vendor": "xAI",
+      "manifests": [
+        {
+          "format": "xai-api",
+          "url": "https://councilof.ai/.well-known/xai-api.json"
+        }
+      ]
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral / Le Chat",
+      "vendor": "Mistral AI",
+      "manifests": [
+        {
+          "format": "mistral-api",
+          "url": "https://councilof.ai/.well-known/mistral-api.json"
+        },
+        {
+          "format": "mistral-functions",
+          "url": "https://councilof.ai/.well-known/mistral-functions.json"
+        }
+      ]
+    },
+    {
+      "id": "perplexity",
+      "name": "Perplexity",
+      "vendor": "Perplexity AI",
+      "manifests": [
+        {
+          "format": "perplexity-api",
+          "url": "https://councilof.ai/.well-known/perplexity-api.json"
+        },
+        {
+          "format": "perplexity-pages",
+          "url": "https://councilof.ai/interop/perplexity-pages.json"
+        }
+      ]
+    },
+    {
+      "id": "poe",
+      "name": "Poe",
+      "vendor": "Quora",
+      "manifests": [
+        {
+          "format": "poe-bot",
+          "url": "https://councilof.ai/interop/poe-bot.json"
+        }
+      ]
+    },
+    {
+      "id": "huggingchat",
+      "name": "HuggingChat",
+      "vendor": "HuggingFace",
+      "manifests": [
+        {
+          "format": "hf-spaces",
+          "url": "https://councilof.ai/.well-known/huggingface.json"
+        }
+      ]
+    },
+    {
+      "id": "you",
+      "name": "You.com",
+      "vendor": "You.com",
+      "manifests": [
+        {
+          "format": "you-api",
+          "url": "https://councilof.ai/.well-known/you-api.json"
+        }
+      ]
+    },
+    {
+      "id": "pi",
+      "name": "Pi",
+      "vendor": "Inflection AI",
+      "manifests": [
+        {
+          "format": "pi-api",
+          "url": "https://councilof.ai/.well-known/pi-api.json"
+        }
+      ]
+    },
+    {
+      "id": "coze",
+      "name": "Coze",
+      "vendor": "ByteDance",
+      "manifests": [
+        {
+          "format": "coze-bot",
+          "url": "https://councilof.ai/interop/coze-bot.json"
+        }
+      ]
+    },
+    {
+      "id": "reka",
+      "name": "Reka Core",
+      "vendor": "Reka AI",
+      "manifests": [
+        {
+          "format": "reka-api",
+          "url": "https://councilof.ai/.well-known/reka-api.json"
+        }
+      ]
+    },
+    {
+      "id": "cohere",
+      "name": "Cohere Coral",
+      "vendor": "Cohere",
+      "manifests": [
+        {
+          "format": "cohere-api",
+          "url": "https://councilof.ai/.well-known/cohere-api.json"
+        }
+      ]
+    },
+    {
+      "id": "groq",
+      "name": "Groq",
+      "vendor": "Groq Inc",
+      "manifests": [
+        {
+          "format": "groq-api",
+          "url": "https://councilof.ai/.well-known/groq-api.json"
+        }
+      ]
+    }
+  ],
+  "install_methods": {
+    "url": "Visit https://councilof.ai/connect",
+    "github": "https://github.com/CSOAI-ORG/councilof-ai",
+    "npm": "gspc-card-verifier",
+    "pypi": "csoai",
+    "agent_card": "https://councilof.ai/agents/csoai-agent.json"
+  }
+}

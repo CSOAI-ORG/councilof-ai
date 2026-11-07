@@ -1,0 +1,84 @@
+{
+  "schema": "csoai.chainlink-oracle-gaps-rejections/0.1",
+  "as_of": "2026-09-20T00:00:00Z",
+  "purpose": "Explicit gaps, rejections, and nulls for the Chainlink oracle-boundary pack. Missing, conflicting, stale, and uncheckable evidence stays visible; nothing here is averaged away or silently dropped.",
+  "gaps": [
+    {
+      "gap_id": "GAP-01-por-docs-404",
+      "surface": "https://docs.chain.link/data-feeds/proof-of-reserves",
+      "state": "UNCHECKABLE",
+      "detail": "HTTP 404 at collection time. Proof-of-reserves documentation drifted or moved; no PoR content was frozen. Every PoR-dependent claim is null in this pack. A future 200 is a correction event, not retroactive evidence."
+    },
+    {
+      "gap_id": "GAP-02-feed-ui-429",
+      "surface": "https://data.chain.link/feeds/ethereum/mainnet/eth-usd",
+      "state": "UNCHECKABLE",
+      "detail": "HTTP 429 (rate limited) on anonymous readback at collection time. The feed UI's presented heartbeat/deviation values could not be frozen; the docs registry excerpt is the issuer source of record for those fields."
+    },
+    {
+      "gap_id": "GAP-03-status-page-unreachable",
+      "surface": "https://status.chain.link/",
+      "state": "UNCHECKABLE",
+      "detail": "DNS/connection failure from the collection seat at collection time. Incident and correction history is therefore UNMEASURED in this pack; no claim about Chainlink's incident handling is made in either direction."
+    },
+    {
+      "gap_id": "GAP-04-node-signatures-not-visible",
+      "surface": "consumer read path (latestRoundData)",
+      "state": "UNCHECKABLE",
+      "detail": "No publisher or node signatures are exposed at the consumer read path. Whether per-node signed submissions exist and verify is out of scope for this intake; vector NEG-05/NEG-06 cover the boundary."
+    },
+    {
+      "gap_id": "GAP-05-aggregator-config-fields",
+      "surface": "aggregator contract config (threshold/heartbeat as on-chain values)",
+      "state": "UNCHECKABLE",
+      "detail": "The declared threshold (0.5%) and heartbeat (3600s) come from the issuer registry page; the standard consumer read path does not expose them as contract state. Checkable only indirectly via update cadence."
+    },
+    {
+      "gap_id": "GAP-06-governance-and-admin-keys",
+      "surface": "aggregator proxy admin / multisig / timelock state",
+      "state": "UNMEASURED",
+      "detail": "Who can upgrade or reconfigure the feed contracts was not probed in this intake. No governance claim is made; this is a required input for any future provenance-controls run."
+    },
+    {
+      "gap_id": "GAP-07-single-rpc-seat",
+      "surface": "ethereum.publicnode.com",
+      "state": "CLOSED_AT_ENDPOINT_LEVEL",
+      "detail": "Cross-RPC replay executed (chainlink-cross-rpc-replay.json): publicnode and drpc serve the identical block hash at pinned block 26015635 and byte-identical description/decimals/latestRoundData results; cloudflare-eth.com cannot fulfill eth_blockNumber (deprecated gateway) and its failure is preserved in the report. Residual limitation: both replays ran from one physical seat; a second-seat replay remains open and is recorded in the report itself."
+    }
+  ],
+  "rejections": [
+    {
+      "rejection_id": "REJ-01-price-performance",
+      "rejected": "ETH or LINK price level, market performance, or feed 'accuracy' against venue prices",
+      "reason": "Asset performance is not governance quality; price truth is outside what oracle-boundary evidence establishes (boundary axiom 1)."
+    },
+    {
+      "rejection_id": "REJ-02-third-party-price-aggregators",
+      "rejected": "CoinMarketCap / CoinGecko / exchange API prices as corroboration",
+      "reason": "Non-primary sources; using them would import an unexamined second oracle to judge the first."
+    },
+    {
+      "rejection_id": "REJ-03-explorer-labels",
+      "rejected": "Etherscan address labels and verified-contract badges as identity evidence",
+      "reason": "Third-party platform metadata; identity is pinned by docs registry + chain readback agreement only."
+    },
+    {
+      "rejection_id": "REJ-04-integration-partnership-language",
+      "rejected": "Any wording implying CSOAI-Chainlink integration, partnership, endorsement, or canonical-oracle status",
+      "reason": "No external confirmation exists; Goal 2 acceptance forbids the claim without it."
+    },
+    {
+      "rejection_id": "REJ-05-certification-language",
+      "rejected": "Any certification, grade, rating, or compliance wording for these artifacts",
+      "reason": "Measurement credentials only; this pack stops at CANDIDATE_UNMEASURED."
+    },
+    {
+      "rejection_id": "REJ-06-link-token-identity-duplication",
+      "rejected": "Re-collecting LINK token contract identity in this pack",
+      "reason": "Already a frozen subject in measurement/registers/2026-09-19 (token:link, sha256-pinned eth_getCode); this pack cites that register instead of duplicating it."
+    }
+  ],
+  "stale_evidence_policy": "Every claim row carries retrieved_at; on-chain rows are valid only for their read time. Re-runs supersede by appending, never by editing frozen rows.",
+  "signing": "disabled",
+  "publication": "disabled"
+}

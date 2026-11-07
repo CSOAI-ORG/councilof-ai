@@ -1,0 +1,42 @@
+version: 1
+filesystem_policy:
+  include_workdir: true
+  read_only: []
+  read_write:
+    - /tmp
+landlock:
+  compatibility: hard_requirement
+process:
+  run_as_user: "1000"
+  run_as_group: "1000"
+network_policies:
+  council_gspc_mcp:
+    endpoints:
+      - host: councilof.ai
+        port: 443
+        path: /mcp
+        protocol: mcp
+        enforcement: enforce
+        mcp:
+          versions: ["2025-03-26", "2025-06-18", "2025-11-25"]
+          strict_tool_names: true
+          max_body_bytes: 65536
+        rules:
+          - allow: {method: initialize}
+          - allow: {method: notifications/initialized}
+          - allow: {method: ping}
+          - allow: {method: tools/list}
+          - allow:
+              method: tools/call
+              tool:
+                any: [board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion, x402_trust, mcp_trust]
+        deny_rules:
+          - {method: tools/call, tool: commission_card}
+          - {method: tools/call, tool: art50_marking_evidence}
+          - {method: tools/call, tool: rwa_evidence}
+          - {method: tools/call, tool: receipts_batch}
+    binaries:
+      - {path: /usr/local/bin/node}
+      - {path: /usr/bin/node}
+      - {path: "/usr/bin/python3*"}
+      - {path: /usr/bin/curl}

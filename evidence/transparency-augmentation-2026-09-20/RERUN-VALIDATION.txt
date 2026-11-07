@@ -1,0 +1,55 @@
+# RERUN VALIDATION — README commands executed verbatim by the authoring operator
+ran_at=2026-09-20T02:06:44Z
+
+== 1. rekor selftest ==
+selftest: valid bundle accepted; wrong logID/SPKI, checkpoint size, proof index rejected; root_hash positive+negative; STH structural negatives
+exit=0
+
+== 2. offline entry verify (+ by-design INVALID root_hash, F1) ==
+{
+  "overall": "INVALID",
+  "checks": [
+    {
+      "check": "log_identity",
+      "verdict": "VALID"
+    },
+    {
+      "check": "set",
+      "verdict": "VALID"
+    },
+    {
+      "check": "inclusion",
+      "verdict": "VALID"
+    },
+    {
+      "check": "checkpoint",
+      "verdict": "VALID"
+    },
+    {
+      "check": "root_hash",
+      "verdict": "INVALID"
+    }
+  ]
+}
+exit=0
+
+== 3. OTS pending (fixture) ==
+File sha256 hash: 1a621d17ec38d82210c8ae65391fd7b4826d9adb18857cd4f8aa9572ec544683
+    verify PendingAttestation('https://bob.btc.calendar.opentimestamps.org')
+    verify PendingAttestation('https://finney.calendar.eternitywall.com')
+    verify PendingAttestation('https://alice.btc.calendar.opentimestamps.org')
+Calendar https://bob.btc.calendar.opentimestamps.org: Pending confirmation in Bitcoin blockchain
+Calendar https://finney.calendar.eternitywall.com: Pending confirmation in Bitcoin blockchain
+Calendar https://alice.btc.calendar.opentimestamps.org: Pending confirmation in Bitcoin blockchain
+exit=1 (1 = still pending, expected)
+
+== 4. OTS confirmed (production root, offline part) ==
+File sha256 hash: dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4
+    verify BitcoinBlockHeaderAttestation(967150)
+    verify BitcoinBlockHeaderAttestation(967098)
+    verify BitcoinBlockHeaderAttestation(967093)
+    verify BitcoinBlockHeaderAttestation(967093)
+exit=0
+
+== 5. keyless leg ==
+SKIPPED by design: UNCHECKABLE, gate S1 (sigstore/keyless-blocker.txt)

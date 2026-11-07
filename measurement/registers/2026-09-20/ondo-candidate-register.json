@@ -1,0 +1,67 @@
+{
+  "as_of": "2026-09-20",
+  "axes_referenced_existing_only": [
+    "custody-disclosure",
+    "distribution-integrity",
+    "provenance-controls",
+    "regulatory-framework",
+    "reserve-attestation"
+  ],
+  "board_state_at_intake": "23 axes / 22 measured / 1 UNMEASURED slot (effect-binding), read live from https://councilof.ai/api/gspc on 2026-09-20; this pack changes no board state",
+  "counts": {
+    "by_claim_class": {
+      "ISSUER_ASSERTION": 29,
+      "ONCHAIN_OBSERVATION": 6,
+      "THIRD_PARTY_ATTESTATION": 12
+    },
+    "categories_covered": 10,
+    "frozen_rows": 47,
+    "gaps_advanced": [
+      "GAP-01",
+      "GAP-08",
+      "GAP-09"
+    ],
+    "gaps_open": 9,
+    "independently_checkable_rows": 31,
+    "inventoried_attestation_files": 780,
+    "pinned_document_samples": 4,
+    "rejections": 7,
+    "rows_preserved_without_axis": 6,
+    "rows_with_axis_mapping": 41,
+    "sources_observed": 31,
+    "sources_uncheckable": 0
+  },
+  "distribution_state": "LOCAL_DRAFT_ONLY",
+  "measurement_state": "CANDIDATE_UNMEASURED",
+  "never_claims": [
+    "No axis score, grade, or ranking is produced or implied.",
+    "On-chain readback agreement is not proof of authentic issuance authority (REJ-06).",
+    "Attestation-document existence is not reserve sufficiency.",
+    "Asset performance is not governance quality.",
+    "No wallet connection, transaction, purchase, or token transfer was performed or is proposed."
+  ],
+  "pack_contents": {
+    "app_manifest": "measurement/registers/2026-09-20/ondo-app-manifest.json",
+    "attestation_inventory": "measurement/registers/2026-09-20/ondo-attestation-inventory.json",
+    "attestation_manifest": "measurement/registers/2026-09-20/ondo-attestation-manifest.json",
+    "frozen_inputs": "measurement/registers/2026-09-20/ondo-frozen-inputs.jsonl",
+    "gaps_rejections": "measurement/registers/2026-09-20/ondo-gaps-rejections.json",
+    "instrument_proposal": "measurement/registers/2026-09-20/ondo-instrument-proposal.json",
+    "raw_store": "measurement/registers/2026-09-20/ondo-evidence-raw/",
+    "source_manifest": "measurement/registers/2026-09-20/ondo-source-manifest.json"
+  },
+  "proof_state": {
+    "canonical_sha256": "PENDING",
+    "ed25519": "PENDING",
+    "merkle_root": "PENDING",
+    "ots": "UNCHECKABLE",
+    "rekor": "UNCHECKABLE"
+  },
+  "schema": "csoai.ondo-candidate-register/0.1",
+  "stop_rule": "Stays CANDIDATE_UNMEASURED unless the pinned instrument, deterministic grader, complete denominator, run output, and signed card all exist and reconcile. Nothing in this register is a score, rating, certification, or endorsement.",
+  "subject": {
+    "display_name": "Ondo Finance (issuer; products observed: OUSG, USDY, Ondo Stocks)",
+    "prior_register_state": "measurement/registers/2026-09-19/token-evidence-twin-canary.json carries token:ondo as BLOCKED_IDENTITY_PIN; that state is unchanged \u2014 this pack asserts no ONDO governance-token address (REJ-05)",
+    "subject_id": "issuer:ondo"
+  }
+}

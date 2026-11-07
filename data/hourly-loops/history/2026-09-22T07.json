@@ -1,0 +1,1527 @@
+{
+  "axis_touch": {
+    "axes": [
+      {
+        "axis": "governance",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "safety",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "provenance",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "continuity",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "conformance",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "openness",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "machinery-conformity",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "care",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "cross-reality",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "detector-interop",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "art5-safeguard",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "swarm",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "affect",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "jail",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "effect-binding",
+        "status": "UNMEASURED"
+      },
+      {
+        "axis": "provenance-controls",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "reserve-attestation",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "regulatory-framework",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "distribution-integrity",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "custody-disclosure",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "ai-adoption-components",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "labour-components",
+        "status": "MEASURED"
+      },
+      {
+        "axis": "humanoid-labour-index",
+        "status": "MEASURED"
+      }
+    ],
+    "axis_count": 23,
+    "claim_boundary": "This touch observes the public GSPC roster. Direct axis dataset reads remain the responsibility of the existing standing-cycle audit.",
+    "measured": 22,
+    "sha256": "d1cd91c57054db4e16b08722e9cca38db0d25fb56bbf5807d1edd79c4a3a3340",
+    "source": "https://councilof.ai/api/gspc",
+    "state": "OBSERVED",
+    "unmeasured": 1
+  },
+  "baseline_loops": 40,
+  "changed_loops": 0,
+  "claim_boundary": "An hourly touch receipt proves only the declared probe was observed. UNCHANGED means the cheap fingerprint did not change, not that the entire external population was re-downloaded. Deep candidates do not mean deep measurement executed.",
+  "content_hash": "62008d798fb2dd59485124cbff0e48511dd359709821e83abc01c460f55c1106",
+  "deep_candidates_created": 38,
+  "execution": "disabled",
+  "hour_key": "2026-09-22T07",
+  "hourly_merkle_root": "f0e89e48c32a3c8118da8e72a0f1ad08ddfdac2c12282bf91f8488d48393b10f",
+  "inconclusive_loops": 1,
+  "loop_count": 40,
+  "observed_at": "2026-09-22T07:10:58Z",
+  "observed_loops": 39,
+  "publication": "disabled",
+  "receipts": [
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "trust",
+      "fingerprint": "14ab9ad44da89c3c6c6d396202f12337aee9952e97b7b6dbf9ae236648a04e43",
+      "freshness_state": "STALE_OVER_60M",
+      "id": "H-01",
+      "name": "Root freshness",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 24454,
+          "etag": "\"d11a8477df974704008e53428dc1bec6\"",
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
+          "source": "https://councilof.ai/root.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "8c182e7410ae8da149774eaf629e9a4cc476bcf11140068159b684e56fa25d03",
+      "related_axes": [
+        "provenance",
+        "provenance-controls"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "source_age_seconds": 604635.7,
+      "source_as_of": "2026-09-15T07:13:43Z",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "trust",
+      "fingerprint": "24241194cbf68856c67be154e700b603885f3e910a681badbf8e479cb4d99fc5",
+      "id": "H-02",
+      "name": "Rekor witness state",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 133276,
+          "files": 47,
+          "kind": "glob",
+          "sha256": "0f7f8f51f3bccc0e6444149c922b636b2f6c24693b46bb8163eb93ab1fa65186",
+          "source": "public/interop/rekor-root-*.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "0c68fc16fce7074a651a981a723a4d9cb0723c9cf7d8292129666ccbf07139a8",
+      "related_axes": [
+        "provenance",
+        "provenance-controls"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "trust",
+      "fingerprint": "15e3ec02ef796ab7f404bfb52fc8aaca4af93ebc46bbe72c0dc29d6cf65e20d3",
+      "id": "H-03",
+      "name": "OTS/BTC witness state",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 236819,
+          "files": 47,
+          "kind": "glob",
+          "sha256": "6ad329c49addc3416b8b89828a46f3ba4edf2c45e8a19e95ce116fc97444a3c9",
+          "source": "public/interop/root-*.json.ots",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "ef6928b25dbf3969f8695797ddb426cbbffa80c38881c4cb65779c130878d8e9",
+      "related_axes": [
+        "provenance",
+        "provenance-controls"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "trust",
+      "fingerprint": "af42653e47244dfaa181c859678e4868760aafd42e030234413f22b23bf558b2",
+      "id": "H-04",
+      "name": "Signer status",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 1605,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "df3b343d15b82620c6c81058a76a67bbf84e32e73b33bfca1a829f60241e145c",
+          "source": "https://councilof.ai/api/eunomia-data",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "02b019aae63fdc5b4f0166dab66964c0088543758c1ccca9b8fb1538881a2914",
+      "related_axes": [
+        "governance",
+        "provenance-controls",
+        "custody-disclosure"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "trust",
+      "fingerprint": "e137bec24916c7134e48191e4672ea90fd043f7780ac0d3dd9cd994eba9dd4fc",
+      "id": "H-05",
+      "name": "Corrections watch",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 86741,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "11cdb6271edecbd25152ed2314665fdc993f9a795d34fcc91cc73dcd12a83b07",
+          "source": "https://councilof.ai/api/corrections",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "7f7fcfc90cd84de2be1dddb48ff42a08bdf46c796d81497020a60a3395f17ffe",
+      "related_axes": [
+        "governance",
+        "provenance",
+        "continuity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "revenue",
+      "fingerprint": "77e130727132873ad02a9527c9077c48f9001462853bd3ee344b188d2973940d",
+      "id": "H-06",
+      "name": "x402 challenge surfaces",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 15072,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "b68ccd4f0520bcdfa527e6096994932b1e11a14811d52f9796b0960bd7b21de1",
+          "source": "https://councilof.ai/.well-known/x402.json",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 7058,
+          "etag": null,
+          "http": 402,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "7b8100310d66455ebc1370b0f0279913e2be89af902a8b7dced642eaafd1b8fc",
+          "source": "https://councilof.ai/api/proof?bundle=1",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "9f58f59b3e82498d2bbe060d4336bc6ddacac3c97c7af417ed02cd33d2d97fbe",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "revenue",
+      "fingerprint": "62fd72d394244c1a8d4a40de7349c15be7427c030af4a79c3a6f704fb9cefb5a",
+      "id": "H-07",
+      "name": "Revenue counter",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 5057,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "45e74e201d7bff6e6008baad884f204478f15f4da648eb753be0a15189ed08b6",
+          "source": "https://councilof.ai/api/revenue",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "4e8d8f4950c29affa0bef665e72fce3e868112bf9f59b20d0be2a700ae42fce0",
+      "related_axes": [
+        "governance",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "revenue",
+      "fingerprint": "c1dab8cb51df114f786ad4aaaab2a24705016f8815ab4d5663b49d51b1b7a0b8",
+      "id": "H-08",
+      "name": "PayAI listing metadata",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 2011,
+          "etag": "W/\"7db-okiMfnm1Xpu8wFKaXKK+gJHpCys\"",
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "20844e881df4b2dd2871766532496f1aba4085870d7e2236657f10ec5e20dc55",
+          "source": "https://facilitator.payai.network/discovery/resources?limit=1&offset=0",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "986295ffbf4fca3d9d6afddd03778cc5b29f7a33ee6f905a90d820dae3e27be5",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "revenue",
+      "fingerprint": "295e27ee93b50949260f42d9d6f78f3ee5010bb624eee04f4fd0baf488c3c8e4",
+      "id": "H-09",
+      "name": "Bazaar presence",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 74554,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "fe86569e67ec6e66f8b9f72f9309d489b875f7912762890a282e64a2d70eab4a",
+          "source": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources?limit=1&offset=0",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 2011,
+          "etag": "W/\"7db-okiMfnm1Xpu8wFKaXKK+gJHpCys\"",
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "20844e881df4b2dd2871766532496f1aba4085870d7e2236657f10ec5e20dc55",
+          "source": "https://facilitator.payai.network/discovery/resources?limit=1&offset=0",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "62d5cfd7ada610f14b54adb34c1a9ace78dfda458232ed0e3b25b34a6d5ef250",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "revenue",
+      "fingerprint": "23e650c70ae60217c7dca516e39069c4f1ed1d1918b959e34aee3d581df90c74",
+      "id": "H-10",
+      "name": "Billing lifecycle",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 269,
+          "kind": "file",
+          "mtime_ns": 1789378904683911222,
+          "sha256": "ac3ffb3e9aba08e2bf3356e607a0126443907dfaa5bf4835d0abc21ed48c06df",
+          "source": "public/interop/commission-fulfillment/index.json",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 5057,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "45e74e201d7bff6e6008baad884f204478f15f4da648eb753be0a15189ed08b6",
+          "source": "https://councilof.ai/api/revenue",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "57c83e5bda49782e1aae23eb702472fa21aa1be33c6137f3e8e4565e4ad616a4",
+      "related_axes": [
+        "governance",
+        "provenance-controls"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "distribution",
+      "fingerprint": "909bd2977b0c127dcd6d6d46a14d28911442b43b2084600f1bb032a69246b9b0",
+      "id": "H-11",
+      "name": "PyPI distribution estate",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 136,
+          "files": 1,
+          "kind": "glob",
+          "sha256": "0fcbe9741064fa7e72025a991c29136426c29fadd9f9bab653b77bb20e4b8ffd",
+          "source": "public/interop/*pypi*",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "3ec71862b5fef59f6d8936daf95379ac9fb10e55e323850daadcb4958bd14124",
+      "related_axes": [
+        "openness",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "distribution",
+      "fingerprint": "1db2b3a75ce52916922b0aa39c08bbdb4d78f4a529f908883f5a915e00e0a2dd",
+      "id": "H-12",
+      "name": "npm distribution estate",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 5932,
+          "files": 6,
+          "kind": "glob",
+          "sha256": "33880c040845b0a423bd6f7d4e9ae453d85e51bc9d0f8f652cdd9c183962551d",
+          "source": "public/interop/*npm*",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "d16b2e1026b0bb6e6c540e50315e342d94208c74baf980833be9da6085f4ee58",
+      "related_axes": [
+        "openness",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "distribution",
+      "fingerprint": "f38593018b49a818fad3a32a69a635f4f8cdb2c84e55c54b8eb99d6d7371cbd2",
+      "id": "H-13",
+      "name": "Hugging Face distribution estate",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 690,
+          "kind": "file",
+          "mtime_ns": 1789455515043602250,
+          "sha256": "8b4f2e1585623eebff240c585e351a8a17de8efefbf8397802a2475811bac8ef",
+          "source": "public/interop/hf-census/SUMMARY.json",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 1073960,
+          "kind": "file",
+          "mtime_ns": 1789455515049594140,
+          "sha256": "40e06510fe279f40b28851c3b123f5bb2040f2072f84454d6abcc8fed51eef0e",
+          "source": "public/interop/hf-census/org-register.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "e29f1db73dca5975e46b79f3eb996db516ac38dc9569d71618446974019fe620",
+      "related_axes": [
+        "openness",
+        "distribution-integrity",
+        "ai-adoption-components"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "distribution",
+      "fingerprint": "0a4f7db07a759e03eddabfa3e0ff4aa11bfa9ebd2816b1071fff32dd3fb7c6f2",
+      "id": "H-14",
+      "name": "MCP registry own estate",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 9608,
+          "kind": "file",
+          "mtime_ns": 1789196695218131543,
+          "sha256": "ea9a5fec8371fd299028599d5cfe6844db0f9d3964b0be776ca23e8c6bc5f808",
+          "source": "public/interop/mcp-registry-resolution.json",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 1118,
+          "kind": "file",
+          "mtime_ns": 1789555750474944487,
+          "sha256": "56084e97a5aac27a8a854945efa11dd7a29bfd53033851c8efb2e8f35e84ebee",
+          "source": "public/interop/auto-eat/card-autoeat-mcp-registry-mining-unsigned.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "aa2a1a5af454c6ace89832706116fe6a61e65503d59969066fa51632cc73c82c",
+      "related_axes": [
+        "openness",
+        "machinery-conformity",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "distribution",
+      "fingerprint": "b656166636acdbf9ad61e294aec56c8f0abd453121dd6db7a34d05dcd741c49c",
+      "id": "H-15",
+      "name": "GitHub organisation aggregate",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "http": 403,
+          "kind": "http",
+          "reason": "HTTPError:403",
+          "source": "https://api.github.com/orgs/CSOAI-ORG",
+          "state": "INCONCLUSIVE"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "95d5d9b65533d0fb939a2acb7a67b8f115347547a6e7740ee9074244c429bdf6",
+      "related_axes": [
+        "openness",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "INCONCLUSIVE"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "distribution",
+      "fingerprint": "6cdf5e5aca55446305825cc6049695e3f843436f9ef1de7004b0508389377447",
+      "id": "H-16",
+      "name": "Remote endpoint survival",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 25833,
+          "kind": "file",
+          "mtime_ns": 1789378904688833925,
+          "sha256": "8d86b0bb54075c262af0625367b8109c62a28af6e8aad77d31c0c5daedfe811b",
+          "source": "public/interop/mcp-liveness-2026-09/report.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "d4c94831714219d3592507a1f424431bd50d3694300d057df4dcc930153fc704",
+      "related_axes": [
+        "continuity",
+        "machinery-conformity",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "fingerprint": "16ea2208d77e90b00276fa0db455713c875079c5aa5bae3953e2a9d0540e58eb",
+      "id": "H-17",
+      "name": "Stablecoin universe",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 12928,
+          "kind": "file",
+          "mtime_ns": 1789555079532923247,
+          "sha256": "752175b2c55d689e8d847429e538dd9b3d62b6bc1d56957599a254e3d7a8e8f4",
+          "source": "public/interop/stablecoins-extended.json",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 215064,
+          "kind": "file",
+          "mtime_ns": 1789538308663466630,
+          "sha256": "4d08e094955aae7a66bade6e388a109a80f0b97295c1308e373ada838a978a20",
+          "source": "public/interop/stablecoin-universe-2026-09/index.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "60aeafb7e223cc9096eed44f8abbb034a6fb34102df970d0ec093118b1c628c1",
+      "related_axes": [
+        "reserve-attestation",
+        "custody-disclosure",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "fingerprint": "61cc38fa316de0553d02515cb9fe0e868ae6ba5fda31470bc90539b80c0a0d2f",
+      "id": "H-18",
+      "name": "XRPL instruments",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 2099,
+          "kind": "file",
+          "mtime_ns": 1789196695713543179,
+          "sha256": "1d67107f57a2a357329f63833017dbae9836acc01a11864fa8b2502761377fe7",
+          "source": "public/interop/xrpl-instruments.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "2543c4d8ccb921d7f99b689e5a0dbea8e958cdad3cf2b6d12d0adbda6c6a0b88",
+      "related_axes": [
+        "cross-reality",
+        "reserve-attestation",
+        "custody-disclosure"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "fingerprint": "3856d35ffb9f1462fab1e9858c7c5c804ee4ac80e13e9ee99578317dccea3c3f",
+      "id": "H-19",
+      "name": "SWIFT identity estate",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 11048,
+          "kind": "file",
+          "mtime_ns": 1789196695673424718,
+          "sha256": "9725e8a66be96be390563bc84853dc143f31c88a572263d6268a181c126730d6",
+          "source": "public/interop/swift-census-2026-09/index.json",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 3812,
+          "kind": "file",
+          "mtime_ns": 1789196695080323049,
+          "sha256": "124eded8c84dd6aa7ff5166bdab5da9602a3d61ea1225de4a91c59cdef1622dd",
+          "source": "public/interop/coverage-xrpl-swift.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "a039cda67552760754ac1d75b6f990830a3bbbb0cf31c9e55564289d1f81b821",
+      "related_axes": [
+        "cross-reality",
+        "regulatory-framework",
+        "custody-disclosure"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "fingerprint": "6473d716caccb5186fc2db5952e9aa95de3b1e647b82e0420603bfbf9e1a3a07",
+      "id": "H-20",
+      "name": "Wrapper/index board",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 2511,
+          "kind": "file",
+          "mtime_ns": 1789196695207655610,
+          "sha256": "9fc2cce35c2e83538614f9ef171c75d45425b19d751ce93f04611d4bd8d0bfee",
+          "source": "public/interop/index-reference-reverify.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "be281fac46273e8956ddaf47039326e4fe24f13b45bc5025bb4a8eb4cac91051",
+      "related_axes": [
+        "cross-reality",
+        "provenance-controls",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "fingerprint": "608ae85f474c899b9526c7ab339ca31b7c13fca724851777fa0f4cbca2ed3e51",
+      "id": "H-21",
+      "name": "MCP ecosystem",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 9608,
+          "kind": "file",
+          "mtime_ns": 1789196695218131543,
+          "sha256": "ea9a5fec8371fd299028599d5cfe6844db0f9d3964b0be776ca23e8c6bc5f808",
+          "source": "public/interop/mcp-registry-resolution.json",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 20018,
+          "kind": "file",
+          "mtime_ns": 1789455515054193777,
+          "sha256": "e8ea03d9c40385aa3bfc46034f97bc8452eb11d336a3738ca187b6be8c79f0e7",
+          "source": "public/interop/mcp-directories.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "e135c7c845e86806217974c6d598dd35e7e76f9f89d724f8fb03f25fee473af0",
+      "related_axes": [
+        "machinery-conformity",
+        "detector-interop",
+        "swarm"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "fingerprint": "3aa1af2955b7de0c06f80a3f6ba218cbffb6e1d656bf60fbb916ce487d466c8b",
+      "id": "H-22",
+      "name": "A2A agent ecosystem",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 7619,
+          "kind": "file",
+          "mtime_ns": 1789735980694156449,
+          "sha256": "7ad36bcb9bf5e6fef5c8fc16f1bcbb43748db9577c6fdcdc22fc693f756dd8a2",
+          "source": "public/interop/agent-discovery-census.json",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 10371,
+          "kind": "file",
+          "mtime_ns": 1789735980693958570,
+          "sha256": "4896d89364649fc54f3799381dc0f90dbab60830dac73af2d39bad973469dcce",
+          "source": "public/interop/a2a-engine-cards.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "142ea90e2e1f9af14e10048a38b554646493d998b37a3cfd45ed4b53a7b52f1e",
+      "related_axes": [
+        "machinery-conformity",
+        "swarm",
+        "effect-binding"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "fingerprint": "fae3ff3249d3041f9e16aae8d14b25022e3a8645cbdd662501eb9e2d51764542",
+      "id": "H-23",
+      "name": "x402 ecosystem",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 74554,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "fe86569e67ec6e66f8b9f72f9309d489b875f7912762890a282e64a2d70eab4a",
+          "source": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources?limit=1&offset=0",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 2011,
+          "etag": "W/\"7db-okiMfnm1Xpu8wFKaXKK+gJHpCys\"",
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "20844e881df4b2dd2871766532496f1aba4085870d7e2236657f10ec5e20dc55",
+          "source": "https://facilitator.payai.network/discovery/resources?limit=1&offset=0",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "4f2b2bbf2cedd190d49e0f9c2fe2f7ae01c83651b013560d495c423dd81e05e1",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "ecosystem",
+      "fingerprint": "d97d7678e56062db127f1aa95cf4f42b022d9b59285988ae5ef83239e2857973",
+      "id": "H-24",
+      "name": "AI lab/model drift",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 79510,
+          "kind": "file",
+          "mtime_ns": 1789654679821504266,
+          "sha256": "d7ca649050b8340f2cc6927ab34a8a27a72fcd896aa22d0a35d3b7f66b5eee34",
+          "source": "public/interop/lab-card-census-2026-09-17.json",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 385045,
+          "files": 71,
+          "kind": "glob",
+          "sha256": "b7d4c10b803e2f69ed79e94a60a9535753388f0ab70dd1b992080f05f3b63469",
+          "source": "public/feeds/provider-diff/**/*.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "125e43279ca594aac76e3a0a71dd6c0248fc7a8afd767d0ff33d4c72b3ba657a",
+      "related_axes": [
+        "governance",
+        "safety",
+        "continuity",
+        "conformance",
+        "openness",
+        "care",
+        "art5-safeguard",
+        "affect",
+        "jail"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {
+        "H-21": "608ae85f474c899b9526c7ab339ca31b7c13fca724851777fa0f4cbca2ed3e51"
+      },
+      "execution_authority": "none",
+      "family": "index",
+      "fingerprint": "6f234a7723da3ee2c9ad4c6402ba46fd0cd3950822fd1a74922025f2e478a395",
+      "id": "H-25",
+      "name": "X-1 MCP concentration",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [],
+      "publication_authority": "none",
+      "receipt_hash": "2d1f2b3b41208e7d8e0fe7a51c5d5720eafff67126499f7f98e9e08adba950f5",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {
+        "H-23": "fae3ff3249d3041f9e16aae8d14b25022e3a8645cbdd662501eb9e2d51764542"
+      },
+      "execution_authority": "none",
+      "family": "index",
+      "fingerprint": "c51b2302f9cbf229562ac54d19afac248b4fb83589001df086608e0b3d4396f4",
+      "id": "H-26",
+      "name": "X-2 x402 adoption",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [],
+      "publication_authority": "none",
+      "receipt_hash": "e966106878ac9c453c00b6a8aa007b13d9d8f52ccda686ccd6d84c56b44cecaf",
+      "related_axes": [
+        "machinery-conformity",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {
+        "H-22": "3aa1af2955b7de0c06f80a3f6ba218cbffb6e1d656bf60fbb916ce487d466c8b"
+      },
+      "execution_authority": "none",
+      "family": "index",
+      "fingerprint": "4db02869ee42b7040080eaf2584a7163797d8ae29448ddd2e567c70cf501f07c",
+      "id": "H-27",
+      "name": "X-3 A2A churn",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [],
+      "publication_authority": "none",
+      "receipt_hash": "e1116020532cbe16020734d5d63f616176bb9461c969ecb356357d384640661b",
+      "related_axes": [
+        "swarm",
+        "effect-binding"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {
+        "H-17": "16ea2208d77e90b00276fa0db455713c875079c5aa5bae3953e2a9d0540e58eb"
+      },
+      "execution_authority": "none",
+      "family": "index",
+      "fingerprint": "bc6d483f25c926429683e7bc837898df13fe26f945fba7858828a5d36b493f1c",
+      "id": "H-28",
+      "name": "X-4 stablecoin divergence",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [],
+      "publication_authority": "none",
+      "receipt_hash": "b3278483698fd814454a11d5032d4bb501982e41b22c1d632c84dd93c6822e51",
+      "related_axes": [
+        "reserve-attestation",
+        "custody-disclosure"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {
+        "H-01": "14ab9ad44da89c3c6c6d396202f12337aee9952e97b7b6dbf9ae236648a04e43",
+        "H-05": "e137bec24916c7134e48191e4672ea90fd043f7780ac0d3dd9cd994eba9dd4fc"
+      },
+      "execution_authority": "none",
+      "family": "index",
+      "fingerprint": "5b9fb2a2163f329c2ebf486a407c0f10655142b500f69c7003270da89f9a4e91",
+      "id": "H-29",
+      "name": "X-5 evidence freshness/correction latency",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [],
+      "publication_authority": "none",
+      "receipt_hash": "f1bccd78fe7b722646a2ed96612f69c0cf00c1cefba1598b1357aec40ee2e232",
+      "related_axes": [
+        "provenance",
+        "continuity",
+        "provenance-controls"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {
+        "H-16": "6cdf5e5aca55446305825cc6049695e3f843436f9ef1de7004b0508389377447"
+      },
+      "execution_authority": "none",
+      "family": "index",
+      "fingerprint": "d44293e87aa548f8cf31a12b6832aa3792fbcd7ba31d61ff0e5f986b290a4cc5",
+      "id": "H-30",
+      "name": "X-6 endpoint survival",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [],
+      "publication_authority": "none",
+      "receipt_hash": "d9ef0b91e333ddb01459ba16b2ab194838567bc25cb11a3e499246266fa2f5f1",
+      "related_axes": [
+        "continuity",
+        "distribution-integrity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "institutional",
+      "fingerprint": "5b522b83a412d88113c5941ea6be9a5eda508d87ea072a4a48523f57c069fcb8",
+      "id": "H-31",
+      "name": "Regulator corridor",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 14442,
+          "kind": "file",
+          "mtime_ns": 1789619406401226368,
+          "sha256": "1592c6c5e37d34a4adb0bf4813169e2f57d9961f524c1a578b59ac1df895e5e6",
+          "source": "public/interop/deep-research-regulatory-2026-09.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "9afc5f18f571df22184554e2c31bc7be4293750fcd545230c85ea64c1aa47a2e",
+      "related_axes": [
+        "governance",
+        "regulatory-framework",
+        "art5-safeguard"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "institutional",
+      "fingerprint": "8effeb7ddee435d7f05a89e2b5ab1087f9e1b7a6a7155ab047035b060bc12d99",
+      "id": "H-32",
+      "name": "Standards corridor",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 54368,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "f3675e0d12d739834015e427ba0ce19cec10844f3ee9c0b3289bb92eebed8337",
+          "source": "https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 47247,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "44aa28af9e839a90e205a6a8f56d97d828914a17bc08bb775b4320b8d8ca038b",
+          "source": "https://www.w3.org/community/agent-conformance/",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "76a106c3b132aa97394d5b79bfc31a1c13a64e80210dd63bb2db1a3df96efff7",
+      "related_axes": [
+        "conformance",
+        "governance",
+        "detector-interop"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "institutional",
+      "fingerprint": "5d3a47d5f56837f4802cda2f934126d879ef79486ecc2e06b9f8f2430a336fa3",
+      "id": "H-33",
+      "name": "Deadline board",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 2592,
+          "kind": "file",
+          "mtime_ns": 1789232120258041280,
+          "sha256": "3c1f9c0193da8507ff976f34a2d1cb1e9599f393ca970f31155d5ca5742e6eb3",
+          "source": "scripts/business-operations/calendar.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "9bb8570e5c3dc7817108322c395fed11fa0384e8dbac80e6b222de40ea412cc0",
+      "related_axes": [
+        "governance",
+        "regulatory-framework"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "institutional",
+      "fingerprint": "9c2661c9fc4c7bb207f1e05985a17b408c167ac5cf2daa3d291795ceb6798fe1",
+      "id": "H-34",
+      "name": "Grant/funding windows",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 5009,
+          "files": 9,
+          "kind": "glob",
+          "sha256": "6e63345e8ba54cbdb50af1a8ec70b6945d742fbfdc5bade829367e1091a761d3",
+          "source": "public/grants/*",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "bab9c3b34153229d92d17e0057073e05011ca2ad366ae04d4e47117515a81624",
+      "related_axes": [
+        "governance"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "fingerprint": "d88c4e1434abd9c50fc613d3ee31c23e560f21ff1fdb68197b8d5607b0d26966",
+      "id": "H-35",
+      "name": "Public surface regression",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 303438,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "b5b115c753c6adf7c046669440ffd2ce8321a7ec5d6b950b8d39eba62b5c3829",
+          "source": "https://councilof.ai/",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 116180,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "130fc1c7af8c50fb554108fc92533e738584b554d54c4d6c6637115f0748f737",
+          "source": "https://councilof.ai/pricing",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 288706,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "9b48c10d3ea16bab8f05aa65b48998cfbe6debb21e6259475bb1977b15683071",
+          "source": "https://councilof.ai/assess/",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 17186,
+          "etag": "\"cd4451c8978016edc33a6f796dbf6e13\"",
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "c655357cf53937b31389c6b0c91928f8647aaaf9cfc6911a7426bda71c5e90b8",
+          "source": "https://councilof.ai/llms.txt",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 13018,
+          "etag": "\"0c35a71848c308845047fdd78dd9eb93\"",
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "b6474156e927483e5e156780f2e0fbd82f12e86d7efd25edc22be597a73aed19",
+          "source": "https://councilof.ai/.well-known/agent.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "9657f1a433aefe03e62aaa46fdf20287985f8bc1de3589f3d8bd90732b21eb10",
+      "related_axes": [
+        "governance",
+        "continuity",
+        "openness"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "fingerprint": "20f845ce35bfd744e991cd10ab3dfb0a3ee80425eeedf8a340b543ed5bccbb10",
+      "id": "H-36",
+      "name": "Tool/count consistency",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 70795,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": "Tue, 22 Sep 2026 07:11:02 GMT",
+          "sha256": "d1cd91c57054db4e16b08722e9cca38db0d25fb56bbf5807d1edd79c4a3a3340",
+          "source": "https://councilof.ai/api/gspc",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 124642,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "47275b07c910c903fda69e8888ae9cb8567af801b4786db8c9c577ab0771f79d",
+          "source": "https://councilof.ai/tools",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 201700,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "9077d2e868dc37dc234f13fe44ef1436212b4e8a266555a11508643e94a5291c",
+          "source": "https://councilof.ai/products",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "6b87d85fbf5468a4c647832160596ede5910a32863008e9605cb488fe1b4743c",
+      "related_axes": [
+        "governance",
+        "conformance",
+        "machinery-conformity"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "fingerprint": "425a061219f3e6a26c87fe34922e291b619f32e9a93a6ca98ed091e91cb28727",
+      "id": "H-37",
+      "name": "Truth-register projection",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 70795,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": "Tue, 22 Sep 2026 07:11:02 GMT",
+          "sha256": "d1cd91c57054db4e16b08722e9cca38db0d25fb56bbf5807d1edd79c4a3a3340",
+          "source": "https://councilof.ai/api/gspc",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 5057,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "45e74e201d7bff6e6008baad884f204478f15f4da648eb753be0a15189ed08b6",
+          "source": "https://councilof.ai/api/revenue",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 86741,
+          "etag": null,
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "11cdb6271edecbd25152ed2314665fdc993f9a795d34fcc91cc73dcd12a83b07",
+          "source": "https://councilof.ai/api/corrections",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 24454,
+          "etag": "\"d11a8477df974704008e53428dc1bec6\"",
+          "http": 200,
+          "kind": "http",
+          "last_modified": null,
+          "sha256": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
+          "source": "https://councilof.ai/root.json",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "ebb1514fa1945fec84cfaaa88f1015ed122b96be945389ce6c0fc829622e8f99",
+      "related_axes": [
+        "governance",
+        "provenance",
+        "provenance-controls"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {},
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "fingerprint": "f01578693883093f7e7440a60ea9abb6076effa53a246246fe832df85a6f57cf",
+      "id": "H-38",
+      "name": "Data-room projection",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [
+        {
+          "bytes": 8164,
+          "files": 1,
+          "kind": "glob",
+          "sha256": "8f6779fa1de7bd2572b472e7f06471c856b7a5fd0305edb6e060dcff61217f9a",
+          "source": "**/*DATA*ROOM*.md",
+          "state": "OBSERVED"
+        },
+        {
+          "bytes": 33336,
+          "files": 2,
+          "kind": "glob",
+          "sha256": "5a7fe625a4e5338c7e74bdd9067b5409c68e5a1a75a625f3538968a2cbf3cd70",
+          "source": "**/*SERIES*A*.md",
+          "state": "OBSERVED"
+        }
+      ],
+      "publication_authority": "none",
+      "receipt_hash": "8e3c7eea1a31a2f3d1484ccd9458d126e6103e80002f0cf6ab2d02f47db47e61",
+      "related_axes": [
+        "governance",
+        "provenance-controls"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {
+        "H-17": "16ea2208d77e90b00276fa0db455713c875079c5aa5bae3953e2a9d0540e58eb",
+        "H-21": "608ae85f474c899b9526c7ab339ca31b7c13fca724851777fa0f4cbca2ed3e51",
+        "H-22": "3aa1af2955b7de0c06f80a3f6ba218cbffb6e1d656bf60fbb916ce487d466c8b",
+        "H-23": "fae3ff3249d3041f9e16aae8d14b25022e3a8645cbdd662501eb9e2d51764542"
+      },
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "fingerprint": "f56c58323560833e6b77c2e58fcd900796a500f8ee8defce5648a21d620578bc",
+      "id": "H-39",
+      "name": "Census delta materiality",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [],
+      "publication_authority": "none",
+      "receipt_hash": "a406f1a793509d5566acca3873ec0fdb04789558a8c5fa344196a8237066012a",
+      "related_axes": [
+        "ai-adoption-components",
+        "labour-components",
+        "humanoid-labour-index"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "state": "OBSERVED"
+    },
+    {
+      "anchoring_state": "NOT_ATTEMPTED",
+      "claim_boundary": "Hourly touch detects change in the declared probe surface only; deep measurement is required before any stronger population claim.",
+      "delta": "BASELINE",
+      "dependencies": {
+        "H-01": "14ab9ad44da89c3c6c6d396202f12337aee9952e97b7b6dbf9ae236648a04e43",
+        "H-02": "24241194cbf68856c67be154e700b603885f3e910a681badbf8e479cb4d99fc5",
+        "H-03": "15e3ec02ef796ab7f404bfb52fc8aaca4af93ebc46bbe72c0dc29d6cf65e20d3",
+        "H-04": "af42653e47244dfaa181c859678e4868760aafd42e030234413f22b23bf558b2",
+        "H-05": "e137bec24916c7134e48191e4672ea90fd043f7780ac0d3dd9cd994eba9dd4fc",
+        "H-06": "77e130727132873ad02a9527c9077c48f9001462853bd3ee344b188d2973940d",
+        "H-07": "62fd72d394244c1a8d4a40de7349c15be7427c030af4a79c3a6f704fb9cefb5a",
+        "H-08": "c1dab8cb51df114f786ad4aaaab2a24705016f8815ab4d5663b49d51b1b7a0b8",
+        "H-09": "295e27ee93b50949260f42d9d6f78f3ee5010bb624eee04f4fd0baf488c3c8e4",
+        "H-10": "23e650c70ae60217c7dca516e39069c4f1ed1d1918b959e34aee3d581df90c74",
+        "H-11": "909bd2977b0c127dcd6d6d46a14d28911442b43b2084600f1bb032a69246b9b0",
+        "H-12": "1db2b3a75ce52916922b0aa39c08bbdb4d78f4a529f908883f5a915e00e0a2dd",
+        "H-13": "f38593018b49a818fad3a32a69a635f4f8cdb2c84e55c54b8eb99d6d7371cbd2",
+        "H-14": "0a4f7db07a759e03eddabfa3e0ff4aa11bfa9ebd2816b1071fff32dd3fb7c6f2",
+        "H-15": "b656166636acdbf9ad61e294aec56c8f0abd453121dd6db7a34d05dcd741c49c",
+        "H-16": "6cdf5e5aca55446305825cc6049695e3f843436f9ef1de7004b0508389377447",
+        "H-17": "16ea2208d77e90b00276fa0db455713c875079c5aa5bae3953e2a9d0540e58eb",
+        "H-18": "61cc38fa316de0553d02515cb9fe0e868ae6ba5fda31470bc90539b80c0a0d2f",
+        "H-19": "3856d35ffb9f1462fab1e9858c7c5c804ee4ac80e13e9ee99578317dccea3c3f",
+        "H-20": "6473d716caccb5186fc2db5952e9aa95de3b1e647b82e0420603bfbf9e1a3a07",
+        "H-21": "608ae85f474c899b9526c7ab339ca31b7c13fca724851777fa0f4cbca2ed3e51",
+        "H-22": "3aa1af2955b7de0c06f80a3f6ba218cbffb6e1d656bf60fbb916ce487d466c8b",
+        "H-23": "fae3ff3249d3041f9e16aae8d14b25022e3a8645cbdd662501eb9e2d51764542",
+        "H-24": "d97d7678e56062db127f1aa95cf4f42b022d9b59285988ae5ef83239e2857973",
+        "H-25": "6f234a7723da3ee2c9ad4c6402ba46fd0cd3950822fd1a74922025f2e478a395",
+        "H-26": "c51b2302f9cbf229562ac54d19afac248b4fb83589001df086608e0b3d4396f4",
+        "H-27": "4db02869ee42b7040080eaf2584a7163797d8ae29448ddd2e567c70cf501f07c",
+        "H-28": "bc6d483f25c926429683e7bc837898df13fe26f945fba7858828a5d36b493f1c",
+        "H-29": "5b9fb2a2163f329c2ebf486a407c0f10655142b500f69c7003270da89f9a4e91",
+        "H-30": "d44293e87aa548f8cf31a12b6832aa3792fbcd7ba31d61ff0e5f986b290a4cc5",
+        "H-31": "5b522b83a412d88113c5941ea6be9a5eda508d87ea072a4a48523f57c069fcb8",
+        "H-32": "8effeb7ddee435d7f05a89e2b5ab1087f9e1b7a6a7155ab047035b060bc12d99",
+        "H-33": "5d3a47d5f56837f4802cda2f934126d879ef79486ecc2e06b9f8f2430a336fa3",
+        "H-34": "9c2661c9fc4c7bb207f1e05985a17b408c167ac5cf2daa3d291795ceb6798fe1",
+        "H-35": "d88c4e1434abd9c50fc613d3ee31c23e560f21ff1fdb68197b8d5607b0d26966",
+        "H-36": "20f845ce35bfd744e991cd10ab3dfb0a3ee80425eeedf8a340b543ed5bccbb10",
+        "H-37": "425a061219f3e6a26c87fe34922e291b619f32e9a93a6ca98ed091e91cb28727",
+        "H-38": "f01578693883093f7e7440a60ea9abb6076effa53a246246fe832df85a6f57cf",
+        "H-39": "f56c58323560833e6b77c2e58fcd900796a500f8ee8defce5648a21d620578bc"
+      },
+      "execution_authority": "none",
+      "family": "self-integrity",
+      "fingerprint": "edecd4fb705395f1294294c9e28f12d316f7ef1f25ec94e4ca9c3ce982370059",
+      "hourly_merkle_root": "f0e89e48c32a3c8118da8e72a0f1ad08ddfdac2c12282bf91f8488d48393b10f",
+      "id": "H-40",
+      "leaf_count": 39,
+      "name": "Receipt of receipts",
+      "observed_at": "2026-09-22T07:10:58Z",
+      "probes": [],
+      "publication_authority": "none",
+      "receipt_hash": "fc88bccff917e08ee8d05ae6dfcd8aa618f18cf3674963562a849537a9c1508c",
+      "related_axes": [
+        "provenance",
+        "continuity",
+        "provenance-controls"
+      ],
+      "schema": "csoai.hourly-loop-receipt/0.1",
+      "signing_state": "UNSIGNED_LOCAL_RESEARCH",
+      "state": "OBSERVED"
+    }
+  ],
+  "scheduler": "existing-standing-cycle",
+  "schema": "csoai.hourly-loop-run/0.1"
+}

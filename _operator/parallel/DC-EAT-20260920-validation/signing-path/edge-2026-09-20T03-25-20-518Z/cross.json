@@ -1,0 +1,343 @@
+{
+  "schema": "csoai.cross/0.1",
+  "what": "The divergence layer. NOT one fused gap number — regulation and a bond price are not commensurable on one scale. Conformance to the in-force provision is the deterministic axis; the measured-AI result and the human baseline are reported ALONGSIDE as context, each labelled by data state. It composes; it does not fuse.",
+  "legs": {
+    "regulation": {
+      "source": "/api/regulation",
+      "state": "statement of law, cited",
+      "present": true
+    },
+    "measured_ai": {
+      "source": "/api/gspc",
+      "state": "MEASURED (signed board)",
+      "present": true
+    },
+    "human_baseline": {
+      "source": "/api/reported",
+      "state": "REPORTED (cited third-party)",
+      "present": true,
+      "note": "CAPABILITY-LEVEL baselines (ARC-AGI/GAIA/GPQA), not yet per-axis — stated, not hidden. REPORTED context only: human labels carry inherent noise (literature ~63.5% mean agreement), so the human leg is never deterministically SCORED — it is reported with its source, never fused into a measured cell."
+    },
+    "market_data": {
+      "state": "NOT PRESENT — a live index/market leg would be a fourth REPORTED leg contingent on a real cited source; it is not fabricated here"
+    }
+  },
+  "east_west": "Jurisdictional divergence (EU · US states · China · Korea · Japan · Australia) lives in /api/regulation — the same measured-AI number carries different obligations and penalties across regimes.",
+  "human_baselines_sample": [],
+  "rows": [
+    {
+      "axis": "governance",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 237,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "safety",
+      "measured_ai": {
+        "leader": "gemma3:12b (base model)",
+        "accuracy": 0.944,
+        "accuracy_is": "point estimate",
+        "separation": "TIE",
+        "n": 36,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "provenance",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 32,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "continuity",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 33,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "conformance",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 35,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "openness",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 32,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "machinery-conformity",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 33,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "care",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 199,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "obligation": "vulnerability protection (Art 5 exploitation ban)",
+        "instrument": "EU AI Act Art 5(1)(b)",
+        "penalty_exposure": null
+      },
+      "divergence": "The instrument (EU AI Act Art 5(1)(b)) requires vulnerability protection (Art 5 exploitation ban). Measured leader undefined scores NaN% on the frozen split; separation UNTESTED. Whether that clears the obligation is a legal question, not a measured one — this cell states the gap, it does not certify."
+    },
+    {
+      "axis": "cross-reality",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 32,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "detector-interop",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 33,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "art5-safeguard",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 36,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "swarm",
+      "measured_ai": {
+        "leader": "qwen2.5:7b (base model)",
+        "accuracy": 0.4444,
+        "accuracy_is": "point estimate from the signed qwen2.5:7b candidate card b44335819f7720966b41e2ee26f5798892b0eb8d2571c71e0c9090506f1ff823",
+        "separation": "UNTESTED",
+        "n": 37,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "obligation": "multi-agent oversight (human oversight duty)",
+        "instrument": "EU AI Act Art 14",
+        "penalty_exposure": null
+      },
+      "divergence": "The instrument (EU AI Act Art 14) requires multi-agent oversight (human oversight duty). Measured leader qwen2.5:7b (base model) scores 44.4% (point estimate from the signed qwen2.5:7b candidate card b44335819f7720966b41e2ee26f5798892b0eb8d2571c71e0c9090506f1ff823) on the frozen split; separation UNTESTED. Whether that clears the obligation is a legal question, not a measured one — this cell states the gap, it does not certify."
+    },
+    {
+      "axis": "affect",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "separation": "UNTESTED",
+        "n": 41,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "obligation": "emotion-recognition disclosure",
+        "instrument": "EU AI Act Art 50 / Art 5 workplace ban",
+        "penalty_exposure": null
+      },
+      "divergence": "The instrument (EU AI Act Art 50 / Art 5 workplace ban) requires emotion-recognition disclosure. Measured leader undefined scores NaN% on the frozen split; separation UNTESTED. Whether that clears the obligation is a legal question, not a measured one — this cell states the gap, it does not certify."
+    },
+    {
+      "axis": "jail",
+      "measured_ai": {
+        "leader": "qwen2.5:0.5b-instruct (base model)",
+        "accuracy": 0.5915,
+        "accuracy_is": "point estimate",
+        "separation": "TIE",
+        "n": 71,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "effect-binding",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "n": 0,
+        "state": "UNMEASURED"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "provenance-controls",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "n": 6,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "reserve-attestation",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "n": 16,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "regulatory-framework",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "n": 16,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "distribution-integrity",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "n": 16,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "custody-disclosure",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "n": 16,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "ai-adoption-components",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "n": 2,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "labour-components",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "n": 2,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "measured_ai": {
+        "accuracy_is": "point estimate",
+        "n": 8,
+        "state": "MEASURED (signed)"
+      },
+      "regulation": {
+        "note": "no single governing instrument mapped for this axis"
+      },
+      "divergence": null
+    }
+  ],
+  "honest_gate": "This cross composes live feeds and is signed at the edge with #board-attestation-1 — the SAME key and mechanism as /api/gspc. The signature attests the INTEGRITY of this composed payload as served; it does not re-attest the underlying legs (each carries its own data-state and, where present, its own signature). No key → no signature field.",
+  "license": "CC-BY-4.0",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "signature": {
+    "attests": "integrity of this composed divergence payload as published by the site (NOT a re-attestation of the underlying legs)",
+    "signer": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig": "e42319c4c2e77d526b9b6865d8836d3392d55ec155fe275e798917503c4442e34b2f6bc000d718bb16aca00999c3ea07c824220c1e2d0fda651036a18218bb08",
+    "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+    "sig_input": "canonical JSON (recursively sorted keys, no whitespace) of this payload with the signature field removed",
+    "verify": "fetch /.well-known/did.json → #board-attestation-1 public key → recompute canonical JSON and verify Ed25519 against did.json"
+  }
+}

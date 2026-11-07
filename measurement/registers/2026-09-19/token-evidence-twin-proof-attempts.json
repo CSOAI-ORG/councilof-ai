@@ -1,0 +1,24 @@
+{
+  "artifact": "measurement/registers/2026-09-19/token-evidence-twin-source-observations.json",
+  "artifact_sha256": "d48b00781849c154d293f79c0ca5b8ed6e654da56e580cb94e8de3b0df7f5e59",
+  "attempts": [
+    {
+      "layer": "csoai_layer_0_ed25519",
+      "reason": "governance signing gateway unreachable (status 405)",
+      "state": "BLOCKED"
+    },
+    {
+      "layer": "rekor_sigstore",
+      "reason": "requires a valid signature or supported signing identity",
+      "state": "NOT_ATTEMPTED"
+    },
+    {
+      "layer": "open_timestamps",
+      "reason": "deferred until an accepted canonical evidence object exists",
+      "state": "NOT_ATTEMPTED"
+    }
+  ],
+  "publication": "disabled",
+  "recorded_at": "2026-09-19T17:18:42.889617+00:00",
+  "schema": "csoai.token-evidence-proof-attempts/0.1"
+}

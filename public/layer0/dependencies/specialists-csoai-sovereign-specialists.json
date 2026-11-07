@@ -1,0 +1,33 @@
+{
+  "authority": {
+    "dependency_registration": true,
+    "effect_authority": false,
+    "endorsement": false,
+    "gspc_measurement": false,
+    "source_truth": false
+  },
+  "capability_id": "specialists",
+  "claim_boundary": "Proves that the live-branch response bytes of /api/specialists change when the exact upstream specialist-feed bytes change and replay stably when restored. It does not validate upstream signature, truth, freshness, GSPC status, endorsement, or effect authority.",
+  "implementation": {
+    "fixture_path": "functions/api/specialists.dependency.test.ts",
+    "fixture_sha256": "c7f21effb305e76b5da611683e51eb44a5fff065d5832f5e9abae29b39e0ee34",
+    "handler_path": "functions/api/specialists.ts",
+    "handler_sha256": "678cd78dd5044126edb8e2de84d065b3d905af2424faf396cbaa6885b07d5886"
+  },
+  "outputs": {
+    "baseline_sha256": "6769b30711c413d355a39e118ed995cc1107a6d5399837f0609550023da52b5b",
+    "changed": true,
+    "changed_sha256": "a743d809b04ebc6cee131c0f2928fc01b0e2d67beca023109c8d840c0f740069",
+    "replay_sha256": "6769b30711c413d355a39e118ed995cc1107a6d5399837f0609550023da52b5b",
+    "replay_stable": true
+  },
+  "schema": "csoai.layer0-dependency-fixture/0.1",
+  "scope_match_required": true,
+  "source_id": "csoai-sovereign-specialists",
+  "source_scope": "https://csoai-sovereign.pages.dev/api/specialists.json",
+  "state": "VERIFIED_DIRECT_DEPENDENCY",
+  "watch": {
+    "kind": "http_artifact",
+    "url": "https://csoai-sovereign.pages.dev/api/specialists.json"
+  }
+}
