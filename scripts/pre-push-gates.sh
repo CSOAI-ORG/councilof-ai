@@ -126,6 +126,31 @@ if [ "$board_ok" -eq 1 ]; then
   anchor_out=$(node scripts/board-production-anchor.mjs --selftest 2>&1 \
     && node scripts/board-production-anchor.mjs dist/client --board-reference prerender-board-reference.json 2>&1) \
     || { echo "  ✖ board-production-anchor — its verdict:"; printf '%s\n' "$anchor_out" | tail -12 | sed 's/^/      /'; fail=1; }
+  # ADDED 2026-11-07. The published interop index is a machine-readable promise to every reader:
+  # "sha256 is the digest of the file's bytes as published ... a match means you hold what the
+  # estate published". Measured 2026-11-07: the index labelled all 1,904 retired .invalid paths
+  # "hf-mirror — served by a 302 redirect ... the path is real and fetchable", and NONE of them
+  # is 302'd: the estate's own Function (functions/interop/[[path]].ts) intercepts every .invalid
+  # path and serves it from the retired-bytes archive, or 404s by design. 1,898 of them 404'd.
+  # The producer now models that state, and this check proves the COMMITTED index is what the
+  # producer would write — so the promise cannot drift without a push naming it.
+  # It runs after the build, because the digests of pages-served HTML are over the BUILT file
+  # (the build injects a launcher script, so the tree's bytes are not what a reader fetches).
+  python3 scripts/build-interop-file-index.py --selftest >/dev/null 2>&1 \
+    || { echo "  ✖ interop index: the producer's own selftest failed — the check is broken"; fail=1; }
+  index_rc=0
+  index_out=$(python3 scripts/build-interop-file-index.py public/interop public/interop/file-index.json \
+    scripts/deploy-exclusions.json --served-root dist/client --check 2>&1) || index_rc=$?
+  if [ "$index_rc" -eq 1 ]; then
+    echo "  ✖ interop index: the published index is STALE — it no longer describes this tree — its verdict:"
+    printf '%s\n' "$index_out" | tail -6 | sed 's/^/      /'; fail=1
+  elif [ "$index_rc" -eq 2 ]; then
+    echo "  · interop index: UNCHECKABLE — the check could not run. Not a finding, and not a reason to refuse the push:"
+    printf '%s\n' "$index_out" | tail -4 | sed 's/^/      /'
+  elif [ "$index_rc" -ne 0 ]; then
+    echo "  ✖ interop index: the check failed unexpectedly (exit $index_rc) — its verdict:"
+    printf '%s\n' "$index_out" | tail -6 | sed 's/^/      /'; fail=1
+  fi
 fi
 
 # ADDED 2026-09-26. Private canaries (harness/instrument-guard) must never reach a public
