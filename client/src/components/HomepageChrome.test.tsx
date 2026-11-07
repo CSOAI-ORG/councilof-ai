@@ -51,7 +51,8 @@ describe("homepage site chrome", () => {
     expect(html).toContain('data-testid="palette-launcher"');
     expect(html).toContain('data-testid="header-council-os"');
     expect(html).not.toContain("data-nav-trigger=");
-    expect(html).not.toContain('data-testid="header-book-measurement"');
+    expect(html.match(/data-testid="header-book-measurement"/g)).toHaveLength(1);
+    expect(html).toMatch(/<a[^>]*href="\/assess\/"[^>]*data-testid="header-book-measurement"/);
   });
 
   it("keeps the established dropdown navigation and measurement enquiry on other routes", () => {
