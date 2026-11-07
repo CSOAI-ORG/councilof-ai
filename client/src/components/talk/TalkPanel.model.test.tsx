@@ -6,7 +6,7 @@ import TalkPanel,{type TalkPanelHandle} from "./TalkPanel";
 test("real model selector sends cloud question directly, switches to local without server fallback",async()=>{
  vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT",true);window.history.replaceState(null,"","/");
  Object.defineProperty(HTMLElement.prototype,"scrollIntoView",{configurable:true,value:vi.fn()});
- const fetcher=vi.fn(async()=>Response.json({model:"overlay-actual",choices:[{message:{content:"A useful answer"},finish_reason:"stop"}]}));vi.stubGlobal("fetch",fetcher);
+ const fetcher=vi.fn(async(_url: RequestInfo | URL, _init?: RequestInit)=>Response.json({model:"overlay-actual",choices:[{message:{content:"A useful answer"},finish_reason:"stop"}]}));vi.stubGlobal("fetch",fetcher);
  const node=document.createElement("div");document.body.append(node);const root=createRoot(node),ref=createRef<TalkPanelHandle>();
  try{
   await act(async()=>root.render(<TalkPanel ref={ref} hideSuggestions/>));
