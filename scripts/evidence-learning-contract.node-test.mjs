@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {compileReportPractice} from '../public/evidence-learning/report-practice.mjs';
 import {publicURL,readPublic,validateBoard,validateScenario,changedTotals,measurementTimeLabel,LESSONS,practiceKey,practiceScore,makeReviewDraft,coachingContext} from '../public/evidence-learning/contract.mjs';
 const board={schema:'csoai.gspc-axes/0.5',axes:[{axis:'governance',task:'A bounded task',status:'MEASURED',n:30}],totals:{axes:1,measured_axes:1,unmeasured_axes:0}};
 test('reader allows only exact public sources and one exact axis',()=>{
@@ -90,4 +92,76 @@ test('resuming preserves the selected axis and step and rejects inconsistent lea
  const {normalizeLearningState,VERSION}=await import('../public/evidence-learning/contract.mjs');const s=normalizeLearningState({component_version:VERSION,progress:{},proposals:{},shots:[],ui:{axis:'safety',stage:'propose'}});assert.equal(s.ui.axis,'safety');assert.equal(s.ui.stage,'propose');assert.throws(()=>normalizeLearningState({...s,progress:{'safety:evidence-scope:1':{correct:true,selected:0,attempts:1}}}));
 });
 test('background refresh does not replace the proposal source binding',()=>{const s=readFileSync(new URL('../public/evidence-learning/element.js',import.meta.url),'utf8');assert.match(s,/paintSource\(background\)/);assert.match(s,/proposalCapture\(\)/);assert.match(s,/case'pin-source'/);assert.match(s,/aria-controls="stage-panel"/);assert.match(s,/tabindex="\$\{this.stage===id\?'0':'-1'\}"/);assert.match(s,/this\.bound=true/);});
+
+const rawCapture=(data=board)=>({url:'https://councilof.ai/api/gspc',readAt:'2026-11-07T03:00:00Z',raw:JSON.stringify(data)});
+test('report practice derives answers and its digest from the same source bytes',async()=>{
+ const capture={...rawCapture(),data:{fake:true},sha256:'forged'};
+ const p=await compileReportPractice(capture,'governance');
+ assert.equal(p.source.sha256,createHash('sha256').update(capture.raw).digest('hex'));
+ assert.equal(p.questions[0].options[p.questions[0].answer],'MEASURED');
+ assert.equal(p.questions[1].options[p.questions[1].answer],'30');
+ assert.equal(p.questions[2].options[p.questions[2].answer],'Not supplied or uncheckable');
+ assert.equal(p.grants_authority,false);assert.ok(Object.isFrozen(p.questions[0].options));
+ assert.throws(()=>{p.questions[0].answer=0},TypeError);
+});
+test('report practice rejects missing, foreign, oversized, invalid and wrong-axis sources',async()=>{
+ for(const c of [null,{...rawCapture(),url:'https://evil.test/api/gspc'}, {...rawCapture(),raw:'x'.repeat(2000001)}, {...rawCapture(),raw:'{}'}, {...rawCapture(),raw:'{bad'}, {...rawCapture(),readAt:'bad'}])await assert.rejects(()=>compileReportPractice(c,'governance'));
+ await assert.rejects(()=>compileReportPractice(rawCapture(),'absent'));
+});
+test('report practice preserves unknown, draft and zero observations without upgrading them',async()=>{
+ for(const status of ['UNMEASURED','DRAFT','SPEC','PLANNED']){
+  const b=structuredClone(board);b.axes[0].status=status;b.axes[0].n=0;b.totals.measured_axes=0;
+  const p=await compileReportPractice(rawCapture(b),'governance');
+  assert.equal(p.reported.status,status);assert.equal(p.questions[1].options[2],'0');assert.equal(p.grants_authority,false);
+ }
+});
+test('changed bytes change practice identity; a new retrieval alone does not',async()=>{
+ const first=await compileReportPractice(rawCapture(),'governance');
+ const reread=await compileReportPractice({...rawCapture(),readAt:'2026-11-07T04:00:00Z'},'governance');
+ assert.equal(first.id,reread.id);
+ const b=structuredClone(board);b.axes[0].n=31;
+ const changed=await compileReportPractice(rawCapture(b),'governance');
+ assert.notEqual(first.id,changed.id);assert.equal(first.reported.n,30);
+});
+test('report UI escapes source text and labels a changed or failed refresh as historical',async()=>{
+ const {CouncilEvidenceLearning}=await import('../public/evidence-learning/element.js');
+ const b=structuredClone(board);b.axes[0].task='<img src=x onerror=alert(1)>';
+ const p=await compileReportPractice(rawCapture(b),'governance');
+ const view={axis:'governance',reportPractice:p,reportAnswers:{},capture:{sha256:p.source.sha256},boardCapture:rawCapture(b),readState:'SOURCE_READ',loading:false};
+ const render=()=>CouncilEvidenceLearning.prototype.reportPracticeContent.call(view);
+ assert.match(render(),/Matches the latest successful/);assert.match(render(),/&lt;img/);assert.doesNotMatch(render(),/<img/);
+ view.capture.sha256='b'.repeat(64);assert.match(render(),/Pinned historical practice/);
+ view.readState='CACHED';assert.match(render(),/data-do="report-practice" disabled/);
+ view.axis='safety';assert.doesNotMatch(render(),/Report SHA-256:/);
+});
+test('report answer events reject stale revision and cross-axis clicks',async()=>{
+ const {CouncilEvidenceLearning}=await import('../public/evidence-learning/element.js');
+ const p=await compileReportPractice(rawCapture(),'governance');
+ const view={axis:'governance',reportPractice:p,reportAnswers:{},render(){},shadowRoot:{querySelector(){return null}}};
+ const click=dataset=>CouncilEvidenceLearning.prototype.click.call(view,{target:{closest:()=>({dataset})}});
+ await click({reportQuestion:'status',revision:p.id,answer:'1'});assert.equal(view.reportAnswers.status,1);
+ await click({reportQuestion:'status',revision:'old',answer:'0'});assert.equal(view.reportAnswers.status,1);
+ await click({reportQuestion:'status',revision:p.id,answer:'99'});assert.equal(view.reportAnswers.status,1);
+ view.axis='safety';await click({reportQuestion:'status',revision:p.id,answer:'0'});assert.equal(view.reportAnswers.status,1);
+});
+test('explicit report rebinding preserves same-revision answers and clears changed-revision answers',async()=>{
+ const {CouncilEvidenceLearning}=await import('../public/evidence-learning/element.js');
+ const p=await compileReportPractice(rawCapture(),'governance');
+ const view={axis:'governance',isConnected:true,readState:'SOURCE_READ',boardCapture:rawCapture(),reportPractice:p,reportAnswers:{status:1},render(){},shadowRoot:{querySelector(){return null}}};
+ const click=()=>CouncilEvidenceLearning.prototype.click.call(view,{target:{closest:()=>({dataset:{do:'report-practice'}})}});
+ await click();assert.equal(view.reportAnswers.status,1);
+ const b=structuredClone(board);b.axes[0].n=31;view.boardCapture=rawCapture(b);
+ assert.equal(view.reportPractice.reported.n,30);await click();assert.equal(view.reportPractice.reported.n,31);assert.deepEqual(view.reportAnswers,{});
+ view.readState='CACHED';view.boardCapture=rawCapture();await click();assert.equal(view.reportPractice.reported.n,31);
+});
+test('background source painting updates availability without replacing answer controls',async()=>{
+ const {CouncilEvidenceLearning}=await import('../public/evidence-learning/element.js');
+ const button={},state={},refresh={},status={};
+ const nodes={'[data-do="report-practice"]':button,'[data-report-state]':state,'[data-do="refresh"]':refresh,'.status':status};
+ const view={stage:'practice',loading:false,readState:'CACHED',boardCapture:null,capture:{sha256:'new'},reportPractice:{source:{sha256:'old'}},sourceLabel:()=>'',shadowRoot:{querySelector:selector=>nodes[selector]||null,set innerHTML(_){throw Error('Answer controls replaced')}}};
+ CouncilEvidenceLearning.prototype.paintSource.call(view,true);
+ assert.equal(button.disabled,true);assert.match(state.textContent,/Pinned historical practice/);
+ assert.equal(state.className,'notice warn');
+});
+
 
