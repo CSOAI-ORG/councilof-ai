@@ -24,7 +24,18 @@ const PERSONAS = [
       params: { tab: "measured", task: "pricing-overview" },
     },
   },
-  { who: "auditor",    path: "/honesty",                       must: ["What we publish against ourselves.", "An instrument that will say anything measures nothing"] },
+  // The auditor persona reads /honesty. Its two markers were the page's old slogans, which
+  // #3899 ("professional public messaging with preserved evidence boundaries") deliberately
+  // replaced with service-and-evidence wording - and scripts/surface/public-copy.node-test.mjs
+  // now FORBIDS those slogans by name. Two guards were contradicting each other; the copy guard
+  // is the current one, so this persona is the stale half.
+  //
+  // The INTENT is unchanged, and the current headings carry it: "In-house model comparison
+  // results" is what the Council publishes against itself (its own models score below their
+  // base models, and the page says so), and "Coverage and unmeasured results" is what an
+  // instrument that claims to measure everything must also show - the unmeasured cells stay
+  // visible. The slogans are not coming back; these markers carry the same promise.
+  { who: "auditor",    path: "/honesty",                       must: ["In-house model comparison results", "Coverage and unmeasured results"] },
   { who: "researcher", path: "/library",                       must: ["reference pages across"] },
   { who: "api-agent",  path: "/api/gspc",                      must: ['"measured_axes"', '"quotable_axes"', '"public_count"'] , json: true },
   { who: "a2a-agent",  path: "/.well-known/agent-card.json",   must: ['"doi"', "CSOAI Ltd"], json: true, forbid: [/MEOK AI Labs/, /\$\d+\/mo/] },
