@@ -73,6 +73,7 @@ jobs:
       # as_of and source_commit move on every run. The corpus is what matters, so compare
       # the two WITHOUT them, and only treat a difference as drift.
       - name: has the corpus moved?
+        id: drift
         run: |
           cat > /tmp/idx_verdict.py <<'PY'
           import json, sys
@@ -96,6 +97,7 @@ jobs:
           if grep -q '^SAME' /tmp/verdict.txt; then
             echo "the corpus did not move — the rebuilt index differs only in as_of/source_commit. Nothing to land."
             git checkout -- public/interop/file-index.json
+            echo "drift=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           # A rebuild that LOSES more than 10% of the published rows in one night is not
@@ -111,8 +113,13 @@ jobs:
               sys.exit(1)
           print(f"row count {was} -> {now}")
           PY
+          echo "drift=true" >> "$GITHUB_OUTPUT"
 
+      # The gate on the landing step is a JOB OUTPUT, not an early `exit 0`: `exit 0` inside a
+      # step ends only that step, so the job would carry on into the landing step and try to
+      # commit the file it had just restored. A no-op night therefore skips the landing step.
       - name: land the rebuilt index (via PR — master is GH006-protected)
+        if: steps.drift.outputs.drift == 'true'
         env:
           GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
         run: |
@@ -120,6 +127,10 @@ jobs:
           git config user.name "csoai-interop-index"
           git config user.email "index@csoai.org"
           git add public/interop/file-index.json
+          if git diff --cached --quiet; then
+            echo "nothing staged — the corpus did not move. Nothing to land."
+            exit 0
+          fi
           STAMP=$(date -u +%Y-%m-%dT%H%M%SZ)
           BR="ops/interop-file-index-${STAMP}"
           git checkout -b "$BR"
