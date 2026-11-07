@@ -118,7 +118,22 @@ const bundle = {
   cards: orderedCards,
 };
 
-writeFileSync(OUT, JSON.stringify(bundle, null, 2) + "\n");
+// MINIFIED ON PURPOSE (2026-11-07). This file is a transport artefact, not a record: nothing
+// reads its whitespace, and every consumer parses it. Cloudflare Pages rejects any single file
+// over 25 MiB, and this one was at 24.89 MiB — 113 KiB of headroom — with the corpus still
+// growing by ~350 KiB per publish. The next card batch would have taken the whole site down,
+// and it did: the public-root candidate PR #3710 failed its own gates on
+// "cards-bundle.json — 25.2 MiB", which froze the public root for five days.
+//
+// The indentation was costing 6.29 MiB of pure whitespace (26,098,183 bytes -> 19,501,504).
+// Minified, the same content is 18.60 MiB and the headroom is 6.4 MiB — roughly nineteen more
+// publishes at the current rate. Content is byte-for-byte the same object: JSON.stringify with
+// no indent produces the identical value, and every reader does JSON.parse.
+//
+// This is not a fix for unbounded growth. It buys the room to shard the aggregate properly
+// before the next cliff. If it ever runs out again, shard it (a hash -> shard index plus one
+// shard per fetch is still O(1) subrequests, which is the only property this file exists for).
+writeFileSync(OUT, JSON.stringify(bundle) + "\n");
 console.log(
   `[cards-bundle] ${read} cards -> public/cards-bundle.json ` +
     `(${rootHashes.length} on root, all resolved; ${skipped} non-card/unreadable files skipped)`,
