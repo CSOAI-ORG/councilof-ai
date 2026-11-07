@@ -1,3 +1,4 @@
+import { postSettlementStore, postObservationState } from "./_bookkeeping_budget";
 import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * GET /api/request-attestation — Tier 1: commission a signed card for a subject (× optional axis).
@@ -524,9 +525,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   // Enqueue writes mill:commission:<subject> for GET /api/commission-queue. Failure never blocks receipt.
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:issuances")) || "0") + 1;
-      await env.REVENUE_KV.put("count:issuances", String(n));
-      await env.REVENUE_KV.put(
+      const n = Number((await postSettlementStore(env.REVENUE_KV,payment).get("count:issuances")) || "0") + 1;
+      await postSettlementStore(env.REVENUE_KV,payment).put("count:issuances", String(n));
+      await postSettlementStore(env.REVENUE_KV,payment).put(
         `ras:${leaf.sha256}`,
         JSON.stringify({
           subject,
@@ -541,7 +542,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           fulfillment: target.fulfillment,
         }),
       );
-      await env.REVENUE_KV.put(
+      await postSettlementStore(env.REVENUE_KV,payment).put(
         `mill:commission:${subject}`,
         JSON.stringify({
           subject,
@@ -566,7 +567,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     { card, verify: `${origin}/gspc-verify`, signed: !!leaf.sig_ed25519, unsigned_reason: leaf.unsigned_reason, bytes: leaf.bytes, note: "Commission receipt. Not a grade, not a rank, not a certificate. Root inclusion follows the public-root workflow." },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

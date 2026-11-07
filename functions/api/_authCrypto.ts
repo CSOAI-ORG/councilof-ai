@@ -3,9 +3,14 @@
  * Runs on apex (councilof.ai), not GCP. RunPod/Oracle handle compute; login lives here.
  */
 
+export interface AuthStore {
+  get(key: string): Promise<string | null>;
+  put(key: string, value: string): Promise<void>;
+}
+
 export interface AuthEnv {
   ASSESS_SIGNING_KEY_PKCS8_B64?: string;
-  SOV_ARENA_STATE?: KVNamespace;
+  SOV_ARENA_STATE?: AuthStore;
 }
 
 const TOKEN_TTL_MS = 30 * 864e5;
@@ -61,7 +66,7 @@ export function asciiEnvelope(json: string): string {
 
 export async function issueToken(
   env: AuthEnv,
-  user: { email: string; name: string },
+  user: { email: string; name: string; account_generation?: string },
 ): Promise<string | null> {
   const issuedAt = Date.now();
   const body = {
@@ -70,6 +75,7 @@ export async function issueToken(
     aud: "council-os",
     sub: user.email,
     name: user.name || "",
+    ...(user.account_generation ? { account_generation: user.account_generation } : {}),
     iat: issuedAt,
     exp: issuedAt + TOKEN_TTL_MS,
   };
@@ -83,7 +89,7 @@ export async function issueToken(
   return btoa(asciiEnvelope(JSON.stringify({ payload, sig })));
 }
 
-export async function verifyToken(env: AuthEnv, token: string): Promise<{ sub: string; name: string } | null> {
+export async function verifyToken(env: AuthEnv, token: string): Promise<{ sub: string; name: string; account_generation?: string } | null> {
   try {
     const parsed = JSON.parse(atob(token)) as {
       payload?: unknown;
@@ -110,6 +116,7 @@ export async function verifyToken(env: AuthEnv, token: string): Promise<{ sub: s
       aud?: unknown;
       sub?: unknown;
       name?: unknown;
+      account_generation?: unknown;
       iat?: unknown;
       exp?: unknown;
     };
@@ -120,6 +127,7 @@ export async function verifyToken(env: AuthEnv, token: string): Promise<{ sub: s
       typeof body.sub !== "string" ||
       body.sub.length === 0 ||
       typeof body.name !== "string" ||
+      (body.account_generation !== undefined && (typeof body.account_generation !== "string" || !/^[a-f0-9]{64}$/.test(body.account_generation))) ||
       typeof body.iat !== "number" ||
       typeof body.exp !== "number" ||
       !Number.isFinite(body.iat) ||
@@ -129,7 +137,7 @@ export async function verifyToken(env: AuthEnv, token: string): Promise<{ sub: s
       body.exp - body.iat > TOKEN_TTL_MS
     )
       return null;
-    return { sub: body.sub, name: body.name };
+    return { sub: body.sub, name: body.name, ...(typeof body.account_generation === "string" ? { account_generation: body.account_generation } : {}) };
   } catch {
     return null;
   }
@@ -148,4 +156,6 @@ export interface StoredUser {
   salt: string;
   pw: string;
   created_at: string;
+  /** Fresh random lifecycle identity; legacy records require password reauthentication before upgrade. */
+  account_generation?: string;
 }

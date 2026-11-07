@@ -1,3 +1,4 @@
+import { postSettlementStore, postObservationState } from "./_bookkeeping_budget";
 import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * GET /api/wrapper?id=<roster id> — per-request signed evidence card of ONE wrapped/bridged
@@ -438,8 +439,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:issuances")) || "0") + 1;
-      await env.REVENUE_KV.put("count:issuances", String(n));
+      const n = Number((await postSettlementStore(env.REVENUE_KV,payment).get("count:issuances")) || "0") + 1;
+      await postSettlementStore(env.REVENUE_KV,payment).put("count:issuances", String(n));
     } catch { /* never blocks a paid deliverable */ }
   }
 
@@ -453,7 +454,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       "x-csoai-signed": signed.signed ? "true" : "false",
       ...(payment.ok && payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
     },
-  }), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  }), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

@@ -1,3 +1,4 @@
+import { prepareOwnedChallenge, purchaseSessionSnapshot } from "@/lib/buyerPurchases";
 import { useEffect, useRef, useState } from "react";
 import {
   buildTypedData,
@@ -142,13 +143,26 @@ export default function X402PayButton({
       // account/signature prompts so stale terms never reach the provider.
       if (!remainsCurrent()) return;
       setState({ kind: "signing", wallet: detail.info?.name ?? "wallet" });
-      const signature = await signX402Challenge(detail.provider, challenge);
+      const snapshot=purchaseSessionSnapshot();
+      if(!snapshot.readable)throw new Error("Session storage unavailable; ownership cannot be qualified.");
+      if(snapshot.token&&!challenge.purchaseRequest)throw new Error("Run the tool again to prepare the exact signed-in purchase.");
+      const owned=challenge.purchaseRequest?await prepareOwnedChallenge(challenge,challenge.purchaseRequest):
+        {challenge,token:null,stillCurrent:()=>{const current=purchaseSessionSnapshot();return current.readable&&!current.token;}};
+      if(!remainsCurrent()||!owned.stillCurrent()){
+        if(operationAlive())setState({kind:"error",detail:"The account or request changed. Nothing was submitted; reopen the current payment terms."});
+        return;
+      }
+      const signature = await signX402Challenge(detail.provider, owned.challenge);
       // A tool/input change while the wallet prompt was open invalidates this
       // approval. Never replay it against mutable or newly selected inputs.
-      if (!remainsCurrent()) return;
+      if(!remainsCurrent()||!owned.stillCurrent()){
+        if(operationAlive())setState({kind:"error",detail:"The account or request changed. Nothing was submitted; reopen the current payment terms."});
+        return;
+      }
       setState({ kind: "paying" });
       const execution = await executePayment(signature.header);
       if (!operationAlive()) return;
+      if(!owned.stillCurrent()){setState({kind:"error",detail:"The account changed while the result was pending. Inspect the original account\'s saved purchases before paying again."});return;}
 
       if (execution.status === "reissued") {
         setState({

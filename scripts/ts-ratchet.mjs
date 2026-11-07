@@ -6,7 +6,8 @@
 // committed ceiling without modifying it, while maintainers deliberately
 // tighten the ceiling after removing errors.
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, mkdtempSync, mkdirSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -16,8 +17,8 @@ const TSC = resolve(ROOT, "node_modules/typescript/bin/tsc");
 const MODES = new Set(["--check", "--update", "--selftest"]);
 
 function fail(message, detail = "") {
-  console.error(`ts-ratchet: FAIL — ${message}`);
-  if (detail.trim()) console.error(detail.trim());
+  // Flush the entire diagnostic payload before exiting; console writes to CI pipes are async.
+  writeFileSync(2, `ts-ratchet: FAIL — ${message}\n${detail.trim() ? detail.trim() + "\n" : ""}`);
   process.exit(1);
 }
 
@@ -47,6 +48,23 @@ function runSelftest() {
   }
   if (parseBaseline("199\n") !== 199 || parseBaseline("not-a-number") !== null) {
     fail("selftest baseline parser did not enforce an integer ceiling");
+  }
+  const fixtureRoot = mkdtempSync(resolve(tmpdir(), "ts-ratchet-output-"));
+  try {
+    mkdirSync(resolve(fixtureRoot, "scripts"));
+    mkdirSync(resolve(fixtureRoot, "node_modules/typescript/bin"), { recursive: true });
+    writeFileSync(resolve(fixtureRoot, "scripts/.ts-error-baseline"), "0\n");
+    writeFileSync(resolve(fixtureRoot, "scripts/ts-ratchet.mjs"), readFileSync(fileURLToPath(import.meta.url)));
+    writeFileSync(resolve(fixtureRoot, "node_modules/typescript/bin/tsc"),
+      'for(let i=0;i<2000;i++)console.log("fixture-"+i+".ts(1,1): error TS2322: "+ "x".repeat(256));process.exitCode=2;\n');
+    const result = spawnSync(process.execPath, [resolve(fixtureRoot, "scripts/ts-ratchet.mjs"), "--check"],
+      { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
+    if (result.status !== 1 || !result.stderr.includes("errors rose 0 -> 2000") ||
+        !result.stderr.includes("fixture-1999.ts(1,1): error TS2322:")) {
+      fail("selftest lost the final diagnostic or regression exit code");
+    }
+  } finally {
+    rmSync(fixtureRoot, { recursive: true, force: true });
   }
   console.log("ts-ratchet: selftest OK");
 }

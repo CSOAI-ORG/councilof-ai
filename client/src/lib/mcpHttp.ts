@@ -22,6 +22,8 @@ export type McpHttpOptions = {
   timeoutMs?: number;
   /** Which door to ask: "/mcp" (free + paid tools, the default) or "/mcp/free" (the free tools only). */
   door?: McpDoor;
+  /** Same-origin transport only; never tool arguments or catalog fallback. */
+  buyerToken?:string;
 };
 
 /** The two MCP doors this site serves. /mcp/free is the one /connect installs. */
@@ -53,6 +55,7 @@ function request(
   params: JsonObject,
   id: number,
   signal?: AbortSignal,
+  buyerToken?:string,
 ): RequestInit {
   const suppliedMeta = object(params._meta) ? params._meta : {};
   const modernParams = {
@@ -71,6 +74,7 @@ function request(
   };
   if (method === "tools/call" && typeof params.name === "string") {
     headers["Mcp-Name"] = params.name;
+    if(buyerToken)headers.authorization="Bearer "+buyerToken;
   }
   return {
     method: "POST",
@@ -82,6 +86,7 @@ function request(
       params: modernParams,
     }),
     signal,
+    credentials:"omit",redirect:"error",
   };
 }
 
@@ -140,7 +145,7 @@ export async function mcpRpc(
       try {
         const response = await fetch(
           endpoint,
-          request(method, params, id, deadline.signal),
+          request(method,params,id,deadline.signal,method==="tools/call"&&endpoint==="/mcp"?options.buyerToken:undefined),
         );
         if (!response.ok) {
           throw new Error(`${endpoint} returned HTTP ${response.status}`);

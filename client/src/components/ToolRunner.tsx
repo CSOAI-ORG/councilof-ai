@@ -364,6 +364,13 @@ export function challengeFromResult(
         amount,
         resource,
         nonce: typeof a.nonce === "string" ? a.nonce : null,
+        ...(() => {const identity=bag.purchase_request??holder.purchase_request;
+          if(!identity||typeof identity!=="object"||Array.isArray(identity))return {};
+          const r=identity as Record<string,unknown>;
+          return typeof r.url==="string"&&r.resource===resource&&(r.method==="GET"||r.method==="POST")&&
+            typeof r.body_sha256==="string"&&/^[a-f0-9]{64}$/.test(r.body_sha256)
+            ?{purchaseRequest:{url:r.url,resource,method:r.method,body_sha256:r.body_sha256}}:{};
+        })(),
         maxTimeoutSeconds:
           typeof a.maxTimeoutSeconds === "number" ? a.maxTimeoutSeconds : null,
         extra:

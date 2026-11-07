@@ -1,3 +1,4 @@
+import { postSettlementStore, postObservationState } from "./_bookkeeping_budget";
 import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * GET /api/pop/{population} — the population doors: one metered read-transform per measured
@@ -263,8 +264,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:population_slices")) || "0") + 1;
-      await env.REVENUE_KV.put("count:population_slices", String(n));
+      const n = Number((await postSettlementStore(env.REVENUE_KV,payment).get("count:population_slices")) || "0") + 1;
+      await postSettlementStore(env.REVENUE_KV,payment).put("count:population_slices", String(n));
     } catch { /* never blocks a paid deliverable */ }
   }
 
@@ -291,7 +292,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       "x-csoai-signed": leaf.sig_ed25519 ? "true" : "false",
       ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
     },
-  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. The path selects the population; body is ignored. */
