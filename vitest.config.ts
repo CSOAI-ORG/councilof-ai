@@ -32,6 +32,9 @@ export const NODE_TEST_FILES = [
   'scripts/build-models-measured.test.mjs',
   'scripts/contract-convergence.test.mjs',
   'scripts/feed-delivery-kit.test.mjs',
+  'scripts/evidence-learning-contract.node-test.mjs',
+  // Executed by node-test-registry: compiled site chrome must preserve frozen evidence bytes.
+  'scripts/inject-workspace-launcher.capture.test.mjs',
   'scripts/harness-x/render.test.mjs',
   // The hub fetch that gates the build (authenticated, retrying): a node:test file vitest
   // cannot collect, named here so pr-gates.yml runs it under node --test. It stubs the
