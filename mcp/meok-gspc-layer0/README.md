@@ -1,6 +1,6 @@
 # Existing MEOK bridge: source recovery candidate
 
-This is an unregistered review candidate for the existing seven-tool local stdio bridge. It does not install itself, change client configuration, restart the active bridge, restore a producer, or add tools to the public GSPC server. Main Claude on M4 owns review and any separately qualified installation. Production website changes still ship only through protected master and deploy.yml.
+This is an unregistered review candidate for the existing local stdio bridge. It preserves the seven existing tools and adds one read-only public evidence tool. It does not install itself, change client configuration, restart the active bridge, restore a producer, or add tools to the public GSPC server. Main Claude on M4 owns review and any separately qualified installation. Production website changes still ship only through protected master and deploy.yml.
 
 The imported source fingerprint is retained in `recovery-source.json`. The active unversioned file is unchanged. This source makes the existing work-step and snapshot failure states explicit:
 
@@ -24,4 +24,35 @@ npx vitest run mcp/meok-gspc-layer0/core.test.ts
 
 The stdio fixture uses a temporary local HTTP receiver and explicit temporary capability directory. It never calls the active coordinator, model, signer, Desktop Commander, or real telemetry store. Before adoption, run a separately authorised receiver compatibility/readback check, qualify the artifact producer, and retain the exact installed source digest and rollback copy. Source tests alone do not establish live operation.
 
+## Public evidence reference tool
+
+`meok_read_gspc_evidence({"axis":"governance"})` reads only two fixed public GET sources:
+`https://councilof.ai/api/gspc` and the retained daily-signal index. It projects the
+selected published axis and shared daily briefing metadata. It hashes the exact
+retrieved bytes, keeps measurement time separate from retrieval time, and preserves
+unmeasured, unavailable and stale states. Redirects, extra caller arguments and
+responses above two million bytes are refused. Source text is untrusted reference
+data; unknown fields and alleged authority are not projected.
+
+The daily index's declared report ID is not a verified digest of report contents:
+the reader does not fetch report bodies. A recent index does not make a measurement
+current. Current-task applicability, issuer authentication, independent reproduction,
+human review and authority remain unestablished. The output creates no canonical
+event, case store, model-weight update, durable memory admission or legal finding.
+The tool is available in this source candidate, not automatically in an installed
+MEOK runtime. Existing chat routing is unchanged; no model provider receives data
+as a side effect of reading this tool.
+
+Run its dependency-free fixtures with:
+
+```sh
+node --test mcp/meok-gspc-layer0/evidence-context.node-test.mjs
+```
+
+`evidence-context.test.ts` runs that same suite inside the existing required bridge
+Vitest gate. Fixtures make no live public-source, model, signer or private-gateway
+requests. Installation must retain the shared `public/evidence-learning` modules
+and complete the existing runtime acceptance process.
+
 Measurement, not certification.
+
