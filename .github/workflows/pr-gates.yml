@@ -509,6 +509,12 @@ jobs:
 
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
+        # HF_TOKEN so the bench-suite build's hub fetch is authenticated. The banks are
+        # public, so the token cannot change a byte — it only raises the rate limit the hub
+        # applies, and an ANONYMOUS fetch was answering 429 at random and failing this build
+        # (and so every push and deploy). See scripts/surface/hub-fetch.mjs.
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: npm run build:client
 
       - name: Verify same-build Coliseum artifact
