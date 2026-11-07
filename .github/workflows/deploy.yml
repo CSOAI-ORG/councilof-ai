@@ -132,6 +132,14 @@ jobs:
           node scripts/build-council-native-panel.mjs --check
           npm run build:client
 
+      - name: Verify the one-build Coliseum mirror
+        run: >-
+          python3 scripts/sync_hf_coliseum.py --artifact dist/hf-coliseum
+          --expected-sha "$GITHUB_SHA" --verify-only
+
+      - name: Brand gate for the generated Coliseum mirror
+        run: node scripts/brand-gate.mjs dist/hf-coliseum
+
       # The host deliberately keeps an honest 404 catch-all. Materialise the canonical
       # workspace before the fast shell gate so a cold /dashboard request tests the same
       # file that Pages will serve instead of relying on SPA-rewrite behaviour.
@@ -204,6 +212,21 @@ jobs:
         run: |
           node scripts/link-gate.mjs --selftest
           node scripts/link-gate.mjs dist/client
+
+      # link-gate reads a LINK in a MACHINE surface: it walks .json files only
+      # (scripts/link-gate.mjs, `if (!f.endsWith(".json")) continue`). An href in
+      # an HTML page is invisible to it, which is why the homepage's nine dead
+      # axis links survived every green build until 2026-11-06.
+      #
+      # axis-route-gate closes exactly that gap for axis routes, and it knows
+      # which route each axis owns because it reads the route map the axis-page
+      # generator publishes from the same payload it rendered the pages from. It
+      # fails closed on its own crash, and its selftest reproduces the historical
+      # defect before its verdict is trusted.
+      - name: Axis-route gate — every axis link resolves on the shipped tree
+        run: |
+          node scripts/surface/axis-route-gate.mjs --selftest
+          node scripts/surface/axis-route-gate.mjs dist/client
 
       - name: Copy corrected field pages from source into dist (vite skips public/*.html)
         run: |
@@ -479,6 +502,16 @@ jobs:
         env:
           FLEET_LOCK_LIVE: "1"
         run: npx vitest run functions/mcp/tool-fleet.lock.test.ts
+
+      # Retain the exact mirror produced by the SAME Vite build above. The existing
+      # guarded HF writer consumes this only after this deployment succeeds.
+      - name: Retain the built Coliseum mirror for the existing HF writer
+        uses: actions/upload-artifact@v4
+        with:
+          name: coliseum-mirror-${{ github.sha }}
+          path: dist/hf-coliseum/
+          if-no-files-found: error
+          retention-days: 7
 
       # csoai.org is the static apex (csoai-site-deploy.yml ← csoai-static-deploy2).
       # Do NOT redeploy the SPA to csoai-site — that overwrites did:web:csoai.org.

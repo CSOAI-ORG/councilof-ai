@@ -1,0 +1,11 @@
+{
+  "name": "@csoai/x402",
+  "version": "0.1.0",
+  "description": "CSOAI measurement-consumer x402 buyer: policy-gated, offer-JWS-verified, decision-recorded. Loop B of the GSPC payment architecture.",
+  "type": "module",
+  "main": "src/client.js",
+  "exports": { ".": "./src/client.js", "./policy": "./src/policy.js", "./offer-jws": "./src/offer-jws.js", "./route": "./src/route.js" },
+  "scripts": { "test": "node --test test/" },
+  "license": "Apache-2.0",
+  "dependencies": { "ethers": "^6.17.0" }
+}
