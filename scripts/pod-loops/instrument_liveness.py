@@ -44,19 +44,26 @@ from pathlib import Path
 REPO = "csoai/instrument-liveness"
 
 
-def resolve_lanes() -> Path:
-    """The lanes root, resolved the way lib.sh and hf_upload.py resolve it."""
+def resolve_lanes() -> Path | None:
+    """The lanes root, resolved the way lib.sh and hf_upload.py resolve it.
+
+    Returns None when there is none. It does NOT raise, and that is load-bearing: this module
+    is imported by --selftest, which runs on CI where there is no lanes root at all. A raise
+    here would kill the module at import time, so the selftest would die before it ran and the
+    CI step would go red for a reason that has nothing to do with the thing under test. The
+    refusal to run for real without a lanes root moved to main(), where it belongs.
+    """
     env = os.environ.get("LANES")
     if env:
         return Path(env).expanduser()
     for candidate in (Path.home() / "lanes", Path("/workspace/lanes")):
         if candidate.is_dir():
             return candidate
-    raise SystemExit("instrument_liveness: set LANES=/path/to/lanes and re-run. Nothing was written.")
+    return None
 
 
-LANES = resolve_lanes()
-UPLOADER = LANES / "loops" / "hf_upload.py"
+# None is allowed at import; assess() and main() refuse to act on it.
+LANES: Path | None = resolve_lanes()
 
 # Each instrument names the files it writes and the cadence it runs at. The cadence is a fact
 # about the instrument's own schedule (the cron line that drives it), not a typed status.
@@ -130,6 +137,10 @@ def read_jsonl(path: Path) -> list[dict]:
 
 def assess(spec: dict, report_date: str) -> dict:
     """Derive one instrument's record from its own output. Nothing is typed in."""
+    if LANES is None:
+        raise SystemExit(
+            "instrument_liveness: no lanes root. Set LANES=/path/to/lanes and re-run. Nothing was written."
+        )
     rec: dict = {
         "instrument": spec["id"],
         "what": spec["what"],
@@ -289,8 +300,13 @@ def board(doc: dict) -> str:
 
 
 def upload(local: Path, path_in_repo: str) -> None:
+    if LANES is None:
+        raise SystemExit(
+            "instrument_liveness: no lanes root, so no uploader. Set LANES=/path/to/lanes and re-run."
+        )
+    uploader = LANES / "loops" / "hf_upload.py"
     proc = subprocess.run(
-        [sys.executable, str(UPLOADER), "--repo", REPO, "--file", str(local),
+        [sys.executable, str(uploader), "--repo", REPO, "--file", str(local),
          "--path-in-repo", path_in_repo, "--create"],
         capture_output=True, text=True,
     )
@@ -337,7 +353,36 @@ def selftest() -> int:
         assert len(rec["sha256"]) == 64, rec
         md = board(doc)
         assert "2026-11-04" in md and "2026-11-05" in md, md[:400]
-        assert "not a ranking" in md.lower() or "not a ranking" in md.lower()
+        assert "not a ranking" in md.lower(), md[:400]
+
+    # THE CI CONDITION, AS A TEST. This selftest runs on CI, where there is no lanes root and
+    # no LANES in the environment. A module that resolved the lanes root at import time and
+    # raised when there was none would die before the selftest above could run, so the step
+    # would go red for a reason that has nothing to do with the derivation. The fix was to make
+    # the resolution lazy; this is the assertion that keeps it lazy. Run this script in a
+    # subprocess with HOME pointed at an empty directory and LANES unset: it must exit 0.
+    #
+    # NESTED=1 stops the recursion: the child runs the same selftest, so without the guard the
+    # child would spawn a grandchild, and so on. The child skips only THIS check and runs every
+    # other assertion, which is the part that matters.
+    import os
+    import subprocess
+    import tempfile
+
+    if os.environ.get("CSOAI_LIVENESS_SELFTEST_NESTED") != "1":
+        with tempfile.TemporaryDirectory() as empty_home:
+            env = {k: v for k, v in os.environ.items() if k != "LANES"}
+            env["HOME"] = empty_home
+            env["CSOAI_LIVENESS_SELFTEST_NESTED"] = "1"
+            proc = subprocess.run(
+                [sys.executable, str(Path(__file__).resolve()), "--selftest"],
+                capture_output=True, text=True, env=env,
+            )
+            assert proc.returncode == 0, (
+                "selftest must pass with no lanes root and no LANES in the environment "
+                f"(the CI condition): rc={proc.returncode}\n{proc.stdout}\n{proc.stderr}"
+            )
+            assert "selftest: OK" in proc.stdout, proc.stdout + proc.stderr
 
     print("instrument_liveness selftest: OK - the gaps are derived, not typed, and the verdicts "
           "are statements about elapsed time.")
@@ -353,6 +398,11 @@ def main() -> int:
 
     if args.selftest:
         return selftest()
+
+    if LANES is None:
+        raise SystemExit(
+            "instrument_liveness: no lanes root. Set LANES=/path/to/lanes and re-run. Nothing was written."
+        )
 
     date = args.date or dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")
     doc = build(date)
