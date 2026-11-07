@@ -13,7 +13,7 @@ import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delive
  * static assets (/cards-bundle.json for the leaves, /receipts/root-history.json for the roots —
  * the git history of public/root.json indexed at build time by scripts/build-root-history.mjs).
  *
- *   ?from=&to=&preview=1   FREE: count, span, root count, cap/truncation, and the sha256 of the
+ *   ?from=&to=&preview=1   FREE (also preview=true): count, span, root count, cap/truncation, and the sha256 of the
  *                          exact canonical batch bytes the paid path returns. No leaves.
  *   ?from=&to=             402 challenge (the amount lives ONLY here) + the same preview in csoai.
  *   + settled X-PAYMENT    200 on delivery: the batch (sha256 matches the preview) + one manifest
@@ -174,12 +174,13 @@ export function assembleBatch(opts: {
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
-  const preview = url.searchParams.get("preview") === "1";
+  const previewValue = url.searchParams.get("preview");
+  const preview = previewValue === "1" || previewValue === "true";
   const fromRaw = url.searchParams.get("from");
   const toRaw = url.searchParams.get("to");
   const usage = {
     get: `${origin}/api/receipts/batch?from=<iso>&to=<iso>[&preview=1]`,
-    note: "from is required; to defaults to now. preview=1 is free and returns the batch sha256 without the leaves.",
+    note: "from is required; to defaults to now. preview=1 (or preview=true) is free and returns the batch sha256 without the leaves.",
     recent_free: [`${origin}/root.json`, `${origin}/cards/<sha16>.json`, `${origin}/api/proof?sha=<64-hex>`, `${origin}/receipts/root-history.json`],
   };
   const from = parseIso(fromRaw);
