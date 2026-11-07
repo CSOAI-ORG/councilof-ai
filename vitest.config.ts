@@ -41,6 +41,12 @@ export const NODE_TEST_FILES = [
   // cannot collect, named here so pr-gates.yml runs it under node --test. It stubs the
   // fetch, so a 429 and a 404 can be produced on demand.
   'scripts/surface/hub-fetch.node-test.mjs',
+  // The HF mirror gate must tell a MISSING file from a FAILED READ: on 2026-11-07 it
+  // published a rate limit as "the directory is not on HF" and blocked a PR whose files
+  // were present. Named here so pr-gates.yml runs it under node --test (same reason as
+  // hub-fetch above). It stubs the fetch, so a 429, a 404 and a network error can be
+  // produced on demand, and it needs no network.
+  'scripts/surface/hf-mirror-gate.node-test.mjs',
   // The hygiene sweeper planner: a node:test file vitest cannot collect, named here so
   // pr-gates.yml runs it under node --test (same reason as sitemap-withdrawal below).
   // No apostrophes in these comments: the registry and the workflow extract entries by
