@@ -347,13 +347,15 @@ describe("auth foundation: register signs before it writes", () => {
   it("registers a Unicode name with one awaited write and a verifiable ASCII token", async () => {
     const env = { ASSESS_SIGNING_KEY_PKCS8_B64: await signingKey() };
     let settled = false;
-    const put = vi.fn(async () => {
+    const rows=new Map<string,string>();
+    const put = vi.fn(async(key:string,value:string) => {
       await new Promise((r) => setTimeout(r, 5));
       settled = true;
+      rows.set(key,value);
     });
     const response = await onRequest({
       params: { path: ["register"] },
-      env: { ...env, SOV_ARENA_STATE: { get: vi.fn(async () => null), put } },
+      env: { ...env, SOV_ARENA_STATE: { get: vi.fn(async(key:string) => rows.get(key)??null), put } },
       request: new Request("https://councilof.ai/api/auth/register", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -366,7 +368,7 @@ describe("auth foundation: register signs before it writes", () => {
     const { token, user } = await response.json();
     expect(user).toEqual({ email: "person@example.test", name: "山田 🙂" });
     expect(isAsciiWire(token)).toBe(true);
-    expect(await verifyToken(env, token)).toEqual({ sub: "person@example.test", name: "山田 🙂" });
+    expect(await verifyToken(env,token)).toEqual({sub:"person@example.test",name:"山田 🙂",account_generation:expect.stringMatching(/^[a-f0-9]{64}$/)});
   });
 
   it("returns 503 without a token when the put records the account and then throws", async () => {

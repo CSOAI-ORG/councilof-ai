@@ -42,9 +42,11 @@ function responseUser(value: unknown): CouncilSessionUser | null {
   return serverUser((value as Record<string, unknown>).user);
 }
 
+export const COUNCIL_SESSION_PERSISTENCE_MESSAGE = "This browser could not save your sign-in session. Sign-in was not completed; allow site storage before trying again.";
+
 export class CouncilSessionPersistenceError extends Error {
   constructor() {
-    super("This browser could not save your sign-in session. Sign-in was not completed; allow site storage before trying again.");
+    super(COUNCIL_SESSION_PERSISTENCE_MESSAGE);
     this.name = "CouncilSessionPersistenceError";
   }
 }

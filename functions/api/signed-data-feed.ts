@@ -1,3 +1,4 @@
+import { postSettlementStore, postObservationState } from "./_bookkeeping_budget";
 // functions/api/signed-data-feed.ts — Tier 3: the signed DATA FEED rail.
 // Renamed 30 Sep 2026 from /api/eunomia-data (an internal codename); the old path answers 308 here
 // (functions/api/eunomia-data.ts) so every registry listing and old link keeps working.
@@ -142,8 +143,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:feed_pulls")) || "0") + 1;
-      await env.REVENUE_KV.put("count:feed_pulls", String(n));
+      const n = Number((await postSettlementStore(env.REVENUE_KV,payment).get("count:feed_pulls")) || "0") + 1;
+      await postSettlementStore(env.REVENUE_KV,payment).put("count:feed_pulls", String(n));
     } catch {
       /* never blocks a paid deliverable */
     }
@@ -170,7 +171,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       "x-csoai-feed-sha256":manifest!.evidence.blocks_sha256,
       ...(payment.paymentResponse ? {"x-payment-response":payment.paymentResponse} : {}),
     },
-  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

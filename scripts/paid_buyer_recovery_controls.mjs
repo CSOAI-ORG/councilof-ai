@@ -44,6 +44,7 @@ async function load(relative){
   if(target==="functions/api/gspc.ts")return synthetic("board",{currentBoardLid:()=> "fixture"});
   if(target==="functions/api/_x402_offer.ts")return synthetic("offers",{attachOffers:async value=>value,X402_SIGNER_KID:"did:fixture#synthetic",OFFER_RECEIPT_EXTENSION:"offer-receipt"});
   if(target==="functions/api/_x402_discovery.ts")return synthetic("discovery",{declareDiscoveryExtension:()=>({}),descriptionForPath:()=>"",onBeforeSettle:value=>value});
+  if(target==="functions/mcp/_handlers.ts")return synthetic("mcp-rpc",{rpc:(id,result)=>Response.json({jsonrpc:"2.0",id,result})});
   if(target==="functions/api/_x402_jws.ts")return synthetic("jws",{parseJws:()=>null,signJws:async(_payload,key)=>{assert.equal(key,"synthetic-receipt-fixture-only");return "synthetic.unverified.receipt";},verifyJwsSignature:async()=>false,JWS_ALG:"EdDSA"});
   if(target==="functions/_lib/cardSign.ts")return synthetic("card-sign",{signPayload:async()=>({sha256:"f".repeat(64),sig_ed25519:null,unsigned_reason:"synthetic unsigned fixture; key absent"}),canonicalBytes:value=>new TextEncoder().encode(JSON.stringify(value)),PAYLOAD_CAP_BYTES:3072});
   if(parent.identifier==="functions/api/_ras_door.ts" && target==="functions/api/rwa/evidence.ts")return synthetic("verdict",{VERDICT_RE:/never-match-synthetic-fixture-a4b4/});
@@ -441,6 +442,58 @@ await test("identity replacement during verification still cancels without overw
  }});
  await assert.rejects(()=>f.controller.login("fixture@example.test","synthetic-password"),error=>error.name==="AbortError");
  assert.equal(values.get(sessions.COUNCIL_TOKEN_KEY),"synthetic-newer-session");assert.ok(f.emitted.every(value=>!value.user&&!value.token));f.controller.dispose();
+});
+
+
+const paidMcp=await ns("functions/mcp/_paid.ts");
+const toolCatalogue=JSON.parse(await fs.readFile(path.join(root,"functions/mcp/paid-tools.json"),"utf8"));
+const mcpCaller={authorization:authorization(tokenA),env};
+const mcpTool=toolCatalogue.tools[0].name;
+await test("all five existing paid MCP names read owned history without a financial or provider request",async()=>{
+ const before=financialCalls.length,puts=kv.calls.filter(c=>c[0]==="put").length;
+ assert.equal(toolCatalogue.tools.length,5);
+ for(const tool of toolCatalogue.tools){
+  const result=await paidMcp.paidToolResult(tool.name,{purchase_action:"history"},"https://councilof.ai",mcpCaller);
+  assert.equal(result.structuredContent.status,"PURCHASE_HISTORY");
+  assert.equal(result.structuredContent.no_new_payment_or_provider_call,true);
+  assert.ok(result.structuredContent.purchase.rows.some(row=>row.transaction===tx));
+  assert.ok(!JSON.stringify(result).includes(tokenA));
+ }
+ assert.equal(financialCalls.length,before);assert.equal(kv.calls.filter(c=>c[0]==="put").length,puts);
+});
+await test("MCP recovery reads exact original bytes and final receipt under the existing bearer transport",async()=>{
+ const before=financialCalls.length;
+ const result=await paidMcp.paidToolResult(mcpTool,{purchase_action:"recover",purchase_transaction:tx},"https://councilof.ai",mcpCaller);
+ assert.equal(result.structuredContent.status,"ORIGINAL_RECOVERED");
+ assert.equal(result.structuredContent.purchase.result.body_base64,Buffer.from(originalBytes).toString("base64"));
+ assert.equal(result.structuredContent.purchase.receipt.payment_response,confirmed.paymentResponse);
+ assert.equal(result.structuredContent.settlement_state,"NOT_REQUESTED");assert.equal(financialCalls.length,before);
+});
+await test("MCP private recovery rejects anonymous and another subject without exposing output",async()=>{
+ const before=financialCalls.length;
+ for(const caller of [{env},{env,authorization:authorization(tokenB)}]){
+  const result=await paidMcp.paidToolResult(mcpTool,{purchase_action:"recover",purchase_transaction:tx},"https://councilof.ai",caller);
+  assert.equal(result.isError,true);assert.equal(result.structuredContent.status,"PURCHASE_UNAVAILABLE");
+  assert.ok(!JSON.stringify(result).includes(confirmed.paymentResponse));
+ }
+ assert.equal(financialCalls.length,before);
+});
+await test("MCP explicit decision uses the same result identity and exact readback without financial effects",async()=>{
+ const before=financialCalls.length,id="e".repeat(64);
+ const result=await paidMcp.paidToolResult(mcpTool,{purchase_action:"request_correction",purchase_transaction:tx,purchase_request_id:id,
+  purchase_result_sha256:resultSha,purchase_result_version:resultVersion,purchase_reason:"Synthetic MCP fixture decision"},"https://councilof.ai",mcpCaller);
+ assert.equal(result.structuredContent.status,"BUYER_DECISION_RECORDED");
+ const puts=kv.calls.filter(c=>c[0]==="put").length;
+ const observed=await paidMcp.paidToolResult(mcpTool,{purchase_action:"decisions",purchase_transaction:tx,purchase_request_id:id},"https://councilof.ai",mcpCaller);
+ assert.equal(observed.structuredContent.status,"BUYER_DECISIONS");assert.equal(observed.structuredContent.purchase.rows.length,1);
+ assert.equal(observed.structuredContent.purchase.rows[0].request_id,id);assert.equal(kv.calls.filter(c=>c[0]==="put").length,puts);
+ assert.equal(financialCalls.length,before);
+});
+await test("MCP recovery refuses a supplied payment authorization rather than treating it as a fresh purchase",async()=>{
+ const before=financialCalls.length,puts=kv.calls.filter(c=>c[0]==="put").length;
+ const result=await paidMcp.paidToolResult(mcpTool,{purchase_action:"recover",purchase_transaction:tx,x_payment:"synthetic-financial-authorization-not-dispatched"},"https://councilof.ai",mcpCaller);
+ assert.equal(result.structuredContent.status,"BAD_ARGUMENTS");
+ assert.equal(financialCalls.length,before);assert.equal(kv.calls.filter(c=>c[0]==="put").length,puts);
 });
 
 const passed=cases.filter(c=>c.passed).length;
