@@ -167,6 +167,23 @@ def served_path(served_root, public_rel):
     return os.path.join(served_root, public_rel)
 
 
+def mirror_routed_paths(man):
+    """The paths the exclusions manifest routes to the mirror.
+
+    BOTH kinds count. A `dir` entry routes everything under it; a `file` entry routes that ONE
+    file. MEASURED 2026-11-07: two files were routed by public/_redirects with their own 302
+    rules (interop/effect-binding-server-probe-2026-09-22.json and ...-2026-09-30.json, whose
+    exclusion notes say "served via 302 from HF"), but the producer only collected `kind == "dir"`
+    entries, so it labelled them "pages" — the wrong served state for files the BUILD DROPS from
+    dist/client. Their `.signed.json` companions stay on-site and are correctly "pages".
+    """
+    dirs, files = [], []
+    for e in man.get("entries", []):
+        if e.get("kind") in ("dir", "file") and not e.get("mirror_only"):
+            (dirs if e.get("kind") == "dir" else files).append(e["path"].strip("/"))
+    return dirs, files
+
+
 def function_mirror_prefixes():
     """The mirror-served prefixes the estate's Function DEFERS to the redirect chain for.
 
@@ -187,12 +204,25 @@ def function_mirror_prefixes():
 
 
 def rows_differ(a, b):
+    """Do the two row sets disagree?
+
+    A path and its served state are ALWAYS comparable. Its DIGEST is comparable only when the
+    served bytes were available — the build injects a launcher script into the HTML it serves
+    (+63 bytes), so a digest taken over the tree's bytes can never match the served bytes for
+    those rows. Measured 2026-11-07: with the committed tree standing in for the built one, 23
+    rows differ, every one of them HTML, every one of them exactly +63 bytes. A digest that
+    cannot be compared faithfully is UNCHECKABLE, not drift — so it is skipped, and counted
+    separately, rather than reported as a difference.
+    """
     if len(a) != len(b):
         return True
     for x, y in zip(a, b):
-        for k in ("path", "bytes", "sha256", "served"):
-            if x.get(k) != y.get(k):
-                return True
+        if x.get("path") != y.get("path") or x.get("served") != y.get("served"):
+            return True
+        if x.get("_digest_comparable", True) and y.get("_digest_comparable", True):
+            for k in ("bytes", "sha256"):
+                if x.get(k) != y.get(k):
+                    return True
     return False
 
 
@@ -282,7 +312,20 @@ def selftest():
                    cwd=REPO, capture_output=True).returncode
     check("with the manifest present the check runs (rc 0 = matches, 1 = stale)", rc2 in (0, 1), f"rc={rc2}")
 
-    # 6. the index cannot contain its own digest, and it must not index a build artefact.
+    # 6. the routing rule must cover BOTH exclusion kinds: a `file` entry routes that ONE file
+    #    through a 302, and two of them were being labelled "pages".
+    try:
+        with open("scripts/deploy-exclusions.json", "r", encoding="utf-8") as f:
+            man = json.load(f)
+        dirs, files = mirror_routed_paths(man)
+        under = [f for f in files if f.startswith("interop/")]
+        check("file-kind exclusions under interop/ are routed to the mirror", len(under) > 0,
+              f"files={files}")
+        check("dir-kind exclusions are still routed", len([d for d in dirs if d.startswith("interop/")]) > 0)
+    except Exception as e:
+        check("the exclusions are readable", False, str(e)[:80])
+
+    # 7. the index cannot contain its own digest, and it must not index a build artefact.
     #    Measured 2026-11-07: the committed index indexed ITSELF (writing the digest changes
     #    the file) and public/interop/pod-cards-index.json, a gitignored build output whose
     #    bytes are the same LENGTH and a different digest on every build.
@@ -321,6 +364,7 @@ def main():
     # The served label is the one thing this index must not get wrong, so a missing routing
     # source is an absence of evidence, not a reason to label everything one way.
     mirror_dirs = []
+    mirror_files = []
     if not os.path.exists(exclusions):
         print(f"build-interop-file-index: the exclusions manifest is MISSING ({exclusions}).")
         print("  Without it every path would be labelled 'pages' — which is the one thing this")
@@ -332,16 +376,16 @@ def main():
     except Exception as e:
         print(f"build-interop-file-index: the exclusions manifest is UNREADABLE ({e}).")
         sys.exit(2)
-    for e in man.get("entries", []):
-        if e.get("kind") == "dir" and not e.get("mirror_only"):
-            mirror_dirs.append(e["path"].strip("/"))
+    mirror_dirs, mirror_files = mirror_routed_paths(man)
     mirror_prefixes = [d for d in mirror_dirs if d.startswith("interop/")]
-    if not mirror_prefixes:
+    if not mirror_prefixes and not [f for f in mirror_files if f.startswith("interop/")]:
         print("build-interop-file-index: the exclusions manifest names NO mirror-served")
-        print("  directory under interop/, so no path could be routed to the mirror.")
+        print("  path under interop/, so no path could be routed to the mirror.")
         print("  That is an absence of evidence about the routing, not a measurement of it.")
         sys.exit(2)
     print("mirror-served dirs:", mirror_dirs, "-> matching this corpus:", mirror_prefixes, flush=True)
+    if mirror_files:
+        print("mirror-served files:", [f for f in mirror_files if f.startswith("interop/")], flush=True)
 
     # The Function's own list of the prefixes it DEFERS for. It decides what serves a .invalid
     # path, so it is the authority for that classification; the selftest proves it agrees with
@@ -356,6 +400,7 @@ def main():
     rows = []
     total = 0
     served_from_build = 0
+    digests_not_comparable = 0
     skipped_untracked = 0
     skipped_self = 0
     try:
@@ -392,7 +437,8 @@ def main():
                 served = "hf-mirror"
             else:
                 served = "retired-bytes"
-        elif any(public_rel == d or public_rel.startswith(d + "/") for d in mirror_prefixes):
+        elif (any(public_rel == d or public_rel.startswith(d + "/") for d in mirror_prefixes)
+              or public_rel in mirror_files):
             served = "hf-mirror"
         else:
             served = "pages"
@@ -402,14 +448,23 @@ def main():
             # public/interop, so the public path is what has to be rebuilt under the served
             # root — not the tree-relative path.
             built = served_path(served_root, public_rel)
+            digest_comparable = False
             if os.path.exists(built) and os.path.isfile(built):
                 try:
                     n, h = sha256_file(built)
                     served_from_build += 1
+                    digest_comparable = True
                 except Exception:
                     pass
+            else:
+                # No served copy: the build rewrites this HTML (it injects the launcher script
+                # into every built page), so the tree's bytes are NOT what a reader fetches.
+                # The digest is UNCHECKABLE here, not different.
+                digests_not_comparable += 1
 
         row = {"path": "/" + public_rel, "bytes": n, "sha256": h, "served": served}
+        if served == "pages":
+            row["_digest_comparable"] = digest_comparable
         if served == "retired-bytes":
             row["served_note"] = ("retired record; served from the estate's retired-bytes archive "
                                   "when that archive holds these exact bytes, and 404 by design "
@@ -461,6 +516,7 @@ def main():
         },
         "counts": {"files": len(rows), "bytes": total, "by_served": by_served,
                    "digests_taken_from_the_built_tree": served_from_build,
+                   "digests_not_comparable_no_built_tree": digests_not_comparable,
                    "excluded_the_index_itself": skipped_self,
                    "excluded_not_present_in_the_tree": skipped_untracked},
         "files": rows,
@@ -480,8 +536,14 @@ def main():
                   "--served-root dist/client")
             sys.exit(1)
         print(f"build-interop-file-index: the committed index matches ({len(rows)} rows).")
+        if digests_not_comparable:
+            print(f"  · {digests_not_comparable} row(s) could NOT have their digest compared: no built tree at "
+                  f"{served_root}. The build rewrites that HTML (it injects the launcher script), so the "
+                  f"tree's bytes are not what a reader fetches. UNCHECKABLE is not drift.")
         return
 
+    for r in rows:
+        r.pop("_digest_comparable", None)
     with open(out, "w", encoding="utf-8") as f:
         json.dump(doc, f, indent=1)
         f.write("\n")
