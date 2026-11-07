@@ -20,6 +20,8 @@ import CompanyCasePanel, { type CompanyCaseVerifiedCallback } from "./CompanyCas
 import ConnectedCompanyCasePanel from "./ConnectedCompanyCasePanel";
 import { companyWorkspaceSelection, type CompanyCaseConnection } from "./companyCaseModel";
 import ResultCard from "@/components/talk/ResultCard";
+import AIAndToolsControl from "./AIAndToolsControl";
+import { DEFAULT_AI_EXECUTION, restrictAITools, type AIExecutionSelection } from "../../../../shared/aiExecution";
 import ResultFollowUp from "@/components/talk/ResultFollowUp";
 import Inline from "@/components/talk/TalkInline";
 import { answerSections, checkedLine, chipFor, firstSentence, plainAnswer, statTiles, toolTitle, verifyLink } from "@/lib/resultCard";
@@ -401,6 +403,10 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   ref,
 ) {
   const [runs, setRuns] = useState<TalkRun[]>([]);
+  const [execution, setExecution] = useState<AIExecutionSelection>(DEFAULT_AI_EXECUTION);
+  const executionRef = useRef(execution);
+  executionRef.current = execution;
+  const taskExecutions = useRef(new Map<string, AIExecutionSelection>());
   const [q, setQ] = useState("");
   const [announce, setAnnounce] = useState("");
   const abortRef = useRef<AbortController | null>(null);
@@ -451,7 +457,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   }, []);
 
   const start = useCallback(
-    (question: string, confirmTool?: string[], threadId?: string) => {
+    (question: string, confirmTool?: string[], threadId?: string, originalExecution?: AIExecutionSelection) => {
       const text = question.trim();
       if (!text) return;
       const microphone = micRef.current;
@@ -469,7 +475,11 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
       setAnnounce(`Asking: ${text}`);
       let final: TalkRun = newRun(text, id);
       const o = opts.current;
+      const selected = originalExecution ? restrictAITools(originalExecution, executionRef.current) : executionRef.current;
+      taskExecutions.current.set(id, { ...selected, enabledTools: selected.enabledTools === null ? null : [...selected.enabledTools] });
+      if (taskExecutions.current.size > 10) taskExecutions.current.delete(taskExecutions.current.keys().next().value!);
       streamRun({
+        execution: selected,
         question: text,
         threadId: sessionThread,
         confirmTool,
@@ -557,7 +567,7 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
   const confirm = (run: TalkRun) => {
     const tools = run.confirm?.tools.map((t) => t.tool) ?? [];
     update(run.id, (r) => ({ ...r, status: "approved", confirm: null }));
-    start(run.question, tools, run.threadId ?? undefined);
+    start(run.question, tools, run.threadId ?? undefined, taskExecutions.current.get(run.id) ?? DEFAULT_AI_EXECUTION);
   };
   const cancel = (run: TalkRun) => {
     if (run.status !== "awaiting_confirmation") return;
@@ -585,6 +595,8 @@ const PublicTalkPanel = forwardRef<TalkPanelHandle, Props>(function PublicTalkPa
           ))}
         </div>
       ) : null}
+
+      <AIAndToolsControl value={execution} onChange={setExecution} disabled={busy} />
 
       <div className={`${runs.length ? "mt-6" : ""} ${hideSuggestions ? "hidden" : ""}`}>
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground" id="talk-suggest-h">
