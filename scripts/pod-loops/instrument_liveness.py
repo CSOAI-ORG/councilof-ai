@@ -62,7 +62,7 @@ def resolve_lanes() -> Path | None:
     return None
 
 
-# None is allowed at import; assess() and main() refuse to act on it.
+# None is allowed at import; assess(), upload() and main() refuse to act on it.
 LANES: Path | None = resolve_lanes()
 
 # Each instrument names the files it writes and the cadence it runs at. The cadence is a fact
@@ -202,6 +202,21 @@ def assess(spec: dict, report_date: str) -> dict:
         return rec
     digest, size = sha256_and_len(path)
     last = newest_ts(rows, spec["ts_field"])
+    if last:
+        # The strongest evidence: a timestamp the instrument itself wrote into the row.
+        rec["last_output_at_source"] = "row"
+    else:
+        # These receipts carry no timestamp field. The file's mtime is still the instrument's own
+        # write time - only this instrument writes this file - but it is weaker evidence than a
+        # stamp inside the row, so the record says which of the two it is rather than blurring them.
+        last = dt.datetime.fromtimestamp(path.stat().st_mtime, dt.timezone.utc).strftime(
+            "%Y-%m-%dT%H:%M:%SZ"
+        )
+        rec["last_output_at_source"] = "file_mtime"
+        rec["timestamp_note"] = (
+            "these rows carry no timestamp field of their own, so the last write time is taken from "
+            "the file this instrument writes to; a row-borne stamp is stronger evidence"
+        )
     rec.update({
         "state": "PUBLISHED",
         "last_output_at": last,
@@ -270,16 +285,17 @@ def board(doc: dict) -> str:
         "",
         f"as_of {doc['as_of']} (the newest stamp found in the instruments' own output).",
         "",
-        "| instrument | verdict | last output | rows | days with no publication |",
-        "|---|---|---|---|---|",
+        "| instrument | verdict | last output | from | rows | days with no publication |",
+        "|---|---|---|---|---|---|",
     ]
     for r in doc["instruments"]:
         miss = r.get("days_with_no_publication") or []
         miss_txt = ", ".join(miss) if miss else "-"
         if len(miss) > 6:
             miss_txt = f"{len(miss)} days ({miss[0]} .. {miss[-1]})"
+        src = r.get("last_output_at_source") or "-"
         lines.append(
-            f"| {r['instrument']} | {r['verdict']} | {r.get('last_output_at') or '-'} | "
+            f"| {r['instrument']} | {r['verdict']} | {r.get('last_output_at') or '-'} | {src} | "
             f"{r.get('rows', '-')} | {miss_txt} |"
         )
     lines += [
@@ -342,24 +358,44 @@ def selftest() -> int:
         LANES = root
         try:
             doc = build("2026-11-06")
+            rec = doc["instruments"][0]
+            assert rec["state"] == "PUBLISHED", rec
+            assert rec["last_published_day"] == "2026-11-06", rec
+            assert rec["published_days"] == 2, rec
+            assert rec["days_with_no_publication"] == ["2026-11-04", "2026-11-05"], rec
+            assert rec["rows"] == 1, rec
+            assert len(rec["sha256"]) == 64, rec
+            md = board(doc)
+            assert "2026-11-04" in md and "2026-11-05" in md, md[:400]
+            assert "not a ranking" in md.lower(), md[:400]
+
+            # An instrument whose rows carry NO timestamp of their own still produced output. The
+            # record must say so, and must say that its time came from the file the instrument
+            # writes to, not from a stamp inside a row - a weaker evidence, labelled as weaker.
+            receipts = root / "deck-receipts"
+            receipts.mkdir()
+            (receipts / "x.jsonl").write_text('{"kind":"x"}\n', encoding="utf-8")
+            spec = {"id": "x", "what": "w", "cadence_hours": 1, "kind": "jsonl",
+                    "path": "deck-receipts/x.jsonl", "ts_field": "finished_at"}
+            r = assess(spec, "2026-11-06")
+            assert r["state"] == "PUBLISHED", r
+            assert r["rows"] == 1, r
+            assert r["last_output_at_source"] == "file_mtime", r
+            assert "timestamp_note" in r, r
+            # and a row-borne stamp is preferred when there is one
+            (receipts / "x.jsonl").write_text(
+                '{"finished_at":"2026-11-06T01:02:03Z"}\n', encoding="utf-8")
+            r2 = assess(spec, "2026-11-06")
+            assert r2["last_output_at_source"] == "row", r2
+            assert r2["last_output_at"] == "2026-11-06T01:02:03Z", r2
         finally:
             LANES = saved
-        rec = doc["instruments"][0]
-        assert rec["state"] == "PUBLISHED", rec
-        assert rec["last_published_day"] == "2026-11-06", rec
-        assert rec["published_days"] == 2, rec
-        assert rec["days_with_no_publication"] == ["2026-11-04", "2026-11-05"], rec
-        assert rec["rows"] == 1, rec
-        assert len(rec["sha256"]) == 64, rec
-        md = board(doc)
-        assert "2026-11-04" in md and "2026-11-05" in md, md[:400]
-        assert "not a ranking" in md.lower(), md[:400]
 
     # THE CI CONDITION, AS A TEST. This selftest runs on CI, where there is no lanes root and
     # no LANES in the environment. A module that resolved the lanes root at import time and
-    # raised when there was none would die before the selftest above could run, so the step
-    # would go red for a reason that has nothing to do with the derivation. The fix was to make
-    # the resolution lazy; this is the assertion that keeps it lazy. Run this script in a
+    # raised when there was none would die before a single assertion above could run, so the
+    # step would go red for a reason that has nothing to do with the derivation. The fix was to
+    # make the resolution lazy; this is the assertion that keeps it lazy. Run this script in a
     # subprocess with HOME pointed at an empty directory and LANES unset: it must exit 0.
     #
     # NESTED=1 stops the recursion: the child runs the same selftest, so without the guard the
@@ -367,7 +403,6 @@ def selftest() -> int:
     # other assertion, which is the part that matters.
     import os
     import subprocess
-    import tempfile
 
     if os.environ.get("CSOAI_LIVENESS_SELFTEST_NESTED") != "1":
         with tempfile.TemporaryDirectory() as empty_home:
