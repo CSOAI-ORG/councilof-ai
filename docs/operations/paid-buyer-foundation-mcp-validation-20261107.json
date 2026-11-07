@@ -111,17 +111,6 @@
   "counts_not_additive": true,
   "scope": "49 buyer/session/MCP controls run as an independent child before the 165-case foundation report. The foundation count includes a marker for that child and a Python recovery group; do not add all counts as independent tests.",
   "source_state": "Exact tested worktree hashes are retained. This publication also carries the exact six auth-release files from PR4005/6b5719b11c8d8ce3d9ccbccdfb8e9bbae30a5750; their hosted 9655-pass unit/four-check evidence is separate. The newly combined PR head must run its own hosted checks.",
-  "unpublished_human_ui": [
-    "client/src/components/ToolRunner.tsx",
-    "client/src/lib/sovTools.ts",
-    "client/src/components/OwnedPurchases.tsx",
-    "client/src/components/gspc/MyResultsPane.tsx",
-    "client/src/lib/buyerPurchases.ts",
-    "client/src/components/X402PayButton.tsx",
-    "client/src/lib/payEveryDoor.ts",
-    "client/src/lib/x402Wallet.ts",
-    "client/src/lib/mcpHttp.ts"
-  ],
   "dependencies": [
     "3970 original-output retention/privacy",
     "3972 bounded gateway/full-MCP ABI",
@@ -235,11 +224,45 @@
     "scope": "Hosted backend/adapter fixtures; not actual new HTTP/SDK controls or unpublished human UI"
   },
   "http_transport_followon": {
-    "state": "AUTHORED_HOSTED_EXECUTION_PENDING",
+    "state": "TWELVE_HOSTED_TESTS_PASSED_ON_20AD",
     "test_file": "functions/mcp/purchase-http-isolation.test.ts",
     "expected_tests": 12,
     "agent_preparation": "Supported same-origin HTTP /api/purchases/prepare; no MCP-only preparation claim",
     "human_ui": "Staged and held; two guard corrections under focused rendered qualification; no shared-path/ref adoption",
-    "scope": "Actual HTTP mount and installed SDK, caller isolation, unchanged origin/credentials guards with Authorization preflight, real HTTP preparation API, exact-request binding, one mocked financial result, unsigned retention/recovery, explicit decisions and UNKNOWN read-only reconciliation. New HTTP requests simulate reopening; no real browser refresh/customer acceptance."
+    "scope": "Actual HTTP mount and installed SDK, caller isolation, unchanged origin/credentials guards with Authorization preflight, real HTTP preparation API, exact-request binding, one mocked financial result, unsigned retention/recovery, explicit decisions and UNKNOWN read-only reconciliation. New HTTP requests simulate reopening; no real browser refresh/customer acceptance.",
+    "qualified_commit": "20ad8d2da46f995674f2d2b6ae21bc6febbc5a61",
+    "required_checks": {
+      "gates": 128298238103,
+      "build": 128298238366,
+      "stamped_bytes": 128298238155,
+      "hold_guard": 128298238145
+    }
+  },
+  "initial_unpublished_human_ui_snapshot": [
+    "client/src/components/ToolRunner.tsx",
+    "client/src/lib/sovTools.ts",
+    "client/src/components/OwnedPurchases.tsx",
+    "client/src/components/gspc/MyResultsPane.tsx",
+    "client/src/lib/buyerPurchases.ts",
+    "client/src/components/X402PayButton.tsx",
+    "client/src/lib/payEveryDoor.ts",
+    "client/src/lib/x402Wallet.ts",
+    "client/src/lib/mcpHttp.ts"
+  ],
+  "human_ui_source_integration": {
+    "state": "AUTHORED_NEW_HEAD_CI_REQUIRED",
+    "scope": "Corrected owned companions and3explicitly leased minimalhooks onSource4018;3991ref untouched",
+    "shared_preimages": {
+      "head": "20ad8d2da46f995674f2d2b6ae21bc6febbc5a61",
+      "ToolRunner": "1dcbcf2fe9b2288035b5875502fc9e4cb45db5a8",
+      "sovTools": "e4e7500a2245c566e3fcecd8461b8be8f574f3ee",
+      "MyResultsPane": "22e29846ee93b7dab3dbe4983be2a891198168a5",
+      "toolRunner_exact_hunk": true,
+      "sovTools_exact_hunk": true
+    },
+    "expected_new_client_tests": 22,
+    "guard_history": "Earlier4stagedrender/helper cases passed before newer pending-intent/wallet/session changes; no oldgreens copied",
+    "decision_refresh": "Opaque intentID observed beforePOST under verifiedlifecycle owner/exacttransaction/resultdigest/version; restore forces exactauthenticated readback+intenthash; notoken/body/receipt/reason persisted",
+    "acceptance_boundary": "Explicit decisions only; no live deployment, realpayment/provider or Company/browser/customer acceptance"
   }
 }

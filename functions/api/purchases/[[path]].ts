@@ -133,7 +133,7 @@ export async function handlePurchases(request:Request,env:BuyerEnv):Promise<Resp
         rows.push({transaction:row.transaction,resource:row.resource,created_at:row.created_at,
           result_url:"/api/purchases/"+encodeURIComponent(row.transaction),receipt_state:"ROUTE_REPORTED_UNVERIFIED"});
       }
-      return json({schema:"csoai.owned-purchase-history/1",rows,list_complete:page.list_complete,cursor:page.cursor||null,
+      return json({schema:"csoai.owned-purchase-history/1",owner_hash:buyer.owner_hash,rows,list_complete:page.list_complete,cursor:page.cursor||null,
         claim_boundary:"Known lifecycle-bound purchases only. Legacy guest purchases are unowned. Missing index writes are possible; an empty page is not proof that no payment occurred."});
     }
     if(parts.length<1||parts.length>2)throw new BuyerHold("not found",404);
@@ -189,7 +189,7 @@ export async function handlePurchases(request:Request,env:BuyerEnv):Promise<Resp
     if(parts[1] && parts[1]!=="decisions")throw new BuyerHold("not found",404);
     const decisions=await decisionRows(env,buyer,tx,u.searchParams);
     if(parts[1]==="decisions")return json(decisions);
-    return json({schema:"csoai.owned-purchase-result/1",transaction:tx,resource:row.resource,
+    return json({schema:"csoai.owned-purchase-result/1",owner_hash:buyer.owner_hash,transaction:tx,resource:row.resource,
       result:{sha256:artifact.metadata.response_sha256,bytes:artifact.bytes.byteLength,version:artifact.metadata.delivered_at,
         original_status:artifact.status,original_status_text:artifact.status_text,headers:artifact.headers,
         download_url:"/api/purchases/"+encodeURIComponent(tx)+"/body",

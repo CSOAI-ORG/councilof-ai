@@ -1,3 +1,5 @@
+import { prepareOwnedChallenge, samePurchaseSession } from "./buyerPurchases";
+import { purchaseSha256 } from "../../../shared/buyerPurchase";
 /**
  * payEveryDoor — the /pay page's flow, kept out of the component so it can be tested without a
  * DOM and so the per-door button and "pay all remaining" share ONE path.
@@ -278,13 +280,15 @@ export async function retryDoorWithPayment(
   paymentHeader: string,
   fetchImpl: typeof fetch = fetch,
   requestOrigin: string = globalThis.location?.origin || "https://councilof.ai",
+  buyerToken?:string|null,
 ): Promise<PaidOutcome> {
   assertPaidDoorOrigin(door, requestOrigin);
+  if(buyerToken&&!samePurchaseSession(buyerToken))throw new Error("The buyer session changed before dispatch.");
   let r: Response;
   try {
     r = await fetchImpl(door.url, {
       method: door.method, redirect: "manual", credentials: "omit",
-      headers: { accept: "application/json", "x-payment": paymentHeader },
+      headers: { accept: "application/json", "x-payment": paymentHeader,...(buyerToken?{authorization:"Bearer "+buyerToken}:{}) },
     });
   } catch (error) {
     return { kind: "maybe-settled", http: null,
@@ -378,11 +382,15 @@ export async function payDoor(
     validateAction();
     buildTypedData(challenge, PREFLIGHT_SIGNER);
     phase({ kind: "signing", wallet: walletName });
-    const signature = await signX402Challenge(provider, challenge);
+    const owned=await prepareOwnedChallenge(challenge,{url:door.url,resource:challenge.resource,method:door.method,body_sha256:await purchaseSha256(new Uint8Array())},fetchImpl);
     validateAction();
+    if(!owned.stillCurrent())throw new Error("The buyer session changed before wallet approval.");
+    const signature = await signX402Challenge(provider, owned.challenge);
+    validateAction();
+    if(!owned.stillCurrent())throw new Error("The buyer session changed while approving payment.");
     phase({ kind: "paying" });
     sent = true;
-    const outcome = await retryDoorWithPayment(door, signature.header, fetchImpl, requestOrigin);
+    const outcome = await retryDoorWithPayment(door, signature.header, fetchImpl, requestOrigin, owned.token);
     if (outcome.kind === "delivered") {
       return { kind: "delivered", paymentResponse: outcome.paymentResponse, settlement: outcome.settlement, body: outcome.body, output: outcome.output };
     }
