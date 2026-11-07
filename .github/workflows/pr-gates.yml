@@ -262,6 +262,12 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
 
+      - name: Release follow-on trigger contract and negative controls
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node --test scripts/workflow-trigger-coupling.node-test.mjs
+          node scripts/workflow-trigger-coupling.mjs
+
       - name: Outward claims — offline manifest contract selftest
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/outward-claims-guard.mjs --selftest
@@ -519,6 +525,12 @@ jobs:
 
       - name: Build client
         if: steps.scope.outputs.gated == 'true'
+        # HF_TOKEN so the bench-suite build's hub fetch is authenticated. The banks are
+        # public, so the token cannot change a byte — it only raises the rate limit the hub
+        # applies, and an ANONYMOUS fetch was answering 429 at random and failing this build
+        # (and so every push and deploy). See scripts/surface/hub-fetch.mjs.
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: npm run build:client
 
       - name: Verify same-build Coliseum artifact

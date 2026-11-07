@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-/** Canonical source recovery candidate for the existing seven-tool local bridge.
+/** Source recovery candidate preserving the existing local bridge and adding a read-only reference tool.
  * Not installed or registered by this source change. No benchmark admission or signer.
  */
 
 import { submitWorkStep, readCapabilitySnapshot } from './core.mjs';
+import { readGspcEvidence } from './evidence-context.mjs';
 import path from 'node:path';
 import os from 'node:os';
 import readline from 'node:readline';
@@ -14,6 +15,12 @@ const CAP_DIR = process.env.MEOK_CAPABILITY_DIR || path.join(WS, 'meok-router', 
 const HIM_BASE = process.env.HIM_URL || 'http://127.0.0.1:8787';
 
 const TOOLS = [
+  {
+    name: 'meok_read_gspc_evidence',
+    description: 'Read a selected axis from the fixed public GSPC board and retained daily report metadata. Returns source hashes, dates, coverage and limits. No private report ingestion, model training, human approval or execution.',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
+    inputSchema: { type: 'object', properties: { axis: { type: 'string', pattern: '^[a-z0-9][a-z0-9-]{0,79}$', description: 'Exact public GSPC axis ID.' } }, required: ['axis'], additionalProperties: false },
+  },
   {
     name: 'meok_gspc_evaluate_work_step',
     description: 'Submit caller-reported work-step telemetry and report HTTP delivery separately from durable storage. An exit code is not task correctness or a GSPC measurement; no signing or admission occurs.',
@@ -80,6 +87,9 @@ const TOOLS = [
 ];
 
 async function handleToolCall(name, args = {}) {
+  if (name === 'meok_read_gspc_evidence') {
+    return JSON.stringify(await readGspcEvidence(args), null, 2);
+  }
   if (name === 'zcode_desktop') {
     // Stateless bridge to the ZCode Desktop Commander MCP bridge on this host (127.0.0.1:8765).
     const DC = process.env.DC_BRIDGE_URL || 'http://127.0.0.1:8765/mcp';
@@ -185,7 +195,7 @@ rl.on('line', async (line) => {
           capabilities: { tools: {} },
           serverInfo: {
             name: 'meok-gspc-layer0-plugin',
-            version: '1.1.0',
+            version: '1.2.0',
             governance_invariant: 'Measurement and Human-in-the-Loop Oversight — Never Certification',
           },
         },
@@ -232,3 +242,4 @@ rl.on('line', async (line) => {
     }) + '\n');
   }
 });
+
