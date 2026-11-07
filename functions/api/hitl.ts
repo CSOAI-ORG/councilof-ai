@@ -1,3 +1,9 @@
+/**
+ * Public oversight state, live-board knowledge checks, challenges, and decision records.
+ * Recording a decision requires a configured shared operator token. A matching answer
+ * and a caller-supplied operator label do not establish identity, human presence,
+ * professional competence, or execution authority.
+ */
 // functions/api/hitl.ts — the human-in-the-loop surface.
 //
 //   GET  /api/hitl                 the oversight state: policy, gates, modules, counts
