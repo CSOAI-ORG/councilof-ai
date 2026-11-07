@@ -740,7 +740,11 @@ def main():
                           "served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the "
                           "bytes the site serves are NOT the bytes published here, and on a "
                           "'per-request' row they differ on every fetch, so no digest of them can be "
-                          "reproduced by anyone, including us. For retired-bytes paths the digest is "
+                          "reproduced by anyone, including us. A row whose served state is "
+                          "hf-mirror is a different case again: the bytes come from the "
+                          "HuggingFace evidence mirror, which is a SEPARATE HOST whose membership "
+                          "this index does not record, so the row's digest is checkable only while "
+                          "the mirror still holds the file. For retired-bytes paths the digest is "
                           "of the canonical bytes, which the archive copies verbatim."),
         "retired": ("A retired record is HISTORICAL evidence of a past measurement, never current "
                     "proof. The estate's server marks these with the response header "
@@ -752,7 +756,15 @@ def main():
             "pages": "served by the site build",
             "hf-mirror": ("routed by a 302 redirect to the HuggingFace evidence mirror "
                           "(scripts/deploy-exclusions.json); the sha256 is of the canonical tree bytes, "
-                          "which are the bytes the mirror holds"),
+                          "which are the bytes the mirror holds. THE MIRROR IS A SEPARATE HOST AND ITS "
+                          "MEMBERSHIP IS NOT RECORDED HERE, so this row's claim is true UNDER THE "
+                          "CONDITION THAT THE MIRROR STILL HOLDS THE FILE. MEASURED 2026-11-07: all "
+                          "five mirror classes (mill-cards-signed, mill-cards-unsigned, mill-evidence, "
+                          "the file-kind exclusions and the ots/*.invalid records) resolved ANONYMOUSLY "
+                          "with HTTP 200 and an exact digest match. If the mirror ever stops holding a "
+                          "path, the reader gets HUGGINGFACE's 'Entry not found' — a 404 and a 15-byte "
+                          "body from the mirror, NOT from this site — so a mismatch on one of these rows "
+                          "is a statement about the mirror's membership until it is shown otherwise"),
             "retired-bytes": ("a retired .invalid record. The estate's Function intercepts every "
                               ".invalid path and serves it from the retired-bytes archive when that "
                               "archive holds these exact bytes (200, x-evidence-state: "
