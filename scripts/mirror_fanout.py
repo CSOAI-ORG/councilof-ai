@@ -479,53 +479,93 @@ class Surface:
     name: str
     provider: str
     note: str
-    url_for: Callable[[str, SurfaceListing], Optional[str]]
+    url_for: Callable[[str, SurfaceListing, Optional[str]], Optional[str]]
     list_fn: Optional[Callable[[Fetcher], SurfaceListing]] = None
 
 
-def _hf_url(rel: str, listing: SurfaceListing) -> Optional[str]:
+def _listing_url(
+    base: str,
+    listing: SurfaceListing,
+    known: Optional[str],
+    template: str,
+) -> Optional[str]:
+    """The URL for one artefact on a listing-backed surface.
+
+    A listing that could not be READ is not an empty listing. Zenodo's mirror
+    record 22806072 answers HTTP 410 (Gone) now, and a 410 body parses as a listing
+    with no files in it. Treating that as "this surface holds nothing" rewrites two
+    artefacts that WERE published there as "never put there" — which is precisely
+    what NOT_PUBLISHED asserts — and it hides a dead mirror copy among
+    never-published files.
+
+    So when the listing failed, keep the URL this tree already recorded while the
+    surface was alive, and let the fetch adjudicate it: a gone deposit answers
+    non-2xx and is recorded UNREACHABLE ("a URL exists, was fetched, and did not
+    yield 2xx bytes"), which is the honest state. An artefact with no recorded URL
+    keeps NOT_PUBLISHED — there is no evidence it was ever there.
+    """
+    if listing.names is not None and base not in listing.names:
+        if listing.error and known:
+            return known
+        return None
+    return template
+
+
+def _hf_url(rel: str, listing: SurfaceListing, known: Optional[str] = None) -> Optional[str]:
     flat = hf_flat_name(rel)
-    if listing.names is not None and flat not in listing.names:
-        return None
-    return f"https://huggingface.co/datasets/{HF_REPO}/resolve/main/{urllib.parse.quote(flat)}"
-
-
-def _kaggle_url(rel: str, listing: SurfaceListing) -> Optional[str]:
-    base = os.path.basename(rel)
-    if listing.names is not None and base not in listing.names:
-        return None
-    return (
-        f"https://www.kaggle.com/api/v1/datasets/download/"
-        f"{KAGGLE_OWNER}/{KAGGLE_SLUG}/{urllib.parse.quote(base)}"
+    return _listing_url(
+        flat,
+        listing,
+        known,
+        f"https://huggingface.co/datasets/{HF_REPO}/resolve/main/{urllib.parse.quote(flat)}",
     )
 
 
-def _zenodo_url(rel: str, listing: SurfaceListing) -> Optional[str]:
+def _kaggle_url(rel: str, listing: SurfaceListing, known: Optional[str] = None) -> Optional[str]:
     base = os.path.basename(rel)
-    if listing.names is not None and base not in listing.names:
-        return None
-    return f"https://zenodo.org/api/records/{ZENODO_RECORD}/files/{urllib.parse.quote(base)}/content"
-
-
-def _zenodo_mirror_url(rel: str, listing: SurfaceListing) -> Optional[str]:
-    base = os.path.basename(rel)
-    if listing.names is not None and base not in listing.names:
-        return None
-    return (
-        f"https://zenodo.org/api/records/{ZENODO_MIRROR_RECORD}"
-        f"/files/{urllib.parse.quote(base)}/content"
+    return _listing_url(
+        base,
+        listing,
+        known,
+        (
+            f"https://www.kaggle.com/api/v1/datasets/download/"
+            f"{KAGGLE_OWNER}/{KAGGLE_SLUG}/{urllib.parse.quote(base)}"
+        ),
     )
 
 
-def _councilof_url(rel: str, _listing: SurfaceListing) -> Optional[str]:
+def _zenodo_url(rel: str, listing: SurfaceListing, known: Optional[str] = None) -> Optional[str]:
+    base = os.path.basename(rel)
+    return _listing_url(
+        base,
+        listing,
+        known,
+        f"https://zenodo.org/api/records/{ZENODO_RECORD}/files/{urllib.parse.quote(base)}/content",
+    )
+
+
+def _zenodo_mirror_url(rel: str, listing: SurfaceListing, known: Optional[str] = None) -> Optional[str]:
+    base = os.path.basename(rel)
+    return _listing_url(
+        base,
+        listing,
+        known,
+        (
+            f"https://zenodo.org/api/records/{ZENODO_MIRROR_RECORD}"
+            f"/files/{urllib.parse.quote(base)}/content"
+        ),
+    )
+
+
+def _councilof_url(rel: str, _listing: SurfaceListing, known: Optional[str] = None) -> Optional[str]:
     return "https://councilof.ai/" + urllib.parse.quote(public_relpath(rel))
 
 
-def _csoai_url(rel: str, _listing: SurfaceListing) -> Optional[str]:
+def _csoai_url(rel: str, _listing: SurfaceListing, known: Optional[str] = None) -> Optional[str]:
     return "https://csoai.org/" + urllib.parse.quote(public_relpath(rel))
 
 
-def _github_url(rel: str, _listing: SurfaceListing) -> Optional[str]:
+def _github_url(rel: str, _listing: SurfaceListing, known: Optional[str] = None) -> Optional[str]:
     return (
         f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/"
         f"{GITHUB_REF}/{urllib.parse.quote(rel)}"
@@ -637,6 +677,34 @@ def surfaces_by_name(names: Optional[Iterable[str]]) -> list[Surface]:
 # ---------------------------------------------------------------------------
 # Manifest build
 # ---------------------------------------------------------------------------
+def load_known_urls(root: str) -> dict:
+    """The URLs this tree already records, per (surface, artefact).
+
+    A mirror that dies must stay visible. When a surface's listing can no longer be
+    read — Zenodo's record 22806072 answers 410 (Gone) — the URL recorded while it was
+    alive is the only thing that says "it WAS there". Without it the probe calls a
+    dead mirror "never published", and the loss disappears into the NOT_PUBLISHED
+    bucket, which is a false statement about publication.
+    """
+    path = os.path.join(root, "public", "interop", "mirror-manifest.json")
+    known: dict = {}
+    try:
+        with open(path, "rb") as fh:
+            doc = json.load(fh)
+    except Exception:
+        return known
+    for art in doc.get("artifacts", []) or []:
+        apath = art.get("path")
+        if not apath:
+            continue
+        for m in art.get("mirrors", []) or []:
+            url = m.get("url")
+            surface = m.get("surface")
+            if url and surface:
+                known[(surface, apath)] = url
+    return known
+
+
 def build_manifest(
     root: str,
     artifacts: list[str],
@@ -647,6 +715,7 @@ def build_manifest(
 ) -> dict:
     fetch = fetch or (lambda u: anonymous_fetch(u, ua=ua))
     surfaces = surfaces_by_name(only_surfaces)
+    known_urls = load_known_urls(root)
 
     listings: dict[str, SurfaceListing] = {}
     for s in surfaces:
@@ -663,7 +732,7 @@ def build_manifest(
         digest = sha256_bytes(data)
         mirrors = []
         for s in surfaces:
-            url = s.url_for(rel, listings[s.name])
+            url = s.url_for(rel, listings[s.name], known_urls.get((s.name, rel)))
             mirrors.append(probe_mirror(surface=s.name, url=url, expected_sha256=digest, fetch=fetch))
             m = mirrors[-1]
             print(f"  {rel:58s} {s.name:28s} {m['state']}")
@@ -948,7 +1017,55 @@ def selftest() -> int:
         refused = True
     check("C3 classify() refuses NOT_PUBLISHED with a fetch result", refused, True)
 
-    print("\n== D. the fetcher is anonymous ==")
+    print("\n== D. a listing that could not be READ is not an empty listing ==")
+    # Zenodo's mirror record 22806072 answers HTTP 410 (Gone). A 410 body parses as a
+    # listing with no files, so the probe used to call the two artefacts it held
+    # "never put there" — which is what NOT_PUBLISHED asserts — and the dead mirror
+    # copy vanished among never-published files.
+    gone = SurfaceListing(names=set(), error="HTTP 410")
+    check(
+        "D1 a failed listing keeps the URL this tree recorded",
+        _listing_url("x.json", gone, "https://zenodo.example/x.json", "https://tmpl/x.json"),
+        "https://zenodo.example/x.json",
+    )
+    check(
+        "D2 a failed listing with no recorded URL stays NOT_PUBLISHED",
+        _listing_url("x.json", gone, None, "https://tmpl/x.json"),
+        None,
+    )
+    measured_empty = SurfaceListing(names=set(), error=None)
+    check(
+        "D3 a measured empty listing is still NOT_PUBLISHED",
+        _listing_url("x.json", measured_empty, "https://zenodo.example/x.json", "https://tmpl/x.json"),
+        None,
+    )
+    check(
+        "D4 a listed file gets the surface's own URL",
+        _listing_url("x.json", SurfaceListing(names={"x.json"}), None, "https://tmpl/x.json"),
+        "https://tmpl/x.json",
+    )
+    check(
+        "D5 the recorded URL is what gets probed, so a live deposit still reads VERIFIED",
+        probe_mirror(
+            surface="fixture",
+            url=_listing_url("x.json", gone, "https://zenodo.example/x.json", "https://tmpl/x.json"),
+            expected_sha256=good_sha,
+            fetch=fetch_match,
+        )["state"],
+        VERIFIED,
+    )
+    check(
+        "D6 a gone deposit's URL that answers non-2xx reads UNREACHABLE, not NOT_PUBLISHED",
+        probe_mirror(
+            surface="fixture",
+            url=_listing_url("x.json", gone, "https://zenodo.example/x.json", "https://tmpl/x.json"),
+            expected_sha256=good_sha,
+            fetch=fetch_dead,
+        )["state"],
+        UNREACHABLE,
+    )
+
+    print("\n== E. the fetcher is anonymous ==")
     sent: dict = {}
 
     class _Spy(http.server.BaseHTTPRequestHandler):
