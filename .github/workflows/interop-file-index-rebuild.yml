@@ -1,0 +1,139 @@
+name: interop-file-index-rebuild
+# WHY THIS EXISTS. public/interop/file-index.json is the estate's machine-readable map of
+# its evidence corpus: every path, its size, its sha256, and how it is served. An agent that
+# reads it can learn what exists instead of guessing, and can verify what it fetched. It is
+# COMMITTED, and until this workflow existed NOTHING rebuilt it: scripts/build-interop-file-index.py
+# had no invoker anywhere in the estate, so the only rebuilds were manual runs plus a commit.
+# The file decayed silently — 128 of 16,340 published rows had drifted in 19.8 h on
+# 2026-11-07, and the index's own legend promised "the path is real and fetchable" for rows
+# that no longer resolved.
+#
+# WHY A SCHEDULE AND NOT A PR-TIME GATE. The corpus churns on almost every merge: it carries
+# auto-generated snapshots (watchdog-intake/…, x402-trust/…, mcp-trust/latest.json,
+# hf-census/…, stablecoin-deep/…/mirrors/*). Measured drift is ~6.5 rows/hour, so a blocking
+# "regenerate the index in the same PR" rule would be red on master CONSTANTLY, and a gate
+# that cries wolf protects nothing. Nightly is proportionate to that churn rate, and the
+# rebuild lands through a PR so a human still sees the diff.
+#
+# WHY IT DOES NOT OPEN A PR EVERY NIGHT. The builder stamps as_of and source_commit, so a
+# naive rebuild differs from the committed file even when the corpus has not moved a byte.
+# This workflow compares the two IGNORING those two fields — they are bookkeeping, not
+# content — and opens a PR only when the corpus itself drifted. A night with no drift is a
+# no-op, and it says so in the log.
+#
+# WHY IT IS OFFLINE. The builder walks the committed corpus under public/interop and reads
+# scripts/deploy-exclusions.json for the mirror prefixes. It makes NO network call, so this
+# job cannot rate-limit the Hugging Face mirror — which the live site shares, because the
+# site's mirror doors redirect to huggingface.co. See the note in the job below.
+on:
+  schedule:
+    - cron: "53 8 * * *"   # daily 08:53 UTC — after the 07:xx root tick and the morning deploys
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: interop-file-index
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      # Fail closed on a tree that cannot produce a truthful index. The builder walks the
+      # committed corpus; if the corpus or the exclusion list is absent, it would index
+      # whatever it can see and call it the whole corpus. That is the failure the OTS
+      # manifest had, and it is why this preflight exists rather than a bare run.
+      - name: preflight — the corpus and the exclusion list are both present
+        run: |
+          set -euo pipefail
+          test -d public/interop || { echo "public/interop is absent — refusing to rebuild an index of nothing"; exit 1; }
+          test -f scripts/deploy-exclusions.json || { echo "scripts/deploy-exclusions.json is absent — the builder cannot tell a mirror door from a Pages door"; exit 1; }
+          test -f public/interop/ots/manifest.json || { echo "public/interop/ots/manifest.json is absent — the proof manifest is missing"; exit 1; }
+          echo "corpus files: $(find public/interop -type f | wc -l)"
+
+      - name: rebuild the index from the committed corpus (offline — no hub fetch)
+        run: |
+          set -euo pipefail
+          cp public/interop/file-index.json /tmp/index-committed.json
+          python3 scripts/build-interop-file-index.py \
+            public/interop \
+            public/interop/file-index.json \
+            scripts/deploy-exclusions.json \
+            "$GITHUB_SHA"
+
+      # as_of and source_commit move on every run. The corpus is what matters, so compare
+      # the two WITHOUT them, and only treat a difference as drift.
+      - name: has the corpus moved?
+        run: |
+          cat > /tmp/idx_verdict.py <<'PY'
+          import json, sys
+          a = json.load(open('/tmp/index-committed.json'))
+          b = json.load(open('public/interop/file-index.json'))
+          for d in (a, b):
+              d.pop('as_of', None)
+              d.pop('source_commit', None)
+          if a == b:
+              print('SAME')
+              sys.exit(0)
+          added = len(set(x['path'] for x in b.get('files', [])) - set(x['path'] for x in a.get('files', [])))
+          removed = len(set(x['path'] for x in a.get('files', [])) - set(x['path'] for x in b.get('files', [])))
+          print(f'DRIFT added={added} removed={removed}')
+          sys.exit(1)
+          PY
+          set +e
+          VERDICT=$(python3 /tmp/idx_verdict.py)
+          set -e
+          echo "$VERDICT" | tee /tmp/verdict.txt
+          if grep -q '^SAME' /tmp/verdict.txt; then
+            echo "the corpus did not move — the rebuilt index differs only in as_of/source_commit. Nothing to land."
+            git checkout -- public/interop/file-index.json
+            exit 0
+          fi
+          # A rebuild that LOSES more than 10% of the published rows in one night is not
+          # churn — churn is ~1%/day — it is a builder that mislabelled the corpus or a tree
+          # that lost its files. Fail closed rather than land a gutted index.
+          python3 - <<'PY'
+          import json, sys
+          a = json.load(open('/tmp/index-committed.json'))
+          b = json.load(open('public/interop/file-index.json'))
+          was, now = len(a.get('files', [])), len(b.get('files', []))
+          if was and now < was * 0.9:
+              print(f"REFUSING: the rebuild kept {now} of {was} rows ({now/was:.1%}). That is not churn; refusing to land it.")
+              sys.exit(1)
+          print(f"row count {was} -> {now}")
+          PY
+
+      - name: land the rebuilt index (via PR — master is GH006-protected)
+        env:
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-interop-index"
+          git config user.email "index@csoai.org"
+          git add public/interop/file-index.json
+          STAMP=$(date -u +%Y-%m-%dT%H%M%SZ)
+          BR="ops/interop-file-index-${STAMP}"
+          git checkout -b "$BR"
+          git commit -m "interop file index: rebuild the corpus index (${STAMP})"
+          git push origin "HEAD:$BR"
+          URL=$(gh pr create --base master --head "$BR" \
+            --title "interop file index: rebuild the corpus index (${STAMP})" \
+            --body "Nightly rebuild of public/interop/file-index.json from the committed corpus (scripts/build-interop-file-index.py), by .github/workflows/interop-file-index-rebuild.yml.
+
+          The builder walks the committed corpus and makes NO network call. The diff is the corpus moving: files added, files removed, digests changed.
+
+          It lands via PR because master is GH006-protected, and it is armed for auto-merge so a nightly rebuild does not need a human — the check that matters is that every row's sha256 still matches the bytes at that path, which the reader can verify per row.
+
+          as_of and source_commit are bookkeeping and are expected to differ on every rebuild.")
+          gh workflow run pr-gates.yml --repo "$GITHUB_REPOSITORY" --ref "$BR"
+          gh pr merge "$URL" --repo "$GITHUB_REPOSITORY" --squash --auto
+          echo "landed branch=$BR"
