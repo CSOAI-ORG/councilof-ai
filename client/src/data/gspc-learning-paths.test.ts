@@ -203,12 +203,36 @@ describe("GSPC canonical learning paths", () => {
     });
   });
 
+  it("retains current measured-subject rows without replacing the live roster with the old freeze", () => {
+    // The live board uses measured-subject for its subject axes. Rejecting that
+    // known kind discarded the entire roster, including otherwise valid rows.
+    const subject = {
+      axis: "lab-practice",
+      family: "subject",
+      kind: "measured-subject",
+      bench: "Lab practice",
+      task: "Inspect the published subject measurement and its stated limits",
+      status: "MEASURED",
+      n: 37,
+    };
+    const live = buildLearningPaths({ axes: [...CANON, subject] });
+    expect(live.map((path) => path.axis.id)).toEqual([...CANON.map((row) => row.axis), subject.axis]);
+    expect(live.at(-1)?.axis.kind).toBe("measured-subject");
+    expect(live.at(-1)?.axis).not.toHaveProperty("n");
+    expect(live.at(-1)?.axis).not.toHaveProperty("status");
+    expect(deriveLearningProgress(subject.axis, ["learn"], live)?.activeStageId).toBe("play");
+    expect(live.at(-1)?.evidenceBoundary.practiceIsEvidence).toBe(false);
+  });
+
   it("refuses a malformed live reply instead of returning a partial roster", () => {
     expect(() => buildLearningPaths(null)).toThrow();
     expect(() => buildLearningPaths({ axes: "not-an-array" })).toThrow();
     expect(() => buildLearningPaths({ axes: [...CANON, CANON[0]] })).toThrow(/duplicate/);
     expect(() =>
       buildLearningPaths({ axes: [{ ...CANON[0], family: "unknown" }] }),
+    ).toThrow(/unsupported/);
+    expect(() =>
+      buildLearningPaths({ axes: [...CANON, { ...CANON[0], axis: "new-axis", kind: "unknown" }] }),
     ).toThrow(/unsupported/);
   });
 });
