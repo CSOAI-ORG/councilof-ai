@@ -34,6 +34,12 @@ const FUNCTIONS_DIR = join(ROOT, "functions");
 // Function-owned routes must not receive generic bare-to-slash redirects. A
 // sparse checkout without functions/ cannot make that decision safely.
 if (!existsSync(FUNCTIONS_DIR)) {
+  // In --check mode a missing input is UNCHECKABLE, not a finding about the file: the store
+  // could not answer, so it makes no claim.
+  if (process.argv.includes("--check")) {
+    console.error("? redirects: UNCHECKABLE — functions/ is absent, so no generation is possible");
+    process.exit(2);
+  }
   throw new Error("[redirects] functions/ is required to exclude Pages Function routes");
 }
 
@@ -604,7 +610,46 @@ const lines = [
   "",
 ];
 
-writeFileSync(OUT, lines.join("\n"));
+// WHY A --check MODE. public/_redirects is COMMITTED and this script rewrites it on every
+// build. Nothing compared the two. The concrete miss it let through: on 2026-11-06 #3847
+// (857a6cc02) moved /mcp from an App.tsx route to a Pages Function, changing App.tsx only.
+// The committed _redirects kept a `/mcp  /mcp/  308` rule for a route that no longer existed
+// (and that the edge never applied anyway, because the Function answers /mcp directly with
+// 200), while the build produced a file without it. The live edge was correct; the committed
+// artefact was the fiction, and every deploy silently overwrote it.
+//
+// Exit codes: 0 = committed bytes match a fresh generation. 1 = they differ (a finding).
+// 2 = an input needed to generate is absent (UNCHECKABLE — not a finding about the file).
+const CHECK_MODE = process.argv.includes("--check");
+const next = lines.join("\n");
+
+if (CHECK_MODE) {
+  const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : null;
+  if (current === next) {
+    console.log(`✓ redirects: up to date — ${lines.length} lines match a fresh generation`);
+    process.exit(0);
+  }
+  const have = new Set((current ?? "").split("\n"));
+  const want = new Set(next.split("\n"));
+  const stale = [...have].filter((l) => !want.has(l) && l.trim() && !l.trim().startsWith("#"));
+  const absent = [...want].filter((l) => !have.has(l) && l.trim() && !l.trim().startsWith("#"));
+  console.error("✗ redirects: STALE — public/_redirects does not match a fresh generation.");
+  console.error(`    committed ${(current ?? "").split("\n").length} lines · fresh ${next.split("\n").length} lines`);
+  if (stale.length) {
+    console.error(`    rules only in the committed file (${stale.length}):`);
+    for (const l of stale.slice(0, 12)) console.error(`      - ${l}`);
+    if (stale.length > 12) console.error(`      … and ${stale.length - 12} more`);
+  }
+  if (absent.length) {
+    console.error(`    rules only in a fresh generation (${absent.length}):`);
+    for (const l of absent.slice(0, 12)) console.error(`      + ${l}`);
+    if (absent.length > 12) console.error(`      … and ${absent.length - 12} more`);
+  }
+  console.error(`    fix: node scripts/generate-redirects.mjs && git add public/_redirects`);
+  process.exit(1);
+}
+
+writeFileSync(OUT, next);
 const nStatic = STATIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length;
 const nDynamic = DYNAMIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length + 1; // +1 catch-all
 console.log(`[redirects] ${routes.length} app routes detected (not emitted; catch-all covers them)`);
