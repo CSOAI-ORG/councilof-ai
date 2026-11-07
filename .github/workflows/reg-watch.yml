@@ -47,7 +47,7 @@ jobs:
             exit 1
           fi
       - name: Test exact mappings, history preservation and archive rendering
-        run: node --test scripts/build-daily-signal.node-test.mjs scripts/build-daily-product.node-test.mjs scripts/build-axis-reports.ownership.test.mjs
+        run: node --test scripts/build-daily-signal.node-test.mjs scripts/build-daily-product.node-test.mjs scripts/daily-maintenance-metadata.node-test.mjs scripts/build-axis-reports.ownership.test.mjs
       - name: Derive reports from the committed public source snapshot
         run: |
           set -euo pipefail
