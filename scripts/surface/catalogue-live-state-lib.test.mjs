@@ -4,10 +4,15 @@ import { resolve } from "node:path";
 import {
   assertBoardSentences,
   assertEditionIsOurs,
+  assertLaneActivityNumbers,
+  assertOneOpenPullRequestNumber,
+  assertOneOpenPullRequestNumberInPage,
   canonical,
   countDigest,
   htmlRules,
   jsonRules,
+  laneActivityRules,
+  mergeWindowStart,
   normalise,
   subOnce,
 } from "./catalogue-live-state-lib.mjs";
@@ -46,6 +51,16 @@ const READ = {
   unmeasuredAxes: [
     { axis: "lab-practice", family: "subject", kind: "declared-slot", status: "UNMEASURED", n: 0, accuracy: null },
   ],
+  laneActivity: {
+    window_start: "2026-11-03T00:00:00Z",
+    window_end: "2026-11-07T09:10:00.000Z",
+    window_start_source: "the edition this one supersedes (2026-11-03)",
+    merged: [
+      { merged_at: "2026-11-07T08:45:18Z", sha: "a65ac5d622", pr: 4053 },
+      { merged_at: "2026-11-07T08:37:10Z", sha: "0565f64d8a", pr: 4050 },
+    ],
+    open_pull_requests_now: 78,
+  },
 };
 
 describe("catalogue live-state rules", () => {
@@ -164,6 +179,155 @@ describe("catalogue live-state rules", () => {
 
   it("canonical JSON sorts keys, so equal content has one spelling", () => {
     expect(canonical({ b: 1, a: [2, { d: 4, c: 3 }] })).toBe('{"a":[2,{"c":3,"d":4}],"b":1}');
+  });
+
+  // ---------------------------------------------------------------- the lane activity
+  //
+  // The published catalogue carried a reconciliation block that was FROZEN on 2026-11-02:
+  // six merges, under a key that said "since 2026-11-01" while its own sentence said "since
+  // the previous edition" (2026-11-03), with a standing open-pull-request count of 51 in the
+  // same file whose live read said 80. A page that calls itself the reconciled picture was
+  // carrying one lane's frozen view and two disagreeing live numbers. These rules make the
+  // producer own the block, and they have to be able to GO RED.
+
+  it("the lane-activity block is READ, not typed: the frozen key is gone and the window is named", () => {
+    const doc = {
+      edition: "2026-11-07",
+      lane_activity_since_2026_11_01: { open_pull_requests_now: 51, merged: [] },
+    };
+    const out = laneActivityRules(doc, READ.laneActivity);
+    expect(out.lane_activity_since_2026_11_01).toBeUndefined();
+    expect(out.lane_activity.merged_count).toBe(2);
+    expect(out.lane_activity.window_start).toBe("2026-11-03T00:00:00Z");
+    expect(out.lane_activity.window_end).toBe("2026-11-07T09:10:00.000Z");
+    expect(out.lane_activity.open_pull_requests_now).toBe(78);
+    // The standing 51 is gone — not kept beside the live number, but gone.
+    expect(JSON.stringify(out)).not.toContain('"open_pull_requests_now": 51');
+    // And the input document is not mutated: the producer's copy is what it writes.
+    expect(doc.lane_activity_since_2026_11_01).toBeDefined();
+  });
+
+  it("the page's lane-activity table is rewritten from the read, with every merge in the window", () => {
+    const out = htmlRules(read("public/jewels/master-catalogue/index.html"), {
+      ...READ,
+      laneActivity: READ.laneActivity,
+    });
+    expect(out).toContain("What the other lanes shipped since the 2026-11-03 edition");
+    expect(out).toContain("PR #4053");
+    expect(out).toContain("a65ac5d622");
+    // The frozen list is not the window any more: the six merges of 2026-11-02 are gone.
+    expect(out).not.toContain("PR #3737");
+    expect(out).not.toContain("since 2026-11-01</h2>");
+  });
+
+  it("the lane-activity rule is idempotent — a producer that flaps against itself protects nothing", () => {
+    const once = htmlRules(read("public/jewels/master-catalogue/index.html"), {
+      ...READ,
+      laneActivity: READ.laneActivity,
+    });
+    const twice = htmlRules(once, { ...READ, laneActivity: READ.laneActivity });
+    expect(twice).toBe(once);
+  });
+
+  it("REFUSES when the lane-activity section is gone — a moved layout fails loudly", () => {
+    const broken = read("public/jewels/master-catalogue/index.html").replace(
+      /<h2>What the other lanes shipped since[\s\S]*?<\/tbody><\/table><\/div>/,
+      ""
+    );
+    expect(() =>
+      htmlRules(broken, { ...READ, laneActivity: READ.laneActivity })
+    ).toThrow(/lane-activity table/);
+  });
+
+  it("REFUSES a document that carries two open-pull-request numbers", () => {
+    expect(() =>
+      assertOneOpenPullRequestNumber(
+        '{"open_pull_requests": 80, "open_pull_requests_now": 51}',
+        80,
+        "fixture"
+      )
+    ).toThrow(/one document, one number/);
+    // The same number in both places is the state the guard exists to allow.
+    expect(() =>
+      assertOneOpenPullRequestNumber(
+        '{"open_pull_requests": 80, "open_pull_requests_now": 80}',
+        80,
+        "fixture"
+      )
+    ).not.toThrow();
+  });
+
+  it("REFUSES a page that shows a different open-pull-request count than the read", () => {
+    expect(() =>
+      assertOneOpenPullRequestNumberInPage(
+        "<tr><td>Open pull requests</td><td><strong>51</strong></td>",
+        80,
+        "fixture"
+      )
+    ).toThrow(/one document, one number/);
+    expect(() =>
+      assertOneOpenPullRequestNumberInPage(
+        "<tr><td>Open pull requests</td><td><strong>80</strong></td>",
+        80,
+        "fixture"
+      )
+    ).not.toThrow();
+  });
+
+  it("the check normalises the lane-activity count too, so it does not flap when a lane lands", () => {
+    const a = normalise('{"open_pull_requests": 80, "open_pull_requests_now": 78}');
+    const b = normalise('{"open_pull_requests": 71, "open_pull_requests_now": 69}');
+    expect(a).toBe(b);
+  });
+
+  it("the merge window is the edition this one supersedes, and it is NAMED", () => {
+    // A new day's edition supersedes yesterday's.
+    expect(mergeWindowStart({ edition: "2026-11-07", supersedes_edition: "2026-11-03" }, "2026-11-08")).toEqual({
+      startDate: "2026-11-07",
+      windowStart: "2026-11-07T00:00:00Z",
+      source: "the edition this one supersedes (2026-11-07)",
+    });
+    // A same-day re-read does not move the window: the published edition already
+    // supersedes an older one, and the window stays where it was.
+    expect(mergeWindowStart({ edition: "2026-11-07", supersedes_edition: "2026-11-03" }, "2026-11-07")).toEqual({
+      startDate: "2026-11-03",
+      windowStart: "2026-11-03T00:00:00Z",
+      source: "the edition this one supersedes (2026-11-03)",
+    });
+    // A document that names no edition it supersedes has an UNKNOWN window, not an empty one.
+    expect(() => mergeWindowStart({}, "2026-11-07")).toThrow(/unknown, not empty/);
+  });
+
+  it("a guard that passes VACUOUSLY is a comment, not a guard", () => {
+    // No number at all is not a document that agrees: JSON drops a key whose value is
+    // undefined, so a document that lost the count would otherwise pass the check.
+    expect(() => assertOneOpenPullRequestNumber('{"title": "x"}', 80, "fixture")).toThrow(
+      /carries no open-pull-request number/
+    );
+    expect(() => assertOneOpenPullRequestNumberInPage("<p>nothing here</p>", 80, "fixture")).toThrow(
+      /no open-pull-request row/
+    );
+    // And a live read that produced no count is not zero.
+    expect(() => assertOneOpenPullRequestNumber('{"open_pull_requests": 80}', undefined, "fixture")).toThrow(
+      /null, never 0/
+    );
+  });
+
+  it("the structural guard sees the numbers JSON would have dropped", () => {
+    const doc = { live_state: { open_pull_requests: 80 }, lane_activity: { open_pull_requests_now: 80 } };
+    expect(assertLaneActivityNumbers(doc, 80, "fixture")).toEqual({ live: 80, block: 80 });
+    // The block lost its number.
+    expect(() =>
+      assertLaneActivityNumbers({ live_state: { open_pull_requests: 80 }, lane_activity: {} }, 80, "fixture")
+    ).toThrow(/carries no open-pull-request count/);
+    // The two disagree.
+    expect(() =>
+      assertLaneActivityNumbers(
+        { live_state: { open_pull_requests: 80 }, lane_activity: { open_pull_requests_now: 51 } },
+        80,
+        "fixture"
+      )
+    ).toThrow(/one document, one number/);
   });
 
   it("subOnce requires exactly one match", () => {
