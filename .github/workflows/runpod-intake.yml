@@ -46,6 +46,7 @@ jobs:
           python3 -m unittest discover -s scripts -p test_pod_loop_supervisor.py
           python3 -m unittest discover -s scripts -p test_runpod_signing_artifact.py
           python3 -m unittest discover -s scripts -p test_resolve_runpod_trusted_bank.py
+          python3 -m unittest discover -s scripts -p test_runpod_intake_wiring.py
           python3 scripts/verify_runpod_gspc_intake.py --help > /dev/null
 
       - name: Pull the durable intake
@@ -97,33 +98,43 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/trusted-banks"
+          # The jail goldbank is pinned BY DIGEST, so it is staged under its own digest
+          # name, exactly like every other bank, and the resolver's lookup finds it the
+          # same way. A fetch failure is reported and the step CONTINUES: the jail bank
+          # is one axis's worth of runs, and the estate's design is that a run whose
+          # bank cannot be resolved is HELD and recorded, never silently staged.
           python3 - <<'PY'
           import hashlib, os, pathlib, shutil
           from huggingface_hub import hf_hub_download
 
           out_dir = pathlib.Path(os.environ["RUNNER_TEMP"]) / "trusted-banks"
-          repo_root = pathlib.Path(os.environ["GITHUB_WORKSPACE"])
-          for pattern in ("gpu-offload/kaggle-gspc-batch/banks/*.jsonl", "public/interop/banks/**/*.jsonl"):
-              for src in sorted(repo_root.glob(pattern)):
-                  if src.is_file():
-                      shutil.copy2(src, out_dir / f"{src.parent.name}__{src.name}")
-
-          # Also pull the pinned csoai/gspc-jail-goldbank rev df16e7855ff04b90fea19aa5f11f4b86cb466a47
-          jail_path = hf_hub_download(
-              repo_id="csoai/gspc-jail-goldbank",
-              repo_type="dataset",
-              filename="test.jsonl",
-              revision="df16e7855ff04b90fea19aa5f11f4b86cb466a47",
-              token=os.environ.get("HF_TOKEN") or None,
-          )
-          jail_sha = hashlib.sha256(pathlib.Path(jail_path).read_bytes()).hexdigest()
+          try:
+              jail_path = hf_hub_download(
+                  repo_id="csoai/gspc-jail-goldbank",
+                  repo_type="dataset",
+                  filename="test.jsonl",
+                  revision="df16e7855ff04b90fea19aa5f11f4b86cb466a47",
+                  token=os.environ.get("HF_TOKEN") or None,
+              )
+          except Exception as exc:
+              print(f"::warning::jail goldbank could not be fetched: {exc}")
+              print("jail-pinned runs will be HELD as NO_CONTROL_PLANE_BANK, not staged")
+              raise SystemExit(0)
+          raw = pathlib.Path(jail_path).read_bytes()
+          jail_sha = hashlib.sha256(raw).hexdigest()
           if jail_sha != "0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a":
               raise SystemExit(f"jail goldbank digest mismatch: {jail_sha}")
-          shutil.copy2(jail_path, out_dir / "gspc-jail-goldbank__test.jsonl")
+          shutil.copy2(jail_path, out_dir / f"{jail_sha}.jsonl")
           PY
-          python3 scripts/resolve_runpod_trusted_bank.py \
-            --index-out "$RUNNER_TEMP/trusted-banks/index.json" \
-            "$RUNNER_TEMP/trusted-banks"
+          # Stage every ALLOWLISTED bank from the control plane. The resolver writes
+          # each one under its own digest name, filters by the allowlist (so a bank
+          # nobody pinned can never be handed to the verifier), and reports the pins it
+          # could not materialize -- so a bank that is absent says why, instead of
+          # being reported as a run that failed.
+          python3 scripts/resolve_runpod_trusted_bank.py stage \
+            --repo-root "$GITHUB_WORKSPACE" \
+            --allowlist "$GITHUB_WORKSPACE/scripts/runpod_gspc_bank_allowlist.current.json" \
+            --out-dir "$RUNNER_TEMP/trusted-banks"
 
       - name: Verify every run independently
         run: |
@@ -148,14 +159,32 @@ jobs:
             case "$d" in */quarantine/*) echo "SKIP_QUARANTINED_PATH $d"; continue;; esac
             rel=${d#"$GITHUB_WORKSPACE/intake/"}
             trusted_bank=""
-            trusted_bank=$(python3 scripts/resolve_runpod_trusted_bank.py \
-              --index "$RUNNER_TEMP/trusted-banks/index.json" \
-              --run-dir "$d" 2>/dev/null) || {
-              held_bank=$((held_bank+1))
-              printf '%s\n' "$d" >> unmatched-trusted-bank.txt
-              printf 'HOLD_CONTROL_PLANE_BANK_ABSENT\tNO_CONTROL_PLANE_BANK\t%s\tRun bank_sha256 has no byte-identical control-plane bank in repo/HF\n' "$rel" >> intake-rejections.tsv
+            # The resolver's real CLI is `lookup`, which resolves the run's own
+            # bank_sha256 to a digest-named file in the staged directory. It exits 2
+            # when NO byte-identical control-plane bank exists -- a fact about the
+            # banks, which is recorded as a HOLD. Any OTHER non-zero exit means the
+            # resolver could not decide, which is a fact about the TOOL, and it is
+            # counted as FATAL so the job fails closed rather than publishing a
+            # verdict it did not measure. The previous call used a flag the script
+            # never had, so argparse exited 2 on EVERY run and the `||` branch below
+            # reported all of them as HOLD_CONTROL_PLANE_BANK_ABSENT -- a tool error
+            # presented as a verdict about the banks.
+            # stderr is NOT suppressed: a crash must be visible, not read as "absent".
+            rc_lookup=0
+            trusted_bank=$(python3 scripts/resolve_runpod_trusted_bank.py lookup \
+              --run-dir "$d" \
+              --trusted-banks-dir "$RUNNER_TEMP/trusted-banks") || rc_lookup=$?
+            if [ "$rc_lookup" -ne 0 ]; then
+              if [ "$rc_lookup" -eq 2 ]; then
+                held_bank=$((held_bank+1))
+                printf '%s\n' "$d" >> unmatched-trusted-bank.txt
+                printf 'HOLD_CONTROL_PLANE_BANK_ABSENT\tNO_CONTROL_PLANE_BANK\t%s\tRun bank_sha256 has no byte-identical control-plane bank in repo/HF\n' "$rel" >> intake-rejections.tsv
+              else
+                fatal=$((fatal+1))
+                echo "FATAL_RESOLVER rc=$rc_lookup $d :: the resolver could not decide this run safely"
+              fi
               continue
-            }
+            fi
             rc=0
             out=$(python3 scripts/verify_runpod_gspc_intake.py \
                  --run-dir "$d" \
