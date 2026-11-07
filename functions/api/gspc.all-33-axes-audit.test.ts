@@ -733,7 +733,7 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
     expect(rec144.receipts_sha256).toMatch(/^[0-9a-f]{64}$/);
   });
 
-  it("aligns across all 8 GSPC delivery gates, 6 MEOK completion gates, @csoai/layer0@0.2.1, and Public Watchdog working groups on master", () => {
+  it("retains delivery source artifacts while presenting Watchdog and human referrals as local proposals", () => {
     const wgCatalogPath = new URL("../../public/working-groups/catalog.json", import.meta.url);
     const wgConfigPath = new URL("../../council-os/working-groups.json", import.meta.url);
     const inspectTaskPath = new URL("../../harness/bench/inspect_task.py", import.meta.url);
@@ -756,11 +756,16 @@ describe("GSPC all-axes full-depth audit & cross-surface parity", () => {
 
     const myResultsHtml = readFileSync(myResultsPath, "utf8");
     expect(myResultsHtml).toContain("Council Space (Council City 40v40 / Coliseum 4,760 Rounds)");
-    expect(myResultsHtml).toContain("Universal Public Watchdog Layer-0 Incident Harness (12 Global Databases, n=36)");
+    expect(myResultsHtml).toContain("Draft Watchdog source-mapping example");
+    expect(myResultsHtml).toContain('href="/interop/universal-watchdog-incident-harness-v1.json"');
+    expect(myResultsHtml).toContain('intake_state:"LOCAL_EXAMPLE_ONLY"');
+    expect(myResultsHtml).toContain('dispatch_performed:false');
+    expect(myResultsHtml).toContain('human_acceptance:"NOT_RECORDED"');
+    expect(myResultsHtml).not.toContain("Universal Public Watchdog Layer-0 Incident Harness (12 Global Databases, n=36)");
     expect(myResultsHtml).not.toContain("Sovereign Space");
   });
 
-  it("universal-watchdog-incident-harness-v1.json measures 12 global incident databases (n=36), Candidate Axis 34 (public-incident-vigilance), and maps all 33 canonical axes to MEOK Specialists + 7 Working Groups + WG-SAFE Charter + 6 HITL lanes", () => {
+  it("preserves the retained Watchdog proposal fixture, its legacy count fields and mirror digest", () => {
     const whPath = new URL("../../public/interop/universal-watchdog-incident-harness-v1.json", import.meta.url);
     const hfWhPath = new URL("../../spaces/gspc-board/universal-watchdog-incident-harness-v1.json", import.meta.url);
     expect(existsSync(whPath)).toBe(true);

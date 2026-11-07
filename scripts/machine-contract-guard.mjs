@@ -70,7 +70,15 @@ async function get(url) {
   let lastErr;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      const r = await fetch(url, { headers: { "user-agent": UA }, redirect: "follow" });
+      // A CDN edge copy is not the site's current answer. On 2026-11-02 this sweep reported the
+      // signed root as 77.7 h stale while origin/master served a fresh one — the edge had an older
+      // object. Every request now asks for a revalidated copy; the assertion is unchanged, only the
+      // bytes it is asserted against.
+      const bust = url.includes("?") ? "&" : "?";
+      const r = await fetch(`${url}${bust}_cb=${Date.now()}`, {
+        headers: { "user-agent": UA, "cache-control": "no-cache", pragma: "no-cache" },
+        redirect: "follow",
+      });
       if (r.status < 500 || attempt === 2) {
         const body = await r.text();
         return { status: r.status, body };
@@ -139,38 +147,33 @@ try {
 } catch (e) { fail(`/.well-known/did.json fetch error: ${e.message}`); }
 
 // 3. Banned-string sweep over the machine JSON surfaces.
-// /api/corrections is the public ledger of past corrections, and a correction's job is to
-// QUOTE what was wrong — old_values, what_was_wrong, timing_evidence and how_caught carry
-// the retired internal codenames verbatim, labelled "quoted, not claimed". The HTML
-// brand-gate has allowed exactly this on the corrections surfaces since its allowOn rules
-// (scripts/brand-gate.mjs); the machine sweep now honours the same line: those history
-// fields are stripped before the scan, so a NEW leak anywhere else on the payload — title,
-// summary, or a fresh field — still goes red.
-const HISTORY_FIELDS = new Set(["old_values", "old_value", "what_was_wrong", "timing_evidence", "how_caught"]);
-function stripHistoryQuotes(value) {
-  if (Array.isArray(value)) return value.map(stripHistoryQuotes);
-  if (value && typeof value === "object") {
-    const out = {};
-    for (const [k, v] of Object.entries(value)) out[k] = HISTORY_FIELDS.has(k) ? null : stripHistoryQuotes(v);
-    return out;
-  }
-  return value;
-}
-for (const path of ["/api/gspc", "/api/reported", "/api/regulation", "/api/corrections", "/api/cross", "/.well-known/agent.json", "/.well-known/agent-card.json", "/.well-known/scitt.json"]) {
+// /api/corrections is exempt from this sweep, and that is the HTML brand-gate's own rule
+// carried to the machine surfaces: scripts/brand-gate.mjs allows banned display strings on
+// the corrections/refutation/retraction pages via its allowOn rules, because the ledger's
+// JOB is to quote what was wrong. A field-level exemption was tried first (2026-11-02:
+// strip old_values/what_was_wrong/timing_evidence/how_caught) and lasted one day — the
+// live ledger legitimately carries the same quotes in new_values and open_items too, and
+// every future entry shape would re-break a field list. The whole surface is a history
+// record; the HTTP-200 and JSON-validity checks below still apply to it, and every other
+// swept surface stays fully in scope.
+for (const path of ["/api/gspc", "/api/reported", "/api/regulation", "/api/cross", "/.well-known/agent.json", "/.well-known/agent-card.json", "/.well-known/scitt.json"]) {
   try {
     const { status, body } = await get(HOST + path);
     if (status !== 200) { fail(`${path} returned HTTP ${status}`); continue; }
-    let text = body;
-    if (path === "/api/corrections") {
-      try { text = JSON.stringify(stripHistoryQuotes(JSON.parse(body))); }
-      catch { /* not JSON — scan as-is, the sweep stays fail-closed */ }
-    }
-    const scan = text.replace(EXEMPT, "\0alias\0").toLowerCase();
+    const scan = body.replace(EXEMPT, "\0alias\0").toLowerCase();
     const hits = BANNED.filter((s) => scan.includes(s));
     if (hits.length) fail(`${path} carries banned string(s): ${hits.map((h) => JSON.stringify(h)).join(", ")}`);
     else pass(`${path} clean of banned strings`);
   } catch (e) { fail(`${path} fetch error: ${e.message}`); }
 }
+try {
+  const { status, body } = await get(HOST + "/api/corrections");
+  if (status !== 200) fail(`/api/corrections returned HTTP ${status}`);
+  else {
+    try { JSON.parse(body); pass(`/api/corrections 200 + parses as JSON (exempt from the banned-string sweep: history-quoting ledger, per the brand-gate allowOn precedent)`); }
+    catch { fail(`/api/corrections is not valid JSON`); }
+  }
+} catch (e) { fail(`/api/corrections fetch error: ${e.message}`); }
 
 // 4. feed.xml: 200 + well-formed (balanced <rss>/<channel>).
 try {

@@ -1,8 +1,8 @@
 {
  "schema": "csoai.master-catalogue/0.1",
  "title": "CSOAI — Master Catalogue of All Jewels",
- "edition": "2026-11-02",
- "published_at": "2026-11-02T07:16:04.980Z",
+ "edition": "2026-11-07",
+ "published_at": "2026-11-07T06:09:35.809Z",
  "page": "https://councilof.ai/jewels/master-catalogue/",
  "what_this_is": "The estate’s master catalogue of every jewel, state-checked, with the state table repaired at the source and the board read live.",
  "what_this_is_not": [
@@ -168,7 +168,7 @@
   ]
  },
  "live_state": {
-  "read_at": "2026-11-02T07:16:05.067Z",
+  "read_at": "2026-11-07T06:09:35.809Z",
   "board": {
    "url": "https://councilof.ai/api/gspc",
    "http": 200,
@@ -176,19 +176,8 @@
    "measured_axes": 34,
    "unmeasured_axes": 0,
    "public_count": "34 axes · 34 measured",
-   "separation": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED"
-  },
-  "claim_maintenance_axis": {
-   "axis": "claim-maintenance",
-   "status": "MEASURED",
-   "kind": "measured-subject",
-   "method": "claim-maintenance v0.2",
-   "method_sha": "32470d102112154b14a4d5530d71d7a30ecc2acdc5cd8c906c21f672b1deeef7",
-   "bank": "public/interop/claim-maintenance-wave-2026-10-28.json",
-   "bank_sha256": "a62b017a9081b817613c03887c3c6690597a2016ea175f9d95c211d593db0877",
-   "facts_as_of": "2026-10-28T06:05:00Z",
-   "n": 174,
-   "named_in_the_corrections_ledger": false
+   "separation": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
+   "board_count_source": "derived from this commit's /api/gspc (functions/api/gspc.ts, computed offline by scripts/surface/commit-board.mjs; sha256 5ec3c714c943c50cb863065ebb0b5dbc2ddecb1dbf30960b56b0d337a62ee4e1) by scripts/surface/rebind-catalogue-live-state.mjs"
   },
   "unmeasured_axes": [],
   "public_root": {
@@ -196,38 +185,43 @@
    "http": 200,
    "card_count": 428,
    "as_of": "2026-11-01T15:09:42Z",
-   "merkle_root": "4e57607854bea40122c738aa83bbcfcd0d7bd7461add1683af4ee011e1e08aa0"
+   "merkle_root": "4e57607854bea40122c738aa83bbcfcd0d7bd7461add1683af4ee011e1e08aa0",
+   "count_digest": "ef761eb47f0c3f0b520f0bf5210ba2aaae3385265f4231c4552d14c1a2a0d107"
   },
   "corrections_ledger": {
    "url": "https://councilof.ai/api/corrections",
    "http": 200,
-   "entries": 93
+   "entries": 93,
+   "count_digest": "e6f32133e245440619608c3401dc56a77fb7993645da2d229232d2f8c2bac468"
   },
   "x402_catalogue": {
    "url": "https://councilof.ai/api/x402",
    "http": 200,
-   "resources": 30
+   "resources": 30,
+   "count_digest": "c7c4466e9d05ba27574588e7219097ea468bbbc72a74145d80265ea0268a0841"
   },
   "agent_skills": {
    "url": "https://councilof.ai/.well-known/agent-skills/index.json",
    "http": 200,
-   "published": 14,
+   "published": 15,
    "names": [
-    "gspc-board",
-    "east-west-crosswalk",
-    "card-status-link",
-    "benchmark-quality-register",
     "article50-detect",
-    "eu-ai-act-screen",
-    "x402-discovery",
+    "axis-specialist",
+    "benchmark-quality-register",
+    "card-status-link",
+    "east-west-crosswalk",
     "estate-index",
+    "eu-ai-act-screen",
+    "evidence-bundle",
+    "evidence-delivery",
+    "framework-readiness",
+    "gspc-board",
+    "gspc-route",
     "measurement-capsules",
     "server-evidence",
-    "evidence-bundle",
-    "gspc-route",
-    "evidence-delivery",
-    "axis-specialist"
-   ]
+    "x402-discovery"
+   ],
+   "count_digest": "75f9b604d939ccaec324d5037d56684da3b95be63b85f35fc0609dac0dc7e954"
   },
   "mechanism_coverage": {
    "url": "https://councilof.ai/mechanism/coverage.json",
@@ -237,7 +231,8 @@
     "RELATED_MEASURE": 12,
     "CROSSWALK_ONLY": 38,
     "HASH_ONLY": 366
-   }
+   },
+   "count_digest": "fedf1c0c20cca92fbc9cfdc7df9ca0591450922fd79df610c00e3a6236e262b8"
   },
   "claim_maintenance_register": {
    "url": "https://councilof.ai/spec/claim-maintenance/register.json",
@@ -250,9 +245,10 @@
     "CLAIM_MEASURED": 33,
     "UNMEASURED": 39,
     "UNCHECKABLE": 26
-   }
+   },
+   "count_digest": "d0d35d06220a5b0654882282091f21eadbdca67c8263b1af514993dd622e0c53"
   },
-  "open_pull_requests": 51
+  "open_pull_requests": 80
  },
  "counts": {
   "jewel_rows": 130,
@@ -4186,5 +4182,7 @@
   "https://councilof.ai/claims-register/",
   "https://councilof.ai/interop/subject-axis-live-20261027/README.md",
   "https://councilof.ai/jewels/master-catalogue/index.json"
- ]
+ ],
+ "supersedes_edition": "2026-11-03",
+ "edition_written_by": "scripts/surface/rebind-catalogue-live-state.mjs"
 }

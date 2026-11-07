@@ -398,7 +398,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.3+185c1d60ebf3",
+    "version": "0.3+77fd6ecdfa87",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Operations carrying x-payment-info have a paid mode: request their x-csoai.door URL to select it. Without payment, that mode answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters alone may select a free view on mixed-mode operations. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -3131,7 +3131,7 @@
     },
     "/api/hitl": {
       "get": {
-        "description": "The operator token, from the header.",
+        "description": "Public oversight state, live-board knowledge checks, challenges, and decision records. Recording a decision requires a configured shared operator token. A matching answer and a caller-supplied operator label do not establish identity, human presence, professional competence, or execution authority.",
         "operationId": "get__api_hitl",
         "responses": {
           "200": {
@@ -3142,10 +3142,10 @@
           }
         },
         "security": [],
-        "summary": "The operator token, from the header."
+        "summary": "Public oversight state, live-board knowledge checks, challenges, and decision records. Recording a decision requires a configured shared operator token. A matching answer and a caller-supplied\u2026"
       },
       "post": {
-        "description": "The operator token, from the header.",
+        "description": "Public oversight state, live-board knowledge checks, challenges, and decision records. Recording a decision requires a configured shared operator token. A matching answer and a caller-supplied operator label do not establish identity, human presence, professional competence, or execution authority.",
         "operationId": "post__api_hitl",
         "responses": {
           "200": {
@@ -3156,7 +3156,7 @@
           }
         },
         "security": [],
-        "summary": "The operator token, from the header."
+        "summary": "Public oversight state, live-board knowledge checks, challenges, and decision records. Recording a decision requires a configured shared operator token. A matching answer and a caller-supplied\u2026"
       }
     },
     "/api/hitl/challenge": {
@@ -3752,6 +3752,22 @@
         "security": [],
         "summary": "",
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/model-lifecycle": {
+      "get": {
+        "description": "GET /api/model-lifecycle \u2014 upstream availability of a model family, joined to the measurement this estate holds for it.",
+        "operationId": "get__api_model-lifecycle",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/model-lifecycle \u2014 upstream availability of a model family, joined to the measurement this estate holds for it."
       }
     },
     "/api/momentum": {
@@ -9114,52 +9130,32 @@
     },
     "/api/subscribe": {
       "get": {
-        "description": "",
+        "description": "POST /api/subscribe \u2014 the newsletter signup behind the homepage daily-report band and the footer email capture.",
         "operationId": "get__api_subscribe",
         "responses": {
-          "501": {
+          "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "accepted": false,
-                  "endpoint": "/api/subscribe",
-                  "persisted": false,
-                  "schema": "csoai.capability-state/0.1",
-                  "signed": false,
-                  "state": "NOT_IMPLEMENTED"
-                }
-              }
+              "application/json": {}
             },
-            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+            "description": "OK"
           }
         },
         "security": [],
-        "summary": "",
-        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+        "summary": "POST /api/subscribe \u2014 the newsletter signup behind the homepage daily-report band and the footer email capture."
       },
       "post": {
-        "description": "",
+        "description": "POST /api/subscribe \u2014 the newsletter signup behind the homepage daily-report band and the footer email capture.",
         "operationId": "post__api_subscribe",
         "responses": {
-          "501": {
+          "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "accepted": false,
-                  "endpoint": "/api/subscribe",
-                  "persisted": false,
-                  "schema": "csoai.capability-state/0.1",
-                  "signed": false,
-                  "state": "NOT_IMPLEMENTED"
-                }
-              }
+              "application/json": {}
             },
-            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+            "description": "OK"
           }
         },
         "security": [],
-        "summary": "",
-        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+        "summary": "POST /api/subscribe \u2014 the newsletter signup behind the homepage daily-report band and the footer email capture."
       }
     },
     "/api/summary": {
@@ -10801,7 +10797,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 140,
+    "public_operations": 143,
     "quarantined": [
       {
         "buyable": false,
@@ -10817,7 +10813,7 @@
       "well_known": "csoai.x402/0.2"
     },
     "scheme": "exact",
-    "unauthenticated_facades": 28,
+    "unauthenticated_facades": 26,
     "well_known": "https://councilof.ai/.well-known/x402.json"
   }
 }

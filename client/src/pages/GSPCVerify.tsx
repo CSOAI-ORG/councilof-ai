@@ -56,7 +56,24 @@ async function pickPublishedCard(signal?: AbortSignal): Promise<PublishedRef> {
 }
 
 /** Deep-link actions for a ?card= record: copy this page's link, download the exact bytes, re-run the check. */
-export function LinkedCardActions({ href }: { href: string }) {
+function DownloadRecord({ file, name }: { file: Blob; name: string }) {
+  const [failed, setFailed] = useState(false);
+  const save = () => {
+    let url: string | undefined;
+    let a: HTMLAnchorElement | undefined;
+    try {
+      url = URL.createObjectURL(file);
+      a = document.createElement("a"); a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); setFailed(false);
+    } catch { setFailed(true); }
+    finally { a?.remove(); if (url) { const captured = url; setTimeout(() => URL.revokeObjectURL(captured), 30_000); } }
+  };
+  return <><button type="button" data-testid="linked-download" onClick={save}
+    className="inline-flex min-h-[44px] items-center rounded-lg border border-emerald-400/40 px-3 py-2 font-semibold text-emerald-100 hover:bg-white/5">Save loaded JSON</button>
+    {failed && <span role="alert">Download unavailable. Your record is still in the box.</span>}</>;
+}
+
+export function LinkedCardActions({ href, file }: { href: string; file: Blob }) {
   const [copied, setCopied] = useState<"" | "ok" | "fail">("");
   const btn = "inline-flex min-h-[44px] items-center rounded-lg border border-emerald-400/40 px-3 py-2 font-semibold text-emerald-100 hover:bg-white/5";
   const name = href.split("/").pop() || "card.json";
@@ -67,7 +84,7 @@ export function LinkedCardActions({ href }: { href: string }) {
       }}>
         {copied === "ok" ? "Link copied" : copied === "fail" ? "Copy failed: use the address bar" : "Copy link"}
       </button>
-      <a className={btn} href={href} download={name} data-testid="linked-download">Download the record</a>
+      <DownloadRecord file={file} name={name} />
       <a className={btn} href={verifyCardHref(href)} data-testid="linked-reverify">Verify again</a>
     </div>
   );
@@ -84,17 +101,18 @@ export default function GSPCVerify() {
   // ?card=<url>: the record a board row pointed at. Loaded unaltered and verified at once, so
   // the reader never pastes JSON. Refusals and load failures are stated, never a silent pass.
   const [linked, setLinked] = useState<
-    | { state: "loading" | "loaded"; href: string; bytes?: number; sha256?: string }
+    | { state: "loading"; href: string }
+    | { state: "loaded"; href: string; bytes: number; sha256?: string; file: Blob }
     | { state: "refused" | "failed"; href: string; reason: string }
     | null
   >(null);
-  const [publicReopenHref, setPublicReopenHref] = useState<string | null>(null);
+  const [publicExample, setPublicExample] = useState<{ href: string; file: Blob } | null>(null);
   const linkedRequest = useRef<AbortController | null>(null);
   const clearLinkedSource = useCallback(() => {
     linkedRequest.current?.abort();
     linkedRequest.current = null;
     setLinked(null);
-    setPublicReopenHref(null);
+    setPublicExample(null);
     setTryBusy(false);
     setTryErr(null);
   }, []);
@@ -134,14 +152,14 @@ export default function GSPCVerify() {
         if (!r.ok) throw new Error(`GET ${p.href} → HTTP ${r.status}`);
         const buf = await r.arrayBuffer();
         if (buf.byteLength > CARD_PARAM_MAX_BYTES) throw new Error(`the record is ${buf.byteLength} bytes, over the ${CARD_PARAM_MAX_BYTES}-byte limit for a linked card`);
-        const raw = new TextDecoder().decode(buf);
+        const raw = new TextDecoder("utf-8", {fatal: true}).decode(buf);
         let digest: string | undefined;
         try {
           const d = await crypto.subtle.digest("SHA-256", buf);
           digest = [...new Uint8Array(d)].map((x) => x.toString(16).padStart(2, "0")).join("");
         } catch { /* no WebCrypto: the verifier below says UNCHECKABLE itself */ }
         if (ac.signal.aborted) return;
-        setLinked({ state: "loaded", href: p.href, bytes: buf.byteLength, sha256: digest });
+        setLinked({ state: "loaded", href: p.href, bytes: buf.byteLength, sha256: digest, file: new Blob([buf], {type: "application/json"}) });
         setAutoVerify(true);
         setSeed(raw);
         setSeedNonce((n) => n + 1);
@@ -165,7 +183,7 @@ export default function GSPCVerify() {
       const ref = await choose(ac.signal);
       const example = await loadPublicCardExample(ref, window.location.origin, ac.signal);
       if (ac.signal.aborted || linkedRequest.current !== ac) return;
-      setPublicReopenHref(example.href);
+      setPublicExample({href: example.href, file: example.file});
       setAutoVerify(false);
       setSeed(example.raw);
       setSeedNonce((n) => n + 1);
@@ -266,8 +284,8 @@ export default function GSPCVerify() {
             Every check ends in one of three results: <strong>VALID</strong> (the completed record
             checks passed), <strong>INVALID</strong> (a check failed, and it says which), or{" "}
             <strong>UNCHECKABLE</strong> (the check could not be completed). Could-not-check is never
-            reported as a failure. Read the signature result separately: a hash-only VALID result is
-            labelled unsigned and does not prove who wrote the record.
+            reported as a failure. VALID requires a successful signature check; a matching hash
+            alone is insufficient. Read the signature result and its stated limitations.
           </p>
           <details className="mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-white/[0.035] px-4 py-3">
             <summary className="cursor-pointer text-sm font-semibold text-emerald-200">
@@ -380,13 +398,13 @@ export default function GSPCVerify() {
               {tryBusy ? "Loading…" : "Try a governance card"}
             </button>
             <span className="text-[12px] text-emerald-100/65">
-              Each loads one published card into the box, unaltered. Both are free.
+              The first button reads a published card. The governance example is a fixed historical record, not a new measurement. Both are free.
             </span>
           </div>
-          {publicReopenHref && (
+          {publicExample && (
             <p className="mt-3 text-[13px] text-emerald-100/80">
               <a
-                href={publicReopenHref}
+                href={publicExample.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-testid="public-card-reopen"
@@ -394,7 +412,8 @@ export default function GSPCVerify() {
               >
                 Reopen public record
               </a>{" "}
-              in a new tab. Share that tab&apos;s address to let someone check the published record again.
+              in a new tab to check the current publication, or keep exactly what was loaded here. {" "}
+              <DownloadRecord file={publicExample.file} name="gspc-measurement-card.json" />
             </p>
           )}
           {linked && (
@@ -410,7 +429,7 @@ export default function GSPCVerify() {
             >
               <p className="font-semibold">
                 {linked.state === "loading" && "Loading the linked record…"}
-                {linked.state === "loaded" && "Linked record loaded unaltered and checked below."}
+                {linked.state === "loaded" && "Linked record loaded. Read the verification result below."}
                 {linked.state === "refused" && "Linked record not loaded — nothing was checked."}
                 {linked.state === "failed" && "Linked record could not be loaded — nothing was checked."}
               </p>
@@ -420,7 +439,7 @@ export default function GSPCVerify() {
                   {linked.bytes} bytes{linked.sha256 ? ` · sha256 ${linked.sha256}` : ""}
                 </p>
               )}
-              {linked.state === "loaded" && <LinkedCardActions href={linked.href} />}
+              {linked.state === "loaded" && <LinkedCardActions href={linked.href} file={linked.file} />}
               {linked.state === "loaded" && (
                 <details className="mt-3" data-testid="linked-cite">
                   <summary className="flex min-h-[44px] cursor-pointer items-center font-semibold">Cite this record</summary>

@@ -106,6 +106,20 @@ function visible(html) {
 /** Redirected to an error page? The FINAL url is often the plainest evidence there is. */
 const ERROR_PATH = /page-not-found|\/404|\/error|not-?found/i;
 
+// Keep the destination that was measured, without publishing the authority in a signed redirect.
+function publicRedirectUrl(value) {
+  const url = new URL(value);
+  const signed = [...url.searchParams.keys()].some(key =>
+    /^(?:x-amz-(?:credential|signature|security-token)|awsaccesskeyid)$/i.test(key)
+  );
+  if (!signed) return value;
+  url.search = "";
+  url.hash = "";
+  url.username = "";
+  url.password = "";
+  return url.href;
+}
+
 async function probe(t) {
   const started = Date.now();
   let status = 0, contentType = "", body = null, text = "", error = null, finalUrl = t.url;
@@ -117,7 +131,10 @@ async function probe(t) {
     text = await r.text();
     if (/json/.test(contentType)) { try { body = JSON.parse(text); } catch { body = null; } }
   } catch (e) {
-    error = `${e.name}: ${e.message}`.slice(0, 120);
+    const message = String(e.message).replace(/https?:\/\/[^\s<>"']+/gi, value => {
+      try { return publicRedirectUrl(value); } catch { return "[invalid URL]"; }
+    });
+    error = `${e.name}: ${message}`.slice(0, 120);
   }
   // THE CHECK THAT CAUGHT ME. My first cut scanned the first 4000 characters of raw HTML for
   // "404" or "page not found". The EC page carries neither there — it is <head> boilerplate —
@@ -140,7 +157,7 @@ async function probe(t) {
     url: t.url,
     kind: t.kind,
     http_status: status || null,
-    final_url: finalUrl !== t.url ? finalUrl : null,
+    final_url: finalUrl !== t.url ? publicRedirectUrl(finalUrl) : null,
     redirected_to_error_page: redirectedToError || looksLikeErrorPage || null,
     content_type: contentType || null,
     bytes: text.length || 0,

@@ -129,5 +129,5 @@ describe("cardVerify — the browser twin of public/signed/verify-card.mjs", () 
         disagree.push(`${file}: browser=${browser.state} published=${published.state}`);
     }
     expect(disagree).toEqual([]);
-  });
+  }, Math.max(30_000, millFiles.length * 20)); // two verdicts per card across the whole sprayed corpus
 });

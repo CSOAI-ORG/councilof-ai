@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conflicts of interest — Council of AI</title>
+<meta name="description" content="Who decides, what they hold, what they may not decide, and how a conflict is declared, recorded and enforced.">
+<style>
+:root{--ink:#12161c;--mut:#5b6572;--line:#e3e7ec;--bg:#fbfcfd;--acc:#0b6b53;--warn:#8a4b00}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif}
+main{max-width:820px;margin:0 auto;padding:56px 24px 96px}
+h1{font-size:2rem;line-height:1.2;margin:0 0 8px;letter-spacing:-.02em}
+h2{font-size:1.15rem;margin:40px 0 12px}
+.lede{color:var(--mut);font-size:1.05rem;margin:0 0 28px}
+.meta{color:var(--mut);font-size:.86rem;border-top:1px solid var(--line);padding-top:14px;margin-top:48px}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.94rem}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
+code{background:#eef1f4;padding:1px 5px;border-radius:4px;font-size:.9em}
+.note{border-left:3px solid var(--acc);padding:10px 16px;background:#f2f8f6;margin:18px 0}
+.stop{border-left:3px solid var(--warn);padding:10px 16px;background:#fdf6ec;margin:18px 0}
+a{color:var(--acc)}
+ul{padding-left:22px}
+</style>
+</head>
+<body>
+<main>
+<h1>Conflicts of interest</h1>
+<p class="lede">Every state we publish about another organisation is decided by a person. This page says who, what they hold, what they are excluded from, and how a conflict is recorded when it appears.</p>
+
+<div class="note">
+<strong>Rule.</strong> No one may adjudicate a claim, a measurement or a complaint concerning an organisation that employs them, funds them, or that they advise. Where that applies, the case is reassigned and both the conflict and the reassignment are recorded here.
+</div>
+
+<h2>The register</h2>
+<p>The authoritative record is machine-readable: <a href="/governance/conflicts-register.json"><code>/governance/conflicts-register.json</code></a>. It uses the same status vocabulary as the <a href="/governance/committee-registry.json">committee registry</a>:</p>
+<table>
+<tr><th>Status</th><th>Means</th></tr>
+<tr><td><code>VERIFIED</code></td><td>Appointment or declaration confirmed from a record we can point to.</td></tr>
+<tr><td><code>DECLARED</code></td><td>Declared by the person, not yet independently confirmed.</td></tr>
+<tr><td><code>OPEN_SLOT</code></td><td>The role exists and is unfilled. Published as unfilled rather than quietly omitted.</td></tr>
+<tr><td><code>RECUSED</code></td><td>Holds a relevant interest and is excluded from the decision.</td></tr>
+<tr><td><code>SUPERSEDED</code></td><td>Replaced by a later entry.</td></tr>
+</table>
+
+<div class="stop">
+<strong>Current status, stated plainly.</strong> Adjudication roles are <code>OPEN_SLOT</code>: no independent adjudicator has been appointed and no declaration has been collected. The register is published in that state rather than left blank, because "we have not appointed anyone" and "we have appointed someone with no conflicts" are different facts and only one of them is true.
+</div>
+
+<h2>What must be declared</h2>
+<ul>
+<li><strong>Employment and office</strong> — current employer, directorships, and any role in a standards body, alliance or committee that we measure or report on.</li>
+<li><strong>Financial interests</strong> — equity, options, or fees from an organisation whose claims or measurements you adjudicate.</li>
+<li><strong>Funding</strong> — grants, sponsorship or gifts received by you or your organisation from a subject.</li>
+<li><strong>Advocacy</strong> — paid or unpaid advisory roles, expert-witness work, or public campaigning for or against a subject.</li>
+<li><strong>Personal</strong> — close family relationships with anyone in the categories above.</li>
+</ul>
+<p>Declare what a reasonable reader would want to know. The test is not "does this legally disqualify me" but "would a subject be surprised to learn it after the decision".</p>
+
+<h2>When declarations are made</h2>
+<table>
+<tr><th>Event</th><th>Deadline</th></tr>
+<tr><td>On appointment</td><td>Before the first decision</td></tr>
+<tr><td>Annually</td><td>Within 30 days of the anniversary of appointment</td></tr>
+<tr><td>On change</td><td>Within 10 working days of the change</td></tr>
+<tr><td>Per case</td><td>At the start of any adjudication, a case-specific check</td></tr>
+</table>
+
+<h2>How a conflict is handled</h2>
+<ol>
+<li>The person declares it, in writing, to the register.</li>
+<li>The case is reassigned to someone with no relevant interest; the reassignment is recorded with a reason.</li>
+<li>If no unconflicted adjudicator is available, the decision is deferred and published as <code>DEFERRED — no unconflicted adjudicator</code>. It is not decided by the conflicted person.</li>
+<li>The declaration stays on the register for as long as the interest exists, and is retained after it ends.</li>
+</ol>
+
+<h2>What we do not treat as a conflict</h2>
+<ul>
+<li>Having read, cited or criticised an organisation's public work.</li>
+<li>Being a member of a standards body we report on, provided the role is declared.</li>
+<li>Being measured by us yourself — though you then cannot adjudicate your own result.</li>
+</ul>
+
+<h2>Raise a concern</h2>
+<p>If you believe an undisclosed interest affected a decision, use the <a href="/complaints/">complaints route</a> and mark it <strong>independence</strong>. It is handled by someone with no involvement in the original decision, and the outcome appears in the quarterly aggregate like every other complaint.</p>
+
+<div class="meta">
+Part of the <a href="/standards/house-standard/">House Standard</a>. Companion records: <a href="/governance/conflicts-register.json">conflicts-register.json</a> · <a href="/governance/authority-model.json">authority-model.json</a> · <a href="/governance/committee-registry.json">committee-registry.json</a>. Measurement is not certification.
+</div>
+</main>
+</body>
+</html>

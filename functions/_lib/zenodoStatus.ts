@@ -13,7 +13,7 @@
  * Change ZENODO_ACCOUNT_STATE here (and re-run the probe that writes zenodo-status.json) when the
  * appeal is decided. Never flip it without an anonymous doi.org resolve returning 200.
  */
-export const ZENODO_NOTICE = "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.";
+export const ZENODO_NOTICE = "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json).";
 export const ZENODO_UNAVAILABLE_SINCE = "2026-09-29T15:47Z";
 export const ZENODO_STATUS_URL = "https://councilof.ai/interop/zenodo-status.json";
 export const ZENODO_ACCOUNT_STATE: "UNAVAILABLE" | "AVAILABLE" = "UNAVAILABLE";

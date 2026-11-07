@@ -197,6 +197,9 @@ export function v1MessageTo03(m: Json): Json {
 const record = (v: unknown): Json | null =>
   v && typeof v === "object" && !Array.isArray(v) ? (v as Json) : null;
 const str = (v: unknown): string | null => (typeof v === "string" && v ? v : null);
+// framework-readiness calls the SAME module the MCP tool framework_readiness calls, so the two
+// doors cannot disagree about the checklist (the estate's no-second-implementation rule).
+import { readinessResult, READINESS_FRAMEWORK_IDS } from "../mcp/_readiness";
 const numOrNull = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
 
 export const SKILL_IDS = [
@@ -214,6 +217,7 @@ export const SKILL_IDS = [
   "gspc-route",
   "evidence-delivery",
   "axis-specialist",
+  "framework-readiness",
 ] as const;
 type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
@@ -491,6 +495,25 @@ function validateSkillInput(selection: SkillSelection): string | null {
     }
     return null;
   }
+  // framework-readiness: the same contract the MCP tool's inputSchema declares — framework
+  // required from the shared enum, sector and role optional free words.
+  if (skill === "framework-readiness") {
+    if (!exactKeys(input, ["framework"], ["sector", "role"])) {
+      return 'framework-readiness input is {"framework":<one of ' + READINESS_FRAMEWORK_IDS.join("|") + ">} with optional sector and role";
+    }
+    const fw = str(input.framework);
+    if (!fw || !READINESS_FRAMEWORK_IDS.includes(fw)) {
+      return "framework-readiness framework must be one of: " + READINESS_FRAMEWORK_IDS.join(", ");
+    }
+    for (const opt of ["sector", "role"] as const) {
+      const v = input[opt];
+      if (v === undefined) continue;
+      if (typeof v !== "string" || v.length > 64) {
+        return `framework-readiness ${opt} must be a string of at most 64 characters`;
+      }
+    }
+    return null;
+  }
   // The measurement-capsule readers: the same module (functions/_lib/measurementCapsule.ts) as the
   // MCP tools measurement_index / verify_capsule / server_evidence, so the doors cannot disagree.
   if (skill === "measurement-capsules") {
@@ -657,6 +680,29 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
   data: unknown;
 }> {
   const { skill, input } = selection;
+  // framework-readiness is computed IN-PROCESS from the same module the MCP tool calls — the
+  // deterministic checklist needs no fetch, so the answer cannot drift from the door's.
+  if (skill === "framework-readiness") {
+    const r = readinessResult(input as Record<string, unknown>);
+    const source = "functions/mcp/_readiness.ts (the module the MCP tool framework_readiness calls)";
+    return {
+      text: [
+        `${skill}: computed in-process from ${source}.`,
+        "A checklist is preparation, never a determination: nothing here states or implies the caller's status under any framework. Not legal advice.",
+        REGISTER,
+      ].join("\n"),
+      data: {
+        state: "DELIVERED_SOURCE",
+        skill,
+        source,
+        as_of: new Date().toISOString(),
+        register: REGISTER,
+        source_attribution:
+          "Direct same-source output, computed in-process from the shared module; not independently verified or promoted.",
+        payload: r.payload ?? { state: "BAD_ARGUMENTS", error: r.error, not_a_certification: true },
+      },
+    };
+  }
   if (skill === "measurement-capsules" || skill === "server-evidence") {
     const payload =
       skill === "server-evidence"

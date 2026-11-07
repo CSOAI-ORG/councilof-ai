@@ -18,8 +18,8 @@ const rows: { data: string; where: string; basis: string; kept: string }[] = [
     kept: "No automatic expiry. We keep records for the applicable contract, dispute and accounting period. UK company-tax records are normally kept for six years after the end of the accounting period and may need to be kept longer. An erasure request does not override a legal duty to retain a record.",
   },
   {
-    data: "Contact and lead submissions: the email address, name, subject, message, and any report or service reference you enter.",
-    where: "functions/api/contact.ts and lead.ts write them to KV (LEADS). Measurement-intake requests (functions/api/evidence-intake.ts) are stored the same way.",
+    data: "Contact and lead submissions, and newsletter signups: the email address, name, subject, message, any report or service reference you enter, and (for signups) the page that captured the address.",
+    where: "functions/api/contact.ts, lead.ts and subscribe.ts write them to KV (LEADS). Measurement-intake requests (functions/api/evidence-intake.ts) are stored the same way.",
     basis: "Steps you ask us to take before a contract; legitimate interests (answering you).",
     kept: "No automatic expiry. We delete it when the enquiry is closed and there is no continuing need, or on a valid erasure request where no exemption applies.",
   },

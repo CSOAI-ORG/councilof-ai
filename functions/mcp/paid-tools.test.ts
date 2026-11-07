@@ -5,6 +5,8 @@ import { onRequest } from "./[[path]]";
 import { PAID_TOOL_NAMES, buildPaidRequest } from "./_paid";
 import PAID from "./paid-tools.json";
 import FREE from "./gspc-tools.json";
+import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
+import NPM_PREPARED from "../../mcp/gspc-server/package.json";
 
 const ORIGIN = "https://councilof.ai";
 const LEGACY_PROTOCOL = "2025-03-26";
@@ -138,6 +140,7 @@ const FREE_LIST = [
   "axis_claim-maintenance",
   "axis_serving-fidelity",
   "axis_watchdog-ingest",
+  "framework_readiness",
 ];
 const PAID_LIST = [
   "commission_card",
@@ -730,9 +733,24 @@ describe("GET /mcp — the one-command install is at the point of discovery", ()
     expect(g.install).toBeTruthy();
     // ONE default line, and it is the free door (no key, read-only). Nothing else claims "default".
     expect(g.install.default).toBe(`claude mcp add --transport http council-of-ai ${ORIGIN}/mcp/free`);
-    expect(Object.values(g.install).filter((v) => /\/mcp\/free\b/.test(String(v)))).toHaveLength(1);
-    // The npm stdio package is labelled as the lighter, separately versioned implementation.
-    expect(g.install.stdio_lite).toMatch(/^deprecated on npm; npx -y csoai-gspc-mcp \(stdio-lite \d+\.\d+\.x: fewer tools/);
+    // Only the DEFAULT names the free door as an install. The stdio line may name it as the
+    // alternative ("or use the free door") — that is a pointer, not a second install instruction,
+    // and counting every value that merely mentions the door would forbid saying where to go.
+    const installCommands = [g.install.default, g.install.this_door, g.install.no_install_at_all, g.install.python];
+    expect(installCommands.filter((v) => /\/mcp\/free\b/.test(String(v)))).toHaveLength(1);
+    // The npm stdio package is labelled as the lighter, separately versioned implementation, and
+    // the label is DERIVED from the dated capture: the published release's version, its tool count
+    // against the door's, and npm's deprecation flag. Prepared source is not a published release.
+    expect(g.install.stdio_lite).toContain(`npm csoai-gspc-mcp@${NPM_CAPTURE.published.version} (stdio-lite `);
+    expect(g.install.stdio_lite).toContain(`${NPM_CAPTURE.published.total_tools} tool names`);
+    expect(g.install.stdio_lite).toContain(NPM_CAPTURE.published.deprecated ? "is marked deprecated on npm" : "is not marked deprecated on npm");
+    expect(g.install.stdio_lite).toContain(`measured ${NPM_CAPTURE.checked_at.slice(0, 10)}`);
+    if (NPM_PREPARED.version !== NPM_CAPTURE.published.version) {
+      expect(g.install.stdio_lite).toContain(`The prepared release ${NPM_PREPARED.version} is not on npm yet`);
+      expect(g.install.stdio_lite).not.toContain(`npm csoai-gspc-mcp@${NPM_PREPARED.version} (stdio-lite `);
+    } else {
+      expect(g.install.stdio_lite).not.toContain("The prepared release");
+    }
     expect(g.install.claude_code).toBeUndefined();
     expect(g.install.any_client).toBeUndefined();
     expect(g.install.no_install_at_all).toMatch(/api\/gspc/);

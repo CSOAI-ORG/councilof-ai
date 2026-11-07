@@ -1,0 +1,156 @@
+name: catalogue-live-state
+
+# The master catalogue's live_state block is a dated READ of the estate's live surfaces.
+# scripts/surface/rebind-catalogue-live-state.mjs is that read's ONLY producer — the owner's
+# commit b42fe2e54 (2026-11-03) added it — and NOTHING invoked it, so the published reading
+# stopped moving. The producer existed; the schedule that runs it did not.
+#
+# MEASURED 2026-11-07, with the producer's own --check:
+#
+#   DRIFT public/jewels/master-catalogue/index.json
+#   DRIFT public/jewels/master-catalogue/index.html
+#   STALE  public/jewels/master-catalogue/index.json: the published read is
+#          2026-11-03T02:48:05.063Z — a dated read is not a standing claim
+#
+# The published read was four days old — older than the producer's own 72-hour freshness
+# window — and already wrong on a row: agent_skills published 14 while the live index said
+# 15. The board itself had not moved (34 axes · 34 measured, before and after), which is
+# exactly why a stale row can hide: nothing else on the page moved to draw the eye.
+#
+# THIS IS A PRODUCER, NOT A GATE. The tool's own rule: "a PR gate may not depend on a live
+# third-party count." So this never runs on pull_request and never blocks anything. It runs on
+# a schedule, and when the read has moved it banks the new dated edition on ONE rolling branch
+# behind ONE pull request. A dated read is never edited — a new edition is a new read, and the
+# previous edition's bytes stay in git.
+#
+# SINGLE WRITER (owner ruling, 6 Oct 2026): master changes only through a gated pull request.
+# This workflow never pushes master. Whoever lands the pull request lands the current read.
+
+on:
+  schedule:
+    - cron: "23 4 * * *"   # daily, 04:23Z
+  workflow_dispatch:
+
+concurrency:
+  group: catalogue-live-state
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # esbuild is a devDependency and the producer bundles this commit's functions/api/gspc.ts
+      # with it (scripts/surface/commit-board.mjs). --ignore-scripts keeps the browser and
+      # binary postinstalls of the other devDependencies out of the runner; esbuild's own
+      # platform binary arrives as an optionalDependency, so it still loads.
+      - name: deps
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: take the read and write the new edition
+        id: publish
+        env:
+          # The producer's GitHub reads — the open-pull-request count and the merge window —
+          # are unauthenticated by default and rate-limited per IP, which is a transport
+          # event that stops the read rather than a number to publish. A token raises the
+          # limit and is NEVER required: the read still works without it.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          node scripts/surface/rebind-catalogue-live-state.mjs
+          RC=$?
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::the live-state producer refused to publish (exit $RC). Nothing was written: a count with no source is null, never 0."
+            exit "$RC"
+          fi
+          if git diff --quiet -- public/jewels/master-catalogue/index.json public/jewels/master-catalogue/index.html; then
+            echo "no change — the published edition already agrees with a fresh read"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          git --no-pager diff --stat -- public/jewels/master-catalogue/
+
+      - name: bank the edition on ONE rolling branch and open ONE pull request
+        if: steps.publish.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-catalogue-live-state"
+          git config user.email "board@csoai.org"
+          git add public/jewels/master-catalogue/index.json public/jewels/master-catalogue/index.html
+          # Nothing to commit is a state, not an error: the read moment advances every run, but
+          # a tree that did not move must not fail the job.
+          if git diff --cached --quiet; then
+            echo "no tree change — nothing to commit"
+            exit 0
+          fi
+          git commit -m "catalogue: a new dated reading of the live state ($(date -u +%Y-%m-%dT%H:%MZ))"
+          # ONE branch, not one per run. A timestamped branch per day banks 365 stranded
+          # branches and 365 pull requests a year, and only the newest is worth landing —
+          # each edition already contains everything the previous one did. A single
+          # force-updated branch always holds the LATEST read, so whoever lands it lands the
+          # current one, and there is exactly one thing to look at.
+          branch="catalogue-live-state/pending"
+          git push --force origin "HEAD:refs/heads/${branch}"
+          existing=$(gh pr list --head "${branch}" --base master --state open --json url --jq '.[0].url // ""')
+          if [ -n "${existing}" ]; then
+            echo "existing pull request updated in place: ${existing}"
+            pr="${existing}"
+          else
+            cat > "$RUNNER_TEMP/pr-body.md" <<'EOF'
+          A new dated edition of the master catalogue's `live_state` block, produced by
+          `scripts/surface/rebind-catalogue-live-state.mjs`.
+
+          A dated read is never edited — this is a new edition, and the previous edition's
+          bytes stay in git. The read names the URL it read, the HTTP status it got and a
+          digest of the content that produced each count. A count with no source is null,
+          never 0.
+
+          Produced by the schedule in `.github/workflows/catalogue-live-state.yml`.
+          EOF
+            pr=$(gh pr create --base master --head "${branch}" \
+              --title "catalogue: a new dated reading of the live state" \
+              --body-file "$RUNNER_TEMP/pr-body.md")
+          fi
+          # ARM AUTO-MERGE, AND MAKE READY FIRST. A pull request created as a DRAFT cannot
+          # carry auto-merge, and the merge then silently never happens — which would leave
+          # the catalogue stale again in 72 hours, exactly the failure this workflow exists to
+          # stop. `gh pr ready` is a no-op on a pull request that is already ready. GitHub's
+          # auto-merge waits for the REQUIRED CHECKS itself, so this lands the edition only
+          # after the same gates every other change passes, and never with --admin.
+          gh pr ready "${pr}" 2>/dev/null || true
+          # ARM THE MERGE, AND THEN MEASURE THE ARMING. `gh pr merge ... || true` would
+          # swallow a refusal and the job would print "armed" while nothing was armed — and a
+          # green job that armed nothing is the same failure as a green gate that measured
+          # nothing. So the arming is READ BACK, and an un-armed pull request fails the job
+          # with the state named.
+          if ! gh pr merge "${pr}" --repo "${{ github.repository }}" --merge --auto --delete-branch=false; then
+            echo "::warning::could not arm auto-merge on ${pr}; falling through to the read-back"
+          fi
+          armed=$(gh pr view "${pr}" --repo "${{ github.repository }}" --json autoMergeRequest,state \
+            --jq '"\(.state) \(if .autoMergeRequest then "AUTO_MERGE_ON" else "AUTO_MERGE_OFF" end)"' \
+            2>/dev/null || echo "unknown AUTO_MERGE_OFF")
+          echo "pull request ${pr}: ${armed}"
+          case "$armed" in
+            *AUTO_MERGE_ON*|*MERGED*)
+              echo "the edition will land on its own once the required checks pass"
+              ;;
+            *)
+              echo "::error::auto-merge is NOT armed on ${pr} (${armed}) — the edition will not land on its own, and the catalogue will go stale again in 72 hours. This is a finding, not a pass."
+              exit 1
+              ;;
+          esac

@@ -570,7 +570,7 @@ export default function GspcWorkspaceHome({
       id: "corrections",
       href: "/dashboard?tab=corrections",
       title: "Corrections",
-      job: "What we got wrong, how it was caught and what changed. Published results are replaced by new ones, never edited.",
+      job: "Dated corrections, supporting evidence and changes to published results. Superseding records preserve the history.",
       img: { base: "/images/home/watchdog", w: 480, h: 268 },
       figure: <LiveFigureLine read={state} pick={correctionsFigure} testId="ws-fig-corrections" />,
     },

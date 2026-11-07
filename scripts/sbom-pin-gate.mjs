@@ -133,6 +133,46 @@ export function recordedCommit(doc) {
 }
 
 /**
+ * Is this working tree a READABLE git repository at all?
+ *
+ * WHY A THIRD DISTINCTION. "The commit is not in the local store" has at least three
+ * causes, and they print the same words while wanting different repairs:
+ *
+ *   1. THE REPOSITORY ITSELF IS UNREADABLE — the work tree lost its .git link (a
+ *      sibling's offload removed it), so every git command dies with "fatal: not a git
+ *      repository". The repair is to restore the link, or to run the gate in a real
+ *      clone. Nothing about the pin can be said until then.
+ *   2. THE STORE'S HISTORY IS TRUNCATED — a --depth=1 fetch. The repair is to deepen.
+ *   3. THE PIN NAMES A COMMIT IN NO REF — a real finding about the pin.
+ *
+ * Reading 1 as 3 names a false finding and sends the reader after a mechanism that
+ * cannot help. Check the repository first; it costs one command.
+ */
+export function repoReadable(cwd = REPO) {
+  try {
+    const dir = execFileSync("git", ["rev-parse", "--git-dir"], {
+      cwd,
+      encoding: "utf8",
+      // stderr is CAPTURED, not printed: git's "fatal: not a git repository" is the fact
+      // this function reports, not noise for the reader.
+      stdio: ["ignore", "pipe", "pipe"],
+      env: gitEnv(),
+    }).trim();
+    return { readable: true, gitDir: dir, why: null };
+  } catch (error) {
+    return {
+      readable: false,
+      gitDir: null,
+      why:
+        "this working tree is not a readable git repository (git says " +
+        (error?.stderr ? String(error.stderr).trim().split("\n")[0] : "nothing") +
+        ") — the repository link is missing or broken, so no reachability question can be " +
+        "asked here at all",
+    };
+  }
+}
+
+/**
  * Is `sha` an ancestor of `ref`?
  *
  * `git merge-base --is-ancestor` exits 0 for yes, 1 for no, and 128 for "I cannot
@@ -156,10 +196,15 @@ export function isAncestor(sha, ref, cwd = REPO) {
     const code = error?.status;
     if (code === 1) return { reachable: false, why: "it is not an ancestor of HEAD", unprovable: false };
     if (code === 128) {
+      // 128 is git saying "I cannot answer" — the object is not in this store. That is the
+      // SAME class of fact as a truncated store: an absence of evidence, not evidence of
+      // absence. Reporting it as ORPHANED named a false finding and BLOCKED a merge, which
+      // is the outcome this gate exists to avoid. The gate's own header has always said
+      // that 1 and 128 are different verdicts; this is where that promise is kept.
       return {
         reachable: false,
         why: "this repository cannot answer the question — the commit is not in the local store",
-        unprovable: false,
+        unprovable: true,
       };
     }
     return { reachable: false, why: `git could not be run (exit ${code ?? "?"})`, unprovable: false };
@@ -191,29 +236,86 @@ export function isShallow(cwd = REPO) {
 }
 
 /**
- * Bring the PIN's own history into the store, in full.
+ * Is the pinned commit object in this store at all?
  *
- * The question the gate asks is answered by walking the history. When the store is
- * truncated the walk cannot finish, so the gate fetches the pin's chain and asks again.
- * This reads the remote; it changes no tree, commits nothing and pushes nothing.
+ * "I do not have it" and "it is not related" are different facts, and a gate that does not
+ * know which one it is looking at cannot report either honestly.
+ */
+export function objectPresent(sha, cwd = REPO) {
+  try {
+    execFileSync("git", ["cat-file", "-e", sha + "^{commit}"], {
+      cwd,
+      stdio: "ignore",
+      env: gitEnv(),
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * How many commits this store can walk back from HEAD.
  *
- * NO --filter here: "--filter can only be used when extensions.partialClone is set",
- * and the estate's checkout is not a partial clone. A fetch that fails is a fetch that
- * changes nothing, and the gate then reports UNCHECKABLE rather than a finding.
+ * A truncated store answers with a smaller number, which is the visible symptom of a
+ * history that cannot be walked to its end.
+ */
+export function countReachable(cwd = REPO) {
+  try {
+    return execFileSync("git", ["rev-list", "--count", "HEAD"], {
+      cwd,
+      encoding: "utf8",
+      env: gitEnv(),
+    }).trim();
+  } catch {
+    return "unknown";
+  }
+}
+
+/**
+ * The reachability answer, as a VERDICT the workflow can act on.
+ *
+ * Two ways this repository cannot answer, and both are UNCHECKABLE rather than a finding:
+ *
+ *   - the store's history is TRUNCATED (a shallow boundary): git walks back from HEAD,
+ *     stops at the boundary, and reports "not an ancestor" for a commit that IS one. On
+ *     2026-11-02 twenty open pull requests were red on this gate with the pin that
+ *     GitHub's own compare API proves is an ancestor of master, 183 commits back. A gate
+ *     that names a false finding is worse than a gate that names none: it teaches the
+ *     reader that the gate cries wolf, and then it protects nothing.
+ *
+ *   - the PIN ITSELF is not in the store (git exit 128): an absence of evidence, which is
+ *     not evidence of absence.
+ *
+ * A genuine "not an ancestor" — the pin is here, the history is complete, and the walk
+ * finished without reaching it — is the only thing this gate calls ORPHANED, and the only
+ * thing that blocks a merge.
+ *
+ * This reads the store. It changes no tree, commits nothing and pushes nothing.
  */
 export function answerReachability(sha, ref = "HEAD", cwd = REPO) {
+  // THE REPOSITORY FIRST. A work tree that is not a git repository cannot answer any
+  // reachability question, and calling that "the commit is not in the local store"
+  // names a false cause with a false remedy.
+  const repo = repoReadable(cwd);
+  if (!repo.readable) {
+    return { reachable: false, unprovable: true, cause: "NO_REPOSITORY", why: repo.why };
+  }
   const first = isAncestor(sha, ref, cwd);
   if (first.reachable) return first;
-  if (!isShallow(cwd)) return first;
+  // The pin itself is not in this store (git exit 128): the question cannot be asked here.
+  if (first.unprovable) return { ...first, cause: "PIN_NOT_IN_STORE" };
   // The store's history is truncated, so the walk from HEAD stopped at the boundary. That
   // is a question this repository cannot answer, and "cannot answer" is not a finding
   // about the pin: on 2026-11-02 twenty open pull requests were red on this gate with the
   // pin that GitHub's own compare API proves is an ancestor of master, 183 commits back.
   // A gate that names a false finding is worse than a gate that names none: it teaches
   // the reader that the gate cries wolf, and then it protects nothing.
+  if (!isShallow(cwd)) return first;
   return {
     reachable: false,
     unprovable: true,
+    cause: "TRUNCATED_STORE",
     why:
       "this repository's history is truncated (a shallow boundary), so reachability cannot be " +
       "decided here — UNCHECKABLE, not an orphaned pin",
@@ -274,7 +376,7 @@ function selftest() {
     const cases = [
       ["a pin to HEAD is reachable", shaB, { reachable: true, why: null }, "REACHABLE"],
       ["a pin to a commit that is present but NOT an ancestor is orphaned", shaA, { reachable: false, why: "it is not an ancestor of HEAD" }, "ORPHANED"],
-      ["a pin to a commit nobody has cannot be proven reachable", absent, { reachable: false, why: "this repository cannot answer the question — the commit is not in the local store" }, "ORPHANED"],
+      ["a pin to a commit nobody has cannot be proven reachable", absent, { reachable: false, why: "this repository cannot answer the question — the commit is not in the local store" }, "UNPROVABLE"],
     ];
 
     let failures = 0;
@@ -331,6 +433,33 @@ function selftest() {
       }
     } finally {
       fs.rmSync(shallowDir, { recursive: true, force: true });
+    }
+
+    // A work tree that is NOT a git repository at all. A sibling lane's offload removed
+    // the .git link, so every git command died with "fatal: not a git repository" and the
+    // gate printed the same words as a truncated graph. It must name its own cause: the
+    // repair is to restore the link, not to deepen a history that is not there.
+    const notARepo = fs.mkdtempSync(path.join(os.tmpdir(), "sbom-pin-gate-not-a-repo-"));
+    try {
+      const verdict = judge(shaB, answerReachability(shaB, "HEAD", notARepo));
+      if (verdict.state !== "UNPROVABLE") {
+        failures++;
+        console.log("  ✗ a directory that is not a repository must read UNPROVABLE, never ORPHANED");
+      } else {
+        console.log("  ✓ a directory that is not a repository reads UNPROVABLE");
+      }
+      const answer = answerReachability(shaB, "HEAD", notARepo);
+      if (answer.cause !== "NO_REPOSITORY") {
+        failures++;
+        console.log(`  ✗ an unreadable repository must name its own cause, not the pin's (got ${answer.cause})`);
+      } else if (/not in the local store/.test(answer.why)) {
+        failures++;
+        console.log("  ✗ an unreadable repository must not be reported as a missing pin");
+      } else {
+        console.log("  ✓ an unreadable repository names itself, and not the pin");
+      }
+    } finally {
+      fs.rmSync(notARepo, { recursive: true, force: true });
     }
 
     // The decision function itself, without a repository: an absent pin is never
@@ -398,11 +527,31 @@ if (SELFTEST) {
     console.error("");
     console.error("  The pin may well be reachable — this repository cannot tell. That is an");
     console.error("  UNCHECKABLE state, not a finding about the pin, and it does not block a merge.");
-    console.error("  A truncated store is the usual cause; the workflow's own depth-1 fetch makes one.");
+    // Three causes, three repairs. Naming the wrong one sends the reader after a
+    // mechanism that cannot help them.
+    if (ancestor.cause === "NO_REPOSITORY") {
+      console.error("  THE REPOSITORY ITSELF IS UNREADABLE. Restore the repository link, or run");
+      console.error("  this gate in a real clone: no question about the pin can be asked until then.");
+      console.error("  (A sibling lane's offload removed the .git link; every git command died with");
+      console.error("  'fatal: not a git repository', and that is not the same fact as a truncated graph.)");
+    } else if (ancestor.cause === "TRUNCATED_STORE") {
+      console.error("  THE STORE'S HISTORY IS TRUNCATED. Deepen it — fetch without --depth — and");
+      console.error("  re-run. The workflow's own depth-1 fetch makes one; do not re-stamp a pin on");
+      console.error("  the strength of a verdict the graph cannot support.");
+    } else {
+      console.error("  THE PIN IS NOT IN THIS STORE. Fetch it, or run the gate where the history is");
+      console.error("  complete, and ask again.");
+    }
     process.exit(2);
   }
   if (!verdict.ok) {
     console.error(`✗ sbom-pin-gate: the SBOM read from ${sbom.from} pins ${sha}, and ${ancestor.why}.`);
+    // THE FACTS. A gate that says "not an ancestor" without saying whether the object is
+    // even in the store, or whether the graph it is reading is truncated, makes a claim it
+    // cannot support - and the next reader has to rediscover the whole investigation.
+    console.error(`  state: ${verdict.state}  ·  store truncated: ${isShallow() ? "yes" : "no"}` +
+      `  ·  pinned object present: ${objectPresent(sha) ? "yes" : "no"}` +
+      `  ·  commits reachable from HEAD: ${countReachable()}`);
     console.error("");
     console.error("  In CI this reads as 'sbom FAILED — SBOM held; previous output preserved',");
     console.error("  because pr-gates checks out the PR's merge ref and this commit is not in it.");

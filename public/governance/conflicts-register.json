@@ -1,0 +1,86 @@
+{
+  "schema": "csoai.governance.conflicts-register/0.1",
+  "as_of": "2026-10-31",
+  "title": "Conflicts of interest register",
+  "status_vocabulary": ["VERIFIED", "DECLARED", "OPEN_SLOT", "RECUSED", "SUPERSEDED"],
+  "rule": "No one may adjudicate a claim, measurement or complaint concerning an organisation that employs them, funds them, or that they advise. A conflicted person is replaced and the replacement is recorded.",
+  "why_published": "A body that publishes states about named organisations must publish who decides. An empty register and an unappointed panel are different facts; this file states which is true.",
+  "current_status": {
+    "value": "OPEN_SLOT",
+    "note": "No independent adjudicator has been appointed and no declaration has been collected as at 2026-10-31. The register is published in that state rather than left blank.",
+    "since": "2026-10-31"
+  },
+  "roles": [
+    {
+      "id": "adjudicator-claims",
+      "role": "Adjudicator — claims register and Watchdog daily report",
+      "holder": null,
+      "status": "OPEN_SLOT",
+      "confers": "May change the recorded state of a third-party claim, with a published reason.",
+      "may_not_decide": "Any claim concerning an organisation that employs, funds or advises the holder."
+    },
+    {
+      "id": "adjudicator-measurement",
+      "role": "Adjudicator — measurement disputes and axis promotion",
+      "holder": null,
+      "status": "OPEN_SLOT",
+      "confers": "May accept or reject a measured result for publication on the board.",
+      "may_not_decide": "Any axis where the holder's own work, models or employer is a subject."
+    },
+    {
+      "id": "complaints-reviewer",
+      "role": "Complaints reviewer (first instance)",
+      "holder": null,
+      "status": "OPEN_SLOT",
+      "confers": "Decides complaints under /complaints/ within the published service levels.",
+      "may_not_decide": "A complaint about a decision the holder made."
+    },
+    {
+      "id": "appeals-reviewer",
+      "role": "Appeals reviewer (second instance)",
+      "holder": null,
+      "status": "OPEN_SLOT",
+      "confers": "Final internal decision on appeal.",
+      "may_not_decide": "Any case in which the holder took part at first instance."
+    },
+    {
+      "id": "owner-authorised-lane",
+      "role": "Owner-authorised publication lane (CSOAI Ltd)",
+      "holder": "CSOAI Ltd — owner",
+      "status": "VERIFIED",
+      "evidence": "https://councilof.ai/governance/committee-registry.json",
+      "confers": "Publishes, deploys and signs under owner authority.",
+      "may_not_decide": "The measurement result of an axis on which CSOAI's own models are a subject; own models are excluded from comparisons and first-party claims are held to the same statement rules as third-party claims."
+    }
+  ],
+  "declarations": [],
+  "recusal": {
+    "trigger": "A relevant interest in the subject, its funders, or its competitors.",
+    "procedure": [
+      "declare in writing to this register",
+      "reassign the case to an unconflicted adjudicator",
+      "record the reassignment and its reason",
+      "if no unconflicted adjudicator exists, publish DEFERRED — no unconflicted adjudicator and do not decide"
+    ],
+    "retention": "A declaration remains published while the interest exists and is retained after it ends."
+  },
+  "declaration_schedule": {
+    "on_appointment": "before the first decision",
+    "annual": "within 30 days of the anniversary of appointment",
+    "on_change": "within 10 working days",
+    "per_case": "a case-specific check at the start of any adjudication"
+  },
+  "funding_disclosure": {
+    "rule": "Funding is disclosed in aggregate. No funder may direct a state, a rank, a delay or the removal of a correction.",
+    "revenue_source": "https://councilof.ai/api/revenue",
+    "note": "No payer is named without written consent."
+  },
+  "reporting": {
+    "quarterly": "complaints received, grounds accepted and rejected, conflicts declared, cases reassigned, cases deferred",
+    "annual": "the full register with retention history"
+  },
+  "corrections": {
+    "rule": "An error in this register is corrected by a new entry citing the old one; entries are never silently edited.",
+    "ledger": "https://councilof.ai/api/corrections"
+  }
+}

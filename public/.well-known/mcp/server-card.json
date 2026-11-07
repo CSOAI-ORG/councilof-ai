@@ -8,7 +8,7 @@
     "title": "Council of AI — GSPC Measurement Tools",
     "version": "1.4.4"
   },
-  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.4 (io.github.CSOAI-ORG/gspc is its deprecated alias). 48 free tools at /mcp/free; 53 at /mcp (48 free + 5 metered). The npm package is versioned separately.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.4 (io.github.CSOAI-ORG/gspc is its deprecated alias). 49 free tools at /mcp/free; 54 at /mcp (49 free + 5 metered). The npm package is versioned separately.",
   "icon_url": "https://councilof.ai/csoai-icon.svg",
   "provider": {
     "name": "CSOAI Ltd",
@@ -24,11 +24,10 @@
     "mcp": {
       "primary": "https://councilof.ai/mcp",
       "current": "https://councilof.ai/mcp",
-      "stdio": null,
-      "stdio_note": "npm csoai-gspc-mcp: published releases are deprecated on npm and carry fewer tools; use the free door https://councilof.ai/mcp/free",
-      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is 53: 48 free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
+      "stdio": "npx -y csoai-gspc-mcp@0.2.7",
+      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is 54: 49 free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
       "free": "https://councilof.ai/mcp/free",
-      "free_note": "https://councilof.ai/mcp/free serves the 48 free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
+      "free_note": "https://councilof.ai/mcp/free serves the 49 free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -86,19 +85,20 @@
       "axis_claim-maintenance",
       "axis_serving-fidelity",
       "axis_watchdog-ingest",
+      "framework_readiness",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch",
       "evidence_bundle"
     ],
-    "total_tools": 53,
-    "free_tools": 48,
+    "total_tools": 54,
+    "free_tools": 49,
     "metered_tools": 5,
-    "tool_counts": "48 free tools at /mcp/free; 53 at /mcp (48 free + 5 metered). The npm package is versioned separately.",
+    "tool_counts": "49 free tools at /mcp/free; 54 at /mcp (49 free + 5 metered). The npm package is versioned separately.",
     "streaming": false,
     "auth_required": false,
-    "tool_names_sha256": "5d09d508b9995e6be9ea6645509a5825e6b2a1ec19b3c4624fda49c76b5a6411",
+    "tool_names_sha256": "411dee1bb0ae9e643fb9fbb5f2919f1da18e7dc2abc0cf002427e25e856cf186",
     "free_door_tool_names": [
       "board_totals",
       "get_axis",
@@ -147,9 +147,10 @@
       "axis_interpretability-reproducibility",
       "axis_claim-maintenance",
       "axis_serving-fidelity",
-      "axis_watchdog-ingest"
+      "axis_watchdog-ingest",
+      "framework_readiness"
     ],
-    "free_door_tool_names_sha256": "0f98c8f8f310170058f5c3c3732dfe21125aa55222de4fb8e27e2a407f97cda3",
+    "free_door_tool_names_sha256": "3db0a725b22ea8d9859968e179cc31d7813a9bf3041be5969de8d0d27bfb3688",
     "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
     "derived_from": "tools/list of https://councilof.ai/mcp (functions/mcp/gspc-tools.json + paid-tools.json) and of https://councilof.ai/mcp/free (gspc-tools.json)"
   },
@@ -3289,6 +3290,112 @@
       },
       "annotations": {
         "title": "watchdog-ingest axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "framework_readiness",
+      "title": "Framework readiness checklist",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "framework": {
+            "type": "string",
+            "enum": [
+              "eu-ai-act",
+              "dora",
+              "nis2",
+              "gdpr",
+              "iso-27001",
+              "nist-csf",
+              "soc2",
+              "pci-dss",
+              "cra"
+            ],
+            "description": "The framework to check readiness against. Required."
+          },
+          "sector": {
+            "type": "string",
+            "description": "Optional sector word (e.g. finance, healthcare, energy). Adds a pointer to which frameworks commonly bind the sector; never a scope determination."
+          },
+          "role": {
+            "type": "string",
+            "description": "Optional free-text role (e.g. deployer, provider). Echoed for your notes; the tool does not determine which duties attach."
+          }
+        },
+        "required": [
+          "framework"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "OK or BAD_ARGUMENTS"
+          },
+          "framework": {
+            "type": "string"
+          },
+          "framework_label": {
+            "type": "string"
+          },
+          "what_this_is": {
+            "type": "string"
+          },
+          "header": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          },
+          "not_legal_advice": {
+            "type": "boolean"
+          },
+          "item_count": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "description": "Checklist items: id, provision, requirement, evidence_suggested, opens_question"
+          },
+          "provenance": {
+            "type": "array",
+            "description": "Published sources a reader can check without an account"
+          },
+          "sector": {
+            "type": "string"
+          },
+          "sector_note": {
+            "type": "string"
+          },
+          "sector_frameworks": {
+            "type": "array"
+          },
+          "role": {
+            "type": "string"
+          },
+          "role_note": {
+            "type": "string"
+          },
+          "how_to_use": {
+            "type": "array"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "Framework readiness checklist",
         "readOnlyHint": true,
         "destructiveHint": false,
         "idempotentHint": true,

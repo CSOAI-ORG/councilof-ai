@@ -12,6 +12,7 @@ import { Router } from "wouter";
 import ConnectHub, { A2A_ENDPOINT, FULL_DOOR, PLATFORMS } from "./ConnectHub";
 import { FREE_DOOR } from "./ConnectClaude";
 import HomeHero from "../components/home/HomeHero";
+import HomeEvidence from "../components/home/HomeEvidence";
 import HomeWaysIn from "../components/home/HomeWaysIn";
 import FREE_TOOLS from "../../../functions/mcp/gspc-tools.json";
 
@@ -105,13 +106,20 @@ describe("the home page says how to use it", () => {
     }
   });
 
-  it("says what we do in plain words: agents and endpoints, signed vs unsigned vs untested, corrections public", () => {
-    const html = renderToStaticMarkup(<Router ssrPath="/"><HomeHero /></Router>);
-    expect(html).toContain("agents and the endpoints they call");
-    expect(html).toContain("signed cards, unsigned evidence and untested work");
-    expect(html).toContain("corrections stay public");
-    // Not every result is signed; the hero must not say so.
-    expect(html).not.toContain("Every result is signed");
+  it("explains the measured scope, free verification and inspectable evidence without claiming every result is signed", () => {
+    const hero = renderToStaticMarkup(<Router ssrPath="/"><HomeHero /></Router>);
+    const evidence = renderToStaticMarkup(<Router ssrPath="/"><HomeEvidence /></Router>);
+    const text = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+    expect(text(hero)).toContain("AI models, agents and the systems they call");
+    expect(text(hero)).toContain("Verification is free, forever.");
+    expect(hero).toContain('href="/gspc-verify"');
+    // The inspection steps carry the distinction and correction route beside the method.
+    expect(text(evidence)).toContain("Signed and unsigned work stay distinguishable");
+    expect(evidence).toContain('href="/methodology/"');
+    expect(evidence).toContain('href="/corrections/"');
+    expect(text(evidence)).toContain("dated corrections and superseding records");
+    expect(text(evidence)).toContain("does not prove the measurement is right");
+    expect(hero + evidence).not.toContain("Every result is signed");
   });
 });
 

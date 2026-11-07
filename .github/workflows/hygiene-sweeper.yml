@@ -50,12 +50,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Sweep (dry-run unless apply was explicitly dispatched)
+      - name: Sweep (scheduled runs apply; dispatches choose their mode)
         env:
           GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          MODE="${{ inputs.mode || 'dry-run' }}"
-          if [ "${{ github.event_name }}" = "schedule" ]; then MODE="dry-run"; fi
+          # 2026-11-03: the schedule now applies. Two dry-run validations passed first
+          # (workflow_dispatch 41440871103 and the 2026-11-02T23:53 schedule run — both
+          # SUCCESS, both planning exactly nothing over the live queue, which was the
+          # correct verdict). The rails were already fail-closed: families only, never
+          # drafts, never [HOLD], never the watcher-owned doors, never a merge with a
+          # failing or pending check. An apply-mode mistake closes a data PR that can be
+          # reopened (source datasets retain everything); the rails make one unlikely.
+          MODE="${{ github.event_name == 'schedule' && 'apply' || (inputs.mode || 'dry-run') }}"
           node scripts/hygiene/sweeper.mjs --mode "$MODE"

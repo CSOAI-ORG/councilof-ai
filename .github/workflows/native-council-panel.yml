@@ -1,0 +1,108 @@
+name: native-council-panel
+
+on:
+  pull_request:
+    paths:
+      - 'packages/council-panel/**'
+      - 'public/native-panel/**'
+      - 'public/academy/exercises/exercises.json'
+      - 'scripts/*council*native*panel*'
+      - 'scripts/test-council-panel-controls.mjs'
+      - 'client/src/lib/aguiTalk.ts'
+      - 'functions/_lib/uiTools.ts'
+      - 'functions/mcp/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/native-council-panel.yml'
+      - '.github/workflows/deploy.yml'
+      - '.github/workflows/pr-gates.yml'
+      - 'docs/operations/PRODUCERS.json'
+      - 'scripts/surface/native-panel-release.node-test.mjs'
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-council-panel-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-companion-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - name: Native release wiring stays enforced
+        run: node --test scripts/surface/native-panel-release.node-test.mjs
+      - name: Generated UI must match reviewed source
+        run: node scripts/build-council-native-panel.mjs --check
+      - name: Unit, Academy and actual MCP SDK checks
+        run: node scripts/test-council-native-panel.mjs
+      - name: Deliberate broken-control sensitivity
+        run: node scripts/test-council-panel-controls.mjs
+      - name: Install Chromium for owned browser fixtures
+        timeout-minutes: 3
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Actual bundled panel and native host journeys
+        id: panel_browser
+        timeout-minutes: 3
+        run: node packages/council-panel/browser.test.cjs
+      - name: Retain owned browser journey evidence
+        if: ${{ always() && (steps.panel_browser.outcome == 'success' || steps.panel_browser.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-native-panel-browser-evidence
+          retention-days: 14
+          if-no-files-found: warn
+          path: evidence/browser/
+      - name: Compose both existing MCP resources and protocol guards
+        run: npx vitest run functions/mcp/working-groups.test.ts functions/mcp/mcp-protocol.test.ts functions/mcp/mcp-free-door.test.ts
+      - name: Validate loopback preview launcher
+        run: python3 -B scripts/serve-council-native-panel.py --help
+      - name: Retain exact preview bytes and their source identity
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          files = [
+              'public/native-panel/index.html',
+              'public/native-panel/resource.json',
+              'packages/council-panel/README.md',
+              'packages/council-panel/vendor/LICENSE.mcp-apps',
+              'packages/council-panel/vendor/pin.json',
+              'scripts/serve-council-native-panel.py',
+              'docs/operations/native-panel-acceptance-20261104.json',
+          ]
+          manifest = {
+              'scope': 'Verified preview bundle; not a production release, native host installation or certification.',
+              'workflow_commit': os.environ['GITHUB_SHA'],
+              'repository': os.environ['GITHUB_REPOSITORY'],
+              'files': [{'path': p, 'sha256': hashlib.sha256(Path(p).read_bytes()).hexdigest(), 'bytes': Path(p).stat().st_size} for p in files],
+          }
+          Path('native-panel-bundle-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: council-meok-native-companion-preview
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            public/native-panel/index.html
+            public/native-panel/resource.json
+            packages/council-panel/README.md
+            packages/council-panel/vendor/LICENSE.mcp-apps
+            packages/council-panel/vendor/pin.json
+            scripts/serve-council-native-panel.py
+            docs/operations/native-panel-acceptance-20261104.json
+            native-panel-bundle-manifest.json

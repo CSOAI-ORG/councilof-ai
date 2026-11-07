@@ -18,15 +18,19 @@ import {
 import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/server/validators/cf-worker";
 import GSPC_TOOLS from "./gspc-tools.json";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
+import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
+import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
 import { startToolRequestSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "./_route";
+import { READINESS_TOOL_NAMES, readinessToolResult } from "./_readiness";
 import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
 import { recordUsage } from "../_lib/usage";
 import { registerWorkingGroups, WORKING_GROUP_ACCESS } from "./_working_groups";
+import { registerCouncilPanel, withCouncilPanel } from "./_panel";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
 export const MCP_HTTP_SERVER_VERSION = "1.4.4";
@@ -56,6 +60,39 @@ export const TOOL_COUNTS = toolCountSentence(FREE_TOOL_COUNT, PAID_TOOL_COUNT);
 export const STDIO_LITE_LINE = `${String(STDIO_PACKAGE.version).split(".").slice(0, 2).join(".")}.x`;
 
 /**
+ * The npm package's release state, DERIVED from the dated capture
+ * (distribution/npm/npm-publish-check.json, written by scripts/harness-x/npm-publish-live.mjs).
+ *
+ * It used to be typed prose here — "deprecated on npm; npx -y csoai-gspc-mcp (stdio-lite …: fewer
+ * tools…)" — and it was FALSE: npm deprecates 0.1.0-0.2.2, and the estate's own later releases
+ * (0.2.5) are not deprecated. The reason the stdio line is still a warning is a DIFFERENT measured
+ * one: the repository prepares 0.2.6, npm's latest published release is 0.2.5, and the published
+ * tarball carries 53 tool names against the 54 this door serves.
+ *
+ * The fallback below is a sentence that makes NO claim it cannot back, so a damaged capture
+ * degrades the line instead of taking the door down. The capture's health is a GATE
+ * (scripts/llms-txt.mjs --check and scripts/harness-x/render.mjs --check both read it), and
+ * functions/mcp/npm-release-state.test.ts asserts this line equals the derived one, so the
+ * fallback can never be the silent answer.
+ */
+function stdioInstallLine(origin: string): string {
+  try {
+    return doorInstallLine(npmReleaseState(NPM_CAPTURE), {
+      npmId: "csoai-gspc-mcp",
+      stdioLiteLine: STDIO_LITE_LINE,
+      freeDoor: `${origin}/mcp/free`,
+      doorTools: FREE_TOOL_COUNT + PAID_TOOL_COUNT,
+      preparedVersion: STDIO_PACKAGE.version,
+    });
+  } catch {
+    return (
+      `npm csoai-gspc-mcp@${STDIO_PACKAGE.version} (stdio-lite ${STDIO_LITE_LINE}: versioned separately ` +
+      `from this door; ask it for its tools/list, or use the free door ${origin}/mcp/free)`
+    );
+  }
+}
+
+/**
  * GET /mcp install block. ONE default line, and it is the free door: no key, no sign-in, read-only.
  * The metered door and the npm stdio package are alternatives, each labelled for what it is.
  */
@@ -63,8 +100,7 @@ export function fullDoorInstall(origin: string): Record<string, string> {
   return {
     default: `claude mcp add --transport http council-of-ai ${origin}/mcp/free`,
     this_door: `claude mcp add --transport http council-of-ai-metered ${origin}/mcp (the ${FREE_TOOL_COUNT} free tools plus ${PAID_TOOL_COUNT} x402 tools)`,
-    // Every published npm release is marked deprecated on npm (T14, 6 Oct 2026); say so first.
-    stdio_lite: `deprecated on npm; npx -y csoai-gspc-mcp (stdio-lite ${STDIO_LITE_LINE}: fewer tools, versioned separately; ask it for its tools/list)`,
+    stdio_lite: stdioInstallLine(origin),
     no_install_at_all: "curl -s https://councilof.ai/api/gspc",
     python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
   };
@@ -74,7 +110,7 @@ const INSTRUCTIONS =
 // The free door speaks to a person using a chat client, so it carries no operations notes and no
 // payment text (packet CR-6). The count is derived from the file, like the one above.
 export const FREE_INSTRUCTIONS =
-  `Council of AI public measurement records. ${FREE_TOOL_COUNT} free read-only tools: read the GSPC board and one axis, verify a signed measurement card or capsule, check Merkle inclusion, list published measurements about an endpoint, and read census snapshots, and list the already-signed cards relevant to one obligation (observations, never a determination). Every answer carries its state (VALID, INVALID, UNCHECKABLE, UNMEASURED, NOT_MEASURED, UNREACHABLE). Measurement, not certification.`;
+  `Council of AI public measurement records. ${FREE_TOOL_COUNT} free read-only tools: read the GSPC board and one axis, verify a signed measurement card or capsule, check Merkle inclusion, list published measurements about an endpoint, read census snapshots, list the already-signed cards relevant to one obligation (observations, never a determination), and return a framework readiness checklist (evidence planning against published provisions; never a determination). Every answer carries its state (VALID, INVALID, UNCHECKABLE, UNMEASURED, NOT_MEASURED, UNREACHABLE). Measurement, not certification.`;
 const CORS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, HEAD, POST, OPTIONS",
@@ -99,7 +135,7 @@ const BROWSER_ORIGINS = [...HOSTS, "chatgpt.com", "claude.ai"];
 // The measurement-capsule readers (measurement_index, verify_capsule, server_evidence) are ordinary
 // free tools in gspc-tools.json since 2026-09-26, when /measurement-capsules/ was published; the
 // MEASUREMENT_CAPSULE_TOOLS env gate that held them back is gone. One list, one fleet (the lock).
-const DEFINITIONS = [...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[];
+const DEFINITIONS = ([...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[]).map(withCouncilPanel);
 // The free door's registry: the same definitions, filtered. Never a second catalog.
 export const FREE_DEFINITIONS = DEFINITIONS.filter((d) => !PAID_TOOL_NAMES.has(d.name));
 // The SDK's no-eval adapter retains the canonical JSON Schema. No parallel catalog.
@@ -137,6 +173,7 @@ function buildMcp(
       },
     });
     registerWorkingGroups(server);
+    registerCouncilPanel(server);
     for (const { definition, inputSchema, outputSchema } of TOOLS) {
       server.registerTool(
         definition.name,
@@ -148,6 +185,7 @@ function buildMcp(
           // readOnlyHint for the free readers; the paid tools spend the caller's funds when called
           // with x_payment, so they are neither read-only nor idempotent (paid-tools.json).
           ...(definition.annotations ? { annotations: definition.annotations } : {}),
+          ...(definition._meta ? { _meta: definition._meta } : {}),
         },
         (args) =>
           // door.paid guards the dispatch as well as the registry: the free door never reaches
@@ -160,7 +198,9 @@ function buildMcp(
                 ? evidenceToolResult(definition.name, args, origin)
                 : ROUTE_TOOL_NAMES.has(definition.name)
                   ? routeToolResult(args, origin)
-                  : sharedToolResult(definition.name, args, origin),
+                  : READINESS_TOOL_NAMES.has(definition.name)
+                    ? readinessToolResult(args)
+                    : sharedToolResult(definition.name, args, origin),
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.
@@ -284,12 +324,10 @@ function object(value: unknown): value is Record<string, unknown> {
 /**
  * True when a GET is a browser page load: `text/html` is accepted and preferred over JSON.
  *
- * WHY. /mcp/ is a sitemap URL (App.tsx declares a /mcp route) and the address people are told
- * to paste into a client, so people open it in a browser. It used to answer every GET with the
- * discovery JSON: no title, no lang, no heading (ux-gauntlet 2026-09-26). Agents DO read that JSON
- * (llms.txt tells them to quote paid_tools.names from it), so it stays exactly where it is for any
- * request that does not ask for HTML (curl's default, fetch's default, SDK clients). Only a
- * browser navigation, which sends Accept: text/html first, gets the same document as a page.
+ * WHY. /mcp is both the protocol endpoint and the address people open in a browser. Keep the
+ * human catalogue under /mcps so it cannot shadow this function. Agents read the JSON discovery
+ * document (llms.txt points them to paid_tools.names); browser navigation gets the same endpoint
+ * information rendered as an accessible page.
  */
 export function prefersHtml(accept: string | null): boolean {
   const a = (accept ?? "").toLowerCase();

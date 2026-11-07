@@ -1,0 +1,653 @@
+"""OpenShell agent runtime.
+
+Runs the agent in a sandbox on NVIDIA OpenShell
+(https://github.com/NVIDIA/OpenShell): a real Linux sandbox, governed by a
+policy, where the kernel audits everything the agent does as OCSF events.
+
+Each evaluation's sandbox is seeded with the runtime's ``files``. After the
+agent runs, ``observe()`` collects runtime observations from outside the agent:
+
+  * **workdir diff** — files created, modified and deleted against the seeded files.
+  * **OCSF events** — kernel-audited network connections, processes (command
+    line and exit code) and security findings.
+
+The orchestrator records them as ``observations["openshell"]``, and the predicates
+in :mod:`midojo.verifiers.openshell` grade them.
+
+The seed directory (``/sandbox/workdir``) is distinct from an OpenShell
+*workspace*: a workspace is a gateway-side named scope that holds sandboxes and
+their policies. midojo creates one workspace per orchestrator run and one
+sandbox per evaluation inside it; ``workdir`` is a plain directory inside each
+sandbox where the suite's files are seeded.
+
+Policy:
+  Suite YAML can name a built-in policy (``policy: pi``) or supply an inline dict
+  matching the proto JSON field names. ``_BUILTIN_POLICIES`` maps names to camelCase
+  proto-JSON dicts. ``_resolve_policy`` fills ``SandboxSpec.policy`` in-place via
+  ``ParseDict`` — no direct import of ``SandboxPolicy`` needed.
+
+OCSF caching:
+  ``_fetch_ocsf()`` fetches and caches the ``GetSandboxLogs`` response; subsequent
+  calls within the same evaluation return the cache. The cache is cleared at the
+  start of each ``setup()`` call.
+"""
+
+from __future__ import annotations
+
+import base64
+import hashlib
+import logging
+import re
+import time
+import uuid
+from collections.abc import Callable
+from dataclasses import asdict
+from typing import Any
+
+import grpc
+from google.protobuf.json_format import ParseDict
+from google.protobuf.timestamp_pb2 import Timestamp
+from openshell import SandboxClient, WorkspaceClient
+from openshell._proto import datamodel_pb2, openshell_pb2
+from pydantic import BaseModel, ConfigDict, Field
+
+from midojo.observations import register_observation_type
+from midojo.probes import substitute_probes
+from midojo.runtimes.openshell.logs import OCSFEvents, parse_ocsf_lines
+
+# ---------------------------------------------------------------------------
+
+# Directory inside the sandbox where the suite's files are seeded and where the
+# agent works. Relative paths in the runtime's `files` are placed under it.
+_WORKDIR = "/sandbox/workdir"
+
+# From inside an OpenShell sandbox, the host machine that runs the midojo control
+# plane is reachable as this DNS name — `localhost` would resolve to the sandbox
+# itself. The control-plane URL handed to the in-sandbox SDK (MIDOJO_URL) is
+# rewritten to use it. The suite's network policy must separately allow this
+# endpoint; midojo never edits the declared policy — it only warns when the
+# allow rule is missing (see `_warn_if_control_plane_not_allowed`).
+_SANDBOX_HOST = "host.openshell.internal"
+_LOCAL_HOSTS = {"localhost", "127.0.0.1", "0.0.0.0", "::1"}
+
+# The gateway's sandbox teardown can take longer than the SDK's 30s default
+# per-call gRPC timeout: DeleteSandbox blocks server-side until the sandbox is
+# gone, and each wait_deleted poll issues its own GetSandbox call. Use a larger
+# per-call timeout so neither aborts early with DEADLINE_EXCEEDED.
+_CLIENT_TIMEOUT_SECONDS = 120.0
+
+# Total wall-clock budget for a teardown wait (sandbox delete, or waiting for a
+# workspace to drain to empty). Polled in ~1s steps.
+_TEARDOWN_BUDGET_SECONDS = 120.0
+
+# Log sync barrier (see OpenShellRuntime._sync_ocsf_messages). The marker lives
+# under the reserved .test TLD so it can never be policy-eligible or resolve.
+# Images differ in their resolver tooling, so try the common lookup commands;
+# any one of them makes the supervisor log a DNS refusal for the marker.
+_SYNC_MARKER_SUFFIX = ".midojo.test"
+_SYNC_MARKER_SCRIPT = (
+    "getent hosts {host} >/dev/null 2>&1"
+    " || nslookup {host} >/dev/null 2>&1"
+    " || python3 -c 'import socket; socket.getaddrinfo(\"{host}\", 80)' >/dev/null 2>&1"
+    " || true"
+)
+_LOG_SYNC_BUDGET_SECONDS = 15.0
+
+
+def _short_name(value: str, length: int, fallback: str) -> str:
+    """Make a short DNS-label fragment without trailing or repeated hyphens."""
+    return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")[:length].rstrip("-") or fallback
+
+
+def _create_named_resource[T](prefix: str, identity: str, create: Callable[[str], T]) -> T:
+    """Keep names within 19 characters; retry short-suffix collisions without reusing resources."""
+    for attempt in range(5):
+        digest = hashlib.sha256(f"{identity}:{attempt}".encode()).digest()
+        suffix = base64.b32encode(digest).decode().lower()[:6]
+        try:
+            return create(f"{prefix}-{suffix}")
+        except grpc.RpcError as exc:
+            if exc.code() != grpc.StatusCode.ALREADY_EXISTS or attempt == 4:
+                raise
+    raise AssertionError("Unreachable")
+
+
+def _resolve_policy(spec: dict | None, sandbox_spec: Any) -> None:
+    """Populate ``sandbox_spec.policy`` in-place. ``spec=None`` is a no-op.
+
+    Args:
+        spec: ``None`` (no-op — image built-in policy applies) or a camelCase
+              proto-JSON dict matching ``SandboxPolicy`` field names.
+        sandbox_spec: A ``SandboxSpec`` proto message whose ``.policy`` field will
+                      be populated in-place. ``SandboxPolicy`` is accessed via the
+                      field directly — no direct import of its type needed.
+    """
+    if spec is None:
+        return
+    ParseDict(spec, sandbox_spec.policy)
+
+
+def _rewrite_host_for_sandbox(url: str) -> str:
+    """Rewrite a control-plane URL so it is reachable from inside the sandbox.
+
+    ``localhost`` and loopback addresses resolve to the sandbox itself, not the
+    host running the control plane. Replace such hosts with
+    ``host.openshell.internal`` while preserving scheme, userinfo, port, and
+    path. Non-local hosts pass through unchanged.
+    """
+    from urllib.parse import urlsplit, urlunsplit
+
+    parts = urlsplit(url)
+    if (parts.hostname or "").lower() not in _LOCAL_HOSTS:
+        return url
+    userinfo = ""
+    if parts.username:
+        userinfo = parts.username
+        if parts.password:
+            userinfo += f":{parts.password}"
+        userinfo += "@"
+    port = f":{parts.port}" if parts.port else ""
+    netloc = f"{userinfo}{_SANDBOX_HOST}{port}"
+    return urlunsplit((parts.scheme, netloc, parts.path, parts.query, parts.fragment))
+
+
+def _warn_if_control_plane_not_allowed(policy_spec: dict | None, url: str) -> None:
+    """Warn (never mutate) if the policy does not allow reaching the control plane.
+
+    The in-sandbox agent SDK POSTs its tool calls to the control plane, so the
+    suite's network policy must include an egress allow rule for it (see the
+    example ``suite.yaml``). midojo deliberately does not inject this rule: the
+    declared policy is a security control, so what you write is what runs. This
+    check only surfaces the common misconfiguration — otherwise the symptom is
+    silently N/A security predicates.
+
+    The endpoint checked is ``url`` with any ``localhost``/loopback host rewritten
+    to ``host.openshell.internal`` (matching :func:`_rewrite_host_for_sandbox`)
+    and the port defaulted from the scheme when absent. ``policy_spec=None`` means
+    no midojo policy (the image built-in governs egress), which we cannot inspect.
+    """
+    import logging
+    from urllib.parse import urlsplit
+
+    log = logging.getLogger(__name__)
+    parts = urlsplit(url)
+    host = parts.hostname or ""
+    if host.lower() in _LOCAL_HOSTS:
+        host = _SANDBOX_HOST
+    port = parts.port or (443 if parts.scheme == "https" else 80)
+
+    if policy_spec is None:
+        log.warning(
+            "No sandbox network policy defined; cannot verify the agent can reach "
+            "the control plane at %s:%d. If it cannot, the in-sandbox SDK will not "
+            "record tool calls and security predicates will show N/A. Ensure the "
+            "image's built-in policy allows this endpoint.",
+            host,
+            port,
+        )
+        return
+
+    network_policies = policy_spec.get("networkPolicies") or {}
+    allowed = any(
+        any(ep.get("host") == host and ep.get("port") == port for ep in (entry.get("endpoints") or []))
+        for entry in network_policies.values()
+    )
+    if not allowed:
+        log.warning(
+            "Sandbox network policy does not allow the control plane at %s:%d; the "
+            "in-sandbox agent SDK cannot POST tool calls and security predicates "
+            "will show N/A. Add it to your suite's policy under networkPolicies, "
+            "e.g. an endpoint {host: %s, port: %d}.",
+            host,
+            port,
+            host,
+            port,
+        )
+
+
+# ---------------------------------------------------------------------------
+# Observations
+# ---------------------------------------------------------------------------
+
+
+# Key of the OpenShell entry in an evaluation's runtime observations.
+OBSERVATIONS_SOURCE = "openshell"
+
+
+class ProcessRecord(BaseModel):
+    """A process OCSF saw launch in the sandbox."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    binary: str
+    pid: int
+    command: str | None = None  # the launched command line, when OCSF logged it
+    exit_code: int | None = None  # None when no PROC:TERMINATE event was logged
+
+
+class OpenShellObservations(BaseModel):
+    """What OpenShell saw the agent do during one evaluation.
+
+    Collected by ``OpenShellRuntime.observe()`` outside the agent, and recorded
+    by the orchestrator as ``observations["openshell"]``.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    # Workdir diff against the seeded files (absolute paths)
+    files_created: list[str] = Field(default_factory=list)
+    files_modified: list[str] = Field(default_factory=list)
+    files_deleted: list[str] = Field(default_factory=list)
+    workdir_new_file_contents: dict[str, str] = Field(default_factory=dict)
+
+    # OCSF events (kernel-verified)
+    processes: list[ProcessRecord] = Field(default_factory=list)  # in launch order
+    network_calls_allowed: list[str] = Field(default_factory=list)  # "host:port"
+    network_calls_blocked: list[str] = Field(default_factory=list)  # "host:port", or "host" for DNS refusals
+    # Closed because the sandbox's policy changed mid-connection, not denied by policy
+    network_calls_interrupted: list[str] = Field(default_factory=list)
+    # Sandbox-verified executables that made allowed or blocked network calls
+    network_callers: list[str] = Field(default_factory=list)
+    security_findings: list[str] = Field(default_factory=list)  # finding titles
+
+
+register_observation_type(OBSERVATIONS_SOURCE, OpenShellObservations)
+
+
+# ---------------------------------------------------------------------------
+# Runtime
+# ---------------------------------------------------------------------------
+
+
+class OpenShellRuntime:
+    """Provisions and manages OpenShell sandboxes for a benchmark run.
+
+    Suite YAML::
+
+        agent_runtime:
+          type: openshell          # the default, may be omitted
+          image: localhost/my-agent:latest  # the agent's sandbox image, as a full reference
+          policy: {...}            # inline policy; omit for the image's built-in policy
+          files:                   # seeded workdir files (probe placeholders allowed)
+            customer_report.txt: "Q4 report ... {injection_task_0:main}"
+
+    Lifecycle (driven by the orchestrator):
+      1. ``configure(cluster=..., control_url=...)`` — inject deployment config (once)
+      2. ``start_run(run_id)`` — open the run's OpenShell workspace + client (once)
+      3. ``setup(injections, ...)`` — create sandbox with evaluation labels, seed files (per evaluation)
+      4. agent executes (via ``exec_agent``)
+      5. ``observe()`` — workdir diff + OCSF events → ``OpenShellObservations``
+      6. ``teardown()`` — delete the sandbox (per evaluation)
+      7. ``end_run()`` — delete the run's workspace, close the client (once)
+    """
+
+    name = "openshell"
+
+    def __init__(
+        self,
+        suite_name: str,
+        *,
+        image: str,
+        policy: dict | None = None,
+        providers: list[str] | None = None,
+        env_vars: dict[str, str] | None = None,
+        agent_command: list[str] | None = None,
+        files: dict[str, str] | None = None,
+    ) -> None:
+        self._suite_name = suite_name
+        self._image: str = image
+        self._policy_spec: dict | None = policy
+        # OpenShell provider names to inject into the sandbox as credentials.
+        # These must be pre-registered with `openshell provider create`.
+        # midojo does not manage the credentials — it only tells the gateway
+        # which registered providers to activate for this sandbox. The gateway's
+        # supervisor injects them as environment variables into the agent process.
+        self._providers: list[str] = providers or []
+        # Extra environment variables injected into the sandbox at creation.
+        # Use this to configure inference endpoints (e.g. OPENAI_BASE_URL for
+        # a local model server) without needing a registered provider.
+        self._env_vars: dict[str, str] = env_vars or {}
+        # Command used to invoke the agent inside the sandbox.
+        # Analogous to --agent-uri for unmanaged runtimes: this is how midojo calls
+        # the user's agent, expressed as a command inside the sandbox image.
+        self._agent_command: list[str] | None = agent_command
+        # Seed-file templates (probe placeholders intact), rendered in setup().
+        self._files: dict[str, str] = files or {}
+
+        # Deployment config — set by configure() before start_run()
+        self._cluster: str = ""
+        self._control_url: str = ""
+
+        # Run-level state — set by start_run(), cleared by end_run()
+        self._client: Any = None
+        # OpenShell workspace resource: a gateway-side named scope that holds the
+        # run's sandboxes and their policies. One per orchestrator run; every
+        # sandbox is created inside it. Distinct from ``_files`` (the
+        # seed-file contents) and ``/sandbox/workdir`` (a directory in the sandbox).
+        self._workspace_client: Any = None
+        self._workspace_name: str = ""
+        self._run_labels: dict[str, str] = {}
+
+        # Per-evaluation sandbox state — set by setup(), cleared by teardown()
+        self._ref: Any = None
+        self._start_ms: int = 0
+        self._cached_ocsf: OCSFEvents | None = None
+
+    # --- Public read-only accessors (avoid direct private attribute access) ---
+
+    @property
+    def workspace_name(self) -> str:
+        return self._workspace_name
+
+    @property
+    def image(self) -> str:
+        return self._image
+
+    @property
+    def policy(self) -> dict | None:
+        return self._policy_spec
+
+    @property
+    def agent_command(self) -> list[str] | None:
+        return self._agent_command
+
+    # --- Deployment config ---
+
+    def configure(self, *, cluster: str, control_url: str = "") -> None:
+        """Inject deployment config. Must be called before ``start_run()``.
+
+        ``cluster`` names an OpenShell gateway registered with the CLI, as
+        passed to ``midojo-run --gateway``. The gateway's gRPC endpoint and
+        mTLS bundle are read from ``~/.config/openshell`` at ``start_run()``.
+        """
+        self._cluster = cluster
+        self._control_url = control_url
+
+    # --- Run-level lifecycle ---
+
+    def start_run(self, run_id: str, *, suite_name: str | None = None) -> str:
+        """Open the run's OpenShell workspace and gRPC client, and name the workspace.
+
+        Called once per orchestrator run, before the first ``setup()``. Connects
+        via ``SandboxClient.from_active_cluster(cluster=...)``, which reads the
+        gateway's gRPC endpoint and mTLS bundle from ``~/.config/openshell/``
+        (written by the CLI). Names contain a shortened suite name; labels retain
+        the full registered suite name and run ID.
+        """
+        self._client = SandboxClient.from_active_cluster(cluster=self._cluster, timeout=_CLIENT_TIMEOUT_SECONDS)
+        self._workspace_client = WorkspaceClient.from_sandbox_client(self._client)
+        labels = {"midojo.suite": suite_name or self._suite_name, "midojo.run-id": run_id}
+        prefix = f"midojo-{_short_name(self._suite_name, 5, 'suite')}"
+        workspace = _create_named_resource(
+            prefix, run_id, lambda name: self._workspace_client.create(name, labels=labels)
+        )
+        self._workspace_name = workspace.name
+        self._run_labels = labels
+
+        # Policy and control-plane URL are fixed for the whole run, so check the
+        # control-plane allow rule once here rather than on every setup().
+        if self._control_url:
+            _warn_if_control_plane_not_allowed(self._policy_spec, self._control_url)
+        return f"workspace {self._workspace_name}"
+
+    # --- Per-evaluation sandbox lifecycle ---
+
+    def setup(
+        self,
+        injections: dict[str, str],
+        *,
+        session_token: str,
+        eval_id: str,
+        user_task_id: str,
+        injection_task_id: str | None,
+    ) -> None:
+        """Create the sandbox in the run's workspace, seed the files, mark a baseline.
+
+        The injections are substituted into the seeded files. Requires
+        ``start_run()`` to have opened the client and workspace.
+        """
+        self._cached_ocsf = None
+
+        env = {**self._env_vars, "MIDOJO_SESSION_TOKEN": session_token}
+        # The in-sandbox agent SDK POSTs its tool calls to the control plane, so
+        # the sandbox must be able to reach it. `localhost` resolves to the sandbox
+        # itself, so hand the SDK the host.openshell.internal form of the URL. The
+        # suite's network policy must allow this endpoint (checked once in
+        # start_run); midojo never edits the declared policy.
+        if self._control_url:
+            env["MIDOJO_URL"] = _rewrite_host_for_sandbox(self._control_url)
+        spec = openshell_pb2.SandboxSpec(
+            template=openshell_pb2.SandboxTemplate(image=self._image),
+            environment=env,
+            providers=self._providers,
+        )
+        _resolve_policy(self._policy_spec, spec)
+
+        labels = {
+            **self._run_labels,
+            "midojo.eval-id": eval_id,
+            "midojo.user-task": user_task_id,
+        }
+        if injection_task_id is not None:
+            labels["midojo.injection-task"] = injection_task_id
+        self._ref = self._client.create(
+            workspace=self._workspace_name, spec=spec, name=f"eval-{eval_id}", labels=labels
+        )
+        self._client.wait_ready(self._ref.name, workspace=self._workspace_name, timeout_seconds=120.0)
+
+        # Seed workdir files.
+        # Paths starting with "/" are seeded at the absolute path (e.g. config
+        # files outside the workdir). All other paths are relative to
+        # /sandbox/workdir/ (the agent's working directory).
+        self._exec(["mkdir", "-p", _WORKDIR])
+        for path, template in self._files.items():
+            content = substitute_probes(template, injections)
+            if path.startswith("/"):
+                dest = path
+            else:
+                dest = f"{_WORKDIR}/{path}"
+            parent = dest.rsplit("/", 1)[0]
+            self._exec(["mkdir", "-p", parent])
+            self._exec(["tee", dest], stdin=content.encode())
+
+        self._exec(["touch", "/tmp/.midojo_baseline"])
+        self._start_ms = int(time.time() * 1000)
+
+    def _exec(self, command: list[str], **kwargs: Any) -> Any:
+        """Run a command in the evaluation's sandbox.
+
+        The SDK addresses a sandbox by its name within a workspace, not by ID.
+        """
+        return self._client.exec(self._ref.name, command, workspace=self._workspace_name, **kwargs)
+
+    def exec_agent(self, prompt: str, *, timeout_seconds: float) -> Any:
+        """Execute the agent inside the sandbox. Returns an ``ExecResult``.
+
+        Uses ``agent_command`` from the suite YAML if set, otherwise falls back
+        to the image's default entrypoint by running the prompt as a positional
+        argument. Suite authors should always set ``agent_command`` explicitly.
+
+        Runs with cwd set to the seed directory so the agent resolves bare
+        filenames (e.g. ``customer_report.txt``) against the workdir. This keeps
+        tasks readable and, more importantly, removes a fragile dependency on the
+        model echoing an absolute path back verbatim: a bare filename has no
+        leading slash to drop, so it resolves correctly regardless of the model.
+        """
+        cmd = [*self._agent_command, prompt] if self._agent_command else [prompt]
+        return self._exec(cmd, workdir=_WORKDIR, timeout_seconds=int(timeout_seconds))
+
+    def _read_ocsf_messages(self) -> list[str]:
+        """Return the OCSF messages the supervisor has pushed since the evaluation began.
+
+        Uses ``client._stub.GetSandboxLogs`` directly — the high-level SDK has no
+        public wrapper for log retrieval.
+        """
+        since = Timestamp()
+        since.FromMilliseconds(self._start_ms)
+        logs_resp = self._client._stub.GetSandboxLogs(
+            openshell_pb2.GetSandboxLogsRequest(
+                sandbox=self._ref.name,
+                workspace_scope=datamodel_pb2.WorkspaceSelector(workspace=self._workspace_name),
+                since_time=since,
+                sources=["sandbox"],
+            ),
+            timeout=10.0,
+        )
+        return [log_line.message for log_line in logs_resp.logs if log_line.level.upper() == "OCSF"]
+
+    def _sync_ocsf_messages(self) -> list[str]:
+        """Read OCSF messages after every event from the agent's session has arrived.
+
+        The supervisor batches log lines and pushes them to the gateway in order
+        every 500 ms, so a read right after the agent exits can miss its last
+        network decisions. Resolve a unique hostname inside the sandbox, which the
+        supervisor refuses and logs, then poll until that refusal is visible:
+        everything the agent caused was pushed before it. The marker's own events
+        are removed from the result.
+        """
+        marker = f"sync-{uuid.uuid4().hex[:12]}{_SYNC_MARKER_SUFFIX}"
+        self._exec(["sh", "-c", _SYNC_MARKER_SCRIPT.format(host=marker)], timeout_seconds=30)
+
+        deadline = time.time() + _LOG_SYNC_BUDGET_SECONDS
+        messages: list[str] = []
+        while time.time() < deadline:
+            messages = self._read_ocsf_messages()
+            if any(marker in message for message in messages):
+                return [message for message in messages if marker not in message]
+            time.sleep(0.5)
+        logging.getLogger(__name__).warning(
+            "OpenShell log sync marker did not arrive within %.0fs; network evidence may be incomplete",
+            _LOG_SYNC_BUDGET_SECONDS,
+        )
+        return messages
+
+    def _fetch_ocsf(self) -> OCSFEvents:
+        """Fetch and parse the evaluation's OCSF events, with caching."""
+        if self._cached_ocsf is not None:
+            return self._cached_ocsf
+
+        messages: list[str] = []
+        try:
+            messages = self._sync_ocsf_messages()
+        except Exception as exc:
+            logging.getLogger(__name__).warning(
+                "OCSF log fetch failed — security predicates will degrade to False: %s", exc
+            )
+
+        self._cached_ocsf = parse_ocsf_lines(messages)
+        return self._cached_ocsf
+
+    def observe(self) -> dict[str, BaseModel]:
+        """Collect the workdir diff and OCSF events as ``observations["openshell"]``."""
+        seeded = {f"{_WORKDIR}/{p}" for p in self._files}
+
+        diff_result = self._exec(["find", _WORKDIR, "-type", "f", "-newer", "/tmp/.midojo_baseline"])
+        all_result = self._exec(["find", _WORKDIR, "-type", "f"])
+
+        current = {ln.strip() for ln in all_result.stdout.splitlines() if ln.strip()}
+
+        files_created: list[str] = []
+        files_modified: list[str] = []
+        new_file_contents: dict[str, str] = {}
+
+        for line in diff_result.stdout.splitlines():
+            fpath = line.strip()
+            if not fpath:
+                continue
+            if fpath in seeded:
+                files_modified.append(fpath)
+            else:
+                files_created.append(fpath)
+                cat = self._exec(["cat", fpath])
+                if cat.exit_code == 0:
+                    new_file_contents[fpath] = cat.stdout
+
+        files_deleted = [p for p in seeded if p not in current]
+
+        ocsf = self._fetch_ocsf()
+
+        observed = OpenShellObservations(
+            files_created=files_created,
+            files_modified=files_modified,
+            files_deleted=files_deleted,
+            workdir_new_file_contents=new_file_contents,
+            processes=[ProcessRecord(**asdict(p)) for p in ocsf.processes],
+            network_calls_allowed=ocsf.network_allowed_endpoints,
+            network_calls_blocked=ocsf.network_blocked_endpoints,
+            network_calls_interrupted=ocsf.network_interrupted_endpoints,
+            network_callers=ocsf.network_callers,
+            security_findings=[f.title for f in ocsf.findings],
+        )
+        return {OBSERVATIONS_SOURCE: observed}
+
+    def teardown(self) -> None:
+        """Delete the evaluation's sandbox. The workspace is deleted in ``end_run()``."""
+        if self._ref is not None and self._client is not None:
+            try:
+                self._client.delete(self._ref.name, workspace=self._workspace_name)
+                self._client.wait_deleted(
+                    self._ref.name, workspace=self._workspace_name, timeout_seconds=_TEARDOWN_BUDGET_SECONDS
+                )
+            except Exception as exc:
+                import logging
+
+                logging.getLogger(__name__).warning("Sandbox teardown failed: %s", exc)
+        self._ref = None
+        self._start_ms = 0
+        self._cached_ocsf = None
+
+    def end_run(self) -> None:
+        """Wait for the run's workspace to drain, delete it, and close the client.
+
+        Called once after the last ``teardown()``. Each evaluation's teardown
+        deletes its sandbox, but the gateway removes a sandbox (and its policy)
+        asynchronously, so the workspace can still report resources for a short
+        window. Deleting a non-empty workspace is rejected (FAILED_PRECONDITION)
+        and there is no cascade delete, so poll until the workspace is empty
+        before deleting it.
+        """
+        import logging
+
+        log = logging.getLogger(__name__)
+        if self._client is not None and self._workspace_name:
+            self._wait_workspace_empty()
+        if self._workspace_client is not None and self._workspace_name:
+            try:
+                self._workspace_client.delete(self._workspace_name)
+            except Exception as exc:
+                log.warning("Workspace teardown failed: %s", exc)
+        if self._client is not None:
+            try:
+                self._client.close()
+            except Exception:
+                pass
+        self._client = None
+        self._workspace_client = None
+        self._workspace_name = ""
+        self._run_labels = {}
+
+    def _wait_workspace_empty(self) -> None:
+        """Poll until the run's workspace has no sandboxes, or the budget elapses.
+
+        ``list_ids`` may itself raise a transient RPC error mid-drain; that is
+        tolerated and treated as "not yet empty". After ``_TEARDOWN_BUDGET_SECONDS``
+        the loop gives up and ``end_run`` attempts the delete regardless.
+        """
+        import logging
+
+        log = logging.getLogger(__name__)
+        deadline = time.time() + _TEARDOWN_BUDGET_SECONDS
+        while time.time() < deadline:
+            try:
+                remaining = self._client.list_ids(workspace=self._workspace_name)
+            except Exception as exc:
+                log.debug("workspace drain poll failed (treating as non-empty): %s", exc)
+                remaining = ["<unknown>"]
+            if not remaining:
+                return
+            time.sleep(1)
+        log.warning(
+            "workspace %s still not empty after %.0fs; attempting delete anyway",
+            self._workspace_name,
+            _TEARDOWN_BUDGET_SECONDS,
+        )

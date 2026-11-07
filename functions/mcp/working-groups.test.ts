@@ -4,6 +4,8 @@ import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/cli
 import { onRequest, FREE_DEFINITIONS } from "./[[path]]";
 import LOCK from "./tool-fleet.lock.json";
 import { WORKING_GROUP_CATALOG_URI, WORKING_GROUP_REVIEW_PROMPT } from "./_working_groups";
+import { PANEL_URI } from "./_panel";
+import PANEL_RESOURCE from "../../public/native-panel/resource.json";
 
 const origin = "https://councilof.ai";
 const source = readFileSync(new URL("../../public/working-groups/catalog.json", import.meta.url), "utf8");
@@ -30,14 +32,21 @@ describe("public council participation through the actual HTTP MCP handler", () 
   it.each([
     ["/mcp/free", "auto"], ["/mcp/free", "legacy"],
     ["/mcp", "auto"], ["/mcp", "legacy"],
-  ] as const)("reads the exact register and all unsent drafts at %s with %s", async (door, mode) => {
+  ] as const)("reads the exact register, native panel and all unsent drafts at %s with %s", async (door, mode) => {
     const client = await connect(door, mode);
     try {
       expect(client.getServerCapabilities()).toMatchObject({ resources: {}, prompts: {} });
       const resources = await client.listResources();
-      expect(resources.resources.map(r => r.uri)).toEqual([WORKING_GROUP_CATALOG_URI]);
+      expect(resources.resources.map(r => r.uri)).toEqual([WORKING_GROUP_CATALOG_URI, PANEL_URI]);
       const result = await client.readResource({ uri: WORKING_GROUP_CATALOG_URI });
       expect(result.contents).toEqual([{ uri: WORKING_GROUP_CATALOG_URI, mimeType: "application/json", text: source }]);
+      const panel = await client.readResource({ uri: PANEL_URI });
+      expect(panel.contents).toEqual([{
+        uri: PANEL_URI,
+        mimeType: "text/html;profile=mcp-app",
+        text: PANEL_RESOURCE.text,
+        _meta: { ui: { csp: { connectDomains: [origin], resourceDomains: [], frameDomains: [] } } },
+      }]);
       const prompts = await client.listPrompts();
       expect(prompts.prompts.map(p => p.name)).toEqual([WORKING_GROUP_REVIEW_PROMPT]);
       for (const doc of catalog.documents) {
@@ -53,6 +62,14 @@ describe("public council participation through the actual HTTP MCP handler", () 
       }
       const tools = await client.listTools();
       expect(tools.tools.map(t => t.name).sort()).toEqual((door === "/mcp/free" ? FREE_DEFINITIONS.map(t => t.name) : [...LOCK.free, ...LOCK.paid]).sort());
+      expect(tools.tools.find(t => t.name === "board_totals")?._meta).toMatchObject({
+        ui: { resourceUri: PANEL_URI },
+        "openai/ui": { entrypoints: [{ type: "global" }, { type: "thread" }] },
+      });
+      for (const tool of tools.tools.filter(t => LOCK.paid.includes(t.name))) {
+        expect(tool._meta?.ui).toBeUndefined();
+        expect(tool._meta?.["openai/ui"]).toBeUndefined();
+      }
       expect(network).not.toHaveBeenCalled();
     } finally { await client.close(); }
   });
@@ -62,7 +79,7 @@ describe("public council participation through the actual HTTP MCP handler", () 
       for (const args of [{}, { documentId: "unknown" }, { documentId: "x".repeat(9000) }, { documentId: "COAI-WG-002", observation: "Must remain local" }]) {
         await expect(client.getPrompt({ name: WORKING_GROUP_REVIEW_PROMPT, arguments: args })).rejects.toThrow();
       }
-      for (const uri of ["file:///etc/passwd", "https://attacker.invalid/private", WORKING_GROUP_CATALOG_URI + "?secret=1"]) {
+      for (const uri of ["file:///etc/passwd", "https://attacker.invalid/private", WORKING_GROUP_CATALOG_URI + "?secret=1", PANEL_URI + "?secret=1", "ui://council/unregistered-panel"]) {
         await expect(client.readResource({ uri })).rejects.toThrow();
       }
       await expect(client.getPrompt({ name: "appoint_reviewer" })).rejects.toThrow();

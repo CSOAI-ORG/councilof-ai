@@ -22,9 +22,13 @@ import { headFromGet } from "./_head";
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
 // in but absent from the data, so the board reported 14 — the un-swept state.
-// method_status (Measure ruling 2026-10-16, AXES-33-SPEC.md): each live axis either meets the rule
+// method_status (Measure ruling 2026-10-16): each live axis either meets the rule
 // (frozen sha-pinned bank or method, n_valid >= 30) or names its exact gap. Fact-axis gaps read n off
 // the row, never typed. Remediation is queued in bank-next-version. The measured count is unchanged.
+// This ruling was cited as AXES-33-SPEC.md. That document was never committed to any branch, so
+// the citation pointed at nothing a reader could open. The rule it states is enforced at
+// pull-request time by scripts/board-production-anchor.mjs, which refuses a promotion without a
+// frozen sha-pinned bank, method_status "meets-rule" and n >= 30.
 const LEGACY_GAP: Record<string, string> = {
   jail: "27 distinct prompts, n<30",
   swarm: "bank sha points to retired bank",
@@ -649,7 +653,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     doi: "10.5281/zenodo.21991104",
     doi_note: "GSPC Methodology and the Frozen Corpus Anchor (the canonical methodology record — one citable spine, HB.0). Supersedes the stale 21755656 (an unrelated EAT-benchmark dataset).",
     // 29 Sep 2026: the Zenodo record behind this DOI answers HTTP 410 (account blocked by Zenodo;
-    // appeal pending). The identifier stays; this block says it does not currently resolve.
+    // no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json)). The identifier stays; this block says it does not currently resolve.
     ...zenodoDoiStatus({
       url: METHODOLOGY_LIVE_URL,
       relation: "the live methodology page; not the deposit's bytes (no byte-identical copy of the deposited files is served)",

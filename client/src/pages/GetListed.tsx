@@ -98,9 +98,9 @@ export default function GetListed() {
   }
 
   useEffect(() => {
-    document.title = "You are listed. You are not graded. — Council of AI";
+    document.title = "Model listings and measurement requests — Council of AI";
     setMetaDescription(
-      "What being in a CSOAI census means, what the three GSPC badges are, and how a maintainer opts in to a frozen bank to earn a card. Measurement, not certification.",
+      "What being in a CSOAI census means, what the three GSPC badges are, and how a maintainer can request a measurement under a published method. Measurement, not certification.",
     );
   }, []);
 
@@ -108,10 +108,10 @@ export default function GetListed() {
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <section className="mx-auto max-w-3xl px-6 py-16">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-          GSPC census · opt-in funnel
+          GSPC model census
         </p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">
-          You are listed. You are not graded.
+          Model listings and measurement requests
         </h1>
         <p className="mt-4 text-emerald-100/80 leading-relaxed">
           CSOAI runs censuses of the open ecosystem — open-licence models on the
@@ -213,9 +213,9 @@ export default function GetListed() {
         </div>
 
         <p className="mt-8 text-sm text-emerald-100/70">
-          Measurement, not certification. There is no certified badge and no gold
-          badge. An UNMEASURED axis stays visibly empty until a run exists — the
-          gap is the product.
+          Measurement, not certification. Listing, measurement and verification are
+          separate states. An axis remains UNMEASURED until a qualifying run is
+          published; a missing result is never reported as zero.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">

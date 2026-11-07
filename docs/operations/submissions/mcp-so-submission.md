@@ -7,16 +7,16 @@
 
 - **Name:** Council of AI — GSPC Measurement Tools
 - **Repository:** https://github.com/CSOAI-ORG/councilof-ai
-- **npm package:** csoai-gspc-mcp (v0.2.5)
+- **npm package:** csoai-gspc-mcp (v0.2.7)
 - **MCP endpoint:** https://councilof.ai/mcp (streamable-http)
 - **Free door (no payment tool):** https://councilof.ai/mcp/free
-- **stdio:** npx -y csoai-gspc-mcp@0.2.5
+- **stdio:** npx -y csoai-gspc-mcp@0.2.7
 
 ## Description
 
-Independent AI-governance measurement body. 53 MCP tools:
+Independent AI-governance measurement body. 54 MCP tools:
 
-- **48 free readers:** the 14 board readers (`board_totals`, `get_axis`, `verify_card`, `list_cards`, `get_root`, `get_card`, `verify_inclusion`, `x402_trust`, `mcp_trust`, `measurement_index`, `verify_capsule`, `server_evidence`, `evidence_bundle_preview`, `route`) plus one named reader per declared axis (`axis_<axis-id>` — 34 of them), so a caller can ask for one axis by name and get that axis's own board row back, or UNMEASURED where no published run sits behind it.
+- **49 free readers:** the 14 board readers (`board_totals`, `get_axis`, `verify_card`, `list_cards`, `get_root`, `get_card`, `verify_inclusion`, `x402_trust`, `mcp_trust`, `measurement_index`, `verify_capsule`, `server_evidence`, `evidence_bundle_preview`, `route`), one named reader per declared axis (`axis_<axis-id>` — 34 of them), so a caller can ask for one axis by name and get that axis's own board row back, or UNMEASURED where no published run sits behind it, and the `framework_readiness` checklist (deterministic evidence-planning over eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss and cra; preparation, never a determination).
 - **5 x402-metered:** `commission_card`, `art50_marking_evidence`, `rwa_evidence`, `receipts_batch`, `evidence_bundle`
 
 Frozen item banks, published scoring code, OTS-anchored Merkle root, Rekor inclusion proofs. Measurement, not certification.
@@ -37,8 +37,8 @@ https://councilof.ai
 
 This is a staged draft. Nothing here has been sent. Three gates, in order:
 
-1. `npm publish csoai-gspc-mcp@0.2.5` must succeed and `npm view csoai-gspc-mcp@0.2.5` must resolve. The stdio line installs that exact version, and only that version carries the 53 tools. **Resolving the version is not enough**: download the published tarball and compare its own manifests to the live door's `tools/list`, because a version number can resolve while carrying a different payload. That is exactly what happened to `0.2.4`, published 2026-10-28T16:48:34.768Z with 52 tools (47 free + 5 metered, measured from the published tarball on 2026-11-01) — it resolves to this day and is one tool short of the door, because `axis_watchdog-ingest` landed after it was published; `0.2.4` is taken, so the fix is a new version, not a re-publish. `0.2.3` is the older instance of the same trap: published 2026-10-26T07:21:23.715Z with 19 tools (14 free + 5 metered, measured from the published tarball on 2026-10-28) and still resolves.
-2. `POST https://councilof.ai/mcp` with `tools/list` must return 53 tools (48 free + 5 metered). If the live route and this draft disagree, the live route wins and this draft is wrong.
-3. The counts and the tool names above are held against `functions/mcp/gspc-tools.json` and `functions/mcp/paid-tools.json` by `functions/mcp/tool-counts.test.ts`, and the npm version above is held against `mcp/gspc-server/package.json`. A fleet change turns that test red, and this draft has to be updated in the same commit.
+1. The dated capture at `distribution/npm/npm-publish-check.json`, checked **2026-11-04T07:02:56.629Z**, records published `0.2.7` (published 2026-11-04T06:18:50.741Z), not deprecated, with 54 tool names (49 free + 5 metered) matching the captured HTTP door. This is a name-set comparison; it does not establish installation or runtime behaviour. **Recheck the registry and download the pinned tarball before sending**, compare its manifests with the current door's `tools/list`, and run a local install/stdio smoke check. If any check differs, update this staged draft before submission. The repository's prepared version is a separate fact and must not replace the published pin without a fresh registry capture.
+2. `POST https://councilof.ai/mcp` with `tools/list` must return 54 tools (49 free + 5 metered). If the live route and this draft disagree, the live route wins and this draft is wrong.
+3. The counts and the tool names above are held against `functions/mcp/gspc-tools.json` and `functions/mcp/paid-tools.json` by `functions/mcp/tool-counts.test.ts`. The npm pin and capture date are held against `distribution/npm/npm-publish-check.json`, including the captured name-set match. A new capture or fleet change requires this draft to be reviewed in the same change.
 
 Sending goes through the outward gate. Nothing leaves in Nick's name without it.

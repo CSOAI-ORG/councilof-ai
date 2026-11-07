@@ -78,9 +78,16 @@ def _open_directory(name, parent, expected=None):
 
 def _root():
     # Anchor every component from '/', never traverse ancestors by pathname.
+    # realpath, not abspath: on macOS the temp roots are symlinks (/tmp ->
+    # private/tmp, /var -> private/var), and a no-follow walk of the absolute
+    # path refuses its own parent chain there, so the whole suite could only run
+    # on Linux. Resolving FIRST keeps the guarantee — every component actually
+    # walked is a real directory, opened O_NOFOLLOW and identity-checked — while
+    # letting the same hardened walk run on any host. On Linux realpath ==
+    # abspath for these roots, so behavior there is byte-identical.
     descriptor = os.open(os.sep, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
-        for part in os.path.abspath(HERE).split(os.sep):
+        for part in os.path.realpath(HERE).split(os.sep):
             if not part:
                 continue
             child = _open_directory(part, descriptor)

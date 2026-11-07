@@ -32,6 +32,7 @@ const PATHS: Path[] = [
   { n: 4, title: "Attest", blurb: "Reproduce a published measurement to earn a free, signed completion record (issuance is not open yet). It records what you reproduced, not conformity — we certify nothing.", ring: "border-violet-300", chip: "bg-violet-100 text-violet-800", modules: [
     { name: "Completion records — how they work", href: "#completion-records" },
     { name: "Verify a signed card in your browser", href: "/gspc-verify/" },
+    { name: "H.I.M. — where a named human decides", href: "/him" },
   ] },
 ];
 
@@ -49,9 +50,20 @@ export default function CouncilAcademy() {
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Council Academy</h1>
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">No manuals. Follow the modules below from the Layer 0 floor to the frameworks and law that apply to you, then into the tools. The exercises let you reproduce a published measurement yourself; completion records are not issued yet, and one would only ever say you reproduced a measurement — never conformity.</p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a href="/tour" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Take the guided tour {"\u2192"}</a>
-            <a href="/assess" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Free readiness check {"\u2192"}</a>
+            <a href="/tour" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Take the guided tour {"→"}</a>
+            <a href="/assess" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Free readiness check {"→"}</a>
           </div>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-6 pb-4">
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-amber-700">MEOK H.I.M. · the last door on every path</p>
+          <p className="mt-2 text-sm leading-relaxed text-amber-950">
+            Whoever you are — regulator, builder, buyer — the journey ends at the same gate: AI proposes, a named human decides.
+            H.I.M. is that layer, named: the escalation, the competence check, the operator authority, the receipt.
+          </p>
+          <a href="/him" className="mt-3 inline-flex items-center rounded-xl border border-amber-300 bg-white px-4 py-2 text-sm font-bold text-amber-900 hover:bg-amber-100">Meet H.I.M. →</a>
         </div>
       </section>
 
@@ -69,7 +81,7 @@ export default function CouncilAcademy() {
                     {p.modules.map((m) => (
                       <a key={m.name} href={m.href} className="group flex items-center justify-between rounded-xl border border-gray-200 px-4 py-3 hover:border-emerald-300 hover:bg-emerald-50/40 transition">
                         <span className="text-sm font-medium text-gray-800">{m.name}</span>
-                        <span className={"ml-3 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold " + p.chip}>Begin {"\u2192"}</span>
+                        <span className={"ml-3 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold " + p.chip}>Begin {"→"}</span>
                       </a>
                     ))}
                   </div>

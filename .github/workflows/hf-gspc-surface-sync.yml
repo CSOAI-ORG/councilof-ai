@@ -20,7 +20,7 @@ on:
     # release behind while faithfully copying yesterday's production bytes.
     workflows:
       - "public-root"
-      - "Build + deploy site (gated production branch)"
+      - "Build \\+ deploy site (gated production branch)"
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -120,3 +120,68 @@ jobs:
           if [ "$TARGET" = "root" ] || [ "$TARGET" = "both" ]; then
             python scripts/sync_hf_gspc.py --root $dry
           fi
+
+  # No second build, direct upload, dispatch or scheduler. Consume only the
+  # artifact from the successful master deployment in this repository.
+  coliseum:
+    if: >-
+      github.event_name == 'workflow_run' &&
+      vars.HF_GSPC_AUTO_SYNC == 'enabled' &&
+      github.event.workflow_run.name == 'Build + deploy site (gated production branch)' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'master' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            scripts/sync_hf_coliseum.py
+            scripts/test_sync_hf_coliseum.py
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Offline publisher negative controls
+        run: python3 scripts/test_sync_hf_coliseum.py
+
+      - name: Download the successful deployment's immutable build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coliseum-mirror-${{ github.event.workflow_run.head_sha }}
+          path: dist/hf-coliseum
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Verify artifact source and every file before using the HF credential
+        env:
+          EXPECTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: >-
+          python3 scripts/sync_hf_coliseum.py --artifact dist/hf-coliseum
+          --expected-sha "$EXPECTED_SHA" --verify-only
+
+      - name: Existing Hugging Face client
+        run: pip install --quiet "huggingface_hub>=1.5,<2"
+
+      - name: Check target write access, mirror exact built bytes and verify the hosted app
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          EXPECTED_SHA: ${{ github.event.workflow_run.head_sha }}
+          UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
+          BUCKET_ALLOWANCE: ${{ vars.HF_COLISEUM_EXISTING_ALLOWANCE }}
+        run: |
+          set -euo pipefail
+          bucket_args=()
+          if [ "${BUCKET_ALLOWANCE:-}" = "qualified-no-new-charge" ]; then
+            bucket_args+=(--copy-assets-existing-allowance)
+          fi
+          python3 scripts/sync_hf_coliseum.py --artifact dist/hf-coliseum \
+            --expected-sha "$EXPECTED_SHA" --upstream-run-id "$UPSTREAM_RUN_ID" "${bucket_args[@]}"

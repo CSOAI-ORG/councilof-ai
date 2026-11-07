@@ -4,6 +4,7 @@ import { FREE_DEFINITIONS, FREE_INSTRUCTIONS, doorFor, onRequest } from "./[[pat
 import { PAID_TOOL_NAMES } from "./_paid";
 import FREE from "./gspc-tools.json";
 import PAID from "./paid-tools.json";
+import { PANEL_URI } from "./_panel";
 
 /**
  * /mcp/free — the address listed in the Claude connector directory (2026-09-27).
@@ -17,7 +18,7 @@ import PAID from "./paid-tools.json";
 const ORIGIN = "https://councilof.ai";
 const LEGACY = "2025-03-26";
 
-type Tool = { name: string; title?: string; description?: string; annotations?: Record<string, unknown>; inputSchema?: { properties?: Record<string, unknown> } };
+type Tool = { _meta?: Record<string, any>; name: string; title?: string; description?: string; annotations?: Record<string, unknown>; inputSchema?: { properties?: Record<string, unknown> } };
 type Envelope = {
   jsonrpc: string;
   id?: unknown;
@@ -82,9 +83,18 @@ describe("/mcp/free serves exactly the free tools", () => {
     const { response, message } = await rpc("/mcp/free", "tools/list");
     expect(response.status).toBe(200);
     const tools = message.result!.tools!;
-    expect(FREE_NAMES).toHaveLength(48);
+    expect(FREE_NAMES).toHaveLength(49);
     expect(tools.map((t) => t.name)).toEqual(FREE_NAMES);
-    expect(tools).toEqual((FREE as { tools: Tool[] }).tools);
+    // Exact underlying tool contract is preserved; only the explicit UI metadata and
+    // the board presentation title differ. Unknown metadata is still refused.
+    const presented = new Set(["board_totals", "get_axis", "verify_card", "server_evidence"]);
+    const expected = (FREE as { tools: Tool[] }).tools.map(t => presented.has(t.name) ? {
+      ...t, ...(t.name === "board_totals" ? { title: "Council of AI · MEOK companion" } : {}),
+      _meta: { ui: { resourceUri: PANEL_URI }, ...(t.name === "board_totals" ? {
+        "openai/ui": { entrypoints: [{ type: "global" }, { type: "thread" }] },
+      } : {}) },
+    } : t);
+    expect(tools).toEqual(expected);
     for (const t of tools) {
       expect(PAID_TOOL_NAMES.has(t.name), t.name).toBe(false);
       expect(t.title, t.name).toBeTruthy();

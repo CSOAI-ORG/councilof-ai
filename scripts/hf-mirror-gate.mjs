@@ -118,6 +118,23 @@ async function main() {
   }
 
   console.log(`✓ hf-mirror-gate: all ${verified.length} directory exclusions have HF mirrors`);
+
+  // T18 F2: Verify the 4 pinned EU AI Act Article 50 sample card wrappers on HF
+  const PINNED_ART50_PREFIXES = [
+    "1590fa3a3d3c89d2",
+    "6f2c382a3f9af938",
+    "3de61df398d42cef",
+    "559071cdbffd73ad",
+  ];
+  for (const prefix of PINNED_ART50_PREFIXES) {
+    const cardPath = `cards/${prefix}.json`;
+    const status = await headRequest(HF_RESOLVE + cardPath);
+    if (status !== 200 && status !== 302 && status !== 307) {
+      console.error(`✗ hf-mirror-gate: pinned Article 50 wrapper ${cardPath} returned ${status}`);
+      process.exit(1);
+    }
+    console.log(`✓ ${cardPath}: pinned Article 50 wrapper verified (${status})`);
+  }
 }
 
 main().catch((e) => {
