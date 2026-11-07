@@ -61,12 +61,6 @@ jobs:
 
       - name: take the read and write the new edition
         id: publish
-        env:
-          # The producer's GitHub reads — the open-pull-request count and the merge window —
-          # are unauthenticated by default and rate-limited per IP, which is a transport
-          # event that stops the read rather than a number to publish. A token raises the
-          # limit and is NEVER required: the read still works without it.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -uo pipefail
           node scripts/surface/rebind-catalogue-live-state.mjs
