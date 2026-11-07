@@ -61,7 +61,9 @@ async function fetchObject(
       method: "GET",
       headers: { accept: "application/json" },
       credentials: "omit",
-      redirect: "error",
+      // Workers supports manual/follow, not Fetch's error mode. Manual keeps
+      // redirects visible so the non-2xx check below rejects them before parsing.
+      redirect: "manual",
       ...(controller ? { signal: controller.signal } : {}),
     });
     if (!response.ok) return null;
