@@ -138,11 +138,11 @@ class Fixtures(unittest.TestCase):
 
 
 class CommittedOutput(unittest.TestCase):
-    """capture-2026-09-28/out/ is committed. It must be exactly what this adapter produces now."""
+    """Retained capture receipts describe their recorded method; repairs do not rewrite history."""
     ARGS = ["--enforcer-version", "0.1.2", "--subject", "urn:example:openshell-network-proxy:capture-2026-09-28",
             "--issued-at", "2026-09-28T13:43:00Z"]
 
-    def test_committed_capture_output_is_reproducible(self):
+    def test_retained_capture_and_current_method_preserve_valid_observations(self):
         d = os.path.join(HERE, "capture-2026-09-28")
         with tempfile.TemporaryDirectory() as out:
             p = subprocess.run([sys.executable, os.path.join(HERE, "adapter.py"), "compare",
@@ -150,9 +150,38 @@ class CommittedOutput(unittest.TestCase):
                                 "--witness", os.path.join(d, "witness.jsonl"), "--out", out] + self.ARGS,
                                capture_output=True, text=True, cwd=HERE)
             self.assertEqual(p.returncode, 1, p.stdout + p.stderr)
-            for f in ("rows.json", "receipts.jsonl", "run-receipt.json"):
-                self.assertEqual(rbytes(os.path.join(out, f)), rbytes(os.path.join(d, "out", f)),
-                                 f"capture-2026-09-28/out/{f} is stale: regenerate it (see README)")
+            before = jload(os.path.join(d, "out", "rows.json"))
+            after = jload(os.path.join(out, "rows.json"))
+            self.assertEqual(before["adapter"]["version"], "0.2.0")
+            self.assertEqual(after["adapter"]["version"], "0.2.1")
+            # These valid inputs preserve the full row data, judgments and input
+            # references. Changed method identity requires a new run receipt.
+            for key in ("rows", "summary", "inputs", "signing_key"):
+                self.assertEqual(before[key], after[key], key)
+            self.assertEqual(rbytes(os.path.join(out, "receipts.jsonl")),
+                             rbytes(os.path.join(d, "out", "receipts.jsonl")))
+            original_run = jload(os.path.join(d, "out", "run-receipt.json"))
+            current_run = jload(os.path.join(out, "run-receipt.json"))
+            original_claim, current_claim = original_run["claims"][0], current_run["claims"][0]
+            self.assertEqual(original_claim["adapter"]["version"], "0.2.0")
+            self.assertEqual(current_claim["adapter"]["version"], A.ADAPTER_VERSION)
+            self.assertEqual(current_claim["adapter"]["sha256"], A.sha256_file(A.__file__))
+            self.assertEqual(current_claim["adapter"]["witness_rules_sha256"], A.sha256_file(A._WITNESS_HELPER_PATH))
+            self.assertRegex(original_claim["adapter"]["sha256"], r"^[0-9a-f]{64}$")
+            self.assertNotEqual(original_claim["adapter"]["sha256"], current_claim["adapter"]["sha256"])
+            self.assertNotEqual(original_run["content_id"], current_run["content_id"])
+            ref, doc = A._interceptor(), test_did()
+            for report, run in ((before, original_run), (after, current_run)):
+                claim = run["claims"][0]
+                self.assertEqual(claim["evidence_sha256"], A.sha256_bytes(A._canon(report["rows"])))
+                self.assertEqual(claim["inputs"], report["inputs"])
+                self.assertEqual(ref.verify_receipt_result(run, resolve_did=lambda _d: doc)[0], "VALID")
+            retained_rows = jlines(os.path.join(d, "out", "receipts.jsonl"))
+            self.assertEqual(original_claim["row_receipts"], [r["content_id"] for r in retained_rows])
+            self.assertEqual(current_claim["row_receipts"], original_claim["row_receipts"])
+            for row, receipt in zip(before["rows"], retained_rows):
+                self.assertEqual(receipt["claims"][0]["evidence_sha256"], A.sha256_bytes(A._canon(row)))
+                self.assertEqual(ref.verify_receipt_result(receipt, resolve_did=lambda _d: doc)[0], "VALID")
 
     @unittest.skipUnless(shutil.which("node") and os.path.exists(os.path.join(REPO, RUN_MJS)), "node or run.mjs not present")
     def test_js_verifier_agrees(self):
@@ -273,6 +302,98 @@ class Requalify012(unittest.TestCase):
         w = [{"kind": "egress", "host": "169.254.169.254", "port": 80, "left": True, "_line": 1, "_sha256": "0" * 64}]
         rows = A.compare({"version": 1}, [], w)
         self.assertEqual((rows[0]["comparison"], rows[0].get("code")), ("DIVERGED", "EGRESS_WITHOUT_ENFORCER_RECORD"))
+
+
+class UnknownEvidence(unittest.TestCase):
+    """Missing observations must not become successful containment or correlation."""
+
+    @staticmethod
+    def witness(kind, **fields):
+        return {"kind": kind, "_line": 1, "_sha256": "a" * 64, **fields}
+
+    def test_missing_and_unknown_file_syscall_results_remain_unmeasured(self):
+        for kind, attempt in (("file", {"path": "/root/private", "op": "read"}),
+                              ("syscall", {"name": "ptrace"})):
+            for result in (None, "unknown", "", True, False, 1, [], {}):
+                with self.subTest(kind=kind, result=result):
+                    fields = dict(attempt)
+                    if result is not None:
+                        fields["result"] = result
+                    rows = A.compare({"version": 1}, [], [self.witness(kind, **fields)])
+                    self.assertEqual(rows[0]["comparison"], "UNMODELLED")
+                    self.assertEqual(A.summarise(rows)["result"], "UNMEASURED")
+                    self.assertEqual(A.summarise(rows)["witnessed_rows"], 0)
+
+    def test_known_effect_and_errno_still_discriminate(self):
+        for result, expected in (("ok", "DIVERGED"), ("success", "DIVERGED"), (0, "DIVERGED"),
+                                 ("0", "DIVERGED"), ("EPERM", "HELD"), ("EACCES", "HELD")):
+            with self.subTest(result=result):
+                rows = A.compare({"version": 1}, [], [self.witness("syscall", name="ptrace", result=result)])
+                self.assertEqual(rows[0]["comparison"], expected)
+                self.assertEqual(A.summarise(rows)["witnessed_rows"], 1)
+
+    def test_errno_vocabulary_is_stable_across_hosts(self):
+        for result in ("ELIBBAD", "EACCES", "EDEADLK", "EDEADLOCK", "EOPNOTSUPP", "ENOTSUP"):
+            self.assertIs(A.witness_outcome({"kind": "syscall", "result": result}), False)
+        self.assertIsNone(A.witness_outcome({"kind": "syscall", "result": "E_NOT_A_SUPPORTED_ERRNO"}))
+
+    def test_unknown_boolean_does_not_become_a_signed_detail_of_egress(self):
+        rows = A.compare({"version": 1}, [], [self.witness("egress", host="example.test", port=443, left="false")])
+        self.assertIn("witness: outcome unknown", A._row_detail(rows[0]))
+        self.assertNotIn("witness: left", A._row_detail(rows[0]))
+
+    def test_unknown_egress_outcomes_are_not_witnessed(self):
+        policy = {"version": 1, "network_policies": {"public": {
+            "endpoints": [{"host": "example.test", "port": 443}], "binaries": [{"path": "/usr/bin/curl"}]}}}
+        for left in (None, "false", "true", 0, 1, [], {}):
+            with self.subTest(left=left):
+                fields = {"host": "example.test", "port": 443, "binary": "/usr/bin/curl"}
+                if left is not None:
+                    fields["left"] = left
+                rows = A.compare(policy, [], [self.witness("egress", **fields)])
+                self.assertNotEqual(rows[0]["comparison"], "HELD")
+                self.assertEqual(A.summarise(rows)["result"], "UNMEASURED")
+                self.assertEqual(A.summarise(rows)["witnessed_rows"], 0)
+
+    def test_missing_or_invalid_time_cannot_join_unrelated_records(self):
+        for missing_side in ("enforcer", "witness"):
+            for value in (None, "invalid", 42, True):
+                with self.subTest(side=missing_side, value=value):
+                    record = {"kind": "net", "host": "example.test", "port": 443, "action": "DENIED",
+                              "t": "2026-09-28T12:00:00Z", "raw_sha256": "b" * 64}
+                    witness = self.witness("egress", host="example.test", port=443, left=True,
+                                           t="2026-09-28T12:00:00Z")
+                    (record if missing_side == "enforcer" else witness)["t"] = value
+                    rows = A.compare({"version": 1}, [record], [witness])
+                    self.assertEqual(rows[0]["enforcer"]["claim"], "ABSENT")
+                    self.assertNotEqual(rows[0].get("code"), "ENFORCER_RECORD_CONTRADICTED_BY_WITNESS")
+                    self.assertEqual(len(rows), 2)
+
+    def test_finite_window_still_correlates_only_nearby_records(self):
+        record = {"kind": "net", "host": "example.test", "port": 443, "action": "DENIED",
+                  "t": "2026-09-28T12:00:00Z", "raw_sha256": "b" * 64}
+        for timestamp, expected in (("2026-09-28T12:00:04Z", "DENIED"), ("2026-09-28T12:00:06Z", "ABSENT")):
+            witness = self.witness("egress", host="example.test", port=443, left=True, t=timestamp)
+            self.assertEqual(A.compare({"version": 1}, [record], [witness])[0]["enforcer"]["claim"], expected)
+        for window in (float("nan"), float("inf"), -1, True):
+            with self.assertRaises(ValueError):
+                A.compare({"version": 1}, [], [], window_s=window)
+
+    def test_missing_unknown_or_malformed_action_is_not_allowed(self):
+        for action in (None, "unknown", 1, True, [], {}):
+            with self.subTest(action=action):
+                obj = {"class_uid": 4001, "time": 1790596801200,
+                       "dst_endpoint": {"domain": "example.test", "port": 443}, "action": action}
+                record = A.parse_ocsf_json(obj, "synthetic", 1, json.dumps(obj))
+                self.assertEqual(A._enforcer_claim([record], False), "UNKNOWN")
+                self.assertNotEqual(A.compare({"version": 1}, [record], [])[0]["comparison"], "DIVERGED")
+
+    def test_invalid_ocsf_time_remains_unknown(self):
+        for value in (None, "1790596801200", True, -1, 1.5, float("nan"), float("inf"), 10 ** 100):
+            with self.subTest(value=value):
+                obj = {"class_uid": 4001, "time": value, "action": "Denied",
+                       "dst_endpoint": {"domain": "example.test", "port": 443}}
+                self.assertIsNone(A.parse_ocsf_json(obj, "synthetic", 1, "synthetic")["t"])
 
 
 class Hygiene(unittest.TestCase):

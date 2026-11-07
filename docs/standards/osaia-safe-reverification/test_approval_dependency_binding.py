@@ -14,38 +14,45 @@ URI = ("https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/"
 PIN = "333b19b69b1e988cf710a63e7bc9e15b59d2dc9a415f3b7ecbfec541389173cd"
 
 class ApprovalByteComposition(unittest.TestCase):
+    fixture = "hitl-authority-effect.example.json"
+    uri = URI
+    pin = PIN
+
     def setUp(self):
-        self.approval = (HERE / "hitl-authority-effect.example.json").read_bytes()
-        self.assertEqual(hashlib.sha256(self.approval).hexdigest(), PIN)
+        self.approval = (HERE / self.fixture).read_bytes()
+        self.assertEqual(hashlib.sha256(self.approval).hexdigest(), self.pin)
         self.record = json.loads((HERE / "examples" /
             "example-pass-a2a-card-census-integrity.json").read_bytes())
         self.record["dependencies"].append({
             "dep_id": "fixture:approval", "kind": "approval", "state": "PINNED",
-            "uri": URI, "digest": {"alg": "sha256", "value": PIN},
+            "uri": self.uri, "digest": {"alg": "sha256", "value": self.pin},
         })
 
     def dependency(self):
         return self.record["dependencies"][-1]
 
-    def check(self, record=None, uri=URI, raw=None, dep_id="fixture:approval"):
+    def check(self, record=None, uri=None, raw=None, dep_id="fixture:approval"):
         return check_approval_dependency(
-            self.record if record is None else record, dep_id, uri,
+            self.record if record is None else record, dep_id,
+            self.uri if uri is None else uri,
             self.approval if raw is None else raw)
 
     def test_exact_pair_is_only_a_byte_match(self):
+        before = copy.deepcopy(self.record)
         self.assertEqual(self.check(), "BYTE_INTEGRITY_MATCH")
         self.assertEqual(self.record["watch"]["state"], "NOT_WATCHED")
+        self.assertEqual(self.record, before)
 
     def test_same_uri_same_json_but_changed_bytes_is_rejected(self):
         changed = self.approval + b" "
         self.assertEqual(json.loads(changed), json.loads(self.approval))
-        self.assertNotEqual(hashlib.sha256(changed).hexdigest(), PIN)
+        self.assertNotEqual(hashlib.sha256(changed).hexdigest(), self.pin)
         with self.assertRaises(ValueError):
             self.check(raw=changed)
 
     def test_same_bytes_at_different_uri_is_rejected(self):
         with self.assertRaises(ValueError):
-            self.check(uri=URI + "?other-source")
+            self.check(uri=self.uri + "?other-source")
 
     def test_missing_or_ambiguous_dependency_is_rejected(self):
         with self.assertRaises(ValueError):
@@ -62,11 +69,11 @@ class ApprovalByteComposition(unittest.TestCase):
                     self.check()
 
     def test_digest_shape_algorithm_and_case_are_strict(self):
-        for value in (None, True, {"alg": "sha512", "value": PIN},
-                      {"alg": "sha256", "value": PIN.upper()},
-                      {"alg": "sha256", "value": PIN[:-1]},
+        for value in (None, True, {"alg": "sha512", "value": self.pin},
+                      {"alg": "sha256", "value": self.pin.upper()},
+                      {"alg": "sha256", "value": self.pin[:-1]},
                       {"alg": "sha256", "value": "0" * 64},
-                      {"alg": "sha256", "value": PIN, "authenticated": True}):
+                      {"alg": "sha256", "value": self.pin, "authenticated": True}):
             with self.subTest(value=value):
                 self.dependency()["digest"] = value
                 with self.assertRaises(ValueError):
@@ -95,6 +102,17 @@ class ApprovalByteComposition(unittest.TestCase):
         self.assertEqual(self.check(raw=raw), "BYTE_INTEGRITY_MATCH")
         self.assertEqual(json.loads(raw)["authority"]["decision"], "DENY")
 
+    def test_unknown_profile_is_rejected_even_if_hash_matches(self):
+        for profile in ("csoai.hitl-authority-effect/0.3",
+                        "csoai.hitl-authority-effect/0.2-draft", "", None, True):
+            with self.subTest(profile=profile):
+                approval = json.loads(self.approval)
+                approval["profile"] = profile
+                raw = json.dumps(approval, sort_keys=True, separators=(",", ":")).encode()
+                self.dependency()["digest"]["value"] = hashlib.sha256(raw).hexdigest()
+                with self.assertRaises(ValueError):
+                    self.check(raw=raw)
+
     def test_invalid_or_unexpected_approval_body_is_rejected_even_if_hash_matches(self):
         bad = [b"true", b"[]", b"not-json", b'{"profile":"x","profile":"x"}',
                b'{"profile":NaN}', b'{"profile":"csoai.hitl-authority-effect/0.1"}']
@@ -120,7 +138,7 @@ class ApprovalByteComposition(unittest.TestCase):
         self.dependency()["digest"]["value"]=hashlib.sha256(beyond_limit).hexdigest()
         with self.assertRaises(ValueError):
             self.check(raw=beyond_limit)
-        self.dependency()["digest"]["value"]=PIN
+        self.dependency()["digest"]["value"]=self.pin
         selected=copy.deepcopy(self.dependency())
         self.record["dependencies"]=[
             dict(copy.deepcopy(selected),dep_id=f"fixture:other:{i}")
@@ -130,6 +148,16 @@ class ApprovalByteComposition(unittest.TestCase):
             dict(copy.deepcopy(selected),dep_id="fixture:other:127"))
         with self.assertRaises(ValueError):
             self.check()
+
+class ApprovalByteCompositionV02(ApprovalByteComposition):
+    """Run every byte-link and refusal control against the retained v0.2 fixture."""
+
+    fixture = "hitl-authority-effect-v0.2.example.json"
+    uri = ("https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/"
+           "bca964c787680dfac11bc5da4ab0dba5c46ffafd/"
+           "docs/standards/osaia-safe-reverification/" + fixture)
+    pin = "354067e5f544623bad1ed8c85757c3340dfcb098ea79ea0780d688060eaa2d9c"
+
 
 if __name__ == "__main__":
     unittest.main()
