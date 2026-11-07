@@ -451,3 +451,25 @@ describe("a paid retry that fails after sending reads 'may have settled', never 
     expect(html).not.toMatch(/Not paid/);
   });
 });
+
+describe("reported settlement survives delivery uncertainty", () => {
+  const settle = {status:"NONE_ON_RECORD" as const,lastSettle:null,asOf:"fixture"};
+  it("renders a known reported payment fresh even when its output was unreadable", () => {
+    const state = {kind:"maybe-settled" as const,detail:"response stream was unreadable",refund:null,
+      settlement:{success:true,transaction:"0x"+"ef".repeat(32),network:"eip155:8453",payer:null}};
+    const payment=renderToStaticMarkup(<SettleCell settle={settle} state={state} now={Date.now()} />);
+    const warning=renderToStaticMarkup(<OutcomeLine state={state} />);
+    expect(payment).toContain('data-risk="false"');
+    expect(payment).toContain("Settled this session");
+    expect(payment).not.toContain("None on record");
+    expect(warning).toContain("PAYMENT MAY HAVE SETTLED");
+    expect(warning).toContain("delivery could not be confirmed");
+  });
+  it("does not infer payment freshness from a delivered2xx without a successful settlement", () => {
+    const state={kind:"delivered" as const,paymentResponse:null,settlement:null,body:{}};
+    const html=renderToStaticMarkup(<SettleCell settle={settle} state={state} now={Date.now()} />);
+    expect(html).toContain("None on record");
+    expect(html).toContain('data-risk="true"');
+    expect(html).not.toContain("Settled this session");
+  });
+});

@@ -237,16 +237,11 @@ export function unsettledReason(body: unknown): string {
   return "the door answered 402 again and relayed no reason";
 }
 
-/**
- * AFTER A SIGNED PAYMENT IS SENT, "NOT PAID" IS ONLY EVER SAID ON A 402 (7 Oct 2026). A paid door
- * settles before it builds the deliverable, so a 5xx (or a dropped connection) after the X-PAYMENT
- * retry can follow a settle that already moved the buyer's USDC. The art50 pane used to read
- * "Not paid: the paid retry answered HTTP 500" and /pay-all "NOT SETTLED." in exactly that case.
- * Anything but 2xx or 402 after sending is MAYBE-SETTLED: check the wallet before paying again.
- * An explicit paid-undelivered header takes precedence over the HTTP status, including 2xx or 402.
+/** After any signed dispatch, HTTP status alone cannot prove no payment effect.
+ * Keep observed payment headers even when response bytes are unreadable.
  */
 export const MAYBE_SETTLED_LINE =
-  "Payment may have settled: the signed payment was sent, and the door did not deliver. Check your wallet (or the transaction) before you pay again.";
+  "Payment may have settled: the signed payment was sent, and delivery could not be confirmed. Check your wallet (or the transaction) before you pay again.";
 
 /** The refund path a door states in an undelivered body (functions/api/art50/marking-evidence.ts `refund`), or null. */
 export function refundLine(body: unknown): string | null {
@@ -255,64 +250,93 @@ export function refundLine(body: unknown): string | null {
   return r && typeof r.how === "string" && r.how.trim() ? r.how : null;
 }
 
-export type PaidOutcome =
-  | { kind: "delivered"; http: number; paymentResponse: string | null; settlement: Settlement | null; body: unknown }
-  | { kind: "unsettled"; http: 402; reason: string }
-  | { kind: "maybe-settled"; http: number | null; detail: string; paymentResponse: string | null; settlement: Settlement | null; body: unknown };
+export type PaidOutput = { bytes: Uint8Array; contentType: string | null };
 
-/** Retry the SAME door once with the signed payload in X-PAYMENT. */
+/** A download uses the received bytes, without parsing or reserializing them. */
+export function paidOutputBlob(output: PaidOutput): Blob {
+  return new Blob([new Uint8Array(output.bytes).buffer], {
+    type: output.contentType || "application/octet-stream",
+  });
+}
+
+export function assertPaidDoorOrigin(door: Door, origin: string): void {
+  const url = new URL(door.url);
+  if (url.origin !== new URL(origin).origin || url.username || url.password || url.hash ||
+      !["GET", "POST"].includes(door.method.toUpperCase())) {
+    throw new Error("the paid request must stay on its original page origin and resource");
+  }
+}
+
+export type PaidOutcome =
+  | { kind: "delivered"; http: number; paymentResponse: string | null; settlement: Settlement | null; body: unknown; output: PaidOutput }
+  | { kind: "unsettled"; http: 402; reason: string }
+  | { kind: "maybe-settled"; http: number | null; detail: string; paymentResponse: string | null; settlement: Settlement | null; body: unknown; output?: PaidOutput };
+
+/** Send once to the original origin. Redirects never receive a signed payment. */
 export async function retryDoorWithPayment(
   door: Door,
   paymentHeader: string,
   fetchImpl: typeof fetch = fetch,
+  requestOrigin: string = globalThis.location?.origin || "https://councilof.ai",
 ): Promise<PaidOutcome> {
-  const r = await fetchImpl(door.url, {
-    method: door.method,
-    headers: { accept: "application/json", "x-payment": paymentHeader },
-  });
-  const paidNotDelivered =
-    r.headers.get("x-csoai-delivery-state") === "PAID_NOT_DELIVERED" ||
+  assertPaidDoorOrigin(door, requestOrigin);
+  let r: Response;
+  try {
+    r = await fetchImpl(door.url, {
+      method: door.method, redirect: "manual", credentials: "omit",
+      headers: { accept: "application/json", "x-payment": paymentHeader },
+    });
+  } catch (error) {
+    return { kind: "maybe-settled", http: null,
+      detail: `the paid retry did not complete (${String((error as Error)?.message ?? error)})`,
+      paymentResponse: null, settlement: null, body: null };
+  }
+  // Observe settlement before reading a stream that can fail after payment.
+  const paymentResponse = r.headers.get("x-payment-response") || r.headers.get("payment-response");
+  const settlement = decodeSettlement(paymentResponse);
+  const paidNotDelivered = r.headers.get("x-csoai-delivery-state") === "PAID_NOT_DELIVERED" ||
     r.headers.get("x-csoai-delivery-record-state") === "NOT_DELIVERED";
-
-  if (!paidNotDelivered && r.status === 402) {
-    return { kind: "unsettled", http: 402, reason: unsettledReason(await readJson(r)) };
+  let output: PaidOutput | undefined;
+  let body: unknown;
+  try {
+    output = { bytes: new Uint8Array(await r.arrayBuffer()), contentType: r.headers.get("content-type") };
+    body = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(output.bytes));
+  } catch (error) {
+    return { kind: "maybe-settled", http: r.status || null,
+      detail: "the paid response was unreadable or was not valid JSON; keep the payment reference before another payment",
+      paymentResponse, settlement, body: null, ...(output ? { output } : {}) };
   }
-  if (!paidNotDelivered && r.status >= 200 && r.status < 300) {
-    const paymentResponse = r.headers.get("x-payment-response");
-    // KEEP WHAT WAS BOUGHT (2026-10-07). This used to return without reading the body, so a paid
-    // door's deliverable (the signed art50 pack, the commission receipt) was dropped on the floor:
-    // the payer saw DELIVERED and a transaction hash, and nothing they could keep or check.
-    return { kind: "delivered", http: r.status, paymentResponse, settlement: decodeSettlement(paymentResponse), body: await readJson(r) };
+  if (!paidNotDelivered && !r.redirected && r.status >= 200 && r.status < 300) {
+    return { kind: "delivered", http: r.status, paymentResponse, settlement, body, output };
   }
-  const body = await readJson(r);
-  const err =
-    body && typeof body === "object" && typeof (body as { error?: unknown }).error === "string"
-      ? (body as { error: string }).error
-      : null;
-  const paymentResponse = r.headers.get("x-payment-response");
-  return {
-    kind: "maybe-settled",
-    http: r.status,
-    detail: paidNotDelivered
-      ? `the paid retry reported an undelivered output at HTTP ${r.status}${err ? `: ${err}` : ""}`
+  const err = body && typeof body === "object" && typeof (body as { error?: unknown }).error === "string"
+    ? (body as { error: string }).error : null;
+  return { kind: "maybe-settled", http: r.status || null,
+    detail: paidNotDelivered ? `the paid retry reported an undelivered output at HTTP ${r.status}${err ? `: ${err}` : ""}`
+      : r.status === 402 ? `the signed retry answered HTTP 402: ${unsettledReason(body)}; payment effect is unconfirmed`
       : `the paid retry answered HTTP ${r.status}${err ? `: ${err}` : ""}`,
-    paymentResponse,
-    settlement: decodeSettlement(paymentResponse),
-    body,
-  };
+    paymentResponse, settlement, body, output };
 }
 
 export type DoorState =
   | { kind: "idle" }
   | { kind: "signing"; wallet: string }
   | { kind: "paying" }
-  | { kind: "delivered"; paymentResponse: string | null; settlement: Settlement | null; body?: unknown }
+  | { kind: "delivered"; paymentResponse: string | null; settlement: Settlement | null; body?: unknown; output?: PaidOutput }
   | { kind: "unsettled"; reason: string }
-  | { kind: "maybe-settled"; detail: string; settlement: Settlement | null; refund: string | null; body?: unknown }
+  | { kind: "maybe-settled"; detail: string; settlement: Settlement | null; refund: string | null; body?: unknown; paymentResponse?: string | null; output?: PaidOutput }
   | { kind: "rejected"; detail: string }
   | { kind: "wrong-network"; detail: string }
   | { kind: "no-wallet" }
   | { kind: "error"; detail: string };
+
+/** A route-reported payment is independent of whether its output was readable. */
+export function reportedSuccessfulSettlement(state: DoorState | undefined): Settlement | null {
+  if (!state || (state.kind !== "delivered" && state.kind !== "maybe-settled")) return null;
+  const value = state.settlement;
+  return value?.success === true && typeof value.transaction === "string" && value.transaction.trim()
+    ? value : null;
+}
 
 /** The zero address: buildTypedData's preflight signer, as X402PayButton uses it. */
 const PREFLIGHT_SIGNER = "0x0000000000000000000000000000000000000000";
@@ -333,25 +357,37 @@ export async function payDoor(
     walletName: string;
     fetchImpl?: typeof fetch;
     onPhase?: (state: DoorState) => void;
+    requestOrigin?: string;
   },
 ): Promise<DoorState> {
-  const { door, challenge, provider, walletName } = args;
+  const { challenge, provider, walletName } = args;
+  const door = { ...args.door };
+  const requestOrigin = args.requestOrigin || globalThis.location?.origin || "https://councilof.ai";
+  const validateAction = () => {
+    assertPaidDoorOrigin(door, requestOrigin);
+    if (new URL(challenge.resource).href !== new URL(door.url).href ||
+        (globalThis.location?.origin && globalThis.location.origin !== requestOrigin)) {
+      throw new Error("the page origin or quoted resource changed before payment dispatch");
+    }
+  };
   const fetchImpl = args.fetchImpl || fetch;
   const phase = args.onPhase || (() => {});
   // Set once the signed payment leaves this page: from then on a failure may follow a settle.
   let sent = false;
   try {
+    validateAction();
     buildTypedData(challenge, PREFLIGHT_SIGNER);
     phase({ kind: "signing", wallet: walletName });
     const signature = await signX402Challenge(provider, challenge);
+    validateAction();
     phase({ kind: "paying" });
     sent = true;
-    const outcome = await retryDoorWithPayment(door, signature.header, fetchImpl);
+    const outcome = await retryDoorWithPayment(door, signature.header, fetchImpl, requestOrigin);
     if (outcome.kind === "delivered") {
-      return { kind: "delivered", paymentResponse: outcome.paymentResponse, settlement: outcome.settlement, body: outcome.body };
+      return { kind: "delivered", paymentResponse: outcome.paymentResponse, settlement: outcome.settlement, body: outcome.body, output: outcome.output };
     }
     if (outcome.kind === "unsettled") return { kind: "unsettled", reason: outcome.reason };
-    return { kind: "maybe-settled", detail: outcome.detail, settlement: outcome.settlement, refund: refundLine(outcome.body), body: outcome.body };
+    return { kind: "maybe-settled", detail: outcome.detail, paymentResponse: outcome.paymentResponse, settlement: outcome.settlement, refund: refundLine(outcome.body), body: outcome.body, output: outcome.output };
   } catch (error) {
     if (sent) {
       return {
