@@ -265,5 +265,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate clean"
+echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate + interop-file-index clean"
 exit 0
