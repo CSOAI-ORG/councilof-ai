@@ -33,6 +33,10 @@ export const NODE_TEST_FILES = [
   'scripts/contract-convergence.test.mjs',
   'scripts/feed-delivery-kit.test.mjs',
   'scripts/harness-x/render.test.mjs',
+  // The hub fetch that gates the build (authenticated, retrying): a node:test file vitest
+  // cannot collect, named here so pr-gates.yml runs it under node --test. It stubs the
+  // fetch, so a 429 and a 404 can be produced on demand.
+  'scripts/surface/hub-fetch.node-test.mjs',
   // The hygiene sweeper planner: a node:test file vitest cannot collect, named here so
   // pr-gates.yml runs it under node --test (same reason as sitemap-withdrawal below).
   // No apostrophes in these comments: the registry and the workflow extract entries by
