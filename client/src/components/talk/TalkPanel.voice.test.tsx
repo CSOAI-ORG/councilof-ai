@@ -74,7 +74,7 @@ describe("owned voice drafts", () => {
     await act(async () => button(node, "Speak your question").click());
     expect(order).toEqual(["voice-stop", "mic-start"]);
     await act(async () => recognizers[0].result("Review the public record"));
-    expect(node.querySelector("input")!.value).toBe("Review the public record");
+    expect(node.querySelector<HTMLInputElement>("#talk-input")!.value).toBe("Review the public record");
     expect(fetcher).not.toHaveBeenCalled();
     await act(async () => {
       node.querySelector<HTMLButtonElement>('button[type="submit"]')!.click();
@@ -90,7 +90,7 @@ describe("owned voice drafts", () => {
     recognizers[0].buffered = "Buffered final";
     await act(async () => button(node, "Stop listening").click());
     expect(recognizers[0].stopped).toBe(1);
-    expect(node.querySelector("input")!.value).toBe("Buffered final");
+    expect(node.querySelector<HTMLInputElement>("#talk-input")!.value).toBe("Buffered final");
     expect(fetcher).not.toHaveBeenCalled();
   });
   it("voice off discards buffered and late input without losing an existing draft", async () => {
@@ -100,7 +100,7 @@ describe("owned voice drafts", () => {
     await act(async () => root.render(<TalkPanel listen={false} hideSuggestions />));
     await act(async () => recognizers[0].result("late input"));
     expect(recognizers[0].aborted).toBe(1);
-    expect(node.querySelector("input")!.value).toBe("Existing draft");
+    expect(node.querySelector<HTMLInputElement>("#talk-input")!.value).toBe("Existing draft");
     expect(fetcher).not.toHaveBeenCalled();
   });
   it("an old panel unmount cannot stop or overwrite a newer panel's microphone", async () => {
@@ -112,7 +112,7 @@ describe("owned voice drafts", () => {
     await act(async () => old.root.unmount()); roots.delete(old.root);
     expect(recognizers[1].aborted).toBe(0);
     await act(async () => recognizers[1].result("New owner draft"));
-    expect(newer.node.querySelector("input")!.value).toBe("New owner draft");
+    expect(newer.node.querySelector<HTMLInputElement>("#talk-input")!.value).toBe("New owner draft");
     expect(fetcher).not.toHaveBeenCalled();
   });
   it("still shows a microphone error delivered after the primitive's end callback", async () => {

@@ -439,7 +439,10 @@ export const TALK_SUGGESTIONS: { text: string; tool: string }[] = [
   { text: "Which paid doors answer?", tool: "x402_trust" },
 ];
 
+import { parseAIExecution, type AIExecutionSelection } from "../../../functions/_lib/aiExecutionSelection";
+
 export type StreamOptions = {
+  execution?: AIExecutionSelection;
   question: string;
   threadId?: string;
   confirmTool?: string[];
@@ -485,6 +488,7 @@ export async function streamRun(o: StreamOptions): Promise<void> {
       ],
     };
     const fp: Json = {};
+    if (o.execution !== undefined) fp.execution = parseAIExecution(o.execution);
     if (o.confirmTool?.length) fp.confirm = { tools: o.confirmTool, tool: o.confirmTool[0] };
     if (o.page) fp.page = o.page;
     if (o.declareUi || o.watch) body.tools = FRONTEND_TOOLS;
