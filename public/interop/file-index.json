@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-07T05:15:46Z",
- "source_commit": "a5a77f8cd",
+ "as_of": "2026-11-07T05:27:25Z",
+ "source_commit": "87504d6c6",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; a match means you hold what the estate published. Two things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; and for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "served_legend": {
