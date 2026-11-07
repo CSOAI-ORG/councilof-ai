@@ -1,3 +1,4 @@
+import { checkBuyerPayment, finishBuyerPayment, type SettledBuyer } from "./_buyer_purchase";
 // functions/api/_x402.ts — FAIL-CLOSED x402 receipt verification, shared by every metered
 // endpoint (currently /api/proof?bundle=1, /api/request-attestation, and /api/signed-data-feed).
 //
@@ -90,6 +91,8 @@ export type X402Env = CdpEnv & {
   // /api/revenue stays honestly null. Present ⇒ every facilitator-CONFIRMED settle writes one
   // record and moves the non-self tally. Recording never gates the grant.
   REVENUE_KV?: KVNamespace;
+  SOV_ARENA_STATE?: KVNamespace;
+  ASSESS_SIGNING_KEY_PKCS8_B64?: string;
   // Comma-separated wallets the estate controls (besides payTo). A settlement whose payer is one
   // of these is SELF: recorded, but never counted as revenue or as a buyer.
   X402_SELF_WALLETS?: string;
@@ -181,6 +184,9 @@ export type X402Result = {
   receipt?: { format: "jws"; signature: string };
   /** Why there is no receipt on an otherwise successful settle. Absent when there is one. */
   receiptGap?: string;
+  /** Private in-process context; nonenumerable at runtime, never in receipt/body JSON. */
+  buyer?: SettledBuyer;
+  purchaseState?: string;
 };
 
 /** One entry of the canonical x402 `accepts` array (the `exact`/EIP-3009 scheme on Base). */
@@ -558,6 +564,11 @@ export async function verifyX402Payment(
   if (!payload || typeof payload !== "object") {
     return { ok: false, reason: "x-payment payload is not an object" };
   }
+  const buyerCheck = await checkBuyerPayment(request, env, resourceUrl, payload);
+  if (!buyerCheck.ok) return {ok:false,reason:buyerCheck.reason};
+  // CSOAI private request commitment is not facilitator data. The financial signature/nonce remain untouched.
+  const { csoaiPurchase: _privatePurchaseContext, ...financialPayload } = payload;
+
 
   // Real settlement requires a facilitator. None provisioned ⇒ we cannot settle ⇒ fail closed.
   const facilitator = facilitatorUrl(env);
@@ -678,7 +689,7 @@ export async function verifyX402Payment(
       // buyer signed keeps precedence. Same body goes to /verify and /settle, so both carry it.
       paymentPayload: onBeforeSettle(
         toDialectPayload(
-          payload as Record<string, unknown>,
+          financialPayload as Record<string, unknown>,
           v,
           v2ctx,
         ),
@@ -855,14 +866,15 @@ export async function verifyX402Payment(
     if (!recorded.stored) {
       (settlement as Record<string, unknown>).recording_gap = recorded.reason;
     }
-    return {
-      ok: true,
-      reason: "facilitator verified and settled receipt",
-      paymentResponse,
-      settlement,
-      ...(receipt ? { receipt } : {}),
-      ...(receiptGap ? { receiptGap } : {}),
+    const owned = await finishBuyerPayment(env.REVENUE_KV, opts?.allowZeroAmount ? undefined : buyerCheck.buyer,
+      settlement.transaction, settlement.payer, resourceUrl, paymentResponse);
+    const result:X402Result = {
+      ok:true, reason:"facilitator verified and settled receipt",paymentResponse,settlement,
+      ...(receipt ? {receipt}:{}),...(receiptGap ? {receiptGap}:{}),
     };
+    Object.defineProperty(result,"buyer",{value:owned.buyer,enumerable:false});
+    Object.defineProperty(result,"purchaseState",{value:owned.state,enumerable:false});
+    return result;
   } catch (e) {
     return { ok: false, reason: `facilitator error: ${(e as Error).message}` };
   }

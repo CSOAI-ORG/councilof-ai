@@ -1,3 +1,4 @@
+import { ownedOutputBinding, type SettledBuyer } from "./_buyer_purchase";
 /** Transaction-linked CSOAI delivery evidence joined to a settled x402 transaction.
  *
  * This is NOT part of the x402 offer-receipt JWS and is deliberately unsigned bookkeeping.
@@ -202,6 +203,8 @@ export type PaidResponseOptions = {
   confirmedPaid: boolean;
   successfulOutput: boolean;
   paymentResponse?: string;
+  buyer?: SettledBuyer;
+  buyerState?: string;
 };
 
 function deliveryHeaders(response: Response, state: string, paymentResponse?: string): Headers {
@@ -222,7 +225,7 @@ function deliveryHeaders(response: Response, state: string, paymentResponse?: st
  * No TTL, automatic deletion, retention SLA or customer-access capability is introduced.
  */
 async function retainOutputWithinBudget(kv: KvLike, record: DeliveryRecord,
-  response: Response, bytes: Uint8Array, budget: ReturnType<typeof storageBudget>, paymentResponse?: string): Promise<string> {
+  response: Response, bytes: Uint8Array, budget: ReturnType<typeof storageBudget>, paymentResponse?: string, buyer?: SettledBuyer): Promise<string> {
   if (bytes.byteLength > RETAINED_OUTPUT_MAX_BYTES) return "NOT_RETAINED_TOO_LARGE";
   const headerSource = new Headers(response.headers);
   if (paymentResponse) headerSource.set("x-payment-response", paymentResponse);
@@ -240,6 +243,7 @@ async function retainOutputWithinBudget(kv: KvLike, record: DeliveryRecord,
       binary += String.fromCharCode(...bytes.subarray(offset, offset + 8192));
     const envelope = {
       schema: RETAINED_OUTPUT_SCHEMA,
+      ...(ownedOutputBinding(buyer,record.transaction,record.resource) ? {buyer_binding:ownedOutputBinding(buyer,record.transaction,record.resource)} : {}),
       transaction: record.transaction, resource: record.resource,
       delivery_tx_key: deliveryTxKey(record.transaction),
       response_sha256: record.response_sha256, response_bytes: bytes.byteLength,
@@ -257,12 +261,14 @@ async function retainOutputWithinBudget(kv: KvLike, record: DeliveryRecord,
   }
 }
 
-function retentionHeaders(response: Response, state: string): Headers {
+function retentionHeaders(response: Response, state: string, buyerState?: string): Headers {
   const headers = new Headers(response.headers);
   const name = "x-csoai-output-retention-state";
   headers.set(name, state);
+  if(buyerState)headers.set("x-csoai-purchase-state",buyerState);
   const exposed = (headers.get("access-control-expose-headers") || "").split(",").map(v => v.trim()).filter(Boolean);
   if (!exposed.some(v => v.toLowerCase() === name)) exposed.push(name);
+  if(buyerState && !exposed.some(v=>v.toLowerCase()==="x-csoai-purchase-state"))exposed.push("x-csoai-purchase-state");
   headers.set("access-control-expose-headers", exposed.join(", "));
   return headers;
 }
@@ -293,12 +299,12 @@ export async function recordPaidResponse(response: Response, opts: PaidResponseO
       state = result.write_outcome_unknown ? "UNKNOWN" : result.stored ? "WRITTEN" : result.conflict ? "CONFLICT" : result.existing ? "ALREADY_RECORDED" : "ERROR";
       retention = result.write_outcome_unknown ? "UNKNOWN" : result.conflict ? "CONFLICT" :
         result.existing ? "EXISTING_UNCHECKED" : result.stored
-          ? await retainOutputWithinBudget(opts.kv, record, response, bytes, budget, opts.paymentResponse) : "ERROR";
+          ? await retainOutputWithinBudget(opts.kv, record, response, bytes, budget, opts.paymentResponse, opts.buyer) : "ERROR";
     } catch { state = "ERROR"; retention = "ERROR"; }
     finally { budget?.clear(); }
   }
   const result = new Response(bytes, { status: response.status, statusText: response.statusText, headers: deliveryHeaders(response, state, opts.paymentResponse) });
-  return new Response(result.body, { status: result.status, statusText: result.statusText, headers: retentionHeaders(result, retention) });
+  return new Response(result.body, { status: result.status, statusText: result.statusText, headers: retentionHeaders(result, retention, opts.buyerState) });
 }
 
 /** A verified settlement followed by failed output is not successful delivery.
