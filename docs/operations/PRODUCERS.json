@@ -110,6 +110,32 @@
       "note": "The Library IA reads this file for the routes the app serves, and link-gate builds its model of what the site serves from it. It was stale: on 2026-11-06 the committed manifest was missing /brand, /him, /refund-policy and /refunds, and still named GpaiObligations for /gpai while App.tsx had moved to GpaiMatrix, because the lane that added those routes (#3938) did not regenerate the file and nothing anywhere checked. Checked as delegate-to-check-committed because build:client regenerates it before this gate runs, so a plain --check would compare the build's output with itself."
     },
     {
+      "id": "edge-redirects",
+      "command": "node scripts/generate-redirects.mjs",
+      "check": "node scripts/generate-redirects.mjs --check",
+      "outputs": [
+        "public/_redirects"
+      ],
+      "mode": "delegate-to-check-committed",
+      "uncheckable_exit": 2,
+      "gated": true,
+      "verified_2026_11_06": "check passes on a tree where the committed bytes equal a fresh generation; offline, no clock, no randomness, no network",
+      "note": "public/_redirects is the edge's rewrite table and it is COMMITTED, and build:client rewrites it on every deploy. Nothing compared the two, so the committed table could describe rules the build no longer emits while the live edge carried the build's version. Measured 2026-11-06: the committed file still carried `/mcp  /mcp/  308` for a route that #3847 (857a6cc02) had moved out of App.tsx into a Pages Function — a rule the edge never applied, because the Function answers /mcp directly with 200 — while the build produced a file without it. The live edge was correct and the committed artefact was the fiction. Checked as delegate-to-check-committed because build:client regenerates this file before the gate runs, so a plain --check would compare the build's output with itself. Exit 2 is UNCHECKABLE (functions/ or client/src/App.tsx absent): the store could not answer, so it makes no claim."
+    },
+    {
+      "id": "sitemap",
+      "command": "node scripts/generate-sitemap.mjs",
+      "check": "node scripts/generate-sitemap.mjs --check",
+      "outputs": [
+        "public/sitemap.xml"
+      ],
+      "mode": "delegate-to-check-committed",
+      "uncheckable_exit": 2,
+      "gated": true,
+      "verified_2026_11_06": "check passes: 535 URLs match a fresh generation; offline, no clock, no randomness, no network",
+      "note": "The sitemap is how search engines and agents discover what the site serves, it is COMMITTED, and build:client regenerates it on every deploy. Nothing compared the two. Measured 2026-11-06: the committed sitemap listed 536 URLs and the build produced 535 — the extra one being https://councilof.ai/mcp/, left by #3847 (857a6cc02), which moved /mcp from an App.tsx route to a Pages Function and regenerated neither this file nor public/_redirects. The LIVE sitemap was correct (535, set-identical to a fresh generation) and the committed artefact was the fiction, so every deploy silently rewrote it. scripts/sitemap-truth-gate.mjs cannot see this: it asks only whether every LISTED url is served, so a stale extra entry passes and a missing entry passes. This check asks the other question — does the committed file equal what the build produces — and names the differing URLs. Exit 2 is UNCHECKABLE (functions/ or public/_redirects absent): the store could not answer, so it makes no claim. Runs after edge-redirects because the generation reconciles against public/_redirects."
+    },
+    {
       "id": "published-verifier-bundle",
       "command": "node packages/gspc-card-verifier/scripts/bundle.mjs public/verifier/gspc-verify.mjs",
       "check": "node packages/gspc-card-verifier/scripts/bundle.mjs --check public/verifier/gspc-verify.mjs",
