@@ -64,7 +64,7 @@ describe("public council participation through the actual HTTP MCP handler", () 
       expect(tools.tools.map(t => t.name).sort()).toEqual((door === "/mcp/free" ? FREE_DEFINITIONS.map(t => t.name) : [...LOCK.free, ...LOCK.paid]).sort());
       expect(tools.tools.find(t => t.name === "board_totals")?._meta).toMatchObject({
         ui: { resourceUri: PANEL_URI },
-        "openai/ui": { entrypoints: [{ type: "thread" }] },
+        "openai/ui": { entrypoints: [{ type: "global" }, { type: "thread" }] },
       });
       for (const tool of tools.tools.filter(t => LOCK.paid.includes(t.name))) {
         expect(tool._meta?.ui).toBeUndefined();
