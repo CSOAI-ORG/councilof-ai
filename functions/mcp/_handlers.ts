@@ -6,7 +6,7 @@
  */
 import { verifyCard, anchorsFromDid, cardState, type Anchor } from "../_lib/cardVerify";
 import GSPC_TOOLS from "./gspc-tools.json";
-import { readBoundedJsonText, withinJsonBudget, withinValueBudget } from "./_input_budget";
+import { MCP_MAX_TOOL_INPUT_ELEMENTS, readBoundedJsonText, withinJsonBudget, withinValueBudget } from "./_input_budget";
 import {
   CARD_ID_RE,
   FETCHABLE_ORIGINS,
@@ -272,7 +272,7 @@ function checkedCard(card: unknown) {
   return withinValueBudget(card) ? { card } : cardBudgetError;
 }
 function parseCardJson(text: string) {
-  return withinJsonBudget(text) ? checkedCard(JSON.parse(text)) : cardBudgetError;
+  return withinJsonBudget(text, MCP_MAX_TOOL_INPUT_ELEMENTS) ? checkedCard(JSON.parse(text)) : cardBudgetError;
 }
 
 export async function coerceCard(

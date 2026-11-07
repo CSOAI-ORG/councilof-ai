@@ -9,12 +9,19 @@ export const MCP_MAX_REQUEST_BYTES = 28 * 1024 * 1024;
  * and container depth, ignoring punctuation inside escaped strings. This is not a JSON parser:
  * syntax and protocol errors remain the responsibility of JSON.parse and the SDK.
  */
-export function withinJsonBudget(body: string): boolean {
+export function withinJsonBudget(
+  body: string,
+  maxElements = Infinity,
+): boolean {
   let tokens = 0;
   let depth = 0;
   let quoted = false;
   let escaped = false;
   let literal = false;
+  let elements = 0;
+  // Bounded by MCP_MAX_JSON_DEPTH. Track array value starts; colons count object keys.
+  const arrayAtDepth: boolean[] = [false];
+  const nextArrayValue: boolean[] = [false];
   for (let i = 0; i < body.length; i++) {
     const ch = body.charCodeAt(i);
     if (quoted) {
@@ -23,14 +30,37 @@ export function withinJsonBudget(body: string): boolean {
       else if (ch === 34) quoted = false;
       continue;
     }
-    if (ch === 34) { quoted = true; literal = false; tokens++; }
-    else if (ch === 123 || ch === 91) {
+    const open = ch === 123 || ch === 91;
+    const close = ch === 125 || ch === 93;
+    const separator =
+      ch === 44 || ch === 58 || ch === 32 || ch === 9 || ch === 10 || ch === 13;
+    const startsValue = ch === 34 || open || (!close && !separator && !literal);
+    if (startsValue && arrayAtDepth[depth] && nextArrayValue[depth]) {
+      nextArrayValue[depth] = false;
+      if (++elements > maxElements) return false;
+    }
+    if (ch === 58 && ++elements > maxElements) return false;
+    if (ch === 44 && arrayAtDepth[depth]) nextArrayValue[depth] = true;
+    if (ch === 34) {
+      quoted = true;
+      literal = false;
+      tokens++;
+    } else if (open) {
       literal = false;
       tokens++;
       if (++depth > MCP_MAX_JSON_DEPTH) return false;
-    } else if (ch === 125 || ch === 93) { depth--; literal = false; }
-    else if (ch === 44 || ch === 58 || ch === 32 || ch === 9 || ch === 10 || ch === 13) literal = false;
-    else if (!literal) { literal = true; tokens++; }
+      arrayAtDepth[depth] = ch === 91;
+      nextArrayValue[depth] = true;
+    } else if (close) {
+      // Already-invalid syntax; let JSON.parse reject it without allocating structure.
+      if (depth === 0) return true;
+      depth--;
+      literal = false;
+    } else if (separator) literal = false;
+    else if (!literal) {
+      literal = true;
+      tokens++;
+    }
     if (tokens > MCP_MAX_JSON_TOKENS) return false;
   }
   return true;
@@ -48,14 +78,17 @@ export function withinValueBudget(value: unknown): boolean {
       if (!Object.prototype.hasOwnProperty.call(item.value, key)) continue;
       if (++elements > MCP_MAX_TOOL_INPUT_ELEMENTS) return false;
       const child = (item.value as Record<string, unknown>)[key];
-      if (child !== null && typeof child === "object") stack.push({ value: child, depth: item.depth + 1 });
+      if (child !== null && typeof child === "object")
+        stack.push({ value: child, depth: item.depth + 1 });
     }
   }
   return true;
 }
 
 /** Bounded UTF-8 read for caller requests and fetched card bodies. */
-export async function readBoundedJsonText(request: Request | Response): Promise<string> {
+export async function readBoundedJsonText(
+  request: Request | Response,
+): Promise<string> {
   const length = request.headers.get("content-length");
   if (
     length !== null &&
@@ -71,10 +104,7 @@ export async function readBoundedJsonText(request: Request | Response): Promise<
   let bytes = 0;
   let timer: ReturnType<typeof setTimeout> | undefined;
   const deadline = new Promise<never>((_, reject) => {
-    timer = setTimeout(
-      () => reject(new Error("body timeout")),
-      10_000,
-    );
+    timer = setTimeout(() => reject(new Error("body timeout")), 10_000);
   });
   try {
     while (true) {
