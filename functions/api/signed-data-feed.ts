@@ -47,10 +47,20 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   const origin = url.origin;
   // `?x402=1` is the legacy probe flag (public/interop/x402-challenge); keep it as a synonym.
   const wantManifest = url.searchParams.get("manifest") === "1";
+  // 402 BY DEFAULT ON AN UNPAID POST — INDEX ELIGIBILITY (2026-10-09). "Gold-402's gate POSTs {}"
+  // (see the alias at the bottom of this file), and so does every x402 directory validator: it reads
+  // a 200 free preview as "not payable" (x402scan common failure: expected 402, got 200). An
+  // unpaid POST therefore selects the paid tier and reaches the challenge below. A POST that DOES
+  // carry a payment header is untouched — it still answers the free preview exactly as before, so
+  // no paying client sees a changed byte — and GET is untouched too: the published free preview at
+  // /api/signed-data-feed stays 200, as functions/api/metered-endpoints.test.ts pins it.
+  const wantFeed =
+    url.searchParams.get("feed") === "1" ||
+    url.searchParams.get("x402") === "1" ||
+    (request.method === "POST" && !hasPaymentHeader(request));
   let expected: string | null;
   try { expected = expectedFeedDigest(request); }
   catch { return json({schema:"csoai.signed-data-feed/0.2",error:"invalid_expected_digest",settled:false},400); }
-  const wantFeed = url.searchParams.get("feed") === "1" || url.searchParams.get("x402") === "1";
   const resourceUrl = new URL("/api/signed-data-feed?feed=1", origin).toString();
 
   // The streams — read, never typed. Static bytes use the Pages ASSETS binding when
