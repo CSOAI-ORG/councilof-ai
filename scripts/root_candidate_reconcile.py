@@ -51,6 +51,8 @@ from typing import Any
 
 DERIVED_VIEWS = (
     "public/cards-bundle.json",
+    "public/interop/model-lifecycle.json",
+    "functions/api/_model-lifecycle-snapshot.ts",
     "public/interop/ots/manifest.json",
     "public/llms.txt",
     "public/llms-full.txt",
@@ -80,6 +82,25 @@ VIEW_GENERATOR = "scripts/llms-txt.mjs"
 # Its bytes are a function of the tree — its as_of comes from the root's as_of — so the
 # generator decides them and either side will do.
 BUNDLE_GENERATOR = "scripts/generate-cards-bundle.mjs"
+# The model-lifecycle ledger is a derived view too, and MEASURED 2026-11-07 it was the
+# third: the ledger is generated from public/data/v1/latest.json (its estate_measurement
+# as_of and version come from there) and public/interop/models-measured.json. The root
+# publisher writes latest.json on EVERY publish, so a publish that lands a new root
+# leaves the committed ledger holding the previous root's stamps — and nothing rebuilt it,
+# because scripts/build-model-lifecycle.mjs had NO caller anywhere in the estate.
+#
+# The symptom was the rolling candidate's pr-gates: "Unit tests — client, functions and
+# scripts" failed on functions/api/model-lifecycle.test.ts ("the builder's own --check
+# passes against the committed bytes"), 1 failed / 9765 passed (run 42362056788, head
+# 91de3b221b8969ea13a44a93dcf232ae712d4e78). The four fields that differed were exactly
+# the freshness stamps: estate_measurement_version 2026-11-01.2 -> 2026-11-01.3 and its
+# as_of 2026-11-01T15:09:42Z -> 2026-11-01T23:43:53Z. No conflict was involved: the
+# ledger's own history is empty across the merge that changed its input, so the merge was
+# silent and only the gate noticed.
+#
+# The generator decides these bytes, so either side will do and the rebuild happens
+# after the merge — which is the whole point of it being here.
+LIFECYCLE_GENERATOR = "scripts/build-model-lifecycle.mjs"
 
 
 class RealConflict(Exception):
@@ -214,8 +235,9 @@ def _pointer_side_for_merged_root(repo: Path, conflicted: list[str]) -> str | No
 
 
 def rebuild_derived_views(repo: Path, builder: list[str], generator: list[str],
-                          bundle: list[str] | None = None) -> list[str]:
-    """Rebuild the cards bundle, then the manifest, then the views that quote them.
+                          bundle: list[str] | None = None,
+                          lifecycle: list[str] | None = None) -> list[str]:
+    """Rebuild the cards bundle, then the lifecycle ledger, then the manifest, then the views.
 
     The order is the point, and it is asserted by the selftest rather than assumed: the
     bundle is generated from the cards and the root in the tree, the manifest is generated
@@ -227,9 +249,15 @@ def rebuild_derived_views(repo: Path, builder: list[str], generator: list[str],
     scripts/generate-cards-bundle.mjs from public/cards/ and public/root.json. Its as_of
     comes from the root's as_of, so the generator's bytes are a function of the tree — which
     is what makes it a derived view and not a third writer.
+
+    The lifecycle ledger joins between the bundle and the manifest because it is root-derived
+    too (its freshness stamps come from public/data/v1/latest.json, which the root publisher
+    writes) and because nothing else in the chain feeds it. It is rebuilt AFTER the merge
+    for the same reason the bundle is: a ledger that keeps the stamps of the root the merge
+    replaced publishes a measurement of a root that is no longer the one in the tree.
     """
     ran = []
-    for cmd in ([bundle] if bundle else []) + [builder, generator]:
+    for cmd in (([bundle] if bundle else []) + ([lifecycle] if lifecycle else []) + [builder, generator]):
         result = subprocess.run(cmd, cwd=str(repo), capture_output=True, text=True)
         if result.returncode != 0:
             raise Uncheckable(
@@ -246,6 +274,7 @@ def reconcile(
     builder: list[str] | None = None,
     generator: list[str] | None = None,
     bundle: list[str] | None = None,
+    lifecycle: list[str] | None = None,
     commit: bool = True,
 ) -> dict:
     """Merge `remote/branch` into the checked-out candidate, then rebuild the derived views.
@@ -256,9 +285,11 @@ def reconcile(
     builder_supplied = builder is not None
     generator_supplied = generator is not None
     bundle_supplied = bundle is not None
+    lifecycle_supplied = lifecycle is not None
     builder = builder or [sys.executable, MANIFEST_BUILDER, "--apply"]
     generator = generator or ["node", VIEW_GENERATOR]
     bundle = bundle or ["node", BUNDLE_GENERATOR]
+    lifecycle = lifecycle or ["node", LIFECYCLE_GENERATOR]
     # A default generator that is not in the tree is UNCHECKABLE, not a silent pass. A caller
     # that supplied its own command is responsible for that command, so nothing is checked.
     if not builder_supplied and not (repo / MANIFEST_BUILDER).is_file():
@@ -267,6 +298,8 @@ def reconcile(
         raise Uncheckable(f"the candidate tree has no {VIEW_GENERATOR}")
     if not bundle_supplied and not (repo / BUNDLE_GENERATOR).is_file():
         raise Uncheckable(f"the candidate tree has no {BUNDLE_GENERATOR}")
+    if not lifecycle_supplied and not (repo / LIFECYCLE_GENERATOR).is_file():
+        raise Uncheckable(f"the candidate tree has no {LIFECYCLE_GENERATOR}")
 
     # Fetch with an EXPLICIT refspec that force-updates the remote-tracking ref. A plain
     # `git fetch origin master` writes FETCH_HEAD only and leaves refs/remotes/origin/master
@@ -340,14 +373,14 @@ def reconcile(
             git(repo, "add", "--", path)
         git(repo, "commit", "--no-edit")
 
-    ran = rebuild_derived_views(repo, builder, generator, bundle)
+    ran = rebuild_derived_views(repo, builder, generator, bundle, lifecycle)
     git(repo, "add", "--", *DERIVED_VIEWS)
     git(repo, "add", "--", "public/interop/ots")
     if commit:
         staged = git(repo, "diff", "--cached", "--quiet", check=False)
         if staged.returncode != 0:
             git(repo, "commit", "-m",
-                "reconcile: rebuild the OTS manifest and the llms views from the merged tree")
+                "reconcile: rebuild the derived views from the merged tree")
     return {"rebuilt": ran, "head": git(repo, "rev-parse", "HEAD").stdout.strip()}
 
 
@@ -554,17 +587,31 @@ def _make_pointer_repo(tmp: Path, *, candidate_pointer_binds: bool) -> Path:
 
 
 def _stubs(repo: Path, log: Path) -> tuple[list[str], list[str]]:
-    """Real, runnable stand-ins for the two generators.
+    """Real, runnable stand-ins for the generators.
 
     They record the order they ran in, which is what the second fault was about: the
     manifest is generated from the tree, the views are generated from the manifest, and
     the views must never be generated first.
+
+    The lifecycle stub writes the MERGED root's bytes into the ledger, so the selftest can
+    assert the rebuild happened against the tree the merge left — not against the root the
+    merge replaced. That is the fault this case was written for.
     """
     _write(repo / "scripts/ots_manifest_rebuild.py",
            f"open({str(log)!r}, 'a').write('manifest\\n')\n")
     _write(repo / "scripts/generate-cards-bundle.mjs",
            f"import {{ appendFileSync }} from 'node:fs';\n"
            f"appendFileSync({str(log)!r}, 'bundle\\n');\n")
+    _write(repo / "scripts/build-model-lifecycle.mjs",
+           f"import {{ appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync }} from 'node:fs';\n"
+           f"appendFileSync({str(log)!r}, 'lifecycle\\n');\n"
+           f"const root = existsSync('public/root.json')\n"
+           f"  ? readFileSync('public/root.json', 'utf8')\n"
+           f"  : 'no root in this tree\\n';\n"
+           f"mkdirSync('public/interop', {{ recursive: true }});\n"
+           f"mkdirSync('functions/api', {{ recursive: true }});\n"
+           f"writeFileSync('public/interop/model-lifecycle.json', 'ledger-of:' + root);\n"
+           f"writeFileSync('functions/api/_model-lifecycle-snapshot.ts', 'snapshot-of:' + root);\n")
     _write(repo / "scripts/llms-txt.mjs",
            f"import {{ appendFileSync }} from 'node:fs';\n"
            f"appendFileSync({str(log)!r}, 'views\\n');\n")
@@ -609,14 +656,16 @@ def run_selftest() -> int:
 
     # 3. The bundle and the manifest are rebuilt BEFORE the views that quote them. This is the
     #    second fault, and the bundle joined the chain when it was measured as a derived view
-    #    the reconcile did not know about.
+    #    the reconcile did not know about. The lifecycle ledger joined it for the same reason:
+    #    it is a derived view the reconcile did not know about, and a view rebuilt after its
+    #    inputs is the whole rule.
     with tempfile.TemporaryDirectory() as tmp:
         repo = _make_repo(Path(tmp), master_changes_root=False, candidate_changes_root=False)
         log = Path(tmp) / "order.log"
         builder, generator = _stubs(repo, log)
         reconcile(repo, builder=builder, generator=generator)
         order = log.read_text(encoding="utf-8").split()
-        ok = order == ["bundle", "manifest", "views"]
+        ok = order == ["bundle", "lifecycle", "manifest", "views"]
         print(f"  {'ok ' if ok else 'BAD'} the bundle and the manifest are rebuilt before the "
               f"views that quote them: {order}")
         failures += not ok
@@ -692,7 +741,7 @@ def run_selftest() -> int:
             [sys.executable, str(outside), "--repo", str(repo)],
             capture_output=True, text=True, cwd=str(Path(tmp)))
         order = log.read_text(encoding="utf-8").split() if log.exists() else []
-        ok = result.returncode == 0 and order == ["bundle", "manifest", "views"]
+        ok = result.returncode == 0 and order == ["bundle", "lifecycle", "manifest", "views"]
         detail = (result.stdout.strip().splitlines() or [result.stderr.strip()])[-1][:90]
         print(f"  {'ok ' if ok else 'BAD'} the tool works from outside the tree it reconciles: "
               f"{detail} | order {order}")
@@ -760,10 +809,49 @@ def run_selftest() -> int:
         print(f"  {'ok ' if ok else 'BAD'} a pointer that binds no root still fails closed: {detail}")
         failures += not ok
 
+    # 10. The lifecycle ledger is a derived view the reconcile must rebuild AFTER the merge.
+    #     MEASURED 2026-11-07: the rolling candidate's pr-gates failed on
+    #     functions/api/model-lifecycle.test.ts — the committed ledger still held the previous
+    #     root's freshness stamps (estate_measurement_version 2026-11-01.2 -> 2026-11-01.3),
+    #     because scripts/build-model-lifecycle.mjs had NO caller anywhere in the estate.
+    #     The ledger in the tree the reconcile leaves must hold the root the merge kept.
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = _make_repo(Path(tmp), master_changes_root=False, candidate_changes_root=True)
+        log = Path(tmp) / "order.log"
+        builder, generator = _stubs(repo, log)
+        try:
+            reconcile(repo, builder=builder, generator=generator)
+            ledger = git(repo, "cat-file", "-p", "HEAD:public/interop/model-lifecycle.json").stdout
+            snapshot = git(repo, "cat-file", "-p", "HEAD:functions/api/_model-lifecycle-snapshot.ts").stdout
+            root_raw = git(repo, "cat-file", "-p", "HEAD:public/root.json").stdout
+            ok = ledger == f"ledger-of:{root_raw}" and snapshot == f"snapshot-of:{root_raw}"
+            detail = ("the ledger and the snapshot hold the root the merge kept"
+                      if ok else f"ledger {ledger!r} does not hold the tree's root {root_raw!r}")
+        except (RealConflict, Uncheckable) as exc:
+            ok = False
+            detail = str(exc)[:100]
+        print(f"  {'ok ' if ok else 'BAD'} the lifecycle ledger is rebuilt from the merged tree: {detail}")
+        failures += not ok
+
+    # 11. The CONTROL for case 10: with the rebuild suppressed, the ledger keeps a side's bytes
+    #     and the assertion above goes red. A case that cannot fail proves nothing.
+    with tempfile.TemporaryDirectory() as tmp:
+        repo = _make_repo(Path(tmp), master_changes_root=False, candidate_changes_root=True)
+        log = Path(tmp) / "order.log"
+        builder, generator = _stubs(repo, log)
+        reconcile(repo, builder=builder, generator=generator, lifecycle=["node", "-e", ""])
+        ledger = git(repo, "cat-file", "-p", "HEAD:public/interop/model-lifecycle.json").stdout
+        root_raw = git(repo, "cat-file", "-p", "HEAD:public/root.json").stdout
+        ok = ledger != f"ledger-of:{root_raw}"
+        detail = ("without the rebuild the ledger keeps the pre-merge bytes"
+                  if ok else "the ledger was rebuilt even though the generator was suppressed")
+        print(f"  {'ok ' if ok else 'BAD'} without the rebuild the ledger goes stale: {detail}")
+        failures += not ok
+
     if failures:
         print(f"root-candidate-reconcile selftest: FAIL ({failures} case(s))", file=sys.stderr)
         return 1
-    print("root-candidate-reconcile selftest: PASS (9 cases)")
+    print("root-candidate-reconcile selftest: PASS (11 cases)")
     return 0
 
 
