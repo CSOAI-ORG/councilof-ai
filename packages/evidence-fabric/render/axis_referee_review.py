@@ -58,6 +58,12 @@ def validate_index(index):
     if (not isinstance(charter, dict) or not HEX.fullmatch(str(charter.get("sha256", "")))
             or charter.get("mapping_kind") != "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE"):
         raise ValueError("pinned charter review mapping required")
+    version = charter.get("version")
+    if not isinstance(version, str) or not version.strip() or len(version) > 128:
+        raise ValueError("bounded charter version required")
+    snapshot = index.get("source_snapshot")
+    if snapshot is not None and (not isinstance(snapshot, str) or len(snapshot) > 1024):
+        raise ValueError("source snapshot must be a bounded string or null")
     axes = {}
     for row in rows:
         if not isinstance(row, dict):
@@ -107,6 +113,27 @@ def validate_events(raw, axes, observed_at):
     return events
 
 
+def content_ref(event):
+    """A derived continuity key, NOT another canonical event identity.
+
+    Exclude only capture time and attestation wrappers. Keep source digests,
+    methods, declarations, observations, state, limits and correction lineage.
+    This detects capture-only rereads; it does not decide semantic equivalence.
+    """
+    body = {key: copy.deepcopy(value) for key, value in event.items()
+            if key not in ("event_id", "signature", "anchors")}
+    body["claim"].pop("read_at", None)
+    payload = {"identity_kind": "review-content/1", "event_body": body}
+    return "sha256:" + hashlib.sha256(jcs(payload)).hexdigest()
+
+
+def content_groups(events):
+    groups = {}
+    for eid, value in events.items():
+        groups.setdefault(content_ref(value), set()).add(eid)
+    return groups
+
+
 def project(index_bytes: bytes, event_bytes: bytes, *, as_of: str,
             previous_event_bytes: bytes | None = None,
             previous_as_of: str | None = None):
@@ -123,13 +150,16 @@ def project(index_bytes: bytes, event_bytes: bytes, *, as_of: str,
             raise ValueError("comparison baseline is newer than this view")
         prior = validate_events(previous_event_bytes, axes, prior_clock)
     current_ids, prior_ids = set(current), set(prior or {})
+    current_content, prior_content = content_groups(current), content_groups(prior or {})
+    current_keys, prior_keys = set(current_content), set(prior_content)
     references = []
     for axis in sorted(axes):
         linked = sorted(eid for eid, ev in current.items() if axis in ev["observed"]["axis_ids"])
         references.append({
             "axis": axis,
             "charter_articles": copy.deepcopy(axes[axis]["charter_articles"]),
-            "event_refs": [{"event_id": eid, "state": current[eid]["state"],
+            "event_refs": [{"event_id": eid, "content_ref": content_ref(current[eid]),
+                            "state": current[eid]["state"],
                             "source_sha256": current[eid]["claim"]["source_sha256"],
                             "source_read_at": current[eid]["claim"]["read_at"],
                             "signature_verification": "NOT_PERFORMED"} for eid in linked],
@@ -139,12 +169,13 @@ def project(index_bytes: bytes, event_bytes: bytes, *, as_of: str,
         })
     result = {
         "projection_kind": "AXIS_REFEREE_REVIEW",
-        "renderer_revision": "axis-referee-review/1",
+        "renderer_revision": "axis-referee-review/2",
         "as_of": as_of,
         "source_index": {"sha256": hashlib.sha256(index_bytes).hexdigest(),
                          "schema": index["schema"],
                          "snapshot": index.get("source_snapshot"),
-                         "charter": copy.deepcopy(index["charter"])},
+                         "charter": {key: copy.deepcopy(index["charter"].get(key))
+                                     for key in ("version", "sha256", "mapping_kind")}},
         "event_schema": "csoai.evidence-event/0.1",
         "source_events_sha256": hashlib.sha256(event_bytes).hexdigest(),
         "comparison": {
@@ -156,6 +187,19 @@ def project(index_bytes: bytes, event_bytes: bytes, *, as_of: str,
             "carried_event_ids": sorted(current_ids & prior_ids) if prior is not None else None,
             "no_longer_observed_ids": sorted(prior_ids - current_ids) if prior is not None else None,
             "no_longer_observed_means_resolved": False,
+        },
+        "content_comparison": {
+            "identity_kind": "review-content/1",
+            "unique_current_content_refs": len(current_content),
+            "baseline_available": prior is not None,
+            "new_content_refs": sorted(current_keys - prior_keys) if prior is not None else None,
+            "carried_content_refs": sorted(current_keys & prior_keys) if prior is not None else None,
+            "no_longer_observed_content_refs": sorted(prior_keys - current_keys) if prior is not None else None,
+            "refreshed_content_refs": sorted(key for key in current_keys & prior_keys
+                                             if current_content[key] != prior_content[key]) if prior is not None else None,
+            "no_longer_observed_means_resolved": False,
+            "semantic_equivalence_established": False,
+            "excluded_fields": ["event_id", "signature", "anchors", "claim.read_at"],
         },
         "counts": {"axis_slots": len(axes), "unique_event_refs": len(current),
                    "axes_with_observations": sum(bool(r["event_refs"]) for r in references)},
@@ -169,6 +213,7 @@ def project(index_bytes: bytes, event_bytes: bytes, *, as_of: str,
             "Event counts are not independent reproductions, new model measurements or financial value.",
             "Unknown independence stays unknown; another owner must qualify identity and failure domains.",
             "No baseline authenticity or scheduled ingestion is established by supplying comparison bytes.",
+            "Content continuity excludes capture time only; other event changes remain distinct, not automatically improvements.",
         ],
     }
     result["projection_id"] = "sha256:" + hashlib.sha256(jcs(result)).hexdigest()
