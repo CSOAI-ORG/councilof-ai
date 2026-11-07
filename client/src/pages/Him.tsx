@@ -118,6 +118,19 @@ export default function Him() {
         </div>
       </section>
 
+      <section aria-labelledby="him-practice-h" className="mx-auto max-w-6xl px-4 pb-4 sm:px-6">
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-700">Practise the judgment the gate protects</p>
+          <p className="mt-2 text-sm leading-relaxed text-emerald-950">
+            The gate is only as good as the judgment behind it. Practise it in the games:
+            label real items beside published models in <a class="font-semibold underline decoration-emerald-300" href="/games/ruler">THE RULER</a>,
+            or walk the Academy paths to see how each test works.
+          </p>
+          <a href="/games/ruler" className="mt-3 inline-flex items-center rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-bold text-emerald-900 hover:bg-emerald-50">Play THE RULER →</a>
+          <a href="/academy/" className="mt-3 inline-flex items-center rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-bold text-emerald-900 hover:bg-emerald-50">Council Academy →</a>
+        </div>
+      </section>
+
       <section aria-labelledby="him-limits-h" className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
         <div className="rounded-2xl border border-amber-300/70 bg-amber-50 p-6">
           <h2 id="him-limits-h" className="text-base font-black text-amber-950">
