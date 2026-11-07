@@ -219,6 +219,8 @@ def rows_differ(a, b):
     for x, y in zip(a, b):
         if x.get("path") != y.get("path") or x.get("served") != y.get("served"):
             return True
+        if bool(x.get("retired")) != bool(y.get("retired")):
+            return True
         if x.get("_digest_comparable", True) and y.get("_digest_comparable", True):
             for k in ("bytes", "sha256"):
                 if x.get(k) != y.get(k):
@@ -325,7 +327,17 @@ def selftest():
     except Exception as e:
         check("the exclusions are readable", False, str(e)[:80])
 
-    # 7. the index cannot contain its own digest, and it must not index a build artefact.
+    # 7. a retired record must be MARKED retired, and a mislabelled retirement is a difference.
+    #    "Retired" is not "unreachable": after PR #4010 the 1,898 /interop/ots/**.invalid paths
+    #    answer 200 from the mirror, so a reader must be able to see both facts.
+    marked = [{"path": "/interop/ots/x.ots.invalid", "bytes": 1, "sha256": "a", "served": "hf-mirror",
+               "retired": True}]
+    unmarked = [{"path": "/interop/ots/x.ots.invalid", "bytes": 1, "sha256": "a", "served": "hf-mirror"}]
+    check("a mislabelled retirement is a difference", rows_differ(marked, unmarked))
+    check("a wrongly-marked retirement is a difference", rows_differ(unmarked, marked))
+    check("two identically-marked retirements agree", not rows_differ(marked, list(marked)))
+
+    # 8. the index cannot contain its own digest, and it must not index a build artefact.
     #    Measured 2026-11-07: the committed index indexed ITSELF (writing the digest changes
     #    the file) and public/interop/pod-cards-index.json, a gitignored build output whose
     #    bytes are the same LENGTH and a different digest on every build.
@@ -465,6 +477,14 @@ def main():
         row = {"path": "/" + public_rel, "bytes": n, "sha256": h, "served": served}
         if served == "pages":
             row["_digest_comparable"] = digest_comparable
+        if INVALID_PATH_RE.match(public_rel):
+            # A retired record is HISTORICAL evidence, not current proof — whatever serves it.
+            # The estate's Function marks these with x-evidence-state:
+            # retired-or-invalid-historical-bytes, and the index must say the same thing: being
+            # RETIRED is not the same as being UNREACHABLE. Measured 2026-11-07: after PR #4010
+            # the 1,898 /interop/ots/**.invalid paths answer 200 from the mirror. A reader told
+            # only that they are "retired" must also be able to see that they are served.
+            row["retired"] = True
         if served == "retired-bytes":
             row["served_note"] = ("retired record; served from the estate's retired-bytes archive "
                                   "when that archive holds these exact bytes, and 404 by design "
@@ -498,6 +518,12 @@ def main():
                           "pages-served HTML the digest is over the BUILT file, which carries the "
                           "workspace-launcher script the build injects. For retired-bytes paths the "
                           "digest is of the canonical bytes, which the archive copies verbatim."),
+        "retired": ("A retired record is HISTORICAL evidence of a past measurement, never current "
+                    "proof. The estate's server marks these with the response header "
+                    "x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE "
+                    "SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its "
+                    "bytes verify against the sha256 below; a retired path that is not served answers "
+                    "404. The `served` field says which."),
         "served_legend": {
             "pages": "served by the site build",
             "hf-mirror": ("routed by a 302 redirect to the HuggingFace evidence mirror "
