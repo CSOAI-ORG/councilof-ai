@@ -232,7 +232,9 @@ def build(index: dict, axis_reports=None) -> dict:
                 or any(not isinstance(row, dict) or row.get("human_decision") != "HOLD"
                        or row.get("may_apply") is not False or row.get("approval_may_be_inferred") is not False
                        or row.get("challenge_opened") is not False for row in axis_rows)
-                or len({row.get("axis") for row in axis_rows}) != len(axis_rows)):
+                or len({row.get("axis") for row in axis_rows}) != len(axis_rows)
+                or any("referee_history" in row and not held_referee_history(row["referee_history"])
+                       for row in axis_rows)):
             raise ValueError("axis metadata cannot grant authority or duplicate axes")
         body["gspc_axis_reports"] = axis_reports
         body["totals"]["gspc_axis_report_rows"] = len(axis_reports["rows"])
@@ -337,6 +339,100 @@ def published_reports(day, read=public_bytes):
         result["limitations"].append("Report retrieval/identity gap: " + type(exc).__name__)
     return result
 
+def held_referee_history(value):
+    """The build boundary cannot accept action authority via nested metadata."""
+    if not isinstance(value, dict):
+        return False
+    observations = (value.get("previous"), value.get("current"))
+    return (value.get("human_decision") == "HOLD" and value.get("may_apply") is False
+            and value.get("measurement_admission") == "NOT_ESTABLISHED_BY_REPORT_COMPARISON"
+            and all(isinstance(item, dict) and item.get("human_decision") == "HOLD"
+                    and item.get("may_apply") is False and item.get("bft_state") == "NOT_DEMONSTRATED"
+                    and item.get("measurement_admission") == "NOT_ESTABLISHED_BY_REPORT_COMPARISON"
+                    and item.get("signature_state") == "NOT_CHECKED_BY_CONSUMER"
+                    and item.get("independence_state") in ("UNKNOWN", "NOT_ESTABLISHED", "DEPENDENT")
+                    for item in observations))
+
+def referee_projection(raw):
+    """Carry first-party declarations without conferring reviewer authority."""
+    out = {"metadata_state": "MISSING", "source_declared": None,
+           "observation_sha256": None, "independence_state": "UNKNOWN",
+           "bft_state": "NOT_DEMONSTRATED", "signature_state": "NOT_CHECKED_BY_CONSUMER",
+           "measurement_admission": "NOT_ESTABLISHED_BY_REPORT_COMPARISON",
+           "human_decision": "HOLD", "may_apply": False}
+    if raw is None:
+        return out
+    out["metadata_state"] = "MALFORMED"
+    if (not isinstance(raw, dict) or raw.get("schema") != "csoai.referee-observation/0.1"
+            or raw.get("human_decision") != "HOLD" or raw.get("may_apply") is not False):
+        return out
+    fields = ("observation_state", "independence_state", "provenance_state", "bindings",
+              "referees", "source_declared_verdict", "source_declared_independence",
+              "source_declared_bft", "copied_decision_declared", "quorum_geometry",
+              "referee_count", "distinct_implementation_count")
+    declared = {key: raw.get(key) for key in fields}
+    refs = declared.get("referees")
+    if refs is not None and (not isinstance(refs, list) or len(refs) > 64
+            or any(not isinstance(ref, dict) for ref in refs)):
+        return out
+    try:
+        encoded = json.dumps(declared, sort_keys=True, separators=(",", ":"),
+                             ensure_ascii=False, allow_nan=False).encode()
+        if len(encoded) > 65536:
+            return out
+        # Copy instead of aliasing mutable input. Producer-supplied digests are not trusted.
+        declared = json.loads(encoded)
+    except (TypeError, ValueError, RecursionError):
+        return out
+    origins = [ref.get("decision_origin") for ref in (refs or [])
+               if isinstance(ref.get("decision_origin"), str) and ref["decision_origin"]]
+    copied = declared.get("copied_decision_declared") is True or len(origins) != len(set(origins))
+    out.update(metadata_state="SOURCE_DECLARED", source_declared=declared,
+               observation_sha256=sha256_hex(encoded),
+               independence_state="DEPENDENT" if copied else "NOT_ESTABLISHED")
+    return out
+
+def referee_history(old_raw, new_raw):
+    old, new = referee_projection(old_raw), referee_projection(new_raw)
+    if new["metadata_state"] == "MISSING":
+        event = "CURRENT_REFEREE_UNAVAILABLE"
+    elif old["metadata_state"] == "MISSING":
+        event = "PREVIOUS_REFEREE_UNAVAILABLE"
+    elif old["metadata_state"] != "SOURCE_DECLARED" or new["metadata_state"] != "SOURCE_DECLARED":
+        event = "REFEREE_METADATA_UNRESOLVED"
+    elif old == new:
+        event = "UNCHANGED_REFEREE_OBSERVATION"
+    else:
+        event = "REFEREE_OBSERVATION_CHANGED"
+    def context(value):
+        if value["metadata_state"] != "SOURCE_DECLARED":
+            return None
+        declared = value["source_declared"]
+        bindings = declared.get("bindings")
+        required = ("artifact_sha256", "source_sha256", "bank_sha256", "grader_sha256",
+                    "rubric_sha256", "measured_at", "subject", "scope")
+        if (not isinstance(bindings, dict)
+                or any(not isinstance(bindings.get(k), str) or not bindings[k] for k in required)
+                or any(not re.fullmatch(r"[a-f0-9]{64}", bindings[k])
+                       for k in required if k.endswith("_sha256"))):
+            return None
+        refs = declared.get("referees")
+        keys = ("id", "implementation_sha256", "failure_domain", "controller_id")
+        if (not isinstance(refs, list) or not refs
+                or any(any(not isinstance(ref.get(k), str) or not ref[k] for k in keys)
+                       or not re.fullmatch(r"[a-f0-9]{64}", ref["implementation_sha256"]) for ref in refs)
+                or len({ref["id"] for ref in refs}) != len(refs)):
+            return None
+        return {"bindings": bindings, "referees": [{k: ref[k] for k in keys} for ref in refs],
+                "quorum_geometry": declared.get("quorum_geometry")}
+    before, after = context(old), context(new)
+    comparable = before is not None and before == after
+    return {"previous": old, "current": new, "event": event,
+            "comparison_state": "IDENTICAL_DECLARED_REFEREE_CONTEXT" if comparable
+                                else "UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT",
+            "measurement_admission": "NOT_ESTABLISHED_BY_REPORT_COMPARISON",
+            "human_decision": "HOLD", "may_apply": False}
+
 def axis_report_history(registry, charter_map, reports):
     if registry.get("schema") != "csoai.axis-specialist-registry/1.0":
         raise ValueError("canonical registry schema mismatch")
@@ -378,14 +474,22 @@ def axis_report_history(registry, charter_map, reports):
                     for ctx in (old_context,new_context) for k in ("bank_sha256","method_sha")))
         context = ("IDENTICAL_DECLARED_CONTEXT" if complete and old_context == new_context else
                    "CONTEXT_VARIATION" if complete else "UNRESOLVED_CONTEXT_BINDINGS")
+        old_referee, new_referee = (old or {}).get("referee_observation"), (new or {}).get("referee_observation")
+        referee = referee_history(old_referee, new_referee)
+        if ((old_referee is not None or new_referee is not None)
+                and referee["comparison_state"] != "IDENTICAL_DECLARED_REFEREE_CONTEXT"
+                and context == "IDENTICAL_DECLARED_CONTEXT"):
+            context = "UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT"
         changed = [k for k in fields if old is not None and new is not None and old.get(k) != new.get(k)]
+        if referee["previous"] != referee["current"]:
+            changed.append("referee_observation")
         if new is None:
             event = "CURRENT_AXIS_UNAVAILABLE"
         elif previous is None:
             event = "PREVIOUS_UNRESOLVED"
         elif old is None:
             event = "AXIS_ADDED"
-        elif context == "CONTEXT_VARIATION":
+        elif context in ("CONTEXT_VARIATION", "UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT"):
             event = "INCOMPARABLE_VARIATION"
         elif not changed:
             event = "UNCHANGED_EVIDENCE"
@@ -406,7 +510,7 @@ def axis_report_history(registry, charter_map, reports):
         rows.append({"row_id": "gspc-axis::" + name, "observed_metric_direction": numeric_change, "axis": name,
             "reviewer_role": specialist.get("reviewer_role"),
             "reviewer_acceptance": "NOT_ESTABLISHED", "event": event,
-            "comparison_state": context, "changed_fields": changed,
+            "comparison_state": context, "changed_fields": changed, "referee_history": referee,
             "previous": {k: old.get(k) for k in fields} if old is not None else None,
             "current": {k: new.get(k) for k in fields} if new is not None else None,
             "previous_context_sha256": sha256_hex(json.dumps(old_context,sort_keys=True).encode()) if old_context else None,
@@ -435,7 +539,8 @@ def axis_report_history(registry, charter_map, reports):
                 "These are first-party measurement source observations, not incident counts or new GSPC scores.",
                 "A generated report date does not refresh measurement_time; source-declared separation is not fresh statistical admission.",
                 "Internal charter cross-references do not establish external WG-SAFE adoption, human staffing or action authority.",
-                "Unknown or missing context stays unresolved; incompatible banks/methods/versions/scopes are not pooled."]}
+                "Unknown or missing context stays unresolved; incompatible banks/methods/versions/scopes are not pooled.",
+                "Referee declarations and their changes are metadata, not independent verification, BFT proof, acceptance or authority."]}
 
 
 def main() -> int:

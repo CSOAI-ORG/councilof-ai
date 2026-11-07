@@ -296,5 +296,124 @@ class TestAxisReports(unittest.TestCase):
         for raw in [b'{"x":1e999}',b'{"x":1,"x":2}']:
             with self.assertRaises(ValueError):wcf.strict_report(raw)
 
+
+    def referee_fixture(self):
+        return {"schema":"csoai.referee-observation/0.1", "human_decision":"HOLD", "may_apply":False,
+                "observation_state":"SOURCE_DECLARED", "provenance_state":"DECLARED_BINDINGS_ONLY",
+                "bindings":{k:("a"*64 if k.endswith("_sha256") else "fixture")
+                            for k in ("artifact_sha256","source_sha256","bank_sha256","grader_sha256",
+                                      "rubric_sha256","measured_at","subject","scope")},
+                "referees":[{"id":"r1","implementation_sha256":"b"*64,"failure_domain":"d1",
+                             "controller_id":"c1","decision_origin":"o1"}],
+                "source_declared_verdict":"OBSERVED", "copied_decision_declared":False}
+    def put_referees(self):
+        import copy
+        for side in ("current","previous"):
+            for axis in self.names:
+                self.reports[side]["axes"][axis]["referee_observation"]=copy.deepcopy(self.referee_fixture())
+    def test_referee_all34_preserved_without_authority(self):
+        self.put_referees()
+        h=self.history()
+        self.assertEqual([r["axis"] for r in h["rows"]],self.names)
+        for row in h["rows"]:
+            ref=row["referee_history"]
+            self.assertEqual(ref["current"]["source_declared"]["source_declared_verdict"],"OBSERVED")
+            self.assertEqual(ref["current"]["independence_state"],"NOT_ESTABLISHED")
+            self.assertEqual(ref["current"]["bft_state"],"NOT_DEMONSTRATED")
+            self.assertFalse(ref["may_apply"]);self.assertEqual(ref["human_decision"],"HOLD")
+    def test_referee_missing_legacy_keeps_measurement_history(self):
+        row=self.history()["rows"][0]
+        self.assertEqual(row["event"],"UNCHANGED_EVIDENCE")
+        self.assertEqual(row["referee_history"]["current"]["metadata_state"],"MISSING")
+        self.assertEqual(row["referee_history"]["current"]["independence_state"],"UNKNOWN")
+    def test_referee_verdict_change_is_visible(self):
+        self.put_referees();axis=self.names[0]
+        self.current["axes"][axis]["referee_observation"]["source_declared_verdict"]="CONTESTED"
+        row=self.history()["rows"][0]
+        self.assertIn("referee_observation",row["changed_fields"])
+        self.assertNotEqual(row["event"],"UNCHANGED_EVIDENCE")
+        self.assertEqual(row["referee_history"]["event"],"REFEREE_OBSERVATION_CHANGED")
+    def test_referee_context_change_blocks_numeric_gain(self):
+        import copy
+        self.put_referees();axis=self.names[0]
+        self.previous["axes"][axis].update(n=10,accuracy=0.2)
+        self.current["axes"][axis].update(n=10,accuracy=0.9)
+        original=copy.deepcopy(self.current["axes"][axis]["referee_observation"])
+        for field in ("grader_sha256","rubric_sha256","bank_sha256","source_sha256"):
+            with self.subTest(field=field):
+                self.current["axes"][axis]["referee_observation"]=copy.deepcopy(original)
+                self.current["axes"][axis]["referee_observation"]["bindings"][field]="e"*64
+                row=self.history()["rows"][0]
+                self.assertEqual(row["event"],"INCOMPARABLE_VARIATION")
+                self.assertEqual(row["observed_metric_direction"],"NOT_COMPARED")
+    def test_referee_identity_change_is_context_change(self):
+        self.put_referees();axis=self.names[0]
+        self.current["axes"][axis]["referee_observation"]["referees"][0]["controller_id"]="different"
+        self.assertEqual(self.history()["rows"][0]["comparison_state"],"UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT")
+    def test_referee_disappearance_remains_visible(self):
+        self.put_referees();axis=self.names[0]
+        del self.current["axes"][axis]["referee_observation"]
+        row=self.history()["rows"][0]
+        self.assertEqual(row["referee_history"]["event"],"CURRENT_REFEREE_UNAVAILABLE")
+        self.assertIn("referee_observation",row["changed_fields"])
+        self.assertEqual(row["observed_metric_direction"],"NOT_COMPARED")
+    def test_referee_malformed_or_authority_claim_never_admitted(self):
+        for raw in ([],{"schema":"unknown"},{**self.referee_fixture(),"may_apply":True},
+                    {**self.referee_fixture(),"human_decision":"ALLOW"},
+                    {**self.referee_fixture(),"referees":["bad"]}):
+            ref=wcf.referee_projection(raw)
+            self.assertEqual(ref["metadata_state"],"MALFORMED")
+            self.assertFalse(ref["may_apply"]);self.assertEqual(ref["bft_state"],"NOT_DEMONSTRATED")
+    def test_referee_copied_origins_and_forged_verified_claims(self):
+        raw=self.referee_fixture()
+        raw.update(independence_state="VERIFIED",source_declared_bft="VERIFIED",
+                   signature_state="VERIFIED",observation_sha256="0"*64)
+        raw["referees"].append({**raw["referees"][0],"id":"r2"})
+        ref=wcf.referee_projection(raw)
+        self.assertEqual(ref["independence_state"],"DEPENDENT")
+        self.assertEqual(ref["bft_state"],"NOT_DEMONSTRATED")
+        self.assertEqual(ref["signature_state"],"NOT_CHECKED_BY_CONSUMER")
+        self.assertNotEqual(ref["observation_sha256"],"0"*64)
+    def test_referee_repetition_neither_freshness_nor_compounding(self):
+        self.put_referees();row=self.history()["rows"][0]
+        self.assertEqual(row["referee_history"]["event"],"UNCHANGED_REFEREE_OBSERVATION")
+        self.assertEqual(row["event"],"UNCHANGED_EVIDENCE")
+        self.assertEqual(row["current"]["measurement_time"]["observed_on"],"2026-08-12")
+        self.assertEqual(row["observed_metric_direction"],"NOT_COMPARED")
+    def test_referee_input_is_not_mutated_or_aliased(self):
+        import copy
+        raw=self.referee_fixture();before=copy.deepcopy(raw)
+        ref=wcf.referee_projection(raw);self.assertEqual(raw,before)
+        ref["source_declared"]["bindings"]["subject"]="changed-output"
+        self.assertEqual(raw,before)
+    def test_referee_missing_previous_cannot_create_gain(self):
+        self.put_referees();self.reports["previous_state"]="PREVIOUS_REFERENCE_UNBOUND"
+        row=self.history()["rows"][0]
+        self.assertEqual(row["event"],"PREVIOUS_UNRESOLVED")
+        self.assertEqual(row["referee_history"]["event"],"PREVIOUS_REFEREE_UNAVAILABLE")
+        self.assertEqual(row["observed_metric_direction"],"NOT_COMPARED")
+    def test_referee_invalid_bindings_and_nonfinite_metadata(self):
+        raw=self.referee_fixture();raw["bindings"]["grader_sha256"]="not-a-digest"
+        hist=wcf.referee_history(raw,raw)
+        self.assertEqual(hist["comparison_state"],"UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT")
+        raw["quorum_geometry"]={"n":float("nan")}
+        self.assertEqual(wcf.referee_projection(raw)["metadata_state"],"MALFORMED")
+
+
+    def test_referee_nested_authority_cannot_cross_build_boundary(self):
+        import copy
+        self.put_referees();original=self.history()
+        self.assertEqual(wcf.build(INDEX,original)["totals"]["gspc_axis_report_rows"],34)
+        cases=[("history","may_apply",True),("history","human_decision","ALLOW"),
+               ("current","may_apply",True),("previous","human_decision","ALLOW"),
+               ("current","bft_state","VERIFIED"),("previous","signature_state","VERIFIED"),
+               ("current","independence_state","VERIFIED"),
+               ("history","measurement_admission","APPROVED")]
+        for target,field,value in cases:
+            with self.subTest(target=target,field=field):
+                tampered=copy.deepcopy(original);ref=tampered["rows"][0]["referee_history"]
+                (ref if target=="history" else ref[target])[field]=value
+                with self.assertRaises(ValueError):wcf.build(INDEX,tampered)
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
