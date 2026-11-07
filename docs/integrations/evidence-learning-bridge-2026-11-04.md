@@ -42,3 +42,41 @@ The component now resumes the selected axis and step, preserves per-axis proposa
 The tablist now has one active tab stop, labelled panels and keyboard navigation. Container queries support narrow host panels independently of viewport size. The native module loader offers recovery after a failed load. The existing navigation regression expectation includes the new Learn destination; no validation is weakened.
 
 Design references consulted: W3C APG Tabs Pattern (https://www.w3.org/WAI/ARIA/apg/patterns/tabs/), WAI form notifications (https://www.w3.org/WAI/tutorials/forms/notifications/) and WCAG status-message guidance (https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html). These inform the implementation and are not a conformance claim.
+
+
+
+## Daily report metadata learning — 7 November source candidate
+
+The existing `/api/learning-scenarios` route now optionally reads only the public
+`/reports/daily-signal/index.json` metadata. Its shared `dailyBriefing(index, now)`
+projection checks the latest declared report identity, exact same-origin dated paths,
+count consistency and non-future report day. No report body is fetched. Missing or
+invalid optional metadata returns an unavailable briefing while the existing board,
+findings and regulation scenario can still be used.
+
+The Learn view displays the report day separately from retrieval time, the declared
+report ID, mapped/unmapped event counts and direct links to that exact report and index.
+The ID and signing state remain declarations from the index: this view does not verify
+report bytes, signatures, legal applicability or human review. RECENT/STALE is only a
+day-precision age check against a declared two-day window, recomputed at rendering;
+it does not assert source correctness or new measurement activity.
+
+A free question is derived deterministically from these public metadata fields. Its
+answer remains in the current view, with no saved score, credential, reviewer role or
+execution permission. The existing local proposal workflow and separate qualified
+human/acting-system gates remain controlling. There is no model inference, weight
+training, external notification, private intake or second canonical evidence store.
+
+The portable public reader now caps the streamed body at 2,000,000 bytes, cancels an
+oversized stream, rejects redirects and non-JSON replies, decodes UTF-8 strictly, and
+hashes the actual retained response bytes. This avoids a UTF-16 character-count cap
+accepting oversized multibyte input or a decoded/re-encoded hash being mistaken for
+an exact response-byte hash.
+
+Validation in isolated scratch: 23 Node contract tests passed, including optional
+metadata identity/count/link/future-date rejection, source privacy minimisation,
+rendered report links/exercise, current-day staleness, stream cancellation, multibyte
+overflow, invalid UTF-8 and a BOM-preserving digest. Three stripped-TypeScript route
+integration cases passed. Full Vitest/monorepo gates and interactive host/browser
+acceptance remain required; a local Chromium launch was blocked by the runtime's
+socket restriction and does not count as a passed browser test.
