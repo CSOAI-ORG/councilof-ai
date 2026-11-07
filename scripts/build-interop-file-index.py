@@ -14,17 +14,18 @@ and the third and fourth were the ones it got wrong:
 
   pages                 served by the site build
   hf-mirror             routed by a 302 to the HuggingFace evidence mirror
-  retired-bytes         a retired .invalid record. The estate's own Function
-                        (functions/interop/[[path]].ts) intercepts every .invalid path and
-                        serves it from the retired-bytes archive when the archive holds its
-                        exact bytes (200, x-evidence-state:
-                        retired-or-invalid-historical-bytes), and answers 404 BY DESIGN when
-                        it does not. Which of the two a given path gets depends on the
-                        archive in force, which is a DEPLOY-TIME artefact — so the index
-                        states the RULE and the reader checks the archive, which is public at
-                        /archive/retired-proof-bytes-v1.json. An index that named the
-                        membership would be stale the moment the next deploy packs a new
-                        archive, and would churn every lane's next push.
+  retired-bytes         a retired .invalid record that is NOT mirror-served. The estate's own
+                        Function (functions/interop/[[path]].ts) answers these itself, from
+                        the retired-bytes archive, with
+                        x-evidence-state: retired-or-invalid-historical-bytes.
+  retired-bytes-absent  (reserved: the membership-specific variant. Not emitted, because the
+                        archive is a deploy-time artefact and naming it here would make the
+                        index stale on every deploy.)
+
+A .invalid path under a MIRROR-SERVED prefix is hf-mirror, not retired-bytes: since PR #4010
+the Function DEFERS for those, so the request reaches public/_redirects, is 302'd to the
+mirror, and the bytes served are the canonical tree bytes. The Function's own
+MIRROR_SERVED_PREFIXES decides that, and the selftest proves it agrees with the exclusions.
   retired-bytes-absent  (reserved: the membership-specific variant. Not emitted, because
                         the archive is not a committed input. Kept in the legend so a reader
                         that has the archive can tell which case applies.)
@@ -166,6 +167,25 @@ def served_path(served_root, public_rel):
     return os.path.join(served_root, public_rel)
 
 
+def function_mirror_prefixes():
+    """The mirror-served prefixes the estate's Function DEFERS to the redirect chain for.
+
+    Read out of functions/interop/[[path]].ts (MIRROR_SERVED_PREFIXES, added by PR #4010).
+    It is the authority for what actually serves a .invalid path: for these prefixes the
+    Function steps aside and the public/_redirects 302 takes the request to the Hugging Face
+    mirror, so the path is served and fetchable. For every other .invalid path the Function
+    answers itself, from the retired-bytes archive.
+    """
+    if not os.path.exists(FUNCTION_SOURCE):
+        return None
+    with open(FUNCTION_SOURCE, "r", encoding="utf-8") as f:
+        source = f.read()
+    m = re.search(r"MIRROR_SERVED_PREFIXES\s*=\s*\[(.*?)\]", source, re.S)
+    if not m:
+        return None
+    return re.findall(r'"([^"]+)"', m.group(1))
+
+
 def rows_differ(a, b):
     if len(a) != len(b):
         return True
@@ -218,7 +238,26 @@ def selftest():
     check("the served path is NOT the tree-relative path",
           served_path("dist/client", "interop/x/y.html") != os.path.join("dist/client", "x/y.html"))
 
-    # 4. the index cannot contain its own digest, and it must not index a build artefact.
+    # 4. the Function's own mirror-served list and the exclusions must agree, or the index
+    #    and the site will disagree about what serves a .invalid path.
+    fn = function_mirror_prefixes()
+    check("the Function's MIRROR_SERVED_PREFIXES is readable", fn is not None)
+    if fn:
+        try:
+            with open("scripts/deploy-exclusions.json", "r", encoding="utf-8") as f:
+                man = json.load(f)
+            excl = sorted(e["path"].strip("/") + "/" for e in man.get("entries", [])
+                          if e.get("kind") == "dir" and not e.get("mirror_only")
+                          and e["path"].strip("/").startswith("interop/"))
+            # The Function names them as absolute URL prefixes; the exclusions as repo-relative
+            # paths. Same directories, one leading slash apart — so compare them normalised.
+            fn_norm = sorted(p.lstrip("/") for p in fn)
+            check("the Function's mirror prefixes agree with the exclusions",
+                  fn_norm == excl, f"function={fn_norm} exclusions={excl}")
+        except Exception as e:
+            check("the exclusions are readable", False, str(e)[:80])
+
+    # 5. the index cannot contain its own digest, and it must not index a build artefact.
     #    Measured 2026-11-07: the committed index indexed ITSELF (writing the digest changes
     #    the file) and public/interop/pod-cards-index.json, a gitignored build output whose
     #    bytes are the same LENGTH and a different digest on every build.
@@ -260,6 +299,16 @@ def main():
     mirror_prefixes = [d for d in mirror_dirs if d.startswith("interop/")]
     print("mirror-served dirs:", mirror_dirs, "-> matching this corpus:", mirror_prefixes, flush=True)
 
+    # The Function's own list of the prefixes it DEFERS for. It decides what serves a .invalid
+    # path, so it is the authority for that classification; the selftest proves it agrees with
+    # the exclusions this file already routes by.
+    fn_prefixes = function_mirror_prefixes()
+    if fn_prefixes is None:
+        print("build-interop-file-index: the Function's MIRROR_SERVED_PREFIXES is UNREADABLE.")
+        print("  Without it the index cannot say what serves a retired .invalid path.")
+        sys.exit(2)
+    print("the Function defers for:", fn_prefixes, flush=True)
+
     rows = []
     total = 0
     served_from_build = 0
@@ -291,11 +340,14 @@ def main():
             continue
 
         if INVALID_PATH_RE.match(public_rel):
-            # The Function intercepts this path: 200 from the retired-bytes archive when the
-            # archive holds its exact bytes, 404 by design when it does not. Which of the
-            # two depends on the archive in force, which is a deploy-time artefact — so the
-            # index states the rule, and the reader checks the (public) archive.
-            served = "retired-bytes"
+            # The Function intercepts every .invalid path. For the mirror-served prefixes it
+            # DEFERS (PR #4010), so the request reaches public/_redirects, is 302'd to the
+            # mirror, and the bytes served are the canonical tree bytes. For every other
+            # .invalid path the Function answers itself, from the retired-bytes archive.
+            if any(public_rel.startswith(p.lstrip("/")) for p in fn_prefixes):
+                served = "hf-mirror"
+            else:
+                served = "retired-bytes"
         elif any(public_rel == d or public_rel.startswith(d + "/") for d in mirror_prefixes):
             served = "hf-mirror"
         else:
