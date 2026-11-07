@@ -582,7 +582,12 @@ test("GSPC quests are a styled in-workspace game and never promote play into mea
       name: "GSPC Quests — play frozen challenge banks",
     }),
   ).toBeVisible();
-  await expect(playPane.getByText(/current admitted evidence/i)).toBeVisible();
+  await expect(
+    playPane.getByText(/historical board references separate from current admitted evidence/i),
+  ).toBeVisible();
+  await expect(
+    playPane.getByText(/your score stays in this browser; it is not training data or a GSPC measurement/i),
+  ).toBeVisible();
   await expect(playPane.getByText(/models are measured on/i)).toHaveCount(0);
 
   // The page's board read (/api/gspc, falling back to the live councilof.ai read when
@@ -754,40 +759,23 @@ test("workspace navigation starts minimized and remains usable across layout bou
   }
 });
 
-test("a booking door to /assess/ is one click away, wherever the reader is", async ({
-  page,
-}) => {
-  // The header deliberately drops its booking door ON THE HOMEPAGE (Header.tsx renders it
-  // only when `!homepage`; HomepageChrome.test.tsx pins that), because the homepage carries
-  // its own door inside the board panel instead. That panel reads /api/gspc, and this
-  // static server has no /api route, so the homepage's own door is not rendered in THIS
-  // build — which is honest about the environment, not a defect in the journey.
-  //
-  // What this test proves is the part that IS in the build: every other route carries the
-  // header's door, the mobile menu carries it everywhere, and the homepage still reaches the
-  // same route from its document.
-  await page.goto("/methodology/");
-  const desktop = page.locator('[data-testid="header-book-measurement"]');
-  const opener = page.getByRole("button", { name: "Open menu" });
-  if (await desktop.isVisible({ timeout: 30_000 }).catch(() => false)) {
-    await expect(desktop).toBeVisible();
-    await expect(desktop).toHaveAttribute("href", "/assess/");
-  } else {
-    await opener.click();
-    const mobile = page.locator('[data-testid="mobile-book-measurement"]');
-    await expect(mobile).toBeVisible();
-    await expect(mobile).toHaveAttribute("href", "/assess/");
-  }
-
+test("the home header carries a booking door to /assess/ within one click", async ({ page }) => {
   await page.goto("/");
-  // The homepage's door is the board panel's, which needs the live board read this build
-  // cannot make; the document still carries a link to the same route. The door's href carries
-  // a trailing slash, so match the prefix: /assess and /assess/ are the same route.
-  const homeDoor = page.locator('a[href^="/assess"]');
-  expect(await homeDoor.count()).toBeGreaterThan(0);
-  await expect(homeDoor.first()).toHaveAttribute("href", /^\/assess\/?$/);
-  // And the header correctly does NOT carry a second one on the homepage.
-  await expect(page.locator('[data-testid="header-book-measurement"]')).toHaveCount(0);
+  const header = page.locator("[data-site-header]").first();
+  const desktop = header.getByTestId("header-book-measurement");
+  const opener = header.getByRole("button", { name: "Open menu", exact: true });
+  // isVisible does not wait. Settle the responsive entry before choosing its branch.
+  await expect.poll(async () => await desktop.isVisible() || await opener.isVisible()).toBe(true);
+  let booking = desktop;
+  if (!(await desktop.isVisible())) {
+    await opener.click();
+    booking = header.getByTestId("mobile-book-measurement");
+  }
+  await expect(booking).toBeVisible();
+  await expect(booking).toHaveAttribute("href", "/assess/");
+  await booking.click();
+  await expect(page).toHaveURL(/\/dashboard\/?\?.*tab=measured/);
+  await expect(page.getByTestId("dashboard-pane-measured")).toBeVisible();
 });
 
 for (const width of [375, 894, 1024, 1280, 1440, 1536]) {
