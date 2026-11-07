@@ -78,7 +78,7 @@ class IndexFailures(unittest.TestCase):
             observe.write_json(state / ('indexes' + observe.index_selection_suffix(['PayAI']) + '.json'), {'status': 'OBSERVED', 'last_good': good})
             with patch('sys.argv', ['indexes.py', '--state', directory, '--now']), patch('indexes.subprocess.run', return_value=subprocess.CompletedProcess([], 2, '', 'incomplete population')):
                 indexes.main()
-            latest = json.loads((state / 'indexes.json').read_text())
+            latest = json.loads((state / ('indexes' + observe.index_selection_suffix(['PayAI']) + '.json')).read_text())
             self.assertEqual(latest['status'], 'UNAVAILABLE')
             self.assertEqual(latest['last_good'], good)
             self.assertIn('incomplete', latest['error'])
