@@ -34,6 +34,7 @@ export function messagesFor(question, history = [], includeContext = false) {
   if (context.reduce((sum, row) => sum + row.content.length, question.length) > 16000) throw Error("Reduce the conversation context before sending.");
   return [{ role: "system", content: MODEL_FLOOR }, ...context, { role: "user", content: question.trim() }];
 }
+function parseFrame(text) { try { return JSON.parse(text); } catch { throw Error("The provider returned an invalid stream frame."); } }
 function modelName(value) { return typeof value === "string" && value.length > 0 && value.length <= 200 ? value : null; }
 async function jsonBody(response) {
   const length = Number(response.headers.get("content-length") || 0);
@@ -47,7 +48,7 @@ async function jsonBody(response) {
 }
 export function createAIExecutor({ fetchImpl = fetch, getKey = async () => null, canFetch = async () => true, isOffline = () => false } = {}) {
   async function request(provider, suffix, { signal, method = "GET", body, offline = false, secret = false } = {}) {
-    const config = PROVIDERS[provider];
+    const config = own(PROVIDERS, provider) ? PROVIDERS[provider] : null;
     if (!config) throw Error("Unsupported provider.");
     if ((offline || isOffline()) && !config.local) throw Error("Offline AI blocks cloud requests.");
     if (!await canFetch(config.permission)) throw Error("Connect this provider in the extension's AI workspace first.");
@@ -117,6 +118,7 @@ export function createAIExecutor({ fetchImpl = fetch, getKey = async () => null,
       else if (config.format === "anthropic") {
         reportedModel = modelName(data.message?.model) ?? modelName(data.model) ?? reportedModel;
         if (data.type === "content_block_delta" && data.delta?.type === "text_delta") delta = data.delta.text;
+        if (data.type === "content_block_start" && data.content_block?.type === "tool_use" || data.content?.some?.(block=>block.type === "tool_use")) throw Error("This is a text-only connection. No tool request was executed.");
         if (data.type === "message_stop") finished = true;
         if (Array.isArray(data.content)) delta = data.content.filter(block => block.type === "text").map(block => block.text).join("");
       } else {
@@ -154,17 +156,17 @@ export function createAIExecutor({ fetchImpl = fetch, getKey = async () => null,
               if (!line.startsWith("data:")) continue;
               const data = line.slice(5).trim();
               if (data === "[DONE]") { finished = true; continue; }
-              accept(JSON.parse(data));
-            } else accept(JSON.parse(line));
+              accept(parseFrame(data));
+            } else accept(parseFrame(line));
           }
           if (buffer.length > 256 * 1024) throw Error("Provider stream frame exceeded its limit.");
         }
         buffer += decoder.decode();
         if (buffer.trim()) {
-          if (mime.includes("ndjson")) accept(JSON.parse(buffer));
+          if (mime.includes("ndjson")) accept(parseFrame(buffer));
           else if (buffer.trim().startsWith("data:")) {
             const data = buffer.trim().slice(5).trim();
-            if (data === "[DONE]") finished = true; else accept(JSON.parse(data));
+            if (data === "[DONE]") finished = true; else accept(parseFrame(data));
           }
         }
       } finally { try { await reader.cancel(); } catch {} reader.releaseLock(); }

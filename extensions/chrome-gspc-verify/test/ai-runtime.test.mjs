@@ -59,3 +59,9 @@ test("only trusted native page and top-frame exact sites can request",()=>{
   assert.equal(senderScope({id:"abc",url:"https://meok.ai/workspace",origin:"https://meok.ai",tab:{id:1},frameId:0},root),"https://meok.ai");
   for(const sender of [{id:"abc",url:root+"popup.html"},{id:"abc",url:"https://evil.invalid",origin:"https://evil.invalid",tab:{},frameId:0},{id:"abc",url:"https://meok.ai",origin:"https://meok.ai",tab:{},frameId:1}])assert.equal(senderScope(sender,root),null);
 });
+
+test("unknown catalogues cannot form a URL, and malformed frames do not disclose upstream text",async()=>{
+ let calls=0;await assert.rejects(()=>createAIExecutor({fetchImpl:()=>{calls++;}}).models("__proto__"),/Unsupported/);assert.equal(calls,0);
+ const executor=createAIExecutor({fetchImpl:async()=>new Response('data: UPSTREAM-PRIVATE-BODY\n\n',{headers:{"content-type":"text/event-stream"}})});
+ await assert.rejects(()=>executor.chat({choice:{...local,provider:"meok-cloud",model:"default",offline:false},question:"Hi"}),e=>e.message==="The provider returned an invalid stream frame.");
+});
