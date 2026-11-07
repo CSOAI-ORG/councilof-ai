@@ -127,5 +127,24 @@ jobs:
           # auto-merge waits for the REQUIRED CHECKS itself, so this lands the edition only
           # after the same gates every other change passes, and never with --admin.
           gh pr ready "${pr}" 2>/dev/null || true
-          gh pr merge "${pr}" --repo "${{ github.repository }}" --merge --auto --delete-branch=false || true
-          echo "armed auto-merge on ${pr}"
+          # ARM THE MERGE, AND THEN MEASURE THE ARMING. `gh pr merge ... || true` would
+          # swallow a refusal and the job would print "armed" while nothing was armed — and a
+          # green job that armed nothing is the same failure as a green gate that measured
+          # nothing. So the arming is READ BACK, and an un-armed pull request fails the job
+          # with the state named.
+          if ! gh pr merge "${pr}" --repo "${{ github.repository }}" --merge --auto --delete-branch=false; then
+            echo "::warning::could not arm auto-merge on ${pr}; falling through to the read-back"
+          fi
+          armed=$(gh pr view "${pr}" --repo "${{ github.repository }}" --json autoMergeRequest,state \
+            --jq '"\(.state) \(if .autoMergeRequest then "AUTO_MERGE_ON" else "AUTO_MERGE_OFF" end)"' \
+            2>/dev/null || echo "unknown AUTO_MERGE_OFF")
+          echo "pull request ${pr}: ${armed}"
+          case "$armed" in
+            *AUTO_MERGE_ON*|*MERGED*)
+              echo "the edition will land on its own once the required checks pass"
+              ;;
+            *)
+              echo "::error::auto-merge is NOT armed on ${pr} (${armed}) — the edition will not land on its own, and the catalogue will go stale again in 72 hours. This is a finding, not a pass."
+              exit 1
+              ;;
+          esac
