@@ -190,6 +190,31 @@ describe("model registry degraded board recovery", () => {
     expect(host.textContent).toContain("live · /api/gspc");
   });
 
+  it("derives an absent public count from every row status while preserving kind labels", async () => {
+    const model = historicalBoard.axes.find(
+      (axis: { kind: string }) => axis.kind === "model-comparison",
+    );
+    const fact = historicalBoard.axes.find(
+      (axis: { kind: string }) => axis.kind === "deterministic-facts",
+    );
+    vi.mocked(fetch).mockResolvedValue(Response.json({
+      ...historicalBoard,
+      totals: { ...historicalBoard.totals, axes: 5, measured_axes: 4, unmeasured_axes: 1, public_count: "" },
+      axes: [
+        { ...model, axis: "fixture-model", status: "MEASURED" },
+        { ...fact, axis: "fixture-fact", status: "MEASURED" },
+        { ...model, axis: "fixture-subject", kind: "measured-subject", status: "MEASURED" },
+        { ...model, axis: "fixture-unknown", kind: "future-kind", status: "MEASURED" },
+        { ...model, axis: "fixture-unmeasured", kind: "measured-subject", status: "UNMEASURED", n: 0 },
+      ],
+    }));
+    await mount();
+    expect(failure()).toBeNull();
+    const header = host.querySelector("header")!.textContent;
+    expect(header).toContain("5 axis · 4 measured");
+    expect(header).toContain("1 model-comparison + 1 deterministic-fact · 2 measured-subject · 1 unclassified");
+  });
+
   it("keeps withheld leaders and deterministic facts outside the model-comparison leader display", async () => {
     const axis = historicalBoard.axes.find(
       (axis: { kind: string }) => axis.kind === "model-comparison",

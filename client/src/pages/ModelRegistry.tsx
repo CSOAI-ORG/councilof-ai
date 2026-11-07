@@ -244,11 +244,14 @@ export default function ModelRegistry() {
 
   const { modelComparison, deterministicFacts, unclassified } =
     partitionModelRegistryAxes(axes);
-  const measuredCount = modelComparison.filter(
+  const totalMeasuredCount = axes.filter(
     (axis) => axis.status === "MEASURED",
   ).length;
   const factMeasuredCount = deterministicFacts.filter(
     (axis) => axis.status === "MEASURED",
+  ).length;
+  const measuredSubjectCount = unclassified.filter(
+    (axis) => axis.kind === "measured-subject",
   ).length;
 
   return (
@@ -271,7 +274,7 @@ export default function ModelRegistry() {
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500">
             <span>
               {source === "wire"
-                ? `live · /api/gspc · ${measuredOn} · ${publicCount || `${axes.length} axis · ${measuredCount + factMeasuredCount} measured`} · ${modelComparison.length} model-comparison + ${deterministicFacts.length} deterministic-fact${unclassified.length ? ` · ${unclassified.length} unclassified` : ""}`
+                ? `live · /api/gspc · ${measuredOn} · ${publicCount || `${axes.length} axis · ${totalMeasuredCount} measured`} · ${modelComparison.length} model-comparison + ${deterministicFacts.length} deterministic-fact${measuredSubjectCount ? ` · ${measuredSubjectCount} measured-subject` : ""}${unclassified.length > measuredSubjectCount ? ` · ${unclassified.length - measuredSubjectCount} unclassified` : ""}`
                 : `bundled snapshot (${measuredOn}) · not a current API response`}
             </span>
             {issuer && <span className="text-slate-600">issuer {issuer}</span>}

@@ -65,8 +65,8 @@ async function j(url, init = {}) {
 }
 
 /** 1. Offered resources must challenge; a declared UNMEASURED wrapper is not for sale. */
-// No machine-readable availability field is currently published for this row. Match the
-// exact canonical declaration and concrete GET contract; any declaration drift fails closed.
+// Preserve the exact single-pair declaration and GET contract. The separate per-asset
+// case below additionally requires the published machine-readable no_sale contract.
 const WRAPPER_UNMEASURED_DESCRIPTION = "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.";
 function declaredWrapperUnmeasured(res, url, response) {
   if (response.status !== 200 || response.headers.get("payment-required") ||
@@ -84,6 +84,40 @@ function declaredWrapperUnmeasured(res, url, response) {
     Object.keys(payment).length === 4 &&
     ["requested", "presented", "sent_to_facilitator", "settled"]
       .every((key) => Object.hasOwn(payment, key) && payment[key] === false);
+}
+
+const ASSET_WRAPPER_DESCRIPTION = "Wrapped-asset parity evidence for {ASSET}: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.";
+function exactFalseFlags(value, keys) {
+  return value !== null && typeof value === "object" && !Array.isArray(value) &&
+    Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value, key) && value[key] === false);
+}
+function declaredAssetWrapperUnmeasured(res, url, response) {
+  const origin = new URL(SITE).origin;
+  const asset = ["usdc", "usdt", "dai"].find(id => url === origin + "/api/wrapper/asset/" + id);
+  if (!asset || response.status !== 200 || response.headers.get("payment-required") ||
+      res.method !== "GET" || res.url !== url || res.paid_for !== "issuance" ||
+      res.asset !== asset.toUpperCase() || res.free_preview !== url + "?preview=1" ||
+      res.description !== ASSET_WRAPPER_DESCRIPTION.replace("{ASSET}", asset.toUpperCase())) return false;
+  const declared = res.no_sale?.body;
+  if (res.no_sale?.status !== 200 || !declared || Object.keys(declared).length !== 3 ||
+      declared.preview_only !== true || declared.state !== "UNMEASURED" ||
+      !exactFalseFlags(declared.payment, ["requested", "sent_to_facilitator", "settled"])) return false;
+  const body = response.body;
+  if (body?.schema !== "csoai.wrapper-asset-pack/0.1" || body.kind !== "preview" ||
+      body.asset !== asset.toUpperCase() || body.preview_only !== true || body.state !== "UNMEASURED" ||
+      !exactFalseFlags(body.payment, ["requested", "presented", "sent_to_facilitator", "settled"])) return false;
+  // Declining to sell is not a successful delivery. The declared counts and unsigned
+  // preview rows must agree; no signature, settlement or current availability is inferred.
+  return body.counts && Object.keys(body.counts).length === 1 &&
+    Number.isSafeInteger(body.counts.UNMEASURED) && body.counts.UNMEASURED > 0 &&
+    Array.isArray(body.pairs) && body.pairs.length === body.counts.UNMEASURED &&
+    body.pairs.every(id => typeof id === "string" && /^[a-z0-9_.-]+:[a-z0-9_.-]+$/.test(id) &&
+      ({ usdc: ["usdc", "usdc.e", "usdbc"], usdt: ["usdt", "usdt0"], dai: ["dai"] })[asset].includes(id.split(":")[0])) &&
+    new Set(body.pairs).size === body.pairs.length &&
+    Array.isArray(body.cards) && body.cards.length === body.pairs.length &&
+    body.cards.every((card, index) => card?.schema === "https://councilof.ai/schema/card-v0.json" &&
+      card.preview === true && !Object.hasOwn(card, "sig_ed25519") &&
+      card.payload?.id === body.pairs[index] && card.payload.state === "UNMEASURED");
 }
 
 async function checkManifest() {
@@ -124,7 +158,7 @@ async function checkManifest() {
     const r = await j(url);
     const challenge = r.headers.get("payment-required");
     if (r.status === 402 && challenge) ok(`manifest ${path}`, "402 with a challenge");
-    else if (declaredWrapperUnmeasured(res, url, r)) skip("manifest " + path,
+    else if (declaredWrapperUnmeasured(res, url, r) || declaredAssetWrapperUnmeasured(res, url, r)) skip("manifest " + path,
       "UNMEASURED preview only — not buyable; no payment requested, presented, forwarded or settled; no 402 availability claim");
     else bad(`manifest ${path}`, `advertised as buyable but answered HTTP ${r.status}${challenge ? "" : " with no PAYMENT-REQUIRED header"}`);
   }
@@ -2155,6 +2189,76 @@ async function main() {
         }
       }
     ];
+    // The manifest declares this alternative for every per-asset wrapper door too.
+    // Keep fixtures independent of the classifier's description/shape constants.
+    const assetDescription = "Wrapped-asset parity evidence for {ASSET}: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.";
+    const assetPairs = {
+      usdc: ["usdc.e:arbitrum", "usdc.e:optimism", "usdbc:base", "usdc:base", "usdc:arbitrum", "usdc.e:polygon", "usdc:zksync-era"],
+      usdt: ["usdt:arbitrum", "usdt:optimism", "usdt:polygon", "usdt0:optimism", "usdt0:arbitrum"],
+      dai: ["dai:optimism", "dai:base", "dai:polygon"],
+    };
+    const assetCase = (asset = "dai") => ({
+      name: asset + " explicitly declines to sell", want: "SKIP", status: 200, challenge: false,
+      resource: { method: "GET", url: wrapperOrigin + "/api/wrapper/asset/" + asset,
+        paid_for: "issuance", asset: asset.toUpperCase(),
+        free_preview: wrapperOrigin + "/api/wrapper/asset/" + asset + "?preview=1",
+        description: assetDescription.replace("{ASSET}", asset.toUpperCase()),
+        no_sale: { status: 200, body: { preview_only: true, state: "UNMEASURED",
+          payment: { requested: false, sent_to_facilitator: false, settled: false } } } },
+      body: { schema: "csoai.wrapper-asset-pack/0.1", kind: "preview", asset: asset.toUpperCase(),
+        preview_only: true, state: "UNMEASURED", counts: { UNMEASURED: assetPairs[asset].length }, pairs: [...assetPairs[asset]],
+        cards: assetPairs[asset].map(id => ({ schema: "https://councilof.ai/schema/card-v0.json", preview: true,
+          payload: { id, state: "UNMEASURED" } })),
+        payment: { requested: false, presented: false, sent_to_facilitator: false, settled: false } },
+    });
+    manifestCases.push(...["usdc", "usdt", "dai"].map(assetCase));
+    for (const [name, mutate] of [
+      ["missing declared no-sale contract", c => { delete c.resource.no_sale; }],
+      ["wrong declared no-sale status", c => { c.resource.no_sale.status = 402; }],
+      ["changed declared state", c => { c.resource.no_sale.body.state = "MEASURED"; }],
+      ["missing declared payment flag", c => { delete c.resource.no_sale.body.payment.settled; }],
+      ["extra declared payment flag", c => { c.resource.no_sale.body.payment.presented = false; }],
+      ["declared payment requested", c => { c.resource.no_sale.body.payment.requested = true; }],
+      ["unrelated route", c => { c.resource.url = wrapperOrigin + "/api/other"; }],
+      ["unknown asset", c => { c.resource.url = wrapperOrigin + "/api/wrapper/asset/doge"; }],
+      ["foreign origin", c => { c.resource.url = "https://untrusted.invalid/api/wrapper/asset/dai"; }],
+      ["wrong method", c => { c.resource.method = "POST"; }],
+      ["wrong sold purpose", c => { c.resource.paid_for = "assembly"; }],
+      ["description drift", c => { c.resource.description += " Buyable now."; }],
+      ["wrong declared asset", c => { c.resource.asset = "USDC"; }],
+      ["wrong preview URL", c => { c.resource.free_preview += "&extra=1"; }],
+      ["plain 200", c => { c.body = {}; }],
+      ["wrong body schema", c => { c.body.schema = "unrelated/1"; }],
+      ["wrong body kind", c => { c.body.kind = "delivery"; }],
+      ["wrong body asset", c => { c.body.asset = "USDC"; }],
+      ["not preview only", c => { c.body.preview_only = false; }],
+      ["measured body", c => { c.body.state = "MEASURED"; }],
+      ["unknown payment flag", c => { c.body.payment.extra = false; }],
+      ["payment flags are an array", c => { c.body.payment = []; }],
+      ["mixed measured counts", c => { c.body.counts.ESCROW_PARITY_READ = 1; }],
+      ["no observed pairs", c => { c.body.counts.UNMEASURED = 0; }],
+      ["inconsistent pair count", c => { c.body.counts.UNMEASURED = 2; }],
+      ["duplicated pairs", c => { c.body.pairs.push(c.body.pairs[0]); c.body.counts.UNMEASURED = 2; }],
+      ["missing cards", c => { delete c.body.cards; }],
+      ["readable preview card", c => { c.body.cards[0].payload.state = "ESCROW_PARITY_READ"; }],
+      ["wrong pair card", c => { c.body.cards[0].payload.id = "usdc:base"; }],
+      ["wrong asset pair and card", c => { c.body.pairs[0] = "usdc:base"; c.body.cards[0].payload.id = "usdc:base"; }],
+      ["unknown asset alias", c => { c.body.pairs[0] = "daiish:base"; c.body.cards[0].payload.id = "daiish:base"; }],
+      ["signed card in preview", c => { c.body.cards[0].sig_ed25519 = "synthetic"; }],
+      ["200 carrying a payment challenge", c => { c.challenge = true; }],
+      ["bare per-asset 402", c => { c.status = 402; }],
+    ]) {
+      const c = assetCase(); c.name = "per-asset refuses " + name; c.want = "FAIL"; mutate(c); manifestCases.push(c);
+    }
+    for (const key of ["requested", "presented", "sent_to_facilitator", "settled"]) {
+      for (const value of [undefined, true, "false"]) {
+        const c = assetCase(); c.name = "per-asset refuses " + key + "=" + value; c.want = "FAIL";
+        c.body.payment[key] = value; manifestCases.push(c);
+      }
+    }
+    const assetChallenge = assetCase(); assetChallenge.name = "per-asset 402 challenge remains OK";
+    assetChallenge.status = 402; assetChallenge.challenge = true; assetChallenge.want = "OK";
+    manifestCases.push(assetChallenge);
     for (const c of manifestCases) {
       const originalFetch = globalThis.fetch;
       const savedResults = results.splice(0);

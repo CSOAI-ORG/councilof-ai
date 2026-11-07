@@ -44,6 +44,10 @@ export const NODE_TEST_FILES = [
   // pr-gates.yml runs it under node --test (same reason as sitemap-withdrawal below).
   // No apostrophes in these comments: the registry and the workflow extract entries by
   // naive quote matching, and a stray quote inside the array corrupts the parsed list.
+  // The committed-bytes check for the two edge generators (public/sitemap.xml and
+  // public/_redirects): a node:test file vitest cannot collect, named here so
+  // pr-gates.yml runs it under node --test. It proves the checks can detect drift.
+  'scripts/committed-bytes.node-test.mjs',
   'scripts/hygiene/sweeper.node-test.mjs',
   // The cron-health watch decisions: a node:test file vitest cannot collect, named here so
   // pr-gates.yml runs it under node --test. It proves the watch catches a dead schedule,
