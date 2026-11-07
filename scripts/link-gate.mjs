@@ -109,6 +109,14 @@ export function isServed(pathname, files, routes, redirects = new Map()) {
   // honours. Follow one hop and judge the target.
   const to = redirects.get(p) || redirects.get(`${p}/`);
   if (to) {
+    // An off-origin target leaves this gate's scope (same-origin paths), and the rule that sends
+    // it there is the thing we publish: a path that 302s to the Hugging Face mirror IS served.
+    // The splat branch below applies exactly this rule; an exact-path redirect to an off-origin
+    // target is the same case, and it used to be judged dead. It bit on 2026-11-07 when the
+    // refreshed mirror manifest first published
+    // /interop/effect-binding-server-probe-2026-09-22.json and ...-2026-09-30.json — both of
+    // which public/_redirects serves by 302 to csoai/councilof-ai-evidence.
+    if (/^https?:\/\//i.test(to) && !/^https?:\/\/(?:www\.)?councilof\.ai(?:\/|$)/i.test(to)) return true;
     const t = to.replace(/^https?:\/\/(?:www\.)?councilof\.ai/i, "").replace(/\/+$/, "") || "/";
     if (t !== p) return isServed(t, files, routes);
     return true;
@@ -180,6 +188,11 @@ if (SELFTEST && process.argv[1] && resolve(process.argv[1]) === fileURLToPath(im
   must("judges a same-origin splat target", isServed("/old/anything", files, routes, splat));
   must("still catches a splat whose same-origin target is dead", !isServed("/gone/x.json", files, routes, splat));
   must("a splat does not serve paths outside its prefix", !isServed("/cardsx/1.json", files, routes, splat));
+  // An exact-path redirect to an off-origin target is served, exactly like the splat case above:
+  // public/_redirects 302s the excluded run artefacts to the Hugging Face evidence mirror.
+  const exact = new Map([["/interop/probe.json", "https://huggingface.co/datasets/x/resolve/main/interop/probe.json"]]);
+  must("serves a path under an exact-path off-origin redirect", isServed("/interop/probe.json", files, routes, exact));
+  must("still catches an exact-path redirect whose same-origin target is dead", !isServed("/interop/gone.json", files, routes, new Map([["/interop/gone.json", "/nowhere/gone.json"]])));
   must("readRedirects keeps no 200 splat (a rewrite, e.g. the SPA fallback)", ![...readRedirects(REPO).keys()].some((k) => k === "/*"));
   if (bad) { console.error(`✖ link-gate selftest FAILED (${bad})`); process.exit(1); }
   console.log(`✓ link-gate selftest: ${CASES}/${CASES} — catches the dead link it was written for, passes what we serve`);

@@ -387,12 +387,12 @@ Re-read it live; do not quote these figures without the state and coverage besid
 ## Published interop files (every file under /interop/, with its digest)
 
 Derived at generation from https://councilof.ai/interop/file-index.json (same bytes on disk at
-public/interop/file-index.json, schema csoai.interop-file-index/0.1, artifact as_of 2026-11-06T07:17:52Z). It is a
+public/interop/file-index.json, schema csoai.interop-file-index/0.1, artifact as_of 2026-11-07T06:04:24Z). It is a
 MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
 the SHA-256 of the bytes and how the file is served.
 
-- Files indexed: 16,329. Bytes indexed: 258,794,832.
-- By how they are served: 13,238 hf-mirror; 3,091 pages.
+- Files indexed: 16,342. Bytes indexed: 261,669,609.
+- By how they are served: 13,238 hf-mirror; 3,104 pages.
 - hf-mirror: served by a 302 redirect to the HuggingFace evidence mirror (scripts/deploy-exclusions.json); the path is real and fetchable
 - pages: served by the site build
 - To check one file: fetch its path and hash it. A match means you hold the bytes the estate
@@ -422,14 +422,14 @@ board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-06T04:24:35Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-07T06:04:19Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 695. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 696. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
 - Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 693.
-- Still calendar-pending: 2. A calendar-pending proof is a submitted request, not
+- Still calendar-pending: 3. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 86 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
