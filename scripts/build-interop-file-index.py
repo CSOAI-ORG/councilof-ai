@@ -228,6 +228,15 @@ def selftest():
     check("a differing row is a difference", rows_differ(clean, stale))
     check("an identical row is not a difference", not rows_differ(clean, clean))
     check("a row count difference is a difference", rows_differ(clean, clean + stale))
+    # A check that only compares digests may pass while MISLABELLING the served state, and the
+    # served state is the promise a reader reads ("the path is real and fetchable"). So a
+    # row whose served state differs must be a difference even when its bytes do not.
+    mislabelled = [{"path": "/interop/a.json", "bytes": 1, "sha256": "0" * 64, "served": "pages"}]
+    mislabelled[0]["served"] = "hf-mirror"
+    check("a row whose SERVED STATE differs is a difference", rows_differ(clean, mislabelled))
+    check("the served state is compared, not just the digest",
+          rows_differ([{"path": "/x", "bytes": 1, "sha256": "a", "served": "pages"}],
+                      [{"path": "/x", "bytes": 1, "sha256": "a", "served": "retired-bytes"}]))
 
     # 3. the served-tree path must be rebuilt under the PUBLIC path, not the tree-relative one.
     #    The tree root is public/interop and the served root is dist/client, so the served file
