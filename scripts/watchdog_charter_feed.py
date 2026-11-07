@@ -408,6 +408,9 @@ def referee_history(old_raw, new_raw):
         if value["metadata_state"] != "SOURCE_DECLARED":
             return None
         declared = value["source_declared"]
+        if (declared.get("observation_state") != "SOURCE_DECLARED"
+                or declared.get("provenance_state") != "DECLARED_BINDINGS_ONLY"):
+            return None
         bindings = declared.get("bindings")
         required = ("artifact_sha256", "source_sha256", "bank_sha256", "grader_sha256",
                     "rubric_sha256", "measured_at", "subject", "scope")
@@ -417,7 +420,7 @@ def referee_history(old_raw, new_raw):
                        for k in required if k.endswith("_sha256"))):
             return None
         refs = declared.get("referees")
-        keys = ("id", "implementation_sha256", "failure_domain", "controller_id")
+        keys = ("id", "implementation_sha256", "version", "failure_domain", "controller_id")
         if (not isinstance(refs, list) or not refs
                 or any(any(not isinstance(ref.get(k), str) or not ref[k] for k in keys)
                        or not re.fullmatch(r"[a-f0-9]{64}", ref["implementation_sha256"]) for ref in refs)
@@ -426,7 +429,9 @@ def referee_history(old_raw, new_raw):
         return {"bindings": bindings, "referees": [{k: ref[k] for k in keys} for ref in refs],
                 "quorum_geometry": declared.get("quorum_geometry")}
     before, after = context(old), context(new)
-    comparable = before is not None and before == after
+    comparable = (before is not None and after is not None
+                  and json.dumps(before, sort_keys=True, separators=(",", ":"), allow_nan=False)
+                  == json.dumps(after, sort_keys=True, separators=(",", ":"), allow_nan=False))
     return {"previous": old, "current": new, "event": event,
             "comparison_state": "IDENTICAL_DECLARED_REFEREE_CONTEXT" if comparable
                                 else "UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT",
@@ -489,7 +494,8 @@ def axis_report_history(registry, charter_map, reports):
             event = "PREVIOUS_UNRESOLVED"
         elif old is None:
             event = "AXIS_ADDED"
-        elif context in ("CONTEXT_VARIATION", "UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT"):
+        elif (context == "CONTEXT_VARIATION" or
+              (context == "UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT" and changed)):
             event = "INCOMPARABLE_VARIATION"
         elif not changed:
             event = "UNCHANGED_EVIDENCE"

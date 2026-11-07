@@ -303,7 +303,7 @@ class TestAxisReports(unittest.TestCase):
                 "bindings":{k:("a"*64 if k.endswith("_sha256") else "fixture")
                             for k in ("artifact_sha256","source_sha256","bank_sha256","grader_sha256",
                                       "rubric_sha256","measured_at","subject","scope")},
-                "referees":[{"id":"r1","implementation_sha256":"b"*64,"failure_domain":"d1",
+                "referees":[{"id":"r1","implementation_sha256":"b"*64,"version":"v1","failure_domain":"d1",
                              "controller_id":"c1","decision_origin":"o1"}],
                 "source_declared_verdict":"OBSERVED", "copied_decision_declared":False}
     def put_referees(self):
@@ -347,9 +347,26 @@ class TestAxisReports(unittest.TestCase):
                 self.assertEqual(row["event"],"INCOMPARABLE_VARIATION")
                 self.assertEqual(row["observed_metric_direction"],"NOT_COMPARED")
     def test_referee_identity_change_is_context_change(self):
+        import copy
         self.put_referees();axis=self.names[0]
-        self.current["axes"][axis]["referee_observation"]["referees"][0]["controller_id"]="different"
-        self.assertEqual(self.history()["rows"][0]["comparison_state"],"UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT")
+        self.previous["axes"][axis].update(n=10,accuracy=0.2)
+        self.current["axes"][axis].update(n=10,accuracy=0.9)
+        original=copy.deepcopy(self.current["axes"][axis]["referee_observation"])
+        for key,value in (("id","r2"),("implementation_sha256","e"*64),("version","v2"),
+                          ("failure_domain","d2"),("controller_id","c2"),
+                          ("quorum_geometry",{"n":7,"f":2,"q":5})):
+            self.current["axes"][axis]["referee_observation"]=copy.deepcopy(original)
+            raw=self.current["axes"][axis]["referee_observation"]
+            if key=="quorum_geometry":raw[key]=value
+            else:raw["referees"][0][key]=value
+            row=self.history()["rows"][0]
+            self.assertEqual(row["comparison_state"],"UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT")
+            self.assertEqual(row["observed_metric_direction"],"NOT_COMPARED")
+        a=self.referee_fixture();b=copy.deepcopy(a)
+        a["quorum_geometry"]={"n":4,"f":1,"q":3}
+        b["quorum_geometry"]={"n":4,"f":True,"q":3}
+        self.assertEqual(wcf.referee_history(a,b)["comparison_state"],
+                         "UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT")
     def test_referee_disappearance_remains_visible(self):
         self.put_referees();axis=self.names[0]
         del self.current["axes"][axis]["referee_observation"]
@@ -380,6 +397,15 @@ class TestAxisReports(unittest.TestCase):
         self.assertEqual(row["event"],"UNCHANGED_EVIDENCE")
         self.assertEqual(row["current"]["measurement_time"]["observed_on"],"2026-08-12")
         self.assertEqual(row["observed_metric_direction"],"NOT_COMPARED")
+        import copy
+        unknown={"schema":"csoai.referee-observation/0.1","human_decision":"HOLD",
+                 "may_apply":False,"observation_state":"UNKNOWN","independence_state":"UNKNOWN"}
+        for side in ("current","previous"):
+            self.reports[side]["axes"][self.names[0]]["referee_observation"]=copy.deepcopy(unknown)
+        row=self.history()["rows"][0]
+        self.assertEqual(row["event"],"UNCHANGED_EVIDENCE")
+        self.assertEqual(row["comparison_state"],"UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT")
+        self.assertEqual(row["observed_metric_direction"],"NOT_COMPARED")
     def test_referee_input_is_not_mutated_or_aliased(self):
         import copy
         raw=self.referee_fixture();before=copy.deepcopy(raw)
@@ -398,6 +424,10 @@ class TestAxisReports(unittest.TestCase):
         self.assertEqual(hist["comparison_state"],"UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT")
         raw["quorum_geometry"]={"n":float("nan")}
         self.assertEqual(wcf.referee_projection(raw)["metadata_state"],"MALFORMED")
+        for field in ("observation_state","provenance_state"):
+            raw=self.referee_fixture();raw[field]="UNKNOWN"
+            self.assertEqual(wcf.referee_history(raw,raw)["comparison_state"],
+                             "UNRESOLVED_OR_CHANGED_REFEREE_CONTEXT")
 
 
     def test_referee_nested_authority_cannot_cross_build_boundary(self):
