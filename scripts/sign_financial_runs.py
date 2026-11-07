@@ -40,6 +40,31 @@ def sign_label_violation(payload: dict) -> str | None:
     return m.group(0) if m else None
 
 
+_CALLER_VERDICTS_PRINTED = set()
+
+
+def _log_board_sign_caller(reply) -> None:
+    """Print the signer's unsigned `caller` echo to stderr.
+
+    Once per run, and once more for each different strict verdict, so a run logs how a
+    later, stricter signer would treat it ("would-refuse" names the reason). Logging only:
+    it never raises, and it changes nothing that is signed or written.
+    """
+    try:
+        caller = reply.get("caller") if isinstance(reply, dict) else None
+        if not isinstance(caller, dict):
+            return
+        strict = caller.get("strict") if isinstance(caller.get("strict"), dict) else {}
+        verdict = {True: "pass", False: "would-refuse"}.get(strict.get("pass"), "none")
+        seen = f"{verdict}:{strict.get('reason')}"
+        if seen in _CALLER_VERDICTS_PRINTED:
+            return
+        _CALLER_VERDICTS_PRINTED.add(seen)
+        print(f"board-sign caller strict={verdict} {json.dumps(caller, sort_keys=True)}", file=sys.stderr)
+    except Exception:
+        pass
+
+
 def sign_via_oidc_attested(payload: dict) -> tuple[str, str]:
     """Return the signature and the digest computed over the exact remote preimage.
 
@@ -80,6 +105,7 @@ def sign_via_oidc_attested(payload: dict) -> tuple[str, str]:
             out = json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
         raise RuntimeError(f"board-sign HTTP {e.code} {e.read()[:300]!r}") from e
+    _log_board_sign_caller(out)
     sig = out.get("sig_ed25519")
     if not isinstance(sig, str) or len(sig) < 64:
         raise RuntimeError("no sig")

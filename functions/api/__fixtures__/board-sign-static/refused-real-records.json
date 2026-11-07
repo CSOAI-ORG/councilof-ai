@@ -1,0 +1,53 @@
+{
+ "what_this_is": "Three real records the board key signed. Each is a kind the pod-token route must now refuse. The signatures are kept so a test can prove these are the real bytes, not an invented shape.",
+ "records": [
+  {
+   "kind": "card",
+   "source": "public/interop/mill-cards-signed/signed-swarm-ff1969b7da00.json at master 8c89bfcc (body, signature)",
+   "payload": {
+    "kind": "gspc.measurement-card",
+    "axis": "swarm",
+    "model": "Qwen/Qwen3-30B-A3B",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.3,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router"
+   },
+   "sig_ed25519": "7fc6671beb0cf7577534db7d28394f76dfa5c2cd0b98425b55a5779e9d494e058192854fe12d61465765e86b0021744dbf0788dbbdbb9ffc6a7810808eee6101"
+  },
+  {
+   "kind": "root",
+   "source": "public/root.json at master 8c89bfcc (the six signed envelope keys, sig_ed25519)",
+   "payload": {
+    "kind": "csoai.public-root/v1",
+    "schema": "https://councilof.ai/schema/public-root-v1.json",
+    "as_of": "2026-10-13T03:31:42Z",
+    "merkle_root": "ff8570aa7bedd9ba3f463e5292da3a3f8e4b0893703173bb97404bb5b4adb611",
+    "card_count": 317,
+    "did_intended": "did:web:csoai.org#board-attestation-1"
+   },
+   "sig_ed25519": "a26ce798a5c2863f9e8afa93afe91ef3feb73a7c075aa30097acc327f0659e50f2ef22ed62f5f54464dea103491d1a7f3a473914ebdf6288bcf6cc928971cc01"
+  },
+  {
+   "kind": "corrections-attestation",
+   "source": "GET https://councilof.ai/api/corrections read 2026-10-13 (signature.attestation, signature.signature)",
+   "payload": {
+    "artifact": "csoai.corrections/0.1",
+    "content_id": "b04c8d07014b1c0c9497e889481e5e3ededf76736427bac3d814bfd2b3d3f34a",
+    "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
+    "entries": 93,
+    "latest_entry_id": "C-2026-1006-13",
+    "ledger_canonical_bytes": 229171,
+    "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
+    "schema": "csoai.corrections-attestation/0.1",
+    "signed_at": "2026-10-06T13:51:47Z"
+   },
+   "sig_ed25519": "a699fbc4d89fbc49e6b06dc618f4445bbef59e18b74dc05ac33d0b8cc0b3917e7793c5430fbcf4304ba6456b6fd80d3b2fee7e498943ae1563e896b48f697206"
+  }
+ ]
+}
