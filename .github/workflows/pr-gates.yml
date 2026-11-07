@@ -286,6 +286,16 @@ jobs:
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
 
+      - name: Instrument liveness - selftest
+        if: steps.scope.outputs.gated == 'true'
+        # The publisher that says whether the estate's own instruments are still producing. Two of
+        # them had been silent (the settlement census on 4 and 5 Nov, the deck jobs from 3 Nov) and
+        # nothing said so anywhere a reader could see. Its selftest builds a fixture tree with two
+        # published days and two that were never published, and asserts the gap is DERIVED from the
+        # files themselves - so a day that produced nothing cannot be smoothed away by a typed
+        # field, and the verdict stays a statement about elapsed time rather than about quality.
+        run: python3 scripts/pod-loops/instrument_liveness.py --selftest
+
       - name: Dependency security regressions — sanitizer, quoting and proxy trust
         if: steps.scope.outputs.gated == 'true'
         run: |
