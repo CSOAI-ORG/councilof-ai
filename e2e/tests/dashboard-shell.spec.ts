@@ -582,7 +582,12 @@ test("GSPC quests are a styled in-workspace game and never promote play into mea
       name: "GSPC Quests — play frozen challenge banks",
     }),
   ).toBeVisible();
-  await expect(playPane.getByText(/currently admitted ranking/i)).toBeVisible();
+  await expect(
+    playPane.getByText(/historical board references separate from current admitted evidence/i),
+  ).toBeVisible();
+  await expect(
+    playPane.getByText(/your score stays in this browser; it is not training data or a GSPC measurement/i),
+  ).toBeVisible();
   await expect(playPane.getByText(/models are measured on/i)).toHaveCount(0);
 
   // The page's board read (/api/gspc, falling back to the live councilof.ai read when
@@ -756,16 +761,21 @@ test("workspace navigation starts minimized and remains usable across layout bou
 
 test("the home header carries a booking door to /assess/ within one click", async ({ page }) => {
   await page.goto("/");
-  const desktop = page.locator('[data-testid="header-book-measurement"]');
-  const opener = page.getByRole("button", { name: "Open menu" });
-  if (await desktop.isVisible({ timeout: 30_000 }).catch(() => false)) {
-    await expect(desktop).toHaveAttribute("href", "/assess/");
-  } else {
+  const header = page.locator("[data-site-header]").first();
+  const desktop = header.getByTestId("header-book-measurement");
+  const opener = header.getByRole("button", { name: "Open menu", exact: true });
+  // isVisible does not wait. Settle the responsive entry before choosing its branch.
+  await expect.poll(async () => await desktop.isVisible() || await opener.isVisible()).toBe(true);
+  let booking = desktop;
+  if (!(await desktop.isVisible())) {
     await opener.click();
-    const mobile = page.locator('[data-testid="mobile-book-measurement"]');
-    await expect(mobile).toBeVisible();
-    await expect(mobile).toHaveAttribute("href", "/assess/");
+    booking = header.getByTestId("mobile-book-measurement");
   }
+  await expect(booking).toBeVisible();
+  await expect(booking).toHaveAttribute("href", "/assess/");
+  await booking.click();
+  await expect(page).toHaveURL(/\/dashboard\/?\?.*tab=measured/);
+  await expect(page.getByTestId("dashboard-pane-measured")).toBeVisible();
 });
 
 for (const width of [375, 894, 1024, 1280, 1440, 1536]) {
