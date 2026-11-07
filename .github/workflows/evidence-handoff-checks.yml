@@ -141,6 +141,8 @@ jobs:
           packages/evidence-fabric/tests/test_doctrine.py
           packages/evidence-fabric/tests/test_event.py
           packages/evidence-fabric/tests/test_verify_qualification.py
+      - name: Held referee continuity and discriminating mutation controls
+        run: python -B -m unittest discover -s packages/evidence-fabric/tests -p 'test_axis_referee*.py' -v
       - name: Full registry routing and GPAI packet controls
         run: |
           python packages/evidence-fabric/test_regulation_projection.py
