@@ -261,15 +261,19 @@ async function interopAvailabilityFor(origin: string, subject: string, axis: str
           !Number.isSafeInteger(root.n_leaves) || root.n_leaves < 0 ||
           !/^[a-f0-9]{64}$/.test(String(root.merkle_root || "")) ||
           !root.leaves.every((leaf: Record<string, unknown>) =>
+            leaf !== null && typeof leaf === "object" && !Array.isArray(leaf) &&
             /^signed-[a-z0-9-]+-[a-f0-9]{12}\.json$/.test(String(leaf.card || "")) &&
-            typeof leaf.model === "string" && typeof leaf.axis === "string")) {
+            (typeof leaf.model === "string" || leaf.model === null) && typeof leaf.axis === "string")) {
         throw new Error("root shape is not checkable");
       }
       return {
         key, asOf: String(root.as_of), nLeaves: root.n_leaves,
-        leaves: root.leaves.map((leaf: Record<string, string>) => ({
-          modelLower: leaf.model.toLowerCase(), axis: leaf.axis, card: leaf.card,
-        })),
+        // Non-model measurements remain root leaves, never invented model matches.
+        leaves: root.leaves
+          .filter((leaf: Record<string, unknown>) => typeof leaf.model === "string")
+          .map((leaf: Record<string, string>) => ({
+            modelLower: leaf.model.toLowerCase(), axis: leaf.axis, card: leaf.card,
+          })),
       };
     };
 
