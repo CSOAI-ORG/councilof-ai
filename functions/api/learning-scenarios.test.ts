@@ -110,7 +110,7 @@ const regulation = {
 };
 
 function stub(
-  sources: { board?: unknown; findings?: unknown; regulation?: unknown } = {},
+  sources: { board?: unknown; findings?: unknown; regulation?: unknown; dailyIndex?: unknown } = {},
 ) {
   const calls: { method: string; path: string }[] = [];
   const values: Record<string, unknown> = {
@@ -119,6 +119,7 @@ function stub(
       sources.findings === undefined ? findings() : sources.findings,
     "/api/regulation":
       sources.regulation === undefined ? regulation : sources.regulation,
+    "/reports/daily-signal/index.json": sources.dailyIndex ?? null,
   };
   vi.stubGlobal(
     "fetch",
@@ -147,9 +148,40 @@ async function get(path = "/api/learning-scenarios") {
   return { response, text: await response.text() };
 }
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); });
 
 describe("GET /api/learning-scenarios", () => {
+  const dailyIndex = () => ({
+    schema: "csoai.daily-signal-index/0.1", report_count: 1,
+    latest_report_day: "2026-11-06", latest_report_id: "d".repeat(64), signed: false,
+    reports: [{ report_day: "2026-11-06", report_id: "d".repeat(64),
+      json_path: "/reports/daily-signal/2026-11-06.json", markdown_path: "/reports/daily-signal/2026-11-06.md",
+      counts: { events_in_horizon: 8, mapped_events: 0, unmapped_events: 8 }, private_note: "PRIVATE_SENTINEL" }],
+  });
+
+  it("adds optional free report metadata without reading report bodies or granting authority", async () => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date("2026-11-07T03:00:00Z"));
+    const calls = stub({ dailyIndex: dailyIndex() });
+    const { response, text } = await get();
+    expect(response.status).toBe(200);
+    expect(JSON.parse(text).daily_briefing).toMatchObject({ state: "AVAILABLE", report_day: "2026-11-06",
+      source_integrity: "INDEX_DECLARATION_ONLY", grants_authority: false, model_training: false,
+      counts: { events_in_horizon: 8, mapped_events: 0, unmapped_events: 8 }, freshness: { age_days: 1 } });
+    expect(calls.map(c => c.path)).toContain("/reports/daily-signal/index.json");
+    expect(calls.some(c => /2026-11-06\.(json|md)$/.test(c.path))).toBe(false);
+    expect(text).not.toContain("PRIVATE_SENTINEL");
+  });
+
+  it("keeps existing source learning available when optional report metadata is absent or invalid", async () => {
+    for (const daily of [null, { ...dailyIndex(), latest_report_id: "bad" }]) {
+      stub({ dailyIndex: daily });
+      const { response, text } = await get();
+      expect(response.status).toBe(200);
+      expect(JSON.parse(text).daily_briefing.state).toBe("UNAVAILABLE");
+      expect(JSON.parse(text).scenario_count).toBe(22);
+    }
+  });
+
   it("builds deterministic 22-axis scenarios without collapsing evidence classes", async () => {
     const calls = stub();
     const first = await get();
@@ -417,3 +449,4 @@ describe("the board's cardinality is followed, not asserted", () => {
     expect((await get()).response.status).toBe(503);
   });
 });
+
