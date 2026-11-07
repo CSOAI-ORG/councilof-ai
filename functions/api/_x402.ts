@@ -1,5 +1,6 @@
 import { bookkeepingBudget, bookkeepingGap, type BookkeepingBudget } from "./_bookkeeping_budget";
-import { checkBuyerPayment, finishBuyerPayment, type SettledBuyer } from "./_buyer_purchase";
+import type { AuthEnv } from "./_authCrypto";
+import { checkBuyerPayment, finishBuyerPayment, type SettledBuyer, type BuyerStore } from "./_buyer_purchase";
 // functions/api/_x402.ts — FAIL-CLOSED x402 receipt verification, shared by every metered
 // endpoint (currently /api/proof?bundle=1, /api/request-attestation, and /api/signed-data-feed).
 //
@@ -92,7 +93,7 @@ export type X402Env = CdpEnv & {
   // /api/revenue stays honestly null. Present ⇒ every facilitator-CONFIRMED settle writes one
   // record and moves the non-self tally. Recording never gates the grant.
   REVENUE_KV?: KVNamespace;
-  SOV_ARENA_STATE?: KVNamespace;
+  SOV_ARENA_STATE?: AuthEnv["SOV_ARENA_STATE"];
   ASSESS_SIGNING_KEY_PKCS8_B64?: string;
   // Comma-separated wallets the estate controls (besides payTo). A settlement whose payer is one
   // of these is SELF: recorded, but never counted as revenue or as a buyer.
@@ -464,7 +465,7 @@ export async function recordSettlement(
   rec: Omit<SettlementRecord, "schema" | "self" | "zero_value" | "settled_at">,
   sharedBudget?:BookkeepingBudget,
 ): Promise<RecordOutcome> {
-  const kv = env.REVENUE_KV;
+  const kv:Pick<BuyerStore,"get"|"put">|undefined = env.REVENUE_KV;
   if (!kv)
     return { stored: false, reason: "no REVENUE_KV bound", record: null };
   const self = !!rec.payer && selfWallets(env).has(rec.payer.toLowerCase());
@@ -569,7 +570,7 @@ export async function verifyX402Payment(
     return { ok: false, reason: "x-payment payload is not an object" };
   }
   const buyerCheck = await checkBuyerPayment(request, env, resourceUrl, payload);
-  if (!buyerCheck.ok) return {ok:false,reason:buyerCheck.reason};
+  if (buyerCheck.ok === false) return {ok:false,reason:buyerCheck.reason};
   // CSOAI private request commitment is not facilitator data. The financial signature/nonce remain untouched.
   const { csoaiPurchase: _privatePurchaseContext, ...financialPayload } = payload;
 

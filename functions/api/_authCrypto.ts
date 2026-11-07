@@ -3,9 +3,14 @@
  * Runs on apex (councilof.ai), not GCP. RunPod/Oracle handle compute; login lives here.
  */
 
+export interface AuthStore {
+  get(key: string): Promise<string | null>;
+  put(key: string, value: string): Promise<void>;
+}
+
 export interface AuthEnv {
   ASSESS_SIGNING_KEY_PKCS8_B64?: string;
-  SOV_ARENA_STATE?: KVNamespace;
+  SOV_ARENA_STATE?: AuthStore;
 }
 
 const TOKEN_TTL_MS = 30 * 864e5;

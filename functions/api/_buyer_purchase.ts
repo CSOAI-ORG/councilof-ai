@@ -3,7 +3,14 @@ import { verifyToken, userKey, type AuthEnv } from "./_authCrypto";
 import { BUYER_BODY_MAX_BYTES, buyerOwnerHash, buyerNonce, purchaseSeed, purchaseSha256, checkedPurchaseUrl,
   validGeneration, isBuyerNonce, type PurchaseIdentity, type PurchasePreparation } from "../../shared/buyerPurchase";
 
-export type BuyerEnv = AuthEnv & { REVENUE_KV?: KVNamespace };
+export interface BuyerStore {
+  get(key:string):Promise<string|null>;
+  put(key:string,value:string):Promise<void>;
+  list(options:{prefix:string;limit:number;cursor?:string}):Promise<{
+    keys:{name:string}[];list_complete:boolean;cursor?:string;
+  }>;
+}
+export type BuyerEnv = AuthEnv & { REVENUE_KV?: BuyerStore };
 export type BuyerIdentity = Readonly<{ subject:string; generation:string; owner_hash:string }>;
 export class BuyerHold extends Error {
   constructor(message:string,readonly status=401) { super(message); }
@@ -123,7 +130,7 @@ export type PurchaseRecord = {
   schema:"csoai.owned-purchase/1"; owner_hash:string; transaction:string; payer:string;
   resource:string; request:PurchaseIdentity; nonce:string; created_at:string; payment_response:string;
 };
-type Store=Pick<KVNamespace,"get"|"put">;
+type Store=Pick<BuyerStore,"get"|"put">;
 const prefix="private:purchase:v1:";
 export const purchaseOwnerPrefix=(owner:string):string=>prefix+"owner:"+owner+":";
 export async function purchaseTxKey(transaction:string):Promise<string> {

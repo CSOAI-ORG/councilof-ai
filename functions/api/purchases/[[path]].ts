@@ -201,4 +201,4 @@ export async function handlePurchases(request:Request,env:BuyerEnv):Promise<Resp
       state:"UNAVAILABLE",acceptance_inferred:false},error instanceof BuyerHold?error.status:503);
   }
 }
-export const onRequest:PagesFunction<BuyerEnv>=async({request,env})=>handlePurchases(request,env);
+export const onRequest=async({request,env}:{request:Request;env:BuyerEnv}):Promise<Response>=>handlePurchases(request,env);
