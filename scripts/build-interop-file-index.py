@@ -44,6 +44,15 @@ taken over the tree's bytes cannot match what a reader fetches. For pages-routed
 producer therefore hashes the BUILT file when --served-root is given. The injection is not
 re-implemented here: the built file is read as it stands.
 
+AND THE EDGE REWRITES SOME HTML IN TRANSIT, so a row can be published honestly and still not be
+hash-matchable by a reader. Cloudflare rewrites an href="http:// link to https:// and replaces an
+href="mailto:" link with an obfuscated address that is RANDOMISED PER REQUEST. MEASURED
+2026-11-07 on the live site: 52 of the 53 HTML rows under /interop/ are byte-stable across two
+consecutive fetches and their published digests match the served bytes exactly; ONE row is not,
+and three consecutive fetches of it returned three different digests. Every row therefore carries
+`served_bytes`, which says whether the bytes the site serves are the bytes the estate published —
+and a row the edge rewrites says so rather than promising a match it cannot keep.
+
 THREE STATES, kept apart (UNCHECKABLE IS NEVER FAIL):
   exit 0  the committed index IS what this producer would write  -> pass
   exit 1  it is not                                                -> BLOCK, naming the fix
@@ -79,6 +88,31 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # The index cannot contain its own digest: writing the digest changes the file. It is excluded
 # from its own corpus, and the count says so.
 SELF_NAME = "file-index.json"
+
+# THE EDGE REWRITES HTML IN TRANSIT. Cloudflare applies two transforms to HTML served from this
+# zone, and both change the bytes a reader fetches without changing the bytes the estate
+# published:
+#
+#   https-rewrite      an href="http://..." link is served as href="https://..."
+#   email-obfuscation  an href="mailto:..." link is served as a <span class="__cf_email__">
+#                      whose obfuscated address is RANDOMISED PER REQUEST
+#
+# MEASURED 2026-11-07 on the live site, over the 53 HTML rows under /interop/: 52 rows are
+# byte-stable across two consecutive fetches and their published digests match the served bytes
+# exactly. ONE row is not -- /interop/stablecoin-deep-2026-09/mirrors/129.html, whose markup
+# carries 18 href="http://" links and 2 href="mailto:" links. The site served 1,423,000 B
+# against the published 1,422,708 B (+292 B: 6 links rewritten http->https, both mailto links
+# obfuscated), and three consecutive fetches of that path returned THREE different digests.
+#
+# So a row the edge touches cannot be verified by hashing the served bytes, and an obfuscated
+# row never can be -- the served bytes differ on every fetch. The index says that per row
+# instead of promising a match it cannot keep.
+#
+# The triggers are read from the PUBLISHED MARKUP, because that is what the edge sees. The
+# injected launcher carries neither trigger (measured: 0 occurrences), so a row's trigger set is
+# the same whether the bytes are the tree's or the built file's.
+EDGE_HTTP_LINK_RE = re.compile(rb'href="http://')
+EDGE_MAILTO_LINK_RE = re.compile(rb'href="mailto:')
 
 
 def committed_files(tree):
@@ -203,6 +237,51 @@ def function_mirror_prefixes():
     return re.findall(r'"([^"]+)"', m.group(1))
 
 
+def edge_transforms(data):
+    """The Cloudflare edge transforms this markup carries, as a set of names.
+
+    WHY THIS IS READ FROM THE BYTES. Both transforms act on an href attribute, so the markup
+    that carries them is exactly the markup the edge rewrites. An empty set means the edge
+    leaves these bytes alone.
+
+    A mailto inside a script is NOT a trigger: `window.open('mailto:x@y')` is not an href, and
+    MEASURED 2026-11-07 the edge left such a link alone (the page's served bytes matched its
+    published digest exactly).
+    """
+    found = set()
+    if EDGE_HTTP_LINK_RE.search(data):
+        found.add("https-rewrite")
+    if EDGE_MAILTO_LINK_RE.search(data):
+        found.add("email-obfuscation")
+    return found
+
+
+def served_bytes_state(transforms):
+    """What this row says about the bytes the site serves for it.
+
+    as-published                 the served bytes are the bytes the estate published
+    edge-transformed             the edge rewrites the markup, so the served bytes differ from
+                                 the published bytes — reproducibly
+    edge-transformed-per-request the edge rewrites the markup AND the rewrite is randomised per
+                                 request, so the served bytes differ on every fetch and no digest
+                                 of them can be reproduced by anyone, including us
+
+    The sha256 in the row stays the digest of the PUBLISHED bytes in every case. That is what
+    the estate published, and it is the only thing about these bytes that does not change.
+    """
+    if not transforms:
+        return "as-published", None
+    names = ", ".join(sorted(transforms))
+    if "email-obfuscation" in transforms:
+        return ("edge-transformed-per-request",
+                "the edge rewrites this markup (%s) and the rewrite is randomised per request, "
+                "so the bytes served differ on every fetch and no digest of them can be "
+                "reproduced; the sha256 here is of the bytes the estate published" % names)
+    return ("edge-transformed",
+            "the edge rewrites this markup in transit (%s), so the bytes served are not the "
+            "bytes published here; the sha256 here is of the bytes the estate published" % names)
+
+
 def served_html_digests(tree, served_root):
     """The bytes the injector WOULD write for each HTML file, from the injector's own transform.
 
@@ -214,8 +293,17 @@ def served_html_digests(tree, served_root):
     digests and call it drift. It asks THE INJECTOR ITSELF (scripts/surface/served-html-digests.mjs
     imports scripts/inject-workspace-launcher.mjs and calls its exported injectLauncher) what it
     would write. One rule, one place — the estate's own principle that the claim lives in two
-    places: the artefact and the generator that emits it. Proven against the real build: the
-    transform produces the built file's digest EXACTLY (b72f0203..., 976 bytes).
+    places: the artefact and the generator that emits it.
+
+    The injector has TWO rules, not one: it adds the launcher to a page, and it REFUSES to touch
+    a frozen interop mirror capture. A helper that asks only for the transform therefore publishes
+    a digest the site does not serve for every mirror capture. MEASURED 2026-11-07: with the
+    transform alone, the fallback disagreed with the served bytes on 29 of the 53 HTML rows under
+    public/interop — every one of them a mirror capture — by exactly the launcher's size, and
+    matched on every other HTML file. The helper now asks the injector for both rules, so the two
+    forms of this measurement AGREE: with a built tree and without one, the same check gives the
+    same answer (measured 2026-11-07: 53 of 53 rows agree, 0 disagree). The injector is the only
+    place either rule is written, so it is the only place they are read from.
 
     Returns {} when node or the helper is unavailable — the caller then treats those digests as
     UNCHECKABLE rather than different.
@@ -410,6 +498,43 @@ def selftest():
         untracked = [p for p in committed if p.endswith("pod-cards-index.json")]
         check("the build output is not in the committed corpus", not untracked, f"found {untracked}")
 
+    # 9. the EDGE rewrites some HTML in transit, and a row the edge touches must say so.
+    #    MEASURED 2026-11-07 on the live site, over the 53 HTML rows under /interop/: 52 are
+    #    byte-stable across two fetches and their published digests match the served bytes
+    #    exactly. ONE row is not -- /interop/stablecoin-deep-2026-09/mirrors/129.html -- because
+    #    its markup carries href="http:// and href="mailto: links. Three consecutive fetches of
+    #    that path returned three different digests, so a reader hashing it can never match, and
+    #    an index that promised they could would be promising something false.
+    check("markup with no href trigger carries no transform", edge_transforms(b"<a href='/x'>x</a>") == set())
+    check("an http:// link is an https-rewrite trigger",
+          edge_transforms(b'<a href="http://example.org/">x</a>') == {"https-rewrite"})
+    check("a mailto: link is an email-obfuscation trigger",
+          edge_transforms(b'<a href="mailto:a@b.example">x</a>') == {"email-obfuscation"})
+    # A mailto inside a SCRIPT is not an href, and the edge left such a link alone (MEASURED
+    # 2026-11-07: that page's served bytes matched its published digest exactly).
+    check("a mailto inside a script is NOT a trigger",
+          edge_transforms(b"<script>window.open('mailto:a@b.example')</script>") == set())
+    check("a file name with an @ is NOT a trigger",
+          edge_transforms(b'<img src="/assets/FT_logo_pos_RGB@2x.png">') == set())
+    check("clean markup is as-published", served_bytes_state(set())[0] == "as-published")
+    check("an https-rewrite alone is edge-transformed, not per-request",
+          served_bytes_state({"https-rewrite"})[0] == "edge-transformed")
+    check("an email-obfuscation is per-request",
+          served_bytes_state({"email-obfuscation"})[0] == "edge-transformed-per-request")
+    check("every state carries a note when it is not as-published",
+          all(served_bytes_state(t)[1] for t in (set(), {"https-rewrite"}, {"email-obfuscation"})
+              if t))
+    check("as-published carries no note", served_bytes_state(set())[1] is None)
+    # The rule must hold against the REAL corpus, not only against fixtures.
+    real = os.path.join(REPO, "public", "interop", "stablecoin-deep-2026-09", "mirrors", "129.html")
+    if os.path.exists(real):
+        with open(real, "rb") as f:
+            t = edge_transforms(f.read())
+        check("the measured row is marked per-request",
+              "email-obfuscation" in t and "https-rewrite" in t, f"transforms={sorted(t)}")
+    else:
+        check("the measured row is present to check", False, real)
+
     if failed:
         print(f"build-interop-file-index selftest FAILED — {len(failed)} case(s)")
         sys.exit(1)
@@ -552,6 +677,23 @@ def main():
         row = {"path": "/" + public_rel, "bytes": n, "sha256": h, "served": served}
         if served == "pages":
             row["_digest_comparable"] = digest_comparable
+        # WHAT THE SITE SERVES, AS AGAINST WHAT THE ESTATE PUBLISHED. The edge rewrites some
+        # HTML in transit, so a row can be published honestly and still not be hash-matchable by
+        # a reader. The row says so instead of promising a match it cannot keep. The field is on
+        # EVERY row, because a field that is sometimes absent is a field whose absence has to be
+        # interpreted. Only pages-served HTML can carry a trigger: the mirror is another host,
+        # and the archive serves JSON.
+        transforms = set()
+        if served == "pages" and public_rel.endswith(".html"):
+            try:
+                with open(full, "rb") as f:
+                    transforms = edge_transforms(f.read())
+            except OSError:
+                transforms = set()
+        sb_state, sb_note = served_bytes_state(transforms)
+        row["served_bytes"] = sb_state
+        if sb_note:
+            row["served_bytes_note"] = sb_note
         if INVALID_PATH_RE.match(public_rel):
             # A retired record is HISTORICAL evidence, not current proof — whatever serves it.
             # The estate's Function marks these with x-evidence-state:
@@ -569,8 +711,10 @@ def main():
 
     rows.sort(key=lambda r: r["path"])
     by_served = {}
+    by_served_bytes = {}
     for r in rows:
         by_served[r["served"]] = by_served.get(r["served"], 0) + 1
+        by_served_bytes[r["served_bytes"]] = by_served_bytes.get(r["served_bytes"], 0) + 1
 
     doc = {
         "schema": "csoai.interop-file-index/0.2",
@@ -586,13 +730,18 @@ def main():
                          "artefact and naming its membership here would make this index stale on "
                          "every deploy."),
         "how_to_verify": ("sha256 is the digest of the file's bytes as published. Fetch the path and "
-                          "hash it; a match means you hold what the estate published. Two things to "
-                          "know when it does not match: the digest is of the bytes at THIS index's "
-                          "source_commit, and the live site serves the bytes of the currently DEPLOYED "
-                          "commit, so the two agree once that commit is deployed; and for "
-                          "pages-served HTML the digest is over the BUILT file, which carries the "
-                          "workspace-launcher script the build injects. For retired-bytes paths the "
-                          "digest is of the canonical bytes, which the archive copies verbatim."),
+                          "hash it; on a row whose served_bytes reads 'as-published', a match means "
+                          "you hold what the estate published. Three things to know when it does not "
+                          "match: the digest is of the bytes at THIS index's source_commit, and the "
+                          "live site serves the bytes of the currently DEPLOYED commit, so the two "
+                          "agree once that commit is deployed; for pages-served HTML the digest is "
+                          "over the BUILT file, which carries the workspace-launcher script the build "
+                          "injects; and the EDGE rewrites some HTML in transit, so on a row whose "
+                          "served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the "
+                          "bytes the site serves are NOT the bytes published here, and on a "
+                          "'per-request' row they differ on every fetch, so no digest of them can be "
+                          "reproduced by anyone, including us. For retired-bytes paths the digest is "
+                          "of the canonical bytes, which the archive copies verbatim."),
         "retired": ("A retired record is HISTORICAL evidence of a past measurement, never current "
                     "proof. The estate's server marks these with the response header "
                     "x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE "
@@ -615,7 +764,19 @@ def main():
                                       "because the archive is a deploy-time artefact and naming it here "
                                       "would make the index stale on every deploy"),
         },
+        "served_bytes_legend": {
+            "as-published": ("the bytes the site serves for this path are the bytes the estate "
+                             "published here; the sha256 is checkable against a fetch"),
+            "edge-transformed": ("the edge rewrites this markup in transit, so the bytes the site "
+                                 "serves are NOT the bytes published here; the sha256 is of the "
+                                 "published bytes and will not match a fetch"),
+            "edge-transformed-per-request": ("the edge rewrites this markup and the rewrite is "
+                                             "randomised per request, so the bytes the site serves "
+                                             "differ on EVERY fetch; no digest of them can be "
+                                             "reproduced, by a reader or by the estate"),
+        },
         "counts": {"files": len(rows), "bytes": total, "by_served": by_served,
+                   "by_served_bytes": by_served_bytes,
                    "digests_taken_from_the_built_tree": served_from_build,
                    "digests_taken_from_the_injectors_transform": served_from_injector,
                    "digests_taken_from_the_tree_bytes": served_from_tree,
