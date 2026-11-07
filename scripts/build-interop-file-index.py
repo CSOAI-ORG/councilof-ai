@@ -331,6 +331,106 @@ def served_html_digests(tree, served_root):
             pass
 
 
+def head_commit(cwd=REPO):
+    """The commit whose tree this run measured, or None if git cannot say.
+
+    The index NAMES the commit its digests were taken from, so the name must be a commit of
+    this tree. Measured 2026-11-07: the drift reporter tells lanes to repair the index with
+    `python3 scripts/build-interop-file-index.py public/interop public/interop/file-index.json
+    scripts/deploy-exclusions.json` — with no commit — and that run wrote `"source_commit":
+    null`. A published index whose pointer is null names NO tree at all, so the verification
+    instruction in its own how_to_verify ("the digest is of the bytes at THIS index's
+    source_commit") cannot be carried out by anyone. The name is therefore never left empty:
+    a run that measures the tree at HEAD names HEAD.
+    """
+    r = subprocess.run(["git", "rev-parse", "HEAD"], cwd=cwd, capture_output=True, check=False)
+    if r.returncode != 0:
+        return None
+    return r.stdout.decode("utf-8", "replace").strip() or None
+
+
+def commit_resolves_locally(sha, cwd=REPO):
+    """Is `sha` a commit this repository holds? True / False / None (cannot tell).
+
+    Three states, never collapsed, for the reason the estate's own pin gate states it: "not an
+    ancestor" is a finding about the tree and "cannot answer" is an unprovable state, and
+    collapsing them would let a gate pass on ignorance. A truncated store answers 128 for a
+    commit it does not hold, which is an absence of evidence, not evidence of absence.
+    """
+    if not isinstance(sha, str) or not re.fullmatch(r"[0-9a-f]{40}", sha):
+        return False
+    r = subprocess.run(["git", "cat-file", "-e", f"{sha}^{{commit}}"], cwd=cwd,
+                       capture_output=True, check=False)
+    if r.returncode == 0:
+        return True
+    if r.returncode == 128:
+        return None
+    return False
+
+
+def _remote_can_serve(sha, cwd=REPO):
+    """Ask the remote for one commit, the way a reader would. True / False / None."""
+    try:
+        r = subprocess.run(
+            ["git", "fetch", "--dry-run", "--depth=1", "--no-tags", "origin", sha],
+            cwd=cwd, capture_output=True, check=False,
+        )
+    except OSError:
+        return None
+    if r.returncode == 0:
+        return True
+    err = r.stderr.decode("utf-8", "replace")
+    # The remote's own words for "I do not have that commit". Anything else — no network, no
+    # origin, a git that cannot run — stops the QUESTION being answered, which is not the same
+    # as the answer being no.
+    if "not our ref" in err or "couldn't find remote ref" in err:
+        return False
+    return None
+
+
+def pointer_verdict(sha, cwd=REPO, ask=None):
+    """FOLLOWS / DEAD / UNPROVABLE — can a reader fetch the commit this index names?
+
+    The index's own how_to_verify tells the reader: "the digest is of the bytes at THIS index's
+    source_commit", and to fetch that commit and compare. So the pointer is only true if a
+    reader CAN fetch it. Measured 2026-11-07 on the published index: it named
+    99f8456e9308ba2a8d746e02b8d1d25563542146, and the remote answered "upload-pack: not our
+    ref" for it — that commit was never pushed, so the published verification instruction could
+    not be carried out by anyone. Nothing noticed, because the check compared the ROWS and the
+    rows were fine: a check that reports ALIGNED on a wrong answer.
+
+    The question is asked of the REMOTE, because the remote is what a reader fetches from, and
+    because a local store cannot tell "never pushed" from "not fetched here".
+    """
+    if not isinstance(sha, str) or not re.fullmatch(r"[0-9a-f]{40}", sha):
+        return ("UNPROVABLE", "the source_commit is not a 40-hex commit id")
+    answer = _remote_can_serve(sha, cwd) if ask is None else ask(sha)
+    if answer is True:
+        return ("FOLLOWS", "the remote can serve that commit")
+    if answer is False:
+        return ("DEAD", "the remote does not have that commit")
+    return ("UNPROVABLE", "the remote could not be asked")
+
+
+def row_counts(published_rows, corpus_rows):
+    """(added, removed, changed) — the three numbers the drift reporter publishes.
+
+    added:    in the corpus, not named in the published index.
+    removed:  named in the published index, not in the corpus.
+    changed:  named by both, with a digest that no longer matches.
+    """
+    pub = {r.get("path"): r for r in published_rows if isinstance(r, dict)}
+    cor = {r.get("path"): r for r in corpus_rows if isinstance(r, dict)}
+    added = len(set(cor) - set(pub))
+    removed = len(set(pub) - set(cor))
+    changed = 0
+    for path, row in cor.items():
+        other = pub.get(path)
+        if other is not None and rows_differ([other], [row]):
+            changed += 1
+    return added, removed, changed
+
+
 def differing_rows(a, b):
     """The paths that disagree, named. A gate that says "something differs" without saying
     WHAT is a gate that sends the reader hunting; the estate's own pattern is to name the path."""
@@ -453,10 +553,11 @@ def selftest():
                    "scripts/definitely-not-a-real-exclusions.json", "--check"],
                   cwd=REPO, capture_output=True).returncode
     check("a missing exclusions manifest fails closed (exit 2), not open", rc == 2, f"rc={rc}")
-    rc2 = _sp.run([sys.executable, os.path.abspath(__file__), "public/interop",
+    rc2out = _sp.run([sys.executable, os.path.abspath(__file__), "public/interop",
                     "public/interop/file-index.json",
                     "scripts/deploy-exclusions.json", "--served-root", DEFAULT_SERVED_ROOT, "--check"],
-                   cwd=REPO, capture_output=True).returncode
+                   cwd=REPO, capture_output=True)
+    rc2 = rc2out.returncode
     check("with the manifest present the check runs (rc 0 = matches, 1 = stale)", rc2 in (0, 1), f"rc={rc2}")
 
     # 6. the routing rule must cover BOTH exclusion kinds: a `file` entry routes that ONE file
@@ -535,6 +636,48 @@ def selftest():
     else:
         check("the measured row is present to check", False, real)
 
+    # 10. THE POINTER. The index names the commit its digests were measured from, and its own
+    #     how_to_verify tells the reader to fetch that commit and compare, so the pointer is
+    #     only true if a reader CAN fetch it. Measured 2026-11-07 on the published index: it
+    #     named 99f8456e9308ba2a8d746e02b8d1d25563542146, and the remote answers "upload-pack:
+    #     not our ref" for it — that commit was never pushed, so the published verification
+    #     instruction could not be carried out by anyone. Nothing noticed, because the check
+    #     compared the ROWS and the rows were fine: ALIGNED on a wrong answer.
+    #     The verdict is asked of the REMOTE, because the remote is what a reader fetches from,
+    #     and it has THREE states that are never collapsed: "the remote does not have it" is a
+    #     finding, "the remote could not be asked" is an absence of evidence.
+    check("a pointer the remote can serve FOLLOWS",
+          pointer_verdict("a" * 40, ask=lambda s: True)[0] == "FOLLOWS")
+    check("a pointer the remote does not have is DEAD",
+          pointer_verdict("b" * 40, ask=lambda s: False)[0] == "DEAD")
+    check("a pointer the remote could not be asked about is UNPROVABLE, not DEAD",
+          pointer_verdict("c" * 40, ask=lambda s: None)[0] == "UNPROVABLE")
+    check("a source_commit that is not a commit id at all is UNPROVABLE, not DEAD",
+          pointer_verdict("not-a-sha", ask=lambda s: False)[0] == "UNPROVABLE")
+    check("a null pointer — what the drift reporter's own repair command wrote — is UNPROVABLE",
+          pointer_verdict(None, ask=lambda s: False)[0] == "UNPROVABLE")
+
+    # 11. The producer REFUSES to write a pointer it cannot confirm, and it refuses BEFORE it
+    #     measures a corpus. The run is a subprocess, so what is asserted is the real exit code.
+    import subprocess as _sp2
+    rc3 = _sp2.run([sys.executable, os.path.abspath(__file__), "public/interop",
+                    "/tmp/index-selftest-pointer.json",
+                    "scripts/deploy-exclusions.json", "0" * 40],
+                   cwd=REPO, capture_output=True).returncode
+    check("the producer refuses to write a pointer that names no commit this repository holds (exit 2)",
+          rc3 == 2, f"rc={rc3}")
+    # The CONTROL. Without it the refusal could be a blanket refusal — the case would pass for
+    # the wrong reason, and a producer that refuses EVERY pointer is not a gate either.
+    check("the producer's own pointer (HEAD) is a commit this repository holds",
+          commit_resolves_locally(head_commit()) is True)
+
+    # 12. The check prints the summary line the drift reporter parses. The reporter landed in
+    #     #4019 WITH the workflow, and the producer was never taught the contract, so the
+    #     reporter's state has been "unknown" ever since — an instrument that cannot measure.
+    check("the check prints the summary line the drift reporter parses",
+          b"check: corpus " in rc2out.stdout,
+          rc2out.stdout.decode("utf-8", "replace")[-160:].replace("\n", " | "))
+
     if failed:
         print(f"build-interop-file-index selftest FAILED — {len(failed)} case(s)")
         sys.exit(1)
@@ -549,6 +692,33 @@ def main():
 
     check_mode = bool(opts.get("check"))
     served_root = opts.get("served-root", DEFAULT_SERVED_ROOT)
+
+    # The index names the commit its digests were measured from. A run that names no commit
+    # measures the tree at HEAD, so it says so rather than writing a null pointer (measured
+    # 2026-11-07: the drift reporter's own repair command wrote `"source_commit": null`).
+    if not source_commit:
+        source_commit = head_commit()
+
+    # A POINTER MUST NAME A COMMIT THIS REPOSITORY HOLDS, and the producer refuses to write
+    # one it cannot confirm — before it spends a minute measuring a corpus. Measured 2026-11-07:
+    # the published index named 99f8456e9308ba2a8d746e02b8d1d25563542146, a commit that was
+    # never pushed, and the remote answers "upload-pack: not our ref" for it: a published
+    # promise no reader could carry out. A rebuild must not be able to reopen that hole.
+    if not check_mode:
+        resolves = commit_resolves_locally(source_commit)
+        if resolves is not True:
+            print(f"build-interop-file-index: the source_commit does not name a commit this repository "
+                  f"holds ({source_commit!r}).")
+            if resolves is False:
+                print("  It is not a commit id at all.")
+            else:
+                print("  This repository cannot confirm that the commit exists. A truncated store answers")
+                print("  the same way as a missing commit, and the two are DIFFERENT verdicts — but either")
+                print("  way this pointer cannot be confirmed, so the producer will not publish it.")
+            print("  The index names the commit its digests were measured from, so a name that resolves to")
+            print("  nothing publishes a verification instruction nobody can follow.")
+            print("  Fix: name a commit this tree holds — `git rev-parse HEAD`.")
+            sys.exit(2)
 
     # --- the mirror-served directories -----------------------------------------------------------
     # FAIL CLOSED. Measured 2026-11-07 by the catalogue lane, with a reproduction: if the
@@ -805,7 +975,20 @@ def main():
         except Exception as e:
             print(f"build-interop-file-index: the committed index is UNREADABLE ({e})")
             sys.exit(2)
-        drift = differing_rows(current.get("files", []), rows)
+        published_files = current.get("files", [])
+        added, removed, changed = row_counts(published_files, rows)
+        pointer = current.get("source_commit")
+        verdict, why = pointer_verdict(pointer)
+
+        # THE SUMMARY LINE. .github/workflows/interop-index-drift.yml parses this line for the
+        # numbers it publishes, and it has been parsing a line NO producer ever printed: the
+        # reporter landed in #4019 with the workflow, and the producer was never taught the
+        # contract, so the reporter's state has been "unknown" ever since — an instrument that
+        # cannot measure, reporting that it cannot measure, instead of the drift.
+        print(f"check: corpus {len(rows)} rows, published {len(published_files)} rows, "
+              f"added {added} removed {removed} changed {changed}, pointer {verdict}")
+
+        drift = differing_rows(published_files, rows)
         if drift:
             print(f"build-interop-file-index: the committed index is STALE — {len(drift)} row(s) differ:")
             for p in drift[:12]:
@@ -816,7 +999,27 @@ def main():
                   "public/interop public/interop/file-index.json scripts/deploy-exclusions.json <commit> "
                   "--served-root dist/client")
             sys.exit(1)
+
+        # THE POINTER. The rows can be right and the index still publish a promise no reader can
+        # keep: the index names the commit its digests were measured from, and its own
+        # how_to_verify tells the reader to fetch that commit and compare. Measured 2026-11-07:
+        # the published index named 99f8456e9308ba2a8d746e02b8d1d25563542146, which the remote
+        # answers "not our ref" for. The rows were fine, so the check said the index matched —
+        # ALIGNED on a wrong answer. A dead pointer is a finding; an UNPROVABLE one (the remote
+        # could not be asked) is an absence of evidence, and is not.
+        if verdict == "DEAD":
+            print(f"build-interop-file-index: the published index names a commit the remote does NOT have "
+                  f"({pointer}).")
+            print(f"  {why}. Its own how_to_verify tells the reader to fetch that commit and compare, so a")
+            print("  pointer nobody can fetch publishes a promise that cannot be kept.")
+            print("  Fix: re-measure the index naming a commit the remote can serve —")
+            print("        python3 scripts/build-interop-file-index.py public/interop "
+                  "public/interop/file-index.json \\")
+            print("          scripts/deploy-exclusions.json $(git rev-parse HEAD)")
+            sys.exit(1)
+
         print(f"build-interop-file-index: the committed index matches ({len(rows)} rows).")
+        print(f"  · source_commit {pointer}: {verdict} — {why}")
         if digests_not_comparable:
             print(f"  · {digests_not_comparable} row(s) could NOT have their digest compared: no built tree at "
                   f"{served_root}. The build rewrites that HTML (it injects the launcher script), so the "

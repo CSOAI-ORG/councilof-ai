@@ -163,7 +163,8 @@ if [ "$board_ok" -eq 1 ]; then
   index_out=$(python3 scripts/build-interop-file-index.py public/interop public/interop/file-index.json \
     scripts/deploy-exclusions.json --served-root dist/client --check 2>&1) || index_rc=$?
   if [ "$index_rc" -eq 1 ]; then
-    echo "  ✖ interop index: the published index is STALE — it no longer describes this tree — its verdict:"
+    echo "  ✖ interop index: the published index is NOT what the producer would write — its rows no"
+    echo "      longer describe this tree, or it names a commit the remote does not have — its verdict:"
     printf '%s\n' "$index_out" | tail -6 | sed 's/^/      /'; fail=1
   elif [ "$index_rc" -eq 2 ]; then
     echo "  · interop index: UNCHECKABLE — the check could not run. Not a finding, and not a reason to refuse the push:"
