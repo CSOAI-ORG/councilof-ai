@@ -1,0 +1,85 @@
+{
+  "card": {
+    "as_of": "2026-11-01T23:37:21Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "did_json_http": 200,
+      "did_key_present": true,
+      "kind": "csoai.layer0.liveness/0.1",
+      "not_a_grade": true,
+      "ots_state": "CONFIRMED_BITCOIN",
+      "pointer_http": 200,
+      "pointer_match": true,
+      "rekor_state": "WITNESSED",
+      "release_gate": "UNRUN",
+      "root_as_of": "2026-11-01T15:09:42Z",
+      "root_card_count": 428,
+      "root_http": 200,
+      "root_merkle_prefix": "4e57607854bea401",
+      "state": "PROBED"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ce960ad8550c11858c9fc989ff585c65c6b35151780e6f800460c9a3f1686d55",
+    "sig_ed25519": "aee705ff7256c87e3d22d117d061c63cfa109cecc1ed82a9c0bbbe26d2f5c3dfd036e7674a9832d51f62c72d291de4f09980fed0af0e6c853372aadae923d40c",
+    "source_urls": [
+      "https://councilof.ai/.well-known/did.json",
+      "https://councilof.ai/root.json",
+      "https://councilof.ai/interop/root-witness-pointer.json"
+    ],
+    "subject": "Layer 0 liveness — DID key, signed public root, Rekor + OTS witnesses, at one instant",
+    "surface": "public.notice",
+    "tags": [
+      "layer0",
+      "liveness",
+      "probe",
+      "layer0-liveness-2026-09"
+    ],
+    "unmeasured": [
+      "fault tolerance and independent review (the 33-seat council is a design, not a live property)",
+      "anything about the correctness of the cards the root commits to"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "f2afc4a9cf4f21a3495792a0cfb6e0e6992d6613df46c69fedc1c84ca0b29e48",
+    "7ca434d8705a642d63c184500991bcb5b942f8634256e58bf329018d9befb01b",
+    "b133a1e477085bc7d2fd5b34b1394ed7bafcfa8b08782146a5e6aea82ab1d50b",
+    "894f014dc0ea21105250c3a2109de914040ae0046f92c39f73de8de74b99686c",
+    "43b3c6dbd96fb3bab1f6dc0e66ca274b0b200149a2e3bcae0844c9864ec80d9a",
+    "fc84cc258f5d50cf9d0e62c52e779f71f8881ca51d78cec929e585f0566c7e6f",
+    "97c0ef944e4424041d3e50d3e7b59c982d39af6f8d6c7739479825498449bb00",
+    "9e6dad1af1cc2058ae946e2aae5960f91b331539e3ac2b76c6e5f588a23b2d2f",
+    "f22cb68ea6d7ebf5485ca0b008970e2533173113057abe2e2f5b4147b176d22a"
+  ]
+}
