@@ -139,7 +139,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          # Pin trusted publisher code to this reviewed workflow definition.
+          # Artifact run/name/source remain the successful upstream below.
+          ref: ${{ github.workflow_sha }}
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |

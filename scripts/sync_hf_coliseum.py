@@ -91,16 +91,58 @@ def load_artifact(root: Path, expected_sha: str) -> dict[str, bytes]:
     return files
 
 
+# Public platform additions observed on this exact static Space, 7 Nov 2026.
+# The creator ID is public metadata (api/users/<id>/overview), not a credential.
+# Construct one exact allowed served variant; never strip or reserialize HTML.
+HF_STATIC_ENV = b'<script>window.huggingface={variables:{"SPACE_CREATOR_USER_ID":"69195dca8cf74d90adb364a6"}};</script>'
+HF_STATIC_SOCIAL = (
+    b'<meta property="og:title" content="Council Coliseum">'
+    b'<meta property="og:image" content="https://cdn-thumbnails.huggingface.co/social-thumbnails/spaces/csoai/council-coliseum.png">'
+    b'<meta name="twitter:card" content="summary_large_image">'
+    b'<meta name="twitter:image" content="https://cdn-thumbnails.huggingface.co/social-thumbnails/spaces/csoai/council-coliseum.png">'
+)
+
+
+def hosted_index_matches(actual: bytes, expected: bytes) -> bool:
+    if actual == expected:
+        return True
+    if not isinstance(actual, bytes) or expected.count(b"<head>") != 1 or expected.count(b"</head>") != 1:
+        return False
+    start = expected.index(b"<head>") + len(b"<head>")
+    end = expected.index(b"</head>")
+    if start > end:
+        return False
+    served = expected[:start] + HF_STATIC_ENV + expected[start:end] + HF_STATIC_SOCIAL + expected[end:]
+    return actual == served
+
+
 def verify_readback(hub, files, revision, attempts=6, sleep=time.sleep):
+    stage = revision if revision in ("main", "live") else "immutable"
+    failure = "no files checked"
     for attempt in range(attempts):
-        try:
-            if all(hub.read(name, revision) == data for name, data in files.items()):
-                return
-        except Exception:
-            pass
+        matched = True
+        for name, expected in files.items():
+            try:
+                actual = hub.read(name, revision)
+            except Exception as error:
+                status = getattr(error, "code", None)
+                detail = type(error).__name__ + (" status=" + str(status) if type(status) is int else "")
+                failure = "path=" + name + " read-error=" + detail
+                matched = False
+                break
+            exact = actual == expected
+            if revision == "live" and name == "index.html":
+                exact = hosted_index_matches(actual, expected)
+            if not exact:
+                observed = digest(actual) if isinstance(actual, bytes) else "missing-or-nonbytes"
+                failure = "path=" + name + " expected_sha256=" + digest(expected) + " actual_sha256=" + observed
+                matched = False
+                break
+        if matched:
+            return
         if attempt + 1 < attempts:
             sleep(5)
-    raise Refused("HF repository readback does not match the built artifact")
+    raise Refused("HF readback failed: stage=" + stage + " " + failure)
 
 
 def publish(hub, files: dict[str, bytes], source_sha: str, run_id: int,
