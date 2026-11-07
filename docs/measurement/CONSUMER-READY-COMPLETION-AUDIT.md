@@ -1,4 +1,4 @@
-# CSOAI — CONSUMER-READY COMPLETION AUDIT (measured) — 2026-11-06T12:56:54Z
+# CSOAI — CONSUMER-READY COMPLETION AUDIT (measured) — 2026-11-07T11:44:18Z
 
 Every LIVE line below was **probed against the live surface** and carries the measured value and the receipt. An item is LIVE only if a probe saw it; an item whose probe could not run is OPEN with the reason, never LIVE. Owner-gated items are named as owner-gated rather than counted as done.
 
@@ -48,5 +48,5 @@ This is a measurement of completion, not a claim of a market outcome. "Unicorn s
 - an attestation for any third-party evaluation result
 - an endorsement by any person or institution quoted in a checklist
 
-Measured at 2026-11-06T12:56:54Z by `scripts/completion_audit.py`.
+Measured at 2026-11-07T11:44:18Z by `scripts/completion_audit.py`.
 Measurement, not certification.
