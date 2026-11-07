@@ -112,7 +112,7 @@ const regulation = {
 function stub(
   sources: { board?: unknown; findings?: unknown; regulation?: unknown; dailyIndex?: unknown } = {},
 ) {
-  const calls: { method: string; path: string }[] = [];
+  const calls: { method: string; path: string; redirect?: RequestRedirect }[] = [];
   const values: Record<string, unknown> = {
     "/api/gspc": sources.board === undefined ? board() : sources.board,
     "/signed/findings_index.json":
@@ -124,6 +124,9 @@ function stub(
   vi.stubGlobal(
     "fetch",
     vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+      // Cloudflare Workers throws before sending any request for this mode.
+      // Node's fetch accepts it, so a plain Response stub hid the live outage.
+      if (init?.redirect === "error") throw new TypeError("Unsupported redirect mode: error");
       const url = new URL(
         typeof input === "string"
           ? input
@@ -131,8 +134,9 @@ function stub(
             ? input.href
             : input.url,
       );
-      calls.push({ method: init?.method ?? "GET", path: url.pathname });
+      calls.push({ method: init?.method ?? "GET", path: url.pathname, redirect: init?.redirect });
       const value = values[url.pathname];
+      if (value instanceof Response) return value;
       return value === null
         ? new Response("unavailable", { status: 503 })
         : Response.json(value);
@@ -151,6 +155,26 @@ async function get(path = "/api/learning-scenarios") {
 afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); });
 
 describe("GET /api/learning-scenarios", () => {
+  it("loads source learning with Workers-supported manual redirects", async () => {
+    const calls = stub();
+    const { response, text } = await get("/api/learning-scenarios?axis=governance");
+    expect(response.status).toBe(200);
+    expect(JSON.parse(text).state).toBe("READY");
+    expect(calls).toHaveLength(4);
+    expect(calls.every(call => call.redirect === "manual")).toBe(true);
+  });
+
+  it("rejects a redirected required source without following its location", async () => {
+    const calls = stub({ board: new Response(null, {
+      status: 302, headers: { location: "https://external.example/board" },
+    }) });
+    const { response, text } = await get();
+    expect(response.status).toBe(503);
+    expect(JSON.parse(text).errors).toEqual(["GSPC_SOURCE_UNAVAILABLE_OR_INVALID"]);
+    expect(calls.every(call => call.redirect === "manual")).toBe(true);
+    expect(calls.map(call => call.path)).not.toContain("/board");
+  });
+
   const dailyIndex = () => ({
     schema: "csoai.daily-signal-index/0.1", report_count: 1,
     latest_report_day: "2026-11-06", latest_report_id: "d".repeat(64), signed: false,

@@ -3,7 +3,7 @@ import { buildChallenge, buildReceipt, deriveModule, listCompletedModules, listR
 
 const { board } = vi.hoisted(() => ({ board: { axes: [{ axis: "governance", status: "MEASURED", separation: "TIE", n: 10 }] } }));
 vi.mock("./_chatCanon", () => ({ loadBoard: async () => board }));
-import { onRequestPost, onRequestGet } from "./hitl";
+import { onRequestPost, onRequestGet, HITL_ASSESSMENT_SCOPE } from "./hitl";
 
 function store(fail = false) {
   const values = new Map<string, string>();
@@ -29,6 +29,31 @@ async function decisionBody() {
 }
 
 describe("HITL storage acknowledgement and decision history", () => {
+  it("separates a caller label and answer match from identity and competence verification", async () => {
+    const body = { ...await decisionBody(), operator: "caller-supplied label" };
+    const res = await post("decision", body, store());
+    expect(res.status).toBe(200);
+    const reply = await res.json();
+    expect(reply.assessment_scope).toEqual(HITL_ASSESSMENT_SCOPE);
+    expect(reply.assessment_scope).toMatchObject({
+      decision_recording_credential: "SHARED_OPERATOR_TOKEN",
+      operator_identity: "NOT_VERIFIED", human_presence: "NOT_ESTABLISHED",
+      competency_verified_meaning: "LIVE_BOARD_ANSWER_MATCH_ONLY",
+      professional_competence: "NOT_ASSESSED", execution_authority: false,
+    });
+    // Compatibility fields and the signed payload remain the existing receipt shape.
+    expect(reply.assessment_scope).not.toHaveProperty("credential_check");
+    expect(reply.receipt.operator).toBe("caller-supplied label");
+    expect(reply.receipt.competency_verified).toBe(true);
+    expect(reply.receipt).not.toHaveProperty("assessment_scope");
+    expect(reply.receipt.schema).toBe("csoai.hitl-oversight-receipt/0.1");
+  });
+  it("includes assessment limits when reading state and historical receipts", async () => {
+    for (const path of ["", "/record"]) {
+      const res = await onRequestGet({ request: new Request("https://fixture.invalid/api/hitl" + path), env: { HITL_KV: store() } } as any);
+      expect((await res.json()).assessment_scope).toEqual(HITL_ASSESSMENT_SCOPE);
+    }
+  });
   it("does not report a challenge as stored after a rejected write", async () => {
     const res = await post("challenge", { subject: "fixture", proposed_action: "review fixture" }, store(true));
     expect(res.status).toBe(503);
