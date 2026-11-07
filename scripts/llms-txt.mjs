@@ -464,17 +464,49 @@ function fileIndexSection() {
   const legend = ix.served_legend || {};
   const served = kinds.map((k) => `${fmtN(by[k])} ${k}`).join("; ");
   const legendLines = kinds.map((k) => `- ${k}: ${legend[k] || "see the index's own served_legend"}`);
+
+  // SERVED BYTES vs PUBLISHED BYTES. The index carries a per-row served_bytes field that says
+  // whether the bytes the site serves are the bytes the estate published. The EDGE rewrites some
+  // HTML in transit — an http:// link becomes https://, and a mailto: link becomes an obfuscated
+  // address randomised PER REQUEST — so on some rows a reader's fetch cannot match the published
+  // digest, and on those rows no digest of the served bytes can be reproduced by anyone.
+  //
+  // This paragraph is emitted ONLY when the artefact carries the field. It is not thrown for: an
+  // index written before the field existed is a real artefact, and the honest thing to say about
+  // it is nothing rather than a count of edge-transformed rows the index does not have. The
+  // promise below is the index's own, so the two cannot drift apart silently.
+  const byBytes = c.by_served_bytes || null;
+  const bytesLegend = ix.served_bytes_legend || {};
+  const bytesKinds = byBytes ? Object.keys(byBytes).sort() : [];
+  const bytesLines = bytesKinds.map((k) => `- ${k}: ${bytesLegend[k] || "see the index's own served_bytes_legend"}`);
+  const bytesBreakdown = bytesKinds.map((k) => `${fmtN(byBytes[k])} ${k}`).join("; ");
+  const bytesParagraph = byBytes
+    ? `
+- By how the served bytes compare with the published bytes: ${bytesBreakdown}.
+${bytesLines.join("\n")}
+- To check one file: fetch its path and hash it. On a row whose served_bytes reads "as-published", a
+  match means you hold the bytes the estate published. On a row the edge rewrites, the bytes the
+  site serves are NOT the bytes published, and on a row the edge rewrites PER REQUEST the served
+  bytes differ on every fetch, so no digest of them can be reproduced. The index says a file is
+  PRESENT and, where it says so, IDENTICAL to what is served — not that it is measured, signed,
+  certified or true.`
+    : `
+- To check one file: fetch its path and hash it. A match means you hold the bytes the estate
+  published. The index says a file is PRESENT and IDENTICAL to what is served — not that it is
+  measured, signed, certified or true.`;
+
   return `Derived at generation from ${SITE}/interop/file-index.json (same bytes on disk at
 public/interop/file-index.json, schema ${ix.schema}, artifact as_of ${ix.as_of}). It is a
 MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
 the SHA-256 of the bytes and how the file is served.
 
+The index does not list itself. A file cannot carry its own digest — hashing the published index
+gives a digest that depends on the digest — so a row claiming one would be wrong the moment it was
+written. Every OTHER file under /interop/ is listed.
+
 - Files indexed: ${fmtN(c.files)}. Bytes indexed: ${fmtN(c.bytes)}.
 - By how they are served: ${served}.
-${legendLines.join("\n")}
-- To check one file: fetch its path and hash it. A match means you hold the bytes the estate
-  published. The index says a file is PRESENT and IDENTICAL to what is served — not that it is
-  measured, signed, certified or true.`;
+${legendLines.join("\n")}${bytesParagraph}`;
 }
 
 function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
