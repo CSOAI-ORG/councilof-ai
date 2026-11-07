@@ -1,0 +1,15 @@
+# G3-KAGGLE-HF — DRAFT for Measure review (the 412 fix, applied)
+
+The original G3-Kaggle batch (16 models) failed Oct 17-18: Kaggle blocks
+registry.ollama.ai (HTTP 412 on every pull — all runs honestly UNMEASURED).
+This batch re-sources the SAME fleet from huggingface.co GGUF repos
+(Kaggle-ALLOWED domain), pinned by commit sha + file sha256 via the hf:
+handler in runner.py (this branch). Requires the runner patch to merge first.
+
+tag	ollama_manifest_sha256	weights_GB	fits	est_gpu_hours
+hf:unsloth/gemma-4-12b-it-GGUF@fc034cfff751157913579611efad8462ac1be606:gemma-4-12b-it-UD-IQ2_M.gguf	4bd2461d35398dbcf5f3d5f0c9ad91cac78ae35b556e3a81f315a0cc0815ae8c	3.92	P100 or 2xT4	0.5
+hf:unsloth/gemma-3n-E4B-it-GGUF@90fa8b0e431faeae50c305828bc260d6f71720e1:gemma-3n-E4B-it-UD-IQ3_XXS.gguf	2f25dac930b95175ccc86301d8ce604ea8995928e80813dce503922a8ea057b0	3.12	P100 or 2xT4	0.5
+hf:DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP-GGUF@d5f3139249b7ee2535c20ab81125c9a6ab0c4915:Qwen3.5-9B-The-Defiant-Fable-Uncnr-Heretic-NEO-MAX-IQ2_M.gguf	ae9679dee69a4cb3a9375efa3644adc0164a362c61df2b283696d05e57df2fca	4.6	P100 or 2xT4	0.5
+hf:unsloth/Qwen3.5-4B-GGUF@e87f176479d0855a907a41277aca2f8ee7a09523:Qwen3.5-4B-UD-Q5_K_XL.gguf	b4c36a8e14a80c21bcab5a067ce342b2e70e28f60b4aa95ad12203fa17b87426	3.03	P100 or 2xT4	0.5
+
+Dispatch: `gh workflow run kaggle-gspc-batch.yml -f batch_id=G3-KAGGLE-HF -f shard=a` (then b, c).
