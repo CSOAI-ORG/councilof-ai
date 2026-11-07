@@ -50,6 +50,7 @@
  *   node scripts/surface/build-lm-eval-tasks.mjs
  *   node scripts/surface/build-lm-eval-tasks.mjs --check
  */
+import { fetchText } from "./hub-fetch.mjs";
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -167,11 +168,6 @@ function yamlString(s) {
   return '"' + s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n") + '"';
 }
 
-async function fetchText(url) {
-  const res = await fetch(url, { headers: { "User-Agent": "csoai-gspc-lm-eval-builder/1.0" } });
-  if (!res.ok) throw new Error(`GET ${url} -> ${res.status}`);
-  return res.text();
-}
 
 async function main() {
   const axesDoc = JSON.parse(readFileSync(join(ROOT, "public/bench/axes.json"), "utf8"));
