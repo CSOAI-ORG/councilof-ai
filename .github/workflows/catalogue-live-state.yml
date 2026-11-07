@@ -86,6 +86,12 @@ jobs:
           git config user.name "csoai-catalogue-live-state"
           git config user.email "board@csoai.org"
           git add public/jewels/master-catalogue/index.json public/jewels/master-catalogue/index.html
+          # Nothing to commit is a state, not an error: the read moment advances every run, but
+          # a tree that did not move must not fail the job.
+          if git diff --cached --quiet; then
+            echo "no tree change — nothing to commit"
+            exit 0
+          fi
           git commit -m "catalogue: a new dated reading of the live state ($(date -u +%Y-%m-%dT%H:%MZ))"
           # ONE branch, not one per run. A timestamped branch per day banks 365 stranded
           # branches and 365 pull requests a year, and only the newest is worth landing —
@@ -97,9 +103,9 @@ jobs:
           existing=$(gh pr list --head "${branch}" --base master --state open --json url --jq '.[0].url // ""')
           if [ -n "${existing}" ]; then
             echo "existing pull request updated in place: ${existing}"
-            exit 0
-          fi
-          cat > "$RUNNER_TEMP/pr-body.md" <<'EOF'
+            pr="${existing}"
+          else
+            cat > "$RUNNER_TEMP/pr-body.md" <<'EOF'
           A new dated edition of the master catalogue's `live_state` block, produced by
           `scripts/surface/rebind-catalogue-live-state.mjs`.
 
@@ -110,6 +116,16 @@ jobs:
 
           Produced by the schedule in `.github/workflows/catalogue-live-state.yml`.
           EOF
-          gh pr create --base master --head "${branch}" \
-            --title "catalogue: a new dated reading of the live state" \
-            --body-file "$RUNNER_TEMP/pr-body.md"
+            pr=$(gh pr create --base master --head "${branch}" \
+              --title "catalogue: a new dated reading of the live state" \
+              --body-file "$RUNNER_TEMP/pr-body.md")
+          fi
+          # ARM AUTO-MERGE, AND MAKE READY FIRST. A pull request created as a DRAFT cannot
+          # carry auto-merge, and the merge then silently never happens — which would leave
+          # the catalogue stale again in 72 hours, exactly the failure this workflow exists to
+          # stop. `gh pr ready` is a no-op on a pull request that is already ready. GitHub's
+          # auto-merge waits for the REQUIRED CHECKS itself, so this lands the edition only
+          # after the same gates every other change passes, and never with --admin.
+          gh pr ready "${pr}" 2>/dev/null || true
+          gh pr merge "${pr}" --repo "${{ github.repository }}" --merge --auto --delete-branch=false || true
+          echo "armed auto-merge on ${pr}"
