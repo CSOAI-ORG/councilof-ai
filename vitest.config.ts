@@ -24,6 +24,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // every PR. They are named one by one, not globbed, and pr-gates.yml runs exactly this list under
 // `node --test` in its own step, so excluding them here removes no coverage.
 export const NODE_TEST_FILES = [
+  'scripts/evidence-learning-contract.node-test.mjs',
   'scripts/build-daily-signal.node-test.mjs',
   'scripts/daily-mapping-review-queue/build.test.mjs',
   'scripts/build-daily-product.node-test.mjs',
@@ -142,3 +143,4 @@ export default defineConfig({
     exclude: [...defaultExclude, 'dist/**', '**/dist/**', '**/.git-wt-*/**', 'docs/**/*.test.mjs', 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs', ...NODE_TEST_FILES],
   },
 });
+
