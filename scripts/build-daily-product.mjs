@@ -5,6 +5,7 @@
  * Run: node scripts/build-daily-product.mjs [--check]
  */
 import { createHash } from 'node:crypto';
+import { maintenanceView } from './daily-maintenance-metadata.mjs';
 import { existsSync, lstatSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -161,7 +162,7 @@ export function deriveFindings(entry) {
   return {schema:'csoai.daily-signal-findings/0.1', report_id:reportId, report_day:report.as_of, signed:false, scope:'Derived observations about this report; not findings of legal noncompliance.', findings};
 }
 
-function renderMarkdown(entry, comparison, findings) {
+function renderMarkdown(entry, comparison, findings, maintenance) {
   const r = entry.report;
   return [`# Council of AI — Daily evidence report`, '', `Report day: ${r.as_of}`, `Report SHA-256: ${entry.sha256}`, '',
     'This unsigned report organises retained source snapshots. It is not a fresh model measurement, legal assessment or financial valuation.', '',
@@ -170,12 +171,13 @@ function renderMarkdown(entry, comparison, findings) {
     '| Date | Instrument | Provision | Mapping |', '|---|---|---|---|', ...r.signals.map(s => `| ${s.date} | ${md(s.instrument)} | ${md(s.provision)} | ${md(s.mapping.state)} |`), '',
     '## Comparison', '', comparison.state === 'PRIOR_REPORT_UNAVAILABLE' ? 'Prior report unavailable. No change or growth count is inferred.' : `Compared with report ${comparison.previous_report_id}: ${comparison.added_event_ids.length} entered the window, ${comparison.removed_event_ids.length} left, ${comparison.changed_event_ids.length} changed retained rows. ${comparison.changed_source_roles.length} source references changed. These counts are not new measurements or legal amendments.`, '',
     '## Findings and next actions', '', ...findings.findings.map(f => `- **${f.code}** — ${md(f.summary)} ${md(f.qualification_action)} Source: ${f.source.json_pointer}; finding ID ${f.id}.`), '',
+    '## Maintenance metadata', '', maintenanceSummary(maintenance), '',
     '## Source provenance', '', ...Object.entries(r.generated_from).sort().map(([role, source]) => `- ${role}: ${md(source.state)}; path ${md(source.path)}; SHA-256 ${source.sha256 ?? 'not available'}.`),
-    '', `Claim-register source timestamp: ${md(r.corrections.register_as_of)}. Other source timestamps are not supplied in this report. Report day is not a source retrieval time.`, '',
+    '', `Claim-register source timestamp: ${md(r.corrections.register_as_of)}. General per-source retrieval timestamps are not supplied. Selected declared dates, where present, are in maintenance metadata; report day is not a retrieval time.`, '',
     `[Source JSON](${PREFIX + entry.filename}) · [Archive](${PREFIX}) · [GPAI evidence matrix](/gpai) · [Claim maintenance](/claim-maintenance)`, ''].join('\n');
 }
 
-function renderHtml(entries, comparisons, findingPack) {
+function renderHtml(entries, comparisons, findingPack, maintenance) {
   const latest = entries.at(-1), r = latest.report, comparison = comparisons.at(-1), h = escapeHtml;
   const title = 'Daily evidence reports | Council of AI';
   return `<!doctype html>
@@ -189,24 +191,33 @@ function renderHtml(entries, comparisons, findingPack) {
 <section aria-labelledby="deadlines"><h2 id="deadlines">Deadline records</h2><div class="table-wrap" tabindex="0" role="region" aria-label="Deadline records; scroll horizontally on small screens"><table><caption>From the dated source JSON. Each row retains its event digest and source position.</caption><thead><tr><th scope="col">Date</th><th scope="col">Instrument and provision</th><th scope="col">Mapping</th><th scope="col">Evidence reference</th></tr></thead><tbody>${r.signals.map((s,i) => `<tr><td><time datetime="${s.date}">${s.date}</time><br><span class="muted small">${s.days_until} days from report</span></td><td><strong>${h(s.instrument)}</strong><br>${h(s.provision)}<br><span class="muted small">${h(s.jurisdiction)}</span></td><td><span class="status">${h(s.mapping.state.replaceAll('_',' '))}</span><br><span class="small">${h(s.mapping.reason)}</span></td><td><a href="${PREFIX + latest.filename}">Source record ${s.source_index}</a><br><code>/signals/${i}</code><details><summary>Event digest</summary><code>${s.event_sha256}</code></details></td></tr>`).join('') || '<tr><td colspan="4">No records fall inside this report’s stated window.</td></tr>'}</tbody></table></div></section>
 <section aria-labelledby="changes"><h2 id="changes">Changes since the previous retained report</h2><p>${comparison.state === 'PRIOR_REPORT_UNAVAILABLE' ? 'A prior report is not available in this archive. No change or growth count has been inferred.' : `${comparison.added_event_ids.length} records entered the window, ${comparison.removed_event_ids.length} left, and ${comparison.changed_event_ids.length} retained rows changed. ${comparison.changed_source_roles.length} source references changed.`}</p><p class="muted small">Window changes are not necessarily regulatory amendments. Repeated reports and unchanged evidence are not counted as new measurements.</p></section>
 <section aria-labelledby="findings"><h2 id="findings">Findings and next actions</h2><p class="muted">These findings describe evidence preparation and missing information. They are not findings of legal noncompliance.</p><div class="findings">${findingPack.findings.map(f=>`<article class="finding"><h3>${h(f.code.replaceAll('_',' '))}</h3><p>${h(f.summary)}</p><p><strong>Next action:</strong> ${h(f.qualification_action)}</p><p class="small muted">Source pointer: <code>${h(f.source.json_pointer)}</code></p><details><summary>Finding identity</summary><code>${f.id}</code></details></article>`).join('')}</div></section>
-<section aria-labelledby="provenance"><h2 id="provenance">Source provenance</h2><p>Report SHA-256: <code>${latest.sha256}</code></p><p class="muted small">The digest identifies the exact report bytes. It is not a signature or independent confirmation of the source claims.</p>${Object.entries(r.generated_from).sort().map(([role,s])=>`<details><summary>${h(role)} · ${h(s.state)}</summary><p>Source path: <code>${h(s.path)}</code></p><p>SHA-256: <code>${h(s.sha256)}</code></p></details>`).join('')}<p class="small muted">Claim-register source timestamp: ${h(r.corrections.register_as_of)}. Other source timestamps are not supplied in this report. The report day is not a retrieval timestamp.</p></section>
+<section aria-labelledby="maintenance"><h2 id="maintenance">Maintenance metadata</h2><p>${h(maintenanceSummary(maintenance))}</p><p class="muted small">Source metadata only. Exact source-byte changes are distinct from changes in selected metadata; unchanged metadata does not establish unchanged claims, current applicability or permission to act. Source rights remain unknown.</p></section>
+<section aria-labelledby="provenance"><h2 id="provenance">Source provenance</h2><p>Report SHA-256: <code>${latest.sha256}</code></p><p class="muted small">The digest identifies the exact report bytes. It is not a signature or independent confirmation of the source claims.</p>${Object.entries(r.generated_from).sort().map(([role,s])=>`<details><summary>${h(role)} · ${h(s.state)}</summary><p>Source path: <code>${h(s.path)}</code></p><p>SHA-256: <code>${h(s.sha256)}</code></p></details>`).join('')}<p class="small muted">Claim-register source timestamp: ${h(r.corrections.register_as_of)}. General per-source retrieval timestamps are not supplied. Selected declared dates, where present, are in maintenance metadata; report day is not a retrieval time.</p></section>
 <section aria-labelledby="archive"><h2 id="archive">Report archive</h2><div class="table-wrap" tabindex="0" role="region" aria-label="Report archive"><table><caption>Retained dated snapshots, with exact-byte identifiers.</caption><thead><tr><th scope="col">Report day</th><th scope="col">Files</th><th scope="col">SHA-256</th></tr></thead><tbody>${[...entries].reverse().map(e=>`<tr><td>${e.report.as_of}</td><td><a href="${PREFIX + e.filename}">JSON</a> · <a href="${PREFIX + e.report.as_of}.md">Markdown</a></td><td><code>${e.sha256}</code></td></tr>`).join('')}</tbody></table></div><p class="small"><a href="${PREFIX}index.json">Machine-readable archive</a> · <a href="${PREFIX}latest.json">Latest source JSON</a> · <a href="${PREFIX}latest.md">Latest Markdown</a></p></section>
 <section aria-labelledby="next"><h2 id="next">Use the evidence</h2><div class="grid-links"><div><a href="/gpai">Explore the GPAI matrix</a><p>Review the evidence requirements and stated limits for model providers.</p></div><div><a href="/claim-maintenance">Maintain a claim</a><p>Follow evidence dependencies, changes and correction history.</p></div><div><a href="/services">Find an evidence service</a><p>Review available products, previews and delivery scope.</p></div></div></section></main><footer><div class="wrap"><span>Council of AI · Measurement and evidence</span><a href="/corrections">Corrections and review</a></div></footer></body></html>\n`;
+}
+
+function maintenanceSummary(view) {
+  if (!view?.snapshot) return 'Maintenance metadata unavailable for this retained report. No new measurement or recheck outcome is inferred.';
+  const c=view.comparison, board=view.snapshot.sources.board.metadata, claims=view.snapshot.sources.claims.metadata;
+  return `State: ${c.state}. Selected semantic snapshot: ${view.snapshot.semantic_snapshot_id}. Card-corpus last measurement declared: ${board?.last_measurement_declared_at ?? 'unknown'} (not the governance board). Claim-register source timestamp declared: ${claims?.register_as_of_declared ?? 'unknown'}; last measurement not supplied by that register. ${c.byte_changed_roles === null ? 'No prior metadata comparison.' : `${c.byte_changed_roles.length} source-byte reference(s) changed; ${c.parsed_content_changed_roles.length} parsed-content reference(s) changed; ${c.semantic_changed_roles.length} selected metadata projection(s) changed.`} ${c.recheck_candidates.length} pending source-review candidate(s). Date consistency: board ${view.snapshot.sources.board.declared_date_check.state}, claims ${view.snapshot.sources.claims.declared_date_check.state}; measurement freshness NOT_ASSESSED. Rights UNKNOWN; no execution authority or model training.`;
 }
 
 export function buildProduct(directory) {
   const entries = loadArchive(directory);
   const comparisons = entries.map((e, i) => compareReports(e, entries[i - 1]));
+  const maintenance = entries.map((e,i)=>maintenanceView(e.report,entries[i-1]?.report));
   const latest = entries.at(-1), findings = deriveFindings(latest);
   const files = new Map();
-  for (let i = 0; i < entries.length; i++) files.set(entries[i].report.as_of + '.md', renderMarkdown(entries[i], comparisons[i], deriveFindings(entries[i])));
+  for (let i = 0; i < entries.length; i++) files.set(entries[i].report.as_of + '.md', renderMarkdown(entries[i], comparisons[i], deriveFindings(entries[i]),maintenance[i]));
   files.set('latest.md', files.get(latest.report.as_of + '.md'));
   files.set('findings.json', encode(findings));
   const index = {schema:'csoai.daily-signal-index/0.1', latest_report_id:latest.sha256, latest_report_day:latest.report.as_of, signed:false,
     report_count:entries.length, measurement_count:null, valuation:null, scope:'Retained daily-signal snapshots; report count is not a measurement, framework or customer count.',
-    reports:entries.map((e,i)=>({report_id:e.sha256, report_day:e.report.as_of, json_path:PREFIX+e.filename, markdown_path:PREFIX+e.report.as_of+'.md', counts:e.report.headline, comparison:comparisons[i]})).reverse()};
+    maintenance_metadata:maintenance.at(-1),
+    reports:entries.map((e,i)=>({report_id:e.sha256, report_day:e.report.as_of, maintenance:maintenance[i].comparison, json_path:PREFIX+e.filename, markdown_path:PREFIX+e.report.as_of+'.md', counts:e.report.headline, comparison:comparisons[i]})).reverse()};
   files.set('index.json', encode(index));
-  files.set('index.html', renderHtml(entries, comparisons, findings));
+  files.set('index.html', renderHtml(entries, comparisons, findings,maintenance.at(-1)));
   return {files, index};
 }
 

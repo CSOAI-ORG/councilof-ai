@@ -40,6 +40,10 @@ Compared with report ba377d7f4bd6140bd83a3e02440dd02261ac62ebcae3a39929c9d09ad31
 - **SOURCE_ABSENT** — An input is absent: mappings. Supply the scoped source and preserve its revision, date and byte digest. Source: /generated_from/mappings; finding ID e5df4c4819096c4f87ef2e5cb016fd4247302d91fc9bcb1ab3f7be5212b62901.
 - **CLAIM_DELTA_NOT_COMPUTED** — The retained claim register is a snapshot; a correction delta has not been computed. Compare exact retained claim-register revisions and retain explicit supersession references. Source: /corrections; finding ID 3e1fc01b5c509b807d5cdf46f5f8583f679fd368854e8808238d47b55c8b31e4.
 
+## Maintenance metadata
+
+Maintenance metadata unavailable for this retained report. No new measurement or recheck outcome is inferred.
+
 ## Source provenance
 
 - board: READ; path public/signed/card-matrix.json; SHA-256 792873fbc2a14f86e566a350994f9eefef0b0d245a374972e70532796f3c738c.
@@ -48,6 +52,6 @@ Compared with report ba377d7f4bd6140bd83a3e02440dd02261ac62ebcae3a39929c9d09ad31
 - crosswalk: READ; path tui3-crosswalk/regulatory-crosswalk-20260912.json; SHA-256 c00f3ce978e86a8838114ad510afc7da4037700fb749740d70211e23f1b4f665.
 - mappings: ABSENT; path Not recorded; SHA-256 not available.
 
-Claim-register source timestamp: 2026-11-01T07:17:54Z. Other source timestamps are not supplied in this report. Report day is not a source retrieval time.
+Claim-register source timestamp: 2026-11-01T07:17:54Z. General per-source retrieval timestamps are not supplied. Selected declared dates, where present, are in maintenance metadata; report day is not a retrieval time.
 
 [Source JSON](/reports/daily-signal/2026-11-06.json) · [Archive](/reports/daily-signal/) · [GPAI evidence matrix](/gpai) · [Claim maintenance](/claim-maintenance)
