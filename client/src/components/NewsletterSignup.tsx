@@ -17,20 +17,21 @@
  * and hands over the address that does work. A failure says it failed.
  */
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useId, useState } from "react";
 import { Mail, Send, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function NewsletterSignup() {
+  const emailId = useId();
+  const messageId = useId();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "notstored" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email.trim() || status === "loading" || status === "success") return;
 
     setStatus("loading");
     setErrorMessage("");
@@ -47,9 +48,10 @@ export default function NewsletterSignup() {
       if (!response.ok) {
         setStatus("error");
         setErrorMessage(
-          String(data.error || data.message || `The subscribe endpoint answered ${response.status}.`),
+          "Your subscription could not be confirmed. " +
+            String(data.error || data.message || `The service answered ${response.status}.`) +
+            " Your email is still here so you can try again.",
         );
-        setTimeout(() => setStatus("idle"), 6000);
         return;
       }
 
@@ -57,44 +59,50 @@ export default function NewsletterSignup() {
       if (data.stored === true) {
         setStatus("success");
         setEmail("");
-        setTimeout(() => setStatus("idle"), 6000);
-      } else {
+      } else if (data.stored === false) {
         setStatus("notstored");
         setErrorMessage(
-          String(data.reason || "the subscriber store is not connected") +
+          String(data.reason || "subscription is unavailable right now") +
             ". Your address was NOT saved — " +
             String(data.fallback || "email nicholas@csoai.org") +
-            " and we will add you by hand.",
+            " for help.",
+        );
+      } else {
+        setStatus("error");
+        setErrorMessage(
+          "Your subscription could not be confirmed. Your email is still here so you can try again, or email nicholas@csoai.org.",
         );
       }
-    } catch (error) {
-      // No local shadow-store, and no thank-you. An address we could not send is an
-      // address we did not take.
+    } catch {
+      // A missing response cannot establish whether the server saved the request.
+      // Keep the draft and the recovery message; never invent a local subscription.
       setStatus("error");
       setErrorMessage(
-        "Could not reach the subscribe endpoint, so nothing was sent. Email nicholas@csoai.org instead.",
+        "Your subscription could not be confirmed. Your email is still here so you can try again, or email nicholas@csoai.org.",
       );
-      setTimeout(() => setStatus("idle"), 8000);
     }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="w-full max-w-md"
-    >
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+    // No entrance fade: a form that can render faint (whileInView never firing,
+    // or mid-animation captures) reads as disabled — the 2026-11-04 visual walk
+    // caught both the idle button and the confirmation line washed out.
+    <div className="w-full max-w-md">
+      <label htmlFor={emailId} className="mb-2 block text-sm font-semibold text-foreground">Email address</label>
+      <form onSubmit={handleSubmit} aria-busy={status === "loading"} className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Mail aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
           <Input
+            id={emailId}
+            name="email"
             type="email"
+            autoComplete="email"
+            inputMode="email"
             placeholder="Enter your email address"
-            aria-label="Email address for the AI safety newsletter"
+            aria-describedby={status === "idle" ? undefined : messageId}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="pl-10 h-12 bg-white border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+            className="pl-10 h-12 bg-white text-slate-900 placeholder:text-slate-500 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
             disabled={status === "loading" || status === "success"}
             required
           />
@@ -105,49 +113,39 @@ export default function NewsletterSignup() {
           className="h-12 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
         >
           {status === "loading" ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
+            <><Loader2 aria-hidden="true" className="mr-2 h-5 w-5 animate-spin" />Subscribing…</>
           ) : status === "success" ? (
             <>
-              <CheckCircle className="h-5 w-5 mr-2" />
+              <CheckCircle aria-hidden="true" className="h-5 w-5 mr-2" />
               Subscribed!
             </>
           ) : (
             <>
               Subscribe
-              <Send className="h-4 w-4 ml-2" />
+              <Send aria-hidden="true" className="h-4 w-4 ml-2" />
             </>
           )}
         </Button>
       </form>
+      <div id={messageId} role="status" aria-live="polite" aria-atomic="true">
       {status === "success" && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-emerald-600 text-sm mt-2"
-        >
+        <p className="text-emerald-800 font-medium text-sm mt-2">
           Stored. Your address is on the list — no confirmation email is sent.
-        </motion.p>
+        </p>
       )}
       {status === "notstored" && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-amber-700 text-sm mt-2 flex items-start gap-1"
-        >
-          <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+        <p className="text-amber-700 font-medium text-sm mt-2 flex items-start gap-1">
+          <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0 mt-0.5" />
           <span>NOT SUBSCRIBED — {errorMessage}</span>
-        </motion.p>
+        </p>
       )}
       {status === "error" && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-red-500 text-sm mt-2 flex items-center gap-1"
-        >
-          <AlertCircle className="h-4 w-4" />
+        <p className="text-red-600 font-medium text-sm mt-2 flex items-center gap-1">
+          <AlertCircle aria-hidden="true" className="h-4 w-4" />
           {errorMessage}
-        </motion.p>
+        </p>
       )}
-    </motion.div>
+      </div>
+    </div>
   );
 }

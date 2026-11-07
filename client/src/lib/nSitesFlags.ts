@@ -12,9 +12,40 @@
  * not a certificate, and not a reason to mint one CSOAI repo per external model.
  */
 
+import NPM_CAPTURE from "../../../distribution/npm/npm-publish-check.json";
+import { clientNote, npmReleaseState } from "../../../scripts/harness-x/npm-release-state.mjs";
+import { ALL_TOOL_NAMES, toolSummary } from "./mcpTools";
+
+/**
+ * The npm package's release state, DERIVED from the dated capture
+ * (distribution/npm/npm-publish-check.json, written by scripts/harness-x/npm-publish-live.mjs).
+ *
+ * It used to be typed here — "Every published npm release is marked deprecated on npm and carries
+ * fewer tools than the HTTP door" — and it was FALSE: npm deprecates 0.1.0-0.2.2, and the estate's
+ * own later releases (0.2.5) are not deprecated. What is true is that the published release carries
+ * fewer tool names than the door serves, and that the release this repository prepares is not on npm
+ * yet. Both are measured; the sentence is derived from the capture, so it cannot go stale here.
+ *
+ * The fallback makes NO claim it cannot back, so a damaged capture degrades the note instead of
+ * breaking the build. The capture's health is a GATE, and client/src/lib/npm-release-state.test.ts
+ * asserts this note equals the derived one, so the fallback can never be the silent answer.
+ */
+function npmReleaseNote(): string {
+  try {
+    return clientNote(npmReleaseState(NPM_CAPTURE), {
+      doorTools: ALL_TOOL_NAMES.length,
+      freeDoor: "https://councilof.ai/mcp/free",
+    });
+  } catch {
+    return (
+      "The npm package is versioned separately from this door. Ask that install for its tools/list, " +
+      "or use the free door https://councilof.ai/mcp/free."
+    );
+  }
+}
+
 export type FlagStatus = "planted" | "next" | "do-not";
 export type FlagKind = "receipt" | "discovery" | "regulation" | "compute" | "registry";
-
 export type NSiteFlag = {
   id: string;
   title: string;
@@ -51,7 +82,7 @@ export const NSITES_BOOTSTRAP = [
 ] as const;
 
 export const PLUGIN_HARVEST = {
-  plugin_reads: "Public board, seven MCP tools, signed cards. Consent first.",
+  plugin_reads: `Public board, ${ALL_TOOL_NAMES.length} MCP tools, signed cards. Consent first.`,
   plugin_never: [
     "user chat bodies",
     "covert telemetry",
@@ -158,8 +189,8 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     status: "planted",
     kind: "receipt",
     href: "https://councilof.ai/mcp",
-    plant: "Claude, Cursor, Kimi, Grok — one JSON, seven tools.",
-    note: "board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion. No 23rd axis.",
+    plant: `Claude, Cursor, Kimi, Grok — one JSON, ${ALL_TOOL_NAMES.length} tools.`,
+    note: `${toolSummary(6)}. No 23rd axis.`,
     snippet: MCP_SNIPPET,
   },
   {
@@ -199,7 +230,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://www.npmjs.com/package/csoai-gspc-mcp",
     plant: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
-    note: "Every published npm release is marked deprecated on npm and carries fewer tools than the HTTP door; ask that install for its tools/list, or use the free door https://councilof.ai/mcp/free.",
+    note: npmReleaseNote(),
     snippet: NPM_SNIPPET,
   },
   {

@@ -447,9 +447,15 @@ test("one workspace keeps the composer and account access while a tool pane is o
   // Account access remains available through Sections while navigation starts minimized.
   await page.getByRole("button", { name: "Open workspace navigation", exact: true }).click();
   if (isMobile) {
+    // The drawer's accessible name is now i18n'd (dashboard.title, default "Menu"), so the
+    // product property is pinned instead of a translated string: the navigation dialog must
+    // contain account access while a tool pane is open.
+    const navDrawer = page
+      .getByRole("dialog")
+      .filter({ has: page.getByLabel("Open account and workspace menu") });
+    await expect(navDrawer, "one navigation dialog carries account access").toHaveCount(1);
     await expect(
-      page.getByRole("dialog", { name: "Council OS sections" })
-        .getByLabel("Open account and workspace menu"),
+      navDrawer.getByLabel("Open account and workspace menu"),
     ).toBeVisible();
   } else {
     await expect(
@@ -576,7 +582,12 @@ test("GSPC quests are a styled in-workspace game and never promote play into mea
       name: "GSPC Quests — play frozen challenge banks",
     }),
   ).toBeVisible();
-  await expect(playPane.getByText(/currently admitted ranking/i)).toBeVisible();
+  await expect(
+    playPane.getByText(/historical board references separate from current admitted evidence/i),
+  ).toBeVisible();
+  await expect(
+    playPane.getByText(/your score stays in this browser; it is not training data or a GSPC measurement/i),
+  ).toBeVisible();
   await expect(playPane.getByText(/models are measured on/i)).toHaveCount(0);
 
   // The page's board read (/api/gspc, falling back to the live councilof.ai read when
@@ -750,16 +761,21 @@ test("workspace navigation starts minimized and remains usable across layout bou
 
 test("the home header carries a booking door to /assess/ within one click", async ({ page }) => {
   await page.goto("/");
-  const desktop = page.locator('[data-testid="header-book-measurement"]');
-  const opener = page.getByRole("button", { name: "Open menu" });
-  if (await desktop.isVisible({ timeout: 30_000 }).catch(() => false)) {
-    await expect(desktop).toHaveAttribute("href", "/assess/");
-  } else {
+  const header = page.locator("[data-site-header]").first();
+  const desktop = header.getByTestId("header-book-measurement");
+  const opener = header.getByRole("button", { name: "Open menu", exact: true });
+  // isVisible does not wait. Settle the responsive entry before choosing its branch.
+  await expect.poll(async () => await desktop.isVisible() || await opener.isVisible()).toBe(true);
+  let booking = desktop;
+  if (!(await desktop.isVisible())) {
     await opener.click();
-    const mobile = page.locator('[data-testid="mobile-book-measurement"]');
-    await expect(mobile).toBeVisible();
-    await expect(mobile).toHaveAttribute("href", "/assess/");
+    booking = header.getByTestId("mobile-book-measurement");
   }
+  await expect(booking).toBeVisible();
+  await expect(booking).toHaveAttribute("href", "/assess/");
+  await booking.click();
+  await expect(page).toHaveURL(/\/dashboard\/?\?.*tab=measured/);
+  await expect(page.getByTestId("dashboard-pane-measured")).toBeVisible();
 });
 
 for (const width of [375, 894, 1024, 1280, 1440, 1536]) {
@@ -878,3 +894,349 @@ for (const width of [375, 894, 1024, 1280, 1440, 1536]) {
     ).toBeLessThanOrEqual(1);
   });
 }
+
+
+/** Resume the existing native practice pane; these are browser controls, not learning evidence. */
+const BOSS_CHAIR_RESUME_KEY = "csoai.boss-chair-practice/1";
+
+function bossChairPractice(page: Page) {
+  return page.getByTestId("dashboard-pane-space").getByTestId("council-practice-arena");
+}
+
+async function bossChairLeaveAndReturn(page: Page) {
+  const navigation = page.getByRole("navigation", { name: "Learn pages" });
+  await navigation.getByRole("link", { name: "Learning", exact: true }).click();
+  await expect(page.getByTestId("dashboard-pane-learn")).toBeVisible();
+  await navigation.getByRole("link", { name: "Model arena", exact: true }).click();
+  await expect(bossChairPractice(page)).toBeVisible();
+  await expect(bossChairPractice(page).getByRole("button", { name: "Resolve within scope", exact: true })).toBeEnabled();
+}
+
+test("Boss's Chair resume keeps pane navigation, reload and new scenarios inside Council OS", async ({ page }) => {
+  test.setTimeout(120_000);
+  const { pageErrors } = await collectErrors(page);
+  const modelRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.method() === "POST" &&
+        /\/api\/(?:chat|agui\/run)(?:\/|$)|\/hosted\/tasks\/|api\.runpod\./.test(request.url())) {
+      modelRequests.push(request.url());
+    }
+  });
+
+  await openTab(page, "space");
+  const practice = bossChairPractice(page);
+  const resolve = practice.getByRole("button", { name: "Resolve within scope", exact: true });
+  await expect(resolve).toBeEnabled();
+  await resolve.focus();
+  await page.keyboard.press("Enter");
+  await practice.getByRole("button", { name: "Escalate to a person", exact: true }).click();
+  await expect(practice).toContainText("round 3/8");
+  await expect.poll(async () => page.evaluate((key) => {
+    const raw = sessionStorage.getItem(key);
+    return raw ? JSON.parse(raw).decisions : null;
+  }, BOSS_CHAIR_RESUME_KEY)).toEqual(["resolve", "escalate"]);
+  const saved = await page.evaluate((key) => sessionStorage.getItem(key), BOSS_CHAIR_RESUME_KEY);
+  expect(JSON.parse(saved!).decisions).toEqual(["resolve", "escalate"]);
+
+  await bossChairLeaveAndReturn(page);
+  await expect(practice).toContainText("round 3/8");
+  expect(await page.evaluate((key) => sessionStorage.getItem(key), BOSS_CHAIR_RESUME_KEY)).toBe(saved);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(practice).toContainText("round 3/8");
+  await expect(resolve).toBeEnabled();
+
+  for (let i = 0; i < 6; i++) {
+    await resolve.click();
+    if (i < 5) await expect(practice).toContainText("round " + (i + 4) + "/8");
+  }
+  await expect(practice).toContainText("Scenario complete");
+  await practice.getByRole("button", { name: /New seeded scenario/ }).click();
+  await expect(practice).toContainText("seed 43");
+  await expect(practice).toContainText("round 1/8");
+  await bossChairLeaveAndReturn(page);
+  await expect(practice).toContainText("seed 43");
+  await expect(practice).toContainText("round 1/8");
+  const next = await page.evaluate((key) => JSON.parse(sessionStorage.getItem(key)!), BOSS_CHAIR_RESUME_KEY);
+  expect(next.decisions).toEqual([]);
+  await expect(page).toHaveURL(/\/dashboard\/?\?tab=space/);
+  await expect(practice.locator("iframe")).toHaveCount(0);
+  expect(modelRequests).toEqual([]);
+  expect(pageErrors).toEqual([]);
+});
+
+test("Boss's Chair resume refuses invalid saves and remains playable when storage fails", async ({ page }) => {
+  test.setTimeout(120_000);
+  await openTab(page, "space");
+  const rejected = '{"schema":"future/2","decisions":[]}';
+  await page.evaluate(({ key, raw }) => sessionStorage.setItem(key, raw),
+    { key: BOSS_CHAIR_RESUME_KEY, raw: rejected });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  const practice = bossChairPractice(page);
+  const resolve = practice.getByRole("button", { name: "Resolve within scope", exact: true });
+  await expect(practice).toContainText("does not match the current cases");
+  expect(await page.evaluate((key) => sessionStorage.getItem(key), BOSS_CHAIR_RESUME_KEY)).toBe(rejected);
+  await resolve.click();
+  await expect(practice).toContainText("round 2/8");
+  await expect.poll(async () => page.evaluate((key) => {
+    const raw = sessionStorage.getItem(key);
+    return raw ? JSON.parse(raw).decisions : null;
+  }, BOSS_CHAIR_RESUME_KEY)).toEqual(["resolve"]);
+  const previous = await page.evaluate((key) => sessionStorage.getItem(key), BOSS_CHAIR_RESUME_KEY);
+  expect(JSON.parse(previous!).decisions).toEqual(["resolve"]);
+
+  await page.evaluate((key) => {
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (name: string, value: string) {
+      if (this === window.sessionStorage && name === key) {
+        throw new DOMException("Storage full", "QuotaExceededError");
+      }
+      return original.call(this, name, value);
+    };
+  }, BOSS_CHAIR_RESUME_KEY);
+  await practice.getByRole("button", { name: "Escalate to a person", exact: true }).click();
+  await expect(practice).toContainText("round 3/8");
+  await expect(practice).toContainText("Leaving this pane will lose this attempt");
+  expect(await page.evaluate((key) => sessionStorage.getItem(key), BOSS_CHAIR_RESUME_KEY)).toBe(previous);
+
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "sessionStorage", {
+      configurable: true,
+      get() { throw new DOMException("Storage denied", "SecurityError"); },
+    });
+  });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(resolve).toBeEnabled();
+  await resolve.click();
+  await expect(practice).toContainText("round 2/8");
+  await expect(practice).toContainText("Leaving this pane will lose this attempt");
+});
+
+test("Boss's Chair resume accepts one answer from a stale rendered callback batch", async ({ page }) => {
+  test.setTimeout(120_000);
+  await openTab(page, "space");
+  const practice = bossChairPractice(page);
+  await expect(practice.getByRole("button", { name: "Resolve within scope", exact: true })).toBeEnabled();
+  await practice.evaluate((element) => {
+    const buttons = Array.from(element.querySelectorAll("button"));
+    const resolve = buttons.find((button) => button.textContent?.includes("Resolve within scope"));
+    const escalate = buttons.find((button) => button.textContent?.includes("Escalate to a person"));
+    if (!resolve || !escalate) throw new Error("Missing practice choices");
+    resolve.click();
+    escalate.click();
+  });
+  await expect(practice).toContainText("round 2/8");
+  await expect.poll(async () => page.evaluate((key) => {
+    const raw = sessionStorage.getItem(key);
+    return raw ? JSON.parse(raw).decisions : null;
+  }, BOSS_CHAIR_RESUME_KEY)).toEqual(["resolve"]);
+});
+
+
+/** Both public entries use the same emitted Munder component.
+ * The provider here is a deterministic HTTP FIXTURE, not a model/learning result. */
+const MUNDER_LIVE_KEY = "csoai.munder-live-practice/1";
+const MUNDER_PROVIDER = "https://nicholastempleman-meok-sov6-abstraction-overlay.hf.space/v1/chat/completions";
+const MUNDER_MODEL = "meok-sov6-abstraction-v3-light-overlay-on-qwen2.5-1.5b-instruct";
+for (const entry of ["Council OS", "HF mirror"] as const) {
+  async function openMunder(page: Page) {
+    if (entry === "Council OS") await openTab(page, "space");
+    else await page.goto("http://127.0.0.1:4181/", { waitUntil: "domcontentloaded" });
+    const game = page.getByTestId("munder-live-duel");
+    await expect(game.getByRole("button", { name: "Start Munder with MEOK", exact: true })).toBeEnabled();
+    return game;
+  }
+
+  test("Munder live " + entry + " plays eight approved rounds and exports qualified data", async ({ page }, info) => {
+    test.skip(entry === "HF mirror" && !!process.env.BASE_URL, "Local generated artifact is tested by the hosted build; production readback is separate.");
+    test.setTimeout(120_000);
+    const calls: unknown[] = [], errors: string[] = [];
+    page.on("pageerror", e => errors.push(e.message));
+    await page.route(MUNDER_PROVIDER, async route => {
+      const body = route.request().postDataJSON();
+      calls.push(body);
+      const retained = await page.evaluate(key => JSON.parse(sessionStorage.getItem(key)!), MUNDER_LIVE_KEY);
+      expect(retained.rounds.at(-1).intent.body).toBe(route.request().postData());
+      expect(retained.rounds.at(-1).human).toBe("resolve");
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({
+        id: "chatcmpl-browser-" + calls.length, model: MUNDER_MODEL,
+        choices: [{ finish_reason: "stop", message: { role: "assistant", content: '{"action":"resolve"}' } }],
+      }) });
+    });
+    const game = await openMunder(page);
+    expect(calls).toHaveLength(0);
+    await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
+    for (let i = 0; i < 8; i++) {
+      await expect(game.getByTestId("munder-round")).toContainText("case " + (i + 1) + "/8");
+      await game.getByRole("button", { name: "Choose resolve", exact: true }).click();
+      await game.getByRole("button", { name: "Ask MEOK for its move", exact: true }).click();
+      await expect(game.getByTestId("munder-proposal")).toHaveText("resolve");
+      const before = await page.evaluate(key => JSON.parse(sessionStorage.getItem(key)!).rounds.at(-1).approvedAt, MUNDER_LIVE_KEY);
+      expect(before).toBeNull();
+      await game.getByRole("button", { name: "Approve MEOK move in this game", exact: true }).click();
+      if (i < 7) await game.getByRole("button", { name: "Next Munder case", exact: true }).click();
+    }
+    await expect(game.getByTestId("munder-complete")).toContainText("Munder game complete");
+    expect(calls).toHaveLength(8);
+    for (const body of calls as any[]) {
+      expect(body.model).toBe(MUNDER_MODEL);
+      expect(body).not.toHaveProperty("critical");
+      expect(body).not.toHaveProperty("participantChoice");
+    }
+    const downloadPromise = page.waitForEvent("download");
+    await game.getByRole("button", { name: "Download session data", exact: true }).click();
+    const download = await downloadPromise, stream = await download.createReadStream();
+    if (!stream) throw Error("Missing downloaded session data");
+    const chunks: Buffer[] = []; for await (const chunk of stream) chunks.push(Buffer.from(chunk));
+    const report = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+    expect(report.summary.completed).toBe(8);
+    expect(report.qualification).toMatchObject({ signed: false, graphAdmitted: false,
+      measuredHumanLearning: false, authenticatedR3TaskOrNativeEffect: false, automaticTrainingReuse: false });
+    expect(report.rows[0].response.sha256).toMatch(/^[a-f0-9]{64}$/);
+    await info.attach("munder-browser-fixture-report", { body: Buffer.from(JSON.stringify(report, null, 2)), contentType: "application/json" });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(game.getByTestId("munder-complete")).toBeVisible();
+    expect(calls).toHaveLength(8);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+    await page.screenshot({ path: info.outputPath("munder-complete.png"), fullPage: true });
+    expect(errors).toEqual([]);
+  });
+
+  test("Munder live " + entry + " holds unavailable replies across reload without a simulated fallback", async ({ page }) => {
+    test.skip(entry === "HF mirror" && !!process.env.BASE_URL, "Local generated artifact only.");
+    test.setTimeout(120_000);
+    let calls = 0;
+    await page.route(MUNDER_PROVIDER, async route => {
+      calls++; await route.fulfill({ status: 503, contentType: "text/plain", body: "unavailable" });
+    });
+    const game = await openMunder(page);
+    await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
+    await game.getByRole("button", { name: "Choose escalate", exact: true }).click();
+    await game.getByRole("button", { name: "Ask MEOK for its move", exact: true }).click();
+    await expect(game).toContainText("This request is held");
+    await expect(game.getByTestId("munder-proposal")).toHaveCount(0);
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(game).toContainText("This request is held");
+    await expect(game.getByRole("button", { name: "Ask MEOK for its move", exact: true })).toHaveCount(0);
+    expect(calls).toBe(1);
+  });
+
+  test("Munder live " + entry + " refuses a new request when request custody cannot be saved", async ({ page }) => {
+    test.skip(entry === "HF mirror" && !!process.env.BASE_URL, "Local generated artifact only.");
+    test.setTimeout(120_000);
+    let calls = 0;
+    await page.route(MUNDER_PROVIDER, async route => { calls++; await route.abort(); });
+    const game = await openMunder(page);
+    await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
+    await game.getByRole("button", { name: "Choose resolve", exact: true }).click();
+    await page.evaluate(key => {
+      const previous = Storage.prototype.setItem;
+      Storage.prototype.setItem = function (name, value) {
+        if (this === sessionStorage && name === key) throw new DOMException("full", "QuotaExceededError");
+        return previous.call(this, name, value);
+      };
+    }, MUNDER_LIVE_KEY);
+    await game.getByRole("button", { name: "Ask MEOK for its move", exact: true }).click();
+    await expect(game).toContainText("could not be saved");
+    await expect(game.getByTestId("munder-proposal")).toHaveCount(0);
+    expect(calls).toBe(0);
+  });
+}
+
+
+test.describe("Munder actual provider qualification", () => {
+  test.describe.configure({ retries: 0 });
+  for (const surface of [
+    { name: "Council OS", origin: "https://councilof.ai", local: "http://127.0.0.1:4180", path: "/dashboard?tab=space" },
+    { name: "HF mirror", origin: "https://csoai-council-coliseum.static.hf.space", local: "http://127.0.0.1:4181", path: "/" },
+  ]) {
+    test("Munder actual provider " + surface.name + " proposes and applies one fictional move", async ({ page }, info) => {
+      test.skip(process.env.MUNDER_LIVE_PROVIDER !== "1" || info.project.name !== "desktop",
+        "Explicit bounded hosted qualification only; fixtures remain the offline gate.");
+      test.setTimeout(90_000);
+      // Serve only the candidate HTML/assets under the already CORS-qualified
+      // browser origins. The existing MEOK response is never mocked.
+      await page.route(surface.origin + "/**", async route => {
+        const url = new URL(route.request().url());
+        const response = await route.fetch({ url: surface.local + url.pathname + url.search });
+        await route.fulfill({ response });
+      });
+      // This exact page-level pass-through overrides the shell harness's
+      // context-wide HF block. It does not mock, proxy or rewrite the provider.
+      await page.route(MUNDER_PROVIDER, route => route.continue());
+      let calls = 0;
+      const network: unknown[] = [], consoleErrors: string[] = [];
+      page.on("request", r => { if (r.url() === MUNDER_PROVIDER && r.method() === "POST") calls++; });
+      page.on("requestfailed", r => {
+        if (r.url() === MUNDER_PROVIDER) network.push({ event: "requestfailed", method: r.method(), error: r.failure()?.errorText });
+      });
+      page.on("response", r => {
+        if (r.url() === MUNDER_PROVIDER) network.push({ event: "response", status: r.status(), headers: {
+          contentType: r.headers()["content-type"], allowOrigin: r.headers()["access-control-allow-origin"],
+        } });
+      });
+      page.on("console", message => {
+        if (message.type() === "error" && /CORS|meok|hf\.space|net::/.test(message.text()))
+          { if (consoleErrors.length < 16) consoleErrors.push(message.text().slice(0, 2000)); }
+      });
+      try {
+      await page.goto(surface.origin + surface.path, { waitUntil: "domcontentloaded" });
+      const game = page.getByTestId("munder-live-duel");
+      await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
+      await game.getByRole("button", { name: "Choose resolve", exact: true }).click();
+      await game.getByRole("button", { name: "Ask MEOK for its move", exact: true }).click();
+      await expect(game.getByTestId("munder-proposal")).toHaveText(/^(resolve|escalate)$/, { timeout: 25_000 });
+      const proposal = await page.evaluate(key => JSON.parse(sessionStorage.getItem(key)!), MUNDER_LIVE_KEY);
+      expect(proposal.rounds[0].approvedAt).toBeNull();
+      expect(JSON.parse(proposal.rounds[0].proof.body).model).toBe(MUNDER_MODEL);
+      await game.getByRole("button", { name: "Approve MEOK move in this game", exact: true }).click();
+      const applied = await page.evaluate(key => JSON.parse(sessionStorage.getItem(key)!), MUNDER_LIVE_KEY);
+      expect(applied.rounds[0].approvedAt).toBeTruthy();
+      expect(calls).toBe(1);
+      await info.attach("munder-real-provider-candidate-browser", {
+        body: Buffer.from(JSON.stringify({
+          qualification: "candidate build served at allowed origin; real existing HF provider; automated fictional practice; not a deployed-site or human-learning result",
+          surface: surface.name, source: process.env.GITHUB_SHA, requests: calls, session: applied,
+        }, null, 2)), contentType: "application/json",
+      });
+      await page.reload({ waitUntil: "domcontentloaded" });
+      await expect(game).toContainText("Both moves are now recorded");
+      expect(calls).toBe(1);
+      await page.screenshot({ path: info.outputPath("munder-real-provider.png"), fullPage: true });
+      } finally {
+        const retained = await page.evaluate(key => sessionStorage.getItem(key), MUNDER_LIVE_KEY).catch(() => null);
+        const status = await page.getByTestId("munder-status").textContent().catch(() => null);
+        const diagnostic = { qualification: "candidate browser; one unmocked request maximum; no retry",
+          surface: surface.name, source: process.env.GITHUB_SHA, requests: calls, status, network, consoleErrors,
+          retained: retained ? JSON.parse(retained) : null };
+        await info.attach("munder-real-provider-diagnostics", {
+          body: Buffer.from(JSON.stringify(diagnostic, null, 2)), contentType: "application/json",
+        });
+        console.log("MUNDER_PROVIDER_DIAGNOSTIC " + JSON.stringify(diagnostic));
+      }
+    });
+  }
+});
+
+
+
+test("Munder live gallery door opens the native game and holds model access until asked", async ({ page }) => {
+  test.setTimeout(120_000);
+  let calls = 0;
+  await page.route(MUNDER_PROVIDER, async route => { calls++; await route.abort(); });
+  await openTab(page, "play");
+  const card = page.getByTestId("dashboard-pane-play").locator("li").filter({
+    has: page.getByRole("heading", { name: "The Coliseum", exact: true }),
+  });
+  await expect(card).toContainText("Munder");
+  const door = card.getByRole("link", { name: "Open in workspace", exact: true });
+  await expect(door).toHaveAttribute("href", "/dashboard?tab=space");
+  await door.click();
+  await expect(page).toHaveURL(/\/dashboard\/?\?tab=space/);
+  const game = page.getByTestId("dashboard-pane-space").getByTestId("munder-live-duel");
+  await game.getByRole("button", { name: "Start Munder with MEOK", exact: true }).click();
+  await game.getByRole("button", { name: "Choose resolve", exact: true }).click();
+  await expect(game).toContainText("Your move: resolve");
+  await expect(game.locator("iframe")).toHaveCount(0);
+  expect(calls).toBe(0);
+});
+

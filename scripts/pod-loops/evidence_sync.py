@@ -156,6 +156,116 @@ def anon_probe(files: dict, rels, n: int):
     return bad
 
 
+HF_MAX_FILES_PER_DIR = 10000
+
+
+def dir_of(relative):
+    """Validate a literal repository-relative path; do not normalise traversal away."""
+    if not isinstance(relative, str) or not relative or relative.startswith('/') or '\\' in relative:
+        raise ValueError('Expected a repository-relative path')
+    parts = relative.split('/')
+    if any(p in ('', '.', '..') or any(ord(c) < 32 for c in p) for p in parts):
+        raise ValueError('Unsafe or ambiguous repository path')
+    return '/'.join(parts[:-1])
+
+
+def plan_by_directory(rels, tree, files):
+    """Plan against the observed full mirror inventory; replacements add no files.
+
+    A plan grants no permission to prune or migrate old URLs. Readback must still
+    establish whether accepted commits actually produced the expected bytes.
+    """
+    if len(rels) != len(set(rels)):
+        raise ValueError('Duplicate selected file')
+    counts = {}
+    for relative in tree:
+        directory = dir_of(relative)
+        counts[directory] = counts.get(directory, 0) + 1
+    groups = {}
+    for relative in rels:
+        directory = dir_of(relative)
+        if relative not in files:
+            raise ValueError('Selected file absent from build')
+        groups.setdefault(directory, []).append(relative)
+    # The ORPHANS: the mirror holds files this build does not have. They are not
+    # selected, so they are never written, and a plan grants no permission to
+    # prune them — so they accumulate. MEASURED 6 Nov 2026: the mirror held
+    # 9,920 files in interop/mill-cards-unsigned and 9,795 in interop/mill-evidence
+    # where the build holds 3,656 and 4,472; 14,127 of them are orphans whose
+    # admission evidence this tree does not hold. They consumed the budget the
+    # build's own files needed: adding 1,270 files to 9,920 is 11,190, over the
+    # 10,000 limit, so the directory was not written at all and the legitimate
+    # files were never published. The orphan count is what makes that visible.
+    orphan_counts = {}
+    for relative in tree:
+        if relative in files:
+            continue
+        directory = dir_of(relative)
+        orphan_counts[directory] = orphan_counts.get(directory, 0) + 1
+    plan = []
+    for directory, selected in sorted(groups.items()):
+        selected = sorted(selected)
+        before = counts.get(directory, 0)
+        new = sum(relative not in tree for relative in selected)
+        after = before + new
+        plan.append({'directory': directory, 'files': selected,
+                     'mirror_files_before': before, 'new_files': new,
+                     'mirror_files_after': after, 'over_limit': after > HF_MAX_FILES_PER_DIR,
+                     'orphan_files': orphan_counts.get(directory, 0)})
+    return plan
+
+
+def commit_grouped(rels, files, token, message, plan):
+    """Separate directory failures; never continue after denied authorization.
+
+    SYNCED here means commit() returned, not independent readback. main() records
+    actual verified bytes before reporting an overall success. Response bodies and
+    credential values are deliberately excluded from these public-safe summaries.
+    """
+    if len(rels) != len(set(rels)):
+        raise ValueError('Duplicate selected file')
+    actual = {}
+    for relative in rels:
+        directory = dir_of(relative)
+        if relative not in files:
+            raise ValueError('Selected file absent from build')
+        actual.setdefault(directory, []).append(relative)
+    if len(plan) != len(actual) or {p.get('directory') for p in plan} != set(actual):
+        raise ValueError('Plan does not cover selected directories exactly')
+    for row in plan:
+        if sorted(row.get('files', [])) != sorted(actual[row['directory']]):
+            raise ValueError('Plan file set differs')
+        for field in ('mirror_files_before', 'new_files', 'mirror_files_after', 'orphan_files'):
+            if type(row.get(field)) is not int or row[field] < 0:
+                raise ValueError('Plan count must be a nonnegative integer')
+        if row['new_files'] > len(row['files']) or row['mirror_files_before'] + row['new_files'] != row['mirror_files_after']:
+            raise ValueError('Inconsistent plan counts')
+        if type(row.get('over_limit')) is not bool or row['over_limit'] != (row['mirror_files_after'] > HF_MAX_FILES_PER_DIR):
+            raise ValueError('Inconsistent limit classification')
+    outcomes = {}
+    stopped = False
+    for row in sorted(plan, key=lambda x: x['directory']):
+        directory = row['directory']
+        common = {'selected_files': len(row['files']), 'mirror_files_after': row['mirror_files_after'],
+                  'orphan_files': row.get('orphan_files', 0), 'readback_verified': False}
+        if stopped:
+            outcomes[directory] = {**common, 'state': 'NOT_ATTEMPTED', 'detail': 'Earlier authorization or rate-limit refusal; no alternate route attempted'}
+        elif row['over_limit']:
+            outcomes[directory] = {**common, 'state': 'OVER_DIRECTORY_LIMIT', 'detail': f"{row['mirror_files_after']} files would exceed the {HF_MAX_FILES_PER_DIR} file limit; no deletion or write attempted"}
+        else:
+            try:
+                commit(row['files'], files, token, message)
+                outcomes[directory] = {**common, 'state': 'SYNCED', 'detail': 'Commit returned; exact remote and anonymous readback still required'}
+            except (SystemExit, urllib.error.URLError, TimeoutError) as error:
+                # Do not copy the server body, a URL, or the supplied token into a receipt.
+                code = re.search(r'HTTP (\d{3})', str(error))
+                status = int(code.group(1)) if code else None
+                stopped = status in (401, 403, 429)
+                outcomes[directory] = {**common, 'state': 'REJECTED', 'http_status': status,
+                    'detail': 'Commit did not complete; readback is needed to determine any partial effect'}
+    return outcomes
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--public-dir", default="public")
@@ -165,14 +275,21 @@ def main():
     ap.add_argument("--message", default="sync from the councilof.ai build")
     ap.add_argument("--receipt")
     a = ap.parse_args()
+    if a.probe < 1:
+        ap.error("--probe must be positive; anonymous verification cannot be disabled")
     manifest = json.loads(Path(a.manifest).read_text())
     files = local_files(Path(a.public_dir), manifest)
     prefixes = {rel.split("/")[0] for rel in files}
     token = os.environ.get("HF_TOKEN") if a.apply else None
     tree = remote_tree(prefixes, token)
     d = diff(files, tree)
-    print(f"evidence-sync: {len(files)} local files under {sorted(prefixes)}; dataset holds {len(tree)}; differing {len(d)}")
-    rec = {"schema": "csoai.evidence-sync/1", "dataset": REPO, "local": len(files), "remote": len(tree), "differing_before": len(d)}
+    # The ORPHANS the mirror holds and this build does not. A plan grants no
+    # permission to prune them, so they accumulate and they consume the
+    # per-directory budget the build's own files need. Naming the count is what
+    # turns that from an invisible drift into a measured one.
+    orphan_total = len(set(tree) - set(files))
+    print(f"evidence-sync: {len(files)} local files under {sorted(prefixes)}; dataset holds {len(tree)}; differing {len(d)}; orphans (mirror holds, build does not) {orphan_total}")
+    rec = {"schema": "csoai.evidence-sync/1", "dataset": REPO, "local": len(files), "remote": len(tree), "differing_before": len(d), "orphan_files": orphan_total}
     if d and not a.apply:
         print(f"✗ evidence-sync: {REPO} trails this build by {len(d)} file(s), e.g. {d[:3]}; the redirects would serve stale bytes")
         rec["state"] = "TRAILING"; _w(a.receipt, rec); sys.exit(3)
@@ -184,13 +301,63 @@ def main():
             print(f"✗ evidence-sync: secret pattern in {len(hits)} file(s); nothing uploaded: {hits[:5]}")
             rec["state"] = "SECRET_SCAN_FAILED"; _w(a.receipt, rec); sys.exit(5)
         print(f"  secret scan: {len(d)} file(s), 0 hits")
-        commit(d, files, token, a.message)
-        tree = remote_tree(prefixes, token)
-        left = diff(files, tree)
+        plan = plan_by_directory(d, tree, files)
+        outcomes = commit_grouped(d, files, token, a.message, plan)
+        rec['directories'] = outcomes
+        try:
+            tree = remote_tree(prefixes, token)
+            left = diff(files, tree)
+        except (SystemExit, OSError, ValueError):
+            rec.update(state='READBACK_UNAVAILABLE', uploaded=None)
+            _w(a.receipt, rec)
+            raise SystemExit(6)
+        left_set = set(left)
+        verified = [relative for relative in d if relative not in left_set]
+        for row in plan:
+            pending = sum(relative in left_set for relative in row['files'])
+            outcomes[row['directory']]['remaining_files'] = pending
+            outcomes[row['directory']]['readback_verified'] = pending == 0
+        rec.update(verified_matching=len(verified), remaining=len(left))
+        # Verify a member of every successful directory, not only a prefix sample.
+        sample = []
+        for row in plan:
+            matching = [relative for relative in row['files'] if relative not in left_set]
+            if matching:
+                sample.append(matching[0])
+        sample.extend(relative for relative in verified[:a.probe] if relative not in sample)
+        try:
+            bad = anon_probe(files, sample, len(sample))
+        except OSError:
+            rec.update(state='ANON_READBACK_FAILED', uploaded=None)
+            _w(a.receipt, rec)
+            raise SystemExit(7)
+        rec['anon_readback_ok'] = len(sample) - len(bad)
+        if bad:
+            rec.update(state='ANON_READBACK_FAILED', uploaded=None)
+            _w(a.receipt, rec)
+            raise SystemExit(7)
         if left:
-            print(f"✗ evidence-sync: {len(left)} file(s) still differ after upload: {left[:3]}"); rec["state"] = "UPLOAD_INCOMPLETE"; _w(a.receipt, rec); sys.exit(6)
+            rec.update(state='PARTIAL_SYNC' if verified else 'UPLOAD_INCOMPLETE', uploaded=None)
+            _w(a.receipt, rec)
+            print(f"✗ evidence-sync: {len(verified)} selected files match; {len(left)} remain; publication remains incomplete")
+            raise SystemExit(6)
+        if any(row['state'] != 'SYNCED' for row in outcomes.values()):
+            # Another writer or a lost response may explain matching bytes. Do not
+            # claim this invocation uploaded or successfully owned that operation.
+            rec.update(state='READBACK_MATCH_COMMIT_UNCERTAIN', uploaded=None)
+            _w(a.receipt, rec)
+            raise SystemExit(6)
+        rec.update(state='IN_SYNC', uploaded=len(d))
+        _w(a.receipt, rec)
+        print(f"✓ evidence-sync: all {len(d)} selected files verified; {len(sample)} anonymous readbacks")
+        return
     sample = d if d else random.sample(sorted(files), min(a.probe, len(files)))
-    bad = anon_probe(files, sample, a.probe)
+    try:
+        bad = anon_probe(files, sample, a.probe)
+    except OSError:
+        rec.update(state='ANON_READBACK_FAILED', uploaded=None)
+        _w(a.receipt, rec)
+        raise SystemExit(7)
     if bad:
         print(f"✗ evidence-sync: anonymous read-back failed for {len(bad)}: {bad[:3]}"); rec["state"] = "ANON_READBACK_FAILED"; _w(a.receipt, rec); sys.exit(7)
     rec.update(state="IN_SYNC", uploaded=len(d), anon_readback_ok=min(a.probe, len(sample)))

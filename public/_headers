@@ -13,6 +13,25 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
   Cache-Control: no-cache, must-revalidate
   Strict-Transport-Security: max-age=31536000; includeSubDomains
+  # CONTENT-SECURITY-POLICY, REPORT-ONLY. councilof.ai served no CSP at all while
+  # meok.ai (same estate, same component library) has had one since before this
+  # review — so the estate's own posture was inconsistent across its own origins.
+  #
+  # It is REPORT-ONLY on purpose. A wrong enforced CSP is a white screen: this
+  # repo has already had a white-screen incident (2026-08-11, an asset served
+  # as text/html), and a policy guessed from a source list is exactly the kind
+  # of thing that causes one. Report-only cannot break a page — it only reports.
+  #
+  # The policy below is modelled on the one meok.ai already runs, so the sources
+  # are known-good for this component library, with 'unsafe-eval' deliberately
+  # LEFT OUT so the report shows anything that would need it. frame-ancestors
+  # carries the same two origins as the enforcing /dashboard/* rule below, so
+  # the dashboard frame does not report a violation it is allowed.
+  #
+  # NEXT STEP (needs a real traffic window, not a guess): read the report over
+  # a week of production traffic, fix what it names, then promote this header
+  # to `Content-Security-Policy` and drop the -Report-Only suffix.
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https: wss:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://huggingface.co https://*.hf.space
 
 # The Council OS dashboard may be FRAMED by the Hugging Face Space csoai/gspc-board — the one
 # living Space — and nowhere else. The global X-Frame-Options: SAMEORIGIN above cannot name a
@@ -162,6 +181,10 @@
 /.well-known/scitt-keys
   Content-Type: application/json
   Cache-Control: public, max-age=3600
+
+# The exact published evidence-event contract; schema bytes come from its one source.
+/spec/evidence-event/v0.1/schema.json
+  Content-Type: application/schema+json; charset=utf-8
 
 # Evidence copies of third-party pages (a report's mirrors/ folder: Paxos, Ripple, rwa.xyz and
 # others, captured so a finding can be re-read). They are not our pages; no search engine should

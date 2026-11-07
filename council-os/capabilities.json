@@ -23,20 +23,50 @@
   "not_declared": [],
   "openapi_gap": [
     {
-      "id": "api-axis-specialists-axis",
-      "path": "/api/axis-specialists/[axis]",
-      "method": "GET",
-      "reason": "dynamic Pages route; the index capability and its 33 generated axis links declare the exact set, while build_openapi.py intentionally walks concrete routes only"
-    },
-    {
       "id": "api-art50-marking-evidence-post",
       "path": "/api/art50/marking-evidence",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-signed-data-feed-post",
-      "path": "/api/signed-data-feed",
+      "id": "api-atlas",
+      "path": "/api/atlas",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-atlas-post",
+      "path": "/api/atlas",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-certificate-schema",
+      "path": "/api/certificate-schema",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-checkout-post",
+      "path": "/api/checkout",
+      "method": "POST",
+      "reason": "withdrawn (DOOR_CLOSED): the handler still answers its fail-closed 404, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-discover-chainlink-post",
+      "path": "/api/discover/chainlink",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-discover-ondo-ousg-post",
+      "path": "/api/discover/ondo-ousg",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-discover-ondo-post",
+      "path": "/api/discover/ondo",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
@@ -53,16 +83,76 @@
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
+      "id": "api-files",
+      "path": "/api/files",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-files-post",
+      "path": "/api/files",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
       "id": "api-free-door-post",
       "path": "/api/free-door",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
+      "id": "api-fulfill",
+      "path": "/api/fulfill",
+      "method": "GET",
+      "reason": "withdrawn (DOOR_CLOSED): the handler still answers its fail-closed 404, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-growth-loops",
+      "path": "/api/growth-loops",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
       "id": "api-measurement-fresh-capsule-post",
       "path": "/api/measurement/fresh-capsule",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-memory",
+      "path": "/api/memory",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-memory-post",
+      "path": "/api/memory",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-operator",
+      "path": "/api/operator",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-operator-post",
+      "path": "/api/operator",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-paddle-webhook",
+      "path": "/api/paddle-webhook",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-paddle-webhook-post",
+      "path": "/api/paddle-webhook",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
     },
     {
       "id": "api-pop-a2a-post",
@@ -125,8 +215,32 @@
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
+      "id": "api-prod-readiness",
+      "path": "/api/prod-readiness",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
       "id": "api-proof-post",
       "path": "/api/proof",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-ras-mcp-probe-post",
+      "path": "/api/ras/mcp-probe",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-ras-supply-post",
+      "path": "/api/ras/supply",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-ras-x402-check-post",
+      "path": "/api/ras/x402-check",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
@@ -149,8 +263,32 @@
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-wrapper-post",
-      "path": "/api/wrapper",
+      "id": "api-sandbox",
+      "path": "/api/sandbox",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-sandbox-post",
+      "path": "/api/sandbox",
+      "method": "POST",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-signed-data-feed-post",
+      "path": "/api/signed-data-feed",
+      "method": "POST",
+      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
+    },
+    {
+      "id": "api-synthesis",
+      "path": "/api/synthesis",
+      "method": "GET",
+      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
+    },
+    {
+      "id": "api-wrapper-asset-dai-post",
+      "path": "/api/wrapper/asset/dai",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
@@ -167,26 +305,8 @@
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
     {
-      "id": "api-wrapper-asset-dai-post",
-      "path": "/api/wrapper/asset/dai",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-ras-mcp-probe-post",
-      "path": "/api/ras/mcp-probe",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-ras-x402-check-post",
-      "path": "/api/ras/x402-check",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-ras-supply-post",
-      "path": "/api/ras/supply",
+      "id": "api-wrapper-post",
+      "path": "/api/wrapper",
       "method": "POST",
       "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
     },
@@ -219,132 +339,6 @@
       "path": "/.well-known/x402.json",
       "method": "GET",
       "reason": "a /.well-known document; the OpenAPI producer covers functions/api only"
-    },
-    {
-      "id": "api-discover-chainlink-post",
-      "path": "/api/discover/chainlink",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-discover-ondo-post",
-      "path": "/api/discover/ondo",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-discover-ondo-ousg-post",
-      "path": "/api/discover/ondo-ousg",
-      "method": "POST",
-      "reason": "the handler exports this alias, but the x402 manifest advertises a different method and build_openapi.py intentionally publishes one method per listed door"
-    },
-    {
-      "id": "api-atlas",
-      "path": "/api/atlas",
-      "method": "GET",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-atlas-post",
-      "path": "/api/atlas",
-      "method": "POST",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-certificate-schema",
-      "path": "/api/certificate-schema",
-      "method": "GET",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-checkout-post",
-      "path": "/api/checkout",
-      "method": "POST",
-      "reason": "withdrawn (DOOR_CLOSED): the handler still answers its fail-closed 404, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-files",
-      "path": "/api/files",
-      "method": "GET",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-files-post",
-      "path": "/api/files",
-      "method": "POST",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-fulfill",
-      "path": "/api/fulfill",
-      "method": "GET",
-      "reason": "withdrawn (DOOR_CLOSED): the handler still answers its fail-closed 404, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-growth-loops",
-      "path": "/api/growth-loops",
-      "method": "GET",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-memory",
-      "path": "/api/memory",
-      "method": "GET",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-memory-post",
-      "path": "/api/memory",
-      "method": "POST",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-operator",
-      "path": "/api/operator",
-      "method": "GET",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-operator-post",
-      "path": "/api/operator",
-      "method": "POST",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-paddle-webhook",
-      "path": "/api/paddle-webhook",
-      "method": "GET",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-paddle-webhook-post",
-      "path": "/api/paddle-webhook",
-      "method": "POST",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-prod-readiness",
-      "path": "/api/prod-readiness",
-      "method": "GET",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-sandbox",
-      "path": "/api/sandbox",
-      "method": "GET",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-sandbox-post",
-      "path": "/api/sandbox",
-      "method": "POST",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
-    },
-    {
-      "id": "api-synthesis",
-      "path": "/api/synthesis",
-      "method": "GET",
-      "reason": "withdrawn (RETIRED): the handler still answers its fail-closed 503, and a withdrawn route is not listed in public/openapi.json"
     }
   ],
   "capabilities": [
@@ -384,54 +378,47 @@
       ]
     },
     {
-      "audience": "agent",
-      "description": "Read the bounded specialist audit for one exact GSPC axis, or the full index with an empty input. Every axis has its own logical MEOK Hive cluster, mission, evidence checks, negative controls, improvement proposals and human reviewer role. RSI is recommendation-only: no ASI claim, no self-modification, no spend, no deployment and no apply operation. Every proposal stays PROPOSED_NOT_APPLIED under a MEOK H.I.M.-compatible HOLD gate. The existing axis_<id> MCP tools remain the live measurement readers; these audits are unsigned analysis of a captured board, not new measurement or certification.",
-      "description_state": "DOCUMENTED",
-      "examples": [
-        "SendMessage with Part.data {\"skill\":\"axis-specialist\",\"input\":{}}",
-        "SendMessage with Part.data {\"skill\":\"axis-specialist\",\"input\":{\"axis\":\"governance\"}}",
-        "GET /api/axis-specialists/governance"
-      ],
       "id": "axis-specialist",
       "kind": "a2a_skill",
-      "lifecycle": "LIVE",
       "name": "MEOK Hive axis specialist audits (free, unsigned)",
+      "description": "Read the bounded specialist audit for one exact GSPC axis, or the full index with an empty input. Every axis has its own logical MEOK Hive cluster, mission, evidence checks, negative controls, improvement proposals and human reviewer role. RSI is recommendation-only: no ASI claim, no self-modification, no spend, no deployment and no apply operation. Every proposal stays PROPOSED_NOT_APPLIED under a MEOK H.I.M.-compatible HOLD gate. The existing axis_<id> MCP tools remain the live measurement readers; these audits are unsigned analysis of a captured board, not new measurement or certification.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
       "payment": "free",
-      "probe": {
-        "expect_status": [
-          200
-        ],
-        "method": "POST",
-        "request": "/api/a2a",
-        "safe": false,
-        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
-      },
-      "schema_refs": [
-        "csoai.axis-specialist-index/1.0",
-        "csoai.axis-specialist-audit/1.0"
-      ],
+      "schema_refs": [],
       "surfaces": [
         "a2a",
         "llms"
       ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
       "tags": [
         "measurement",
         "human-in-the-loop",
         "meok",
         "audit"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"axis-specialist\",\"input\":{}}",
+        "SendMessage with Part.data {\"skill\":\"axis-specialist\",\"input\":{\"axis\":\"governance\"}}",
+        "GET /api/axis-specialists/governance"
       ]
     },
     {
-      "audience": "agent",
-      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
-      "description_state": "DOCUMENTED",
-      "examples": [
-        "SendMessage with Part.data {\"skill\":\"benchmark-quality-register\",\"input\":{}}",
-        "GET /api/benchmark-quality"
-      ],
       "id": "benchmark-quality-register",
       "kind": "a2a_skill",
       "name": "Benchmark-quality register",
+      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
@@ -453,6 +440,10 @@
         "benchmark-quality",
         "reproducibility",
         "governance"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"benchmark-quality-register\",\"input\":{}}",
+        "GET /api/benchmark-quality"
       ]
     },
     {
@@ -636,10 +627,7 @@
       "audience": "agent",
       "lifecycle": "LIVE",
       "payment": "free",
-      "schema_refs": [
-        "csoai.local-evidence-draft/1.2",
-        "council-os.evidence-delivery-result/1.0"
-      ],
+      "schema_refs": [],
       "surfaces": [
         "a2a",
         "llms"
@@ -671,17 +659,53 @@
       ]
     },
     {
-      "audience": "agent",
-      "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
+      "id": "framework-readiness",
+      "kind": "a2a_skill",
+      "name": "Framework readiness checklist (deterministic)",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"<id>\"}} and the answer is computed in-process by the same module the MCP tool framework_readiness calls, so the two doors cannot disagree: per item, the published provision it is keyed to, a plain-words requirement summary, the evidence that would show readiness, and the question it opens for the caller's own compliance function. Optional sector and role are echoed as pointers and notes. There is no score and no pass or fail: a checklist lays out what evidence would be measured, it does not certify compliance, and it is not legal advice or a conformity assessment.",
       "description_state": "DOCUMENTED",
-      "examples": [
-        "SendMessage with Part.data {\"skill\":\"gspc-board\",\"input\":{}}",
-        "Legacy compatibility: one text Part containing exactly \"board\"",
-        "GET /api/gspc — the same board, outside A2A"
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "a2a",
+        "llms"
       ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "tags": [
+        "eu-ai-act",
+        "dora",
+        "nis2",
+        "gdpr",
+        "iso-27001",
+        "nist-csf",
+        "soc2",
+        "pci-dss",
+        "cra",
+        "readiness",
+        "deterministic"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"eu-ai-act\"}}",
+        "SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"gdpr\",\"sector\":\"healthcare\"}}"
+      ]
+    },
+    {
       "id": "gspc-board",
       "kind": "a2a_skill",
       "name": "Signed GSPC Board",
+      "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
@@ -702,6 +726,11 @@
         "measurement",
         "governance",
         "verification"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"gspc-board\",\"input\":{}}",
+        "Legacy compatibility: one text Part containing exactly \"board\"",
+        "GET /api/gspc — the same board, outside A2A"
       ]
     },
     {
@@ -875,6 +904,31 @@
       "source": "functions/api/a2a.ts"
     },
     {
+      "id": "api-a2a-key",
+      "kind": "http",
+      "path": "/api/a2a/key",
+      "method": "GET",
+      "name": "A2a key",
+      "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports GET.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/a2a/key",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/a2a/key.ts"
+    },
+    {
       "id": "api-a2a-post",
       "kind": "http",
       "path": "/api/a2a",
@@ -901,6 +955,108 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "source": "functions/api/a2a.ts"
+    },
+    {
+      "id": "api-a2a-route",
+      "kind": "http",
+      "path": "/api/a2a/route",
+      "method": "GET",
+      "name": "A2a route",
+      "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/a2a/route",
+        "expect_status": [
+          405
+        ],
+        "safe": true
+      },
+      "source": "functions/api/a2a/route.ts"
+    },
+    {
+      "id": "api-a2a-route-post",
+      "kind": "http",
+      "path": "/api/a2a/route",
+      "method": "POST",
+      "name": "A2a route (POST)",
+      "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a/route",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "source": "functions/api/a2a/route.ts"
+    },
+    {
+      "id": "api-a2a-verify",
+      "kind": "http",
+      "path": "/api/a2a/verify",
+      "method": "GET",
+      "name": "A2a verify",
+      "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/a2a/verify",
+        "expect_status": [
+          405
+        ],
+        "safe": true
+      },
+      "source": "functions/api/a2a/verify.ts"
+    },
+    {
+      "id": "api-a2a-verify-post",
+      "kind": "http",
+      "path": "/api/a2a/verify",
+      "method": "POST",
+      "name": "A2a verify (POST)",
+      "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a/verify",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "source": "functions/api/a2a/verify.ts"
     },
     {
       "id": "api-action-jobs",
@@ -1293,11 +1449,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/atlas",
         "expect_status": [
           503
         ],
-        "method": "GET",
-        "request": "/api/atlas",
         "safe": true
       },
       "source": "functions/api/atlas.ts"
@@ -1318,11 +1474,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "POST",
+        "request": "/api/atlas",
         "expect_status": [
           503
         ],
-        "method": "POST",
-        "request": "/api/atlas",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -1356,43 +1512,41 @@
       "source": "functions/api/axis-register.ts"
     },
     {
-      "audience": "both",
-      "description": "GET /api/axis-specialists — unsigned MEOK Hive audit index for every GSPC axis. GET /api/axis-specialists/<axis> returns one exact audit. Each specialist has an isolated logical cluster, distinct checks and proposals, and a MEOK H.I.M.-compatible HOLD gate. No apply operation or new measurement.",
-      "description_state": "DOCUMENTED",
       "id": "api-axis-specialists",
       "kind": "http",
-      "lifecycle": "LIVE",
+      "path": "/api/axis-specialists",
       "method": "GET",
       "name": "MEOK Hive axis specialists",
-      "path": "/api/axis-specialists",
+      "description": "GET /api/axis-specialists — unsigned MEOK Hive audit index for every GSPC axis. Each specialist has an isolated logical cluster, distinct checks and proposals, and a MEOK H.I.M.-compatible HOLD gate. No apply operation or new measurement.",
+      "description_state": "DOCUMENTED",
+      "audience": "both",
+      "lifecycle": "LIVE",
       "payment": "free",
-      "probe": {
-        "expect_status": [
-          200
-        ],
-        "method": "GET",
-        "request": "/api/axis-specialists",
-        "safe": true
-      },
-      "schema_refs": [
-        "csoai.axis-specialist-index/1.0"
-      ],
-      "source": "functions/api/axis-specialists.ts",
+      "schema_refs": [],
       "surfaces": [
         "openapi",
         "llms",
         "nav"
-      ]
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/axis-specialists",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/axis-specialists.ts"
     },
     {
-      "audience": "agent",
-      "description": "",
-      "description_state": "UNDOCUMENTED",
       "id": "api-badge",
       "kind": "http",
       "path": "/api/badge",
       "method": "GET",
       "name": "Badge",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "audience": "agent",
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
@@ -1620,11 +1774,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/certificate-schema",
         "expect_status": [
           503
         ],
-        "method": "GET",
-        "request": "/api/certificate-schema",
         "safe": true
       },
       "source": "functions/api/certificate-schema.ts"
@@ -1755,11 +1909,11 @@
       "schema_refs": [],
       "surfaces": [],
       "probe": {
+        "method": "POST",
+        "request": "/api/checkout",
         "expect_status": [
           404
         ],
-        "method": "POST",
-        "request": "/api/checkout",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -2219,6 +2373,36 @@
         "safe": true
       },
       "source": "functions/api/coverage.ts"
+    },
+    {
+      "id": "api-coverage-evidence",
+      "kind": "http",
+      "path": "/api/coverage-evidence",
+      "method": "GET",
+      "name": "Coverage evidence row",
+      "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free_preview_then_x402",
+      "schema_refs": [
+        "csoai.coverage-evidence/0.1"
+      ],
+      "surfaces": [
+        "openapi",
+        "llms"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/coverage-evidence?asset=tether",
+        "expect_status": [
+          402
+        ],
+        "safe": true
+      },
+      "source": "functions/api/coverage-evidence.ts",
+      "free_preview": "/api/coverage-evidence?asset=tether&preview=1",
+      "paid_for": "assembly"
     },
     {
       "id": "api-coverage-truth",
@@ -3035,11 +3219,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/files",
         "expect_status": [
           503
         ],
-        "method": "GET",
-        "request": "/api/files",
         "safe": true
       },
       "source": "functions/api/files.ts"
@@ -3060,11 +3244,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "POST",
+        "request": "/api/files",
         "expect_status": [
           503
         ],
-        "method": "POST",
-        "request": "/api/files",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -3224,14 +3408,65 @@
       "schema_refs": [],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/fulfill",
         "expect_status": [
           404
         ],
-        "method": "GET",
-        "request": "/api/fulfill",
         "safe": true
       },
       "source": "functions/api/fulfill.ts"
+    },
+    {
+      "id": "api-gate",
+      "kind": "http",
+      "path": "/api/gate",
+      "method": "GET",
+      "name": "Gate",
+      "description": "A GET on a POST path is a method error, not a 404.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/gate",
+        "expect_status": [
+          405
+        ],
+        "safe": true
+      },
+      "source": "functions/api/gate.ts"
+    },
+    {
+      "id": "api-gate-post",
+      "kind": "http",
+      "path": "/api/gate",
+      "method": "POST",
+      "name": "Gate (POST)",
+      "description": "A GET on a POST path is a method error, not a 404.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/gate",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "source": "functions/api/gate.ts"
     },
     {
       "id": "api-growth-loops",
@@ -3249,11 +3484,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/growth-loops",
         "expect_status": [
           503
         ],
-        "method": "GET",
-        "request": "/api/growth-loops",
         "safe": true
       },
       "source": "functions/api/growth-loops.ts"
@@ -3882,11 +4117,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/memory",
         "expect_status": [
           503
         ],
-        "method": "GET",
-        "request": "/api/memory",
         "safe": true
       },
       "source": "functions/api/memory.ts"
@@ -3907,11 +4142,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "POST",
+        "request": "/api/memory",
         "expect_status": [
           503
         ],
-        "method": "POST",
-        "request": "/api/memory",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -3968,6 +4203,33 @@
         "safe": true
       },
       "source": "functions/api/mint.ts"
+    },
+    {
+      "id": "api-model-lifecycle",
+      "kind": "http",
+      "path": "/api/model-lifecycle",
+      "method": "GET",
+      "name": "Model lifecycle",
+      "description": "GET /api/model-lifecycle — upstream availability (available / retired / not released) of the model families this estate measures, joined to this estate's own signed measurement for each family. A family with no signed card is UNMEASURED, never zero.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.model-lifecycle/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/model-lifecycle",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/model-lifecycle.ts"
     },
     {
       "id": "api-momentum",
@@ -4087,11 +4349,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/operator",
         "expect_status": [
           503
         ],
-        "method": "GET",
-        "request": "/api/operator",
         "safe": true
       },
       "source": "functions/api/operator.ts"
@@ -4112,11 +4374,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "POST",
+        "request": "/api/operator",
         "expect_status": [
           503
         ],
-        "method": "POST",
-        "request": "/api/operator",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -4219,11 +4481,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/paddle-webhook",
         "expect_status": [
           503
         ],
-        "method": "GET",
-        "request": "/api/paddle-webhook",
         "safe": true
       },
       "source": "functions/api/paddle-webhook.ts"
@@ -4246,11 +4508,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "POST",
+        "request": "/api/paddle-webhook",
         "expect_status": [
           503
         ],
-        "method": "POST",
-        "request": "/api/paddle-webhook",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -4707,11 +4969,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/prod-readiness",
         "expect_status": [
           503
         ],
-        "method": "GET",
-        "request": "/api/prod-readiness",
         "safe": true
       },
       "source": "functions/api/prod-readiness.ts"
@@ -5532,35 +5794,6 @@
       "paid_for": "issuance"
     },
     {
-      "audience": "agent",
-      "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
-      "description_state": "DOCUMENTED",
-      "id": "api-coverage-evidence",
-      "kind": "http",
-      "lifecycle": "LIVE",
-      "method": "GET",
-      "name": "Coverage evidence row",
-      "paid_for": "assembly",
-      "path": "/api/coverage-evidence",
-      "payment": "x402",
-      "probe": {
-        "expect_status": [
-          402
-        ],
-        "method": "GET",
-        "request": "/api/coverage-evidence?asset=tether",
-        "safe": true
-      },
-      "schema_refs": [
-        "csoai.coverage-evidence/0.1"
-      ],
-      "source": "functions/api/coverage-evidence.ts",
-      "surfaces": [
-        "openapi",
-        "llms"
-      ]
-    },
-    {
       "id": "api-request-attestation-post",
       "kind": "http",
       "path": "/api/request-attestation",
@@ -5861,11 +6094,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/sandbox",
         "expect_status": [
           503
         ],
-        "method": "GET",
-        "request": "/api/sandbox",
         "safe": true
       },
       "source": "functions/api/sandbox.ts"
@@ -5886,11 +6119,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "POST",
+        "request": "/api/sandbox",
         "expect_status": [
           503
         ],
-        "method": "POST",
-        "request": "/api/sandbox",
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
@@ -6123,10 +6356,10 @@
       "path": "/api/subscribe",
       "method": "GET",
       "name": "Subscribe",
-      "description": "",
-      "description_state": "UNDOCUMENTED",
+      "description": "POST /api/subscribe — the newsletter signup behind the homepage daily-report band and the footer email capture.",
+      "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "NOT_IMPLEMENTED",
+      "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
       "surfaces": [
@@ -6136,7 +6369,7 @@
         "method": "GET",
         "request": "/api/subscribe",
         "expect_status": [
-          501
+          200
         ],
         "safe": true
       },
@@ -6148,10 +6381,10 @@
       "path": "/api/subscribe",
       "method": "POST",
       "name": "Subscribe (POST)",
-      "description": "",
-      "description_state": "UNDOCUMENTED",
+      "description": "POST /api/subscribe — the newsletter signup behind the homepage daily-report band and the footer email capture.",
+      "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "NOT_IMPLEMENTED",
+      "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
       "surfaces": [
@@ -6161,7 +6394,7 @@
         "method": "POST",
         "request": "/api/subscribe",
         "expect_status": [
-          501
+          200
         ],
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
@@ -6236,11 +6469,11 @@
       ],
       "surfaces": [],
       "probe": {
+        "method": "GET",
+        "request": "/api/synthesis",
         "expect_status": [
           503
         ],
-        "method": "GET",
-        "request": "/api/synthesis",
         "safe": true
       },
       "source": "functions/api/synthesis.ts"
@@ -7389,7 +7622,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 48
+      "order": 50
     },
     {
       "id": "axis_affect",
@@ -8224,60 +8457,6 @@
       "order": 46
     },
     {
-      "id": "axis_watchdog-ingest",
-      "kind": "mcp_tool",
-      "name": "axis_watchdog-ingest",
-      "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "mcp",
-        "llms"
-      ],
-      "probe": {
-        "method": "POST",
-        "request": "/mcp",
-        "expect_status": [
-          200
-        ],
-        "safe": false,
-        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
-      },
-      "required_args": [],
-      "order": 47
-    },
-    {
-      "id": "framework_readiness",
-      "kind": "mcp_tool",
-      "name": "framework_readiness",
-      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "mcp",
-        "llms"
-      ],
-      "probe": {
-        "method": "POST",
-        "request": "/mcp",
-        "expect_status": [
-          200
-        ],
-        "safe": false,
-        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
-      },
-      "required_args": [
-        "framework"
-      ],
-      "order": 47
-    },
-    {
       "id": "axis_swarm",
       "kind": "mcp_tool",
       "name": "axis_swarm",
@@ -8302,6 +8481,32 @@
       },
       "required_args": [],
       "order": 25
+    },
+    {
+      "id": "axis_watchdog-ingest",
+      "kind": "mcp_tool",
+      "name": "axis_watchdog-ingest",
+      "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [],
+      "order": 47
     },
     {
       "id": "board_totals",
@@ -8356,7 +8561,7 @@
       "required_args": [
         "subject"
       ],
-      "order": 47
+      "order": 49
     },
     {
       "id": "evidence_bundle",
@@ -8385,7 +8590,7 @@
       "required_args": [
         "obligation"
       ],
-      "order": 51
+      "order": 53
     },
     {
       "id": "evidence_bundle_preview",
@@ -8414,6 +8619,34 @@
         "obligation"
       ],
       "order": 12
+    },
+    {
+      "id": "framework_readiness",
+      "kind": "mcp_tool",
+      "name": "framework_readiness",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [
+        "framework"
+      ],
+      "order": 48
     },
     {
       "id": "get_axis",
@@ -8602,7 +8835,7 @@
       "required_args": [
         "from"
       ],
-      "order": 50
+      "order": 52
     },
     {
       "id": "route",
@@ -8657,7 +8890,7 @@
       "required_args": [
         "asset"
       ],
-      "order": 49
+      "order": 51
     },
     {
       "id": "server_evidence",
@@ -9220,232 +9453,6 @@
         "safe": true
       },
       "source": "functions/.well-known/x402.json.ts"
-    },
-    {
-      "id": "api-layer0-gate",
-      "kind": "http",
-      "path": "/api/gate",
-      "method": "POST",
-      "name": "Layer 0 Sovereign Gate",
-      "description": "POST /api/gate - the CSOAI Layer-0 Sovereign Gate decision. Answers one question: what does the estate's policy say about the action that was asked about? A policy decision, not a certification, not a ranking, and not a statement that anything was executed. Identity is required; the G-block floor G >= 0.50 is non-derogable; EU AI Act Article 5 practices and the AILuminate hazards are denied; Annex III domains escalate to a human.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "openapi",
-        "llms"
-      ],
-      "probe": {
-        "method": "POST",
-        "request": "/api/gate",
-        "expect_status": [
-          200
-        ],
-        "safe": false,
-        "unsafe_reason": "POST is a JSON body; the loop's probe shape is GET"
-      },
-      "source": "functions/api/gate.ts"
-    },
-    {
-      "id": "api-layer0-gate-get",
-      "kind": "http",
-      "path": "/api/gate",
-      "method": "GET",
-      "name": "Layer 0 Sovereign Gate (GET)",
-      "description": "GET is not allowed on /api/gate; the decision is a POST.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "METHOD_NOT_ALLOWED",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "openapi",
-        "llms"
-      ],
-      "probe": {
-        "method": "GET",
-        "request": "/api/gate",
-        "expect_status": [
-          405
-        ],
-        "safe": true
-      },
-      "source": "functions/api/gate.ts"
-    },
-    {
-      "id": "api-layer0-a2a-route",
-      "kind": "http",
-      "path": "/api/a2a/route",
-      "method": "POST",
-      "name": "Layer 0 A2A envelope",
-      "description": "POST /api/a2a/route - builds and signs a csoai.a2a/0.1 attestation envelope: an Ed25519 signature over the canonical envelope (without its sig field), a policy block carrying the gate's decision, and an episode hash over the exchange. A denied action is refused with 403 and no envelope. When this deployment has no signing key the route answers 503 and says so: an unsigned artefact is honest and a fabricated signature is not.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "openapi",
-        "llms"
-      ],
-      "probe": {
-        "method": "POST",
-        "request": "/api/a2a/route",
-        "expect_status": [
-          200
-        ],
-        "safe": false,
-        "unsafe_reason": "POST is a JSON body; the loop's probe shape is GET"
-      },
-      "source": "functions/api/a2a/route.ts"
-    },
-    {
-      "id": "api-layer0-a2a-route-get",
-      "kind": "http",
-      "path": "/api/a2a/route",
-      "method": "GET",
-      "name": "Layer 0 A2A envelope (GET)",
-      "description": "GET is not allowed on /api/a2a/route; the envelope is built by a POST.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "METHOD_NOT_ALLOWED",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "openapi",
-        "llms"
-      ],
-      "probe": {
-        "method": "GET",
-        "request": "/api/a2a/route",
-        "expect_status": [
-          405
-        ],
-        "safe": true
-      },
-      "source": "functions/api/a2a/route.ts"
-    },
-    {
-      "id": "api-layer0-a2a-verify",
-      "kind": "http",
-      "path": "/api/a2a/verify",
-      "method": "POST",
-      "name": "Layer 0 A2A envelope verification",
-      "description": "POST /api/a2a/verify - verifies an inbound A2A envelope. It rebuilds the canonical form of the envelope with its sig field removed and checks the Ed25519 signature against the peer key the caller supplies, or against this deployment's own published key. It answers valid true or false and never true for an envelope it could not check. A valid signature says who signed the bytes; it says nothing about whether the decision inside was right.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "openapi",
-        "llms"
-      ],
-      "probe": {
-        "method": "POST",
-        "request": "/api/a2a/verify",
-        "expect_status": [
-          400
-        ],
-        "safe": false,
-        "unsafe_reason": "POST is a JSON body; the loop's probe shape is GET"
-      },
-      "source": "functions/api/a2a/verify.ts"
-    },
-    {
-      "id": "api-layer0-a2a-verify-get",
-      "kind": "http",
-      "path": "/api/a2a/verify",
-      "method": "GET",
-      "name": "Layer 0 A2A envelope verification (GET)",
-      "description": "GET is not allowed on /api/a2a/verify; an envelope is verified by a POST.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "METHOD_NOT_ALLOWED",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "openapi",
-        "llms"
-      ],
-      "probe": {
-        "method": "GET",
-        "request": "/api/a2a/verify",
-        "expect_status": [
-          405
-        ],
-        "safe": true
-      },
-      "source": "functions/api/a2a/verify.ts"
-    },
-    {
-      "id": "api-layer0-a2a-key",
-      "kind": "http",
-      "path": "/api/a2a/key",
-      "method": "GET",
-      "name": "Layer 0 signing public key",
-      "description": "GET /api/a2a/key - the public half of this deployment's Layer-0 signing key: the kid that names it, and the key itself. The public key is DERIVED from the same secret the signer uses, so the two cannot drift apart. When no signing key is configured the endpoint answers 404 and says so; it never publishes a placeholder that would fail verification in a confusing way.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "openapi",
-        "llms"
-      ],
-      "probe": {
-        "method": "GET",
-        "request": "/api/a2a/key",
-        "expect_status": [
-          200
-        ],
-        "safe": true
-      },
-      "source": "functions/api/a2a/key.ts"
-    },
-    {
-      "id": "framework-readiness",
-      "kind": "a2a_skill",
-      "name": "Framework readiness checklist (deterministic)",
-      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"<id>\"}} and the answer is computed in-process by the same module the MCP tool framework_readiness calls, so the two doors cannot disagree: per item, the published provision it is keyed to, a plain-words requirement summary, the evidence that would show readiness, and the question it opens for the caller's own compliance function. Optional sector and role are echoed as pointers and notes. There is no score and no pass or fail: a checklist lays out what evidence would be measured, it does not certify compliance, and it is not legal advice or a conformity assessment.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "a2a",
-        "llms"
-      ],
-      "probe": {
-        "method": "POST",
-        "request": "/api/a2a",
-        "expect_status": [
-          200
-        ],
-        "safe": false,
-        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
-      },
-      "tags": [
-        "eu-ai-act",
-        "dora",
-        "nis2",
-        "gdpr",
-        "iso-27001",
-        "nist-csf",
-        "soc2",
-        "pci-dss",
-        "cra",
-        "readiness",
-        "deterministic"
-      ],
-      "examples": [
-        "SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"eu-ai-act\"}}",
-        "SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"gdpr\",\"sector\":\"healthcare\"}}"
-      ]
     }
   ]
 }
