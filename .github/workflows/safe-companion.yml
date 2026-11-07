@@ -10,6 +10,10 @@ on:
       - 'client/src/components/SafeExportReview.tsx'
       - 'client/src/components/DashboardEvidenceLearningPane.tsx'
       - 'docs/standards/osaia-safe-reverification/**'
+      - 'functions/_lib/cardVerify.ts'
+      - 'extensions/chrome-gspc-verify/**'
+      - 'scripts/build-extension-zip.py'
+      - 'public/downloads/gspc-verify-*.zip'
       - '.github/workflows/safe-companion.yml'
   push:
     branches: [master]
@@ -22,6 +26,10 @@ on:
       - 'client/src/components/SafeExportReview.tsx'
       - 'client/src/components/DashboardEvidenceLearningPane.tsx'
       - 'docs/standards/osaia-safe-reverification/**'
+      - 'functions/_lib/cardVerify.ts'
+      - 'extensions/chrome-gspc-verify/**'
+      - 'scripts/build-extension-zip.py'
+      - 'public/downloads/gspc-verify-*.zip'
       - '.github/workflows/safe-companion.yml'
   merge_group:
   workflow_dispatch:
@@ -66,6 +74,10 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - name: Keep the shipped extension on the canonical verifier
+        run: |
+          npx vitest run extensions/chrome-gspc-verify/test/twin.test.mjs extensions/chrome-gspc-verify/test/signature-required.test.mjs --maxWorkers 1
+          python3 scripts/build-extension-zip.py --check
       - run: npx playwright install --with-deps chromium
       - name: Resolve installed test browser
         id: chromium
