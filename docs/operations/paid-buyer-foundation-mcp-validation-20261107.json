@@ -142,13 +142,8 @@
     "live_deployed": false
   },
   "current_hosted_failure": {
-    "head": "c130887a71599f33e5549bb2148d9c4f3d9302e4",
-    "job": 128283453803,
-    "stage": "TypeScript debt ratchet",
-    "observed_diagnostics": 164,
-    "baseline": 142,
-    "diagnostics_not_all_new": true,
-    "unit_and_domain_steps_not_run": true
+    "state": "NEW_COMBINED_HEAD_REQUIRED",
+    "supersedes": "bea hosted three-failure unit stage; no green claim from local generator"
   },
   "diagnostic_output_control": {
     "state": "PASS",
@@ -156,5 +151,60 @@
     "elapsed_seconds": 0.684,
     "scope": "Actual CLI child refuses2000 simulated compiler errors and retains the final diagnostic before exit. No real project/compiler or baseline change.",
     "new_combined_head_hosted_checks": "PENDING"
+  },
+  "type_boundary_correction": {
+    "commit": "bea1fc6dbb070057cd19b8fc21e18b29e943df82",
+    "hosted_job": 128289639343,
+    "typescript": "PASS at unchanged ceiling142 diagnostics/56 files",
+    "unit_result": {
+      "passed": 9684,
+      "failed": 3,
+      "skipped": 17
+    },
+    "later_domain_runner": "SKIPPED; prior49/165 evidence remains dated and separate",
+    "failures": [
+      "Two exact generated discovery outputs stale after paid schema changes",
+      "Existing settlement test expected raw KV quota error; revised fixed-safe error contract retains stored:false, known transaction and one attempted put"
+    ]
+  },
+  "discovery_correction": {
+    "schema": "codex.buyer-discovery-controls/1",
+    "state": "PASS",
+    "source_commit": "bea1fc6dbb070057cd19b8fc21e18b29e943df82",
+    "observed_at_utc": "2026-11-07T03:48:34.863136+00:00",
+    "source_inputs": 40,
+    "generated_files_checked": 216,
+    "changes": [
+      {
+        "path": "public/.well-known/mcp/server-card.json",
+        "bytes": 139313,
+        "sha256": "ef6ab02ae43d01f83577fa83539827fa965de1194270e589d7e85c22ac055502",
+        "git_blob": "959f18597c1f8700eaa82c22e5b541b824811630",
+        "old_git_blob": "9c6a5936caf54bb0635bc8554c5f55496ffa35ed"
+      },
+      {
+        "path": "distribution/MANIFEST.json",
+        "bytes": 54027,
+        "sha256": "54785d00b0a0c5478215b984bc59f4daf5cd4d8644552a78fae07863d73fb94a",
+        "git_blob": "440e918ed54d47ab628c6f2b506bd7f600775230",
+        "old_git_blob": "18d01565ec99aa2523f81f25435b282c79588904"
+      }
+    ],
+    "render": {
+      "exit_code": 0,
+      "killed": null,
+      "peak_group_rss_bytes": 70852608,
+      "elapsed_seconds": 0.891
+    },
+    "check": {
+      "exit_code": 0,
+      "killed": null,
+      "peak_group_rss_bytes": 69226496,
+      "elapsed_seconds": 0.75
+    },
+    "free_before": 5499047936,
+    "mem_before": 390787072,
+    "free_after": 5495443456,
+    "runtime_adoption": false
   }
 }
