@@ -772,9 +772,15 @@ describe("an explicit guest snapshot stays isolated while a paid response is pen
     const pending=retryDoorWithPayment(door(),"synthetic-payment",f,ORIGIN,null);
     await atBoundary;if(boundary!=="unchanged")token="synthetic-new-signed-in-owner";release();
     const result=await pending;expect(f).toHaveBeenCalledTimes(1);
-    if(boundary==="unchanged"){expect(result.kind).toBe("delivered");expect(result.body).toEqual({value:secret});}
+    if(boundary==="unchanged"){
+      expect(result.kind).toBe("delivered");
+      if(result.kind!=="delivered")throw new Error("unchanged guest delivery was not returned");
+      expect(result.body).toEqual({value:secret});
+    }
     else{
-      expect(result.kind).toBe("maybe-settled");expect(result.body).toBeNull();
+      expect(result.kind).toBe("maybe-settled");
+      if(result.kind!=="maybe-settled")throw new Error("changed guest session was not held");
+      expect(result.body).toBeNull();
       expect(JSON.stringify(result)).not.toContain(secret);expect(JSON.stringify(result)).not.toContain(receipt);
       expect(result).not.toHaveProperty("output");
       if(result.kind==="maybe-settled")expect(result.detail).toMatch(/may have settled/i);
