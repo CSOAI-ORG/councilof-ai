@@ -206,5 +206,40 @@
     "mem_before": 390787072,
     "free_after": 5495443456,
     "runtime_adoption": false
+  },
+  "hosted_checkpoint_5af": {
+    "commit": "5af7b44bea97e83c2c776a84772d3dea734df327",
+    "test_revision": "bfcaaab236bb9213d45075156e7d47f22ffd89fb",
+    "required_checks": {
+      "gates": 128292335814,
+      "build": 128292335086,
+      "stamped_bytes": 128292335889,
+      "hold_guard": 128292335721
+    },
+    "state": "ALL_FOUR_SUCCESS",
+    "unit_tests": {
+      "passed": 9687,
+      "skipped": 17,
+      "failed": 0
+    },
+    "buyer_controls": {
+      "passed": 49,
+      "failed": 0
+    },
+    "foundation_controls": {
+      "passed": 165,
+      "buyer_child_is_included": true
+    },
+    "real_paid_api_calls": 0,
+    "production_changed": false,
+    "scope": "Hosted backend/adapter fixtures; not actual new HTTP/SDK controls or unpublished human UI"
+  },
+  "http_transport_followon": {
+    "state": "AUTHORED_HOSTED_EXECUTION_PENDING",
+    "test_file": "functions/mcp/purchase-http-isolation.test.ts",
+    "expected_tests": 12,
+    "agent_preparation": "Supported same-origin HTTP /api/purchases/prepare; no MCP-only preparation claim",
+    "human_ui": "Staged and held; two guard corrections under focused rendered qualification; no shared-path/ref adoption",
+    "scope": "Actual HTTP mount and installed SDK, caller isolation, unchanged origin/credentials guards with Authorization preflight, real HTTP preparation API, exact-request binding, one mocked financial result, unsigned retention/recovery, explicit decisions and UNKNOWN read-only reconciliation. New HTTP requests simulate reopening; no real browser refresh/customer acceptance."
   }
 }

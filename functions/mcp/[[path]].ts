@@ -116,7 +116,7 @@ const CORS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, HEAD, POST, OPTIONS",
   "access-control-allow-headers":
-    "Content-Type, Accept, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Session-Id, Last-Event-ID",
+    "Authorization, Content-Type, Accept, MCP-Protocol-Version, Mcp-Method, Mcp-Name, Mcp-Session-Id, Last-Event-ID",
   "access-control-expose-headers":
     "MCP-Protocol-Version, Mcp-Session-Id, x-otel-trace-id",
 };
