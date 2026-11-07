@@ -128,6 +128,12 @@ jobs:
           npm run ts-ratchet
 
       - name: Build client
+        # HF_TOKEN so the bench-suite build's hub fetch is authenticated. The banks are
+        # public, so the token cannot change a byte — it only raises the rate limit the hub
+        # applies, and an ANONYMOUS fetch was answering 429 at random and failing the BUILD,
+        # which is this deploy. See scripts/surface/hub-fetch.mjs.
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           node scripts/build-council-native-panel.mjs --check
           npm run build:client
