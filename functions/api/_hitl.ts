@@ -573,6 +573,7 @@ export type HitlReceipt = {
   axis: string;
   decision: HitlDecision;
   note: string;
+  /** Legacy field: a live-board answer matched; no human identity or professional competence is verified. */
   competency_verified: boolean;
   completed_modules: string[];
   module_id: string;
@@ -902,4 +903,5 @@ export function decisionPathOpen(env: HitlEnv): boolean {
 export function signingKeyConfigured(env: HitlEnv): boolean {
   return (env.BOARD_SIGN_KEY_PKCS8_B64 ?? "").trim().length > 0;
 }
+
 
