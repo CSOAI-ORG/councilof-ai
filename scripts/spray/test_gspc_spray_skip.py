@@ -396,6 +396,8 @@ def test_spray_follows_the_deploy_workflow_by_its_exact_name():
     coupling, and pin the guard that a cancelled or failed deploy — which moved nothing at the apex —
     is skipped."""
     deploy_name = _workflow_name(WORKFLOWS / "deploy.yml")
+    # GitHub workflow filters are globs; JSON supplies YAML double-quote escaping.
+    deploy_filter = json.dumps("".join("\\" + c if c in "\\*?+![]" else c for c in deploy_name))
     # Every workflow whose workflow_run trigger follows the deploy by its `name:` string — a rename
     # of deploy.yml silently stops all of them (2026-09-15: spray; 2026-09-20 audit found the other
     # four had been dead since the 'gated production branch' rename). Pin them all.
@@ -409,9 +411,10 @@ def test_spray_follows_the_deploy_workflow_by_its_exact_name():
     for follower in followers:
         text = (WORKFLOWS / follower).read_text(encoding="utf-8")
         assert "workflow_run:" in text, follower
-        assert f'- "{deploy_name}"' in text or f'workflows: ["{deploy_name}"]' in text, follower
-        # Failing control: the coupling is byte-exact — one extra character and the trigger is a miss.
-        assert f'- "{deploy_name}x"' not in text, follower
+        assert f'- {deploy_filter}' in text or f'workflows: [{deploy_filter}]' in text, follower
+        # An unescaped producer name is not a literal workflow filter.
+        assert f'- {json.dumps(deploy_name)}' not in text, follower
+        assert f'workflows: [{json.dumps(deploy_name)}]' not in text, follower
     spray_text = (WORKFLOWS / "gspc-spray.yml").read_text(encoding="utf-8")
     assert "github.event.workflow_run.conclusion == 'success'" in spray_text
     assert _workflow_name(WORKFLOWS / "gspc-spray.yml") == "gspc-spray"

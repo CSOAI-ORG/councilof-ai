@@ -46,6 +46,43 @@ node_out=$(node scripts/node-engine-floor-gate.mjs --selftest 2>&1 \
   && node scripts/node-engine-floor-gate.mjs 2>&1) \
   || { echo "  ✖ node-engine-floor-gate — its verdict:"; printf '%s\n' "$node_out" | tail -8 | sed 's/^/      /'; fail=1; }
 
+# ADDED 2026-11-06. The three never-exempt live surfaces quote the board's own sentence, and the
+# producer that rewrites them (scripts/surface/rebind-board-cites.mjs) had NO TRIGGER — a script
+# with no trigger is not a loop, it is a file. Measured 2026-11-06: those three cites published
+# "34 axes · 23 measured" against a live 34 axes · 34 measured, and the gate was green throughout,
+# because COUNT_RE reads only the slot count out of the middle form and MEASURED_RE does not
+# match "M measured" at all.
+#
+# facts-gate's ruleLiveBoardSentence now CATCHES the stale cite at build time. This check is the
+# other half: it says whether the committed cites are still what the producer would write, so the
+# repair is one command and the drift cannot be committed.
+#
+# It compares against THIS COMMIT's own board (commitBoard computes it offline from
+# functions/api/gspc.ts, no network), so it is not a live read and it does not depend on which
+# deploy happens to be live.
+#
+# THREE STATES, kept apart:
+#   exit 0  the cites ARE what the producer would write          -> pass
+#   exit 1  a cite would change: it no longer quotes this board  -> BLOCK (a real finding)
+#   exit 2  the check could not run                              -> report; NOT a finding
+# An UNCHECKABLE check is an absence of evidence, and UNCHECKABLE IS NEVER FAIL.
+node scripts/surface/rebind-board-cites.mjs --selftest >/dev/null 2>&1 \
+  || { echo "  ✖ board cites: the producer's own selftest failed — the check is broken"; fail=1; }
+cite_rc=0
+cite_out=$(node scripts/surface/rebind-board-cites.mjs --check 2>&1) || cite_rc=$?
+if [ "$cite_rc" -eq 1 ]; then
+  echo "  ✖ board cites: a never-exempt live surface no longer quotes this commit's board — its verdict:"
+  printf '%s\n' "$cite_out" | tail -8 | sed 's/^/      /'
+  echo "      Fix: node scripts/surface/rebind-board-cites.mjs   (then commit the three files)"
+  fail=1
+elif [ "$cite_rc" -eq 2 ]; then
+  echo "  · board cites: UNCHECKABLE — the check could not run. Not a finding, and not a reason to refuse the push:"
+  printf '%s\n' "$cite_out" | tail -3 | sed 's/^/      /'
+elif [ "$cite_rc" -ne 0 ]; then
+  echo "  ✖ board cites: the check failed unexpectedly (exit $cite_rc) — its verdict:"
+  printf '%s\n' "$cite_out" | tail -8 | sed 's/^/      /'; fail=1
+fi
+
 # The gate must be provably working before its verdict means anything — a gate
 # that has never gone red proves nothing about the tree it just passed.
 node scripts/facts-gate.mjs --selftest >/dev/null 2>&1 \
@@ -101,6 +138,16 @@ canary_out=$(node scripts/canary-leak-gate.mjs --selftest 2>&1 \
 node scripts/brand-gate.mjs public >/dev/null 2>&1 \
   || { echo "  ✖ brand-gate: a forbidden display string is in public/"; \
        node scripts/brand-gate.mjs public 2>&1 | tail -8; fail=1; }
+
+# ADDED 2026-11-06. The link gate reads a link in a MACHINE surface — it walks
+# .json files only — so an href in an HTML page is invisible to it. The
+# homepage's nine dead axis links survived every green build that way. This
+# gate reads the axis route map and checks every axis link in every published
+# page. It is fast (no network, no build) and its selftest reproduces the
+# historical defect before its verdict is trusted.
+axis_route_out=$(node scripts/surface/axis-route-gate.mjs --selftest 2>&1 \
+  && node scripts/surface/axis-route-gate.mjs public 2>&1) \
+  || { echo "  ✖ axis-route-gate — its verdict:"; printf '%s\n' "$axis_route_out" | tail -10 | sed 's/^/      /'; fail=1; }
 
 # ADDED 2026-09-05. price-gate joined the deploy as a blocking step and immediately
 # stopped one: 60 published_price findings, every one of them a NUMBER in a public
@@ -193,5 +240,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate clean"
+echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate clean"
 exit 0
