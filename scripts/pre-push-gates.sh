@@ -126,6 +126,31 @@ if [ "$board_ok" -eq 1 ]; then
   anchor_out=$(node scripts/board-production-anchor.mjs --selftest 2>&1 \
     && node scripts/board-production-anchor.mjs dist/client --board-reference prerender-board-reference.json 2>&1) \
     || { echo "  ✖ board-production-anchor — its verdict:"; printf '%s\n' "$anchor_out" | tail -12 | sed 's/^/      /'; fail=1; }
+  # ADDED 2026-11-07. The published interop index is a machine-readable promise to every reader:
+  # "sha256 is the digest of the file's bytes as published ... a match means you hold what the
+  # estate published". Measured 2026-11-07: the index labelled all 1,904 retired .invalid paths
+  # "hf-mirror — served by a 302 redirect ... the path is real and fetchable", and NONE of them
+  # is 302'd: the estate's own Function (functions/interop/[[path]].ts) intercepts every .invalid
+  # path and serves it from the retired-bytes archive, or 404s by design. 1,898 of them 404'd.
+  # The producer now models that state, and this check proves the COMMITTED index is what the
+  # producer would write — so the promise cannot drift without a push naming it.
+  # It runs after the build, because the digests of pages-served HTML are over the BUILT file
+  # (the build injects a launcher script, so the tree's bytes are not what a reader fetches).
+  python3 scripts/build-interop-file-index.py --selftest >/dev/null 2>&1 \
+    || { echo "  ✖ interop index: the producer's own selftest failed — the check is broken"; fail=1; }
+  index_rc=0
+  index_out=$(python3 scripts/build-interop-file-index.py public/interop public/interop/file-index.json \
+    scripts/deploy-exclusions.json --served-root dist/client --check 2>&1) || index_rc=$?
+  if [ "$index_rc" -eq 1 ]; then
+    echo "  ✖ interop index: the published index is STALE — it no longer describes this tree — its verdict:"
+    printf '%s\n' "$index_out" | tail -6 | sed 's/^/      /'; fail=1
+  elif [ "$index_rc" -eq 2 ]; then
+    echo "  · interop index: UNCHECKABLE — the check could not run. Not a finding, and not a reason to refuse the push:"
+    printf '%s\n' "$index_out" | tail -4 | sed 's/^/      /'
+  elif [ "$index_rc" -ne 0 ]; then
+    echo "  ✖ interop index: the check failed unexpectedly (exit $index_rc) — its verdict:"
+    printf '%s\n' "$index_out" | tail -6 | sed 's/^/      /'; fail=1
+  fi
 fi
 
 # ADDED 2026-09-26. Private canaries (harness/instrument-guard) must never reach a public
@@ -224,13 +249,23 @@ fi
 # ADDED 2026-09-20. workflow_run couples follow-on workflows to deploy.yml by its
 # `name:` STRING. A rename lane changed deploy.yml's name without touching the five
 # followers — every one of them would have gone silent on merge with no red anywhere.
-# The fix and the pin test exist (scripts/spray/test_gspc_spray_skip.py), but a pin
-# nobody runs is decoration. This is the one-second version, before the push.
-deploy_name=$(sed -n 's/^name: *//p' .github/workflows/deploy.yml | head -1 | tr -d '"' | tr -d "'")
-for f in post-deploy-verify claims-e2e sov-stack-e2e hf-gspc-surface-sync gspc-spray; do
-  grep -qF "$deploy_name" ".github/workflows/$f.yml" \
-    || { echo "  ✖ trigger-coupling: $f.yml does not reference deploy.yml's name ('$deploy_name') — a rename must be applied to all five followers"; fail=1; }
-done
+#
+# CHANGED 2026-11-07. The check below used to be a literal `grep -qF` for deploy.yml's
+# raw name. That is WRONG, and it was failing on the estate's own correct tree:
+# workflow_run.workflows takes GLOB filters, not literals, so a producer name carrying a
+# `+` must be escaped — the five followers correctly carry "Build \\+ deploy site (gated
+# production branch)" and a literal grep for "Build + deploy site (gated production
+# branch)" cannot find it. MEASURED: on master at 2026-11-07 this check failed for four
+# of the five followers while the estate's own proper checker
+# (scripts/workflow-trigger-coupling.mjs, which CI runs in deploy.yml and pr-gates.yml)
+# reported "trigger-coupling OK: 5 literal workflow filters". So the local gate was
+# blocking EVERY push from any desk that has it, over a rename that was done correctly.
+#
+# So the check now runs the SAME SCRIPT CI RUNS — the estate's own, not a copy of it —
+# and its verdict is the authoritative one. Same scripts, not copies.
+node scripts/workflow-trigger-coupling.mjs >/dev/null 2>&1 \
+  || { echo "  ✖ trigger-coupling: the followers do not carry deploy.yml's name as a literal filter"; \
+       echo "      A rename must be applied to all five followers (scripts/workflow-trigger-coupling.mjs says which)."; fail=1; }
 
 if [ "$fail" -ne 0 ]; then
   echo
@@ -240,5 +275,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate clean"
+echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate + interop-file-index + trigger-coupling clean"
 exit 0
