@@ -25,6 +25,13 @@ const FUNCTIONS_DIR = join(ROOT, "functions");
 // omits them cannot generate a truthful sitemap, so fail closed instead of
 // silently advertising those retired routes.
 if (!existsSync(FUNCTIONS_DIR)) {
+  // In --check mode a missing input is UNCHECKABLE, not a finding about the file: the
+  // store could not answer, so it makes no claim. A sparse checkout that omits
+  // functions/ cannot generate a truthful sitemap either way.
+  if (process.argv.includes("--check")) {
+    console.error("? sitemap: UNCHECKABLE — functions/ is absent, so no generation is possible");
+    process.exit(2);
+  }
   throw new Error("[sitemap] functions/ is required to reconcile Pages Function redirects");
 }
 
@@ -49,6 +56,13 @@ try {
     if (Number(code) >= 300 && Number(code) < 400) redirectRules.set(from, to);
   }
 } catch {
+  // Without _redirects the generator cannot know which paths the edge rewrites, so its output
+  // would be a guess that differs from the build for reasons that have nothing to do with the
+  // committed file. In --check mode that is UNCHECKABLE — the store could not answer.
+  if (process.argv.includes("--check")) {
+    console.error("? sitemap: UNCHECKABLE — public/_redirects is absent, so reconciliation is impossible");
+    process.exit(2);
+  }
   console.warn("[sitemap] no public/_redirects to reconcile against");
 }
 
@@ -772,6 +786,49 @@ const xml = `<?xml version="1.0" encoding="UTF-8"?>
 ${urls}
 </urlset>
 `;
+
+// WHY A --check MODE. This file is COMMITTED, and the build regenerates it on every deploy.
+// Nothing compared the two, so a committed sitemap could describe a site that no longer exists
+// and every deploy would silently overwrite the committed bytes. That is not hypothetical:
+// on 2026-11-06 the committed sitemap listed 536 URLs while the build produced 535 — the
+// extra one being https://councilof.ai/mcp/, left behind by #3847 (857a6cc02), which moved
+// /mcp from an App.tsx route to a Pages Function and regenerated neither this file nor
+// public/_redirects. The live site was CORRECT (535, set-identical to the build) and the
+// committed artefact was the fiction. sitemap-truth-gate.mjs cannot see this: it only asks
+// whether every LISTED url is served, so a stale EXTRA entry passes and a missing entry
+// passes. --check asks the other question — does the committed file equal what the build
+// produces — and answers it in one run.
+//
+// Exit codes: 0 = committed bytes match a fresh generation. 1 = they differ (a finding).
+// 2 = the inputs needed to generate are absent (UNCHECKABLE — not a finding about the file).
+const CHECK_MODE = process.argv.includes("--check");
+
+if (CHECK_MODE) {
+  const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : null;
+  if (current === xml) {
+    console.log(`✓ sitemap: up to date — ${finalPaths.length} URLs match a fresh generation`);
+    process.exit(0);
+  }
+  const locs = (t) => (t ? [...t.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]) : []);
+  const have = new Set(locs(current));
+  const want = new Set(locs(xml));
+  const stale = [...have].filter((u) => !want.has(u));
+  const absent = [...want].filter((u) => !have.has(u));
+  console.error(`✗ sitemap: STALE — public/sitemap.xml does not match a fresh generation.`);
+  console.error(`    committed ${have.size} URLs · fresh ${want.size} URLs`);
+  if (stale.length) {
+    console.error(`    listed but no longer generated (${stale.length}):`);
+    for (const u of stale.slice(0, 12)) console.error(`      - ${u}`);
+    if (stale.length > 12) console.error(`      … and ${stale.length - 12} more`);
+  }
+  if (absent.length) {
+    console.error(`    generated but not listed (${absent.length}):`);
+    for (const u of absent.slice(0, 12)) console.error(`      + ${u}`);
+    if (absent.length > 12) console.error(`      … and ${absent.length - 12} more`);
+  }
+  console.error(`    fix: node scripts/generate-sitemap.mjs && git add public/sitemap.xml`);
+  process.exit(1);
+}
 
 writeFileSync(OUT, xml);
 console.log(
