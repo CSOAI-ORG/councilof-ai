@@ -215,6 +215,31 @@ jobs:
       - name: Disclosure sweep rules - selftest
         run: python3 scripts/claimguard-estate-sweep.py --selftest
 
+  # 7 Nov 2026: the published-surface audit compared a page's canonical link with the url that
+  # was ASKED for, while urllib follows redirects and hands it the FINAL page's body. So
+  # /pricing/ — which answers 308 to /dashboard/?tab=measured&task=pricing-overview and carries
+  # the canonical /dashboard/, which is CORRECT — was reported as a MEDIUM "canonical points at
+  # a different path" against a page that is not defective. A checker that cries wolf on a
+  # correct page teaches its reader to ignore it. The same tool's Content-Security-Policy rule
+  # was a branch whose body was `pass`, so the machine surface (/api/gspc, /api/state, /api/cards
+  # answered with five security headers and NO policy at all) went unreported.
+  #
+  # The audit itself stays an OPERATOR tool — it touches the network. Its RULES are the part
+  # that can be a gate, and they are tested here offline against the live shapes measured on
+  # 2026-11-07: the /pricing/ redirect, the canonical on the page served there, and the three
+  # API surfaces that carried no policy. This job is RED against the unfixed script and green
+  # against the fixed one, which is what makes the green mean something.
+  published-surface-audit-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Published-surface audit rules - selftest
+        run: python3 -m unittest discover -s scripts -p test_published_surface_audit.py -v
+
   # A PR marked "do not merge" must not show green. Lanes self-merge with the shared token and a
   # hold lived only in prose, so this makes the marker a failing check. Reads the event payload
   # only (labels + title from GITHUB_EVENT_PATH): no token, no API, no network. Fails on a label
