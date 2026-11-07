@@ -249,13 +249,23 @@ fi
 # ADDED 2026-09-20. workflow_run couples follow-on workflows to deploy.yml by its
 # `name:` STRING. A rename lane changed deploy.yml's name without touching the five
 # followers — every one of them would have gone silent on merge with no red anywhere.
-# The fix and the pin test exist (scripts/spray/test_gspc_spray_skip.py), but a pin
-# nobody runs is decoration. This is the one-second version, before the push.
-deploy_name=$(sed -n 's/^name: *//p' .github/workflows/deploy.yml | head -1 | tr -d '"' | tr -d "'")
-for f in post-deploy-verify claims-e2e sov-stack-e2e hf-gspc-surface-sync gspc-spray; do
-  grep -qF "$deploy_name" ".github/workflows/$f.yml" \
-    || { echo "  ✖ trigger-coupling: $f.yml does not reference deploy.yml's name ('$deploy_name') — a rename must be applied to all five followers"; fail=1; }
-done
+#
+# CHANGED 2026-11-07. The check below used to be a literal `grep -qF` for deploy.yml's
+# raw name. That is WRONG, and it was failing on the estate's own correct tree:
+# workflow_run.workflows takes GLOB filters, not literals, so a producer name carrying a
+# `+` must be escaped — the five followers correctly carry "Build \\+ deploy site (gated
+# production branch)" and a literal grep for "Build + deploy site (gated production
+# branch)" cannot find it. MEASURED: on master at 2026-11-07 this check failed for four
+# of the five followers while the estate's own proper checker
+# (scripts/workflow-trigger-coupling.mjs, which CI runs in deploy.yml and pr-gates.yml)
+# reported "trigger-coupling OK: 5 literal workflow filters". So the local gate was
+# blocking EVERY push from any desk that has it, over a rename that was done correctly.
+#
+# So the check now runs the SAME SCRIPT CI RUNS — the estate's own, not a copy of it —
+# and its verdict is the authoritative one. Same scripts, not copies.
+node scripts/workflow-trigger-coupling.mjs >/dev/null 2>&1 \
+  || { echo "  ✖ trigger-coupling: the followers do not carry deploy.yml's name as a literal filter"; \
+       echo "      A rename must be applied to all five followers (scripts/workflow-trigger-coupling.mjs says which)."; fail=1; }
 
 if [ "$fail" -ne 0 ]; then
   echo
@@ -265,5 +275,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate + interop-file-index clean"
+echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate + interop-file-index + trigger-coupling clean"
 exit 0
