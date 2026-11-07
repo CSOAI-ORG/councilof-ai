@@ -70,7 +70,7 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
 };
 
 /**
- * /api/* responses carry NO security headers today.
+ * /api/* responses carry the security headers the static rules never reach.
  *
  * public/_headers sets them, but that file applies to Cloudflare Pages STATIC
  * assets. A Pages Function answers /api/* and never sees it, so the entire
@@ -79,6 +79,12 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
  * frame protection, while the HTML pages beside it carried all of them. The
  * estate's own machine-readable surface is its most-read surface: agents and
  * crawlers fetch it constantly.
+ *
+ * 2026-11-07: the Content-Security-Policy was still missing after that repair.
+ * The surface answered with five security headers and no policy, and the
+ * published-surface audit recorded that as three MEDIUM findings. It is set
+ * here now, on the same wrapper, so the whole policy for /api/ lives in one
+ * place and a future header cannot be half-applied.
  *
  * Scoped to /api/ on purpose. The /dashboard/* rule in public/_headers unsets
  * X-Frame-Options and replaces it with CSP frame-ancestors, because the Council
@@ -111,6 +117,36 @@ function withApiSecurityHeaders(request: Request, response: Response): Response 
   headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   headers.set("X-Frame-Options", "DENY");
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), interest-cohort=()");
+
+  // The Content-Security-Policy the /api/ surface was missing.
+  //
+  // MEASURED 2026-11-07: councilof.ai answered /api/gspc, /api/state and
+  // /api/cards with FIVE security headers and no Content-Security-Policy at
+  // all, while the HTML beside it carried one. The estate's machine-readable
+  // surface is the surface agents and crawlers read most, and it was the one
+  // with no policy. The published-surface audit recorded this as three MEDIUM
+  // findings.
+  //
+  // A machine surface carries no scripts to allow, so the policy that fits it
+  // is the strictest there is: nothing loads from it, it cannot be framed, and
+  // it cannot be a form target. That closes the one live path the surface
+  // still had — /api/feed.xml answers XML, and XML a browser renders is a
+  // document, so without a policy the response is a document it will execute.
+  //
+  // An /api/ answer that is genuinely an HTML document gets the sandbox form
+  // instead: the page still RENDERS, with its scripts and forms inert, rather
+  // than becoming a white screen. This repo has already had one white-screen
+  // incident (2026-08-11), and a policy that guesses wrong about a response
+  // type is how you cause the next one — so the two cases are separated on the
+  // response's own content-type rather than on an assumption.
+  const contentType = headers.get("content-type") ?? "";
+  const isDocument = /text\/html/i.test(contentType);
+  headers.set(
+    "Content-Security-Policy",
+    isDocument
+      ? "sandbox; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+      : "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
+  );
 
   // A Headers copy collapses repeated Set-Cookie into one comma-joined value,
   // which changes the cookie's meaning. Carry each one across separately.
