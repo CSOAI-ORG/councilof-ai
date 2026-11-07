@@ -38,12 +38,11 @@ describe("shared AI and tools control", () => {
     expect(observed.enabledTools).toEqual(["board_totals"]);
     expect(fetch).toHaveBeenCalledTimes(1);
   });
-  it("keeps unavailable models and offline options truthful, with accessible explanations", async () => {
+  it("keeps public tool controls separate from the real model connection", async () => {
     await mount(); await open();
     const selects = [...node.querySelectorAll("select")];
-    expect(selects).toHaveLength(3);
-    expect(selects.every(select => select.disabled && select.getAttribute("aria-describedby"))).toBe(true);
-    expect(node.textContent).toContain("complete offline operation need a qualified runtime connection");
+    expect(selects).toHaveLength(0);
+    expect(node.textContent).toContain("Tools for this conversation");
     expect(node.querySelector("button")?.getAttribute("aria-expanded")).toBe("true");
   });
   it("holds selection changes during an active question", async () => {

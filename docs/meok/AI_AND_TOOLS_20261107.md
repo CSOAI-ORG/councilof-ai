@@ -1,42 +1,19 @@
-# Shared AI and tools controls
+# MEOK and CSOAI AI connection — 7 November 2026
+Codex, autoMerge:false. Existing consolidation audit: crqmw4dk5xvmsn0jdy.
 
-This change implements the first usable slice of the MEOK/CouncilOS selection
-contract in the existing public Council conversation. It does not install a model,
-enable another provider, change Company-case routing, or qualify offline operation.
+Public TalkPanel and the existing MEOK Ask widget select published Council tools, local Ollama, offline AI, or cloud AI. The shared browser client is client/src/lib/modelConnection.mjs; scripts/build-ai-connection.mjs generates its native extension twin and MEOK website bundle. This reuses the existing chrome-gspc-verify MV3 extension, installed Ollama and the running keyless MEOK cloud overlay. No server, paid account, model download or service start is added.
 
-The shared controlled React view is AIAndToolsControl. It accepts a selection and
-onChange callback; it has no credentials, persistence, case store or model client.
-A MEOK host can reuse it after its canonical source and request adapter are qualified.
-MEOK's separate website is not wired by this PR.
+The extension's bundled AI workspace opens without the websites. Offline AI is locked by default. Grant the loopback optional host permission, find installed models, choose an installed GGUF completion model, then ask. Native offline AI validates tags and model details before POST /api/chat, rejecting cloud-linked and embedding models. A local engine must already be running. The lock governs AI requests through this adapter; it is not an OS firewall, and the existing measurement popup/site may still make its normal reads.
 
-The public TalkPanel captures a selection for each question and sends
-forwardedProps.execution. The server validates the entire envelope before running.
-The whole backend/frontend tool plan is checked before any call or page-action event.
-No selected tool means no planned tool calls; it does not turn the website offline.
-Confirmation intersects the original task's choices with current restrictions,
-so an old confirmation cannot expand either selection.
+Save online settings to use cloud connections. Optional fixed origins support MEOK's existing cloud overlay, OpenAI, Anthropic, Groq and explicit Hugging Face provider routes. These are provider API accounts, not borrowed web-chat logins. Keys are entered only in trusted extension settings and kept in chrome.storage.session with TRUSTED_CONTEXTS access. They clear on browser restart or extension reload. Website messages cannot grant permissions, configure policy, read keys or change endpoint URLs. Only top-frame exact meok.ai and councilof.ai origins explicitly allowed in extension settings can request model text. No credentials are sent to the website or public Council endpoint.
 
-The descriptor publishes the actual selectable conversation tools, including page
-actions. The default remains the published tool set. Once the user selects tools,
-that explicit list is sent and obsolete names are rejected. These settings apply
-only to this public conversation; standalone ToolRunner, external plugins, Company
-cases and other agents retain their separate controls and existing authority.
+Keyless MEOK cloud can be explicitly selected directly from the websites (also usable on phone/TV browsers). Other provider/local routes use the installed connection; absent connections fail without fallback. Exact requested and reported model identity is attached to the answer. AI answers are marked unsigned and unmeasured. Model text has no tool, case, approval, payment or signing authority. Tools remain on the existing Council deterministic AGUI path with per-question tool allowlists, whole-plan checks and original/current selection intersection for confirmation. Switching to model mode holds old tool confirmation.
 
-The current public answer path is deterministic tool routing, with no AI model.
-The control states that directly. Local, paired-computer, other-provider and offline
-options remain unavailable with a visible reason. In the recovered local gateway,
-local inference can still be preceded by an online board refresh. Offline therefore
-requires a qualified installed runtime, pinned cache, local voice/assets, denied
-external egress and restricted plugins. No silent cloud fallback is acceptable.
+Choices are captured per question; changing a control never replays work. Recent AI conversation is sent only with the context checkbox selected and is held in page memory, bounded to ten messages and the adapter size cap. It does not create shared persistent memory across providers or modify model weights. Offline mode turns off the panel's browser speech-recognition entry point. Hosted website availability and companion device handoff are separate from this native offline workspace.
 
-Integration order after this slice:
-1. Qualify the existing MEOK request adapter and its local model inventory.
-2. Reuse this controlled view with that adapter's authoritative readiness choices.
-3. Qualify existing hosted provider grants/budgets and destination-scoped context.
-4. Qualify offline across board/cache, assets, voice, telemetry and tool effects.
-5. Verify same-task checkpoint handoff without duplicate dispatch.
+## Validation
+The current adapter completed bounded real requests to local qwen3:0.6b (all three requests loopback: tags, show, chat) and the already RUNNING cpu-basic MEOK HF Space. Both returned OK text. Cloud overlay is a prompt overlay on stock Qwen, not a trained or measured own model. No external paid-provider key or inference was used. Other adapters are protocol tested, requiring the user's own account/permission at use time.
 
-Tests cover selection validation, server rejection/no-dispatch, UI selection and
-readiness states. A passing unit test is not runtime or offline acceptance.
-The full specification remains in the existing Busabase audit request
-crqmw4dk5xvmsn0jdy, marker MEOK_CSOAI_LOCAL_CLOUD_UX_20261107.
+Focused tests cover UI request selection, existing voice/abort regressions, provider failure without fallback, no remote egress in offline AI, GGUF validation, incomplete streams, text-only replies, explicit HF routes and source-origin authorization. Deterministic generated-client/native-panel/extension ZIP checks are required, as are the unchanged protected PR gates. Full current-head CI and independent browser evidence remain separately reported in the PR.
+
+MEOK's website integration belongs to the existing private meok-ai-site repository. Its bundled client must match the canonical generated Council asset. No changes are made to the private HIM proxy, held execute path, RunPod service or Company custody gates. Owner-controlled merge/release remains required; no merge or deployment is performed here.

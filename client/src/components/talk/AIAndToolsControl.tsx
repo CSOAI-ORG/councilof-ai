@@ -61,31 +61,6 @@ export default function AIAndToolsControl({ value, onChange, disabled = false }:
       </button>
       {open ? <div id={id} className="mt-3 space-y-4">
         <p className="text-xs text-muted-foreground">These settings apply to the next public Council question. Company cases and tools opened separately keep their own controls.</p>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <label className="grid gap-1 text-sm font-medium">Where work runs
-            <select value="cloud" aria-describedby={id + "-readiness"} className={CONTROL} disabled>
-              <option value="cloud">Cloud · Council tools</option>
-              <option value="local" disabled>This device · not connected</option>
-              <option value="paired" disabled>Connected computer · not connected</option>
-            </select>
-          </label>
-          <label className="grid gap-1 text-sm font-medium">AI provider
-            <select value="council-tools" aria-describedby={id + "-readiness"} className={CONTROL} disabled>
-              <option value="council-tools">Council tools · no AI model</option>
-              <option value="local" disabled>Local model · not connected</option>
-              <option value="other" disabled>Other provider · not connected</option>
-            </select>
-          </label>
-          <label className="grid gap-1 text-sm font-medium">Connectivity
-            <select value="online" aria-describedby={id + "-readiness"} className={CONTROL} disabled>
-              <option value="online">Online</option>
-              <option value="offline" disabled>Offline · unavailable</option>
-            </select>
-          </label>
-        </div>
-        <p id={id + "-readiness"} className="text-xs leading-relaxed text-muted-foreground">
-          This conversation uses online tools, with no AI model in its answer path. Local models, other AI providers and complete offline operation need a qualified runtime connection. A local file or browser workspace does not make a cloud request offline.
-        </p>
         <fieldset disabled={disabled || !catalogue} className="space-y-2">
           <legend className="text-sm font-semibold">Tools for this conversation</legend>
           <p className="text-xs text-muted-foreground">Selecting a tool permits it in a question; existing approval and payment checks still apply. “None” blocks planned tool calls, including page actions.</p>
@@ -105,7 +80,7 @@ export default function AIAndToolsControl({ value, onChange, disabled = false }:
                       const before = selected ?? catalogue.tools;
                       onChange({ ...value, enabledTools: event.target.checked ? [...before, tool] : before.filter(name => name !== tool) });
                     }} />
-                  <span className="break-all">{tool.replaceAll("_", " ").replace(/([a-z])([A-Z])/g, "$1 $2")}</span>
+                  <span className="break-all">{tool.replaceAll("_", " ").replace(/([a-z])([A-Z])/g, (_match, first, second) => first + " " + second)}</span>
                 </label>)}
               {!catalogue.tools.some(tool => tool.toLowerCase().includes(query.trim().toLowerCase())) ? <p className="p-3 text-sm">No matching tools.</p> : null}
             </div>
