@@ -2,6 +2,7 @@
 export const MCP_MAX_JSON_TOKENS = 25_000;
 export const MCP_MAX_JSON_DEPTH = 64;
 export const MCP_MAX_TOOL_INPUT_ELEMENTS = 10_000;
+export const MCP_MAX_REQUEST_BYTES = 28 * 1024 * 1024;
 
 /**
  * Constant-space preflight BEFORE JSON.parse or SDK schema validation. Count value/key tokens
@@ -33,4 +34,62 @@ export function withinJsonBudget(body: string): boolean {
     if (tokens > MCP_MAX_JSON_TOKENS) return false;
   }
   return true;
+}
+
+/** Check a parsed/coerced card too; JSON strings can hide structure from the outer request. */
+export function withinValueBudget(value: unknown): boolean {
+  let elements = 0;
+  const stack = [{ value, depth: 1 }];
+  while (stack.length) {
+    const item = stack.pop()!;
+    if (item.value === null || typeof item.value !== "object") continue;
+    if (item.depth > MCP_MAX_JSON_DEPTH) return false;
+    for (const key in item.value) {
+      if (!Object.prototype.hasOwnProperty.call(item.value, key)) continue;
+      if (++elements > MCP_MAX_TOOL_INPUT_ELEMENTS) return false;
+      const child = (item.value as Record<string, unknown>)[key];
+      if (child !== null && typeof child === "object") stack.push({ value: child, depth: item.depth + 1 });
+    }
+  }
+  return true;
+}
+
+/** Bounded UTF-8 read for caller requests and fetched card bodies. */
+export async function readBoundedJsonText(request: Request | Response): Promise<string> {
+  const length = request.headers.get("content-length");
+  if (
+    length !== null &&
+    (!/^\d+$/.test(length) || Number(length) > MCP_MAX_REQUEST_BYTES)
+  ) {
+    if (request.body) void request.body.cancel().catch(() => {});
+    throw new RangeError("body limit");
+  }
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  const parts: string[] = [];
+  let bytes = 0;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () => reject(new Error("body timeout")),
+      10_000,
+    );
+  });
+  try {
+    while (true) {
+      const { done, value } = await Promise.race([reader.read(), deadline]);
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > MCP_MAX_REQUEST_BYTES) throw new RangeError("body limit");
+      parts.push(decoder.decode(value, { stream: true }));
+    }
+    parts.push(decoder.decode());
+    return parts.join("");
+  } finally {
+    clearTimeout(timer);
+    // Hostile streams may never resolve cancellation; never await that promise.
+    void reader.cancel().catch(() => {});
+    reader.releaseLock();
+  }
 }

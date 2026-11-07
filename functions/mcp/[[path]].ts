@@ -16,7 +16,7 @@ import {
   type Tool,
 } from "@modelcontextprotocol/server";
 import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/server/validators/cf-worker";
-import { MCP_MAX_TOOL_INPUT_ELEMENTS, withinJsonBudget } from "./_input_budget";
+import { MCP_MAX_REQUEST_BYTES, MCP_MAX_TOOL_INPUT_ELEMENTS, readBoundedJsonText, withinJsonBudget } from "./_input_budget";
 import GSPC_TOOLS from "./gspc-tools.json";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
@@ -121,8 +121,7 @@ const CORS = {
     "MCP-Protocol-Version, Mcp-Session-Id, x-otel-trace-id",
 };
 // Wire cap accommodates 20 MiB base64 input; this is not a concurrency SLA.
-export const MCP_MAX_REQUEST_BYTES = 28 * 1024 * 1024;
-const BODY_TIMEOUT_MS = 10_000;
+export { MCP_MAX_REQUEST_BYTES } from "./_input_budget";
 const HOSTS = [
   "councilof.ai",
   "www.councilof.ai",
@@ -282,42 +281,6 @@ function withHeaders(response: Response): Response {
   });
 }
 
-async function readBody(request: Request): Promise<string> {
-  const length = request.headers.get("content-length");
-  if (
-    length !== null &&
-    (!/^\d+$/.test(length) || Number(length) > MCP_MAX_REQUEST_BYTES)
-  )
-    throw new RangeError("body limit");
-  if (!request.body) return "";
-  const reader = request.body.getReader();
-  const decoder = new TextDecoder("utf-8", { fatal: true });
-  const parts: string[] = [];
-  let bytes = 0;
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const deadline = new Promise<never>((_, reject) => {
-    timer = setTimeout(
-      () => reject(new Error("body timeout")),
-      BODY_TIMEOUT_MS,
-    );
-  });
-  try {
-    while (true) {
-      const { done, value } = await Promise.race([reader.read(), deadline]);
-      if (done) break;
-      bytes += value.byteLength;
-      if (bytes > MCP_MAX_REQUEST_BYTES) throw new RangeError("body limit");
-      parts.push(decoder.decode(value, { stream: true }));
-    }
-    parts.push(decoder.decode());
-    return parts.join("");
-  } finally {
-    clearTimeout(timer);
-    // Hostile streams may never resolve cancellation; never await that promise.
-    void reader.cancel().catch(() => {});
-    reader.releaseLock();
-  }
-}
 
 function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -565,7 +528,7 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
 
   let body: string;
   try {
-    body = await readBody(request);
+    body = await readBoundedJsonText(request);
   } catch (error) {
     return jsonError(
       error instanceof RangeError ? 413 : 400,

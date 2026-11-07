@@ -49,6 +49,16 @@ describe("MCP input budgets before validation or tool dispatch", () => {
     expect(network).not.toHaveBeenCalled();
   });
 
+  it.each(["/mcp", "/mcp/free"])("reports a JSON-string card budget as UNCHECKABLE at %s", async door => {
+    const { response, network } = call({ card: JSON.stringify({ body: { values: Array(10_001).fill(null) } }) }, door);
+    const result = await response;
+    expect(result.status).toBe(200);
+    expect(await result.json()).toMatchObject({ result: { isError: false, structuredContent: {
+      state: "UNCHECKABLE", reasons: ["input_budget_exceeded"],
+    } } });
+    expect(network).not.toHaveBeenCalled();
+  });
+
   it.each([true, false])("retains the 20 MiB base64 wire contract (modern=%s)", async modern => {
     const { response, network } = call({ card: "A".repeat(4 * Math.ceil(20 * 1024 * 1024 / 3)) }, "/mcp/free", modern);
     const result = await response;

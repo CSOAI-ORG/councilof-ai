@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MCP_MAX_JSON_DEPTH, MCP_MAX_JSON_TOKENS, withinJsonBudget } from "./_input_budget";
+import { MCP_MAX_JSON_DEPTH, MCP_MAX_JSON_TOKENS, withinJsonBudget, withinValueBudget } from "./_input_budget";
 
 describe("constant-space JSON preflight", () => {
   it("accepts the exact token budget and rejects the next token", () => {
@@ -16,6 +16,12 @@ describe("constant-space JSON preflight", () => {
   it("ignores punctuation and escaped quotes/backslashes inside strings", () => {
     const text = '[{"key":"\\\\\\\"value"},null]'.repeat(20_000);
     expect(withinJsonBudget(JSON.stringify({ card: text }))).toBe(true);
+  });
+  it("bounds parsed arrays/records without treating a large string as a collection", () => {
+    expect(withinValueBudget(Array(10_000).fill(null))).toBe(true);
+    expect(withinValueBudget(Array(10_001).fill(null))).toBe(false);
+    expect(withinValueBudget(Object.fromEntries(Array.from({ length: 10_001 }, (_, n) => [n, 0])))).toBe(false);
+    expect(withinValueBudget({ payload: "A".repeat(1024 * 1024) })).toBe(true);
   });
   it.each(["{", "null", "[]", '"unterminated', "[true,false,-1.5e2]"])("leaves syntax/protocol validation to their parsers: %s", body => {
     expect(withinJsonBudget(body)).toBe(true);
