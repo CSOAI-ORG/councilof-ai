@@ -126,7 +126,10 @@ jobs:
       - name: Qualify adapter observations and refusal controls
         run: python -m unittest discover -v -s harness/openshell-adapter -p 'test_*.py'
       - name: Qualify the full evidence library with retained fixtures
-        run: python -m pytest -q -rs packages/evidence-fabric/tests --junitxml=qualification/evidence-fabric.xml
+        run: |
+          export CSOAI_EVIDENCE_CONSOLE="$(command -v csoai-evidence)"
+          test -n "$CSOAI_EVIDENCE_CONSOLE" && test -x "$CSOAI_EVIDENCE_CONSOLE"
+          python -m pytest -q -rs packages/evidence-fabric/tests --junitxml=qualification/evidence-fabric.xml
       - name: Verify the installed package against canonical golden files
         run: python packages/evidence-fabric/pypi/check_install.py packages/evidence-fabric
       - name: Retain evidence qualification
