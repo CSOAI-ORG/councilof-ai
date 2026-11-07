@@ -257,7 +257,23 @@ def selftest():
         except Exception as e:
             check("the exclusions are readable", False, str(e)[:80])
 
-    # 5. the index cannot contain its own digest, and it must not index a build artefact.
+    # 5. the producer must FAIL CLOSED without its routing source. Measured 2026-11-07 by the
+    #    catalogue lane: with the exclusions manifest missing, mirror_dirs stays empty and EVERY
+    #    row is labelled "pages" -- the whole index mislabelled, run still successful. Their
+    #    measurement: {pages: 16327} instead of {pages: 3089, hf-mirror: 13238}.
+    import subprocess as _sp
+    rc = _sp.run([sys.executable, os.path.abspath(__file__), "public/interop",
+                   "/tmp/index-selftest-should-not-exist.json",
+                   "scripts/definitely-not-a-real-exclusions.json", "--check"],
+                  cwd=REPO, capture_output=True).returncode
+    check("a missing exclusions manifest fails closed (exit 2), not open", rc == 2, f"rc={rc}")
+    rc2 = _sp.run([sys.executable, os.path.abspath(__file__), "public/interop",
+                    "public/interop/file-index.json",
+                    "scripts/deploy-exclusions.json", "--served-root", DEFAULT_SERVED_ROOT, "--check"],
+                   cwd=REPO, capture_output=True).returncode
+    check("with the manifest present the check runs (rc 0 = matches, 1 = stale)", rc2 in (0, 1), f"rc={rc2}")
+
+    # 6. the index cannot contain its own digest, and it must not index a build artefact.
     #    Measured 2026-11-07: the committed index indexed ITSELF (writing the digest changes
     #    the file) and public/interop/pod-cards-index.json, a gitignored build output whose
     #    bytes are the same LENGTH and a different digest on every build.
@@ -289,14 +305,33 @@ def main():
     served_root = opts.get("served-root", DEFAULT_SERVED_ROOT)
 
     # --- the mirror-served directories -----------------------------------------------------------
+    # FAIL CLOSED. Measured 2026-11-07 by the catalogue lane, with a reproduction: if the
+    # exclusions manifest is MISSING or mis-pathed, mirror_dirs stays empty and EVERY row is
+    # labelled "pages" — the whole index mislabelled, with the run still succeeding. Their
+    # measurement: by_served came out {pages: 16327} instead of {pages: 3089, hf-mirror: 13238}.
+    # The served label is the one thing this index must not get wrong, so a missing routing
+    # source is an absence of evidence, not a reason to label everything one way.
     mirror_dirs = []
-    if os.path.exists(exclusions):
+    if not os.path.exists(exclusions):
+        print(f"build-interop-file-index: the exclusions manifest is MISSING ({exclusions}).")
+        print("  Without it every path would be labelled 'pages' — which is the one thing this")
+        print("  index must not get wrong. This is an absence of evidence, not a measurement.")
+        sys.exit(2)
+    try:
         with open(exclusions, "r", encoding="utf-8") as f:
             man = json.load(f)
-        for e in man.get("entries", []):
-            if e.get("kind") == "dir" and not e.get("mirror_only"):
-                mirror_dirs.append(e["path"].strip("/"))
+    except Exception as e:
+        print(f"build-interop-file-index: the exclusions manifest is UNREADABLE ({e}).")
+        sys.exit(2)
+    for e in man.get("entries", []):
+        if e.get("kind") == "dir" and not e.get("mirror_only"):
+            mirror_dirs.append(e["path"].strip("/"))
     mirror_prefixes = [d for d in mirror_dirs if d.startswith("interop/")]
+    if not mirror_prefixes:
+        print("build-interop-file-index: the exclusions manifest names NO mirror-served")
+        print("  directory under interop/, so no path could be routed to the mirror.")
+        print("  That is an absence of evidence about the routing, not a measurement of it.")
+        sys.exit(2)
     print("mirror-served dirs:", mirror_dirs, "-> matching this corpus:", mirror_prefixes, flush=True)
 
     # The Function's own list of the prefixes it DEFERS for. It decides what serves a .invalid
