@@ -18,7 +18,7 @@ const fixtureFetch=async(input,init={})=>{
   throw new Error("unexpected synthetic transport");
 };
 const context=vm.createContext({crypto:webcrypto,Request,Response,Headers,URL,URLSearchParams,TextEncoder,TextDecoder,
- Uint8Array,ArrayBuffer,atob,btoa,setTimeout,clearTimeout,DOMException,fetch:fixtureFetch,
+ Uint8Array,ArrayBuffer,atob,btoa,setTimeout,clearTimeout,DOMException,AbortController,fetch:fixtureFetch,
  console:{log(){},warn(){},error(){}}});
 const modules=new Map();
 function synthetic(name,exports){
@@ -306,7 +306,8 @@ await test("decision 26 is available by bounded cursor and exact read after refr
 });
 await test("download removes content encoding and preserves the original stored octets",async()=>{
  const key=delivery.retainedOutputTxKey(tx),saved=kv.values.get(key),row=JSON.parse(saved);
- row.headers["content-encoding"]="gzip";kv.values.set(key,JSON.stringify(row));
+ assert.ok(Array.isArray(row.headers));row.headers.push(["content-encoding","gzip"]);kv.values.set(key,JSON.stringify(row));
+ assert.equal(new Headers(JSON.parse(kv.values.get(key)).headers).get("content-encoding"),"gzip");
  const result=await api.handlePurchases(apiRequest("/body"),env);assert.equal(result.status,200);
  assert.equal(result.headers.get("content-encoding"),null);assert.deepEqual(new Uint8Array(await result.arrayBuffer()),originalBytes);
  kv.values.set(key,saved);
@@ -391,6 +392,55 @@ await test("one shared budget prevents later store operations after expiry",asyn
  const payment={observationBudget:budget};
  await assert.rejects(()=>budgets.postSettlementStore({get:async()=>null,put:async()=>{calls++;}},payment).put("late","value"));
  assert.equal(calls,0);assert.equal(budgets.postObservationState(payment),"DEADLINE");budget.clear();
+});
+
+
+const sessions=await ns("client/src/lib/councilSession.ts");
+function sessionFixture(storage,overrides={}){
+ const emitted=[],calls=[];const token="synthetic-session-not-an-actual-credential";
+ const fetcher=async(url,init)=>{calls.push({url,init});
+  return Response.json(url.endsWith("/me")?{user:{email:"fixture@example.test",name:"Fixture"}}:{token,user:{email:"fixture@example.test",name:"Fixture"}});
+ };
+ const controller=sessions.createCouncilSessionController({storage,fetcher,publish:value=>emitted.push(value),...overrides});
+ return {controller,emitted,calls,token};
+}
+for(const storage of [null,{getItem:()=>{throw Error("synthetic storage unavailable");},setItem(){},removeItem(){}}]){
+ await test("unavailable sign-in persistence has a visible error class before any login dispatch "+(storage?"denied":"absent"),async()=>{
+  const f=sessionFixture(storage);
+  await assert.rejects(()=>f.controller.login("fixture@example.test","synthetic-password"),error=>error.name==="CouncilSessionPersistenceError"&&error.name!=="AbortError");
+  assert.equal(f.calls.length,0);assert.ok(f.emitted.every(value=>!value.user&&!value.token));f.controller.dispose();
+ });
+}
+for(const mode of ["throw","silent"]){
+ await test("verified candidate is never presented as signed in when storage "+mode+" fails",async()=>{
+  const storage={getItem:()=>null,setItem(){if(mode==="throw")throw Error("synthetic quota");},removeItem(){}};
+  const f=sessionFixture(storage);
+  await assert.rejects(()=>f.controller.login("fixture@example.test","synthetic-password"),error=>error.name==="CouncilSessionPersistenceError");
+  assert.equal(f.calls.length,2);assert.ok(f.emitted.every(value=>!value.user&&!value.token));f.controller.dispose();
+ });
+}
+await test("persisted verified session survives a fresh controller restore without another password POST",async()=>{
+ const values=new Map(),storage={getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value),removeItem:key=>values.delete(key)};
+ const first=sessionFixture(storage);await first.controller.login("fixture@example.test","synthetic-password");
+ assert.equal(first.emitted.at(-1).user.email,"fixture@example.test");assert.equal(values.get(sessions.COUNCIL_TOKEN_KEY),first.token);
+ first.controller.dispose();
+ const fresh=sessionFixture(storage);await fresh.controller.restore();
+ assert.equal(fresh.emitted.at(-1).user.email,"fixture@example.test");assert.equal(fresh.calls.length,1);assert.equal(fresh.calls[0].url,"/api/auth/me");assert.equal(fresh.calls[0].init.method,"GET");fresh.controller.dispose();
+});
+await test("another subject returned by same-origin verification never becomes a cached session",async()=>{
+ const values=new Map(),storage={getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value),removeItem:key=>values.delete(key)};
+ const f=sessionFixture(storage,{fetcher:async url=>Response.json(url.endsWith("/me")?{user:{email:"other@example.test",name:"Other"}}:{token:"synthetic-candidate",user:{email:"fixture@example.test",name:"Fixture"}})});
+ await assert.rejects(()=>f.controller.login("fixture@example.test","synthetic-password"),/could not be verified/);
+ assert.equal(values.size,0);assert.ok(f.emitted.every(value=>!value.user&&!value.token));f.controller.dispose();
+});
+await test("identity replacement during verification still cancels without overwriting the newer session",async()=>{
+ const values=new Map(),storage={getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value),removeItem:key=>values.delete(key)};
+ const f=sessionFixture(storage,{fetcher:async url=>{
+  if(url.endsWith("/me"))values.set(sessions.COUNCIL_TOKEN_KEY,"synthetic-newer-session");
+  return Response.json(url.endsWith("/me")?{user:{email:"fixture@example.test",name:"Fixture"}}:{token:"synthetic-old-candidate",user:{email:"fixture@example.test",name:"Fixture"}});
+ }});
+ await assert.rejects(()=>f.controller.login("fixture@example.test","synthetic-password"),error=>error.name==="AbortError");
+ assert.equal(values.get(sessions.COUNCIL_TOKEN_KEY),"synthetic-newer-session");assert.ok(f.emitted.every(value=>!value.user&&!value.token));f.controller.dispose();
 });
 
 const passed=cases.filter(c=>c.passed).length;
