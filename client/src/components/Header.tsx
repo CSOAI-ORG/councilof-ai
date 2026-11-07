@@ -234,7 +234,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             <button type="button" onClick={() => openPalette()} className="inline-flex min-h-10 shrink-0 items-center rounded-xl p-2 text-slate-600 transition-colors hover:bg-emerald-50 hover:text-emerald-800" aria-label="Search pages and ask (Ctrl K)" title="Search pages and ask (Ctrl K / ⌘K)" aria-keyshortcuts="Control+K Meta+K" data-testid="palette-launcher">
               <Search className="h-5 w-5" aria-hidden="true" />
             </button>
-            {!homepage && (<a href={BOOK_MEASUREMENT_LINK.href} className="inline-flex min-h-9 shrink-0 items-center whitespace-nowrap rounded-xl border border-emerald-700 px-3 text-sm font-semibold text-emerald-800 hover:bg-emerald-50" data-testid="header-book-measurement">{BOOK_MEASUREMENT_LINK.name}</a>)}
+            <a href={BOOK_MEASUREMENT_LINK.href} className="inline-flex min-h-9 shrink-0 items-center whitespace-nowrap rounded-xl border border-emerald-700 px-3 text-sm font-semibold text-emerald-800 hover:bg-emerald-50" data-testid="header-book-measurement">{BOOK_MEASUREMENT_LINK.name}</a>
             {user ? (
               <>
                 <Suspense fallback={null}><NotificationCenter /></Suspense>
@@ -282,6 +282,7 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
           <div id="mobile-site-navigation" className={homepage ? "xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto" : "2xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto"}>
             {homepage ? (
               <div data-testid="homepage-mobile-navigation" className="grid gap-1">
+                <a href={BOOK_MEASUREMENT_LINK.href} onClick={() => setMobileMenuOpen(false)} data-testid="mobile-book-measurement" className="flex min-h-11 items-center rounded-lg px-4 py-2 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600">{BOOK_MEASUREMENT_LINK.name}</a>
                 {[
                   { name: "Results", href: "/#board" },
                   { name: "Services", href: "/#products" },
