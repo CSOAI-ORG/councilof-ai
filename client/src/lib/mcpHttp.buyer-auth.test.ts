@@ -3,7 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mcpRpc } from "./mcpHttp";
 const network = vi.fn<typeof fetch>();
 beforeEach(() => { network.mockReset().mockImplementation(async (_input, init) => {
-  const call = JSON.parse(String(init?.body)); return Response.json({ jsonrpc: "2.0", id: call.id, result: { tools: [] } });
+  const call = JSON.parse(String(init?.body));
+  const result = call.method === "tools/list"
+    ? { resultType: "complete", tools: [] }
+    : { resultType: "complete", content: [{ type: "text", text: "synthetic complete reply" }], isError: false };
+  return Response.json({ jsonrpc: "2.0", id: call.id, result });
 }); vi.stubGlobal("fetch", network); });
 afterEach(() => vi.unstubAllGlobals());
 function headers(index = 0) { return new Headers(network.mock.calls[index][1]?.headers); }

@@ -11,6 +11,16 @@ export interface BuyerStore {
   }>;
 }
 export type BuyerEnv = AuthEnv & { REVENUE_KV?: BuyerStore };
+/** Only the web request operations used for ownership; excludes platform-specific Cf generics. */
+export interface PurchaseBodySource {
+  clone(): { readonly body: { getReader(): {
+    read(): Promise<{done:true;value?:Uint8Array}|{done:false;value:Uint8Array}>;
+    cancel(reason?:unknown): Promise<void>; releaseLock():void;
+  } } | null };
+}
+export type BuyerRequest=PurchaseBodySource & { readonly url:string; readonly method:string;
+  readonly headers:{ get(name:string):string|null;has(name:string):boolean } };
+
 export type BuyerIdentity = Readonly<{ subject:string; generation:string; owner_hash:string }>;
 export class BuyerHold extends Error {
   constructor(message:string,readonly status=401) { super(message); }
@@ -22,7 +32,7 @@ export async function buyerDeadline<T>(operation:() => Promise<T>,ms=250):Promis
     timer=setTimeout(() => reject(new BuyerHold("purchase bookkeeping outcome unknown; reconcile by reading",503)),ms);
   })]); } finally { if(timer!==undefined)clearTimeout(timer); }
 }
-export async function currentBuyer(env:AuthEnv,request:Request):Promise<BuyerIdentity> {
+export async function currentBuyer(env:AuthEnv,request:Pick<BuyerRequest,"headers">):Promise<BuyerIdentity> {
   const header=request.headers.get("authorization") || "";
   if (!header.startsWith("Bearer ") || header.length>16384) throw new BuyerHold("a current Council session is required");
   let session:Awaited<ReturnType<typeof verifyToken>>;
@@ -47,7 +57,7 @@ export async function currentBuyer(env:AuthEnv,request:Request):Promise<BuyerIde
     owner_hash:await buyerOwnerHash(session.sub,session.account_generation)});
 }
 /** Bounded clone; the actual handler still receives the original bytes. */
-export async function purchaseBody(request:Request):Promise<Uint8Array> {
+export async function purchaseBody(request:PurchaseBodySource):Promise<Uint8Array> {
   const reader=request.clone().body?.getReader();
   if (!reader) return new Uint8Array();
   const chunks:Uint8Array[]=[];let size=0;
@@ -64,7 +74,7 @@ export async function purchaseBody(request:Request):Promise<Uint8Array> {
   const all=new Uint8Array(size);let offset=0;
   for(const part of chunks){all.set(part,offset);offset+=part.byteLength;}return all;
 }
-export async function prepareBuyerRequest(buyer:BuyerIdentity,request:Request,resource:string):Promise<PurchasePreparation> {
+export async function prepareBuyerRequest(buyer:BuyerIdentity,request:BuyerRequest,resource:string):Promise<PurchasePreparation> {
   const origin=new URL(request.url).origin;
   const identity:PurchaseIdentity=Object.freeze({
     url:checkedPurchaseUrl(request.url,origin),resource:checkedPurchaseUrl(resource,origin),
@@ -88,7 +98,7 @@ function decodeHeader(raw:string):Record<string,unknown>|null {
   try { const value:unknown=JSON.parse(raw.trim().startsWith("{")?raw:atob(raw));
     return object(value)?value:null; } catch {return null;}
 }
-export function captureBuyerRequest(request:Request):Request {
+export function captureBuyerRequest<T,Clone>(request:T & {headers:BuyerRequest["headers"];clone():Clone}):T|Clone {
   const headers=[request.headers.get("x-payment"),request.headers.get("payment-signature")];
   const needs=request.headers.has("authorization") || headers.some(raw=>{
     const payload=raw?decodeHeader(raw):null;
@@ -98,7 +108,7 @@ export function captureBuyerRequest(request:Request):Request {
 }
 
 /** Always called centrally before ANY facilitator discovery/verify/settle. */
-export async function checkBuyerPayment(request:Request,env:BuyerEnv,resource:string,payload:Record<string,unknown>):Promise<BuyerCheck> {
+export async function checkBuyerPayment(request:BuyerRequest,env:BuyerEnv,resource:string,payload:Record<string,unknown>):Promise<BuyerCheck> {
   try {
     const auth=authorization(payload);
     const other=request.headers.get("x-payment") && request.headers.get("payment-signature");

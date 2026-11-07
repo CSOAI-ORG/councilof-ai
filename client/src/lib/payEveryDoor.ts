@@ -283,7 +283,11 @@ export async function retryDoorWithPayment(
   buyerToken?:string|null,
 ): Promise<PaidOutcome> {
   assertPaidDoorOrigin(door, requestOrigin);
-  if(buyerToken&&!samePurchaseSession(buyerToken))throw new Error("The buyer session changed before dispatch.");
+  const sessionChanged=()=>buyerToken!==undefined&&!samePurchaseSession(buyerToken);
+  if(sessionChanged())throw new Error("The buyer session changed before dispatch.");
+  const changedOutcome=():PaidOutcome=>({kind:"maybe-settled",http:null,
+    detail:"The buyer session changed while the paid response was pending. Payment may have settled. Check the original account's saved purchases or the paying wallet before signing or retrying.",
+    paymentResponse:null,settlement:null,body:null});
   let r: Response;
   try {
     r = await fetchImpl(door.url, {
@@ -291,10 +295,12 @@ export async function retryDoorWithPayment(
       headers: { accept: "application/json", "x-payment": paymentHeader,...(buyerToken?{authorization:"Bearer "+buyerToken}:{}) },
     });
   } catch (error) {
+    if(sessionChanged())return changedOutcome();
     return { kind: "maybe-settled", http: null,
       detail: `the paid retry did not complete (${String((error as Error)?.message ?? error)})`,
       paymentResponse: null, settlement: null, body: null };
   }
+  if(sessionChanged())return changedOutcome();
   // Observe settlement before reading a stream that can fail after payment.
   const paymentResponse = r.headers.get("x-payment-response") || r.headers.get("payment-response");
   const settlement = decodeSettlement(paymentResponse);
@@ -306,10 +312,12 @@ export async function retryDoorWithPayment(
     output = { bytes: new Uint8Array(await r.arrayBuffer()), contentType: r.headers.get("content-type") };
     body = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(output.bytes));
   } catch (error) {
+    if(sessionChanged())return changedOutcome();
     return { kind: "maybe-settled", http: r.status || null,
       detail: "the paid response was unreadable or was not valid JSON; keep the payment reference before another payment",
       paymentResponse, settlement, body: null, ...(output ? { output } : {}) };
   }
+  if(sessionChanged())return changedOutcome();
   if (!paidNotDelivered && !r.redirected && r.status >= 200 && r.status < 300) {
     return { kind: "delivered", http: r.status, paymentResponse, settlement, body, output };
   }
@@ -391,6 +399,7 @@ export async function payDoor(
     phase({ kind: "paying" });
     sent = true;
     const outcome = await retryDoorWithPayment(door, signature.header, fetchImpl, requestOrigin, owned.token);
+    if(!owned.stillCurrent())return {kind:"maybe-settled",detail:"The buyer session changed while the paid response was pending. Payment may have settled. Check the original account's saved purchases or the paying wallet before signing or retrying.",settlement:null,refund:null};
     if (outcome.kind === "delivered") {
       return { kind: "delivered", paymentResponse: outcome.paymentResponse, settlement: outcome.settlement, body: outcome.body, output: outcome.output };
     }

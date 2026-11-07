@@ -130,7 +130,7 @@ describe("/pay-all ships clean copy", () => {
 
   it("names the wallet path it shares with X402PayButton, function for function", () => {
     expect(strip(libSource)).toContain("buildTypedData(challenge, PREFLIGHT_SIGNER)");
-    expect(strip(libSource)).toContain("signX402Challenge(provider, challenge)");
+    expect(strip(libSource)).toContain("signX402Challenge(provider, owned.challenge)");
     expect(strip(libSource)).toContain("classifyPayError(error)");
     expect(strip(pageSource)).toContain("discoverEIP6963()");
   });

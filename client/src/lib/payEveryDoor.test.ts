@@ -694,3 +694,90 @@ describe("paid response byte and uncertainty custody", () => {
     expect(state.kind).toBe("error");expect(f).not.toHaveBeenCalled();
   });
 });
+
+
+describe("pay-all keeps an arriving paid result within its captured buyer session", () => {
+  it.each(["unchanged", "headers", "body"] as const)("qualifies the session at the %s boundary without another paid request", async boundary => {
+    const { buyerNonce } = await import("../../../shared/buyerPurchase");
+    let token = "synthetic-owner-a";
+    vi.stubGlobal("window", { localStorage: { getItem: (key: string) => key === "csoai_token" ? token : null } });
+    const owner = "a".repeat(64), seed = "b".repeat(64);
+    const privateBody = { value: "synthetic-original-owner-a-output" };
+    const routeReceipt = btoa(JSON.stringify({ success: true, transaction: "0x" + "ef".repeat(32), network: "eip155:8453", payer: SIGNER }));
+    let reached!: () => void;
+    const atBoundary = new Promise<void>(resolve => { reached = resolve; });
+    let release!: () => void;
+    let paidCalls = 0;
+    const p = provider();
+    const fetchImpl = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+      const headers = new Headers(init?.headers);
+      expect(headers.get("authorization")).toBe("Bearer synthetic-owner-a");
+      if (String(input) === "/api/purchases/prepare") {
+        const request = JSON.parse(String(init?.body));
+        expect(headers.has("x-payment")).toBe(false);
+        return jsonResponse(200, { schema: "csoai.purchase-preparation/1", owner_hash: owner, seed, request, nonce: await buyerNonce(owner, request, seed) });
+      }
+      expect(String(input)).toBe(door().url);
+      expect(headers.get("x-payment")).toBeTruthy();
+      paidCalls++;
+      const response = jsonResponse(200, privateBody, { "x-payment-response": routeReceipt });
+      if (boundary === "body") {
+        const raw = new TextEncoder().encode(JSON.stringify(privateBody)).buffer;
+        vi.spyOn(response, "arrayBuffer").mockImplementation(() => new Promise<ArrayBuffer>(resolve => {
+          release = () => resolve(raw); reached();
+        }));
+        return response;
+      }
+      return new Promise<Response>(resolve => { release = () => resolve(response); reached(); });
+    }) as unknown as typeof fetch;
+    const pending = payDoor({ door: door(), challenge: challengeFromPaymentRequired(PAYMENT_REQUIRED)!, provider: p, walletName: "synthetic", fetchImpl });
+    await atBoundary;
+    if (boundary !== "unchanged") token = "synthetic-owner-b";
+    release();
+    const state = await pending;
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect(paidCalls).toBe(1);
+    expect(p.calls.filter(call => call.method === "eth_signTypedData_v4")).toHaveLength(1);
+    if (boundary === "unchanged") {
+      expect(state.kind).toBe("delivered");
+      if (state.kind === "delivered") { expect(state.body).toEqual(privateBody); expect(state.paymentResponse).toBe(routeReceipt); }
+    } else {
+      expect(state.kind).toBe("maybe-settled");
+      expect(JSON.stringify(state)).not.toContain(privateBody.value);
+      expect(JSON.stringify(state)).not.toContain(routeReceipt);
+      expect(state).not.toHaveProperty("output"); expect(state).not.toHaveProperty("body");
+      if (state.kind === "maybe-settled") expect(state.detail).toMatch(/session changed/i);
+    }
+  });
+});
+
+describe("an explicit guest snapshot stays isolated while a paid response is pending", () => {
+  it.each(["unchanged","headers","body"] as const)("%s guest response preserves one-dispatch uncertainty", async boundary => {
+    let token:string|null=null;
+    vi.stubGlobal("window",{localStorage:{getItem:(key:string)=>key==="csoai_token"?token:null}});
+    let reached!:()=>void,release!:()=>void;
+    const atBoundary=new Promise<void>(resolve=>{reached=resolve;});
+    const secret="synthetic-guest-delivery";
+    const receipt=btoa(JSON.stringify({transaction:"0x"+"ac".repeat(32),success:true}));
+    const f=vi.fn(async (_input:unknown,init?:RequestInit)=>{
+      expect(new Headers(init?.headers).has("authorization")).toBe(false);
+      const response=jsonResponse(200,{value:secret},{"x-payment-response":receipt});
+      if(boundary==="body"){
+        vi.spyOn(response,"arrayBuffer").mockImplementation(()=>new Promise<ArrayBuffer>(resolve=>{
+          release=()=>resolve(new TextEncoder().encode(JSON.stringify({value:secret})).buffer);reached();
+        }));return response;
+      }
+      return new Promise<Response>(resolve=>{release=()=>resolve(response);reached();});
+    }) as unknown as typeof fetch;
+    const pending=retryDoorWithPayment(door(),"synthetic-payment",f,ORIGIN,null);
+    await atBoundary;if(boundary!=="unchanged")token="synthetic-new-signed-in-owner";release();
+    const result=await pending;expect(f).toHaveBeenCalledTimes(1);
+    if(boundary==="unchanged"){expect(result.kind).toBe("delivered");expect(result.body).toEqual({value:secret});}
+    else{
+      expect(result.kind).toBe("maybe-settled");expect(result.body).toBeNull();
+      expect(JSON.stringify(result)).not.toContain(secret);expect(JSON.stringify(result)).not.toContain(receipt);
+      expect(result).not.toHaveProperty("output");
+      if(result.kind==="maybe-settled")expect(result.detail).toMatch(/may have settled/i);
+    }
+  });
+});
