@@ -419,10 +419,13 @@ def main():
         "source_commit": source_commit,
         "what_this_is": ("Every file the estate's committed tree publishes under /interop/, with its "
                          "size, its sha256 and how it is served. Built by reading the tree, so it is a "
-                         "measurement, not a list of intentions. Four served states, because there "
-                         "are four — a path routed to the mirror is not the same path as one the "
-                         "estate serves from its retired-bytes archive, and neither is the same as "
-                         "one that answers 404 by design."),
+                         "measurement, not a list of intentions. Three served states occur, because "
+                         "there are three — a path routed to the mirror is not the same path as one the "
+                         "estate serves from its retired-bytes archive, and a fourth state "
+                         "(retired-bytes-absent) is reserved for a retired record the archive does "
+                         "not hold, which is not emitted because the archive is a deploy-time "
+                         "artefact and naming its membership here would make this index stale on "
+                         "every deploy."),
         "how_to_verify": ("sha256 is the digest of the file's bytes as published. Fetch the path and "
                           "hash it; a match means you hold what the estate published. Two things to "
                           "know when it does not match: the digest is of the bytes at THIS index's "
