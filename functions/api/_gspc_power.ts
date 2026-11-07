@@ -104,6 +104,19 @@ const POWER_SOURCE =
 const rowsServeTheBank = (axis: string): boolean =>
   !!POWER_AXES[axis] && SEP_AXES[axis]?.untested_reason_code !== "ROWS_ARE_A_RETIRED_BANK";
 
+/**
+ * The published file the SERVED bank's items are counted from, with its pinned sha256: the per-item
+ * rows where they describe the served bank, else the bank file scripts/gspc_bank_distinct.py counts.
+ * The same choice powerFields makes for distinct_items, exported so a second reading of the bank
+ * (the language census, _gspc_language.ts) can be bound to the same bytes and never to another file.
+ */
+export function servedBankFile(axis: string): { file: string; sha256: string } | undefined {
+  const p = POWER_AXES[axis];
+  if (p && rowsServeTheBank(axis)) return { file: p.file, sha256: p.sha256 };
+  const b = BANK_DISTINCT_AXES[axis];
+  return b ? { file: b.file, sha256: b.file_sha256 } : undefined;
+}
+
 export type PowerFields = {
   distinct_items: number | null;
   distinct_items_source: string;
