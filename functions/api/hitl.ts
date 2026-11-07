@@ -410,7 +410,7 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
     }
 
     const module = checked.module;
-    const stored = await markModuleCompleted(store, module.id, {
+    const stored = checked.correct && await markModuleCompleted(store, module.id, {
       module_id: module.id,
       axis: module.axis,
       at: new Date().toISOString(),
@@ -566,7 +566,6 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
 
     const operator = String(body?.operator ?? "").trim() || "the operator";
     const note = String(body?.note ?? "").trim();
-    const completed = await listCompletedModules(store);
 
     const receipt = await buildReceipt({
       operator,
@@ -574,7 +573,9 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       decision,
       note: note || `Competency-verified human-in-the-loop decision (${checked.module.id})`,
       competency_verified: true,
-      completed_modules: Array.from(new Set([...completed, checked.module.id])).sort(),
+      // The shared practice store has no learner identity. Only this request's
+      // rechecked module belongs in this decision; do not attribute others' history.
+      completed_modules: [checked.module.id],
       module_id: checked.module.id,
       // Sign the public projection, with the original id still binding its full content.
       // Do not disclose private context through the new decision or public history.

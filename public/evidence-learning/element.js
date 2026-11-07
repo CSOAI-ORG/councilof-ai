@@ -1,4 +1,4 @@
-import {VERSION,ESC,validateBoard,validateScenario,readPublic,changedTotals,measurementTimeLabel,LESSONS,practiceKey,practiceScore,makeReviewDraft,coachingContext,validateLearningBackup,STAGES,captureForStorage,reviewReadiness,normalizeLearningState} from './contract.mjs?rev=2eb8ef45f4e7';
+import {VERSION,ESC,validateBoard,validateScenario,readPublic,changedTotals,measurementTimeLabel,LESSONS,practiceKey,practiceScore,makeReviewDraft,coachingContext,validateLearningBackup,STAGES,captureForStorage,reviewReadiness,normalizeLearningState} from './contract.mjs?rev=4b33132411d0';
 import {briefingView,briefingExercise} from './daily-briefing.mjs?rev=432f2b526224';
 const KEY='council-evidence-learning-v1';
 const stateLabel=s=>({'MEASURED':'Measurement recorded by the source','UNMEASURED':'No measurement recorded','PUBLISHED_VERIFIED':'Source reports published verification','NONE_PUBLISHED':'No published evidence recorded','CROSSWALK_POINTERS':'Relevant reference links published','UNMAPPED':'No mapping recorded','UNAVAILABLE':'Source unavailable'}[s]||'Inspect the source state');

@@ -160,11 +160,11 @@ describe("the human-in-the-loop console", () => {
     expect(view!.textContent).toContain("status MEASURED");
   });
 
-  it("shows the knowledge-check and self-reported operator limits next to the controls", async () => {
+  it("shows the reading-check and self-reported operator limits next to the controls", async () => {
     stub((url) => url.endsWith("/api/hitl") ? json(snapshot())
       : url.endsWith("/api/hitl/challenges") ? json({ schema: "csoai.hitl-companion-state/0.1", challenges: [] }) : null);
     const c = await mount({ challenge: CHALLENGE });
-    expect(c.textContent).toContain("Knowledge check — read the record");
+    expect(c.textContent).toContain("Reading check — read the record");
     expect(c.querySelector('[data-testid="hitl-knowledge-scope"]')?.textContent).toContain("professional competence");
     expect(c.querySelector('[data-testid="hitl-operator-scope"]')?.textContent).toContain("does not authenticate a person");
     expect(c.textContent).toContain("Operator label (self-reported)");
