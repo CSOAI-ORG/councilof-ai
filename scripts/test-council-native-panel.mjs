@@ -11,6 +11,6 @@ try{
  for(const [name,input]of [['CORE','packages/council-panel/core.ts'],['ACADEMY','packages/council-panel/academy.ts'],['REGISTRY','functions/mcp/_panel.ts']]){
   const out=path.join(temporary,name.toLowerCase()+'.cjs');await build({entryPoints:[path.join(root,input)],outfile:out,bundle:true,platform:'node',format:'cjs'});env['PANEL_'+name+'_MODULE']=out;
  }
- const test=spawnSync(process.execPath,['--test','packages/council-panel/core.test.cjs','packages/council-panel/academy.test.cjs','packages/council-panel/registry.test.mjs'],{cwd:root,env,stdio:'inherit',timeout:60000});
+ const test=spawnSync(process.execPath,['--test','packages/council-panel/core.test.cjs','packages/council-panel/academy.test.cjs','packages/council-panel/registry.test.mjs','packages/council-panel/correction.test.mjs'],{cwd:root,env,stdio:'inherit',timeout:60000});
  if(test.error)throw test.error;if(test.status!==0)process.exitCode=test.status||1;
 }finally{fs.rmSync(temporary,{recursive:true,force:true});}
