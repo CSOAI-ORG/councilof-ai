@@ -243,7 +243,7 @@ export function registerCouncilAuthContractCases(test: UnitCase) {
     });
     await controller.restore();
     assert.equal(published.at(-1)?.user, null);
-    await assert.rejects(controller.login(owner.email, "unit-password"), { name: "AbortError" });
+    await assert.rejects(controller.login(owner.email, "unit-password"), { name: "CouncilSessionPersistenceError" });
     assert.equal(published.at(-1)?.user, null);
     assert.equal(calls, 0);
     controller.logout();
@@ -446,7 +446,7 @@ export function registerCouncilAuthContractCases(test: UnitCase) {
         fetcher: async () => stage === "body" ? r : pending.promise, publish: value => { published.push(value); },
       });
       const login = controller.login(owner.email, "unit-password");
-      const rejected = assert.rejects(login, { name: "AbortError" });
+      const rejected = assert.rejects(login, { name: "CouncilSessionPersistenceError" });
       if (stage === "body") await reading.promise;
       replaceCachedIdentity(cache);
       readable = false;
@@ -468,7 +468,7 @@ export function registerCouncilAuthContractCases(test: UnitCase) {
         storage: { getItem: () => null, setItem: () => { if (writeBehavior === "throw") throw new Error("unit write denied"); }, removeItem: () => {} },
         fetcher: async (_url, init) => { methods.push(String(init.method)); return init.method === "GET" ? response({ user: owner }) : session(); }, publish: value => { published.push(value); },
       });
-      await assert.rejects(controller.login(owner.email, "unit-password"), { name: "AbortError" });
+      await assert.rejects(controller.login(owner.email, "unit-password"), { name: "CouncilSessionPersistenceError" });
       assert.deepEqual(methods, ["POST", "GET"]);
       assert.deepEqual(published.at(-1), { user: null, token: null, loading: false });
     }
@@ -670,7 +670,7 @@ export function registerCouncilAuthContractCases(test: UnitCase) {
           else readable = false;
           if (stage === "response") me.resolve(response({ user: owner }));
           else body.resolve({ user: owner });
-          assert.equal(await outcome, "AbortError");
+          assert.equal(await outcome, interruption === "unreadable storage" ? "CouncilSessionPersistenceError" : "AbortError");
           if (newer) await newer;
           readable = true;
           assert.equal(cache.get("unit-unrelated"), "kept");

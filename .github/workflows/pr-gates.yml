@@ -262,6 +262,12 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
 
+      - name: Release follow-on trigger contract and negative controls
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node --test scripts/workflow-trigger-coupling.node-test.mjs
+          node scripts/workflow-trigger-coupling.mjs
+
       - name: Outward claims — offline manifest contract selftest
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/outward-claims-guard.mjs --selftest
