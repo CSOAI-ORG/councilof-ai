@@ -32,7 +32,7 @@ import { a2uiForTool } from "./a2uiSurfaces";
 import { executePlan, extractAxis, routeIntent, ROUTABLE_TOOLS, type Plan } from "./talkRouter";
 import { FRONTEND_TOOLS, FRONTEND_TOOL_NAMES, planUi, readPageContext, withPageSubject, type UiPlan } from "./uiTools";
 import PAID_TOOLS from "../mcp/paid-tools.json";
-import { blockedAITools, parseAIExecution, type AIExecutionSelection } from "../../shared/aiExecution";
+import { blockedAITools, parseAIExecution, type AIExecutionSelection } from "./aiExecutionSelection";
 
 type Json = Record<string, unknown>;
 

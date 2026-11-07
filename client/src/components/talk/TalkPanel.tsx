@@ -21,7 +21,7 @@ import ConnectedCompanyCasePanel from "./ConnectedCompanyCasePanel";
 import { companyWorkspaceSelection, type CompanyCaseConnection } from "./companyCaseModel";
 import ResultCard from "@/components/talk/ResultCard";
 import AIAndToolsControl from "./AIAndToolsControl";
-import { DEFAULT_AI_EXECUTION, restrictAITools, type AIExecutionSelection } from "../../../../shared/aiExecution";
+import { DEFAULT_AI_EXECUTION, restrictAITools, type AIExecutionSelection } from "../../../../functions/_lib/aiExecutionSelection";
 import ResultFollowUp from "@/components/talk/ResultFollowUp";
 import Inline from "@/components/talk/TalkInline";
 import { answerSections, checkedLine, chipFor, firstSentence, plainAnswer, statTiles, toolTitle, verifyLink } from "@/lib/resultCard";

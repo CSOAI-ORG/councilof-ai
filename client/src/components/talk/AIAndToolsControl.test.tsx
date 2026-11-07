@@ -3,7 +3,7 @@ import { act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Control, { parseConversationCatalogue } from "./AIAndToolsControl";
-import { DEFAULT_AI_EXECUTION, type AIExecutionSelection } from "../../../../shared/aiExecution";
+import { DEFAULT_AI_EXECUTION, type AIExecutionSelection } from "../../../../functions/_lib/aiExecutionSelection";
 let root: Root; let node: HTMLDivElement;
 let observed: AIExecutionSelection;
 const catalogue = { schema: "csoai.agui-run/0.1", execution: {

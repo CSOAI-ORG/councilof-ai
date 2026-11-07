@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { serveAguiRun, aguiDescriptor } from "./aguiRun";
-import { DEFAULT_AI_EXECUTION, parseAIExecution } from "../../shared/aiExecution";
+import { DEFAULT_AI_EXECUTION, parseAIExecution } from "./aiExecutionSelection";
 const origin = "https://council.example";
 function request(execution: unknown, extra = {}) {
   return new Request(origin + "/api/agui/run", { method: "POST", body: JSON.stringify({

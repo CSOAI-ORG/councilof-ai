@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from "react";
-import type { AIExecutionSelection } from "../../../../shared/aiExecution";
+import type { AIExecutionSelection } from "../../../../functions/_lib/aiExecutionSelection";
 
 type Props = {
   value: AIExecutionSelection;

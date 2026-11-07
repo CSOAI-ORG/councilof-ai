@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { blockedAITools, DEFAULT_AI_EXECUTION as defaults, parseAIExecution, restrictAITools } from "./aiExecution";
+import { blockedAITools, DEFAULT_AI_EXECUTION as defaults, parseAIExecution, restrictAITools } from "./aiExecutionSelection";
 describe("AI execution preferences", () => {
   it("distinguishes all tools from none and snapshots the list", () => {
     expect(blockedAITools(parseAIExecution(defaults), ["board_totals"])).toEqual([]);

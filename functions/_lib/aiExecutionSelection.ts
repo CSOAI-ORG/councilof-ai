@@ -30,7 +30,7 @@ export function parseAIExecution(
   if (Array.isArray(tools) && knownTools && tools.some(tool => !knownTools.has(tool))) {
     throw new Error("A selected tool is no longer published. Refresh AI and tools before trying again.");
   }
-  return { version: 1, host: "cloud", provider: "council-tools", connectivity: "online", enabledTools: tools === null ? null : [...tools] as string[] };
+  return { version: 1, host: "cloud", provider: "council-tools", connectivity: "online", enabledTools: Array.isArray(tools) ? [...tools] as string[] : null };
 }
 
 export function blockedAITools(selection: AIExecutionSelection | null, planned: readonly string[]): string[] {

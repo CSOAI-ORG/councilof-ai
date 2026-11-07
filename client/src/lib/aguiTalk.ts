@@ -439,7 +439,7 @@ export const TALK_SUGGESTIONS: { text: string; tool: string }[] = [
   { text: "Which paid doors answer?", tool: "x402_trust" },
 ];
 
-import { parseAIExecution, type AIExecutionSelection } from "../../../shared/aiExecution";
+import { parseAIExecution, type AIExecutionSelection } from "../../../functions/_lib/aiExecutionSelection";
 
 export type StreamOptions = {
   execution?: AIExecutionSelection;
