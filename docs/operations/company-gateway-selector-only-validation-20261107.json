@@ -1,0 +1,69 @@
+{
+  "schema": "codex.company-selector-only-source-amendment/1",
+  "actor": "Codex",
+  "autoMerge": false,
+  "record_scope": "Source amendment description; not a new-head execution or live adoption receipt",
+  "source_parent": "9391932d179ea9292ab36698f85d5c74782d49e2",
+  "existing_branch": "codex/company-cloudflare-gateway-binding-20261106",
+  "amendment": {
+    "wrangler": {
+      "action": "Remove only the unqualified gateway-origin addition",
+      "removed": {
+        "MEOK_LIBRARY_GATEWAY_ORIGIN": "https://api.meok.ai"
+      },
+      "before_git_blob": "b0dbfdb5c356b1ef6962255e0d6a3df1ee067849",
+      "restored_git_blob": "0f6219930db020860b417083f9d796a2b8d62a27",
+      "matches_reviewed_master": "e5497dd59b17de6eae937b64eedb02187f89f018"
+    },
+    "adoption_contract": "Keep origin activation, binding, actual save/readback and both-app reopen unfinished in the existing full integration",
+    "product_source_changes": false
+  },
+  "unchanged_product_git_blobs": {
+    "functions/mcp/[[path]].ts": "1a2704e54105e843886866a6670ef2ebb60e0841",
+    "functions/mcp/_tools_list.ts": "82ce995927c8740ccada6af208c61f3c973b9622",
+    "functions/mcp/bounded-tools-list.test.ts": "3803c9f556aef24e3ae47ef327fe3771e4305d81"
+  },
+  "historical_evidence": {
+    "original_validation": {
+      "path": "docs/operations/company-gateway-bounded-discovery-validation-20261106.json",
+      "git_blob": "9d9560bb1ec6594f37ff6114c9c3e67b45b84d0d",
+      "unchanged": true,
+      "scope": "Original 17-control source receipt; pins and counts are historical"
+    },
+    "executed_http_checkpoint": {
+      "source_head": "a400386e358334e5a434b99be6d4d20e8a185502",
+      "run_id": "42341707628",
+      "gates_job_id": 128310602245,
+      "tests_run": 18,
+      "passed": 18,
+      "observed_at_utc": "2026-11-07T05:19:58.1096334Z",
+      "elapsed_ms": 260,
+      "scope": "Identical selector helper and HTTP-test blobs; actual checkout contains additional buyer changes. Not qualification of this amendment."
+    },
+    "deployed_blocker": {
+      "attributed_to": "Existing Company owner; Source reviewed code and did not repeat the live probe",
+      "observed_at_utc": "2026-11-07T05:38:26Z",
+      "http_status": 200,
+      "content_type": "text/event-stream",
+      "bounded_prefix_bytes": 65537,
+      "bounded_prefix_sha256": "92e10d5dc1d6541390d5e37019a2a28db97ff69d35f709581e96b192a30a4674",
+      "scope": "Exact gateway request exceeded the unchanged limit; no full catalogue parse or global feature-absence claim"
+    }
+  },
+  "unchanged_upstream_limit_bytes": 65536,
+  "selector_cache_ttl_ms": 0,
+  "fresh_candidate_qualification": "Required on the actual amended/current-base commit; no historical pass transferred",
+  "deployment_qualification": "Normal deployment witness followed by one exact bounded gateway-frame read; no predeployment retry",
+  "unfinished_full_integration": [
+    "qualified origin and ingress installation",
+    "authenticated owner/role and original Base binding",
+    "one authorized real case save with exact result and receipt",
+    "native readback with explicit PENDING or COMMITTED state",
+    "same-case refresh/reopen in MEOK and CouncilOS"
+  ],
+  "case_posts": 0,
+  "payments": 0,
+  "services_started": 0,
+  "origin_activated": false,
+  "runtime_adoption": false
+}

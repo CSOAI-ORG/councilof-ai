@@ -4,6 +4,8 @@ import copy
 import json
 from pathlib import Path
 import tempfile
+import subprocess
+import sys
 import unittest
 
 from sync_hf_coliseum import (
@@ -280,6 +282,136 @@ class BucketCopyControls(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.copy(api, {"assets/game.js": b"public asset"})
 
+
+
+# Actual immutable/raw and hosted bytes at Space commit5b0e7c37, source8b.
+RAW_HF_INDEX = "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    <meta name=\"robots\" content=\"noindex\" />\n    <title>Munder — Council Coliseum</title>\n    <meta name=\"description\" content=\"Play the Boss's Chair fictional governance game against the existing MEOK endpoint. Browser practice with explicit approval and downloadable records.\" />\n    <script type=\"module\" crossorigin src=\"/assets/coliseum.r2-BsbF5jg-.js\"></script>\n    <link rel=\"modulepreload\" crossorigin href=\"/assets/index.r2-3zDINAM_.js\">\n    <link rel=\"modulepreload\" crossorigin href=\"/assets/MunderDuel.r2-CHfASKis.js\">\n    <link rel=\"stylesheet\" crossorigin href=\"/assets/index.r2-B7hILMwH.css\">\n  </head>\n  <body><div id=\"root\"></div></body>\n</html>\n".encode("utf-8")
+HOSTED_HF_INDEX = "<!doctype html>\n<html lang=\"en\">\n  <head><script>window.huggingface={variables:{\"SPACE_CREATOR_USER_ID\":\"69195dca8cf74d90adb364a6\"}};</script>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    <meta name=\"robots\" content=\"noindex\" />\n    <title>Munder — Council Coliseum</title>\n    <meta name=\"description\" content=\"Play the Boss's Chair fictional governance game against the existing MEOK endpoint. Browser practice with explicit approval and downloadable records.\" />\n    <script type=\"module\" crossorigin src=\"/assets/coliseum.r2-BsbF5jg-.js\"></script>\n    <link rel=\"modulepreload\" crossorigin href=\"/assets/index.r2-3zDINAM_.js\">\n    <link rel=\"modulepreload\" crossorigin href=\"/assets/MunderDuel.r2-CHfASKis.js\">\n    <link rel=\"stylesheet\" crossorigin href=\"/assets/index.r2-B7hILMwH.css\">\n  <meta property=\"og:title\" content=\"Council Coliseum\"><meta property=\"og:image\" content=\"https://cdn-thumbnails.huggingface.co/social-thumbnails/spaces/csoai/council-coliseum.png\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:image\" content=\"https://cdn-thumbnails.huggingface.co/social-thumbnails/spaces/csoai/council-coliseum.png\"></head>\n  <body><div id=\"root\"></div></body>\n</html>\n".encode("utf-8")
+
+
+class HostedReadbackControls(unittest.TestCase):
+    def verify(self, files, values, revision="live"):
+        class Reader:
+            def read(self, name, _revision):
+                return values.get(name)
+        return verify_readback(Reader(), files, revision, attempts=1, sleep=lambda _: None)
+
+    def test_real_observed_static_additions_and_raw_bytes_match(self):
+        self.assertNotEqual(RAW_HF_INDEX, HOSTED_HF_INDEX)
+        self.assertTrue(publisher.hosted_index_matches(HOSTED_HF_INDEX, RAW_HF_INDEX))
+        self.assertTrue(publisher.hosted_index_matches(RAW_HF_INDEX, RAW_HF_INDEX))
+        self.verify({"index.html": RAW_HF_INDEX}, {"index.html": HOSTED_HF_INDEX})
+
+    def test_changed_authored_html_or_entry_asset_is_refused(self):
+        for before, after in [(b'id="root"', b'id="other"'), (b'coliseum.r2-', b'wrong.r2-'), (b'Munder', b'Other')]:
+            with self.subTest(before=before):
+                self.assertFalse(publisher.hosted_index_matches(HOSTED_HF_INDEX.replace(before, after), RAW_HF_INDEX))
+
+    def test_unknown_script_is_refused(self):
+        actual = HOSTED_HF_INDEX.replace(b"</head>", b"<script>unexpected()</script></head>")
+        self.assertFalse(publisher.hosted_index_matches(actual, RAW_HF_INDEX))
+
+    def test_different_even_well_formed_creator_id_is_refused(self):
+        actual = HOSTED_HF_INDEX.replace(b"69195dca8cf74d90adb364a6", b"a" * 24)
+        self.assertFalse(publisher.hosted_index_matches(actual, RAW_HF_INDEX))
+
+    def test_unknown_variable_is_refused(self):
+        actual = HOSTED_HF_INDEX.replace(b'"SPACE_CREATOR_USER_ID":', b'"UNKNOWN":')
+        self.assertFalse(publisher.hosted_index_matches(actual, RAW_HF_INDEX))
+
+    def test_other_space_social_metadata_is_refused(self):
+        actual = HOSTED_HF_INDEX.replace(b"spaces/csoai/council-coliseum.png", b"spaces/csoai/other.png")
+        self.assertFalse(publisher.hosted_index_matches(actual, RAW_HF_INDEX))
+
+    def test_duplicate_platform_addition_is_refused(self):
+        actual = HOSTED_HF_INDEX.replace(b"<head>", b"<head>" + publisher.HF_STATIC_ENV)
+        self.assertFalse(publisher.hosted_index_matches(actual, RAW_HF_INDEX))
+
+    def test_moved_platform_addition_is_refused(self):
+        actual = HOSTED_HF_INDEX.replace(publisher.HF_STATIC_ENV, b"").replace(b"</body>", publisher.HF_STATIC_ENV + b"</body>")
+        self.assertFalse(publisher.hosted_index_matches(actual, RAW_HF_INDEX))
+
+    def test_repository_reads_remain_exact_for_main_and_immutable(self):
+        for revision in ("main", "b" * 40):
+            with self.subTest(revision=revision), self.assertRaisesRegex(Refused, "readback"):
+                self.verify({"index.html": RAW_HF_INDEX}, {"index.html": HOSTED_HF_INDEX}, revision)
+
+    def test_live_asset_corruption_still_fails_with_safe_diagnostics(self):
+        with self.assertRaisesRegex(Refused, "stage=live path=assets/game.js") as caught:
+            self.verify({"index.html": RAW_HF_INDEX, "assets/game.js": b"expected"},
+                        {"index.html": HOSTED_HF_INDEX, "assets/game.js": b"changed"})
+        self.assertIn("expected_sha256=", str(caught.exception))
+        self.assertNotIn("actual_sha256=changed", str(caught.exception))
+
+    def test_full_publish_verifies_known_static_variant(self):
+        files = artifact()
+        files["index.html"] = RAW_HF_INDEX
+        manifest = json.loads(files[MANIFEST])
+        manifest["files"]["index.html"] = digest(RAW_HF_INDEX)
+        files[MANIFEST] = json.dumps(manifest).encode()
+        class StaticHub(Hub):
+            def read(self, name, revision):
+                if revision == "live" and name == "index.html":
+                    return HOSTED_HF_INDEX
+                return super().read(name, revision)
+        report = publish(StaticHub(), files, SHA, 12, sleep=lambda _: None)
+        self.assertEqual(report["state"], "PUBLISHED_AND_VERIFIED")
+
+    def test_read_errors_identify_stage_and_path_without_error_message(self):
+        from urllib.error import HTTPError
+        class Denied:
+            def read(self, name, revision):
+                raise HTTPError("https://public.invalid/", 403, "private-error-detail", {}, None)
+        with self.assertRaisesRegex(Refused, "stage=main path=index.html read-error=HTTPError status=403") as caught:
+            verify_readback(Denied(), {"index.html": b"expected"}, "main", attempts=1)
+        self.assertNotIn("private-error-detail", str(caught.exception))
+
+    def test_workflow_pins_consumer_code_separately_from_verified_artifact(self):
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/hf-gspc-surface-sync.yml").read_text()
+        consumer = workflow.split("\n  coliseum:\n", 1)[1]
+        self.assertIn("ref: $" + "{{ github.workflow_sha }}", consumer)
+        self.assertNotIn("ref: master", consumer)
+        sparse = consumer.split("sparse-checkout: |\n", 1)[1].split("\n\n", 1)[0]
+        self.assertEqual([line.strip() for line in sparse.splitlines() if line.strip()], [
+            "scripts/sync_hf_coliseum.py", "scripts/test_sync_hf_coliseum.py",
+            ".github/workflows/hf-gspc-surface-sync.yml",
+        ])
+        self.assertIn("github.event.workflow_run.conclusion == 'success'", consumer)
+        self.assertIn("github.event.workflow_run.head_repository.full_name == github.repository", consumer)
+        self.assertIn("name: coliseum-mirror-$" + "{{ github.event.workflow_run.head_sha }}", consumer)
+        self.assertIn("run-id: $" + "{{ github.event.workflow_run.id }}", consumer)
+        self.assertEqual(consumer.count("EXPECTED_SHA: $" + "{{ github.event.workflow_run.head_sha }}"), 2)
+        self.assertIn('--expected-sha "$EXPECTED_SHA"', consumer)
+        self.assertNotIn("npm run build", consumer)
+
+
+class MinimalConsumerCheckoutControls(unittest.TestCase):
+    def test_full_offline_suite_runs_with_exact_consumer_inputs(self):
+        source = Path(__file__).resolve().parents[1]
+        paths = [
+            "scripts/sync_hf_coliseum.py", "scripts/test_sync_hf_coliseum.py",
+            ".github/workflows/hf-gspc-surface-sync.yml",
+        ]
+        classes = [value for value in globals().values()
+                   if isinstance(value, type) and issubclass(value, unittest.TestCase)
+                   and value is not type(self)]
+        names = sorted("test_sync_hf_coliseum." + value.__name__ for value in classes)
+        expected = sum(unittest.defaultTestLoader.loadTestsFromTestCase(value).countTestCases()
+                       for value in classes)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in paths:
+                target = root / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes((source / name).read_bytes())
+            self.assertEqual(sorted(path.relative_to(root).as_posix()
+                                    for path in root.rglob("*") if path.is_file()), sorted(paths))
+            result = subprocess.run(
+                [sys.executable, "-B", "-m", "unittest", *names], cwd=root / "scripts",
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=60,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout)
+            self.assertIn("Ran " + str(expected) + " tests", result.stdout)
 
 if __name__ == "__main__":
     unittest.main()
