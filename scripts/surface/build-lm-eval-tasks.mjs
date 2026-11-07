@@ -50,6 +50,7 @@
  *   node scripts/surface/build-lm-eval-tasks.mjs
  *   node scripts/surface/build-lm-eval-tasks.mjs --check
  */
+import { fetchText } from "./hub-fetch.mjs";
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -167,18 +168,6 @@ function yamlString(s) {
   return '"' + s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n") + '"';
 }
 
-async function fetchText(url) {
-  // Authenticate when a token is available. The Hub rate-limits ANONYMOUS reads per IP, and a
-  // 429 from our own published banks breaks the build (and therefore the deploy) for reasons
-  // that have nothing to do with the code being built. An authenticated read is both the
-  // correct credential for the org's own datasets and a far higher limit.
-  const headers = { "User-Agent": "csoai-gspc-lm-eval-builder/1.0" };
-  const token = process.env.HF_TOKEN || process.env.HUGGING_FACE_HUB_TOKEN;
-  if (token) headers.Authorization = `Bearer ${token.trim()}`;
-  const res = await fetch(url, { headers });
-  if (!res.ok) throw new Error(`GET ${url} -> ${res.status}`);
-  return res.text();
-}
 
 async function main() {
   const axesDoc = JSON.parse(readFileSync(join(ROOT, "public/bench/axes.json"), "utf8"));
