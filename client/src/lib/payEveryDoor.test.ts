@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { challengeFromResult } from "@/components/ToolRunner";
 import { buildTypedData, type EIP1193Provider, type X402Challenge } from "./x402Wallet";
 import {
@@ -18,6 +18,8 @@ import {
   explorerTxUrl,
   listingFor,
   payDoor,
+  paidOutputBlob,
+  reportedSuccessfulSettlement,
   quoteDoor,
   relayedFetch,
   remainingDoors,
@@ -93,8 +95,10 @@ function provider(opts: { chain?: string; onSign?: (params: unknown[]) => unknow
 
 const door = (): Door => doorsFromManifest(MANIFEST)[2];
 
+beforeEach(() => { vi.stubGlobal("location", { origin: ORIGIN }); });
 afterEach(() => {
   vi.useRealTimers();
+  vi.unstubAllGlobals();
 });
 
 describe("the door list is the manifest, never a typed list", () => {
@@ -247,7 +251,7 @@ describe("three outcomes and no fourth", () => {
 
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock).toHaveBeenCalledWith(d.url, {
-        method: d.method,
+        method: d.method, redirect: "manual", credentials: "omit",
         headers: { accept: "application/json", "x-payment": "fixture-payment" },
       });
       expect(out.kind).toBe("maybe-settled");
@@ -337,6 +341,7 @@ describe("three outcomes and no fourth", () => {
     if (out.kind === "maybe-settled") {
       expect(out.paymentResponse).toBe("opaque-route-echo");
       expect(out.settlement).toBeNull();
+      expect(reportedSuccessfulSettlement({kind:"delivered",paymentResponse:null,settlement:null})).toBeNull();
       expect(out.body).toEqual(failureBody);
     }
   });
@@ -401,11 +406,12 @@ describe("three outcomes and no fourth", () => {
     if (s.kind === "maybe-settled") expect(s.detail).toMatch(/did not complete \(Failed to fetch\)/);
   });
 
-  it("UNSETTLED when the door answers 402 again, with the facilitator's reason verbatim", async () => {
+  it("HTTP402 after signed dispatch leaves the payment effect unconfirmed", async () => {
     const reason = "facilitator rejected receipt: invalid_exact_evm_insufficient_balance";
     const fetchImpl = vi.fn(async () => jsonResponse(402, { ...PAYMENT_REQUIRED, csoai: { not_paid_reason: reason } })) as unknown as typeof fetch;
     const s = await payDoor({ door: door(), challenge: challengeFromPaymentRequired(PAYMENT_REQUIRED)!, provider: provider(), walletName: "w", fetchImpl });
-    expect(s).toEqual({ kind: "unsettled", reason });
+    expect(s.kind).toBe("maybe-settled");
+    if (s.kind === "maybe-settled") expect(s.detail).toContain(reason);
   });
 
   it("reads the reason from the three places a door may relay it, and says when there is none", () => {
@@ -629,5 +635,62 @@ describe("the Settle-all tally reads the door states and counts each door once",
     expect(walkTally([], {})).toEqual({ queued: 0, delivered: 0, unsettled: 0, maybe_settled: 0, rejected: 0, failed: 0, pending: 0 });
     // a door that may have settled is its own count, never "pending" (pending reads as "still to pay")
     expect(walkTally(["m"], { m: { kind: "maybe-settled", detail: "the paid retry answered HTTP 500", settlement: null, refund: null } }).maybe_settled).toBe(1);
+  });
+});
+
+describe("paid response byte and uncertainty custody", () => {
+  it("preserves observed settlement when the response stream fails", async () => {
+    const receipt={success:true,transaction:"0x"+"ef".repeat(32),network:"eip155:8453",payer:SIGNER};
+    const r=jsonResponse(200,{},{"x-payment-response":btoa(JSON.stringify(receipt))});
+    vi.spyOn(r,"arrayBuffer").mockRejectedValue(new TypeError("stream lost after settle"));
+    const fetchImpl=vi.fn(async()=>r) as unknown as typeof fetch;
+    const state=await payDoor({door:door(),challenge:challengeFromPaymentRequired(PAYMENT_REQUIRED)!,
+      provider:provider(),walletName:"fixture",fetchImpl});
+    expect(state.kind).toBe("maybe-settled");
+    if(state.kind==="maybe-settled") {
+      expect(state.settlement?.transaction).toBe(receipt.transaction);
+      expect(reportedSuccessfulSettlement(state)?.transaction).toBe(receipt.transaction);
+      expect(state.paymentResponse).toBe(btoa(JSON.stringify(receipt)));
+    }
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+  it("keeps exact whitespace and UTF8 bytes for the original download", async () => {
+    const text=' { "text": "é", "count": 1 }' + String.fromCharCode(10);
+    const state=await retryDoorWithPayment(door(),"fixture",vi.fn(async()=>new Response(text,{
+      headers:{"content-type":"application/json"}})) as unknown as typeof fetch);
+    expect(state.kind).toBe("delivered");
+    if(state.kind==="delivered") {
+      expect(state.body).toEqual({text:"é",count:1});
+      expect(new Uint8Array(await paidOutputBlob(state.output).arrayBuffer())).toEqual(new TextEncoder().encode(text));
+    }
+  });
+  it("does not label malformed JSON as delivered and keeps its received bytes", async () => {
+    const state=await retryDoorWithPayment(door(),"fixture",vi.fn(async()=>new Response("not JSON",{
+      headers:{"content-type":"application/json","payment-response":btoa(JSON.stringify({transaction:"0x"+"ab".repeat(32)}))}})) as unknown as typeof fetch);
+    expect(state.kind).toBe("maybe-settled");
+    if(state.kind==="maybe-settled") {
+      expect(state.settlement?.transaction).toBe("0x"+"ab".repeat(32));
+      expect(new TextDecoder().decode(state.output?.bytes)).toBe("not JSON");
+    }
+  });
+  it("sends once with manual redirects and no ambient credentials", async () => {
+    const f=vi.fn(async()=>jsonResponse(302,{redirect:true})) as unknown as typeof fetch;
+    const state=await retryDoorWithPayment(door(),"fixture",f);
+    expect(state.kind).toBe("maybe-settled");
+    expect(f).toHaveBeenCalledTimes(1);
+    expect((f as ReturnType<typeof vi.fn>).mock.calls[0][1]).toMatchObject({redirect:"manual",credentials:"omit"});
+  });
+  it("rejects an external payment URL before the wallet or network", async () => {
+    const p=provider();const f=vi.fn() as unknown as typeof fetch;
+    const state=await payDoor({door:{...door(),url:"https://external.invalid/api/paid"},
+      challenge:challengeFromPaymentRequired(PAYMENT_REQUIRED)!,provider:p,walletName:"fixture",fetchImpl:f});
+    expect(state.kind).toBe("error");expect(p.calls).toEqual([]);expect(f).not.toHaveBeenCalled();
+  });
+  it("rechecks page origin after a wallet await without dispatching payment", async () => {
+    const p=provider({onSign:()=>{vi.stubGlobal("location",{origin:"https://external.invalid"});return SIGNATURE;}});
+    const f=vi.fn() as unknown as typeof fetch;
+    const state=await payDoor({door:door(),challenge:challengeFromPaymentRequired(PAYMENT_REQUIRED)!,
+      provider:p,walletName:"fixture",fetchImpl:f});
+    expect(state.kind).toBe("error");expect(f).not.toHaveBeenCalled();
   });
 });
