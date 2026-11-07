@@ -51,7 +51,7 @@ export default function Login() {
       toast.success('Welcome back!');
       setLocation(councilLoginDestination(returnTo, email));
     } catch (error) {
-      if (!mounted.current || (error instanceof Error && error.name === 'AbortError')) return;
+      if (!mounted.current || ((error instanceof Error || error instanceof DOMException) && error.name === 'AbortError')) return;
       toast.error(error instanceof CouncilSessionPersistenceError
         ? COUNCIL_SESSION_PERSISTENCE_MESSAGE
         : 'Login failed. Please try again.');
