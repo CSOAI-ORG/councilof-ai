@@ -13,7 +13,7 @@ const js=result.outputFiles[0].text.replace(/<\/script/gi,'<\\/script');
 const template=fs.readFileSync(path.join(source,'panel.html'),'utf8');
 if(template.split('/* PANEL_SCRIPT */').length!==2)throw new Error('Expected one inline script slot.');
 const html=template.replace('/* PANEL_SCRIPT */',()=>js);
-const resource={uri:'ui://council/live-panel/1',mimeType:'text/html;profile=mcp-app',version:'0.1.0',sha256:digest(html),text:html};
+const resource={uri:'ui://council/live-panel/2',mimeType:'text/html;profile=mcp-app',version:'0.2.0',sha256:digest(html),text:html};
 const outputs=new Map([['public/native-panel/index.html',html],['public/native-panel/resource.json',JSON.stringify(resource)+'\n']]);
 if(process.argv.includes('--check')){
  for(const [relative,text]of outputs)if(!fs.existsSync(path.join(root,relative))||fs.readFileSync(path.join(root,relative),'utf8')!==text)throw new Error('Native panel artifact drift: '+relative);
