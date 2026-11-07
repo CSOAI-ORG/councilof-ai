@@ -24,7 +24,19 @@ const PERSONAS = [
       params: { tab: "measured", task: "pricing-overview" },
     },
   },
-  { who: "auditor",    path: "/honesty",                       must: ["What we publish against ourselves.", "An instrument that will say anything measures nothing"] },
+  // The auditor's page is /honesty. It was rewritten on 2026-11-07 (#4042) to a numbered
+  // disclosure: scope and limitations, what the signature does NOT prove, coverage and
+  // unmeasured slots, and where corrections live. The markers below are that page's OWN
+  // headings, so a regression that drops the limitations or the corrections section is red.
+  //
+  // The previous markers ("What we publish against ourselves." / "An instrument that will say
+  // anything measures nothing") are FORBIDDEN copy, not missing copy: the estate's own
+  // scripts/surface/public-copy.node-test.mjs asserts that the public copy does NOT contain
+  // them. Keeping them as `must` made this persona red on every schedule from 2026-11-04
+  // (10 consecutive runs) against a tree the estate's policy says is correct — a gate crying
+  // wolf on a correct tree. They are now a `forbid`, which is what they are: the old copy
+  // must not come back.
+  { who: "auditor",    path: "/honesty",                       must: ["Measurement scope, limitations and corrections", "Signature and evidence limitations", "Documented corrections and preserved history"], forbid: [/What we publish against ourselves/i] },
   { who: "researcher", path: "/library",                       must: ["reference pages across"] },
   { who: "api-agent",  path: "/api/gspc",                      must: ['"measured_axes"', '"quotable_axes"', '"public_count"'] , json: true },
   { who: "a2a-agent",  path: "/.well-known/agent-card.json",   must: ['"doi"', "CSOAI Ltd"], json: true, forbid: [/MEOK AI Labs/, /\$\d+\/mo/] },
