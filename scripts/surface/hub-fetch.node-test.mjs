@@ -30,7 +30,7 @@ function stub(sequence) {
     calls.push({ url, init });
     const status = sequence[Math.min(calls.length - 1, sequence.length - 1)];
     const body = status === 200 ? "BANK BYTES" : "nope";
-    return { ok: status >= 200 && status < 300, status, text: async () => body };
+    return new Response(body, { status });
   };
   return { impl, calls };
 }
@@ -99,4 +99,143 @@ test("the token is read from the environment first, then the local hub cache", (
   assert.equal(hubToken({ HF_TOKEN: "from-env" }, "/nonexistent"), "from-env");
   assert.equal(hubToken({ HUGGING_FACE_HUB_TOKEN: "from-env-2" }, "/nonexistent"), "from-env-2");
   assert.equal(hubToken({}, "/nonexistent"), null);
+});
+
+const entry = "https://huggingface.co/datasets/csoai/fixture/resolve/main/items.jsonl";
+const offline = { env: {}, home: "/nonexistent", wait: noWait };
+
+test("untrusted entry URLs are refused before token lookup or any request", async () => {
+  for (const url of ["http://huggingface.co/x", "https://other.invalid/x",
+    "https://huggingface.co.evil.invalid/x", "https://huggingface.co:8443/x",
+    "https://user:password@huggingface.co/x", "file:///tmp/bank", "not a URL"]) {
+    let called = false;
+    const env = new Proxy({}, { get() { throw new Error("Token lookup must not occur"); } });
+    await assert.rejects(fetchText(url, { ...offline, env,
+      fetchImpl: async () => { called = true; return new Response("unwanted"); } }),
+    /Hub URL|HTTPS/);
+    assert.equal(called, false, url);
+  }
+});
+
+test("same-origin and CDN redirects preserve bytes but bind credentials only to HF", async () => {
+  const calls = [];
+  const text = await fetchText(entry, { ...offline, env: { HF_TOKEN: "synthetic-test-only" },
+    fetchImpl: async (url, init) => {
+      calls.push({ url, init });
+      if (calls.length === 1) return new Response(null, { status: 302, headers: { location: "/api/resolve-cache/fixture" } });
+      if (calls.length === 2) return new Response(null, { status: 307, headers: { location: "https://cdn-fixture.invalid/file?signed=synthetic-query" } });
+      return new Response("public bank bytes");
+    } });
+  assert.equal(text, "public bank bytes");
+  assert.equal(calls[0].init.headers.Authorization, "Bearer synthetic-test-only");
+  assert.equal(calls[1].init.headers.Authorization, "Bearer synthetic-test-only");
+  assert.equal(calls[2].init.headers.Authorization, undefined);
+  assert.ok(calls.every(({ init }) => init.redirect === "manual" && init.signal));
+});
+
+test("redirects refuse downgrades, embedded credentials, absent locations and loops", async () => {
+  for (const location of ["http://other.invalid/file", "https://user:password@other.invalid/file", null]) {
+    let calls = 0;
+    await assert.rejects(fetchText(entry, { ...offline, fetchImpl: async () => {
+      calls++;
+      return new Response(null, { status: 302, headers: location ? { location } : {} });
+    } }), /HTTPS|location/);
+    assert.equal(calls, 1);
+  }
+  let calls = 0;
+  await assert.rejects(fetchText(entry, { ...offline, fetchImpl: async () => {
+    calls++;
+    return new Response(null, { status: 302, headers: { location: entry } });
+  } }), /redirect limit/);
+  assert.equal(calls, 6);
+});
+
+test("attempt and deadline options cannot remove their finite bounds", async () => {
+  for (const bounds of [{ attempts: 0 }, { attempts: Infinity }, { attempts: 5 },
+    { attempts: 1.5 }, { timeoutMs: 0 }, { timeoutMs: Infinity }, { timeoutMs: 60001 }]) {
+    let calls = 0;
+    await assert.rejects(fetchText(entry, { ...offline, ...bounds, fetchImpl: async () => {
+      calls++; return new Response("unwanted");
+    } }), /bound/);
+    assert.equal(calls, 0);
+  }
+});
+
+test("the request deadline rejects even when a fetch stub ignores abort", { timeout: 1000 }, async () => {
+  let signal;
+  await assert.rejects(fetchText(entry, { ...offline, timeoutMs: 15,
+    fetchImpl: async (_, init) => { signal = init.signal; return new Promise(() => {}); } }), /timed out/);
+  assert.equal(signal.aborted, true);
+});
+
+test("the same deadline covers a stalled body and cancels its locked reader", { timeout: 1000 }, async () => {
+  let cancelled = 0, signal;
+  await assert.rejects(fetchText(entry, { ...offline, timeoutMs: 15,
+    fetchImpl: async (_, init) => {
+      signal = init.signal;
+      return new Response(new ReadableStream({ cancel() { cancelled++; } }));
+    } }), /timed out/);
+  assert.equal(signal.aborted, true);
+  assert.equal(cancelled, 1);
+});
+
+test("a response arriving after timeout is cancelled rather than followed", { timeout: 1000 }, async () => {
+  let resolveLate, cancelled = 0, calls = 0;
+  const result = fetchText(entry, { ...offline, timeoutMs: 15,
+    fetchImpl: async () => { calls++; return new Promise(resolve => { resolveLate = resolve; }); } });
+  await assert.rejects(result, /timed out/);
+  resolveLate(new Response(new ReadableStream({ cancel() { cancelled++; } }), {
+    status: 302, headers: { location: "https://late-fixture.invalid/file" },
+  }));
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(calls, 1);
+  assert.equal(cancelled, 1);
+});
+
+test("retry, terminal-error and redirect bodies are cancelled", async () => {
+  for (const status of [429, 500, 404, 302]) {
+    let calls = 0, cancelled = 0;
+    const invoke = fetchText(entry, { ...offline, fetchImpl: async () => {
+      calls++;
+      if (calls > 1) return new Response("BANK BYTES");
+      return new Response(new ReadableStream({ cancel() { cancelled++; } }), {
+        status, headers: status === 302 ? { location: "/redirect-target" } : {},
+      });
+    } });
+    if (status === 404) await assert.rejects(invoke, /HTTP 404/);
+    else assert.equal(await invoke, "BANK BYTES");
+    assert.equal(cancelled, 1, `status ${status}`);
+  }
+});
+
+test("a stalled cancellation cannot stall retry or deadline cleanup", { timeout: 1000 }, async () => {
+  let calls = 0;
+  const text = await fetchText(entry, { ...offline, fetchImpl: async () => {
+    calls++;
+    return calls === 1 ? { ok: false, status: 429, body: { cancel: () => new Promise(() => {}) } } : new Response("BANK BYTES");
+  } });
+  assert.equal(text, "BANK BYTES");
+  assert.equal(calls, 2);
+});
+
+test("query strings and underlying fetch error text do not leak into diagnostics", async () => {
+  const warnings = [], original = console.warn;
+  console.warn = message => warnings.push(message);
+  try {
+    await assert.rejects(fetchText(entry + "?signed=synthetic-private-query", { ...offline,
+      fetchImpl: async () => new Response("no", { status: 429 }) }), error =>
+      !error.message.includes("synthetic-private-query") && /HTTP 429/.test(error.message));
+    await assert.rejects(fetchText(entry, { ...offline, fetchImpl: async () => {
+      throw new Error("https://cdn-fixture.invalid/?signed=synthetic-private-query");
+    } }), error => error.message === "Hub request failed");
+    assert.ok(warnings.every(message => !message.includes("synthetic-private-query")));
+  } finally { console.warn = original; }
+});
+
+test("streamed UTF-8 bank text is unchanged across chunk boundaries", async () => {
+  const bytes = new TextEncoder().encode('{"item":"café 🎯"}\n');
+  const text = await fetchText(entry, { ...offline, fetchImpl: async () => new Response(new ReadableStream({
+    start(controller) { for (const byte of bytes) controller.enqueue(Uint8Array.of(byte)); controller.close(); },
+  })) });
+  assert.equal(text, '{"item":"café 🎯"}\n');
 });

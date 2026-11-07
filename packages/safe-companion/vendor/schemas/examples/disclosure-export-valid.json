@@ -1,0 +1,74 @@
+{
+  "disclosure_export_schema_version": "0.1.0",
+  "disclosure_export": {
+    "case_id": "11111111-2222-4333-8444-555555555555",
+    "package_id": "aaaaaaaa-bbbb-4ccc-8ddd-000000000001",
+    "version_id": "aaaaaaaa-bbbb-4ccc-8ddd-000000000002",
+    "version": 2,
+    "status": "approved",
+    "latest_version": 2,
+    "template": {
+      "key": "confidential_rapid_alert",
+      "title": "Confidential rapid alert",
+      "sections": [
+        {
+          "title": "Header",
+          "contains": "Case reference, recipient, purpose, and TLP audience"
+        },
+        {
+          "title": "Attached derivatives",
+          "contains": "Each redacted item: its ID, media type, size, label, and checksum"
+        },
+        {
+          "title": "Redaction manifest",
+          "contains": "Removed line ranges per item, with no removed text"
+        },
+        {
+          "title": "Approval record",
+          "contains": "The approval ID, the approver, and the digest the approval covers"
+        }
+      ]
+    },
+    "recipient": "Member CERT (synthetic)",
+    "purpose": "Rapid alert on the affected gateway (synthetic)",
+    "tlp_audience": "AMBER",
+    "digest": "bc33ecf5d6dd113dd3a0280afd0cf7845f81e8ef4522411b86ed68fd7cf24b0b",
+    "items": [
+      {
+        "withheld": false,
+        "evidence_id": "00000000-0000-4000-8000-000000000001",
+        "media_type": "text/plain",
+        "size_bytes": 58,
+        "sha256_plaintext": "1f0e3dad99908345f7439f8ffabdffc4a6c2e1d4b2f6b0c1e5a9d7c3b8f4a201",
+        "tlp_label": "AMBER"
+      },
+      {
+        "withheld": true
+      }
+    ],
+    "withheld_count": 1,
+    "manifest": {
+      "items": [
+        {
+          "evidence_id": "00000000-0000-4000-8000-000000000001",
+          "lines_total": 4,
+          "removed_lines": 1,
+          "removed": [
+            {
+              "from_line": 3,
+              "to_line": 3,
+              "lines": 1
+            }
+          ]
+        }
+      ]
+    },
+    "approval": {
+      "id": "cccccccc-dddd-4eee-8fff-000000000009",
+      "approved_by": "dddddddd-eeee-4fff-8000-000000000001",
+      "approved_at": "2026-11-02T10:00:00+00:00",
+      "digest": "bc33ecf5d6dd113dd3a0280afd0cf7845f81e8ef4522411b86ed68fd7cf24b0b",
+      "separation_rule": "preparer_differs_from_approver"
+    }
+  }
+}
