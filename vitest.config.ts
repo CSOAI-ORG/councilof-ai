@@ -25,6 +25,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // `node --test` in its own step, so excluding them here removes no coverage.
 export const NODE_TEST_FILES = [
   'scripts/build-daily-signal.node-test.mjs',
+  'scripts/daily-mapping-review-queue/build.test.mjs',
   'scripts/build-daily-product.node-test.mjs',
   'scripts/build-axis-reports.ownership.test.mjs',
   'scripts/build-axis-reports.slots.test.mjs',
@@ -32,6 +33,10 @@ export const NODE_TEST_FILES = [
   'scripts/contract-convergence.test.mjs',
   'scripts/feed-delivery-kit.test.mjs',
   'scripts/harness-x/render.test.mjs',
+  // The hub fetch that gates the build (authenticated, retrying): a node:test file vitest
+  // cannot collect, named here so pr-gates.yml runs it under node --test. It stubs the
+  // fetch, so a 429 and a 404 can be produced on demand.
+  'scripts/surface/hub-fetch.node-test.mjs',
   // The hygiene sweeper planner: a node:test file vitest cannot collect, named here so
   // pr-gates.yml runs it under node --test (same reason as sitemap-withdrawal below).
   // No apostrophes in these comments: the registry and the workflow extract entries by
