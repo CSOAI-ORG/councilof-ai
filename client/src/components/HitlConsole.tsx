@@ -263,7 +263,7 @@ export default function HitlConsole({
       });
     } catch {
       setError(
-        "The competence result could not be confirmed. The decision endpoint will check the current record again.",
+        "The reading-check result could not be confirmed. The decision endpoint will check the current record again.",
       );
     } finally {
       submitting.current = false;
@@ -502,7 +502,7 @@ export default function HitlConsole({
       {module ? (
         <div className="mb-5 rounded-xl border border-sky-400/30 bg-sky-500/5 p-4">
           <h3 className="mb-2 text-sm font-semibold text-sky-50">
-            Competency — read the record{" "}
+            Reading check — read the record{" "}
             <span className="font-normal text-sky-100/60">({module.id})</span>
           </h3>
           <p className="mb-3 whitespace-pre-wrap text-[12px] text-sky-100/80">
