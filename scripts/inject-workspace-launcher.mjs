@@ -7,7 +7,8 @@
  * recursively rewrote source pages, which made a build step capable of changing
  * hundreds of tracked files. Here the generated `dist/client` tree is the only
  * valid target and `--check` proves the shipped tree has exactly one launcher tag
- * per HTML document.
+ * per site HTML document. Frozen interop mirror captures must instead match
+ * their preserved public/ source bytes exactly; adding site chrome changes evidence.
  *
  * Usage:
  *   node scripts/inject-workspace-launcher.mjs --dir dist/client
@@ -20,6 +21,10 @@ import { resolve, relative, sep } from "node:path";
 const ROOT = resolve(import.meta.dirname, "..");
 const TAG = '<script src="/council-workspace-launcher.js" defer></script>';
 const NEEDLE = "/council-workspace-launcher.js";
+
+export function isImmutableCapture(relativePath) {
+  return /^interop\/(?:[^/]+\/)*mirrors\/[^]+\.html$/.test(relativePath.split(sep).join("/"));
+}
 
 function countNeedles(source) {
   return source.split(NEEDLE).length - 1;
@@ -93,8 +98,19 @@ function main() {
 
   const missing = [];
   const duplicate = [];
+  const alteredCaptures = [];
+  let captures = 0;
   let changed = 0;
   for (const path of files) {
+    const relativePath = relative(target, path);
+    if (isImmutableCapture(relativePath)) {
+      captures++;
+      const preserved = resolve(ROOT, "public", relativePath);
+      if (!existsSync(preserved) || !readFileSync(path).equals(readFileSync(preserved))) {
+        alteredCaptures.push(relativePath);
+      }
+      continue;
+    }
     const source = readFileSync(path, "utf8");
     const count = countNeedles(source);
     if (count > 1) {
@@ -111,7 +127,10 @@ function main() {
     }
   }
 
-  if (duplicate.length || missing.length) {
+  if (duplicate.length || missing.length || alteredCaptures.length) {
+    if (alteredCaptures.length) {
+      console.error(`workspace-launcher: ${alteredCaptures.length} immutable HTML captures differ from preserved source; first: ${alteredCaptures.slice(0, 5).join(", ")}`);
+    }
     if (missing.length) {
       console.error(
         `workspace-launcher: ${missing.length} HTML files missing launcher; first: ${missing
@@ -132,8 +151,8 @@ function main() {
 
   console.log(
     check
-      ? `workspace-launcher: ${files.length}/${files.length} built HTML files aligned`
-      : `workspace-launcher: aligned ${files.length} built HTML files (${changed} changed)`,
+      ? `workspace-launcher: ${files.length - captures} site HTML files aligned; ${captures} immutable captures byte-identical`
+      : `workspace-launcher: aligned ${files.length - captures} site HTML files (${changed} changed); ${captures} immutable captures byte-identical`,
   );
 }
 

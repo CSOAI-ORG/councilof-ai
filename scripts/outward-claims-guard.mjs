@@ -65,8 +65,8 @@ async function j(url, init = {}) {
 }
 
 /** 1. Offered resources must challenge; a declared UNMEASURED wrapper is not for sale. */
-// No machine-readable availability field is currently published for this row. Match the
-// exact canonical declaration and concrete GET contract; any declaration drift fails closed.
+// Preserve the exact single-pair declaration and GET contract. The separate per-asset
+// case below additionally requires the published machine-readable no_sale contract.
 const WRAPPER_UNMEASURED_DESCRIPTION = "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.";
 function declaredWrapperUnmeasured(res, url, response) {
   if (response.status !== 200 || response.headers.get("payment-required") ||
@@ -84,6 +84,40 @@ function declaredWrapperUnmeasured(res, url, response) {
     Object.keys(payment).length === 4 &&
     ["requested", "presented", "sent_to_facilitator", "settled"]
       .every((key) => Object.hasOwn(payment, key) && payment[key] === false);
+}
+
+const ASSET_WRAPPER_DESCRIPTION = "Wrapped-asset parity evidence for {ASSET}: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.";
+function exactFalseFlags(value, keys) {
+  return value !== null && typeof value === "object" && !Array.isArray(value) &&
+    Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value, key) && value[key] === false);
+}
+function declaredAssetWrapperUnmeasured(res, url, response) {
+  const origin = new URL(SITE).origin;
+  const asset = ["usdc", "usdt", "dai"].find(id => url === origin + "/api/wrapper/asset/" + id);
+  if (!asset || response.status !== 200 || response.headers.get("payment-required") ||
+      res.method !== "GET" || res.url !== url || res.paid_for !== "issuance" ||
+      res.asset !== asset.toUpperCase() || res.free_preview !== url + "?preview=1" ||
+      res.description !== ASSET_WRAPPER_DESCRIPTION.replace("{ASSET}", asset.toUpperCase())) return false;
+  const declared = res.no_sale?.body;
+  if (res.no_sale?.status !== 200 || !declared || Object.keys(declared).length !== 3 ||
+      declared.preview_only !== true || declared.state !== "UNMEASURED" ||
+      !exactFalseFlags(declared.payment, ["requested", "sent_to_facilitator", "settled"])) return false;
+  const body = response.body;
+  if (body?.schema !== "csoai.wrapper-asset-pack/0.1" || body.kind !== "preview" ||
+      body.asset !== asset.toUpperCase() || body.preview_only !== true || body.state !== "UNMEASURED" ||
+      !exactFalseFlags(body.payment, ["requested", "presented", "sent_to_facilitator", "settled"])) return false;
+  // Declining to sell is not a successful delivery. The declared counts and unsigned
+  // preview rows must agree; no signature, settlement or current availability is inferred.
+  return body.counts && Object.keys(body.counts).length === 1 &&
+    Number.isSafeInteger(body.counts.UNMEASURED) && body.counts.UNMEASURED > 0 &&
+    Array.isArray(body.pairs) && body.pairs.length === body.counts.UNMEASURED &&
+    body.pairs.every(id => typeof id === "string" && /^[a-z0-9_.-]+:[a-z0-9_.-]+$/.test(id) &&
+      ({ usdc: ["usdc", "usdc.e", "usdbc"], usdt: ["usdt", "usdt0"], dai: ["dai"] })[asset].includes(id.split(":")[0])) &&
+    new Set(body.pairs).size === body.pairs.length &&
+    Array.isArray(body.cards) && body.cards.length === body.pairs.length &&
+    body.cards.every((card, index) => card?.schema === "https://councilof.ai/schema/card-v0.json" &&
+      card.preview === true && !Object.hasOwn(card, "sig_ed25519") &&
+      card.payload?.id === body.pairs[index] && card.payload.state === "UNMEASURED");
 }
 
 async function checkManifest() {
@@ -124,7 +158,7 @@ async function checkManifest() {
     const r = await j(url);
     const challenge = r.headers.get("payment-required");
     if (r.status === 402 && challenge) ok(`manifest ${path}`, "402 with a challenge");
-    else if (declaredWrapperUnmeasured(res, url, r)) skip("manifest " + path,
+    else if (declaredWrapperUnmeasured(res, url, r) || declaredAssetWrapperUnmeasured(res, url, r)) skip("manifest " + path,
       "UNMEASURED preview only — not buyable; no payment requested, presented, forwarded or settled; no 402 availability claim");
     else bad(`manifest ${path}`, `advertised as buyable but answered HTTP ${r.status}${challenge ? "" : " with no PAYMENT-REQUIRED header"}`);
   }
@@ -167,12 +201,21 @@ async function checkToolCounts() {
  * 3. Compare like scopes. This declaration comes from the owner's corrected README at
  * https://huggingface.co/datasets/csoai/gspc-hf-model-census/blob/449e38a3241819dd0df98efd1eb402f1c2d6d40d/README.md
  * (25 September correction, independently read 23 October). It describes one frozen file,
- * not today's roster. Bind the exception to that immutable revision, date and saved scope;
- * an old as_of by itself never exempts a current count mismatch.
+ * not today's roster. The README-only changes through 159498e50f28cb482cb046b2963d7a8d39c416dd
+ * preserve the same models.jsonl object. Bind the exception to that object's identity AND
+ * a reviewed scope declaration, not the container HEAD. An old date alone is never enough.
  */
 const HF_CENSUS = "https://huggingface.co/datasets/csoai/gspc-hf-model-census";
 const FROZEN_CENSUS = {
   revision: "449e38a3241819dd0df98efd1eb402f1c2d6d40d",
+  object: {
+    oid: "4de07e073a9815a3b3360192fdd2b85ba2a3ecc3",
+    size: 14787327,
+    sha256: "d52fd37f6cd7f19791ba2db5540a6cf25d7be508bed4944b5dd7d59e5d6e0eb1",
+  },
+  // Exact reviewed README blobs, not an assertion that arbitrary new prose is historical.
+  // Future declaration changes need review even if the data object stays the same.
+  scopeBlobs: ["b15fdba5fad1154dfbbe8cea1eee039d3101251b", "920ae6dea0cff700deda343128642ce6b5991620"],
   asOf: "2026-09-05T05:34:58Z",
   axes: [
     "governance", "safety", "provenance", "continuity", "conformance", "openness",
@@ -183,6 +226,48 @@ const FROZEN_CENSUS = {
   ],
 };
 
+function censusObjectBinding(tree) {
+  if (!Array.isArray(tree) || tree.length > 64 || tree.some((entry) =>
+      !entry || typeof entry !== "object" || Array.isArray(entry) || typeof entry.path !== "string") ||
+      new Set(tree.map((entry) => entry.path)).size !== tree.length) return "UNKNOWN";
+  const data = tree.find((entry) => entry.path === "models.jsonl");
+  const declaration = tree.find((entry) => entry.path === "README.md");
+  if (data?.type !== "file" || declaration?.type !== "file" ||
+      !/^[a-f0-9]{40}$/.test(data.oid ?? "") || !/^[a-f0-9]{40}$/.test(declaration.oid ?? "") ||
+      !Number.isSafeInteger(data.size) || data.size < 1 ||
+      !/^[a-f0-9]{64}$/.test(data.lfs?.oid ?? "") || data.lfs?.size !== data.size) return "UNKNOWN";
+  if (data.oid !== FROZEN_CENSUS.object.oid || data.size !== FROZEN_CENSUS.object.size ||
+      data.lfs.oid !== FROZEN_CENSUS.object.sha256) return "DIFFERENT";
+  return FROZEN_CENSUS.scopeBlobs.includes(declaration.oid) ? "FROZEN" : "UNKNOWN";
+}
+
+// Bounded API metadata, never the full data file. HF's LFS identity is a repository assertion;
+// this guard does not claim to have downloaded and independently hashed all 20,000 rows.
+async function readCensusObjectBinding(revision) {
+  let reader;
+  try {
+    const response = await fetch("https://huggingface.co/api/datasets/csoai/gspc-hf-model-census/tree/" + revision,
+      { headers: UA, signal: AbortSignal.timeout(15000) });
+    reader = response.body?.getReader();
+    if (response.status !== 200 || !reader || response.headers.get("link")) return "UNKNOWN";
+    const decoder = new TextDecoder("utf-8", { fatal: true });
+    let text = "", bytes = 0;
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > 16384) return "UNKNOWN";
+      text += decoder.decode(value, { stream: true });
+    }
+    text += decoder.decode();
+    return censusObjectBinding(JSON.parse(text));
+  } catch {
+    return "UNKNOWN";
+  } finally {
+    if (reader) await reader.cancel().catch(() => {});
+  }
+}
+
 function validCensusDate(value, now) {
   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value)) return false;
   const time = Date.parse(value);
@@ -190,7 +275,7 @@ function validCensusDate(value, now) {
   return Number.isFinite(time) && time <= now && new Date(time).toISOString() === canonical;
 }
 
-function censusAxisVerdicts(row, axes, revision, now) {
+function censusAxisVerdicts(row, axes, revision, now, binding) {
   const result = (state, claim, detail) => ({ state, claim, detail });
   const unqualified = (detail) => [result("SKIP", "hf census axes", detail)];
   if (!row || typeof row !== "object" || Array.isArray(row) ||
@@ -211,7 +296,7 @@ function censusAxisVerdicts(row, axes, revision, now) {
   ];
   // A positive current claim is always compared, even if an old date or a known historical
   // revision is attached. Never let archive treatment hide an explicit current mismatch.
-  if (revision === FROZEN_CENSUS.revision && row.scope !== "current") {
+  if (binding === "FROZEN" && row.scope !== "current") {
     if (!dateQualified) return [...diagnostics, ...unqualified("historical binding is unqualified; no current-coverage verdict")];
     const matches = row.as_of === FROZEN_CENSUS.asOf &&
       row.schema === "csoai.gspc-axes/0.5" && row.status === "UNMEASURED" &&
@@ -220,14 +305,15 @@ function censusAxisVerdicts(row, axes, revision, now) {
       (row.scope === undefined || row.scope === "frozen") &&
       row.axes.every((axis, i) => axis === FROZEN_CENSUS.axes[i]);
     if (!matches) return [result("FAIL", "hf census scope",
-      "first row contradicts the pinned frozen revision/date/saved-axis declaration; historical exception refused")];
+      "first row contradicts the pinned frozen object/date/saved-axis declaration; historical exception refused")];
     return [result("SKIP", "hf census axes",
       "historical first-row scope: " + claimed + " axes (0 measured + " + row.unmeasured_axes +
       " unmeasured), as_of " + row.as_of + ", revision " + revision +
-      "; live board has " + axes + ". Not current coverage; other rows and historical-board correctness were not checked")];
+      "; live board has " + axes + ". Repository object identity and reviewed scope matched. " +
+      "Not current coverage; other rows, full-file hash and historical-board correctness were not checked")];
   }
-  if (revision === FROZEN_CENSUS.revision && row.scope === "current") diagnostics.push(result("FAIL", "hf census scope",
-    "the pinned frozen revision is also presented as current; archive declaration and current claim conflict"));
+  if (binding === "FROZEN" && row.scope === "current") diagnostics.push(result("FAIL", "hf census scope",
+    "the pinned frozen object is also presented as current; archive declaration and current claim conflict"));
   if (row.scope !== "current") diagnostics.push(result("SKIP", "hf census scope",
     "no qualified frozen declaration for revision " + revision +
     "; first-row count comparison only, not archive or whole-file acceptance"));
@@ -235,8 +321,8 @@ function censusAxisVerdicts(row, axes, revision, now) {
     "first row accounts for " + claimed + " axes (" + row.measured_axes + " measured + " +
     row.unmeasured_axes + " unmeasured); live board has " + axes +
     "; an old or unqualified date does not excuse a current count mismatch")];
-  if (!dateQualified || (row.scope !== undefined && row.scope !== "current")) {
-    return [...diagnostics, ...unqualified("first-row total equals the live count, but date or scope remains unqualified")];
+  if (!dateQualified || binding === "UNKNOWN" || row.scope !== "current") {
+    return [...diagnostics, ...unqualified("first-row total equals the live count, but date, object identity or scope remains unqualified")];
   }
   return [...diagnostics, result("OK", "hf census axes",
     "first-row counts: " + row.measured_axes + " measured + " + row.unmeasured_axes +
@@ -297,11 +383,12 @@ async function checkAxisCounts() {
   if (metadata.status !== 200 || typeof revision !== "string" || !/^[a-f0-9]{40}$/.test(revision)) {
     return skip("hf census scope", "current immutable revision unavailable (HTTP " + metadata.status + "); no historical exception or current acceptance");
   }
+  const binding = await readCensusObjectBinding(revision);
   const census = await fetch(HF_CENSUS + "/resolve/" + revision + "/models.jsonl",
     { headers: { ...UA, Range: "bytes=0-4000" } });
   if (!census.ok) return skip("hf census", "HTTP " + census.status + "; first-row scope unqualified");
   const row = await firstCensusRow(census);
-  results.push(...censusAxisVerdicts(row, axes, revision, observedAt));
+  results.push(...censusAxisVerdicts(row, axes, revision, observedAt, binding));
 }
 
 /**
@@ -1151,6 +1238,13 @@ async function main() {
     // It is one-row evidence, never a claim about every row in the 20,000-model file.
     const frozenRow = {"as_of":"2026-09-05T05:34:58Z","axes":["governance","safety","provenance","continuity","conformance","openness","machinery-conformity","care","cross-reality","detector-interop","art5-safeguard","swarm","affect","jail","provenance-controls","reserve-attestation","regulatory-framework","distribution-integrity","custody-disclosure","ai-adoption-components","labour-components","humanoid-labour-index"],"board":"https://councilof.ai/api/gspc","hub":"huggingface","issuer":"did:web:csoai.org#card-attestation-1","measured_axes":0,"model_id":"sentence-transformers/all-MiniLM-L6-v2","schema":"csoai.gspc-axes/0.5","status":"UNMEASURED","unmeasured_axes":22,"verify":"https://councilof.ai/gspc-verify"};
     const otherRevision = "f".repeat(40);
+    const brandedRevision = "159498e50f28cb482cb046b2963d7a8d39c416dd";
+    const frozenTree = [
+      { type: "file", path: "models.jsonl", oid: "4de07e073a9815a3b3360192fdd2b85ba2a3ecc3", size: 14787327,
+        lfs: { oid: "d52fd37f6cd7f19791ba2db5540a6cf25d7be508bed4944b5dd7d59e5d6e0eb1", size: 14787327 } },
+      { type: "file", path: "README.md", oid: "b15fdba5fad1154dfbbe8cea1eee039d3101251b", size: 15348 },
+    ];
+    const brandedTree = [frozenTree[0], { ...frozenTree[1], oid: "920ae6dea0cff700deda343128642ce6b5991620", size: 7115 }];
     const currentRow = { ...frozenRow, scope: "current", as_of: "2026-10-23T00:00:00Z",
       unmeasured_axes: 33, axes: Array.from({ length: 33 }, (_, i) => "axis-" + i) };
     const axisCases = [
@@ -1161,7 +1255,7 @@ async function main() {
       { name: "old date at another revision cannot imply frozen", revision: otherRevision, want: "FAIL", diagnostic: "hf census scope" },
       { name: "explicit current22 vs live33 fails at new revision", revision: otherRevision, patch: { scope: "current" }, want: "FAIL" },
       { name: "current33 vs live33 passes count only", revision: otherRevision, row: currentRow, want: "OK" },
-      { name: "matching count without qualified scope stays diagnosed", revision: otherRevision, row: { ...currentRow, scope: undefined }, want: "OK", diagnostic: "hf census scope" },
+      { name: "matching count without qualified scope stays unqualified", revision: otherRevision, row: { ...currentRow, scope: undefined }, want: "SKIP", diagnostic: "hf census scope" },
       { name: "new frozen declaration is not silently admitted", revision: otherRevision, row: { ...currentRow, scope: "frozen" }, want: "SKIP", diagnostic: "hf census scope" },
       { name: "current mismatch and missing date retain FAIL", revision: otherRevision, patch: { scope: "current", as_of: undefined }, want: "FAIL", diagnostic: "hf census date" },
       { name: "equal count with missing date is unqualified", revision: otherRevision, row: { ...currentRow, as_of: undefined }, want: "SKIP", diagnostic: "hf census date" },
@@ -1225,8 +1319,43 @@ async function main() {
         row: currentRow, rangeKind: "bad-total", want: "SKIP" },
       { name: "zero-start wildcard206 with complete newline qualifies count", revision: otherRevision,
         row: currentRow, rangeKind: "wildcard", want: "OK" },
-
-
+      { name: "reviewed README-only head change preserves historical data scope", revision: brandedRevision,
+        tree: brandedTree, want: "SKIP", historical: true },
+      { name: "same accepted objects at another immutable revision remain historical", revision: otherRevision,
+        tree: brandedTree, want: "SKIP", historical: true },
+      { name: "current claim cannot borrow historical object scope", revision: brandedRevision,
+        tree: brandedTree, patch: { scope: "current" }, want: "FAIL" },
+      { name: "current claim on frozen object fails even at equal board count", revision: brandedRevision,
+        tree: brandedTree, patch: { scope: "current" }, boardCount: 22, want: "FAIL", claim: "hf census scope" },
+      { name: "changed LFS identity cannot acquire historical exception", revision: brandedRevision,
+        tree: [{ ...frozenTree[0], lfs: { ...frozenTree[0].lfs, oid: "a".repeat(64) } }, frozenTree[1]], want: "FAIL" },
+      { name: "changed LFS pointer blob cannot acquire historical exception", revision: brandedRevision,
+        tree: [{ ...frozenTree[0], oid: "a".repeat(40) }, frozenTree[1]], want: "FAIL" },
+      { name: "changed object size cannot acquire historical exception", revision: brandedRevision,
+        tree: [{ ...frozenTree[0], size: 14787328, lfs: { ...frozenTree[0].lfs, size: 14787328 } }, frozenTree[1]], want: "FAIL" },
+      { name: "changed axis at accepted newer revision fails scope", revision: brandedRevision, tree: brandedTree,
+        patch: { axes: frozenRow.axes.map((axis, i) => i ? axis : "changed-axis") }, want: "FAIL", claim: "hf census scope" },
+      { name: "changed date at accepted newer revision fails scope", revision: brandedRevision, tree: brandedTree,
+        patch: { as_of: "2026-09-06T05:34:58Z" }, want: "FAIL", claim: "hf census scope" },
+      { name: "changed schema at accepted newer revision fails scope", revision: brandedRevision, tree: brandedTree,
+        patch: { schema: "csoai.gspc-axes/0.6" }, want: "FAIL", claim: "hf census scope" },
+      { name: "missing data metadata cannot qualify frozen scope", tree: [frozenTree[1]], want: "FAIL" },
+      { name: "duplicate data metadata cannot qualify frozen scope", tree: [...frozenTree, frozenTree[0]], want: "FAIL" },
+      { name: "missing scope declaration cannot qualify frozen scope", tree: [frozenTree[0]], want: "FAIL" },
+      { name: "unknown README declaration cannot qualify frozen scope",
+        tree: [frozenTree[0], { ...frozenTree[1], oid: "a".repeat(40) }], want: "FAIL" },
+      { name: "tree API refusal cannot pass equal current count", treeStatus: 503, revision: otherRevision,
+        row: currentRow, want: "SKIP" },
+      { name: "tree API exception cannot pass equal current count", treeThrows: true, revision: otherRevision,
+        row: currentRow, want: "SKIP" },
+      { name: "malformed tree cannot pass equal current count", treeRaw: "{bad json}", revision: otherRevision,
+        row: currentRow, want: "SKIP" },
+      { name: "paginated metadata cannot claim complete object identity", treeLink: '<next>; rel="next"',
+        boardCount: 22, want: "SKIP" },
+      { name: "oversized metadata stream is cancelled and unqualified", treeRaw: "x".repeat(20000), treeStream: true,
+        boardCount: 22, want: "SKIP" },
+      { name: "inconsistent metadata sizes are not exact identity",
+        tree: [{ ...frozenTree[0], lfs: { ...frozenTree[0].lfs, size: 1 } }, frozenTree[1]], boardCount: 22, want: "SKIP" },
     ];
     for (const c of axisCases) {
       const originalFetch = globalThis.fetch;
@@ -1236,6 +1365,7 @@ async function main() {
       const row = c.row ?? { ...frozenRow, ...c.patch };
       const raw = c.rawBytes ?? c.raw ?? JSON.stringify(row) + "\n";
       let cancelled = false;
+      let treeCancelled = false;
       try {
         globalThis.fetch = async (url, init = {}) => {
           const requested = String(url);
@@ -1246,7 +1376,19 @@ async function main() {
           if (calls.length === 2 && requested === "https://huggingface.co/api/datasets/csoai/gspc-hf-model-census") {
             return new Response(JSON.stringify({ sha: revision }), { status: c.metadataStatus ?? 200 });
           }
-          if (calls.length === 3 && requested === HF_CENSUS + "/resolve/" + revision + "/models.jsonl") {
+          if (calls.length === 3 && requested === "https://huggingface.co/api/datasets/csoai/gspc-hf-model-census/tree/" + revision) {
+            if (c.treeThrows) throw new Error("offline metadata unavailable");
+            const tree = c.tree ?? (revision === FROZEN_CENSUS.revision ? frozenTree :
+              [{ ...frozenTree[0], oid: "b".repeat(40), lfs: { ...frozenTree[0].lfs, oid: "b".repeat(64) } }, frozenTree[1]]);
+            const treeRaw = c.treeRaw ?? JSON.stringify(tree);
+            const body = c.treeStream ? new ReadableStream({
+              start(controller) { controller.enqueue(new TextEncoder().encode(treeRaw)); },
+              cancel() { treeCancelled = true; },
+            }) : treeRaw;
+            return new Response(body, { status: c.treeStatus ?? 200,
+              headers: c.treeLink ? { link: c.treeLink } : {} });
+          }
+          if (calls.length === 4 && requested === HF_CENSUS + "/resolve/" + revision + "/models.jsonl") {
             const body = c.stream ? new ReadableStream({
               start(controller) { controller.enqueue(new TextEncoder().encode(raw + "x".repeat(10000))); },
               cancel() { cancelled = true; },
@@ -1273,17 +1415,17 @@ async function main() {
         const observed = results.find((r) => r.claim === (c.claim ?? "hf census axes"));
         const expectsRow = (c.metadataStatus ?? 200) === 200 &&
           typeof revision === "string" && /^[a-f0-9]{40}$/.test(revision);
-        const requestIdentity = calls.length === (expectsRow ? 3 : 2) &&
+        const requestIdentity = calls.length === (expectsRow ? 4 : 2) &&
           calls.every(({ init }) => (init.method ?? "GET") === "GET" && init.body === undefined &&
             Object.keys(init.headers ?? {}).every((name) => ["user-agent", "accept", "range"].includes(name.toLowerCase()))) &&
-          (!expectsRow || calls[2].init.headers.Range === "bytes=0-4000") &&
+          (!expectsRow || calls[3].init.headers.Range === "bytes=0-4000") &&
           calls.every(({ url }) => !url.includes("/resolve/main/"));
         if (!requestIdentity || observed?.state !== c.want ||
             (c.want !== "FAIL" && results.some((r) => r.state === "FAIL")) ||
             (c.diagnostic && !results.some((r) => r.claim === c.diagnostic && r.state === "SKIP")) ||
             (c.historical && (!observed.detail.includes("historical first-row scope") ||
               !observed.detail.includes("Not current coverage") || !observed.detail.includes("other rows"))) ||
-            (c.stream && !cancelled)) {
+            (c.stream && !cancelled) || (c.treeStream && !treeCancelled)) {
           console.error("selftest FAIL: census " + c.name + " -> " + JSON.stringify(results) + ", wanted " + c.want);
           bad++;
         }
@@ -2047,6 +2189,76 @@ async function main() {
         }
       }
     ];
+    // The manifest declares this alternative for every per-asset wrapper door too.
+    // Keep fixtures independent of the classifier's description/shape constants.
+    const assetDescription = "Wrapped-asset parity evidence for {ASSET}: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.";
+    const assetPairs = {
+      usdc: ["usdc.e:arbitrum", "usdc.e:optimism", "usdbc:base", "usdc:base", "usdc:arbitrum", "usdc.e:polygon", "usdc:zksync-era"],
+      usdt: ["usdt:arbitrum", "usdt:optimism", "usdt:polygon", "usdt0:optimism", "usdt0:arbitrum"],
+      dai: ["dai:optimism", "dai:base", "dai:polygon"],
+    };
+    const assetCase = (asset = "dai") => ({
+      name: asset + " explicitly declines to sell", want: "SKIP", status: 200, challenge: false,
+      resource: { method: "GET", url: wrapperOrigin + "/api/wrapper/asset/" + asset,
+        paid_for: "issuance", asset: asset.toUpperCase(),
+        free_preview: wrapperOrigin + "/api/wrapper/asset/" + asset + "?preview=1",
+        description: assetDescription.replace("{ASSET}", asset.toUpperCase()),
+        no_sale: { status: 200, body: { preview_only: true, state: "UNMEASURED",
+          payment: { requested: false, sent_to_facilitator: false, settled: false } } } },
+      body: { schema: "csoai.wrapper-asset-pack/0.1", kind: "preview", asset: asset.toUpperCase(),
+        preview_only: true, state: "UNMEASURED", counts: { UNMEASURED: assetPairs[asset].length }, pairs: [...assetPairs[asset]],
+        cards: assetPairs[asset].map(id => ({ schema: "https://councilof.ai/schema/card-v0.json", preview: true,
+          payload: { id, state: "UNMEASURED" } })),
+        payment: { requested: false, presented: false, sent_to_facilitator: false, settled: false } },
+    });
+    manifestCases.push(...["usdc", "usdt", "dai"].map(assetCase));
+    for (const [name, mutate] of [
+      ["missing declared no-sale contract", c => { delete c.resource.no_sale; }],
+      ["wrong declared no-sale status", c => { c.resource.no_sale.status = 402; }],
+      ["changed declared state", c => { c.resource.no_sale.body.state = "MEASURED"; }],
+      ["missing declared payment flag", c => { delete c.resource.no_sale.body.payment.settled; }],
+      ["extra declared payment flag", c => { c.resource.no_sale.body.payment.presented = false; }],
+      ["declared payment requested", c => { c.resource.no_sale.body.payment.requested = true; }],
+      ["unrelated route", c => { c.resource.url = wrapperOrigin + "/api/other"; }],
+      ["unknown asset", c => { c.resource.url = wrapperOrigin + "/api/wrapper/asset/doge"; }],
+      ["foreign origin", c => { c.resource.url = "https://untrusted.invalid/api/wrapper/asset/dai"; }],
+      ["wrong method", c => { c.resource.method = "POST"; }],
+      ["wrong sold purpose", c => { c.resource.paid_for = "assembly"; }],
+      ["description drift", c => { c.resource.description += " Buyable now."; }],
+      ["wrong declared asset", c => { c.resource.asset = "USDC"; }],
+      ["wrong preview URL", c => { c.resource.free_preview += "&extra=1"; }],
+      ["plain 200", c => { c.body = {}; }],
+      ["wrong body schema", c => { c.body.schema = "unrelated/1"; }],
+      ["wrong body kind", c => { c.body.kind = "delivery"; }],
+      ["wrong body asset", c => { c.body.asset = "USDC"; }],
+      ["not preview only", c => { c.body.preview_only = false; }],
+      ["measured body", c => { c.body.state = "MEASURED"; }],
+      ["unknown payment flag", c => { c.body.payment.extra = false; }],
+      ["payment flags are an array", c => { c.body.payment = []; }],
+      ["mixed measured counts", c => { c.body.counts.ESCROW_PARITY_READ = 1; }],
+      ["no observed pairs", c => { c.body.counts.UNMEASURED = 0; }],
+      ["inconsistent pair count", c => { c.body.counts.UNMEASURED = 2; }],
+      ["duplicated pairs", c => { c.body.pairs.push(c.body.pairs[0]); c.body.counts.UNMEASURED = 2; }],
+      ["missing cards", c => { delete c.body.cards; }],
+      ["readable preview card", c => { c.body.cards[0].payload.state = "ESCROW_PARITY_READ"; }],
+      ["wrong pair card", c => { c.body.cards[0].payload.id = "usdc:base"; }],
+      ["wrong asset pair and card", c => { c.body.pairs[0] = "usdc:base"; c.body.cards[0].payload.id = "usdc:base"; }],
+      ["unknown asset alias", c => { c.body.pairs[0] = "daiish:base"; c.body.cards[0].payload.id = "daiish:base"; }],
+      ["signed card in preview", c => { c.body.cards[0].sig_ed25519 = "synthetic"; }],
+      ["200 carrying a payment challenge", c => { c.challenge = true; }],
+      ["bare per-asset 402", c => { c.status = 402; }],
+    ]) {
+      const c = assetCase(); c.name = "per-asset refuses " + name; c.want = "FAIL"; mutate(c); manifestCases.push(c);
+    }
+    for (const key of ["requested", "presented", "sent_to_facilitator", "settled"]) {
+      for (const value of [undefined, true, "false"]) {
+        const c = assetCase(); c.name = "per-asset refuses " + key + "=" + value; c.want = "FAIL";
+        c.body.payment[key] = value; manifestCases.push(c);
+      }
+    }
+    const assetChallenge = assetCase(); assetChallenge.name = "per-asset 402 challenge remains OK";
+    assetChallenge.status = 402; assetChallenge.challenge = true; assetChallenge.want = "OK";
+    manifestCases.push(assetChallenge);
     for (const c of manifestCases) {
       const originalFetch = globalThis.fetch;
       const savedResults = results.splice(0);

@@ -24,6 +24,7 @@ export interface GspcAxis {
   colour: string;
   note?: string;
   kind?: string;
+  public_leader_state?: string;
 }
 interface GspcResponse {
   schema: string;
@@ -33,51 +34,179 @@ interface GspcResponse {
   totals: { public_count?: string; measured_axes?: number; unmeasured_axes?: number; axes?: number };
   limitations: string[];
 }
-function useGspc(): { axes: GspcAxis[]; source: string; measuredOn: string; publicCount: string; loading: boolean; error: string | null; limitations: string[]; issuer: string } {
-  const [state, setState] = useState<{
-    axes: GspcAxis[];
-    source: string;
-    measuredOn: string;
-    publicCount: string;
-    loading: boolean;
-    error: string | null;
-    limitations: string[];
-    issuer: string;
-  }>({
-    axes: AXES.map((axis) => ({ ...axis, kind: axis.kind || "model-comparison" })),
+export const MODEL_REGISTRY_TIMEOUT_MS = 15_000;
+const STATUS = new Set(["MEASURED", "UNMEASURED", "DRAFT", "SPEC", "PLANNED"]);
+const object = (value: unknown): Record<string, unknown> | null =>
+  value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+const optionalText = (value: unknown) =>
+  value == null || typeof value === "string";
+const fraction = (value: unknown) =>
+  value == null ||
+  (typeof value === "number" &&
+    Number.isFinite(value) &&
+    value >= 0 &&
+    value <= 1);
+
+/** Validate every field this view renders before calling array/string/number methods.
+ * Additional evidence fields stay on the wire; this does not admit a measurement. */
+export function parseModelRegistryResponse(value: unknown): GspcResponse {
+  const body = object(value);
+  if (body?.schema !== "csoai.gspc-axes/0.5" || !Array.isArray(body.axes))
+    throw new Error("The response is not a supported GSPC board");
+  const seen = new Set<string>();
+  const axes = body.axes.map((value): GspcAxis => {
+    const row = object(value);
+    if (
+      !row ||
+      typeof row.axis !== "string" ||
+      !/^[a-z0-9_.-]{1,120}$/i.test(row.axis) ||
+      seen.has(row.axis) ||
+      typeof row.bench !== "string" ||
+      typeof row.task !== "string" ||
+      typeof row.n !== "number" ||
+      !Number.isSafeInteger(row.n) ||
+      row.n < 0 ||
+      typeof row.status !== "string" ||
+      !STATUS.has(row.status) ||
+      ![
+        row.leader,
+        row.dataset,
+        row.note,
+        row.kind,
+        row.separation,
+        row.public_leader_state,
+      ].every(optionalText) ||
+      ![
+        row.accuracy,
+        row.separation_p,
+        row.fleet_mean,
+        row.macro_f1,
+        row.unparsed_rate,
+      ].every(fraction) ||
+      (row.interval != null &&
+        (!Array.isArray(row.interval) ||
+          row.interval.length !== 2 ||
+          !row.interval.every(
+            (part) => typeof part === "number" && fraction(part),
+          ) ||
+          row.interval[0] > row.interval[1]))
+    ) {
+      throw new Error("The board contains an unreadable axis row");
+    }
+    seen.add(row.axis);
+    return {
+      ...row,
+      colour: typeof row.colour === "string" ? row.colour : "#34d399",
+    } as unknown as GspcAxis;
+  });
+  const measured = body.measured_on == null ? null : object(body.measured_on);
+  const totals = body.totals == null ? null : object(body.totals);
+  if (
+    !measured ||
+    !totals ||
+    typeof measured.date !== "string" ||
+    !measured.date.trim() ||
+    !optionalText(totals?.public_count) ||
+    typeof body.issuer !== "string" ||
+    !body.issuer.trim() ||
+    (body.limitations != null &&
+      (!Array.isArray(body.limitations) ||
+        !body.limitations.every((line) => typeof line === "string")))
+  ) {
+    throw new Error("The board metadata could not be read");
+  }
+  return {
+    ...body,
+    axes,
+    measured_on: measured ?? {},
+    totals: totals ?? {},
+    limitations: body.limitations ?? [],
+    issuer: body.issuer ?? "",
+  } as unknown as GspcResponse;
+}
+
+function useGspc() {
+  const [attempt, setAttempt] = useState(0);
+  const [state, setState] = useState({
+    axes: AXES.map((axis) => ({
+      ...axis,
+      kind: axis.kind || "model-comparison",
+    })) as GspcAxis[],
     source: "snapshot",
     measuredOn: MEASURED_ON.date,
     publicCount: "",
     loading: true,
-    error: null,
-    limitations: [],
+    error: null as string | null,
+    limitations: [] as string[],
     issuer: "",
   });
 
   useEffect(() => {
     const ac = new AbortController();
-    fetch("/api/gspc", { signal: ac.signal })
-      .then((r) => r.json())
-      .then((d: GspcResponse) => {
+    let active = true;
+    let timedOut = false;
+    setState((previous) => ({ ...previous, loading: true }));
+    const timeout = window.setTimeout(() => {
+      timedOut = true;
+      ac.abort();
+      if (active)
+        setState((previous) => ({
+          ...previous,
+          loading: false,
+          error:
+            "The board request timed out. No current response was confirmed.",
+        }));
+    }, MODEL_REGISTRY_TIMEOUT_MS);
+    fetch("/api/gspc", {
+      signal: ac.signal,
+      headers: { accept: "application/json" },
+    })
+      .then(async (response) => {
+        if (!response.ok)
+          throw new Error(`The board returned HTTP ${response.status}`);
+        if (
+          (response.headers.get("content-type") || "")
+            .toLowerCase()
+            .includes("text/html")
+        )
+          throw new Error("The board returned HTML instead of JSON");
+        return parseModelRegistryResponse(await response.json());
+      })
+      .then((board) => {
+        if (!active || timedOut) return;
         setState({
-          axes: d.axes,
+          axes: board.axes,
           source: "wire",
-          measuredOn: d.measured_on?.date ?? "",
-          // The whole board, derived by the API — never a slot number typed here.
-          publicCount: d.totals?.public_count ?? "",
+          measuredOn: board.measured_on?.date ?? "",
+          publicCount: board.totals?.public_count ?? "",
           loading: false,
           error: null,
-          limitations: d.limitations ?? [],
-          issuer: d.issuer ?? "",
+          limitations: board.limitations,
+          issuer: board.issuer,
         });
       })
-      .catch(() => {
-        setState((s) => ({ ...s, loading: false }));
-      });
-    return () => ac.abort();
-  }, []);
+      .catch((error) => {
+        if (!active || timedOut) return;
+        setState((previous) => ({
+          ...previous,
+          loading: false,
+          error:
+            error instanceof Error
+              ? error.message
+              : "The board response could not be read",
+        }));
+      })
+      .finally(() => window.clearTimeout(timeout));
+    return () => {
+      active = false;
+      window.clearTimeout(timeout);
+      ac.abort();
+    };
+  }, [attempt]);
 
-  return state;
+  return { ...state, retry: () => setAttempt((value) => value + 1) };
 }
 
 function fmtCI(lo: number, hi: number) { return `[${lo.toFixed(3)}, ${hi.toFixed(3)}]`; }
@@ -110,27 +239,19 @@ const AXIS_LABEL: Record<string, string> = {
 };
 
 export default function ModelRegistry() {
-  const { axes, source, measuredOn, publicCount, loading, limitations, issuer } = useGspc();
+  const { axes, source, measuredOn, publicCount, loading, error, limitations, issuer, retry } = useGspc();
   const framed = typeof window !== "undefined" && isEmbedded();
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#04070d]">
-        <div className="text-center">
-          <div className="text-sm text-slate-500">reading /api/gspc…</div>
-          <div className="mt-2 text-[11px] text-slate-600">If this takes too long, the bundled snapshot serves as fallback.</div>
-        </div>
-      </div>
-    );
-  }
 
   const { modelComparison, deterministicFacts, unclassified } =
     partitionModelRegistryAxes(axes);
-  const measuredCount = modelComparison.filter(
+  const totalMeasuredCount = axes.filter(
     (axis) => axis.status === "MEASURED",
   ).length;
   const factMeasuredCount = deterministicFacts.filter(
     (axis) => axis.status === "MEASURED",
+  ).length;
+  const measuredSubjectCount = unclassified.filter(
+    (axis) => axis.kind === "measured-subject",
   ).length;
 
   return (
@@ -153,8 +274,8 @@ export default function ModelRegistry() {
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500">
             <span>
               {source === "wire"
-                ? `live · /api/gspc · ${measuredOn} · ${publicCount || `${axes.length} axis · ${measuredCount + factMeasuredCount} measured`} · ${modelComparison.length} model-comparison + ${deterministicFacts.length} deterministic-fact${unclassified.length ? ` · ${unclassified.length} unclassified` : ""}`
-                : `bundled snapshot (${measuredOn}) · /api/gspc unreachable`}
+                ? `live · /api/gspc · ${measuredOn} · ${publicCount || `${axes.length} axis · ${totalMeasuredCount} measured`} · ${modelComparison.length} model-comparison + ${deterministicFacts.length} deterministic-fact${measuredSubjectCount ? ` · ${measuredSubjectCount} measured-subject` : ""}${unclassified.length > measuredSubjectCount ? ` · ${unclassified.length - measuredSubjectCount} unclassified` : ""}`
+                : `bundled snapshot (${measuredOn}) · not a current API response`}
             </span>
             {issuer && <span className="text-slate-600">issuer {issuer}</span>}
             <a
@@ -164,6 +285,33 @@ export default function ModelRegistry() {
               Living board ↗
             </a>
           </div>
+          {loading ? (
+            <p role="status" className="mt-3 text-sm text-slate-400">
+              {error ? "Retrying" : "Reading"} /api/gspc… The dated snapshot
+              remains separate from a current response.
+            </p>
+          ) : null}
+          {error ? (
+            <div
+              role="alert"
+              className="mt-3 rounded-xl border border-amber-500/30 bg-amber-950/30 p-4 text-sm text-amber-200"
+              data-testid="model-registry-unreachable"
+            >
+              <p>
+                <strong>UNREACHABLE</strong> · {error} The displayed rows are
+                the bundled snapshot ({MEASURED_ON.date}), not live
+                measurements.
+              </p>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={retry}
+                className="mt-3 min-h-11 rounded-lg border border-amber-500/40 px-3 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:opacity-50"
+              >
+                {loading ? "Retrying board…" : "Retry board"}
+              </button>
+            </div>
+          ) : null}
           {limitations.length > 0 && (
             <details className="mt-2 text-[11px] text-slate-600">
               <summary className="cursor-pointer">Limitations ({limitations.length})</summary>
@@ -179,8 +327,14 @@ export default function ModelRegistry() {
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {modelComparison.length === 0 && (
           <div className="rounded-xl border border-white/8 bg-white/[0.02] p-6 text-center text-sm text-slate-400">
-            The live board could not be read and the bundled snapshot carries no per-axis
-            leaders. Read the board directly at <a className="text-emerald-400 hover:underline" href="/api/gspc">/api/gspc</a>.
+            {source === "wire"
+              ? "This board response contains no model-comparison axes. No model ranking is inferred."
+              : "The bundled snapshot contains no model-comparison rows."}{" "}
+            Read the source directly at{" "}
+            <a className="text-emerald-400 hover:underline" href="/api/gspc">
+              /api/gspc
+            </a>
+            .
           </div>
         )}
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -188,6 +342,7 @@ export default function ModelRegistry() {
             const isMeasured = a.status === "MEASURED";
             const hasInterval = a.interval && a.interval.length === 2;
             const hasLeaderAccuracy =
+              !a.public_leader_state &&
               typeof a.accuracy === "number" && Number.isFinite(a.accuracy);
             return (
               <div
@@ -281,7 +436,11 @@ export default function ModelRegistry() {
 
         {/* Scoreboard link footnote */}
         <div className="mt-8 border-t border-white/8 pt-4 text-center text-[11px] text-slate-600">
-          This page shows per-axis leaders from the live API. The living board is at{" "}
+          This page shows per-axis results from{" "}
+          {source === "wire"
+            ? "the validated API response"
+            : "the dated bundled snapshot"}
+          . The living board is at{" "}
           <a className="text-emerald-400 hover:underline" href="/gspc-scoreboard/">
             /gspc-scoreboard/
           </a>
