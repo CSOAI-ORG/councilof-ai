@@ -205,6 +205,7 @@ export type PaidResponseOptions = {
   paymentResponse?: string;
   buyer?: SettledBuyer;
   buyerState?: string;
+  observationState?:string;
 };
 
 function deliveryHeaders(response: Response, state: string, paymentResponse?: string): Headers {
@@ -261,14 +262,16 @@ async function retainOutputWithinBudget(kv: KvLike, record: DeliveryRecord,
   }
 }
 
-function retentionHeaders(response: Response, state: string, buyerState?: string): Headers {
+function retentionHeaders(response: Response, state: string, buyerState?: string,observationState?:string): Headers {
   const headers = new Headers(response.headers);
   const name = "x-csoai-output-retention-state";
   headers.set(name, state);
   if(buyerState)headers.set("x-csoai-purchase-state",buyerState);
+  if(observationState)headers.set("x-csoai-bookkeeping-state",observationState);
   const exposed = (headers.get("access-control-expose-headers") || "").split(",").map(v => v.trim()).filter(Boolean);
   if (!exposed.some(v => v.toLowerCase() === name)) exposed.push(name);
   if(buyerState && !exposed.some(v=>v.toLowerCase()==="x-csoai-purchase-state"))exposed.push("x-csoai-purchase-state");
+  if(observationState&&!exposed.some(v=>v.toLowerCase()==="x-csoai-bookkeeping-state"))exposed.push("x-csoai-bookkeeping-state");
   headers.set("access-control-expose-headers", exposed.join(", "));
   return headers;
 }
@@ -304,7 +307,7 @@ export async function recordPaidResponse(response: Response, opts: PaidResponseO
     finally { budget?.clear(); }
   }
   const result = new Response(bytes, { status: response.status, statusText: response.statusText, headers: deliveryHeaders(response, state, opts.paymentResponse) });
-  return new Response(result.body, { status: result.status, statusText: result.statusText, headers: retentionHeaders(result, retention, opts.buyerState) });
+  return new Response(result.body, { status: result.status, statusText: result.statusText, headers: retentionHeaders(result, retention, opts.buyerState,opts.observationState) });
 }
 
 /** A verified settlement followed by failed output is not successful delivery.

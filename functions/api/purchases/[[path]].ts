@@ -58,32 +58,54 @@ async function original(env:BuyerEnv,row:PurchaseRecord){
     seen.add(pair[0]);headerBytes+=new TextEncoder().encode(pair[0]+pair[1]).byteLength;
     if(headerBytes>8192)throw new BuyerHold("original headers exceed bound",503);headers.push([pair[0],pair[1]]);
   }
-  if(!headers.some(([name,value])=>(name==="x-payment-response"||name==="payment-response") && value===row.payment_response))
+  const receiptEcho=headers.find(([name])=>name==="x-payment-response")?.[1] ||
+    headers.find(([name])=>name==="payment-response")?.[1];
+  let echo:Record<string,unknown>|null=null;
+  try{const decoded=JSON.parse(atob(receiptEcho||""));if(object(decoded))echo=decoded;}catch{}
+  if(!receiptEcho||!echo||echo.success!==true||(echo.transaction??echo.txHash)!==row.transaction||
+      typeof echo.payer!=="string"||echo.payer.toLowerCase()!==row.payer)
     throw new BuyerHold("original receipt echo mismatch",503);
   const binary=atob(body.body_base64);const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
   if(bytes.byteLength!==metadata.response_bytes || bytes.byteLength>RETAINED_OUTPUT_MAX_BYTES ||
       await purchaseSha256(bytes)!==metadata.response_sha256)throw new BuyerHold("original result digest mismatch",503);
-  return {metadata,bytes,headers,status:body.status,status_text:body.status_text,body_base64:body.body_base64};
+  return {metadata,bytes,headers,payment_response:receiptEcho,status:body.status,status_text:body.status_text,body_base64:body.body_base64};
 }
 const decisionPrefix=async(buyer:BuyerIdentity,tx:string)=>"private:purchase-decision:v1:"+buyer.owner_hash+":"+
   await purchaseSha256(new TextEncoder().encode(tx))+":";
-async function decisionRows(env:BuyerEnv,buyer:BuyerIdentity,tx:string){
+async function decisionRows(env:BuyerEnv,buyer:BuyerIdentity,tx:string,query=new URLSearchParams()){
   const prefix=await decisionPrefix(buyer,tx);
-  const listed=await buyerDeadline(()=>env.REVENUE_KV!.list({prefix,limit:25}));
-  const rows:unknown[]=[];
-  for(const key of listed.keys){
-    if(!key.name.startsWith(prefix))throw new BuyerHold("decision listing scope mismatch",503);
-    const raw=await buyerDeadline(()=>env.REVENUE_KV!.get(key.name));
-    let row:unknown;try{row=raw?JSON.parse(raw):null;}catch{throw new BuyerHold("decision record unreadable",503);}
-    if(!object(row)||row.schema!=="csoai.buyer-result-decision/1"||row.owner_hash!==buyer.owner_hash||row.transaction!==tx)
-      throw new BuyerHold("decision record scope mismatch",503);rows.push(row);
+  const cursor=query.get("cursor")||undefined,requestId=query.get("request_id");
+  if(cursor&&cursor.length>2048)throw new BuyerHold("invalid cursor",400);
+  if(requestId!==null&&!validGeneration(requestId))throw new BuyerHold("invalid decision request id",400);
+  if(cursor&&requestId)throw new BuyerHold("use either a cursor or exact decision request id",400);
+  const read=async(key:string)=>{
+    if(!key.startsWith(prefix))throw new BuyerHold("decision listing scope mismatch",503);
+    const raw=await buyerDeadline(()=>env.REVENUE_KV!.get(key));
+    if(raw===null)return null;
+    let row:unknown;try{row=JSON.parse(raw);}catch{throw new BuyerHold("decision record unreadable",503);}
+    if(!object(row)||row.schema!=="csoai.buyer-result-decision/1"||row.owner_hash!==buyer.owner_hash||row.transaction!==tx||
+        !validGeneration(row.request_id)||typeof row.action!=="string"||!["accept","reject","request_correction"].includes(row.action)||
+        !validGeneration(row.result_sha256)||typeof row.result_version!=="string"||typeof row.reason!=="string"||
+        !validGeneration(row.intent_sha256)||key!==prefix+row.request_id)
+      throw new BuyerHold("decision record scope mismatch",503);
+    return row;
+  };
+  if(requestId){
+    const row=await read(prefix+requestId);
+    return {rows:row?[row]:[],request_id:requestId,list_complete:true,cursor:null,
+      state:row?"EXACT_REQUEST_OBSERVED":"REQUEST_NOT_OBSERVED",
+      claim_boundary:"A missing read is not proof that an unknown write did not commit. Do not automatically retry the decision."};
   }
+  const listed=await buyerDeadline(()=>env.REVENUE_KV!.list({prefix,limit:25,...(cursor?{cursor}:{})}));
+  const rows:unknown[]=[];
+  for(const key of listed.keys){const row=await read(key.name);if(!row)throw new BuyerHold("listed decision unavailable",503);rows.push(row);}
   return {rows,list_complete:listed.list_complete,cursor:listed.cursor||null,
     state:"BUYER_DECLARATIONS_OBSERVED",claim_boundary:"Explicit buyer decisions are not inferred from download. KV is eventually consistent; no exclusive current-state or merchant acceptance is inferred."};
 }
 export async function handlePurchases(request:Request,env:BuyerEnv):Promise<Response>{
   try{
     const buyer=await currentBuyer(env,request);
+    if(!env.REVENUE_KV)throw new BuyerHold("purchase store unavailable",503);
     const u=new URL(request.url);
     const parts=u.pathname.replace(/^\/api\/purchases\/?/,"").split("/").filter(Boolean).map(decodeURIComponent);
     if(parts.length===1 && parts[0]==="prepare" && request.method==="POST"){
@@ -118,7 +140,7 @@ export async function handlePurchases(request:Request,env:BuyerEnv):Promise<Resp
     const tx=parts[0];const row=await owned(env,buyer,tx);
     if(parts.length===2 && parts[1]==="decisions" && request.method==="POST"){
       const b=await smallJson(request);
-      if(!["accept","reject","request_correction"].includes(String(b.action))||!validGeneration(b.request_id)||
+      if(typeof b.action!=="string" || !["accept","reject","request_correction"].includes(b.action)||!validGeneration(b.request_id)||
           !validGeneration(b.result_sha256)||typeof b.result_version!=="string"||
           (b.reason!==undefined && (typeof b.reason!=="string"||b.reason.length>2000)))
         throw new BuyerHold("decision action, request id and original result identity required",400);
@@ -156,6 +178,7 @@ export async function handlePurchases(request:Request,env:BuyerEnv):Promise<Resp
     const artifact=await original(env,row);
     if(parts[1]==="body"){
       const headers=new Headers(artifact.headers);
+      headers.delete("content-encoding");
       headers.set("content-disposition",'attachment; filename="csoai-original-result.bin"');
       headers.set("cache-control","private, no-store");headers.set("vary","Authorization");
       headers.set("content-security-policy","sandbox; default-src 'none'");
@@ -164,14 +187,14 @@ export async function handlePurchases(request:Request,env:BuyerEnv):Promise<Resp
       return new Response(artifact.bytes,{status:200,headers});
     }
     if(parts[1] && parts[1]!=="decisions")throw new BuyerHold("not found",404);
-    const decisions=await decisionRows(env,buyer,tx);
+    const decisions=await decisionRows(env,buyer,tx,u.searchParams);
     if(parts[1]==="decisions")return json(decisions);
     return json({schema:"csoai.owned-purchase-result/1",transaction:tx,resource:row.resource,
       result:{sha256:artifact.metadata.response_sha256,bytes:artifact.bytes.byteLength,version:artifact.metadata.delivered_at,
         original_status:artifact.status,original_status_text:artifact.status_text,headers:artifact.headers,
         download_url:"/api/purchases/"+encodeURIComponent(tx)+"/body",
         ...(u.searchParams.get("include_body")==="1"?{body_base64:artifact.body_base64}:{})},
-      receipt:{payment_response:row.payment_response,state:"ROUTE_REPORTED_UNVERIFIED"},decisions,
+      receipt:{payment_response:artifact.payment_response,state:"ROUTE_REPORTED_UNVERIFIED"},decisions,
       acceptance_inferred:false,claim_boundary:"Original prepared body and stored route receipt only. No regeneration, settlement, provider/model call, new signature or inferred acceptance."});
   }catch(error){
     return json({error:error instanceof BuyerHold?error.message:"purchase state could not be qualified",

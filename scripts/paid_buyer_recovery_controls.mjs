@@ -6,7 +6,7 @@ import { stripTypeScriptTypes } from "node:module";
 import { webcrypto } from "node:crypto";
 const root=process.argv[2];
 if(!root)throw new Error("exact source root required");
-const cases=[];let financialCalls=[];let failNetwork=false;
+const cases=[];let financialCalls=[];let failNetwork=false;let fixtureTransaction="fixture-transaction-1";
 const fixturePayer="0x"+"1".repeat(40),payTo="0x"+"2".repeat(40);
 const fixtureFetch=async(input,init={})=>{
   const url=String(input);assert.ok(url.startsWith("https://fixture.invalid/"),"no external network");
@@ -14,7 +14,7 @@ const fixtureFetch=async(input,init={})=>{
   if(failNetwork)throw new Error("network forbidden in recovery");
   if(url.endsWith("/supported"))return Response.json({kinds:[{x402Version:1,scheme:"exact",network:"base"},{x402Version:2,scheme:"exact",network:"eip155:8453"}]});
   if(url.endsWith("/verify"))return Response.json({isValid:true});
-  if(url.endsWith("/settle"))return Response.json({success:true,transaction:"fixture-transaction-1",network:"base",payer:fixturePayer});
+  if(url.endsWith("/settle"))return Response.json({success:true,transaction:fixtureTransaction,network:"base",payer:fixturePayer});
   throw new Error("unexpected synthetic transport");
 };
 const context=vm.createContext({crypto:webcrypto,Request,Response,Headers,URL,URLSearchParams,TextEncoder,TextDecoder,
@@ -28,7 +28,7 @@ function synthetic(name,exports){
 }
 const config={ESTATE_PAY_TO:payTo,resolvePayTo:()=>payTo,facilitatorUrl:env=>env.X402_FACILITATOR_URL||null,
  USDC_BASE_EIP712:{name:"USD Coin",version:"2"},NETWORK_SLUG_BASE:"base",NETWORK_CAIP2_BASE:"eip155:8453",
- toCaip2Network:n=>n==="base"?"eip155:8453":n,toLegacyNetwork:n=>n==="eip155:8453"?"base":n};
+ railMode:()=>({mode:"fixture"}),toCaip2Network:n=>n==="base"?"eip155:8453":n,toLegacyNetwork:n=>n==="eip155:8453"?"base":n};
 async function load(relative){
  relative=relative.replaceAll("\\","/");if(modules.has(relative))return modules.get(relative);
  const source=await fs.readFile(path.join(root,relative),"utf8");
@@ -42,9 +42,11 @@ async function load(relative){
   if(target==="functions/api/_skus.ts")return synthetic("skus",{SKUS:{},USDC_BASE:{network:"base",asset:"0x"+"3".repeat(40)},usdToAtomic:()=> "10000",resolvePriceUsd:()=> "0.01"});
   if(target==="functions/api/_cdp_jwt.ts")return synthetic("cdp",{maybeMintCdpJwt:async()=>null});
   if(target==="functions/api/gspc.ts")return synthetic("board",{currentBoardLid:()=> "fixture"});
-  if(target==="functions/api/_x402_offer.ts")return synthetic("offers",{attachOffers:async value=>value});
+  if(target==="functions/api/_x402_offer.ts")return synthetic("offers",{attachOffers:async value=>value,X402_SIGNER_KID:"did:fixture#synthetic",OFFER_RECEIPT_EXTENSION:"offer-receipt"});
   if(target==="functions/api/_x402_discovery.ts")return synthetic("discovery",{declareDiscoveryExtension:()=>({}),descriptionForPath:()=>"",onBeforeSettle:value=>value});
-  if(target==="functions/api/_x402_receipt.ts")return synthetic("receipts",{buildReceiptRecord:()=>{throw Error("no fixture receipt signing");},receiptExtension:()=>({}),receiptPayload:()=>({}),signReceipt:()=>{throw Error("real receipt signing forbidden");},storeReceipt:()=>{throw Error("no fixture receipt signing");}});
+  if(target==="functions/api/_x402_jws.ts")return synthetic("jws",{parseJws:()=>null,signJws:async(_payload,key)=>{assert.equal(key,"synthetic-receipt-fixture-only");return "synthetic.unverified.receipt";},verifyJwsSignature:async()=>false,JWS_ALG:"EdDSA"});
+  if(target==="functions/_lib/cardSign.ts")return synthetic("card-sign",{signPayload:async()=>({sha256:"f".repeat(64),sig_ed25519:null,unsigned_reason:"synthetic unsigned fixture; key absent"}),canonicalBytes:value=>new TextEncoder().encode(JSON.stringify(value)),PAYLOAD_CAP_BYTES:3072});
+  if(parent.identifier==="functions/api/_ras_door.ts" && target==="functions/api/rwa/evidence.ts")return synthetic("verdict",{VERDICT_RE:/never-match-synthetic-fixture-a4b4/});
   if(target==="functions/api/_x402_descriptions.ts"){
    const imported=source.match(/import\s*\{([^}]+)\}\s*from\s*["']\.\/_x402_descriptions["']/);
    if(!imported)throw Error("description imports required");
@@ -56,7 +58,7 @@ async function load(relative){
  return m;
 }
 async function ns(file){const m=await load(file);if(m.status!=="evaluated")await m.evaluate();return m.namespace;}
-async function test(name,fn){try{await fn();cases.push({name,passed:true});}catch(error){cases.push({name,passed:false,error:String(error?.stack||error)});}}
+async function test(name,fn){if(process.env.CODEX_CONTROL_PATTERN&&!name.includes(process.env.CODEX_CONTROL_PATTERN))return;try{await fn();cases.push({name,passed:true});}catch(error){cases.push({name,passed:false,error:String(error?.stack||error)});}}
 const auth=await ns("functions/api/_authCrypto.ts");
 const pure=await ns("shared/buyerPurchase.ts");
 const buyer=await ns("functions/api/_buyer_purchase.ts");
@@ -64,6 +66,9 @@ const delivery=await ns("functions/api/_x402_delivery_record.ts");
 const api=await ns("functions/api/purchases/[[path]].ts");
 const router=await ns("functions/api/auth/[[path]].ts");
 const x402=await ns("functions/api/_x402.ts");
+const receiptStore=await ns("functions/api/_x402_receipt.ts");
+const budgets=await ns("functions/api/_bookkeeping_budget.ts");
+const ras=await ns("functions/api/_ras_door.ts");
 // Ephemeral synthetic auth fixture only, held in worker memory; never printed or saved.
 const key=await webcrypto.subtle.generateKey({name:"Ed25519"},true,["sign","verify"]);
 const fixtureKey=Buffer.from(await webcrypto.subtle.exportKey("pkcs8",key.privateKey)).toString("base64");
@@ -266,6 +271,126 @@ await test("new account generation is confirmed before a registration session is
  assert.equal(response.status,200);const data=await response.json(),verified=await auth.verifyToken(env,data.token);
  assert.ok(pure.validGeneration(verified.account_generation));
  assert.equal(JSON.parse(accounts.values.get(auth.userKey(email))).account_generation,verified.account_generation);
+});
+
+
+await test("bound payment with missing required purchase store refuses before financial calls",async()=>{
+ const before=financialCalls.length;
+ const result=await x402.verifyX402Payment(paidReq(),{...env,REVENUE_KV:undefined},target);
+ assert.equal(result.ok,false);assert.equal(financialCalls.length,before);
+});
+await test("decision action must be a string rather than coercible input",async()=>{
+ const puts=kv.calls.filter(c=>c[0]==="put").length,before=financialCalls.length;
+ for(const action of [["accept"],{toString:"accept"},1,null]){
+  const response=await api.handlePurchases(apiRequest("/decisions",tokenA,"POST",decision(action,"6".repeat(64))),env);
+  assert.equal(response.status,400);
+ }
+ assert.equal(kv.calls.filter(c=>c[0]==="put").length,puts);assert.equal(financialCalls.length,before);
+});
+await test("decision 26 is available by bounded cursor and exact read after refresh without writes",async()=>{
+ const initial=await api.handlePurchases(apiRequest("/decisions"),env);const first=(await initial.json()).rows[0];
+ const prefix=kv.calls.filter(c=>c[0]==="list").at(-1)[1];
+ for(let i=10;i<40;i++){const request_id=i.toString(16).padStart(64,"0");kv.values.set(prefix+request_id,JSON.stringify({...first,request_id}));}
+ const puts=kv.calls.filter(c=>c[0]==="put").length,before=financialCalls.length;
+ const page=await api.handlePurchases(apiRequest("/decisions"),env);const p=await page.json();
+ assert.equal(p.rows.length,25);assert.equal(p.list_complete,false);assert.ok(p.cursor);
+ const next=await api.handlePurchases(apiRequest("/decisions?cursor="+encodeURIComponent(p.cursor)),env);const n=await next.json();
+ assert.ok(n.rows.length>0);assert.equal(n.list_complete,true);
+ const id=n.rows[0].request_id;
+ const fresh=await api.handlePurchases(apiRequest("/decisions?request_id="+id),env);const exact=await fresh.json();
+ assert.equal(exact.rows.length,1);assert.equal(exact.rows[0].request_id,id);assert.equal(exact.state,"EXACT_REQUEST_OBSERVED");
+ const missing=await api.handlePurchases(apiRequest("/decisions?request_id="+"f".repeat(64)),env);
+ assert.equal((await missing.json()).state,"REQUEST_NOT_OBSERVED");
+ assert.equal((await api.handlePurchases(apiRequest("/decisions?cursor=25&request_id="+id),env)).status,400);
+ assert.equal(kv.calls.filter(c=>c[0]==="put").length,puts);assert.equal(financialCalls.length,before);
+});
+await test("download removes content encoding and preserves the original stored octets",async()=>{
+ const key=delivery.retainedOutputTxKey(tx),saved=kv.values.get(key),row=JSON.parse(saved);
+ row.headers["content-encoding"]="gzip";kv.values.set(key,JSON.stringify(row));
+ const result=await api.handlePurchases(apiRequest("/body"),env);assert.equal(result.status,200);
+ assert.equal(result.headers.get("content-encoding"),null);assert.deepEqual(new Uint8Array(await result.arrayBuffer()),originalBytes);
+ kv.values.set(key,saved);
+});
+function stalledStore(prefix,phase){
+ const base=store();let release,started=0;
+ const held=new Promise(resolve=>{release=resolve;});
+ const wrapped={...base,
+  async get(key){if(phase==="get"&&key.startsWith(prefix)){base.calls.push(["get",key]);started++;await held;return base.values.get(key)??null;}return base.get(key);},
+  async put(key,value){if(phase==="put"&&key.startsWith(prefix)){base.calls.push(["put",key]);started++;await held;base.values.set(key,value);return;}return base.put(key,value);}
+ };
+ return {wrapped,release:()=>release(),started:()=>started};
+}
+for(const phase of ["get","put"]){
+ await test("central "+phase+" stall preserves settlement, original output and no late follow-on writes",async()=>{
+  failNetwork=false;fixtureTransaction="central-stall-"+phase;
+  const h=stalledStore("settled:tx:",phase),before=financialCalls.length,start=Date.now();
+  const paid=await x402.verifyX402Payment(paidReq(),{...env,REVENUE_KV:h.wrapped},target);
+  assert.equal(paid.ok,true);assert.equal(paid.purchaseState,"RECORDED");assert.equal(h.started(),1);
+  assert.equal(financialCalls.slice(before).filter(c=>c.url.endsWith("/settle")).length,1);
+  assert.ok(Date.now()-start<1600,"post-settlement stall must be bounded");
+  const result=await delivery.recordPaidResponse(new Response(originalBytes),{kv:h.wrapped,transaction:fixtureTransaction,resource:target,
+   confirmedPaid:true,successfulOutput:true,paymentResponse:paid.paymentResponse,buyer:paid.buyer,buyerState:paid.purchaseState,observationState:budgets.postObservationState(paid)});
+  assert.equal(result.status,200);assert.deepEqual(new Uint8Array(await result.arrayBuffer()),originalBytes);
+  assert.equal(result.headers.get("x-csoai-output-retention-state"),"RETAINED");
+  assert.match(result.headers.get("x-csoai-bookkeeping-state"),phase==="put"?/UNKNOWN/:/DEADLINE/);
+  const puts=h.wrapped.calls.filter(c=>c[0]==="put").length;
+  h.release();await new Promise(resolve=>setTimeout(resolve,35));
+  assert.equal(h.wrapped.calls.filter(c=>c[0]==="put").length,puts);
+  const recovered=await api.handlePurchases(request("https://councilof.ai/api/purchases/"+fixtureTransaction+"/body"),{...env,REVENUE_KV:h.wrapped});
+  assert.equal(recovered.status,200);assert.deepEqual(new Uint8Array(await recovered.arrayBuffer()),originalBytes);
+ });
+ await test("receipt "+phase+" stall is bounded and never starts the payer index after deadline",async()=>{
+  const h=stalledStore("receipt:tx:",phase),start=Date.now();
+  const record=receiptStore.buildReceiptRecord({receipt:{format:"jws",signature:"synthetic-not-signed"},payload:{version:1,network:"eip155:8453",resourceUrl:target,payer:fixturePayer,issuedAt:1,transaction:"receipt-stall-"+phase},
+    resource:target,amount_atomic:"10000",asset:"fixture",self:false,settlement_recorded:true});
+  const result=await receiptStore.storeReceipt(h.wrapped,record);
+  assert.equal(result.stored,false);assert.equal(h.started(),1);assert.ok(Date.now()-start<1600);
+  assert.match(result.reason,phase==="put"?/UNKNOWN/:/DEADLINE/);
+  const puts=h.wrapped.calls.filter(c=>c[0]==="put").length;
+  h.release();await new Promise(resolve=>setTimeout(resolve,35));
+  assert.equal(h.wrapped.calls.filter(c=>c[0]==="put").length,puts);
+  assert.ok(!h.wrapped.calls.some(c=>c[1].startsWith("receipt:payer:")));
+ });
+ await test("central receipt "+phase+" stall still recovers its exact final echoed reference",async()=>{
+  failNetwork=false;fixtureTransaction="central-receipt-stall-"+phase;
+  const h=stalledStore("receipt:tx:",phase),before=financialCalls.length;
+  const paid=await x402.verifyX402Payment(paidReq(),{...env,REVENUE_KV:h.wrapped,BOARD_SIGN_KEY_PKCS8_B64:"synthetic-receipt-fixture-only"},target);
+  assert.equal(paid.ok,true);assert.equal(h.started(),1);assert.ok(paid.receipt);assert.match(paid.receiptGap,/not stored/);
+  assert.equal(JSON.parse(Buffer.from(paid.paymentResponse,"base64").toString()).extensions["offer-receipt"].info.receipt.signature,"synthetic.unverified.receipt");
+  const response=await delivery.recordPaidResponse(new Response(originalBytes),{kv:h.wrapped,transaction:fixtureTransaction,resource:target,
+   confirmedPaid:true,successfulOutput:true,paymentResponse:paid.paymentResponse,buyer:paid.buyer,buyerState:paid.purchaseState,observationState:budgets.postObservationState(paid)});
+  assert.equal(response.headers.get("x-csoai-output-retention-state"),"RETAINED");
+  const puts=h.wrapped.calls.filter(c=>c[0]==="put").length;h.release();await new Promise(resolve=>setTimeout(resolve,35));
+  assert.equal(h.wrapped.calls.filter(c=>c[0]==="put").length,puts);
+  const recovered=await api.handlePurchases(request("https://councilof.ai/api/purchases/"+fixtureTransaction+"?include_body=1"),{...env,REVENUE_KV:h.wrapped});
+  assert.equal(recovered.status,200);assert.equal((await recovered.json()).receipt.payment_response,paid.paymentResponse);
+  assert.equal(financialCalls.slice(before).filter(c=>c.url.endsWith("/settle")).length,1);
+ });
+ await test("actual RAS "+phase+" counter stall still delivers retained output and explicit counter gap",async()=>{
+  failNetwork=false;fixtureTransaction="ras-counter-stall-"+phase;
+  const h=stalledStore("ras:fixture:counter",phase),before=financialCalls.length,start=Date.now();
+  const result=await ras.rasDoor({request:paidReq(),env:{...env,REVENUE_KV:h.wrapped},resourceUrl:target,
+   accepts:[{scheme:"exact",network:"base",amount:"10000",maxAmountRequired:"10000",asset:"fixture",payTo,resource:target,mimeType:"application/json",maxTimeoutSeconds:300,extra:{name:"USD Coin",version:"2"}}],
+   bazaar:{info:{},schema:{}},schema:"synthetic.ras/1",surface:"synthetic",description:"Offline fixture",serviceName:"fixture",tags:[],deliverable:"fixture",freePreviewPath:"/fixture",never:[],
+   inputError:()=>null,compute:async()=>({delivered:true,payload:{target:"fixture.invalid",fetched_at:"2026-11-01T00:00:00Z",result:"OBSERVED"},subject:"fixture.invalid",source_urls:[]}),
+   counter:"ras:fixture:counter"});
+  assert.equal(result.status,200,result.status===200?"":JSON.stringify((await result.clone().json()).csoai?.not_paid_reason));assert.ok(Date.now()-start<1600);assert.equal(h.started(),1);
+  assert.match(result.headers.get("x-csoai-counter-state"),phase==="put"?/UNKNOWN/:/DEADLINE/);
+  assert.equal(result.headers.get("x-csoai-output-retention-state"),"RETAINED");
+  const bytes=new Uint8Array(await result.arrayBuffer());assert.ok(bytes.length>0);
+  const puts=h.wrapped.calls.filter(c=>c[0]==="put").length;
+  h.release();await new Promise(resolve=>setTimeout(resolve,35));assert.equal(h.wrapped.calls.filter(c=>c[0]==="put").length,puts);
+  const recovered=await api.handlePurchases(request("https://councilof.ai/api/purchases/"+fixtureTransaction+"/body"),{...env,REVENUE_KV:h.wrapped});
+  assert.equal(recovered.status,200);assert.deepEqual(new Uint8Array(await recovered.arrayBuffer()),bytes);
+  assert.equal(financialCalls.slice(before).filter(c=>c.url.endsWith("/settle")).length,1);
+ });
+}
+await test("one shared budget prevents later store operations after expiry",async()=>{
+ const budget=budgets.bookkeepingBudget(20);let calls=0;
+ await assert.rejects(()=>budget.run(()=>new Promise(()=>{}),"get"));
+ const payment={observationBudget:budget};
+ await assert.rejects(()=>budgets.postSettlementStore({get:async()=>null,put:async()=>{calls++;}},payment).put("late","value"));
+ assert.equal(calls,0);assert.equal(budgets.postObservationState(payment),"DEADLINE");budget.clear();
 });
 
 const passed=cases.filter(c=>c.passed).length;

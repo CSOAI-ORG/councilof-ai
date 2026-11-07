@@ -1,3 +1,4 @@
+import { bookkeepingBudget, BookkeepingTimeout, type BookkeepingBudget } from "./_bookkeeping_budget";
 import { verifyToken, userKey, type AuthEnv } from "./_authCrypto";
 import { BUYER_BODY_MAX_BYTES, buyerOwnerHash, buyerNonce, purchaseSeed, purchaseSha256, checkedPurchaseUrl,
   validGeneration, isBuyerNonce, type PurchaseIdentity, type PurchasePreparation } from "../../shared/buyerPurchase";
@@ -90,7 +91,7 @@ export function captureBuyerRequest(request:Request):Request {
 }
 
 /** Always called centrally before ANY facilitator discovery/verify/settle. */
-export async function checkBuyerPayment(request:Request,env:AuthEnv,resource:string,payload:Record<string,unknown>):Promise<BuyerCheck> {
+export async function checkBuyerPayment(request:Request,env:BuyerEnv,resource:string,payload:Record<string,unknown>):Promise<BuyerCheck> {
   try {
     const auth=authorization(payload);
     const other=request.headers.get("x-payment") && request.headers.get("payment-signature");
@@ -105,6 +106,7 @@ export async function checkBuyerPayment(request:Request,env:AuthEnv,resource:str
     if(!object(sidecar) || sidecar.version!==1 || !validGeneration(sidecar.seed))
       throw new BuyerHold("request-bound payment context missing or invalid",400);
     const owner=await currentBuyer(env,request);
+    if(!env.REVENUE_KV)throw new BuyerHold("buyer recovery store is unavailable; no payment attempted",503);
     const origin=new URL(request.url).origin;
     const identity:PurchaseIdentity=Object.freeze({url:checkedPurchaseUrl(request.url,origin),
       resource:checkedPurchaseUrl(resource,origin),method:request.method.toUpperCase(),
@@ -143,40 +145,36 @@ function samePurchase(a:PurchaseRecord,b:PurchaseRecord):boolean {
     a.resource===b.resource && a.nonce===b.nonce && JSON.stringify(a.request)===JSON.stringify(b.request);
 }
 export async function finishBuyerPayment(kv:Store|undefined,buyer:PreparedBuyer|undefined,
-  transaction:unknown,payer:unknown,resource:string,paymentResponse:string):Promise<{buyer?:SettledBuyer;state:string}> {
+  transaction:unknown,payer:unknown,resource:string,paymentResponse:string,sharedBudget?:BookkeepingBudget):Promise<{buyer?:SettledBuyer;state:string}> {
   if(!buyer)return {state:"UNOWNED_LEGACY"};
   if(!prepared.has(buyer) || typeof transaction!=="string" || !transaction || transaction.length>256 || /\s/.test(transaction) || typeof payer!=="string" ||
       payer.toLowerCase()!==buyer.payer || resource!==buyer.request.resource)
     return {state:"UNBOUND_SETTLEMENT"};
   const context=Object.freeze({...buyer,transaction,resource});settled.add(context);
   if(!kv)return {buyer:context,state:"UNRECORDED_NO_STORE"};
-  let attempted=false;let expired=false;let timer:ReturnType<typeof setTimeout>|undefined;
-  const timeout=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{expired=true;reject(new BuyerHold("purchase storage deadline",503));},250);});
-  const run=async<T>(operation:()=>Promise<T>):Promise<T>=>{
-    if(expired)throw new BuyerHold("purchase storage deadline",503);
-    return Promise.race([timeout,Promise.resolve().then(()=>{if(expired)throw new BuyerHold("purchase storage deadline",503);return operation();})]);
-  };
+  let attempted=false;const budget=sharedBudget??bookkeepingBudget();
+  const run=<T>(operation:()=>Promise<T>,phase:"get"|"put")=>budget.run(operation,phase);
   try {
-    return await Promise.race([timeout,(async()=>{
+    return await (async()=>{
       const key=await purchaseTxKey(transaction);
       const candidate:PurchaseRecord={schema:"csoai.owned-purchase/1",owner_hash:buyer.owner_hash,transaction,
         payer:buyer.payer,resource,request:buyer.request,nonce:buyer.nonce,created_at:new Date().toISOString(),payment_response:paymentResponse};
-      const existing=await run(()=>kv.get(key));let record=candidate;
+      const existing=await run(()=>kv.get(key),"get");let record=candidate;
       if(existing!==null){
         let parsed:unknown;try{parsed=JSON.parse(existing);}catch{return {buyer:context,state:"CONFLICT"};}
         if(!validPurchaseRecord(parsed) || !samePurchase(parsed,candidate))return {buyer:context,state:"CONFLICT"};
         record=parsed;
-      }else{attempted=true;await run(()=>kv.put(key,JSON.stringify(candidate)));}
+      }else{attempted=true;await run(()=>kv.put(key,JSON.stringify(candidate)),"put");}
       const index=purchaseOwnerPrefix(buyer.owner_hash)+await purchaseSha256(new TextEncoder().encode(transaction));
-      const oldIndex=await run(()=>kv.get(index));
+      const oldIndex=await run(()=>kv.get(index),"get");
       if(oldIndex!==null){
         let parsed:unknown;try{parsed=JSON.parse(oldIndex);}catch{return {buyer:context,state:"CONFLICT"};}
         if(!validPurchaseRecord(parsed) || !samePurchase(parsed,record))return {buyer:context,state:"CONFLICT"};
-      }else{attempted=true;await run(()=>kv.put(index,JSON.stringify(record)));}
+      }else{attempted=true;await run(()=>kv.put(index,JSON.stringify(record)),"put");}
       return {buyer:context,state:"RECORDED"};
-    })()]);
+    })();
   }catch{return {buyer:context,state:attempted?"UNKNOWN":"UNRECORDED_UNKNOWN"};}
-  finally{if(timer!==undefined)clearTimeout(timer);}
+  finally{if(!sharedBudget)budget.clear();}
 }
 export function ownedOutputBinding(buyer:SettledBuyer|undefined,transaction:string,resource:string) {
   return buyer && settled.has(buyer) && buyer.transaction===transaction && buyer.resource===resource
@@ -187,6 +185,7 @@ export function ownedOutputBinding(buyer:SettledBuyer|undefined,transaction:stri
 export function purchaseStoreBudget(ms=250) {
   let expired=false;let timer:ReturnType<typeof setTimeout>|undefined;
   const timeout=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{expired=true;reject(new BuyerHold("store outcome unknown; reconcile by reading",503));},ms);});
+  void timeout.catch(()=>undefined);
   return {async run<T>(operation:()=>Promise<T>):Promise<T>{
     if(expired)throw new BuyerHold("store deadline",503);
     return Promise.race([timeout,Promise.resolve().then(()=>{if(expired)throw new BuyerHold("store deadline",503);return operation();})]);
