@@ -168,7 +168,14 @@ function yamlString(s) {
 }
 
 async function fetchText(url) {
-  const res = await fetch(url, { headers: { "User-Agent": "csoai-gspc-lm-eval-builder/1.0" } });
+  // Authenticate when a token is available. The Hub rate-limits ANONYMOUS reads per IP, and a
+  // 429 from our own published banks breaks the build (and therefore the deploy) for reasons
+  // that have nothing to do with the code being built. An authenticated read is both the
+  // correct credential for the org's own datasets and a far higher limit.
+  const headers = { "User-Agent": "csoai-gspc-lm-eval-builder/1.0" };
+  const token = process.env.HF_TOKEN || process.env.HUGGING_FACE_HUB_TOKEN;
+  if (token) headers.Authorization = `Bearer ${token.trim()}`;
+  const res = await fetch(url, { headers });
   if (!res.ok) throw new Error(`GET ${url} -> ${res.status}`);
   return res.text();
 }
