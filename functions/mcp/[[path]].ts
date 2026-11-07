@@ -16,6 +16,7 @@ import {
   type Tool,
 } from "@modelcontextprotocol/server";
 import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/server/validators/cf-worker";
+import { MCP_MAX_TOOL_INPUT_ELEMENTS, withinJsonBudget } from "./_input_budget";
 import GSPC_TOOLS from "./gspc-tools.json";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
@@ -166,6 +167,7 @@ function buildMcp(
     const origin = new URL(requestInfo.url).origin;
     const server = new McpServer(SERVER_INFO, {
       instructions: door.instructions,
+      maxToolInputElements: MCP_MAX_TOOL_INPUT_ELEMENTS,
       capabilities: { tools: { listChanged: false } },
       cacheHints: {
         "server/discover": { ttlMs: 300_000, cacheScope: "public" },
@@ -222,7 +224,7 @@ function buildMcp(
     }));
     return server;
   },
-  { legacy: "stateless", maxSubscriptions: 0 },
+  { legacy: "stateless", maxSubscriptions: 0, maxRequestBodySize: MCP_MAX_REQUEST_BYTES },
   );
 }
 const mcp = buildMcp(DEFINITIONS, { instructions: INSTRUCTIONS, paid: true });
@@ -571,6 +573,8 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       "Request body exceeds the size/time limit or is not valid UTF-8.",
     );
   }
+  if (!withinJsonBudget(body))
+    return jsonError(413, -32600, "Request JSON exceeds the structure limit.");
   let call: unknown;
   try {
     call = JSON.parse(body);
