@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-11-01T23:43:53Z",
+  "as_of": "2026-11-07T16:26:17Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -42,10 +42,10 @@
       "listing_state": "DISCOVERED",
       "n_measured": 0,
       "note": "Cited in publisher-health.json / status only. Not a card-v0 leaf. Not MEASURED. listings.jsonl is never committed.",
-      "as_of": "2026-11-01T11:27:22Z",
-      "n": 2540,
-      "n_unique_ids": 2540,
-      "sha256_jsonl": "c32f69a18c68ea0beb470c25b0d4f2fb44b370116a08e927732463a60ca4dfc0",
+      "as_of": "2026-11-07T11:15:45Z",
+      "n": 1954,
+      "n_unique_ids": 1954,
+      "sha256_jsonl": "b0413bd20559eaf43a2754704cc352aca789a548ddf07a2a90f18ceebbf41bb9",
       "complete": true,
       "mode": "delta",
       "source": "public/signed/hub-census-delta.json"
@@ -74,7 +74,7 @@
           "signer": "did:web:csoai.org#board-attestation-1",
           "signer_anchored": true,
           "alg": "Ed25519",
-          "signature": "4c29ca8585575c68830a3c3cd9754e5915b5b0d5213d8d5bb11c23b5d35c38da05e98348801390507ddf625f7379ff30141c794db304252621bef8aff70a1c00",
+          "signature": "01e456a3300199112dc843371515541b7741b85750a2137d1e7470b13db670f6363753af9cacb634090265706716dd4501df3fbb05838b4cfb5a9c73dbf47700",
           "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
           "preimage": {
             "schema": "csoai.gspc-living/0.2",
@@ -291,99 +291,99 @@
               {
                 "axis": "lab-practice",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 37,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "company-practice",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 40,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "measurer-integrity",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 40,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "harness-fidelity",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 36,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "interop-conformance",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 34,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "humanoid-deployment",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 35,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "regulator-transparency",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 41,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "interpretability-reproducibility",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 33,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "claim-maintenance",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 174,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "serving-fidelity",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 38,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "watchdog-ingest",
                 "family": "subject",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "measured-subject",
+                "status": "MEASURED",
+                "n": 106,
                 "accuracy": null,
                 "separation": null
               }
@@ -414,8 +414,7 @@
           "tracked_as": "/api/corrections C-2026-0826-08"
         },
         "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec"
-      },
-      "board_count_source": "derived from this commit's /api/gspc (functions/api/gspc.ts, computed offline by scripts/surface/commit-board.mjs; sha256 5ec3c714c943c50cb863065ebb0b5dbc2ddecb1dbf30960b56b0d337a62ee4e1) by scripts/surface/rebind-board-cites.mjs; the producer re-reads the live board on its next run"
+      }
     }
   },
   "swift": {
@@ -450,9 +449,14 @@
       "mcp-conformance-2026-10",
       "watchdog-intake-2026-10"
     ],
-    "n_leaves": 123,
-    "n_skipped": 0,
-    "skipped": [],
+    "n_leaves": 124,
+    "n_skipped": 1,
+    "skipped": [
+      {
+        "file": "x402-door-conformance-2026-09/card-x402-door-9-unsigned.json",
+        "reason": "duplicate payload sha256"
+      }
+    ],
     "note": "Staged unsigned atoms read from disk; no network. Signed only by the public-root writer in GHA. PROBED/DISCOVERED/UNMEASURED stay on the payload under the signature. Never MEASURED. Not a grade."
   },
   "witness_queue": {
@@ -466,8 +470,8 @@
   },
   "provider_diff": {
     "dir": "public/feeds/provider-diff/leaves",
-    "n_files": 171,
-    "n_leaves": 171,
+    "n_files": 182,
+    "n_leaves": 182,
     "n_skipped": 0,
     "skipped": [],
     "note": "Hash-only provider document diffs, staged unsigned by scripts/watch/provider_watch.py; signed only by the public-root writer in GHA. A leaf attests that bytes at a URL changed between two captures — nothing about what or why. Content never stored. Not a grade."
@@ -480,7 +484,7 @@
   "evm_permissions": {
     "schema": "csoai.evm.permission-state/0.1",
     "n_leaves": 32,
-    "n_proofs": 29,
+    "n_proofs": 27,
     "n_roster": 32,
     "n_unverified": 33,
     "aum_source": "https://app.rwa.xyz/treasuries",
@@ -488,51 +492,51 @@
     "chains": {
       "arbitrum": {
         "rpc": "arbitrum-one-rpc.publicnode.com",
-        "block": 520410797,
-        "block_hash": "0x5b9b4034ea8b03b7f2a62d6a9f6092acd15b83dcdfca32a1ce2cc01a7e295570",
-        "block_time": "2026-11-01T23:37:24Z"
+        "block": 522130456,
+        "block_hash": "0x1d7650e963cb54f66bf42141f02ec65d2e0e2f54efad14d131469a45e44aeb93",
+        "block_time": "2026-11-07T16:23:05Z"
       },
       "avalanche": {
         "rpc": "api.avax.network",
-        "block": 99171191,
-        "block_hash": "0x093a7425f0b32d454d3ff4cfb33f6d1f34efbd1232cbefc662e6270857c974ed",
-        "block_time": "2026-11-01T23:37:23Z"
+        "block": 99687306,
+        "block_hash": "0xd044deb2c721130ee743f765e0a24a1bbf75ea4a6a67965408670e792837e670",
+        "block_time": "2026-11-07T16:23:04Z"
       },
       "base": {
         "rpc": "base-rpc.publicnode.com",
-        "block": 53393449,
-        "block_hash": "0xbf27fbe479b43c0c1d9453254fe1742333b3ad5ccc15c4d19266b0d750539f4c",
-        "block_time": "2026-11-01T23:37:25Z"
+        "block": 54391052,
+        "block_hash": "0xae92802603999a272969cb4fc9a7a98cbd5c6a468a0c937c704385a367ed12fa",
+        "block_time": "2026-11-07T16:23:06Z"
       },
       "bsc": {
         "rpc": "bsc-rpc.publicnode.com",
-        "block": 131138184,
-        "block_hash": "0xc04a72da89899b043677d361fe9b13fb3808d0d344a876f7bae3c9c2c348c499",
-        "block_time": "2026-11-01T23:37:25Z"
+        "block": 132231957,
+        "block_hash": "0xa018fe8ba1de799732b14687aa0d44553b217b6fabfb0c6a34ab63da999cbd56",
+        "block_time": "2026-11-07T16:23:05Z"
       },
       "ethereum": {
         "rpc": "ethereum-rpc.publicnode.com",
-        "block": 26323250,
-        "block_hash": "0x0bf0741174e641b29fca9f1d5a26e54c72a0fb4ef92a15b0a1686b6a2f2ded79",
-        "block_time": "2026-11-01T23:37:11Z"
+        "block": 26364146,
+        "block_hash": "0x0f73c4751cc430f468b8924bf5fc95081c3c5321815b24e8bb3f30f63f54854f",
+        "block_time": "2026-11-07T16:22:59Z"
       },
       "mantle": {
         "rpc": "mantle-rpc.publicnode.com",
-        "block": 102722967,
-        "block_hash": "0x4cacc69a8b3725f9afef19a4a39a883250ee851004626fba8508e276b0b0162d",
-        "block_time": "2026-11-01T23:37:26Z"
+        "block": 102969137,
+        "block_hash": "0x07ea5500fa13c60820874891fa73d7c178a12de39166ee40f25bfe4a9c7b3454",
+        "block_time": "2026-11-07T16:23:06Z"
       },
       "optimism": {
         "rpc": "optimism-rpc.publicnode.com",
-        "block": 158988734,
-        "block_hash": "0x66dbe6217692e26cf30c40baa458c955c725af20317ceb9de28cb65e6c8c27b1",
-        "block_time": "2026-11-01T23:37:25Z"
+        "block": 159234904,
+        "block_hash": "0xae9f659a8090946dedb4012759b369be36635ad467f31ca0a1b0c32c854c5564",
+        "block_time": "2026-11-07T16:23:05Z"
       },
       "polygon": {
         "rpc": "polygon-bor-rpc.publicnode.com",
-        "block": 96580527,
-        "block_hash": "0xc9b0d6121ffca3669cde0ecf1903d6de09f6628bdaf79e49e54a4196597ed74f",
-        "block_time": "2026-11-01T23:37:27Z"
+        "block": 96908754,
+        "block_hash": "0x8b999ca4a29df39f6cf1e5f98a445a680a35fba6b371736a86e5f655c1749d45",
+        "block_time": "2026-11-07T16:23:07Z"
       }
     },
     "failures": [
@@ -545,7 +549,15 @@
         "reason": "no endpoint answered eth_getProof"
       },
       {
+        "subject": "evm:mTBILL:base",
+        "reason": "no endpoint answered eth_getProof"
+      },
+      {
         "subject": "evm:VBILL:bsc",
+        "reason": "no endpoint answered eth_getProof"
+      },
+      {
+        "subject": "evm:bIB01:base",
         "reason": "no endpoint answered eth_getProof"
       }
     ],
@@ -559,35 +571,35 @@
     "requests_used": 80,
     "chains": {
       "arbitrum": {
-        "block": 520411106,
+        "block": 522130555,
         "rpc": "arbitrum-one-rpc.publicnode.com"
       },
       "avalanche": {
-        "block": 99171295,
+        "block": 99687338,
         "rpc": "api.avax.network"
       },
       "base": {
-        "block": 53393495,
+        "block": 54391202,
         "rpc": "base-rpc.publicnode.com"
       },
       "bsc": {
-        "block": 131138390,
+        "block": 132232024,
         "rpc": "bsc-rpc.publicnode.com"
       },
       "ethereum": {
-        "block": 26323258,
+        "block": 26364148,
         "rpc": "ethereum-rpc.publicnode.com"
       },
       "mantle": {
-        "block": 102723013,
+        "block": 102969152,
         "rpc": "mantle-rpc.publicnode.com"
       },
       "optimism": {
-        "block": 158988781,
+        "block": 159234920,
         "rpc": "optimism-rpc.publicnode.com"
       },
       "polygon": {
-        "block": 96580589,
+        "block": 96908774,
         "rpc": "polygon-bor-rpc.publicnode.com"
       }
     },
@@ -697,16 +709,16 @@
     "n_scanned": 12000,
     "pages_ok": 120,
     "pages_uncheckable": 0,
-    "hits": 26,
-    "not_in_verified_set": 22,
+    "hits": 27,
+    "not_in_verified_set": 23,
     "unmeasured": 0,
-    "mirrors_written": 22
+    "mirrors_written": 23
   },
   "xrpl_state_matrix": {
     "status": "UNCHANGED",
     "pack": "xrpl-16-state-matrix",
-    "matrix_sha256": "7de48ff64f53d135c5aecc017213d5dbad9dcb067eb3c93a4e2f3de839f399ac",
-    "ledger_index": 108055259
+    "matrix_sha256": "c177105851c33713978c8b1728d3ee225ae5165cfb23839f3c03af6fd4606eaa",
+    "ledger_index": 108178003
   },
   "rwa_reconciliation": {
     "status": "PROBED",
@@ -717,7 +729,7 @@
     "status": "PROBED",
     "release_id": "stablecoin-deep-2026-09",
     "rows": 20,
-    "generated_at": "2026-09-15T02:06:49Z"
+    "generated_at": "2026-11-07T10:36:22Z"
   },
   "art50_census": {
     "status": "PROBED",
@@ -731,7 +743,7 @@
     "inputs_changed": false,
     "payload_bytes": 2595
   },
-  "card_count": 429,
+  "card_count": 442,
   "xrpl_asset_state_count": 16,
   "carried_forward_published_measurements": [
     {
