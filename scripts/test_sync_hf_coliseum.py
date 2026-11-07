@@ -4,6 +4,8 @@ import copy
 import json
 from pathlib import Path
 import tempfile
+import subprocess
+import sys
 import unittest
 
 from sync_hf_coliseum import (
@@ -369,6 +371,11 @@ class HostedReadbackControls(unittest.TestCase):
         consumer = workflow.split("\n  coliseum:\n", 1)[1]
         self.assertIn("ref: $" + "{{ github.workflow_sha }}", consumer)
         self.assertNotIn("ref: master", consumer)
+        sparse = consumer.split("sparse-checkout: |\n", 1)[1].split("\n\n", 1)[0]
+        self.assertEqual([line.strip() for line in sparse.splitlines() if line.strip()], [
+            "scripts/sync_hf_coliseum.py", "scripts/test_sync_hf_coliseum.py",
+            ".github/workflows/hf-gspc-surface-sync.yml",
+        ])
         self.assertIn("github.event.workflow_run.conclusion == 'success'", consumer)
         self.assertIn("github.event.workflow_run.head_repository.full_name == github.repository", consumer)
         self.assertIn("name: coliseum-mirror-$" + "{{ github.event.workflow_run.head_sha }}", consumer)
@@ -376,6 +383,35 @@ class HostedReadbackControls(unittest.TestCase):
         self.assertEqual(consumer.count("EXPECTED_SHA: $" + "{{ github.event.workflow_run.head_sha }}"), 2)
         self.assertIn('--expected-sha "$EXPECTED_SHA"', consumer)
         self.assertNotIn("npm run build", consumer)
+
+
+class MinimalConsumerCheckoutControls(unittest.TestCase):
+    def test_full_offline_suite_runs_with_exact_consumer_inputs(self):
+        source = Path(__file__).resolve().parents[1]
+        paths = [
+            "scripts/sync_hf_coliseum.py", "scripts/test_sync_hf_coliseum.py",
+            ".github/workflows/hf-gspc-surface-sync.yml",
+        ]
+        classes = [value for value in globals().values()
+                   if isinstance(value, type) and issubclass(value, unittest.TestCase)
+                   and value is not type(self)]
+        names = sorted("test_sync_hf_coliseum." + value.__name__ for value in classes)
+        expected = sum(unittest.defaultTestLoader.loadTestsFromTestCase(value).countTestCases()
+                       for value in classes)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in paths:
+                target = root / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes((source / name).read_bytes())
+            self.assertEqual(sorted(path.relative_to(root).as_posix()
+                                    for path in root.rglob("*") if path.is_file()), sorted(paths))
+            result = subprocess.run(
+                [sys.executable, "-B", "-m", "unittest", *names], cwd=root / "scripts",
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=60,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout)
+            self.assertIn("Ran " + str(expected) + " tests", result.stdout)
 
 if __name__ == "__main__":
     unittest.main()
