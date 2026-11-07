@@ -43,14 +43,14 @@ export function dailyBriefing(index, now = new Date()) {
 
 // Validate the already-projected response before exposing links or learning text.
 // Reprojection ensures the view uses the same path/count/freshness rules as producers.
-export function briefingView(value) {
+export function briefingView(value, now = new Date()) {
   if (value?.schema !== BRIEFING_SCHEMA || value.state !== 'AVAILABLE') return null;
   const result = dailyBriefing({schema: 'csoai.daily-signal-index/0.1', report_count: 1,
     latest_report_day: value.report_day, latest_report_id: value.report_id_declared,
     signed: value.signed_declared,
     reports: [{report_day: value.report_day, report_id: value.report_id_declared,
       json_path: value.report_paths?.json, markdown_path: value.report_paths?.markdown, counts: value.counts}]},
-    value.freshness?.as_of_day ? value.freshness.as_of_day + 'T00:00:00Z' : 'invalid');
+    now);
   return result.state === 'AVAILABLE' ? result : null;
 }
 
