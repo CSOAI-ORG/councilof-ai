@@ -104,11 +104,10 @@ const READ_LABEL_SPEC =
   "case- and underscore-insensitive; anything else is UNPARSED and leaves the denominator.";
 
 // ── fetch the published banks ───────────────────────────────────────────────────────────
-async function fetchText(url) {
-  const res = await fetch(url, { headers: { "User-Agent": "csoai-build-bench-suite/1.0" } });
-  if (!res.ok) throw new Error(`GET ${url} -> HTTP ${res.status}`);
-  return res.text();
-}
+// The fetch itself lives in ./hub-fetch.mjs: it sends the hub token when the machine has one
+// and retries a transient 429/5xx, because an ANONYMOUS fetch of a PUBLIC dataset was failing
+// this build at random and the build is the pre-push gate. See that file for the measurement.
+import { fetchText } from "./hub-fetch.mjs";
 
 /** Load one bank from the Hub and derive, from its own bytes: the sha256, the item count, the
  *  label vocabulary, and whether the answer menu is sound. Nothing is typed. */
