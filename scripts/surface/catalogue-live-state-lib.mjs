@@ -52,7 +52,7 @@ export const countDigest = (v) => createHash("sha256").update(canonical(v)).dige
 export const normalise = (s) =>
   s
     .replace(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/g, "<TS>")
-    .replace(/"open_pull_requests":\s*\d+/g, '"open_pull_requests": <PRS>')
+    .replace(/"open_pull_requests(?:_now)?":\s*\d+/g, '"open_pull_requests": <PRS>')
     .replace(/(<tr><td>Open pull requests<\/td><td><strong>)\d+(<\/strong>)/g, "$1<PRS>$2");
 
 const htmlEscape = (s) =>
@@ -155,6 +155,32 @@ export function htmlRules(html, v) {
     `Published ${v.readAt}.${supersedeNote}`,
     "html: published-at line"
   );
+  // The lane-activity table: the merges that landed since the edition this one supersedes.
+  // It is rewritten from the read, never from the previous edition's list, so it cannot go
+  // stale the way the hand-written one did (six merges frozen on 2026-11-02, published under
+  // a heading that said "since 2026-11-01" in an edition dated 2026-11-07).
+  if (v.laneActivity) {
+    const la = v.laneActivity;
+    const rows = la.merged.length
+      ? la.merged
+          .map(
+            (m) =>
+              `<tr><td>${htmlEscape(m.merged_at.slice(0, 16).replace("T", " "))}</td><td><code>${htmlEscape(m.sha)}</code></td><td class="ns">PR #${m.pr}</td></tr>`
+          )
+          .join("\n")
+      : `<tr><td colspan="3">\u2014</td></tr>`;
+    const block =
+      `<h2>What the other lanes shipped since the ${htmlEscape(la.window_start.slice(0, 10))} edition</h2>\n` +
+      `<p>Eight sessions work this estate in parallel. This catalogue is the reconciled picture, so what they merged is recorded here with its pull request. ` +
+      `<strong>${la.merged.length}</strong> pull requests merged between ${htmlEscape(la.window_start)} and ${htmlEscape(la.window_end)}; the list is complete for that window, and the open-pull-request count above is the live one read at the same moment.</p>\n` +
+      `<div class="scroll"><table><thead><tr><th>When (UTC)</th><th>Commit</th><th>Pull request</th></tr></thead><tbody>\n${rows}\n</tbody></table></div>`;
+    h = subOnce(
+      h,
+      /<h2>What the other lanes shipped since [^<]*<\/h2>[\s\S]*?<\/tbody><\/table><\/div>/,
+      block,
+      "html: lane-activity table"
+    );
+  }
   return h;
 }
 
@@ -175,6 +201,147 @@ export function jsonRules(doc, live_state, readAt, edition) {
   out.live_state = live_state;
   out.edition_written_by = PRODUCER_ID;
   return out;
+}
+
+/**
+ * THE LANE-ACTIVITY BLOCK — the catalogue's reconciliation record.
+ *
+ * It used to be hand-written, and it was wrong in three ways at once. Its key said
+ * "since_2026_11_01" while its own sentence said "since the previous edition" (2026-11-03),
+ * so the two disagreed about the window. The list itself stopped on 2026-11-02: six merges
+ * were frozen there while 283 pull requests merged after 2026-11-01 — so the page that
+ * called itself "the reconciled picture rather than one lane's view" was carrying one
+ * lane's view, frozen. And it carried a standing open-pull-request count of 51 while the
+ * live read in the SAME document said 80: two live numbers, one standing, disagreeing.
+ *
+ * So the producer owns the block now, the way it owns live_state. It reads the merges that
+ * landed since the edition this one supersedes, states the window it read, and carries the
+ * open-pull-request count FROM THE SAME READ as live_state — one read, one number.
+ *
+ * The old key is REMOVED, not kept beside the new one: a stale copy of a block next to a
+ * live copy is itself a false claim, and it is exactly the defect this function exists to
+ * end.
+ */
+export function laneActivityRules(doc, activity) {
+  const out = { ...doc };
+  delete out.lane_activity_since_2026_11_01;
+  const merged = activity.merged.map((m) => ({
+    merged_at: m.merged_at,
+    sha: m.sha,
+    pr: m.pr,
+  }));
+  out.lane_activity = {
+    what_this_is:
+      "What the other sessions working this estate merged since the edition this one supersedes, so the catalogue is the reconciled picture rather than one lane's view. The window is named here, the list is complete for it, and the open-pull-request count is the live one read at the same moment as the rest of this block.",
+    window_start: activity.window_start,
+    window_end: activity.window_end,
+    window_start_source: activity.window_start_source,
+    merged_count: merged.length,
+    merged,
+    open_pull_requests_now: activity.open_pull_requests_now,
+    open_pull_requests_source:
+      "GitHub search API — the same read as live_state.open_pull_requests; a catalogue may carry one open-pull-request number, not two",
+  };
+  return out;
+}
+
+/**
+ * THE WINDOW THE MERGE LIST COVERS.
+ *
+ * "Since the previous edition" has to mean one thing. On a new day the previous edition is
+ * yesterday's edition; on a same-day re-read the published edition already supersedes an
+ * older one, and the window does not move. Either way the window is NAMED in the output, so
+ * a reader can see exactly what the list covers instead of taking the key's word for it.
+ */
+export function mergeWindowStart(doc, edition) {
+  const prev = doc?.edition || null;
+  const startDate = prev && prev !== edition ? prev : doc?.supersedes_edition || prev;
+  if (!startDate) {
+    throw new Error(
+      "the catalogue does not name the edition it supersedes — the merge window is unknown, not empty"
+    );
+  }
+  return {
+    startDate,
+    windowStart: `${startDate}T00:00:00Z`,
+    source: `the edition this one supersedes (${startDate})`,
+  };
+}
+
+/**
+ * ONE document, ONE open-pull-request number.
+ *
+ * The published catalogue carried 51 in its lane-activity block and 80 in its live_state
+ * block, in the same file, at the same time, and a reader could not tell which one was
+ * live. This guard refuses to publish a document that carries two different numbers for
+ * the same quantity: the number in the lane-activity block is written from the same read as
+ * the number in live_state, so they cannot drift, and this proves it rather than assuming it.
+ */
+export function assertOneOpenPullRequestNumber(text, n, name) {
+  if (typeof n !== "number" || !Number.isFinite(n)) {
+    throw new Error(`${name}: the live read produced no open-pull-request count — a count with no source is null, never 0`);
+  }
+  const found = [...text.matchAll(/"open_pull_requests(?:_now)?"\s*:\s*(\d+)/g)].map((m) => Number(m[1]));
+  // A document that carries NO number has not been checked — it has been skipped. A guard
+  // that passes vacuously is a comment, not a guard.
+  if (!found.length) {
+    throw new Error(`${name}: the document carries no open-pull-request number at all`);
+  }
+  for (const f of found) {
+    if (f !== n) {
+      throw new Error(
+        `${name}: the document carries an open-pull-request count of ${f} where the live read says ${n} — one document, one number`
+      );
+    }
+  }
+  return found.length;
+}
+
+/**
+ * The page's own row. A page is not a JSON document, so the page's guard is its own: it
+ * looks for the row a reader sees, and it fails when the row is gone — a page that lost
+ * the row has not been checked, it has been skipped.
+ */
+export function assertOneOpenPullRequestNumberInPage(page, n, name) {
+  if (typeof n !== "number" || !Number.isFinite(n)) {
+    throw new Error(`${name}: the live read produced no open-pull-request count — a count with no source is null, never 0`);
+  }
+  const rows = [...page.matchAll(/<tr><td>Open pull requests<\/td><td><strong>(\d+)<\/strong>/g)].map((m) =>
+    Number(m[1])
+  );
+  if (!rows.length) {
+    throw new Error(`${name}: the page shows no open-pull-request row at all`);
+  }
+  for (const f of rows) {
+    if (f !== n) {
+      throw new Error(
+        `${name}: the page shows ${f} open pull requests where the live read says ${n} — one document, one number`
+      );
+    }
+  }
+  return rows.length;
+}
+
+/**
+ * THE STRUCTURAL FORM OF THE SAME RULE: the document's two open-pull-request numbers must
+ * both be present and both be the live one. A regex cannot see a key that JSON dropped
+ * because its value was undefined — and "absent" is a state, never a zero that passes.
+ */
+export function assertLaneActivityNumbers(doc, n, name) {
+  const live = doc?.live_state?.open_pull_requests;
+  const block = doc?.lane_activity?.open_pull_requests_now;
+  if (typeof live !== "number") {
+    throw new Error(`${name}: live_state carries no open-pull-request count`);
+  }
+  if (typeof block !== "number") {
+    throw new Error(`${name}: the lane-activity block carries no open-pull-request count`);
+  }
+  if (live !== n || block !== n) {
+    throw new Error(
+      `${name}: live_state says ${live} and the lane-activity block says ${block}, where the live read says ${n} — one document, one number`
+    );
+  }
+  return { live, block };
 }
 
 /**
