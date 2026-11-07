@@ -25,6 +25,26 @@
 set -uo pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" || exit 1
 
+# THE PRERENDER'S BROWSER LIVES OUTSIDE THE RECLAIMABLE CACHE.
+#
+# Playwright's default browser directory is ~/Library/Caches/ms-playwright, and a disk reclaim
+# on this machine has deleted it THREE times in one morning — once mid-push, while this very
+# gate was running. Every time, the gate reported "Chromium for Playwright is not installed",
+# which reads like a missing dependency but is a reclaim having taken a regenerable cache that
+# the gate genuinely needs. The browsers are therefore installed at a stable path, and the
+# environment points Playwright at it.
+#
+# THIS SUITE SETS THE PATH ITSELF. The reasoning used to live only in .githooks/pre-push, so
+# the suite only found the browser when it was invoked THROUGH that hook. MEASURED
+# 2026-11-07: this desk's global hook (core.hooksPath is absolute, so it is a wrapper that
+# delegates to THIS suite) did not export the path, and every push failed with "Chromium for
+# Playwright is not installed" — on a machine where the browser was installed, at the stable
+# path, all along. The suite is the thing that runs the check, so the suite is where the path
+# belongs: the claim lives in the artefact and in the generator that uses it.
+#
+# An operator who sets PLAYWRIGHT_BROWSERS_PATH to something else keeps their choice.
+export PLAYWRIGHT_BROWSERS_PATH="${PLAYWRIGHT_BROWSERS_PATH:-$HOME/csoai-logs/ms-playwright}"
+
 fail=0
 echo "pre-push: content gates (the ones that fail deploys) …"
 
@@ -109,7 +129,8 @@ trap restore_regen EXIT
 
 board_ok=1
 if ! node -e "require('playwright').chromium.launch().then(b=>b.close()).then(()=>process.exit(0),()=>process.exit(1))" >/dev/null 2>&1; then
-  echo "  ✖ Chromium for Playwright is not installed (npx playwright install chromium) — prerender cannot run"; fail=1; board_ok=0
+  echo "  ✖ Chromium for Playwright is not installed at $PLAYWRIGHT_BROWSERS_PATH — prerender cannot run"; fail=1; board_ok=0
+  echo "      install it there with:"; echo "        PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH node node_modules/playwright/cli.js install chromium"
 fi
 if [ "$board_ok" -eq 1 ]; then
   build_out=$(npm run build:client 2>&1) \

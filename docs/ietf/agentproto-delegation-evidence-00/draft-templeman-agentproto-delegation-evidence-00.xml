@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  draft-templeman-agentproto-delegation-evidence-00.xml
+
+  RECONSTRUCTED 2026-11-07 from the rendered text in
+  ~/clawd/_alignment/ietf-drafts-20260912/draft-templeman-agentproto-delegation-evidence-00.txt.
+
+  WHY A RECONSTRUCTION. The three sibling drafts of 2026-09-12 were never submitted, so no
+  XML2rfc source of theirs exists on the IETF archive (measured: no .xml anywhere in the
+  estate, the repo, or the archive carries their docNames). Only their RENDERED text survives,
+  and that text is HAND-SET: its page footers, page numbers and table of contents were written
+  by hand, which is why it does not correspond to any xml2rfc output. So the content is
+  recovered from it and the structure is rebuilt, and the parts the original hand lacked are
+  generated properly: the table of contents, the page footers, "Status of This Memo" and
+  "Copyright Notice" all come from xml2rfc now.
+
+  HOW IT IS CHECKED. xml2rfc 3.34.1 renders it with 0 errors and 0 warnings other than the
+  expected date warning, and the rendered prose is compared with the recovered text at
+  paragraph granularity, in both directions. The expiry is NOT typed: xml2rfc derives it from
+  the date and the docName suffix, and 12 September 2026 + 185 days is 16 March 2027, which is
+  the expiry the recovered text carries.
+-->
+<!DOCTYPE rfc [
+  <!ENTITY nbsp    "&#160;">
+  <!ENTITY zwsp   "&#8203;">
+  <!ENTITY nbhy   "&#8209;">
+  <!ENTITY wj     "&#8288;">
+]>
+
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" ipr="trust200902" docName="draft-templeman-agentproto-delegation-evidence-00" category="info" submissionType="IETF" tocDepth="2" tocInclude="true" sortRefs="true" symRefs="true">
+  <front>
+    <title abbrev="Delegation and Evidence">Delegation Chains in Agent Protocols: Binding Authority and Action into Verifiable Evidence</title>
+
+    <author fullname="Nicholas Templeman" initials="N." surname="Templeman">
+      <organization>Council of AI (CSOAI Ltd)</organization>
+      <address>
+        <postal>
+          <street>3rd Floor, 86-90 Paul Street</street>
+          <city>London</city>
+          <code>EC2A 4NE</code>
+          <country>United Kingdom</country>
+        </postal>
+        <email>nicholas@csoai.org</email>
+        <uri>https://councilof.ai/</uri>
+      </address>
+    </author>
+
+    <date year="2026" month="September" day="12"/>
+
+    <area>General</area>
+
+    <keyword>SCITT</keyword>
+    <keyword>delegation</keyword>
+    <keyword>agent protocols</keyword>
+    <keyword>verifiable evidence</keyword>
+    <keyword>transparency logs</keyword>
+
+    <abstract>
+      <t>Agent protocols &#8212; A2A-style agent-to-agent calls and MCP-style agent-to-tool
+      calls &#8212; increasingly route work through delegation: one agent authorizes another
+      to act, and the delegate acts.  When the action is later disputed, the question "whose
+      authority was this under, and what exactly was done" must be answerable from artifacts,
+      not from logs held by the parties to the dispute.  This document scopes the problem of
+      delegation evidence: how a delegating agent's grant of authority and a delegate's
+      subsequent actions are bound into verifiable receipts, and how a verifier checks a chain
+      of delegation without trusting any central party.  It defines the required evidence at
+      each hop &#8212; a signed grant, a signed action record referencing the grant, and
+      receipts witnessed independently of both parties &#8212; and states what verification
+      does and does not establish.  This document specifies nothing and proposes no wire
+      format; it scopes requirements and identifies the existing machinery that carries
+      them.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="introduction" title="Introduction">
+      <t>The emerging agent protocols share a shape.  In agent-to-agent protocols (A2A
+      <xref target="A2A"/>), an agent publishes a card describing its capabilities and accepts
+      tasks from peer agents.  In agent-to-tool protocols (MCP <xref target="MCP"/>), an agent
+      connects to servers exposing tools and invokes them.  In both, real deployments chain: an
+      orchestrator delegates to a specialist, the specialist delegates to a tool, the tool calls
+      a service.  Work is routed through delegation, and the delegating party is frequently not
+      the party the end user engaged.</t>
+
+      <t>When an action is later disputed &#8212; a payment made, a message sent, a record
+      modified, a measurement commissioned &#8212; the operative questions are: under whose
+      authority was this action taken, what exactly was authorized, what exactly was done, and
+      can any of that be checked by someone who trusts none of the parties.  Today the answers
+      live in the logs of the parties to the dispute, which is to say they are not answers; they
+      are claims.  The sibling document <xref target="I-D.templeman-agent-log-tampering"/>
+      treats the tamper-evidence of such logs.  This document treats the prior question: what
+      evidence should exist, at each hop, for a delegation chain to be checkable at all.</t>
+
+      <t>The scope is deliberately narrow.  This document does not define a delegation
+      protocol, a capability system, or an authorization framework.  It defines the evidence
+      requirements: which signed artifacts must exist at each hop, what each must reference,
+      and what a verifier can conclude from them.  Existing authorization machinery (tokens,
+      capabilities) answers "may this action proceed".  Delegation evidence answers the later
+      question: "it proceeded &#8212; under whose grant, and is that answer checkable."</t>
+    </section>
+
+    <section anchor="conventions" title="Conventions and Definitions">
+      <t>This document is Informational and contains no normative requirements.</t>
+
+      <dl>
+        <dt>delegator:</dt>
+        <dd><t>The agent (or its operator) granting authority to act.</t></dd>
+
+        <dt>delegate:</dt>
+        <dd><t>The agent receiving the grant and performing actions under it.</t></dd>
+
+        <dt>grant:</dt>
+        <dd><t>A signed statement by the delegator authorizing a scoped class of actions by a
+        named delegate, for a stated period or task.  The grant is the unit of authority.</t></dd>
+
+        <dt>action record:</dt>
+        <dd><t>A signed statement by the delegate recording one action taken under a grant,
+        referencing the grant by digest.</t></dd>
+
+        <dt>receipt:</dt>
+        <dd><t>A signed statement, issued by the party receiving a call, acknowledging that a
+        specified request was received and a specified response returned, bound to the request
+        by digest.  Receipts make a call checkable without trusting either party's
+        logs.</t></dd>
+
+        <dt>delegation chain:</dt>
+        <dd><t>A sequence in which a delegate under one grant acts as delegator for a further
+        grant (sub-delegation), where the further grant is within the scope of the one under
+        which the delegator itself acts.</t></dd>
+
+        <dt>witness:</dt>
+        <dd><t>An independent, append-only, publicly auditable log in which digests of grants,
+        action records, or receipts are included, per
+        <xref target="I-D.templeman-agent-log-tampering"/>, Section 4.3.</t></dd>
+      </dl>
+    </section>
+
+    <section anchor="delegation-problem" title="The Delegation Problem">
+      <t>Consider the minimal interesting case: agent A engages agent B to perform a task; B
+      delegates part of it to agent C; C invokes tool T.  The action that matters &#8212; say,
+      a payment &#8212; is performed by T under a request from C, which C made under a grant
+      from B, which B made under an engagement from A.  Four properties of this shape drive the
+      evidence requirements:</t>
+
+      <ul>
+        <li>Authority and action are separated in space and time.  The grant exists before the
+        action, is issued by a different party, and may cover many actions.  Evidence must bind
+        each action to the specific grant under which it was taken, not merely to the delegating
+        party generally.</li>
+
+        <li>Each hop has an incentive asymmetry.  When things go well, all parties claim credit;
+        when they go badly, each party's incentive is to widen its own grant's scope
+        retrospectively ("C was authorized to do that") or to narrow it ("C exceeded its
+        authority").  Only a grant signed before the action, with its scope fixed and
+        witnessed, resists both directions of revision.</li>
+
+        <li>The verifier trusts no one in the chain.  The dispute may be precisely between the
+        parties whose logs would otherwise answer the question.  Evidence that resolves it must
+        be checkable against keys and witnesses that are independent of every party to the
+        dispute.</li>
+
+        <li>Chains fail at the joints.  In practice the artifacts at each hop (a token
+        presented, a call logged) exist; what is missing is the binding between them: the action
+        record that names its grant by digest, the receipt that names its request by digest.  The
+        unbound middle &#8212; an action that references no grant, a grant under which no
+        actions are recorded &#8212; is where disputes go to be unresolvable.</li>
+      </ul>
+
+      <t>The sub-delegation case sharpens the third property.  If B's grant to C purports to
+      exceed B's own authority under A's engagement, the chain is only as strong as the scope
+      check at that joint.  Section 4.4 treats scope containment as a first-class verification
+      step rather than an assumption.</t>
+    </section>
+
+    <section anchor="evidence-requirements" title="Evidence Requirements">
+      <t>The requirements are stated as what must exist, not how it is encoded.  COSE_Sign1
+      <xref target="RFC9052"/> registered per <xref target="RFC9943"/> is one adequate carrier;
+      JWS over JSON is another.  Where digests identify artifacts, the framing considerations of
+      <xref target="I-D.templeman-scitt-framing-space"/> apply.</t>
+
+      <section anchor="grant" title="The Grant">
+        <t>A grant MUST-equivalent (this document is informational; the word marks a requirement
+        for the evidence property, not a protocol mandate) carry:</t>
+
+        <t>G1.  The delegator's identity, bound to a verification key whose resolution does not
+        depend on the delegator's say-so (a DID, a SCITT-registered identity, a key published at
+        a well-known location with its own witnessed history).</t>
+
+        <t>G2.  The delegate's identity, with the same property.</t>
+
+        <t>G3.  A scope: the class of actions authorized, stated tightly enough that an action
+        can later be classified as in-scope or out-of-scope by inspection.  "Handle the task" is
+        not a scope; "invoke tool T with parameter class P, at most N times, spending at most X"
+        is.</t>
+
+        <t>G4.  A validity window or a task binding.  Open-ended grants make temporal reasoning
+        impossible: an action under an expired grant must be visibly under an expired
+        grant.</t>
+
+        <t>G5.  A statement of sub-delegation permission: may the delegate re-grant, and if so
+        under what containment rule (strict narrowing is the only rule that composes
+        safely).</t>
+
+        <t>G6.  The delegator's signature over the above, and &#8212; for the grant to resist
+        retrospective revision &#8212; witnessed inclusion of the grant's digest in an
+        independent log before the actions under it commence, or at minimum before any
+        dispute.</t>
+
+        <t>G6 is the requirement that is cheapest to meet before it is needed and impossible to
+        meet after: a grant first published during a dispute is a claim about the past, not a
+        record of it.</t>
+      </section>
+
+      <section anchor="action-record" title="The Action Record">
+        <t>Each action taken under a grant produces an action record by the delegate
+        carrying:</t>
+
+        <t>A1.  The delegate's identity and signature.</t>
+
+        <t>A2.  The digest of the grant under which the action is taken.  This is the binding
+        the problem of Section 3 turns on: not a reference to the delegator, but to the
+        specific signed grant.</t>
+
+        <t>A3.  A description of the action sufficient for scope classification: the tool
+        invoked, the parameter class, the amount, the counterparty.</t>
+
+        <t>A4.  A timestamp and, where the delegate keeps a hash-chained log per
+        <xref target="I-D.templeman-agent-log-tampering"/>, the entry's position in that chain,
+        so the action record cannot later be detached from its context without
+        detection.</t>
+
+        <t>A5.  Where a receipt (Section 4.3) is obtained from the receiving party, the receipt's
+        digest.</t>
+
+        <t>The action record answers "what was done, under which grant".  It does not answer "was
+        the action correct" &#8212; that is measurement territory, out of scope here per
+        <xref target="I-D.templeman-audit-usecase-scope"/>'s separation of measurement from
+        judgement.</t>
+      </section>
+
+      <section anchor="receipt" title="The Receipt">
+        <t>A receipt is issued by the receiving party of a call (the agent accepting a task, the
+        tool server accepting an invocation) and carries:</t>
+
+        <t>R1.  The digest of the request as received &#8212; the exact octets, retained
+        verbatim, since re-serialization changes digests in ways measured in
+        <xref target="I-D.templeman-scitt-framing-space"/>.</t>
+
+        <t>R2.  The digest of the response returned, or a statement that the request was
+        refused.</t>
+
+        <t>R3.  The receiving party's identity and signature, with key resolution independent of
+        the issuer.</t>
+
+        <t>R4.  Optionally, witnessed inclusion of the receipt digest, for calls whose later
+        existence may be contested.</t>
+
+        <t>The receipt's function is to change what is being trusted.  Without it, the caller's
+        record of the call is the caller's claim, and the receiver's record is the receiver's
+        claim, and a dispute is two claims.  With it, both parties hold the same signed artifact
+        and the verifier checks arithmetic.  A signature is an integrity claim, not a truth
+        claim: the receipt says these bytes were received and these bytes returned; it says
+        nothing about whether the response was adequate.  A content address is not
+        authorization: the request digest proves identity of bytes, while whether the caller was
+        authorized to make the request is established by the grant chain, not by the
+        receipt.</t>
+      </section>
+
+      <section anchor="chain-composition" title="Chain Composition">
+        <t>For a delegation chain of depth k, verification composes:</t>
+
+        <ol>
+          <li>Each action record references its grant by digest (A2); the referenced grant is
+          fetched and its signature verified (G6).</li>
+
+          <li>The action is classified against the grant's scope (G3).  The classification is a
+          judgement a verifier makes by inspection; the evidence makes the judgement checkable,
+          not automatic.</li>
+
+          <li>Where the grant's delegator was itself a delegate, the containing grant is fetched
+          and the containment check applied: the sub-grant's scope must be within the containing
+          scope.  Strict narrowing (G5) is what makes this check decidable.</li>
+
+          <li>Each hop's witnessed digests are checked against the witness log's published
+          history, establishing that the grants and receipts existed when claimed.</li>
+
+          <li>The verifier reports which links hold and which are absent.  An action whose grant
+          is missing, expired, out-of-scope, or unwitnessed is reported as such; the vocabulary
+          of <xref target="I-D.templeman-audit-usecase-scope"/> (through UNCHECKABLE for a
+          broken chain) applies to each artifact.</li>
+        </ol>
+
+        <t>The composition has one deliberately unfriendly property: it surfaces gaps rather
+        than interpolating across them.  A chain with an unwitnessed middle hop is not "mostly
+        verified"; the middle hop is reported unwitnessed.  Interpolation is how unresolvable
+        disputes are manufactured.</t>
+      </section>
+    </section>
+
+    <section anchor="verification" title="Verification Without Trusted Central Parties">
+      <t>The verifier's complete trust set, with the requirements of Section 4 met:</t>
+
+      <ul>
+        <li>Signature verification against keys resolved from DIDs, well-known endpoints, or a
+        transparency service's identity registry &#8212; none of which are parties to the
+        dispute.</li>
+
+        <li>The append-only property of the witness log, which is publicly auditable and is the
+        same trust a transparency log asks of the Internet <xref target="RFC6962"/>.</li>
+
+        <li>Where anchors are used, the replication of the anchoring chain
+        <xref target="OTI"/>.</li>
+      </ul>
+
+      <t>Nothing in the set is operated by any party to the delegation chain, and no account with
+      anyone is required.  The cost of this independence is paid at issuance time: keys must be
+      published before they are needed, grants witnessed before actions, receipts collected at
+      call time.  The evidence cannot be back-constructed, which is precisely its value.</t>
+
+      <t>The pattern is deliberately indifferent to the transport.  Whether the call travelled
+      over an A2A task, an MCP tool invocation, or an ad-hoc HTTP request changes the encoding
+      of the artifacts and none of the requirements.  Delegation evidence is a property of the
+      artifacts, not of the protocol that carried the call.</t>
+    </section>
+
+    <section anchor="does-not-establish" title="What Verification Does Not Establish">
+      <t>A verified delegation chain establishes: these grants existed at these times, signed by
+      these keys; these actions reference those grants; these actions classify in or out of
+      those scopes; these receipts bind these requests and responses.  It does not
+      establish:</t>
+
+      <ul>
+        <li>That the delegator's operator authorized the delegator.  The chain of authority from
+        an agent's key to a legal person is a separate evidentiary problem (key ceremony,
+        organizational attestation) that this document does not address.</li>
+
+        <li>That the action was wise, lawful, or adequate.  Verification binds action to
+        authority; it does not grade either.</li>
+
+        <li>That no other actions occurred.  Action records are positive evidence.  The
+        completeness question &#8212; was everything the delegate did recorded &#8212; is the
+        log-integrity question of <xref target="I-D.templeman-agent-log-tampering"/> applied to
+        the delegate, and composes with this document but is not solved by it.</li>
+
+        <li>That the identities are whom the end user believed them to be.  Key-to-name binding
+        is a discovery and naming problem; the evidence here binds keys to keys.</li>
+      </ul>
+
+      <t>These exclusions are stated because the natural marketing summary of delegation
+      evidence &#8212; "provably accountable agents" &#8212; claims all four.  The artifacts
+      claim none of them, and an honest deployment says so.</t>
+    </section>
+
+    <section anchor="existing-work" title="Relationship to Existing Work">
+      <t>The components exist and are not claimed here as new.  Capability systems and
+      macaroons-style attenuated tokens <xref target="MACAROONS"/> implement strict narrowing as
+      an authorization mechanism; this document requires the same containment as an evidence
+      property.  The SCITT architecture <xref target="RFC9943"/> and its reference APIs
+      <xref target="I-D.ietf-scitt-scrapi"/> carry registration and receipts for signed
+      statements; grants, action records, and receipts as defined here are signed statements.
+      The CCF receipt profile <xref target="I-D.ietf-scitt-receipts-ccf-profile"/> is one
+      receipt format with the required binding properties.  A transparency log
+      <xref target="RFC6962"/> and Sigstore <xref target="SIGSTORE"/> supply the witness pattern
+      and a running public witness.  The A2A protocol's agent card <xref target="A2A"/> is a
+      discovery surface to which delegation-evidence capabilities can be advertised; the MCP tool
+      model <xref target="MCP"/> is the other end of the same hop.  The framing hazards for
+      digest-identified CBOR artifacts are measured in
+      <xref target="I-D.templeman-scitt-framing-space"/>; the log-integrity substrate is
+      <xref target="I-D.templeman-agent-log-tampering"/>; the state vocabulary for reporting
+      verification outcomes is <xref target="I-D.templeman-audit-usecase-scope"/>.</t>
+
+      <t>What this document adds is the requirement set itself: the list of artifacts, the
+      bindings between them, and the explicit statement of what verifying them does not
+      establish.  Existing protocol work has focused on making delegation work; this document is
+      about making it checkable afterwards, which is a different design pressure and pulls
+      artifacts into existence that working systems do not otherwise produce &#8212; most
+      importantly, the pre-action witnessed grant (G6) and the request-bound receipt
+      (Section 4.3).</t>
+    </section>
+
+    <section anchor="honesty-and-scope" title="Honesty and Scope">
+      <t>This section states what this document does not claim.</t>
+
+      <ul>
+        <li>This document does not define a delegation protocol, an authorization framework, or a
+        capability system.  It defines evidence requirements that such systems can meet.</li>
+
+        <li>This document does not claim that delegation evidence makes agents accountable.  It
+        makes specific claims checkable; accountability is a social property that evidence
+        serves but does not constitute.</li>
+
+        <li>This document does not claim adoption by A2A, MCP, or any other protocol effort, and
+        no statement here should be read as implying such adoption.</li>
+
+        <li>This document does not propose changes to any existing protocol.  It composes
+        existing machinery.</li>
+
+        <li>This document does not address key-to-legal-person binding, grant revocation
+        semantics, or cross-jurisdictional evidential weight.  All three matter and none are
+        solved here.</li>
+
+        <li>The author operates a measurement service that issues signed receipts of the kind
+        Section 4.3 describes, under a published A2A extension proposal.  No conclusion about
+        that service's quality follows from anything written here, and the extension proposal's
+        existence does not imply its adoption by anyone.</li>
+      </ul>
+    </section>
+
+    <section anchor="security-considerations" title="Security Considerations">
+      <t>Grant theft and replay.  A witnessed, signed grant is a bearer instrument for its scope
+      unless the delegate identity (G2) is bound and checked at action time.  Action records
+      that name their grant (A2) allow a verifier to detect a delegate acting under a grant
+      issued to another delegate; transport-level enforcement of the same check is a protocol
+      decision outside this document.</t>
+
+      <t>Scope drafting.  The containment check of Section 4.4 is only as strong as the scopes
+      are legible.  A scope written in natural language classifies by argument; a scope written
+      in structured parameter classes classifies by inspection.  Evidence requirements cannot
+      force good drafting, but they can make bad drafting visible, since the classification step
+      is reported.</t>
+
+      <t>Timing.  Pre-action witnessing (G6) is the load-bearing timing requirement.  A grant
+      witnessed after the actions under it commenced is evidence of publication, not of prior
+      existence, and honest reporting distinguishes the two &#8212; as do the pending and
+      confirmed anchoring states of <xref target="I-D.templeman-audit-usecase-scope"/>.</t>
+
+      <t>Framing hazards.  Digest-identified artifacts over re-serializable encodings are subject
+      to the class measured in <xref target="I-D.templeman-scitt-framing-space"/>; received
+      octets must be retained verbatim (R1) or a canonical encoding defined and
+      enforced.</t>
+
+      <t>Witness trust.  As in <xref target="I-D.templeman-agent-log-tampering"/>, Section 9: the
+      witness's append-only property is the trust assumption, it is publicly auditable, and a
+      verifier who does not audit it is trusting rather than verifying.</t>
+    </section>
+
+    <section anchor="iana" title="IANA Considerations">
+      <t>This document has no IANA actions.</t>
+    </section>
+
+  </middle>
+
+  <back>
+    <references title="Normative References" anchor="normative-references">
+      <reference anchor="RFC6962">
+        <front>
+          <title>Certificate Transparency</title>
+          <author fullname="B. Laurie" initials="B." surname="Laurie"/>
+          <author fullname="A. Langley" initials="A." surname="Langley"/>
+          <author fullname="E. Kasper" initials="E." surname="Kasper"/>
+          <date month="June" year="2013"/>
+        </front>
+        <seriesInfo name="RFC" value="6962"/>
+        <seriesInfo name="DOI" value="10.17487/RFC6962"/>
+      </reference>
+
+      <reference anchor="RFC9052">
+        <front>
+          <title>CBOR Object Signing and Encryption (COSE): Structures and Process</title>
+          <author fullname="J. Schaad" initials="J." surname="Schaad"/>
+          <date month="August" year="2022"/>
+        </front>
+        <seriesInfo name="STD" value="96"/>
+        <seriesInfo name="RFC" value="9052"/>
+        <seriesInfo name="DOI" value="10.17487/RFC9052"/>
+      </reference>
+
+      <reference anchor="RFC9943">
+        <front>
+          <title>An Architecture for Trustworthy and Transparent Digital Supply Chains</title>
+          <author fullname="H. Birkholz" initials="H." surname="Birkholz"/>
+          <author fullname="A. Delignat-Lavaud" initials="A." surname="Delignat-Lavaud"/>
+          <author fullname="C. Fournet" initials="C." surname="Fournet"/>
+          <author fullname="Y. Deshpande" initials="Y." surname="Deshpande"/>
+          <author fullname="S. Lasker" initials="S." surname="Lasker"/>
+          <date month="June" year="2026"/>
+        </front>
+        <seriesInfo name="RFC" value="9943"/>
+        <seriesInfo name="DOI" value="10.17487/RFC9943"/>
+      </reference>
+    </references>
+
+    <references title="Informative References" anchor="informative-references">
+      <reference anchor="A2A">
+        <front>
+          <title>Agent2Agent (A2A) Protocol Specification</title>
+          <author>
+            <organization>Google and the A2A Project</organization>
+          </author>
+        </front>
+        <!-- The recovered text carries this URL. XML2rfc derives a reference's URL from its
+             seriesInfo, and this reference has none, so the URL would be DROPPED. The
+             annotation is what carries it. -->
+        <annotation>https://a2a-protocol.org/latest/specification/</annotation>
+      </reference>
+
+      <reference anchor="MCP">
+        <front>
+          <title>Model Context Protocol Specification</title>
+          <author>
+            <organization>Anthropic and the Model Context Protocol project</organization>
+          </author>
+        </front>
+        <!-- As with [A2A]: no seriesInfo, so xml2rfc derives no URL, and the annotation is
+             what carries the one the recovered text holds. -->
+        <annotation>https://modelcontextprotocol.io/specification/</annotation>
+      </reference>
+
+      <reference anchor="MACAROONS">
+        <front>
+          <title>Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud</title>
+          <author fullname="A. Birgisson" initials="A." surname="Birgisson"/>
+          <author fullname="J. Politz" initials="J." surname="Politz"/>
+          <author fullname="U. Erlingsson" initials="U." surname="Erlingsson"/>
+          <author fullname="A. Taly" initials="A." surname="Taly"/>
+          <author fullname="M. Vrable" initials="M." surname="Vrable"/>
+          <author fullname="M. Lentczner" initials="M." surname="Lentczner"/>
+          <date month="February" year="2014"/>
+        </front>
+        <seriesInfo name="NDSS" value="2014"/>
+        <seriesInfo name="DOI" value="10.14722/ndss.2014.23212"/>
+      </reference>
+
+      <reference anchor="I-D.ietf-scitt-scrapi">
+        <front>
+          <title>Supply Chain Integrity, Transparency, and Trust (SCITT) Reference APIs</title>
+          <author fullname="H. Birkholz" initials="H." surname="Birkholz"/>
+          <author fullname="J. Geater" initials="J." surname="Geater"/>
+          <author fullname="A. Delignat-Lavaud" initials="A." surname="Delignat-Lavaud"/>
+          <date month="June" day="26" year="2026"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-scitt-scrapi-11" stream="IETF" status="standard"/>
+      </reference>
+
+      <reference anchor="I-D.ietf-scitt-receipts-ccf-profile">
+        <front>
+          <title>CCF Profile for COSE Receipts</title>
+          <author fullname="H. Birkholz" initials="H." surname="Birkholz"/>
+          <author fullname="A. Delignat-Lavaud" initials="A." surname="Delignat-Lavaud"/>
+          <author fullname="C. Fournet" initials="C." surname="Fournet"/>
+          <author fullname="A. Chamayou" initials="A." surname="Chamayou"/>
+          <date month="June" day="24" year="2026"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-scitt-receipts-ccf-profile-04" stream="IETF" status="standard"/>
+      </reference>
+
+      <reference anchor="I-D.templeman-scitt-framing-space">
+        <front>
+          <title>Measuring the CBOR Framing Space of COSE_Sign1 Data-Hash Pre-images</title>
+          <author fullname="N. Templeman" initials="N." surname="Templeman"/>
+          <date month="September" day="5" year="2026"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-templeman-scitt-framing-space-00" stream="IETF" status="standard"/>
+      </reference>
+
+      <reference anchor="I-D.templeman-agent-log-tampering">
+        <front>
+          <title>Tampering with Agent Action Logs: A Threat Model and Evidence Requirements</title>
+          <author fullname="N. Templeman" initials="N." surname="Templeman"/>
+          <date month="September" day="12" year="2026"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-templeman-agent-log-tampering-00" stream="IETF" status="standard"/>
+      </reference>
+
+      <reference anchor="I-D.templeman-audit-usecase-scope">
+        <front>
+          <title>Scoping the AUDIT Use Case for Transparent Measurement Evidence of AI Systems</title>
+          <author fullname="N. Templeman" initials="N." surname="Templeman"/>
+          <date month="September" day="12" year="2026"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-templeman-audit-usecase-scope-00" stream="IETF" status="standard"/>
+      </reference>
+
+      <reference anchor="SIGSTORE">
+        <front>
+          <title>Rekor: Software Supply Chain Transparency Log</title>
+          <author>
+            <organization>The Sigstore Project</organization>
+          </author>
+        </front>
+      <!-- As with [A2A] and [MCP]: no seriesInfo, so xml2rfc derives no URL, and the
+         annotation is what carries the one the recovered text holds. -->
+      <annotation>https://docs.sigstore.dev/logging/overview/</annotation>
+      </reference>
+
+      <reference anchor="OTI">
+        <front>
+          <title>OpenTimestamps: Scalable, Trust-Minimized, Distributed Timestamping with Bitcoin</title>
+          <author fullname="P. Todd" initials="P." surname="Todd"/>
+        </front>
+      <!-- As with [A2A] and [MCP]: no seriesInfo, so xml2rfc derives no URL, and the
+         annotation is what carries the one the recovered text holds. -->
+      <annotation>https://opentimestamps.org/</annotation>
+      </reference>
+    </references>
+
+    <section anchor="acknowledgements">
+      <name>Acknowledgements</name>
+      <t>The requirement set was shaped by building a signed-receipts extension proposal for
+      agent-to-agent calls and discovering which artifacts a verifier actually needs at dispute
+      time.  The A2A and MCP communities' published specifications define the hop shapes this
+      document reasons about.</t>
+    </section>
+  </back>
+</rfc>

@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  draft-templeman-audit-usecase-scope-00.xml
+
+  RECONSTRUCTED 2026-11-07 from the rendered text in
+  ~/clawd/_alignment/ietf-drafts-20260912/draft-templeman-audit-usecase-scope-00.txt.
+
+  WHY A RECONSTRUCTION. The three sibling drafts of 2026-09-12 were never submitted, so no
+  XML2rfc source of theirs exists on the IETF archive (measured: no .xml anywhere in the
+  estate, the repo, or the archive carries their docNames). Only their RENDERED text survives,
+  and that text is HAND-SET: its page footers, page numbers and table of contents were written
+  by hand, which is why it does not correspond to any xml2rfc output. So the content is
+  recovered from it and the structure is rebuilt, and the parts the original hand lacked are
+  generated properly: the table of contents, the page footers, "Status of This Memo" and
+  "Copyright Notice" all come from xml2rfc now.
+
+  HOW IT IS CHECKED. xml2rfc 3.34.1 renders it with 0 warnings, and the rendered prose is
+  compared with the recovered text section by section. The expiry is NOT typed: xml2rfc derives
+  it from the date and the docName suffix, and 12 September 2026 + 185 days is 16 March 2027,
+  which is the expiry the recovered text carries.
+-->
+<!DOCTYPE rfc [
+  <!ENTITY nbsp    "&#160;">
+  <!ENTITY zwsp   "&#8203;">
+  <!ENTITY nbhy   "&#8209;">
+  <!ENTITY wj     "&#8288;">
+]>
+
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" ipr="trust200902" docName="draft-templeman-audit-usecase-scope-00" category="info" submissionType="IETF" tocDepth="2" tocInclude="true" sortRefs="true" symRefs="true">
+  <front>
+    <title abbrev="AUDIT Use Case Scope">Scoping the AUDIT Use Case for Transparent Measurement Evidence of AI Systems</title>
+
+    <author fullname="Nicholas Templeman" initials="N." surname="Templeman">
+      <organization>Council of AI (CSOAI Ltd)</organization>
+      <address>
+        <postal>
+          <street>3rd Floor, 86-90 Paul Street</street>
+          <city>London</city>
+          <code>EC2A 4NE</code>
+          <country>United Kingdom</country>
+        </postal>
+        <email>nicholas@csoai.org</email>
+        <uri>https://councilof.ai/</uri>
+      </address>
+    </author>
+
+    <date year="2026" month="September" day="12"/>
+
+    <area>General</area>
+
+    <keyword>SCITT</keyword>
+    <keyword>transparency</keyword>
+    <keyword>measurement</keyword>
+    <keyword>audit</keyword>
+
+    <abstract>
+      <t>This document scopes a use case for the SCITT architecture: the AUDIT use case, in
+      which measurements of AI systems are published as transparent, append-only, verifiable
+      evidence. It defines a state vocabulary for the lifecycle of a piece of measurement
+      evidence, from DISCOVERED through SETTLED, with UNCHECKABLE as an honest terminal state
+      for evidence whose verification chain is broken or absent. The document distinguishes
+      measurement from certification throughout: the evidence described here records what was
+      measured, by whom, with which key, anchored where, and says nothing about whether the
+      measured system is good. This document specifies nothing and proposes no wire format. It
+      scopes a use case and defines vocabulary, and identifies the existing protocol machinery
+      that already carries each state.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="introduction" title="Introduction">
+      <t>The SCITT architecture <xref target="RFC9943"/> describes how signed statements about
+      artifacts are made transparent: statements are registered in an append-only ledger and
+      receipts are issued that bind a statement to a position in that ledger. The architecture is
+      neutral about what the statements are about.</t>
+
+      <t>A growing class of systems&#8212;AI models, agent frameworks, and the services built
+      on them&#8212;are subjects of measurement: someone runs a benchmark, an evaluation, a
+      census, or a probe, and records a result. Today those results travel as claims. A claim's
+      weight is a function of the recipient's trust in the claimant, which is not a verifiable
+      property. The AUDIT use case is the application of SCITT transparency to that class:
+      measurement results are issued as signed statements, registered, witnessed, and anchored,
+      so that what is trusted is a signature, a ledger position, and an anchor&#8212;not the
+      say-so of the measuring party.</t>
+
+      <t>The motivation is not regulatory. Several jurisdictions are constructing obligations
+      that will produce demand for durable, checkable records of what was measured about
+      which system and when (for example, the EU AI Act's record-keeping provisions and the
+      NIST AI RMF's measurement function). This document does not map to any such obligation.
+      It scopes the use case on its own terms.</t>
+
+      <t>The document does three things: it bounds the use case
+      (<xref target="audit-use-case"/>), it defines a state vocabulary for evidence lifecycle
+      (<xref target="state-vocabulary"/>), and it identifies which existing machinery carries
+      each state (<xref target="existing-work"/>). It specifies nothing.</t>
+    </section>
+
+    <section anchor="conventions" title="Conventions and Definitions">
+      <t>This document is Informational and contains no normative requirements.</t>
+
+      <dl>
+        <dt>measurement</dt>
+        <dd><t>The execution of a defined procedure against a defined subject, producing a
+        recorded result. Measurement is distinguished from certification, which is a judgement
+        about fitness for purpose. This document concerns measurement only.</t></dd>
+
+        <dt>measurement card</dt>
+        <dd><t>A structured document recording one measurement: subject, procedure, inputs,
+        result, timestamp, and the identity of the measuring party. A card is the unit of
+        signing.</t></dd>
+
+        <dt>evidence</dt>
+        <dd><t>A measurement card together with the cryptographic artifacts that make it
+        checkable: signature, ledger receipt, witness records, and anchors.</t></dd>
+
+        <dt>root</dt>
+        <dd><t>A Merkle root computed over an ordered set of leaf digests, each leaf being the
+        digest of one measurement card. The root is the unit of anchoring.</t></dd>
+
+        <dt>witness</dt>
+        <dd><t>A third party that countersigns or includes a digest in an independent, publicly
+        auditable log, such that the digest's existence at a point in time can be checked
+        without reference to the measuring party.</t></dd>
+
+        <dt>anchor</dt>
+        <dd><t>A timestamping commitment to a digest on a widely replicated substrate whose
+        history is impractical to rewrite, such as a public blockchain via OpenTimestamps
+        <xref target="OTI"/>.</t></dd>
+      </dl>
+    </section>
+
+    <section anchor="audit-use-case" title="The AUDIT Use Case">
+      <t>The use case has four actors:</t>
+
+      <ul>
+        <li>The measuring party, who runs procedures and issues cards.</li>
+        <li>The subject provider, whose system is measured and who may or may not cooperate.</li>
+        <li>The transparency service, operating an append-only ledger per <xref target="RFC9943"/>,
+        which registers signed statements and issues receipts.</li>
+        <li>The verifier, who later checks the evidence. The verifier is assumed to be
+        offline-capable and unwilling to create an account with anyone.</li>
+      </ul>
+
+      <t>The use case's distinguishing properties, relative to the supply-chain cases SCITT was
+      designed around, are:</t>
+
+      <ul>
+        <li>The subject is not a software artifact with a stable digest. An AI model served
+        behind an API may change without notice. Evidence must therefore record what was
+        actually observed, with the observation timestamp, and must tolerate the subject having
+        changed since. A card about a model is a claim about an observation session, not about
+        a persistent object.</li>
+
+        <li>The measurement may be adversarially unwelcome. The subject provider may prefer
+        that a measurement not exist. This places the burden on durability: a card that exists
+        only on the measuring party's web server can be made to disappear by anyone with
+        leverage over that server. Registration in an independent ledger, third-party
+        witnessing, and anchoring each reduce the set of parties who can silently erase the
+        record.</li>
+
+        <li>The value of the evidence is in its checkability, not its conclusion. Two honest
+        measuring parties running the same procedure should get compatible results, and the
+        AUDIT use case wants a state (REPRODUCED, <xref target="terminal-states"/>) that
+        records when that has happened&#8212;and an honest state (UNCHECKABLE,
+        <xref target="terminal-states"/>) for when the chain needed to check the evidence does
+        not exist.</li>
+      </ul>
+
+      <t>The use case explicitly excludes: grading, ranking, certification, conformity
+      assessment, and any statement of fitness for purpose. Those may be built on top of
+      measurement evidence by other parties; they are not part of the evidence.</t>
+    </section>
+
+    <section anchor="state-vocabulary" title="A State Vocabulary for Measurement Evidence">
+      <t>The states below describe where a piece of evidence is in its lifecycle. They are
+      descriptive, not normative: a state is a fact about what has been done, checkable from
+      the artifacts, and carries no quality judgement. The vocabulary exists so that a
+      measuring party can report its posture honestly and a verifier can see at a glance which
+      properties hold.</t>
+
+      <t>The states form a partial order for the forward path, but the vocabulary's usefulness
+      is precisely that states can be absent: a card may be SIGNED but never ROOTED, and saying
+      so is more informative than saying nothing.</t>
+
+      <section anchor="discovery-states" title="Discovery and Indexing States">
+        <dl>
+          <dt>DISCOVERED</dt>
+          <dd><t>A subject of potential measurement interest has been identified. No procedure
+          has run. No evidence exists. This state exists so that census-style work&#8212;
+          enumerating a population before measuring it&#8212;can be reported without implying
+          that measurement has occurred.</t></dd>
+
+          <dt>INDEXED</dt>
+          <dd><t>The subject has been assigned a stable local identifier and its discovery
+          metadata (where found, when, under what description) has been recorded. Still no
+          measurement. The distinction from DISCOVERED is bookkeeping: the subject is now
+          addressable in later cards.</t></dd>
+
+          <dt>MEASURED</dt>
+          <dd><t>A defined procedure has executed against the subject and produced a recorded
+          result. The result exists as a measurement card but is unsigned. A MEASURED card is
+          a draft: it has no integrity protection and no bound identity, and should be treated
+          by any consumer as unverifiable.</t></dd>
+        </dl>
+
+        <t>The forward transition from MEASURED that never happens is common and legitimate:
+        much exploratory measurement is not worth the cost of signing. The vocabulary does not
+        require every card to advance.</t>
+      </section>
+
+      <section anchor="signing-states" title="Signing and Aggregation States">
+        <dl>
+          <dt>SIGNED</dt>
+          <dd><t>The card has been signed by the measuring party with a key whose verification
+          method is resolvable (for example, an Ed25519 key published at a DID, or a COSE key in
+          a discoverable location). The signature binds the card's bytes to the signer. It is
+          an integrity claim, not a truth claim: it says these bytes are the bytes that were
+          signed, and says nothing about whether the measurement inside them is correct.</t></dd>
+
+          <dt>ROOTED</dt>
+          <dd><t>The card's digest has been included as a leaf in a Merkle tree whose root has
+          been published, together with the inclusion path. Aggregation is the scaling
+          mechanism: one root commits to many cards, so the cost of later witnessing and
+          anchoring is paid once per root, not once per card. A verifier who holds the root,
+          the leaf index, and the path can check inclusion without trusting the publisher,
+          provided the root itself is checkable. ROOTED therefore inherits the checkability of
+          whatever state the root has reached.</t></dd>
+        </dl>
+
+        <t>A card may be SIGNED without being ROOTED (a one-off measurement published alone)
+        and a root may be published without the card being individually SIGNED (the signature
+        may live at the root). The vocabulary deliberately does not force a single pipeline
+        shape.</t>
+      </section>
+
+      <section anchor="witnessing-states" title="Witnessing and Anchoring States">
+        <dl>
+          <dt>WITNESSED_REKOR</dt>
+          <dd><t>The card's digest (or the root containing it) has been submitted to a public
+          transparency log&#8212;in the running implementation, Rekor <xref target="SIGSTORE"/>
+          &#8212;and an inclusion proof has been obtained. The witness is a third party with an
+          independent, auditable, append-only log. After this state, the evidence's existence
+          at the witnessed time no longer depends on the measuring party's infrastructure
+          surviving.</t></dd>
+
+          <dt>STAMPED_PENDING_BITCOIN</dt>
+          <dd><t>An OpenTimestamps <xref target="OTI"/> commitment to the root has been created
+          and submitted for inclusion in a Bitcoin transaction, but the transaction is not yet
+          confirmed. The calendar portion of the proof exists; the blockchain portion is
+          pending. This state is named explicitly because an unconfirmed timestamp is weaker
+          than a confirmed one, and conflating the two is a known way to overstate evidence
+          strength.</t></dd>
+
+          <dt>CONFIRMED_BITCOIN</dt>
+          <dd><t>The OpenTimestamps commitment is confirmed on the Bitcoin chain to a depth the
+          verifier considers adequate. The timestamp is now backed by the cost of rewriting
+          Bitcoin history, which is the strongest widely available not-belonging-to-anyone
+          clock.</t></dd>
+        </dl>
+
+        <t>The two states are separate so that a pipeline can report "timestamp submitted,
+        awaiting confirmation" without borrowing the credibility of a confirmation it does not
+        yet have.</t>
+      </section>
+
+      <section anchor="terminal-states" title="Terminal States">
+        <dl>
+          <dt>SETTLED</dt>
+          <dd><t>The evidence chain is complete for this card: SIGNED, ROOTED, WITNESSED_REKOR,
+          and CONFIRMED_BITCOIN all hold, and the published artifacts are sufficient for an
+          offline verifier to check every link without contacting the measuring party. SETTLED
+          is a statement about the evidence, not about the measured subject.</t></dd>
+
+          <dt>REPRODUCED</dt>
+          <dd><t>An independent party, using the published procedure and inputs, has repeated
+          the measurement and obtained a result within the published tolerance, and that
+          reproduction is itself signed and published. REPRODUCED is the only state that says
+          anything about the measurement's content: it says two parties agree on what the
+          procedure yields. It still says nothing about fitness.</t></dd>
+
+          <dt>UNCHECKABLE</dt>
+          <dd><t>A terminal state assigned honestly when the chain required to check the
+          evidence does not exist: a lost key, a dead witness log, a root whose leaves are no
+          longer published, a card whose signer cannot be resolved. UNCHECKABLE is not an
+          accusation; it is a refusal to borrow credibility. An evidence corpus that reports
+          UNCHECKABLE where it applies is more trustworthy than one whose every entry is
+          labelled checkable, because the label then means something.</t></dd>
+        </dl>
+      </section>
+    </section>
+
+    <section anchor="evidence-artifacts" title="Evidence Artifacts">
+      <t>The use case's running implementation publishes, for each card:</t>
+
+      <ul>
+        <li>the measurement card itself, as a structured JSON document addressed by content
+        digest;</li>
+        <li>an Ed25519 signature over the card bytes, with the verification key published at a
+        resolvable location;</li>
+        <li>a published chain of signed checkpoints over the card index, so that the index
+        itself is tamper-evident;</li>
+        <li>a Merkle root per publication batch, with inclusion paths;</li>
+        <li>Rekor inclusion proofs for roots;</li>
+        <li>OpenTimestamps proofs for roots, with pending and confirmed states distinguished as
+        in <xref target="witnessing-states"/>.</li>
+      </ul>
+
+      <t>The artifacts are listed here to make the vocabulary concrete, not to standardize their
+      formats. COSE_Sign1 <xref target="RFC9052"/> is the obvious carrier for signed cards in a
+      SCITT context; the implementation above predates that choice and uses raw Ed25519 over
+      JSON. Both are instances of the same state machine. Where a digest over wire octets is
+      used as an identifier, the framing considerations of
+      <xref target="I-D.templeman-scitt-framing-space"/> apply.</t>
+    </section>
+
+    <section anchor="transparency-buys" title="What Transparency Buys Here">
+      <t>Transparency infrastructure earns its cost in this use case in four specific ways:</t>
+
+      <ul>
+        <li>Non-erasure. A card registered in an independent ledger and witnessed in an
+        independent log cannot be quietly withdrawn by the measuring party, and cannot be made
+        to disappear by pressure on the measuring party alone. For measurements that are
+        adversarially unwelcome (<xref target="audit-use-case"/>), this is the primary
+        property.</li>
+
+        <li>Back-dating resistance. A measurement anchored before an event (a model release,
+        an incident, a regulatory deadline) can be shown to predate it. A measurement claimed
+        after the fact to have been made before the fact cannot be retro-fitted, because the
+        anchor is missing. This is what converts "we measured this" from a claim into a
+        checkable fact about timing.</li>
+
+        <li>Selective-disclosure detection. A measuring party that publishes roots but shows
+        only favourable cards can be caught: the root commits to a leaf count, and a verifier
+        with the full leaf set can check what was omitted. The vocabulary's INDEXED state,
+        reported honestly, makes the denominator visible.</li>
+
+        <li>Verifier independence. A SETTLED card can be checked by a party with no
+        relationship to the measurer, no account, and no network access to the measurer. The
+        verifier's trust is placed in signature verification, the witness log's append-only
+        property, and the anchoring chain's replication&#8212;all of which are independently
+        auditable.</li>
+      </ul>
+
+      <t>What transparency does not buy is correctness. A wrong measurement, transparently
+      published, is a wrong measurement that cannot be erased. That is the point: the
+      infrastructure makes the record durable and checkable, and the measuring party's
+      incentive to be right comes from exactly that durability.</t>
+    </section>
+
+    <section anchor="existing-work" title="Relationship to Existing Work">
+      <t>Each state in <xref target="state-vocabulary"/> is carried by machinery that already
+      exists:</t>
+
+      <ul>
+        <li>SIGNED maps to a SCITT signed statement per <xref target="RFC9943"/>, Section 5,
+        with COSE_Sign1 <xref target="RFC9052"/> as the carrier.</li>
+
+        <li>Registration and receipts map to the SCITT Reference APIs
+        <xref target="I-D.ietf-scitt-scrapi"/> and to COSE receipt profiles such as
+        <xref target="I-D.ietf-scitt-receipts-ccf-profile"/>.</li>
+
+        <li>WITNESSED_REKOR uses the Sigstore Rekor public instance <xref target="SIGSTORE"/>,
+        which is not SCITT infrastructure but is an independent append-only log with public
+        inclusion proofs; the vocabulary cares about the property, not the operator.</li>
+
+        <li>STAMPED_PENDING_BITCOIN and CONFIRMED_BITCOIN use OpenTimestamps
+        <xref target="OTI"/>, which aggregates many digests into one chain transaction, making
+        per-card anchoring economically feasible.</li>
+
+        <li>The framing hazards for digest-based identifiers over CBOR
+        <xref target="RFC8949"/> objects are measured in the sibling document
+        <xref target="I-D.templeman-scitt-framing-space"/>, which this document cites rather
+        than repeats.</li>
+      </ul>
+
+      <t>This document discovers nothing in that machinery. It names the states so that an
+      evidence corpus can describe its own posture in terms a verifier can act on, and so that
+      gaps (a SIGNED card that is never ROOTED, a stamp that never confirms) are reportable
+      rather than silent.</t>
+    </section>
+
+    <section anchor="honesty-and-scope" title="Honesty and Scope">
+      <t>This section states what this document does not claim.</t>
+
+      <ul>
+        <li>This document does not define a certification scheme. No state in
+        <xref target="state-vocabulary"/> is a judgement that a measured system is adequate,
+        safe, lawful, or fit for any purpose. The vocabulary describes evidence handling, not
+        merit.</li>
+
+        <li>This document does not claim the vocabulary is complete. Other witnesses (other
+        transparency logs, other anchoring chains) map onto the same shape; the names given
+        here are the ones the running implementation uses.</li>
+
+        <li>This document does not claim that any state has been achieved for any particular
+        corpus by any particular party. It defines labels; it does not assert facts.</li>
+
+        <li>This document does not propose protocol changes to SCITT, Sigstore, or
+        OpenTimestamps. It uses them as they are.</li>
+
+        <li>The author operates a measurement service that uses this vocabulary. The document
+        is offered as a scope and a set of definitions, not as evidence of the service's
+        quality, and no conclusion about the service follows from anything written here.</li>
+      </ul>
+    </section>
+
+    <section anchor="security-considerations" title="Security Considerations">
+      <t>The security properties of the states are inherited from their carriers: Ed25519
+      signatures, Merkle inclusion, Rekor's append-only log, and Bitcoin's replication. None
+      are weakened by the vocabulary.</t>
+
+      <t>Two hazards are worth stating. First, a vocabulary of honest states can be used
+      dishonestly: a party may label a card SETTLED when it is not. The defence is
+      structural&#8212;every state is checkable from published artifacts, so the label is a
+      claim, and the check is cheap. Second, the UNCHECKABLE state can be abused in reverse,
+      to disparage a competitor's evidence; the check for that is the same, since UNCHECKABLE is
+      also a claim about artifacts and can be verified or refuted by inspection.</t>
+
+      <t>Digest-based identifiers over re-serializable encodings are subject to the
+      framing-class hazard measured in <xref target="I-D.templeman-scitt-framing-space"/>;
+      evidence systems should retain received octets verbatim.</t>
+    </section>
+
+    <section anchor="iana" title="IANA Considerations">
+      <t>This document has no IANA actions.</t>
+    </section>
+
+  </middle>
+
+  <back>
+    <references title="Normative References" anchor="normative-references">
+      <reference anchor="RFC8949">
+        <front>
+          <title>Concise Binary Object Representation (CBOR)</title>
+          <author fullname="C. Bormann" initials="C." surname="Bormann"/>
+          <author fullname="P. Hoffman" initials="P." surname="Hoffman"/>
+          <date month="December" year="2020"/>
+        </front>
+        <seriesInfo name="RFC" value="8949"/>
+        <seriesInfo name="STD" value="94"/>
+        <seriesInfo name="DOI" value="10.17487/RFC8949"/>
+      </reference>
+
+      <reference anchor="RFC9052">
+        <front>
+          <title>CBOR Object Signing and Encryption (COSE): Structures and Process</title>
+          <author fullname="J. Schaad" initials="J." surname="Schaad"/>
+          <date month="August" year="2022"/>
+        </front>
+        <seriesInfo name="RFC" value="9052"/>
+        <seriesInfo name="STD" value="96"/>
+        <seriesInfo name="DOI" value="10.17487/RFC9052"/>
+      </reference>
+
+      <reference anchor="RFC9943">
+        <front>
+          <title>An Architecture for Trustworthy and Transparent Digital Supply Chains</title>
+          <author fullname="H. Birkholz" initials="H." surname="Birkholz"/>
+          <author fullname="A. Delignat-Lavaud" initials="A." surname="Delignat-Lavaud"/>
+          <author fullname="C. Fournet" initials="C." surname="Fournet"/>
+          <author fullname="Y. Deshpande" initials="Y." surname="Deshpande"/>
+          <author fullname="S. Lasker" initials="S." surname="Lasker"/>
+          <date month="June" year="2026"/>
+        </front>
+        <seriesInfo name="RFC" value="9943"/>
+        <seriesInfo name="DOI" value="10.17487/RFC9943"/>
+      </reference>
+    </references>
+
+    <references title="Informative References" anchor="informative-references">
+      <reference anchor="I-D.ietf-scitt-scrapi">
+        <front>
+          <title>Supply Chain Integrity, Transparency, and Trust (SCITT) Reference APIs</title>
+          <author fullname="H. Birkholz" initials="H." surname="Birkholz"/>
+          <author fullname="J. Geater" initials="J." surname="Geater"/>
+          <author fullname="A. Delignat-Lavaud" initials="A." surname="Delignat-Lavaud"/>
+          <date month="June" day="26" year="2026"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-scitt-scrapi-11" stream="IETF" status="standard"/>
+      </reference>
+
+      <reference anchor="I-D.ietf-scitt-receipts-ccf-profile">
+        <front>
+          <title>CCF Profile for COSE Receipts</title>
+          <author fullname="H. Birkholz" initials="H." surname="Birkholz"/>
+          <author fullname="A. Delignat-Lavaud" initials="A." surname="Delignat-Lavaud"/>
+          <author fullname="C. Fournet" initials="C." surname="Fournet"/>
+          <author fullname="A. Chamayou" initials="A." surname="Chamayou"/>
+          <date month="June" day="24" year="2026"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-scitt-receipts-ccf-profile-04" stream="IETF" status="standard"/>
+      </reference>
+
+      <reference anchor="I-D.templeman-scitt-framing-space">
+        <front>
+          <title>Measuring the CBOR Framing Space of COSE_Sign1 Data-Hash Pre-images</title>
+          <author fullname="N. Templeman" initials="N." surname="Templeman"/>
+          <date month="September" day="5" year="2026"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-templeman-scitt-framing-space-00" stream="IETF" status="standard"/>
+      </reference>
+
+      <reference anchor="SIGSTORE">
+        <front>
+          <title>Rekor: Software Supply Chain Transparency Log</title>
+          <author>
+            <organization>The Sigstore Project</organization>
+          </author>
+        </front>
+      </reference>
+
+      <reference anchor="OTI">
+        <front>
+          <title>OpenTimestamps: Scalable, Trust-Minimized, Distributed Timestamping with Bitcoin</title>
+          <author fullname="P. Todd" initials="P." surname="Todd"/>
+        </front>
+      </reference>
+    </references>
+
+    <section anchor="acknowledgements">
+      <name>Acknowledgements</name>
+      <t>The state vocabulary was developed against a running evidence pipeline, which is the
+      surest way to discover which states need honest names. The SCITT working group's published
+      architecture and reference APIs carry every forward state defined here.</t>
+    </section>
+  </back>
+</rfc>
