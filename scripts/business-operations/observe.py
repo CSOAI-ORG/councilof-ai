@@ -27,6 +27,10 @@ ENDPOINTS = {
 }
 
 
+def index_selection_suffix(selection):
+    return '-' + hashlib.sha256(json.dumps(sorted(set(selection))).encode()).hexdigest()[:12]
+
+
 def stamp():
     return datetime.now(UTC).isoformat(timespec='seconds').replace('+00:00', 'Z')
 
@@ -237,7 +241,7 @@ def run(state, config, mill=False, force_sources=False):
             alerts.append({'id': 'deadline:' + event['id'], 'kind': 'deadline', 'detail': event['state']})
     if now.date().isoformat() > config.get('period', {}).get('end', '9999-12-31'):
         alerts.append({'id': 'calendar:review-expired', 'kind': 'deadline'})
-    index_path = state / 'indexes.json'
+    index_path = state / ('indexes' + index_selection_suffix(['PayAI']) + '.json')
     indexes = json.loads(index_path.read_text()) if index_path.exists() else None
     if indexes is None or indexes.get('status') != 'OBSERVED':
         alerts.append({'id': 'indexes:unavailable', 'kind': 'distribution'})
