@@ -42,3 +42,15 @@ test('unknown model remains unspecified rather than adapter identity',()=>{const
 test('all 51 harness tasks are retained inside the row budget',()=>{const results={},versions={};for(let i=0;i<51;i++){results['t'+i]={acc:i===50?0:1};versions['t'+i]=1}const rows=benchmarkRows({config:{model:'hf'},results,versions});assert.equal(rows.length,51);assert.equal(rows.at(-1).value,0)});
 test('all 51 Inspect scorer results are retained',()=>{const d=inspect();d.results.scores=Array.from({length:51},(_,i)=>({name:'score'+i,metrics:{acc:{value:i===50?0:1}}}));const rows=benchmarkRows(d);assert.equal(rows.length,51);assert.equal(rows.at(-1).value,0)});
 test('over-budget summaries are refused as a whole',()=>{const results={},versions={};for(let i=0;i<201;i++){results['t'+i]={acc:1};versions['t'+i]=1}assert.throws(()=>benchmarkRows({config:{model:'hf'},results,versions}),/entire import was refused/)});
+
+const liveBoard=(counts)=>({kind:'live-board-totals',state:'LIVE',reachable:true,counts});
+const namedBoard=[{name:'unmeasured',value:0},{name:'axis_slots',value:34},{name:'measured',value:34}];
+test('native MCP board counts render by name and preserve zero',()=>assert.deepEqual(publicBoard(liveBoard(namedBoard)),{axes:34,measured:34,unmeasured:0}));
+test('native MCP board rejects missing duplicate or invalid counts',()=>{
+ for(const rows of [namedBoard.slice(1),[...namedBoard,namedBoard[0]],namedBoard.map(x=>x.name==='measured'?{...x,value:'34'}:x),namedBoard.map(x=>x.name==='measured'?{...x,value:33}:x)])assert.equal(publicBoard(liveBoard(rows)),null);
+});
+test('native MCP board does not infer available evidence from cached or unreachable output',()=>{
+ assert.equal(publicBoard({...liveBoard(namedBoard),state:'UNAVAILABLE'}),null);
+ assert.equal(publicBoard({...liveBoard(namedBoard),reachable:false}),null);
+ assert.equal(publicBoard({text:'34 axes and 34 measured'}),null);
+});
