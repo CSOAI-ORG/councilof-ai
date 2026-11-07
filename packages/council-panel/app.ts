@@ -211,9 +211,13 @@ function acceptHostResult(result:unknown){
 async function connectHost(){
   const previous=app, current=++hostGeneration;
   hostReady=false;app=null;hostBoard=null;correction.invalidate();void previous?.close();
-  const bridge=new App({name:'Council of AI · MEOK',version:'0.2.0'},{},{autoResize:true});app=bridge;
+  // The pinned SDK's automatic observer outlives close(); own its lifetime here.
+  const bridge=new App({name:'Council of AI · MEOK',version:'0.2.0'},{},{autoResize:false});app=bridge;
   const isCurrent=()=>app===bridge && current===hostGeneration;
+  let resizeObserver:ResizeObserver|null=null, resizeFrame=0, lastWidth=0, lastHeight=0;
+  const stopResize=()=>{resizeObserver?.disconnect();resizeObserver=null;if(resizeFrame)cancelAnimationFrame(resizeFrame);resizeFrame=0;};
   const disconnected=()=>{
+    stopResize();
     if(!isCurrent())return;
     hostReady=false;app=null;hostGeneration++;hostBoard=null;correction.invalidate();
     $('host-state').textContent='Host bridge unavailable';$('connection-host').textContent='The host bridge is unavailable. Conversation actions are disabled.';
@@ -229,6 +233,17 @@ async function connectHost(){
     if(!isCurrent()){void bridge.close();return;}
     hostReady=true;$('host-state').textContent='Native host connected';$('connection-host').textContent='MCP Apps bridge established. This does not grant access to other chats or actions.';
     $('correction-status').textContent=canMessage()?'Observe a task, then stage a correction for this conversation.':'This host does not advertise text messages. Correction handoff is unavailable.';render();
+    const scheduleResize=()=>{
+      if(resizeFrame||!isCurrent()||!hostReady)return;
+      resizeFrame=requestAnimationFrame(()=>{
+        resizeFrame=0;if(!isCurrent()||!hostReady)return;
+        const root=document.documentElement, originalHeight=root.style.height;root.style.height='max-content';
+        const height=Math.ceil(root.getBoundingClientRect().height),width=Math.ceil(window.innerWidth);root.style.height=originalHeight;
+        if(width===lastWidth&&height===lastHeight)return;lastWidth=width;lastHeight=height;
+        void bridge.sendSizeChanged({width,height}).catch(()=>{disconnected();void bridge.close();});
+      });
+    };
+    resizeObserver=new ResizeObserver(scheduleResize);resizeObserver.observe(document.documentElement);resizeObserver.observe(document.body);scheduleResize();
   }catch{disconnected();void bridge.close();}
 }
 if(displayToken)startDisplay(displayToken);else{render();if(native)void connectHost();}
