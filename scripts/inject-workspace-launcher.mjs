@@ -17,6 +17,7 @@
  */
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { resolve, relative, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const TAG = '<script src="/council-workspace-launcher.js" defer></script>';
@@ -157,7 +158,12 @@ function main() {
 }
 
 try {
-  main();
+  // CHANGED 2026-11-07. This module is now IMPORTED as well as run: the interop index
+  // producer asks the injector what it would WRITE for each HTML file, so the served bytes
+  // come from the injector's own transform instead of a second implementation of it. An
+  // import must not run the CLI — and the estate's own sibling script
+  // (scripts/retired-proof-archive.mjs) already guards its entry point this way.
+  if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
 } catch (error) {
   console.error(`workspace-launcher: ${error instanceof Error ? error.message : String(error)}`);
   process.exitCode = 1;
