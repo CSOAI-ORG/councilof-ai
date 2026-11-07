@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Shield, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { CouncilSessionPersistenceError, COUNCIL_SESSION_PERSISTENCE_MESSAGE } from '@/lib/councilSession';
 import { councilLoginDestination, councilLoginReturnFromSearch } from '@/lib/councilLoginReturn';
 import { toast } from 'sonner';
 
@@ -51,7 +52,9 @@ export default function Login() {
       setLocation(councilLoginDestination(returnTo, email));
     } catch (error) {
       if (!mounted.current || (error instanceof Error && error.name === 'AbortError')) return;
-      toast.error('Login failed. Please try again.');
+      toast.error(error instanceof CouncilSessionPersistenceError
+        ? COUNCIL_SESSION_PERSISTENCE_MESSAGE
+        : 'Login failed. Please try again.');
     } finally {
       if (mounted.current) setIsSubmitting(false);
     }
