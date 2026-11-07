@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-07T07:41:23Z",
- "source_commit": "x",
+ "as_of": "2026-11-07T07:51:40Z",
+ "source_commit": "d8400b513",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; a match means you hold what the estate published. Two things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; and for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -12,14 +12,16 @@
   "retired-bytes-absent": "reserved for the membership-specific variant; not emitted, because the archive is a deploy-time artefact and naming it here would make the index stale on every deploy"
  },
  "counts": {
-  "files": 16340,
-  "bytes": 258837137,
+  "files": 16341,
+  "bytes": 258838721,
   "by_served": {
-   "pages": 3094,
+   "pages": 3095,
    "retired-bytes": 6,
    "hf-mirror": 13240
   },
   "digests_taken_from_the_built_tree": 3094,
+  "digests_taken_from_the_injectors_transform": 0,
+  "digests_taken_from_the_tree_bytes": 1,
   "digests_not_comparable_no_built_tree": 0,
   "excluded_the_index_itself": 1,
   "excluded_not_present_in_the_tree": 0
@@ -97951,6 +97953,12 @@
    "path": "/interop/x402-trust/20261106T193759Z.json",
    "bytes": 1584,
    "sha256": "b2b8eb7293d5923555aa08fe55d291961723043fbd977f6756da10fe18f4c202",
+   "served": "pages"
+  },
+  {
+   "path": "/interop/x402-trust/20261107T062448Z.json",
+   "bytes": 1584,
+   "sha256": "ccb15f0bed644d1a37e83d0e6bd06ff74ffd0e8ebec925e6ad737f69f4241778",
    "served": "pages"
   },
   {

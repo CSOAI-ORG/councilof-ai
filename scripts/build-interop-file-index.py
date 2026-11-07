@@ -203,6 +203,63 @@ def function_mirror_prefixes():
     return re.findall(r'"([^"]+)"', m.group(1))
 
 
+def served_html_digests(tree, served_root):
+    """The bytes the injector WOULD write for each HTML file, from the injector's own transform.
+
+    WHY. The build injects a workspace-launcher script into every HTML page it serves, so the
+    served bytes of an HTML file are NOT the tree's bytes. MEASURED 2026-11-07: with the
+    committed tree standing in for the built one, 23 published rows differ by exactly +63 bytes.
+
+    So a measurement that cannot reach the built tree must not compare tree bytes to published
+    digests and call it drift. It asks THE INJECTOR ITSELF (scripts/surface/served-html-digests.mjs
+    imports scripts/inject-workspace-launcher.mjs and calls its exported injectLauncher) what it
+    would write. One rule, one place — the estate's own principle that the claim lives in two
+    places: the artefact and the generator that emits it. Proven against the real build: the
+    transform produces the built file's digest EXACTLY (b72f0203..., 976 bytes).
+
+    Returns {} when node or the helper is unavailable — the caller then treats those digests as
+    UNCHECKABLE rather than different.
+    """
+    if served_root and os.path.isdir(served_root):
+        return {}
+    helper = os.path.join(REPO, "scripts", "surface", "served-html-digests.mjs")
+    if not os.path.exists(helper):
+        return {}
+    import tempfile
+    with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as tmp:
+        out = tmp.name
+    try:
+        r = subprocess.run(["node", helper, tree, out], cwd=REPO, capture_output=True, timeout=120)
+        if r.returncode != 0:
+            return {}
+        with open(out, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+    finally:
+        try:
+            os.unlink(out)
+        except OSError:
+            pass
+
+
+def differing_rows(a, b):
+    """The paths that disagree, named. A gate that says "something differs" without saying
+    WHAT is a gate that sends the reader hunting; the estate's own pattern is to name the path."""
+    out = []
+    if len(a) != len(b):
+        return [f"<row count {len(a)} vs {len(b)}>"]
+    by_path_b = {r.get("path"): r for r in b}
+    for x in a:
+        y = by_path_b.get(x.get("path"))
+        if y is None:
+            out.append(f"{x.get('path')} (not in the other set)")
+            continue
+        if rows_differ([x], [y]):
+            out.append(x.get("path"))
+    return out
+
+
 def rows_differ(a, b):
     """Do the two row sets disagree?
 
@@ -409,10 +466,16 @@ def main():
         sys.exit(2)
     print("the Function defers for:", fn_prefixes, flush=True)
 
+    html_digests = served_html_digests(tree, served_root)
+    if html_digests:
+        print(f"served HTML digests from the injector's own transform: {len(html_digests)}", flush=True)
+
     rows = []
     total = 0
     served_from_build = 0
     digests_not_comparable = 0
+    served_from_injector = 0
+    served_from_tree = 0
     skipped_untracked = 0
     skipped_self = 0
     try:
@@ -468,10 +531,22 @@ def main():
                     digest_comparable = True
                 except Exception:
                     pass
+            elif html_digests.get(sub):
+                # What the injector would write, asked of the injector itself.
+                info = html_digests[sub]
+                n, h = info["bytes"], info["sha256"]
+                digest_comparable = True
+                served_from_injector += 1
+            elif not public_rel.endswith(".html"):
+                # The build's only rewrite of a file under /interop/ is the injector's, and that
+                # touches HTML only (MEASURED 2026-11-07: a build modified three tracked files and
+                # none of them under /interop/). So for a non-HTML file the tree's bytes ARE the
+                # served bytes, and the digest is comparable without a build.
+                digest_comparable = True
+                served_from_tree += 1
             else:
-                # No served copy: the build rewrites this HTML (it injects the launcher script
-                # into every built page), so the tree's bytes are NOT what a reader fetches.
-                # The digest is UNCHECKABLE here, not different.
+                # No served copy and no injector digest: the digest is UNCHECKABLE here, not
+                # different.
                 digests_not_comparable += 1
 
         row = {"path": "/" + public_rel, "bytes": n, "sha256": h, "served": served}
@@ -542,6 +617,8 @@ def main():
         },
         "counts": {"files": len(rows), "bytes": total, "by_served": by_served,
                    "digests_taken_from_the_built_tree": served_from_build,
+                   "digests_taken_from_the_injectors_transform": served_from_injector,
+                   "digests_taken_from_the_tree_bytes": served_from_tree,
                    "digests_not_comparable_no_built_tree": digests_not_comparable,
                    "excluded_the_index_itself": skipped_self,
                    "excluded_not_present_in_the_tree": skipped_untracked},
@@ -555,8 +632,13 @@ def main():
         except Exception as e:
             print(f"build-interop-file-index: the committed index is UNREADABLE ({e})")
             sys.exit(2)
-        if rows_differ(current.get("files", []), rows):
-            print(f"build-interop-file-index: the committed index is STALE — {len(rows)} rows would change.")
+        drift = differing_rows(current.get("files", []), rows)
+        if drift:
+            print(f"build-interop-file-index: the committed index is STALE — {len(drift)} row(s) differ:")
+            for p in drift[:12]:
+                print(f"  {p}")
+            if len(drift) > 12:
+                print(f"  ... and {len(drift) - 12} more")
             print("  Fix: python3 scripts/build-interop-file-index.py "
                   "public/interop public/interop/file-index.json scripts/deploy-exclusions.json <commit> "
                   "--served-root dist/client")

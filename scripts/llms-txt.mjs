@@ -469,6 +469,10 @@ public/interop/file-index.json, schema ${ix.schema}, artifact as_of ${ix.as_of})
 MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
 the SHA-256 of the bytes and how the file is served.
 
+The index does not list itself. A file cannot carry its own digest — hashing the published index
+gives a digest that depends on the digest — so a row claiming one would be wrong the moment it was
+written. Every OTHER file under /interop/ is listed.
+
 - Files indexed: ${fmtN(c.files)}. Bytes indexed: ${fmtN(c.bytes)}.
 - By how they are served: ${served}.
 ${legendLines.join("\n")}
