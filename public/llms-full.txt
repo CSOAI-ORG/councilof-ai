@@ -1085,15 +1085,19 @@ Each record below is a dated account of what public sources state, with its sour
 - COBOL copybook decoding test corpus — records whose correct values are known by construction, with must-fail controls; CC0. Held private while results against open-source decoders wait for each project's maintainers to have seen them: the dataset address does not open yet, so it is not linked here. Measured results are published through the records feed below the day the hold lifts.
 - All of the signed records above, plus corrections and daily notes, as a feed: https://councilof.ai/feeds/records.xml (Atom) — https://councilof.ai/feeds/records.json (JSON Feed)
 
-## 10d. PUBLISHED INTEROP FILES — every file under /interop/, with its digest
+## 10d. PUBLISHED INTEROP FILES — every file under /interop/, with its digest (except the index itself)
 
 Derived at generation from https://councilof.ai/interop/file-index.json (same bytes on disk at
-public/interop/file-index.json, schema csoai.interop-file-index/0.1, artifact as_of 2026-11-06T07:17:52Z). It is a
+public/interop/file-index.json, schema csoai.interop-file-index/0.1, artifact as_of 2026-11-07T02:27:20Z). It is a
 MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
 the SHA-256 of the bytes and how the file is served.
 
-- Files indexed: 16,329. Bytes indexed: 258,794,832.
-- By how they are served: 13,238 hf-mirror; 3,091 pages.
+The index does not list itself. A file cannot carry its own digest — hashing the published index
+gives a digest that depends on the digest — so a row claiming one would be wrong the moment it was
+written. Every OTHER file under /interop/ is listed.
+
+- Files indexed: 16,340. Bytes indexed: 258,835,688.
+- By how they are served: 13,238 hf-mirror; 3,102 pages.
 - hf-mirror: served by a 302 redirect to the HuggingFace evidence mirror (scripts/deploy-exclusions.json); the path is real and fetchable
 - pages: served by the site build
 - To check one file: fetch its path and hash it. A match means you hold the bytes the estate
