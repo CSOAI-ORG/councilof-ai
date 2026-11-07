@@ -25,6 +25,25 @@ name: catalogue-live-state
 #
 # SINGLE WRITER (owner ruling, 6 Oct 2026): master changes only through a gated pull request.
 # This workflow never pushes master. Whoever lands the pull request lands the current read.
+#
+# AND NOW IT LANDS ITS OWN EDITION, because arming an auto-merge is not landing.
+# MEASURED 2026-11-07: this workflow arms the auto-merge and then stops. Branch protection on
+# `master` requires the head to contain the base's tip (`strict: true`), and master moves every
+# 6.0 minutes at the median (99 gaps over the last 100 commits: p50 6.0, p75 10.7, p90 13.6),
+# while the `pr-gates` workflow that produces the required contexts takes 11-14 minutes. So the
+# edition's pull request is behind the base by the time its gates finish, auto-merge waits for
+# an up-to-dateness it never gets, and the edition does not land — the 72-hour freshness window
+# was a fiction. MEASURED on the first edition this workflow published (#4060): 8 of the last 10
+# `pr-gates` runs on that branch finished `cancelled`, and the lane's own re-publish loop made
+# it worse by pushing a new head every 60-90 seconds, which cancels the in-flight gate of the
+# branch it pushes to (`pr-gates.yml` keys its concurrency group on the BRANCH NAME).
+#
+# THE RULE, one cycle at a time: never push a new head while a required check is in flight; when
+# the base has moved, catch the branch up with ONE `PUT /pulls/{n}/update-branch` (measured on
+# #4060 at ~2 s, a clean merge commit, `behind_by: 0`, and it preserves the reviewed commits
+# where a rebase would rewrite them); then wait for the gates on that new head and let the
+# armed auto-merge land it. The instrument is `scripts/land/one-cycle-sync.mjs`, whose decision
+# is pure and proved over an 864-state sweep, and its network shell is what runs here.
 
 on:
   schedule:
@@ -42,7 +61,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
@@ -57,16 +76,10 @@ jobs:
       # binary postinstalls of the other devDependencies out of the runner; esbuild's own
       # platform binary arrives as an optionalDependency, so it still loads.
       - name: deps
-        run: npm ci --ignore-scripts --no-audit --no-fund
+        run: npm ci --ignore-scripts --no-aaudit --no-fund
 
       - name: take the read and write the new edition
         id: publish
-        env:
-          # The producer's GitHub reads — the open-pull-request count and the merge window —
-          # are unauthenticated by default and rate-limited per IP, which is a transport
-          # event that stops the read rather than a number to publish. A token raises the
-          # limit and is NEVER required: the read still works without it.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -uo pipefail
           node scripts/surface/rebind-catalogue-live-state.mjs
@@ -84,6 +97,7 @@ jobs:
           git --no-pager diff --stat -- public/jewels/master-catalogue/
 
       - name: bank the edition on ONE rolling branch and open ONE pull request
+        id: bank
         if: steps.publish.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -98,13 +112,25 @@ jobs:
             echo "no tree change — nothing to commit"
             exit 0
           fi
+          branch="catalogue-live-state/pending"
+          # DO NOT PUSH OVER AN IN-FLIGHT GATE. `pr-gates.yml` keys its concurrency group on the
+          # BRANCH NAME with cancel-in-progress: true, so a push to this branch supersedes the
+          # in-flight gate of the branch's previous head — and the gate that is running now would
+          # be cancelled by this push. Measured 2026-11-07: 8 of the last 10 gate runs on this
+          # branch finished `cancelled`. So: if a run is in flight, the pending edition is landed
+          # by the instrument below and this run publishes nothing new.
+          in_flight=$(gh run list --repo "${{ github.repository }}" --branch "${branch}" --limit 10 \
+            --json status --jq '[.[] | select(.status=="in_progress" or .status=="queued")] | length' 2>/dev/null || echo 0)
+          if [ "${in_flight:-0}" -gt 0 ] 2>/dev/null; then
+            echo "::notice::${in_flight} run(s) are in flight on ${branch} — pushing over them would cancel the gate that is running. This run publishes no new head; the pending edition is landed by the one-cycle step."
+            exit 0
+          fi
           git commit -m "catalogue: a new dated reading of the live state ($(date -u +%Y-%m-%dT%H:%MZ))"
           # ONE branch, not one per run. A timestamped branch per day banks 365 stranded
           # branches and 365 pull requests a year, and only the newest is worth landing —
           # each edition already contains everything the previous one did. A single
           # force-updated branch always holds the LATEST read, so whoever lands it lands the
           # current one, and there is exactly one thing to look at.
-          branch="catalogue-live-state/pending"
           git push --force origin "HEAD:refs/heads/${branch}"
           existing=$(gh pr list --head "${branch}" --base master --state open --json url --jq '.[0].url // ""')
           if [ -n "${existing}" ]; then
@@ -126,6 +152,7 @@ jobs:
               --title "catalogue: a new dated reading of the live state" \
               --body-file "$RUNNER_TEMP/pr-body.md")
           fi
+          pr_number=$(gh pr view "${pr}" --repo "${{ github.repository }}" --json number --jq '.number')
           # ARM AUTO-MERGE, AND MAKE READY FIRST. A pull request created as a DRAFT cannot
           # carry auto-merge, and the merge then silently never happens — which would leave
           # the catalogue stale again in 72 hours, exactly the failure this workflow exists to
@@ -154,3 +181,67 @@ jobs:
               exit 1
               ;;
           esac
+
+      # RESOLVE THE PENDING EDITION. Whether this run published a new head or found one already
+      # waiting, the pull request that has to land is the open one on the rolling branch. It is
+      # resolved here, after the banking step, so that every path — a new head, an unchanged
+      # read, or a run that declined to push over an in-flight gate — reaches the landing step
+      # with the same number. An earlier draft of this workflow returned early on the
+      # in-flight path, which left the pending edition unlanded by the very step meant to land
+      # it.
+      - name: resolve the pending edition
+        id: resolve
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          branch="catalogue-live-state/pending"
+          url=$(gh pr list --repo "${{ github.repository }}" --head "${branch}" --base master --state open \
+            --json url --jq '.[0].url // ""' 2>/dev/null || echo "")
+          if [ -z "${url}" ]; then
+            echo "no open pull request on ${branch} — nothing to land"
+            echo "number=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          number=$(gh pr view "${url}" --repo "${{ github.repository }}" --json number --jq '.number' 2>/dev/null || echo "")
+          echo "pending edition: ${url} (${number})"
+          echo "number=${number}" >> "$GITHUB_OUTPUT"
+
+      # LAND THE EDITION. Arming an auto-merge is not landing: with `strict: true` the pull
+      # request must contain the base's tip, and the base moves while the gates run. This step
+      # runs the ONE-CYCLE instrument: it waits while a required check is in flight, catches the
+      # branch up with ONE update-branch when the base has moved, waits again on the new head,
+      # and lets the armed auto-merge do the landing. It never rebases, never force-pushes,
+      # never merges by hand and never uses --admin.
+      #
+      # The instrument arrived on master AFTER this workflow was written, so its absence is
+      # handled as a state and not a failure: without it, the arming above is the only landing
+      # mechanism and the edition waits for a human, as it always did.
+      - name: land the edition with the one-cycle rule
+        if: steps.resolve.outputs.number != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          if [ ! -f scripts/land/one-cycle-sync.mjs ]; then
+            echo "::notice::scripts/land/one-cycle-sync.mjs is not on master yet — the edition stays armed and waits for the same quiet window as before."
+            exit 0
+          fi
+          pr_number="${{ steps.resolve.outputs.number }}"
+          # The deadline is shorter than the job's timeout on purpose: a run that is still
+          # waiting when the deadline passes leaves the pull request armed and the next
+          # scheduled run picks it up. A cancelled job that took the branch with it would be
+          # worse than a job that stopped cleanly.
+          node scripts/land/one-cycle-sync.mjs "${pr_number}" \
+            --repo "${{ github.repository }}" \
+            --watch --poll-seconds 40 --deadline-seconds 1500
+          RC=$?
+          case "$RC" in
+            0) echo "the edition is landed, or it is armed and waiting on its own gates" ;;
+            3) echo "::error::a required check failed on the edition's pull request — the edition is NOT landed and the catalogue will go stale. This is a finding, not a pass." ;;
+            4) echo "::warning::a read did not complete — nothing was decided, and nothing was pushed" ;;
+            5) echo "::error::the base and the edition's head do not merge — a real conflict for a human to resolve" ;;
+            *) echo "::warning::the one-cycle instrument exited ${RC}; the edition stays armed" ;;
+          esac
+          exit 0
