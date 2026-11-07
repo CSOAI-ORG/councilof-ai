@@ -34,11 +34,13 @@ describe("homepage mobile navigation", () => {
     mount();
     const menu = container.querySelector("#mobile-site-navigation")!;
     expect([...menu.querySelectorAll("a")].map((link) => link.getAttribute("href"))).toEqual([
-      "/#board", "/#products", "/#how-it-works", "/#developers", "/gspc-verify",
+      "/assess/", "/#board", "/#products", "/#how-it-works", "/#developers", "/gspc-verify",
       "/about", "/contact?arm=run", "/dashboard", "/library",
     ]);
     expect(menu.querySelectorAll("button")).toHaveLength(0);
-    expect(menu.textContent).not.toContain("Book a measurement");
+    const assessment = menu.querySelector<HTMLAnchorElement>('[data-testid="mobile-book-measurement"]');
+    expect(assessment?.getAttribute("href")).toBe("/assess/");
+    expect(assessment?.textContent).toBe("Book a measurement");
   });
 
   it("closes after a same-page anchor click even when the router path does not change", () => {
