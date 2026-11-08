@@ -24,6 +24,7 @@ def package(output):
     source.extend(ROOT / p for p in manifest["files"])
     source.extend(ROOT.parent / "evidence-fabric" / name for name in (
         "event.py", "LICENSE", "schema/evidence-event-0.1.schema.json"))
+    source.append(REPO / ".github/workflows/world-rehearsal-candidate.yml")
     for file in source:
         if not file.is_file():
             raise ValueError("Required source missing: " + str(file))

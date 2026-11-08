@@ -110,6 +110,12 @@ release. The runtime probe test is a protocol fixture, not a real Kiri test.
 
 ## Production integration still required
 
+Validation on 8 November 2026: 23 Python tests, the 11-step DOM/HTTP journey
+and the 10-check native Chromium journey passed. The browser run checks actual
+downloads/reopening, comparisons, tamper refusal, stale-result clearing and
+390px page overflow. [CI receipt](https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42444509465).
+This does not establish visual design perfection or accessibility conformance.
+
 Use the existing Council OS route/pane and evidence handoff, not a second portal
 or parallel authority store. Serve the surface and its API under one controlled
 origin; the loopback server's CSP intentionally prevents cross-origin embedding.
