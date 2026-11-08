@@ -494,7 +494,10 @@ describe("legacy password login preserves one exact account incarnation without 
     }));
     expect(current).toEqual(originalOwner);
     expect(await buyerNonce(current.owner_hash, commitment.request, commitment.seed)).toBe(commitment.nonce);
-    expect((await invoke(f.env, "me", undefined, firstToken)).status).toBe(200);
+    const me = await invoke(f.env, "me", undefined, firstToken);
+    expect(me.status).toBe(200);
+    expect(me.headers.get("cache-control")).toBe("no-store");
+    expect((await me.json()).account_generation).toBe(originalOwner.generation);
     expect(f.put).not.toHaveBeenCalled();
     expect(f.rows.get(email)).toBe(f.original);
   });
@@ -523,7 +526,15 @@ describe("legacy password login preserves one exact account incarnation without 
     const stale = await oldLogin;
     expect(stale.status).toBe(200); // Its old snapshot cannot grant access to the current account.
     const oldToken = (await stale.json()).token;
-    expect((await invoke(f.env, "me", undefined, oldToken)).status).toBe(401);
+    const staleMe = await invoke(f.env, "me", undefined, oldToken);
+    expect(staleMe.status).toBe(401);
+    expect(staleMe.headers.get("cache-control")).toBe("no-store");
+    const staleBody = await staleMe.json();
+    for (const field of ["account_generation", "user", "token"]) expect(staleBody).not.toHaveProperty(field);
+    const currentMe = await invoke(f.env, "me", undefined, newToken);
+    expect(currentMe.status).toBe(200);
+    expect(currentMe.headers.get("cache-control")).toBe("no-store");
+    expect((await currentMe.json()).account_generation).toBe(newOwner.generation);
     await expect(buyer.currentBuyer(f.env, new Request("https://councilof.ai/api/proof", {
       headers: { authorization: "Bearer " + oldToken },
     }))).rejects.toThrow(/lifecycle changed/);
@@ -540,7 +551,14 @@ describe("legacy password login preserves one exact account incarnation without 
     const before = await buyer.currentBuyer(f.env, bearer);
     const edit = await invoke(f.env, "profile", { name: "Changed name" }, token);
     expect(edit.status).toBe(200);
-    expect((await invoke(f.env, "me", undefined, token)).status).toBe(200);
+    const me = await invoke(f.env, "me", undefined, token);
+    expect(me.status).toBe(200);
+    expect(me.headers.get("cache-control")).toBe("no-store");
+    expect(await me.json()).toEqual({
+      user: { email, name: "Changed name" },
+      account_generation: before.generation,
+      entitlements: { paid: false, products: [], count: 0 },
+    });
     expect(await buyer.currentBuyer(f.env, bearer)).toEqual(before);
     expect(JSON.parse(f.rows.get(email)!).account_generation).toBeUndefined();
     expect(f.put).toHaveBeenCalledTimes(1); // The requested profile write, never a login upgrade.
@@ -559,7 +577,12 @@ describe("legacy password login preserves one exact account incarnation without 
     const generation = "c".repeat(64), f = await fixture({ account_generation: generation });
     const response = await invoke(f.env, "login", { email, password });
     expect(response.status).toBe(200);
-    expect((await verifyToken(f.env, (await response.json()).token))?.account_generation).toBe(generation);
+    const token = (await response.json()).token;
+    expect((await verifyToken(f.env, token))?.account_generation).toBe(generation);
+    const me = await invoke(f.env, "me", undefined, token);
+    expect(me.status).toBe(200);
+    expect(me.headers.get("cache-control")).toBe("no-store");
+    expect((await me.json()).account_generation).toBe(generation);
     expect(f.put).not.toHaveBeenCalled();
     expect(f.rows.get(email)).toBe(f.original);
   });
