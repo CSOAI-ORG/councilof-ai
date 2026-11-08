@@ -36,6 +36,7 @@ const purchaseApiModule=await moduleFrom(current('functions/api/purchases/[[path
  '../_buyer_purchase':buyerModule,'../_x402_delivery_record':helperModule,'../../../shared/buyerPurchase':pureBuyerModule
 });
 const h=helperModule.namespace,STATE='x-csoai-delivery-record-state',passed=[];
+const exposedHeaders=response=>(response.headers.get('access-control-expose-headers')||'').toLowerCase().split(',').map(name=>name.trim());
 const cardSignModule=await moduleFrom(current('functions/_lib/cardSign.ts'));
 const feedSerializer=await moduleFrom(current('functions/api/_eunomia_delivery.ts'),{'../_lib/cardSign':cardSignModule});
 async function test(name,fn){await fn();passed.push(name);console.log('PASS '+name);}
@@ -54,6 +55,26 @@ function response(body=' \n{"café":"雪","signature":"unchanged"}\n',status=200
  return new Response(body,{status,headers:{'content-type':'application/json; charset=utf-8','x-payment-response':'opaque-settlement-echo','x-csoai-card-sha256':'artifact-digest','access-control-expose-headers':'X-Artifact'}});
 }
 async function bytes(res){return Buffer.from(await res.arrayBuffer());}
+for(const [name,echo,expose] of [
+ ['existing receipt','existing-receipt','X-Artifact'],
+ ['mixed-case existing exposure','existing-receipt','X-Artifact, X-PAYMENT-RESPONSE'],
+ ['absent receipt',undefined,'X-Artifact'],
+]){
+ await test('successful paid CORS '+name,async()=>{
+  const body='unchanged paid body café 雪';
+  const input=new Response(body,{status:201,statusText:'Fixture response',headers:{
+   'content-type':'application/json; charset=utf-8','access-control-allow-origin':'*',
+   'access-control-expose-headers':expose,'x-artifact':'unchanged',...(echo?{'x-payment-response':echo}:{})
+  }});
+  const out=await h.recordPaidResponse(input,{confirmedPaid:true,successfulOutput:true,resource:'https://example.test/paid'});
+  assert.equal(out.status,201);assert.equal(out.statusText,'Fixture response');
+  assert.equal(await out.text(),body);assert.equal(out.headers.get('x-payment-response'),echo??null);
+  assert.equal(out.headers.get('x-artifact'),'unchanged');assert.equal(out.headers.get('access-control-allow-origin'),'*');
+  const exposed=exposedHeaders(out);
+  for(const header of ['x-artifact',STATE])assert.equal(exposed.filter(v=>v===header).length,1);
+  assert.equal(exposed.filter(v=>v==='x-payment-response').length,echo?1:0);
+ });
+}
 async function verifyRow(kv,res,expected,opts){
  const actual=await bytes(res);assert.deepEqual(actual,expected);
  const row=JSON.parse(kv.map.get(h.deliveryTxKey(opts.transaction)));
@@ -466,6 +487,7 @@ await test('full paid proof records exact bundle with one mock settlement',async
  assert.equal(b.toString('utf8'),JSON.stringify({schema:'csoai.public-root-proof/0.1',kind:'bundle',as_of:null,merkle_root:sha,n:1,proofs:[{sha256:sha,index:0,proof:[],merkle_root:sha,card_count:1}],note:'Paid bundle of inclusion proofs for the last published root. Not a grade.'},null,2));
  assert.equal(out.status,200);assert.equal(out.headers.get(STATE),'WRITTEN');
  assert.equal(out.headers.get('x-payment-response'),'opaque-echo');assert.equal(out.headers.get('x-csoai-delivery-state'),null);
+ assert.equal(exposedHeaders(out).filter(name=>name==='x-payment-response').length,1);
  assert.equal(kv.puts,2);assert.equal(settlements,1);
 });
 const proofRefusals=[
@@ -648,6 +670,7 @@ await test('full nonempty evidence bundle records revised observation UTF8 bytes
   const text=raw.toString('utf8'),body=JSON.parse(text),observations=body.oscal['assessment-results'].results[0].observations;
   assert.equal(actual.out.status,200);assert.equal(body.kind,'bundle');assert.equal(actual.settlements,1);
   assert.equal(actual.out.headers.get(STATE),'WRITTEN');assert.equal(actual.out.headers.get('x-payment-response'),'opaque-echo');
+  assert.equal(exposedHeaders(actual.out).filter(name=>name==='x-payment-response').length,1);
   assert.equal(body.manifest_card.payload.status,'ASSEMBLED');assert.equal(body.manifest_card.payload.card_count,1);
   assert.equal(body.signed,false);assert.equal(body.manifest_card.sig_ed25519,null);assert.equal(body.unsigned_reason,'offline unsigned fixture');
   assert.deepEqual(Object.keys(body.cards),[sha]);assert.equal(body.cards[sha].proof,undefined);

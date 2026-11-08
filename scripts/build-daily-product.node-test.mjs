@@ -38,7 +38,7 @@ test('single snapshot produces accessible static archive and explicitly unavaila
   const html=files.get('index.html');
   assert.match(html,/<html lang="en">/);assert.match(html,/name="viewport"/);assert.match(html,/Skip to report/);
   assert.equal((html.match(/<h1>/g)||[]).length,1);assert.match(html,/scope="col"/);assert.doesNotMatch(html,/<script\b/i);
-  assert.match(html,/2026-10-01T00:00:00Z/);assert.match(html,/Other source timestamps are not supplied/);
+  assert.match(html,/2026-10-01T00:00:00Z/);assert.match(html,/General per-source retrieval timestamps are not supplied/);
   assert.equal(files.get('latest.md'),files.get('2026-11-04.md'));
 });
 test('raw-byte changes alter report identity without claiming a new measurement',t=>{

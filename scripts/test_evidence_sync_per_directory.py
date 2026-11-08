@@ -45,6 +45,17 @@ NEW = {
     "cards": 0,
     "proofs": 0,
 }
+# The live shape of the two directories at the cliff: the mirror holds far more
+# files than the build does, and the difference are ORPHANS — files the mirror
+# holds that this build does not have. MEASURED 6 Nov 2026 against the live
+# mirror: interop/mill-cards-unsigned 9,920 in the mirror, 3,656 in the build,
+# 7,534 orphans; interop/mill-evidence 9,795 in the mirror, 4,472 in the build,
+# 6,593 orphans. A plan grants no permission to prune them, so they accumulate,
+# and they consume the budget the build's own files need.
+ORPHANS = {
+    "interop/mill-cards-unsigned": 7534,
+    "interop/mill-evidence": 6593,
+}
 
 
 def _shape():
@@ -54,6 +65,9 @@ def _shape():
             p = f"{d}/f{i}.json"
             tree[p] = ("oid", None)
             files[p] = p
+    for d, n in ORPHANS.items():
+        for i in range(n):
+            files.pop(f"{d}/f{i}.json", None)
     for d, n in NEW.items():
         for i in range(n):
             p = f"{d}/new{i}.json"
@@ -72,6 +86,46 @@ def test_the_plan_names_exactly_the_two_directories_at_the_cliff():
     plan = es.plan_by_directory(rels, tree, files)
     over = {e["directory"] for e in plan if e["over_limit"]}
     assert over == {"interop/mill-cards-unsigned", "interop/mill-evidence"}, over
+
+
+def test_the_plan_reports_the_orphans_that_occupy_the_budget():
+    """The orphans are why the two directories are at the cliff.
+
+    MEASURED 6 Nov 2026 against the live mirror: interop/mill-cards-unsigned
+    held 9,920 files where the build holds 3,656 — 7,534 of them orphans — and
+    interop/mill-evidence held 9,795 where the build holds 4,472 (6,593
+    orphans). 40 of the 40 sampled orphans name an admission evidence file this
+    tree does not hold. They are never written and never pruned, so they consume
+    the per-directory budget the build's own files need: 9,920 + 1,270 = 11,190
+    is over the 10,000 limit, and the legitimate files were never published.
+
+    The count has to be VISIBLE, or the freeze looks like a network problem.
+    """
+    tree, files, rels = _shape()
+    plan = {e["directory"]: e for e in es.plan_by_directory(rels, tree, files)}
+    unsigned = plan["interop/mill-cards-unsigned"]
+    evidence = plan["interop/mill-evidence"]
+    # The fixture mirrors the live shape: the mirror holds 9,920 files where
+    # this build holds 3,656, and every OTHER mirror file is an orphan.
+    assert unsigned["mirror_files_before"] == 9920
+    assert unsigned["new_files"] == 1270
+    assert unsigned["orphan_files"] == 7534
+    assert evidence["orphan_files"] == 6593
+    # The orphans are the reason the directory is over the limit, so the count
+    # must be a real number and not a guess.
+    assert unsigned["orphan_files"] > 0 and unsigned["over_limit"]
+
+
+def test_the_orphan_count_is_validated_before_any_write():
+    files = {"cards/x": "fixture"}
+    plan = es.plan_by_directory(list(files), {}, files)
+    plan[0]["orphan_files"] = -1
+    with patch.object(es, "commit", side_effect=AssertionError("must never write")):
+        try:
+            es.commit_grouped(list(files), files, "fixture", "test", plan)
+        except ValueError:
+            return
+    raise AssertionError("Negative orphan count accepted")
 
 
 def test_the_ots_manifest_directory_can_take_its_file():

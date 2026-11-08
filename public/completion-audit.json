@@ -1,6 +1,6 @@
 {
  "schema": "csoai.completion-audit/0.1",
- "measured_at": "2026-11-02T07:10:08Z",
+ "measured_at": "2026-11-07T11:44:18Z",
  "note": "Every LIVE line was probed against the live surface and carries the measured value and the receipt URL. An item is LIVE only if a probe saw it. Owner-gated items are named as owner-gated, never as done. This is a measurement of completion, not a claim of a market outcome: 'unicorn status' is a trajectory, not a claim, and nothing here asserts it.",
  "not_claimed": [
   "a customer",
@@ -15,8 +15,8 @@
  ],
  "counts": {
   "total": 27,
-  "live": 12,
-  "open": 6,
+  "live": 11,
+  "open": 7,
   "staged": 3,
   "owner": 6
  },
@@ -63,7 +63,7 @@
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
-   "measured": "14 skill(s) in the published index",
+   "measured": "15 skill(s) in the published index",
    "receipt": "https://councilof.ai/.well-known/agent-skills/index.json"
   },
   {
@@ -71,8 +71,8 @@
    "item": "OpenTimestamps: every published proof Bitcoin-attested",
    "lane": "agent",
    "closer": "probe",
-   "state": "LIVE",
-   "measured": "677/677 proofs Bitcoin-attested, 0 pending",
+   "state": "OPEN",
+   "measured": "693/695 proofs Bitcoin-attested, 2 pending",
    "receipt": "https://councilof.ai/interop/ots/manifest.json"
   },
   {
@@ -81,7 +81,7 @@
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
-   "measured": "40 verified, 5 blockers, 8 not_claimed; no unamended 'Public root stale' blocker",
+   "measured": "44 verified, 5 blockers, 8 not_claimed; no unamended 'Public root stale' blocker",
    "receipt": "https://councilof.ai/completion.json"
   },
   {

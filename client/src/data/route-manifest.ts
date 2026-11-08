@@ -999,8 +999,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/gpai",
-  "comp": "GpaiObligations",
-  "title": "Gpai Obligations"
+  "comp": "GpaiMatrix",
+  "title": "Gpai Matrix"
  },
  {
   "path": "/gpai-evidence",
@@ -1791,6 +1791,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/rediscovered",
   "comp": "Lineage",
   "title": "Lineage"
+ },
+ {
+  "path": "/refund-policy",
+  "comp": "RefundPolicy",
+  "title": "Refund Policy"
+ },
+ {
+  "path": "/refunds",
+  "comp": "RefundPolicy",
+  "title": "Refund Policy"
  },
  {
   "path": "/refutation-ledger",

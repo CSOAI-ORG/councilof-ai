@@ -1,6 +1,6 @@
 {
   "schema": "csoai.producers/0.1",
-  "as_of": "2026-09-06T10:20:00Z",
+  "as_of": "2026-11-06T04:05:00Z",
   "why": "On 2026-09-06 public/interop/agent-card-jws-input.json described a card nobody served. Its producer was correct; nothing re-ran it. The whole gates job was red for every lane until someone noticed. This manifest names source -> producer -> output so CI can notice instead.",
   "how_to_read": "Each entry names what a producer WRITES and how to prove the committed bytes still match. `gated: true` entries are enforced by scripts/producers-check.mjs in CI. `gated: false` entries record WHY they cannot be, which is the more useful half. Two of the three x402-census entries carry `becomes_gated_when` instead of `gated: true`: their --check has nothing to compare until a second round exists, and a check that cannot fail is not a gate. Their `selftest` command runs on every PR instead, and that is the half that can go red today.",
   "extending": "Add an entry, run `node scripts/producers-check.mjs` locally, and only set gated:true once it passes on a clean tree. Never set gated:true on a producer that stamps a timestamp or a random id into its output, and never on one that signs.",
@@ -92,9 +92,48 @@
       "outputs": [
         "public/signed/card-matrix.json"
       ],
-      "mode": "delegate-to-check",
+      "mode": "delegate-to-check-committed",
       "gated": true,
-      "verified_2026_09_06": "check passes: 335 cells, 64 models, 16 axes"
+      "verified_2026_09_06": "check passes: 335 cells, 64 models, 16 axes",
+      "note": "The build runs BEFORE this gate in pr-gates.yml and regenerates this file, so a plain --check compares the build's own output with the build's own output and cannot fail on a stale COMMIT. Checked as delegate-to-check-committed instead: the committed bytes are restored, the producer checks those, then the build's bytes are put back. Control 2026-11-06: corrupting the committed file made the plain gate exit 1 before a rebuild and report \"up to date\" after one. This output is not in the OTS manifest, so nothing else covered it."
+    },
+    {
+      "id": "route-manifest",
+      "command": "node scripts/generate-route-manifest.mjs",
+      "check": "node scripts/generate-route-manifest.mjs --check",
+      "outputs": [
+        "client/src/data/route-manifest.ts"
+      ],
+      "mode": "delegate-to-check-committed",
+      "gated": true,
+      "verified_2026_11_06": "check passes: 476 routes match App.tsx; offline, no clock, no randomness",
+      "note": "The Library IA reads this file for the routes the app serves, and link-gate builds its model of what the site serves from it. It was stale: on 2026-11-06 the committed manifest was missing /brand, /him, /refund-policy and /refunds, and still named GpaiObligations for /gpai while App.tsx had moved to GpaiMatrix, because the lane that added those routes (#3938) did not regenerate the file and nothing anywhere checked. Checked as delegate-to-check-committed because build:client regenerates it before this gate runs, so a plain --check would compare the build's output with itself."
+    },
+    {
+      "id": "edge-redirects",
+      "command": "node scripts/generate-redirects.mjs",
+      "check": "node scripts/generate-redirects.mjs --check",
+      "outputs": [
+        "public/_redirects"
+      ],
+      "mode": "delegate-to-check-committed",
+      "uncheckable_exit": 2,
+      "gated": true,
+      "verified_2026_11_06": "check passes on a tree where the committed bytes equal a fresh generation; offline, no clock, no randomness, no network",
+      "note": "public/_redirects is the edge's rewrite table and it is COMMITTED, and build:client rewrites it on every deploy. Nothing compared the two, so the committed table could describe rules the build no longer emits while the live edge carried the build's version. Measured 2026-11-06: the committed file still carried `/mcp  /mcp/  308` for a route that #3847 (857a6cc02) had moved out of App.tsx into a Pages Function — a rule the edge never applied, because the Function answers /mcp directly with 200 — while the build produced a file without it. The live edge was correct and the committed artefact was the fiction. Checked as delegate-to-check-committed because build:client regenerates this file before the gate runs, so a plain --check would compare the build's output with itself. Exit 2 is UNCHECKABLE (functions/ or client/src/App.tsx absent): the store could not answer, so it makes no claim."
+    },
+    {
+      "id": "sitemap",
+      "command": "node scripts/generate-sitemap.mjs",
+      "check": "node scripts/generate-sitemap.mjs --check",
+      "outputs": [
+        "public/sitemap.xml"
+      ],
+      "mode": "delegate-to-check-committed",
+      "uncheckable_exit": 2,
+      "gated": true,
+      "verified_2026_11_06": "check passes: 535 URLs match a fresh generation; offline, no clock, no randomness, no network",
+      "note": "The sitemap is how search engines and agents discover what the site serves, it is COMMITTED, and build:client regenerates it on every deploy. Nothing compared the two. Measured 2026-11-06: the committed sitemap listed 536 URLs and the build produced 535 — the extra one being https://councilof.ai/mcp/, left by #3847 (857a6cc02), which moved /mcp from an App.tsx route to a Pages Function and regenerated neither this file nor public/_redirects. The LIVE sitemap was correct (535, set-identical to a fresh generation) and the committed artefact was the fiction, so every deploy silently rewrote it. scripts/sitemap-truth-gate.mjs cannot see this: it asks only whether every LISTED url is served, so a stale extra entry passes and a missing entry passes. This check asks the other question — does the committed file equal what the build produces — and names the differing URLs. Exit 2 is UNCHECKABLE (functions/ or public/_redirects absent): the store could not answer, so it makes no claim. Runs after edge-redirects because the generation reconciles against public/_redirects."
     },
     {
       "id": "published-verifier-bundle",
@@ -114,9 +153,10 @@
       "outputs": [
         "public/signed/gspc-quest-instruments.json"
       ],
-      "mode": "delegate-to-check",
+      "mode": "delegate-to-check-committed",
       "gated": true,
-      "verified_2026_09_06": "check passes: 12 current"
+      "verified_2026_09_06": "check passes: 12 current",
+      "note": "The build runs BEFORE this gate in pr-gates.yml and regenerates this file, so a plain --check compares the build's own output with the build's own output and cannot fail on a stale COMMIT. Checked as delegate-to-check-committed instead: the committed bytes are restored, the producer checks those, then the build's bytes are put back. Control 2026-11-06: corrupting the committed file made the plain gate exit 1 before a rebuild and report \"up to date\" after one. This output is not in the OTS manifest, so nothing else covered it."
     },
     {
       "id": "harness-cards-staged-index",
@@ -150,10 +190,12 @@
         "public/interop/sbom-councilof-ai.json"
       ],
       "mode": "delegate-to-check",
+      "uncheckable_exit": 3,
       "gated": true,
       "reason": "Read-only detailed lockfile-inventory parity checks exact versions, install paths, licence/integrity declarations, dependency roles and input digests. Recorded generation-commit input bytes are verified; only UUID, timestamp and consistent generation-time commit/root reference differ from a fresh run. Missing pinned history or stale inputs fail; no automatic fetch or overwrite.",
       "drift_fixed_2026_09_06": "The committed SBOM was dated 2026-08-25 with 126 components and still listed @types/nodemailer, drizzle-kit, drizzle-orm, mysql2, nodemailer and xlsx — the exact six that 3ef395fcd (#1273) DELETED for carrying five high-severity advisories. Our published supply-chain artefact advertised packages we had removed for security. Regenerated: 120.",
-      "check": "python3 scripts/gen_sbom.py --check"
+      "check": "python3 scripts/gen_sbom.py --check",
+      "note_uncheckable": "Exit 3 is UNCHECKABLE here and only here: scripts/pre-push-gates.sh documents gen_sbom.py --check as 0 pass, 2 THE SBOM DOES NOT MATCH THE TREE (a real finding, blocks), 3 the pinned generation commit is unreadable (report it, not a finding). Most of the estate spells UNCHECKABLE as exit 2, so producers-check takes the code from here rather than assuming it, and a depth-1 clone that cannot read the pin is not painted as a stale SBOM."
     },
     {
       "id": "llms-txt",
@@ -316,6 +358,19 @@
       "mode": "delegate-to-check",
       "gated": true,
       "note": "Exact deterministic bundle/resource parity using the existing esbuild and SHA-pinned licensed MCP Apps SDK. Also checked before the protected production build; no root dependency input or stamped SBOM changes."
+    },
+    {
+      "id": "institutional-rails",
+      "command": "python3 scripts/institutional_rails.py",
+      "check": "python3 scripts/institutional_rails.py --check",
+      "outputs": [
+        "public/interop/institutional-rails/v0.1"
+      ],
+      "mode": "delegate-to-check",
+      "gated": false,
+      "reason": "The producer is sound and its catalogue IS committed (data/institutional-rails/rails.json, events.source.jsonl, watch-universe.json, code-plane-baseline-2026-10-01.json). The script never fetches, deploys, signs, anchors, schedules, pays, trades or contacts a third party, so it is safe to run unattended. Its OUTPUT was never committed: public/interop/institutional-rails/v0.1 does not exist in the repo, so --check reports DRIFT on all 18 files it would write. Gating it today would paint every lane red over a first publication, not over drift. The decision is PUBLISH or DELETE the builder, and it belongs to the owner: the source is described as curated primary-source evidence, which is not the same as reviewed for publication.",
+      "becomes_gated_when": "the v0.1 output is committed (run: python3 scripts/institutional_rails.py, then commit public/interop/institutional-rails/v0.1/), after which --check is a true drift gate and this entry can be flipped to gated: true with no other change.",
+      "observed_2026_11_06": "--check reports DRIFT on 18 files; the output directory is absent from the repo; the catalogue and the builder are both present and run offline"
     }
   ],
   "not_yet_classified": {

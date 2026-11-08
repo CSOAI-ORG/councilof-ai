@@ -4205,6 +4205,33 @@
       "source": "functions/api/mint.ts"
     },
     {
+      "id": "api-model-lifecycle",
+      "kind": "http",
+      "path": "/api/model-lifecycle",
+      "method": "GET",
+      "name": "Model lifecycle",
+      "description": "GET /api/model-lifecycle — upstream availability (available / retired / not released) of the model families this estate measures, joined to this estate's own signed measurement for each family. A family with no signed card is UNMEASURED, never zero.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.model-lifecycle/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/model-lifecycle",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/model-lifecycle.ts"
+    },
+    {
       "id": "api-momentum",
       "kind": "http",
       "path": "/api/momentum",

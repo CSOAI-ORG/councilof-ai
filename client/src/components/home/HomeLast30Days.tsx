@@ -9,6 +9,8 @@
 const REPO = "https://github.com/CSOAI-ORG/councilof-ai/pull/";
 
 const SHIPPED: { date: string; pr: number; text: string }[] = [
+  { date: "5 Nov", pr: 3933, text: "Council companion brings task evidence, local benchmark imports and learning into one view; mirror checks report failures and reviewed articles keep their titles." },
+  { date: "5 Nov", pr: 3931, text: "Checks on approval records reject reversed timing and preserve unknown effects; local execution remains held." },
   { date: "16 Oct", pr: 3256, text: "Hugging Face dataset viewers repaired; GSPC dataset cards refresh live counts after every deploy." },
   { date: "16 Oct", pr: 3257, text: "Kaggle batch workflow for reproducible GSPC measurement batches." },
   { date: "15 Oct", pr: 3238, text: "Artifact seal: POST /api/sign on a dedicated signing key, fail-closed." },

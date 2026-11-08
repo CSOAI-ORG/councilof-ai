@@ -212,8 +212,10 @@ function deliveryHeaders(response: Response, state: string, paymentResponse?: st
   const headers = new Headers(response.headers);
   headers.set("x-csoai-delivery-record-state", state);
   if (paymentResponse) headers.set("x-payment-response", paymentResponse);
+  // Successful routes already put the settlement echo on their response. Expose that
+  // existing header too, without requiring the caller to repeat it in options.
   const exposed = (headers.get("access-control-expose-headers") || "").split(",").map(v => v.trim()).filter(Boolean);
-  for (const name of ["x-csoai-delivery-record-state", ...(paymentResponse ? ["x-payment-response"] : [])]) {
+  for (const name of ["x-csoai-delivery-record-state", ...(headers.has("x-payment-response") ? ["x-payment-response"] : [])]) {
     if (!exposed.some(v => v.toLowerCase() === name)) exposed.push(name);
   }
   headers.set("access-control-expose-headers", exposed.join(", "));

@@ -102,9 +102,13 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // catalogue row (x402-ras-doors 64e556117). The listing builds its terms the same way.
   const resourceUrl = `${origin}/api/coverage-evidence`;
   const asset = url.searchParams.get("asset");
+  // The discovery example describes a fixed preview, not the buyer’s current asset.
+  // Derive its result from the embedded record so the advertised subject cannot drift.
+  const exampleId = "1";
+  const exampleRow = COVERAGE.rows[exampleId];
   const bazaar = declareBazaarHttpGet({
     method: "GET",
-    queryParams: { asset: "373", preview: "1" },
+    ...(exampleRow ? { queryParams: { asset: exampleId, preview: "1" } } : {}),
     queryParamsSchema: {
       properties: {
         asset: { type: "string", description: "numeric DefiLlama stablecoin id (or a symbol; collisions return 409 with candidates)" },
@@ -112,7 +116,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       },
       required: ["asset"],
     },
-    outputExample: { schema: KIND, asset: { defillama_id: "373", symbol: "USDT", name: "Tether", chain: "Ethereum" }, state: "DEEP_MEASURED" },
+    ...(exampleRow ? { outputExample: { schema: KIND, asset: { defillama_id: exampleId, symbol: exampleRow.s, name: exampleRow.n, chain: exampleRow.c }, state: exampleRow.st, as_of: COVERAGE.as_of } } : {}),
   });
   const isPreview = url.searchParams.get("preview") === "1";
   const accepts = x402Accepts(env, resourceUrl, { skuId: "coverage_evidence", tier: "per_request", description: COVERAGE_EVIDENCE_DESCRIPTION, productId: PRODUCT_ID });

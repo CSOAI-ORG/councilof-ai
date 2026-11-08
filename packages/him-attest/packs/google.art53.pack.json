@@ -1,0 +1,110 @@
+{
+  "schema": "csoai.him-attestation-pack/0.1",
+  "subject": "google",
+  "framework": {
+    "slug": "eu-ai-act-art53",
+    "title": "EU AI Act Article 53 — GPAI provider documentation duties"
+  },
+  "doctrine": "human-in-the-loop attestation of evidence — NOT conformity certification",
+  "statement": "Human-in-the-loop attestation of evidence. Machine checkpoints carry signed measurement evidence; human checkpoints carry named human decisions. This is not conformity certification and grants no regulatory status.",
+  "as_of": "2026-11-02T06:40:21.114Z",
+  "segments": [
+    "ai-platforms",
+    "enterprise",
+    "government"
+  ],
+  "checkpoints": [
+    {
+      "id": "art53.provider-docs-tracked",
+      "requirement": "Public documentation surfaces (model cards, usage policy, safety policy) tracked with signed byte-change cards",
+      "status": "MACHINE-EVIDENCED",
+      "evidence": [
+        {
+          "subject": "xAI — model_cards: bytes changed 2026-09-13",
+          "sha256": "04a251012e7d262d88b6f5172f62f92bd7c9b5c0071c05c0428b59a35adafb0e",
+          "as_of": "2026-09-13T10:19:18Z"
+        },
+        {
+          "subject": "DeepSeek — model_cards: bytes changed 2026-09-05",
+          "sha256": "061834e1d6c1ae6ae1c9c573c25367a5477877b2456d77f37478b394d3e9a984",
+          "as_of": "2026-09-05T09:06:18Z"
+        },
+        {
+          "subject": "Cohere — model_cards: bytes changed 2026-09-12",
+          "sha256": "1030d2ff1e03d14c21b59faf91ddb1fb261cf36d5f26d0d88704766c6db4d1b8",
+          "as_of": "2026-09-12T09:23:39Z"
+        },
+        {
+          "subject": "Google — usage_policy: bytes changed 2026-09-12",
+          "sha256": "19d8edacc4b209c41af5439d79972357177de2c4f0a12cf78a31a5bf6a07bdf5",
+          "as_of": "2026-09-12T09:23:16Z"
+        },
+        {
+          "subject": "Alibaba Cloud / Qwen — model_cards: bytes changed 2026-09-13",
+          "sha256": "1b1c152a891ecad53164c627cf57d294f7505a2eacff520172cef859e39d7d30",
+          "as_of": "2026-09-13T10:19:32Z"
+        }
+      ],
+      "evidence_count": 13
+    },
+    {
+      "id": "art53.provider-diff-current",
+      "requirement": "Provider-diff daily capture current",
+      "status": "MACHINE-EVIDENCED",
+      "evidence": [
+        {
+          "subject": "provider-diff daily capture 2026-09-03: 0 changed, 6 uncheckable, 0 unknown of 51",
+          "sha256": "01cbaddc65a8037a5b65a62420ce1912985dba9a706e8129e791ce617e8aab54",
+          "as_of": "2026-09-03T09:51:48Z"
+        },
+        {
+          "subject": "provider-diff daily capture 2026-10-06: 0 changed, 6 uncheckable, 0 unknown of 51",
+          "sha256": "054b71b7e9331a75ba9f99cda03f805fa9f0b1e870712556882c6636e65cbf22",
+          "as_of": "2026-10-06T12:05:36Z"
+        },
+        {
+          "subject": "provider-diff daily capture 2026-09-04: 11 changed, 6 uncheckable, 0 unknown of 51",
+          "sha256": "06cb2055f8abcd1ee85d3dac86c2fccfac21eed0e5edb9970a6117810d7f3800",
+          "as_of": "2026-09-04T09:40:57Z"
+        },
+        {
+          "subject": "provider-diff daily capture 2026-09-12: 28 changed, 6 uncheckable, 0 unknown of 51",
+          "sha256": "1a6b2478af8a44aa80d92bca3948ec5732543d342f72d665eb8ed7fadbe35b91",
+          "as_of": "2026-09-12T09:23:07Z"
+        }
+      ],
+      "evidence_count": 4
+    },
+    {
+      "id": "art53.training-summary",
+      "requirement": "Training-content summary published by the provider (Art 53(1)(d))",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "eu-ai-act-art53:art53.training-summary"
+    },
+    {
+      "id": "art53.copyright-policy",
+      "requirement": "Copyright policy in place (Art 53(1)(c))",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "eu-ai-act-art53:art53.copyright-policy"
+    },
+    {
+      "id": "art53.downstream-info",
+      "requirement": "Downstream-provider information supplied (Art 53(1)(b))",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "eu-ai-act-art53:art53.downstream-info"
+    },
+    {
+      "id": "art53.accountable-owner",
+      "requirement": "Named accountable owner signs this attestation cycle",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "eu-ai-act-art53:art53.accountable-owner"
+    }
+  ],
+  "human_tasks": [
+    "eu-ai-act-art53:art53.training-summary",
+    "eu-ai-act-art53:art53.copyright-policy",
+    "eu-ai-act-art53:art53.downstream-info",
+    "eu-ai-act-art53:art53.accountable-owner"
+  ],
+  "ceremony_sha256": "2a25694ed443c31dbda7f0859a6d5b7e952e14e142127c1719d79eed6119e3fe"
+}

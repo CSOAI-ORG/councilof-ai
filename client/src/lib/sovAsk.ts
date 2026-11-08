@@ -51,12 +51,17 @@ export type AskResult = {
 /** Ask the CSOAI Sovereign. Returns cleaned text, or ok:false with a fallback string. */
 export async function askSovereign(userText: string, opts?: { fallback?: string; system?: string }): Promise<AskResult> {
   const q = (userText || "").trim();
-  const fallback = (opts && opts.fallback) || "I can only speak as the CSOAI Council assistant on AI governance, regulation and cybersecurity — ask me about a framework, a system, or how to get compliant and I'll help.";
+  const fallback = (opts && opts.fallback) || "Ask me about AI governance, regulation, cybersecurity, a named framework, or the evidence for your system.";
   if (!q) return { ok: false, text: fallback };
   const started = Date.now();
   try {
     const sys = ((opts && opts.system) || SYS) + langDirective();
-    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: sys + "\n\nUser question: " + q }) });
+    // The grounded endpoint routes its extracted user question before model fallback.
+    // Keep system instructions out of that question while preserving both role turns.
+    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ messages: [
+      { role: "system", content: sys },
+      { role: "user", content: q },
+    ] }) });
     if (r.ok) {
       const d = await r.json();
       const t = String((d && (d.answer ?? d.reply ?? d.response)) || "").trim();
