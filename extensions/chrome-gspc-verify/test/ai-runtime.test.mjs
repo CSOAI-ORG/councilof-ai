@@ -65,3 +65,22 @@ test("unknown catalogues cannot form a URL, and malformed frames do not disclose
  const executor=createAIExecutor({fetchImpl:async()=>new Response('data: UPSTREAM-PRIVATE-BODY\n\n',{headers:{"content-type":"text/event-stream"}})});
  await assert.rejects(()=>executor.chat({choice:{...local,provider:"meok-cloud",model:"default",offline:false},question:"Hi"}),e=>e.message==="The provider returned an invalid stream frame.");
 });
+
+test("NVIDIA uses the fixed hosted API, selected model and session key, with no tools or implicit context",async()=>{
+ const calls=[];const executor=createAIExecutor({getKey:async provider=>{assert.equal(provider,"nvidia");return "TEST-ONLY";},fetchImpl:async(url,init)=>{
+  calls.push([url,init]);if(url.endsWith("/v1/models"))return json({data:[{id:"nvidia/test-model"}]});
+  return json({model:"nvidia/test-model",choices:[{message:{content:"NVIDIA fixture answer"},finish_reason:"stop"}]});
+ }});
+ assert.deepEqual(await executor.models("nvidia"),[{id:"nvidia/test-model",size:null,label:"nvidia/test-model"}]);
+ const result=await executor.chat({choice:{...local,provider:"nvidia",model:"nvidia/test-model",offline:false},question:"Develop this idea",history:[{role:"assistant",content:"DO NOT SEND OLD CONTEXT"}],maxTokens:64});
+ assert.equal(result.provider,"nvidia");assert.equal(result.content,"NVIDIA fixture answer");assert.equal(result.reportedModel,"nvidia/test-model");assert.equal(result.measured,false);
+ assert.equal(calls.length,2);assert.ok(calls.every(([u])=>u.startsWith("https://integrate.api.nvidia.com/v1/")));
+ const request=calls[1][1],body=JSON.parse(request.body);assert.equal(request.headers.authorization,"Bearer TEST-ONLY");assert.equal(request.credentials,"omit");assert.equal(request.redirect,"error");
+ assert.equal(body.model,"nvidia/test-model");assert.equal(body.max_tokens,64);assert.equal(body.tools,undefined);assert(!JSON.stringify(body).includes("DO NOT SEND"));
+});
+test("NVIDIA cloud cannot bypass the offline lock or change provider on failure",async()=>{
+ let calls=0;const choice={...local,provider:"nvidia",model:"nvidia/test-model",offline:false};
+ await assert.rejects(()=>createAIExecutor({isOffline:()=>true,getKey:()=>{calls++;},fetchImpl:()=>{calls++;}}).chat({choice,question:"Hello"}),/Offline/);assert.equal(calls,0);
+ const executor=createAIExecutor({getKey:async()=>"TEST-ONLY",fetchImpl:async()=>{calls++;return new Response("PRIVATE BODY",{status:503});}});
+ await assert.rejects(()=>executor.chat({choice,question:"Hello"}),e=>e.message.includes("503")&&!e.message.includes("PRIVATE"));assert.equal(calls,1);
+});

@@ -2,6 +2,7 @@
 export const PROVIDERS = Object.freeze({
   ollama: { label: "Ollama · local models", local: true, base: "http://127.0.0.1:11434", permission: "http://127.0.0.1/*", format: "ollama", key: false },
   "meok-cloud": { label: "MEOK cloud overlay", local: false, base: "https://nicholastempleman-meok-sov6-abstraction-overlay.hf.space", permission: "https://nicholastempleman-meok-sov6-abstraction-overlay.hf.space/*", format: "openai", key: false, fixedModel: "default" },
+  nvidia: { label: "NVIDIA · hosted text models", local: false, base: "https://integrate.api.nvidia.com", permission: "https://integrate.api.nvidia.com/*", format: "openai", key: true },
   openai: { label: "OpenAI", local: false, base: "https://api.openai.com", permission: "https://api.openai.com/*", format: "openai", key: true },
   groq: { label: "Groq", local: false, base: "https://api.groq.com/openai", permission: "https://api.groq.com/*", format: "openai", key: true },
   anthropic: { label: "Anthropic", local: false, base: "https://api.anthropic.com", permission: "https://api.anthropic.com/*", format: "anthropic", key: true },
