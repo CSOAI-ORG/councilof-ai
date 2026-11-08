@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { webcrypto } from "node:crypto";
-import { onRequestGet } from "./request-attestation";
+import { onRequestGet, COMMISSION_ENQUEUE_DEADLINE_MS } from "./request-attestation";
+import { bookkeepingBudget } from "./_bookkeeping_budget";
+import { listCommissionQueue } from "./commission-queue";
 import { verifyX402Payment } from "./_x402";
 import { signPayload } from "../_lib/cardSign";
 
@@ -58,12 +60,25 @@ beforeEach(() => {
   }));
 });
 afterEach(() => {
+  vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.clearAllMocks();
 });
 
+function queueStore() {
+  const rows = new Map<string, string>();
+  return {
+    rows,
+    get: vi.fn(async (key: string) => rows.get(key) ?? null),
+    put: vi.fn(async (key: string, value: string) => { rows.set(key, value); }),
+    list: vi.fn(async ({ prefix }: { prefix: string }) => ({
+      keys: [...rows.keys()].filter(key => key.startsWith(prefix)).map(name => ({ name })),
+      list_complete: true,
+    })),
+  };
+}
 const call = () =>
-  onRequestGet({ request: new Request(url), env: {} } as unknown as Parameters<typeof onRequestGet>[0]);
+  onRequestGet({ request: new Request(url), env: { REVENUE_KV: queueStore() } } as unknown as Parameters<typeof onRequestGet>[0]);
 
 describe("a paid request whose reserve read fails is INCOMPLETE, never an empty reserve", () => {
   it("reports UNCHECKABLE with a null count and the reason — not reserve_count 0", async () => {
@@ -133,5 +148,152 @@ describe("a settled payment whose receipt cannot issue is never answered with a 
     // the x402 settlement receipt travels with the failure — a payer is never charged and
     // answered without it
     expect(response.headers.get("x-payment-response")).toBe(SETTLED.paymentResponse);
+  });
+});
+
+describe("paid commission fulfillment is independent of optional observation bookkeeping", () => {
+  const matrix = () => new Response(JSON.stringify({ as_of: "2026-11-08T00:00:00Z", cells: [] }), { status: 200 });
+  const paidCall = (kv: unknown, targetUrl = url) => onRequestGet({
+    request: new Request(targetUrl, { headers: { "x-payment": "synthetic-fixture-only" } }),
+    env: { REVENUE_KV: kv },
+  } as unknown as Parameters<typeof onRequestGet>[0]);
+
+  it("enqueues an actual discoverable intent after a 300ms reserve read exhausts the 250ms observation budget", async () => {
+    vi.useFakeTimers();
+    const kv = queueStore();
+    payment.mockImplementation(async () => ({ ...SETTLED, observationBudget: bookkeepingBudget() }) as any);
+    vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>(resolve => {
+      setTimeout(() => resolve(matrix()), 300);
+    })));
+    const pending = paidCall(kv);
+    await vi.advanceTimersByTimeAsync(300);
+    const response = await pending, body = await response.json() as any;
+    expect(response.status).toBe(200);
+    expect(body.card.payload.enqueued).toBe(true);
+    expect(kv.put.mock.calls.map(([key]) => key)).toContain("ras:" + "a".repeat(64));
+    expect(kv.put.mock.calls.map(([key]) => key)).toContain("mill:commission:org/model-name");
+    expect(kv.get.mock.calls.map(([key]) => key)).not.toContain("count:issuances");
+    const queue = await listCommissionQueue(kv as unknown as KVNamespace);
+    expect(queue.rows).toHaveLength(1);
+    expect(queue.rows[0]).toMatchObject({ subject: "org/model-name", receipt_sha: "a".repeat(64), status: "QUEUED" });
+    expect(payment).toHaveBeenCalledTimes(1);
+  });
+
+  it("reports an unconfirmed primary write without serving a queued card or starting later writes", async () => {
+    const kv = queueStore();
+    kv.put.mockRejectedValue(new Error("queue acknowledgement lost"));
+    vi.stubGlobal("fetch", vi.fn(async () => matrix()));
+    const response = await paidCall(kv), body = await response.json() as any;
+    expect(response.status).toBe(500);
+    expect(body).toMatchObject({ state: "SETTLED_COMMISSION_ENQUEUE_UNCONFIRMED",
+      enqueued: null, queue_state: "UNKNOWN", settle: { transaction: "0xabc" } });
+    expect(body).not.toHaveProperty("card");
+    expect(response.headers.get("x-payment-response")).toBe(SETTLED.paymentResponse);
+    expect(kv.put).toHaveBeenCalledTimes(1);
+    expect(kv.put.mock.calls[0][0]).toBe("mill:commission:org/model-name");
+    expect(kv.get).not.toHaveBeenCalled();
+    expect(payment).toHaveBeenCalledTimes(1);
+  });
+
+  it("bounds a hanging primary write and never retries or indexes it when it commits after the response", async () => {
+    vi.useFakeTimers();
+    const kv = queueStore();
+    let entered!: () => void, commit!: () => void;
+    const started = new Promise<void>(resolve => { entered = resolve; });
+    kv.put.mockImplementation((key, value) => new Promise<void>(resolve => {
+      commit = () => { kv.rows.set(key, value); resolve(); };
+      entered();
+    }));
+    vi.stubGlobal("fetch", vi.fn(async () => matrix()));
+    const pending = paidCall(kv);
+    await started;
+    await vi.advanceTimersByTimeAsync(COMMISSION_ENQUEUE_DEADLINE_MS);
+    const response = await pending, body = await response.json() as any;
+    expect(response.status).toBe(500);
+    expect(body.enqueued).toBeNull();
+    expect(body.queue_state).toBe("UNKNOWN");
+    expect(body).not.toHaveProperty("card");
+    expect(response.headers.get("x-payment-response")).toBe(SETTLED.paymentResponse);
+    expect(kv.put).toHaveBeenCalledTimes(1);
+    commit();
+    await Promise.resolve(); await Promise.resolve();
+    expect(kv.put).toHaveBeenCalledTimes(1);
+    expect(kv.get).not.toHaveBeenCalled();
+    expect((await listCommissionQueue(kv as unknown as KVNamespace)).rows).toHaveLength(1);
+    expect(payment).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps the acknowledged preferred intent discoverable when ras metadata fails", async () => {
+    const kv = queueStore();
+    kv.put.mockImplementation(async (key, value) => {
+      if (key.startsWith("ras:")) throw new Error("receipt metadata unavailable");
+      kv.rows.set(key, value);
+    });
+    vi.stubGlobal("fetch", vi.fn(async () => matrix()));
+    const response = await paidCall(kv), body = await response.json() as any;
+    expect(response.status).toBe(200);
+    expect(body.card.payload.enqueued).toBe(true);
+    const queue = await listCommissionQueue(kv as unknown as KVNamespace);
+    expect(queue.rows).toHaveLength(1);
+    expect(queue.rows[0].source).toBe("mill:commission");
+    expect(payment).toHaveBeenCalledTimes(1);
+  });
+
+  it("replaces the preferred stale subject entry before claiming a newly paid commission is queued", async () => {
+    const kv = queueStore();
+    const previous = { subject: "org/model-name", model: "org/model-name", fulfillment: "QUEUED",
+      status: "QUEUED", tx: "0xprevious", receipt_sha: "b".repeat(64), as_of: "2026-11-01T00:00:00Z" };
+    kv.rows.set("mill:commission:org/model-name", JSON.stringify(previous));
+    kv.rows.set("ras:" + "b".repeat(64), JSON.stringify(previous));
+    kv.put.mockImplementation(async (key, value) => {
+      if (key.startsWith("ras:")) throw new Error("secondary metadata unavailable");
+      kv.rows.set(key, value);
+    });
+    vi.stubGlobal("fetch", vi.fn(async () => matrix()));
+    const response = await paidCall(kv), body = await response.json() as any;
+    expect(response.status).toBe(200);
+    expect(body.card.payload.enqueued).toBe(true);
+    expect(kv.put.mock.calls[0][0]).toBe("mill:commission:org/model-name");
+    const queue = await listCommissionQueue(kv as unknown as KVNamespace);
+    expect(queue.rows).toHaveLength(1);
+    expect(queue.rows[0]).toMatchObject({ source: "mill:commission", tx: "0xabc", receipt_sha: "a".repeat(64) });
+  });
+
+  it("does not let an optional counter failure prevent the essential queue writes", async () => {
+    const kv = queueStore();
+    kv.get.mockImplementation(async key => {
+      if (key === "count:issuances") throw new Error("optional counter unavailable");
+      return kv.rows.get(key) ?? null;
+    });
+    vi.stubGlobal("fetch", vi.fn(async () => matrix()));
+    const response = await paidCall(kv), body = await response.json() as any;
+    expect(response.status).toBe(200);
+    expect(body.card.payload.enqueued).toBe(true);
+    expect(kv.put.mock.calls.map(([key]) => key)).toContain("mill:commission:org/model-name");
+    expect((await listCommissionQueue(kv as unknown as KVNamespace)).rows).toHaveLength(1);
+  });
+
+  it.each([true, false])("preserves an honest unqueued SKU receipt with queue storage bound=%s", async bound => {
+    const kv = bound ? queueStore() : undefined;
+    vi.stubGlobal("fetch", vi.fn(async () => matrix()));
+    const response = await paidCall(kv, origin + "/api/request-attestation?subject=payai-wrapper");
+    const body = await response.json() as any;
+    expect(response.status).toBe(200);
+    expect(body.card.payload).toMatchObject({ subject_kind: "sku_wrapper", model: null,
+      fulfillment: "UNFULFILLABLE", enqueued: false, queue: null, queue_ref: null });
+    expect(response.headers.get("x-payment-response")).toBe(SETTLED.paymentResponse);
+    expect(payment).toHaveBeenCalledTimes(1);
+    if (kv) {
+      expect(kv.put.mock.calls.some(([key]) => key.startsWith("mill:commission:"))).toBe(false);
+      expect((await listCommissionQueue(kv as unknown as KVNamespace)).rows).toEqual([]);
+    }
+  });
+
+  it("refuses a signed payment before verification when the commission store is not bound", async () => {
+    const response = await paidCall(undefined), body = await response.json() as any;
+    expect(response.status).toBe(503);
+    expect(body).toMatchObject({ state: "COMMISSION_QUEUE_UNAVAILABLE", enqueued: false });
+    expect(body).not.toHaveProperty("card");
+    expect(payment).not.toHaveBeenCalled();
   });
 });

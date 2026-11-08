@@ -372,21 +372,41 @@ export async function payDoor(
     requestOrigin?: string;
   },
 ): Promise<DoorState> {
-  const { challenge, provider, walletName } = args;
+  const { provider, walletName } = args;
   const door = { ...args.door };
   const requestOrigin = args.requestOrigin || globalThis.location?.origin || "https://councilof.ai";
-  const validateAction = () => {
-    assertPaidDoorOrigin(door, requestOrigin);
-    if (new URL(challenge.resource).href !== new URL(door.url).href ||
-        (globalThis.location?.origin && globalThis.location.origin !== requestOrigin)) {
-      throw new Error("the page origin or quoted resource changed before payment dispatch");
-    }
-  };
   const fetchImpl = args.fetchImpl || fetch;
   const phase = args.onPhase || (() => {});
   // Set once the signed payment leaves this page: from then on a failure may follow a settle.
   let sent = false;
   try {
+    // Keep the requested URL and quoted payment terms as separate immutable snapshots.
+    // Some doors quote their path while the actual request includes the buyer's query.
+    const challenge = structuredClone(args.challenge);
+    const requested = new URL(door.url), quoted = new URL(challenge.resource);
+    const canonicalRequest = new URL(requested.href);
+    if (requested.pathname === "/api/request-attestation") {
+      // Match this producer's validated contract: trim subject, lowercase axis, omit ignored inputs.
+      canonicalRequest.search = "";
+      const subject = (requested.searchParams.get("subject") || "").trim();
+      const axis = (requested.searchParams.get("axis") || "").trim().toLowerCase();
+      if (subject) canonicalRequest.searchParams.set("subject", subject);
+      if (axis) canonicalRequest.searchParams.set("axis", axis);
+    }
+    const query = (url: URL) => {
+      const entries = new URLSearchParams(url.search);
+      entries.sort(); // Stable key order preserves which repeated value the producer's get() selects.
+      return JSON.stringify([...entries.entries()]);
+    };
+    const validateAction = () => {
+      assertPaidDoorOrigin(door, requestOrigin);
+      if (quoted.origin !== requested.origin || quoted.pathname !== requested.pathname ||
+          quoted.username || quoted.password || quoted.hash ||
+          ((quoted.search || requested.pathname === "/api/request-attestation") && query(quoted) !== query(canonicalRequest)) ||
+          (globalThis.location?.origin && globalThis.location.origin !== requestOrigin)) {
+        throw new Error("the page origin or quoted resource changed before payment dispatch");
+      }
+    };
     validateAction();
     buildTypedData(challenge, PREFLIGHT_SIGNER);
     phase({ kind: "signing", wallet: walletName });

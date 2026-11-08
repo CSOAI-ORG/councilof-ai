@@ -437,3 +437,130 @@ describe("auth foundation: register signs before it writes", () => {
     expect(await response.json()).not.toHaveProperty("token");
   });
 });
+
+describe("legacy password login preserves one exact account incarnation without KV upgrade writes", () => {
+  const email = "legacy-incarnation@example.test", password = "synthetic-strong-password";
+  const requestFor = (action: string, body?: unknown, token?: string) => new Request(
+    "https://councilof.ai/api/auth/" + action, {
+      method: body === undefined ? "GET" : action === "profile" ? "PUT" : "POST",
+      headers: { ...(body === undefined ? {} : { "content-type": "application/json" }),
+        ...(token ? { authorization: "Bearer " + token } : {}) },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    });
+  const invoke = (env: unknown, action: string, body?: unknown, token?: string) =>
+    onRequest({ params: { path: [action] }, env, request: requestFor(action, body, token) } as never);
+  async function fixture(extra: Record<string, unknown> = {}) {
+    const salt = "synthetic-incarnation-salt";
+    const account = { email, name: "Original name", salt, pw: await hashPassword(password, salt),
+      created_at: "2026-11-01T00:00:00.000Z", retained_unknown: { value: true }, ...extra };
+    const original = JSON.stringify(account), rows = new Map([[email, original]]);
+    const get = vi.fn(async () => rows.get(email) ?? null);
+    const put = vi.fn(async (_key: string, raw: string) => { rows.set(email, raw); });
+    const env = { ASSESS_SIGNING_KEY_PKCS8_B64: await signingKey(), SOV_ARENA_STATE: { get, put } };
+    return { account, original, rows, get, put, env };
+  }
+
+  it("keeps a purchase commitment usable between two overlapping legacy logins without an upgrade write", async () => {
+    const f = await fixture();
+    const buyer = await import("./_buyer_purchase");
+    const { buyerNonce } = await import("../../shared/buyerPurchase");
+    let ready!: () => void, release!: (raw: string) => void, reads = 0;
+    const secondCaptured = new Promise<void>(resolve => { ready = resolve; });
+    f.get.mockImplementation(async () => {
+      if (++reads === 2) {
+        ready();
+        return new Promise<string>(resolve => { release = resolve; });
+      }
+      return f.rows.get(email) ?? null;
+    });
+    f.put.mockRejectedValue(new Error("a login must not invoke an uncertain KV upgrade"));
+    const first = invoke(f.env, "login", { email, password });
+    const second = invoke(f.env, "login", { email, password });
+    await secondCaptured;
+    const firstResponse = await first;
+    expect(firstResponse.status).toBe(200);
+    const firstToken = (await firstResponse.json()).token;
+    const purchaseRequest = new Request("https://councilof.ai/api/proof?bundle=1", {
+      headers: { authorization: "Bearer " + firstToken },
+    });
+    const originalOwner = await buyer.currentBuyer(f.env, purchaseRequest);
+    const commitment = await buyer.prepareBuyerRequest(originalOwner, purchaseRequest, purchaseRequest.url);
+    release(f.original);
+    const secondResponse = await second;
+    expect(secondResponse.status).toBe(200);
+    const secondToken = (await secondResponse.json()).token;
+    const current = await buyer.currentBuyer(f.env, new Request(purchaseRequest.url, {
+      headers: { authorization: "Bearer " + secondToken },
+    }));
+    expect(current).toEqual(originalOwner);
+    expect(await buyerNonce(current.owner_hash, commitment.request, commitment.seed)).toBe(commitment.nonce);
+    expect((await invoke(f.env, "me", undefined, firstToken)).status).toBe(200);
+    expect(f.put).not.toHaveBeenCalled();
+    expect(f.rows.get(email)).toBe(f.original);
+  });
+
+  it("never restores a former incarnation when its delayed login overlaps a same-email registration", async () => {
+    const f = await fixture(), buyer = await import("./_buyer_purchase");
+    let ready!: () => void, release!: (raw: string) => void, reads = 0;
+    const captured = new Promise<void>(resolve => { ready = resolve; });
+    f.get.mockImplementation(async () => {
+      if (++reads === 1) {
+        ready();
+        return new Promise<string>(resolve => { release = resolve; });
+      }
+      return f.rows.get(email) ?? null;
+    });
+    const oldLogin = invoke(f.env, "login", { email, password });
+    await captured;
+    f.rows.delete(email); // Existing account deletion/recreation, not a login mutation.
+    const registration = await invoke(f.env, "register", { email, password, name: "New incarnation" });
+    expect(registration.status).toBe(200);
+    const newToken = (await registration.json()).token, newRaw = f.rows.get(email)!;
+    const newOwner = await buyer.currentBuyer(f.env, new Request("https://councilof.ai/api/proof", {
+      headers: { authorization: "Bearer " + newToken },
+    }));
+    release(f.original);
+    const stale = await oldLogin;
+    expect(stale.status).toBe(200); // Its old snapshot cannot grant access to the current account.
+    const oldToken = (await stale.json()).token;
+    expect((await invoke(f.env, "me", undefined, oldToken)).status).toBe(401);
+    await expect(buyer.currentBuyer(f.env, new Request("https://councilof.ai/api/proof", {
+      headers: { authorization: "Bearer " + oldToken },
+    }))).rejects.toThrow(/lifecycle changed/);
+    expect(f.rows.get(email)).toBe(newRaw);
+    expect(f.put).toHaveBeenCalledTimes(1); // Only the explicit new registration wrote.
+    expect((await verifyToken(f.env, oldToken))?.account_generation).not.toBe(newOwner.generation);
+  });
+
+  it("keeps the legacy lifecycle through a normal profile-name edit", async () => {
+    const f = await fixture(), buyer = await import("./_buyer_purchase");
+    const login = await invoke(f.env, "login", { email, password });
+    const token = (await login.json()).token;
+    const bearer = new Request("https://councilof.ai/api/proof", { headers: { authorization: "Bearer " + token } });
+    const before = await buyer.currentBuyer(f.env, bearer);
+    const edit = await invoke(f.env, "profile", { name: "Changed name" }, token);
+    expect(edit.status).toBe(200);
+    expect((await invoke(f.env, "me", undefined, token)).status).toBe(200);
+    expect(await buyer.currentBuyer(f.env, bearer)).toEqual(before);
+    expect(JSON.parse(f.rows.get(email)!).account_generation).toBeUndefined();
+    expect(f.put).toHaveBeenCalledTimes(1); // The requested profile write, never a login upgrade.
+  });
+
+  it.each([null, "invalid", "A".repeat(64)])("refuses an explicit malformed generation instead of deriving around it: %s", async generation => {
+    const f = await fixture({ account_generation: generation });
+    const response = await invoke(f.env, "login", { email, password });
+    expect(response.status).toBe(503);
+    expect(await response.json()).not.toHaveProperty("token");
+    expect(f.put).not.toHaveBeenCalled();
+    expect(f.rows.get(email)).toBe(f.original);
+  });
+
+  it("uses a valid stored generation without replacing it with a derived identity", async () => {
+    const generation = "c".repeat(64), f = await fixture({ account_generation: generation });
+    const response = await invoke(f.env, "login", { email, password });
+    expect(response.status).toBe(200);
+    expect((await verifyToken(f.env, (await response.json()).token))?.account_generation).toBe(generation);
+    expect(f.put).not.toHaveBeenCalled();
+    expect(f.rows.get(email)).toBe(f.original);
+  });
+});

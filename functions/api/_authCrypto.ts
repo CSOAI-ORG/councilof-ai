@@ -150,12 +150,38 @@ export function userKey(email: string): string {
   return `auth:user:${String(email).toLowerCase()}`;
 }
 
+
+/**
+ * A password-authenticated legacy account has one identity without a KV upgrade write.
+ * Name/profile edits do not change it; a recreated account has fresh incarnation facts.
+ * Explicit stored generations remain authoritative. This is not a CAS or uniqueness claim.
+ */
+export async function currentAccountGeneration(value: unknown, subject: string): Promise<string | null> {
+  try {
+    if (!value || typeof value !== "object" || Array.isArray(value) ||
+        typeof subject !== "string" || !subject) return null;
+    const row = value as Record<string, unknown>;
+    if (row.email !== subject || typeof row.name !== "string" ||
+        typeof row.salt !== "string" || !row.salt ||
+        typeof row.pw !== "string" || !/^[a-f0-9]{64}$/i.test(row.pw) ||
+        typeof row.created_at !== "string" || !Number.isFinite(Date.parse(row.created_at))) return null;
+    if (row.account_generation !== undefined)
+      return typeof row.account_generation === "string" && /^[a-f0-9]{64}$/.test(row.account_generation)
+        ? row.account_generation : null;
+    return hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify([
+      "csoai.legacy-account-incarnation/1", subject, row.salt, row.pw, row.created_at,
+    ]))));
+  } catch {
+    return null;
+  }
+}
+
 export interface StoredUser {
   email: string;
   name: string;
   salt: string;
   pw: string;
   created_at: string;
-  /** Fresh random lifecycle identity; legacy records require password reauthentication before upgrade. */
+  /** Fresh random identity for new accounts; legacy identities are derived after password reauthentication. */
   account_generation?: string;
 }

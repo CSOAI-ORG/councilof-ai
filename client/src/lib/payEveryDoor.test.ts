@@ -787,3 +787,183 @@ describe("an explicit guest snapshot stays isolated while a paid response is pen
     }
   });
 });
+
+describe("path-scoped payment quotes retain the exact requested URL", () => {
+  const requested = ORIGIN + "/api/coverage-evidence?asset=tether";
+  const pathResource = ORIGIN + "/api/coverage-evidence";
+  const scopedDoor = (url = requested): Door => ({ ...door(), url, routeKey: routeKey(url) });
+  const scopedChallenge = (resource = pathResource): X402Challenge => ({
+    ...challengeFromPaymentRequired(PAYMENT_REQUIRED)!,
+    resource,
+    accepted: { ...ACCEPTED, extra: { ...ACCEPTED.extra }, resource },
+    resourceInfo: { ...PAYMENT_REQUIRED.resource, url: resource },
+  });
+  beforeEach(() => {
+    vi.stubGlobal("window", { localStorage: { getItem: () => null } });
+  });
+
+  it("lets a guest approve a path quote and sends one signed request with its original query", async () => {
+    const fetchImpl = vi.fn(async (input: unknown, init?: RequestInit) => {
+      expect(String(input)).toBe(requested);
+      const headers = new Headers(init?.headers);
+      expect(headers.has("authorization")).toBe(false);
+      const payment = JSON.parse(atob(headers.get("x-payment")!));
+      expect(payment.resource.url).toBe(pathResource);
+      expect(payment.accepted.resource).toBe(pathResource);
+      return jsonResponse(200, { synthetic: "original request output" });
+    }) as unknown as typeof fetch;
+    const p = provider();
+    const state = await payDoor({ door: scopedDoor(), challenge: scopedChallenge(),
+      provider: p, walletName: "synthetic", fetchImpl });
+    expect(state.kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect(p.calls.filter(call => call.method === "eth_signTypedData_v4")).toHaveLength(1);
+  });
+
+  it("binds the full query URL and distinct quoted path in a signed-in purchase commitment", async () => {
+    const { buyerNonce, purchaseSha256 } = await import("../../../shared/buyerPurchase");
+    vi.stubGlobal("window", { localStorage: { getItem: () => "synthetic-owner" } });
+    const owner = "a".repeat(64), seed = "b".repeat(64);
+    const expected = { url: requested, resource: pathResource, method: "GET",
+      body_sha256: await purchaseSha256(new Uint8Array()) };
+    const fetchImpl = vi.fn(async (input: unknown, init?: RequestInit) => {
+      const headers = new Headers(init?.headers);
+      expect(headers.get("authorization")).toBe("Bearer synthetic-owner");
+      if (String(input) === "/api/purchases/prepare") {
+        expect(headers.has("x-payment")).toBe(false);
+        const identity = JSON.parse(String(init?.body));
+        expect(identity).toEqual(expected);
+        return jsonResponse(200, { schema: "csoai.purchase-preparation/1", owner_hash: owner,
+          seed, request: identity, nonce: await buyerNonce(owner, identity, seed) });
+      }
+      expect(String(input)).toBe(requested);
+      const payment = JSON.parse(atob(headers.get("x-payment")!));
+      expect(payment.resource.url).toBe(pathResource);
+      expect(payment.csoaiPurchase.seed).toBe(seed);
+      expect(payment.payload.authorization.nonce).toBe(await buyerNonce(owner, expected, seed));
+      return jsonResponse(200, { synthetic: "owned original output" });
+    }) as unknown as typeof fetch;
+    const state = await payDoor({ door: scopedDoor(), challenge: scopedChallenge(),
+      provider: provider(), walletName: "synthetic", fetchImpl });
+    expect(state.kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+  });
+
+  it("accepts an explicit matching query in another entry order without changing either URL", async () => {
+    const url = requested + "&axis=safety";
+    const resource = pathResource + "?axis=safety&asset=tether";
+    const fetchImpl = vi.fn(async (input: unknown) => {
+      expect(String(input)).toBe(url);
+      return jsonResponse(200, { synthetic: true });
+    }) as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: provider(), walletName: "synthetic", fetchImpl })).kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    "https://external.invalid/api/coverage-evidence",
+    ORIGIN + "/api/different",
+    pathResource + "?asset=other",
+    pathResource + "?asset=tether&asset=tether",
+    "https://user:pass@councilof.ai/api/coverage-evidence",
+    pathResource + "#not-part-of-an-http-request",
+  ])("refuses a conflicting quote before the wallet or network: %s", async resource => {
+    const p = provider(), fetchImpl = vi.fn() as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(), challenge: scopedChallenge(resource),
+      provider: p, walletName: "synthetic", fetchImpl })).kind).toBe("error");
+    expect(p.calls).toEqual([]);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("keeps ignored request tracking outside a canonical attestation quote without changing the actual URL", async () => {
+    const url = ORIGIN + "/api/request-attestation?subject=org%2Fmodel-name&axis=safety&utm_source=test";
+    const resource = ORIGIN + "/api/request-attestation?subject=org%2Fmodel-name&axis=safety";
+    const fetchImpl = vi.fn(async (input: unknown, init?: RequestInit) => {
+      expect(String(input)).toBe(url);
+      expect(JSON.parse(atob(new Headers(init?.headers).get("x-payment")!)).resource.url).toBe(resource);
+      return jsonResponse(200, { synthetic: true });
+    }) as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: provider(), walletName: "synthetic", fetchImpl })).kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it("accepts the attestation producer's subject trimming and axis normalization", async () => {
+    const url = ORIGIN + "/api/request-attestation?subject=%20org%2Fmodel-name%20&axis=%20SAFETY%20&ignored=1";
+    const resource = ORIGIN + "/api/request-attestation?subject=org%2Fmodel-name&axis=safety";
+    const fetchImpl = vi.fn(async (input: unknown) => {
+      expect(String(input)).toBe(url);
+      return jsonResponse(200, { synthetic: true });
+    }) as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: provider(), walletName: "synthetic", fetchImpl })).kind).toBe("delivered");
+  });
+
+  it.each([
+    "?subject=org%2Fother-model&axis=safety",
+    "?subject=org%2Fmodel-name&axis=alignment",
+    "?subject=org%2Fmodel-name",
+  ])("refuses an attestation quote that changes or drops a meaningful target field: %s", async query => {
+    const url = ORIGIN + "/api/request-attestation?subject=org%2Fmodel-name&axis=safety&utm_source=test";
+    const resource = ORIGIN + "/api/request-attestation" + query;
+    const p = provider(), fetchImpl = vi.fn() as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: p, walletName: "synthetic", fetchImpl })).kind).toBe("error");
+    expect(p.calls).toEqual([]);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("refuses swapped repeated query values that select a different first asset", async () => {
+    const p = provider(), fetchImpl = vi.fn() as unknown as typeof fetch;
+    const url = pathResource + "?asset=tether&asset=usd-coin";
+    const resource = pathResource + "?asset=usd-coin&asset=tether";
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: p, walletName: "synthetic", fetchImpl })).kind).toBe("error");
+    expect(p.calls).toEqual([]);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("preserves repeated-value order while allowing a different order of distinct query keys", async () => {
+    const url = pathResource + "?asset=tether&axis=safety&asset=usd-coin";
+    const resource = pathResource + "?axis=safety&asset=tether&asset=usd-coin";
+    const fetchImpl = vi.fn(async (input: unknown) => {
+      expect(String(input)).toBe(url);
+      return jsonResponse(200, { synthetic: true });
+    }) as unknown as typeof fetch;
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: provider(), walletName: "synthetic", fetchImpl })).kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not conflate a query key containing '=' with an equal-looking value", async () => {
+    const p = provider(), fetchImpl = vi.fn() as unknown as typeof fetch;
+    const url = pathResource + "?a%3Db=c", resource = pathResource + "?a=b%3Dc";
+    expect((await payDoor({ door: scopedDoor(url), challenge: scopedChallenge(resource),
+      provider: p, walletName: "synthetic", fetchImpl })).kind).toBe("error");
+    expect(p.calls).toEqual([]);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("keeps the original request and nested payment terms when caller objects change during approval", async () => {
+    const selected = scopedDoor(), challenge = scopedChallenge();
+    const p = provider({ onSign: () => {
+      selected.url = "https://external.invalid/api/changed";
+      challenge.resource = "https://external.invalid/api/changed";
+      challenge.accepted!.amount = "999999";
+      challenge.accepted!.extra!.name = "changed after approval";
+      return SIGNATURE;
+    } });
+    const fetchImpl = vi.fn(async (input: unknown, init?: RequestInit) => {
+      expect(String(input)).toBe(requested);
+      const payment = JSON.parse(atob(new Headers(init?.headers).get("x-payment")!));
+      expect(payment.resource.url).toBe(pathResource);
+      expect(payment.accepted.amount).toBe(ACCEPTED.amount);
+      expect(payment.accepted.extra.name).toBe(ACCEPTED.extra.name);
+      return jsonResponse(200, { synthetic: true });
+    }) as unknown as typeof fetch;
+    expect((await payDoor({ door: selected, challenge, provider: p,
+      walletName: "synthetic", fetchImpl })).kind).toBe("delivered");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+});

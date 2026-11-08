@@ -18,6 +18,7 @@ import {
   type StoredUser,
   RESERVED_EMAILS,
   canonical,
+  currentAccountGeneration,
   hashPassword,
   issueToken,
   verifyToken,
@@ -228,22 +229,13 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     if (!stored || (await hashPassword(password, stored.salt)) !== stored.pw) {
       return json({ error: "invalid credentials" }, 401);
     }
-    const generation = validGeneration(stored.account_generation) ? stored.account_generation : purchaseSeed();
+    // Reauthentication qualifies this incarnation without a stale full-record KV write.
+    // Overlapping legacy logins derive the same lifecycle and cannot restore a deleted account.
+    const generation = await currentAccountGeneration(stored, email);
+    if (!generation) return json({error:"account lifecycle could not be qualified"},503);
     const sessionUser = { email: stored.email, name: stored.name, account_generation:generation };
     const token = await signedSession(ctx.env, sessionUser);
     if (!token) return signingUnavailable();
-    if (!validGeneration(stored.account_generation)) {
-      // One observed upgrade of the existing account record. KV has no CAS and is eventually consistent.
-      // Never return a token after an unknown write/readback, and never retry the write here.
-      if (!ctx.env.SOV_ARENA_STATE) return json({error:"account store unavailable"},503);
-      const updated = {...stored, account_generation:generation};
-      try {
-        await ctx.env.SOV_ARENA_STATE.put(userKey(stored.email),JSON.stringify(updated));
-        const observed = storedAccount(await ctx.env.SOV_ARENA_STATE.get(userKey(stored.email)),stored.email);
-        if (!observed || canonical(observed)!==canonical(updated))
-          return json({error:"account lifecycle upgrade unconfirmed; sign in again after checking the account"},503);
-      } catch { return json({error:"account lifecycle upgrade unconfirmed; no session returned"},503); }
-    }
     return json({token,user:{email:stored.email,name:stored.name}});
   }
 
@@ -303,7 +295,9 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     if (input && "response" in input) return input.response;
     const owner = await currentOwner(ctx.env, subject);
     if ("response" in owner) return owner.response;
-    if (owner.account.account_generation !== identity.account_generation)
+    const generation = await currentAccountGeneration(owner.account, subject);
+    if (!generation) return json({error:"account lifecycle could not be qualified"},503);
+    if (generation !== identity.account_generation)
       return json({error:"account lifecycle changed; sign in again"},401);
     const user = { email: owner.account.email, name: owner.account.name };
 

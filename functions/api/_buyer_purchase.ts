@@ -1,5 +1,5 @@
 import { bookkeepingBudget, BookkeepingTimeout, type BookkeepingBudget } from "./_bookkeeping_budget";
-import { verifyToken, userKey, type AuthEnv } from "./_authCrypto";
+import { verifyToken, userKey, currentAccountGeneration, type AuthEnv } from "./_authCrypto";
 import { BUYER_BODY_MAX_BYTES, buyerOwnerHash, buyerNonce, purchaseSeed, purchaseSha256, checkedPurchaseUrl,
   validGeneration, isBuyerNonce, type PurchaseIdentity, type PurchasePreparation } from "../../shared/buyerPurchase";
 
@@ -50,8 +50,10 @@ export async function currentBuyer(env:AuthEnv,request:Pick<BuyerRequest,"header
       typeof account.salt!=="string" || !account.salt || typeof account.pw!=="string" || !/^[a-f0-9]{64}$/i.test(account.pw) ||
       typeof account.created_at!=="string" || !Number.isFinite(Date.parse(account.created_at)))
     throw new BuyerHold("account record invalid",503);
-  if (account.email!==session.sub ||
-      account.account_generation!==session.account_generation)
+  if (account.email!==session.sub) throw new BuyerHold("account lifecycle changed; sign in again");
+  const generation=await currentAccountGeneration(account,session.sub);
+  if (!generation) throw new BuyerHold("account record invalid or lifecycle unavailable",503);
+  if (generation!==session.account_generation)
     throw new BuyerHold("account lifecycle changed; sign in again");
   return Object.freeze({subject:session.sub,generation:session.account_generation,
     owner_hash:await buyerOwnerHash(session.sub,session.account_generation)});

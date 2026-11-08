@@ -229,14 +229,18 @@ await test("prepare validates current lifecycle and binds target without payment
  assert.equal(response.status,200);const p=await response.json();assert.match(p.nonce,/^0x43534f31[0-9a-f]{56}$/);
  assert.equal(kv.calls.filter(c=>c[0]==="put").length,before);assert.equal(financialCalls.length,n);
 });
-await test("login upgrades legacy generation only after password and exact observed store readback",async()=>{
+await test("password login qualifies a stable legacy incarnation without a KV upgrade write",async()=>{
  const email="legacy-login@example.test",salt="synthetic-salt",password="fixture-password";
  const pw=await auth.hashPassword(password,salt);
- accounts.values.set(auth.userKey(email),JSON.stringify({email,name:"Legacy",salt,pw,created_at:"2026-11-01T00:00:00Z",unknown_preserved:{x:1}}));
+ const original=JSON.stringify({email,name:"Legacy",salt,pw,created_at:"2026-11-01T00:00:00Z",unknown_preserved:{x:1}});
+ accounts.values.set(auth.userKey(email),original);
+ const writes=accounts.calls.filter(c=>c[0]==="put").length;
  const response=await router.onRequest({request:request("https://councilof.ai/api/auth/login",null,"POST",JSON.stringify({email,password})),env,params:{path:"login"}});
  assert.equal(response.status,200);const result=await response.json();const verified=await auth.verifyToken(env,result.token);
  assert.ok(pure.validGeneration(verified.account_generation));
- assert.equal(JSON.parse(accounts.values.get(auth.userKey(email))).unknown_preserved.x,1);
+ assert.equal((await buyer.currentBuyer(env,request(target,result.token))).generation,verified.account_generation);
+ assert.equal(accounts.calls.filter(c=>c[0]==="put").length,writes);
+ assert.equal(accounts.values.get(auth.userKey(email)),original);
 });
 
 await test("owner ledger timeout never starts a late write after a delayed get",async()=>{
@@ -494,6 +498,58 @@ await test("MCP recovery refuses a supplied payment authorization rather than tr
  const result=await paidMcp.paidToolResult(mcpTool,{purchase_action:"recover",purchase_transaction:tx,x_payment:"synthetic-financial-authorization-not-dispatched"},"https://councilof.ai",mcpCaller);
  assert.equal(result.structuredContent.status,"BAD_ARGUMENTS");
  assert.equal(financialCalls.length,before);assert.equal(kv.calls.filter(c=>c[0]==="put").length,puts);
+});
+
+
+await test("overlapping legacy logins preserve recovery of an original paid output retained between them",async()=>{
+ const email="legacy-overlap-purchase@example.test",password="synthetic-password",salt="synthetic-overlap-salt";
+ const original=JSON.stringify({email,name:"Legacy overlap",salt,pw:await auth.hashPassword(password,salt),created_at:"2026-11-01T00:00:00Z"});
+ const accountStore=store();accountStore.values.set(auth.userKey(email),original);
+ const normalGet=accountStore.get.bind(accountStore);let reads=0,ready,release;
+ const captured=new Promise(resolve=>{ready=resolve;});
+ accountStore.get=async key=>{
+  if(++reads===2){ready();return new Promise(resolve=>{release=resolve;});}
+  return normalGet(key);
+ };
+ const localEnv={...env,SOV_ARENA_STATE:accountStore};
+ const login=()=>router.onRequest({request:request("https://councilof.ai/api/auth/login",null,"POST",JSON.stringify({email,password})),
+  env:localEnv,params:{path:"login"}});
+ const first=login(),second=login();await captured;
+ const oldNetwork=failNetwork,oldTransaction=fixtureTransaction;
+ try{
+  const firstResponse=await first;assert.equal(firstResponse.status,200);
+  const firstToken=(await firstResponse.json()).token;
+  const owner=await buyer.currentBuyer(localEnv,request(target,firstToken));
+  const prepared=await buyer.prepareBuyerRequest(owner,request(target,firstToken),target);
+  const payload=envelope(prepared.nonce,1,prepared.seed);
+  failNetwork=false;fixtureTransaction="fixture-legacy-overlap-transaction";
+  const settledPayment=await x402.verifyX402Payment(paidReq(payload,firstToken),localEnv,target,{
+   scheme:"exact",network:"base",maxAmountRequired:"10000",amount:"10000",asset:"0x"+"3".repeat(40),
+   payTo,resource:target,mimeType:"application/json",maxTimeoutSeconds:300,extra:{name:"USD Coin",version:"2"}});
+  assert.equal(settledPayment.ok,true);assert.ok(settledPayment.buyer);
+  const bytes=new TextEncoder().encode("synthetic original output before the second login");
+  const paid=await delivery.recordPaidResponse(new Response(bytes,{headers:{"content-type":"application/octet-stream"}}),{
+   kv,transaction:settledPayment.settlement.transaction,resource:target,confirmedPaid:true,successfulOutput:true,
+   paymentResponse:settledPayment.paymentResponse,buyer:settledPayment.buyer,buyerState:settledPayment.purchaseState});
+  assert.equal(paid.headers.get("x-csoai-output-retention-state"),"RETAINED");
+  release(original);
+  const secondResponse=await second;assert.equal(secondResponse.status,200);
+  const secondToken=(await secondResponse.json()).token;
+  assert.equal((await buyer.currentBuyer(localEnv,request(target,secondToken))).owner_hash,owner.owner_hash);
+  const before=financialCalls.length;failNetwork=true;
+  const base="https://councilof.ai/api/purchases/"+settledPayment.settlement.transaction;
+  const metadata=await api.handlePurchases(request(base+"?include_body=1",secondToken),localEnv);
+  assert.equal(metadata.status,200);const recovered=await metadata.json();
+  assert.equal(recovered.receipt.payment_response,settledPayment.paymentResponse);
+  assert.equal(recovered.result.body_base64,Buffer.from(bytes).toString("base64"));
+  const body=await api.handlePurchases(request(base+"/body",secondToken),localEnv);
+  assert.equal(body.status,200);assert.deepEqual(new Uint8Array(await body.arrayBuffer()),bytes);
+  assert.equal(financialCalls.length,before);
+  assert.equal(accountStore.calls.filter(c=>c[0]==="put").length,0);
+  assert.equal(accountStore.values.get(auth.userKey(email)),original);
+ }finally{
+  release?.(original);failNetwork=oldNetwork;fixtureTransaction=oldTransaction;
+ }
 });
 
 const passed=cases.filter(c=>c.passed).length;

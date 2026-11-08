@@ -1,4 +1,4 @@
-import { postSettlementStore, postObservationState } from "./_bookkeeping_budget";
+import { bookkeepingBudget, postSettlementStore, postObservationState } from "./_bookkeeping_budget";
 import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * GET /api/request-attestation — Tier 1: commission a signed card for a subject (× optional axis).
@@ -54,6 +54,9 @@ import { signPayload, cardV0, BOARD_ATTESTATION_DID } from "../_lib/cardSign";
 import { classifyCommissionTarget } from "./_commission_target";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
+
+/** Fulfillment has its own bounded write path, independent of optional observations. */
+export const COMMISSION_ENQUEUE_DEADLINE_MS = 2000;
 
 type Cell = { model: string; axis: string; card: string; card_url: string; signed: boolean; created?: string };
 
@@ -375,6 +378,12 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       unmeasured: ["root_inclusion"],
     },
   });
+  const queueEligible = targetEarly?.fulfillment === "QUEUED" && typeof targetEarly.model === "string" && !!targetEarly.model;
+  if (hasPaymentHeader(request) && queueEligible && !env.REVENUE_KV) {
+    return json({ schema: "csoai.request-attestation/0.2", state: "COMMISSION_QUEUE_UNAVAILABLE",
+      error: "commission queue is unavailable; this request did not attempt payment",
+      enqueued: false }, 503);
+  }
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   // The free preview is the same whether or not the caller pays: what already exists.
@@ -463,9 +472,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     model: target.model,
     bank: target.bank,
     fulfillment: target.fulfillment,
-    enqueued: true,
-    queue: "commission",
-    queue_ref,
+    enqueued: queueEligible,
+    queue: queueEligible ? "commission" : null,
+    queue_ref: queueEligible ? queue_ref : null,
     axis: axis || null,
     axis_known: knownAxis,
     settle: { network: payment.settlement?.network || null, transaction: tx, payer: payment.settlement?.payer || null },
@@ -525,45 +534,60 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     unmeasured: reserve.read ? ["fresh_run_schedule"] : ["fresh_run_schedule", "reserve"],
   });
 
-  // Tally + mill-visible enqueue when a store is bound. Absent store ⇒ nothing counted (null, never 0).
-  // Enqueue writes mill:commission:<subject> for GET /api/commission-queue. Failure never blocks receipt.
+  if (queueEligible) {
+    // The signed candidate is released only after the preferred mill intent is acknowledged.
+    // An older mill key overrides ras fallbacks in listCommissionQueue, so ras alone is insufficient.
+    // This budget starts HERE, not before the potentially slow reserve read.
+    const enqueueBudget = bookkeepingBudget(COMMISSION_ENQUEUE_DEADLINE_MS);
+    try {
+      if (!env.REVENUE_KV) throw new Error("commission store unavailable");
+      const kv = env.REVENUE_KV;
+      await enqueueBudget.run(() => kv.put(`mill:commission:${subject}`, JSON.stringify({
+        subject, subject_kind: target.subject_kind, model: target.model, bank: target.bank,
+        axis: axis || null, tx, as_of, receipt_sha: leaf.sha256, card_sha: leaf.sha256,
+        status: "QUEUED", fulfillment: target.fulfillment,
+      })), "put");
+      try {
+        await enqueueBudget.run(() => kv.put(`ras:${leaf.sha256}`, JSON.stringify({
+          subject, axis: axis || null, tx, as_of, enqueued: true, queue: "commission",
+          subject_kind: target.subject_kind, model: target.model, bank: target.bank,
+          fulfillment: target.fulfillment,
+        })), "put");
+      } catch {
+        // The acknowledged preferred intent remains discoverable. Never retry an uncertain put.
+      }
+    } catch {
+      // A failed/timed-out put may still commit. Do not serve an enqueued:true card or pay again.
+      return json({
+        schema: "csoai.request-attestation/0.2", state: "SETTLED_COMMISSION_ENQUEUE_UNCONFIRMED",
+        error: "commission enqueue could not be confirmed", enqueued: env.REVENUE_KV ? null : false,
+        queue_state: env.REVENUE_KV ? "UNKNOWN" : "UNAVAILABLE", queue_ref,
+        prepared_receipt_sha: leaf.sha256,
+        settle: { network: payment.settlement?.network || null, transaction: tx, payer: payment.settlement?.payer || null },
+        deliverable_state: "INCOMPLETE_QUEUE_UNCONFIRMED",
+        note: "Payment settled. The queue write is unconfirmed and may commit later. Check the original payment and commission queue before any further action; do not repeat payment.",
+      }, 500, payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {});
+    } finally {
+      enqueueBudget.clear();
+    }
+  }
+
+  // Optional issuance observations cannot prevent fulfillment or consume its write budget.
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await postSettlementStore(env.REVENUE_KV,payment).get("count:issuances")) || "0") + 1;
-      await postSettlementStore(env.REVENUE_KV,payment).put("count:issuances", String(n));
-      await postSettlementStore(env.REVENUE_KV,payment).put(
-        `ras:${leaf.sha256}`,
-        JSON.stringify({
-          subject,
-          axis: axis || null,
-          tx,
-          as_of,
-          enqueued: true,
-          queue: "commission",
-          subject_kind: target.subject_kind,
-          model: target.model,
-          bank: target.bank,
+      const observations = postSettlementStore(env.REVENUE_KV, payment);
+      if (!queueEligible) {
+        // SKU/wrapper receipts are valid outputs, never model-mill tasks.
+        await observations.put(`ras:${leaf.sha256}`, JSON.stringify({
+          subject, axis: axis || null, tx, as_of, enqueued: false, queue: null,
+          subject_kind: target.subject_kind, model: target.model, bank: target.bank,
           fulfillment: target.fulfillment,
-        }),
-      );
-      await postSettlementStore(env.REVENUE_KV,payment).put(
-        `mill:commission:${subject}`,
-        JSON.stringify({
-          subject,
-          subject_kind: target.subject_kind,
-          model: target.model,
-          bank: target.bank,
-          axis: axis || null,
-          tx,
-          as_of,
-          receipt_sha: leaf.sha256,
-          card_sha: leaf.sha256,
-          status: "QUEUED",
-          fulfillment: target.fulfillment,
-        }),
-      );
+        }));
+      }
+      const n = Number((await observations.get("count:issuances")) || "0") + 1;
+      await observations.put("count:issuances", String(n));
     } catch {
-      /* a tally/enqueue failure never blocks a paid deliverable */
+      /* missing optional observations never retract the acknowledged commission intent */
     }
   }
 
