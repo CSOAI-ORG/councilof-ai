@@ -1,4 +1,5 @@
 import { createElement, useEffect, useState } from "react";
+import SafeExportReview from "./SafeExportReview";
 
 /** The same public-source reader and synthetic lesson runner used by the private
  * research hub. Native Council OS shell; no cross-origin iframe or private data.
@@ -20,7 +21,8 @@ export default function DashboardEvidenceLearningPane() {
     if (!script) {
       script = document.createElement("script");
       script.type = "module";
-      script.src = "/evidence-learning/element.js?v=0.2.0";
+      // Asset revision changes with rendered code; local state stays at protocol0.2.0.
+      script.src = "/evidence-learning/element.js?v=0.2.0&rev=23540167dc02";
       script.dataset.councilEvidenceLearning = "1";
     }
     script.addEventListener("load", loaded);
@@ -50,6 +52,7 @@ export default function DashboardEvidenceLearningPane() {
         </div>
       )}
       {state === "ready" && createElement("council-evidence-learning")}
+      <SafeExportReview />
     </section>
   );
 }

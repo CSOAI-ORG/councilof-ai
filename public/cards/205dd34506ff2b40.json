@@ -1,0 +1,77 @@
+{
+  "card": {
+    "as_of": "2026-11-06T14:36:24Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "door": "https://councilof.ai/api/wrapper/asset/dai",
+      "http": 200,
+      "kind": "csoai.x402-door-exception/0.1",
+      "not_delivery_proof": true,
+      "notes": [
+        "expected 402 challenge, got HTTP 200"
+      ],
+      "paid_for": "issuance",
+      "state": "DISCOVERED"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "205dd34506ff2b4091a9161194b27485b9ca7eacb54b8dbd7ad4cfded27af2a5",
+    "sig_ed25519": "c524e55f021f37a1a2350ef32939de289981851cc6bead61051c23ef4b85e5f5d1ddaa8dc73faec10d033a651f59b6defea4921774da93c41fc0ade2e9e2500c",
+    "source_urls": [
+      "https://councilof.ai/api/wrapper/asset/dai",
+      "https://councilof.ai/interop/x402-door-conformance-2026-09/report.json"
+    ],
+    "subject": "x402 door exception: https://councilof.ai/api/wrapper/asset/dai",
+    "surface": "public.notice",
+    "tags": [
+      "x402",
+      "conformance",
+      "exception"
+    ],
+    "unmeasured": [
+      "fulfillment_bytes"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "9a6af7a3a4f86d6224df70d6227fa82f41f0a3aed2e1d1eba11a96061fa1e881",
+    "6f3488b383c3ecbdb6366eee38683a0278158fa3751b3bf0ff87422d118a56d7",
+    "cc9077b2f54017c273d604eed17e01852407c8edcc88755f1950ea04f609c0bb",
+    "5bdd98686c6f801609e672cce1acb100196e8842f6b835614a3bde8f27064bb2",
+    "73b5cde3a2d5d47a17d9f637207782457f5060cce8d96fc319e8cb734342911b",
+    "eabb451f42284199f3d0aaba0280251ed1deb3ad9a4c6c6a3bb2a299f8d98500",
+    "b3b568458828ea0b00d1a94be2ad9a55de9c5f690e0022110cc04e271b337d79",
+    "bc684cc0db4dc624e1ebfec04e37f60951dba4004b5d8a67e1c88b62db521bcd",
+    "d597ef7d16c1efe2952119b07c89a3d92ef2b8e287b8dbb4c4665d92174104ad"
+  ]
+}

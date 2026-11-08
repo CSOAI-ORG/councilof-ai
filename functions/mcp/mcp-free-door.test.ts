@@ -91,7 +91,7 @@ describe("/mcp/free serves exactly the free tools", () => {
     const expected = (FREE as { tools: Tool[] }).tools.map(t => presented.has(t.name) ? {
       ...t, ...(t.name === "board_totals" ? { title: "Council of AI · MEOK companion" } : {}),
       _meta: { ui: { resourceUri: PANEL_URI }, ...(t.name === "board_totals" ? {
-        "openai/ui": { entrypoints: [{ type: "thread" }] },
+        "openai/ui": { entrypoints: [{ type: "global" }, { type: "thread" }] },
       } : {}) },
     } : t);
     expect(tools).toEqual(expected);

@@ -1,0 +1,155 @@
+name: Lane Board Truth
+
+# council-os/LANES.md is a LIVE CLAIM REGISTER. Its own first line says "live lane claims.
+# Check before starting ANY work", and every row's state cell is a claim about the present.
+#
+# MEASURED 2026-11-07: eleven rows claimed `open` whose pull request had already merged.
+# Three of them were from the same morning (#4034 merged 05:36:17Z, #4037 05:48:51Z,
+# #4041 06:22:55Z); one had been claiming `open` since 27 October. Every one of the eleven
+# belonged to one owner, and no other owner's row was false. A lane that reads a false
+# `open` will either avoid a territory that is already finished, or re-do work that has
+# already landed. Nothing noticed: the board is read by people, and people read it for
+# what a lane is DOING, not for what has already landed.
+#
+# WHY THIS DOES NOT BLOCK A PULL REQUEST. The same rule as the interop index drift
+# reporter: a rule that is red on every merge protects nothing, and a board is corrected by
+# a HUMAN JUDGEMENT about what a row should now claim — this instrument only says which
+# claims disagree with the repository's own record. So it measures and REPORTS, into one
+# issue, and never fails a pull request.
+#
+# THREE STATES, NOT TWO. `measured` (every comparable claim was compared with the
+# repository's record), `false` (a claim disagrees), and `unknown` (the comparison could
+# not be made — the API was unreachable, or the board could not be read). ABSENCE IS A
+# STATE: an unmeasurable board is never reported as "no false claims". That distinction is
+# the whole point — a check that could not see must say so rather than pass. The exit code
+# carries it: 0 measured and agreeing, 1 measured and false, 2 could not measure.
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "council-os/LANES.md"
+      - "scripts/surface/lane-truth-check.mjs"
+      - ".github/workflows/lane-truth.yml"
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  lane-truth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Selftest first, always. A guard that has stopped working must fail loudly rather
+      # than pass everything silently — and this one proves each verdict against a FIXTURE,
+      # so it needs no network and cannot be fooled by a quiet API.
+      - name: Selftest — prove the verdicts against a fixture
+        run: node scripts/surface/lane-truth-check.mjs --selftest
+
+      - name: Measure the board against the repository's own record
+        id: measure
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # GitHub runs a `run:` block with `bash -e`, so a non-zero exit ABORTS the step.
+          # The measurement's exit code IS its result — 0 agreeing, 1 false, 2 unmeasurable
+          # — so it must be CAPTURED, not fatal.
+          set -uo pipefail
+          set +e
+          node scripts/surface/lane-truth-check.mjs --json lane-truth.json > lane-truth.txt 2>&1
+          RC=$?
+          set -e
+          cat lane-truth.txt
+          echo "rc=$RC" >> "$GITHUB_OUTPUT"
+
+          STATE="$(sed -n 's/^state: //p' lane-truth.txt | head -1)"
+          # NOT `FALSE`: in YAML, `FALSE:` as a mapping key is the BOOLEAN `false`, so the
+          # environment variable arrives named `false` and `$FALSE` is unbound under `set -u`.
+          # That is not a hypothetical — it is how this workflow's first run failed.
+          FALSE_CLAIMS="$(sed -n 's/^false claims: //p' lane-truth.txt | head -1)"
+          TOTAL="$(sed -n 's/^lane board: \([0-9]*\) rows.*/\1/p' lane-truth.txt | head -1)"
+          COMPARABLE="$(sed -n 's/^lane board: [0-9]* rows, \([0-9]*\) comparable/\1/p' lane-truth.txt | head -1)"
+          # The summary lines ARE the measurement. If they are absent, the state is UNKNOWN,
+          # which is a state and not a zero: a check that could not measure must not report
+          # "no false claims".
+          if [ -z "$STATE" ] || [ -z "$FALSE_CLAIMS" ]; then
+            echo "state=unknown" >> "$GITHUB_OUTPUT"
+            echo "false_claims=unknown" >> "$GITHUB_OUTPUT"
+            echo "rows=unknown" >> "$GITHUB_OUTPUT"
+            echo "comparable=unknown" >> "$GITHUB_OUTPUT"
+            echo "::warning::the lane-truth check printed no summary — the state is unknown, not zero"
+            exit 0
+          fi
+          echo "state=$STATE" >> "$GITHUB_OUTPUT"
+          echo "false_claims=$FALSE_CLAIMS" >> "$GITHUB_OUTPUT"
+          echo "rows=${TOTAL:-unknown}" >> "$GITHUB_OUTPUT"
+          echo "comparable=${COMPARABLE:-unknown}" >> "$GITHUB_OUTPUT"
+
+      - name: Report the board's truth into one issue
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATE: ${{ steps.measure.outputs.state }}
+          # NOT `FALSE`: YAML reads `FALSE:` as the boolean `false`, so the variable would
+          # arrive named `false` and `$FALSE` would be unbound under `set -u`.
+          FALSE_CLAIMS: ${{ steps.measure.outputs.false_claims }}
+          ROWS: ${{ steps.measure.outputs.rows }}
+          COMPARABLE: ${{ steps.measure.outputs.comparable }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- lane-board-truth -->"
+          if [ "$STATE" = "unknown" ]; then
+            TITLE="lane board: truth could not be measured (state: unknown)"
+          elif [ "$FALSE_CLAIMS" = "0" ]; then
+            TITLE="lane board: every claim agrees with the record (state: ${STATE})"
+          else
+            TITLE="lane board: ${FALSE_CLAIMS} false claim(s) (state: ${STATE})"
+          fi
+          BODY="$(printf '%s\n\n_Measured by `.github/workflows/lane-truth.yml` on %s at %s (%s)._\n\n`council-os/LANES.md` is a live claim register. This run compared every row whose state cell is a machine state (`open`, `merged`, `closed`) with the repository own record of the pull request that row names.\n\n| | count |\n|---|---:|\n| rows on the board | %s |\n| rows with a comparable claim | %s |\n| FALSE claims | %s |\n\nState: **%s**.\n\nA false claim is a row whose state cell disagrees with the pull request it names. The repair is a human judgement: correct the cell to what is true, and keep the row — a lane row is a live claim, not a dated record, so correcting it is correct. A claim may carry its own evidence (`merged (via #3570)`), and the evidence is what is checked.\n\nThis never fails a pull request. A board is corrected by judgement, not by a rule that would be red on every merge.\n\n```\n%s\n```\n' "$MARKER" "$(date -u +%FT%TZ)" "$GITHUB_REF" "${GITHUB_SHA:0:12}" "$ROWS" "$COMPARABLE" "$FALSE_CLAIMS" "$STATE" "$(cat lane-truth.txt 2>/dev/null || echo 'no output')")"
+
+          NUM="$(gh issue list --state open --limit 100 --json number,body \
+                  --jq "map(select(.body != null and (.body | contains(\"$MARKER\")))) | .[0].number // empty" || true)"
+          if [ -n "$NUM" ]; then
+            gh issue edit "$NUM" --title "$TITLE" --body "$BODY"
+            echo "refreshed issue #$NUM -> $TITLE"
+          else
+            gh issue create --title "$TITLE" --body "$BODY" || true
+            echo "opened the lane-truth issue"
+          fi
+
+      - name: Say what the board claims on the pull request (never blocks it)
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATE: ${{ steps.measure.outputs.state }}
+          FALSE_CLAIMS: ${{ steps.measure.outputs.false_claims }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- lane-board-truth-comment -->"
+          if [ "$STATE" = "unknown" ]; then
+            BODY="$(printf '%s\n\nThe lane board truth could not be MEASURED (state: unknown). An unmeasured state is not a clean one: the measurement is in the workflow log.\n' "$MARKER")"
+          elif [ "$FALSE_CLAIMS" = "0" ]; then
+            BODY="$(printf '%s\n\nEvery machine-state claim on `council-os/LANES.md` agrees with the repository own record of the pull request it names (state: %s).\n' "$MARKER" "$STATE")"
+          else
+            BODY="$(printf '%s\n\n`council-os/LANES.md` carries **%s** claim(s) that disagree with the pull request they name (state: %s):\n\n```\n%s\n```\n\nA lane row is a live claim, so correcting it is correct — but the correction is a judgement about what the row should now say, and it is the lane own. This comment does not block the pull request.\n' "$MARKER" "$FALSE_CLAIMS" "$STATE" "$(grep -E '^  line ' lane-truth.txt 2>/dev/null || echo 'see the workflow log')")"
+          fi
+          NUM="$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+                  --jq "map(select(.body != null and (.body | contains(\"$MARKER\")))) | .[0].id // empty" | head -1 || true)"
+          if [ -n "$NUM" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$NUM" -f body="$BODY" > /dev/null
+            echo "refreshed comment $NUM"
+          else
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$BODY" > /dev/null
+            echo "commented on #$PR"
+          fi

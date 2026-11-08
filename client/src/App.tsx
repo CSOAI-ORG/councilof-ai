@@ -127,6 +127,7 @@ const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
 const MotionLab = lazy(() => import("./pages/MotionLab"));
 const RemediationPartners = lazy(() => import("./pages/RemediationPartners"));
 const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
 const FrameworkHive = lazy(() => import("./pages/FrameworkHive"));
 const CouncilModelCard = lazy(() => import("./pages/CouncilModelCard"));
 const CouncilSystemCard = lazy(() => import("./pages/CouncilSystemCard"));
@@ -641,7 +642,7 @@ function AppShell() {
                   <Route path="/motion-lab" component={MotionLab} />
                   <Route path="/remediation-partners" component={RemediationPartners} />
                   <Route path="/login" component={Login} />
-                  <Route path="/signup" component={ContentReviewNotice} />
+                  <Route path="/signup" component={Signup} />
                   <Route path="/welcome" component={ContentReviewNotice} />
                   <Route path="/hive/:slug" component={FrameworkHive} />
                   <Route path="/hive" component={FrameworkHive} />

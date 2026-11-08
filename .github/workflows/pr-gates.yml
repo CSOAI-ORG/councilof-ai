@@ -133,6 +133,25 @@ jobs:
           THIRD_PARTY_GUARD_IDS: ${{ secrets.THIRD_PARTY_GUARD_IDS }}
         run: python3 scripts/privacy/test_third_party_identifiers.py -v
 
+  # 7 Nov 2026: .github/workflows/runpod-intake.yml called
+  # scripts/resolve_runpod_trusted_bank.py with flags the script never had ("--index-out"
+  # and "--index"), while the script's real CLI is two subcommands, "stage" and "lookup".
+  # argparse rejected both calls with exit 2, so the staging step never produced a
+  # trusted-bank directory and the verify loop -- which swallowed the error with
+  # 2>/dev/null -- reported EVERY run as HOLD_CONTROL_PLANE_BANK_ABSENT. A tool error
+  # was being published as a verdict about the banks. Neither call site had ever run,
+  # so nothing caught it. This test reads the subcommand set from the script's own
+  # --help, so it cannot drift away from the script it guards.
+  runpod-intake-wiring:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: The runpod-intake workflow calls the resolver with a CLI that exists
+        run: python3 -m unittest discover -s scripts -p test_runpod_intake_wiring.py -v
+
   # 26 Oct 2026: the pending public-root candidate could not be reconciled with master and every
   # run of public-root-candidate-upgrade.yml failed there, so the ONE public root had not advanced
   # for over nine hours. Two faults, both in the reconcile step: the merge died on a content
@@ -196,6 +215,31 @@ jobs:
       - name: Disclosure sweep rules - selftest
         run: python3 scripts/claimguard-estate-sweep.py --selftest
 
+  # 7 Nov 2026: the published-surface audit compared a page's canonical link with the url that
+  # was ASKED for, while urllib follows redirects and hands it the FINAL page's body. So
+  # /pricing/ — which answers 308 to /dashboard/?tab=measured&task=pricing-overview and carries
+  # the canonical /dashboard/, which is CORRECT — was reported as a MEDIUM "canonical points at
+  # a different path" against a page that is not defective. A checker that cries wolf on a
+  # correct page teaches its reader to ignore it. The same tool's Content-Security-Policy rule
+  # was a branch whose body was `pass`, so the machine surface (/api/gspc, /api/state, /api/cards
+  # answered with five security headers and NO policy at all) went unreported.
+  #
+  # The audit itself stays an OPERATOR tool — it touches the network. Its RULES are the part
+  # that can be a gate, and they are tested here offline against the live shapes measured on
+  # 2026-11-07: the /pricing/ redirect, the canonical on the page served there, and the three
+  # API surfaces that carried no policy. This job is RED against the unfixed script and green
+  # against the fixed one, which is what makes the green mean something.
+  published-surface-audit-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Published-surface audit rules - selftest
+        run: python3 -m unittest discover -s scripts -p test_published_surface_audit.py -v
+
   # A PR marked "do not merge" must not show green. Lanes self-merge with the shared token and a
   # hold lived only in prose, so this makes the marker a failing check. Reads the event payload
   # only (labels + title from GITHUB_EVENT_PATH): no token, no API, no network. Fails on a label
@@ -244,7 +288,7 @@ jobs:
           else
             echo "coliseum_live=false" >> "$GITHUB_OUTPUT"
           fi
-          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|mcp/meok-gspc-layer0/|packages/council-panel/|packages/evidence-fabric/schema/evidence-event-0\.1\.schema\.json$|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$|\.github/workflows/native-council-panel\.yml$|\.github/workflows/deploy\.yml$)' || true)
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|e2e/|public/|functions/|scripts/|mcp/meok-gspc-layer0/|packages/council-panel/|packages/evidence-fabric/schema/evidence-event-0\.1\.schema\.json$|spaces/gspc-board/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|vitest\.config\.ts$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$|\.github/workflows/bot-checks-sweeper\.yml$|\.github/workflows/native-council-panel\.yml$|\.github/workflows/deploy\.yml$)' || true)
           if [ -n "$gated" ]; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
             echo "gated paths in this PR:"; printf '  %s\n' $gated
@@ -261,6 +305,12 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
+
+      - name: Release follow-on trigger contract and negative controls
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node --test scripts/workflow-trigger-coupling.node-test.mjs
+          node scripts/workflow-trigger-coupling.mjs
 
       - name: Outward claims — offline manifest contract selftest
         if: steps.scope.outputs.gated == 'true'
@@ -912,6 +962,8 @@ jobs:
           # opentimestamps-client: test_ots_restamp_ledger.py builds detached proofs offline and runs
           # the release gate's own .ots check over them.
           python3 -m pip install -q pytest cryptography pyarrow huggingface_hub opentimestamps-client
+          # Qualify candidate sweeper code before it can dispatch from master.
+          python3 -m unittest discover -v -s scripts -p test_bot_checks_sweeper.py
           node --test scripts/claims/maintenance-schedule-state.node-test.mjs scripts/claims/signature-projection.node-test.mjs
           node --test scripts/claims/reread-extractor.node-test.mjs scripts/claims/reread-presence.node-test.mjs
           node scripts/claim-maintenance-register.mjs --check

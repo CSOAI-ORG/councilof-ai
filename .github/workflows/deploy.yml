@@ -38,20 +38,12 @@ jobs:
       - name: No committed conflict markers (blocks the 2026-08-24 build break)
         run: node scripts/no-conflict-markers.mjs
 
-      # Trigger-coupling guard. workflow_run couples a follow-on workflow to THIS
-      # workflow by its `name:` string and nothing else. A rename here with no
-      # matching edit in the five followers stops them silently — no red anywhere
-      # (found 2026-09-20 in a local rename lane). Check the coupling here, in the
-      # renamed file's own guard chain, where a rename cannot avoid running.
-      - name: Trigger-coupling guard — follow-on workflows pin this workflow's exact name
+      # Filter values are GitHub globs: a literal + in this name must be escaped.
+      # Parse active trigger lists, not comments or literal runtime conditions.
+      - name: Trigger-coupling guard — five exact literal workflow filters
         run: |
-          set -eu
-          name=$(sed -n 's/^name: *//p' .github/workflows/deploy.yml | head -1 | tr -d '"' | tr -d "'")
-          for f in post-deploy-verify claims-e2e sov-stack-e2e hf-gspc-surface-sync gspc-spray; do
-            grep -qF "$name" ".github/workflows/$f.yml" \
-              || { echo "::error::$f.yml no longer references this workflow's name — a rename here must be applied there too"; exit 1; }
-          done
-          echo "trigger-coupling OK: 5 followers pin '$name'"
+          node --test scripts/workflow-trigger-coupling.node-test.mjs
+          node scripts/workflow-trigger-coupling.mjs
 
       - name: Wallet secret gate — no private key material in tracked release inputs
         run: |
