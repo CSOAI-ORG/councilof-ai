@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Decision rehearsal · Council of AI</title>
+  <link rel="stylesheet" href="/app.css"><script type="module" src="/app.js"></script>
+</head>
+<body>
+<header><a href="https://councilof.ai/globe" rel="noreferrer">Council of AI · Globe</a><span class="pill">Local integration candidate</span></header>
+<main>
+  <section class="intro"><p class="eyebrow">Explore · challenge · replay</p><h1>Rehearse the decision.<br>Keep the evidence.</h1>
+  <p>Three fictional suppliers. One revoked evidence record. See whether the decision changes when the evidence does.</p>
+  <p class="boundary">Synthetic practice. No live models, real people, purchases or external actions.</p></section>
+  <section class="layout">
+    <div class="card">
+      <h2>1. Choose the experiment</h2>
+      <form id="scenario">
+        <label>Intervention<select name="intervention"><option value="evidence-aware">Check evidence at decision time</option><option value="baseline">Keep the initial evidence snapshot</option></select></label>
+        <div class="pair"><label>Synthetic population<input name="population" type="number" min="1" max="10000" value="1000" required></label>
+        <label>Replay seed<input name="seed" type="number" min="0" max="4294967295" value="42" required></label></div>
+        <p>Supplier A's evidence is revoked at tick 3. This is a declared fixture rule.</p>
+        <button id="run">Run rehearsal</button>
+      </form>
+      <p id="status" role="status" aria-live="polite">Ready. Select an intervention and run.</p>
+      <button id="clear" class="secondary">Clear this view</button>
+    </div>
+    <div class="card globe-card"><h2>2. Explore the result</h2>
+      <canvas id="globe" width="640" height="440" aria-label="Illustrative globe showing sampled synthetic population records"></canvas>
+      <p id="sample">The globe will show up to 120 synthetic records.</p>
+      <label>Globe rotation<input id="rotation" type="range" min="-180" max="180" value="45"></label>
+      <label>Inspect a sampled record<select id="node" disabled><option value="">No record selected</option></select></label>
+      <p id="node-detail">Choose a sampled record after running.</p>
+      <label>Replay timeline<input id="tick" type="range" min="0" max="9" value="0" disabled></label>
+      <p id="frame">No result yet.</p><div id="counts" class="metrics"></div>
+    </div>
+  </section>
+  <section class="layout">
+    <div class="card"><h2>3. Inspect the reasoning</h2>
+      <div id="messages"><p>Agent-role messages will appear here. These roles use scripted fixture messages.</p></div>
+      <h3>What to practise next</h3><p id="lesson">Run the two interventions, then compare the exported bundles.</p>
+      <details><summary>Decision trace and counts</summary><pre id="trace">No trace.</pre></details>
+    </div>
+    <div class="card"><h2>4. Save, reopen and compare</h2>
+      <button id="download" disabled>Save evidence bundle</button>
+      <label>Reopen a saved bundle<input id="reopen" type="file" accept=".json,application/json"></label>
+      <p id="verify-result" role="status">No saved bundle checked.</p>
+      <div class="pair"><label>First comparison bundle<input id="first" type="file" accept=".json,application/json"></label>
+      <label>Second comparison bundle<input id="second" type="file" accept=".json,application/json"></label></div>
+      <button id="compare" class="secondary" disabled>Compare interventions</button>
+      <p id="compare-result" role="status">Use the same seed and population for both interventions.</p>
+      <p class="small">Replay checks internal consistency against the local engine. Bundles are unsigned and do not establish human authority, real-world accuracy or GSPC admission.</p>
+    </div>
+  </section>
+  <section class="card"><h2>Accessible result table</h2><p>The table contains the complete aggregate timeline independently of the globe.</p>
+    <div class="table-wrap"><table><thead><tr><th>Tick</th><th>A</th><th>B</th><th>C</th><th>Undecided</th><th>Revoked A selections</th></tr></thead><tbody id="rows"></tbody></table></div>
+  </section>
+</main><footer>Local, synthetic and unmeasured · Measurement, never certification · <a href="https://councilof.ai/dashboard?tab=evidence-learning">Evidence and learning</a></footer>
+</body></html>

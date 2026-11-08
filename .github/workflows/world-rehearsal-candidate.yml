@@ -1,0 +1,46 @@
+name: World rehearsal candidate
+
+on:
+  pull_request:
+    paths:
+      - 'packages/world-rehearsal/**'
+      - 'packages/evidence-fabric/event.py'
+      - '.github/workflows/world-rehearsal-candidate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            packages/world-rehearsal
+            packages/evidence-fabric
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pinned source, engine and HTTP qualification
+        run: |
+          python3 packages/world-rehearsal/scripts/check_upstreams.py
+          python3 -B -m unittest discover -s packages/world-rehearsal/tests -p 'test_*.py'
+      - name: Install isolated UI test dependencies
+        run: |
+          npm install --prefix /tmp/rehearsal-tests --ignore-scripts --no-audit --no-fund jsdom@26.1.0 @playwright/test@1.57.0
+          node /tmp/rehearsal-tests/node_modules/@playwright/test/cli.js install --with-deps chromium
+      - name: DOM and native browser journeys
+        env:
+          NODE_PATH: /tmp/rehearsal-tests/node_modules
+        run: |
+          node packages/world-rehearsal/tests/journey.cjs
+          node packages/world-rehearsal/tests/browser.cjs
+      - name: Package candidate source with canonical dependency
+        run: python3 packages/world-rehearsal/scripts/package_candidate.py --output /tmp/world-rehearsal-candidate.zip

@@ -1,0 +1,17 @@
+{
+  "schema": "csoai.candidate-qualification/0.1",
+  "observed_on": "2026-11-08",
+  "state": "LOCAL_CANDIDATE",
+  "base_commit": "ff0fbe8f3ad8aca4d02aa66d41e709b573ca091a",
+  "python": {"version": "3.12", "tests": 23, "state": "PASS", "scope": "engine, canonical events, deterministic replay, tamper refusal, comparison, SwarmChat token and membership checks, local HTTP host/origin and input boundaries, simulated runtime protocol"},
+  "dom_http_journey": {"state": "PASS", "journeys": 11, "scope": "actual UI JavaScript, forms, loopback API, fixture chat records, exported bytes on disk, replay, comparisons, changed-input and in-flight-result clearing", "stubs": ["canvas context", "native download click"]},
+  "upstream_integrity": {"state": "PINNED_BYTES_MATCH", "third_party_files": 10, "source_comparison": "Seven SwarmChat modules and licenses byte-compared against pinned clones; Event/Tempo class AST compared against source notebook cell 61"},
+  "dependency_complete_archive": {"state": "PASS", "scope": "Fresh extraction, every source hash, 23 Python tests and CLI run/verify round trip"},
+  "native_browser": {"state": "BLOCKED_ENVIRONMENT", "reason": "Bundled Playwright Chromium absent; installed Chromium cannot create its process socket under this environment policy. No visual, responsive-layout or native-download pass is claimed.", "next": "Run tests/browser.cjs in a browser-capable environment; candidate workflow is provided."},
+  "real_kiri": "NOT_RUN",
+  "human_approval_to_external_effect": "NOT_RUN",
+  "production_integration": "NOT_WIRED",
+  "deployed": false,
+  "model_calls": 0,
+  "upstream_endorsement": "NOT_ESTABLISHED"
+}
