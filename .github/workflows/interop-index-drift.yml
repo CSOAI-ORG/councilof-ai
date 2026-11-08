@@ -50,6 +50,17 @@ jobs:
         with:
           python-version: "3.12"
 
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      # The measurement asks THE INJECTOR what it would write for each HTML page, and the
+      # injector imports scripts/surface/commit-board.mjs, which imports esbuild. Without the
+      # dependencies installed the helper dies with ERR_MODULE_NOT_FOUND and the builder
+      # treats those digests as UNCHECKABLE — so the 53 HTML rows are never compared and the
+      # measurement is quietly PARTIAL, which is the one thing this instrument must not be.
+      - name: Install the dependencies the measurement imports
+        run: npm ci --no-audit --no-fund
+
       - name: Measure the corpus and compare it with the committed index
         id: measure
         run: |

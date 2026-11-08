@@ -25,6 +25,20 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
 
+      # The measurement asks THE INJECTOR what it would write for each HTML page, and the
+      # injector imports scripts/surface/commit-board.mjs, which imports esbuild. Without the
+      # dependencies installed the helper dies with ERR_MODULE_NOT_FOUND and the builder
+      # treats those digests as UNCHECKABLE — so the 53 HTML rows are never compared, and the
+      # llms views cannot be regenerated at all.
+      #
+      # MEASURED 2026-11-07: this workflow had NEVER succeeded. Both of its runs (17:50Z and
+      # 22:15Z) died here, on `node scripts/llms-txt.mjs`, AFTER the python measurement had
+      # already succeeded — so the re-measurement was computed and then thrown away, the
+      # corpus drifted (16,341 committed rows against 16,365 measured), and the index's
+      # pointer was never repaired.
+      - name: Install the dependencies the measurement imports
+        run: npm ci --no-audit --no-fund
+
       # WHY THIS EXISTS. public/interop/file-index.json is a MEASUREMENT of the published interop
       # tree: every path, with its size, its sha256 and how it is served. Its promise is that a
       # reader can fetch a path and hash it and get what the estate published. It was committed on
