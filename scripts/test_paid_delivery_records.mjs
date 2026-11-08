@@ -685,8 +685,10 @@ await test('actual feed response seam retains paid body on storage ERROR',async(
  assert.equal(out.headers.get('x-payment-response'),'opaque-echo');
 });
 const paidTools=JSON.parse(current('functions/mcp/paid-tools.json'));
+const inputBudgetModule=await moduleFrom(current('functions/mcp/_input_budget.ts'));
 const paidModule=await moduleFrom(current('functions/mcp/_paid.ts'),{
  './paid-tools.json':{default:paidTools},
+ './_input_budget':inputBudgetModule,
  './_handlers':{rpc:(id,result)=>new Response(JSON.stringify({jsonrpc:'2.0',id,result}))}
 });
 const feedTool=paidTools.tools.find(x=>x.csoai.route==='/api/request-attestation');
@@ -730,7 +732,7 @@ await test('paid MCP authorization refuses automatic redirects',async()=>{
  const built=paidModule.namespace.buildPaidRequest(feedTool.name,{subject:'fixture-subject',x_payment:'fixture-payment'},'https://example.test');
  assert.equal(built.req.redirect,'manual');assert.equal(built.req.headers.get('x-payment'),'fixture-payment');assert.equal(new URL(built.req.url).origin,'https://example.test');
 });
-const testedPaths=new Set([...Object.keys(FROZEN_SEAMS),'functions/api/_x402_delivery_record.ts','functions/api/_x402_receipt.ts','functions/api/receipts/index.ts','functions/mcp/_paid.ts','scripts/test_paid_delivery_records.mjs','scripts/fixtures/paid_delivery_seams.json']);
+const testedPaths=new Set([...Object.keys(FROZEN_SEAMS),'functions/api/_x402_delivery_record.ts','functions/api/_x402_receipt.ts','functions/api/receipts/index.ts','functions/mcp/_paid.ts','functions/mcp/_input_budget.ts','scripts/test_paid_delivery_records.mjs','scripts/fixtures/paid_delivery_seams.json']);
 const source_sha256=Object.fromEntries([...testedPaths].sort().map(p=>[p,digest(Buffer.from(current(p)))]));
 const test_revision=execFileSync('git',['-c','protocol.allow=never','rev-parse','HEAD'],{encoding:'utf8'}).trim();
 console.log(JSON.stringify({offline:true,test_revision,source_sha256,network_policy:'no external fetch; explicit synthetic transports only',passed:passed.length,cases:passed,paid_api_calls:0,production_changed:false,scope:'helper,27 advertised paid response-emission seams,4 unchanged free entrypoints,full wrapper changes/proof/provider/evidence mocks,actual MCP adapter; other full-route integrations and live acceptance unverified'}));

@@ -6,6 +6,7 @@
  */
 import { verifyCard, anchorsFromDid, cardState, type Anchor } from "../_lib/cardVerify";
 import GSPC_TOOLS from "./gspc-tools.json";
+import { MCP_MAX_TOOL_INPUT_ELEMENTS, readBoundedJsonText, withinJsonBudget, withinValueBudget } from "./_input_budget";
 import {
   CARD_ID_RE,
   FETCHABLE_ORIGINS,
@@ -40,11 +41,12 @@ async function verifyCardThreeState(
   origin: string,
 ) {
   const raw = args.card ?? args.record ?? args.json ?? args.url ?? args.input;
-  const { card, error, resolved } = await coerceCard(raw, origin);
+  const { card, error, errorCode, resolved } = await coerceCard(raw, origin);
   if (error) {
     return {
       state: "UNCHECKABLE",
       reason: error,
+      ...(errorCode ? { reasons: [errorCode] } : {}),
       ...(resolved ? { resolved_from: resolved } : {}),
       not_a_certification: true,
     };
@@ -262,11 +264,22 @@ async function loadAnchors(origin: string): Promise<Anchor[]> {
  * {origin}/signed/cards/{id}.json. `resolved` names what was fetched, so the verdict can be held
  * to the id that was asked about.
  */
+const cardBudgetError = {
+  error: "Card input exceeds the structure limit; verification was not attempted.",
+  errorCode: "input_budget_exceeded",
+};
+function checkedCard(card: unknown) {
+  return withinValueBudget(card) ? { card } : cardBudgetError;
+}
+function parseCardJson(text: string) {
+  return withinJsonBudget(text, MCP_MAX_TOOL_INPUT_ELEMENTS) ? checkedCard(JSON.parse(text)) : cardBudgetError;
+}
+
 export async function coerceCard(
   raw: unknown,
   origin = "https://councilof.ai",
-): Promise<{ card?: unknown; error?: string; resolved?: { id: string; url: string } }> {
-  if (raw && typeof raw === "object") return { card: raw };
+): Promise<{ card?: unknown; error?: string; errorCode?: string; resolved?: { id: string; url: string } }> {
+  if (raw && typeof raw === "object") return checkedCard(raw);
   if (typeof raw !== "string") {
     return {
       error:
@@ -288,7 +301,7 @@ export async function coerceCard(
         };
       }
       if (!r.ok) return { error: `card fetch returned HTTP ${r.status} for ${url}`, resolved: { id, url } };
-      return { card: await r.json(), resolved: { id, url } };
+      return { ...parseCardJson(await readBoundedJsonText(r)), resolved: { id, url } };
     } catch (e) {
       return { error: `card fetch failed for ${url}: ${(e as Error).message}`, resolved: { id, url } };
     }
@@ -304,13 +317,13 @@ export async function coerceCard(
     try {
       const r = await fetch(s, { headers: { accept: "application/json" } });
       if (!r.ok) return { error: `card fetch returned HTTP ${r.status}` };
-      return { card: await r.json() };
+      return parseCardJson(await readBoundedJsonText(r));
     } catch (e) {
       return { error: `card fetch failed: ${(e as Error).message}` };
     }
   }
   try {
-    return { card: JSON.parse(s) };
+    return parseCardJson(s);
   } catch {
     return {
       error:
@@ -334,13 +347,13 @@ export async function verifyToolResult(
   origin: string,
 ): Promise<McpToolResult> {
   const raw = args.card ?? args.record ?? args.json ?? args.url ?? args.input;
-  const { card, error, resolved } = await coerceCard(raw, origin);
+  const { card, error, errorCode, resolved } = await coerceCard(raw, origin);
   if (error) {
     const payload = {
       valid: false,
       state: "UNCHECKABLE",
       reason: error,
-      reasons: ["input_not_a_card"],
+      reasons: [errorCode ?? "input_not_a_card"],
       ...(resolved ? { resolved_from: resolved } : {}),
     };
     return {

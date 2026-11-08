@@ -25,10 +25,11 @@ export type Container = "jpeg" | "png" | "webp" | "bmff" | "pdf" | "unknown";
 
 export type C2paInspection = {
   container: Container;
-  manifest_store_present: boolean;
+  manifest_store_present: boolean | null;
   manifest_store_bytes: number | null;
   manifest_store_sha256: string | null;
-  manifest_count: number;
+  manifest_count: number | null;
+  parser_budget_exceeded?: boolean;
   active_manifest_label: string | null;
   claim: {
     version: "v1" | "v2" | null;
@@ -40,8 +41,8 @@ export type C2paInspection = {
     assertion_count: number;
     assertion_labels: string[];
   } | null;
-  assertion_hashes: { status: Tri; checked: number; failed: string[]; reason: string | null };
-  data_hash: { status: Tri; binding: string | null; alg: string | null; exclusions: number; exclusions_cover_manifest: boolean | null; reason: string | null };
+  assertion_hashes: { status: Tri; checked: number | null; failed: string[]; reason: string | null };
+  data_hash: { status: Tri; binding: string | null; alg: string | null; exclusions: number | null; exclusions_cover_manifest: boolean | null; reason: string | null };
   signature: {
     status: Tri;
     cose_alg: string | null;
@@ -87,13 +88,22 @@ function hashAlg(name: string | null | undefined): "SHA-256" | "SHA-384" | "SHA-
   return null;
 }
 
+// Resource policy, not a format validity verdict. One shared budget per inspection.
+export const C2PA_MAX_DEPTH = 64;
+export const C2PA_MAX_ITEMS = 10_000;
+export const C2PA_MAX_CERTIFICATE_BYTES = 65_536;
+class ParserBudgetError extends Error {}
+type ParserBudget = { cbor: number; boxes: number; der: number };
+const parserBudget = (): ParserBudget => ({ cbor: 0, boxes: 0, der: 0 });
+const budgetError = (part: string): never => { throw new ParserBudgetError(`C2PA parser ${part} budget exceeded; inspection not completed`); };
+
 // ───────────────────────────── minimal CBOR ─────────────────────────────
 export class CborTag {
   constructor(public tag: number, public value: unknown) {}
 }
 class CborReader {
   o = 0;
-  constructor(private b: Uint8Array) {}
+  constructor(private b: Uint8Array, private budget: ParserBudget) {}
   private len(ai: number): number | null {
     if (ai < 24) return ai;
     if (ai === 24) return this.b[this.o++];
@@ -116,7 +126,9 @@ class CborReader {
     if (ai === 31) return null; // indefinite
     throw new Error("cbor: bad additional info");
   }
-  read(): unknown {
+  read(depth = 1): unknown {
+    if (depth > C2PA_MAX_DEPTH) budgetError("CBOR depth");
+    if (++this.budget.cbor > C2PA_MAX_ITEMS) budgetError("CBOR items");
     if (this.o >= this.b.length) throw new Error("cbor: truncated");
     const ib = this.b[this.o++];
     const mt = ib >> 5;
@@ -131,7 +143,7 @@ class CborReader {
         const n = this.len(ai);
         if (n === null) {
           const chunks: Uint8Array[] = [];
-          while (this.b[this.o] !== 0xff) chunks.push(this.read() as Uint8Array);
+          while (this.b[this.o] !== 0xff) chunks.push(this.read(depth + 1) as Uint8Array);
           this.o++;
           const total = chunks.reduce((a, c) => a + c.length, 0);
           const out = new Uint8Array(total);
@@ -142,30 +154,33 @@ class CborReader {
           }
           return mt === 2 ? out : td.decode(out);
         }
+        if (!Number.isSafeInteger(n) || n < 0 || this.o + n > this.b.length) throw new Error("cbor: truncated string");
         const s = this.b.subarray(this.o, this.o + n);
         this.o += n;
         return mt === 2 ? s : td.decode(s);
       }
       case 4: {
         const n = this.len(ai);
+        if (n !== null && n > C2PA_MAX_ITEMS - this.budget.cbor) budgetError("CBOR items");
         const arr: unknown[] = [];
         if (n === null) {
-          while (this.b[this.o] !== 0xff) arr.push(this.read());
+          while (this.b[this.o] !== 0xff) arr.push(this.read(depth + 1));
           this.o++;
-        } else for (let i = 0; i < n; i++) arr.push(this.read());
+        } else for (let i = 0; i < n; i++) arr.push(this.read(depth + 1));
         return arr;
       }
       case 5: {
         const n = this.len(ai);
+        if (n !== null && n * 2 > C2PA_MAX_ITEMS - this.budget.cbor) budgetError("CBOR items");
         const m = new Map<unknown, unknown>();
         if (n === null) {
-          while (this.b[this.o] !== 0xff) m.set(this.read(), this.read());
+          while (this.b[this.o] !== 0xff) m.set(this.read(depth + 1), this.read(depth + 1));
           this.o++;
-        } else for (let i = 0; i < n; i++) m.set(this.read(), this.read());
+        } else for (let i = 0; i < n; i++) m.set(this.read(depth + 1), this.read(depth + 1));
         return m;
       }
       case 6:
-        return new CborTag(this.len(ai) as number, this.read());
+        return new CborTag(this.len(ai) as number, this.read(depth + 1));
       case 7: {
         if (ai === 20) return false;
         if (ai === 21) return true;
@@ -196,33 +211,31 @@ class CborReader {
     throw new Error("cbor: unreachable");
   }
 }
-export function cborDecode(b: Uint8Array): unknown {
-  return new CborReader(b).read();
+export function cborDecode(b: Uint8Array, budget = parserBudget()): unknown {
+  return new CborReader(b, budget).read();
 }
 /** Encoder for exactly what Sig_structure needs: arrays, text strings, byte strings. */
 export function cborEncode(v: unknown): Uint8Array {
-  const out: number[] = [];
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  const append = (bytes: Uint8Array) => { chunks.push(bytes); total += bytes.length; };
   const head = (mt: number, n: number) => {
-    if (n < 24) out.push((mt << 5) | n);
-    else if (n < 256) out.push((mt << 5) | 24, n);
-    else if (n < 65536) out.push((mt << 5) | 25, n >> 8, n & 255);
-    else out.push((mt << 5) | 26, (n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255);
+    if (n < 24) append(Uint8Array.of((mt << 5) | n));
+    else if (n < 256) append(Uint8Array.of((mt << 5) | 24, n));
+    else if (n < 65536) append(Uint8Array.of((mt << 5) | 25, n >> 8, n & 255));
+    else append(Uint8Array.of((mt << 5) | 26, (n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255));
   };
   const enc = (x: unknown) => {
-    if (typeof x === "string") {
-      const b = te.encode(x);
-      head(3, b.length);
-      out.push(...b);
-    } else if (x instanceof Uint8Array) {
-      head(2, x.length);
-      out.push(...x);
-    } else if (Array.isArray(x)) {
-      head(4, x.length);
-      x.forEach(enc);
-    } else throw new Error("cborEncode: unsupported");
+    if (typeof x === "string") { const bytes = te.encode(x); head(3, bytes.length); append(bytes); }
+    else if (x instanceof Uint8Array) { head(2, x.length); append(x); }
+    else if (Array.isArray(x)) { head(4, x.length); x.forEach(enc); }
+    else throw new Error("cborEncode: unsupported");
   };
   enc(v);
-  return Uint8Array.from(out);
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const bytes of chunks) { out.set(bytes, offset); offset += bytes.length; }
+  return out;
 }
 const mget = (m: unknown, k: unknown): unknown => (m instanceof Map ? m.get(k) : undefined);
 const asStr = (v: unknown): string | null => (typeof v === "string" ? v : null);
@@ -241,10 +254,11 @@ export type JumbfBox = {
   children: JumbfBox[];
 };
 
-export function parseJumbf(buf: Uint8Array, off = 0, end = buf.length): JumbfBox[] {
+export function parseJumbf(buf: Uint8Array, off = 0, end = buf.length, budget = parserBudget(), depth = 1): JumbfBox[] {
   const boxes: JumbfBox[] = [];
-  let guard = 0;
-  while (off + 8 <= end && guard++ < 10000) {
+  while (off + 8 <= end) {
+    if (depth > C2PA_MAX_DEPTH) budgetError("JUMBF depth");
+    if (++budget.boxes > C2PA_MAX_ITEMS) budgetError("JUMBF boxes");
     let L = u32(buf, off);
     const T = td.decode(buf.subarray(off + 4, off + 8));
     let hdr = 8;
@@ -270,7 +284,7 @@ export function parseJumbf(buf: Uint8Array, off = 0, end = buf.length): JumbfBox
         }
       }
       box.content = body.subarray(dl);
-      box.children = parseJumbf(body, dl, body.length);
+      box.children = parseJumbf(body, dl, body.length, budget, depth + 1);
     }
     boxes.push(box);
     off += L;
@@ -283,7 +297,7 @@ export type Extracted = { container: Container; store: Uint8Array | null; manife
 
 const JUMBF_C2PA_UUID = "6332706100110010800000aa00389b71"; // "c2pa" manifest store description UUID
 
-export function extractManifestStore(b: Uint8Array): Extracted {
+export function extractManifestStore(b: Uint8Array, budget = parserBudget()): Extracted {
   // JPEG: APP11 (0xFFEB) segments, CI="JP", grouped by En, ordered by Z.
   if (b.length > 4 && b[0] === 0xff && b[1] === 0xd8) {
     const groups = new Map<number, { z: number; bytes: Uint8Array; start: number; length: number }[]>();
@@ -323,7 +337,7 @@ export function extractManifestStore(b: Uint8Array): Extracted {
         store.set(p, o);
         o += p.length;
       }
-      const top = parseJumbf(store)[0];
+      const top = parseJumbf(store, 0, store.length, budget)[0];
       if (top && top.type === "jumb" && top.label === "c2pa") {
         return { container: "jpeg", store, manifest_ranges: g.map((p) => ({ start: p.start, length: p.length })) };
       }
@@ -397,22 +411,27 @@ export function extractManifestStore(b: Uint8Array): Extracted {
 // ───────────────────────────── DER / X.509 (leaf only) ─────────────────────────────
 type Tlv = { tag: number; start: number; end: number; hdr: number };
 function tlv(b: Uint8Array, o: number): Tlv {
+  if (!Number.isSafeInteger(o) || o < 0 || o + 2 > b.length) throw new Error("der: truncated header");
   const tag = b[o];
   let len = b[o + 1];
   let h = 2;
   if (len & 0x80) {
     const n = len & 0x7f;
+    if (n === 0 || n > 6 || o + 2 + n > b.length) throw new Error("der: invalid length");
     len = 0;
     for (let i = 0; i < n; i++) len = len * 256 + b[o + 2 + i];
     h = 2 + n;
   }
+  if (!Number.isSafeInteger(len) || o + h + len > b.length) throw new Error("der: truncated value");
   return { tag, start: o + h, end: o + h + len, hdr: o };
 }
-function children(b: Uint8Array, t: Tlv): Tlv[] {
+function children(b: Uint8Array, t: Tlv, budget: ParserBudget): Tlv[] {
   const out: Tlv[] = [];
   let o = t.start;
   while (o < t.end) {
+    if (++budget.der > C2PA_MAX_ITEMS) budgetError("DER items");
     const c = tlv(b, o);
+    if (c.end <= o || c.end > t.end) throw new Error("der: child outside parent");
     out.push(c);
     o = c.end;
   }
@@ -437,25 +456,26 @@ const OID_P384 = "2b81040022";
 const OID_P521 = "2b81040023";
 const OID_ED25519 = "2b6570";
 
-export function parseLeafCert(der: Uint8Array): LeafCert {
+export function parseLeafCert(der: Uint8Array, budget = parserBudget()): LeafCert {
+  if (der.length > C2PA_MAX_CERTIFICATE_BYTES) budgetError("certificate bytes");
   const cert = tlv(der, 0);
-  const tbs = children(der, cert)[0];
-  const f = children(der, tbs);
+  const tbs = children(der, cert, budget)[0];
+  const f = children(der, tbs, budget);
   let i = 0;
   if (f[0].tag === 0xa0) i = 1; // explicit version
   // serial, sigalg, issuer, validity, subject, spki
   const validity = f[i + 3];
   const subject = f[i + 4];
   const spki = f[i + 5];
-  const [nb, na] = children(der, validity);
+  const [nb, na] = children(der, validity, budget);
   let cn: string | null = null;
-  for (const rdn of children(der, subject)) {
-    for (const atv of children(der, rdn)) {
-      const [oid, val] = children(der, atv);
+  for (const rdn of children(der, subject, budget)) {
+    for (const atv of children(der, rdn, budget)) {
+      const [oid, val] = children(der, atv, budget);
       if (hex(der.subarray(oid.start, oid.end)) === OID_CN) cn = td.decode(der.subarray(val.start, val.end));
     }
   }
-  const alg = children(der, children(der, spki)[0]);
+  const alg = children(der, children(der, spki, budget)[0], budget);
   const algOid = hex(der.subarray(alg[0].start, alg[0].end));
   let key: LeafCert["key"] = { kind: "unknown" };
   if (algOid === OID_RSA || algOid === OID_RSA_PSS) key = { kind: "rsa" };
@@ -469,13 +489,13 @@ export function parseLeafCert(der: Uint8Array): LeafCert {
 }
 
 /** RSAPublicKey (n, e) out of an SPKI as a JWK — independent of whether the SPKI OID is rsaEncryption or id-RSASSA-PSS. */
-function rsaJwk(spki: Uint8Array): JsonWebKey {
+function rsaJwk(spki: Uint8Array, budget: ParserBudget): JsonWebKey {
   const b64url = (b: Uint8Array): string => btoa(String.fromCharCode(...b)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   const top = tlv(spki, 0);
-  const [, bitStr] = children(spki, top);
+  const [, bitStr] = children(spki, top, budget);
   const pk = spki.subarray(bitStr.start + 1, bitStr.end); // skip the unused-bits octet
   const seq = tlv(pk, 0);
-  const [n, e] = children(pk, seq);
+  const [n, e] = children(pk, seq, budget);
   const strip = (t: Tlv): Uint8Array => {
     let o = t.start;
     while (o < t.end - 1 && pk[o] === 0) o++;
@@ -495,12 +515,13 @@ const COSE_ALG: Record<number, { name: string; hash: "SHA-256" | "SHA-384" | "SH
   [-8]: { name: "EdDSA", hash: null, kind: "eddsa" },
 };
 
-export async function verifyCoseSign1(coseBytes: Uint8Array, detachedPayload: Uint8Array): Promise<C2paInspection["signature"]> {
+export async function verifyCoseSign1(coseBytes: Uint8Array, detachedPayload: Uint8Array, budget = parserBudget()): Promise<C2paInspection["signature"]> {
   const out: C2paInspection["signature"] = { status: "UNCHECKABLE", cose_alg: null, leaf_cn: null, leaf_not_before: null, leaf_not_after: null, chain_length: null, timestamp: null, reason: null };
   let decoded: unknown;
   try {
-    decoded = cborDecode(coseBytes);
+    decoded = cborDecode(coseBytes, budget);
   } catch (e) {
+    if (e instanceof ParserBudgetError) throw e;
     out.reason = `COSE not decodable: ${(e as Error).message}`;
     return out;
   }
@@ -514,8 +535,9 @@ export async function verifyCoseSign1(coseBytes: Uint8Array, detachedPayload: Ui
   const sig = arr[3] as Uint8Array;
   let prot: unknown = new Map();
   try {
-    prot = protectedBytes.length ? cborDecode(protectedBytes) : new Map();
-  } catch {
+    prot = protectedBytes.length ? cborDecode(protectedBytes, budget) : new Map();
+  } catch (e) {
+    if (e instanceof ParserBudgetError) throw e;
     out.reason = "protected header not decodable";
     return out;
   }
@@ -532,8 +554,9 @@ export async function verifyCoseSign1(coseBytes: Uint8Array, detachedPayload: Ui
   }
   let leaf: LeafCert;
   try {
-    leaf = parseLeafCert(chain[0]);
+    leaf = parseLeafCert(chain[0], budget);
   } catch (e) {
+    if (e instanceof ParserBudgetError) throw e;
     out.reason = `leaf certificate not parseable: ${(e as Error).message}`;
     return out;
   }
@@ -548,7 +571,7 @@ export async function verifyCoseSign1(coseBytes: Uint8Array, detachedPayload: Ui
   try {
     let ok = false;
     if (alg.kind === "rsa-pss" && leaf.key.kind === "rsa") {
-      const key = await crypto.subtle.importKey("jwk", rsaJwk(leaf.spki), { name: "RSA-PSS", hash: alg.hash! }, false, ["verify"]);
+      const key = await crypto.subtle.importKey("jwk", rsaJwk(leaf.spki, budget), { name: "RSA-PSS", hash: alg.hash! }, false, ["verify"]);
       const saltLength = { "SHA-256": 32, "SHA-384": 48, "SHA-512": 64 }[alg.hash!];
       ok = await crypto.subtle.verify({ name: "RSA-PSS", saltLength }, key, sig as BufferSource, sigStructure as BufferSource);
     } else if (alg.kind === "ecdsa" && leaf.key.kind === "ec") {
@@ -564,6 +587,7 @@ export async function verifyCoseSign1(coseBytes: Uint8Array, detachedPayload: Ui
     out.status = ok ? "VALID" : "INVALID";
     out.reason = ok ? "leaf SPKI verifies the COSE_Sign1 over the claim bytes" : "signature does not verify under the leaf SPKI";
   } catch (e) {
+    if (e instanceof ParserBudgetError) throw e;
     out.reason = `WebCrypto could not verify: ${(e as Error).message}`;
   }
   return out;
@@ -578,9 +602,9 @@ function contentBox(sb: JumbfBox | undefined, type: string): Uint8Array | null {
   return c ? c.body : null;
 }
 
-export async function inspectC2pa(asset: Uint8Array | null, storeOverride?: Uint8Array): Promise<C2paInspection> {
+async function inspectC2paCore(asset: Uint8Array | null, storeOverride: Uint8Array | undefined, budget: ParserBudget): Promise<C2paInspection> {
   const notes: string[] = [];
-  const ex = asset ? extractManifestStore(asset) : { container: "unknown" as Container, store: null, manifest_ranges: [] };
+  const ex = asset ? extractManifestStore(asset, budget) : { container: "unknown" as Container, store: null, manifest_ranges: [] };
   const store = storeOverride ?? ex.store;
   const res: C2paInspection = {
     container: ex.container,
@@ -601,7 +625,7 @@ export async function inspectC2pa(asset: Uint8Array | null, storeOverride?: Uint
     notes.push("no C2PA manifest store located in this container; metadata is strippable, so a manifest not being detected says nothing about the generator");
     return res;
   }
-  const top = parseJumbf(store)[0];
+  const top = parseJumbf(store, 0, store.length, budget)[0];
   if (!top || top.type !== "jumb" || top.label !== "c2pa") {
     notes.push("bytes found where a manifest store should be, but the JUMBF superbox is not labelled c2pa");
     res.assertion_hashes.reason = res.data_hash.reason = res.signature.reason = "manifest store not parseable";
@@ -623,8 +647,9 @@ export async function inspectC2pa(asset: Uint8Array | null, storeOverride?: Uint
   let claim: unknown = null;
   if (claimBytes) {
     try {
-      claim = cborDecode(claimBytes);
+      claim = cborDecode(claimBytes, budget);
     } catch (e) {
+      if (e instanceof ParserBudgetError) throw e;
       notes.push(`claim CBOR not decodable: ${(e as Error).message}`);
     }
   }
@@ -689,7 +714,7 @@ export async function inspectC2pa(asset: Uint8Array | null, storeOverride?: Uint
   else if (!asset) res.data_hash.reason = "asset bytes not supplied (manifest-only mode); hard binding cannot be recomputed";
   else {
     try {
-      const d = cborDecode(dh) as Map<string, unknown>;
+      const d = cborDecode(dh, budget) as Map<string, unknown>;
       const alg = hashAlg(asStr(d.get("alg")) || res.claim.alg);
       const exRaw = d.get("exclusions");
       const exclusions = (Array.isArray(exRaw) ? exRaw : [])
@@ -717,13 +742,14 @@ export async function inspectC2pa(asset: Uint8Array | null, storeOverride?: Uint
         res.data_hash.reason = res.data_hash.status === "VALID" ? "asset hash with declared exclusions matches" : "asset bytes do not match the declared hash (edited after signing, or exclusions differ)";
       }
     } catch (e) {
+      if (e instanceof ParserBudgetError) throw e;
       res.data_hash.reason = `hash.data not decodable: ${(e as Error).message}`;
     }
   }
   // 5. signature
   if (!sigBytes) res.signature.reason = "no c2pa.signature box";
   else if (!claimBytes) res.signature.reason = "no claim bytes to verify against";
-  else res.signature = await verifyCoseSign1(sigBytes, claimBytes);
+  else res.signature = await verifyCoseSign1(sigBytes, claimBytes, budget);
   if (res.assertion_hashes.status === "VALID" && res.data_hash.status === "VALID" && res.signature.status === "VALID") {
     notes.push("manifest internally consistent: assertion hashes, hard binding and claim signature all recompute; trust-list anchoring remains UNCHECKABLE");
   }
@@ -743,3 +769,22 @@ export function xmpDigitalSourceType(b: Uint8Array): string | null {
 }
 
 export { ascii as _ascii };
+
+/** Refusal is not a negative detection or a partial cryptographic verdict. */
+export async function inspectC2pa(asset: Uint8Array | null, storeOverride?: Uint8Array): Promise<C2paInspection> {
+  try { return await inspectC2paCore(asset, storeOverride, parserBudget()); }
+  catch (error) {
+    if (!(error instanceof ParserBudgetError)) throw error;
+    const reason = error.message;
+    return {
+      container: "unknown", manifest_store_present: null, manifest_store_bytes: storeOverride?.byteLength ?? null,
+      manifest_store_sha256: storeOverride ? await sha256(storeOverride) : null, manifest_count: null,
+      active_manifest_label: null, claim: null, parser_budget_exceeded: true,
+      assertion_hashes: { status: "UNCHECKABLE", checked: null, failed: [], reason },
+      data_hash: { status: "UNCHECKABLE", binding: null, alg: null, exclusions: null, exclusions_cover_manifest: null, reason },
+      signature: { status: "UNCHECKABLE", cose_alg: null, leaf_cn: null, leaf_not_before: null, leaf_not_after: null, chain_length: null, timestamp: null, reason },
+      chain_trust: { status: "UNCHECKABLE", reason }, xmp_digital_source_type: asset ? xmpDigitalSourceType(asset) : null,
+      notes: [reason],
+    };
+  }
+}

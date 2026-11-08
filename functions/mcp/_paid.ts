@@ -32,6 +32,7 @@
  */
 import PAID_TOOLS from "./paid-tools.json";
 import { rpc, type McpToolResult } from "./_handlers";
+import { MCP_MAX_TOOL_INPUT_ELEMENTS, withinJsonBudget } from "./_input_budget";
 
 type PaidTool = {
   name: string;
@@ -121,6 +122,18 @@ export function buildPaidRequest(
     args[k] === true || args[k] === "1" || args[k] === "true";
   const headers: Record<string, string> = { accept: "application/json" };
   const xp = str("x_payment");
+  // Preserve authorization bytes; only resource preflight happens here, never settlement.
+  if (xp.length > 65_536 || new TextEncoder().encode(xp).byteLength > 65_536)
+    return { error: "x_payment exceeds the header size limit" };
+  if (xp) {
+    try {
+      const text = xp.startsWith("{") ? xp : atob(xp);
+      if (!withinJsonBudget(text, MCP_MAX_TOOL_INPUT_ELEMENTS))
+        return { error: "x_payment exceeds the JSON structure limit" };
+    } catch {
+      // Opaque/malformed legacy values retain the endpoint's existing rejection path.
+    }
+  }
   if (xp) headers["x-payment"] = xp;
   const u = new URL(route, origin);
   let method = "GET";

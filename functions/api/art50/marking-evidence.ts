@@ -188,8 +188,19 @@ export async function measure(input: Input): Promise<Measurement> {
 
   if (c2) {
     const present = c2.manifest_store_present;
-    checked.push({ method: "c2pa.manifest-store", result: present ? "DETECTED" : "NOT_DETECTED", ...(present ? { note: `${c2.manifest_count} manifest(s); active ${c2.active_manifest_label ?? "?"}; generator ${c2.claim?.claim_generator ?? "?"}` } : {}) });
-    statements.push(present ? "marking detected by method c2pa.manifest-store" : "marking not detected by method c2pa.manifest-store");
+    if (c2.parser_budget_exceeded) {
+      const reason = c2.signature.reason ?? "C2PA parser resource budget exceeded";
+      checked.push({ method: "c2pa.manifest-store", result: "UNCHECKABLE", note: reason });
+      statements.push("marking UNCHECKABLE by method c2pa.manifest-store: parser resource budget exceeded");
+      gap("c2pa.manifest-store", reason);
+      for (const method of ["c2pa.assertion-hashes", "c2pa.hard-binding", "c2pa.claim-signature"]) {
+        checked.push({ method, result: "UNCHECKABLE", note: reason });
+        gap(method, reason);
+      }
+    } else {
+      checked.push({ method: "c2pa.manifest-store", result: present ? "DETECTED" : "NOT_DETECTED", ...(present ? { note: `${c2.manifest_count} manifest(s); active ${c2.active_manifest_label ?? "?"}; generator ${c2.claim?.claim_generator ?? "?"}` } : {}) });
+      statements.push(present ? "marking detected by method c2pa.manifest-store" : "marking not detected by method c2pa.manifest-store");
+    }
     if (present) {
       checked.push({ method: "c2pa.assertion-hashes", result: c2.assertion_hashes.status, ...(c2.assertion_hashes.reason ? { note: c2.assertion_hashes.reason } : { note: `${c2.assertion_hashes.checked} recomputed` }) });
       checked.push({ method: "c2pa.hard-binding", result: c2.data_hash.status, ...(c2.data_hash.reason ? { note: c2.data_hash.reason } : { note: `${c2.data_hash.binding} ${c2.data_hash.alg ?? ""} ${c2.data_hash.exclusions} exclusion(s)`.trim() }) });
@@ -415,8 +426,16 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
         x402: `${resourceUrl} (same request without preview=1 — the 402 carries the price)`,
         invoice_gbp: `${resourceUrl}?commissioned_by=<organisation>&invoice=gbp`,
       },
-      note: "Preview: same measurement, no signature, no card. Marking results are stated as detected / not detected by the named method at fetched_at.",
+      note: "Preview: unsigned observations and explicit UNCHECKABLE limits; no signature or card.",
     });
+  }
+
+  if (m.detail?.parser_budget_exceeded) {
+    return json({
+      schema: KIND, error: "parser_resource_limit", state: "UNCHECKABLE",
+      reason: m.detail.signature.reason, payment_taken: false,
+      free_preview: `${resourceUrl}?preview=1`,
+    }, 422);
   }
 
   let payment: Record<string, unknown> | null = null;
