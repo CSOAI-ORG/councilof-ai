@@ -1,7 +1,4 @@
-# CSOAI — CONSUMER-READY COMPLETION AUDIT (measured) — 2026-11-08T03:38:31Z
-
-> **Classification-only correction prepared 2026-11-08T10:26:28Z by Codex. No new measurement.** The observations and measured-at time remain 2026-11-08T03:38:31Z. Only U-1 and U-2 change from LIVE to OPEN: the retained GET results establish availability, not completed delivery or claim-maintenance acceptance. The previous counts were 27 total / 11 LIVE / 7 OPEN / 3 STAGED / 6 OWNER; corrected counts are 27 total / 9 LIVE / 9 OPEN / 3 STAGED / 6 OWNER. The other 25 item bodies and every observation/receipt are unchanged and were not re-verified.
-> Provenance: original JSON blob 5ed556ebabcf2a67bdf81de404be13c5cbc6eed5 / SHA256 61d982bea00a79d6247a6733d8b2356d01ded47ca2398ceb62125452666f5031; original Markdown blob adafc3c1a93c9b241fc675323923de878ebb1290 / SHA256 c408df651ba00df8e37df7531aa2086c4cd07da39c565ccc80eb07f3de141758. Criteria source: PR #4126, scripts/completion_audit.py blob ead040005b7951c911b8fe1c27cef5e4c7580014. This is an unsigned derived-report correction; signed evidence/root/witness records are unchanged.
+# CSOAI — CONSUMER-READY COMPLETION AUDIT (measured) — 2026-11-08T11:56:02Z
 
 Every LIVE line below was **probed against the live surface** and carries the measured value and the receipt. An item is LIVE only if a probe saw it; an item whose probe could not run is OPEN with the reason, never LIVE. Owner-gated items are named as owner-gated rather than counted as done.
 
@@ -11,8 +8,8 @@ This is a measurement of completion, not a claim of a market outcome. "Unicorn s
 
 | # | Item | Lane | State | Measured | Receipt |
 | --- | --- | --- | --- | --- | --- |
-| U-1 | Product live end to end (discover -> identify -> pay -> verify) | agent | **OPEN** | 6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200 | [https://councilof.ai/](https://councilof.ai/) |
-| U-2 | Flagship public (claim maintenance) | agent | **OPEN** | GET / -> HTTP 200 | [https://councilof.ai/](https://councilof.ai/) |
+| U-1 | Product live end to end (discover -> identify -> pay -> verify) | agent | **OPEN** | availability=LIVE; 6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200; completion not verified: this GET-only audit does not consume a qualified non-fixture discover/identify/pay/deliver/verify receipt | [https://councilof.ai/](https://councilof.ai/) |
+| U-2 | Flagship public (claim maintenance) | agent | **OPEN** | availability=LIVE; GET / -> HTTP 200; completion not verified: this GET-only audit does not consume qualified claim-maintenance acceptance linking the claim, supporting evidence, correction history and independent readback | [https://councilof.ai/](https://councilof.ai/) |
 | U-3 | Heartbeat board public | agent | **LIVE** | GET /board/ -> HTTP 200 | [https://councilof.ai/board/](https://councilof.ai/board/) |
 | U-4 | Root advancing + axes + corrections counter | agent | **LIVE** | root as_of=2026-11-07T20:54:37Z, 442 leaves; board public_count=34 axes · 34 measured; corrections=93, signature_state=VALID | [https://councilof.ai/root.json](https://councilof.ai/root.json) |
 | U-13a | Agent skills published | agent | **LIVE** | 15 skill(s) in the published index | [https://councilof.ai/.well-known/agent-skills/index.json](https://councilof.ai/.well-known/agent-skills/index.json) |
@@ -51,5 +48,5 @@ This is a measurement of completion, not a claim of a market outcome. "Unicorn s
 - an attestation for any third-party evaluation result
 - an endorsement by any person or institution quoted in a checklist
 
-Measured at 2026-11-08T03:38:31Z by `scripts/completion_audit.py`.
+Measured at 2026-11-08T11:56:02Z by `scripts/completion_audit.py`.
 Measurement, not certification.
