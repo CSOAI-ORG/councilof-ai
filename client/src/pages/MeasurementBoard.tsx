@@ -812,7 +812,7 @@ function LeaderboardPanel({ axis }: { axis: string }) {
                 >
                   <td className="px-3 py-2 font-mono tabular-nums text-gray-700">{m.rank}</td>
                   <td className="px-3 py-2">
-                    <span className="font-semibold text-gray-900">{m.arm}</span>
+                    <span className="font-semibold text-gray-900 [overflow-wrap:anywhere]">{m.arm}</span>
                     {m.frontier && (
                       <span
                         className="ml-2 rounded-full border border-emerald-600 bg-white px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-emerald-800"

@@ -9,6 +9,46 @@ const MIRROR_PATH = /^\/interop\/[^/]+\/mirrors\//;
 const CAPTURE_POLICY = "sandbox; default-src 'none'; style-src 'unsafe-inline'; img-src data:";
 
 /**
+ * The directories whose live bytes are served from the Hugging Face mirror by a
+ * public/_redirects 302. scripts/deploy-exclusions.json names the same directories,
+ * and public/_redirects is the source of truth for the rule that reaches them.
+ *
+ * WHY THIS LIST EXISTS. Cloudflare Pages applies _redirects only to requests that no
+ * Function has already answered, so this Function SHADOWS the mirror rule for every
+ * path it handles. It used to answer 404 for any .invalid path it did not hold in
+ * the archive -- and the archive held only the SIX top-level /interop/*.invalid
+ * files, because the build drops the mirror-served directories out of dist/client
+ * (scripts/drop-proofs-from-dist.mjs runs inside npm run build:client, BEFORE the
+ * deploy's pack step), so the packer never saw the 1,898 .invalid files under
+ * /interop/ots/ and never archived them.
+ *
+ * MEASURED 2026-11-06 on the live site. The published index names 1,898
+ * /interop/ots/**.invalid paths as hf-mirror. Every one sampled was HTTP 404 at the
+ * site (30/30) while the mirror served the exact indexed bytes (40/40 digests
+ * matched, and the git blob sha1 of the mirror's bytes equals the repository's).
+ * A published artefact nobody can name is the same defect as a missing one, so for
+ * these directories this Function must DEFER to the redirect chain instead of
+ * refusing the URL.
+ *
+ * The mirror is the correct home for these bytes: deploy-exclusions.json already
+ * excludes /interop/ots from the Pages bundle precisely so they are served from the
+ * mirror. The archive is for bytes that are nowhere else.
+ *
+ * retired-proof-archive.test.ts asserts that this list agrees with public/_redirects,
+ * so a new mirror-served directory cannot be added without being handled here.
+ */
+export const MIRROR_SERVED_PREFIXES = [
+  "/interop/mill-cards-signed/",
+  "/interop/mill-cards-unsigned/",
+  "/interop/mill-evidence/",
+  "/interop/ots/",
+];
+
+function isMirrorServed(path: string): boolean {
+  return MIRROR_SERVED_PREFIXES.some((prefix) => path.startsWith(prefix));
+}
+
+/**
  * Is the capture policy ALREADY on this response?
  *
  * MEASURED 2026-11-06 on the live site. `public/_headers` sets
@@ -106,7 +146,24 @@ export const onRequest: PagesFunction<AssetEnv> = async (ctx) => {
   }
 
   const member = archive.members[path];
-  if (!member) return new Response("Not found", { status: 404 });
+  if (!member) {
+    // These exact bytes are not in the retired-proof archive. For a mirror-served
+    // directory they are still live on the mirror, and this Function must not
+    // shadow the _redirects rule that reaches them: refusing the URL here turned
+    // 1,898 published paths into 404s. Defer to the redirect chain instead.
+    if (!isMirrorServed(path)) return new Response("Not found", { status: 404 });
+    const deferred = await ctx.next();
+    if (deferred.status === 404 || deferred.status === 410) {
+      return new Response("Not found", { status: 404 });
+    }
+    const headers = new Headers(deferred.headers);
+    headers.set("x-evidence-state", "retired-or-invalid-historical-bytes");
+    return new Response(deferred.body, {
+      status: deferred.status,
+      statusText: deferred.statusText,
+      headers,
+    });
+  }
   if (
     !Number.isSafeInteger(member.bytes) ||
     member.bytes < 0 ||

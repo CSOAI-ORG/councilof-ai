@@ -263,7 +263,7 @@ export default function HitlConsole({
       });
     } catch {
       setError(
-        "The competence result could not be confirmed. The decision endpoint will check the current record again.",
+        "The reading-check result could not be confirmed. The decision endpoint will check the current record again.",
       );
     } finally {
       submitting.current = false;
@@ -362,9 +362,8 @@ export default function HitlConsole({
         </span>
       </div>
       <p className="mb-4 text-sm text-amber-100/80">
-        A measurement says what was observed. It never says what should happen.
-        The acts — publish, release, send, approve — wait for a competent, named
-        human.
+        Record a review decision after checking the published record. Identity,
+        professional competence and permission to act need separate evidence.
       </p>
 
       {/* 1. THE GATE STATE, HONESTLY. */}
@@ -502,9 +501,13 @@ export default function HitlConsole({
       {module ? (
         <div className="mb-5 rounded-xl border border-sky-400/30 bg-sky-500/5 p-4">
           <h3 className="mb-2 text-sm font-semibold text-sky-50">
-            Competency — read the record{" "}
+            Reading check — read the record{" "}
             <span className="font-normal text-sky-100/60">({module.id})</span>
           </h3>
+          <p data-testid="hitl-knowledge-scope" className="mb-3 text-[12px] text-sky-100/80">
+            A matching answer checks this published record only. It does not
+            verify human identity, professional competence or execution authority.
+          </p>
           <p className="mb-3 whitespace-pre-wrap text-[12px] text-sky-100/80">
             {module.briefing}
           </p>
@@ -565,12 +568,12 @@ export default function HitlConsole({
         <h3 className="mb-2 text-sm font-semibold text-emerald-50">Decision</h3>
         <div className="mb-3 grid gap-2 sm:grid-cols-2">
           <label className="text-[12px] text-emerald-100/80">
-            Operator name
+            Operator label (self-reported)
             <input
               data-testid="hitl-operator"
               value={operator}
               onChange={(e) => setOperator(e.target.value)}
-              placeholder="who is deciding"
+              placeholder="label recorded with this decision"
               className="mt-1 w-full rounded-lg border border-emerald-500/30 bg-black/40 px-3 py-2 text-sm text-emerald-50"
             />
           </label>
@@ -587,6 +590,10 @@ export default function HitlConsole({
             />
           </label>
         </div>
+        <p data-testid="hitl-operator-scope" className="mb-3 text-xs text-emerald-100/80">
+          The shared operator token controls access to recording. The supplied
+          label does not authenticate a person or establish their competence.
+        </p>
         <label className="mb-3 block text-[12px] text-emerald-100/80">
           Note
           <textarea
@@ -657,6 +664,11 @@ export default function HitlConsole({
             </p>
             <p className="mt-1 text-[12px] text-emerald-100/85">
               {receipt.note}
+            </p>
+            <p data-testid="hitl-receipt-scope" className="mt-1 text-[12px] text-emerald-100/70">
+              The receipt records a supplied operator label and a live-board
+              answer check. It does not establish human identity, professional
+              competence or execution authority.
             </p>
             <p className="mt-1 text-[12px] text-emerald-100/70">
               {receipt.signature?.value_hex

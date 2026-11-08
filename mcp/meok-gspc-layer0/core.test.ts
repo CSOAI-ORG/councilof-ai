@@ -147,7 +147,7 @@ it('the candidate MCP entry preserves tool IDs and exposes unknown outcomes and 
     const invalidId = new Promise<any>(resolve => { pending.set(null, resolve); child.stdin.write('{"jsonrpc":"2.0","id":null,"method":"tools/list"}\n'); });
     expect((await invalidId).error.code).toBe(-32600);
     const list = (await rpc('tools/list')).result.tools;
-    expect(list.map((tool: any) => tool.name)).toEqual(['meok_gspc_evaluate_work_step', 'meok_route_to_clan', 'meok_workstream_benchmark_report', 'meok_layer0_flywheel_status', 'meok_fleet_catalog', 'him_say', 'zcode_desktop']);
+    expect(list.map((tool: any) => tool.name)).toEqual(['meok_read_gspc_evidence', 'meok_gspc_evaluate_work_step', 'meok_route_to_clan', 'meok_workstream_benchmark_report', 'meok_layer0_flywheel_status', 'meok_fleet_catalog', 'him_say', 'zcode_desktop']);
     expect(JSON.stringify(list)).not.toMatch(/20,600|414 suites|77-artefact|3\.2 TB/);
     const submitted = await rpc('tools/call', { name: 'meok_gspc_evaluate_work_step', arguments: args });
     expect(JSON.parse(submitted.result.content[0].text)).toMatchObject({ entry: { exit_code: null, verdict: 'UNCHECKABLE' }, recording: { state: 'HTTP_ACCEPTED', persistence: 'UNVERIFIED' } });
@@ -164,3 +164,4 @@ it('the candidate MCP entry preserves tool IDs and exposes unknown outcomes and 
     await new Promise<void>(resolve => http.close(() => resolve()));
   }
 });
+
