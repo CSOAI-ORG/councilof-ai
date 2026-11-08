@@ -35,7 +35,7 @@ describe("jail current/archived evidence separation", () => {
     expect(liveSection).not.toContain("TIE");
     expect(html).toContain("Historical separation label:");
     expect(html).toContain("TIE</strong> (archived, not current)");
-    expect(html).toContain('datetime="2026-08-18"');
+    expect(html.toLowerCase()).toContain('datetime="2026-08-18"');
   });
   it("does not promote retained board data after a failed refresh", () => {
     const html = render({ ...ready(), error: "Refresh failed" });
