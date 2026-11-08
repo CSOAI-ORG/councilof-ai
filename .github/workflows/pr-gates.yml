@@ -317,6 +317,33 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/outward-claims-guard.mjs --selftest
 
+      - name: Completion audit — offline availability/outcome controls
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          ulimit -v 262144
+          ulimit -t 8
+          timeout 35s python3 -B - <<'PY'
+          import importlib.util, socket
+          from unittest.mock import patch
+          spec = importlib.util.spec_from_file_location('completion_audit_gate', 'scripts/completion_audit.py')
+          audit = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(audit)
+          def forbidden(*args, **kwargs):
+              raise AssertionError('Focused availability gate attempted live or full-audit IO')
+          original_fetch = audit.fetch
+          with patch.object(audit, 'measure', forbidden), \
+               patch.object(audit.urllib.request, 'urlopen', forbidden), \
+               patch.object(socket, 'socket', forbidden), \
+               patch.object(socket, 'getaddrinfo', forbidden), \
+               patch.object(audit.subprocess, 'run', forbidden), \
+               patch.object(audit.tempfile, 'TemporaryDirectory', forbidden):
+              faults = audit.availability_outcome_selftest()
+          assert audit.fetch is original_fetch, 'fetch stub was not restored'
+          if faults:
+              raise AssertionError('\n'.join(faults))
+          print('completion audit availability/outcome controls: PASS')
+          PY
+
       # Runs before `npm ci` so a stamped-byte edit fails in seconds. See the stamped-bytes job above
       # for why (#2871 / deploy run 37590160574). Verified to fail: the selftest goes red when any one
       # of its four guards is removed, and replaying f4487608d against its parent exits 1 naming
