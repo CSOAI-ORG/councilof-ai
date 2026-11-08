@@ -112,7 +112,8 @@ for (const [ax, list] of [...byAxis.entries()].sort()) {
 const byModel = new Map();
 for (const c of cards) {
   if (!c.model) continue;
-  const key = slug(c.model);
+  // opaque public identifier: internal fine-tune names never become public paths or fields
+  const key = "m-" + sha256(c.model).slice(0, 12);
   if (!byModel.has(key)) byModel.set(key, { model: c.model, cards: [] });
   byModel.get(key).cards.push(c);
 }
@@ -123,7 +124,8 @@ for (const [key, entry] of [...byModel.entries()].sort()) {
     schema: "csoai.feed.model/0.1",
     feed: `model/${key}`,
     as_of: AS_OF,
-    model: entry.model,
+    model_ref: sha256(entry.model).slice(0, 16),
+    identity_note: "the model identifier resolves via the signed card corpus (public/signed/cards, card-matrix.json); raw identifiers are not published on this surface",
     cards: entry.cards.length,
     axes_covered: axesCovered,
     variation_note: "same-fixture runs across this model's variations live here; deltas between models are the variation evidence",
