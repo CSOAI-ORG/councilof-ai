@@ -43,9 +43,11 @@ import path from "node:path";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { commitBoard } from "./commit-board.mjs";
-import { assertBoardSentences, assertEditionIsOurs, countDigest, htmlRules, jsonRules, normalise } from "./catalogue-live-state-lib.mjs";
+import { assertBoardSentences, assertEditionIsOurs, assertLaneActivityNumbers, assertOneOpenPullRequestNumber, assertOneOpenPullRequestNumberInPage, countDigest, htmlRules, jsonRules, laneActivityRules, mergeWindowStart, normalise } from "./catalogue-live-state-lib.mjs";
+import { readMergeWindow } from "./merge-window.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
+const REPO_SLUG = "CSOAI-ORG/councilof-ai";
 const CHECK = process.argv.includes("--check");
 const SITE = "https://councilof.ai";
 const UA = "CSOAI-catalogue-read/0.1 (councilof.ai master catalogue live-state producer)";
@@ -74,9 +76,9 @@ async function get(url) {
 /** The GitHub open-PR count the catalogue publishes. Unauthenticated search; the count is a
  *  reading of one moment, so it carries the moment it was read. */
 async function openPullRequests() {
-  const q = encodeURIComponent("repo:CSOAI-ORG/councilof-ai is:pr is:open");
+  const q = encodeURIComponent(`repo:${REPO_SLUG} is:pr is:open`);
   const r = await fetch(`https://api.github.com/search/issues?q=${q}&per_page=1`, {
-    headers: { accept: "application/vnd.github+json", "user-agent": UA },
+    headers: { accept: "application/vnd.github+json", "user-agent": UA, ...(process.env.GITHUB_TOKEN || process.env.GH_TOKEN ? { authorization: `Bearer ${process.env.GITHUB_TOKEN || process.env.GH_TOKEN}` } : {}) },
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });
   if (!r.ok) throw new Error(`GitHub search answered HTTP ${r.status} — the PR count stays unknown, never 0`);
@@ -119,6 +121,34 @@ const unmeasuredAxes = (board.axes || [])
 
 const readAt = new Date().toISOString();
 const edition = readAt.slice(0, 10);
+
+// ---------------------------------------------------------------- index.json
+const jPath = path.join(REPO, JSON_FILE);
+const jBefore = fs.readFileSync(jPath, "utf8");
+const jDoc = JSON.parse(jBefore);
+if (!jDoc.live_state || !jDoc.live_state.board) throw new Error("index.json has no live_state.board — the shape moved");
+// Another lane may already have published an edition of this catalogue for today. This
+// producer does not overwrite one it did not write: the collision is refused and named.
+try {
+  assertEditionIsOurs(jDoc, edition);
+} catch (e) {
+  console.error(`\nrefused to publish: ${e.message}\n`);
+  process.exit(1);
+}
+
+// ---------------------------------------------------------------- the merge window
+// The window is the edition this one supersedes. On a new day that is yesterday's edition;
+// on a same-day re-read it is the edition the published one already supersedes. Either way
+// the window is named, so a reader can see exactly what the list covers.
+const { startDate: windowStartDate, windowStart, source: windowStartSource } = mergeWindowStart(jDoc, edition);
+const { merged } = await readMergeWindow(windowStart, windowStartDate);
+const laneActivity = {
+  window_start: windowStart,
+  window_end: readAt,
+  window_start_source: windowStartSource,
+  merged,
+  open_pull_requests_now: prs,
+};
 
 const live_state = {
   read_at: readAt,
@@ -197,22 +227,11 @@ const v = {
   readAt,
   edition,
   unmeasuredAxes,
+  laneActivity,
 };
 
 // ---------------------------------------------------------------- index.json
-const jPath = path.join(REPO, JSON_FILE);
-const jBefore = fs.readFileSync(jPath, "utf8");
-const jDoc = JSON.parse(jBefore);
-if (!jDoc.live_state || !jDoc.live_state.board) throw new Error("index.json has no live_state.board — the shape moved");
-// Another lane may already have published an edition of this catalogue for today. This
-// producer does not overwrite one it did not write: the collision is refused and named.
-try {
-  assertEditionIsOurs(jDoc, edition);
-} catch (e) {
-  console.error(`\nrefused to publish: ${e.message}\n`);
-  process.exit(1);
-}
-const jNext = jsonRules(jDoc, live_state, readAt, edition);
+const jNext = laneActivityRules(jsonRules(jDoc, live_state, readAt, edition), laneActivity);
 const indent = (jBefore.match(/\n( +)"/) || [, "  "])[1].length;
 const jAfter = JSON.stringify(jNext, null, indent) + (jBefore.endsWith("\n") ? "\n" : "");
 v.supersedes = jNext.supersedes_edition;
@@ -225,6 +244,16 @@ const hAfter = htmlRules(hBefore, v);
 // ---------------------------------------------------------------- guard, then write
 assertBoardSentences(hAfter, v.board, "index.html");
 assertBoardSentences(jAfter, v.board, "index.json");
+// One document, one open-pull-request number: the live count and the reconciliation
+// block's count are the same number, and the document may not disagree with itself.
+assertOneOpenPullRequestNumberInPage(hAfter, prs, "index.html");
+assertOneOpenPullRequestNumber(jAfter, prs, "index.json");
+assertLaneActivityNumbers(jNext, prs, "index.json");
+// The frozen block is replaced, not kept beside the live one: a stale copy of a block
+// next to a live copy is itself a false claim.
+if (jAfter.includes("lane_activity_since_2026_11_01")) {
+  throw new Error("index.json still carries the frozen lane-activity block beside the live one");
+}
 
 const results = [
   { file: JSON_FILE, before: jBefore, after: jAfter },

@@ -105,6 +105,23 @@ test('resuming preserves the selected axis and step and rejects inconsistent lea
 test('background refresh does not replace the proposal source binding',()=>{const s=readFileSync(new URL('../public/evidence-learning/element.js',import.meta.url),'utf8');assert.match(s,/paintSource\(background\)/);assert.match(s,/proposalCapture\(\)/);assert.match(s,/case'pin-source'/);assert.match(s,/aria-controls="stage-panel"/);assert.match(s,/tabindex="\$\{this.stage===id\?'0':'-1'\}"/);assert.match(s,/this\.bound=true/);});
 
 const reportDay='2026-11-06',reportId='a'.repeat(64);
+test('dashboard asset revisions bind the shipped module graph independently of the local-state protocol',async()=>{
+ const {VERSION}=await import('../public/evidence-learning/contract.mjs');
+ const element=readFileSync(new URL('../public/evidence-learning/element.js',import.meta.url));
+ const loader=readFileSync(new URL('../client/src/components/DashboardEvidenceLearningPane.tsx',import.meta.url),'utf8');
+ const src=loader.match(/script\.src = "([^"]+)"/);assert.ok(src);
+ const asset=new URL(src[1],'https://councilof.ai');
+ assert.equal(asset.pathname,'/evidence-learning/element.js');
+ assert.equal(asset.searchParams.get('v'),VERSION);
+ assert.equal(asset.searchParams.get('rev'),createHash('sha256').update(element).digest('hex').slice(0,12));
+ const imports=[...element.toString('utf8').matchAll(/^import .+ from ['"]([^'"]+)['"];$/gm)].map(match=>match[1]);
+ for(const name of ['contract.mjs','daily-briefing.mjs']){
+  const specifier=imports.find(value=>new URL(value,asset).pathname===`/evidence-learning/${name}`);assert.ok(specifier,`${name} import required`);
+  const dependency=new URL(specifier,asset),bytes=readFileSync(new URL(`../public/evidence-learning/${name}`,import.meta.url));
+  assert.equal(dependency.origin,'https://councilof.ai');
+  assert.equal(dependency.searchParams.get('rev'),createHash('sha256').update(bytes).digest('hex').slice(0,12));
+ }
+});
 const dailyIndex=()=>({schema:'csoai.daily-signal-index/0.1',report_count:1,latest_report_day:reportDay,latest_report_id:reportId,signed:false,reports:[{report_day:reportDay,report_id:reportId,json_path:`/reports/daily-signal/${reportDay}.json`,markdown_path:`/reports/daily-signal/${reportDay}.md`,counts:{events_in_horizon:8,mapped_events:0,unmapped_events:8},private_text:'PRIVATE_SENTINEL'}]});
 test('daily briefing retains exact dated metadata without source bodies or authority',()=>{
  const b=dailyBriefing(dailyIndex(),'2026-11-07T03:00:00Z');assert.equal(b.state,'AVAILABLE');assert.equal(b.report_id_declared,reportId);assert.equal(b.freshness.age_days,1);assert.equal(b.source_integrity,'INDEX_DECLARATION_ONLY');assert.equal(b.grants_authority,false);assert.equal(b.model_training,false);assert.doesNotMatch(JSON.stringify(b),/PRIVATE_SENTINEL/);

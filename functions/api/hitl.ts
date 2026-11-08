@@ -1,3 +1,9 @@
+/**
+ * Public oversight state, live-board knowledge checks, challenges, and decision records.
+ * Recording a decision requires a configured shared operator token. A matching answer
+ * and a caller-supplied operator label do not establish identity, human presence,
+ * professional competence, or execution authority.
+ */
 // functions/api/hitl.ts — the human-in-the-loop surface.
 //
 //   GET  /api/hitl                 the oversight state: policy, gates, modules, counts
@@ -64,6 +70,17 @@ import {
   type HitlEnv,
   type HitlReceipt,
 } from "./_hitl";
+
+/** Response interpretation only; never part of a signed receipt payload. */
+export const HITL_ASSESSMENT_SCOPE = Object.freeze({
+  decision_recording_credential: "SHARED_OPERATOR_TOKEN",
+  operator_label: "CALLER_SUPPLIED",
+  operator_identity: "NOT_VERIFIED",
+  human_presence: "NOT_ESTABLISHED",
+  competency_verified_meaning: "LIVE_BOARD_ANSWER_MATCH_ONLY",
+  professional_competence: "NOT_ASSESSED",
+  execution_authority: false,
+} as const);
 
 const CORS: Record<string, string> = {
   "access-control-allow-origin": "*",
@@ -196,6 +213,7 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     }
     return json({
       ...publicModule(mod, completed.includes(mod.id)),
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       completed_modules: completed,
     });
   }
@@ -205,6 +223,7 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     const modules = deriveModules(board);
     return json({
       schema: "csoai.hitl-curriculum/0.1",
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       policy: HITL_POLICY,
       derived_from: "GET /api/gspc → axes[] (read live on every request)",
       count: modules.length,
@@ -233,6 +252,7 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
   if (path === "record") {
     return json({
       schema: "csoai.hitl-record/0.1",
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       policy: HITL_POLICY,
       store_bound: Boolean(store),
       count: receipts.length,
@@ -249,10 +269,11 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
   const counts = decisionCounts(challenges, receipts);
   return json({
     schema: HITL_STATE_SCHEMA,
+    assessment_scope: HITL_ASSESSMENT_SCOPE,
     policy: HITL_POLICY,
     title: "Human in the loop",
     one_line:
-      "A measurement says what was observed. It never says what should happen. The acts — publish, release, send, approve — wait for a competent, named human.",
+      "Record a review decision after a live-board knowledge check. Human identity, professional competence and action authority require separate evidence.",
     statutory_basis: "EU AI Act Art. 14 (human oversight) · Art. 4 (AI literacy) · ETSI EN 304 223 P11",
     decisions: [...HITL_DECISIONS],
     receipt_schema: HITL_RECEIPT_SCHEMA,
@@ -404,6 +425,7 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       correct_option: module.correct_option,
       explanation: module.explanation,
       oversight_gate_unlocked: checked.correct,
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       recorded: stored,
       note: checked.correct
         ? "Correct. The decision endpoint re-checks this answer against the live record at the moment of signing, so a stale answer cannot pass."
@@ -578,6 +600,7 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       stored: true,
       storage_state: "WRITE_ACKNOWLEDGED",
       execution_authority: false,
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       blocked_by_competency_gate: false,
       receipt: publicReceipt(receipt),
       note: receipt.signature.value_hex
@@ -591,4 +614,5 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
 
 /** HEAD answers what GET answers, with no body (functions/api/_head.ts). */
 export const onRequestHead = headFromGet(onRequestGet);
+
 

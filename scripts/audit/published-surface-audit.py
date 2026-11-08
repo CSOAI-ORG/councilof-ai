@@ -100,6 +100,97 @@ def get(url: str, method: str = "GET", timeout: int = 25):
         return 0, {}, str(exc).encode()
 
 
+def get_final(url: str, method: str = "GET", timeout: int = 25):
+    """GET a url and also report the url it was SERVED at.
+
+    urllib follows redirects, so `get()`'s body is the FINAL page's body. That
+    matters because the body and the headers must be attributed to the same
+    url: a route that 308s to another route is served AT that other route, and
+    its canonical link and its headers belong there.
+
+    MEASURED 2026-11-07: https://councilof.ai/pricing/ answers 308 to
+    /dashboard/?tab=measured&task=pricing-overview, and the canonical on the
+    page actually served is https://councilof.ai/dashboard/ — which is CORRECT.
+    Reading that canonical against the url that was ASKED for reports a defect
+    in a page that is not defective.
+    """
+    req = urllib.request.Request(url, headers=_UA, method=method)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout, context=_ctx) as r:
+            return r.status, dict(r.headers), r.read(), r.geturl()
+    except urllib.error.HTTPError as e:
+        return e.code, dict(e.headers), e.read(), e.geturl()
+    except Exception as exc:  # noqa: BLE001
+        return 0, {}, str(exc).encode(), url
+
+
+def csp_state(headers: dict) -> str:
+    """'enforced', 'report-only' or 'absent' — the state of the CSP on a response.
+
+    A policy that is only Report-Only protects nothing: the browser reports
+    what would have been blocked and blocks nothing.
+    """
+    if headers.get("content-security-policy") or headers.get("Content-Security-Policy"):
+        return "enforced"
+    if (headers.get("content-security-policy-report-only")
+            or headers.get("Content-Security-Policy-Report-Only")):
+        return "report-only"
+    return "absent"
+
+
+def canonical_finding(requested: str, served: str, canonical: str | None):
+    """The verdict on a page's canonical link, as (severity, issue, evidence).
+
+    A canonical link must name the url the page is SERVED at. Not the url that
+    was asked for: a route that 308s to another route is served AT that other
+    route, and the canonical on that page correctly names it. Comparing against
+    the requested url reports a defect in a correct page — which is what this
+    did to /pricing/ on 2026-11-07.
+
+    A canonical that names NEITHER the requested nor the served path is still a
+    real defect, and is reported with both urls so the reader can see which
+    comparison failed.
+    """
+    if not canonical:
+        return ("low", "no canonical link", "")
+    served_path = urlparse(served).path.rstrip("/")
+    canonical_path = urlparse(canonical).path.rstrip("/")
+    if canonical_path == served_path:
+        return None
+    requested_path = urlparse(requested).path.rstrip("/")
+    if served_path != requested_path:
+        return ("medium", "canonical points at a different path than the url served",
+                f"{canonical} (requested {requested}, served {served})")
+    return ("medium", "canonical points at a different path", canonical)
+
+
+def csp_finding(served: str, state: str, html_state: str | None):
+    """The verdict on one surface's Content-Security-Policy, as (severity, issue, evidence).
+
+    'enforced' is the only state that protects a surface. 'report-only' reports
+    what would have been blocked and blocks nothing. 'absent' is no policy at
+    all.
+
+    The HTML surface's state is carried in because the asymmetry is the finding:
+    a policy on the page surface and none on the machine surface is not two
+    absences, it is one surface protected and one that is not — and the machine
+    surface is the one agents read more often.
+    """
+    if state == "enforced":
+        return None
+    if state == "report-only":
+        return ("medium", "a Content-Security-Policy is present only as Report-Only",
+                "it cannot break a page, but it also cannot protect one until it is enforced")
+    machine = "/api/" in urlparse(served).path
+    evidence = ""
+    if machine and html_state == "report-only":
+        evidence = ("the HTML surface carries one only as Report-Only, and the machine "
+                    "surface is read more often than the page surface")
+    elif machine and html_state == "absent":
+        evidence = "the machine surface is read more often than the page surface"
+    return ("medium", "no Content-Security-Policy", evidence)
+
+
 def head_text(url: str) -> str:
     st, _, body = get(url)
     return body.decode("utf-8", "replace") if st == 200 else ""
@@ -127,6 +218,36 @@ class Register:
         return sum(1 for i in self.items if i["severity"] == severity)
 
 
+def route_404_finding(url: str, status: int) -> str | None:
+    """A required route that answers 404 is a defect: the reader asked for a page the
+    estate says it serves, and it is not there.
+
+    THE 404 PAGE IS NOT A REQUIRED ROUTE. It exists to be missing — a 404 is the correct
+    answer there, and a checker that reports it as a missing route punishes a repair. That
+    is not hypothetical: on 2026-11-07 the meok lane fixed its 404 page from answering 200
+    (a soft 404) to answering 404 with the page, and this rule then reported the FIX as a
+    HIGH regression.
+    """
+    if status == 404 and not url.rstrip("/").endswith("/404"):
+        return "route is a 404"
+    return None
+
+
+def soft_404_finding(origin: str, missing_status: int) -> str | None:
+    """A MISSING URL that answers 200 makes the URL look present.
+
+    It is measured on a path that DOES NOT EXIST, never on /404. The old rule measured
+    /404, which made it unsatisfiable in both directions: /404 answering 200 was called a
+    soft 404, and /404 answering 404 was called a missing route — so on 2026-11-07 this
+    checker raised a finding on ALL THREE domains, every one of them false. The status of
+    the 404 path says nothing about whether a missing URL looks present; only the missing
+    URL's own status does.
+    """
+    if missing_status == 200:
+        return "a missing URL answers HTTP 200 (soft 404)"
+    return None
+
+
 def audit_routes(reg: Register) -> None:
     # councilof.ai is the measurement surface and carries every core route.
     # csoai.org is its mirror and meok.ai is a different product: it is NOT
@@ -143,14 +264,17 @@ def audit_routes(reg: Register) -> None:
             reg.add("critical", url, "the route did not answer")
         elif status >= 500:
             reg.add("critical", url, f"server error {status}")
-        elif status == 404:
-            reg.add("high", url, "route is a 404")
-    # A soft 404: the /404 path answering 200 makes a missing URL look present.
+        else:
+            issue = route_404_finding(url, status)
+            if issue:
+                reg.add("high", url, issue)
+    # A soft 404, measured on a MISSING path: that is the only place "a missing URL looks
+    # present" can be observed. The 404 page's own status is not evidence either way.
     for origin in ORIGINS:
-        st, _, _ = get(origin + "/404")
-        if st == 200:
-            reg.add("medium", origin + "/404", "the 404 path answers HTTP 200 (soft 404)", "status=200")
         st, _, body = get(origin + "/nonexistent-audit-probe-zzz")
+        issue = soft_404_finding(origin, st)
+        if issue:
+            reg.add("medium", origin, issue, f"status={st} on a missing path")
         t = body.decode("utf-8", "replace")
         if st == 404:
             m = re.search(r'<meta[^>]+name=["\']robots["\'][^>]*content=["\']([^"\']+)', t, re.I)
@@ -204,35 +328,55 @@ def audit_headers(reg: Register) -> None:
         "https://councilof.ai/", "https://councilof.ai/api/gspc", "https://councilof.ai/api/state",
         "https://councilof.ai/api/cards", "https://csoai.org/", "https://meok.ai/",
     ]
+    # A header finding belongs to the url whose RESPONSE carried it. csoai.org
+    # answers 308 to councilof.ai, so it serves no content of its own and has
+    # no header of its own to judge; the response that a reader actually gets
+    # there is councilof.ai's, and that is where the gap is recorded. Judging
+    # csoai.org by the headers of the page it redirects to names the wrong
+    # surface, and reporting the same gap once per name is how a register stops
+    # being read.
+    seen: set[str] = set()
+    states: dict[str, str] = {}
     for url in probes:
-        st, headers, _ = get(url)
+        st, headers, _, final = get_final(url)
         if st == 0:
             continue
-        missing = [h for h in SECURITY_HEADERS if not (headers.get(h) or headers.get(h.title()))]
+        served = final or url
+        if served in seen:
+            continue
+        seen.add(served)
+        states[served] = csp_state(headers)
+        missing = [h for h in SECURITY_HEADERS
+                   if h != "content-security-policy"
+                   and not (headers.get(h) or headers.get(h.title()))]
         if missing:
-            reg.add("medium", url, "security headers missing", ", ".join(missing))
-        # A content-security-policy on the HTML surface and none on the API surface is
-        # the inconsistency that was found: the machine surface is read more often.
-        if "/api/" in url and (headers.get("content-security-policy")):
-            pass
-    html_csp = None
-    _, hh, _ = get("https://councilof.ai/")
-    html_csp = hh.get("content-security-policy")
-    if not html_csp:
-        _, hh2, _ = get("https://councilof.ai/")
-        html_csp = hh2.get("Content-Security-Policy") or hh2.get("content-security-policy-report-only")
-        if html_csp:
-            reg.add("info", "https://councilof.ai/", "a CSP is present only as Report-Only",
-                    "it cannot break a page, but it also cannot protect one until it is enforced")
-        else:
-            reg.add("medium", "https://councilof.ai/", "no Content-Security-Policy on the HTML surface")
+            reg.add("medium", served, "security headers missing", ", ".join(missing))
+
+    # The Content-Security-Policy, judged per surface.
+    #
+    # This replaces a branch that never fired:
+    #
+    #     if "/api/" in url and (headers.get("content-security-policy")):
+    #         pass
+    #
+    # It had the shape of the rule it meant to be — a policy on the page
+    # surface and none on the machine surface — but its body was `pass` and its
+    # condition tested for the policy BEING PRESENT, so it could only ever do
+    # nothing. The asymmetry it was written for went unreported for as long as
+    # it stood. It is now measured.
+    html_state = states.get("https://councilof.ai/")
+    for served, state in states.items():
+        verdict = csp_finding(served, state, html_state)
+        if verdict:
+            severity, issue, evidence = verdict
+            reg.add(severity, served, issue, evidence)
 
 
 def audit_meta(reg: Register) -> None:
     for route in ["/", "/about/", "/board/", "/methodology/", "/connect/", "/services/",
                   "/memberships/", "/corrections/", "/faq/", "/contact/", "/pricing/"]:
         url = "https://councilof.ai" + route
-        st, _, body = get(url)
+        st, _, body, final = get_final(url)
         if st != 200:
             continue
         t = body.decode("utf-8", "replace")
@@ -241,15 +385,105 @@ def audit_meta(reg: Register) -> None:
         if not re.search(r'<meta[^>]+name=["\']description["\'][^>]*content=["\'][^"\']{20,}', t, re.I):
             reg.add("low", url, "no meta description of at least 20 characters")
         m = re.search(r'<link[^>]+rel=["\']canonical["\'][^>]*href=["\']([^"\']+)', t, re.I)
-        if not m:
-            reg.add("low", url, "no canonical link")
-        elif urlparse(m.group(1)).path.rstrip("/") != route.rstrip("/"):
-            reg.add("medium", url, "canonical points at a different path", m.group(1))
+        # The canonical is compared with the url the page was SERVED at. /pricing/
+        # answers 308 to /dashboard/?tab=measured&task=pricing-overview, and the
+        # canonical on the page served there is /dashboard/ — which is right.
+        verdict = canonical_finding(url, final or url, m.group(1) if m else None)
+        if verdict:
+            severity, issue, evidence = verdict
+            reg.add(severity, url, issue, evidence)
         m = re.search(r'<meta[^>]+property=["\']og:image["\'][^>]*content=["\']([^"\']+)', t, re.I)
         if m and m.group(1).startswith("http"):
             ist, _, _ = get(m.group(1))
             if ist != 200:
                 reg.add("low", url, "og:image does not resolve", f"{m.group(1)} -> {ist}")
+
+
+QUALIFIER = r"model[- ]compar\w*|comparisons|financial[- ]fact|financial|subject|fact"
+
+
+def _governing_qualifier(before: str, after: str):
+    """The qualifier that governs THIS number, or None.
+
+    A qualifier governs a number only when no other number stands between them.
+
+    MEASURED 2026-11-07. The homepage's own sentence is "Published board totals 34
+    axes · 34 measured 0 of 14 model-comparison axes separated a leader". The
+    qualifier "model-comparison" sits within forty characters of "34 axes", so the
+    old rule read "34 axes" as the FLEET count and compared the board's TOTAL with
+    the fleet's 14 — and reported a HIGH: "typed axis count 34 disagrees with the
+    live board (14)" against a page and an API that agree exactly (`/api/gspc`
+    `totals.axes` = 34, `totals.model_fleets` = 14). A checker that cries wolf on a
+    correct page is worse than no checker, because it teaches the reader to ignore
+    it.
+
+    So the qualifier must belong to the number it sits BESIDE. Two rules say so:
+
+    1. If another number stands BETWEEN the qualifier and this one, the qualifier
+       belongs to that other number.
+    2. If the qualifier has its OWN number on its left ("12 model-comparison axes"),
+       it belongs to that number and is not available to govern a later one.
+
+    Both rules are needed, and each catches a shape the other misses.
+    """
+    window = before + " " + after
+    split = len(before) + 1  # where the number itself would sit
+    for m in re.finditer(QUALIFIER, window, re.I):
+        if m.end() <= split:
+            gap = window[m.end():split - 1]
+        else:
+            gap = window[split - 1:m.start()]
+        if re.search(r"\d", gap):
+            continue  # another number stands between the qualifier and this one
+        if re.search(r"\d\s*$", window[:m.start()]):
+            continue  # the qualifier carries its own number: "12 model-comparison axes"
+        return m.group(0)
+    return None
+
+
+def check_axis_counts(visible: str, live_total, live_measured, live_fleet, reg, url: str) -> None:
+    """Every axis count typed into one page's visible text, checked against the board.
+
+    Split out of audit_counts so the selftest can prove each verdict against a FIXTURE
+    without touching the network.
+    """
+    # "N axes" — but a family qualifier names a SUBSET, so "14 model-comparison
+    # axes" and "Model comparisons · 14 axes" are the FLEET count and are
+    # correct, while a bare "14 axes" claims the axis total. The qualifier
+    # can sit before the number or before the noun, so both are looked for.
+    for m in re.finditer(r"(\d+)\s+(axes|slots)\b(?!\s+measured)", visible, re.I):
+        value = int(m.group(1))
+        before = visible[max(0, m.start() - 70):m.start()].lower()
+        after = visible[m.end():m.end() + 40].lower()
+        qualifier = _governing_qualifier(before, after)
+        if qualifier:
+            if "model" not in qualifier.lower() and "comparison" not in qualifier.lower():
+                continue  # a different family: the total is not what it counts
+            if live_fleet is None:
+                continue
+            expected = live_fleet
+        else:
+            expected = live_total
+        if expected is not None and value != expected:
+            reg.add("high", url,
+                    f"typed axis count {value} disagrees with the live board ({expected})",
+                    visible[max(0, m.start() - 90):m.end() + 60].strip()[:200])
+
+    # Board-level measured counts only. "Lab Practice 37 measured" is a
+    # per-axis n — how many bank items that axis measured — and comparing it
+    # with the number of measured axes is a category error, so only the
+    # unambiguous board shapes are checked.
+    for pattern, expected in (
+        (r"(\d+)\s+axes\s+measured\b", live_measured),
+        (r"(\d+)\s+of\s+\d+\s+(?:quotable\s+)?axes\b", live_measured),
+        (r"measured\s*[:=]\s*(\d+)", live_measured),
+    ):
+        for m in re.finditer(pattern, visible, re.I):
+            value = int(m.group(1))
+            if expected is not None and value != expected:
+                reg.add("high", url,
+                        f"typed measured count {value} disagrees with the live board ({expected})",
+                        visible[max(0, m.start() - 90):m.end() + 60].strip()[:200])
 
 
 def audit_counts(reg: Register) -> None:
@@ -288,42 +522,9 @@ def audit_counts(reg: Register) -> None:
         # axes" and "Model comparisons · 14 axes" are the FLEET count and are
         # correct, while a bare "14 axes" claims the axis total. The qualifier
         # can sit before the number or before the noun, so both are looked for.
-        for m in re.finditer(r"(\d+)\s+(axes|slots)\b(?!\s+measured)", visible, re.I):
-            value = int(m.group(1))
-            before = visible[max(0, m.start() - 70):m.start()].lower()
-            after = visible[m.end():m.end() + 40].lower()
-            qualifier = re.search(
-                r"model[- ]compar\w*|comparisons|financial[- ]fact|financial|subject|fact",
-                before + " " + after,
-            )
-            if qualifier:
-                if "model" not in qualifier.group(0) and "comparison" not in qualifier.group(0):
-                    continue  # a different family: the total is not what it counts
-                if live_fleet is None:
-                    continue
-                expected = live_fleet
-            else:
-                expected = live_total
-            if expected is not None and value != expected:
-                reg.add("high", url,
-                        f"typed axis count {value} disagrees with the live board ({expected})",
-                        visible[max(0, m.start() - 90):m.end() + 60].strip()[:200])
-
-        # Board-level measured counts only. "Lab Practice 37 measured" is a
-        # per-axis n — how many bank items that axis measured — and comparing it
-        # with the number of measured axes is a category error, so only the
-        # unambiguous board shapes are checked.
-        for pattern, expected in (
-            (r"(\d+)\s+axes\s+measured\b", live_measured),
-            (r"(\d+)\s+of\s+\d+\s+(?:quotable\s+)?axes\b", live_measured),
-            (r"measured\s*[:=]\s*(\d+)", live_measured),
-        ):
-            for m in re.finditer(pattern, visible, re.I):
-                value = int(m.group(1))
-                if expected is not None and value != expected:
-                    reg.add("high", url,
-                            f"typed measured count {value} disagrees with the live board ({expected})",
-                            visible[max(0, m.start() - 90):m.end() + 60].strip()[:200])
+        # The qualifier must GOVERN this number: if another number stands between
+        # the qualifier and this one, it belongs to that other number.
+        check_axis_counts(visible, live_total, live_measured, live_fleet, reg, url)
 
 
 def audit_language(reg: Register) -> None:
@@ -368,11 +569,125 @@ def audit_machine_files(reg: Register) -> None:
         reg.add("high", "https://councilof.ai/sitemap.xml", f"sitemap did not answer ({st})")
 
 
+def selftest() -> int:
+    """Prove each count verdict against a FIXTURE, with no network.
+
+    A checker that cries wolf on a correct page is worse than no checker, because it
+    teaches the reader to ignore it. So every rule is proved in BOTH directions: the
+    defect it exists to catch is still caught, and the correct page is left alone.
+
+    The board's own numbers on 2026-11-07: 34 axes, 34 measured, 14 model-comparison
+    axes (the fleet), 0 separated, 7 ties, 7 untested.
+    """
+    cases = []
+
+    def check(name, ok, detail=""):
+        cases.append((name, bool(ok), detail))
+
+    def run(text, total=34, measured=34, fleet=14):
+        reg = Register()
+        check_axis_counts(text, total, measured, fleet, reg, "https://councilof.ai/")
+        return reg.items
+
+    # 1. THE FALSE POSITIVE, verbatim from the live homepage's own sentence. The
+    #    qualifier "model-comparison" belongs to the 14, not to the 34 — and the
+    #    old rule compared the board's total with the fleet count and reported a
+    #    HIGH against a page and an API that agree exactly.
+    real = ("Published board totals 34 axes · 34 measured 0 of 14 model-comparison "
+            "axes separated a leader · 7 TIE · 7 UNTESTED")
+    found = run(real)
+    check("the live homepage's own sentence raises no finding", not found, str(found))
+
+    # 2. THE DEFECT THE CHECK EXISTS FOR: a page typing a total that is not the
+    #    board's total is still caught.
+    found = run("Published board totals 33 axes · 33 measured")
+    check("a wrong total is still caught", len(found) == 1 and found[0]["severity"] == "high", str(found))
+    check("the wrong total names both numbers",
+          bool(found) and "33" in found[0]["issue"] and "34" in found[0]["issue"], str(found))
+
+    # 3. THE FLEET COUNT, in the shape the grammar allows, is checked against the
+    #    fleet and not against the total.
+    found = run("Model comparisons · 14 axes")
+    check("a correct fleet count raises no finding", not found, str(found))
+    found = run("Model comparisons · 13 axes", fleet=14)
+    check("a wrong fleet count is caught", len(found) == 1, str(found))
+
+    # 4. The measured-count shapes.
+    found = run("34 axes measured")
+    check("a correct measured count raises no finding", not found, str(found))
+    found = run("33 axes measured")
+    check("a wrong measured count is caught", len(found) == 1, str(found))
+    found = run("34 of 34 axes")
+    check("a correct 'N of N axes' raises no finding", not found, str(found))
+    found = run("33 of 34 axes")
+    check("a wrong 'N of N axes' is caught", len(found) == 1, str(found))
+    found = run("measured: 34")
+    check("a correct 'measured: N' raises no finding", not found, str(found))
+    found = run("measured: 33")
+    check("a wrong 'measured: N' is caught", len(found) == 1, str(found))
+
+    # 5. A per-axis n is NOT a board count: "Lab Practice 37 measured" counts bank
+    #    items, and comparing it with the measured-axis count is a category error.
+    found = run("Lab Practice 37 measured")
+    check("a per-axis n is not compared with the board count", not found, str(found))
+
+    # 6. A qualifier belonging to ANOTHER number does not govern this one, and a
+    #    qualifier that DOES belong to this one still does.
+    found = run("34 axes — 12 model-comparison axes")
+    check("a qualifier behind another number does not govern", not found, str(found))
+    found = run("12 model-comparison axes — 34 axes")
+    check("a qualifier before its own number still governs", not found, str(found))
+    found = run("12 model-comparison axes — 13 axes", fleet=14)
+    check("and a wrong number beside it is still caught", len(found) == 1, str(found))
+
+    # 7. THE 404 FAMILY. The old rules measured /404 twice and could not both be
+    #    satisfied: /404 answering 200 was called "the 404 path answers HTTP 200 (soft
+    #    404)", and /404 answering 404 was called "route is a 404" HIGH. So the checker
+    #    raised a finding on ALL THREE domains, every one of them false — and when the meok
+    #    lane CORRECTLY changed its 404 page from a soft 200 to a real 404 with the page,
+    #    the audit reported the repair as a HIGH regression. A checker that punishes the
+    #    fix teaches the reader to ignore it.
+    check("a missing URL answering 404 raises no soft-404 finding",
+          soft_404_finding("https://x/", 404) is None, str(soft_404_finding("https://x/", 404)))
+    check("a missing URL answering 200 IS a soft 404",
+          soft_404_finding("https://x/", 200) is not None, str(soft_404_finding("https://x/", 200)))
+    check("a missing URL answering 500 is not reported as a soft 404",
+          soft_404_finding("https://x/", 500) is None, str(soft_404_finding("https://x/", 500)))
+    check("the 404 page answering 404 is NOT a missing route",
+          route_404_finding("https://meok.ai/404", 404) is None,
+          str(route_404_finding("https://meok.ai/404", 404)))
+    check("the 404 page answering 200 is not a missing route either",
+          route_404_finding("https://councilof.ai/404", 200) is None,
+          str(route_404_finding("https://councilof.ai/404", 200)))
+    check("a required route answering 404 is still caught",
+          route_404_finding("https://councilof.ai/board/", 404) == "route is a 404",
+          str(route_404_finding("https://councilof.ai/board/", 404)))
+    check("a required route answering 200 raises nothing",
+          route_404_finding("https://councilof.ai/board/", 200) is None,
+          str(route_404_finding("https://councilof.ai/board/", 200)))
+
+    failed = 0
+    for name, ok, detail in cases:
+        if not ok:
+            failed += 1
+        line = f"{'ok  ' if ok else 'FAIL'} {name}"
+        if not ok and detail:
+            line += f" — {detail}"
+        print(line)
+    print(f"published-surface-audit selftest: {len(cases) - failed}/{len(cases)} passed")
+    return 1 if failed else 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", help="write the register to this file as JSON")
     ap.add_argument("--only", help="comma-separated check names")
+    ap.add_argument("--selftest", action="store_true",
+                    help="prove the count rules against a fixture, with no network")
     args = ap.parse_args()
+
+    if args.selftest:
+        return selftest()
 
     reg = Register()
     checks = {
