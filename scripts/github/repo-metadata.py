@@ -86,7 +86,9 @@ limitations under the License.
 
 # --------------------------------------------------------------------------- hand-written (read by a person on 2026-09-05)
 HAND: dict[str, str] = {
-    "councilof-ai": "📏 Measures AI systems on frozen instruments and publishes the live 22-axis GSPC board, Ed25519-signed cards, a signed Merkle root with a Rekor witness, and a public corrections ledger — councilof.ai. Measurement, not certification.",
+    # Flagship reviewed 2026-11-08: describe the service without a stale axis
+    # count or suggesting that GSPC measures Council's own repository.
+    "councilof-ai": "📏 Publishes AI-behaviour measurements, dated evidence records, frozen test instruments and free verification tools at councilof.ai. Measurement, not certification.",
     "gspc-board": "🪞 Mirrors GET councilof.ai/api/gspc as dated JSON/parquet snapshots — every count derived from the axes array, every card Ed25519-verifiable without an account. CC0 data.",
     "a2a-signed-receipts": "🧾 Extends A2A with signed-receipts/v1 — did:web key-trust for §8.4 AgentCard signing plus Ed25519-signed task-outcome receipts. Evidence of what was claimed, not a certification.",
     "inspect-receipts": "🔏 Signs every Inspect AI eval run with an Ed25519, hash-chained, offline-verifiable measurement receipt. Evidence of what was claimed and when — not certification.",

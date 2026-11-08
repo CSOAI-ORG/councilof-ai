@@ -19,6 +19,13 @@ the primary records. Visible review dates are formatted from their recorded
 dates in UTC. The older outside-use review date is preserved; reviewing the
 new filings does not silently redate the other evidence.
 
+The flagship override in the existing repository-metadata planner now uses
+a count-free service description. Its earlier override still said 22 axes.
+The live GitHub description also used wording that could imply Council's
+own repository was measured by GSPC. The source correction does not itself
+apply a live metadata update; the owner action packet contains the proposed
+single-repository description plan. No topic or licence change is proposed.
+
 ## Primary records reviewed
 
 - NAIC v5.0 received comments, item 33, PDF pages 224–225:
