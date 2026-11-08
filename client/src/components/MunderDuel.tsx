@@ -3,6 +3,7 @@ import {
   MUNDER_KEY, MEOK_SOURCE, makeMunderSession, decodeMunder, saveMunder,
   chooseMunder, beginMeok, receiveMeok, holdMunder, approveMunder, nextMunder,
   fetchMeokMove, parseModelMove, munderSummary, munderReport, type MunderSession,
+  beginMunderLesson, retryMunderLesson, munderCaseLesson, MAX_MUNDER_LOCAL_RETRIES,
 } from "@/lib/munderDuel";
 import { generatePracticeRounds, type PracticeDecision } from "@/lib/munderPractice";
 
@@ -47,7 +48,7 @@ export default function MunderDuel({ fetchImpl, sourceRevision = source }: Props
     try {
       const id = "munder_" + crypto.randomUUID();
       const seed = current.current ? (current.current.seed + 1) >>> 0 : 42;
-      if (retain(makeMunderSession(id, seed), "Game started. Choose your move before asking MEOK.")) setConfirmNew(false);
+      if (retain(makeMunderSession(id, seed, new Date().toISOString(), sourceRevision), "Game started. Choose your move before asking MEOK.")) setConfirmNew(false);
     } catch { show("This browser cannot create and save a game identifier."); }
   }
   function change(sessionId: string, caseId: number, kind: "human" | "approve" | "next", choice?: PracticeDecision) {
@@ -94,6 +95,19 @@ export default function MunderDuel({ fetchImpl, sourceRevision = source }: Props
       if (mounted.current) setPending(false);
     }
   }
+
+  function learningChange(sessionId: string, caseId: number, kind: "open" | "retry", choice?: PracticeDecision) {
+    const s = current.current;
+    if (!s || s.id !== sessionId || busy.current) return;
+    try {
+      const next = kind === "open" ? beginMunderLesson(s, caseId)
+        : retryMunderLesson(s, caseId, choice!);
+      retain(next, kind === "open"
+        ? "The case lesson is open. Original moves, response and approval are preserved."
+        : "Exact local retry recorded. Known-case practice is not an independent learning assessment.");
+    } catch (error) { show(error instanceof Error ? error.message : "This lesson view has changed."); }
+  }
+
   async function download(kind: "json" | "markdown") {
     if (!current.current || exporting) return;
     const snapshot = current.current;
@@ -184,6 +198,45 @@ export default function MunderDuel({ fetchImpl, sourceRevision = source }: Props
               <button type="button" className={button + " mt-2"} onClick={() => start(game.id)}>Start separate game</button>
             </div>}
         </aside>
+
+        {summary.completed > 0 ? <section className="rounded-2xl border border-slate-700 p-4 lg:col-span-2"
+          aria-labelledby="munder-lessons-title" data-testid="munder-lessons">
+          <h3 id="munder-lessons-title" className="font-semibold">Review and retry the same cases</h3>
+          <p className="mt-2 text-sm text-slate-300">Each approved case keeps its original choices and response.
+            Lessons and retries stay in this game and its download. Local retries do not change game points or call MEOK.</p>
+          {game.rounds.filter(item => item.approvedAt).map(item => {
+            const lesson = munderCaseLesson(game, item.caseId), learning = item.learning;
+            const matched = learning?.attempts.at(-1)?.choice === lesson.expected;
+            const canRetry = !!learning && !matched && learning.attempts.length < MAX_MUNDER_LOCAL_RETRIES;
+            return <details key={item.caseId} className="mt-3 rounded-xl border border-slate-700 p-3"
+              data-testid={"munder-lesson-case-" + item.caseId}>
+              <summary className="cursor-pointer font-semibold">Case {item.caseId}: {lesson.subject}
+                {" · "}{lesson.originalParticipantMatched ? "your initial choice matched" : "review your initial choice"}</summary>
+              <p className="mt-3 text-sm">{lesson.body}</p>
+              {!learning ? <button type="button" className={button + " mt-3"} disabled={pending}
+                onClick={() => learningChange(game.id, item.caseId, "open")}>Open local lesson for case {item.caseId}</button> : <>
+                <p className="mt-3 text-sm">{lesson.explanation}</p>
+                <p className="mt-2 text-sm">Known case rule: <strong>{lesson.expected}</strong>.
+                  Initial participant and MEOK moves remain recorded.</p>
+                <ol className="mt-2 list-decimal pl-5 text-sm" aria-label={"Local retry history for case " + item.caseId}>
+                  {learning.attempts.map((attempt, index) => <li key={index}>{attempt.choice}
+                    {" · "}{attempt.choice === lesson.expected ? "matches known rule" : "review rule"}
+                    {" · "}{attempt.at}</li>)}
+                </ol>
+                {canRetry ? <div className="mt-3 flex flex-wrap gap-2">
+                  <button type="button" className={button} disabled={pending}
+                    onClick={() => learningChange(game.id, item.caseId, "retry", "resolve")}>Retry case {item.caseId} as resolve</button>
+                  <button type="button" className={button} disabled={pending}
+                    onClick={() => learningChange(game.id, item.caseId, "retry", "escalate")}>Retry case {item.caseId} as escalate</button>
+                </div> : <p className="mt-3 text-sm">{matched
+                  ? "Exact retry matched the known case rule. This is local practice."
+                  : "The local retry limit is reached. Existing history is preserved."}</p>}
+                <p className="mt-3 text-xs text-slate-400">Independent held-out assessment: not established.
+                  Graph admission: not submitted. No learning gain, credential or execution authority is claimed.</p>
+              </>}
+            </details>;
+          })}
+        </section> : null}
       </div> : null}
     </section>
   );
