@@ -44,10 +44,15 @@ The focused Traction suite exercises the real component through React server
 rendering. It checks the section boundary, source links, dated status and
 limitations across compact/full and light/inverted views. Eight tests pass.
 
-Normal source publication remains subject to the complete repository
-pre-push gates and hosted required checks. No build, hosted check or deployed
-acceptance is implied by the focused test result. The release receipt and PR
-description record their actual outcomes.
+The normal full pre-push run did not complete: desktop storage fell below
+the owner's floor and the small remote runner exhausted its default heap,
+then spent the larger-heap retry under memory and disk pressure. The
+documented per-push emergency route in `.githooks/pre-push` and
+`scripts/pre-push-gates.sh` is used for this draft source handoff. No full
+local build, prerender, hosted check or deployed acceptance is claimed.
+Complete hosted required checks and M4 owner review are required before
+ready/merge. No global hook or branch-protection setting is changed.
+The release receipt and PR description record the actual scoped checks.
 
 The full content gate also detected missing producer provenance on the
 publisher-health board citation. The existing board-citation producer adds
