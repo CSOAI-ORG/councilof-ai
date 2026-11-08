@@ -43,8 +43,15 @@ import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
 
-/** The proof strip: the four figures a first-time visitor cares about. The rest are on /about/#numbers. */
-export const HOME_PROOF_IDS = ["signed_cards", "corrections", "mcp_tools", "hf_datasets"];
+/** The proof strip: the figures a first-time visitor cares about. The rest are on /about/#numbers. */
+export const HOME_PROOF_IDS = [
+  "signed_cards",
+  "corrections",
+  "mcp_tools",
+  "hf_datasets",
+  "hf_downloads_30d_other",
+  "capsules",
+];
 
 /**
  * schema.org for the front door. Four nodes an answer engine can use without reading the page:
