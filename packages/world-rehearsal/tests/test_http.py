@@ -1,3 +1,4 @@
+import http.client
 import json
 from pathlib import Path
 import sys
@@ -56,7 +57,20 @@ class HTTPTests(unittest.TestCase):
 
     def test_wrong_media_and_large_body_refused(self):
         self.assertEqual(self.request("/api/run", "{}", {"Content-Type":"text/plain"})[0], 415)
-        self.assertEqual(self.request("/api/run", "x" * (2*1024*1024+1))[0], 413)
+        # Send oversized framing alone: a correct early refusal can close the
+        # connection before a high-level client finishes uploading its body.
+        conn = http.client.HTTPConnection("127.0.0.1", self.httpd.server_port, timeout=5)
+        try:
+            conn.putrequest("POST", "/api/run")
+            conn.putheader("Origin", self.origin)
+            conn.putheader("Content-Type", "application/json")
+            conn.putheader("Content-Length", str(2*1024*1024+1))
+            conn.endheaders()
+            response = conn.getresponse()
+            self.assertEqual(response.status, 413)
+            self.assertIn(b"2 MiB", response.read())
+        finally:
+            conn.close()
 
     def test_duplicate_input_unknown_route_and_bounded_validation(self):
         self.assertEqual(self.request("/api/run", '{"seed":1,"seed":2}')[0], 400)
