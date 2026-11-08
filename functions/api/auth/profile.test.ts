@@ -89,6 +89,7 @@ async function expectFailure(response: Response, status: number, unconfirmed = f
   expect(body).not.toHaveProperty("saved");
   expect(body).not.toHaveProperty("user");
   expect(body).not.toHaveProperty("token");
+  expect(body).not.toHaveProperty("account_generation");
   if (unconfirmed) expect(body.state).toBe("write_unconfirmed");
   else expect(body).not.toHaveProperty("state");
 }
@@ -107,13 +108,15 @@ describe("owner-only private profile API", () => {
     expect(f.put).not.toHaveBeenCalled();
   });
 
-  it("/me keeps its original response shape while reading the current owner record", async () => {
+  it("/me adds only the current nonsecret generation after validating the owner", async () => {
     const f = await fixture();
     f.rows.set(userKey(EMAIL), JSON.stringify({ ...f.account, name: "Changed after token issue" }));
     const response = await request(f.env, f.token, "me");
     expect(response.status).toBe(200);
+    expect(response.headers.get("cache-control")).toBe("no-store");
     expect(await response.json()).toEqual({
       user: { email: EMAIL, name: "Changed after token issue" },
+      account_generation: f.account.account_generation,
       entitlements: { paid: false, products: [], count: 0 },
     });
     expect(f.get.mock.calls).toEqual([[userKey(EMAIL)]]);
@@ -127,6 +130,7 @@ describe("owner-only private profile API", () => {
     const tampered = btoa(JSON.stringify(envelope));
     for (const token of ["", "not-a-token", tampered]) {
       await expectFailure(await request(f.env, token), 401);
+      await expectFailure(await request(f.env, token, "me"), 401);
       await expectFailure(await request(f.env, token, "profile", "PUT", '{"name":"New"}'), 401);
     }
     expect(f.get).not.toHaveBeenCalled();
@@ -175,6 +179,8 @@ describe("owner-only private profile API", () => {
       [JSON.stringify({ ...storedAccount(), salt: "" }), 503],
       [JSON.stringify({ ...storedAccount(), pw: "not-a-digest" }), 503],
       [JSON.stringify({ ...storedAccount(), created_at: "not-a-date" }), 503],
+      ...[null, "invalid", "A".repeat(64)].map(generation =>
+        [JSON.stringify({ ...storedAccount(), account_generation: generation }), 503] as [string, number]),
       [JSON.stringify(storedAccount()).replace('"future_field":', '"overflow":1e400,"future_field":'), 503],
     ];
     for (const [raw, status] of invalidRows) {
@@ -207,6 +213,15 @@ describe("owner-only private profile API", () => {
       user: { email: EMAIL, name: "山田 🙂" },
       visibility: "private",
     });
+    const me = await request(f.env, f.token, "me");
+    expect(me.status).toBe(200);
+    expect(me.headers.get("cache-control")).toBe("no-store");
+    expect(await me.json()).toEqual({
+      user: { email: EMAIL, name: "山田 🙂" },
+      account_generation: f.account.account_generation,
+      entitlements: { paid: false, products: [], count: 0 },
+    });
+    expect(f.put).toHaveBeenCalledTimes(1);
   });
 
   it("accepts full-record semantic equality without requiring JSON key order", async () => {
@@ -234,6 +249,7 @@ describe("owner-only private profile API", () => {
       salt: "new-salt",
       pw: "b".repeat(64),
       created_at: "2027-01-01T00:00:00.000Z",
+      account_generation: "b".repeat(64),
       future_field: { replaced: true },
       schema: "new-schema",
       __proto__: null,
@@ -392,12 +408,23 @@ describe("owner-only private profile API", () => {
   });
   it("requires reauthentication for a legacy lifecycle-less token",async()=>{
     const f=await fixture(),token=await issueToken(f.env as never,{email:EMAIL,name:"Legacy"});
-    await expectFailure(await request(f.env,token!),401);expect(f.put).not.toHaveBeenCalled();
+    await expectFailure(await request(f.env,token!),401);
+    await expectFailure(await request(f.env,token!,"me"),401);expect(f.put).not.toHaveBeenCalled();
   });
   it("refuses the old lifecycle after an account is recreated at the same email",async()=>{
     const f=await fixture();f.rows.set(userKey(EMAIL),JSON.stringify({...f.account,account_generation:"b".repeat(64)}));
     await expectFailure(await request(f.env,f.token),401);
-    await expectFailure(await putName(f,{name:"Wrong lifecycle"}),401);expect(f.put).not.toHaveBeenCalled();
+    await expectFailure(await request(f.env,f.token,"me"),401);
+    await expectFailure(await putName(f,{name:"Wrong lifecycle"}),401);
+    const fresh=await issueToken(f.env,{email:EMAIL,name:"Current incarnation",account_generation:"b".repeat(64)});
+    const current=await request(f.env,fresh!,"me");
+    expect(current.status).toBe(200);
+    expect(current.headers.get("cache-control")).toBe("no-store");
+    expect(await current.json()).toEqual({
+      user:{email:EMAIL,name:f.account.name},account_generation:"b".repeat(64),
+      entitlements:{paid:false,products:[],count:0},
+    });
+    expect(f.put).not.toHaveBeenCalled();
   });
 
 });
