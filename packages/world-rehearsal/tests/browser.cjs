@@ -69,6 +69,37 @@ const assert = require("node:assert/strict");
     await page.locator('[name="seed"]').fill("43");
     assert.equal(await page.locator("#download").isDisabled(),true);
     assert.equal(await page.locator("#rows tr").count(),0);
+    // Paired measurements must retain separate units and refuse rewritten reports.
+    await page.getByRole("button",{name:"Run paired controls",exact:true}).click();
+    await page.getByText(/Measurement recorded in/).waitFor();
+    assert.equal(await page.locator("#measurement-rows tr").count(),12);
+    assert.match(await page.locator("#measurement-counts").textContent(),/Actual model calls: 0/);
+    assert.match(await page.locator("#measurement-counts").textContent(),/Consenting human participants: 0/);
+    assert.equal(await page.getByText("Not estimable: no decisions",{exact:true}).count(),3);
+    const [measurementDownload]=await Promise.all([page.waitForEvent("download",{timeout:5000}),
+      page.getByRole("button",{name:"Save measurement report",exact:true}).click()]);
+    const measurementPath=join(temp,"measurement.json");await measurementDownload.saveAs(measurementPath);
+    const measurement=JSON.parse(await readFile(measurementPath,"utf8"));
+    assert.equal(measurement.counters.simulation_episodes,24);
+    assert.equal(measurement.counters.actual_model_calls,0);
+    assert.equal(measurement.counters.consenting_human_participants,0);
+    assert.equal(measurement.summary.promotion_allowed,false);
+    await page.getByRole("textbox",{name:"Seeds, separated by commas"}).fill("42,42");
+    assert.equal(await page.locator("#measurement-download").isDisabled(),true);
+    assert.equal(await page.locator("#measurement-rows tr").count(),0);
+    await page.getByRole("button",{name:"Run paired controls",exact:true}).click();
+    await page.getByText(/Use 1 to 8 distinct integer seeds/).waitFor();
+    await page.locator("#measurement-reopen").setInputFiles(measurementPath);
+    await page.getByText(/Replay match. Internal consistency only/).waitFor();
+    assert.equal(await page.locator("#measurement-rows tr").count(),12);
+    const forged=structuredClone(measurement);forged.counters.consenting_human_participants=1;
+    const forgedPath=join(temp,"forged-measurement.json");await writeFile(forgedPath,JSON.stringify(forged));
+    await page.locator("#measurement-reopen").setInputFiles(forgedPath);
+    await page.getByText(/Measurement report does not match deterministic replay/).waitFor();
+    assert.equal(await page.locator("#measurement-download").isDisabled(),true);
+    assert.equal(await page.locator("#measurement-rows tr").count(),0);
+    await page.locator("#measurement-reopen").setInputFiles(measurementPath);
+    await page.getByText(/Replay match. Internal consistency only/).waitFor();
     await page.setViewportSize({width:390,height:844});
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
     await page.screenshot({path:join(temp,"mobile.png"),fullPage:true});
@@ -77,7 +108,12 @@ const assert = require("node:assert/strict");
       "two interventions with real SwarmChat records","saved actual bundles",
       "reopened downloaded original","compared controlled changes","changed comparison clears result",
       "tampered bundle refused and stale view cleared","original recovery",
-      "scenario input clears old output","390px no horizontal page overflow","no page errors"
+      "scenario input clears old output","390px no horizontal page overflow","no page errors",
+      "paired controls render twelve cases","separate synthetic/model/human units",
+      "zero-decision rate is not estimable","actual measurement report downloaded",
+      "changed measurement inputs clear old result","duplicate seeds refused",
+      "downloaded measurement replayed","forged participation refused and cleared",
+      "original measurement recovered"
     ],origin:"loopback",models:0,external_requests:0},null,2));
   } finally {
     if(browser)await browser.close();
@@ -86,3 +122,4 @@ const assert = require("node:assert/strict");
     await rm(temp,{recursive:true,force:true});
   }
 })().catch(error=>{console.error(error);process.exitCode=1;});
+

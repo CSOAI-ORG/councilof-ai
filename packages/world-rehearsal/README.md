@@ -82,6 +82,8 @@ Lookup updates are counted separately. No billion-agent scale claim is made.
 ```sh
 python3 packages/world-rehearsal/main.py run --population 1000 --intervention evidence-aware > bundle.json
 python3 packages/world-rehearsal/main.py verify bundle.json
+python3 packages/world-rehearsal/main.py measure --population 1000 --seeds 42 43 44 --rounds 10 > measurement.json
+python3 packages/world-rehearsal/main.py verify-measurement measurement.json
 python3 packages/world-rehearsal/scripts/check_upstreams.py
 python3 -B -m unittest discover -s packages/world-rehearsal/tests -p 'test_*.py'
 ```
@@ -110,11 +112,71 @@ release. The runtime probe test is a protocol fixture, not a real Kiri test.
 
 ## Production integration still required
 
-Validation on 8 November 2026: 23 Python tests, the 11-step DOM/HTTP journey
-and the 10-check native Chromium journey passed. The browser run checks actual
-downloads/reopening, comparisons, tamper refusal, stale-result clearing and
-390px page overflow. [CI receipt](https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42444509465).
-This does not establish visual design perfection or accessibility conformance.
+The v0.1 predecessor passed 23 Python tests, 11 DOM/HTTP journeys and 10 native
+Chromium checks ([historical CI receipt](https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42444509465)).
+For this v0.2 candidate, 36 Python tests passed locally. The paired-control UI
+was exercised in a native browser; the automated browser journey now includes
+measurement downloads, reopening and forged participation rejection. See the
+current PR checks for qualification of the exact release head. Historical CI
+does not qualify changed bytes. No accessibility conformance is claimed.
+
+## Paired deterministic measurement
+
+Section 5 runs both interventions on identical seeds and populations for four
+declared cases: evidence revoked during a run, unchanged evidence, an expired
+permit and evidence revoked at the start. Default inputs yield 12 paired cases,
+24 episodes and 24,000 synthetic record instances, not 24,000 distinct people.
+Actual model calls, response replays and consenting human participants are
+separate counters and remain zero. Work is capped at 2,000,000 record-ticks.
+
+The measurement distinguishes completed decisions, blocked decision slots and
+retained selections. A retained selection after execution stops is not counted
+as a new decision. An episode with no decisions has a null error-rate estimate;
+abstaining everywhere cannot pass the equal-completion control. Passing controls
+and observing a difference are separate results. The declared fixture deliberately
+favors checking revocation; it establishes neither a novel capability nor a
+prediction about a population. Seeds are not independent human samples.
+
+The unsigned `csoai.rehearsal-measurement/0.1` wrapper carries the existing
+canonical event, with `UNMEASURED` state and null board value. Reopening reruns
+the complete suite against the pinned implementation and compares all fields.
+Changing a count, score, limit or engine pin invalidates the report even if its
+outer digest is recomputed. Changing engine Python bytes changes the fingerprint:
+preserve the v0.1 archive for v0.1 bundles and the v0.2 archive for v0.2 reports.
+
+## Bounded improvement research sequence
+
+1. **Plumbing (implemented):** deterministic controls, preserved input/source
+   pins, bounded work, explicit participation counters, exact replay and refusal
+   to infer improvement from inactivity.
+2. **Selected models (not implemented):** an opt-in adapter for one pinned model
+   revision, with prompt/tool versions, token/time/cost ceilings, recorded call
+   failures, request/response digests and separate live-call/replay counters.
+   Freeze a baseline before testing. Separate model failure, policy refusal and
+   useful completion. Keep held-out scenarios inaccessible to the proposing agent.
+3. **Consenting humans (not implemented):** the existing identity/consent and
+   authority/effect contracts, accessible explanations, withdrawal and a qualified
+   reviewer. Training XP does not grant execution authority or certify competence.
+   Count distinct consented participants separately from sessions and reviews.
+4. **Candidate evolution (not implemented):** a proposer may produce a bounded
+   patch in an isolated workspace. A separate evaluator checks regression, safety,
+   completion and resource budgets. An authenticated authorized human approves an
+   exact revision; the executor rechecks scope, expiry and revocation. Preserve
+   rollback and independently observe the harmless effect. Never let the proposer
+   rewrite its tests or approve its own promotion.
+5. **Weight-space experiments (research only):** preserve original weights and
+   license, hash each changed checkpoint, and evaluate each version independently
+   on held-out and unrelated regression tasks. The referenced
+   [weight-space programming article](https://rikiyat.github.io/blog/weight-space-programming/)
+   reports limited experiments; it does not establish general automatic improvement
+   of this system. No weights were downloaded or edited by this candidate.
+
+For UK/EU/US-facing deployment, the engineering priorities are local processing,
+data minimization, clear source rights, revocable authority, accessible controls,
+audit exports and transparent corrections. Legal applicability depends on the
+actual service and jurisdiction; a simulation pass is not a compliance finding.
+Retrieval from permitted live reports and human-approved lessons should precede
+any model fine-tuning. Synthetic reports cannot substitute for evidence of transfer.
 
 Use the existing Council OS route/pane and evidence handoff, not a second portal
 or parallel authority store. Serve the surface and its API under one controlled
@@ -135,3 +197,4 @@ To create the dependency-complete source archive, use:
 ```sh
 python3 packages/world-rehearsal/scripts/package_candidate.py --output /tmp/council-rehearsal-candidate.zip
 ```
+

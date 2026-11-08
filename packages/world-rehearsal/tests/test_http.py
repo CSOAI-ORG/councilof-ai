@@ -12,6 +12,17 @@ from rehearsal.server import make_server
 
 
 class HTTPTests(unittest.TestCase):
+    def test_measurement_run_reopen_refusal_and_static_module(self):
+        status, body, _ = self.request("/api/measure", '{"population":25,"seeds":[42],"rounds":6}')
+        self.assertEqual(status, 200)
+        report = json.loads(body)["report"]
+        self.assertEqual(json.loads(self.request("/api/verify-measurement", json.dumps(report))[1])["state"], "REPLAY_MATCH")
+        report["counters"]["actual_model_calls"] = 1
+        self.assertEqual(self.request("/api/verify-measurement", json.dumps(report))[0], 400)
+        self.assertEqual(self.request("/api/measure", '{"seeds":[1,1]}')[0], 400)
+        self.assertEqual(self.request("/api/measure", "{}", {"Origin":"https://elsewhere.invalid"})[0], 403)
+        self.assertEqual(self.request("/measurement.js")[0], 200)
+
     @classmethod
     def setUpClass(cls):
         cls.httpd = make_server()
@@ -88,3 +99,4 @@ class HTTPTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

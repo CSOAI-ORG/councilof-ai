@@ -10,6 +10,7 @@ from urllib.parse import urlsplit
 from .dependencies import ROOT
 from .engine import simulate
 from .evidence import bundle_for, strict_json, verify, compare
+from .measurement import run_suite, verify_suite
 from .messaging import RehearsalMessages
 
 MAX_BODY = 2 * 1024 * 1024
@@ -68,7 +69,8 @@ def make_server(port=0):
                     "messaging": "SWARMCHAT_STORE", "canonical_events": "csoai.evidence-event/0.1",
                     "container_runtime": "NOT_CONNECTED"})
                 return
-            file = {"/": "index.html", "/app.js": "app.js", "/app.css": "app.css"}.get(path)
+            file = {"/": "index.html", "/app.js": "app.js", "/app.css": "app.css",
+                    "/measurement.js": "measurement.js"}.get(path)
             if not file:
                 self.reply(404, {"error": "Not found"})
                 return
@@ -103,6 +105,12 @@ def make_server(port=0):
                             "elapsed_ms": round((time.monotonic() - started) * 1000, 3)}
                     elif path == "/api/verify":
                         result = verify(params)
+                    elif path == "/api/measure":
+                        started = time.monotonic()
+                        result = {"report": run_suite(params),
+                                  "elapsed_ms": round((time.monotonic() - started) * 1000, 3)}
+                    elif path == "/api/verify-measurement":
+                        result = verify_suite(params)
                     elif path == "/api/compare":
                         if not isinstance(params, list) or len(params) != 2:
                             raise ValueError("Select exactly two bundles")
@@ -136,3 +144,4 @@ def serve(port):
     finally:
         httpd.server_close()
         httpd.app.close()
+

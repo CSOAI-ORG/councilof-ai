@@ -4,6 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Decision rehearsal · Council of AI</title>
   <link rel="stylesheet" href="/app.css"><script type="module" src="/app.js"></script>
+  <script type="module" src="/measurement.js"></script>
 </head>
 <body>
 <header><a href="https://councilof.ai/globe" rel="noreferrer">Council of AI · Globe</a><span class="pill">Local integration candidate</span></header>
@@ -54,5 +55,24 @@
   <section class="card"><h2>Accessible result table</h2><p>The table contains the complete aggregate timeline independently of the globe.</p>
     <div class="table-wrap"><table><thead><tr><th>Tick</th><th>A</th><th>B</th><th>C</th><th>Undecided</th><th>Revoked A selections</th></tr></thead><tbody id="rows"></tbody></table></div>
   </section>
+  <section class="card" aria-labelledby="measurement-title">
+    <h2 id="measurement-title">5. Measure both interventions</h2>
+    <p>Compare identical synthetic cases with revocation, unchanged evidence and an expired permit. The suite counts completed decisions separately from retained state.</p>
+    <form id="measurement-form">
+      <div class="pair"><label>Records per episode<input name="population" type="number" min="1" max="10000" value="1000" required></label>
+      <label>Seeds, separated by commas<input name="seeds" value="42,43,44" maxlength="100" required></label></div>
+      <label>Ticks per episode<input name="rounds" type="number" min="4" max="50" value="10" required></label>
+      <button id="measure">Run paired controls</button>
+    </form>
+    <p id="measurement-status" role="status" aria-live="polite">Deterministic controls only. No live model calls or human participants.</p>
+    <div id="measurement-counts" class="metrics"></div>
+    <p id="measurement-summary"></p>
+    <div class="table-wrap"><table><thead><tr><th>Case / seed</th><th>Completed decisions: baseline / candidate</th><th>Revoked decisions: baseline / candidate</th><th>Candidate revoked rate</th><th>Controls</th></tr></thead><tbody id="measurement-rows"></tbody></table></div>
+    <p class="small">A zero-decision case has no error-rate estimate. Seeds are reproducibility inputs, not independent human samples. These controls do not establish model improvement or GSPC admission.</p>
+    <button id="measurement-download" disabled>Save measurement report</button>
+    <label>Reopen measurement report<input id="measurement-reopen" type="file" accept=".json,application/json"></label>
+    <details><summary>Exact measurement source</summary><pre id="measurement-source">No report selected.</pre></details>
+  </section>
 </main><footer>Local, synthetic and unmeasured · Measurement, never certification · <a href="https://councilof.ai/dashboard?tab=evidence-learning">Evidence and learning</a></footer>
 </body></html>
+

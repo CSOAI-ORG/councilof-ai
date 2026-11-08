@@ -12,6 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from check_upstreams import check
+sys.path.insert(0, str(ROOT))
+from rehearsal import VERSION
 
 
 def package(output):
@@ -30,8 +32,8 @@ def package(output):
             raise ValueError("Required source missing: " + str(file))
     entries = {file.relative_to(REPO).as_posix(): file.read_bytes() for file in sorted(set(source))}
     entries["SOURCE-MANIFEST.json"] = (json.dumps({
-        "schema": "csoai.candidate-source/0.1", "package_version": "0.1.0",
-        "base_commit": "ff0fbe8f3ad8aca4d02aa66d41e709b573ca091a",
+        "schema": "csoai.candidate-source/0.1", "package_version": VERSION,
+        "base_commit": "b1905d6465aa299f9dfb5bd4290ec2f955b63b0e",
         "state": "LOCAL_CANDIDATE", "deployed": False,
         "files": {p: hashlib.sha256(data).hexdigest() for p, data in entries.items()}
     }, indent=2) + "\n").encode()
@@ -51,3 +53,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
     package(parser.parse_args().output)
+
