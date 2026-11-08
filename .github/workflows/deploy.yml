@@ -101,8 +101,34 @@ jobs:
       - name: Pages size guard — 25 MiB per-file limit (source assets)
         run: node scripts/pages-size-guard.mjs public --packed-history-projection --exclude proofs,cards
 
+      - name: Native canvas build prerequisites
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+            build-essential pkg-config libpixman-1-dev \
+            libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+
       - name: Install deps
         run: npm ci --no-audit --no-fund
+
+      - name: Native canvas runtime smoke
+        timeout-minutes: 1
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const assert = require('node:assert/strict');
+          const { createCanvas } = require('canvas');
+          const canvas = createCanvas(2, 2);
+          const context = canvas.getContext('2d');
+          context.fillStyle = '#112233';
+          context.fillRect(0, 0, 2, 2);
+          assert.deepEqual(Array.from(context.getImageData(0, 0, 2, 2).data),
+            [17, 34, 51, 255, 17, 34, 51, 255, 17, 34, 51, 255, 17, 34, 51, 255]);
+          const png = canvas.toBuffer('image/png');
+          assert.ok(Buffer.isBuffer(png) && png.length > 8);
+          assert.deepEqual(Array.from(png.subarray(0, 8)), [137, 80, 78, 71, 13, 10, 26, 10]);
+          console.log('Native canvas smoke: PASS (2x2 RGBA and PNG signature; RAM only)');
+          NODE
 
       # No release may present a stale sidecar as current or serve plaintext / mismatched
       # files under an .ots extension. This is intentionally red until the historical
