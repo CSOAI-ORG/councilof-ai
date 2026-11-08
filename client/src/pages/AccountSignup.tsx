@@ -69,7 +69,7 @@ export default function AccountSignup() {
 
   if (loading) return <p role="status">Checking your account...</p>;
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-12">
+    <div className="min-h-screen bg-gray-50 px-4 py-12">
       <section className="mx-auto max-w-md rounded-xl border bg-white p-6 shadow-sm" aria-labelledby="signup-title">
         <h1 id="signup-title" className="text-2xl font-semibold">Create your Council account</h1>
         <p className="mt-3 text-sm text-gray-600">
@@ -85,6 +85,6 @@ export default function AccountSignup() {
         </form>
         <p className="mt-4 text-sm">Already have an account? <a className="underline" href={councilLoginHref(returnTo)}>Sign in</a></p>
       </section>
-    </main>
+    </div>
   );
 }
