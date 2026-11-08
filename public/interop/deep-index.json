@@ -1,0 +1,3552 @@
+{
+  "schema": "csoai.deep-index/0.1",
+  "brand": "Council of AI — Global Regulation Atlas",
+  "title": "The deep index — every dimension the estate carries, joined or declared apart",
+  "purpose": "One artifact joining the sector×framework content, the industry pages, the Distribution Hive account spine, the Layer 0 trust floor, the measured board and the deadline register — and listing, as data, every cross-dimension binding that has no published artifact yet.",
+  "measurement_not_certification": "This index carries descriptions and states exactly as their sources serve them. A binding declared absent is a fact about published artifacts, not a judgment about compliance. Nothing here is legal opinion.",
+  "content_sha256_rule": "sha256 over canonicalJson(content) — sorted keys, no whitespace — where content is the seven layers plus anchors and layer_meta, WITHOUT generated_at and WITHOUT the hash itself. Same canonical rule as the card digest family; recomputable from the artifact itself.",
+  "content_sha256": "3aa2815850cfc2ff0947e7aa01da591c97ea0ac33518e4a9b083dffece334217",
+  "sources": {
+    "sectors_frameworks": "client/src/data/sectors-content.ts (committed bytes)",
+    "industries": "client/src/data/industries-content.ts (committed bytes)",
+    "accounts": "client/src/data/ecosystem.ts (committed bytes, org-level public fields only)",
+    "layer0": "client/src/pages/Layer0.tsx + client/src/data/layer0Nodes.ts (committed bytes, titles and registry fields)",
+    "board_axes": "https://councilof.ai/api/gspc",
+    "deadlines": "https://councilof.ai/api/regulation",
+    "anchors_crosswalk": "https://councilof.ai/crosswalk/east-west-v1.json",
+    "anchors_inventory": "https://councilof.ai/interop/regulatory-inventory-latest.json"
+  },
+  "generated_at": "2026-11-08T04:17:44.022Z",
+  "counts": {
+    "sectors_frameworks": 165,
+    "industries": 16,
+    "accounts": 88,
+    "layer0": 35,
+    "board_axes": 34,
+    "deadlines": 22,
+    "bindings": 10,
+    "declared_gaps": 10
+  },
+  "sectors_frameworks": [
+    {
+      "industry_path": "education",
+      "framework": "cra",
+      "slug": "education-cra",
+      "title": "Education AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/education-cra"
+    },
+    {
+      "industry_path": "education",
+      "framework": "dora",
+      "slug": "education-dora",
+      "title": "Education AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/education-dora"
+    },
+    {
+      "industry_path": "education",
+      "framework": "eu-ai-act",
+      "slug": "education-eu-ai-act",
+      "title": "Education AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/education-eu-ai-act"
+    },
+    {
+      "industry_path": "education",
+      "framework": "gdpr",
+      "slug": "education-gdpr",
+      "title": "Education AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/education-gdpr"
+    },
+    {
+      "industry_path": "education",
+      "framework": "hipaa",
+      "slug": "education-hipaa",
+      "title": "Education AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/education-hipaa"
+    },
+    {
+      "industry_path": "education",
+      "framework": "iso-42001",
+      "slug": "education-iso-42001",
+      "title": "Education AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/education-iso-42001"
+    },
+    {
+      "industry_path": "education",
+      "framework": "nis2",
+      "slug": "education-nis2",
+      "title": "Education AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/education-nis2"
+    },
+    {
+      "industry_path": "education",
+      "framework": "uk-ai-regulation",
+      "slug": "education-uk-ai-regulation",
+      "title": "Education AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/education-uk-ai-regulation"
+    },
+    {
+      "industry_path": "education",
+      "framework": "uk-ai",
+      "slug": "education-uk-ai",
+      "title": "Education AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/education-uk-ai"
+    },
+    {
+      "industry_path": "energy",
+      "framework": "cra",
+      "slug": "energy-cra",
+      "title": "Energy & Utilities AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-cra"
+    },
+    {
+      "industry_path": "energy",
+      "framework": "dora",
+      "slug": "energy-dora",
+      "title": "Energy & Utilities AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-dora"
+    },
+    {
+      "industry_path": "energy",
+      "framework": "eu-ai-act",
+      "slug": "energy-eu-ai-act",
+      "title": "Energy & Utilities AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-eu-ai-act"
+    },
+    {
+      "industry_path": "energy",
+      "framework": "gdpr",
+      "slug": "energy-gdpr",
+      "title": "Energy & Utilities AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-gdpr"
+    },
+    {
+      "industry_path": "energy",
+      "framework": "hipaa",
+      "slug": "energy-hipaa",
+      "title": "Energy & Utilities AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-hipaa"
+    },
+    {
+      "industry_path": "energy",
+      "framework": "iso-42001",
+      "slug": "energy-iso-42001",
+      "title": "Energy & Utilities AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-iso-42001"
+    },
+    {
+      "industry_path": "energy",
+      "framework": "nis2",
+      "slug": "energy-nis2",
+      "title": "Energy & Utilities AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-nis2"
+    },
+    {
+      "industry_path": "energy",
+      "framework": "uk-ai",
+      "slug": "energy-uk-ai",
+      "title": "Energy & Utilities AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-uk-ai"
+    },
+    {
+      "industry_path": "energy-utilities",
+      "framework": "cra",
+      "slug": "energy-utilities-cra",
+      "title": "Energy / Utilities AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-utilities-cra"
+    },
+    {
+      "industry_path": "energy-utilities",
+      "framework": "dora",
+      "slug": "energy-utilities-dora",
+      "title": "Energy / Utilities AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-utilities-dora"
+    },
+    {
+      "industry_path": "energy-utilities",
+      "framework": "eu-ai-act",
+      "slug": "energy-utilities-eu-ai-act",
+      "title": "Energy / Utilities AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-utilities-eu-ai-act"
+    },
+    {
+      "industry_path": "energy-utilities",
+      "framework": "gdpr",
+      "slug": "energy-utilities-gdpr",
+      "title": "Energy / Utilities AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-utilities-gdpr"
+    },
+    {
+      "industry_path": "energy-utilities",
+      "framework": "hipaa",
+      "slug": "energy-utilities-hipaa",
+      "title": "Energy / Utilities AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-utilities-hipaa"
+    },
+    {
+      "industry_path": "energy-utilities",
+      "framework": "iso-42001",
+      "slug": "energy-utilities-iso-42001",
+      "title": "Energy / Utilities AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-utilities-iso-42001"
+    },
+    {
+      "industry_path": "energy-utilities",
+      "framework": "nis2",
+      "slug": "energy-utilities-nis2",
+      "title": "Energy / Utilities AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-utilities-nis2"
+    },
+    {
+      "industry_path": "energy-utilities",
+      "framework": "uk-ai-regulation",
+      "slug": "energy-utilities-uk-ai-regulation",
+      "title": "Energy / Utilities AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/energy-utilities-uk-ai-regulation"
+    },
+    {
+      "industry_path": "finance-banking",
+      "framework": "cra",
+      "slug": "finance-banking-cra",
+      "title": "Finance / Banking AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-banking-cra"
+    },
+    {
+      "industry_path": "finance-banking",
+      "framework": "dora",
+      "slug": "finance-banking-dora",
+      "title": "Finance / Banking AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-banking-dora"
+    },
+    {
+      "industry_path": "finance-banking",
+      "framework": "eu-ai-act",
+      "slug": "finance-banking-eu-ai-act",
+      "title": "Finance / Banking AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-banking-eu-ai-act"
+    },
+    {
+      "industry_path": "finance-banking",
+      "framework": "gdpr",
+      "slug": "finance-banking-gdpr",
+      "title": "Finance / Banking AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-banking-gdpr"
+    },
+    {
+      "industry_path": "finance-banking",
+      "framework": "hipaa",
+      "slug": "finance-banking-hipaa",
+      "title": "Finance / Banking AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-banking-hipaa"
+    },
+    {
+      "industry_path": "finance-banking",
+      "framework": "iso-42001",
+      "slug": "finance-banking-iso-42001",
+      "title": "Finance / Banking AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-banking-iso-42001"
+    },
+    {
+      "industry_path": "finance-banking",
+      "framework": "nis2",
+      "slug": "finance-banking-nis2",
+      "title": "Finance / Banking AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-banking-nis2"
+    },
+    {
+      "industry_path": "finance-banking",
+      "framework": "uk-ai-regulation",
+      "slug": "finance-banking-uk-ai-regulation",
+      "title": "Finance / Banking AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-banking-uk-ai-regulation"
+    },
+    {
+      "industry_path": "finance",
+      "framework": "cra",
+      "slug": "finance-cra",
+      "title": "Finance & Banking AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-cra"
+    },
+    {
+      "industry_path": "finance",
+      "framework": "dora",
+      "slug": "finance-dora",
+      "title": "Finance & Banking AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-dora"
+    },
+    {
+      "industry_path": "finance",
+      "framework": "eu-ai-act",
+      "slug": "finance-eu-ai-act",
+      "title": "Finance & Banking AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-eu-ai-act"
+    },
+    {
+      "industry_path": "finance",
+      "framework": "gdpr",
+      "slug": "finance-gdpr",
+      "title": "Finance & Banking AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-gdpr"
+    },
+    {
+      "industry_path": "finance",
+      "framework": "hipaa",
+      "slug": "finance-hipaa",
+      "title": "Finance & Banking AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-hipaa"
+    },
+    {
+      "industry_path": "finance",
+      "framework": "iso-42001",
+      "slug": "finance-iso-42001",
+      "title": "Finance & Banking AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-iso-42001"
+    },
+    {
+      "industry_path": "finance",
+      "framework": "nis2",
+      "slug": "finance-nis2",
+      "title": "Finance & Banking AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-nis2"
+    },
+    {
+      "industry_path": "finance",
+      "framework": "uk-ai",
+      "slug": "finance-uk-ai",
+      "title": "Finance & Banking AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/finance-uk-ai"
+    },
+    {
+      "industry_path": "government",
+      "framework": "cra",
+      "slug": "government-cra",
+      "title": "Government & Public Sector AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-cra"
+    },
+    {
+      "industry_path": "government",
+      "framework": "dora",
+      "slug": "government-dora",
+      "title": "Government & Public Sector AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-dora"
+    },
+    {
+      "industry_path": "government",
+      "framework": "eu-ai-act",
+      "slug": "government-eu-ai-act",
+      "title": "Government & Public Sector AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-eu-ai-act"
+    },
+    {
+      "industry_path": "government",
+      "framework": "gdpr",
+      "slug": "government-gdpr",
+      "title": "Government & Public Sector AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-gdpr"
+    },
+    {
+      "industry_path": "government",
+      "framework": "hipaa",
+      "slug": "government-hipaa",
+      "title": "Government & Public Sector AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-hipaa"
+    },
+    {
+      "industry_path": "government",
+      "framework": "iso-42001",
+      "slug": "government-iso-42001",
+      "title": "Government & Public Sector AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-iso-42001"
+    },
+    {
+      "industry_path": "government",
+      "framework": "nis2",
+      "slug": "government-nis2",
+      "title": "Government & Public Sector AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-nis2"
+    },
+    {
+      "industry_path": "government-public-sector",
+      "framework": "cra",
+      "slug": "government-public-sector-cra",
+      "title": "Government / Public Sector AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-public-sector-cra"
+    },
+    {
+      "industry_path": "government-public-sector",
+      "framework": "dora",
+      "slug": "government-public-sector-dora",
+      "title": "Government / Public Sector AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-public-sector-dora"
+    },
+    {
+      "industry_path": "government-public-sector",
+      "framework": "eu-ai-act",
+      "slug": "government-public-sector-eu-ai-act",
+      "title": "Government / Public Sector AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-public-sector-eu-ai-act"
+    },
+    {
+      "industry_path": "government-public-sector",
+      "framework": "gdpr",
+      "slug": "government-public-sector-gdpr",
+      "title": "Government / Public Sector AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-public-sector-gdpr"
+    },
+    {
+      "industry_path": "government-public-sector",
+      "framework": "hipaa",
+      "slug": "government-public-sector-hipaa",
+      "title": "Government / Public Sector AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-public-sector-hipaa"
+    },
+    {
+      "industry_path": "government-public-sector",
+      "framework": "iso-42001",
+      "slug": "government-public-sector-iso-42001",
+      "title": "Government / Public Sector AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-public-sector-iso-42001"
+    },
+    {
+      "industry_path": "government-public-sector",
+      "framework": "nis2",
+      "slug": "government-public-sector-nis2",
+      "title": "Government / Public Sector AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-public-sector-nis2"
+    },
+    {
+      "industry_path": "government-public-sector",
+      "framework": "uk-ai-regulation",
+      "slug": "government-public-sector-uk-ai-regulation",
+      "title": "Government / Public Sector AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-public-sector-uk-ai-regulation"
+    },
+    {
+      "industry_path": "government",
+      "framework": "uk-ai",
+      "slug": "government-uk-ai",
+      "title": "Government & Public Sector AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/government-uk-ai"
+    },
+    {
+      "industry_path": "healthcare",
+      "framework": "cra",
+      "slug": "healthcare-cra",
+      "title": "Healthcare AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/healthcare-cra"
+    },
+    {
+      "industry_path": "healthcare",
+      "framework": "dora",
+      "slug": "healthcare-dora",
+      "title": "Healthcare AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/healthcare-dora"
+    },
+    {
+      "industry_path": "healthcare",
+      "framework": "eu-ai-act",
+      "slug": "healthcare-eu-ai-act",
+      "title": "Healthcare AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/healthcare-eu-ai-act"
+    },
+    {
+      "industry_path": "healthcare",
+      "framework": "gdpr",
+      "slug": "healthcare-gdpr",
+      "title": "Healthcare AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/healthcare-gdpr"
+    },
+    {
+      "industry_path": "healthcare",
+      "framework": "hipaa",
+      "slug": "healthcare-hipaa",
+      "title": "Healthcare AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/healthcare-hipaa"
+    },
+    {
+      "industry_path": "healthcare",
+      "framework": "iso-42001",
+      "slug": "healthcare-iso-42001",
+      "title": "Healthcare AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/healthcare-iso-42001"
+    },
+    {
+      "industry_path": "healthcare",
+      "framework": "nis2",
+      "slug": "healthcare-nis2",
+      "title": "Healthcare AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/healthcare-nis2"
+    },
+    {
+      "industry_path": "healthcare",
+      "framework": "uk-ai-regulation",
+      "slug": "healthcare-uk-ai-regulation",
+      "title": "Healthcare AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/healthcare-uk-ai-regulation"
+    },
+    {
+      "industry_path": "healthcare",
+      "framework": "uk-ai",
+      "slug": "healthcare-uk-ai",
+      "title": "Healthcare AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/healthcare-uk-ai"
+    },
+    {
+      "industry_path": "home",
+      "framework": null,
+      "slug": "home",
+      "title": "Sector Compliance Guides | CSOAI",
+      "canonical": "https://csoai.org/sectors/home"
+    },
+    {
+      "industry_path": "insurance",
+      "framework": "cra",
+      "slug": "insurance-cra",
+      "title": "Insurance AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/insurance-cra"
+    },
+    {
+      "industry_path": "insurance",
+      "framework": "dora",
+      "slug": "insurance-dora",
+      "title": "Insurance AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/insurance-dora"
+    },
+    {
+      "industry_path": "insurance",
+      "framework": "eu-ai-act",
+      "slug": "insurance-eu-ai-act",
+      "title": "Insurance AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/insurance-eu-ai-act"
+    },
+    {
+      "industry_path": "insurance",
+      "framework": "gdpr",
+      "slug": "insurance-gdpr",
+      "title": "Insurance AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/insurance-gdpr"
+    },
+    {
+      "industry_path": "insurance",
+      "framework": "hipaa",
+      "slug": "insurance-hipaa",
+      "title": "Insurance AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/insurance-hipaa"
+    },
+    {
+      "industry_path": "insurance",
+      "framework": "iso-42001",
+      "slug": "insurance-iso-42001",
+      "title": "Insurance AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/insurance-iso-42001"
+    },
+    {
+      "industry_path": "insurance",
+      "framework": "nis2",
+      "slug": "insurance-nis2",
+      "title": "Insurance AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/insurance-nis2"
+    },
+    {
+      "industry_path": "insurance",
+      "framework": "uk-ai-regulation",
+      "slug": "insurance-uk-ai-regulation",
+      "title": "Insurance AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/insurance-uk-ai-regulation"
+    },
+    {
+      "industry_path": "insurance",
+      "framework": "uk-ai",
+      "slug": "insurance-uk-ai",
+      "title": "Insurance AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/insurance-uk-ai"
+    },
+    {
+      "industry_path": "legal",
+      "framework": "cra",
+      "slug": "legal-cra",
+      "title": "Legal & Law Firms AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-cra"
+    },
+    {
+      "industry_path": "legal",
+      "framework": "dora",
+      "slug": "legal-dora",
+      "title": "Legal & Law Firms AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-dora"
+    },
+    {
+      "industry_path": "legal",
+      "framework": "eu-ai-act",
+      "slug": "legal-eu-ai-act",
+      "title": "Legal & Law Firms AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-eu-ai-act"
+    },
+    {
+      "industry_path": "legal",
+      "framework": "gdpr",
+      "slug": "legal-gdpr",
+      "title": "Legal & Law Firms AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-gdpr"
+    },
+    {
+      "industry_path": "legal",
+      "framework": "hipaa",
+      "slug": "legal-hipaa",
+      "title": "Legal & Law Firms AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-hipaa"
+    },
+    {
+      "industry_path": "legal",
+      "framework": "iso-42001",
+      "slug": "legal-iso-42001",
+      "title": "Legal & Law Firms AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-iso-42001"
+    },
+    {
+      "industry_path": "legal-law-firms",
+      "framework": "cra",
+      "slug": "legal-law-firms-cra",
+      "title": "Legal / Law Firms AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-law-firms-cra"
+    },
+    {
+      "industry_path": "legal-law-firms",
+      "framework": "dora",
+      "slug": "legal-law-firms-dora",
+      "title": "Legal / Law Firms AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-law-firms-dora"
+    },
+    {
+      "industry_path": "legal-law-firms",
+      "framework": "eu-ai-act",
+      "slug": "legal-law-firms-eu-ai-act",
+      "title": "Legal / Law Firms AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-law-firms-eu-ai-act"
+    },
+    {
+      "industry_path": "legal-law-firms",
+      "framework": "gdpr",
+      "slug": "legal-law-firms-gdpr",
+      "title": "Legal / Law Firms AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-law-firms-gdpr"
+    },
+    {
+      "industry_path": "legal-law-firms",
+      "framework": "hipaa",
+      "slug": "legal-law-firms-hipaa",
+      "title": "Legal / Law Firms AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-law-firms-hipaa"
+    },
+    {
+      "industry_path": "legal-law-firms",
+      "framework": "iso-42001",
+      "slug": "legal-law-firms-iso-42001",
+      "title": "Legal / Law Firms AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-law-firms-iso-42001"
+    },
+    {
+      "industry_path": "legal-law-firms",
+      "framework": "nis2",
+      "slug": "legal-law-firms-nis2",
+      "title": "Legal / Law Firms AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-law-firms-nis2"
+    },
+    {
+      "industry_path": "legal-law-firms",
+      "framework": "uk-ai-regulation",
+      "slug": "legal-law-firms-uk-ai-regulation",
+      "title": "Legal / Law Firms AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-law-firms-uk-ai-regulation"
+    },
+    {
+      "industry_path": "legal",
+      "framework": "nis2",
+      "slug": "legal-nis2",
+      "title": "Legal & Law Firms AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-nis2"
+    },
+    {
+      "industry_path": "legal",
+      "framework": "uk-ai",
+      "slug": "legal-uk-ai",
+      "title": "Legal & Law Firms AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/legal-uk-ai"
+    },
+    {
+      "industry_path": "manufacturing",
+      "framework": "cra",
+      "slug": "manufacturing-cra",
+      "title": "Manufacturing AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/manufacturing-cra"
+    },
+    {
+      "industry_path": "manufacturing",
+      "framework": "dora",
+      "slug": "manufacturing-dora",
+      "title": "Manufacturing AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/manufacturing-dora"
+    },
+    {
+      "industry_path": "manufacturing",
+      "framework": "eu-ai-act",
+      "slug": "manufacturing-eu-ai-act",
+      "title": "Manufacturing AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/manufacturing-eu-ai-act"
+    },
+    {
+      "industry_path": "manufacturing",
+      "framework": "gdpr",
+      "slug": "manufacturing-gdpr",
+      "title": "Manufacturing AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/manufacturing-gdpr"
+    },
+    {
+      "industry_path": "manufacturing",
+      "framework": "hipaa",
+      "slug": "manufacturing-hipaa",
+      "title": "Manufacturing AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/manufacturing-hipaa"
+    },
+    {
+      "industry_path": "manufacturing",
+      "framework": "iso-42001",
+      "slug": "manufacturing-iso-42001",
+      "title": "Manufacturing AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/manufacturing-iso-42001"
+    },
+    {
+      "industry_path": "manufacturing",
+      "framework": "nis2",
+      "slug": "manufacturing-nis2",
+      "title": "Manufacturing AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/manufacturing-nis2"
+    },
+    {
+      "industry_path": "manufacturing",
+      "framework": "uk-ai-regulation",
+      "slug": "manufacturing-uk-ai-regulation",
+      "title": "Manufacturing AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/manufacturing-uk-ai-regulation"
+    },
+    {
+      "industry_path": "manufacturing",
+      "framework": "uk-ai",
+      "slug": "manufacturing-uk-ai",
+      "title": "Manufacturing AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/manufacturing-uk-ai"
+    },
+    {
+      "industry_path": "media",
+      "framework": "cra",
+      "slug": "media-cra",
+      "title": "Media & Publishing AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-cra"
+    },
+    {
+      "industry_path": "media",
+      "framework": "dora",
+      "slug": "media-dora",
+      "title": "Media & Publishing AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-dora"
+    },
+    {
+      "industry_path": "media",
+      "framework": "eu-ai-act",
+      "slug": "media-eu-ai-act",
+      "title": "Media & Publishing AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-eu-ai-act"
+    },
+    {
+      "industry_path": "media",
+      "framework": "gdpr",
+      "slug": "media-gdpr",
+      "title": "Media & Publishing AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-gdpr"
+    },
+    {
+      "industry_path": "media",
+      "framework": "hipaa",
+      "slug": "media-hipaa",
+      "title": "Media & Publishing AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-hipaa"
+    },
+    {
+      "industry_path": "media",
+      "framework": "iso-42001",
+      "slug": "media-iso-42001",
+      "title": "Media & Publishing AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-iso-42001"
+    },
+    {
+      "industry_path": "media",
+      "framework": "nis2",
+      "slug": "media-nis2",
+      "title": "Media & Publishing AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-nis2"
+    },
+    {
+      "industry_path": "media-publishing",
+      "framework": "cra",
+      "slug": "media-publishing-cra",
+      "title": "Media / Publishing AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-publishing-cra"
+    },
+    {
+      "industry_path": "media-publishing",
+      "framework": "dora",
+      "slug": "media-publishing-dora",
+      "title": "Media / Publishing AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-publishing-dora"
+    },
+    {
+      "industry_path": "media-publishing",
+      "framework": "eu-ai-act",
+      "slug": "media-publishing-eu-ai-act",
+      "title": "Media / Publishing AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-publishing-eu-ai-act"
+    },
+    {
+      "industry_path": "media-publishing",
+      "framework": "gdpr",
+      "slug": "media-publishing-gdpr",
+      "title": "Media / Publishing AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-publishing-gdpr"
+    },
+    {
+      "industry_path": "media-publishing",
+      "framework": "hipaa",
+      "slug": "media-publishing-hipaa",
+      "title": "Media / Publishing AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-publishing-hipaa"
+    },
+    {
+      "industry_path": "media-publishing",
+      "framework": "iso-42001",
+      "slug": "media-publishing-iso-42001",
+      "title": "Media / Publishing AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-publishing-iso-42001"
+    },
+    {
+      "industry_path": "media-publishing",
+      "framework": "nis2",
+      "slug": "media-publishing-nis2",
+      "title": "Media / Publishing AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-publishing-nis2"
+    },
+    {
+      "industry_path": "media-publishing",
+      "framework": "uk-ai-regulation",
+      "slug": "media-publishing-uk-ai-regulation",
+      "title": "Media / Publishing AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-publishing-uk-ai-regulation"
+    },
+    {
+      "industry_path": "media",
+      "framework": "uk-ai",
+      "slug": "media-uk-ai",
+      "title": "Media & Publishing AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/media-uk-ai"
+    },
+    {
+      "industry_path": "nonprofit",
+      "framework": "cra",
+      "slug": "nonprofit-cra",
+      "title": "Non-profit & NGO AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-cra"
+    },
+    {
+      "industry_path": "nonprofit",
+      "framework": "dora",
+      "slug": "nonprofit-dora",
+      "title": "Non-profit & NGO AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-dora"
+    },
+    {
+      "industry_path": "nonprofit",
+      "framework": "eu-ai-act",
+      "slug": "nonprofit-eu-ai-act",
+      "title": "Non-profit & NGO AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-eu-ai-act"
+    },
+    {
+      "industry_path": "nonprofit",
+      "framework": "gdpr",
+      "slug": "nonprofit-gdpr",
+      "title": "Non-profit & NGO AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-gdpr"
+    },
+    {
+      "industry_path": "nonprofit",
+      "framework": "hipaa",
+      "slug": "nonprofit-hipaa",
+      "title": "Non-profit & NGO AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-hipaa"
+    },
+    {
+      "industry_path": "nonprofit",
+      "framework": "iso-42001",
+      "slug": "nonprofit-iso-42001",
+      "title": "Non-profit & NGO AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-iso-42001"
+    },
+    {
+      "industry_path": "nonprofit-ngo",
+      "framework": "cra",
+      "slug": "nonprofit-ngo-cra",
+      "title": "Non-profit / NGO AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-ngo-cra"
+    },
+    {
+      "industry_path": "nonprofit-ngo",
+      "framework": "dora",
+      "slug": "nonprofit-ngo-dora",
+      "title": "Non-profit / NGO AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-ngo-dora"
+    },
+    {
+      "industry_path": "nonprofit-ngo",
+      "framework": "eu-ai-act",
+      "slug": "nonprofit-ngo-eu-ai-act",
+      "title": "Non-profit / NGO AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-ngo-eu-ai-act"
+    },
+    {
+      "industry_path": "nonprofit-ngo",
+      "framework": "gdpr",
+      "slug": "nonprofit-ngo-gdpr",
+      "title": "Non-profit / NGO AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-ngo-gdpr"
+    },
+    {
+      "industry_path": "nonprofit-ngo",
+      "framework": "hipaa",
+      "slug": "nonprofit-ngo-hipaa",
+      "title": "Non-profit / NGO AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-ngo-hipaa"
+    },
+    {
+      "industry_path": "nonprofit-ngo",
+      "framework": "iso-42001",
+      "slug": "nonprofit-ngo-iso-42001",
+      "title": "Non-profit / NGO AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-ngo-iso-42001"
+    },
+    {
+      "industry_path": "nonprofit-ngo",
+      "framework": "nis2",
+      "slug": "nonprofit-ngo-nis2",
+      "title": "Non-profit / NGO AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-ngo-nis2"
+    },
+    {
+      "industry_path": "nonprofit-ngo",
+      "framework": "uk-ai-regulation",
+      "slug": "nonprofit-ngo-uk-ai-regulation",
+      "title": "Non-profit / NGO AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-ngo-uk-ai-regulation"
+    },
+    {
+      "industry_path": "nonprofit",
+      "framework": "nis2",
+      "slug": "nonprofit-nis2",
+      "title": "Non-profit & NGO AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-nis2"
+    },
+    {
+      "industry_path": "nonprofit",
+      "framework": "uk-ai",
+      "slug": "nonprofit-uk-ai",
+      "title": "Non-profit & NGO AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/nonprofit-uk-ai"
+    },
+    {
+      "industry_path": "retail",
+      "framework": "cra",
+      "slug": "retail-cra",
+      "title": "Retail & E-commerce AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-cra"
+    },
+    {
+      "industry_path": "retail",
+      "framework": "dora",
+      "slug": "retail-dora",
+      "title": "Retail & E-commerce AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-dora"
+    },
+    {
+      "industry_path": "retail-ecommerce",
+      "framework": "cra",
+      "slug": "retail-ecommerce-cra",
+      "title": "Retail / E-commerce AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-ecommerce-cra"
+    },
+    {
+      "industry_path": "retail-ecommerce",
+      "framework": "dora",
+      "slug": "retail-ecommerce-dora",
+      "title": "Retail / E-commerce AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-ecommerce-dora"
+    },
+    {
+      "industry_path": "retail-ecommerce",
+      "framework": "eu-ai-act",
+      "slug": "retail-ecommerce-eu-ai-act",
+      "title": "Retail / E-commerce AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-ecommerce-eu-ai-act"
+    },
+    {
+      "industry_path": "retail-ecommerce",
+      "framework": "gdpr",
+      "slug": "retail-ecommerce-gdpr",
+      "title": "Retail / E-commerce AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-ecommerce-gdpr"
+    },
+    {
+      "industry_path": "retail-ecommerce",
+      "framework": "hipaa",
+      "slug": "retail-ecommerce-hipaa",
+      "title": "Retail / E-commerce AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-ecommerce-hipaa"
+    },
+    {
+      "industry_path": "retail-ecommerce",
+      "framework": "iso-42001",
+      "slug": "retail-ecommerce-iso-42001",
+      "title": "Retail / E-commerce AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-ecommerce-iso-42001"
+    },
+    {
+      "industry_path": "retail-ecommerce",
+      "framework": "nis2",
+      "slug": "retail-ecommerce-nis2",
+      "title": "Retail / E-commerce AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-ecommerce-nis2"
+    },
+    {
+      "industry_path": "retail-ecommerce",
+      "framework": "uk-ai-regulation",
+      "slug": "retail-ecommerce-uk-ai-regulation",
+      "title": "Retail / E-commerce AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-ecommerce-uk-ai-regulation"
+    },
+    {
+      "industry_path": "retail",
+      "framework": "eu-ai-act",
+      "slug": "retail-eu-ai-act",
+      "title": "Retail & E-commerce AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-eu-ai-act"
+    },
+    {
+      "industry_path": "retail",
+      "framework": "gdpr",
+      "slug": "retail-gdpr",
+      "title": "Retail & E-commerce AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-gdpr"
+    },
+    {
+      "industry_path": "retail",
+      "framework": "hipaa",
+      "slug": "retail-hipaa",
+      "title": "Retail & E-commerce AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-hipaa"
+    },
+    {
+      "industry_path": "retail",
+      "framework": "iso-42001",
+      "slug": "retail-iso-42001",
+      "title": "Retail & E-commerce AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-iso-42001"
+    },
+    {
+      "industry_path": "retail",
+      "framework": "nis2",
+      "slug": "retail-nis2",
+      "title": "Retail & E-commerce AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-nis2"
+    },
+    {
+      "industry_path": "retail",
+      "framework": "uk-ai",
+      "slug": "retail-uk-ai",
+      "title": "Retail & E-commerce AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/retail-uk-ai"
+    },
+    {
+      "industry_path": "transportation",
+      "framework": "cra",
+      "slug": "transportation-cra",
+      "title": "Transportation & Logistics AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-cra"
+    },
+    {
+      "industry_path": "transportation",
+      "framework": "dora",
+      "slug": "transportation-dora",
+      "title": "Transportation & Logistics AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-dora"
+    },
+    {
+      "industry_path": "transportation",
+      "framework": "eu-ai-act",
+      "slug": "transportation-eu-ai-act",
+      "title": "Transportation & Logistics AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-eu-ai-act"
+    },
+    {
+      "industry_path": "transportation",
+      "framework": "gdpr",
+      "slug": "transportation-gdpr",
+      "title": "Transportation & Logistics AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-gdpr"
+    },
+    {
+      "industry_path": "transportation",
+      "framework": "hipaa",
+      "slug": "transportation-hipaa",
+      "title": "Transportation & Logistics AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-hipaa"
+    },
+    {
+      "industry_path": "transportation",
+      "framework": "iso-42001",
+      "slug": "transportation-iso-42001",
+      "title": "Transportation & Logistics AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-iso-42001"
+    },
+    {
+      "industry_path": "transportation-logistics",
+      "framework": "cra",
+      "slug": "transportation-logistics-cra",
+      "title": "Transportation / Logistics AI Compliance — CRA | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-logistics-cra"
+    },
+    {
+      "industry_path": "transportation-logistics",
+      "framework": "dora",
+      "slug": "transportation-logistics-dora",
+      "title": "Transportation / Logistics AI Compliance — DORA | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-logistics-dora"
+    },
+    {
+      "industry_path": "transportation-logistics",
+      "framework": "eu-ai-act",
+      "slug": "transportation-logistics-eu-ai-act",
+      "title": "Transportation / Logistics AI Compliance — EU AI Act | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-logistics-eu-ai-act"
+    },
+    {
+      "industry_path": "transportation-logistics",
+      "framework": "gdpr",
+      "slug": "transportation-logistics-gdpr",
+      "title": "Transportation / Logistics AI Compliance — GDPR | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-logistics-gdpr"
+    },
+    {
+      "industry_path": "transportation-logistics",
+      "framework": "hipaa",
+      "slug": "transportation-logistics-hipaa",
+      "title": "Transportation / Logistics AI Compliance — HIPAA | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-logistics-hipaa"
+    },
+    {
+      "industry_path": "transportation-logistics",
+      "framework": "iso-42001",
+      "slug": "transportation-logistics-iso-42001",
+      "title": "Transportation / Logistics AI Compliance — ISO 42001 | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-logistics-iso-42001"
+    },
+    {
+      "industry_path": "transportation-logistics",
+      "framework": "nis2",
+      "slug": "transportation-logistics-nis2",
+      "title": "Transportation / Logistics AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-logistics-nis2"
+    },
+    {
+      "industry_path": "transportation-logistics",
+      "framework": "uk-ai-regulation",
+      "slug": "transportation-logistics-uk-ai-regulation",
+      "title": "Transportation / Logistics AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-logistics-uk-ai-regulation"
+    },
+    {
+      "industry_path": "transportation",
+      "framework": "nis2",
+      "slug": "transportation-nis2",
+      "title": "Transportation & Logistics AI Compliance — NIS2 | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-nis2"
+    },
+    {
+      "industry_path": "transportation",
+      "framework": "uk-ai",
+      "slug": "transportation-uk-ai",
+      "title": "Transportation & Logistics AI Compliance — UK AI Regulation | CSOAI",
+      "canonical": "https://csoai.org/sectors/transportation-uk-ai"
+    }
+  ],
+  "industries": [
+    {
+      "slug": "cybersecurity",
+      "title": "Cybersecurity AI Compliance — CSOAI Industry Solutions"
+    },
+    {
+      "slug": "education",
+      "title": "Education AI Compliance — CSOAI"
+    },
+    {
+      "slug": "energy",
+      "title": "Energy AI Compliance — CSOAI"
+    },
+    {
+      "slug": "finance",
+      "title": "Layer 0 for Finance — CSOAI"
+    },
+    {
+      "slug": "government",
+      "title": "Government & Public Sector AI Compliance — CSOAI Industry Solutions"
+    },
+    {
+      "slug": "healthcare",
+      "title": "Layer 0 for Healthcare — CSOAI"
+    },
+    {
+      "slug": "home",
+      "title": "Industry Solutions — CSOAI Layer 0"
+    },
+    {
+      "slug": "insurance",
+      "title": "Insurance AI Compliance — CSOAI"
+    },
+    {
+      "slug": "legal",
+      "title": "Layer 0 for Legal — CSOAI"
+    },
+    {
+      "slug": "logistics",
+      "title": "Logistics & Supply Chain AI Compliance — CSOAI Industry Solutions"
+    },
+    {
+      "slug": "manufacturing",
+      "title": "Manufacturing AI Compliance — CSOAI"
+    },
+    {
+      "slug": "media",
+      "title": "Layer 0 for Media — CSOAI"
+    },
+    {
+      "slug": "mining",
+      "title": "Mining & Mineral Extraction AI Compliance — CSOAI Industry Solutions"
+    },
+    {
+      "slug": "retail",
+      "title": "Retail AI Compliance — CSOAI"
+    },
+    {
+      "slug": "telecoms",
+      "title": "Telecommunications AI Compliance — CSOAI Industry Solutions"
+    },
+    {
+      "slug": "transportation",
+      "title": "Transportation AI Compliance — CSOAI"
+    }
+  ],
+  "accounts": [
+    {
+      "id": "eu-ai-office",
+      "name": "European AI Office",
+      "type": "regulator",
+      "region": "EU",
+      "country": "Belgium",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "nist",
+      "name": "NIST",
+      "type": "regulator",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "ico-uk",
+      "name": "ICO (UK)",
+      "type": "regulator",
+      "region": "UK",
+      "country": "United Kingdom",
+      "jurisdictions": [
+        "uk"
+      ],
+      "frameworks": [
+        "uk-principles",
+        "gdpr"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "enisa",
+      "name": "ENISA",
+      "type": "regulator",
+      "region": "EU",
+      "country": "Greece",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "nis2",
+        "cra"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "bafin",
+      "name": "BaFin",
+      "type": "regulator",
+      "region": "EU",
+      "country": "Germany",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "nis2"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "mas-sg",
+      "name": "Monetary Authority of Singapore",
+      "type": "regulator",
+      "region": "APAC",
+      "country": "Singapore",
+      "jurisdictions": [
+        "sg"
+      ],
+      "frameworks": [
+        "mas-feat",
+        "iso-42001"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "cnil",
+      "name": "CNIL",
+      "type": "regulator",
+      "region": "EU",
+      "country": "France",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "gdpr",
+        "eu-ai-act"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "korea-msit",
+      "name": "Ministry of Science & ICT (Korea)",
+      "type": "regulator",
+      "region": "APAC",
+      "country": "South Korea",
+      "jurisdictions": [
+        "kr"
+      ],
+      "frameworks": [
+        "kr-basic-ai-act"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "uk-aisi",
+      "name": "UK AI Safety Institute",
+      "type": "regulator",
+      "region": "UK",
+      "country": "United Kingdom",
+      "jurisdictions": [
+        "uk"
+      ],
+      "frameworks": [
+        "uk-principles",
+        "frontier-safety"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "us-ftc",
+      "name": "US Federal Trade Commission",
+      "type": "regulator",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "ftc-act",
+        "us-federal"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "edpb",
+      "name": "European Data Protection Board",
+      "type": "regulator",
+      "region": "EU",
+      "country": "Belgium",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "gdpr",
+        "eu-ai-act"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "de-bsi",
+      "name": "BSI (Germany)",
+      "type": "regulator",
+      "region": "EU",
+      "country": "Germany",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "nis2",
+        "cra",
+        "iso-27001"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "fr-anssi",
+      "name": "ANSSI (France)",
+      "type": "regulator",
+      "region": "EU",
+      "country": "France",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "nis2",
+        "cra"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "it-garante",
+      "name": "Garante (Italy)",
+      "type": "regulator",
+      "region": "EU",
+      "country": "Italy",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "gdpr",
+        "eu-ai-act"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "es-aesia",
+      "name": "AESIA (Spain)",
+      "type": "regulator",
+      "region": "EU",
+      "country": "Spain",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "ca-opc",
+      "name": "Office of the Privacy Commissioner (Canada)",
+      "type": "regulator",
+      "region": "Americas",
+      "country": "Canada",
+      "jurisdictions": [
+        "ca"
+      ],
+      "frameworks": [
+        "pipeda",
+        "aida"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "au-oaic",
+      "name": "OAIC (Australia)",
+      "type": "regulator",
+      "region": "APAC",
+      "country": "Australia",
+      "jurisdictions": [
+        "au"
+      ],
+      "frameworks": [
+        "au-privacy",
+        "au-ai-ethics"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "jp-ppc",
+      "name": "Personal Information Protection Commission (Japan)",
+      "type": "regulator",
+      "region": "APAC",
+      "country": "Japan",
+      "jurisdictions": [
+        "jp"
+      ],
+      "frameworks": [
+        "appi",
+        "jp-ai-guidelines"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "cn-cac",
+      "name": "Cyberspace Administration of China",
+      "type": "regulator",
+      "region": "APAC",
+      "country": "China",
+      "jurisdictions": [
+        "cn"
+      ],
+      "frameworks": [
+        "tc260",
+        "genai-measures"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "sg-imda",
+      "name": "IMDA / PDPC (Singapore)",
+      "type": "regulator",
+      "region": "APAC",
+      "country": "Singapore",
+      "jurisdictions": [
+        "sg"
+      ],
+      "frameworks": [
+        "model-ai-gov",
+        "ai-verify"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "br-anpd",
+      "name": "ANPD (Brazil)",
+      "type": "regulator",
+      "region": "Americas",
+      "country": "Brazil",
+      "jurisdictions": [
+        "br"
+      ],
+      "frameworks": [
+        "lgpd",
+        "br-ai-bill"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "sa-sdaia",
+      "name": "SDAIA (Saudi Arabia)",
+      "type": "regulator",
+      "region": "MENA",
+      "country": "Saudi Arabia",
+      "jurisdictions": [
+        "sa"
+      ],
+      "frameworks": [
+        "sa-ai-ethics",
+        "pdpl"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "in-meity",
+      "name": "MeitY (India)",
+      "type": "regulator",
+      "region": "APAC",
+      "country": "India",
+      "jurisdictions": [
+        "in"
+      ],
+      "frameworks": [
+        "dpdp-act",
+        "in-ai-advisory"
+      ],
+      "posture": "sets-rules",
+      "play": "align"
+    },
+    {
+      "id": "ent-eu-bank",
+      "name": "[EU G-SIB bank]",
+      "type": "fortune500",
+      "region": "EU",
+      "country": "—",
+      "jurisdictions": [
+        "eu",
+        "uk"
+      ],
+      "frameworks": [
+        "eu-ai-act",
+        "dora",
+        "nis2",
+        "gdpr"
+      ],
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "ent-us-health",
+      "name": "[US health system]",
+      "type": "fortune500",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf",
+        "co-admt"
+      ],
+      "posture": "unknown",
+      "play": "absorb"
+    },
+    {
+      "id": "ent-ai-lab",
+      "name": "[Frontier AI lab]",
+      "type": "sector",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-gpai",
+        "nist-ai-rmf"
+      ],
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "ent-eu-insurer",
+      "name": "[EU insurer]",
+      "type": "fortune500",
+      "region": "EU",
+      "country": "—",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act",
+        "dora",
+        "solvency-ii"
+      ],
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "jpmorgan",
+      "name": "JPMorgan Chase",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "nist-ai-rmf",
+        "gdpr"
+      ],
+      "sector": "banking",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "bofa",
+      "name": "Bank of America",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "us-state-ai"
+      ],
+      "sector": "banking",
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "citigroup",
+      "name": "Citigroup",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "nist-ai-rmf"
+      ],
+      "sector": "banking",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "unitedhealth",
+      "name": "UnitedHealth Group",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf",
+        "co-admt"
+      ],
+      "sector": "health",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "cvshealth",
+      "name": "CVS Health",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf"
+      ],
+      "sector": "health",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "pfizer",
+      "name": "Pfizer",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-highrisk",
+        "gxp-ai",
+        "nist-ai-rmf"
+      ],
+      "sector": "pharma",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "microsoft",
+      "name": "Microsoft",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-gpai",
+        "nist-ai-rmf",
+        "iso-42001"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "alphabet",
+      "name": "Alphabet (Google)",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-gpai",
+        "nist-ai-rmf",
+        "iso-42001"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "exxonmobil",
+      "name": "ExxonMobil",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "us-state-ai"
+      ],
+      "sector": "energy",
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "lockheed",
+      "name": "Lockheed Martin",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "itar-ear",
+        "nato-ai"
+      ],
+      "sector": "defence",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "att",
+      "name": "AT&T",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "us-state-ai"
+      ],
+      "sector": "telecom",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "elevance",
+      "name": "Elevance Health",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf",
+        "co-admt"
+      ],
+      "sector": "insurance",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "wellsfargo",
+      "name": "Wells Fargo",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "us-state-ai"
+      ],
+      "sector": "banking",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "goldmansachs",
+      "name": "Goldman Sachs",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "nist-ai-rmf"
+      ],
+      "sector": "banking",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "morganstanley",
+      "name": "Morgan Stanley",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "nist-ai-rmf"
+      ],
+      "sector": "banking",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "amex",
+      "name": "American Express",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "pci-dss"
+      ],
+      "sector": "finance",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "cigna",
+      "name": "The Cigna Group",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf"
+      ],
+      "sector": "insurance",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "hca",
+      "name": "HCA Healthcare",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf"
+      ],
+      "sector": "health",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "mckesson",
+      "name": "McKesson",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf"
+      ],
+      "sector": "health",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "humana",
+      "name": "Humana",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "hipaa",
+        "nist-ai-rmf"
+      ],
+      "sector": "insurance",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "jnj",
+      "name": "Johnson & Johnson",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-highrisk",
+        "gxp-ai",
+        "nist-ai-rmf"
+      ],
+      "sector": "pharma",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "merck",
+      "name": "Merck & Co.",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-highrisk",
+        "gxp-ai",
+        "nist-ai-rmf"
+      ],
+      "sector": "pharma",
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "abbvie",
+      "name": "AbbVie",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-highrisk",
+        "gxp-ai"
+      ],
+      "sector": "pharma",
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "meta",
+      "name": "Meta Platforms",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-gpai",
+        "nist-ai-rmf",
+        "gdpr"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "nvidia",
+      "name": "NVIDIA",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-gpai",
+        "nist-ai-rmf",
+        "iso-42001"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "ibm",
+      "name": "IBM",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act",
+        "nist-ai-rmf",
+        "iso-42001"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "oracle",
+      "name": "Oracle",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act",
+        "nist-ai-rmf"
+      ],
+      "sector": "ai-lab",
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "chevron",
+      "name": "Chevron",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf"
+      ],
+      "sector": "energy",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "verizon",
+      "name": "Verizon",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "us-state-ai"
+      ],
+      "sector": "telecom",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "rtx",
+      "name": "RTX (Raytheon)",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "itar-ear",
+        "nato-ai"
+      ],
+      "sector": "defence",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "boeing",
+      "name": "Boeing",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "itar-ear"
+      ],
+      "sector": "defence",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "northrop",
+      "name": "Northrop Grumman",
+      "type": "fortune100",
+      "region": "US",
+      "country": "USA",
+      "jurisdictions": [
+        "us"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "itar-ear",
+        "nato-ai"
+      ],
+      "sector": "defence",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "hsbc",
+      "name": "HSBC",
+      "type": "global2000",
+      "region": "UK",
+      "country": "United Kingdom",
+      "jurisdictions": [
+        "uk",
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "nist-ai-rmf",
+        "gdpr-uk"
+      ],
+      "sector": "banking",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "deutschebank",
+      "name": "Deutsche Bank",
+      "type": "global2000",
+      "region": "EU",
+      "country": "Germany",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "nis2",
+        "gdpr"
+      ],
+      "sector": "banking",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "bnpparibas",
+      "name": "BNP Paribas",
+      "type": "global2000",
+      "region": "EU",
+      "country": "France",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "gdpr"
+      ],
+      "sector": "banking",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "santander",
+      "name": "Banco Santander",
+      "type": "global2000",
+      "region": "EU",
+      "country": "Spain",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "gdpr"
+      ],
+      "sector": "banking",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "allianz",
+      "name": "Allianz",
+      "type": "global2000",
+      "region": "EU",
+      "country": "Germany",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "solvency-ii"
+      ],
+      "sector": "insurance",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "axa",
+      "name": "AXA",
+      "type": "global2000",
+      "region": "EU",
+      "country": "France",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "dora",
+        "eu-ai-act",
+        "solvency-ii"
+      ],
+      "sector": "insurance",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "novartis",
+      "name": "Novartis",
+      "type": "global2000",
+      "region": "EU",
+      "country": "Switzerland",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-highrisk",
+        "gxp-ai",
+        "iso-42001"
+      ],
+      "sector": "pharma",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "roche",
+      "name": "Roche",
+      "type": "global2000",
+      "region": "EU",
+      "country": "Switzerland",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-highrisk",
+        "gxp-ai"
+      ],
+      "sector": "pharma",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "astrazeneca",
+      "name": "AstraZeneca",
+      "type": "global2000",
+      "region": "UK",
+      "country": "United Kingdom",
+      "jurisdictions": [
+        "uk",
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-highrisk",
+        "gxp-ai",
+        "gdpr-uk"
+      ],
+      "sector": "pharma",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "sanofi",
+      "name": "Sanofi",
+      "type": "global2000",
+      "region": "EU",
+      "country": "France",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act-highrisk",
+        "gxp-ai"
+      ],
+      "sector": "pharma",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "sap",
+      "name": "SAP",
+      "type": "global2000",
+      "region": "EU",
+      "country": "Germany",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act",
+        "gdpr"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "siemens",
+      "name": "Siemens",
+      "type": "global2000",
+      "region": "EU",
+      "country": "Germany",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act",
+        "nis2",
+        "cra"
+      ],
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "vodafone",
+      "name": "Vodafone",
+      "type": "global2000",
+      "region": "UK",
+      "country": "United Kingdom",
+      "jurisdictions": [
+        "uk",
+        "eu"
+      ],
+      "frameworks": [
+        "nis2",
+        "cra",
+        "eu-ai-act",
+        "gdpr-uk"
+      ],
+      "sector": "telecom",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "ericsson",
+      "name": "Ericsson",
+      "type": "global2000",
+      "region": "EU",
+      "country": "Sweden",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "nis2",
+        "cra",
+        "eu-ai-act"
+      ],
+      "sector": "telecom",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "asml",
+      "name": "ASML",
+      "type": "global2000",
+      "region": "EU",
+      "country": "Netherlands",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act",
+        "nis2"
+      ],
+      "sector": "ai-lab",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "shell",
+      "name": "Shell",
+      "type": "global2000",
+      "region": "UK",
+      "country": "United Kingdom",
+      "jurisdictions": [
+        "uk",
+        "eu"
+      ],
+      "frameworks": [
+        "nis2",
+        "cra",
+        "eu-ai-act"
+      ],
+      "sector": "energy",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "totalenergies",
+      "name": "TotalEnergies",
+      "type": "global2000",
+      "region": "EU",
+      "country": "France",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "nis2",
+        "cra",
+        "eu-ai-act"
+      ],
+      "sector": "energy",
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "airbus",
+      "name": "Airbus",
+      "type": "global2000",
+      "region": "EU",
+      "country": "France",
+      "jurisdictions": [
+        "eu"
+      ],
+      "frameworks": [
+        "eu-ai-act",
+        "nis2",
+        "nato-ai"
+      ],
+      "sector": "defence",
+      "posture": "emerging",
+      "play": "integrate"
+    },
+    {
+      "id": "baesystems",
+      "name": "BAE Systems",
+      "type": "global2000",
+      "region": "UK",
+      "country": "United Kingdom",
+      "jurisdictions": [
+        "uk"
+      ],
+      "frameworks": [
+        "nist-ai-rmf",
+        "nato-ai"
+      ],
+      "sector": "defence",
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "samsung",
+      "name": "Samsung Electronics",
+      "type": "global2000",
+      "region": "APAC",
+      "country": "South Korea",
+      "jurisdictions": [
+        "kr",
+        "eu"
+      ],
+      "frameworks": [
+        "kr-basic-ai-act",
+        "iso-42001",
+        "eu-ai-act"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "tsmc",
+      "name": "TSMC",
+      "type": "global2000",
+      "region": "APAC",
+      "country": "Taiwan",
+      "jurisdictions": [
+        "tw",
+        "eu"
+      ],
+      "frameworks": [
+        "iso-42001",
+        "eu-ai-act"
+      ],
+      "sector": "ai-lab",
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "sony",
+      "name": "Sony",
+      "type": "global2000",
+      "region": "APAC",
+      "country": "Japan",
+      "jurisdictions": [
+        "jp",
+        "eu"
+      ],
+      "frameworks": [
+        "iso-42001",
+        "eu-ai-act"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "dbs",
+      "name": "DBS Bank",
+      "type": "global2000",
+      "region": "APAC",
+      "country": "Singapore",
+      "jurisdictions": [
+        "sg"
+      ],
+      "frameworks": [
+        "mas-feat",
+        "iso-42001"
+      ],
+      "sector": "banking",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "mufg",
+      "name": "Mitsubishi UFJ",
+      "type": "global2000",
+      "region": "APAC",
+      "country": "Japan",
+      "jurisdictions": [
+        "jp"
+      ],
+      "frameworks": [
+        "iso-42001"
+      ],
+      "sector": "banking",
+      "posture": "unknown",
+      "play": "integrate"
+    },
+    {
+      "id": "tencent",
+      "name": "Tencent",
+      "type": "global2000",
+      "region": "APAC",
+      "country": "China",
+      "jurisdictions": [
+        "cn"
+      ],
+      "frameworks": [
+        "tc260",
+        "cn-genai"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "alibaba",
+      "name": "Alibaba",
+      "type": "global2000",
+      "region": "APAC",
+      "country": "China",
+      "jurisdictions": [
+        "cn"
+      ],
+      "frameworks": [
+        "tc260",
+        "cn-genai"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "infosys",
+      "name": "Infosys",
+      "type": "global2000",
+      "region": "APAC",
+      "country": "India",
+      "jurisdictions": [
+        "in",
+        "eu"
+      ],
+      "frameworks": [
+        "iso-42001",
+        "eu-ai-act"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "tcs",
+      "name": "Tata Consultancy Services",
+      "type": "global2000",
+      "region": "APAC",
+      "country": "India",
+      "jurisdictions": [
+        "in",
+        "eu"
+      ],
+      "frameworks": [
+        "iso-42001",
+        "eu-ai-act"
+      ],
+      "sector": "ai-lab",
+      "posture": "mature",
+      "play": "integrate"
+    },
+    {
+      "id": "reliance",
+      "name": "Reliance Industries",
+      "type": "global2000",
+      "region": "APAC",
+      "country": "India",
+      "jurisdictions": [
+        "in"
+      ],
+      "frameworks": [
+        "iso-42001"
+      ],
+      "sector": "energy",
+      "posture": "unknown",
+      "play": "integrate"
+    }
+  ],
+  "layer0": [
+    {
+      "source": "client/src/pages/Layer0.tsx",
+      "kind": "control-level",
+      "id": "L0-1",
+      "title": "Identity"
+    },
+    {
+      "source": "client/src/pages/Layer0.tsx",
+      "kind": "control-level",
+      "id": "L0-2",
+      "title": "Policy-gated"
+    },
+    {
+      "source": "client/src/pages/Layer0.tsx",
+      "kind": "control-level",
+      "id": "L0-3",
+      "title": "Signed"
+    },
+    {
+      "source": "client/src/pages/Layer0.tsx",
+      "kind": "bench-topic",
+      "title": "GovComp-Bench gate — 32/32 scenarios"
+    },
+    {
+      "source": "client/src/pages/Layer0.tsx",
+      "kind": "bench-topic",
+      "title": "Frontier comparison — same grid, frontier API model"
+    },
+    {
+      "source": "client/src/pages/Layer0.tsx",
+      "kind": "bench-topic",
+      "title": "Framework gap matrix — real primaries"
+    },
+    {
+      "source": "client/src/pages/Layer0.tsx",
+      "kind": "bench-topic",
+      "title": "Refusal quality — false positives"
+    },
+    {
+      "source": "client/src/pages/Layer0.tsx",
+      "kind": "bench-topic",
+      "title": "SOVBENCH citations — primary-verified"
+    },
+    {
+      "source": "client/src/pages/Layer0.tsx",
+      "kind": "bench-topic",
+      "title": "What we do NOT claim"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "uk-legislation",
+      "title": "legislation.gov.uk",
+      "cls": "LAW",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "eur-lex",
+      "title": "EUR-Lex — EU AI Act",
+      "cls": "LAW",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "eur-lex-art50",
+      "title": "EUR-Lex Article 50 watcher",
+      "cls": "LAW",
+      "status": "UNKNOWN"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "us-fedreg",
+      "title": "US Federal Register",
+      "cls": "LAW",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "sec-edgar",
+      "title": "SEC EDGAR",
+      "cls": "COMPANY",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "gov-uk",
+      "title": "GOV.UK Content API",
+      "cls": "GOV",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "eurostat",
+      "title": "Eurostat",
+      "cls": "GOV",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "epa-echo",
+      "title": "EPA ECHO",
+      "cls": "REGULATOR",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "nist-nvd",
+      "title": "NIST NVD CVE API",
+      "cls": "SAFETY",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "cisa-kev",
+      "title": "CISA KEV catalog",
+      "cls": "SAFETY",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "openfda",
+      "title": "openFDA",
+      "cls": "HEALTH",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "clinicaltrials",
+      "title": "ClinicalTrials.gov v2",
+      "cls": "HEALTH",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "pubmed",
+      "title": "PubMed E-utilities",
+      "cls": "SCHOLARLY",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "chembl",
+      "title": "EBI ChEMBL",
+      "cls": "HEALTH",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "who-gho",
+      "title": "WHO GHO OData",
+      "cls": "INTL",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "crossref",
+      "title": "Crossref",
+      "cls": "SCHOLARLY",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "arxiv",
+      "title": "arXiv",
+      "cls": "SCHOLARLY",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "rfc-editor",
+      "title": "RFC 9964 (ML-DSA COSE)",
+      "cls": "STANDARD",
+      "status": "LIVE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "c2pa-spec",
+      "title": "C2PA specification",
+      "cls": "STANDARD",
+      "status": "UNKNOWN"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "us-govinfo",
+      "title": "US GovInfo (USLM)",
+      "cls": "LAW",
+      "status": "CANDIDATE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "ecfr",
+      "title": "eCFR",
+      "cls": "LAW",
+      "status": "CANDIDATE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "canada-justice",
+      "title": "Canada Justice Laws",
+      "cls": "LAW",
+      "status": "CANDIDATE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "japan-egov",
+      "title": "Japan e-Gov API v2",
+      "cls": "LAW",
+      "status": "CANDIDATE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "fedlex",
+      "title": "Fedlex (Akoma Ntoso)",
+      "cls": "LAW",
+      "status": "CANDIDATE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "mitre-attack",
+      "title": "MITRE ATT&CK",
+      "cls": "SAFETY",
+      "status": "CANDIDATE"
+    },
+    {
+      "source": "client/src/data/layer0Nodes.ts",
+      "kind": "node",
+      "id": "uk-atrs",
+      "title": "UK ATRS register",
+      "cls": "GOV",
+      "status": "CANDIDATE"
+    }
+  ],
+  "board_axes": [
+    {
+      "axis": "governance",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "accuracy": 0.5865,
+      "n": 237,
+      "separation": "TIE"
+    },
+    {
+      "axis": "safety",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "accuracy": 0.9444,
+      "n": 36,
+      "separation": "TIE"
+    },
+    {
+      "axis": "provenance",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "accuracy": 0.7188,
+      "n": 32,
+      "separation": "TIE"
+    },
+    {
+      "axis": "continuity",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "accuracy": 0.6061,
+      "n": 33,
+      "separation": "TIE"
+    },
+    {
+      "axis": "conformance",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "accuracy": 0.7143,
+      "n": 35,
+      "separation": "TIE"
+    },
+    {
+      "axis": "openness",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "accuracy": 0.8438,
+      "n": 32,
+      "separation": "TIE"
+    },
+    {
+      "axis": "machinery-conformity",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 33,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "care",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "accuracy": 0.405,
+      "n": 199,
+      "separation": "TIE"
+    },
+    {
+      "axis": "cross-reality",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 32,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "detector-interop",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 33,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "art5-safeguard",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 36,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "swarm",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "accuracy": 0.4444,
+      "n": 37,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "affect",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "n": 41,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "jail",
+      "kind": "model-comparison",
+      "status": "MEASURED",
+      "accuracy": 0.5915,
+      "n": 71,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "effect-binding",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 261
+    },
+    {
+      "axis": "provenance-controls",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 6
+    },
+    {
+      "axis": "reserve-attestation",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 16
+    },
+    {
+      "axis": "regulatory-framework",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 16
+    },
+    {
+      "axis": "distribution-integrity",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 16
+    },
+    {
+      "axis": "custody-disclosure",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 16
+    },
+    {
+      "axis": "ai-adoption-components",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 2
+    },
+    {
+      "axis": "labour-components",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 2
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "kind": "deterministic-facts",
+      "status": "MEASURED",
+      "n": 8
+    },
+    {
+      "axis": "lab-practice",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 37
+    },
+    {
+      "axis": "company-practice",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 40
+    },
+    {
+      "axis": "measurer-integrity",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 40
+    },
+    {
+      "axis": "harness-fidelity",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 36
+    },
+    {
+      "axis": "interop-conformance",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 34
+    },
+    {
+      "axis": "humanoid-deployment",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 35
+    },
+    {
+      "axis": "regulator-transparency",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 41
+    },
+    {
+      "axis": "interpretability-reproducibility",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 33
+    },
+    {
+      "axis": "claim-maintenance",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 174
+    },
+    {
+      "axis": "serving-fidelity",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 38
+    },
+    {
+      "axis": "watchdog-ingest",
+      "kind": "measured-subject",
+      "status": "MEASURED",
+      "n": 106
+    }
+  ],
+  "deadlines": [
+    {
+      "date": "2025-02-02",
+      "instrument": "EU AI Act",
+      "basis": "Reg (EU) 2024/1689 Art 113",
+      "status": "IN_FORCE",
+      "days_until": -644
+    },
+    {
+      "date": "2025-08-02",
+      "instrument": "EU AI Act",
+      "basis": "Reg (EU) 2024/1689 Art 113",
+      "status": "IN_FORCE",
+      "days_until": -463
+    },
+    {
+      "date": "2025-09-01",
+      "instrument": "China GB 45438-2025",
+      "basis": "CAC/MIIT/MPS/NRTA joint measures",
+      "status": "IN_FORCE",
+      "days_until": -433
+    },
+    {
+      "date": "2026-01-01",
+      "instrument": "Texas TRAIGA (HB 149)",
+      "basis": "HB 149",
+      "status": "IN_FORCE",
+      "days_until": -311
+    },
+    {
+      "date": "2026-01-01",
+      "instrument": "California SB 53",
+      "basis": "Ch. 138, Statutes of 2025",
+      "status": "IN_FORCE",
+      "days_until": -311
+    },
+    {
+      "date": "2026-01-22",
+      "instrument": "South Korea AI Basic Act",
+      "basis": "Framework Act, promulgated 2025-01-21",
+      "status": "IN_FORCE",
+      "days_until": -290
+    },
+    {
+      "date": "2026-08-02",
+      "instrument": "EU AI Act",
+      "basis": "Reg (EU) 2024/1689 Art 113",
+      "status": "IN_FORCE",
+      "days_until": -98
+    },
+    {
+      "date": "2026-08-02",
+      "instrument": "California AI Transparency Act (CAITA, SB 942)",
+      "basis": "SB 942/AB 853 as amended 2025 (operative 2 Aug 2026)",
+      "status": "IN_FORCE",
+      "days_until": -98
+    },
+    {
+      "date": "2026-09-11",
+      "instrument": "EU Cyber Resilience Act",
+      "basis": "Reg (EU) 2024/2847 Art 14/16",
+      "status": "UPCOMING",
+      "days_until": -58
+    },
+    {
+      "date": "2026-12-02",
+      "instrument": "EU AI Act Art 50(2)",
+      "basis": "Art 111(4), inserted by Digital Omnibus Reg (EU) 2026/1744 Art 1(39)(b)",
+      "status": "UPCOMING",
+      "days_until": 24
+    },
+    {
+      "date": "2026-12-02",
+      "instrument": "EU AI Act Art 5 (new)",
+      "basis": "Digital Omnibus amendments",
+      "status": "UPCOMING",
+      "days_until": 24
+    },
+    {
+      "date": "2026-12-09",
+      "instrument": "EU Product Liability Directive",
+      "basis": "Dir (EU) 2024/2853 Art 24",
+      "status": "UPCOMING",
+      "days_until": 31
+    },
+    {
+      "date": "2026-12-10",
+      "instrument": "Australia Privacy Act",
+      "basis": "Privacy Act amendment",
+      "status": "UPCOMING",
+      "days_until": 32
+    },
+    {
+      "date": "2027-01-01",
+      "instrument": "Illinois SB 315",
+      "basis": "Public Act 104-0538 §18(a), §10(d)",
+      "status": "UPCOMING",
+      "days_until": 54
+    },
+    {
+      "date": "2027-01-01",
+      "instrument": "New York RAISE Act",
+      "basis": "S6953B/A6453B as amended 2026-03-27",
+      "status": "UPCOMING",
+      "days_until": 54
+    },
+    {
+      "date": "2027-01-01",
+      "instrument": "Colorado SB 26-189",
+      "basis": "SB 26-189, signed 2026-05-14",
+      "status": "UPCOMING",
+      "days_until": 54
+    },
+    {
+      "date": "2027-08-02",
+      "instrument": "EU AI Act",
+      "basis": "Reg (EU) 2024/1689 as amended",
+      "status": "UPCOMING",
+      "days_until": 267
+    },
+    {
+      "date": "2027-12-02",
+      "instrument": "EU AI Act",
+      "basis": "Digital Omnibus Reg (EU) 2026/1744",
+      "status": "UPCOMING",
+      "days_until": 389
+    },
+    {
+      "date": "2028-01-01",
+      "instrument": "Illinois SB 315",
+      "basis": "Public Act 104-0538 §10(d)",
+      "status": "UPCOMING",
+      "days_until": 419
+    },
+    {
+      "date": "2028-08-02",
+      "instrument": "EU AI Act",
+      "basis": "Digital Omnibus Reg (EU) 2026/1744",
+      "status": "UPCOMING",
+      "days_until": 633
+    },
+    {
+      "date": "2027-01-18",
+      "instrument": "US GENIUS Act (Pub. L. 119-27)",
+      "basis": "Pub. L. 119-27 §20, signed 2025-07-18",
+      "status": "UPCOMING",
+      "days_until": 71
+    },
+    {
+      "date": "2028-07-18",
+      "instrument": "US GENIUS Act (Pub. L. 119-27)",
+      "basis": "Pub. L. 119-27 §3(b)",
+      "status": "UPCOMING",
+      "days_until": 618
+    }
+  ],
+  "bindings": [
+    {
+      "from": "sectors_frameworks.industry_path",
+      "to": "board_axes",
+      "status": "no published binding",
+      "note": "No artifact maps a sectors-content industry path to GSPC axes or findings. The only sector-level binding published is public/interop/white-label-sector-crosswalk.json, covering 3 white-label sectors (insurance, bond, cobol) and none of the industry paths in this index."
+    },
+    {
+      "from": "sectors_frameworks.industry_path",
+      "to": "industries.slug",
+      "status": "no published binding",
+      "note": "Two industry vocabularies exist — the sector-page paths (including compound forms like finance-banking and legal-law-firms) and the industry-page slugs — with no published mapping between them."
+    },
+    {
+      "from": "sectors_frameworks.entry",
+      "to": "anchors.crosswalk rows",
+      "status": "no published binding",
+      "note": "The sector pages carry prose pointers to /crosswalk/east-west-v1.json, but no published artifact binds an individual sector×framework entry to specific crosswalk rows or concepts."
+    },
+    {
+      "from": "accounts.frameworks",
+      "to": "sectors_frameworks.framework",
+      "status": "no published binding",
+      "note": "The account spine names framework tokens (eu-ai-act, dora, nis2, ...) and the sector content names the same frameworks, but no published artifact joins an account's framework list to sector framework coverage."
+    },
+    {
+      "from": "accounts",
+      "to": "anchors.regulatoryInventoryPointer (frozen provisions)",
+      "status": "no published binding",
+      "note": "The frozen regulatory inventory points at hashed provision crosswalks; no published artifact binds any account's frameworks or jurisdictions to specific inventory provisions."
+    },
+    {
+      "from": "accounts.jurisdictions",
+      "to": "deadlines",
+      "status": "no published binding",
+      "note": "No published artifact joins an account's jurisdictions to the deadline register rows that bite them."
+    },
+    {
+      "from": "deadlines.basis",
+      "to": "anchors.regulatoryInventoryPointer (frozen provisions)",
+      "status": "no published binding",
+      "note": "Deadline rows cite instruments and articles; the inventory pointer lists provisions. Nothing published joins the two."
+    },
+    {
+      "from": "board_axes",
+      "to": "sectors_frameworks.framework",
+      "status": "no published binding",
+      "note": "No published artifact binds a GSPC axis to any framework token the sector content uses."
+    },
+    {
+      "from": "layer0.control-level",
+      "to": "board_axes",
+      "status": "no published binding",
+      "note": "No published artifact binds a Layer 0 control level (L0-1/L0-2/L0-3) to any measured board axis."
+    },
+    {
+      "from": "layer0.node",
+      "to": "accounts",
+      "status": "no published binding",
+      "note": "Both layers name real public organisations, but no published artifact identifies Layer 0 registry nodes with account-spine entries (or declares them disjoint)."
+    }
+  ],
+  "anchors": {
+    "crosswalk": {
+      "url": "https://councilof.ai/crosswalk/east-west-v1.json",
+      "schema": "csoai.east-west-crosswalk/1.0",
+      "version": "2026-10-26",
+      "rows": 63,
+      "regimes": 9,
+      "concepts": [
+        "Risk management",
+        "Data governance",
+        "Documentation & records",
+        "Transparency & disclosure",
+        "Human oversight",
+        "Security & resilience",
+        "Bias & fairness",
+        "Accountability & governance"
+      ],
+      "method": "Row, regime and concept counts measured from the fetched crosswalk payload at build time, never typed."
+    },
+    "regulatoryInventoryPointer": {
+      "url": "https://councilof.ai/interop/regulatory-inventory-latest.json",
+      "schema": "csoai.regulatory-inventory-pointer/1",
+      "kind": "DISCOVERY_POINTER_ONLY",
+      "versioned_at": "2026-10-26T03:37:48.681Z",
+      "index_url": "/interop/regulatory-inventory-2026-10-26-7bc985bfc7c2.json",
+      "index_sha256": "ac5c2e73bbabaa2059b4ff4eb88c23d674bee04de94b77b3ef74fae957b144cd",
+      "crosswalk_assets": 26,
+      "method": "Frozen-inventory pointer fields read from the fetched payload at build time; the pointer's own scope note governs interpretation."
+    }
+  },
+  "layer_meta": {
+    "sectors_frameworks": {
+      "extraction": "JSON.parse of the exported array literal in client/src/data/sectors-content.ts (sliced from `export const sectorsdata: SectorsDataEntry[] = [ ... ];`); all entries parsed clean. industry_path and framework are derived per slug by longest-suffix match against the framework tokens the slugs themselves use (uk-ai-regulation, eu-ai-act, iso-42001, uk-ai, gdpr, hipaa, nis2, cra, dora); a slug matching none keeps framework null and is listed in unresolved_framework_slugs.",
+      "unresolved_framework_slugs": [
+        "home"
+      ]
+    },
+    "industries": {
+      "extraction": "JSON.parse of the exported array literal in client/src/data/industries-content.ts (`export const industriesdata: IndustriesDataEntry[] = [ ... ];`); slug and title only; all entries parsed clean."
+    },
+    "accounts": {
+      "extraction": "String-aware top-level field scan of the ECOSYSTEM array literal in client/src/data/ecosystem.ts (unquoted TS keys; every value verbatim, nothing completed). Org-level public fields only: hq coordinates and the free-text source/currentVendor recon fields stay in the source file and out of this artifact. sector is omitted where the source omits it; posture/vendor unknown stays unknown."
+    },
+    "layer0": {
+      "extraction": "Structured extraction of the array literals in client/src/pages/Layer0.tsx (L0_LEVELS control-level names, BENCH topics — titles only) plus the audited node registry the page renders from, client/src/data/layer0Nodes.ts (LAYER0_NODES: id, name, cls, status). Node coordinates and prose fields stay in the registry file."
+    },
+    "board_axes": {
+      "extraction": "Fetched live from GET /api/gspc at build time; per-axis fields the board serves (axis, kind, status, accuracy, n, separation), absent where the board omits them.",
+      "url": "https://councilof.ai/api/gspc",
+      "board_public_count": "34 axes · 34 measured",
+      "board_lid": "34 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate."
+    },
+    "deadlines": {
+      "extraction": "Fetched live from GET /api/regulation at build time. Prose fields (what, penalty_exposure) are quoted by the register and deliberately not copied here — one `what` row carries a currency amount (a quoted revenue threshold), and this artifact quotes no amounts.",
+      "url": "https://councilof.ai/api/regulation",
+      "verified_as_of": "2026-09-12",
+      "days_until_rule": "date minus build date 2026-11-08 (UTC), whole days; past dates negative"
+    },
+    "bindings": {
+      "extraction": "The DECLARED-GAP layer: every cross-dimension binding this index checked for and did not find published. Verified against the tree at authoring time; partial bindings are named in the notes rather than absorbed. A gap closed by a later artifact must be removed from this list in the same commit that publishes the artifact."
+    },
+    "anchors": {
+      "extraction": "Counts and pointer fields measured from fetched payloads at build time."
+    }
+  }
+}

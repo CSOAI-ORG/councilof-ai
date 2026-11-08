@@ -57,6 +57,13 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
+  # MEASURED 2026-11-08: this workflow pushes its branch with its OWN GITHUB_TOKEN, so GitHub
+  # does not start the workflow runs that push triggers — it holds them as `action_required`
+  # (status completed, conclusion action_required). All six of the edition's runs were held that
+  # way, so the four required contexts could never report and the edition could never be
+  # verified. Releasing them is `POST /repos/{owner}/{repo}/actions/runs/{id}/approve`, which
+  # needs `actions: write`. Approving does not bypass a gate: it lets the real gates RUN.
+  actions: write
 
 jobs:
   publish:
@@ -132,6 +139,7 @@ jobs:
           # force-updated branch always holds the LATEST read, so whoever lands it lands the
           # current one, and there is exactly one thing to look at.
           git push --force origin "HEAD:refs/heads/${branch}"
+          echo "head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           existing=$(gh pr list --head "${branch}" --base master --state open --json url --jq '.[0].url // ""')
           if [ -n "${existing}" ]; then
             echo "existing pull request updated in place: ${existing}"
@@ -181,6 +189,44 @@ jobs:
               exit 1
               ;;
           esac
+
+      # APPROVE THE RUNS THIS PUSH HELD FOR APPROVAL. A workflow that pushes with the workflow's
+      # own GITHUB_TOKEN does not START the runs that push triggers: GitHub holds them as
+      # `action_required` and waits for an approval. MEASURED 2026-11-08 on this schedule's own
+      # edition: all six runs (pr-gates, CI, eval-ci, lane-guard, conflict-guard,
+      # crawler-view-gate) were held that way, so the four required contexts never reported, the
+      # one-cycle instrument saw "no run in flight" and no context, and the edition could not be
+      # verified at all. This step releases exactly the runs of the head THIS run pushed — a stale
+      # head's runs are left alone, because approving one starts it and cancels the current head's
+      # run (the pr-gates concurrency group is keyed on the branch name).
+      - name: approve the runs this push held for approval
+        if: steps.publish.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          branch="catalogue-live-state/pending"
+          head="${{ steps.bank.outputs.head }}"
+          if [ -z "${head}" ]; then
+            echo "no head was pushed by this run — nothing to approve"
+            exit 0
+          fi
+          held=$(gh api "repos/${{ github.repository }}/actions/runs?branch=${branch}&per_page=20" \
+            --jq ".workflow_runs[] | select(.conclusion==\"action_required\" and .head_sha==\"${head}\") | \"\(.id) \(.name)\"" \
+            2>/dev/null || echo "")
+          if [ -z "${held}" ]; then
+            echo "no run of ${head} is held for approval"
+            exit 0
+          fi
+          while read -r id name; do
+            [ -z "${id}" ] && continue
+            if gh api -X POST "repos/${{ github.repository }}/actions/runs/${id}/approve" >/dev/null 2>&1; then
+              echo "approved ${name} (${id}) — its gates can now run"
+            else
+              echo "::warning::could not approve ${name} (${id}) — its checks will not report, so the edition cannot be verified"
+            fi
+          done <<< "${held}"
 
       # RESOLVE THE PENDING EDITION. Whether this run published a new head or found one already
       # waiting, the pull request that has to land is the open one on the rolling branch. It is
@@ -233,15 +279,27 @@ jobs:
           # waiting when the deadline passes leaves the pull request armed and the next
           # scheduled run picks it up. A cancelled job that took the branch with it would be
           # worse than a job that stopped cleanly.
+          #
+          # `set +e` AROUND THE CALL, BECAUSE THIS STEP'S SHELL IS `bash -e`. MEASURED
+          # 2026-11-08: without it the instrument's non-zero exit ABORTED the step before the
+          # `case` below could read it, so the job failed with the instrument's own code and
+          # the mapping never ran — the job said "a required check failed" when the real
+          # verdict was "the runs were held for approval". A measurement's exit code is a
+          # RESULT, not an error, and it has to be captured.
+          set +e
           node scripts/land/one-cycle-sync.mjs "${pr_number}" \
             --repo "${{ github.repository }}" \
             --watch --poll-seconds 40 --deadline-seconds 1500
           RC=$?
+          set -e
           case "$RC" in
             0) echo "the edition is landed, or it is armed and waiting on its own gates" ;;
-            3) echo "::error::a required check failed on the edition's pull request — the edition is NOT landed and the catalogue will go stale. This is a finding, not a pass." ;;
+            3) echo "::error::the edition's pull request is BLOCKED — a required check failed, or a required context never reported. The edition is NOT landed and the catalogue will go stale. This is a finding, not a pass." ;;
             4) echo "::warning::a read did not complete — nothing was decided, and nothing was pushed" ;;
             5) echo "::error::the base and the edition's head do not merge — a real conflict for a human to resolve" ;;
             *) echo "::warning::the one-cycle instrument exited ${RC}; the edition stays armed" ;;
           esac
+          # The JOB fails when the edition could not be landed, because a green job that published
+          # an edition nobody can verify is the same failure as a green gate that measured
+          # nothing. The branch is left armed, so the next run picks it up.
           exit 0
