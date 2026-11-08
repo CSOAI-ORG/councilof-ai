@@ -1,3 +1,5 @@
+import { verifyCardHref } from "@/lib/cardParam";
+
 /** Presentation readers only. Historical records and the canonical board are not modified. */
 export const JAIL_INDEX_URL = "/interop/jail-index.json";
 export const JAIL_INDEX_LIMIT = 64 * 1024;
@@ -109,5 +111,5 @@ export async function fetchJailArchive(signal: AbortSignal, request: typeof fetc
 }
 
 export function jailVerifyHref(card: JailArchive["cards"][number]): string {
-  return `/gspc-verify/?card=${encodeURIComponent(`https://councilof.ai${card.url}`)}`;
+  return verifyCardHref(card.url);
 }
