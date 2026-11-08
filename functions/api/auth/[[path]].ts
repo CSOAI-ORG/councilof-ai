@@ -306,6 +306,7 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
         ? json({ user, visibility: "private" })
         : json({
             user,
+            account_generation: generation,
             entitlements: { paid: false, products: [] as string[], count: 0 },
           });
     }
