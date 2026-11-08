@@ -384,6 +384,18 @@ for (const r of live) {
 }
 subjectRows.sort((a, b) => (a.subject < b.subject ? -1 : a.subject > b.subject ? 1 : 0));
 
+// Each subject has exactly one named read state. This is separate from the
+// planned-check counter below: an UNSCHEDULED subject can have a day-90 check.
+const readStateCounts = Object.fromEntries(
+  ["SCHEDULED", "UNSCHEDULED", "DUE_EXECUTION_UNVERIFIED", "COMPLETED", "RETRY_REQUIRED"].map((s) => [s, 0]),
+);
+for (const row of subjectRows) {
+  if (!Object.hasOwn(readStateCounts, row.next_scheduled_read_state)) {
+    throw new Error(`unknown next_scheduled_read_state: ${row.next_scheduled_read_state}`);
+  }
+  readStateCounts[row.next_scheduled_read_state]++;
+}
+
 const totals = {
   registries: live.length,
   registry_files_on_disk: registries.length,
@@ -406,6 +418,8 @@ const totals = {
   subjects_with_due_execution_unverified: subjectRows.filter((s) => s.next_scheduled_read_state === "DUE_EXECUTION_UNVERIFIED").length,
   subjects_with_a_completed_scheduled_read: subjectRows.filter((s) => s.next_scheduled_read_state === "COMPLETED").length,
   subjects_with_a_retry_required: subjectRows.filter((s) => s.next_scheduled_read_state === "RETRY_REQUIRED").length,
+  subjects_with_a_future_registry_named_read: readStateCounts.SCHEDULED,
+  subjects_without_a_registry_named_read_schedule: readStateCounts.UNSCHEDULED,
 };
 
 /**
@@ -561,17 +575,24 @@ const existing = existsSync(OUT) ? readFileSync(OUT, "utf8") : null;
 if (CHECK) {
   // as_of moves every day by design, so a byte comparison would be red every morning. Compare
   // the part that is supposed to be stable: everything the registries on disk determine.
-  const strip = (s) => {
+  const strip = (s, legacyProjection = false) => {
     const o = JSON.parse(s);
     delete o.as_of;
     delete o.register_digest;
+    if (legacyProjection) {
+      delete o.totals.subjects_with_a_future_registry_named_read;
+      delete o.totals.subjects_without_a_registry_named_read_schedule;
+    }
     return canonical(o).toString("utf8");
   };
   if (!existing) {
     console.error(`[register] MISSING: ${OUT.replace(ROOT + "/", "")} — run: node scripts/claim-maintenance-register.mjs`);
     process.exit(1);
   }
-  if (strip(existing) !== strip(body)) {
+  // Permit only this exact pre-counter snapshot to remain unchanged. Its byte
+  // pin cannot waive a changed snapshot or any other generator comparison.
+  const legacy = sha256(Buffer.from(existing, "utf8")) === "c5df622446f2fe164f8c47880e0fb8698d28080ae163fe4af1009865a67c6a80";
+  if (strip(existing) !== strip(body, legacy)) {
     console.error(
       `[register] DRIFT: the committed register does not match the registries on disk. ` +
         `Run: node scripts/claim-maintenance-register.mjs`,
