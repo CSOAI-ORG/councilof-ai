@@ -103,6 +103,16 @@ elif [ "$cite_rc" -ne 0 ]; then
   printf '%s\n' "$cite_out" | tail -8 | sed 's/^/      /'; fail=1
 fi
 
+# Check COMMITTED derived evidence before the build can regenerate it. The mirror contract
+# reads the two source artifacts directly; the OTS gate reads existing detached proof bytes.
+# These are the same offline checks used by hosted CI/release, with no stamping or publication.
+reviewed_out=$(PYTHONPATH=scripts/connectors python3 scripts/connectors/build_reviewed_stream.py --check 2>&1) \
+  || { echo "  ✖ reviewed-stream: committed envelopes could not be qualified — its verdict:"; \
+       printf '%s\n' "$reviewed_out" | tail -8 | sed 's/^/      /'; fail=1; }
+manifest_out=$(python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public 2>&1) \
+  || { echo "  ✖ OTS manifest: committed proof inventory could not be qualified — its verdict:"; \
+       printf '%s\n' "$manifest_out" | tail -8 | sed 's/^/      /'; fail=1; }
+
 # The published-surface audit's RULES, offline. The audit itself is an OPERATOR tool —
 # it touches the network — but its rules are code, and code can be checked without one.
 #
@@ -336,5 +346,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate + interop-file-index + trigger-coupling clean"
+echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate + interop-file-index + reviewed-stream + OTS-manifest + trigger-coupling clean"
 exit 0
