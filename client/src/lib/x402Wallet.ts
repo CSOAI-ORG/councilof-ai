@@ -89,6 +89,8 @@ export interface X402Challenge {
   amount: string;
   resource: string;
   nonce?: string | null;
+  purchaseSeed?: string;
+  purchaseRequest?: import("../../../shared/buyerPurchase").PurchaseIdentity;
   expires?: number | null;
   extra?: X402Accepted["extra"] | null;
   maxTimeoutSeconds?: number | null;
@@ -104,6 +106,7 @@ export type X402Authorization = {
 };
 
 export type X402PaymentPayload = {
+  csoaiPurchase?: {version:1;seed:string};
   x402Version: 2;
   /** Compatibility fields consumed by our v2-to-v1 facilitator adapter. */
   scheme: "exact";
@@ -381,6 +384,7 @@ export async function signX402Challenge(
 
   const payload: X402PaymentPayload = {
     x402Version: 2,
+    ...(challenge.purchaseSeed?{csoaiPurchase:{version:1 as const,seed:challenge.purchaseSeed}}:{}),
     scheme: "exact",
     network: terms.network,
     resource: challenge.resourceInfo,
