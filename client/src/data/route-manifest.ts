@@ -1963,6 +1963,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Signed Mill Batch20260924"
  },
  {
+  "path": "/signup",
+  "comp": "AccountSignup",
+  "title": "Account Signup"
+ },
+ {
   "path": "/simulate",
   "comp": "Redirect",
   "title": "Simulate"
