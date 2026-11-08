@@ -1,3 +1,5 @@
+import { postObservationState } from "./_bookkeeping_budget";
+import { recordPaidResponse } from "./_x402_delivery_record";
 /**
  * GET /api/coverage-evidence — the TUI-2 coverage evidence row, as an x402 paid door.
  *
@@ -198,7 +200,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     network: paid.settlement?.network ?? null,
     bazaar: paid.settlement?.bazaar ?? null,
   };
-  return json(fullBody(id, row, payment), 200, paid.paymentResponse ? { "x-payment-response": paid.paymentResponse } : {});
+  return recordPaidResponse(json(fullBody(id,row,payment),200,paid.paymentResponse?{"x-payment-response":paid.paymentResponse}:{}),{kv:env.REVENUE_KV,transaction:paid.settlement?.transaction,resource:resourceUrl,confirmedPaid:paid.ok,successfulOutput:true,paymentResponse:paid.paymentResponse,buyer:paid.buyer,buyerState:paid.purchaseState,observationState:postObservationState(paid)});
 };
 
 // HEAD must answer exactly as GET would (same status, PAYMENT-REQUIRED on the 402,
