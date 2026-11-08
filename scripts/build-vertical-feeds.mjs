@@ -216,11 +216,22 @@ const index = {
 const all = new Map([...axisFeeds, ...modelFeeds, ...regulatorFeeds, ...industryFeeds]);
 all.set("index.json", index);
 
+
+// ---- brand hygiene: internal codenames never reach a public surface (owner rule, brand-gate parity)
+const CODENAME = /\bsovos\b|\bsov3\d*(?:-[a-z0-9-]+)?\b|\bdorado\b|\bcibola\b|\bventuri|\bpontius|\blaputa/gi;
+function scrub(v) {
+  if (typeof v === "string") return v.replace(CODENAME, "[internal-ref]");
+  if (Array.isArray(v)) return v.map(scrub);
+  if (v && typeof v === "object") return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, scrub(x)]));
+  return v;
+}
+
 // ---- write / check ---------------------------------------------------------
+
 let mismatch = 0;
-for (const [rel, body] of [...all.entries()].sort()) {
+for (const [rel, rawBody] of [...all.entries()].sort()) {
   const p = join(FEEDS, rel);
-  const bytes = canonical(body);
+  const bytes = canonical(scrub(rawBody));
   if (CHECK) {
     const cur = existsSync(p) ? readFileSync(p, "utf8") : null;
     if (cur !== bytes) { console.error(`✗ stale: ${rel}`); mismatch++; }
