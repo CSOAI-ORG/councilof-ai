@@ -1,3 +1,6 @@
+import { handlePurchases } from "../api/purchases/[[path]]";
+import { purchaseBody, type BuyerEnv } from "../api/_buyer_purchase";
+import { purchaseSha256 } from "../../shared/buyerPurchase";
 /**
  * Paid MCP tools on Pages /mcp — thin, honest wrappers over the x402-metered routes.
  *
@@ -186,10 +189,12 @@ export function buildPaidRequest(
   };
 }
 
+export type PaidCallerContext={authorization?:string;env?:BuyerEnv};
 export async function paidToolResult(
   name: string,
   args: Record<string, unknown>,
   origin: string,
+  caller?:PaidCallerContext,
 ): Promise<McpToolResult> {
   const paymentPresented =
     typeof args.x_payment === "string" && args.x_payment.trim() !== "";
@@ -252,6 +257,29 @@ export async function paidToolResult(
     isError,
   });
 
+  if("purchase_action" in args){
+    if(paymentPresented)return reply({...base,status:"BAD_ARGUMENTS",reason:"Recovery and decisions must omit payment authorization."},"No payment was attempted.",true);
+    const action=args.purchase_action,tx=typeof args.purchase_transaction==="string"?args.purchase_transaction:"";
+    if(typeof action!=="string"||!["history","recover","decisions","accept","reject","request_correction"].includes(action)||
+      (action!=="history"&&(!tx||tx.length>256)))
+      return reply({...base,status:"BAD_ARGUMENTS",reason:"A supported purchase action and owned transaction are required."},"No payment was attempted.",true);
+    const decision=!["history","recover","decisions"].includes(action);
+    const url=new URL(action==="history"?"/api/purchases":"/api/purchases/"+encodeURIComponent(tx)+(action==="recover"?"?include_body=1":"/decisions"),origin);
+    if(typeof args.purchase_cursor==="string")url.searchParams.set("cursor",args.purchase_cursor);
+    if(action==="decisions"&&typeof args.purchase_request_id==="string")url.searchParams.set("request_id",args.purchase_request_id);
+    const headers=new Headers(decision?{"content-type":"application/json"}:{});
+    if(caller?.authorization)headers.set("authorization",caller.authorization);
+    const request=new Request(url,{method:decision?"POST":"GET",headers,...(decision?{body:JSON.stringify({
+      action,result_sha256:args.purchase_result_sha256,result_version:args.purchase_result_version,
+      request_id:args.purchase_request_id,reason:args.purchase_reason,
+    })}:{})});
+    const response=await handlePurchases(request,caller?.env||{}),result=await response.json();
+    return reply({...base,status:response.ok?(action==="history"?"PURCHASE_HISTORY":action==="recover"?"ORIGINAL_RECOVERED":action==="decisions"?"BUYER_DECISIONS":"BUYER_DECISION_RECORDED"):"PURCHASE_UNAVAILABLE",
+      http_status:response.status,purchase:result,payment_presented:false,settlement_state:"NOT_REQUESTED",
+      no_new_payment_or_provider_call:true,acceptance_inferred:false},
+      response.ok?"Owned original data or explicit buyer declaration read. No new payment, provider/model call or signature.":"Purchase access or decision could not be qualified. No new payment was attempted.",!response.ok);
+  }
+
   if ("error" in built)
     return reply(
       { ...base, status: "BAD_ARGUMENTS", reason: built.error },
@@ -259,6 +287,8 @@ export async function paidToolResult(
       true,
     );
 
+  if(caller?.authorization)built.req.headers.set("authorization",caller.authorization);
+  const identityRequest=paymentPresented?null:built.req.clone();
   let res: Response;
   try {
     res = await fetch(built.req);
@@ -304,7 +334,13 @@ export async function paidToolResult(
       body && typeof body === "object" && !Array.isArray(body)
         ? (body as Record<string, unknown>)
         : {};
+    const advertised=typeof paymentRequired.resource==="object"&&paymentRequired.resource!==null
+      ?(paymentRequired.resource as {url?:unknown}).url:typeof paymentRequired.resource==="string"?paymentRequired.resource
+      :Array.isArray(paymentRequired.accepts)&&typeof paymentRequired.accepts[0]?.resource==="string"?paymentRequired.accepts[0].resource:undefined;
+    const purchaseRequest=identityRequest?{url:identityRequest.url,resource:typeof advertised==="string"?advertised:identityRequest.url,
+      method:identityRequest.method,body_sha256:await purchaseSha256(await purchaseBody(identityRequest))}:undefined;
     const payload = {
+      ...(purchaseRequest?{purchase_request:purchaseRequest}:{}),
       // x402 MCP transport: the PaymentRequired object sits at the top level of structuredContent.
       ...paymentRequired,
       ...base,
