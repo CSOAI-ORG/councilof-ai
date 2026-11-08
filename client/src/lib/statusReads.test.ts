@@ -47,6 +47,16 @@ describe("live status reads", () => {
     });
   });
 
+  it.each([null, [], "not an object", 0, false])(
+    "keeps a non-object JSON body unread instead of exposing %j as component data",
+    async (body) => {
+      vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify(body))));
+      expect(await readJson("/api/health")).toEqual({
+        ok: false, error: "source response did not contain an object", readAt: READ_AT,
+      });
+    },
+  );
+
   it("preserves successful JSON, measured zero and existing request options", async () => {
     const body = { one_number: { all_time: 0, settlements: 0 } };
     const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify(body)));

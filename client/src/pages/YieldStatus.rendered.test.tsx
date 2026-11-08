@@ -64,6 +64,20 @@ describe("rendered /status source failures", () => {
     },
   );
 
+  it("renders unknown rows for valid JSON null instead of aborting the entire page", async () => {
+    const fetcher = vi.fn(async () => new Response("null"));
+    vi.stubGlobal("fetch", fetcher);
+    await renderStatus();
+
+    expect(container.querySelectorAll('li[data-state="UNKNOWN"]')).toHaveLength(12);
+    expect(container.querySelectorAll('li[data-state="UNMEASURED"]')).toHaveLength(6);
+    expect(container.querySelectorAll('li[data-state="OK"]')).toHaveLength(0);
+    expect(container.textContent).toContain("source response did not contain an object");
+    expect(container.textContent).toContain("page read completed at");
+    expect(fetcher).toHaveBeenCalledTimes(15);
+    expect(snapshotFailure(container.textContent ?? "", [])).toBeNull();
+  });
+
   it("retains measured zero and a source-reported offline state when other reads fail", async () => {
     vi.stubGlobal("fetch", vi.fn(async (url: string) => {
       if (url === "/api/revenue") {

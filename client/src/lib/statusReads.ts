@@ -37,7 +37,13 @@ export async function readJson<T>(path: string, init?: RequestInit): Promise<Rea
       ...init,
     });
     if (!response.ok) return { ok: false, error: `HTTP ${response.status}`, readAt };
-    return { ok: true, body: (await response.json()) as T, readAt };
+    const body: unknown = await response.json();
+    // Every /status JSON source is an object. Valid JSON null/scalars/arrays
+    // cannot supply a component observation and must not crash the whole page.
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+      return { ok: false, error: "source response did not contain an object", readAt };
+    }
+    return { ok: true, body: body as T, readAt };
   } catch (error) {
     return { ok: false, error: statusReadError(error), readAt };
   }
