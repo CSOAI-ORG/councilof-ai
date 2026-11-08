@@ -93,7 +93,7 @@ function Row({ a }: { a: GspcAxis }) {
           title={typeof a.bench === "string" && a.bench ? `${a.axis} · ${a.bench}` : a.axis}
           data-axis-link={a.axis}
         >
-          <span className="min-w-0 truncate text-[12px] font-semibold leading-tight text-white/90">
+          <span className="min-w-0 line-clamp-2 text-[11px] font-semibold leading-tight text-white/90">
             {a.axis}
           </span>
           <span className="shrink-0 font-mono text-[12px] font-bold tabular-nums text-[#6ee7b7]">
@@ -106,7 +106,7 @@ function Row({ a }: { a: GspcAxis }) {
           title={typeof a.bench === "string" && a.bench ? `${a.axis} · ${a.bench}` : a.axis}
           data-axis-link={a.axis}
         >
-          <span className="min-w-0 truncate text-[12px] font-semibold leading-tight text-white/90">
+          <span className="min-w-0 line-clamp-2 text-[11px] font-semibold leading-tight text-white/90">
             {a.axis}
           </span>
           <span className="shrink-0 font-mono text-[12px] font-bold tabular-nums text-[#6ee7b7]">
