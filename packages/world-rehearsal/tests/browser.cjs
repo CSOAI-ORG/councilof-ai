@@ -53,7 +53,10 @@ const assert = require("node:assert/strict");
     assert.match(await page.locator("#frame").textContent(),/Tick 0:/);
     await page.keyboard.press("ArrowRight");assert.match(await page.locator("#frame").textContent(),/Tick 1:/);
     await page.setViewportSize({width:390,height:844});
-    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,
+      JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll("body *")]
+        .filter(el=>!el.closest(".table-wrap")&&(el.getBoundingClientRect().right>innerWidth+1||el.scrollWidth>el.clientWidth+1))
+        .slice(0,8).map(el=>({tag:el.tagName,id:el.id,class:el.className,client:el.clientWidth,scroll:el.scrollWidth})))));
     assert.equal(await page.locator("#rows tr").count(),10);
     await page.locator("#aggregate-table").focus();
     assert.equal(await page.locator("#aggregate-table").evaluate(el=>el===document.activeElement),true);
