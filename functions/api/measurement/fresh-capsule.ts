@@ -1,3 +1,4 @@
+import { postObservationState } from "../_bookkeeping_budget";
 import { recordPaidResponse } from "../_x402_delivery_record";
 /**
  * GET /api/measurement/fresh-capsule?endpoint=<https MCP URL>&dimension=TOOLS|VERSION|PROTOCOL
@@ -298,7 +299,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
       },
     },
-  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
