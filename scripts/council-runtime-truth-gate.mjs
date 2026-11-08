@@ -831,7 +831,7 @@ for (const route of [
   "/assurance",
   "/systemcard",
   "/training",
-  "/signup",
+  // /signup uses the strict AccountSignup contract above; retired Signup.tsx stays denied.
   "/welcome",
   "/system-status",
   "/sec-disclosure",
