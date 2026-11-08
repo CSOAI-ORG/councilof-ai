@@ -1,12 +1,16 @@
 # Post-deploy verification — G1.6 POST-MERGE PROVER.
 #
 # After every deploy, hit both hosts (councilof.ai + csoai.org), assert 200s
-# on critical endpoints, and comment on the PR that triggered the deploy.
+# on critical endpoints, and attach the result to this verification run.
 #
 # This workflow runs AFTER the build-deploy job completes successfully.
 # It verifies the LIVE deployment, not the build artifacts.
 
 name: Post-deploy verification
+
+# Verification never writes to an unrelated pull request or changes production.
+permissions:
+  contents: read
 
 on:
   workflow_run:
@@ -20,7 +24,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master' && github.event.workflow_run.head_repository.full_name == github.repository }}
     timeout-minutes: 10
     steps:
       - name: Probe live endpoints on both hosts
@@ -37,6 +41,10 @@ jobs:
           PASS=0
           FAIL=0
           REPORT=""
+          read -ra HOST_ARRAY <<< "${HOSTS//,/ }"
+          read -ra ENDPOINT_ARRAY <<< "$ENDPOINTS"
+          read -ra CLIENT_ARRAY <<< "$CLIENT_ENDPOINTS"
+          EXPECTED=$(( ${#HOST_ARRAY[@]} * (${#ENDPOINT_ARRAY[@]} + 2 * ${#CLIENT_ARRAY[@]}) ))
           for HOST in $(echo "$HOSTS" | tr ',' ' '); do
             for EP in $ENDPOINTS; do
               URL="https://$HOST$EP"
@@ -74,6 +82,7 @@ jobs:
           done
           echo "pass=$PASS" >> "$GITHUB_OUTPUT"
           echo "fail=$FAIL" >> "$GITHUB_OUTPUT"
+          echo "expected=$EXPECTED" >> "$GITHUB_OUTPUT"
           echo "report<<EOF" >> "$GITHUB_OUTPUT"
           echo -e "$REPORT" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
@@ -85,12 +94,14 @@ jobs:
         id: content
         run: |
           set -uo pipefail
+          PASS=0
           FAIL=0
           REPORT=""
 
           # root.json must have merkle_root and card_count
           ROOT=$(curl -s -L --max-time 20 "https://councilof.ai/root.json" 2>/dev/null)
           if echo "$ROOT" | python3 -c "import sys,json;d=json.load(sys.stdin);assert d.get('merkle_root') and d.get('card_count')" 2>/dev/null; then
+            PASS=$((PASS+1))
             REPORT="$REPORT\n✅ root.json has merkle_root + card_count"
           else
             FAIL=$((FAIL+1))
@@ -100,6 +111,7 @@ jobs:
           # /feed must return valid JSON with cards array
           FEED=$(curl -s -L --max-time 20 "https://councilof.ai/feed" 2>/dev/null)
           if echo "$FEED" | python3 -c "import sys,json;d=json.load(sys.stdin);assert d.get('count',0) > 0" 2>/dev/null; then
+            PASS=$((PASS+1))
             CARDS=$(echo "$FEED" | python3 -c "import sys,json;print(json.load(sys.stdin).get('count',0))")
             REPORT="$REPORT\n✅ /feed serves $CARDS cards"
           else
@@ -110,57 +122,66 @@ jobs:
           # agents index must serve with correct content-type
           IDX_CODE=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 20 "https://councilof.ai/.well-known/agents/index.json" 2>/dev/null)
           if [ "$IDX_CODE" = "200" ]; then
+            PASS=$((PASS+1))
             REPORT="$REPORT\n✅ /.well-known/agents/index.json serves"
           else
             FAIL=$((FAIL+1))
             REPORT="$REPORT\n❌ /.well-known/agents/index.json → $IDX_CODE"
           fi
 
+          echo "pass=$PASS" >> "$GITHUB_OUTPUT"
           echo "fail=$FAIL" >> "$GITHUB_OUTPUT"
+          echo "expected=3" >> "$GITHUB_OUTPUT"
           echo "report<<EOF" >> "$GITHUB_OUTPUT"
           echo -e "$REPORT" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
-      - name: Comment on PR
+      - name: Record and enforce live verification result
         if: always()
         uses: actions/github-script@v7
+        env:
+          DEPLOY_SHA: ${{ github.event.workflow_run.head_sha }}
+          DEPLOY_RUN_URL: ${{ github.event.workflow_run.html_url }}
+          PROBE_OUTCOME: ${{ steps.probe.outcome }}
+          PROBE_PASS: ${{ steps.probe.outputs.pass }}
+          PROBE_FAIL: ${{ steps.probe.outputs.fail }}
+          PROBE_EXPECTED: ${{ steps.probe.outputs.expected }}
+          PROBE_REPORT: ${{ steps.probe.outputs.report }}
+          CONTENT_OUTCOME: ${{ steps.content.outcome }}
+          CONTENT_PASS: ${{ steps.content.outputs.pass }}
+          CONTENT_FAIL: ${{ steps.content.outputs.fail }}
+          CONTENT_EXPECTED: ${{ steps.content.outputs.expected }}
+          CONTENT_REPORT: ${{ steps.content.outputs.report }}
         with:
           script: |
-            const pass = '${{ steps.probe.outputs.pass }}';
-            const fail = '${{ steps.probe.outputs.fail }}';
-            const contentFail = '${{ steps.content.outputs.fail }}';
-            const probeReport = `${{ steps.probe.outputs.report }}`;
-            const contentReport = `${{ steps.content.outputs.report }}`;
-            const totalFail = parseInt(fail) + parseInt(contentFail);
-            const icon = totalFail === 0 ? '✅' : '⚠️';
-            const body = [
-              `## ${icon} Post-deploy verification`,
-              '',
-              `**Endpoints**: ${pass} pass, ${fail} fail`,
-              `**Content probes**: ${contentFail} fail`,
-              '',
-              '### Endpoint probes',
-              probeReport,
-              '',
-              '### Content probes',
-              contentReport,
-              '',
-              `_Verified by post-deploy-verify.yml at ${new Date().toISOString()}_`,
-            ].join('\n');
-
-            // Find the PR associated with the triggering workflow run
-            const { data: prs } = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              per_page: 5,
+            const env = process.env;
+            const count = value => {
+              if (!/^(0|[1-9][0-9]*)$/.test(value ?? '')) return null;
+              const n = Number(value);
+              return Number.isSafeInteger(n) ? n : null;
+            };
+            const rows = ['PROBE', 'CONTENT'].map(prefix => {
+              const pass = count(env[`${prefix}_PASS`]);
+              const fail = count(env[`${prefix}_FAIL`]);
+              const expected = count(env[`${prefix}_EXPECTED`]);
+              const complete = env[`${prefix}_OUTCOME`] === 'success' &&
+                pass !== null && fail !== null && expected !== null &&
+                expected > 0 && pass + fail === expected;
+              return { prefix, pass, fail, expected, complete };
             });
-            // Comment on the most recently updated open PR
-            if (prs.length > 0) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prs[0].number,
-                body,
-              });
+            // A malformed or interrupted run is unknown, never a zero-failure pass.
+            const failed = rows.some(row => !row.complete || row.fail > 0);
+            const body = [
+              `## ${failed ? 'FAILED' : 'PASSED'} post-deploy verification`,
+              `Deployment commit: ${env.DEPLOY_SHA}`,
+              `Deployment run: ${env.DEPLOY_RUN_URL}`,
+              'These probes observe the live hosts at verification time; they do not prove which commit the apex serves.',
+              ...rows.map(row => `${row.prefix}: ${row.complete ? `${row.pass} pass, ${row.fail} fail of ${row.expected}` : 'UNCHECKABLE — incomplete or invalid probe result'}`),
+              '', '### Endpoint probes', env.PROBE_REPORT || 'No report captured.',
+              '', '### Content probes', env.CONTENT_REPORT || 'No report captured.',
+            ].join('\n');
+            // Preserve the failure even if writing the human-readable summary fails.
+            if (failed) {
+              core.setFailed('Live verification failed or did not complete; see the run summary.');
             }
+            await core.summary.addRaw(body).write();
