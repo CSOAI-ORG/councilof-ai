@@ -1,3 +1,6 @@
+import { bookkeepingBudget, bookkeepingGap, type BookkeepingBudget } from "./_bookkeeping_budget";
+import type { AuthEnv } from "./_authCrypto";
+import { checkBuyerPayment, finishBuyerPayment, type SettledBuyer, type BuyerStore } from "./_buyer_purchase";
 // functions/api/_x402.ts — FAIL-CLOSED x402 receipt verification, shared by every metered
 // endpoint (currently /api/proof?bundle=1, /api/request-attestation, and /api/signed-data-feed).
 //
@@ -90,6 +93,8 @@ export type X402Env = CdpEnv & {
   // /api/revenue stays honestly null. Present ⇒ every facilitator-CONFIRMED settle writes one
   // record and moves the non-self tally. Recording never gates the grant.
   REVENUE_KV?: KVNamespace;
+  SOV_ARENA_STATE?: AuthEnv["SOV_ARENA_STATE"];
+  ASSESS_SIGNING_KEY_PKCS8_B64?: string;
   // Comma-separated wallets the estate controls (besides payTo). A settlement whose payer is one
   // of these is SELF: recorded, but never counted as revenue or as a buyer.
   X402_SELF_WALLETS?: string;
@@ -181,6 +186,10 @@ export type X402Result = {
   receipt?: { format: "jws"; signature: string };
   /** Why there is no receipt on an otherwise successful settle. Absent when there is one. */
   receiptGap?: string;
+  /** Private in-process context; nonenumerable at runtime, never in receipt/body JSON. */
+  buyer?: SettledBuyer;
+  purchaseState?: string;
+  observationBudget?: BookkeepingBudget;
 };
 
 /** One entry of the canonical x402 `accepts` array (the `exact`/EIP-3009 scheme on Base). */
@@ -472,8 +481,9 @@ export type RecordOutcome =
 export async function recordSettlement(
   env: X402Env,
   rec: Omit<SettlementRecord, "schema" | "self" | "zero_value" | "settled_at">,
+  sharedBudget?:BookkeepingBudget,
 ): Promise<RecordOutcome> {
-  const kv = env.REVENUE_KV;
+  const kv:Pick<BuyerStore,"get"|"put">|undefined = env.REVENUE_KV;
   if (!kv)
     return { stored: false, reason: "no REVENUE_KV bound", record: null };
   const self = !!rec.payer && selfWallets(env).has(rec.payer.toLowerCase());
@@ -494,9 +504,10 @@ export async function recordSettlement(
         : "UNKNOWN",
     settled_at: new Date().toISOString(),
   };
+  const budget=sharedBudget??bookkeepingBudget();
   try {
     const key = `settled:tx:${record.transaction || `unknown:${Date.now()}`}`;
-    if ((await kv.get(key)) == null) await kv.put(key, JSON.stringify(record));
+    if ((await budget.run(()=>kv.get(key),"get")) == null) await budget.run(()=>kv.put(key,JSON.stringify(record)),"put");
     const amt =
       record.amount_atomic && /^\d+$/.test(record.amount_atomic)
         ? BigInt(record.amount_atomic)
@@ -505,9 +516,9 @@ export async function recordSettlement(
       const tallyKey = self
         ? "settled:self_usdc_atomic"
         : "settled:usdc_atomic";
-      const prev = await kv.get(tallyKey);
+      const prev = await budget.run(()=>kv.get(tallyKey),"get");
       const base = prev && /^\d+$/.test(prev) ? BigInt(prev) : 0n;
-      await kv.put(tallyKey, (base + amt).toString());
+      await budget.run(()=>kv.put(tallyKey,(base+amt).toString()),"put");
     }
     return { stored: true, record };
   } catch (e) {
@@ -521,10 +532,10 @@ export async function recordSettlement(
     // The outcome is returned now so a caller can surface the gap instead of inferring silence.
     return {
       stored: false,
-      reason: `kv write failed: ${(e as Error).message}`,
+      reason: bookkeepingGap(e),
       record,
     };
-  }
+  } finally {if(!sharedBudget)budget.clear();}
 }
 
 /**
@@ -576,6 +587,11 @@ export async function verifyX402Payment(
   if (!payload || typeof payload !== "object") {
     return { ok: false, reason: "x-payment payload is not an object" };
   }
+  const buyerCheck = await checkBuyerPayment(request, env, resourceUrl, payload);
+  if (buyerCheck.ok === false) return {ok:false,reason:buyerCheck.reason};
+  // CSOAI private request commitment is not facilitator data. The financial signature/nonce remain untouched.
+  const { csoaiPurchase: _privatePurchaseContext, ...financialPayload } = payload;
+
 
   // Real settlement requires a facilitator. None provisioned ⇒ we cannot settle ⇒ fail closed.
   const facilitator = facilitatorUrl(env);
@@ -696,7 +712,7 @@ export async function verifyX402Payment(
       // buyer signed keeps precedence. Same body goes to /verify and /settle, so both carry it.
       paymentPayload: onBeforeSettle(
         toDialectPayload(
-          payload as Record<string, unknown>,
+          financialPayload as Record<string, unknown>,
           v,
           v2ctx,
         ),
@@ -812,6 +828,11 @@ export async function verifyX402Payment(
         "no BOARD_SIGN_KEY_PKCS8_B64 is set in the Pages environment, so the edge holds no key to sign a receipt with";
     }
 
+    const observationBudget=bookkeepingBudget();
+    // Record the buyer before optional revenue/receipt observations can consume the deadline.
+    // The exact final signed receipt is recovered from the retained original response.
+    const owned=await finishBuyerPayment(env.REVENUE_KV,opts?.allowZeroAmount?undefined:buyerCheck.buyer,
+      settlement.transaction,settlement.payer,resourceUrl,btoa(JSON.stringify({success:true,...buyerFacing})),observationBudget);
     const recorded = await recordSettlement(env, {
       transaction: settlement.transaction,
       network: settlement.network,
@@ -822,7 +843,7 @@ export async function verifyX402Payment(
       campaign_id: accept?.csoaiPricing?.campaign_id,
       pricing_basis: accept?.csoaiPricing?.pricing_basis,
       normal_amount_atomic: accept?.csoaiPricing?.normal_amount_atomic || null,
-    });
+    }, observationBudget);
 
     if (!receiptGap && settlement.payer) {
       try {
@@ -849,6 +870,7 @@ export async function verifyX402Payment(
             self: recorded.record ? recorded.record.self : null,
             settlement_recorded: recorded.stored,
           }),
+          observationBudget,
         );
         if (!stored.stored)
           receiptGap = `receipt signed but not stored: ${stored.reason}`;
@@ -873,14 +895,15 @@ export async function verifyX402Payment(
     if (!recorded.stored) {
       (settlement as Record<string, unknown>).recording_gap = recorded.reason;
     }
-    return {
-      ok: true,
-      reason: "facilitator verified and settled receipt",
-      paymentResponse,
-      settlement,
-      ...(receipt ? { receipt } : {}),
-      ...(receiptGap ? { receiptGap } : {}),
+    
+    const result:X402Result = {
+      ok:true, reason:"facilitator verified and settled receipt",paymentResponse,settlement,
+      ...(receipt ? {receipt}:{}),...(receiptGap ? {receiptGap}:{}),
     };
+    Object.defineProperty(result,"buyer",{value:owned.buyer,enumerable:false});
+    Object.defineProperty(result,"purchaseState",{value:owned.state,enumerable:false});
+    Object.defineProperty(result,"observationBudget",{value:observationBudget,enumerable:false});
+    return result;
   } catch (e) {
     return { ok: false, reason: `facilitator error: ${(e as Error).message}` };
   }
