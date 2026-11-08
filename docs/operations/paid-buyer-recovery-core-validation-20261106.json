@@ -1,0 +1,183 @@
+{
+  "schema": "codex.buyer-recovery-core-checkpoint/1",
+  "actor": "Codex",
+  "autoMerge": false,
+  "foundation_head": "5dca4ceef2b079a135c1dcaa86bb234f1542d545",
+  "retained_test_receipt": {
+    "path": "/tmp/codex-buyer-recovery-core-controls-pass2-20261106/CONTROL_RESULT.json",
+    "bytes": 5626,
+    "sha256": "3f9adda7353f274cfdd190b699bc4e833dc705251b19ea5c59c5e574a1a87ab9"
+  },
+  "actual_report": {
+    "schema": "codex.buyer-recovery-source-validation/1",
+    "actor": "Codex",
+    "autoMerge": false,
+    "admission": {
+      "utc": "2026-11-06T07:47:13.721478+00:00",
+      "disk_free_bytes": 5592268800,
+      "memory_available_bytes": 430469120
+    },
+    "exit_code": 0,
+    "stop_reason": null,
+    "peak_rss_bytes": 115118080,
+    "elapsed_seconds": 3.8233082609949633,
+    "source_files": {
+      "shared/buyerPurchase.ts": {
+        "bytes": 2326,
+        "sha256": "f9152c90cb233fa41048f3ea19a41aef431a304fe2769485ea8d740e235557f5"
+      },
+      "functions/api/_buyer_purchase.ts": {
+        "bytes": 13337,
+        "sha256": "df063a6e887ede98737c08c6b79cb93637e619b61eda4ca35415656363792982"
+      },
+      "functions/api/_authCrypto.ts": {
+        "bytes": 5827,
+        "sha256": "093a60aad40675262b72545494b658db4ead44fc9c4c15cab9a2aa1a77760fc9"
+      },
+      "functions/api/auth/[[path]].ts": {
+        "bytes": 14191,
+        "sha256": "2f05ed4c4363493ab37169559211854d1be1a4572c34e2882809d023312616ef"
+      },
+      "functions/api/_x402.ts": {
+        "bytes": 64603,
+        "sha256": "50d4de5bd945053871b325fc1f9a745cf1401120523b3661939791d92f98294a"
+      },
+      "functions/api/_x402_delivery_record.ts": {
+        "bytes": 16505,
+        "sha256": "abc2063f0d1b858402438accf0170404eb9691a7dcd93a26e7fc65420392e195"
+      },
+      "functions/api/purchases/[[path]].ts": {
+        "bytes": 14170,
+        "sha256": "bd100de707039be88f17381af8075684d127084d6eda04534ec39d5bd7a17e3b"
+      },
+      "functions/api/_x402_negotiate.ts": {
+        "bytes": 10576,
+        "sha256": "cf99bfde6a92edb4ca594f3ccf087db24e1d991ca437294eda55b1131f3c3c72"
+      },
+      "functions/api/_wrapper_asset_doors.json": {
+        "bytes": 1094,
+        "sha256": "570e68bfed3206d33bdf651d875360860e8826b7da5e1ab25c6131b4eea5894b"
+      },
+      "scripts/paid_buyer_recovery_controls.mjs": {
+        "bytes": 22723,
+        "sha256": "3995e1295e88c1f7faef035de724a15ff9cf748986b426287a60b6540e2b8755"
+      }
+    },
+    "log_sha256": "726cf4fb8a7b2bdc90ec54efeb56cba84cecf87a70c5cb1f0e7e38374c63ed0e",
+    "tests": {
+      "schema": "codex.buyer-recovery-offline-controls/1",
+      "passed": 24,
+      "failed": 0,
+      "cases": [
+        {
+          "name": "signed auth envelope preserves lifecycle claim and legacy verification remains distinct",
+          "passed": true
+        },
+        {
+          "name": "account recreation changes owner identity and rejects the former lifecycle",
+          "passed": true
+        },
+        {
+          "name": "corrupt current account is unavailable rather than an ownership grant",
+          "passed": true
+        },
+        {
+          "name": "auth-free legacy payment remains unowned compatibility",
+          "passed": true
+        },
+        {
+          "name": "tagged v1 and v2 payment headers bind to the verified account",
+          "passed": true
+        },
+        {
+          "name": "stripped auth, stripped seed, another buyer and stripped tag cannot downgrade",
+          "passed": true
+        },
+        {
+          "name": "ambiguous dual headers reject a bound payment before a financial effect",
+          "passed": true
+        },
+        {
+          "name": "exact URL query, resource, method and body digest are bound",
+          "passed": true
+        },
+        {
+          "name": "binary POST can prepare before parsing and survive later handler body consumption",
+          "passed": true
+        },
+        {
+          "name": "unbranded or mismatched-payer settlement does not bind an output",
+          "passed": true
+        },
+        {
+          "name": "actual central settlement passes no Council authorization or private seed to facilitator",
+          "passed": true
+        },
+        {
+          "name": "actual paid response retains original bytes with private owner binding",
+          "passed": true
+        },
+        {
+          "name": "history and fresh recovery return exact stored bytes and receipt with zero new provider effects",
+          "passed": true
+        },
+        {
+          "name": "wrong account and anonymous callers receive no private result or receipt",
+          "passed": true
+        },
+        {
+          "name": "tampered body or private binding cannot be recovered",
+          "passed": true
+        },
+        {
+          "name": "decision refuses wrong digest, version and owner without a write",
+          "passed": true
+        },
+        {
+          "name": "explicit buyer action persists once; exact replay reads and changed replay conflicts",
+          "passed": true
+        },
+        {
+          "name": "reject and correction request are separate explicit decisions against the same original",
+          "passed": true
+        },
+        {
+          "name": "prepare validates current lifecycle and binds target without payment or storage write",
+          "passed": true
+        },
+        {
+          "name": "login upgrades legacy generation only after password and exact observed store readback",
+          "passed": true
+        },
+        {
+          "name": "owner ledger timeout never starts a late write after a delayed get",
+          "passed": true
+        },
+        {
+          "name": "in-flight owner put is UNKNOWN and cannot start a later history write",
+          "passed": true
+        },
+        {
+          "name": "unknown explicit decision write is reconciled by reading without repeating payment or write",
+          "passed": true
+        },
+        {
+          "name": "new account generation is confirmed before a registration session is returned",
+          "passed": true
+        }
+      ],
+      "real_network_calls": 0,
+      "real_payment_signatures": 0,
+      "real_customer_decisions": 0,
+      "synthetic_financial_transport_calls": 3,
+      "auth_fixture": "Ephemeral synthetic fixture key and tokens only in worker memory; no production credentials or sessions."
+    }
+  },
+  "recovery_on": "2026-11-07",
+  "state": "BACKEND_CORE_CHECKPOINT; HUMAN_MCP_AND_FULL_INTEGRATION_UNFINISHED",
+  "claims": [
+    "24 retained offline fixture controls passed. Hashes independently re-read after interruption.",
+    "No production credentials, real payment, buyer decision, signing or runtime adoption.",
+    "Not a live customer or Company case acceptance proof."
+  ]
+}
