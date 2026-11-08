@@ -141,9 +141,11 @@ release. The runtime probe test is a protocol fixture, not a real Kiri test.
 
 ## Production integration still required
 
-Version 0.2.0 local validation on 8 November 2026: 34 Python tests and the
-17-step DOM/HTTP journey pass. The expanded native browser journey is also
-required by CI; see `QUALIFICATION.json` for its exact tested version and state.
+Version 0.2.0 validation on 8 November 2026: 34 Python tests, the 17-step
+DOM/HTTP journey and 17 native Chromium checks pass. CI also qualifies fresh
+archive extraction, the canonical consumer and a byte-identical rebuild.
+[CI receipt](https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42446519042).
+See `QUALIFICATION.json` for exact scope and tested source.
 This does not establish visual design perfection or accessibility conformance.
 See [INTEGRATION.md](INTEGRATION.md) for the scoped connection and readiness map.
 
