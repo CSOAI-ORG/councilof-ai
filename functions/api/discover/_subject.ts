@@ -101,38 +101,50 @@ export const handleSubject = async (
     boundary:
       "Measurement, not certification. Discovery does not imply measurement, validity, or endorsement.",
   };
+  // THE DISCOVERY BLOCK IS COMPUTED ONCE AND USED TWICE (the free-door pattern): the 402 below
+  // advertises it, and verifyX402Payment echoes the SAME object into the v2 PaymentPayload the
+  // facilitator catalogs from — specs/extensions/bazaar.md: "If the extension is omitted, discovery
+  // cataloging will not occur." Built inside buildPaymentRequiredV2 only, a zero-value settle here
+  // reached the facilitator with no extensions at all, so the door stayed settleable and unindexed
+  // (PayAI catalogs off /verify and /settle, never off a 402 — docs.payai.network/x402/facilitators/bazaar).
+  const bazaar = {
+    info: {
+      input: { type: "http", method: "GET" },
+      output: { type: "json", example: output },
+    },
+    schema: {
+      $schema: "https://json-schema.org/draft/2020-12/schema",
+      type: "object",
+      properties: {
+        input: {
+          type: "object",
+          properties: {
+            type: { type: "string", const: "http" },
+            method: { type: "string", enum: ["GET"] },
+          },
+          required: ["type", "method"],
+          additionalProperties: false,
+        },
+        output: {
+          type: "object",
+          properties: { type: { type: "string" } },
+          required: ["type"],
+        },
+      },
+      required: ["input"],
+    },
+  };
+
   const challenge = buildPaymentRequiredV2({
     resourceUrl,
     description,
     serviceName: `CSOAI ${subject.label} discovery`,
+    // Service-level metadata the Bazaar persists alongside description and mimeType
+    // (docs.payai.network/x402/facilitators/bazaar). No amount lives here: amounts are only ever
+    // in accepts[].
+    tags: ["discovery", key, "links", "x402"],
     accepts,
-    bazaar: {
-      info: {
-        input: { type: "http", method: "GET" },
-        output: { type: "json", example: output },
-      },
-      schema: {
-        $schema: "https://json-schema.org/draft/2020-12/schema",
-        type: "object",
-        properties: {
-          input: {
-            type: "object",
-            properties: {
-              type: { type: "string", const: "http" },
-              method: { type: "string", enum: ["GET"] },
-            },
-            required: ["type", "method"],
-            additionalProperties: false,
-          },
-          output: {
-            type: "object",
-            properties: { type: { type: "string" } },
-            required: ["type"],
-          },
-        },
-        required: ["input"],
-      },
-    },
+    bazaar,
   });
 
   const payment = await verifyX402Payment(
@@ -140,7 +152,10 @@ export const handleSubject = async (
     env,
     resourceUrl,
     accepts[0],
-    { allowZeroAmount: true },
+    // allowZeroAmount: the honest price of a discovery door. bazaar: the SAME block the 402 above
+    // advertised — without it the payload reaches the facilitator with no extensions and the
+    // resource is never catalogued.
+    { allowZeroAmount: true, bazaar },
   );
   if (payment.ok) {
     return Response.json(output, {
