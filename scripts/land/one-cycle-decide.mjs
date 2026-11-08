@@ -112,6 +112,7 @@ export const ACTIONS = Object.freeze({
  * @param {string[]} state.required.inFlight        required contexts queued or running.
  * @param {string[]} state.required.unreported      required contexts that have not reported at all.
  * @param {boolean}  state.anyRunInFlight          is any workflow run on this head still going?
+ * @param {string[]} state.runsAwaitingApproval    workflow runs on this head held for approval.
  * @returns {{action: string, reason: string, detail: object}}
  */
 export function decide(state) {
@@ -120,6 +121,7 @@ export function decide(state) {
   const failed = list(required.failed);
   const inFlight = list(required.inFlight);
   const unreported = list(required.unreported);
+  const awaitingApproval = list(state?.runsAwaitingApproval);
   const behind = Number.isFinite(state?.behind) ? Math.max(0, Math.trunc(state.behind)) : 0;
 
   // A read that did not complete is not a reading. Reporting `behind = 0` from a failed compare
@@ -190,6 +192,21 @@ export function decide(state) {
         action: ACTIONS.WAIT_FOR_CHECKS,
         reason: `${unreported.length} required context(s) have not reported yet (${unreported.join(", ")}) and a run is still in flight on this head`,
         detail: { behind, unreported },
+      };
+    }
+    if (awaitingApproval.length > 0) {
+      // A RUN HELD FOR APPROVAL IS A STATE, AND IT NAMES ITS REMEDY. MEASURED 2026-11-08 on the
+      // catalogue's own edition: the schedule pushes its branch with the workflow's GITHUB_TOKEN,
+      // so GitHub does not start the runs it triggers — it holds them as `action_required`. The
+      // required contexts therefore never report, no run is in flight, and a reader that only
+      // knows "unreported and nothing running" would call this BROKEN. It is not broken: it is
+      // waiting for an approval, and the approval is a POST to
+      // /repos/{owner}/{repo}/actions/runs/{id}/approve. So the verdict is WAIT, and the reason
+      // says what is holding it and what releases it.
+      return {
+        action: ACTIONS.WAIT_FOR_CHECKS,
+        reason: `${unreported.length} required context(s) have not reported because ${awaitingApproval.length} workflow run(s) on this head are held for approval (${awaitingApproval.join(", ")}) — a workflow that pushes with GITHUB_TOKEN does not start the runs it triggers`,
+        detail: { behind, unreported, runsAwaitingApproval: awaitingApproval },
       };
     }
     if (Number.isFinite(age) && age < HEAD_GRACE_SECONDS) {
@@ -282,6 +299,16 @@ export function fixtures() {
       },
       action: ACTIONS.BLOCKED,
       reason: /a sync does not fix a failure/,
+    },
+    {
+      name: "runs HELD FOR APPROVAL wait, and name the remedy",
+      state: {
+        prState: "open", draft: false, armed: false, behind: 0, readComplete: true, headAgeSeconds: 200,
+        runsAwaitingApproval: ["pr-gates", "CI"],
+        required: { passed: [], failed: [], inFlight: [], unreported: [...REQUIRED_CONTEXTS] },
+      },
+      action: ACTIONS.WAIT_FOR_CHECKS,
+      reason: /held for approval/,
     },
     {
       name: "a FRESH head with no checks yet waits, it does not block",
