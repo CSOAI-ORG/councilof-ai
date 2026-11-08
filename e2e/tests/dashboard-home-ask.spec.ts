@@ -1220,3 +1220,37 @@ for (const vp of VIEWPORTS) {
     }, null, 2));
   });
 }
+
+/** Actual App composition: page content lives inside App's single main landmark. */
+for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+  test("ordinary signup has one composed main before and after reload at " + viewport.width + "px", async ({ page, baseURL }, info) => {
+    test.setTimeout(60_000);
+    await page.setViewportSize(viewport);
+    const origin = new URL(baseURL || "http://127.0.0.1:4180").origin;
+    const authPosts: string[] = [];
+    page.on("request", request => {
+      const u = new URL(request.url());
+      if (u.origin === origin && request.method() === "POST" && /^\/api\/auth\/(register|login)\/?$/.test(u.pathname))
+        authPosts.push(u.pathname);
+    });
+    const check = async () => {
+      await expect(page.locator("main")).toHaveCount(1);
+      const main = page.getByRole("main", { name: "Main content", exact: true });
+      await expect(main.getByRole("heading", { name: "Create your Council account", exact: true })).toBeVisible();
+      for (const id of ["name", "email", "password", "confirmation"])
+        await expect(main.locator("#" + id)).toBeVisible();
+      await expect(main.getByRole("button", { name: "Create account", exact: true })).toBeEnabled();
+      await expect(main.getByRole("link", { name: "Sign in", exact: true })).toHaveAttribute("href", "/login/");
+    };
+    await page.goto("/signup?next=%2Fdashboard", { waitUntil: "domcontentloaded" });
+    await check();
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await check();
+    expect(authPosts).toEqual([]);
+    await writeFile(info.outputPath("published-source-signup-landmark.json"), JSON.stringify({
+      scope: "Built candidate actual App/signup composition and ordinary reload; no account submission or native case acceptance",
+      viewport, path: "/signup?next=%2Fdashboard", mainLandmarks: 1, reloadVerified: true,
+      visibleFields: ["name", "email", "password", "confirmation"], authPosts,
+    }, null, 2));
+  });
+}
