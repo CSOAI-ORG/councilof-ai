@@ -4,6 +4,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import MunderDuel from "./MunderDuel";
 import { MUNDER_KEY, MEOK_MODEL } from "@/lib/munderDuel";
+import { generatePracticeRounds } from "@/lib/munderPractice";
 
 let root: Root, host: HTMLDivElement;
 const answer = JSON.stringify({ id: "chatcmpl-mounted", model: MEOK_MODEL,
@@ -14,8 +15,8 @@ function button(label: string) {
   return found;
 }
 async function click(label: string) { await act(async () => { button(label).click(); }); }
-async function mount(fetchImpl: typeof fetch) {
-  await act(async () => { root.render(<StrictMode><MunderDuel fetchImpl={fetchImpl} sourceRevision={"a".repeat(40)} /></StrictMode>); });
+async function mount(fetchImpl: typeof fetch, sourceRevision = "a".repeat(40)) {
+  await act(async () => { root.render(<StrictMode><MunderDuel fetchImpl={fetchImpl} sourceRevision={sourceRevision} /></StrictMode>); });
 }
 beforeEach(() => {
   (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
@@ -117,6 +118,70 @@ describe("Munder participant journey", () => {
     expect(s.rounds).toHaveLength(1); expect(s.rounds[0].human).toBeNull();
     expect(s.rounds[0].intent).toBeNull();
     expect(fetcher).toHaveBeenCalledTimes(before);
+  });
+
+
+
+  it("records a local lesson and exact retry, then restores it without another provider request", async () => {
+    const fetcher = vi.fn(async () => new Response(answer));
+    await mount(fetcher as typeof fetch);
+    await click("Start Munder with MEOK"); await click("Choose resolve");
+    await click("Ask MEOK for its move"); await click("Approve MEOK move in this game");
+    const original = JSON.parse(sessionStorage.getItem(MUNDER_KEY)!);
+    await click("Open local lesson for case 1");
+    const expected = generatePracticeRounds(42)[0].critical ? "escalate" : "resolve";
+    expect(host.textContent).toContain("Known case rule: " + expected);
+    const wrong = expected === "resolve" ? "escalate" : "resolve";
+    await click("Retry case 1 as " + wrong); await click("Retry case 1 as " + expected);
+    const after = JSON.parse(sessionStorage.getItem(MUNDER_KEY)!);
+    expect(after.rounds[0].human).toBe(original.rounds[0].human);
+    expect(after.rounds[0].proof).toEqual(original.rounds[0].proof);
+    expect(after.rounds[0].approvedAt).toBe(original.rounds[0].approvedAt);
+    expect(after.rounds[0].learning.attempts.map((a: {choice: string}) => a.choice)).toEqual([wrong, expected]);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    await act(async () => root.unmount()); root = createRoot(host);
+    await mount(fetcher as typeof fetch, "b".repeat(40));
+    expect(host.textContent).toContain("Exact retry matched the known case rule");
+    expect(JSON.parse(sessionStorage.getItem(MUNDER_KEY)!).rounds[0].learning).toEqual(after.rounds[0].learning);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it("refuses an old session's lesson callback without overwriting the new game's history", async () => {
+    const fetcher = vi.fn(async () => new Response(answer));
+    await mount(fetcher as typeof fetch);
+    await click("Start Munder with MEOK"); await click("Choose resolve");
+    await click("Ask MEOK for its move"); await click("Approve MEOK move in this game");
+    const oldOpen = button("Open local lesson for case 1");
+    await click("Start a separate Munder game");
+    await act(async () => { button("Start separate game").click(); oldOpen.click(); });
+    const saved = JSON.parse(sessionStorage.getItem(MUNDER_KEY)!);
+    expect(saved.rounds[0].human).toBeNull();
+    expect(saved.rounds[0].learning).toBeUndefined();
+    expect(saved.rounds[0].intent).toBeNull();
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps a resumed game's creation build when the app revision changes, without repeating I/O", async () => {
+    const fetcher = vi.fn(async () => new Response(answer));
+    await mount(fetcher as typeof fetch, "a".repeat(40));
+    await click("Start Munder with MEOK"); await click("Choose resolve");
+    await click("Ask MEOK for its move"); await click("Approve MEOK move in this game");
+    const original = JSON.parse(sessionStorage.getItem(MUNDER_KEY)!);
+    expect(original.createdWithSourceRevision).toBe("a".repeat(40));
+    await act(async () => root.unmount());
+    root = createRoot(host);
+    await mount(fetcher as typeof fetch, "b".repeat(40));
+    const restored = JSON.parse(sessionStorage.getItem(MUNDER_KEY)!);
+    expect(restored.id).toBe(original.id);
+    expect(restored.createdWithSourceRevision).toBe("a".repeat(40));
+    expect(restored.rounds[0].approvedAt).toBe(original.rounds[0].approvedAt);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    await click("Start a separate Munder game"); await click("Start separate game");
+    const separate = JSON.parse(sessionStorage.getItem(MUNDER_KEY)!);
+    expect(separate.id).not.toBe(original.id);
+    expect(separate.createdWithSourceRevision).toBe("b".repeat(40));
+    expect(separate.rounds[0].intent).toBeNull();
+    expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
   it("preserves an incompatible save until an explicit new game", async () => {
