@@ -1,3 +1,4 @@
+import { postSettlementStore, postObservationState } from "../_bookkeeping_budget";
 import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delivery_record";
 // functions/api/feeds/provider-diff.ts — the provider document diff feed.
 //
@@ -286,8 +287,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const assemblyComplete = idx.ok && state.ok && root.ok && leavesComplete;
   if (assemblyComplete && env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:provider_diff_history")) || "0") + 1;
-      await env.REVENUE_KV.put("count:provider_diff_history", String(n));
+      const n = Number((await postSettlementStore(env.REVENUE_KV,payment).get("count:provider_diff_history")) || "0") + 1;
+      await postSettlementStore(env.REVENUE_KV,payment).put("count:provider_diff_history", String(n));
     } catch {
       /* never blocks a paid deliverable */
     }
@@ -321,7 +322,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     { "cache-control": "no-store", ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}) },
   );
   if (!assemblyComplete) return markPaidUndeliveredResponse(prepared, payment.ok, payment.paymentResponse);
-  return recordPaidResponse(prepared, { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  return recordPaidResponse(prepared, { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
