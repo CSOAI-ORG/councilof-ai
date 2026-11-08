@@ -32,7 +32,7 @@ def digest(value):
     return hashlib.sha256(fabric.jcs(value)).hexdigest()
 
 
-def fingerprint():
+def _source_fingerprint():
     paths = sorted((ROOT / "rehearsal").glob("*.py"))
     paths += sorted((ROOT / "third_party").rglob("*.py"))
     entries = [(p.relative_to(ROOT).as_posix(), hashlib.sha256(p.read_bytes()).hexdigest())
@@ -40,6 +40,12 @@ def fingerprint():
     entries.append(("../evidence-fabric/event.py",
                     hashlib.sha256((ROOT.parent / "evidence-fabric/event.py").read_bytes()).hexdigest()))
     return digest(entries)
+
+
+def fingerprint():
+    if _source_fingerprint() != _LOADED_SOURCE_FINGERPRINT:
+        raise ValueError("Source files changed while this process was running. Restart with the exact source version.")
+    return _LOADED_SOURCE_FINGERPRINT
 
 
 class SimulationPermit:
@@ -82,7 +88,8 @@ def simulate(params):
     frames, events = [], []
     counters = {"population_records": cfg["population"], "active_model_agents": 0,
                 "model_calls": 0, "surrogate_updates": 0, "fixture_lookup_updates": 0,
-                "human_participants": 0, "denied_ticks": 0}
+                "human_participants": 0, "denied_ticks": 0, "permitted_ticks": 0,
+                "selection_updates_after_revocation": 0, "new_revoked_A_selections": 0}
     while len(queue):
         tick, kind, _ = queue.pop_batch()
         revoked = tick >= cfg["revocation_tick"]
@@ -92,6 +99,10 @@ def simulate(params):
                 visible_revocation = revoked and cfg["intervention"] == "evidence-aware"
                 choices = [table[(profile, visible_revocation)] for profile in profiles]
                 counters["fixture_lookup_updates"] += len(choices)
+                counters["permitted_ticks"] += 1
+                if revoked:
+                    counters["selection_updates_after_revocation"] += len(choices)
+                    counters["new_revoked_A_selections"] += choices.count(0)
             else:
                 counters["denied_ticks"] += 1
             events.append({"tick": tick, "kind": "decision", "permit": outcome,
@@ -100,19 +111,33 @@ def simulate(params):
             counts = [choices.count(s) for s in range(3)]
             frames.append({"tick": tick, "counts": counts, "undecided": choices.count(-1),
                            "sample_choices": choices[:120],
+                           "permit": outcome, "updated": outcome == "ALLOWED",
+                           "new_revoked_A_selections": counts[0] if revoked and outcome == "ALLOWED" else 0,
                            "revoked_A_selected": counts[0] if revoked else 0,
                            "evidence_A": "revoked" if revoked else "current"})
     nodes = [{"id": f"synthetic-{i:05d}", "profile": profiles[i],
               "lat": (-28, 51, 36)[i % 3] + rng.uniform(-9, 9),
               "lng": (135, -1, -98)[i % 3] + rng.uniform(-14, 14),
               "supplier": choices[i]} for i in range(min(cfg["population"], 120))]
-    lesson = ("Review evidence at decision time; the baseline keeps selecting a revoked record."
-              if any(f["revoked_A_selected"] for f in frames)
-              else "This fixture avoided revoked evidence; test an unseen case before generalising.")
+    if not counters["permitted_ticks"]:
+        lesson = "No selection update was permitted. This run does not test evidence handling."
+    elif not any(f["evidence_A"] == "revoked" for f in frames):
+        lesson = "Revocation was outside this run's timeline; revoked-evidence handling was not tested."
+    elif not counters["selection_updates_after_revocation"]:
+        lesson = "No selection update was permitted after revocation. Retained selections are not new decisions."
+    elif counters["new_revoked_A_selections"]:
+        lesson = "New synthetic selections used revoked evidence. Compare the controlled interventions."
+    else:
+        lesson = "Permitted updates referenced no revoked record. Compare the baseline before attributing a difference."
     return {"scenario_id": sid, "config": cfg, "suppliers": copy.deepcopy(SUPPLIERS),
             "frames": frames, "trace": events, "sampled_nodes": nodes,
             "counters": counters, "lesson": lesson,
             "limits": ["Synthetic rule fixture; no population forecast or model evaluation.",
+                       "Selection updates count record-ticks, not unique people or real executions.",
                        "No authenticated human approval or external execution.",
                        "Globe shows at most 120 synthetic records; coordinates are illustrative.",
                        "No GSPC admission, signature, certification, payment or training reuse."]}
+
+
+# Cached modules must never claim a newer on-disk implementation after an update.
+_LOADED_SOURCE_FINGERPRINT = _source_fingerprint()

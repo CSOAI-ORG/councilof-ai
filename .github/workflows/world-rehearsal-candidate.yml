@@ -44,4 +44,6 @@ jobs:
           node packages/world-rehearsal/tests/journey.cjs
           node packages/world-rehearsal/tests/browser.cjs
       - name: Package candidate source with canonical dependency
-        run: python3 packages/world-rehearsal/scripts/package_candidate.py --output /tmp/world-rehearsal-candidate.zip
+        run: |
+          python3 packages/world-rehearsal/scripts/package_candidate.py --output /tmp/world-rehearsal-candidate.zip
+          python3 packages/world-rehearsal/scripts/smoke_candidate.py

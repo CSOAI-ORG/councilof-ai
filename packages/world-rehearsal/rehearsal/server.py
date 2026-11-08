@@ -9,7 +9,7 @@ import time
 from urllib.parse import urlsplit
 from .dependencies import ROOT
 from .engine import simulate
-from .evidence import bundle_for, strict_json, verify, compare
+from .evidence import bundle_for, strict_json, verify, compare, events_jsonl
 from .messaging import RehearsalMessages
 
 MAX_BODY = 2 * 1024 * 1024
@@ -103,6 +103,10 @@ def make_server(port=0):
                             "elapsed_ms": round((time.monotonic() - started) * 1000, 3)}
                     elif path == "/api/verify":
                         result = verify(params)
+                    elif path == "/api/events":
+                        result = {"schema": "csoai.evidence-event/0.1", "unsigned": True,
+                                  "event_count": len(params.get("evidence_events", [])) if isinstance(params, dict) else 0,
+                                  "jsonl": events_jsonl(params)}
                     elif path == "/api/compare":
                         if not isinstance(params, list) or len(params) != 2:
                             raise ValueError("Select exactly two bundles")

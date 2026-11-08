@@ -31,9 +31,9 @@ const assert = require("node:assert/strict");
     const check=async(condition,message)=>{assert.ok(await condition(),message);};
     await page.goto(origin);
     await page.getByRole("heading",{name:"Rehearse the decision."}).waitFor();
-    const save=async(name)=>{
+    const save=async(name,button="Save evidence bundle")=>{
       const [download]=await Promise.all([page.waitForEvent("download",{timeout:5000}),
-                                        page.getByRole("button",{name:"Save evidence bundle"}).click()]);
+                                        page.getByRole("button",{name:button}).click()]);
       const path=join(temp,name);await download.saveAs(path);return path;
     };
     const run=async(mode)=>{
@@ -45,19 +45,36 @@ const assert = require("node:assert/strict");
       return save(mode+".json");
     };
     const baseline=await run("baseline"), aware=await run("evidence-aware");
+    const eventFile=await save("events.jsonl","Export canonical events");
+    const event=JSON.parse(await readFile(eventFile,"utf8"));
+    assert.equal(event.schema,"csoai.evidence-event/0.1");assert.equal(event.state,"UNMEASURED");
+    assert.equal(event.value,null);assert.equal(event.signature,null);
+    await page.locator("#tick").focus();await page.keyboard.press("Home");
+    assert.match(await page.locator("#frame").textContent(),/Tick 0:/);
+    await page.keyboard.press("ArrowRight");assert.match(await page.locator("#frame").textContent(),/Tick 1:/);
+    await page.setViewportSize({width:390,height:844});
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+    assert.equal(await page.locator("#rows tr").count(),10);
+    await page.locator("#aggregate-table").focus();
+    assert.equal(await page.locator("#aggregate-table").evaluate(el=>el===document.activeElement),true);
+    await page.setViewportSize({width:1280,height:900});
     const original=JSON.parse(await readFile(aware,"utf8"));
     assert.equal(original.core.counters.population_records,1000);
     assert.equal(original.core.counters.model_calls,0);
     await page.getByRole("button",{name:"Clear this view"}).click();
+    await page.locator('[name="seed"]').fill("99");
     await page.locator("#reopen").setInputFiles(aware);
     await page.getByText(/Replay match. Unsigned fixture/).waitFor();
+    assert.equal(await page.locator('[name="seed"]').inputValue(),"42");
     await check(()=>page.locator("#rows tr").count().then(n=>n===10),"actual downloaded file reopened");
     await page.locator("#first").setInputFiles(baseline);
     await page.locator("#second").setInputFiles(aware);
     await page.getByRole("button",{name:"Compare interventions"}).click();
     await page.getByText(/Comparable fixtures. Change/).waitFor();
+    assert.equal(await page.locator("#comparison-rows tr").count(),10);
     await page.locator("#second").setInputFiles(baseline);
     await page.getByText("Comparison inputs changed. No previous verdict applies.").waitFor();
+    assert.equal(await page.locator("#comparison-table").isVisible(),false);
     const changed=structuredClone(original);changed.core.frames[9].counts[0]=999;
     const bad=join(temp,"tampered.json");await writeFile(bad,JSON.stringify(changed));
     await page.locator("#reopen").setInputFiles(bad);
@@ -69,6 +86,12 @@ const assert = require("node:assert/strict");
     await page.locator('[name="seed"]').fill("43");
     assert.equal(await page.locator("#download").isDisabled(),true);
     assert.equal(await page.locator("#rows tr").count(),0);
+    await page.getByText("Timing and simulation permit",{exact:true}).click();
+    await page.getByLabel("Permit expiry tick").fill("0");await run("evidence-aware");
+    assert.match(await page.locator("#lesson").textContent(),/No selection update was permitted/);
+    await page.getByLabel("Permit expiry tick").fill("50");
+    await page.getByLabel("Evidence revocation tick").fill("10");await run("evidence-aware");
+    assert.match(await page.locator("#lesson").textContent(),/was not tested/);
     await page.setViewportSize({width:390,height:844});
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
     await page.screenshot({path:join(temp,"mobile.png"),fullPage:true});
@@ -77,7 +100,10 @@ const assert = require("node:assert/strict");
       "two interventions with real SwarmChat records","saved actual bundles",
       "reopened downloaded original","compared controlled changes","changed comparison clears result",
       "tampered bundle refused and stale view cleared","original recovery",
-      "scenario input clears old output","390px no horizontal page overflow","no page errors"
+      "scenario input clears old output","390px no horizontal page overflow","no page errors",
+      "canonical JSONL download","keyboard timeline","populated mobile result fits page",
+      "complete comparison timeline clears on edit","expired permit has no success claim",
+      "unobserved revocation has no success claim","reopen restores original scenario controls"
     ],origin:"loopback",models:0,external_requests:0},null,2));
   } finally {
     if(browser)await browser.close();

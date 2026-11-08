@@ -55,6 +55,17 @@ class HTTPTests(unittest.TestCase):
         self.assertEqual(self.request("/api/run", "{}", {"Origin":"https://elsewhere.invalid"})[0], 403)
         self.assertEqual(self.request("/api/run", "{}", {"Host":"elsewhere.invalid"})[0], 403)
 
+    def test_event_export_is_replay_checked_and_never_grants_authority(self):
+        result = json.loads(self.request("/api/run", '{"population":6}')[1])
+        status, body, _ = self.request("/api/events", json.dumps(result["bundle"]))
+        self.assertEqual(status, 200)
+        exported = json.loads(body)
+        self.assertTrue(exported["unsigned"])
+        self.assertEqual(exported["event_count"], 1)
+        self.assertEqual(json.loads(exported["jsonl"])["state"], "UNMEASURED")
+        result["bundle"]["core"]["lesson"] = "faked success"
+        self.assertEqual(self.request("/api/events", json.dumps(result["bundle"]))[0], 400)
+
     def test_wrong_media_and_large_body_refused(self):
         self.assertEqual(self.request("/api/run", "{}", {"Content-Type":"text/plain"})[0], 415)
         # Send oversized framing alone: a correct early refusal can close the
