@@ -643,7 +643,7 @@ jobs:
       - name: Council OS first question — desktop and mobile
         id: council_os_first_question
         if: steps.scope.outputs.gated == 'true'
-        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries|workflow entry and header remain usable at (375|894|1024|1280|1440|1536)px$|Boss.s Chair resume|Munder live|GSPC quests are a styled in-workspace game and never promote play into measurement$|the home header carries a booking door to /assess/ within one click$'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries|workflow entry and header remain usable at (375|894|1024|1280|1440|1536)px$|Boss.s Chair resume|Munder live|GSPC quests are a styled in-workspace game and never promote play into measurement$|the home header carries a booking door to /assess/ within one click$|ordinary signup has one composed main before and after reload at (1440|390)px$'
 
       - name: Retain Council OS first-question premerge evidence
         if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
@@ -654,6 +654,7 @@ jobs:
             test-results/**/trace.zip
             test-results/**/agui-request-lifecycle.json
             test-results/**/agui-local-trace.json
+            test-results/**/published-source-signup-landmark.json
             test-results/**/*.png
           retention-days: 3
           if-no-files-found: warn
