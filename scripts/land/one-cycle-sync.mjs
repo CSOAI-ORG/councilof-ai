@@ -199,6 +199,15 @@ async function readState() {
     }
   }
   const anyRunInFlight = runs.some((r) => r.status === "queued" || r.status === "in_progress");
+  // A run held for approval has `status: completed` and `conclusion: action_required` — it is
+  // NOT in flight, because it has not started. MEASURED 2026-11-08 on the catalogue's own
+  // edition: the schedule pushes its branch with the workflow's GITHUB_TOKEN, so GitHub does not
+  // start the runs it triggers — it holds all six of them as `action_required`, and the four
+  // required contexts therefore never report. A reader that only asks "is anything running?"
+  // sees nothing running and calls it broken.
+  const runsAwaitingApproval = runs
+    .filter((r) => r.conclusion === "action_required" || r.status === "action_required")
+    .map((r) => r.name);
 
   return {
     note: receiptNote,
@@ -209,6 +218,7 @@ async function readState() {
       behind,
       readComplete: problems.length === 0,
       anyRunInFlight,
+      runsAwaitingApproval,
       headAgeSeconds,
       required: { passed, failed, inFlight, unreported },
     },
@@ -346,6 +356,7 @@ function print(receipt) {
       `behind=${receipt.behind}`,
       `required[passed=${req.passed?.length || 0} inFlight=${req.inFlight?.length || 0} failed=${req.failed?.length || 0} unreported=${req.unreported?.length || 0}]`,
       receipt.headAgeSeconds !== undefined ? `head_age=${Math.round(receipt.headAgeSeconds)}s` : "",
+      receipt.runsAwaitingApproval && receipt.runsAwaitingApproval.length ? `held_for_approval=${receipt.runsAwaitingApproval.join("+")}` : "",
       `-> ${receipt.decision}`,
       receipt.reason,
       receipt.note ? `   (${receipt.note})` : "",
