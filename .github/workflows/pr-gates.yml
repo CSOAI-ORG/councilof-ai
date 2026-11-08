@@ -310,6 +310,7 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: |
           node --test scripts/workflow-trigger-coupling.node-test.mjs
+          node --test scripts/post-deploy-verification.node-test.mjs
           node scripts/workflow-trigger-coupling.mjs
 
       - name: Outward claims — offline manifest contract selftest
