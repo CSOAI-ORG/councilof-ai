@@ -1,0 +1,80 @@
+{
+  "card": {
+    "as_of": "2026-11-07T16:23:05Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "reserve-attestation",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "is a third-party reserve attestation publicly published and current?"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "81cc6ff86d7669ba285b5cbc7a8f097d78ce0aabeee1ff484d277cb34df71bc7",
+    "sig_ed25519": "d902b1eda94118bd66ac1bb3b1c156561d3c1617f0a381a8d97b9cda189dd9ec39f984e736b544b356dea2f04ffdf4a8b009540cd7f6cc07983ae7f79bd58a08",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-reserve-attestation"
+    ],
+    "subject": "GSPC reserve-attestation UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "reserve-attestation",
+      "n=0"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "8159335f892d327168e9527b68ce51f4f3b94c239bc9194758a807b23df24a57",
+    "5c21f870f3a00a9e1e429cb33affb1a23125212d4a99e5f61c59b54865cc29f9",
+    "27784616eb2dfc779863c71fd50cae209f7425c694ffed0864b64cae11676552",
+    "1fe95153db6953f2568536f70b78d1a75969999369689bb7cfc20c8d8abefec9",
+    "47e82207ed926bb459877de2022332940282cddd7e6d9f4ee99d266f6d66839e",
+    "231451ce04bc2cb9baf3cba5b6dfbaa1e7ac4b90e640fd939112b3b10f0ef330",
+    "6029be87a01ac854c910b85f0458c5c63696980847bfdf2412bb2ed9b875c6e6",
+    "31c77a9be8c3216a6dfd4a8c0690aeced999c2d047485283b7949d43bb987295",
+    "ca1efcbc52416d4a75cd4c0abc60b50a813491e5e33361b18cf08480b6a580fb"
+  ]
+}
