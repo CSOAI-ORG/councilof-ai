@@ -24,6 +24,7 @@ function storedAccount() {
     salt: "fixture-salt",
     pw: "a".repeat(64),
     created_at: "2026-10-14T00:00:00.000Z",
+    account_generation:"a".repeat(64),
     id: "existing-id",
     role: "existing-role",
     verified: false,
@@ -46,7 +47,7 @@ async function fixture(subject = EMAIL) {
   };
   const token = await issueToken(
     { ASSESS_SIGNING_KEY_PKCS8_B64: signingKeyBase64 },
-    { email: subject, name: "Old token name" },
+    { email: subject, name: "Old token name",account_generation:"a".repeat(64) },
   );
   if (!token) throw new Error("local signing fixture failed");
   return { env, account, rows, get, put, token };
@@ -389,4 +390,14 @@ describe("owner-only private profile API", () => {
     expect(await response.json()).toEqual({ error: "invalid credentials" });
     expect(f.put).not.toHaveBeenCalled();
   });
+  it("requires reauthentication for a legacy lifecycle-less token",async()=>{
+    const f=await fixture(),token=await issueToken(f.env as never,{email:EMAIL,name:"Legacy"});
+    await expectFailure(await request(f.env,token!),401);expect(f.put).not.toHaveBeenCalled();
+  });
+  it("refuses the old lifecycle after an account is recreated at the same email",async()=>{
+    const f=await fixture();f.rows.set(userKey(EMAIL),JSON.stringify({...f.account,account_generation:"b".repeat(64)}));
+    await expectFailure(await request(f.env,f.token),401);
+    await expectFailure(await putName(f,{name:"Wrong lifecycle"}),401);expect(f.put).not.toHaveBeenCalled();
+  });
+
 });
