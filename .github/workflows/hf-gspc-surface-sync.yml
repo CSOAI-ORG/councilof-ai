@@ -139,12 +139,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          # Pin trusted publisher code to this reviewed workflow definition.
+          # Artifact run/name/source remain the successful upstream below.
+          ref: ${{ github.workflow_sha }}
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             scripts/sync_hf_coliseum.py
             scripts/test_sync_hf_coliseum.py
+            .github/workflows/hf-gspc-surface-sync.yml
 
       - uses: actions/setup-python@v5
         with:
