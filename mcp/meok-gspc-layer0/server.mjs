@@ -101,20 +101,35 @@ async function handleToolCall(name, args = {}) {
     try {
       if (args.op === 'list') {
         const r = await rpc({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
+        if (!r.ok) {
+          await r.body?.cancel().catch(() => {});
+          return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_HTTP_ERROR', http_status: r.status });
+        }
         const txt = await r.text();
         const line = txt.split('\n').find((l) => l.startsWith('data: ') && l.includes('"tools"')) || txt;
-        return JSON.stringify({ bridge: DC, tools: JSON.parse(line.replace(/^data: /, '')).result.tools.map((t) => t.name) });
+        const reply = JSON.parse(line.replace(/^data: /, ''));
+        if (reply.error) return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_RPC_ERROR' });
+        return JSON.stringify({ bridge: DC, tools: reply.result.tools.map((t) => t.name) });
       }
       if (args.op === 'call') {
         if (!args.tool) return JSON.stringify({ error: 'op=call requires tool' });
         const r = await rpc({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: args.tool, arguments: args.arguments || {} } });
+        if (!r.ok) {
+          await r.body?.cancel().catch(() => {});
+          return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_HTTP_ERROR', http_status: r.status });
+        }
         const txt = await r.text();
         const line = txt.split('\n').find((l) => l.startsWith('data: ') && l.includes('"result"')) || txt;
-        return JSON.stringify({ bridge: DC, tool: args.tool, result: JSON.parse(line.replace(/^data: /, '')).result });
+        const reply = JSON.parse(line.replace(/^data: /, ''));
+        if (reply.error) return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_RPC_ERROR' });
+        if (!reply.result || typeof reply.result !== 'object' || Array.isArray(reply.result)) {
+          return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_RESPONSE_INVALID' });
+        }
+        return JSON.stringify({ bridge: DC, tool: args.tool, result: reply.result });
       }
       return JSON.stringify({ error: 'op must be list|call' });
     } catch (e) {
-      return JSON.stringify({ error: 'DC bridge unreachable at ' + DC + ': ' + String(e).slice(0, 160), hint: 'the bridge runs inside the ZCode Desktop session; it is unreachable when no DC session is live' });
+      return JSON.stringify({ state: 'UNCHECKABLE', reason: 'DESKTOP_REQUEST_FAILED' });
     }
   }
   if (name === 'meok_gspc_evaluate_work_step') {
@@ -134,13 +149,20 @@ async function handleToolCall(name, args = {}) {
         }),
         signal: AbortSignal.timeout(30000),
       });
+      if (!res.ok) {
+        await res.body?.cancel().catch(() => {});
+        return JSON.stringify({ state: 'UNCHECKABLE', reason: 'HIM_HTTP_ERROR', http_status: res.status });
+      }
       const data = await res.json();
-      return JSON.stringify({
-        answer: data?.choices?.[0]?.message?.content ?? '',
-        provenance: data?.meok_provenance ?? null,
-      }, null, 2);
-    } catch (e) {
-      return JSON.stringify({ error: e.message });
+      const answer = data?.choices?.[0]?.message?.content;
+      if (data?.error || typeof answer !== 'string') {
+        return JSON.stringify({ state: 'UNCHECKABLE', reason: 'HIM_RESPONSE_INVALID' });
+      }
+      return JSON.stringify({ answer, provenance: data?.meok_provenance ?? null }, null, 2);
+    } catch {
+      // Transport and parsing failures are execution errors, never successful empty answers.
+      // Do not return exception text that may disclose a credential-bearing endpoint.
+      return JSON.stringify({ state: 'UNCHECKABLE', reason: 'HIM_REQUEST_FAILED' });
     }
   }
 
@@ -213,7 +235,8 @@ rl.on('line', async (line) => {
       try {
         const text = await handleToolCall(params?.name, params?.arguments ?? {});
         const value = JSON.parse(text);
-        const isError = value.state === 'UNCHECKABLE' || value.recording?.state === 'UNCONFIRMED';
+        const isError = value.state === 'UNCHECKABLE' || value.recording?.state === 'UNCONFIRMED' ||
+          Boolean(value.error) || value.result?.isError === true;
         process.stdout.write(JSON.stringify({
           jsonrpc: '2.0', id,
           result: { content: [{ type: 'text', text }], ...(isError ? { isError: true } : {}) },
