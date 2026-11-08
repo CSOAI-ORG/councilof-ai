@@ -132,3 +132,121 @@ export function qualifyLocalFirstAskCompletion(observation) {
     return reject("malformed completion evidence");
   }
 }
+
+
+/**
+ * Add independent same-session protocol proof without changing any legacy verdict.
+ * Local fixtures only. No wall clocks, re-sorted events or projected legacy counters.
+ */
+export function qualifyLocalFirstAskWithProtocol(observation, protocol) {
+  const legacyQualification = qualifyLocalFirstAskCompletion(observation);
+  const reject = reason => ({ accepted: false, reason, legacyQualification,
+    browserNetworkState: "unqualified", proofBasis: "same-session-protocol" });
+  const require = (condition, reason) => { if (!condition) throw new Error(reason); };
+  const boundedId = value => typeof value === "string" && value.length > 0 && value.length <= 256;
+  try {
+    const o = observation, p = protocol;
+    require(o?.localFixture === true, "local finite fixture required");
+    require(legacyQualification.accepted === true ||
+      legacyQualification.reason === "browser failure not strictly observed after qualified read-done",
+      "legacy completion prerequisites refused");
+    require(p?.schema === "csoai.first-ask-passive-protocol/2" &&
+      p.orderingBasis === "one-owned-cdp-session-handler-entry-sequence" &&
+      p.ready === true && p.diagnosticOnly === true, "protocol capture unavailable");
+    const expectedLimits = { events: 96, requests: 8, contexts: 32, faults: 8, markerBytes: 2048, idChars: 256 };
+    require(Object.entries(expectedLimits).every(([key, value]) => p.limits?.[key] === value), "unqualified capture bounds");
+    for (const key of ["eventsTruncated", "requestsTruncated", "contextsTruncated", "faultsTruncated",
+      "markerTruncated", "identifierTruncated"]) require(p[key] === false, "protocol capture truncated or unknown");
+    require(Array.isArray(p.faults) && p.faults.length === 0, "protocol capture fault");
+    require(p.emitter?.enabled === true && p.emitter.emitted === 1 && p.emitter.faults === 0 &&
+      p.emitter.truncated === false, "native marker emitter unavailable");
+    require(typeof p.marker?.nonce === "string" &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(p.marker.nonce),
+      "native marker nonce unavailable");
+    require(Array.isArray(p.events) && p.events.length > 0 && p.events.length <= expectedLimits.events &&
+      p.matchingMarkers === 1 && p.correlationAvailable === true && boundedId(p.mainFrameId),
+      "protocol event coverage incomplete");
+    const origin = new URL(o.origin).origin, target = o.request.url;
+    const requestBytes = Buffer.byteLength(o.request.body, "utf8"), requestSHA256 = sha256(o.request.body);
+    const native = o.nativeTransport.requests[0], contexts = new Map();
+    let frame = null, request = null, marker = null, terminal = null, previousSequence = 0;
+    for (const event of p.events) {
+      require(event && Number.isSafeInteger(event.receiveSequence) && event.receiveSequence > previousSequence,
+        "protocol sequence missing duplicated or reordered");
+      previousSequence = event.receiveSequence;
+      switch (event.event) {
+        case "main-frame-navigation":
+          require(!request || terminal, "main frame changed during request");
+          require(boundedId(event.frameId) && typeof event.loaderId === "string" && event.loaderId.length <= 256 &&
+            Number.isSafeInteger(event.generation) && event.generation > 0 &&
+            (!frame || event.generation === frame.generation + 1), "unqualified frame epoch");
+          frame = event; contexts.clear(); break;
+        case "main-default-context-created":
+          require(frame && event.frameId === frame.frameId && event.origin === origin && event.isDefault === true &&
+            event.generation === frame.generation && boundedId(event.loaderId) && event.loaderId === frame.loaderId &&
+            Number.isSafeInteger(event.id) && event.id > 0 && boundedId(event.uniqueId) &&
+            !contexts.has(event.id) && contexts.size < expectedLimits.contexts, "foreign or ambiguous execution context");
+          contexts.set(event.id, event); break;
+        case "context-destroyed":
+          require(!request || terminal || event.executionContextId !== request.context.id,
+            "request execution context destroyed before terminal");
+          contexts.delete(event.executionContextId); break;
+        case "contexts-cleared":
+          require(!request || terminal, "request execution contexts cleared before terminal");
+          contexts.clear(); break;
+        case "request": {
+          require(!request && frame && frame.frameId === p.mainFrameId && event.frameId === frame.frameId &&
+            event.loaderId === frame.loaderId && boundedId(event.loaderId) &&
+            event.activeMainLoaderId === frame.loaderId && event.generation === frame.generation &&
+            boundedId(event.id) && event.method === "POST" && event.url === target &&
+            event.bodyUnavailable === false && event.redirected === false &&
+            event.bodyBytes === requestBytes && event.bodySHA256 === requestSHA256,
+            "raw request identity or body mismatch");
+          const active = [...contexts.values()].filter(value => value.frameId === frame.frameId &&
+            value.generation === frame.generation && value.loaderId === frame.loaderId);
+          require(active.length === 1, "request default context unavailable");
+          request = { ...event, context: active[0] }; break;
+        }
+        case "native-eof-console": {
+          require(request && !marker && event.eof === true && event.nonce === p.marker.nonce &&
+            event.contextMatched === true && event.executionContextId === request.context.id &&
+            contexts.get(event.executionContextId)?.uniqueId === request.context.uniqueId &&
+            event.contextUniqueId === request.context.uniqueId && event.contextLoaderId === request.loaderId &&
+            event.frameId === request.frameId && event.generation === request.generation &&
+            event.nativeFetchId === native.nativeFetchId && event.signalId === native.signalId &&
+            event.url === target && event.aborted === false, "native marker identity context or signal mismatch");
+          marker = event; break;
+        }
+        case "loading-finished":
+        case "loading-failed":
+          require(request && !terminal && event.requestId === request.id, "raw terminal identity mismatch");
+          terminal = event; break;
+        default: throw new Error("unknown protocol event");
+      }
+    }
+    require(frame && request && marker && terminal && frame.frameId === p.mainFrameId &&
+      request.receiveSequence < marker.receiveSequence && request.receiveSequence < terminal.receiveSequence,
+      "one complete protocol request marker and terminal required");
+    const legacyTerminal = o.networkEvents.find(event => event.event !== "request");
+    if (legacyTerminal.event === "requestfinished") {
+      require(legacyQualification.accepted === true && legacyTerminal.failure === null &&
+        terminal.event === "loading-finished", "contradictory finished browser terminal");
+    } else {
+      require(legacyTerminal.event === "requestfailed" && legacyTerminal.failure === "net::ERR_ABORTED" &&
+        terminal.event === "loading-failed" && terminal.errorText === "net::ERR_ABORTED" &&
+        terminal.canceled === true && terminal.blockedReason === null,
+        "unqualified raw browser failure");
+      require(marker.receiveSequence < terminal.receiveSequence, "raw failure not strictly after native EOF marker");
+    }
+    return { accepted: true, reason: "exact finite fixture consumed with independent same-session protocol proof",
+      legacyQualification, proofBasis: "same-session-protocol",
+      browserNetworkState: legacyTerminal.event, browserFailure: legacyTerminal.failure,
+      receiverBytes: Buffer.byteLength(o.fixture.body, "utf8"), receiverSHA256: native.nativeSHA256,
+      protocolProof: { requestId: request.id, frameId: request.frameId, loaderId: request.loaderId,
+        generation: request.generation, executionContextId: request.context.id,
+        contextUniqueId: request.context.uniqueId, nativeFetchId: native.nativeFetchId, signalId: native.signalId,
+        requestBodySHA256: requestSHA256, requestSequence: request.receiveSequence,
+        nativeEOFSequence: marker.receiveSequence, terminalSequence: terminal.receiveSequence },
+      orderingBoundary: "One owned CDP session received the native EOF marker and raw Network terminal; internal browser cause unresolved" };
+  } catch (error) { return reject(error instanceof Error ? error.message : "malformed protocol completion evidence"); }
+}

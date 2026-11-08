@@ -1,0 +1,51 @@
+{
+  "schema": "csoai.paid-client-response-source-validation/1",
+  "tests_run": 16,
+  "passed": 16,
+  "failures": 0,
+  "controls": [
+    "exact-original-utf8-whitespace-download",
+    "402-after-possible-settle-stays-unconfirmed",
+    "402-without-receipt-is-not-definite-unsettled",
+    "malformed-success-retains-received-bytes-without-delivery-claim",
+    "known-settlement-survives-body-stream-failure",
+    "v2-payment-response-header-is-kept",
+    "redirect-is-manual-without-ambient-credentials",
+    "one-failed-network-dispatch-is-never-retried",
+    "external-origin-is-refused-before-wallet",
+    "changed-quoted-resource-is-refused-before-wallet",
+    "page-origin-rechecked-after-wallet-await",
+    "caller-url-mutation-does-not-change-dispatched-resource",
+    "unconfirmed-payment-removed-from-auto-pay-walk",
+    "credential-url-and-fragment-refused-before-dispatch",
+    "unreadable-output-still-carries-reported-payment-freshness",
+    "delivery-without-reported-success-is-not-payment-freshness"
+  ],
+  "fixture_wallet_boundary": true,
+  "real_wallet_signatures": 0,
+  "network_calls": 0,
+  "real_payments": 0,
+  "source_files": {
+    "client/src/lib/payEveryDoor.ts": {
+      "bytes": 31397,
+      "sha256": "349886b49228ee01e8d4cc9b2e2d5dd23e5c176eb27bbf39584f84b4ed32f10a"
+    },
+    "client/src/lib/payEveryDoor.test.ts": {
+      "bytes": 36944,
+      "sha256": "10e82969de7923bb709c3a06fd7e485a116a45c29e4bd1abc147ed4c1eecc3e0"
+    },
+    "client/src/pages/PayEveryDoor.tsx": {
+      "bytes": 42041,
+      "sha256": "3b5d9a092b2f4dec8f64bd9a17479bb2fd185490344684edb646241b7fc45ab9"
+    },
+    "client/src/pages/PayEveryDoor.test.tsx": {
+      "bytes": 24626,
+      "sha256": "2ffbae94080b420a296a9e40d564506b6b0fbcd37bed0e2bfef26c7c0d38e54e"
+    }
+  },
+  "linux_receipt_sha256": "c096549c2ce01d2cd6e8c91e06f4ce957a0635fe07504042dac7868a547c14b8",
+  "hosted_client_tests": "Updated; normal hosted checks pending at source publication.",
+  "buyer_owned_server_recovery": false,
+  "account_wallet_lifecycle_binding": false,
+  "settlement_freshness": "Route-reported success and transaction remain independent of output readability; no independent chain verification is inferred."
+}
