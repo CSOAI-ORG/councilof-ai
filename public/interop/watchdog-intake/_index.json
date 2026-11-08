@@ -1,8 +1,8 @@
 {
  "schema": "csoai.watchdog-signal-index/0.1",
- "as_of": "2026-11-06T16:55:55Z",
- "run_id": "20261106T165555Z",
- "run_artifact": "/interop/watchdog-intake/20261106T165555Z.json",
+ "as_of": "2026-11-07T15:54:56Z",
+ "run_id": "20261107T155456Z",
+ "run_artifact": "/interop/watchdog-intake/20261107T155456Z.json",
  "measure": "PUBLIC SOURCE REACHABILITY AND PARSEABILITY — a count of sources probed",
  "count_grammar": "n counts SOURCES PROBED, the same grammar as effect-binding's 'tool-call servers probed'. It is never pooled with bank-item n and never appears in a mean. REACHABLE means the source answered 200 with a documented shape; UNCHECKABLE means it answered but the body was not the documented shape; UNREACHABLE means it did not answer. These are DIFFERENT facts and are never summed into a single figure that would read like a score.",
  "not_a": [
@@ -92,28 +92,28 @@
    "name": "CISA Known Exploited Vulnerabilities catalog",
    "kind": "advisory-feed",
    "state": "REACHABLE",
-   "count": 1768,
+   "count": 1769,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "273b7e449828f0af92e012bf03270a6a6c3deb21dc7a50b46ebe0447ea196bff"
+   "body_sha256": "47e0406b2be5a40420eff66f3d90e83eb8883dae6ff4d08e1b2a942c366f6cc2"
   },
   {
    "source_id": "nvd-cve-api",
    "name": "NIST National Vulnerability Database CVE API 2.0",
    "kind": "advisory-feed",
    "state": "REACHABLE",
-   "count": 420287,
+   "count": 420933,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "965f5701bd25ac8f7ddf9425e3241eef2245510875b3bcd970dbc7440344119a"
+   "body_sha256": "acd92dc9b5fd427397e8138a735a306716278b6d173b1338fd8e26e4740afa36"
   },
   {
    "source_id": "ghsa-api",
@@ -127,7 +127,7 @@
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "e6f204c5a6c16a617904978cc462d69b0c2ae3668a183b8205f08a13c6b136eb"
+   "body_sha256": "1b8988e410cdac212962d3299d343efbffcc346c085fff7f379afba8270686e5"
   },
   {
    "source_id": "osv-query",
@@ -141,7 +141,7 @@
     "effect-binding",
     "supply-chain"
    ],
-   "body_sha256": "bf7f46b767e17e925a01a172133113e148e4309718afd7515f43730cfa0bdbf6"
+   "body_sha256": "eb3c7b5fa6a237414fb7e2d3fd4a310550e3945b50aba95f171122e146c00c9a"
   },
   {
    "source_id": "mitre-cve",
@@ -195,20 +195,20 @@
     "serving-fidelity",
     "provenance"
    ],
-   "body_sha256": "799ddd62b3459c0cbec97a9b3182f447a8cf74665aa843e54d07ca74d9a5685a"
+   "body_sha256": "f49f6cf2b215bb8f2f40dafca5d5be3ce18abdc4ed97de55870a08e0091187c4"
   },
   {
    "source_id": "openrouter",
    "name": "OpenRouter model catalog API",
    "kind": "model-registry",
    "state": "REACHABLE",
-   "count": 453,
+   "count": 460,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "serving-fidelity"
    ],
-   "body_sha256": "098ba4c7e88bcf4b53a16fce27dba3e6e4ba2cdd855f990bffaaa0e22dee5113"
+   "body_sha256": "d6613e826d78f2ce96943896b24bd96ff1f1a3922b0d332f4b531fe46cd648b4"
   },
   {
    "source_id": "atlas-current",
@@ -275,14 +275,14 @@
    "name": "Sigstore Rekor transparency log",
    "kind": "transparency-log",
    "state": "REACHABLE",
-   "count": 3599997726,
+   "count": 3619150113,
    "count_kind": "count",
    "http_status": 200,
    "grid": [
     "provenance",
     "provenance-controls"
    ],
-   "body_sha256": "2a9a910d1dc95152f54c0a668de52fec8b6fc332d9889d5fc29a1575b3fd5a9a"
+   "body_sha256": "b931aa6ded0f993f970775ca0df3e76028776bdd294fb92778d3bc3a978554c2"
   },
   {
    "source_id": "openssf-scorecard",
@@ -296,7 +296,7 @@
     "supply-chain",
     "provenance-controls"
    ],
-   "body_sha256": "04ce3c826b3767ec4db03d67dc3b4281867f9d9653d74d98148c2b2be295debe"
+   "body_sha256": "fc02294c6fcacb575e5004348df9983a87c6fbd048e8a9bba38dc3e9e32a1c77"
   },
   {
    "source_id": "safe-repo",

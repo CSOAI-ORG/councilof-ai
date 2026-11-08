@@ -103,6 +103,29 @@ elif [ "$cite_rc" -ne 0 ]; then
   printf '%s\n' "$cite_out" | tail -8 | sed 's/^/      /'; fail=1
 fi
 
+# The published-surface audit's RULES, offline. The audit itself is an OPERATOR tool —
+# it touches the network — but its rules are code, and code can be checked without one.
+#
+# ADDED 2026-11-07. The canonical rule compared a page's canonical link with the url that
+# was ASKED for, while urllib follows redirects and hands it the FINAL page's body. So
+# /pricing/ — which answers 308 to /dashboard/?tab=measured&task=pricing-overview and
+# carries the canonical /dashboard/, which is CORRECT — was reported as a MEDIUM
+# "canonical points at a different path" against a page that is not defective. A checker
+# that cries wolf on a correct page teaches its reader to ignore it. The same tool's
+# Content-Security-Policy rule was a branch whose body was `pass`, so the machine surface
+# (/api/gspc, /api/state, /api/cards answered with five security headers and NO policy at
+# all) went unreported.
+#
+# This check is RED against the unfixed rules and green against the fixed ones. That is the
+# whole point of it: a gate that has never gone red proves nothing about the tree it passed.
+audit_rules_rc=0
+audit_rules_out=$(python3 -m unittest discover -s scripts -p test_published_surface_audit.py 2>&1) || audit_rules_rc=$?
+if [ "$audit_rules_rc" -ne 0 ]; then
+  echo "  ✖ published-surface audit rules: the rules themselves are wrong (exit $audit_rules_rc) — their verdict:"
+  printf '%s\n' "$audit_rules_out" | tail -12 | sed 's/^/      /'
+  fail=1
+fi
+
 # The gate must be provably working before its verdict means anything — a gate
 # that has never gone red proves nothing about the tree it just passed.
 node scripts/facts-gate.mjs --selftest >/dev/null 2>&1 \

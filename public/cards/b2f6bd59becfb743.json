@@ -1,0 +1,147 @@
+{
+  "card": {
+    "as_of": "2026-11-07T16:23:04Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:bIB01:avalanche",
+      "symbol": "bIB01",
+      "product": "Backed IB01 $ Treasury Bond 0-1yr",
+      "chain": "avalanche",
+      "chain_id": 43114,
+      "address": "0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "block": 99687306,
+      "block_hash": "0xd044deb2c721130ee743f765e0a24a1bbf75ea4a6a67965408670e792837e670",
+      "block_time": "2026-11-07T16:23:04Z",
+      "rpc": "api.avax.network",
+      "checked": {
+        "name": "Backed IB01 $ Treasury Bond 0-1yr",
+        "symbol": "bIB01",
+        "decimals": 18,
+        "totalSupply": "21000295821000000000000",
+        "isPaused": false,
+        "owner": "0x49754062e35f7591b93cc4f9915965be89643a65",
+        "sanctionsList": "0x40c57923924b5c5c5455c48d93317139addac8fb",
+        "pauser": "0x8768cda7a463dae1baa6b2500efb025ebd7ffc50",
+        "terms": "https://www.backedassets.fi/legal-documentation",
+        "eip1967_implementation": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+        "eip1967_admin": "0xf2057bdff8439dbffce073e14a9854945d5e5644"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "d8d748590ad7783b4554f21d36a5c6aa4808d4ee57a85e4ecdc238419d993cd8",
+        "bytes": 11205,
+        "url": "/archive/proofs/eip1186/d8d748590ad7783b.json",
+        "rpc": "avalanche-c-chain-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xd269697b4279ac0c88e8e9dca3ba6baaab8990de21a857ce85cd68efaac706f4",
+          "storageHash": "0x4a5123edb3e9be55fd8446bb653dd85fb51708b7f5156b5301fddbbbfab6d72c",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0xf2057bdff8439dbffce073e14a9854945d5e5644",
+            "nodes": 3
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 99687306 on avalanche, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b2f6bd59becfb743dfcdc4802248ed5c48a8085dfd33eeb4820f4ad34209b85a",
+    "sig_ed25519": "2b849d7828c8f277ca788f075db031cd2d5615b4aadf8b7f5403bb4ea80ae6f0893e1aa60e3ed394c7d6040de150c53de9bfbae12ec86ee83c5b1e0810ef8f0a",
+    "source_urls": [
+      "https://api.avax.network/ext/bc/C/rpc",
+      "https://snowscan.xyz/token/0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "https://avalanche-c-chain-rpc.publicnode.com"
+    ],
+    "subject": "evm:bIB01:avalanche permission state at block 99687306",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:avalanche",
+      "coverage:permission-state",
+      "subject:bIB01"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "1d2c4c4521fc9d5ee852f1c38394cd0b417988e72cd5ab0079cdc67523357835",
+    "09c33f63845370dd54d06d21f24f512a87353c2587caddb060939687422d71fa",
+    "8c17084290eeab8097a65bb237980f9764bc209f3fc919b24eafce23d72bfc81",
+    "e33f895bf39f423135808ff37bdf7fc4c16afb7120b2e910ce0d046fa2e9310c",
+    "7afad1a8232f140ed0b3c1031433b947952a268331fc7329b4e317bcfd5d3d1d",
+    "360b30ce3ee63bcd6c847eaeb383f3413cc5889fa20be504856afb505d8d770e",
+    "0e5361c66c13cbc74eed4e7e1033bf802c4dea7ec4da19f20bd85685256c938f",
+    "ff90436f1e8dbc7276057857ed0803969b097b70bef0eee5a465dd67c10cd8a9",
+    "7cb02d414581c765aef8854221ff53a37526d30b773c5952dca3597ceb76c9aa"
+  ]
+}

@@ -100,6 +100,97 @@ def get(url: str, method: str = "GET", timeout: int = 25):
         return 0, {}, str(exc).encode()
 
 
+def get_final(url: str, method: str = "GET", timeout: int = 25):
+    """GET a url and also report the url it was SERVED at.
+
+    urllib follows redirects, so `get()`'s body is the FINAL page's body. That
+    matters because the body and the headers must be attributed to the same
+    url: a route that 308s to another route is served AT that other route, and
+    its canonical link and its headers belong there.
+
+    MEASURED 2026-11-07: https://councilof.ai/pricing/ answers 308 to
+    /dashboard/?tab=measured&task=pricing-overview, and the canonical on the
+    page actually served is https://councilof.ai/dashboard/ — which is CORRECT.
+    Reading that canonical against the url that was ASKED for reports a defect
+    in a page that is not defective.
+    """
+    req = urllib.request.Request(url, headers=_UA, method=method)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout, context=_ctx) as r:
+            return r.status, dict(r.headers), r.read(), r.geturl()
+    except urllib.error.HTTPError as e:
+        return e.code, dict(e.headers), e.read(), e.geturl()
+    except Exception as exc:  # noqa: BLE001
+        return 0, {}, str(exc).encode(), url
+
+
+def csp_state(headers: dict) -> str:
+    """'enforced', 'report-only' or 'absent' — the state of the CSP on a response.
+
+    A policy that is only Report-Only protects nothing: the browser reports
+    what would have been blocked and blocks nothing.
+    """
+    if headers.get("content-security-policy") or headers.get("Content-Security-Policy"):
+        return "enforced"
+    if (headers.get("content-security-policy-report-only")
+            or headers.get("Content-Security-Policy-Report-Only")):
+        return "report-only"
+    return "absent"
+
+
+def canonical_finding(requested: str, served: str, canonical: str | None):
+    """The verdict on a page's canonical link, as (severity, issue, evidence).
+
+    A canonical link must name the url the page is SERVED at. Not the url that
+    was asked for: a route that 308s to another route is served AT that other
+    route, and the canonical on that page correctly names it. Comparing against
+    the requested url reports a defect in a correct page — which is what this
+    did to /pricing/ on 2026-11-07.
+
+    A canonical that names NEITHER the requested nor the served path is still a
+    real defect, and is reported with both urls so the reader can see which
+    comparison failed.
+    """
+    if not canonical:
+        return ("low", "no canonical link", "")
+    served_path = urlparse(served).path.rstrip("/")
+    canonical_path = urlparse(canonical).path.rstrip("/")
+    if canonical_path == served_path:
+        return None
+    requested_path = urlparse(requested).path.rstrip("/")
+    if served_path != requested_path:
+        return ("medium", "canonical points at a different path than the url served",
+                f"{canonical} (requested {requested}, served {served})")
+    return ("medium", "canonical points at a different path", canonical)
+
+
+def csp_finding(served: str, state: str, html_state: str | None):
+    """The verdict on one surface's Content-Security-Policy, as (severity, issue, evidence).
+
+    'enforced' is the only state that protects a surface. 'report-only' reports
+    what would have been blocked and blocks nothing. 'absent' is no policy at
+    all.
+
+    The HTML surface's state is carried in because the asymmetry is the finding:
+    a policy on the page surface and none on the machine surface is not two
+    absences, it is one surface protected and one that is not — and the machine
+    surface is the one agents read more often.
+    """
+    if state == "enforced":
+        return None
+    if state == "report-only":
+        return ("medium", "a Content-Security-Policy is present only as Report-Only",
+                "it cannot break a page, but it also cannot protect one until it is enforced")
+    machine = "/api/" in urlparse(served).path
+    evidence = ""
+    if machine and html_state == "report-only":
+        evidence = ("the HTML surface carries one only as Report-Only, and the machine "
+                    "surface is read more often than the page surface")
+    elif machine and html_state == "absent":
+        evidence = "the machine surface is read more often than the page surface"
+    return ("medium", "no Content-Security-Policy", evidence)
+
+
 def head_text(url: str) -> str:
     st, _, body = get(url)
     return body.decode("utf-8", "replace") if st == 200 else ""
@@ -237,35 +328,55 @@ def audit_headers(reg: Register) -> None:
         "https://councilof.ai/", "https://councilof.ai/api/gspc", "https://councilof.ai/api/state",
         "https://councilof.ai/api/cards", "https://csoai.org/", "https://meok.ai/",
     ]
+    # A header finding belongs to the url whose RESPONSE carried it. csoai.org
+    # answers 308 to councilof.ai, so it serves no content of its own and has
+    # no header of its own to judge; the response that a reader actually gets
+    # there is councilof.ai's, and that is where the gap is recorded. Judging
+    # csoai.org by the headers of the page it redirects to names the wrong
+    # surface, and reporting the same gap once per name is how a register stops
+    # being read.
+    seen: set[str] = set()
+    states: dict[str, str] = {}
     for url in probes:
-        st, headers, _ = get(url)
+        st, headers, _, final = get_final(url)
         if st == 0:
             continue
-        missing = [h for h in SECURITY_HEADERS if not (headers.get(h) or headers.get(h.title()))]
+        served = final or url
+        if served in seen:
+            continue
+        seen.add(served)
+        states[served] = csp_state(headers)
+        missing = [h for h in SECURITY_HEADERS
+                   if h != "content-security-policy"
+                   and not (headers.get(h) or headers.get(h.title()))]
         if missing:
-            reg.add("medium", url, "security headers missing", ", ".join(missing))
-        # A content-security-policy on the HTML surface and none on the API surface is
-        # the inconsistency that was found: the machine surface is read more often.
-        if "/api/" in url and (headers.get("content-security-policy")):
-            pass
-    html_csp = None
-    _, hh, _ = get("https://councilof.ai/")
-    html_csp = hh.get("content-security-policy")
-    if not html_csp:
-        _, hh2, _ = get("https://councilof.ai/")
-        html_csp = hh2.get("Content-Security-Policy") or hh2.get("content-security-policy-report-only")
-        if html_csp:
-            reg.add("info", "https://councilof.ai/", "a CSP is present only as Report-Only",
-                    "it cannot break a page, but it also cannot protect one until it is enforced")
-        else:
-            reg.add("medium", "https://councilof.ai/", "no Content-Security-Policy on the HTML surface")
+            reg.add("medium", served, "security headers missing", ", ".join(missing))
+
+    # The Content-Security-Policy, judged per surface.
+    #
+    # This replaces a branch that never fired:
+    #
+    #     if "/api/" in url and (headers.get("content-security-policy")):
+    #         pass
+    #
+    # It had the shape of the rule it meant to be — a policy on the page
+    # surface and none on the machine surface — but its body was `pass` and its
+    # condition tested for the policy BEING PRESENT, so it could only ever do
+    # nothing. The asymmetry it was written for went unreported for as long as
+    # it stood. It is now measured.
+    html_state = states.get("https://councilof.ai/")
+    for served, state in states.items():
+        verdict = csp_finding(served, state, html_state)
+        if verdict:
+            severity, issue, evidence = verdict
+            reg.add(severity, served, issue, evidence)
 
 
 def audit_meta(reg: Register) -> None:
     for route in ["/", "/about/", "/board/", "/methodology/", "/connect/", "/services/",
                   "/memberships/", "/corrections/", "/faq/", "/contact/", "/pricing/"]:
         url = "https://councilof.ai" + route
-        st, _, body = get(url)
+        st, _, body, final = get_final(url)
         if st != 200:
             continue
         t = body.decode("utf-8", "replace")
@@ -274,10 +385,13 @@ def audit_meta(reg: Register) -> None:
         if not re.search(r'<meta[^>]+name=["\']description["\'][^>]*content=["\'][^"\']{20,}', t, re.I):
             reg.add("low", url, "no meta description of at least 20 characters")
         m = re.search(r'<link[^>]+rel=["\']canonical["\'][^>]*href=["\']([^"\']+)', t, re.I)
-        if not m:
-            reg.add("low", url, "no canonical link")
-        elif urlparse(m.group(1)).path.rstrip("/") != route.rstrip("/"):
-            reg.add("medium", url, "canonical points at a different path", m.group(1))
+        # The canonical is compared with the url the page was SERVED at. /pricing/
+        # answers 308 to /dashboard/?tab=measured&task=pricing-overview, and the
+        # canonical on the page served there is /dashboard/ — which is right.
+        verdict = canonical_finding(url, final or url, m.group(1) if m else None)
+        if verdict:
+            severity, issue, evidence = verdict
+            reg.add(severity, url, issue, evidence)
         m = re.search(r'<meta[^>]+property=["\']og:image["\'][^>]*content=["\']([^"\']+)', t, re.I)
         if m and m.group(1).startswith("http"):
             ist, _, _ = get(m.group(1))
