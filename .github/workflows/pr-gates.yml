@@ -328,6 +328,15 @@ jobs:
           python3 scripts/stamped-bytes-gate.py --selftest
           python3 scripts/stamped-bytes-gate.py --base HEAD^1 --head HEAD
 
+      - name: Native canvas build prerequisites
+        if: steps.scope.outputs.gated == 'true'
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+            build-essential pkg-config libpixman-1-dev \
+            libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+
       - name: Install deps
         if: steps.scope.outputs.gated == 'true'
         # The Python half matches deploy.yml's install. scripts/ots-manifest-fresh.test.ts (step "Unit
@@ -336,6 +345,25 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
+
+      - name: Native canvas runtime smoke
+        if: steps.scope.outputs.gated == 'true'
+        timeout-minutes: 1
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const assert = require('node:assert/strict');
+          const { createCanvas } = require('canvas');
+          const canvas = createCanvas(2, 2);
+          const context = canvas.getContext('2d');
+          context.fillStyle = '#112233';
+          context.fillRect(0, 0, 2, 2);
+          assert.deepEqual(Array.from(context.getImageData(0, 0, 2, 2).data),
+            [17, 34, 51, 255, 17, 34, 51, 255, 17, 34, 51, 255, 17, 34, 51, 255]);
+          const png = canvas.toBuffer('image/png');
+          assert.ok(Buffer.isBuffer(png) && png.length > 8);
+          assert.deepEqual(Array.from(png.subarray(0, 8)), [137, 80, 78, 71, 13, 10, 26, 10]);
+          console.log('Native canvas smoke: PASS (2x2 RGBA and PNG signature; RAM only)');
+          NODE
 
       - name: Instrument liveness - selftest
         if: steps.scope.outputs.gated == 'true'
