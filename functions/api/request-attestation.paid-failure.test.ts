@@ -50,7 +50,7 @@ const SETTLED = {
 
 beforeEach(() => {
   vi.stubGlobal("crypto", webcrypto);
-  payment.mockResolvedValue(SETTLED);
+  payment.mockResolvedValue({ ...SETTLED }); // One fresh payment/budget identity per request fixture.
   sign.mockImplementation(async (payload: Record<string, unknown>) => ({
     sha256: "a".repeat(64),
     sig_ed25519: null,
@@ -269,6 +269,7 @@ describe("paid commission fulfillment is independent of optional observation boo
     const response = await paidCall(kv), body = await response.json() as any;
     expect(response.status).toBe(200);
     expect(body.card.payload.enqueued).toBe(true);
+    expect(kv.get).toHaveBeenCalledWith("count:issuances");
     expect(kv.put.mock.calls.map(([key]) => key)).toContain("mill:commission:org/model-name");
     expect((await listCommissionQueue(kv as unknown as KVNamespace)).rows).toHaveLength(1);
   });
