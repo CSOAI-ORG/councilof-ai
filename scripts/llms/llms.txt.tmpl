@@ -207,8 +207,10 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Source-linked SOV World observatory (dated simulation archive; check source date and signature-verification status on the page): https://councilof.ai/world/observatory/
 - Agent card: https://councilof.ai/.well-known/agent-card.json
+- Agent Skills (the 15 executable skills, each with a digest and one SKILL.md): https://councilof.ai/.well-known/agent-skills/index.json — the index lists every skill id and the path of its SKILL.md; each SKILL.md names the exact call it makes. Send a skill to the A2A door (POST https://councilof.ai/api/a2a, header `A2A-Version: 1.0`, JSON-RPC 2.0 `SendMessage`).
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — {{MCP_TOOLS}} tools: {{MCP_FREE_WORD}} free readers plus {{MCP_PAID_WORD}} x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
 - MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the {{MCP_FREE_WORD}} free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
+- Install guide (the canonical remote install for any client, the exact reviewed tool catalog, and the safe first checks): https://councilof.ai/llms-install.md
 - Public root (https://councilof.ai/root.json): Merkle envelope. Read live `sig_ed25519` and the stated preimage fields (`kind`, `schema`, `as_of`, `merkle_root`, `card_count`, `did_intended`). Check the signature against a published pinned key; report an absent signature as unsigned and an unavailable check as UNCHECKABLE. Presence in the root does not by itself establish a GSPC measurement or grade. Verification is free.
 - Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending until an independent `ots verify` confirms a Bitcoin attestation; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
 {{DATED_MILL_ROOT_LINE}}
@@ -262,6 +264,9 @@ Lid (quote live `totals.lid`): {{LID}}
 ## Distribution — measured, PARTIAL, and not adoption
 
 {{DISTRIBUTION_SECTION}}
+## Published interop files (every file under /interop/, with its digest — except the index itself)
+
+{{FILE_INDEX_SECTION}}
 ## Signed evidence records (evidence linked from the board, never counted into it)
 
 {{EVIDENCE_RECORDS_SECTION}}

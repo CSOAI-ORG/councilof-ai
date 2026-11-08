@@ -1,0 +1,73 @@
+name: org profile derivation (generator owns the numbers)
+
+# The org profile README on CSOAI-ORG/.github is derived from THIS repo's generator
+# (scripts/github/org-readme.py). Its derivation workflow lived in the .github repo on a
+# bare daily cron — which GitHub silently stopped honouring on 2026-09-14; the profile
+# then rotted for 50 days (found 2026-11-03: a banned codename back in the header, counts
+# stale). This workflow re-homes the derivation next to its generator and fires it on the
+# estate's one reliable signal — GSPC Continuous Measurement completions, hourly — plus a
+# daily cron and manual dispatch as backstops.
+#
+# Fail-safes, unchanged from the original derivation:
+#   · the run REFUSES to publish when the board did not answer (UNCHECKABLE lid) — the
+#     previous file stays up rather than a fabricated page;
+#   · publish happens only when the derived bytes actually differ from what is deployed;
+#   · identity is SNAPSHOT_PR_TOKEN (the same PAT the landing automations use), so the
+#     commit reads like the estate's other automated writes.
+
+on:
+  schedule:
+    - cron: "33 6 * * *"
+  workflow_run:
+    workflows: ["GSPC Continuous Measurement"]
+    types: [completed]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: org-profile-derive
+  cancel-in-progress: false
+
+jobs:
+  derive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Derive the profile from live endpoints
+        run: |
+          set -euo pipefail
+          python3 scripts/github/org-readme.py --profile > /tmp/profile.md.new
+          # if-statement, not `grep && { exit 1; }`: under set -e a non-matching grep on
+          # the GOOD path would abort the step (the original workflow got this right).
+          if grep -q '^> \*\*UNCHECKABLE\*\*' /tmp/profile.md.new; then
+            echo "board did not answer; refusing to publish a fabricated page"; exit 1
+          fi
+      - name: Publish to CSOAI-ORG/.github only when bytes changed
+        env:
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REMOTE=$(gh api repos/CSOAI-ORG/.github/contents/profile/README.md --jq '.content' | base64 -d)
+          if [ "$REMOTE" = "$(cat /tmp/profile.md.new)" ]; then
+            echo "derived profile unchanged; nothing to publish"; exit 0
+          fi
+          SHA=$(gh api repos/CSOAI-ORG/.github/contents/profile/README.md --jq '.sha')
+          export PROFILE_SHA="$SHA"
+          python3 - <<'PY'
+          import base64, json, os
+          payload = {
+              "message": "profile: re-derive from live endpoints (org profile derivation, hourly signal)",
+              "content": base64.b64encode(open("/tmp/profile.md.new", "rb").read()).decode(),
+              "sha": os.environ["PROFILE_SHA"],
+          }
+          open("/tmp/payload.json", "w").write(json.dumps(payload))
+          PY
+          gh api -X PUT repos/CSOAI-ORG/.github/contents/profile/README.md \
+            --input /tmp/payload.json --jq '.commit.sha'
+          echo "published refreshed profile README"

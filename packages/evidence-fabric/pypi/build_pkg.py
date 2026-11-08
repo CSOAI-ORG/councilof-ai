@@ -5,9 +5,10 @@
     python3 build_pkg.py OUT_DIR          # writes OUT_DIR/{pyproject.toml,README.md,LICENSE,src/csoai_evidence_fabric/...}
     python3 -m build OUT_DIR              # sdist + wheel in OUT_DIR/dist
 
-The canonical files are copied, never edited in place. Only two mechanical rewrites are made, so the modules
+The canonical files are copied, never edited in place. Mechanical import rewrites make the modules
 import as one package instead of through sys.path:
   * `import event as E`            -> `from csoai_evidence_fabric import event as E`
+  * `import openshell_witness as W` -> `from csoai_evidence_fabric import openshell_witness as W`
   * `from render import ...`       -> `from csoai_evidence_fabric.render import ...`
   * `sys.path.insert(0, ...)`      -> `pass`
 Everything else is byte-for-byte the canonical code; `check_install.py` checks the packaged renderers against
@@ -18,7 +19,7 @@ import os, re, shutil, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.dirname(HERE)
 PKG = "csoai_evidence_fabric"
-MODULES = ["event.py", "verify.py", "batch.py", "safe_freeze_v2.py",
+MODULES = ["event.py", "verify.py", "batch.py", "safe_freeze_v2.py", "openshell_witness.py",
            "render/__init__.py", "render/ocsf.py", "render/otel.py", "render/sarif.py", "render/intoto.py",
            "render/ecs_hec.py", "render/w3c_acr01.py",
            "ingest/__init__.py", "ingest/sarif_in.py", "ingest/garak_in.py", "ingest/safe_in.py", "ingest/openshell_in.py"]
@@ -27,6 +28,7 @@ DATA_DIRS = ["schema", "vendor"]
 
 def rewrite(text):
     text = re.sub(r"^(\s*)import event as E\b", rf"\1from {PKG} import event as E", text, flags=re.M)
+    text = re.sub(r"^(\s*)import openshell_witness as W\b", rf"\1from {PKG} import openshell_witness as W", text, flags=re.M)
     text = re.sub(r"^(\s*)from render import ", rf"\1from {PKG}.render import ", text, flags=re.M)
     text = re.sub(r"^(\s*)from ingest import ", rf"\1from {PKG}.ingest import ", text, flags=re.M)
     text = re.sub(r"^(\s*)sys\.path\.insert\(0, [^\n]*\)\s*$", r"\1pass", text, flags=re.M)
@@ -42,7 +44,7 @@ def main(out):
         d = os.path.join(dst, rel)
         os.makedirs(os.path.dirname(d), exist_ok=True)
         t = rewrite(open(s, encoding="utf-8").read())
-        if re.search(r"^\s*(import event|from render import|from ingest import|sys\.path\.insert)", t, re.M):
+        if re.search(r"^\s*(import event|import openshell_witness|from render import|from ingest import|sys\.path\.insert)", t, re.M):
             sys.exit(f"unrewritten import left in {rel}")
         open(d, "w", encoding="utf-8").write(t)
     open(os.path.join(dst, "__init__.py"), "w").write(

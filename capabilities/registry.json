@@ -1826,6 +1826,19 @@
       "payment": "free"
     },
     {
+      "id": "api-model-lifecycle",
+      "protocols": [
+        "http"
+      ],
+      "title": "Model lifecycle",
+      "description": "GET /api/model-lifecycle — upstream availability (available / retired / not released) of the model families this estate measures, joined to this estate's own signed measurement for each family. A family with no signed card is UNMEASURED, never zero.",
+      "endpoint": "/api/model-lifecycle",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-momentum",
       "protocols": [
         "http"

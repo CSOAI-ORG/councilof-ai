@@ -8,7 +8,12 @@ name: Reg-watch — regulation-change detector (living loop)
 on:
   schedule:
     - cron: "45 6 * * *"   # daily 06:45 UTC
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      derived_reports_only:
+        description: Run only the derived report publication job
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -16,7 +21,94 @@ permissions:
   pull-requests: write   # lands via branch + PR; a direct push to master is GH006 (required gates)
 
 jobs:
+  daily-evidence-product:
+    name: Publish derived daily evidence archive through release gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: daily-evidence-product
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Require a PR identity that triggers normal required checks
+        env:
+          REPORT_PR_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN }}
+        run: |
+          if [ -z "$REPORT_PR_TOKEN" ]; then
+            echo "::error::Daily publication is held: SNAPSHOT_PR_TOKEN is absent. No fallback that suppresses required PR checks."
+            exit 1
+          fi
+      - name: Test exact mappings, history preservation and archive rendering
+        run: node --test scripts/build-daily-signal.node-test.mjs scripts/build-daily-product.node-test.mjs scripts/daily-maintenance-metadata.node-test.mjs scripts/build-axis-reports.ownership.test.mjs
+      - name: Derive reports from the committed public source snapshot
+        run: |
+          set -euo pipefail
+          REPORT_DAY=$(date -u +%F)
+          echo "REPORT_DAY=$REPORT_DAY" >> "$GITHUB_ENV"
+          node scripts/build-daily-signal.mjs --as-of "$REPORT_DAY"
+          node scripts/build-daily-signal.mjs --as-of "$REPORT_DAY" --check
+          node scripts/build-daily-product.mjs
+          node scripts/build-daily-product.mjs --check
+      - name: Retain the generated public report packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-evidence-product
+          path: public/reports/daily-signal/
+          retention-days: 30
+      - name: Submit only generated report files to normal gated publication
+        env:
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "daily-evidence-product"
+          git config user.email "nicholas@csoai.org"
+          git add -- public/reports/daily-signal/
+          python3 - <<'PY'
+          import re, subprocess
+          # NUL records preserve spaces/newlines in names. Disable rename detection
+          # so a moved historical report is an explicit deletion plus addition.
+          raw = subprocess.check_output(['git', 'diff', '--cached', '--name-status', '-z', '--no-renames'])
+          records = raw.split(b'\0')[:-1] if raw else []
+          if (raw and not raw.endswith(b'\0')) or len(records) % 2:
+              raise SystemExit('Refusing malformed staged status records')
+          allowed = re.compile(r'public/reports/daily-signal/(?:[0-9]{4}-[0-9]{2}-[0-9]{2}\.(?:json|md)|latest\.(?:json|md)|index\.(?:json|html)|findings\.json)')
+          dated_source = re.compile(r'public/reports/daily-signal/[0-9]{4}-[0-9]{2}-[0-9]{2}\.json')
+          for raw_status, raw_path in zip(records[::2], records[1::2]):
+              status, path = raw_status.decode('ascii'), raw_path.decode('utf-8')
+              if not allowed.fullmatch(path):
+                  raise SystemExit('Refusing unexpected generated path')
+              if status == 'D':
+                  raise SystemExit('Refusing report archive deletion')
+              if status not in ('A', 'M'):
+                  raise SystemExit('Refusing unexpected staged change type')
+              if dated_source.fullmatch(path) and status != 'A':
+                  raise SystemExit('Refusing modification of a retained dated source report')
+          PY
+          if git diff --cached --quiet; then
+            echo "No derived report changes."
+            exit 0
+          fi
+          BRANCH="automation/daily-evidence-${REPORT_DAY}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git switch -c "$BRANCH"
+          git commit -m "Publish derived evidence report ${REPORT_DAY}"
+          git push origin "$BRANCH"
+          cat > "$RUNNER_TEMP/daily-evidence-pr.md" <<'BODY'
+          Publish the derived daily clock report, source-bound findings and report archive. Only generated daily-signal artifacts are staged. Source dates, exact source hashes, missing mappings and unknown evidence remain explicit. This is report generation from committed source snapshots, not a new measurement or legal assessment.
+
+          Publication uses the repository's normal required checks and master deployment. Auto-merge is requested for this bounded generated-data change; no administrator bypass is used. Prior dated source JSON is preserved; Markdown and indexes are reproducible renderings. Changed same-day inputs require a reviewed correction.
+          BODY
+          PR_URL=$(gh pr create --base master --head "$BRANCH" --title "Daily evidence report ${REPORT_DAY}" --body-file "$RUNNER_TEMP/daily-evidence-pr.md")
+          gh pr merge "$PR_URL" --auto --merge
   reg-watch:
+    if: ${{ github.event_name != 'workflow_dispatch' || !inputs.derived_reports_only }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

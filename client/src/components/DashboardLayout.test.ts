@@ -36,14 +36,23 @@ describe("dashboard consolidation details", () => {
     expect(source).not.toContain("fetcher(handoff.transport");
   });
 
-  it("pins embedded page controls to the canvas corner — no floating Workspace button to clear", () => {
-    // 27 Sep 2026: the floating mobile "Workspace" button left the canvas; the History
-    // control now lives in the section bar, so the controls no longer need a top-16 offset.
+  it("keeps embedded recovery controls in page flow and Workspace in the section bar", () => {
+    // Recovery controls wrap above the embedded page instead of covering its content.
+    // The History control remains in the section bar, not a floating Workspace button.
     const source = readFileSync(
       resolve(__dirname, "./DashboardEmbeddedView.tsx"),
       "utf8",
     );
-    expect(source).toContain("right-3 top-3");
+    const toolbar = source.match(/<div className="flex flex-wrap items-center justify-end[^\"]*">([\s\S]*?)<\/div>/)?.[0];
+    expect(toolbar).toBeDefined();
+    expect(toolbar).not.toMatch(/\b(?:absolute|fixed)\b/);
+    expect(toolbar).toContain('href={path}');
+    expect(toolbar).toContain("(opens in a new tab)");
+    expect(toolbar).toContain('aria-label="Close page and return to all tools"');
+    expect(toolbar).toContain("min-h-11");
+    expect(source.indexOf(toolbar!)).toBeLessThan(source.indexOf("<iframe"));
+    expect(source).toContain('role="alert"');
+    expect(source).toContain("Retry page");
     expect(source).not.toContain("top-16");
     const workspace = readFileSync(
       resolve(__dirname, "./DashboardWorkspace.tsx"),

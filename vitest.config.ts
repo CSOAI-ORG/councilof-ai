@@ -24,16 +24,42 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // every PR. They are named one by one, not globbed, and pr-gates.yml runs exactly this list under
 // `node --test` in its own step, so excluding them here removes no coverage.
 export const NODE_TEST_FILES = [
+  'scripts/build-daily-signal.node-test.mjs',
+  'scripts/daily-maintenance-metadata.node-test.mjs',
+  'scripts/daily-mapping-review-queue/build.test.mjs',
+  'scripts/build-daily-product.node-test.mjs',
+  'scripts/build-axis-reports.ownership.test.mjs',
   'scripts/build-axis-reports.slots.test.mjs',
   'scripts/build-models-measured.test.mjs',
   'scripts/contract-convergence.test.mjs',
   'scripts/feed-delivery-kit.test.mjs',
+  'scripts/evidence-learning-contract.node-test.mjs',
+  // Executed by node-test-registry: compiled site chrome must preserve frozen evidence bytes.
+  'scripts/inject-workspace-launcher.capture.test.mjs',
   'scripts/harness-x/render.test.mjs',
+  // The hub fetch that gates the build (authenticated, retrying): a node:test file vitest
+  // cannot collect, named here so pr-gates.yml runs it under node --test. It stubs the
+  // fetch, so a 429 and a 404 can be produced on demand.
+  'scripts/surface/hub-fetch.node-test.mjs',
+  // The HF mirror gate must tell a MISSING file from a FAILED READ: on 2026-11-07 it
+  // published a rate limit as "the directory is not on HF" and blocked a PR whose files
+  // were present. Named here so pr-gates.yml runs it under node --test (same reason as
+  // hub-fetch above). It stubs the fetch, so a 429, a 404 and a network error can be
+  // produced on demand, and it needs no network.
+  'scripts/surface/hf-mirror-gate.node-test.mjs',
   // The hygiene sweeper planner: a node:test file vitest cannot collect, named here so
   // pr-gates.yml runs it under node --test (same reason as sitemap-withdrawal below).
   // No apostrophes in these comments: the registry and the workflow extract entries by
   // naive quote matching, and a stray quote inside the array corrupts the parsed list.
+  // The committed-bytes check for the two edge generators (public/sitemap.xml and
+  // public/_redirects): a node:test file vitest cannot collect, named here so
+  // pr-gates.yml runs it under node --test. It proves the checks can detect drift.
+  'scripts/committed-bytes.node-test.mjs',
   'scripts/hygiene/sweeper.node-test.mjs',
+  // The cron-health watch decisions: a node:test file vitest cannot collect, named here so
+  // pr-gates.yml runs it under node --test. It proves the watch catches a dead schedule,
+  // passes a live one, and finds a schedule run buried behind pull_request runs.
+  'scripts/hygiene/cron-watch.node-test.mjs',
   'scripts/regulator-census-redirects.test.mjs',
   'scripts/research/watch-sources.test.mjs',
   'scripts/review/deploy-target-wiring.test.mjs',
@@ -49,6 +75,11 @@ export const NODE_TEST_FILES = [
   'scripts/surface/prerender-io.test.mjs',
   'scripts/surface/render-board-reference.test.mjs',
   'scripts/surface/public-copy.node-test.mjs',
+  // The live persona gauntlet demands page markers that must exist in the page source. This
+  // node:test file catches that drift at pull-request time instead of on a two-hourly
+  // schedule, and it proves the retired copy has not come back.
+  'scripts/surface/persona-markers.node-test.mjs',
+  'scripts/surface/reviewed-blog-publication.node-test.mjs',
   'spaces/gspc-board/table.node-test.mjs',
   // node:test file. vitest cannot collect it and reports it as a FAILED SUITE
   // ("No test suite found in file ..."), so it is named here: pr-gates.yml reads

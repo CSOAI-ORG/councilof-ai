@@ -12,7 +12,7 @@ const ALL = (registry.servers as Server[]) || [];
 
 export default function FrameworkDetail() {
   useEffect(() => { document.title = "Framework compliance — CSOAI Charter crosswalk | CSOAI"; }, []);
-  const [, params] = useRoute("/frameworks/:slug");
+  const [, params] = useRoute<{ slug: string }>("/frameworks/:slug");
   const slug = params?.slug || "";
   const fw = useMemo(() => FRAMEWORKS.find((f) => f.slug === slug), [slug]);
 
@@ -104,13 +104,13 @@ export default function FrameworkDetail() {
           <div className="mb-12">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold flex items-center gap-2"><Boxes className="h-6 w-6 text-emerald-600" /> {tools.length} MCP tools that satisfy {fw.name}</h2>
-              <Link href={`/mcp?framework=${encodeURIComponent(tag)}`}>
+              <Link href={`/mcps?framework=${encodeURIComponent(tag)}`}>
                 <Button variant="outline" size="sm">View all <ArrowRight className="h-3.5 w-3.5 ml-1.5" /></Button>
               </Link>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {tools.slice(0, 9).map((t) => (
-                <Link key={t.slug} href={`/mcp/${t.slug}`}>
+                <Link key={t.slug} href={`/mcps/${t.slug}`}>
                   <Card className="p-4 h-full hover:border-emerald-400 transition-colors cursor-pointer">
                     <h3 className="font-semibold text-sm mb-1">{t.name}</h3>
                     <p className="text-xs text-gray-500 line-clamp-2">{t.description}</p>

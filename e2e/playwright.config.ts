@@ -2,8 +2,9 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  // The Council OS shell smoke has its own config (playwright.shell.config.ts) and static server.
-  testIgnore: /dashboard-shell\.spec\.ts/,
+  // These suites own built-checkout fixtures and local servers in their dedicated configs.
+  // Keep them out of this broad deployed-site suite.
+  testIgnore: /(dashboard-shell|gpai-daily-evidence)\.spec\.ts/,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

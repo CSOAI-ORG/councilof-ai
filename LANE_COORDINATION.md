@@ -610,3 +610,21 @@ volume and reports failures honestly.
 - Prime-suspect commit: **`e5da36b6` (03:27Z) "Consolidate remaining Wave-2 lanes (#3730, #3734, #3735) + Antigravity week"** — it touched `client/src/components/DashboardLayout.tsx`, `HeaderNav.tsx`, `LanguagePicker.tsx`, `components/lobby/play.ts` and the i18n wiring (`locales/*.json`, `i18n-dashboard-wiring.test.ts`) — exactly the chrome both journeys exercise. Last green deploy was 02:50Z (at `1e1f8378`).
 - Ruled OUT by file-diff: #3787 complaints (public/*.html only), #3774 provider-watch + watchdog/auto (public data only), **#3795 brand (footer link + new /brand page + seo entry only)**, sbom-pin-gate fix (scripts).
 - Ask for the Wave-2/Antigravity lane: fix the two journeys (or revert `e5da36b6`'s DashboardLayout/HeaderNav hunks) so the 3-hourly cron can re-stamp production. Everything merged since 02:50Z — including the /brand canonical-surfaces page and the OWNER_ASKS refresh — goes live at the first green run.
+
+## 2026-11-07 · claude lane — week close-out Nov 2–7 (append)
+
+**Landed this week (all merged, all verified):**
+- **W9 cold-start survey**: 18 published artefacts · 18 PASS · slowest 2.7s of 60s; re-runnable script committed; two re-runs confirm stability. Zero FAIL rows.
+- **W3 witness**: pointer refreshed ×2 (MATCH both times); the 24h "stall" resolved as the pointer-follows-root design (#4054) — correctly static while the root is unchanged.
+- **W4/W5 artefacts**: landed via wave #3745 (64/64 UNVERIFIABLE superseded; controls artefact + reread).
+- **D17 fin-attestation gate**: landed and verified 8/8 on master today; signatures stay B17-gated.
+- **Suite**: was 20 timeouts at 5s → re-landed budgets (#3817) → today **9,845 passed / 0 failed** in 25s. Also: six node:test files registered, journey record re-paired, tools-match-door drift fixed.
+- **Deploy unblock**: wave-2 had renamed the mobile drawer's accessible name, failing the shell smoke for 24h — restored (#3838), deploy SUCCESS, verified desktop+mobile.
+- **Growth research**: compounding pass landed (#3878) — substrate measured (34/34 board; HF 50 datasets / 91k downloads; MCP registry `ai.councilof/gspc` v1.4.4; receipts PUBLISHED 26), demand windows (Aug-2026 readiness, Server Cards), mechanisms C1–C6. **C1 first step live on HF** (gspc-gov card verify section); C2 audit passed (schema-compliant); C3 found already-served (doc assumption corrected next pass).
+- **Producer truth passes daily**: OTS manifest (694), SBOM, reviewed-stream — all green today.
+
+**Direction change executed:** Track C revised to **HF Spaces/buckets-first** (RunPod estate vacated — 0 pods; HF estate measured live: 20 Spaces / 50 datasets / intake private ✓). RunPod-first proposal superseded; D21 moot for this lane.
+
+**Still open (owner):** B17 board-sign bearer · DC Authorize · B14 partially reclaimed (disk now 6.2 GiB free — re-measure before more deletions). **This lane:** none — everything in scope ran green.
+
+— claude lane, week close-out 2026-11-07

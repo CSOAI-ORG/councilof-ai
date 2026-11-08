@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ExternalLink, Search, ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
 import { PaneHead } from "@/components/lobby/paneKit";
+import { researchSourceMetadata, type ResearchSourceMetadata } from "../../../scripts/research/source-metadata.mjs";
 
 export function researchPlanUrl(hostname?: string): string {
   return hostname === "localhost" || hostname === "127.0.0.1"
@@ -48,8 +49,7 @@ type ResearchSource = {
   publisher: string;
   title: string;
   url: string;
-  watch: boolean;
-};
+} & ResearchSourceMetadata;
 type ResearchPlan = {
   axis: string;
   research_state: string;
@@ -88,6 +88,38 @@ function endpointState(value?: string): string {
 function measuredWhen(value?: Record<string, string>): string {
   if (!value) return "measurement time not supplied";
   return value.observed_at ?? value.observed_on ?? value.not_after ?? value.state ?? "UNCHECKABLE";
+}
+
+export function ResearchSourceList({ sources }: { sources: ResearchSource[] }) {
+  return (
+    <footer className="mt-4 border-t border-slate-100 pt-3">
+      <h5 className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Research sources and references</h5>
+      <ul className="mt-2 space-y-3">
+        {sources.map((source) => {
+          const metadata = researchSourceMetadata(source);
+          const watchState = metadata.watch === true ? "Watch configured"
+            : metadata.watch === false ? "Reference only — watching disabled" : "Watch status uncheckable";
+          return (
+            <li key={source.id}>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <a href={source.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[12px] font-medium text-emerald-900 underline underline-offset-4">
+                  {source.publisher}: {source.title}<ExternalLink className="h-3 w-3" aria-hidden="true" />
+                </a>
+                <span className="text-[11px] font-medium text-slate-600">{watchState}</span>
+              </div>
+              {metadata.boundary && <p className="mt-1 text-[12px] leading-relaxed text-slate-700">{metadata.boundary}</p>}
+              {(metadata.reviewed_on || metadata.version || metadata.license) && <dl className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-600">
+                {metadata.reviewed_on && <div><dt className="inline font-semibold">Reference reviewed: </dt><dd className="inline"><time dateTime={metadata.reviewed_on}>{metadata.reviewed_on}</time></dd></div>}
+                {metadata.version && <div><dt className="inline font-semibold">Version: </dt><dd className="inline">{metadata.version}</dd></div>}
+                {metadata.license && <div><dt className="inline font-semibold">Declared license: </dt><dd className="inline">{metadata.license}</dd></div>}
+              </dl>}
+              {metadata.rights_url && <a href={metadata.rights_url} target="_blank" rel="noreferrer" className="mt-1 inline-block text-[11px] text-emerald-900 underline underline-offset-4">Read source terms</a>}
+            </li>
+          );
+        })}
+      </ul>
+    </footer>
+  );
 }
 
 export default function DashboardResearchPane() {
@@ -147,7 +179,7 @@ export default function DashboardResearchPane() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-7 sm:px-8">
       <PaneHead eyebrow="GSPC · continuous research" title="From a measured axis to its next review">
-        Live measurements joined to explicit research semantics. Sources are watched for change; a person
+        Live measurements joined to explicit research semantics. Configured watches and method references are labelled separately; a person
         decides what changed and whether a fresh measurement is justified. Nothing here trains a model,
         fixes a system, signs a finding or promotes a candidate to the board.
       </PaneHead>
@@ -266,12 +298,7 @@ export default function DashboardResearchPane() {
               <section className="rounded-xl bg-emerald-50 p-3"><h5 className="text-xs font-semibold text-emerald-950">Safe autonomous action</h5><p className="mt-1 text-[12px] leading-relaxed text-emerald-950/85">{plan.safe_autonomous_action}</p></section>
               <section className="rounded-xl border border-slate-200 p-3"><h5 className="text-xs font-semibold text-slate-900">Required human gate</h5><p className="mt-1 text-[12px] leading-relaxed text-slate-700">{plan.human_gate}</p></section>
             </div>
-            <footer className="mt-4 border-t border-slate-100 pt-3">
-              <h5 className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Authoritative watch sources</h5>
-              <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
-                {plan.sources.map((source) => <li key={source.id}><a href={source.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[12px] font-medium text-emerald-900 underline underline-offset-4">{source.publisher}: {source.title}<ExternalLink className="h-3 w-3" aria-hidden="true" /></a></li>)}
-              </ul>
-            </footer>
+            <ResearchSourceList sources={plan.sources} />
           </article>
         ))}
       </div>

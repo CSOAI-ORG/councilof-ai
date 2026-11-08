@@ -1,0 +1,111 @@
+{
+  "schema": "csoai.him-attestation-pack/0.1",
+  "subject": "anthropic",
+  "framework": {
+    "slug": "dora-art28-30",
+    "title": "DORA Art 28–30 — ICT third-party risk oversight (AI vendors)"
+  },
+  "doctrine": "human-in-the-loop attestation of evidence — NOT conformity certification; feeds a Register of Information, never replaces it",
+  "statement": "Human-in-the-loop attestation of evidence. Machine checkpoints carry signed measurement evidence; human checkpoints carry named human decisions. This is not conformity certification and grants no regulatory status.",
+  "as_of": "2026-11-02T06:40:28.918Z",
+  "segments": [
+    "banks",
+    "enterprise",
+    "government",
+    "lfx-orgs"
+  ],
+  "checkpoints": [
+    {
+      "id": "dora.vendor-cards",
+      "requirement": "AI vendor's public model carries signed measurement cards",
+      "status": "MACHINE-EVIDENCED",
+      "evidence": [
+        {
+          "subject": "xAI — model_cards: bytes changed 2026-09-13",
+          "sha256": "04a251012e7d262d88b6f5172f62f92bd7c9b5c0071c05c0428b59a35adafb0e",
+          "as_of": "2026-09-13T10:19:18Z"
+        },
+        {
+          "subject": "DeepSeek — model_cards: bytes changed 2026-09-05",
+          "sha256": "061834e1d6c1ae6ae1c9c573c25367a5477877b2456d77f37478b394d3e9a984",
+          "as_of": "2026-09-05T09:06:18Z"
+        },
+        {
+          "subject": "Cohere — model_cards: bytes changed 2026-09-12",
+          "sha256": "1030d2ff1e03d14c21b59faf91ddb1fb261cf36d5f26d0d88704766c6db4d1b8",
+          "as_of": "2026-09-12T09:23:39Z"
+        },
+        {
+          "subject": "Alibaba Cloud / Qwen — model_cards: bytes changed 2026-09-13",
+          "sha256": "1b1c152a891ecad53164c627cf57d294f7505a2eacff520172cef859e39d7d30",
+          "as_of": "2026-09-13T10:19:32Z"
+        }
+      ],
+      "evidence_count": 4
+    },
+    {
+      "id": "dora.drift-watched",
+      "requirement": "Vendor policy/safety/pricing drift under continuous signed watch",
+      "status": "MACHINE-EVIDENCED",
+      "evidence": [
+        {
+          "subject": "Alibaba Cloud / Qwen — pricing: bytes changed 2026-09-12",
+          "sha256": "0102dc8878b7136625760a4fa95909b64c2e97e92e9b68be59b66466494fde96",
+          "as_of": "2026-09-12T09:23:55Z"
+        },
+        {
+          "subject": "provider-diff daily capture 2026-09-03: 0 changed, 6 uncheckable, 0 unknown of 51",
+          "sha256": "01cbaddc65a8037a5b65a62420ce1912985dba9a706e8129e791ce617e8aab54",
+          "as_of": "2026-09-03T09:51:48Z"
+        },
+        {
+          "subject": "Anthropic — pricing: bytes changed 2026-09-05",
+          "sha256": "02ce3531876aa3a4ac55760ec2481efef9f6053603426d46fd089618c4d7f0d6",
+          "as_of": "2026-09-05T09:06:18Z"
+        },
+        {
+          "subject": "xAI — pricing: bytes changed 2026-09-14",
+          "sha256": "04185ebdb82edb330bc0408dd3cb40ece91f38bc0e4f8116bd772f5712ad9c81",
+          "as_of": "2026-09-14T10:50:36Z"
+        },
+        {
+          "subject": "provider-diff daily capture 2026-10-06: 0 changed, 6 uncheckable, 0 unknown of 51",
+          "sha256": "054b71b7e9331a75ba9f99cda03f805fa9f0b1e870712556882c6636e65cbf22",
+          "as_of": "2026-10-06T12:05:36Z"
+        }
+      ],
+      "evidence_count": 9
+    },
+    {
+      "id": "dora.exit-plan",
+      "requirement": "Documented exit strategy for the ICT third-party arrangement (Art 28)",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "dora-art28-30:dora.exit-plan"
+    },
+    {
+      "id": "dora.contract-terms",
+      "requirement": "Contract covers Art 29 mandatory provisions",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "dora-art28-30:dora.contract-terms"
+    },
+    {
+      "id": "dora.register-entry",
+      "requirement": "Register of Information entry updated with this evidence pack reference",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "dora-art28-30:dora.register-entry"
+    },
+    {
+      "id": "dora.accountable-owner",
+      "requirement": "Named accountable owner (DORA-eligible role) signs",
+      "status": "HUMAN-REQUIRED",
+      "task_id": "dora-art28-30:dora.accountable-owner"
+    }
+  ],
+  "human_tasks": [
+    "dora-art28-30:dora.exit-plan",
+    "dora-art28-30:dora.contract-terms",
+    "dora-art28-30:dora.register-entry",
+    "dora-art28-30:dora.accountable-owner"
+  ],
+  "ceremony_sha256": "d9bcf6fca538ac95a9d86c1c15c7795e56253efb279fba0736ca072227b4b8af"
+}

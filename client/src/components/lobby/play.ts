@@ -2,9 +2,9 @@
  * play — the "Council OS — local play" gallery data.
  *
  * THE HONESTY RULE FOR THIS FILE, AND IT IS THE WHOLE POINT OF IT.
- * Play gallery cards are preview-only until live routes ship. The arena wrapper exists
- * only as a local package; no match, duel or swarm run is running on this site
- * for anyone to join. So:
+ * Each card describes its own existing practice or replay capability. Remote
+ * MEOK proposals, seeded simulated seats and historical results stay distinct.
+ * Unimplemented games remain unlinked. So:
  *
  *   - `route` is set ONLY where a real destination already answers on this site
  *     (an App.tsx route, or a real static page like /gspc-quests.html). Most are
@@ -44,13 +44,15 @@ export const PLAY_CARDS: PlayCard[] = [
     id: "coliseum",
     title: "The Coliseum",
     blurb:
-      "Recorded frontier-system runs over frozen statutory text with deterministic grading.",
+      "Munder — The Boss's Chair: eight fictional requests for you and MEOK, with each model move awaiting your approval.",
     image: "/images/coliseum_hero_arena.jpg",
     alt: "Clay figures and green verification seals gathered in a marble arena",
     status: "route",
     route: "/dashboard?tab=space",
     reality:
-      "Opens the recorded arena replay in this workspace. It compares legacy runs for inspection; it is not a live prompt battle or a currently admitted ranking.",
+      "Choose first, request a proposal from the existing MEOK service, then approve its move in this browser game. " +
+      "Download local practice data and a report; game points never update the GSPC board. " +
+      "The dated arena replay remains available below.",
   },
   {
     id: "gspc-quests",

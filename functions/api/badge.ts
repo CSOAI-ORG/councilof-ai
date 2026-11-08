@@ -265,9 +265,9 @@ const cardBadge = async (
       return { label, message: "unsigned", colour: GREY, state: "unsigned" };
     }
     const verdict = await verifyCard(card, []);
-    // verdict.valid alone is not a signature: an empty signature leaves the Signature check at
-    // ok:null ("unsigned") and still comes back valid:true. "verified", "measured" and "valid"
-    // need the Signature check itself to have run and passed (14 Oct 2026).
+    // Keep the badge boundary explicit even though the shared verifier now rejects unsigned
+    // records. "verified", "measured" and "valid" require the Signature check itself to have
+    // run and passed, not an index flag or a digest match alone.
     const signature = verdict.checks?.find((c) => c.label === "Signature");
     const signedValid =
       verdict.valid === true && verdict.id === h && signature?.ok === true && signature.code === "signature_valid";

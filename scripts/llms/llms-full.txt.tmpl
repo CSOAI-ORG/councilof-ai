@@ -135,7 +135,7 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
       "date": "2026-09-02",
       "what_was_wrong": "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis \u00b7 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
       "how_caught": "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive) [custody corrected by C-2026-0925-01: all three shares sit on one host, one failure domain; the split was never performed]. Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
-      "fix": "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots \u00b7 22 measured). The 15/7 file is superseded, not edited. The Pages /api/board-sign path was not used \u2014 it is a 3KB card-sign and cannot carry this snapshot.",
+      "fix": "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots \u00b7 22 measured). The 15/7 file is superseded, not edited. The Pages POST /api/board-sign path was not used \u2014 it is a 3KB card-sign and cannot carry this snapshot.",
       "status": "CORRECTED IN THAT SNAPSHOT \u2014 re-check the current axis arrays and signature state"
     },
     {
@@ -269,6 +269,9 @@ was a number that had stopped being true. Count the rows.
    Free read-only door for chat clients, no key: `POST https://councilof.ai/mcp/free`. Claude Code:
    `claude mcp add --transport http council-of-ai https://councilof.ai/mcp/free`
 2. A2A (agent to agent) — `POST https://councilof.ai/api/a2a`, JSON-RPC v1.0; SendMessage answers
+   Agent Skills: `GET https://councilof.ai/.well-known/agent-skills/index.json` lists the 15
+   executable skills; the index lists every skill id and the path of its `SKILL.md`,
+   and each SKILL.md names the exact call it makes.
    with the live lid derived from /api/gspc. The interface `/.well-known/agent-card.json` names.
 3. AG-UI (agent to user) — `GET https://councilof.ai/api/agui/gspc-state`, SSE STATE_DELTA +
    TEXT_MESSAGE_CONTENT derived from /api/gspc per request. Presentation transport: it renders
@@ -278,6 +281,8 @@ was a number that had stopped being true. Count the rows.
 6. Hermes integration — no public install package is currently advertised
 7. REST + curl — `curl https://councilof.ai/api/gspc`
    If a public source refuses a request, retain its HTTP status and observation time. Report the source as unreachable for that request; do not substitute a cached value or work around an access restriction.
+
+The install guide for those doors — the canonical remote install for any client, the exact reviewed tool catalog, and the safe first checks — is at https://councilof.ai/llms-install.md.
 
 The source-linked SOV World observatory is at https://councilof.ai/world/observatory/.
 It is a dated simulation archive; its source date and upstream signature-verification status are shown on the page.
@@ -336,6 +341,9 @@ Each record below is a dated account of what public sources state, with its sour
 - COBOL copybook decoding test corpus — records whose correct values are known by construction, with must-fail controls; CC0. Held private while results against open-source decoders wait for each project's maintainers to have seen them: the dataset address does not open yet, so it is not linked here. Measured results are published through the records feed below the day the hold lifts.
 - All of the signed records above, plus corrections and daily notes, as a feed: https://councilof.ai/feeds/records.xml (Atom) — https://councilof.ai/feeds/records.json (JSON Feed)
 
+## 10d. PUBLISHED INTEROP FILES — every file under /interop/, with its digest (except the index itself)
+
+{{FILE_INDEX_SECTION}}
 ## 11. WE HOLD NO CERTIFICATION UNDER ANY STATUTORY SCHEME
 
 A regulated category adjacent to ours now exists in US state law.

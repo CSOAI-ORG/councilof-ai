@@ -138,18 +138,24 @@ export default function DashboardWorkspace({
   }, []);
 
   useEffect(() => {
+    let pendingStore: Storage | undefined;
     try {
-      const raw = localStorage.getItem(CANDIDATE_PENDING_KEY);
+      pendingStore = window.localStorage;
+      const raw = pendingStore.getItem(CANDIDATE_PENDING_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as { observation?: unknown };
         const observation = normalizeCandidateObservation(
           parsed?.observation ?? parsed,
         );
         if (observation) setCandidate(observation);
-        localStorage.removeItem(CANDIDATE_PENDING_KEY);
       }
     } catch {
-      localStorage.removeItem(CANDIDATE_PENDING_KEY);
+      // A denied read is optional local context, never a failed workspace.
+    }
+    try {
+      pendingStore?.removeItem(CANDIDATE_PENDING_KEY);
+    } catch {
+      // Cleanup can be denied independently from reading. Keep the workspace usable.
     }
 
     const receive = (event: MessageEvent) => {
