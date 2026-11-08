@@ -726,6 +726,35 @@ for (const sourcePath of [
     `${sourcePath} is a legacy prototype and must stay outside the routed public graph`,
   );
 }
+
+// The approved auth-only replacement is distinct from every retired prototype.
+// Keep the legacy Signup prohibition above; this is a positive, narrower publication contract.
+function assertAccountSignupPublication(app, graph, page) {
+  assert.match(app, /const AccountSignup = lazy\(\(\) => import\("\.\/pages\/AccountSignup"\)\);/, "use the reviewed account-registration component");
+  assert.match(app, /<Route path="\/signup" component=\{AccountSignup\} \/>/, "only the approved modern component may serve signup");
+  assert.equal(graph.has("client/src/pages/AccountSignup.tsx"), true, "the modern registration route must resolve");
+  assert.equal(graph.has("client/src/pages/Signup.tsx"), false, "the retired signup prototype stays unrouted");
+  assert.match(page, /import \{ useAuth \} from ['"]@\/contexts\/AuthContext['"]/, "reuse the canonical account controller");
+  assert.match(page, /await signup\(/, "ordinary registration uses the shared controller");
+  assert.match(page, /councilLoginReturnFromSearch\(/, "retain the existing safe return policy");
+  assert.doesNotMatch(page, /\b(?:fetch|XMLHttpRequest|localStorage|sessionStorage|csoai_token)\b|\/api\/auth\//, "no account API shortcut or second token store in the page");
+  assert.doesNotMatch(page, /\bPLAN_INFO\b|\bsov_intended_(?:plan|credits)\b|['"]\/welcome['"]/, "legacy plans, credit intent and welcome flow remain retired");
+}
+const modernSignupSource = readFileSync("client/src/pages/AccountSignup.tsx", "utf8");
+assertAccountSignupPublication(appSource, activeClientSources, modernSignupSource);
+for (const [label, app, graph, page] of [
+  ["retired route", appSource.replace('<Route path="/signup" component={AccountSignup} />', '<Route path="/signup" component={Signup} />'), activeClientSources, modernSignupSource],
+  ["unresolved modern route", appSource, new Set([...activeClientSources].filter(path => path !== "client/src/pages/AccountSignup.tsx")), modernSignupSource],
+  ["active legacy prototype", appSource, new Set([...activeClientSources, "client/src/pages/Signup.tsx"]), modernSignupSource],
+  ["direct registration", appSource, activeClientSources, modernSignupSource + "\nfetch('/api/auth/register');"],
+  ["second token store", appSource, activeClientSources, modernSignupSource + "\nlocalStorage.setItem('other_token', 'fixture');"],
+  ["legacy plan intent", appSource, activeClientSources, modernSignupSource + "\nconst PLAN_INFO = {};"],
+  ["missing shared controller", appSource, activeClientSources, modernSignupSource.replace("import { useAuth } from '@/contexts/AuthContext';", "")],
+]) {
+  assert.throws(() => assertAccountSignupPublication(app, graph, page), undefined, "account publication contract rejects " + label);
+}
+console.log("account-signup publication contract: 1 current source + 7 negative controls passed");
+
 assert.doesNotMatch(appSource, /data\/(?:sectors-content|industries-content|frameworks-content|blog-content)/);
 assert.match(
   appSource,

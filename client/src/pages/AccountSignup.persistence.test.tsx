@@ -2,7 +2,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import Signup from './Signup';
+import AccountSignup from './AccountSignup';
 import { CouncilSessionPersistenceError, COUNCIL_SESSION_PERSISTENCE_MESSAGE } from '@/lib/councilSession';
 const mocks = vi.hoisted(() => ({ signup: vi.fn(), navigate: vi.fn(), error: vi.fn(),
   user: null as null | { email: string }, search: '' }));
@@ -18,7 +18,7 @@ beforeEach(async () => {
   mocks.user = null;
   mocks.search = 'next=%2Fdashboard%2F%3Fworkspace%3Dcompany%26case%3Dcase_fixture';
   host = document.createElement('div'); document.body.append(host); root = createRoot(host);
-  await act(async () => root.render(<Signup />));
+  await act(async () => root.render(<AccountSignup />));
 });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); vi.unstubAllGlobals(); });
 async function fill(id: string, value: string) {
@@ -45,7 +45,7 @@ describe('ordinary account creation and uncertain outcomes', () => {
     expect(mocks.navigate).not.toHaveBeenCalled();
     expect(host.querySelector<HTMLButtonElement>('button[type="submit"]')!.disabled).toBe(true);
     mocks.user = { email: 'fixture@example.test' };
-    await act(async () => root.render(<Signup />));
+    await act(async () => root.render(<AccountSignup />));
     expect(mocks.navigate).toHaveBeenCalledExactlyOnceWith('/dashboard/?workspace=company&case=case_fixture');
   });
   it('keeps the safe storage failure and stops another registration after an uncertain attempt', async () => {
@@ -89,6 +89,6 @@ describe('ordinary account creation and uncertain outcomes', () => {
   });
   it('does not preserve an external return target after a verified account appears', async () => {
     mocks.search = 'next=https%3A%2F%2Foutside.example%2F'; mocks.user = { email: 'fixture@example.test' };
-    await act(async () => root.render(<Signup />)); expect(mocks.navigate).toHaveBeenCalledExactlyOnceWith('/dashboard');
+    await act(async () => root.render(<AccountSignup />)); expect(mocks.navigate).toHaveBeenCalledExactlyOnceWith('/dashboard');
   });
 });
