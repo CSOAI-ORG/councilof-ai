@@ -30,7 +30,6 @@ on:
     paths:
       - "public/interop/**"
       - "scripts/build-interop-file-index.py"
-      - "scripts/rebuild-interop-file-index.py"
       - ".github/workflows/interop-index-drift.yml"
 
 permissions:
@@ -113,7 +112,7 @@ jobs:
           else
             TITLE="interop index: ${ADDED} added, ${REMOVED} removed, ${CHANGED} changed (state: ${STATE})"
           fi
-          BODY="$(printf '%s\n\n_Measured by `.github/workflows/interop-index-drift.yml` on %s at %s (%s)._\n\nThe published index `/interop/file-index.json` is a measurement of the corpus under `/interop/`. This run compared the corpus with the index committed beside it.\n\n| | rows |\n|---|---:|\n| corpus | %s |\n| published index | %s |\n| added (in the corpus, not named in the index) | %s |\n| removed (named in the index, not in the corpus) | %s |\n| changed (named with a digest that no longer matches) | %s |\n\nState: **%s**.\n\n```\n%s\n```\n\nThe repair belongs in the PRODUCER: regenerate the index and its derived files with `python3 scripts/build-interop-file-index.py` (or `scripts/rebuild-interop-file-index.py --check` when there is no working tree) and commit both together. The measurement never certifies the corpus; it only says whether the index still describes it.\n' "$MARKER" "$(date -u +%FT%TZ)" "$GITHUB_REF" "${GITHUB_SHA:0:12}" "$CORPUS" "$PUBLISHED" "$ADDED" "$REMOVED" "$CHANGED" "$STATE" "$(cat drift.txt 2>/dev/null || echo 'no output'))"
+          BODY="$(printf '%s\n\n_Measured by `.github/workflows/interop-index-drift.yml` on %s at %s (%s)._\n\nThe published index `/interop/file-index.json` is a measurement of the corpus under `/interop/`. This run compared the corpus with the index committed beside it.\n\n| | rows |\n|---|---:|\n| corpus | %s |\n| published index | %s |\n| added (in the corpus, not named in the index) | %s |\n| removed (named in the index, not in the corpus) | %s |\n| changed (named with a digest that no longer matches) | %s |\n\nState: **%s**.\n\n```\n%s\n```\n\nThe repair belongs in the PRODUCER: regenerate the index and its derived files with `python3 scripts/build-interop-file-index.py --check public/interop public/interop/file-index.json scripts/deploy-exclusions.json` and commit both together. The digests are of the bytes AS PUBLISHED. Without a built tree the producer asks the injector what it would write for each HTML page, which is the same transform the build uses; with a built tree it reads the built file. Either way the comparison is faithful. `UNCHECKABLE` is what it says only if the injector itself cannot be run. The measurement never certifies the corpus; it only says whether the index still describes it.\n' "$MARKER" "$(date -u +%FT%TZ)" "$GITHUB_REF" "${GITHUB_SHA:0:12}" "$CORPUS" "$PUBLISHED" "$ADDED" "$REMOVED" "$CHANGED" "$STATE" "$(cat drift.txt 2>/dev/null || echo 'no output'))"
 
           NUM="$(gh issue list --state open --limit 100 --json number,body \
                   --jq "map(select(.body != null and (.body | contains(\"$MARKER\")))) | .[0].number // empty" || true)"

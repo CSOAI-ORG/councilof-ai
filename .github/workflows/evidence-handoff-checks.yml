@@ -5,6 +5,7 @@ on:
     paths:
       - 'packages/evidence-fabric/**'
       - 'scripts/build-daily-*.mjs'
+      - 'scripts/daily-maintenance-*.mjs'
       - 'scripts/build-axis-reports*.mjs'
       - 'public/reports/daily-signal/**'
       - 'public/interop/regulatory-inventory-latest.json'
@@ -37,6 +38,7 @@ on:
     paths:
       - 'packages/evidence-fabric/**'
       - 'scripts/build-daily-*.mjs'
+      - 'scripts/daily-maintenance-*.mjs'
       - 'scripts/build-axis-reports*.mjs'
       - 'public/reports/daily-signal/**'
       - 'public/interop/regulatory-inventory-latest.json'
@@ -139,12 +141,14 @@ jobs:
           packages/evidence-fabric/tests/test_doctrine.py
           packages/evidence-fabric/tests/test_event.py
           packages/evidence-fabric/tests/test_verify_qualification.py
+      - name: Held referee continuity and discriminating mutation controls
+        run: python -B -m unittest discover -s packages/evidence-fabric/tests -p 'test_axis_referee*.py' -v
       - name: Full registry routing and GPAI packet controls
         run: |
           python packages/evidence-fabric/test_regulation_projection.py
           python packages/evidence-fabric/test_gpai_packet.py
       - name: Exact deadline mapping controls
-        run: node --test scripts/build-daily-signal.node-test.mjs scripts/build-daily-product.node-test.mjs scripts/build-axis-reports.ownership.test.mjs
+        run: node --test scripts/build-daily-signal.node-test.mjs scripts/build-daily-product.node-test.mjs scripts/daily-maintenance-metadata.node-test.mjs scripts/build-axis-reports.ownership.test.mjs
       - name: Verify committed GPAI matrix against its exact source artifacts
         run: node scripts/surface/build-gpai-matrix.mjs --check
       - name: Verify committed daily archive outputs

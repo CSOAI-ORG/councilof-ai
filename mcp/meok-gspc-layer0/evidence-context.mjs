@@ -23,7 +23,7 @@ async function readFixed(path, fetchImpl, now) {
     response = await fetchImpl(url, {method: 'GET', credentials: 'omit', redirect: 'error',
       cache: 'no-store', headers: {accept: 'application/json'}, signal: AbortSignal.timeout(5000)});
     if (!response.ok || response.redirected || (response.url && response.url !== url)) throw new Error('SOURCE_UNAVAILABLE');
-    if (!/^application\/(?:[\w.+-]+\+)?json(?:;|$)/i.test(response.headers.get('content-type') || '')) throw new Error('SOURCE_NOT_JSON');
+    if (!/^application\/(?:[\w.+-]+\+)?json[ \t]*(?:;|$)/i.test(response.headers.get('content-type') || '')) throw new Error('SOURCE_NOT_JSON');
     const declaredLength = response.headers.get('content-length');
     if (declaredLength && (!/^\d+$/.test(declaredLength) || Number(declaredLength) > BYTE_CAP)) throw new Error('SOURCE_TOO_LARGE');
     if (!response.body?.getReader) throw new Error('SOURCE_UNREADABLE');

@@ -39,6 +39,95 @@ export function hubToken(env = process.env, home = process.env.HOME) {
 }
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const HUB_ORIGIN = "https://huggingface.co";
+const MAX_ATTEMPTS = 4;
+const MAX_REDIRECTS = 5;
+
+class HubFetchError extends Error {}
+
+function checkedUrl(value, entry = false) {
+  let url;
+  try { url = new URL(value); } catch { throw new HubFetchError("Invalid Hub URL"); }
+  if (url.protocol !== "https:" || url.username || url.password ||
+      (entry && url.origin !== HUB_ORIGIN)) {
+    throw new HubFetchError("Hub requests require HTTPS and an exact huggingface.co entry origin");
+  }
+  return url;
+}
+
+// Cancellation must not extend the deadline if an upstream/custom stream stalls.
+function cancelBody(body) {
+  try { Promise.resolve(body?.cancel()).catch(() => {}); } catch {}
+}
+
+async function readText(response, signal, onReader) {
+  if (!response.body) return "";
+  const reader = response.body.getReader();
+  onReader(reader);
+  const decoder = new TextDecoder();
+  let text = "";
+  try {
+    while (true) {
+      signal.throwIfAborted();
+      const { done, value } = await reader.read();
+      signal.throwIfAborted();
+      if (done) return text + decoder.decode();
+      text += decoder.decode(value, { stream: true });
+    }
+  } finally {
+    cancelBody(reader);
+    reader.releaseLock();
+  }
+}
+
+async function requestAttempt(entry, token, fetchImpl, timeoutMs) {
+  const controller = new AbortController();
+  const { signal } = controller;
+  let activeBody;
+  let timer;
+  const deadline = new Promise((_, reject) => {
+    timer = setTimeout(() => {
+      controller.abort();
+      cancelBody(activeBody);
+      reject(new HubFetchError("Hub request or response body timed out"));
+    }, timeoutMs);
+  });
+  const request = async () => {
+    let url = entry;
+    for (let redirects = 0; ; redirects++) {
+      signal.throwIfAborted();
+      const headers = { "User-Agent": "csoai-build-bench-suite/1.0" };
+      // HF can redirect public files to a CDN. Never send its token to that origin.
+      if (token && url.origin === HUB_ORIGIN) headers.Authorization = `Bearer ${token}`;
+      const response = await fetchImpl(url.href, { headers, redirect: "manual", signal });
+      activeBody = response.body;
+      try {
+        signal.throwIfAborted();
+        if ([301, 302, 303, 307, 308].includes(response.status)) {
+          if (redirects >= MAX_REDIRECTS) throw new HubFetchError("Hub redirect limit exceeded");
+          const location = response.headers.get("location");
+          if (!location) throw new HubFetchError("Hub redirect has no location");
+          url = checkedUrl(new URL(location, url));
+          continue;
+        }
+        if (!response.ok) return { status: response.status };
+        return { status: response.status, text: await readText(response, signal, (reader) => { activeBody = reader; }) };
+      } finally {
+        cancelBody(response.body);
+      }
+    }
+  };
+  try {
+    return await Promise.race([request(), deadline]);
+  } catch (error) {
+    // Do not forward fetch errors containing signed redirect URLs or credentials.
+    throw error instanceof HubFetchError ? error : new HubFetchError("Hub request failed");
+  } finally {
+    clearTimeout(timer);
+    controller.abort();
+    cancelBody(activeBody);
+  }
+}
 
 /**
  * Fetch a bank, with the hub token when there is one, and with a bounded retry on the
@@ -49,20 +138,23 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  * honestly, and it turns one true negative into four requests against a host that already
  * said no.
  */
-export async function fetchText(url, { fetchImpl = globalThis.fetch, env = process.env, home = process.env.HOME, wait = sleep, attempts = 4 } = {}) {
-  const headers = { "User-Agent": "csoai-build-bench-suite/1.0" };
+export async function fetchText(url, { fetchImpl = globalThis.fetch, env = process.env, home = process.env.HOME, wait = sleep, attempts = 4, timeoutMs = 15000 } = {}) {
+  const entry = checkedUrl(url, true);
+  if (!Number.isSafeInteger(attempts) || attempts < 1 || attempts > MAX_ATTEMPTS ||
+      !Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 60000) {
+    throw new HubFetchError("Invalid Hub attempt or timeout bound");
+  }
   const token = hubToken(env, home);
-  if (token) headers.Authorization = `Bearer ${token}`;
   let status = null;
   for (let attempt = 0; attempt < attempts; attempt++) {
-    const res = await fetchImpl(url, { headers });
-    if (res.ok) return res.text();
+    const res = await requestAttempt(entry, token, fetchImpl, timeoutMs);
+    if (res.text !== undefined) return res.text;
     status = res.status;
-    if (status !== 429 && status < 500) break;
+    if (status !== 429 && !(status >= 500 && status <= 599)) break;
     if (attempt < attempts - 1) {
-      console.warn(`[hub-fetch] GET ${url} -> HTTP ${status}; retrying in ${1000 * 2 ** attempt}ms`);
+      console.warn(`[hub-fetch] GET ${entry.origin}${entry.pathname} -> HTTP ${status}; retrying in ${1000 * 2 ** attempt}ms`);
       await wait(1000 * 2 ** attempt);
     }
   }
-  throw new Error(`GET ${url} -> HTTP ${status}`);
+  throw new HubFetchError(`GET ${entry.origin}${entry.pathname} -> HTTP ${status}`);
 }

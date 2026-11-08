@@ -25,6 +25,26 @@
 set -uo pipefail
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" || exit 1
 
+# THE PRERENDER'S BROWSER LIVES OUTSIDE THE RECLAIMABLE CACHE.
+#
+# Playwright's default browser directory is ~/Library/Caches/ms-playwright, and a disk reclaim
+# on this machine has deleted it THREE times in one morning — once mid-push, while this very
+# gate was running. Every time, the gate reported "Chromium for Playwright is not installed",
+# which reads like a missing dependency but is a reclaim having taken a regenerable cache that
+# the gate genuinely needs. The browsers are therefore installed at a stable path, and the
+# environment points Playwright at it.
+#
+# THIS SUITE SETS THE PATH ITSELF. The reasoning used to live only in .githooks/pre-push, so
+# the suite only found the browser when it was invoked THROUGH that hook. MEASURED
+# 2026-11-07: this desk's global hook (core.hooksPath is absolute, so it is a wrapper that
+# delegates to THIS suite) did not export the path, and every push failed with "Chromium for
+# Playwright is not installed" — on a machine where the browser was installed, at the stable
+# path, all along. The suite is the thing that runs the check, so the suite is where the path
+# belongs: the claim lives in the artefact and in the generator that uses it.
+#
+# An operator who sets PLAYWRIGHT_BROWSERS_PATH to something else keeps their choice.
+export PLAYWRIGHT_BROWSERS_PATH="${PLAYWRIGHT_BROWSERS_PATH:-$HOME/csoai-logs/ms-playwright}"
+
 fail=0
 echo "pre-push: content gates (the ones that fail deploys) …"
 
@@ -83,6 +103,29 @@ elif [ "$cite_rc" -ne 0 ]; then
   printf '%s\n' "$cite_out" | tail -8 | sed 's/^/      /'; fail=1
 fi
 
+# The published-surface audit's RULES, offline. The audit itself is an OPERATOR tool —
+# it touches the network — but its rules are code, and code can be checked without one.
+#
+# ADDED 2026-11-07. The canonical rule compared a page's canonical link with the url that
+# was ASKED for, while urllib follows redirects and hands it the FINAL page's body. So
+# /pricing/ — which answers 308 to /dashboard/?tab=measured&task=pricing-overview and
+# carries the canonical /dashboard/, which is CORRECT — was reported as a MEDIUM
+# "canonical points at a different path" against a page that is not defective. A checker
+# that cries wolf on a correct page teaches its reader to ignore it. The same tool's
+# Content-Security-Policy rule was a branch whose body was `pass`, so the machine surface
+# (/api/gspc, /api/state, /api/cards answered with five security headers and NO policy at
+# all) went unreported.
+#
+# This check is RED against the unfixed rules and green against the fixed ones. That is the
+# whole point of it: a gate that has never gone red proves nothing about the tree it passed.
+audit_rules_rc=0
+audit_rules_out=$(python3 -m unittest discover -s scripts -p test_published_surface_audit.py 2>&1) || audit_rules_rc=$?
+if [ "$audit_rules_rc" -ne 0 ]; then
+  echo "  ✖ published-surface audit rules: the rules themselves are wrong (exit $audit_rules_rc) — their verdict:"
+  printf '%s\n' "$audit_rules_out" | tail -12 | sed 's/^/      /'
+  fail=1
+fi
+
 # The gate must be provably working before its verdict means anything — a gate
 # that has never gone red proves nothing about the tree it just passed.
 node scripts/facts-gate.mjs --selftest >/dev/null 2>&1 \
@@ -109,7 +152,8 @@ trap restore_regen EXIT
 
 board_ok=1
 if ! node -e "require('playwright').chromium.launch().then(b=>b.close()).then(()=>process.exit(0),()=>process.exit(1))" >/dev/null 2>&1; then
-  echo "  ✖ Chromium for Playwright is not installed (npx playwright install chromium) — prerender cannot run"; fail=1; board_ok=0
+  echo "  ✖ Chromium for Playwright is not installed at $PLAYWRIGHT_BROWSERS_PATH — prerender cannot run"; fail=1; board_ok=0
+  echo "      install it there with:"; echo "        PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH node node_modules/playwright/cli.js install chromium"
 fi
 if [ "$board_ok" -eq 1 ]; then
   build_out=$(npm run build:client 2>&1) \
@@ -126,6 +170,31 @@ if [ "$board_ok" -eq 1 ]; then
   anchor_out=$(node scripts/board-production-anchor.mjs --selftest 2>&1 \
     && node scripts/board-production-anchor.mjs dist/client --board-reference prerender-board-reference.json 2>&1) \
     || { echo "  ✖ board-production-anchor — its verdict:"; printf '%s\n' "$anchor_out" | tail -12 | sed 's/^/      /'; fail=1; }
+  # ADDED 2026-11-07. The published interop index is a machine-readable promise to every reader:
+  # "sha256 is the digest of the file's bytes as published ... a match means you hold what the
+  # estate published". Measured 2026-11-07: the index labelled all 1,904 retired .invalid paths
+  # "hf-mirror — served by a 302 redirect ... the path is real and fetchable", and NONE of them
+  # is 302'd: the estate's own Function (functions/interop/[[path]].ts) intercepts every .invalid
+  # path and serves it from the retired-bytes archive, or 404s by design. 1,898 of them 404'd.
+  # The producer now models that state, and this check proves the COMMITTED index is what the
+  # producer would write — so the promise cannot drift without a push naming it.
+  # It runs after the build, because the digests of pages-served HTML are over the BUILT file
+  # (the build injects a launcher script, so the tree's bytes are not what a reader fetches).
+  python3 scripts/build-interop-file-index.py --selftest >/dev/null 2>&1 \
+    || { echo "  ✖ interop index: the producer's own selftest failed — the check is broken"; fail=1; }
+  index_rc=0
+  index_out=$(python3 scripts/build-interop-file-index.py public/interop public/interop/file-index.json \
+    scripts/deploy-exclusions.json --served-root dist/client --check 2>&1) || index_rc=$?
+  if [ "$index_rc" -eq 1 ]; then
+    echo "  ✖ interop index: the published index is STALE — it no longer describes this tree — its verdict:"
+    printf '%s\n' "$index_out" | tail -6 | sed 's/^/      /'; fail=1
+  elif [ "$index_rc" -eq 2 ]; then
+    echo "  · interop index: UNCHECKABLE — the check could not run. Not a finding, and not a reason to refuse the push:"
+    printf '%s\n' "$index_out" | tail -4 | sed 's/^/      /'
+  elif [ "$index_rc" -ne 0 ]; then
+    echo "  ✖ interop index: the check failed unexpectedly (exit $index_rc) — its verdict:"
+    printf '%s\n' "$index_out" | tail -6 | sed 's/^/      /'; fail=1
+  fi
 fi
 
 # ADDED 2026-09-26. Private canaries (harness/instrument-guard) must never reach a public
@@ -221,11 +290,26 @@ elif [ "$pin_rc" -ne 0 ]; then
   printf '%s\n' "$pin_out" | tail -14 | sed 's/^/      /'; fail=1
 fi
 
-# workflow_run uses glob patterns. Reuse the production guard: raw substring matching rejects
-# correctly escaped literal names (such as the '+' in the current producer's display name).
-trigger_out=$(node --test scripts/workflow-trigger-coupling.node-test.mjs 2>&1 \
-  && node scripts/workflow-trigger-coupling.mjs 2>&1) \
-  || { echo "  ✖ trigger-coupling — its verdict:"; printf '%s\n' "$trigger_out" | tail -12 | sed 's/^/      /'; fail=1; }
+# ADDED 2026-09-20. workflow_run couples follow-on workflows to deploy.yml by its
+# `name:` STRING. A rename lane changed deploy.yml's name without touching the five
+# followers — every one of them would have gone silent on merge with no red anywhere.
+#
+# CHANGED 2026-11-07. The check below used to be a literal `grep -qF` for deploy.yml's
+# raw name. That is WRONG, and it was failing on the estate's own correct tree:
+# workflow_run.workflows takes GLOB filters, not literals, so a producer name carrying a
+# `+` must be escaped — the five followers correctly carry "Build \\+ deploy site (gated
+# production branch)" and a literal grep for "Build + deploy site (gated production
+# branch)" cannot find it. MEASURED: on master at 2026-11-07 this check failed for four
+# of the five followers while the estate's own proper checker
+# (scripts/workflow-trigger-coupling.mjs, which CI runs in deploy.yml and pr-gates.yml)
+# reported "trigger-coupling OK: 5 literal workflow filters". So the local gate was
+# blocking EVERY push from any desk that has it, over a rename that was done correctly.
+#
+# So the check now runs the SAME SCRIPT CI RUNS — the estate's own, not a copy of it —
+# and its verdict is the authoritative one. Same scripts, not copies.
+node scripts/workflow-trigger-coupling.mjs >/dev/null 2>&1 \
+  || { echo "  ✖ trigger-coupling: the followers do not carry deploy.yml's name as a literal filter"; \
+       echo "      A rename must be applied to all five followers (scripts/workflow-trigger-coupling.mjs says which)."; fail=1; }
 
 # The dependency inventory is timestamped too. Check the same committed-byte predicate as CI,
 # before a full hosted run discovers that regenerated bytes still carry the old detached proof.
@@ -252,5 +336,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate clean"
+echo "  ✓ wallet-credential-gate + node-engine-floor-gate + facts-gate + board-production-anchor + brand-gate + canary-leak-gate + price-gate + axis-route-gate + interop-file-index + trigger-coupling clean"
 exit 0

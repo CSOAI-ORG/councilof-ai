@@ -573,6 +573,7 @@ export type HitlReceipt = {
   axis: string;
   decision: HitlDecision;
   note: string;
+  /** Legacy field: a live-board answer matched; no human identity or professional competence is verified. */
   competency_verified: boolean;
   completed_modules: string[];
   module_id: string;
@@ -806,13 +807,17 @@ export async function listReceipts(store: KVNamespace | null, limit = 50, strict
   return out;
 }
 
-/** Record that a module was completed. Returns false when there is no store to record it in. */
+/** Record a correct shared practice result; this store does not bind a learner identity. */
 export async function markModuleCompleted(
   store: KVNamespace | null,
   moduleId: string,
   record: Record<string, unknown>,
 ): Promise<boolean> {
-  if (!store) return false;
+  // Incorrect attempts must not create completion or overwrite an earlier correct
+  // observation. Keep this guard in the helper as well as the HTTP caller.
+  if (!store || typeof record !== "object" || record === null || Array.isArray(record) ||
+      typeof moduleId !== "string" || !moduleId.trim() ||
+      record.module_id !== moduleId || record.correct !== true) return false;
   try {
     await store.put(`${HITL_PREFIX}module:${moduleId}`, JSON.stringify(record));
     return true;
@@ -831,7 +836,10 @@ export async function listCompletedModules(store: KVNamespace | null): Promise<s
       if (!raw) continue;
       try {
         const rec = JSON.parse(raw) as Record<string, unknown>;
-        if (rec?.module_id) out.push(String(rec.module_id));
+        // Historical incorrect/malformed rows remain stored, but are not completed.
+        // Bind the record to its storage key instead of accepting a different module id.
+        if (rec?.correct === true && typeof rec.module_id === "string" && rec.module_id.trim() &&
+            key.name === `${HITL_PREFIX}module:${rec.module_id}`) out.push(rec.module_id);
       } catch {
         /* skip */
       }
@@ -895,4 +903,5 @@ export function decisionPathOpen(env: HitlEnv): boolean {
 export function signingKeyConfigured(env: HitlEnv): boolean {
   return (env.BOARD_SIGN_KEY_PKCS8_B64 ?? "").trim().length > 0;
 }
+
 

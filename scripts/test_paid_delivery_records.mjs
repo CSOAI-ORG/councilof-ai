@@ -24,6 +24,7 @@ async function moduleFrom(source,imports={}){
 }
 const helperModule=await moduleFrom(current('functions/api/_x402_delivery_record.ts'));
 const h=helperModule.namespace,STATE='x-csoai-delivery-record-state',passed=[];
+const exposedHeaders=response=>(response.headers.get('access-control-expose-headers')||'').toLowerCase().split(',').map(name=>name.trim());
 const cardSignModule=await moduleFrom(current('functions/_lib/cardSign.ts'));
 const feedSerializer=await moduleFrom(current('functions/api/_eunomia_delivery.ts'),{'../_lib/cardSign':cardSignModule});
 async function test(name,fn){await fn();passed.push(name);console.log('PASS '+name);}
@@ -42,6 +43,26 @@ function response(body=' \n{"café":"雪","signature":"unchanged"}\n',status=200
  return new Response(body,{status,headers:{'content-type':'application/json; charset=utf-8','x-payment-response':'opaque-settlement-echo','x-csoai-card-sha256':'artifact-digest','access-control-expose-headers':'X-Artifact'}});
 }
 async function bytes(res){return Buffer.from(await res.arrayBuffer());}
+for(const [name,echo,expose] of [
+ ['existing receipt','existing-receipt','X-Artifact'],
+ ['mixed-case existing exposure','existing-receipt','X-Artifact, X-PAYMENT-RESPONSE'],
+ ['absent receipt',undefined,'X-Artifact'],
+]){
+ await test('successful paid CORS '+name,async()=>{
+  const body='unchanged paid body café 雪';
+  const input=new Response(body,{status:201,statusText:'Fixture response',headers:{
+   'content-type':'application/json; charset=utf-8','access-control-allow-origin':'*',
+   'access-control-expose-headers':expose,'x-artifact':'unchanged',...(echo?{'x-payment-response':echo}:{})
+  }});
+  const out=await h.recordPaidResponse(input,{confirmedPaid:true,successfulOutput:true,resource:'https://example.test/paid'});
+  assert.equal(out.status,201);assert.equal(out.statusText,'Fixture response');
+  assert.equal(await out.text(),body);assert.equal(out.headers.get('x-payment-response'),echo??null);
+  assert.equal(out.headers.get('x-artifact'),'unchanged');assert.equal(out.headers.get('access-control-allow-origin'),'*');
+  const exposed=exposedHeaders(out);
+  for(const header of ['x-artifact',STATE])assert.equal(exposed.filter(v=>v===header).length,1);
+  assert.equal(exposed.filter(v=>v==='x-payment-response').length,echo?1:0);
+ });
+}
 async function verifyRow(kv,res,expected,opts){
  const actual=await bytes(res);assert.deepEqual(actual,expected);
  const row=JSON.parse(kv.map.get(h.deliveryTxKey(opts.transaction)));
@@ -446,6 +467,7 @@ await test('full paid proof records exact bundle with one mock settlement',async
  assert.equal(b.toString('utf8'),JSON.stringify({schema:'csoai.public-root-proof/0.1',kind:'bundle',as_of:null,merkle_root:sha,n:1,proofs:[{sha256:sha,index:0,proof:[],merkle_root:sha,card_count:1}],note:'Paid bundle of inclusion proofs for the last published root. Not a grade.'},null,2));
  assert.equal(out.status,200);assert.equal(out.headers.get(STATE),'WRITTEN');
  assert.equal(out.headers.get('x-payment-response'),'opaque-echo');assert.equal(out.headers.get('x-csoai-delivery-state'),null);
+ assert.equal(exposedHeaders(out).filter(name=>name==='x-payment-response').length,1);
  assert.equal(kv.puts,1);assert.equal(settlements,1);
 });
 const proofRefusals=[
@@ -626,6 +648,7 @@ await test('full nonempty evidence bundle records revised observation UTF8 bytes
   const text=raw.toString('utf8'),body=JSON.parse(text),observations=body.oscal['assessment-results'].results[0].observations;
   assert.equal(actual.out.status,200);assert.equal(body.kind,'bundle');assert.equal(actual.settlements,1);
   assert.equal(actual.out.headers.get(STATE),'WRITTEN');assert.equal(actual.out.headers.get('x-payment-response'),'opaque-echo');
+  assert.equal(exposedHeaders(actual.out).filter(name=>name==='x-payment-response').length,1);
   assert.equal(body.manifest_card.payload.status,'ASSEMBLED');assert.equal(body.manifest_card.payload.card_count,1);
   assert.equal(body.signed,false);assert.equal(body.manifest_card.sig_ed25519,null);assert.equal(body.unsigned_reason,'offline unsigned fixture');
   assert.deepEqual(Object.keys(body.cards),[sha]);assert.equal(body.cards[sha].proof,undefined);
@@ -662,8 +685,10 @@ await test('actual feed response seam retains paid body on storage ERROR',async(
  assert.equal(out.headers.get('x-payment-response'),'opaque-echo');
 });
 const paidTools=JSON.parse(current('functions/mcp/paid-tools.json'));
+const inputBudgetModule=await moduleFrom(current('functions/mcp/_input_budget.ts'));
 const paidModule=await moduleFrom(current('functions/mcp/_paid.ts'),{
  './paid-tools.json':{default:paidTools},
+ './_input_budget':inputBudgetModule,
  './_handlers':{rpc:(id,result)=>new Response(JSON.stringify({jsonrpc:'2.0',id,result}))}
 });
 const feedTool=paidTools.tools.find(x=>x.csoai.route==='/api/request-attestation');
@@ -707,7 +732,7 @@ await test('paid MCP authorization refuses automatic redirects',async()=>{
  const built=paidModule.namespace.buildPaidRequest(feedTool.name,{subject:'fixture-subject',x_payment:'fixture-payment'},'https://example.test');
  assert.equal(built.req.redirect,'manual');assert.equal(built.req.headers.get('x-payment'),'fixture-payment');assert.equal(new URL(built.req.url).origin,'https://example.test');
 });
-const testedPaths=new Set([...Object.keys(FROZEN_SEAMS),'functions/api/_x402_delivery_record.ts','functions/api/_x402_receipt.ts','functions/api/receipts/index.ts','functions/mcp/_paid.ts','scripts/test_paid_delivery_records.mjs','scripts/fixtures/paid_delivery_seams.json']);
+const testedPaths=new Set([...Object.keys(FROZEN_SEAMS),'functions/api/_x402_delivery_record.ts','functions/api/_x402_receipt.ts','functions/api/receipts/index.ts','functions/mcp/_paid.ts','functions/mcp/_input_budget.ts','scripts/test_paid_delivery_records.mjs','scripts/fixtures/paid_delivery_seams.json']);
 const source_sha256=Object.fromEntries([...testedPaths].sort().map(p=>[p,digest(Buffer.from(current(p)))]));
 const test_revision=execFileSync('git',['-c','protocol.allow=never','rev-parse','HEAD'],{encoding:'utf8'}).trim();
 console.log(JSON.stringify({offline:true,test_revision,source_sha256,network_policy:'no external fetch; explicit synthetic transports only',passed:passed.length,cases:passed,paid_api_calls:0,production_changed:false,scope:'helper,27 advertised paid response-emission seams,4 unchanged free entrypoints,full wrapper changes/proof/provider/evidence mocks,actual MCP adapter; other full-route integrations and live acceptance unverified'}));

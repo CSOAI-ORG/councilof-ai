@@ -113,8 +113,26 @@ test('oversized streamed responses are cancelled before JSON projection', async 
   assert.equal(cancelled, 2);
 });
 
+test('JSON media types accept HTTP optional whitespace without changing evidence or authority', async () => {
+  for (const contentType of ['application/json ; charset=utf-8', 'application/json\t;\tcharset=utf-8',
+    'Application/JSON ; Charset=utf-8', 'application/problem+json \t; charset=utf-8', 'application/json \t']) {
+    const b = board(), i = index();
+    const value = await readGspcEvidence({axis:'governance'}, {fetchImpl:async url =>
+      new Response(JSON.stringify(url.endsWith('/api/gspc') ? b : i), {headers:{'content-type':contentType}}), now});
+    assert.equal(value.state, 'OBSERVED_PUBLISHED_RECORD', contentType);
+    assert.equal(value.source.bytes_sha256, createHash('sha256').update(JSON.stringify(b)).digest('hex'));
+    assert.equal(value.daily_briefing.state, 'AVAILABLE');
+    assert.equal(value.daily_briefing.report_day, '2026-11-06');
+    assert.equal(value.process.authority_profile, 'csoai.hitl-authority-effect/0.1');
+    assert.equal(value.use.grants_authority, false); assert.equal(value.use.execution_allowed, false);
+  }
+});
+
 test('redirected or non-JSON responses and invalid UTF-8 are unavailable', async () => {
   for (const response of [() => new Response('<html>login</html>'),
+    ...['text/html', 'application/jsonx', 'application/json-seq', 'application/x-json',
+      'application/json+xml', 'application/json\u00a0; charset=utf-8'].map(contentType =>
+      () => new Response(JSON.stringify(board()), {headers:{'content-type':contentType}})),
     () => {const r=Response.json(board());Object.defineProperty(r,'redirected',{value:true});return r;},
     () => new Response(new Uint8Array([0xff,0xfe]),{headers:{'content-type':'application/json'}})]) {
     const value = await readGspcEvidence({axis:'governance'}, {fetchImpl:async()=>response(), now});

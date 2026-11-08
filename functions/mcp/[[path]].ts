@@ -18,6 +18,7 @@ import {
 import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/server/validators/cf-worker";
 import { MCP_MAX_REQUEST_BYTES, MCP_MAX_TOOL_INPUT_ELEMENTS, readBoundedJsonText, withinJsonBudget } from "./_input_budget";
 import GSPC_TOOLS from "./gspc-tools.json";
+import { toolsListResult } from "./_tools_list";
 import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import NPM_CAPTURE from "../../distribution/npm/npm-publish-check.json";
 import { doorInstallLine, npmReleaseState } from "../../scripts/harness-x/npm-release-state.mjs";
@@ -170,7 +171,8 @@ function buildMcp(
       capabilities: { tools: { listChanged: false } },
       cacheHints: {
         "server/discover": { ttlMs: 300_000, cacheScope: "public" },
-        "tools/list": { ttlMs: 300_000, cacheScope: "public" },
+        // Named selections and the full catalogue must never share a cached result.
+        "tools/list": { ttlMs: 0, cacheScope: "public" },
       },
     });
     registerWorkingGroups(server);
@@ -218,9 +220,7 @@ function buildMcp(
         },
         (args) => verifyToolResult(args, origin),
       );
-    server.server.setRequestHandler("tools/list", () => ({
-      tools: definitions,
-    }));
+    server.server.setRequestHandler("tools/list", (request) => toolsListResult(definitions, request.params));
     return server;
   },
   { legacy: "stateless", maxSubscriptions: 0, maxRequestBodySize: MCP_MAX_REQUEST_BYTES },
