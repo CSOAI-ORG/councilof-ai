@@ -449,9 +449,9 @@
     {
       "id": "board-counts",
       "kind": "a2a_skill",
-      "name": "board-counts",
-      "description": "",
-      "description_state": "UNDOCUMENTED",
+      "name": "Count grammar — every published count, labelled",
+      "description": "SendMessage answers with GET /api/counts: every published count (board slots vs measurements, frozen-bank models, own model tags, card matrix, signed public root, signed card index) with its entry, source, as_of, what it means and how to quote it. A NOT_READ row is a read that failed, never a zero; figures are never summed or reconciled — where two surfaces disagree, the disagreement is the finding. Quote the ONE figure whose meaning answers the question.",
+      "description_state": "DOCUMENTED",
       "audience": "agent",
       "lifecycle": "LIVE",
       "payment": "free",
@@ -467,7 +467,12 @@
         ],
         "safe": false,
         "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
-      }
+      },
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"board-counts\",\"input\":{}}",
+        "Legacy compatibility: one text Part containing exactly \"counts\"",
+        "GET /api/counts — the same grammar, outside A2A"
+      ]
     },
     {
       "id": "card-status-link",
@@ -727,40 +732,6 @@
       "kind": "a2a_skill",
       "name": "Signed GSPC Board",
       "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
-      "description_state": "DOCUMENTED",
-      "audience": "agent",
-      "lifecycle": "LIVE",
-      "payment": "free",
-      "schema_refs": [],
-      "surfaces": [
-        "a2a",
-        "llms"
-      ],
-      "probe": {
-        "method": "POST",
-        "request": "/api/a2a",
-        "expect_status": [
-          200
-        ],
-        "safe": false,
-        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
-      },
-      "tags": [
-        "measurement",
-        "governance",
-        "verification"
-      ],
-      "examples": [
-        "SendMessage with Part.data {\"skill\":\"gspc-board\",\"input\":{}}",
-        "Legacy compatibility: one text Part containing exactly \"board\"",
-        "GET /api/gspc — the same board, outside A2A"
-      ]
-    },
-    {
-      "id": "board-counts",
-      "kind": "a2a_skill",
-      "name": "Count grammar — every published count, labelled",
-      "description": "SendMessage answers with GET /api/counts: every published count (board slots vs measurements, frozen-bank models, own model tags, card matrix, signed public root, signed card index) with its source, as_of, what it means and how to quote it. A NOT_READ row is a read that failed, never a zero; figures are never summed or reconciled — where two surfaces disagree, the disagreement is the finding. Quote the ONE figure whose meaning answers the question.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
       "lifecycle": "LIVE",
