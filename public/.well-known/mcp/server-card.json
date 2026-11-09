@@ -8,7 +8,7 @@
     "title": "Council of AI — GSPC Measurement Tools",
     "version": "1.4.4"
   },
-  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.4 (io.github.CSOAI-ORG/gspc is its deprecated alias). 47 free tools at /mcp/free; 52 at /mcp (47 free + 5 metered). The npm package is versioned separately.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.4 (io.github.CSOAI-ORG/gspc is its deprecated alias). 49 free tools at /mcp/free; 54 at /mcp (49 free + 5 metered). The npm package is versioned separately.",
   "icon_url": "https://councilof.ai/csoai-icon.svg",
   "provider": {
     "name": "CSOAI Ltd",
@@ -24,11 +24,10 @@
     "mcp": {
       "primary": "https://councilof.ai/mcp",
       "current": "https://councilof.ai/mcp",
-      "stdio": null,
-      "stdio_note": "npm csoai-gspc-mcp: published releases are deprecated on npm and carry fewer tools; use the free door https://councilof.ai/mcp/free",
-      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is 52: 47 free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
+      "stdio": "npx -y csoai-gspc-mcp@0.2.7",
+      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is 54: 49 free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.4.",
       "free": "https://councilof.ai/mcp/free",
-      "free_note": "https://councilof.ai/mcp/free serves the 47 free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
+      "free_note": "https://councilof.ai/mcp/free serves the 49 free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -85,19 +84,21 @@
       "axis_interpretability-reproducibility",
       "axis_claim-maintenance",
       "axis_serving-fidelity",
+      "axis_watchdog-ingest",
+      "framework_readiness",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch",
       "evidence_bundle"
     ],
-    "total_tools": 52,
-    "free_tools": 47,
+    "total_tools": 54,
+    "free_tools": 49,
     "metered_tools": 5,
-    "tool_counts": "47 free tools at /mcp/free; 52 at /mcp (47 free + 5 metered). The npm package is versioned separately.",
+    "tool_counts": "49 free tools at /mcp/free; 54 at /mcp (49 free + 5 metered). The npm package is versioned separately.",
     "streaming": false,
     "auth_required": false,
-    "tool_names_sha256": "224e89713b8a337b4e372cf96ec98abf9cb2c33d5aefda06921b6457dee204be",
+    "tool_names_sha256": "411dee1bb0ae9e643fb9fbb5f2919f1da18e7dc2abc0cf002427e25e856cf186",
     "free_door_tool_names": [
       "board_totals",
       "get_axis",
@@ -145,9 +146,11 @@
       "axis_regulator-transparency",
       "axis_interpretability-reproducibility",
       "axis_claim-maintenance",
-      "axis_serving-fidelity"
+      "axis_serving-fidelity",
+      "axis_watchdog-ingest",
+      "framework_readiness"
     ],
-    "free_door_tool_names_sha256": "9f9f2ff6217999a52008c54105c1ca8eb55bd2fcac10f8bc7cd1599b7585a31e",
+    "free_door_tool_names_sha256": "3db0a725b22ea8d9859968e179cc31d7813a9bf3041be5969de8d0d27bfb3688",
     "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
     "derived_from": "tools/list of https://councilof.ai/mcp (functions/mcp/gspc-tools.json + paid-tools.json) and of https://councilof.ai/mcp/free (gspc-tools.json)"
   },
@@ -3237,6 +3240,169 @@
       }
     },
     {
+      "name": "axis_watchdog-ingest",
+      "title": "watchdog-ingest axis (live GSPC board)",
+      "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "LIVE, NOT_ON_BOARD or UNREACHABLE"
+          },
+          "axis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measured": {
+            "type": "boolean"
+          },
+          "family": {},
+          "n": {},
+          "accuracy": {},
+          "interval": {},
+          "leader": {},
+          "dataset": {},
+          "source": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "watchdog-ingest axis (live GSPC board)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "framework_readiness",
+      "title": "Framework readiness checklist",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "framework": {
+            "type": "string",
+            "enum": [
+              "eu-ai-act",
+              "dora",
+              "nis2",
+              "gdpr",
+              "iso-27001",
+              "nist-csf",
+              "soc2",
+              "pci-dss",
+              "cra"
+            ],
+            "description": "The framework to check readiness against. Required."
+          },
+          "sector": {
+            "type": "string",
+            "description": "Optional sector word (e.g. finance, healthcare, energy). Adds a pointer to which frameworks commonly bind the sector; never a scope determination."
+          },
+          "role": {
+            "type": "string",
+            "description": "Optional free-text role (e.g. deployer, provider). Echoed for your notes; the tool does not determine which duties attach."
+          }
+        },
+        "required": [
+          "framework"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "OK or BAD_ARGUMENTS"
+          },
+          "framework": {
+            "type": "string"
+          },
+          "framework_label": {
+            "type": "string"
+          },
+          "what_this_is": {
+            "type": "string"
+          },
+          "header": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          },
+          "not_legal_advice": {
+            "type": "boolean"
+          },
+          "item_count": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "description": "Checklist items: id, provision, requirement, evidence_suggested, opens_question"
+          },
+          "provenance": {
+            "type": "array",
+            "description": "Published sources a reader can check without an account"
+          },
+          "sector": {
+            "type": "string"
+          },
+          "sector_note": {
+            "type": "string"
+          },
+          "sector_frameworks": {
+            "type": "array"
+          },
+          "role": {
+            "type": "string"
+          },
+          "role_note": {
+            "type": "string"
+          },
+          "how_to_use": {
+            "type": "array"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "Framework readiness checklist",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
       "name": "commission_card",
       "title": "Commission a measurement card (paid, x402)",
       "annotations": {
@@ -3305,12 +3471,58 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value (base64 x402 payload) signed by your wallet against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
-        "required": [
-          "subject"
-        ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "subject"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
       "csoai": {
         "paid": true,
@@ -3402,6 +3614,43 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
         "additionalProperties": false
@@ -3486,12 +3735,58 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
-        "required": [
-          "asset"
-        ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "asset"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
       "csoai": {
         "paid": true,
@@ -3577,12 +3872,58 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
-        "required": [
-          "from"
-        ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "from"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
       "csoai": {
         "paid": true,
@@ -3674,12 +4015,58 @@
           "x_payment": {
             "type": "string",
             "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          },
+          "purchase_action": {
+            "type": "string",
+            "enum": [
+              "history",
+              "recover",
+              "decisions",
+              "accept",
+              "reject",
+              "request_correction"
+            ],
+            "description": "Selfserve account-owned purchase action. Use Council bearer transport, omit x_payment; no new financial/provider action."
+          },
+          "purchase_transaction": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "purchase_result_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "purchase_result_version": {
+            "type": "string"
+          },
+          "purchase_request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Idempotency id for the same exact decision intent, or exact id lookup when reading decisions. Never change inputs on an unknown write."
+          },
+          "purchase_cursor": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Owner-scoped history/decision page cursor; do not combine with exact decision id."
+          },
+          "purchase_reason": {
+            "type": "string",
+            "maxLength": 2000
           }
         },
-        "required": [
-          "obligation"
-        ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "obligation"
+            ]
+          },
+          {
+            "required": [
+              "purchase_action"
+            ]
+          }
+        ]
       },
       "csoai": {
         "paid": true,
@@ -3700,7 +4087,7 @@
   "license": "CC-BY-4.0",
   "doi": "10.5281/zenodo.21991104",
   "doi_status": "UNAVAILABLE",
-  "doi_status_note": "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
+  "doi_status_note": "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json).",
   "doi_status_since": "2026-09-29T15:47Z",
   "doi_status_url": "https://councilof.ai/interop/zenodo-status.json",
   "doi_alternative": {
@@ -3716,7 +4103,8 @@
   ],
   "discovery": {
     "well_known_mcp": "https://councilof.ai/.well-known/mcp.json",
-    "agent_card": "https://councilof.ai/.well-known/agent-card.json"
+    "agent_card": "https://councilof.ai/.well-known/agent-card.json",
+    "catalog": "https://councilof.ai/catalog.json"
   },
   "doctrine": {
     "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",

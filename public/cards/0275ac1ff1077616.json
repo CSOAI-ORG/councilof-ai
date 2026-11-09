@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-24T09:37:39Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "anthropic",
+      "surface": "safety_policy",
+      "url": "https://www.anthropic.com/responsible-scaling-policy",
+      "prev_sha256": "1a4246a783d024febb989ff3fd3a056b138395cc6053ff4e83cfdb67dd55a385",
+      "new_sha256": "33b18f6b588cc1b49527723532ec8878ead0fd07e1fc55c016c42e7cddfa9d4f",
+      "prev_bytes_sha256": "9f1fefdccc539f3252535ec27666e338ac44e32a5bf9102df81db8548ffff45f",
+      "new_bytes_sha256": "46fea59f54a6700823bd77e808a58bfbf748eac8fbdf8afa90c15b5362084405",
+      "prev_fetched_at": "2026-09-14T10:50:14Z",
+      "fetched_at": "2026-10-24T09:37:39Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 221712,
+        "new": 244396
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "0275ac1ff107761693eaafbc5913a05ccc303771ba31d77267038499661b35e7",
+    "sig_ed25519": "74225a2a3e848a03afbd7f53e0d72fbbb856f1c39d10a005370a20da17a8a8f6929f8d8ec399c23f6757ad3b4c978c10bc05716214023c449651caa21b8de90e",
+    "source_urls": [
+      "https://www.anthropic.com/responsible-scaling-policy"
+    ],
+    "subject": "Anthropic — safety_policy: bytes changed 2026-10-24",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:anthropic",
+      "surface:safety_policy",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "bad7a35bf5c32fa0c52987b06fa5653d8806a4cc54827c9980b51cc4ba5cefa8",
+    "5fc577b44f6f4ba608f89d180426cc9ace4566e396853737e32877208298bb6c",
+    "47a260803a89817d830094bae1310e6c9637f9a611747e237d7017dd5f8d13d3",
+    "6f6ea7df4417a4b5bdfa0abc681c1e88edb4fa96bd265541e552e43ae9e97dde",
+    "7acbe8cc5eb405162121bb05ae00bf55e8241ed0194ace0616b5cf3d696f8529",
+    "d1ea25613e7b15c95ddd16fa326bc3e1a46b5af7ead2e19e898b9a13568b2fff",
+    "87e5d3cd8ea1c00452fac9bb40ba4208fd22da43bce146daf1cd507a6c54c2c7",
+    "a47307729f5473b1a13847bb11bae3a22a6434d07b0d4de66db24b5fd6ec6322",
+    "d597ef7d16c1efe2952119b07c89a3d92ef2b8e287b8dbb4c4665d92174104ad"
+  ]
+}

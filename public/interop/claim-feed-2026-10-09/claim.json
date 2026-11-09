@@ -1,0 +1,52 @@
+{
+  "schema": "csoai.maintained-claim/0.1",
+  "id": "csoai:claim:gspc-board-totals-23-23",
+  "subject": "GSPC board totals (councilof.ai)",
+  "assertion": "board totals 23 axes \u00b7 23 measured",
+  "asserted_values": {
+    "totals.axes": 23,
+    "totals.measured_axes": 23
+  },
+  "source": "https://councilof.ai/api/gspc",
+  "source_fields": [
+    "totals.axes",
+    "totals.measured_axes"
+  ],
+  "source_sha256_at_as_of": "ea6dcbc9baaf602ff85f28c8c9668a02bf1c6f89dbf15a609921a360f022953e",
+  "as_of": "2026-10-09T04:07:30Z",
+  "state": "FRESH",
+  "states": {
+    "FRESH": "a readback succeeded and matches every asserted value",
+    "STALE": "a readback succeeded and no longer matches an asserted value (the claim drifted from its source)",
+    "SUPERSEDED": "a dated record in SUPERSEDED.jsonl replaces this claim; read that record instead",
+    "WITHDRAWN": "a dated record in SUPERSEDED.jsonl withdraws this claim; do not repeat it as current",
+    "UNVERIFIABLE": "the readback could not be taken (fetch failed or source unreadable). Never render this as STALE, 0 or null"
+  },
+  "exit_codes": {
+    "0": [
+      "FRESH"
+    ],
+    "2": [
+      "STALE",
+      "SUPERSEDED",
+      "WITHDRAWN"
+    ],
+    "3": [
+      "UNVERIFIABLE"
+    ]
+  },
+  "supersession_ledger": "SUPERSEDED.jsonl",
+  "supersession_worked_example": "C-2026-0925-01 (did.json custody): a separated-custody claim was withdrawn with dated provenance and 5 OSAIA threads (#18 #27 #37 #38 #66) held until corrected; see README.md and SUPERSEDED.jsonl",
+  "out_of_scope": [
+    "budget",
+    "expiry",
+    "retry"
+  ],
+  "cites": [
+    "https://councilof.ai/api/gspc",
+    "https://councilof.ai/.well-known/did.json",
+    "https://councilof.ai/api/corrections"
+  ],
+  "maintained_by": "CSOAI Ltd (UK, Companies House 16939677)",
+  "note": "Measurement, never certification. Counts are pointers with an as_of, not permanent totals. Corrections supersede with dated provenance; this envelope claims no storage property of any ledger."
+}

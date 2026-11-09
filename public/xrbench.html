@@ -11,12 +11,12 @@
 <meta property="og:description" content="CSOAI — xrbench on the AI measurement board. Measurement, not certification." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://councilof.ai/xrbench" />
-<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta property="og:image" content="https://councilof.ai/og-image.png" />
 <meta property="og:site_name" content="CSOAI Ltd" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Xrbench — Council of AI" />
 <meta name="twitter:description" content="CSOAI — xrbench on the AI measurement board. Measurement, not certification." />
-<meta name="twitter:image" content="https://councilof.ai/og-default.png" />
+<meta name="twitter:image" content="https://councilof.ai/og-image.png" />
 <meta name="theme-color" content="#16a34a" />
 <script type="application/ld+json">
 {
@@ -478,15 +478,15 @@ TOKEN = re.compile(<span class="s">r"\b(PROCEED|CONFIRM|REFUSE)\b"</span>, re.I)
 <b>UNPARSEABLE</b> and is excluded, never counted as a wrong label. A bank with too few scored
 items is <b>UNMEASURED</b> and returns no number. A frozen split of n ≥ 30 scored per item returns
 <b>MEASURED</b> — but a measured bank is only <i>quotable</i> when its board separates the models
-above the 0.15 floor. XRBench is MEASURED at n = 32 and, today, below that floor.</div>
+above the 0.15 floor. XRBench is recorded as MEASURED at n = 32 and below that floor.</div>
 
-<h2>The chain — 5 of 10 complete</h2>
+<h2>Implementation status — 5 of 10 complete</h2>
 <ul class="chain"><li class="on"><b>●</b> items published and loadable</li><li class="on"><b>●</b> card with a licence</li><li class="">○ Hugging Face Space</li><li class="">○ the Space is a tool</li><li class="">○ Kaggle mirror</li><li class="on"><b>●</b> page on this site</li><li class="">○ the page is a tool</li><li class="on"><b>●</b> scorer / harness task published</li><li class="">○ Inspect task</li><li class="on"><b>●</b> measured against a board (not yet discriminating)</li></ul>
-<p class="lede" style="font-size:.85rem;margin-top:.8rem">A measure with a scored bank but no
-discriminating board is a measurement without a ranking. This list is the honest state of the
-lane: the bank is published and scored at n = 32, the scorer is written and this page exists; the
-Space, the Kaggle mirror, and a board that separates models do not yet. This list is meant to be
-measured live, not asserted.</p>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">A scored bank without a discriminating comparison does not establish a ranking.
+This record lists the published implementation status: the bank is scored at n = 32,
+the reference scorer is available and this page is published. The Space, Kaggle mirror
+and a board separating the models are not established here. These are recorded statuses,
+not a live availability check.</p>
 
 <div style="margin:1.4rem 0"><a class="btn" href="https://huggingface.co/datasets/csoai/gspc-xr">The bank ↗</a><a class="btn ghost" href="/govbench">See a quotable lane: GovBench →</a><a class="btn ghost" href="/arena">← Back to the Arena</a></div>
 

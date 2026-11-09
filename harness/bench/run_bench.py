@@ -288,6 +288,7 @@ def main() -> int:
               f"runner, and that refusal is the correct outcome, not a failure.", file=sys.stderr)
         return 2
 
+    bank_items_total = len(items)
     if args.limit and args.limit < len(items):
         items = items[: args.limit]
 
@@ -297,13 +298,20 @@ def main() -> int:
     answers: list[str | None] = [None] * len(items)
     if args.answers:
         try:
+            seen = set()
             for line in Path(args.answers).read_text(encoding="utf-8").splitlines():
                 if not line.strip():
                     continue
                 d = json.loads(line)
-                i = int(d.get("index", -1))
-                if 0 <= i < len(items):
-                    answers[i] = str(d.get("answer", ""))
+                if not isinstance(d, dict):
+                    raise ValueError("each answer must be a JSON object")
+                i = d.get("index")
+                if type(i) is not int or not 0 <= i < len(items) or i in seen:
+                    raise ValueError("answer indices must be unique integers within the evaluated bank")
+                if not isinstance(d.get("answer"), str):
+                    raise ValueError("answer must preserve the original reply as a string")
+                seen.add(i)
+                answers[i] = d["answer"]
         except (OSError, json.JSONDecodeError, ValueError) as e:
             print(f"run_bench: could not read --answers: {e}", file=sys.stderr)
             return 2
@@ -325,22 +333,22 @@ def main() -> int:
     # ── grade, with the estate's grader ────────────────────────────────────────────────
     rows, hits, unparsed = [], 0, 0
     for i, ((text, expected), prompt, ans) in enumerate(zip(items, prompts, answers)):
-        if ans is None:
-            unparsed += 1
-            continue
-        got = MILL.read_label(ans, labels)
+        got = MILL.read_label(ans, labels) if ans is not None else None
         if got is None:
             # Not an answer, and NOT a wrong answer. It leaves the denominator.
             unparsed += 1
             rows.append({"index": i, "expected": expected.strip().upper(), "observed": None,
-                         "ok": None, "unparsed": True, "answer": (ans or "")[:400],
+                         "ok": None, "unparsed": True, "answer": ans or "",
+                         "answer_sha256": hashlib.sha256(ans.encode()).hexdigest() if ans is not None else None,
+                         "answer_missing": ans is None,
                          "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest()})
             continue
         ok = got == expected.strip().upper()
         if ok:
             hits += 1
         rows.append({"index": i, "expected": expected.strip().upper(), "observed": got,
-                     "ok": ok, "unparsed": False, "answer": (ans or "")[:400],
+                     "ok": ok, "unparsed": False, "answer": ans,
+                     "answer_sha256": hashlib.sha256(ans.encode()).hexdigest(), "answer_missing": False,
                      "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest()})
 
     n = len(items) - unparsed
@@ -356,12 +364,17 @@ def main() -> int:
         "model": args.model,
         "grader": "gspc-top100.mill_hub_queue.read_label",
         "grader_source": "harness/gspc-top100/mill_hub_queue.py read_label() — imported, not copied",
+        "grader_source_sha256": hashlib.sha256(Path(MILL.__file__).read_bytes()).hexdigest(),
         "prompt_builder": "gspc-top100.mill_hub_queue.axis_prompt() — imported, not copied",
         "items_total": len(items),
+        "bank_items_total": bank_items_total,
+        "evaluation_scope": "full-bank" if len(items) == bank_items_total else "partial-prefix",
         "items_graded": n,
         "items_unparsed": unparsed,
         "hits": hits,
         "accuracy": round(acc, 4) if acc is not None else None,
+        "accuracy_over_all_items": round(hits / len(items), 4),
+        "wilson95_over_all_items": wilson(hits, len(items)),
         "wilson95": wilson(hits, n),
         "label_vocabulary": labels,
         "label_vocabulary_source": "the bank's own `expected` values, read from the fetched bytes",
@@ -378,7 +391,7 @@ def main() -> int:
         print(f"run_bench: {axis} / {args.model}: {hits}/{n} = "
               f"{acc if acc is None else round(acc, 4)} ({unparsed} unparsed) -> {args.out}",
               file=sys.stderr)
-    return 0 if n > 0 else 2
+    return 2 if n == 0 else 3 if unparsed else 0
 
 
 if __name__ == "__main__":

@@ -1,0 +1,29 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___________ test_ui_approval_does_not_override_host_denial[unissued] ___________
+harness/authority_adapters/test_strands.py:123: in test_ui_approval_does_not_override_host_denial
+    assert host.readback() == []
+E   AssertionError: assert [{'text': 'reviewed'}] == []
+E     
+E     Left contains one more item: {'text': 'reviewed'}
+E     Use -v to get more diff
+__________ test_sdk_approval_does_not_override_host_denial[unissued] ___________
+harness/authority_adapters/test_openai.py:107: in test_sdk_approval_does_not_override_host_denial
+    asyncio.run(run())
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+harness/authority_adapters/test_openai.py:104: in run
+    with pytest.raises(UserError) as failure:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE UserError
+=========================== short test summary info ============================
+FAILED harness/authority_adapters/test_strands.py::test_ui_approval_does_not_override_host_denial[unissued]
+FAILED harness/authority_adapters/test_openai.py::test_sdk_approval_does_not_override_host_denial[unissued]
+2 failed in 1.66s

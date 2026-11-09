@@ -45,6 +45,16 @@ function stubStatic(facilitator?: (u: string) => Response, overrides: Record<str
     return new Response("nope", { status: 404 });
   });
 }
+// Paid model commissions require the same acknowledged queue binding as production.
+// This isolated in-memory fixture retains the exact intent written by the handler.
+function commissionStore() {
+  const records = new Map<string, string>();
+  const kv = {
+    get: vi.fn(async (key: string) => records.get(key) ?? null),
+    put: vi.fn(async (key: string, value: string) => { records.set(key, value); }),
+  };
+  return { records, kv };
+}
 afterEach(() => vi.unstubAllGlobals());
 
 describe("Tier 1 — /api/request-attestation", () => {
@@ -83,7 +93,8 @@ describe("Tier 1 — /api/request-attestation", () => {
       new Response(JSON.stringify(p.endsWith("/verify") ? { isValid: true } : { success: true, transaction: "0xtx", network: "base", payer: "0xp" })),
     );
     const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));
-    const r = await ras(ctx("/api/request-attestation?subject=qwen3&api_key=DO_NOT_PUBLISH", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
+    const { records, kv } = commissionStore();
+    const r = await ras(ctx("/api/request-attestation?subject=qwen3&api_key=DO_NOT_PUBLISH", { X402_FACILITATOR_URL: "https://f.example", REVENUE_KV: kv }, { "x-payment": hdr }));
     expect(r.status).toBe(200);
     expect(r.headers.get("x-payment-response")).toBeTruthy();
     const b = await r.json();
@@ -94,7 +105,10 @@ describe("Tier 1 — /api/request-attestation", () => {
     expect(b.card.source_urls).toContain("https://basescan.org/tx/0xtx");
     expect(b.card.source_urls[0]).toBe("https://councilof.ai/api/request-attestation?subject=qwen3");
     expect(JSON.stringify(b)).not.toContain("DO_NOT_PUBLISH");
-    expect(b.card.payload).toMatchObject({ status: "COMMISSIONED", reserve_count: 2, fresh_run: "UNMEASURED" });
+    expect(b.card.payload).toMatchObject({ status: "COMMISSIONED", reserve_count: 2, fresh_run: "UNMEASURED", enqueued: true });
+    expect(JSON.parse(records.get("mill:commission:qwen3")!)).toMatchObject({
+      subject: "qwen3", model: "qwen3", tx: "0xtx", status: "QUEUED", card_sha: b.card.sha256,
+    });
     expect(b.bytes).toBeLessThanOrEqual(3072);
     expect(JSON.stringify(b.card)).not.toMatch(/accuracy/);
   });
@@ -114,11 +128,15 @@ describe("Tier 1 — /api/request-attestation", () => {
       { "/signed/card-matrix.json": { as_of: "2026-09-12T00:00:00Z", cells } },
     );
     const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));
-    const r = await ras(ctx("/api/request-attestation?subject=target-model", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
+    const { records, kv } = commissionStore();
+    const r = await ras(ctx("/api/request-attestation?subject=target-model", { X402_FACILITATOR_URL: "https://f.example", REVENUE_KV: kv }, { "x-payment": hdr }));
     expect(r.status).toBe(200);
     const b = await r.json();
     expect(b.card.payload.reserve).toHaveLength(24);
-    expect(b.card.payload).toMatchObject({ reserve_count: 30, reserve_returned: 24, reserve_limit: 24 });
+    expect(b.card.payload).toMatchObject({ reserve_count: 30, reserve_returned: 24, reserve_limit: 24, enqueued: true });
+    expect(JSON.parse(records.get("mill:commission:target-model")!)).toMatchObject({
+      subject: "target-model", model: "target-model", tx: "0xtx", status: "QUEUED", card_sha: b.card.sha256,
+    });
   });
 });
 
@@ -216,6 +234,8 @@ describe("catalog + discovery", () => {
       // #2783 (2026-10-01): the zero-priced named-subject discovery doors, one catalogue row.
       "subject_discovery",
       "issuance",
+      // TUI-2 coverage-evidence door (PR #3097): assembled row, tier coverage_evidence.
+      "coverage_evidence",
       "evidence_bundle",
       "data_feed",
       "proof_bundle",

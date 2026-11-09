@@ -543,9 +543,21 @@ PRICE_CTX = re.compile(r"pric|cost|per\s+(?:call|request|card|query|month|year|s
 PRICE_OK = re.compile(r"penalt|\bfines?\b|turnover|market cap|supply|TVL|AUM|outstanding|reserve|raised|grant|settled|revenue|payers?\b|received", re.I)
 
 
-def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3):
+def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3, exempt=None):
+    """exempt(text, match) -> True means the match is not a claim at all.
+
+    This is NOT the negation escape. The negation escape says "we did not
+    certify"; this says the sentence's STRUCTURE makes the word the object
+    of a denial -- "distinguishes X from certification", "explicitly
+    excludes: ... certification". It is passed in by the caller, so the
+    public-notice path is unaffected: a notice that says "fails" is
+    telling a reader something, and the notice word list has no negation
+    escape BY DESIGN.
+    """
     hits = []
     for m in rx.finditer(text):
+        if exempt is not None and exempt(text, m):
+            continue
         w0 = text[max(0, m.start() - before): m.start()]
         w1 = text[m.end(): m.end() + after]
         if text[max(0, m.start() - 4): m.start()].lower().endswith(("non-", "non ")):
@@ -571,19 +583,14 @@ def brand_enforce_held():
     return os.environ.get("BRAND_GATE_ENFORCE_HELD") == "1"
 
 
-def doctrine_checks(text, path="", owner=OWN_DOCTRINE, prices=False):
+def doctrine_checks(text, path="", owner=OWN_DOCTRINE, prices=False, exempt=None):
     """`path` is the BUILT path of the artifact (built_path() for a served page), as brand-gate.mjs sees it."""
     out = []
-    # The corrections ledger states what we published and got wrong, so an entry has to quote it
-    # ("Some pages offered or implied certification ...", "Two priced strings ($0.005/card ...)").
-    # brand-gate.mjs exempts exactly that one built path from the rules its entries quote; the two word
-    # checks below are this gate's own and had no such exemption, so the ledger could never score 100%
-    # without deleting a correction.
     quoted = quotes_withdrawn_copy(path)
     if quoted:
         out.append(R("doctrine.no_certify_language", NA, LEDGER_NA))
     else:
-        h = _hits(text, CERT, before=140, after=80)
+        h = _hits(text, CERT, before=140, after=80, exempt=exempt)
         out.append(R("doctrine.no_certify_language", FAIL if h else PASS,
                      ("certify/compliant/accredited/endorsed used without negation: " + " | ".join(h)) if h else "none found", owner))
     if prices and quoted:
@@ -1074,40 +1081,116 @@ def text_surface_artifacts(ctx, lc, sitemap_sample):
 
 
 # ------------------------------------------------------------------------------ AGENT SURFACES
+# A2A specification 8.4.1 and 8.4.3 step 3 (a2aproject/A2A @ 72b3761b, specification/a2a.proto):
+# "Remove properties with default values from the received Agent Card" before canonicalising. A field
+# that is neither REQUIRED nor `optional` has no presence, so its proto default ("" / false / 0 / [] /
+# {}) is not signed content. Only those fields are listed here. REQUIRED, `optional` and message-typed
+# fields are kept as served, and so is every key the proto does not define.
+# Until 2026-10-13 this gate skipped the step and canonicalised the card as served. Our card carries
+# `"required": false` on three AgentExtension entries, so the gate rebuilt a payload nobody had signed
+# and reported InvalidSignature for a card that verifies. scripts/verify_agent_card_jws.py (which the
+# test file pins this table to) and the signer both remove them.
+A2A_NO_PRESENCE = {
+    "AgentCard": ("securitySchemes", "securityRequirements", "signatures"),
+    "AgentCapabilities": ("extensions",),
+    "AgentExtension": ("uri", "description", "required"),
+    "AgentSkill": ("examples", "inputModes", "outputModes", "securityRequirements"),
+    "AgentInterface": ("tenant",),
+}
+A2A_NESTED = {
+    "AgentCard": {"supportedInterfaces": "AgentInterface", "capabilities": "AgentCapabilities", "skills": "AgentSkill"},
+    "AgentCapabilities": {"extensions": "AgentExtension"},
+}
+# Default removal INSIDE these is not modelled (our card declares neither). A card that used them
+# could read FAIL here for that reason alone, so a failing detail says when they are present.
+A2A_UNMODELLED = ("securitySchemes", "securityRequirements")
+
+
+def a2a_drop_defaults(node, msg="AgentCard"):
+    out = {}
+    for k, v in node.items():
+        if k in A2A_NO_PRESENCE.get(msg, ()) and (v is False or v == "" or v == [] or v == {} or (type(v) is int and v == 0)):
+            continue
+        sub = A2A_NESTED.get(msg, {}).get(k)
+        if sub and isinstance(v, dict):
+            v = a2a_drop_defaults(v, sub)
+        elif sub and isinstance(v, list):
+            v = [a2a_drop_defaults(e, sub) if isinstance(e, dict) else e for e in v]
+        out[k] = v
+    return out
+
+
+def a2a_signed_payload(card):
+    """A2A 8.4.3 steps 3 to 5: drop default-valued properties, drop `signatures`, canonicalise.
+    canon() equals RFC 8785 for what an AgentCard holds (strings, booleans, integers, BMP keys)."""
+    return canon(a2a_drop_defaults({k: v for k, v in card.items() if k != "signatures"}))
+
+
+class CardSigError(Exception):
+    """A reason this gate can state in words (anything else is reported by its exception type)."""
+
+
+def _jws_sig_ok(s, hdr, payload_b64, did, http):
+    """One AgentCardSignature against one payload. Raises when it does not verify."""
+    m = (s["protected"] + "." + payload_b64).encode()
+    sigb = b64u(s["signature"])
+    if hdr.get("alg") in ("EdDSA", "Ed25519"):
+        pk = did.key(hdr.get("kid") or "")
+        if pk is None and hdr.get("jku"):
+            j = http.get(hdr["jku"]).json()
+            k = [k for k in j.get("keys", []) if k.get("kid") == hdr.get("kid")][0]
+            from cryptography.hazmat.primitives.asymmetric import ed25519
+            pk = ed25519.Ed25519PublicKey.from_public_bytes(b64u(k["x"]))
+        if pk is None:
+            raise CardSigError("key not in did.json and no jku")
+        pk.verify(sigb, m)
+        return
+    if hdr.get("alg") == "ES256":
+        from cryptography.hazmat.primitives.asymmetric import ec, utils
+        from cryptography.hazmat.primitives.hashes import SHA256
+        j = http.get(hdr["jku"]).json()
+        k = [k for k in j.get("keys", []) if k.get("kid") == hdr.get("kid")][0]
+        i = lambda b: int.from_bytes(b, "big")
+        pub = ec.EllipticCurvePublicNumbers(i(b64u(k["x"])), i(b64u(k["y"])), ec.SECP256R1()).public_key()
+        pub.verify(utils.encode_dss_signature(i(sigb[:32]), i(sigb[32:])), m, ec.ECDSA(SHA256()))
+        return
+    raise CardSigError(f"unsupported alg {hdr.get('alg')!r}")
+
+
 def verify_jws_card(card, did, http):
-    """A2A card signatures (JWS over RFC 8785 ~ sorted-key compact JSON of the card without 'signatures')."""
+    """A2A card signatures: a JWS (RFC 7515) over the RFC 8785 form of the card without `signatures`,
+    after the default-value removal of A2A 8.4.3 step 3. Only that reading is a PASS. A signature that
+    verifies only over the card as served (defaults kept) is a FAIL that says so: a client that follows
+    8.4.3 removes them and rejects it."""
     sigs = card.get("signatures") if isinstance(card, dict) else None
     if not sigs:
         return False, "card carries no signatures[]"
-    body = {k: v for k, v in card.items() if k != "signatures"}
-    payload = base64.urlsafe_b64encode(canon(body)).rstrip(b"=").decode()
+    b64 = lambda b: base64.urlsafe_b64encode(b).rstrip(b"=").decode()
+    spec = b64(a2a_signed_payload(card))
+    served = b64(canon({k: v for k, v in card.items() if k != "signatures"}))
+    why = []
     for s in sigs:
         try:
             hdr = json.loads(b64u(s["protected"]))
-            m = (s["protected"] + "." + payload).encode()
-            sigb = b64u(s["signature"])
-            if hdr.get("alg") in ("EdDSA", "Ed25519"):
-                pk = did.key(hdr.get("kid") or "")
-                if pk is None and hdr.get("jku"):
-                    j = http.get(hdr["jku"]).json()
-                    k = [k for k in j.get("keys", []) if k.get("kid") == hdr.get("kid")][0]
-                    from cryptography.hazmat.primitives.asymmetric import ed25519
-                    pk = ed25519.Ed25519PublicKey.from_public_bytes(b64u(k["x"]))
-                pk.verify(sigb, m)
-                return True, f"JWS {hdr.get('alg')} kid {hdr.get('kid')} verifies"
-            if hdr.get("alg") == "ES256":
-                from cryptography.hazmat.primitives.asymmetric import ec, utils
-                from cryptography.hazmat.primitives.hashes import SHA256
-                j = http.get(hdr["jku"]).json()
-                k = [k for k in j.get("keys", []) if k.get("kid") == hdr.get("kid")][0]
-                i = lambda b: int.from_bytes(b, "big")
-                pub = ec.EllipticCurvePublicNumbers(i(b64u(k["x"])), i(b64u(k["y"])), ec.SECP256R1()).public_key()
-                pub.verify(utils.encode_dss_signature(i(sigb[:32]), i(sigb[32:])), m, ec.ECDSA(SHA256()))
-                return True, f"JWS ES256 kid {hdr.get('kid')} verifies"
+            kid = hdr.get("kid")
         except Exception as e:
-            last = f"{type(e).__name__}"
+            why.append(f"unreadable protected header ({type(e).__name__})")
             continue
-    return False, f"no signature verifies ({locals().get('last', 'unsupported alg')})"
+        try:
+            _jws_sig_ok(s, hdr, spec, did, http)
+            return True, f"JWS {hdr.get('alg')} kid {kid} verifies (A2A 8.4.3: default values removed, RFC 8785)"
+        except Exception as e:
+            reason = str(e) if isinstance(e, CardSigError) else type(e).__name__
+        if served != spec:
+            try:
+                _jws_sig_ok(s, hdr, served, did, http)
+                reason = "verifies only with default-valued properties kept; A2A 8.4.3 step 3 removes them"
+            except Exception:
+                pass
+        why.append(f"kid {kid}: {reason}")
+    unmodelled = [k for k in A2A_UNMODELLED if card.get(k)]
+    return False, ("no signature verifies as an A2A 8.4 JWS (" + "; ".join(why) + ")"
+                   + (f"; card declares {unmodelled}, default removal inside them is not modelled by this gate" if unmodelled else ""))
 
 
 def agent_card_artifact(ctx):

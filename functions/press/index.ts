@@ -13,6 +13,7 @@ import { build } from "../api/press.json";
 import { caughtOf, remedyOf } from "../_lib/corrections-fields";
 import type { RevenueEnv } from "../api/revenue";
 import { headFromGet } from "../api/_head";
+import { OPERATING_ORGANISATION_SUMMARY } from "../../client/src/data/external-use";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 // Each command block scrolls sideways on a phone, so it is a keyboard stop with a name: a
@@ -53,6 +54,7 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
       { "@type": "PropertyValue", propertyID: "DID", value: "did:web:csoai.org" },
     ],
     url: "https://councilof.ai/",
+    description: OPERATING_ORGANISATION_SUMMARY,
   });
   const faqLd = JSON.stringify({
     "@context": "https://schema.org",
@@ -61,6 +63,14 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
   });
 
   const notAnnounced = d.not_announced.map((n) => `<article><h3>${esc(n.subject)} — <span class="u">${esc(n.state)}</span></h3><p>${esc(n.why)}</p>${pre(n.proof, `Check for ${n.subject}`)}</article>`).join("\n");
+
+  const researchHtml = d.research_notes.map((note) => `<article>
+<h3>${esc(note.title)}</h3>
+<p class="d">Document date: ${esc(note.document_date)} · ${esc(note.kind)}</p>
+<p>${esc(note.summary)}</p><p class="n">${esc(note.scope)}</p>
+<p><a href="${esc(note.note_url)}">Read the research note</a> · <a href="${esc(note.data_url)}">Questions and sources (JSON)</a></p>
+<p><a href="${esc(note.next_step.url)}">${esc(note.next_step.label)}</a>. ${esc(note.next_step.terms)}</p>
+</article>`).join("\n");
 
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -74,6 +84,11 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
 <meta property="og:title" content="Press — Council of AI">
 <meta property="og:description" content="What changed at the Council of AI, with the command that proves each line. Measurement, not certification.">
 <meta property="og:image" content="https://councilof.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://councilof.ai/press/">
+<meta name="twitter:title" content="Press — Council of AI">
+<meta name="twitter:description" content="What changed at the Council of AI, with the command that proves each line. Measurement, not certification.">
+<meta name="twitter:image" content="https://councilof.ai/og-image.png">
 <link rel="alternate" type="application/rss+xml" title="Corrections" href="https://councilof.ai/feeds/corrections.xml">
 <link rel="alternate" type="application/rss+xml" title="Signed cards" href="https://councilof.ai/feeds/cards.xml">
 <link rel="alternate" type="application/rss+xml" title="Public root" href="https://councilof.ai/feeds/roots.xml">
@@ -96,6 +111,8 @@ footer{margin-top:3rem;color:var(--mut);font-size:.85rem;border-top:1px solid va
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 </style></head><body><main>
 <h1>Press</h1>
+<p class="lede">${esc(OPERATING_ORGANISATION_SUMMARY)}</p>
+<p><a href="/traction/#external-use">Operation and documented external use</a>: dated examples of outside execution, implementation and technical citation, with primary sources and scope limits. These examples are separate from the measurement window and commercial records below.</p>
 <div style="border-left:3px solid #b45309;padding-left:1rem;margin:0 0 1.4rem">
 <p><strong>Press contact:</strong> Nicholas Templeman, founder — <a href="mailto:contact@csoai.org?subject=Press">contact@csoai.org</a></p>
 <p class="n">For deadline queries, include <strong>PRESS URGENT</strong> in the subject.</p>
@@ -104,6 +121,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 <p class="lede">${esc(d.doctrine)}</p>
 <p class="lede">Window <b>${esc(d.window.from)} → ${esc(d.window.to)}</b>. ${esc(d.window.derivation)}</p>
 ${pre(d.window.proof, "Command that derives this window")}
+
+<section aria-labelledby="research-heading">
+<h2 id="research-heading">Research notes</h2>
+<p class="n">Document reviews and proposed checks, separate from measured results and commercial outcomes below.</p>
+${researchHtml}
+</section>
 
 <h2>Corrections issued in this window — ${esc(c.value)} of ${esc(c.total)} total</h2>
 <p>${esc(c.note)}</p>

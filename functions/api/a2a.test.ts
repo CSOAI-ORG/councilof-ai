@@ -385,6 +385,36 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
     expect(json.error.message).toMatch(/redirected \(302\)/i);
   });
 
+  it("framework-readiness computes in-process — no fetch, shared module payload, honesty fields", async () => {
+    // The checklist is deterministic, so the skill calls readinessResult directly (the same
+    // module the MCP tool calls). No network: fetch must stay untouched on the happy path.
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { json } = await callSkill("framework-readiness", { framework: "dora", sector: "finance" });
+    expect(json.error).toBeUndefined();
+    expect(fetchMock).not.toHaveBeenCalled();
+    const data = json.result.message.parts[1].data;
+    expect(data).toMatchObject({
+      state: "DELIVERED_SOURCE",
+      skill: "framework-readiness",
+      source: expect.stringContaining("functions/mcp/_readiness.ts"),
+    });
+    expect(data.payload).toMatchObject({
+      state: "OK",
+      framework: "dora",
+      item_count: 6,
+      not_a_certification: true,
+    });
+    expect(data.payload.sector_note).toContain('For sector "finance"');
+    expect(json.result.message.parts[0].text).toContain("never a determination");
+    // An unknown framework is refused at validation, naming the accepted ids (the tool's own
+    // BAD_ARGUMENTS payload stays reachable only through the MCP door, which validates later).
+    const bad = await callSkill("framework-readiness", { framework: "hipaa" });
+    expect(bad.json.error.code).toBe(A2A_ERROR.INVALID_PARAMS);
+    expect(bad.json.error.message).toContain("must be one of:");
+    expect(bad.json.error.message).toContain("iso-27001");
+  });
+
   it("routes card-status-link with only an encoded immutable subject and card hash", async () => {
     const fetchMock = vi.fn(async () => Response.json({ measured: true }));
     vi.stubGlobal("fetch", fetchMock);

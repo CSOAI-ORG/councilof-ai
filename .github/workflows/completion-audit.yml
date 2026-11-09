@@ -1,0 +1,95 @@
+name: completion-audit
+
+# Re-measure the public completion audit and publish it.
+#
+# WHY THIS EXISTS. The audit was published once, on 2026-10-28, and was still
+# being served four days later with a root figure of 325 leaves while the live
+# root had moved to 326. A published measurement that nobody re-reads is a
+# snapshot pretending to be a fact. The estate's own rule - a green run is not
+# the invariant, a stated number that has drifted is worse than no number -
+# applies here exactly.
+#
+# WHAT IT DOES. Runs scripts/completion_audit.py, which PROBES the live surface
+# for every box and writes public/completion-audit.json plus the ledger under
+# docs/measurement/. If the measurement moved, it opens a PR and enables
+# auto-merge on it, so the gates decide - not this workflow, and not a human
+# reading a number. If nothing moved, it exits and the published audit is left
+# exactly as it is.
+#
+# IT NEVER PUSHES MASTER DIRECTLY. It opens a PR; the required checks
+# (gates, build, stamped-bytes, hold-guard) are the gate, and the merge queue
+# or auto-merge applies them.
+#
+# IT MEASURES, IT DOES NOT CLAIM. The audit carries the same not_claimed list,
+# and the probes report what they saw - including boxes that are open, and
+# boxes that only a human can close.
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: completion-audit
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: dig, so the DNS probe can tell "absent" from "unknown"
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq dnsutils
+
+      - name: The audit's own rules must be able to fail
+        run: python3 scripts/completion_audit.py --selftest
+
+      - name: Measure every box against the live surface
+        run: |
+          python3 scripts/completion_audit.py
+          git --no-pager diff --stat -- public/completion-audit.json \
+            docs/measurement/CONSUMER-READY-COMPLETION-AUDIT.md || true
+
+      - name: Open a PR when the measurement moved
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          BRANCH=completion-audit/pending
+          if git diff --quiet -- public/completion-audit.json \
+                        docs/measurement/CONSUMER-READY-COMPLETION-AUDIT.md; then
+            echo "the measurement did not move — the published audit is already current"
+            exit 0
+          fi
+          git checkout -B "$BRANCH"
+          git add public/completion-audit.json docs/measurement/CONSUMER-READY-COMPLETION-AUDIT.md
+          git -c user.name="csoai-completion-audit" \
+              -c user.email="audit@csoai.org" \
+              commit -m "completion audit: re-measured against the live surface"
+          git push --force-with-lease origin "$BRANCH"
+          pr=$(gh pr list --repo "$REPO" --head "$BRANCH" --state open \
+                --json number --jq '.[0].number // empty')
+          if [ -z "$pr" ]; then
+            # gh pr create has no --json on the runner's gh build (unknown flag: --json —
+            # found 2026-11-04 by the first dispatch this workflow ever received); it
+            # prints the PR URL, so the number comes from that.
+            pr_url=$(gh pr create --repo "$REPO" --head "$BRANCH" --base master \
+                 --title "completion audit: re-measured against the live surface" \
+                 --body "Automated re-measurement by scripts/completion_audit.py. The probes read the live surface; the required checks are the gate.")
+            pr="${pr_url##*/}"
+          fi
+          echo "PR #$pr"
+          gh pr merge "$pr" --repo "$REPO" --squash --auto || true

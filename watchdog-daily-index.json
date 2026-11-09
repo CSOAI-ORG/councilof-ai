@@ -1,0 +1,311 @@
+{
+  "schema": "csoai.watchdog.daily-incident-signal-index/0.1",
+  "report_id": "watchdog-daily-2026-10-31-ea0f7823032e29be",
+  "issued_at": "2026-10-31T03:59:14.274Z",
+  "period": {
+    "start": "2026-10-31T00:00:00.000Z",
+    "end": "2026-10-31T03:59:14.274Z"
+  },
+  "scope": {
+    "source_registry_version": "2026-10-31",
+    "source_ids": [
+      "aiid",
+      "oecd-aim",
+      "aiaaic",
+      "avid",
+      "mitre-atlas",
+      "ai-incident-index",
+      "eu-ai-act-serious-incident-channel"
+    ],
+    "geographic_scope": [],
+    "language_scope": [],
+    "sector_scope": [],
+    "global_coverage_claim": false
+  },
+  "coverage": {
+    "in_scope_sources": {
+      "status": "available",
+      "value": 7
+    },
+    "monitored_sources": {
+      "status": "available",
+      "value": 6
+    },
+    "source_monitoring_rate": {
+      "status": "available",
+      "numerator": 6,
+      "denominator": 7,
+      "value": 0.8571428571428571
+    },
+    "not_monitored_source_ids": [
+      "eu-ai-act-serious-incident-channel"
+    ],
+    "source_checks": [
+      {
+        "source_id": "aiid",
+        "source_ref": "https://incidentdatabase.ai/research/snapshots/",
+        "checked_at": "2026-10-31T03:59:14.274Z",
+        "check_method": "http_head",
+        "endpoint_state": "reachable",
+        "endpoint_http_status": 200,
+        "error_code": null,
+        "source_updated_at": null,
+        "rights_state": "unknown"
+      },
+      {
+        "source_id": "oecd-aim",
+        "source_ref": "https://oecd.ai/en/incidents",
+        "checked_at": "2026-10-31T03:59:14.274Z",
+        "check_method": "http_head",
+        "endpoint_state": "redirected",
+        "endpoint_http_status": 302,
+        "error_code": null,
+        "source_updated_at": null,
+        "rights_state": "unknown"
+      },
+      {
+        "source_id": "aiaaic",
+        "source_ref": "https://www.aiaaic.org/aiaaic-repository/user-guide",
+        "checked_at": "2026-10-31T03:59:14.274Z",
+        "check_method": "http_head",
+        "endpoint_state": "reachable",
+        "endpoint_http_status": 200,
+        "error_code": null,
+        "source_updated_at": null,
+        "rights_state": "unknown"
+      },
+      {
+        "source_id": "avid",
+        "source_ref": "https://avidml.org/database/",
+        "checked_at": "2026-10-31T03:59:14.274Z",
+        "check_method": "http_head",
+        "endpoint_state": "reachable",
+        "endpoint_http_status": 200,
+        "error_code": null,
+        "source_updated_at": null,
+        "rights_state": "unknown"
+      },
+      {
+        "source_id": "mitre-atlas",
+        "source_ref": "https://atlas.mitre.org/",
+        "checked_at": "2026-10-31T03:59:14.274Z",
+        "check_method": "http_head",
+        "endpoint_state": "reachable",
+        "endpoint_http_status": 200,
+        "error_code": null,
+        "source_updated_at": null,
+        "rights_state": "unknown"
+      },
+      {
+        "source_id": "ai-incident-index",
+        "source_ref": "https://www.aiincidentindex.org/data",
+        "checked_at": "2026-10-31T03:59:14.274Z",
+        "check_method": "http_head",
+        "endpoint_state": "redirected",
+        "endpoint_http_status": 301,
+        "error_code": null,
+        "source_updated_at": null,
+        "rights_state": "unknown"
+      },
+      {
+        "source_id": "eu-ai-act-serious-incident-channel",
+        "source_ref": "https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-73",
+        "checked_at": null,
+        "check_method": "not_checked",
+        "endpoint_state": "not_checked",
+        "endpoint_http_status": null,
+        "error_code": null,
+        "source_updated_at": null,
+        "rights_state": "unknown"
+      }
+    ],
+    "known_gaps": [
+      "This inventory checks seven named public source pages; it is not an incident census or a global completeness measure.",
+      "HEAD availability does not confirm that source records are current, complete, accurate, or reusable.",
+      "The controlled source-permission register is not joined to this runtime inventory; rights_state is therefore unknown here.",
+      "Redirects and access restrictions are preserved as endpoint states; no response body is fetched."
+    ]
+  },
+  "intake": {
+    "mode": "source_status_only",
+    "candidate_items": {
+      "status": "not_in_scope",
+      "value": null,
+      "reason": "No incident-report intake or durable case workflow is enabled."
+    },
+    "duplicate_items": {
+      "status": "not_in_scope",
+      "value": null,
+      "reason": "No incident records are collected or compared for duplicates."
+    },
+    "held_for_rights_or_privacy": {
+      "status": "not_in_scope",
+      "value": null,
+      "reason": "No incident records are collected or held by this monitor."
+    },
+    "out_of_scope_items": {
+      "status": "not_in_scope",
+      "value": null,
+      "reason": "Incident records are outside this monitor's scope."
+    }
+  },
+  "human_review": {
+    "staffing_status": "not_staffed",
+    "items_by_state": {
+      "awaiting_triage": {
+        "status": "not_in_scope",
+        "value": null,
+        "reason": "No incident-report intake or durable case workflow is enabled."
+      },
+      "received": {
+        "status": "not_in_scope",
+        "value": null,
+        "reason": "No incident-report intake or durable case workflow is enabled."
+      },
+      "acknowledged": {
+        "status": "not_in_scope",
+        "value": null,
+        "reason": "No incident-report intake or durable case workflow is enabled."
+      },
+      "accepted": {
+        "status": "not_in_scope",
+        "value": null,
+        "reason": "No incident-report intake or durable case workflow is enabled."
+      },
+      "decided": {
+        "status": "not_in_scope",
+        "value": null,
+        "reason": "No incident-report intake or durable case workflow is enabled."
+      },
+      "appealed": {
+        "status": "not_in_scope",
+        "value": null,
+        "reason": "No incident-report intake or durable case workflow is enabled."
+      },
+      "corrected": {
+        "status": "not_in_scope",
+        "value": null,
+        "reason": "No incident-report intake or durable case workflow is enabled."
+      },
+      "closed": {
+        "status": "not_in_scope",
+        "value": null,
+        "reason": "No incident-report intake or durable case workflow is enabled."
+      }
+    },
+    "service_hours_ref": null
+  },
+  "working_group_process": {
+    "registry_ref": "https://github.com/CSOAI-ORG/councilof-ai/pull/3641",
+    "groups_in_scope": {
+      "status": "unavailable",
+      "value": null,
+      "reason": "No accepted-roster or working-group task feed is connected to this index."
+    },
+    "adopted_charters": {
+      "status": "unavailable",
+      "value": null,
+      "reason": "No accepted-roster or working-group task feed is connected to this index."
+    },
+    "accepted_chairs": {
+      "status": "unavailable",
+      "value": null,
+      "reason": "No accepted-roster or working-group task feed is connected to this index."
+    },
+    "accepted_reviewers": {
+      "status": "unavailable",
+      "value": null,
+      "reason": "No accepted-roster or working-group task feed is connected to this index."
+    },
+    "active_tasks": {
+      "status": "unavailable",
+      "value": null,
+      "reason": "No accepted-roster or working-group task feed is connected to this index."
+    },
+    "independent_challenges": {
+      "status": "unavailable",
+      "value": null,
+      "reason": "No accepted-roster or working-group task feed is connected to this index."
+    },
+    "unresolved_appeals": {
+      "status": "unavailable",
+      "value": null,
+      "reason": "No accepted-roster or working-group task feed is connected to this index."
+    }
+  },
+  "evidence_quality": {
+    "items_with_source_pointer": {
+      "status": "not_in_scope",
+      "value": null,
+      "reason": "No incident-report intake or durable case workflow is enabled."
+    },
+    "items_with_capture_time": {
+      "status": "not_in_scope",
+      "value": null,
+      "reason": "No incident-report intake or durable case workflow is enabled."
+    },
+    "items_with_rights_record": {
+      "status": "not_in_scope",
+      "value": null,
+      "reason": "No incident-report intake or durable case workflow is enabled."
+    },
+    "items_with_provenance": {
+      "status": "not_in_scope",
+      "value": null,
+      "reason": "No incident-report intake or durable case workflow is enabled."
+    },
+    "source_pointer_rate": {
+      "status": "not_in_scope",
+      "numerator": null,
+      "denominator": null,
+      "value": null,
+      "reason": "No incident-report intake or durable case workflow is enabled."
+    },
+    "capture_time_rate": {
+      "status": "not_in_scope",
+      "numerator": null,
+      "denominator": null,
+      "value": null,
+      "reason": "No incident-report intake or durable case workflow is enabled."
+    },
+    "rights_record_rate": {
+      "status": "not_in_scope",
+      "numerator": null,
+      "denominator": null,
+      "value": null,
+      "reason": "No incident-report intake or durable case workflow is enabled."
+    },
+    "provenance_rate": {
+      "status": "not_in_scope",
+      "numerator": null,
+      "denominator": null,
+      "value": null,
+      "reason": "No incident-report intake or durable case workflow is enabled."
+    }
+  },
+  "gspc_link": {
+    "relationship": "link_only",
+    "board_ref": "https://councilof.ai/api/gspc",
+    "axis_scores_written": false,
+    "incident_counts_are_axis_scores": false
+  },
+  "privacy": {
+    "public_report_text_included": false,
+    "direct_identifiers_included": false,
+    "small_cell_suppression_applied": false
+  },
+  "limitations": [
+    "This is a draft metadata-only source-availability index, not an incident report feed, safety verdict, certification, or global incident census.",
+    "No incident records, report text, attachments, reporter data, or personal data are queried or stored.",
+    "All intake and case-review measures are not in scope; do not interpret them as zero incidents.",
+    "No small-cell suppression pass is run because this source-status index contains no incident counts.",
+    "Rights state is unknown in this index until the controlled source-permission register is connected and reviewed.",
+    "No MEOK referral receiver or accepted reviewer roster is connected; this index does not route cases.",
+    "GSPC is linked only. This generator performs no GSPC, MEOK, Busabase, or publication writes."
+  ],
+  "review": {
+    "status": "draft",
+    "reviewer_ref": null,
+    "decision_ref": null
+  }
+}

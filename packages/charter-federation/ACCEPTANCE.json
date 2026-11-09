@@ -1,0 +1,112 @@
+{
+  "state": "INTEGRATED_SOURCE_ACCEPTED_FOR_PROTECTED_RELEASE",
+  "observed_at": "2026-10-30T08:49:32.176825+00:00",
+  "combined_base_commit": "f7545d8006def6d8bedb36c3515fd95c705b6168",
+  "source_receipt": {
+    "schema": "council.charter-federation-build/0.1",
+    "register_sha256": "1ad918bfddc5d73b8a3a91a2482ef1768644762b40e47734df5b6406425bd7ee",
+    "sources": 16,
+    "provisions": 417,
+    "articles": 22,
+    "groups": 7,
+    "coverage": {
+      "HASH_ONLY": 366,
+      "CROSSWALK_ONLY": 38,
+      "RELATED_MEASURE": 12,
+      "PREDICATE": 1
+    },
+    "generated": {
+      "register.json": "e24d5fd8e7256173ab36331b0396b3ec9ce128da7ecdb5f78d9cdf75e7c30179",
+      "tracker.html": "31a06a3bab07e5091b2ef591a1a5077a51fd00e78066f33c51741912c8576bcc",
+      "discussion.html": "db213260957634ea802c95d4a06e60dbd4a348a6dfce005eeca25872261e824d"
+    }
+  },
+  "reproducibility": {
+    "passed": true,
+    "observed_at": "2026-10-30T08:49:32.172278+00:00",
+    "generated_bytes_identical": {
+      "register.json": "e24d5fd8e7256173ab36331b0396b3ec9ce128da7ecdb5f78d9cdf75e7c30179",
+      "tracker.html": "31a06a3bab07e5091b2ef591a1a5077a51fd00e78066f33c51741912c8576bcc",
+      "discussion.html": "db213260957634ea802c95d4a06e60dbd4a348a6dfce005eeca25872261e824d",
+      "build-receipt.json": "6e9292ba7a4a4f9f4e4dfa544251c41ba71790da6152d1a1af0f14ee00abd0d7"
+    },
+    "inputs": [
+      "council-os/working-groups.json",
+      "council-os/working-group-tracker.json"
+    ],
+    "command": "python3 -B build.py --root ../.."
+  },
+  "browser": {
+    "passed": true,
+    "observed_at": "2026-10-30T08:49:30.511Z",
+    "host": "M4",
+    "browser": "Chrome via Playwright",
+    "scenarios": [
+      "tracker:inventory-and-mode",
+      "tracker:search-and-open",
+      "tracker:filters-and-empty",
+      "tracker:note-reload",
+      "tracker:bound-draft-download",
+      "tracker:revision-bound-working-group-handoff",
+      "tracker:keyboard-provision-lookup",
+      "tracker:validation-error",
+      "tracker:automated-accessibility",
+      "tracker:responsive-and-large-text",
+      "discussion:inventory-and-mode",
+      "discussion:search-and-open",
+      "discussion:filters-and-empty",
+      "discussion:note-reload",
+      "discussion:bound-draft-download",
+      "discussion:revision-bound-working-group-handoff",
+      "discussion:keyboard-provision-lookup",
+      "discussion:validation-error",
+      "discussion:automated-accessibility",
+      "discussion:responsive-and-large-text",
+      "blocked-storage-explicit-recovery",
+      "all-sources-readable-without-javascript"
+    ],
+    "scenario_count": 22,
+    "viewports": [
+      1440,
+      390,
+      320
+    ],
+    "large_text_px": 32,
+    "page_errors": [],
+    "axe_violations": [],
+    "external_requests": 0,
+    "post_requests": 0,
+    "register_unchanged": true,
+    "register_file_sha256": "e24d5fd8e7256173ab36331b0396b3ec9ce128da7ecdb5f78d9cdf75e7c30179",
+    "preview_source": "public/charter-register",
+    "scope": "Generated public views and participation handoff, not representative-user, screen-reader, WCAG-conformance or deployed forum acceptance."
+  },
+  "tests": {
+    "python_methods": 18,
+    "exporter_node_tests": 4,
+    "real_mcp_sdk_tests": 1,
+    "working_group_core_tests": 9,
+    "counts_are_separate_and_must_not_be_summed": true
+  },
+  "logs": {
+    "python.log": "daac057ac0f2e031ffc03208e5da7ac8e3685128be836fc8be771a1a09b79087",
+    "export.log": "6ff727d599017dca97d85cc299a494c8171f218da88eb7f9b7b1c7119f7d34fe",
+    "mcp-sdk.log": "d49d9c1db9e21f769df0733b4ef62420afa99b0ccdb871209367e101b31b9f5e",
+    "wg-core.log": "d50f2c2494a5f00b9c6ffa0a5c9ff84a43b02df8fb9d11cbfa5803ce702cbbee",
+    "render-check.log": "12b2d15b83531bb37f1e2d84d28cac887b3e1379308bbad4460cbcb8d934dbeb"
+  },
+  "additional_receipts": [
+    "receipts/completion-20261030/working-groups-browser.json",
+    "receipts/completion-20261030/contributors-browser.json",
+    "receipts/completion-20261030/notebook-replay.json"
+  ],
+  "visual_inspection": {
+    "tracker_desktop": "READ_AND_INSPECTED",
+    "discussion_mobile": "READ_AND_INSPECTED",
+    "screenshots_exported": false
+  },
+  "public_release": "Not asserted by source-acceptance receipt; requires protected release and hosted readback.",
+  "human_appointments_created": 0,
+  "external_messages_sent": 0,
+  "model_requests": 0
+}

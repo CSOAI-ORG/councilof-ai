@@ -1,3 +1,4 @@
+import { postSettlementStore, postObservationState } from "./_bookkeeping_budget";
 import { recordPaidResponse, markPaidUndeliveredResponse } from "./_x402_delivery_record";
 /**
  * GET /api/evidence-bundle — Tier 2: an evidence bundle mapped to ONE regulatory obligation.
@@ -300,6 +301,20 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     });
   }
 
+  // An unreadable corpus is unknown, not an empty selection. Refuse before issuing a
+  // quotation or entering payment verification/settlement; a readable empty corpus stays valid.
+  if (!corpus.read_ok) {
+    return json({
+      schema: "csoai.evidence-bundle/0.1",
+      status: "UNCHECKABLE", error: "corpus_unavailable",
+      obligation: preview.obligation, subject: subject || null,
+      relevant_signed_cards: null,
+      corpus: { ...preview.corpus, signed_cards_total: null, read_state: "UNCHECKABLE" },
+      reason: "The measurement corpus was unavailable or did not provide a cards object. No conclusion about the presence of relevant measurements was established. No payment was verified or settled by this request.",
+      relation: preview.relation, free_verify: preview.free_verify,
+    }, 503);
+  }
+
   const resourceUrl = new URL(`/api/evidence-bundle?obligation=${ob.id}&bundle=1${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`, origin).toString();
   const previewUrl = new URL(resourceUrl);
   previewUrl.searchParams.delete("bundle");
@@ -451,8 +466,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:proofs")) || "0") + 1;
-      await env.REVENUE_KV.put("count:proofs", String(n));
+      const n = Number((await postSettlementStore(env.REVENUE_KV,payment).get("count:proofs")) || "0") + 1;
+      await postSettlementStore(env.REVENUE_KV,payment).put("count:proofs", String(n));
     } catch {
       /* never blocks a paid deliverable */
     }
@@ -475,7 +490,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */

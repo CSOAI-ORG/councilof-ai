@@ -1,0 +1,165 @@
+{
+  "schema": "csoai.claim-reactions/0.1",
+  "source": "/api/claims/events",
+  "source_verification": "VERIFIES",
+  "authority_state": "NONE: read-only projection; no recheck, correction, payment, signing or publication is executed here",
+  "since_exclusive": -1,
+  "n_events": 9,
+  "by_state": {
+    "NO_CHANGE": 7,
+    "BASELINE_ONLY": 1,
+    "DELIVERY_RECEIPT": 1
+  },
+  "n_counter_reaction_required": 0,
+  "reactions": [
+    {
+      "event_seq": 0,
+      "observed_at": "2026-09-28T07:51:52Z",
+      "subject_sealed_id": "4a31dd96e79dcf1b",
+      "claim_ref": "*",
+      "event_state": "OBSERVED",
+      "receipt_state": null,
+      "reaction_state": "NO_CHANGE",
+      "reason": "The event records no claim-state change that requires a bounded re-check.",
+      "recommended_checks": [],
+      "counter_reaction": {
+        "required": false,
+        "checks": [],
+        "boundary": "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false."
+      }
+    },
+    {
+      "event_seq": 1,
+      "observed_at": "2026-09-28T07:51:54Z",
+      "subject_sealed_id": "4a31dd96e79dcf1b",
+      "claim_ref": "*",
+      "event_state": "OBSERVED",
+      "receipt_state": null,
+      "reaction_state": "NO_CHANGE",
+      "reason": "The event records no claim-state change that requires a bounded re-check.",
+      "recommended_checks": [],
+      "counter_reaction": {
+        "required": false,
+        "checks": [],
+        "boundary": "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false."
+      }
+    },
+    {
+      "event_seq": 2,
+      "observed_at": "2026-09-28T07:51:54Z",
+      "subject_sealed_id": "4a31dd96e79dcf1b",
+      "claim_ref": "*",
+      "event_state": "MEASURED",
+      "receipt_state": null,
+      "reaction_state": "NO_CHANGE",
+      "reason": "The event records no claim-state change that requires a bounded re-check.",
+      "recommended_checks": [],
+      "counter_reaction": {
+        "required": false,
+        "checks": [],
+        "boundary": "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false."
+      }
+    },
+    {
+      "event_seq": 3,
+      "observed_at": "2026-09-28T07:51:54Z",
+      "subject_sealed_id": "4a31dd96e79dcf1b",
+      "claim_ref": "c1",
+      "event_state": "CONFIRMED",
+      "receipt_state": null,
+      "reaction_state": "NO_CHANGE",
+      "reason": "The event records no claim-state change that requires a bounded re-check.",
+      "recommended_checks": [],
+      "counter_reaction": {
+        "required": false,
+        "checks": [],
+        "boundary": "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false."
+      }
+    },
+    {
+      "event_seq": 4,
+      "observed_at": "2026-09-28T07:51:54Z",
+      "subject_sealed_id": "4a31dd96e79dcf1b",
+      "claim_ref": "c2",
+      "event_state": "CONFIRMED",
+      "receipt_state": null,
+      "reaction_state": "NO_CHANGE",
+      "reason": "The event records no claim-state change that requires a bounded re-check.",
+      "recommended_checks": [],
+      "counter_reaction": {
+        "required": false,
+        "checks": [],
+        "boundary": "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false."
+      }
+    },
+    {
+      "event_seq": 5,
+      "observed_at": "2026-09-28T07:51:54Z",
+      "subject_sealed_id": "4a31dd96e79dcf1b",
+      "claim_ref": "c4",
+      "event_state": "CONFIRMED",
+      "receipt_state": null,
+      "reaction_state": "NO_CHANGE",
+      "reason": "The event records no claim-state change that requires a bounded re-check.",
+      "recommended_checks": [],
+      "counter_reaction": {
+        "required": false,
+        "checks": [],
+        "boundary": "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false."
+      }
+    },
+    {
+      "event_seq": 6,
+      "observed_at": "2026-09-28T07:51:54Z",
+      "subject_sealed_id": "4a31dd96e79dcf1b",
+      "claim_ref": "c3",
+      "event_state": "CONFIRMED",
+      "receipt_state": null,
+      "reaction_state": "NO_CHANGE",
+      "reason": "The event records no claim-state change that requires a bounded re-check.",
+      "recommended_checks": [],
+      "counter_reaction": {
+        "required": false,
+        "checks": [],
+        "boundary": "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false."
+      }
+    },
+    {
+      "event_seq": 7,
+      "observed_at": "2026-09-28T07:51:54Z",
+      "subject_sealed_id": "4a31dd96e79dcf1b",
+      "claim_ref": null,
+      "event_state": null,
+      "receipt_state": null,
+      "reaction_state": "BASELINE_ONLY",
+      "reason": "This atoms event establishes a baseline; a baseline is not evidence of a later change.",
+      "recommended_checks": [],
+      "counter_reaction": {
+        "required": false,
+        "checks": [],
+        "boundary": "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false."
+      }
+    },
+    {
+      "event_seq": 8,
+      "observed_at": "2026-09-28T07:51:57Z",
+      "subject_sealed_id": "4a31dd96e79dcf1b",
+      "claim_ref": "*",
+      "event_state": "CONFIRMED",
+      "receipt_state": "DELIVERY_RECEIPT",
+      "reaction_state": "DELIVERY_RECEIPT",
+      "reason": "The event records a signed delivery state; signing is a receipt, not a new finding.",
+      "recommended_checks": [],
+      "counter_reaction": {
+        "required": false,
+        "checks": [],
+        "boundary": "Counter-reaction challenges the proposed re-check path; it does not decide whether the maintained claim is true or false."
+      }
+    }
+  ],
+  "does_not_prove": [
+    "that any maintained claim is true or false",
+    "that a recommended re-check has been executed",
+    "that a source failure means the source changed"
+  ]
+}

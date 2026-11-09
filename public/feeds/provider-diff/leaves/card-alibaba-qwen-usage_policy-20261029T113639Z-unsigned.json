@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Alibaba Cloud / Qwen — usage_policy: bytes changed 2026-10-29",
+ "as_of": "2026-10-29T11:37:25Z",
+ "source_urls": [
+  "https://www.alibabacloud.com/help/en/model-studio/getting-started/models"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "alibaba-qwen",
+  "surface": "usage_policy",
+  "url": "https://www.alibabacloud.com/help/en/model-studio/getting-started/models",
+  "prev_sha256": "9b6ea29a5b1795584106cf1a420a5b460c52bd5f7f58df2bfa993dbcab0be5f1",
+  "new_sha256": "c924ee54e16d8de0f4d6a468ba82bd56e826e715501532610a7e0f896771204f",
+  "prev_bytes_sha256": "f0cca1579e915ca6cca1ac4e5feea62392d9afec6e3d7142c7b41b25ee123eb8",
+  "new_bytes_sha256": "c290cd3ece5865719dd645424f8f6ae0fced4bd5037ec731551fb8b9d6d22606",
+  "prev_fetched_at": "2026-10-26T11:15:51Z",
+  "fetched_at": "2026-10-29T11:37:25Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 28466,
+   "new": 42624
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "b6e69e8520702888c16d99e4db66bf27c75f36357f243f8847f2918637d8ef2e",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:alibaba-qwen",
+  "surface:usage_policy",
+  "hash-only"
+ ]
+}

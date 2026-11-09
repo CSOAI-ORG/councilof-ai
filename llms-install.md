@@ -22,45 +22,41 @@ npm package, API key, or OAuth:
 }
 ```
 
-Reconnect and confirm that Cline's server panel discovers the reviewed tool names below
+Reconnect and confirm that Cline's server panel discovers the tool names listed below
 (`tools/list` at the protocol level) before relying on the integration. The remote
 is the canonical service; it is also suitable for MCP clients that support remote
 Streamable HTTP configuration. This is not a claim of support for every AI platform
 or client.
 
-## Optional local stdio package: check the published archive
+## Optional local stdio package (not the contract; use the remote)
 
-The package identity is `csoai-gspc-mcp`. This guide keeps the canonical remote
-configuration above as the simplest starting point. The free read-only door is
-https://councilof.ai/mcp/free. Source, published-package and deployed-remote versions
-are separate facts; none is inferred from another.
+<!-- mcp-npm-facts:start -->
+The package identity is `csoai-gspc-mcp` (not the stale scoped name previously
+shown here). The latest measured release carries the same tool names as the remote.
+This guide gives the remote configuration above; alternatively use
+the free read-only door https://councilof.ai/mcp/free.
 
-**Published-archive observation (30 October 2026):** `0.2.4` was published at
-2026-10-28T16:48:34.768Z. Its immutable npm archive contains 52 tool definitions
-(47 free + 5 metered), and its registry SHA-512 integrity value was checked against
-the downloaded bytes. Archive SHA-256:
-`cea24d2bcef3657b7b35a98d8b658c1b387a45b5c17772bb27b47a901cb0101d`.
-This is a dated archive observation, not a claim about every future latest release.
-A matching tool list is not proof of matching response behaviour: source version
-0.2.5 repairs summary/full board responses and preserves separated-leader and
-original-date semantics.
+The latest published release is `0.2.7` (published 2026-11-04T06:18:50.741Z). Its published tarball carries
+54 tool names — 49 free + 5 metered — measured from the tarball's own manifests
+on 2026-11-04, not from this repository. It is **not** marked deprecated on npm, which is why
+`npm view csoai-gspc-mcp@latest deprecated` prints nothing: deprecation is not the
+signal here, the name comparison is.
 
-**Historical mismatch: `0.2.3`** was published at 2026-10-26T07:21:23.715Z with
-19 tools (14 free + 5 metered), as observed from its published archive on
-28 October. Preserve that incident as history, not as the current latest version.
-An empty `npm view csoai-gspc-mcp@latest deprecated` response does not prove parity;
-inspect the actual archive and exercise the documented behaviour.
+That release carries the same 54 tool names as the live door. The live door
+served 54 names at the same moment. Re-run the comparison — `npm pack
+csoai-gspc-mcp@latest`, extract `gspc-tools.json` and `paid-tools.json`, diff
+against the door's `tools/list` — whenever either side moves, and treat the diff,
+not npm's deprecation flag, as the signal.
 
-The repository currently prepares `0.2.5`, but that source version is **not a
-published npm release** until `npm view csoai-gspc-mcp@0.2.5 version` confirms that
-exact version AND the published archive's definitions and tested responses agree
-with the declared contract. A local candidate passing tests does not establish
-registry publication. Keep any eventual release receipt separate from this guide.
+The repository source version `0.2.7` is the published release identified by this dated capture.
+Recheck `npm view csoai-gspc-mcp@0.2.7 version` before relying on its availability.
+Name parity does not establish runtime or behavioural equivalence with the remote.
+<!-- mcp-npm-facts:end -->
 
 ## Exact reviewed tool catalog
 
 This list describes the reviewed source contract at this commit. Confirm that the
-deployed remote returns the same 52 names before treating it as the live contract.
+deployed remote returns the same 54 names before treating it as the live contract.
 Listing the catalog and using every free read/verification tool is free. In
 particular, `verify_card` checks a Council-issued signed measurement card without a
 payment. Its three possible verdict classes are `VALID`, `INVALID`, and
@@ -116,7 +112,9 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
     "axis_regulator-transparency",
     "axis_interpretability-reproducibility",
     "axis_claim-maintenance",
-    "axis_serving-fidelity"
+    "axis_serving-fidelity",
+    "axis_watchdog-ingest",
+    "framework_readiness"
   ],
   "x402_metered": [
     "commission_card",
@@ -166,3 +164,28 @@ Sources: [canonical MCP remote](https://councilof.ai/mcp) ·
 [Cline remote-server configuration](https://github.com/cline/cline/blob/main/docs/mcp/mcp-overview.mdx) ·
 [monorepo](https://github.com/CSOAI-ORG/councilof-ai) ·
 [free verifier method](https://councilof.ai/signed/HOW-TO-VERIFY.md)
+
+## Cite the board from your own agent-card
+
+MEOK's H.I.M. agent-card (`https://meok.ai/.well-known/agent-card.json`) ships
+GSPC skills that quote the signed board verbatim and say UNMEASURED where no
+measurement exists. Any agent-card can do the same in one paste — the pattern is
+free, and every copy distributes verifiable measurement:
+
+```json
+{
+  "id": "board-totals",
+  "name": "Board totals",
+  "description": "LIVE board totals — axis slots, measured count, unmeasured count, and the separation state across the model-comparison axes. Quoted verbatim from the signed board.",
+  "tags": ["measurement", "gspc", "board"],
+  "examples": ["what does the board say", "how many axes are measured"],
+  "verify": "https://councilof.ai/gspc-verify/",
+  "source": "https://councilof.ai/api/gspc"
+}
+```
+
+Rules of the pattern: quote the board verbatim or say UNMEASURED — never a
+paraphrase, never a score; carry a `verify` link so every claim is checkable in
+one click; and never grade your own product with the board you cite (the judge is
+never the subject). The free verifier (`/api/verify`, `verify-card.mjs`) is the
+check; the Merkle root is the commitment.

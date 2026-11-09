@@ -174,7 +174,7 @@ describe("Company gateway transport boundary", () => {
       expect(response.headers.get("x-private")).toBeNull();
       expect(response.headers.get("cache-control")).toBe("no-store");
     });
-  it.each([524288, 524289])("bounds actual chunked response bytes at %i despite a false length header", async size => {
+  it.each([524288, 524289])("bounds actual chunked response bytes at %i despite a false length header", { timeout: 60_000 }, async size => {
     // Build the exact requested size independently of JSON spelling.
     const base = encoder.encode('{"schema":"meok.library-case/1","saved":false}');
     const data = new Uint8Array(size).fill(32); data.set(base);

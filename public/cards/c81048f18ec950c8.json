@@ -1,0 +1,146 @@
+{
+  "card": {
+    "as_of": "2026-11-01T01:05:16Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USDY:mantle",
+      "symbol": "USDY",
+      "product": "Ondo U.S. Dollar Yield",
+      "chain": "mantle",
+      "chain_id": 5000,
+      "address": "0x5be26527e817998a7206475496fde1e68957c5a6",
+      "block": 102682402,
+      "block_hash": "0xc6e0cf8b22e304f69e48b9b8f93e99585d75b02043f050f9ca58f621329cb813",
+      "block_time": "2026-11-01T01:05:16Z",
+      "rpc": "mantle-rpc.publicnode.com",
+      "checked": {
+        "name": "Ondo U.S. Dollar Yield",
+        "symbol": "USDY",
+        "decimals": 18,
+        "totalSupply": "317337484996694753844865",
+        "paused": false,
+        "defaultAdminRoleMembers": 1,
+        "blocklist": "0xdbd7a7d8807f0c98c9a58f7732f2799c8587e5c6",
+        "eip1967_implementation": "0x3b355a7a25e75a320f631f9736afb3dcc9f3ef66",
+        "eip1967_admin": "0x201cdd34310a53915ee55b0a229b5a4eb18d1448"
+      },
+      "absent": [
+        "isPaused()",
+        "owner()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "d5ccc1cb378304feb7b7c0e82fc25aaf1f0ec40c40663b3274d09ec952bd597f",
+        "bytes": 13342,
+        "url": "/archive/proofs/eip1186/d5ccc1cb378304fe.json",
+        "rpc": "mantle-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xa23b20d4f9e75f4bf9bd74d8c1b7f0219547289c67a11dea65370c1810fc1387",
+          "storageHash": "0x08ee67293d3a05e161ed9b9e035b1a43c7ae66bad1a22bbb36f4a283ebbeb8e7",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x3b355a7a25e75a320f631f9736afb3dcc9f3ef66",
+            "nodes": 4
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x201cdd34310a53915ee55b0a229b5a4eb18d1448",
+            "nodes": 5
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 102682402 on mantle, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c81048f18ec950c89b9c7200714bcdd118d9dc28f5991344aac0472a0f0b074c",
+    "sig_ed25519": "8256d7f14eec32cbf25928fbf053c24f6a7bf02773982e56b299b3da76488ddacb914c4288e62bf4e7fb2a795d3d8bdd6fe8a8dd48f84fa4358837f88810d901",
+    "source_urls": [
+      "https://mantle-rpc.publicnode.com",
+      "https://docs.ondo.finance/developer-guides/mantle-integration-guidelines"
+    ],
+    "subject": "evm:USDY:mantle permission state at block 102682402",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:mantle",
+      "coverage:permission-state",
+      "subject:USDY"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "fee4e34f105f90058fb31ca72301298d55e67d4b9fc34df5500d4334a72232e3",
+    "2ac9dd0b9833d49674d210ceae026f98b0e4a67c1ce0691d6859cbe1de6ea33a",
+    "68af50e960fd42d4a41c22ea3639249f16805cf06cbfdf1a924218df77fad55f",
+    "8527e7f9bdfdaf5e5aa5c5ed8c3409401458bad44482c42857514f1279b4d65d",
+    "022bb8999937187d375a9f2b2ec621e0b185c8580402f4705054cf709d43cd75",
+    "d2b946ab5dc96934562af5b9cce5a93edf33cd77a2ab285b32a9266920a57f09",
+    "fce67b59e1167d1549c282121212e4cbf95450138c1a9c77955cf951e235a0ff",
+    "0a89447a221b87c26ed08ccf68ec106257c71d3bf92a225220c87576dbcebb3f",
+    "b24c76185ddd3c04fc3a87f74d885bc797bd4e7c99f901923b735f8861a1cb05"
+  ]
+}

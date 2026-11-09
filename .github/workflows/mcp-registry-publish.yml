@@ -1,19 +1,17 @@
-name: Publish MCP Registry (v1.4.2)
+name: Publish MCP Registry
 
-# Publishes the gspc MCP server to the official MCP Registry.
-# Auth: GitHub Actions OIDC -> exchange for Registry JWT -> POST /v0/publish.
-# No long-lived NPM_TOKEN or secrets - uses GitHub's OIDC trust.
+# Manual publication of the generated GitHub-namespace manifest only.
+# Domain namespaces require their separate DNS/HTTP ownership flow.
 "on":
   workflow_dispatch:
     inputs:
       version:
-        description: "MCP server version to publish (must match server.json)"
+        description: "Reviewed version already rendered in the GitHub manifest"
         required: true
         type: string
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   publish:
@@ -23,39 +21,34 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      SERVER_JSON: distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json
+      EXPECTED_NAME: io.github.CSOAI-ORG/gspc
+      VER: ${{ inputs.version }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
-      - name: Validate version matches server.json
-        working-directory: mcp/gspc-server
+      - name: Check publisher and selected manifest before authentication
         run: |
           set -euo pipefail
-          actual="$(node -p "require('./server.json').version")"
-          test "$actual" = "${{ inputs.version }}"
-          echo "server.json version: $actual"
+          node --test scripts/mcp-registry-publish.node-test.cjs
+          node scripts/mcp-registry-publish.cjs --validate
 
-      - name: Get GitHub OIDC id_token
-        id: oidc
+      - name: Authenticate and publish with exact readback
+        shell: bash
         run: |
-          ID_TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=registry.modelcontextprotocol.io" | jq -r .value)
-          echo "ID_TOKEN_LENGTH=${#ID_TOKEN}"
-          echo "id_token=$ID_TOKEN" >> "$GITHUB_OUTPUT"
-
-      - name: Exchange OIDC for Registry JWT
-        id: jwt
-        run: |
-          REGISTRY_JWT=$(curl -sS -X POST \
-            https://registry.modelcontextprotocol.io/v0/auth/github-oidc \
-            -H "Content-Type: application/json" \
-            -d "$(jq -nc --arg t "${{ steps.oidc.outputs.id_token }}" '{oidc_token: $t}')" \
-            | jq -r '.registry_token')
-          echo "REGISTRY_JWT_LENGTH=${#REGISTRY_JWT}"
-          echo "registry_token=$REGISTRY_JWT" >> "$GITHUB_OUTPUT"
-
-      - name: Publish server.json to MCP Registry
-        working-directory: mcp/gspc-server
-        env:
-          TOKEN: ${{ steps.jwt.outputs.registry_token }}
-          VER: ${{ inputs.version }}
-        run: node ../../scripts/mcp-registry-publish.cjs
+          set -euo pipefail
+          ID_TOKEN="$(curl --fail --silent --show-error --max-time 30 \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https%3A%2F%2Fregistry.modelcontextprotocol.io" \
+            | jq -er '.value | select(type == "string" and length > 0)')"
+          [[ "$ID_TOKEN" =~ ^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$ ]]
+          echo "::add-mask::$ID_TOKEN"
+          REGISTRY_JWT="$(jq -nc --arg t "$ID_TOKEN" '{oidc_token: $t}' \
+            | curl --fail --silent --show-error --max-time 30 \
+              -X POST https://registry.modelcontextprotocol.io/v0.1/auth/github-oidc \
+              -H "Content-Type: application/json" --data-binary @- \
+            | jq -er '.registry_token | select(type == "string" and length > 0)')"
+          [[ "$REGISTRY_JWT" =~ ^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$ ]]
+          echo "::add-mask::$REGISTRY_JWT"
+          TOKEN="$REGISTRY_JWT" node scripts/mcp-registry-publish.cjs --publish

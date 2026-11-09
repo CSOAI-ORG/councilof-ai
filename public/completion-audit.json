@@ -1,6 +1,6 @@
 {
  "schema": "csoai.completion-audit/0.1",
- "measured_at": "2026-10-28T04:10:07Z",
+ "measured_at": "2026-11-08T11:56:02Z",
  "note": "Every LIVE line was probed against the live surface and carries the measured value and the receipt URL. An item is LIVE only if a probe saw it. Owner-gated items are named as owner-gated, never as done. This is a measurement of completion, not a claim of a market outcome: 'unicorn status' is a trajectory, not a claim, and nothing here asserts it.",
  "not_claimed": [
   "a customer",
@@ -14,9 +14,9 @@
   "an endorsement by any person or institution quoted in a checklist"
  ],
  "counts": {
-  "total": 26,
-  "live": 11,
-  "open": 6,
+  "total": 27,
+  "live": 9,
+  "open": 9,
   "staged": 3,
   "owner": 6
  },
@@ -26,8 +26,8 @@
    "item": "Product live end to end (discover -> identify -> pay -> verify)",
    "lane": "agent",
    "closer": "probe",
-   "state": "LIVE",
-   "measured": "6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200",
+   "state": "OPEN",
+   "measured": "availability=LIVE; 6/6 surfaces answered 200: board=200, root=200, corrections=200, x402=200, mcp=200, verify=200; completion not verified: this GET-only audit does not consume a qualified non-fixture discover/identify/pay/deliver/verify receipt",
    "receipt": "https://councilof.ai/"
   },
   {
@@ -35,8 +35,8 @@
    "item": "Flagship public (claim maintenance)",
    "lane": "agent",
    "closer": "probe",
-   "state": "LIVE",
-   "measured": "GET / -> HTTP 200",
+   "state": "OPEN",
+   "measured": "availability=LIVE; GET / -> HTTP 200; completion not verified: this GET-only audit does not consume qualified claim-maintenance acceptance linking the claim, supporting evidence, correction history and independent readback",
    "receipt": "https://councilof.ai/"
   },
   {
@@ -54,16 +54,16 @@
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
-   "measured": "root as_of=2026-10-27T21:20:49Z, 325 leaves; board public_count=33 axes · 23 measured; corrections=93, signature_state=VALID",
+   "measured": "root as_of=2026-11-07T20:54:37Z, 442 leaves; board public_count=34 axes · 34 measured; corrections=93, signature_state=VALID",
    "receipt": "https://councilof.ai/root.json"
   },
   {
    "id": "U-13a",
-   "item": "Agent skills published (12 skills)",
+   "item": "Agent skills published",
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
-   "measured": "12 skill(s) in the published index",
+   "measured": "15 skill(s) in the published index",
    "receipt": "https://councilof.ai/.well-known/agent-skills/index.json"
   },
   {
@@ -71,8 +71,8 @@
    "item": "OpenTimestamps: every published proof Bitcoin-attested",
    "lane": "agent",
    "closer": "probe",
-   "state": "LIVE",
-   "measured": "677/677 proofs Bitcoin-attested, 0 pending",
+   "state": "OPEN",
+   "measured": "696/698 proofs Bitcoin-attested, 2 pending",
    "receipt": "https://councilof.ai/interop/ots/manifest.json"
   },
   {
@@ -81,16 +81,25 @@
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
-   "measured": "40 verified, 5 blockers, 8 not_claimed; no unamended 'Public root stale' blocker",
+   "measured": "44 verified, 5 blockers, 8 not_claimed; no unamended 'Public root stale' blocker",
    "receipt": "https://councilof.ai/completion.json"
   },
   {
    "id": "U-10a",
-   "item": "Namespace consolidation 4->1 in the published tree",
+   "item": "Namespace consolidation: the com.councilof/* DNS TXT claim",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "OPEN",
+   "measured": "no namespace TXT is published (com.councilof.ai -> the name does not exist; _namespace.com.councilof.ai -> the name does not exist; _mcp.com.councilof.ai -> the name does not exist) - publishing it needs DNS authority for the domain, which is the owner's",
+   "receipt": "dns:com.councilof.ai _namespace.com.councilof.ai _mcp.com.councilof.ai"
+  },
+  {
+   "id": "U-10c",
+   "item": "No published artefact still claims a com.councilof.* identifier",
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
-   "measured": "0 public file(s) still carry the 'com.councilof.' namespace",
+   "measured": "0 published file(s) still claim an identifier in the com.councilof.* space",
    "receipt": "repo:public/ (measured at build time)"
   },
   {
@@ -117,8 +126,53 @@
    "lane": "agent",
    "closer": "probe",
    "state": "LIVE",
-   "measured": "1 Evaluation Card artefact(s)",
+   "measured": "2 Evaluation Card artefact(s)",
    "receipt": "repo:docs/ public/"
+  },
+  {
+   "id": "U-9b",
+   "item": "The corrections corpus, published and signed",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "LIVE",
+   "measured": "93 correction(s) published, signature_state=VALID; the corpus is numbered C-<date>-<n>, so there is no '#60-70' series to be present or absent",
+   "receipt": "https://councilof.ai/api/corrections"
+  },
+  {
+   "id": "U-13b",
+   "item": "Ecosystem Health Board + citation flywheel",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "OPEN",
+   "measured": "no Ecosystem Health Board on the edge: /ecosystem-health/ -> HTTP 404, /health-board/ -> HTTP 404; the estate's own CJ-50 row calls it UNVERIFIED",
+   "receipt": "https://councilof.ai/reports/"
+  },
+  {
+   "id": "U-18a",
+   "item": "The chained loop v0.1 (fixed grader)",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "OPEN",
+   "measured": "no chained-loop artefact in scripts/, docs/, public/, council-os/, functions/ or harness/ — the corpus calls the stack 'verified' and the 2-week held-out gate the closer; neither is in the tree",
+   "receipt": "repo:scripts/ docs/ public/ council-os/ functions/ harness/"
+  },
+  {
+   "id": "U-19a",
+   "item": "Small-world lab T-1 league",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "OPEN",
+   "measured": "no small-world / T-1 league artefact in the tree; the corpus lists it as 'specced, pod spike' and names a pod spike as the closer",
+   "receipt": "repo:scripts/ docs/ public/ council-os/ functions/ harness/"
+  },
+  {
+   "id": "U-22",
+   "item": "402 health split + stale-directory repoints",
+   "lane": "agent",
+   "closer": "probe",
+   "state": "OPEN",
+   "measured": "no 402-health / health-split / repoint artefact in the tree; the corpus lists 'measured, repair queue' with the repair queue as the closer",
+   "receipt": "repo:scripts/ docs/ public/ council-os/ functions/ harness/"
   },
   {
    "id": "U-5",
@@ -199,51 +253,6 @@
    "closer": "the filed marks",
    "state": "OWNER",
    "measured": "not probeable: filing is a human act",
-   "receipt": ""
-  },
-  {
-   "id": "U-13",
-   "item": "Health Board daily habit + citation flywheel",
-   "lane": "agent",
-   "closer": "deploy+habit",
-   "state": "OPEN",
-   "measured": "not yet closed by a probe; the work is in the agent lane",
-   "receipt": ""
-  },
-  {
-   "id": "U-14",
-   "item": "OpenShell adapters + Cedar translator",
-   "lane": "agent",
-   "closer": "agent builds",
-   "state": "OPEN",
-   "measured": "not yet closed by a probe; the work is in the agent lane",
-   "receipt": ""
-  },
-  {
-   "id": "U-15",
-   "item": "Evaluation Cards schema adoption",
-   "lane": "agent",
-   "closer": "agent builds",
-   "state": "OPEN",
-   "measured": "not yet closed by a probe; the work is in the agent lane",
-   "receipt": ""
-  },
-  {
-   "id": "U-18",
-   "item": "The chained loop v0.1 (fixed grader)",
-   "lane": "agent",
-   "closer": "agent+pod, 2-week gate",
-   "state": "OPEN",
-   "measured": "not yet closed by a probe; the work is in the agent lane",
-   "receipt": ""
-  },
-  {
-   "id": "U-19",
-   "item": "Small-world lab T-1 league",
-   "lane": "agent",
-   "closer": "pod spike",
-   "state": "OPEN",
-   "measured": "not yet closed by a probe; the work is in the agent lane",
    "receipt": ""
   },
   {

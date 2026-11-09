@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Amazon (AWS Bedrock / Nova) — pricing: bytes changed 2026-10-28",
+ "as_of": "2026-10-28T12:25:00Z",
+ "source_urls": [
+  "https://aws.amazon.com/bedrock/pricing/"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "amazon",
+  "surface": "pricing",
+  "url": "https://aws.amazon.com/bedrock/pricing/",
+  "prev_sha256": "1deefc05e29c2f4866756543b8abdd27458aceb4fe5b3eec3f347d18941d91c5",
+  "new_sha256": "96221ca5b951156db2febccf7ec4c2e1189023f5ee38ddb7409dc4efcf014292",
+  "prev_bytes_sha256": "96163fc7cb6a44623372d9c6777615cc73de109308f9d14b4b810e14f6c93e63",
+  "new_bytes_sha256": "473bd178db17190c89b61fd83ff21fbd2af952dc3ad0f88a912fac7844234b04",
+  "prev_fetched_at": "2026-10-26T11:15:54Z",
+  "fetched_at": "2026-10-28T12:25:00Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 893631,
+   "new": 893710
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": "Wed, 21 Oct 2026 18:21:41 GMT",
+   "new": "Tue, 27 Oct 2026 00:29:26 GMT"
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "4f89511703705ba3b8458b6ccdd14ab0043db9a51628ede378c820674153cdb0",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:amazon",
+  "surface:pricing",
+  "hash-only"
+ ]
+}

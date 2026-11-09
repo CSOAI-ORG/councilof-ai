@@ -247,9 +247,15 @@ export function renderAxesIndex(board) {
   const cmp = axes.filter((a) => a?.kind === "model-comparison");
   const facts = axes.filter(isFacts);
   const slots = axes.filter((a) => a?.kind === "declared-slot");
+  // A MEASURED subject axis (first of its kind, 2026-10-29) is measured, so it is not a
+  // declared slot and must not be filed as one: its n is a real count over a frozen
+  // sha-pinned bank. It still has no model fleet, so no separation test applies to it.
+  const measuredSubjects = axes.filter((a) => a?.kind === "measured-subject");
   // Any axis whose kind the board did not name is shown, but never counted into a
   // group whose prose would misdescribe it.
-  const unclassified = axes.filter((a) => !cmp.includes(a) && !facts.includes(a) && !slots.includes(a));
+  const unclassified = axes.filter(
+    (a) => !cmp.includes(a) && !facts.includes(a) && !slots.includes(a) && !measuredSubjects.includes(a),
+  );
   const tr = (a, leadCol) => {
     const lead = !hasSeparation(a)
       ? "—"
@@ -267,8 +273,21 @@ export function renderAxesIndex(board) {
 ${list.map((a) => tr(a, leadCol)).join("\n")}
     </tbody>
   </table></div>`;
+  // Consistency guard: the lid quotes the board's totals; the h1 counts the rows this page
+  // lists. The only way those two numbers may differ is axes held back by the owner — and
+  // that difference must be STATED, never left for the reader to discover. A mismatch the
+  // reconciliation line cannot explain is corrupted board data: refuse to render it.
+  const ownerHeld = typeof board?.ownerHeldCount === "number" ? board.ownerHeldCount : 0;
+  const lidLead = parseInt(String(lid(board)).match(/^\s*(\d+)/)?.[1] ?? "NaN", 10);
+  const shown = axes.length;
+  if (Number.isFinite(lidLead) && lidLead !== shown + ownerHeld) {
+    throw Error(`LID_COUNT_MISMATCH the board's totals say ${lidLead} axes but the payload carries ${shown + ownerHeld} (${shown} public + ${ownerHeld} owner-held)`);
+  }
+  const reconcile = lidLead === shown
+    ? ""
+    : `\n  <p class="muted">The board serves ${lidLead} axes; ${ownerHeld} ${ownerHeld === 1 ? "is" : "are"} owner-gated pending go, so this page lists ${shown}. The held slots have no public row, page or count of their own.</p>`;
   const body = `  <p class="lid">${esc(lid(board))}</p>
-  <h1>All ${axes.length} GSPC axes</h1>
+  <h1>All ${shown} GSPC axes</h1>${reconcile}
   <p>Every axis on the board, with the state the board serves for it and a page of its own. An empty slot would read UNMEASURED, never zero. A point leader is not a separated leader: TIE and UNTESTED are their own states, and neither is a win.</p>
 
   <h2>${cmp.length} model-comparison axes</h2>
@@ -281,7 +300,10 @@ ${table(facts)}
 ${slots.length ? `
   <h2>${slots.length} declared subject slots</h2>
   <p class="muted">A declared slot with no run behind it yet. No model fleet answers it, so no separation test applies to it either: n 0 is the literal truth, never a score. It becomes MEASURED only with a frozen sha-pinned bank, n_valid at least 30, passing the gate.</p>
-${table(slots, false)}` : ""}${unclassified.length ? `
+${table(slots, false)}` : ""}${measuredSubjects.length ? `
+  <h2>${measuredSubjects.length} measured subject axes</h2>
+  <p class="muted">A frozen, sha-pinned method or bank measured the subject class this axis names, over at least 30 valid items. No model fleet answers it, so no separation test applies and it joins no leader or mean — but unlike a declared slot its n is a real count, not a zero.</p>
+${table(measuredSubjects, false)}` : ""}${unclassified.length ? `
   <h2>${unclassified.length} axes of an unnamed kind</h2>
   <p class="muted">The board does not name a kind for these, so this page does not guess what they measure. It shows the state the board serves and nothing more.</p>
 ${table(unclassified, false)}` : ""}
@@ -297,14 +319,51 @@ ${table(unclassified, false)}` : ""}
 /** Every file this generator owns, keyed by repo-relative path. */
 export function renderAll(boardIn) {
   // Owner-gated rows (public_pages HIDDEN_PENDING_OWNER_GO) stay in GET /api/gspc but get no public
-  // page and no row on any page until the owner's go. Totals are left as served.
-  const board = { ...boardIn, axes: (Array.isArray(boardIn?.axes) ? boardIn.axes : []).filter((a) => a?.public_pages !== "HIDDEN_PENDING_OWNER_GO") };
+  // page and no row on any page until the owner's go. Totals are left as served — which means the
+  // index page carries two counts about the same set: the board's totals and the rows shown here.
+  // A page that shows both counts without reconciling them reads as an error to every reader, so
+  // renderAxesIndex states the held-back count beside them. Only the COUNT is carried; the held
+  // axis ids stay owner business.
+  const allAxes = Array.isArray(boardIn?.axes) ? boardIn.axes : [];
+  const ownerHeld = allAxes.filter((a) => a?.public_pages === "HIDDEN_PENDING_OWNER_GO").length;
+  const board = { ...boardIn, axes: allAxes.filter((a) => a?.public_pages !== "HIDDEN_PENDING_OWNER_GO"), ownerHeldCount: ownerHeld };
   const out = {};
   for (const row of Array.isArray(board?.axes) ? board.axes : []) {
     if (typeof row?.axis !== "string" || !/^[a-z0-9-]+$/.test(row.axis)) throw Error(`AXIS_ID_NOT_A_SLUG ${row?.axis}`);
     out[`axis/${row.axis}.html`] = renderAxisPage(row, board);
   }
   out["axes.html"] = renderAxesIndex(board);
+  // THE ROUTE MAP. Where each axis's public page lives, and which axes have no
+  // public page at all. Published next to the pages it describes, from the same
+  // payload, so a surface that must not fetch can still link a real URL.
+  //
+  // WHY. The working-groups registry renders statically (no network call) and
+  // lists all 34 axes. It used to link every one of them to /gspc/<axis>/,
+  // which is prerendered only for model-comparison axes — so 20 of its links
+  // were 404s, and the 2 owner-held axes were linked at all when they have no
+  // public page. Typing the route per axis is the thing that rots: the board
+  // grows an axis and the link breaks. This map is regenerated on every build
+  // from the payload the pages were rendered from, so it cannot disagree with
+  // them.
+  out["interop/axis-routes.json"] =
+    JSON.stringify(
+      {
+        schema: "csoai.axis-routes/0.1",
+        source: "GET /api/gspc",
+        // The board's own words, not a date this script invented: the payload
+        // carries no single as_of, so the stamp and the published count are
+        // quoted and the field stays null when the board does not supply one.
+        as_of: boardIn?.measured_on?.living_stamp?.updated ?? null,
+        board_public_count: boardIn?.totals?.public_count ?? null,
+        axes: allAxes.map((a) => ({
+          axis: a?.axis,
+          kind: a?.kind,
+          ...(a?.public_pages ? { public_pages: a.public_pages } : {}),
+        })),
+      },
+      null,
+      2,
+    ) + "\n";
   return out;
 }
 
@@ -391,6 +450,6 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   console.log(
     check
       ? `✓ axis pages: ${Object.keys(files).length} files match this commit's /api/gspc`
-      : `✓ axis pages: ${Object.keys(files).length - 1} axes + axes.html rendered into ${relative(ROOT, outDir) || "."}`,
+      : `✓ axis pages: ${Object.keys(files).length - 2} axes + axes.html + interop/axis-routes.json rendered into ${relative(ROOT, outDir) || "."}`,
   );
 }

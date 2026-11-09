@@ -161,10 +161,15 @@ function historicalExemptions(facts) {
       throw new Error(`historical_count_exemptions: "${p}" is not one exact file path (no globs, no directories)`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || "")) throw new Error(`historical_count_exemptions: ${p} has no date`);
     if (typeof e.reason !== "string" || !e.reason.trim()) throw new Error(`historical_count_exemptions: ${p} has no reason`);
-    if (!Number.isInteger(e.historical_axes)) throw new Error(`historical_count_exemptions: ${p} has no historical_axes`);
+    // A dated record may quote MORE THAN ONE board count: a canonical view catalogues the board
+    // as it stood on several dated reads, each with its own as_of and source. So the recorded count
+    // may be one integer or a list of them, and the file is exempt for exactly those counts and
+    // for no other. A list is still an EXPLICIT, dated, per-file entry with a stated reason.
+    const counts = Array.isArray(e.historical_axes) ? e.historical_axes : [e.historical_axes];
+    if (!counts.length || counts.some((n) => !Number.isInteger(n))) throw new Error(`historical_count_exemptions: ${p} has no historical_axes`);
     if (LIVE_SURFACES_NEVER_EXEMPT.includes(p)) throw new Error(`historical_count_exemptions: ${p} is a live surface and may never be exempt`);
     if (map.has(p)) throw new Error(`historical_count_exemptions: ${p} listed twice`);
-    map.set(p, e.historical_axes);
+    map.set(p, counts);
   }
   return map;
 }
@@ -231,7 +236,7 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
   while ((m = COUNT_RE.exec(text))) {
     const n = Number(m[1]);
     if (n === liveCount) continue;
-    if (historicalAxes !== undefined && n === historicalAxes) continue;
+    if (historicalAxes !== undefined && historicalAxes.includes(n)) continue;
     // A measured/quotable-qualified count is a claim about the MEASURED count, not
     // the board total. ruleMeasuredOverclaim owns it.
     if (/^(?:measured|quotable)\s*$/i.test(m[2] || "")) continue;
@@ -360,6 +365,57 @@ function ruleMeasuredOverclaim(facts, file, text, add, liveMeasured) {
         ctx: ctx(text, m.index, re.lastIndex),
       });
     }
+  }
+}
+
+// THE MIDDLE FORM of the board's own sentence: "<N> axes \u00b7 <M> measured".
+//
+// That is exactly the shape of totals.public_count — the string every live surface is told
+// to quote VERBATIM. COUNT_RE reads only the slot count out of it, and MEASURED_RE does not
+// match "M measured" at all, so the measured half of a live surface's board sentence was
+// invisible to this gate. Measured 2026-11-06: three surfaces that may never be exempt
+// published "34 axes \u00b7 23 measured" while the board read "34 axes \u00b7 34 measured",
+// and the gate was green throughout.
+//
+// The rule is deliberately narrow, because a wide one would flag history:
+//   - it fires ONLY when the slot count in the sentence IS the current slot count, so a
+//     historical quote ("the board read 23 axes \u00b7 22 measured" on an older date) names
+//     a different slot count and is left alone;
+//   - it fires ONLY for a surface in LIVE_SURFACES_NEVER_EXEMPT, the list of surfaces a
+//     reader quotes AS the board's state;
+//   - it fires only when the measured half disagrees with the board's measured count, in
+//     EITHER direction: on these surfaces an underclaim is not a safer claim, it is a stale
+//     one, and "claiming fewer is safe" is the wrong rule for the surface that must carry
+//     the board's current sentence.
+//
+// Every other surface keeps the existing grammar untouched.
+const BOARD_SENTENCE_RE =
+  /\b(\d{1,3})\s+(?:canonical\s+|public\s+)?(?:axes|axis|slots)\s*[\u00b7\u2022]\s*(\d{1,3})\s+measured\b/gi;
+
+function ruleLiveBoardSentence(facts, file, text, add, liveCount, liveMeasured) {
+  if (liveCount == null || liveMeasured == null) return;
+  if (!LIVE_SURFACES_NEVER_EXEMPT.includes(file)) return;
+  BOARD_SENTENCE_RE.lastIndex = 0;
+  let m;
+  while ((m = BOARD_SENTENCE_RE.exec(text))) {
+    const slots = Number(m[1]);
+    const measured = Number(m[2]);
+    if (slots !== liveCount) continue;       // a historical read names a different slot count
+    if (measured === liveMeasured) continue; // it quotes the board's current sentence
+    if (isProhibition(text, m.index)) continue;
+    if (isNegated(text, m.index, BOARD_SENTENCE_RE.lastIndex)) continue;
+    if (CORRECTION_CTX.test(ctx(text, m.index, BOARD_SENTENCE_RE.lastIndex, 300))) continue;
+    add({
+      rule: "live-board-sentence",
+      file,
+      text: m[0],
+      why:
+        `"${m[0]}" is a live surface quoting the board's own sentence, but the board reads ` +
+        `${liveCount} axes \u00b7 ${liveMeasured} measured. A surface that may never be exempt ` +
+        `carries the board's CURRENT state: an underclaim is not a safer claim, it is a stale one. ` +
+        `Rebuild it with scripts/surface/rebind-board-cites.mjs.`,
+      ctx: ctx(text, m.index, BOARD_SENTENCE_RE.lastIndex),
+    });
   }
 }
 
@@ -603,6 +659,7 @@ function runRules(facts, files, rootDir, liveCount, liveMeasured, gatedIds = [])
     const countText=contentOf(f,currentCountContent(corrected));
     ruleAxisCount(facts, rel, countText, add, liveCount, corrected);
     ruleMeasuredOverclaim(facts, rel, text, add, liveMeasured);
+    ruleLiveBoardSentence(facts, rel, text, add, liveCount, liveMeasured);
     ruleCapabilityTense(facts, rel, text, add);
     ruleAnchorCount(facts, rel, text, add);
     ruleOwnerGated(rel, raw, gatedIds, add);
@@ -665,9 +722,14 @@ function selftestCases(N, M, U) {
   [`all ${N} axes are measured is ${U === 0 ? "honest" : "an OVERCLAIM"} (U = ${U})`, `<p>All ${N} axes are measured and signed.</p>`, U !== 0],
   [`VIOLATION: ${N + 8} measured axes (more than the board carries)`, `<p>The board publishes ${N + 8} measured axes.</p>`, true],
   // ── postfix measured grammar = the live totals.lid (2026-09-16, board 23 · 22) ──
-  ["live lid verbatim: N axes measured is a MEASURED claim, not a slot count", "<p>Lid: 15 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.</p>", false],
-  ["VIOLATION: postfix overclaim still fails", "<p>Board right now: 30 axes measured · 14 model fleets.</p>", true],
-  ["understatement passes (fewer than measured is safe)", "<p>The board carries 15 measured axes today.</p>", false],
+  // These three used to TYPE 15 and 30. When the board reached 34 measured, "30 axes
+  // measured" became an UNDERSTATEMENT - which the gate allows - so the case that had to
+  // fail stopped failing, and the selftest went red. The exact defect this gate exists to
+  // catch, reproduced inside the gate: a typed number goes stale and then means the
+  // opposite of what it meant. So all three read M off the observation now.
+  [`live lid verbatim: ${M} axes measured is a MEASURED claim, not a slot count`, `<p>Lid: ${M} axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.</p>`, false],
+  [`VIOLATION: postfix overclaim still fails (${M + 8} axes measured)`, `<p>Board right now: ${M + 8} axes measured · 14 model fleets.</p>`, true],
+  [`understatement passes (${Math.max(1, M - 8)} measured is fewer than ${M})`, `<p>The board carries ${Math.max(1, M - 8)} measured axes today.</p>`, false],
   ["VIOLATION: EAS asserted live", "<p>Every attestation is anchored on EAS today.</p>", true],
   ["honest EAS label", "<p>EVM · EAS BlackRock BUIDL 0x7712c3420573… UNMEASURED</p>", false],
   ["VIOLATION: ERC-3643 asserted live", "<p>We issue ERC-3643 credentials; issuance runs on the trusted-issuer bridge.</p>", true],
@@ -778,6 +840,7 @@ async function selftest(facts) {
     ruleBoundary(facts, file, text, add);
     ruleAxisCount(facts, file, text, add, liveCount, html);
     ruleMeasuredOverclaim(facts, file, text, add, liveMeasured);
+    ruleLiveBoardSentence(facts, file, text, add, liveCount, liveMeasured);
     ruleCapabilityTense(facts, file, text, add);
     ruleAnchorCount(facts, file, text, add);
     const didFail = violations.length > 0;
@@ -796,11 +859,35 @@ async function selftest(facts) {
   {
     const grown = liveCount + 10;
     const listed = historicalExemptions(facts);
-    const [firstListed, firstCount] = [...listed.entries()][0] || [];
+    const [firstListed, firstCounts] = [...listed.entries()][0] || [];
+    const firstCount = Array.isArray(firstCounts) ? firstCounts[0] : firstCounts;
+    // The generic "exempt only for what it records" case has to use a count OUTSIDE the recorded
+    // set. When the first listed file records SEVERAL counts, firstCount + 1 can be one of them --
+    // and then the case would expect a violation that the exemption correctly allows.
+    const firstCountSet = Array.isArray(firstCounts) ? firstCounts : [firstCount];
+    const beyondRecorded = firstCountSet.length ? Math.max(...firstCountSet) + 1 : liveCount;
     const cases = [];
     if (firstListed) {
       cases.push([`listed historical file keeps its recorded ${firstCount}`, `{"note":"Board has ${firstCount} axes."}`, false, firstListed]);
-      cases.push(["VIOLATION: a listed file is exempt only for its recorded count", `{"note":"Board has ${firstCount + 1} axes."}`, true, firstListed]);
+      cases.push(["VIOLATION: a listed file is exempt only for the counts it records", `{"note":"Board has ${beyondRecorded} axes."}`, true, firstListed]);
+    }
+    // A dated record that quotes SEVERAL dated board counts is exempt for each of them and for
+    // no other. This case proves the list form in BOTH directions: it must pass for the counts
+    // the record actually carries, and it must still catch a count the record does not.
+    {
+      const twoFile = "interop/listed-two-dated-counts.json";
+      const twoFacts = { ...facts, counts: { ...facts.counts, historical_count_exemptions: { files: [{ path: twoFile, date: "2026-10-08", reason: "dated record quoting two dated reads", historical_axes: [22, 23] }] } } };
+      for (const [name, body, shouldFail] of [
+        ["a listed file keeps its FIRST recorded count", `{"note":"Board has 22 axes."}`, false],
+        ["a listed file keeps its SECOND recorded count", `{"note":"Board has 23 axes."}`, false],
+        ["VIOLATION: a listed file is exempt only for the counts it records", `{"note":"Board has 24 axes."}`, true],
+      ]) {
+        const v = [];
+        ruleAxisCount(twoFacts, twoFile, body, (x) => v.push(x), grown, body);
+        const ok = (v.length > 0) === shouldFail;
+        ok ? pass++ : fail++;
+        console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name} (board ${grown})`);
+      }
     }
     cases.push([`VIOLATION: an unlisted file with ${firstCount ?? liveCount} axes fails`, `{"note":"Board has ${firstCount ?? liveCount} axes."}`, true, "interop/new-unlisted-file.json"]);
     for (const live of LIVE_SURFACES_NEVER_EXEMPT)
@@ -832,6 +919,30 @@ async function selftest(facts) {
     console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name}`);
   }
   // The page-level rule: a gated axis is a PAGE, whether or not the markup carries a hook.
+  // \u2500\u2500 THE MIDDLE FORM of the board's own sentence \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // These call ruleLiveBoardSentence ALONE, so each case proves what THIS rule does and
+  // not what some other rule does to the same sentence. Three live surfaces published
+  // "N axes \u00b7 M-11 measured" against a board reading "N axes \u00b7 M measured" and the gate was
+  // green: COUNT_RE reads only the slot count out of that shape, and MEASURED_RE does not
+  // match "M measured" at all.
+  for (const [name, file, body, shouldFail] of [
+    ["VIOLATION: a live surface that misquotes the measured half of the board sentence fails",
+     "publisher-health.json", `{"public_count": "${liveCount} axes \u00b7 ${Math.max(0, liveMeasured - 11)} measured"}`, true],
+    ["a live surface that quotes the board's current sentence passes",
+     "publisher-health.json", `{"public_count": "${liveCount} axes \u00b7 ${liveMeasured} measured"}`, false],
+    ["a HISTORICAL board sentence with an older slot count is left alone",
+     "publisher-health.json", `{"note": "On 2026-09-01 the board read 23 axes \u00b7 22 measured."}`, false],
+    ["a surface that may never be exempt is the only one judged",
+     "interop/not-a-live-surface.json", `{"public_count": "${liveCount} axes \u00b7 ${Math.max(0, liveMeasured - 11)} measured"}`, false],
+    ["a live surface that OVERSTATES the measured count fails",
+     "owm/v0.1/latest.json", `{"public_count": "${liveCount} axes \u00b7 ${liveMeasured + 5} measured"}`, true],
+  ]) {
+    const v = [];
+    ruleLiveBoardSentence(facts, file, body, (x) => v.push(x), liveCount, liveMeasured);
+    const ok = (v.length > 0) === shouldFail;
+    ok ? pass++ : fail++;
+    console.log(`  ${ok ? "ok  " : "FAIL"}  ${shouldFail ? "must CATCH " : "must PASS  "} ${name} (board ${liveCount} \u00b7 ${liveMeasured})`);
+  }
   for (const [name, file, html, shouldFail] of [
     ["owner-gated axis page by path", "axis/regulator-transparency.html", "<html><body>x</body></html>", true],
     ["owner-gated axis page by canonical", "axis/somewhere.html", '<link rel="canonical" href="https://councilof.ai/axis/regulator-transparency" />', true],

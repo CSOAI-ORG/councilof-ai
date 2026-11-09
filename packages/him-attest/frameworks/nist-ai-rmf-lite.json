@@ -1,0 +1,13 @@
+{
+  "slug": "nist-ai-rmf-lite",
+  "title": "NIST AI RMF 1.0 — lite crosswalk (GOV/MAP/MEASURE/MANAGE evidence posture)",
+  "doctrine": "human-in-the-loop attestation of evidence — NOT conformity certification",
+  "segments": ["enterprise", "sme", "government", "fortune500"],
+  "checkpoints": [
+    {"id": "nist.measure.evidence", "requirement": "MEASURE functions backed by signed per-item measurements", "mode": "machine", "evidence": {"kind": "board", "axes": ["safety", "jail", "care", "governance"]}},
+    {"id": "nist.map.inventory", "requirement": "MAP: AI inventory lists the measured systems", "mode": "human"},
+    {"id": "nist.govern.roles", "requirement": "GOV: governance roles and risk tolerance documented", "mode": "human"},
+    {"id": "nist.manage.incident", "requirement": "MANAGE: incident response covers AI-specific failures", "mode": "human"},
+    {"id": "nist.accountable-owner", "requirement": "Named accountable owner signs this attestation cycle", "mode": "human"}
+  ]
+}

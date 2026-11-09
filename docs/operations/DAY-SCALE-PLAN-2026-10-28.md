@@ -1,5 +1,20 @@
 # Day-scale plan — what the estate still needs, and what it actually costs
 
+> **30 October correction — promotion assumptions superseded.** The estimates below are a
+> historical plan, not evidence that ten promotions are ready. Use the
+> [current completion review](TEN-AXIS-COMPLETION-2026-10-30.md) and its retained evidence.
+> The regulator census has **six target objects**, not 126 measurement units; 126 was
+> a text-line count. The agent interop census does not automatically measure standards
+> groups or evaluation organisations. Source reachability and keyword totals do not
+> establish the declared constructs. Claim disclosure/withdrawal review, subject identity,
+> applicable methods, behavioral execution and the genuine admission process remain open.
+> A named humanoid registry has also been recovered: 30 programmes comprise 13 announced,
+> 13 pilots and four historically labelled deployed, not 30 verified deployments. The
+> current work includes a real 39-case Tracr example reproduction, with explicit limits.
+> All ten subject axes remain unmeasured; the dates and “blocked by nothing” statements
+> below must not be used as current delivery commitments.
+
+
 *Produced 2026-10-28. Every count below was read from bytes today; every "day" is an estimate for
 work that has not been done, and is marked as such.*
 

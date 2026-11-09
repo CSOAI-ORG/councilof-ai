@@ -1,0 +1,94 @@
+{
+  "card": {
+    "as_of": "2026-10-31T10:33:13Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:base",
+      "chain": "base",
+      "chain_id": 8453,
+      "head": {
+        "block": 53326723,
+        "block_hash": "0x4d3c9a7792d3e0f35ca31170df66820ec33ed207f2264f1f08d7c2ade4dfcc37",
+        "block_time": "2026-10-31T10:33:13Z"
+      },
+      "n_contracts": 1,
+      "coverage": [
+        {
+          "subject": "evm-events:mTBILL:base",
+          "from": 51038129,
+          "to": 51038314,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 50775291,
+          "rpc": "base.drpc.org"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on base that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "7c9bdbf8a8a1c331e4ff77f7bf688618c1c211b47d3cb19cddee9fc8c0d8c3d3",
+    "sig_ed25519": "de7d578ce944edce1a348fa397439cb06277e31bf84bcb1b8ccf4ef599d791a030b2c5182db6407fc9cc89aa766be013b9d8e88d73e8b7296074eaa0182ef10f",
+    "source_urls": [
+      "https://base.drpc.org"
+    ],
+    "subject": "evm-events:scan:base coverage at block 53326723",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:base",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "8105baaf03b8771681b5bb9e9061ce198595bb12acc7c97c04541e0c25bd2006",
+    "b5f3abec38b04643c1a002c4dc429006f395462c712afe68ebc71dfb24b5df6a",
+    "d16834e9963c981be23454366a30a57424b2c355d4f36a0f35ad4f0f944f3d9a",
+    "cecf1c2e2119274abe5caa8c7066b9dfaeec4b8c622393a5e68cd6266014a60c",
+    "22a9742f34fc2ff9db0058bab08bc228b1a6f5f80c6133b3ec756ac8e4f2d473",
+    "bba19976cc9e6b81b26b90704df0a5f9a443cd52edfe17b8b4b43d1a87de6446",
+    "d4b9185884be95ac75d9049c910ddea802e06f300d14ffacb533e9ca00b5897d",
+    "8989e1232533354b01b9b4e8713f01bdbce1cc6e8415abd37d22c07ff8c02ec3",
+    "52561c1e65da4520f1e47c410d5d206c465771190b950ccb48be1637b05323d4"
+  ]
+}

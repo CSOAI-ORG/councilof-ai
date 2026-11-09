@@ -150,7 +150,8 @@ var UNCHECKABLE_REASONS = /* @__PURE__ */ new Set([
   "key_ambiguous",
   "key_not_pinned",
   "preimage_uncomputable",
-  "ed25519_unsupported"
+  "ed25519_unsupported",
+  "unsigned"
 ]);
 function cardState(valid, reasons) {
   if (valid) return "VALID";
@@ -403,7 +404,8 @@ async function verifyCard(rec, anchors) {
     }
   }
   if (!sigRaw) {
-    checks.push({ label: "Signature", ok: null, code: "unsigned", detail: "UNSIGNED \u2014 hash only." });
+    fail("unsigned");
+    checks.push({ label: "Signature", ok: null, code: "unsigned", detail: "UNSIGNED \u2014 hash only; no signature was available to verify." });
   } else {
     const sigBytes = decodeSig(sigRaw);
     if (!sigBytes || !keyBytes) {
@@ -439,7 +441,8 @@ async function verifyCard(rec, anchors) {
       }
     }
   }
-  const valid = reasons.length === 0 && checks.every((c) => c.ok !== false || c.advisory === true);
+  const signatureVerified = checks.some((c) => c.code === "signature_valid" && c.ok === true);
+  const valid = signatureVerified && reasons.length === 0 && checks.every((c) => c.ok !== false || c.advisory === true);
   const framing = rec?.body?.public_framing;
   if (typeof framing === "string") {
     checks.push({

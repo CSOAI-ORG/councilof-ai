@@ -1,0 +1,147 @@
+{
+  "card": {
+    "as_of": "2026-10-31T17:41:47Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:mTBILL:ethereum",
+      "symbol": "mTBILL",
+      "product": "Midas US Treasury Bill Token",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xdd629e5241cbc5919847783e6c96b2de4754e438",
+      "block": 26314303,
+      "block_hash": "0x7eb9decb786ef60d8f94d1d22a4e36bd8cda4a74f8fb4032c5b12592243d0b0b",
+      "block_time": "2026-10-31T17:41:47Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "Midas US Treasury Bill Token",
+        "symbol": "mTBILL",
+        "decimals": 18,
+        "totalSupply": "68059754108751598927247865",
+        "paused": false,
+        "accessControl": "0x0312a9d1ff2372ddedcbb21e4b6389afc919ac4b",
+        "eip1967_implementation": "0xd4998cc1ba435298c521f250b81856b1f25c8455",
+        "eip1967_admin": "0xbf25b58cb8dfad688f7bcb2b87d71c23a6600aac"
+      },
+      "absent": [
+        "isPaused()",
+        "owner()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "02d848856e4f2929395d90d07b6d244c1548a6131c490fd7ba4dd0d1b544a049",
+        "bytes": 13342,
+        "url": "/archive/proofs/eip1186/02d848856e4f2929.json",
+        "rpc": "eth.drpc.org",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+          "storageHash": "0xca3f1423866670f212f207254fff30eb1d7b459810ef8521f2eb745ef78d8b11",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0xd4998cc1ba435298c521f250b81856b1f25c8455",
+            "nodes": 4
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0xbf25b58cb8dfad688f7bcb2b87d71c23a6600aac",
+            "nodes": 4
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 26314303 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "bba29e99804ed874b622a2e8a7b3b24e8d3ba3fe833d07961c2602725f5cc419",
+    "sig_ed25519": "238acc11feaf739409075282c90ec5522c0e47ceb6e17ffae38487c57f2500aa5b4a74222234c505db16f8954110431c82c103190b16e0c4af45814f962cb407",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://etherscan.io/token/0xDD629E5241CbC5919847783e6C96B2De4754e438",
+      "https://eth.drpc.org"
+    ],
+    "subject": "evm:mTBILL:ethereum permission state at block 26314303",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:mTBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "6d4c3d5acb5bc126b19473a9f8197ff4b4f7dcdd1cd29e0043af097303765d5c",
+    "c9baf327c4c5e9aa626547d79fdeebdaf4e719528314b51d9f9e261f9d1d851c",
+    "c1ca9fd6b47905daebefc99e4c7ee71a0709f03aa519111786387fede194813a",
+    "86aac2a7c546be993152279a000379a02c9374462017f573a837ee627361a9ff",
+    "5a4e76acd3b99594368007d3ee57bc699e346d6aa0a69306b3c1a6bc0f0eba08",
+    "c34cfb4852212d53e0db45ac9b12fd9645e3bbfe55207607246aef3c65e606fc",
+    "d4b9185884be95ac75d9049c910ddea802e06f300d14ffacb533e9ca00b5897d",
+    "2f80f635032fe08f61790199da89d6720ad7ee0c7ad3df457164851afcfe365f",
+    "9ed0c87f82b4d9e4268b1e97c2530a17587d3a5d1e6d2f936944cf0f665b0d57"
+  ]
+}

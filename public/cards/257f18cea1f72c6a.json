@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-24T09:37:40Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "google",
+      "surface": "usage_policy",
+      "url": "https://policies.google.com/terms/generative-ai/use-policy",
+      "prev_sha256": "267806a6a9760bdf90af97d6618d2a39a7167cc4f7e21b89fea857b9a0cd4833",
+      "new_sha256": "b185b553f36a79a63c344fc7ca5058757ed9400eb2ddfe6aaa8b0e20a0a40d06",
+      "prev_bytes_sha256": "2255b3b3ae7d908a720946fae4f4fa27086eedee6446c889a8d80df394bf2d20",
+      "new_bytes_sha256": "fa14a44a6e6e1f1ab935d55f40b086e24f909d88a2d36e3fa2994f0887f7ab3c",
+      "prev_fetched_at": "2026-10-06T12:05:44Z",
+      "fetched_at": "2026-10-24T09:37:40Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 540887,
+        "new": 544623
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "257f18cea1f72c6ad349814d7dd011cfdac0327b0323a48bd29464e5438a2966",
+    "sig_ed25519": "7d5f0dca3b76c996d948312a7b79e2badd11fe5acba075b0c4f6110b36ec9deed653b972cf9eb82b141b956d7a8aab917bead84ed65790060cef0e84d64f3306",
+    "source_urls": [
+      "https://policies.google.com/terms/generative-ai/use-policy"
+    ],
+    "subject": "Google — usage_policy: bytes changed 2026-10-24",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:google",
+      "surface:usage_policy",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "a6c05a182dc4729bb6c22cfc54865e722b11c91d5f9370ee08e77d70fcf5d6b7",
+    "ad77807f5fea4fff5eb88a5571174e093e8812d667af8d11eebf924297730819",
+    "ff2ec5ea91e51315f7de1f0f9d73c1cbdc2098d97016a4e90131f25118d9681b",
+    "9cd8abc6a7f35e6258cb2610de95c38ff6dcc05d6c00ed23e4363353a857007a",
+    "9b3b2c8084a09395813e5402b05a736f53129192ce0cdab407f6d36886d0086c",
+    "5c925569a940198c345b4eee3a2ce0100647efd74bf52e33ecbea62d8fb8da7c",
+    "1db97de4f1ebe5d42f878a5922f46fdfff8ba6db6183bcfddaab819602644f80",
+    "2347810be70cf927d205598cdda9d0d6536a0fb064d55814988e4d6f20499c3d",
+    "698022b669e991ba5f21c904d323f321e46b6a7c9ff3d6222083d469bca0a693"
+  ]
+}

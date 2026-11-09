@@ -100,7 +100,7 @@ const counter = (
 });
 
 // ── sources, named once ──────────────────────────────────────────────────────
-const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
+const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin,d}.ts (the arrays /api/gspc derives from)";
 const SRC_REGULATORY_INVENTORY = REGULATORY_INVENTORY_PATH;
 
 // ── the board's own date-of-record ───────────────────────────────────────────

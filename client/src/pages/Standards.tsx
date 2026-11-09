@@ -1,237 +1,134 @@
-import { Download, FileText, ExternalLink, CheckCircle2 } from "lucide-react";
+import { ExternalLink, FileText } from "lucide-react";
+import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+const REFERENCES = [
+  {
+    name: "EU AI Act",
+    kind: "EU regulation",
+    description: "Regulation (EU) 2024/1689 sets obligations for AI systems and general-purpose AI models. Applicability depends on the system, role and relevant provision.",
+    source: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+    scope: "Inspect the published provision bank and mechanism map for the checks actually implemented. A provision listed in a corpus is not an executed test.",
+  },
+  {
+    name: "NIST AI RMF",
+    kind: "Voluntary risk framework",
+    description: "NIST's AI Risk Management Framework supports the design, development, use and evaluation of trustworthy AI. Its source page carries current releases and revision information.",
+    source: "https://www.nist.gov/itl/ai-risk-management-framework",
+    scope: "A reference for instrument design. CSOAI does not publish a signed measurement crosswalk covering the framework as a whole.",
+  },
+  {
+    name: "ISO/IEC 42001",
+    kind: "AI management system standard",
+    description: "ISO/IEC 42001:2023 specifies requirements for an AI management system. Consult ISO's source for the standard, edition and permitted access.",
+    source: "https://www.iso.org/standard/42001",
+    scope: "A reference for management and instrument design. CSOAI does not publish a signed measurement crosswalk covering the standard as a whole.",
+  },
+];
+
+const METHODS = [
+  { title: "Measurement methodology", href: "/methodology/", description: "The instruments, grading rules, evidence states and limits behind a published result." },
+  { title: "Statute-to-predicate mechanism", href: "/mechanism/", description: "The published linkage between source provisions and executable checks, with unresolved coverage shown." },
+  { title: "Claim Maintenance", href: "/claim-maintenance/", description: "The versioned specification, reference implementation and register for maintaining public claims." },
+  { title: "Published findings", href: "/findings/", description: "Inspect a result's subject, measurement window, source and available verification record." },
+];
+
+const ADDITIONAL = [
+  { name: "OECD AI Principles", href: "https://oecd.ai/en/ai-principles" },
+  { name: "IEEE standards for autonomous systems", href: "https://standards.ieee.org/industry-connections/ec/autonomous-systems.html" },
+  { name: "UK AI regulation policy", href: "https://www.gov.uk/government/publications/ai-regulation-a-pro-innovation-approach" },
+  { name: "Singapore Model AI Governance Framework", href: "https://www.pdpc.gov.sg/help-and-resources/2020/01/model-ai-governance-framework" },
+];
+
 export default function Standards() {
-  const frameworks = [
-    {
-      id: "eu-ai-act",
-      name: "EU AI Act",
-      fullName: "European Union Artificial Intelligence Act",
-      version: "v1.0",
-      status: "Published",
-      date: "2024-03-13",
-      description: "Comprehensive regulatory framework for AI systems in the European Union, establishing risk-based requirements and compliance obligations.",
-      coverage: ["Risk Classification", "Transparency Requirements", "Data Governance", "Human Oversight", "Conformity Assessment"],
-      pdfUrl: "/docs/eu-ai-act-implementation-guide.pdf",
-      externalUrl: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52021PC0206",
-    },
-    {
-      id: "nist-ai-rmf",
-      name: "NIST AI RMF",
-      fullName: "NIST Artificial Intelligence Risk Management Framework",
-      version: "v1.0",
-      status: "Published",
-      date: "2023-01-26",
-      description: "Voluntary framework from the U.S. National Institute of Standards and Technology for managing AI risks across the lifecycle.",
-      coverage: ["Govern", "Map", "Measure", "Manage", "Risk Assessment", "Trustworthy AI"],
-      pdfUrl: "/docs/nist-ai-rmf-guide.pdf",
-      externalUrl: "https://www.nist.gov/itl/ai-risk-management-framework",
-    },
-    {
-      id: "iso-42001",
-      name: "ISO/IEC 42001",
-      fullName: "ISO/IEC 42001:2023 - AI Management System",
-      version: "v1.0",
-      status: "Published",
-      date: "2023-12-18",
-      description: "International standard specifying requirements for establishing, implementing, maintaining, and continually improving an AI management system.",
-      coverage: ["AI Policy", "Risk Management", "Data Quality", "AI Lifecycle", "Continuous Improvement"],
-      pdfUrl: "/docs/iso-42001-implementation.pdf",
-      externalUrl: "https://www.iso.org/standard/81230.html",
-    },
-    {
-      id: "tc260-western",
-      name: "CSOAI Framework",
-      fullName: "Council of AI - Western AI Safety Governance Framework",
-      version: "v1.0",
-      status: "Active Development",
-      date: "2025-01-15",
-      description: "Measurement harnesses crosswalked to China's TC260 and peer frameworks, with multi-agent council review and public watchdog oversight.",
-      coverage: ["Measurement harnesses", "Watchdog System", "PDCA Cycles", "Compliance Scoring", "Public Transparency"],
-      pdfUrl: "/docs/coai-framework-v1.pdf",
-      externalUrl: null,
-    },
-  ];
-
-  const additionalStandards = [
-    { name: "OECD AI Principles", status: "Reference", url: "https://oecd.ai/en/ai-principles" },
-    { name: "IEEE 7000 Series", status: "Reference", url: "https://standards.ieee.org/industry-connections/ec/autonomous-systems.html" },
-    { name: "UK AI Regulation", status: "Monitoring", url: "https://www.gov.uk/government/publications/ai-regulation-a-pro-innovation-approach" },
-    { name: "Singapore Model AI Governance", status: "Reference", url: "https://www.pdpc.gov.sg/help-and-resources/2020/01/model-ai-governance-framework" },
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-16">
-        <div className="container">
-          <div className="max-w-3xl">
-            <Badge className="mb-4 bg-white/20 text-white border-white/30">Standards & Frameworks</Badge>
-            <h1 className="text-4xl font-bold mb-4">AI Governance Standards</h1>
-            <p className="text-xl text-blue-100">
-              Implementation guides for global AI safety and compliance frameworks.
-              CSOAI publishes measurement harnesses crosswalked to China's TC260 and peer standards —
-              evidence you can verify, not equivalence claims.
-            </p>
-          </div>
+    <div className="min-h-screen bg-background text-foreground">
+      <section className="surface-ink py-16 text-white sm:py-20">
+        <div className="container max-w-5xl">
+          <Badge className="mb-5 border-emerald-400/30 bg-emerald-500/10 text-emerald-200">Methods and references</Badge>
+          <h1 className="max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">AI governance references and published methods</h1>
+          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-200">
+            Follow the official source for a law or standard, then inspect the CSOAI instrument
+            and evidence that address your question. The scope of a measurement is stated in
+            its record. Framework references do not establish full coverage or conformity.
+          </p>
         </div>
-      </div>
+      </section>
 
-      {/* Main Content */}
-      <div className="container py-12">
-        {/* Primary Frameworks */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold mb-6">Primary Frameworks</h2>
-          <div className="grid gap-6">
-            {frameworks.map((framework) => (
-              <Card key={framework.id} className="p-8">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-2xl font-bold">{framework.name}</h3>
-                      <Badge variant={framework.status === "Published" ? "default" : "secondary"}>
-                        {framework.status}
-                      </Badge>
-                    </div>
-                    <p className="text-muted-foreground text-sm mb-1">{framework.fullName}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Version {framework.version} • Published {framework.date}
-                    </p>
+      <div className="container max-w-5xl space-y-14 py-12 sm:py-16">
+        <section aria-labelledby="published-methods-heading">
+          <h2 id="published-methods-heading" className="text-2xl font-bold">Inspect the published work</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {METHODS.map((method) => (
+              <Link key={method.href} href={method.href} className="rounded-2xl border bg-card p-6 text-card-foreground transition-colors hover:border-emerald-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-700">
+                <h3 className="text-lg font-semibold">{method.title} <span aria-hidden="true">→</span></h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{method.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="official-references-heading">
+          <h2 id="official-references-heading" className="text-2xl font-bold">Official framework references</h2>
+          <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
+            CSOAI publishes measurements and evidence. Certification, accreditation and regulatory
+            decisions have their own authorities and requirements.
+          </p>
+          <div className="mt-6 space-y-5">
+            {REFERENCES.map((reference) => (
+              <Card key={reference.name} className="p-5 sm:p-7">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <Badge variant="outline">{reference.kind}</Badge>
+                    <h3 className="mt-3 text-2xl font-semibold">{reference.name}</h3>
                   </div>
-                  <FileText className="h-12 w-12 text-primary" />
+                  <FileText className="h-8 w-8 shrink-0 text-emerald-700" aria-hidden="true" />
                 </div>
-
-                <p className="text-foreground/80 mb-6">{framework.description}</p>
-
-                {/* Coverage Areas */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold mb-3 text-muted-foreground">COVERAGE AREAS</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {framework.coverage.map((area) => (
-                      <Badge key={area} variant="outline" className="flex items-center gap-1">
-                        <CheckCircle2 className="h-3 w-3" />
-                        {area}
-                      </Badge>
-                    ))}
-                  </div>
+                <p className="mt-4 leading-relaxed text-muted-foreground">{reference.description}</p>
+                <div className="mt-4 rounded-xl border bg-muted/40 p-4">
+                  <p className="text-sm font-semibold">CSOAI evidence scope</p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{reference.scope}</p>
                 </div>
-
-                {/* Actions */}
-                <div className="flex gap-3">
-                  <Button className="flex items-center gap-2" disabled title="No file is published for this yet.">Guide not published yet</Button>
-                  {framework.externalUrl && (
-                    <Button variant="outline" className="flex items-center gap-2" asChild>
-                      <a href={framework.externalUrl} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-4 w-4" />
-                        Official Source
-                      </a>
-                    </Button>
-                  )}
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <Button variant="outline" asChild>
+                    <a href={reference.source} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-4 w-4" aria-hidden="true" /> Official {reference.name} source
+                    </a>
+                  </Button>
+                  <Link href="/mechanism/" className="inline-flex min-h-10 items-center text-sm font-semibold text-emerald-800 underline underline-offset-4 dark:text-emerald-300">Inspect implemented coverage</Link>
                 </div>
               </Card>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Additional Standards */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold mb-6">Additional Standards & References</h2>
-          <Card className="p-6">
-            <div className="grid md:grid-cols-2 gap-4">
-              {additionalStandards.map((standard) => (
-                <div key={standard.name} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <p className="font-semibold">{standard.name}</p>
-                    <p className="text-sm text-muted-foreground">{standard.status}</p>
-                  </div>
-                  <Button variant="ghost" size="sm" asChild>
-                    <a href={standard.url} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+        <section aria-labelledby="additional-references-heading">
+          <h2 id="additional-references-heading" className="text-2xl font-bold">Additional source references</h2>
+          <ul className="mt-5 grid list-none gap-3 p-0 sm:grid-cols-2">
+            {ADDITIONAL.map((reference) => (
+              <li key={reference.href}>
+                <a href={reference.href} target="_blank" rel="noopener noreferrer" className="flex h-full items-start justify-between gap-4 rounded-xl border p-4 font-medium hover:bg-muted/50">
+                  {reference.name}<ExternalLink className="mt-1 h-4 w-4 shrink-0" aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            These links identify source materials. Participation records and their evidence are
+            published separately on <Link href="/memberships/" className="font-medium text-primary underline">Where we take part</Link>.
+          </p>
+        </section>
 
-        {/* Comparison Matrix */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold mb-6">Framework Comparison Matrix</h2>
-          <Card className="p-6 overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-3 font-semibold">Feature</th>
-                  <th className="text-center p-3 font-semibold">EU AI Act</th>
-                  <th className="text-center p-3 font-semibold">NIST AI RMF</th>
-                  <th className="text-center p-3 font-semibold">ISO/IEC 42001</th>
-                  <th className="text-center p-3 font-semibold">CSOAI Framework</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b">
-                  <td className="p-3">Legal Binding</td>
-                  <td className="text-center p-3">✅ Mandatory (EU)</td>
-                  <td className="text-center p-3">❌ Voluntary</td>
-                  <td className="text-center p-3">✅ Certification</td>
-                  <td className="text-center p-3">✅ Self-Regulation</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="p-3">Risk Classification</td>
-                  <td className="text-center p-3">✅ 4 Levels</td>
-                  <td className="text-center p-3">✅ Continuous</td>
-                  <td className="text-center p-3">✅ Context-Based</td>
-                  <td className="text-center p-3">✅ Multi-Framework</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="p-3">Public Oversight</td>
-                  <td className="text-center p-3">❌ Government Only</td>
-                  <td className="text-center p-3">❌ No Mechanism</td>
-                  <td className="text-center p-3">❌ Auditor Only</td>
-                  <td className="text-center p-3">✅ Watchdog System</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="p-3">Continuous Improvement</td>
-                  <td className="text-center p-3">⚠️ Periodic Review</td>
-                  <td className="text-center p-3">✅ Lifecycle Focus</td>
-                  <td className="text-center p-3">✅ PDCA Built-in</td>
-                  <td className="text-center p-3">✅ PDCA Cycles</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="p-3">Transparency</td>
-                  <td className="text-center p-3">✅ Required</td>
-                  <td className="text-center p-3">✅ Recommended</td>
-                  <td className="text-center p-3">⚠️ Internal</td>
-                  <td className="text-center p-3">✅ Public Dashboard</td>
-                </tr>
-                <tr>
-                  <td className="p-3">Decentralized Governance</td>
-                  <td className="text-center p-3">❌ Centralized</td>
-                  <td className="text-center p-3">❌ No Governance</td>
-                  <td className="text-center p-3">❌ Org-Level Only</td>
-                  <td className="text-center p-3">✅ Measurement harnesses</td>
-                </tr>
-              </tbody>
-            </table>
-          </Card>
-        </div>
-
-        {/* CTA */}
-        <Card className="p-8 bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-3">Need Implementation Support?</h3>
-            <p className="text-muted-foreground mb-6">
-              Our team provides expert guidance on implementing these frameworks for your AI systems.
-            </p>
-            <div className="flex gap-3 justify-center">
-              <a href="/contact">Schedule Consultation</a>
-              <Button size="lg" variant="outline" disabled title="No file is published for this yet.">Guides not published yet</Button>
-            </div>
-          </div>
-        </Card>
+        <section className="rounded-2xl border bg-muted/40 p-6 sm:p-8" aria-labelledby="measurement-enquiry-heading">
+          <h2 id="measurement-enquiry-heading" className="text-2xl font-bold">Bring one question to the evidence</h2>
+          <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
+            Tell us the system, claim or decision you need to examine. We can agree the relevant
+            sources, method, deliverable and limits within the existing measurement service.
+          </p>
+          <Button className="mt-5" asChild><Link href="/contact/">Request a scoped measurement</Link></Button>
+        </section>
       </div>
     </div>
   );

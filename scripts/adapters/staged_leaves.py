@@ -53,6 +53,13 @@ STAGED_DIRS = (
     # suite at spec 2026-07-28 - because the stable suite does not know the later spec release, and a
     # result from one channel is not comparable with the other. Admission/signing unchanged.
     "mcp-conformance-2026-10",
+    # Public watchdog intake (2026-10-30, lane watchdog-ingest): one PROBED atom per day about
+    # the 18 pinned public watchdog and incident sources the estate measures, from
+    # scripts/readers/watchdog_intake_reader.py. It reads the run artifact and the charter feed
+    # the intake harness already wrote — it probes nothing itself, so the daily root tick stays
+    # cheap. REACHABLE / UNCHECKABLE / UNREACHABLE stay three facts; the routing rows are carried
+    # as a COUNT with their HOLD decision, never as a decision. Admission/signing unchanged.
+    "watchdog-intake-2026-10",
 )
 SURFACE = "public.notice"
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"

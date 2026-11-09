@@ -58,14 +58,130 @@ def cited_title_spans(text: str) -> list[tuple[int, int]]:
     return spans
 
 
+# A .txt Internet-Draft: the header carries the literal "Internet-Draft" line
+# followed by an "Intended status:" line. Only an I-D has that pair, and the
+# pair is what stops a public notice that merely mentions a draft from
+# picking up the I-D exemptions below.
+_ID_TXT = re.compile(r"^Internet-Draft\s+\S[^\n]*\n[^\n]*Intended status:", re.M)
+# A numbered I-D section heading: "11.  Normative References".
+_TXT_HEADING = re.compile(r"^\s*(\d+)\.\s+(.+?)\s*$", re.M)
+# A paragraph: its first line plus its indented continuation lines.
+_TXT_PARA = re.compile(r"[^\n][^\n]*(?:\n[ \t]+[^\n]*)*", re.M)
+_TXT_RFC = re.compile(r"\bRFC\s?\d{3,5}\b")
+_TXT_QUOTED = re.compile(r"\"[^\"]{1,300}\"", re.S)
+
+# The object of a denial is not a claim.
+#   "The document distinguishes measurement from certification throughout"
+#   "The use case explicitly excludes: grading, ranking, certification, ..."
+# The list may WRAP across lines: an I-D's lines are ~72 columns, so
+# "excludes: grading, ranking," and "certification, conformity assessment."
+# are one clause split over two lines. The character class therefore allows
+# newlines and stops only at a sentence-ending period.
+_DISTINGUISH_FROM = re.compile(
+    r"\b(?:distinguish\w*|separat\w*|differentiate\w*)\b[^.]{0,80}\bfrom\s+$", re.I)
+_EXCLUDES_LIST = re.compile(r"\bexcludes?\s*:\s*(?P<list>[^.]{0,200})$", re.I)
+# A denial list that names a subject is a new clause, not a list of excluded
+# things: "explicitly excludes: X, and we certify Y" is a CLAIM about Y.
+_SUBJECT = re.compile(r"\b(?:we|our|us|CSOAI|Council of AI)\b", re.I)
+
+
+def txt_cited_title_spans(text: str) -> list[tuple[int, int]]:
+    """The spans of a cited work's own title inside a .txt Internet-Draft's
+    reference list.
+
+    The .txt analogue of the XML <reference><title> rule: a reference entry
+    in a Normative or Informative References section that cites an RFC, and
+    only the words inside its quoted title.
+    """
+    if not _ID_TXT.search(text):
+        return []
+    headings = [(m.start(), m.group(2)) for m in _TXT_HEADING.finditer(text)]
+    spans: list[tuple[int, int]] = []
+    for para in _TXT_PARA.finditer(text):
+        start = para.start()
+        prev = [h for h in headings if h[0] <= start]
+        if not prev:
+            continue
+        if not re.search(r"\b(?:normative|informative)\s+references\b", prev[-1][1], re.I):
+            continue
+        body = para.group(0)
+        if not _TXT_RFC.search(body):
+            continue
+        for q in _TXT_QUOTED.finditer(body):
+            spans.append((start + q.start(), start + q.end()))
+    return spans
+
+
+def _in_denial_construction(before: str) -> bool:
+    """True when the words immediately before a match make it the object of a
+    denial rather than a claim."""
+    if _DISTINGUISH_FROM.search(before):
+        return True
+    m = _EXCLUDES_LIST.search(before)
+    if m and not _SUBJECT.search(m.group("list")):
+        return True
+    return False
+
+
+def is_internet_draft(text: str) -> bool:
+    """True for an Internet-Draft, in XML2RFC v2 or v3, or in the plain-text
+    I-D form. Read from the RAW text: md_text() collapses the newlines, so
+    the .txt header test cannot see them there."""
+    return bool(_ID_TXT.search(text) or _ID_V3.search(text) or _ID_V2.search(text))
+
+
+def id_denial_exempt(text: str, match) -> bool:
+    """Exemption for Internet-Draft files only: the matched word is the object
+    of a denial. A public notice gets no such exemption."""
+    if not is_internet_draft(text):
+        return False
+    before = text[max(0, match.start() - 200): match.start()]
+    return _in_denial_construction(before)
+
+
 def gate_text(text, path="/notice"):
-    spans = cited_title_spans(text)
+    spans = cited_title_spans(text) + txt_cited_title_spans(text)
+    is_id = is_internet_draft(text)
     banned = []
     for m in og.NOTICE_BANNED.finditer(text):
         if any(start <= m.start() < end for start, end in spans):
             continue  # a cited document's title, not a claim
+        if id_denial_exempt(text, m):
+            continue  # the object of a denial, not a claim
+        if is_id:
+            # The notice word list has NO negation escape BY DESIGN: a public
+            # notice that says "not certified" still puts the word in front of
+            # the reader, and a notice that says "the check FAILED" is bad.
+            # But an Internet-Draft is not a notice, and the DOCTRINE check
+            # above has always applied the negation escape to it -- that is
+            # how "This document does not define a certification scheme"
+            # passes the doctrine check today. Applying two different
+            # standards to the same file is the category error: the notice
+            # list's rules are for notices.
+            # A TIGHT window: the negation must be the words immediately
+            # around the match, not somewhere in the paragraph. A 140-char
+            # window exempted "Certificate" in a test fixture because the
+            # sentence two lines earlier said "nothing" -- an unrelated
+            # negation cannot license a claim.
+            w0 = text[max(0, m.start() - 40): m.start()]
+            w1 = text[m.end(): m.end() + 20]
+            if og.NEG.search(w0) or og.NEG.search(w1):
+                continue
         banned.append(og.clip(text[max(0, m.start() - 30): m.end() + 30], 80))
-    checks = og.doctrine_checks(og.md_text(text), path, og.OWN_NOTICES, prices=True)
+    # The doctrine check runs on md_text, whose offsets differ from the raw
+    # text, so the "is this an Internet-Draft" answer is taken from the RAW
+    # text and the denial window is taken from the SAME text the match was
+    # found in. Mixing the two coordinate spaces would exempt the wrong words.
+    md = og.md_text(text)
+
+    def _denial_exempt_in_md(md_text, match):
+        if not is_id:
+            return False
+        before = md_text[max(0, match.start() - 200): match.start()]
+        return _in_denial_construction(before)
+
+    checks = og.doctrine_checks(md, path, og.OWN_NOTICES, prices=True,
+                                 exempt=_denial_exempt_in_md)
     doctrine = {c["check"]: c["status"] for c in checks}
     fails = [c for c in checks if c["status"] != og.PASS]
     ok = not banned and not fails and len(checks) >= N_DOCTRINE

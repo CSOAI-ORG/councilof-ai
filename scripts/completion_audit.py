@@ -36,7 +36,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import re
+import subprocess
 import sys
+import tempfile
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
@@ -46,7 +50,7 @@ REPO = Path(__file__).resolve().parents[1]
 UA = "csoai-completion-audit/0.1 (+https://councilof.ai)"
 BASE = "https://councilof.ai"
 OUT_JSON = REPO / "public" / "completion-audit.json"
-OUT_MD = REPO / "docs" / "measurement" / "CONSUMER-READY-COMPLETION-AUDIT-2026-10-28.md"
+OUT_MD = REPO / "docs" / "measurement" / "CONSUMER-READY-COMPLETION-AUDIT.md"
 
 # ---------------------------------------------------------------- probe helpers
 
@@ -76,8 +80,18 @@ def fetch_json(path: str, timeout: int = 45):
 # Each probe returns (state, measured, receipt). A probe that cannot run
 # returns OPEN with the reason — it never guesses LIVE.
 
+# These outcomes currently have availability probes, not a qualified completion-
+# receipt consumer. Keep their observations, but do not treat arbitrary response
+# bodies or producer-declared success (including fixtures) as outcome evidence.
+AVAILABILITY_ONLY_OUTCOMES = {
+    "U-1": "a qualified non-fixture discover/identify/pay/deliver/verify receipt",
+    "U-2": "qualified claim-maintenance acceptance linking the claim, supporting "
+           "evidence, correction history and independent readback",
+}
+
+
 def p_product() -> tuple[str, str, str]:
-    """U-1: the four verbs, end to end, on the live surface."""
+    """U-1: observe availability without asserting end-to-end completion."""
     checks = {
         "board": "/api/gspc",
         "root": "/root.json",
@@ -91,15 +105,20 @@ def p_product() -> tuple[str, str, str]:
         status, _ = fetch(path)
         got[name] = status
     ok = [n for n, s in got.items() if s == 200]
-    state = "LIVE" if len(ok) == len(checks) else "OPEN"
-    return state, f"{len(ok)}/{len(checks)} surfaces answered 200: " + ", ".join(
-        f"{n}={got[n]}" for n in checks), f"{BASE}/"
+    availability = "LIVE" if len(ok) == len(checks) else "OPEN"
+    measured = (f"availability={availability}; {len(ok)}/{len(checks)} surfaces "
+                "answered 200: " + ", ".join(f"{n}={got[n]}" for n in checks))
+    return ("OPEN", measured + "; completion not verified: this GET-only audit "
+            "does not consume " + AVAILABILITY_ONLY_OUTCOMES["U-1"], f"{BASE}/")
 
 
 def p_flagship() -> tuple[str, str, str]:
+    """U-2: a reachable homepage does not establish claim-maintenance acceptance."""
     status, _ = fetch("/")
-    return ("LIVE" if status == 200 else "OPEN",
-            f"GET / -> HTTP {status}", f"{BASE}/")
+    availability = "LIVE" if status == 200 else "OPEN"
+    return ("OPEN", f"availability={availability}; GET / -> HTTP {status}; "
+            "completion not verified: this GET-only audit does not consume "
+            + AVAILABILITY_ONLY_OUTCOMES["U-2"], f"{BASE}/")
 
 
 def p_heartbeat_board() -> tuple[str, str, str]:
@@ -154,19 +173,140 @@ def p_ots_manifest() -> tuple[str, str, str]:
             f"{BASE}/interop/ots/manifest.json")
 
 
-def p_namespace() -> tuple[str, str, str]:
-    """U-10: the 4->1 namespace consolidation — measurable in the repo."""
-    ns = "com.councilof."
-    hits = 0
+def _dig_available() -> bool:
+    """Is `dig` present? A machine without it CANNOT say a TXT record is absent -
+    it can only say it does not know. Conflating the two is how a DNS claim gets
+    reported as unpublished on a runner that simply lacks the tool."""
+    try:
+        subprocess.run(["dig", "-v"], capture_output=True, timeout=20)
+        return True
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def _dig_txt_state(name: str) -> tuple[str, list[str]]:
+    """Ask DNS for a name's TXT records, and say WHICH answer we got.
+
+    Returns (state, txt) where state is:
+      "NOERROR"  the name was resolved; txt holds its TXT records (possibly empty)
+      "NXDOMAIN" the name does not exist at all
+      "UNKNOWN"  the query did not complete, so the answer is unknown
+
+    WHY THE THREE STATES. `dig +short` prints NOTHING for a name that does not exist, for
+    a name that exists but publishes no TXT, and for a query that failed (SERVFAIL, a
+    timeout, a resolver that gave up). Those are three different facts and the short form
+    collapses them into one empty string. Reading only the answer would let a DNS outage
+    report "no TXT record" - an absence the estate never measured. The status line is the
+    difference between "we looked and there is nothing" and "we did not get to look".
+
+    Measured 2026-11-02 on the three labels this audit reads: _mcp.com.councilof.ai and
+    _namespace.com.councilof.ai are NXDOMAIN (the subdomain does not exist), which is a
+    different fact from "the subdomain exists and publishes no TXT".
+    """
+    try:
+        r = subprocess.run(["dig", "+noall", "+comments", "+answer", "TXT", name],
+                           capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        return ("UNKNOWN", [])
+    out = r.stdout or ""
+    status = ""
+    for line in out.splitlines():
+        if "status:" in line:
+            status = line.split("status:", 1)[1].split(",")[0].strip().upper()
+            break
+    if status not in ("NOERROR", "NXDOMAIN"):
+        return ("UNKNOWN", [])
+    txt = []
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) >= 5 and parts[3].upper() == "TXT":
+            txt.append(" ".join(parts[4:]).strip().strip('"'))
+    return (status, txt)
+
+
+def _dig_txt(name: str) -> list[str] | None:
+    """TXT records for a DNS name. None means: the tool could not be run, or the query
+    did not complete, so the answer is UNKNOWN. An empty list means: the name was asked
+    and publishes no TXT."""
+    state, txt = _dig_txt_state(name)
+    if state == "UNKNOWN":
+        return None
+    return txt
+
+
+def p_namespace_dns() -> tuple[str, str, str]:
+    """U-10: the namespace claim, which is a DNS TXT record, not a file edit.
+
+    The checklist's own wording is "`com.councilof/*` DNS TXT", and the estate's
+    own lane row says what to publish: the MCP namespace TXT at
+    `_mcp.com.councilof.ai` naming `com.councilof/*`, plus the `_namespace` label,
+    after checking that no conflicting claim exists. So the box is MEASURED by
+    reading DNS, and it is gated on whoever holds the domain's DNS authority.
+    """
+    if not _dig_available():
+        return ("OPEN",
+                "the dig tool is absent, so the TXT state is UNKNOWN - not absent. "
+                "Install dnsutils and re-measure before reading this as a verdict",
+                "dns:com.councilof.ai")
+    labels = ("com.councilof.ai", "_namespace.com.councilof.ai", "_mcp.com.councilof.ai")
+    answers = {n: _dig_txt_state(n) for n in labels}
+    published = [n for n, (state, txt) in answers.items()
+                 if state == "NOERROR" and any("com.councilof/*" in t for t in txt)]
+    if published:
+        return ("LIVE",
+                f"the namespace TXT is published at {', '.join(published)}",
+                "https://councilof.ai/jewels/master-catalogue/")
+    def _read(n: str) -> str:
+        state, txt = answers[n]
+        if state == "NXDOMAIN":
+            return "the name does not exist"
+        if state == "UNKNOWN":
+            return "UNKNOWN - the query did not complete"
+        return ", ".join(txt) if txt else "no TXT record"
+    detail = "; ".join(f"{n} -> " + _read(n) for n in labels)
+    unknown = [n for n, (state, _) in answers.items() if state == "UNKNOWN"]
+    if unknown:
+        # Unknown is not absent. If the query did not complete for any label, the audit
+        # cannot say the claim is unpublished - it can only say it did not find out.
+        return ("OPEN",
+                f"the namespace TXT state is UNKNOWN for {', '.join(unknown)} - unknown is "
+                f"not absent ({detail}); publishing it needs DNS authority for the domain, "
+                f"which is the owner's",
+                "dns:" + " ".join(labels))
+    return ("OPEN",
+            f"no namespace TXT is published ({detail}) - publishing it needs DNS "
+            f"authority for the domain, which is the owner's",
+            "dns:" + " ".join(labels))
+
+
+def p_namespace_tree() -> tuple[str, str, str]:
+    """U-10b: does any PUBLISHED file still claim the old namespace as its own id?
+
+    A DNS name (com.councilof.ai) is not a claimed namespace - it is the label
+    the claim would be published at, and the estate's own rows legitimately name
+    it. What must not survive is a published artefact claiming an identifier in
+    the `com.councilof.*` space, so that is what this counts.
+    """
+    # A DNS name (com.councilof.ai) and the claim form (com.councilof/*) are
+    # legitimate MENTIONS - the label the claim would be published at, and the
+    # pattern it would name. What must not survive is a published artefact
+    # claiming an identifier INSIDE that space, e.g. com.councilof.gsPC.
+    pattern = re.compile(r"com\.councilof\.(?!ai\b|\*)[A-Za-z0-9_-]+")
+    hits = []
     for p in (REPO / "public").rglob("*"):
-        if p.is_file() and p.suffix in {".md", ".json", ".txt", ".html"}:
-            try:
-                if ns in p.read_text(errors="replace"):
-                    hits += 1
-            except OSError:
-                pass
-    state = "LIVE" if hits == 0 else "OPEN"
-    return (state, f"{hits} public file(s) still carry the '{ns}' namespace",
+        if not (p.is_file() and p.suffix in {".md", ".json", ".txt", ".html"}):
+            continue
+        if p.name == "completion-audit.json":
+            continue                      # this audit's own output names the namespace
+        try:
+            if pattern.search(p.read_text(errors="replace")):
+                hits.append(str(p.relative_to(REPO)))
+        except OSError:
+            pass
+    state = "LIVE" if not hits else "OPEN"
+    return (state,
+            f"{len(hits)} published file(s) still claim an identifier in the com.councilof.* space"
+            + (": " + ", ".join(hits[:4]) if hits else ""),
             "repo:public/ (measured at build time)")
 
 
@@ -239,6 +379,109 @@ def p_completion_ledger() -> tuple[str, str, str]:
 # signature ceremony, a DNS record, a business decision and a paying customer
 # are not things a script can measure, and pretending otherwise is the failure
 # the honesty register exists to prevent.
+# ---------------------------------------------------------------- the agent lane
+# These boxes were listed as "agent builds" with no state. A box with no probe is
+# a box nobody measured, so each one below now has a probe that either sees the
+# artefact or says, precisely, that it is not there. The estate's own jewel table
+# already calls CJ-50 (the Ecosystem Health Board) UNVERIFIED - "no prototype was
+# found on any live or local surface" - while the growth corpus still listed it as
+# "prototype + live board". A probe is what tells those two apart.
+
+_SKIP_DIRS = {".git", "node_modules", "dist", ".next", "target", "__pycache__", ".venv"}
+
+
+def repo_paths_containing(*needles: str, limit: int = 60000) -> list[str]:
+    """Repo paths whose name contains any needle. Bounded, because the audit runs
+    in CI and an unbounded walk is how a measurement becomes a timeout."""
+    out: list[str] = []
+    for root in ("scripts", "docs", "public", "council-os", "functions", "harness"):
+        base = REPO / root
+        if not base.is_dir():
+            continue
+        for dirpath, dirnames, filenames in os.walk(base):
+            dirnames[:] = [d for d in dirnames if d not in _SKIP_DIRS]
+            for name in filenames:
+                low = name.lower()
+                if any(n.lower() in low for n in needles):
+                    out.append(os.path.relpath(os.path.join(dirpath, name), REPO))
+                    if len(out) >= limit:
+                        return out
+    return out
+
+
+def p_ecosystem_health_board() -> tuple[str, str, str]:
+    """U-13: the Ecosystem Health Board + its citation flywheel."""
+    tried = ["/ecosystem-health/", "/health-board/"]
+    codes = {}
+    for path in tried:
+        status, _ = fetch(path)
+        codes[path] = status
+    served = [p for p, c in codes.items() if c == 200]
+    if served:
+        return ("LIVE", f"served at {', '.join(served)}",
+                BASE + (served[0] if served else tried[0]))
+    return ("OPEN",
+            "no Ecosystem Health Board on the edge: "
+            + ", ".join(f"{p} -> HTTP {c}" for p, c in codes.items())
+            + "; the estate's own CJ-50 row calls it UNVERIFIED",
+            BASE + "/reports/")
+
+
+def p_chained_loop() -> tuple[str, str, str]:
+    """U-18: the chained loop v0.1 (evolve, dream, grade, select, remember)."""
+    hits = repo_paths_containing("chained-loop", "chain-loop", "chainloop")
+    if hits:
+        return ("LIVE", f"{len(hits)} artefact(s): {hits[0]}", f"repo:{hits[0]}")
+    return ("OPEN",
+            "no chained-loop artefact in scripts/, docs/, public/, council-os/, "
+            "functions/ or harness/ — the corpus calls the stack 'verified' and "
+            "the 2-week held-out gate the closer; neither is in the tree",
+            "repo:scripts/ docs/ public/ council-os/ functions/ harness/")
+
+
+def p_small_world_league() -> tuple[str, str, str]:
+    """U-19: the small-world lab T-1 league."""
+    hits = repo_paths_containing("small-world", "smallworld", "t1-league")
+    if hits:
+        return ("LIVE", f"{len(hits)} artefact(s): {hits[0]}", f"repo:{hits[0]}")
+    return ("OPEN",
+            "no small-world / T-1 league artefact in the tree; the corpus lists it "
+            "as 'specced, pod spike' and names a pod spike as the closer",
+            "repo:scripts/ docs/ public/ council-os/ functions/ harness/")
+
+
+def p_402_health_split() -> tuple[str, str, str]:
+    """U-22: the 402 health split (60/130) and the stale-directory repoints."""
+    hits = repo_paths_containing("402-health", "health-split", "repoint")
+    if hits:
+        return ("LIVE", f"{len(hits)} artefact(s): {hits[0]}", f"repo:{hits[0]}")
+    return ("OPEN",
+            "no 402-health / health-split / repoint artefact in the tree; the corpus "
+            "lists 'measured, repair queue' with the repair queue as the closer",
+            "repo:scripts/ docs/ public/ council-os/ functions/ harness/")
+
+
+def p_corrections_published() -> tuple[str, str, str]:
+    """U-9: the corrections corpus, published and signed.
+
+    The corpus is numbered C-<date>-<n> - C-2026-1006-13, C-2026-0930-12 - NOT #1..#n.
+    An earlier version of this probe counted ids ending "-60" to "-70" and reported "0 of
+    the #60-70 range present" against 93 published corrections, which reads as seventy
+    corrections missing when the series it looked for does not exist. The count is what it
+    is; the invented range is gone.
+    """
+    _, corr = fetch_json("/api/corrections")
+    if not corr:
+        return "OPEN", "the corrections endpoint did not answer", f"{BASE}/api/corrections"
+    entries = corr.get("corrections") or []
+    sig = corr.get("signature_state")
+    state = "LIVE" if entries and sig == "VALID" else "OPEN"
+    return (state,
+            f"{len(entries)} correction(s) published, signature_state={sig}; the corpus is "
+            f"numbered C-<date>-<n>, so there is no '#60-70' series to be present or absent",
+            f"{BASE}/api/corrections")
+
+
 OWNER_GATED = [
     ("U-5", "Signer ceremony + V-9 rotation", "OWNER",
      "a key and a named human at the ceremony", "not probeable: it needs a human and a key"),
@@ -261,11 +504,6 @@ OWNER_GATED = [
 ]
 
 AGENT_LANE = [
-    ("U-13", "Health Board daily habit + citation flywheel", "deploy+habit"),
-    ("U-14", "OpenShell adapters + Cedar translator", "agent builds"),
-    ("U-15", "Evaluation Cards schema adoption", "agent builds"),
-    ("U-18", "The chained loop v0.1 (fixed grader)", "agent+pod, 2-week gate"),
-    ("U-19", "Small-world lab T-1 league", "pod spike"),
     ("U-20", "1,050-move harvest deck + 1,000-move decks + 31-gate board", "execute continuously"),
 ]
 
@@ -274,13 +512,19 @@ PROBED = [
     ("U-2", "Flagship public (claim maintenance)", p_flagship),
     ("U-3", "Heartbeat board public", p_heartbeat_board),
     ("U-4", "Root advancing + axes + corrections counter", p_root_and_corrections),
-    ("U-13a", "Agent skills published (12 skills)", p_skills),
+    ("U-13a", "Agent skills published", p_skills),
     ("U-21", "OpenTimestamps: every published proof Bitcoin-attested", p_ots_manifest),
     ("U-9a", "Corrections published and signed", p_completion_ledger),
-    ("U-10a", "Namespace consolidation 4->1 in the published tree", p_namespace),
+    ("U-10a", "Namespace consolidation: the com.councilof/* DNS TXT claim", p_namespace_dns),
+    ("U-10c", "No published artefact still claims a com.councilof.* identifier", p_namespace_tree),
     ("U-14a", "OpenShell adapter built, with a witness capture", p_openshell_adapter),
     ("U-14b", "Cedar policy set governing the GSPC route", p_cedar_policy),
     ("U-15a", "Evaluation Cards schema published", p_evaluation_cards),
+    ("U-9b", "The corrections corpus, published and signed", p_corrections_published),
+    ("U-13b", "Ecosystem Health Board + citation flywheel", p_ecosystem_health_board),
+    ("U-18a", "The chained loop v0.1 (fixed grader)", p_chained_loop),
+    ("U-19a", "Small-world lab T-1 league", p_small_world_league),
+    ("U-22", "402 health split + stale-directory repoints", p_402_health_split),
 ]
 
 
@@ -341,6 +585,25 @@ def audit_faults(rows: list[dict]) -> list[str]:
     faults = []
     for r in rows:
         ident = r.get("id", "?")
+        if r.get("state") == "LIVE":
+            if ident in AVAILABILITY_ONLY_OUTCOMES:
+                faults.append(
+                    f"{ident} is LIVE but this audit has no qualified outcome "
+                    "receipt consumer; availability or supplied success claims "
+                    "cannot establish completion")
+            rec = (r.get("receipt") or "").strip()
+            # A LIVE box that names a repo path must point at a path that EXISTS.
+            # This is the CJ-50 shape: the corpus called a prototype BUILT and the
+            # estate's own table found no artefact anywhere. A probe that claims
+            # LIVE for a path that is not in the tree is the same error, caught.
+            if rec.startswith("repo:"):
+                target = rec[len("repo:"):].strip()
+                target = target.split(" ", 1)[0]
+                if target.endswith("/"):
+                    if not (REPO / target).is_dir():
+                        faults.append(f"{ident} is LIVE but its receipt path {target!r} is not in the tree")
+                elif not (REPO / target).exists():
+                    faults.append(f"{ident} is LIVE but its receipt path {target!r} is not in the tree")
         if r.get("state") not in STATE_VOCABULARY:
             faults.append(f"{ident} invented the state {r.get('state')!r}")
         if r.get("state") == "LIVE" and not (r.get("measured") or "").strip():
@@ -406,6 +669,91 @@ def banned_claims_in(text: str) -> list[str]:
     return [b for b in BANNED_CLAIMS if b in low]
 
 
+def availability_outcome_selftest() -> list[str]:
+    """Finite, offline controls for U-1/U-2; do not run measure() or touch files."""
+    global fetch
+    original_fetch = fetch
+    fails = []
+    product_paths = (
+        "/api/gspc", "/root.json", "/api/corrections",
+        "/api/x402", "/mcp", "/gspc-verify/",
+    )
+    probes = (("U-1", p_product, product_paths),
+              ("U-2", p_flagship, ("/",)))
+    try:
+        for kind in ("empty", "fixture", "synthetic", "production-claim"):
+            body = b"" if kind == "empty" else json.dumps({
+                "evidence_kind": kind, "state": "LIVE", "paid": True,
+                "verified": True, "maintenance_complete": True,
+                "receipt": "https://example.invalid/supplied-receipt",
+            }).encode()
+            calls = []
+
+            def all_green(path, timeout=45):
+                if path not in product_paths + ("/",):
+                    raise AssertionError(f"unexpected probe: {path}")
+                calls.append(path)
+                return 200, body
+
+            fetch = all_green
+            rows = []
+            for ident, probe, expected in probes:
+                calls.clear()
+                state, measured, receipt = probe()
+                if tuple(calls) != expected:
+                    fails.append(f"{ident}: availability requests changed ({kind})")
+                if state != "OPEN" or "availability=LIVE" not in measured:
+                    fails.append(f"{ident}: green GETs promoted an outcome ({kind})")
+                if receipt != f"{BASE}/" or "completion not verified" not in measured:
+                    fails.append(f"{ident}: observation or limitation lost ({kind})")
+                if ident == "U-1" and (
+                        "6/6 surfaces answered 200" not in measured
+                        or any(f"{name}=200" not in measured for name in (
+                            "board", "root", "corrections", "x402", "mcp", "verify"))):
+                    fails.append("U-1: successful HTTP observations were lost")
+                if ident == "U-2" and "GET / -> HTTP 200" not in measured:
+                    fails.append("U-2: successful homepage observation was lost")
+                row = {"id": ident, "state": state, "measured": measured,
+                       "receipt": receipt}
+                rows.append(row)
+                if audit_faults([row]):
+                    fails.append(f"{ident}: honest OPEN observation was rejected")
+                forged = {**row, "state": "LIVE", "evidence_kind": kind,
+                          "outcome_evidence": {"verified": True, "source": kind}}
+                if not audit_faults([forged]):
+                    fails.append(f"{ident}: supplied success bypassed the guard ({kind})")
+            counts = {"total": 2, "live": 0, "open": 2, "staged": 0, "owner": 0}
+            if counts_consistent(counts, rows):
+                fails.append(f"availability/outcome counts disagree ({kind})")
+
+        def unavailable(path, timeout=45):
+            if path not in product_paths + ("/",):
+                raise AssertionError(f"unexpected probe: {path}")
+            return (503 if path in ("/gspc-verify/", "/") else 200), b""
+
+        fetch = unavailable
+        state, measured, _ = p_product()
+        if (state != "OPEN" or "availability=OPEN" not in measured
+                or "5/6 surfaces answered 200" not in measured
+                or "verify=503" not in measured):
+            fails.append("U-1: failed availability observation was lost")
+        state, measured, _ = p_flagship()
+        if (state != "OPEN" or "availability=OPEN" not in measured
+                or "GET / -> HTTP 503" not in measured):
+            fails.append("U-2: failed homepage observation was lost")
+
+        # No blanket rejection of legitimate fixtures belonging to other boxes.
+        if audit_faults([{
+            "id": "U-14a", "state": "LIVE",
+            "measured": "expected OpenShell refusal fixture",
+            "receipt": "https://example.invalid/openshell-fixture",
+        }]):
+            fails.append("the availability guard reclassified an unrelated fixture")
+    finally:
+        fetch = original_fetch
+    return fails
+
+
 def selftest() -> int:
     """Prove the audit can go red.
 
@@ -416,7 +764,7 @@ def selftest() -> int:
     against a DELIBERATELY BROKEN row: the rule must catch it. If the rule
     cannot catch its own counterexample, the rule is not a rule.
     """
-    fails = []
+    fails = availability_outcome_selftest()
 
     def must_catch(name: str, row: dict) -> None:
         if not audit_faults([row]):
@@ -460,6 +808,16 @@ def selftest() -> int:
         fails.append("the counts rule did not catch a wrong total")
     if not counts_consistent({**c, "live": c["live"] + 1}, real["items"]):
         fails.append("the counts rule did not catch a wrong per-state count")
+    # 9c. and the counterexample: a LIVE row whose repo receipt points at a path
+    # that is NOT in the tree must be caught. This is the CJ-50 shape: the corpus
+    # called a prototype BUILT and the estate's own table found no artefact
+    # anywhere. A probe that claims LIVE for a path that is not in the tree is the
+    # same error, and the audit has to refuse it.
+    ghost = {"id": "X-7", "state": "LIVE", "measured": "a prototype that does not exist",
+             "receipt": "repo:docs/measurement/NO-SUCH-ARTEFACT.md"}
+    if not audit_faults([ghost]):
+        fails.append("the audit did not catch a LIVE row whose repo receipt path is absent")
+
     # 10. the rendered markdown must carry the same numbers as the JSON
     md = render_md(real)
     if f"{c['total']} items" not in md:
@@ -468,12 +826,65 @@ def selftest() -> int:
     for banned in banned_claims_in(md):
         fails.append(f"the rendered ledger asserts a banned claim: {banned!r}")
 
+    # 12. the DNS namespace probe must be able to go RED, and it must never report an
+    #     answer it did not get. "Unknown" and "absent" are different facts, and a probe
+    #     that conflates them reports an absence the estate never measured.
+    global _dig_available, _dig_txt_state
+    original_dig = _dig_txt_state
+    original_dig_available = _dig_available
+    try:
+        _dig_available = lambda: True
+        _dig_txt_state = lambda n: ("NOERROR", ["com.councilof/*"])
+        if p_namespace_dns()[0] != "LIVE":
+            fails.append("the namespace DNS probe did not report a published TXT as LIVE")
+        _dig_txt_state = lambda n: ("NXDOMAIN", [])
+        state, measured, _ = p_namespace_dns()
+        if state != "OPEN":
+            fails.append("the namespace DNS probe did not go red on an unpublished namespace")
+        if "does not exist" not in measured:
+            fails.append("the namespace DNS probe did not name the NXDOMAIN state")
+        _dig_txt_state = lambda n: ("UNKNOWN", [])
+        state, measured, _ = p_namespace_dns()
+        if state != "OPEN":
+            fails.append("the namespace DNS probe reported a verdict for an unknown answer")
+        if "UNKNOWN" not in measured:
+            fails.append("the namespace DNS probe reported an unknown answer as an absence")
+    finally:
+        _dig_txt_state = original_dig
+        _dig_available = original_dig_available
+
+    # 13. the tree probe must be able to go RED on a real claim, and must not fire on a
+    #     DNS label mention or on the audit's own output. These are the two things that
+    #     made the FIRST version of this row go red for the wrong reason.
+    global REPO
+    original_repo = REPO
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            tmp = Path(td)
+            (tmp / "public").mkdir()
+            REPO = tmp
+            (tmp / "public" / "a.json").write_text(json.dumps(
+                {"evidence": "_mcp.com.councilof.ai -> no TXT record",
+                 "next_step": "Publish the TXT naming com.councilof/*"}))
+            if p_namespace_tree()[0] != "LIVE":
+                fails.append("the namespace tree probe counted a DNS mention as a claim")
+            (tmp / "public" / "b.json").write_text(json.dumps({"id": "com.councilof.gsPC"}))
+            if p_namespace_tree()[0] != "OPEN":
+                fails.append("the namespace tree probe did not go red on a com.councilof.* identifier")
+            (tmp / "public" / "b.json").unlink()
+            (tmp / "public" / "completion-audit.json").write_text(json.dumps(
+                {"measured": "com.councilof.gsPC is claimed"}))
+            if p_namespace_tree()[0] != "LIVE":
+                fails.append("the namespace tree probe counted its own output as a claim")
+    finally:
+        REPO = original_repo
+
     if fails:
         for f in fails:
             print("  FAIL:", f)
         return 1
     print("  completion_audit selftest: OK "
-          "(11 rules, each proven able to catch its own counterexample)")
+          "(14 rule groups, each proven able to catch its own counterexample)")
     return 0
 
 

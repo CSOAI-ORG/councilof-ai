@@ -57,6 +57,7 @@ CARD = "---\nlicense: cc-by-4.0\npretty_name: Example census\n---\n# Example cen
 #   private      writes only to a private dataset (no public card, no block expected)
 #   not-a-card   uploads a README that is not one of the public csoai/* dataset cards (a Space, a
 #                package, or a dataset that is not public)
+#   template     publishes a dedicated product template, not a cite_block-generated census card
 PRODUCERS = {
     "fleet/publish_fleet_status.py": "wired",
     "scripts/pubbus/publish-fleet-status.py": "wired",
@@ -72,6 +73,10 @@ PRODUCERS = {
     "scripts/census/dataset-card-hygiene.py": "edits-live",
     "scripts/hf/fix-card-link.py": "edits-live",
     "scripts/hf/hf_live_row.py": "edits-live",
+    "scripts/hf/hf_card_metadata.py": "edits-live",          # preserves the existing citation/body
+    "scripts/hf/polish_frontdoors.py": "template",           # reviewed product templates; content/hash guards
+    "scripts/claims/maintenance_due.py": "not-a-card",       # README below the claim-maintenance archive subfolder
+    "scripts/measurements/publish-fact-table.py": "template", # dedicated fact-table product card
     "scripts/hf/hf-scrub-daily.py": "edits-live",        # hf-org-card.py scrub_legacy line-edits, commit against the revision read
     "scripts/spray/gspc-spray.py": "edits-live",             # hf_dataset_companions() line-edits the live card
     "scripts/pod-loops/gspc-spray.py": "edits-live",

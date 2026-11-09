@@ -1,4 +1,5 @@
-// The claim-maintenance wave must be a faithful re-read, and it must not claim more than it can.
+// Historical 28 October file integrity only. These tests do not qualify its method or denominator.
+// See CLAIM-MAINTENANCE-PROMOTION-PROPOSAL-2026-10-28.md for the 30 October correction.
 //   node --test scripts/measurements/claim-maintenance-wave.node-test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -23,11 +24,11 @@ test("the wave counts add up to the rows it reports", opt, () => {
   }
 });
 
-test("n_valid is the rows that were actually read, and it clears the slot's threshold", opt, () => {
+test("the historical file retains its reported row-count arithmetic, not admission eligibility", opt, () => {
   const unreachable = wave.rows.filter((r) => r.outcome === "UNREACHABLE").length;
   assert.equal(wave.thresholds.n_valid, wave.rows.length - unreachable);
   assert.equal(wave.thresholds.min_valid, 30, "the slot's own threshold is 30");
-  assert.ok(wave.thresholds.meets_threshold, "the wave does not clear the threshold, so the slot cannot be promoted");
+  assert.ok(wave.thresholds.meets_threshold, "historical threshold field changed");
   assert.ok(wave.thresholds.n_valid >= wave.thresholds.min_valid);
 });
 

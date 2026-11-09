@@ -1,0 +1,16 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const {ACADEMY_SOURCE,LESSONS,sourceState,answerLesson,learningRecord,findingDraft}=require(process.env.PANEL_ACADEMY_MODULE||'./.test-academy.cjs');
+test('existing published exercise ids are reused',()=>assert.deepEqual(LESSONS.map(l=>l.id),['board-totals','verify-card','charter-hash']));
+test('source digest match establishes byte identity only',()=>assert.equal(sourceState(ACADEMY_SOURCE.sha256),'CURRENT_BYTES'));
+test('changed source requires review',()=>assert.equal(sourceState('0'.repeat(64)),'REVIEW_DUE'));
+test('missing and malformed source cannot become current',()=>{for(const s of [null,'not-digest',''])assert.equal(sourceState(s),'UNAVAILABLE')});
+test('correct practice answer not certificate or permission',()=>{const r=answerLesson('board-totals',1,'CURRENT_BYTES');assert(r.correct);assert(r.practiceRecorded);assert.equal(r.certification,false);assert.equal(r.grantsAuthority,false)});
+test('wrong answer is not recorded as passed',()=>assert.equal(answerLesson('verify-card',0,'CURRENT_BYTES').practiceRecorded,false));
+test('changed source holds practice even for correct answer',()=>assert.equal(answerLesson('verify-card',2,'REVIEW_DUE').practiceRecorded,false));
+test('unavailable current source does not issue current progress',()=>assert.equal(answerLesson('verify-card',2,'UNAVAILABLE').practiceRecorded,false));
+test('unknown exercise and invalid option refused',()=>{assert.throws(()=>answerLesson('other',1,'CURRENT_BYTES'));for(const i of [-1,99,1.5])assert.throws(()=>answerLesson('board-totals',i,'CURRENT_BYTES'))});
+test('saved practice keeps source provenance without formal completion',()=>{const d=learningRecord(['board-totals','board-totals','not-real'],'NOT_CHECKED');assert.equal(d.practiceCount,1);assert.equal(d.formalExercisesReproduced,0);assert.equal(d.humanCompetenceAssessed,false);assert.equal(d.certificateIssued,false);assert.equal(d.grantsAuthority,false);assert.equal(d.source.commit,ACADEMY_SOURCE.commit)});
+test('changed source does not silently update historical learning',()=>{const d=learningRecord(['charter-hash'],'REVIEW_DUE');assert.equal(d.source.sha256,ACADEMY_SOURCE.sha256);assert.equal(d.sourceState,'REVIEW_DUE')});
+test('finding draft exports only bounded tool metadata',()=>{const d=findingDraft('Missing evidence','error',[{name:'tool',status:'done',label:'UNKNOWN',prompt:'PRIVATE',key:'SECRET'}]);const s=JSON.stringify(d);assert(!s.includes('PRIVATE'));assert(!s.includes('SECRET'));assert.equal(d.sent,false);assert.equal(d.externalRepairAuthorized,false);assert.equal(d.state,'UNSENT_DRAFT')});
+test('finding category must be selected not arbitrary payload',()=>assert.throws(()=>findingDraft('send secrets','done',[])));
+test('a draft does not attribute alliance endorsement or notify anyone',()=>{const d=findingDraft('Changed source','done',[]);assert.equal(d.endorsedByAlliance,false);assert.match(d.recipients,/Not selected/)});

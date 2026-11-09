@@ -81,13 +81,19 @@ export function readConfig(text) {
   const nodeTestFiles = new Set();
   const excludes = [...DEFAULT_EXCLUDE];
 
+  // A COMMENT IS NOT A PATH. The list has carried comments since it was introduced, and
+  // the reader took every quoted word inside one as a file name — so a PR that named seven
+  // real test files was failed by this registry for two paths nobody wrote. Strip the
+  // line comments before reading, so the only strings that become paths are paths.
+  const stripComments = (s) => s.replace(/\/\/[^\n]*/g, "");
+
   const ntMatch = text.match(/export const NODE_TEST_FILES\s*=\s*\[([\s\S]*?)\]/);
   if (ntMatch) {
-    for (const m of ntMatch[1].matchAll(/'([^']+)'/g)) nodeTestFiles.add(m[1]);
+    for (const m of stripComments(ntMatch[1]).matchAll(/'([^']+)'/g)) nodeTestFiles.add(m[1]);
   }
   const exMatch = text.match(/exclude\s*:\s*\[\.\.\.defaultExclude\s*,\s*([\s\S]*?)\]/);
   if (exMatch) {
-    for (const m of exMatch[1].matchAll(/'([^']+)'/g)) excludes.push(m[1]);
+    for (const m of stripComments(exMatch[1]).matchAll(/'([^']+)'/g)) excludes.push(m[1]);
   }
   return { nodeTestFiles, excludes };
 }
@@ -447,6 +453,31 @@ function selftest() {
     if (nodeTestFiles.size === 0) failures.push("NODE_TEST_FILES parsed as empty");
     if (!excludes.includes("packages/**")) failures.push("the exclude list did not parse");
     if (!excludes.includes("**/node_modules/**")) failures.push("the default exclude list is missing");
+
+    // 9b. A COMMENT IS NOT A PATH. A quoted word inside a comment in the list used to be
+    // read as a file name, and the registry then failed the PR for paths nobody wrote.
+    const withComment = `export const NODE_TEST_FILES = [
+  // this comment says 'a comment is not a path'
+  'scripts/real.test.mjs',
+];`;
+    const { nodeTestFiles: fromComment } = readConfig(withComment);
+    if (fromComment.size !== 1 || !fromComment.has("scripts/real.test.mjs")) {
+      failures.push(`a comment was read as a path: ${JSON.stringify([...fromComment])}`);
+    }
+
+    // 9c. The trigger that actually bit us was an APOSTROPHE IN PROSE. The old reader scanned
+    // the block with a cross-line regex, so the apostrophe in "the estate's own rule" paired
+    // with the next quote in the file and manufactured a path that spanned three lines. It
+    // failed a PR for two paths nobody wrote. This case is that exact shape.
+    const withApostrophe = `export const NODE_TEST_FILES = [
+  // registry never carried, and card-counts caught CLAUDE.md pinning a card_count the estate's
+  // own rule forbids. A test nobody runs is a comment.
+  'scripts/real.test.mjs',
+];`;
+    const { nodeTestFiles: fromApostrophe } = readConfig(withApostrophe);
+    if (fromApostrophe.size !== 1 || !fromApostrophe.has("scripts/real.test.mjs")) {
+      failures.push(`prose in a comment was read as a path: ${JSON.stringify([...fromApostrophe])}`);
+    }
 
     // 10. This repository's own workflows yield at least one path filter.
     const repoFilters = collectWorkflowFilters(REPO);

@@ -25,7 +25,12 @@ We implement SCITT RFC 9942/9943; that is not a "report".
 - Open: https://smithery.ai/new
 - Server URL: `https://councilof.ai/mcp`
 - Name: Council of AI GSPC
-- Body: Eleven MCP tools: seven free read-only tools and four metered request tools. Payment never creates a measured result. Measurement, never certification. Verify: https://councilof.ai/gspc-verify
+- Body: The MCP door's tool count and its free/metered split, read on the day from
+  `https://councilof.ai/api/state` → `council_http_mcp.tools_count` (the registry the
+  `/mcp` handler serves: free tools + paid (x402) tools). Do not type the numbers here —
+  they were last wrong here, and a wrong number in a listing is the one a stranger reads.
+  Payment never creates a measured result. Measurement, never certification.
+  Verify: https://councilof.ai/gspc-verify
 
 ### PulseMCP
 - Open: https://www.pulsemcp.com/submit
@@ -83,7 +88,10 @@ We implement SCITT RFC 9942/9943; that is not a "report".
 ### TechCrunch
 - Open: https://techcrunch.com/got-a-tip/
 - From: nicholas@csoai.org (never Gmail)
-- Subject: Independent AI measurement board (not a certificate) — 22 axis · 22 measured
+- Subject: Independent AI measurement board (not a certificate) — live board count below
+  (read it on the day from `https://councilof.ai/api/state` → `board.public_count`, or
+  `board.measured_axes` if only one number is quoted; never type a count into a subject
+  line — `council-os/QUOTING-NUMBERS.md` says quote by field name, not by value)
 - Body: press body above
 
 ### FT

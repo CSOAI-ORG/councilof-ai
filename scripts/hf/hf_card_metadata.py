@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Keep the csoai Hugging Face dataset cards' metadata and live counts honest.
 
-Runs after every successful deploy (hf-gspc-surface-sync.yml). For each listed dataset it reads
-the card that is live on the Hub, rewrites only the fields this script owns, and commits only
-if the bytes changed.
+For each listed dataset it reads the card that is live on the Hub and rewrites only
+the fields this script owns. For reviewed access repairs, use prepare_dataset_access.py
+and the parent/content-guarded publish_product_cards.py publisher. Importing this module
+performs no network operation; the general card producer shares its access recipes.
 
 Owned fields:
   * YAML `configs:` (or `viewer: false` when no file is tabular) so the Dataset Viewer either
     renders or says plainly that there is no table, never an error page.
   * YAML `# TODO` comment lines are removed.
+  * Audited DATA-ACCESS blocks explain the selected table or structured archive.
   * csoai/gspc-board only: the block between GSPC-LIVE-COUNTS markers, read live from
     councilof.ai at run time. Every count is its own line and none are added together.
     Counts awaiting a Measure ruling (capsules, chain cards) are deliberately not printed.
@@ -37,6 +39,64 @@ def cfg(*paths):
 
 NO_VIEWER = {"viewer": False}
 
+def nested(path, field):
+    """Expose an existing record array without rewriting its source document."""
+    return {"configs": [{"config_name": "default", "data_files": [
+        {"split": "train", "path": path}], "field": field}]}
+
+
+# Verified against the public source bytes on 2026-10-30. Proof envelopes,
+# manifests and historical schemas must never be concatenated into one table.
+VIEWER_REPAIRS = {
+    "csoai/omai-bench": cfg("items.jsonl"),
+    "csoai/mcp-registry-self-audit": cfg("snapshots/self-audit-2026-09-22.jsonl"),
+    "csoai/index-presence": nested("2026-09-22/listings-2026-09-22.json", "results"),
+    "csoai/fleet-status": nested("fleet_status.public.json", "jobs"),
+    "csoai/gspc-organism": nested("organism/index.json", "integration_targets"),
+    **{f"csoai/{name}": NO_VIEWER for name in (
+        "councilof-ai-evidence", "councilof-ai-mirror", "cross-ledger-supply",
+        "evidence-index", "eu-ecosystem-measurements", "disclosure-completeness", "tool-parity")},
+}
+
+READ_PATHS = {
+    "csoai/cross-ledger-supply": ("cross_ledger_assets.json", "assets"),
+    "csoai/evidence-index": ("index.json", "items"),
+    "csoai/eu-ecosystem-measurements": ("pontus-x/2026-09-27/summary.json", None),
+    "csoai/disclosure-completeness": ("disclosure-completeness-2026-09-30/set.json", "records"),
+    "csoai/tool-parity": ("parity_snapshot.json", "measurements"),
+}
+
+USAGE_START, USAGE_END = "<!-- DATA-ACCESS:START -->", "<!-- DATA-ACCESS:END -->"
+
+def access_block(repo):
+    if repo not in VIEWER_REPAIRS:
+        return ""
+    intro = {
+        "csoai/omai-bench": "The default table contains benchmark items only. The file manifest is provenance, not evaluation data.",
+        "csoai/mcp-registry-self-audit": "The default table is the 2026-09-22 audit snapshot. Earlier snapshots retain their original schemas in Files; they are not merged or presented as current service health.",
+        "csoai/index-presence": "The default table contains the 21 listing checks from 2026-09-22. Other dated reports and the upstream registry copy remain separate files with their own terms.",
+        "csoai/fleet-status": "The default table contains the public job records. Read the original JSON for its publication time and aggregate funding state. Job state is operational reporting, not a model score or availability guarantee.",
+        "csoai/gspc-organism": "The default table lists integration targets. Targets and local proofs do not establish completed external deployment or human acceptance.",
+    }.get(repo)
+    lines = [USAGE_START, "## Read this product", ""]
+    if intro:
+        lines += [intro, "", "```python", "from datasets import load_dataset",
+                  f'rows = load_dataset("{repo}", name="default", split="train")', "```"]
+    else:
+        lines += ["This is a structured evidence archive, not a training table. The automatic table viewer is disabled because the repository contains documents with different schemas, signatures or timestamp proofs. All original evidence files remain available.", ""]
+        if repo in READ_PATHS:
+            path, field = READ_PATHS[repo]
+            lines += ["```python", "import json", "from huggingface_hub import hf_hub_download",
+                      f'path = hf_hub_download("{repo}", "{path}", repo_type="dataset")',
+                      'with open(path, encoding="utf-8") as source:', "    document = json.load(source)",
+                      f'records = document["{field}"]' if field else "summary = document", "```"]
+        else:
+            lines += [f"Browse [Files](https://huggingface.co/datasets/{repo}/tree/main) and download the named document or proof you need. Use `hf_hub_download` with its exact repository path; downloading the entire archive is unnecessary."]
+        if repo == "csoai/eu-ecosystem-measurements":
+            lines += ["", "Only the aggregate summary is public. Per-asset probes and raw logs are withheld by design."]
+    lines += ["", "For reproducible reuse, pass the repository commit SHA as `revision` and retain the downloaded bytes. Loading a file does not verify its signature; follow this card's verification instructions before relying on a claim. Dated snapshots remain historical measurements.", USAGE_END]
+    return "\n".join(lines)
+
 # Dataset -> metadata this script owns. Paths were read from the Hub tree on 2026-10-16.
 TARGETS: dict[str, dict] = {
     "csoai/omai-bench": cfg("items.jsonl"),
@@ -63,6 +123,7 @@ TARGETS: dict[str, dict] = {
     "csoai/gspc-board": {},  # live counts block only
     "csoai/measurement-capsules": {},  # live counts block; frozen 13,184 headline retired
 }
+TARGETS.update(VIEWER_REPAIRS)
 
 START, END = "<!-- GSPC-LIVE-COUNTS:START -->", "<!-- GSPC-LIVE-COUNTS:END -->"
 
@@ -111,6 +172,8 @@ def yaml_value(key: str, val) -> list[str]:
                 lines += [f"    - {json.dumps(x)}" for x in p]
             else:
                 lines.append(f"    path: {json.dumps(p)}")
+        if "field" in c:
+            lines.append(f"  field: {json.dumps(c['field'])}")
     return lines
 
 def newest_capsule_index() -> tuple[int, str, str]:
@@ -187,7 +250,7 @@ def render(repo: str, text: str, owned: dict, block: str | None) -> str:
     meta, body = split_card(text)
     meta = [ln for ln in meta if not ln.lstrip().startswith("# TODO")]
     if owned:
-        meta = drop_keys(meta, set(owned) | ({"configs"} if "viewer" in owned else {"viewer"} if "configs" in owned else set()))
+        meta = drop_keys(meta, set(owned) | {"dataset_info"} | ({"configs"} if "viewer" in owned else {"viewer"} if "configs" in owned else set()))
         while meta and not meta[-1].strip():
             meta.pop()
         for k, v in owned.items():
@@ -196,6 +259,10 @@ def render(repo: str, text: str, owned: dict, block: str | None) -> str:
         body = fix_board_body(body, block)
     if repo == "csoai/measurement-capsules" and block:
         body = fix_capsules_body(body, block)
+    usage = access_block(repo)
+    if usage:
+        body = re.sub(re.escape(USAGE_START) + r".*?" + re.escape(USAGE_END) + r"\n*", "", body, flags=re.S)
+        body = body.rstrip() + "\n\n" + usage + "\n"
     out = "---\n" + "\n".join(meta) + "\n---\n\n" + body
     if block and BANNED.search(block):
         raise SystemExit("refusing: generated counts block contains banned wording")

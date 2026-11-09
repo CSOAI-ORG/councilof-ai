@@ -1,0 +1,95 @@
+name: interop-index-refresh
+on:
+  schedule:
+    - cron: "41 */6 * * *"   # every 6h, staggered away from :17 / :23 / :29
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: interop-index-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      # WHY THIS EXISTS. public/interop/file-index.json is a MEASUREMENT of the published interop
+      # tree: every path, with its size, its sha256 and how it is served. Its promise is that a
+      # reader can fetch a path and hash it and get what the estate published. It was committed on
+      # 2026-11-03 and rebuilt once on 2026-11-06, and nothing rebuilds it — so it drifts with every
+      # merge. Measured at master on 2026-11-07: 117 rows carried a digest that no longer matched
+      # the bytes, and 12 files under /interop/ were not listed at all. Nothing broke (no listed
+      # path had gone), but the index had stopped being true, which is the one thing it exists to do.
+      #
+      # The corpus moves every day — the daily intake, x402-trust, catalog-trust and hf-census
+      # rounds all publish into public/interop/ — so no pull request can carry a re-measurement of
+      # 16,000 files. The other snapshot rounds already solve this the same way: re-measure on a
+      # schedule and land the result through a pull request.
+      #
+      # The check compares the ROWS, not the bytes: as_of and source_commit move on every run, so
+      # comparing them would report a change when nothing about the corpus moved, and the estate
+      # would publish a pull request that changed nothing.
+
+      - name: Has the measurement moved?
+        id: moved
+        run: |
+          # GitHub runs a `run:` block with `bash -e`, so a non-zero exit ABORTS the step.
+          # The measurement's exit code IS its result — 0 aligned, 1 drifted, 2 unmeasurable —
+          # so it must be CAPTURED, not fatal. (This workflow failed its own first run for
+          # exactly this reason, which is the estate's own lesson applied to its own gate.)
+          set -uo pipefail
+          set +e
+          python3 scripts/build-interop-file-index.py --check public/interop public/interop/file-index.json scripts/deploy-exclusions.json
+          rc=$?
+          set -e
+          if [ "$rc" -eq 2 ]; then
+            echo "::error::the interop index could not be measured at all (the corpus or the exclusions file is unreadable). The index is not being kept current."
+            exit 1
+          fi
+          echo "changed=$rc" >> "$GITHUB_OUTPUT"
+
+      - name: Re-measure the corpus and the llms views that quote it
+        if: steps.moved.outputs.changed == '1'
+        run: |
+          set -euo pipefail
+          python3 scripts/build-interop-file-index.py public/interop public/interop/file-index.json scripts/deploy-exclusions.json "$GITHUB_SHA"
+          # The llms views quote the index's as_of, so they are regenerated with it. They are a PAIR:
+          # a moved index with a stale llms view would publish an as_of that no file holds.
+          node scripts/llms-txt.mjs
+
+      - name: land the measurement (via PR — master is GH006-protected)
+        if: steps.moved.outputs.changed == '1'
+        env:
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}  # SNAPSHOT_PR_TOKEN: a PR opened with it fires pull_request checks; GITHUB_TOKEN cannot
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-interop-index"
+          git config user.email "index@csoai.org"
+          git add public/interop/file-index.json public/llms.txt public/llms-full.txt
+          if git diff --cached --quiet; then
+            echo "no measurement change — nothing to land"
+            exit 0
+          fi
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          BR="interop/index-refresh-${STAMP}"
+          git checkout -b "$BR"
+          git commit -m "interop-index: re-measure the published interop tree (${STAMP})"
+          git push origin "HEAD:$BR"
+          URL=$(gh pr create --base master --head "$BR" \
+            --title "interop-index: re-measure the published interop tree (${STAMP})" \
+            --body "Machine-produced re-measurement of the published interop tree (.github/workflows/interop-index-refresh.yml). The index lists every path under /interop/ with its size, its sha256 and how it is served; a reader can fetch a path and hash it and get what the estate published. It drifts with every merge, because the corpus moves daily and no pull request can carry a re-measurement of 16,000 files, so it is re-measured here on a schedule. The llms views are regenerated with it: they quote the index's as_of, and the two are a PAIR. Lands via PR because master push is GH006-protected.")
+          gh workflow run pr-gates.yml --repo "$GITHUB_REPOSITORY" --ref "$BR"
+          gh pr merge "$URL" --repo "$GITHUB_REPOSITORY" --squash --auto
+          echo "landed branch=$BR"

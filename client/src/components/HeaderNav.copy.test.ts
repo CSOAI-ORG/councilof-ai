@@ -26,6 +26,10 @@ describe("menu copy carries no agent or operator instructions", () => {
   it("reads the same pattern the brand-gate enforces", () => {
     expect(LEAK.test("Apex 522. SPEC only, not a live mill")).toBe(true);
     expect(LEAK.test("Do not restore MEASURED-INDEX-v0.1")).toBe(true);
+    expect(LEAK.test("The gap is the product.")).toBe(true);
+    expect(LEAK.test("Certification theatre")).toBe(true);
+    expect(LEAK.test("Unsolicited and permissionless.")).toBe(true);
+    expect(LEAK.test("Request a scoped AI measurement with published methods.")).toBe(false);
     expect(LEAK.test("Three proposed index measures. Reference test sets only; none is a signed result.")).toBe(false);
   });
 

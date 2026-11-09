@@ -9,6 +9,10 @@
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
+/gspc/field  /board  308
+/gspc/field/ /board  308
+/games                /games/ruler         308
+/games/               /games/ruler         308
 /alliance-map          /memberships         308
 /alliance-map/         /memberships         308
 /authority            /gspc-verify/        308
@@ -25,6 +29,8 @@
 /conflicts/           /independence/       308
 /schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308
 /schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308
+/spec/evidence-event/v0.1  /spec/evidence-event/v0.1/  308
+/agents/csoai-agent.json  /.well-known/agent-card.json  308
 /signed/publisher-health.json  /publisher-health.json  308
 /signed/root.json              /root.json              308
 /card_index.json        /signed/card_index.json  301
@@ -62,7 +68,7 @@
 /sov-town-lab   /gspc-arena?view=towns  308
 /sov-towns      /gspc-arena?view=towns  308
 /towns          /gspc-arena?view=towns  308
-/globe          /globe3d.html           308
+/tool-commons   /dashboard?tab=tools  308
 /byzantine            /council   308
 /byzantine-consensus  /council   308
 /bft                  /council   308
@@ -249,8 +255,36 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- every other concrete <Route> bare path → its prerendered trailing-slash (419) ---
-/a2ui  /a2ui/  308
+# --- client <Redirect> stub routes: hop at the edge, not in the bundle (27) ---
+/a2ui  /dashboard?tab=home  308
+/about-ceasai  /about-credential  308
+/attestation-network  /attestation  308
+/catalog  /products  308
+/ceasai-training  /credential-training  308
+/ceremony  /events/three-root-ceremony  308
+/governance  /ai-governance  308
+/gspc-scoreboard  /dashboard?tab=board  308
+/leaderboard  /dashboard?tab=leaderboard  308
+/lookup  /gspc-verify  308
+/map-regions  /map?tab=regions  308
+/mcp-tools  /dashboard?tab=tools  308
+/public-dashboard  /transparency  308
+/real-world  /globe  308
+/regions  /map?tab=regions  308
+/relevance-map  /map?tab=bridges  308
+/risk-heatmap  /map?tab=risk  308
+/sov3  /workbench  308
+/sov3-model-card  /council-model-card  308
+/sov3-system-card  /council-system-card  308
+/sov3-whitepaper  /workbench-paper  308
+/sovereign  /me  308
+/sovereign-network  /network  308
+/sovereign-pricing  /pricing  308
+/sovereign-twin  /me  308
+/world  /gspc-arena?view=globe  308
+/world-3d  /globe  308
+
+# --- every other concrete <Route> bare path → its prerendered trailing-slash (408) ---
 /ab-testing  /ab-testing/  308
 /accessibility  /accessibility/  308
 /accountability-loop  /accountability-loop/  308
@@ -282,7 +316,6 @@
 /assessment  /assessment/  308
 /assurance  /assurance/  308
 /attestation  /attestation/  308
-/attestation-network  /attestation-network/  308
 /aug-2026  /aug-2026/  308
 /badge  /badge/  308
 /battlecards  /battlecards/  308
@@ -290,17 +323,19 @@
 /blog/gspc-g2-comparison-group-2026-10-14  /blog/gspc-g2-comparison-group-2026-10-14/  308
 /blog/how-to-verify-an-ai-measurement  /blog/how-to-verify-an-ai-measurement/  308
 /blog/keeping-ai-claims-current  /blog/keeping-ai-claims-current/  308
+/blog/owasp-asi-ten-of-ten  /blog/owasp-asi-ten-of-ten/  308
+/blog/the-leaderboard-illusion-is-real  /blog/the-leaderboard-illusion-is-real/  308
+/blog/we-attack-ourselves-every-night  /blog/we-attack-ourselves-every-night/  308
 /board  /board/  308
 /board/model  /board/model/  308
 /board/models  /board/models/  308
 /boards/mcp  /boards/mcp/  308
+/brand  /brand/  308
 /bulk-import  /bulk-import/  308
 /california-ai-law  /california-ai-law/  308
 /canada-aida  /canada-aida/  308
 /careers  /careers/  308
-/catalog  /catalog/  308
 /census  /census/  308
-/ceremony  /ceremony/  308
 /certificate-verification  /certificate-verification/  308
 /certificates  /certificates/  308
 /checklist  /checklist/  308
@@ -417,6 +452,7 @@
 /global-ai-regulation  /global-ai-regulation/  308
 /global-ai-safety-initiative  /global-ai-safety-initiative/  308
 /global-regulations  /global-regulations/  308
+/globe  /globe/  308
 /glossary  /glossary/  308
 /gods-eye  /gods-eye/  308
 /gone-space  /gone-space/  308
@@ -448,6 +484,7 @@
 /help-center  /help-center/  308
 /high-risk-ai  /high-risk-ai/  308
 /high-risk-ai-systems  /high-risk-ai-systems/  308
+/him  /him/  308
 /hive-model  /hive-model/  308
 /hives  /hives/  308
 /home-v2  /home-v2/  308
@@ -473,7 +510,6 @@
 /landscape  /landscape/  308
 /launch  /launch/  308
 /law  /law/  308
-/leaderboard  /leaderboard/  308
 /learn  /learn/  308
 /legacy  /legacy/  308
 /legal/cookies  /legal/cookies/  308
@@ -489,13 +525,9 @@
 /licensing-agreement  /licensing-agreement/  308
 /lineage  /lineage/  308
 /live-ledger  /live-ledger/  308
-/lookup  /lookup/  308
 /map  /map/  308
-/map-regions  /map-regions/  308
 /marketing  /marketing/  308
 /maternal-covenant  /maternal-covenant/  308
-/mcp  /mcp/  308
-/mcp-tools  /mcp-tools/  308
 /me  /me/  308
 /measurement-capsules  /measurement-capsules/  308
 /measurements/disclosure-completeness  /measurements/disclosure-completeness/  308
@@ -506,6 +538,7 @@
 /membership-agreement  /membership-agreement/  308
 /memberships  /memberships/  308
 /meok-law  /meok-law/  308
+/metered  /metered/  308
 /metrology  /metrology/  308
 /minds  /minds/  308
 /models-measured  /models-measured/  308
@@ -553,20 +586,19 @@
 /prosperity-fund  /prosperity-fund/  308
 /protect  /protect/  308
 /provenance-finding  /provenance-finding/  308
-/public-dashboard  /public-dashboard/  308
 /pulse  /pulse/  308
 /quickstart  /quickstart/  308
 /radar  /radar/  308
 /rating-the-raters  /rating-the-raters/  308
 /reach  /reach/  308
 /readiness  /readiness/  308
-/real-world  /real-world/  308
 /receipt  /receipt/  308
 /recommendations  /recommendations/  308
 /rediscovered  /rediscovered/  308
+/refund-policy  /refund-policy/  308
+/refunds  /refunds/  308
 /region-settings  /region-settings/  308
 /regional-analytics  /regional-analytics/  308
-/regions  /regions/  308
 /register  /register/  308
 /registers  /registers/  308
 /registry  /registry/  308
@@ -576,7 +608,6 @@
 /regulator-findings  /regulator-findings/  308
 /regulatory-authority  /regulatory-authority/  308
 /regulatory-compliance  /regulatory-compliance/  308
-/relevance-map  /relevance-map/  308
 /report  /report/  308
 /reports  /reports/  308
 /research-transparency  /research-transparency/  308
@@ -584,7 +615,6 @@
 /resources  /resources/  308
 /rfc-0024  /rfc-0024/  308
 /risk-assessment  /risk-assessment/  308
-/risk-heatmap  /risk-heatmap/  308
 /rlusd  /rlusd/  308
 /roi  /roi/  308
 /safe-space  /safe-space/  308
@@ -607,9 +637,6 @@
 /soai-pdca/government  /soai-pdca/government/  308
 /social  /social/  308
 /south-korea-ai-act  /south-korea-ai-act/  308
-/sovereign  /sovereign/  308
-/sovereign-network  /sovereign-network/  308
-/sovereign-twin  /sovereign-twin/  308
 /sovx  /sovx/  308
 /spec/signed-receipts  /spec/signed-receipts/  308
 /specimens/clarity  /specimens/clarity/  308
@@ -634,7 +661,6 @@
 /terms  /terms/  308
 /terms-of-service  /terms-of-service/  308
 /texas-ai-act  /texas-ai-act/  308
-/tool-commons  /tool-commons/  308
 /tour  /tour/  308
 /tracks  /tracks/  308
 /traction  /traction/  308
@@ -661,8 +687,6 @@
 /why  /why/  308
 /why-csoai  /why-csoai/  308
 /workbench-paper  /workbench-paper/  308
-/world  /world/  308
-/world-3d  /world-3d/  308
 /world-data  /world-data/  308
 /wrappers  /wrappers/  308
 /x402-board  /x402-board/  308

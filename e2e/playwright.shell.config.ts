@@ -33,7 +33,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   webServer: local
-    ? {
+    ? [{
         // e2e/static-server.mjs is committed and has no dependencies, so this step no longer
         // fetches a package from the npm registry. `npx --yes serve@14` did, and on
         // 2026-09-03/04 it hung eight deploys in a row on "Timed out waiting 120000ms from
@@ -51,7 +51,11 @@ export default defineConfig({
         stdout: "pipe",
         stderr: "pipe",
         timeout: 120_000,
-      }
+      }, {
+        command: "node e2e/static-server.mjs dist/hf-coliseum 4181",
+        cwd: ROOT, url: "http://127.0.0.1:4181/",
+        reuseExistingServer: false, stdout: "pipe", stderr: "pipe", timeout: 120_000,
+      }]
     : undefined,
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 900 } } },

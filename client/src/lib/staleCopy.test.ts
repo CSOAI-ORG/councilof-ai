@@ -67,6 +67,8 @@ describe("stale copy honesty", () => {
     const j = JSON.parse(mcp);
     const lock = JSON.parse(readFileSync(resolve(__dirname, "../../../functions/mcp/tool-fleet.lock.json"), "utf8"));
     const registry = JSON.parse(readFileSync(resolve(__dirname, "../../../mcp/gspc-server/server.json"), "utf8"));
+    const capture = JSON.parse(readFileSync(resolve(__dirname, "../../../distribution/npm/npm-publish-check.json"), "utf8"));
+    const prepared = JSON.parse(readFileSync(resolve(__dirname, "../../../mcp/gspc-server/package.json"), "utf8"));
     const fleet = [...lock.free, ...lock.paid];
     expect(j.planted.tools).toEqual(fleet);
     expect(j.measured.tools).toEqual(fleet);
@@ -80,12 +82,27 @@ describe("stale copy honesty", () => {
     expect(card.capabilities.free_tools).toBe(lock.free.length);
     expect(card.capabilities.tools).toEqual(fleet);
     expect(card.description).toContain(`server ${registry.version}`);
-    // While every published npm release is deprecated on npm (scripts/harness-x/render.mjs
-    // NPM_STDIO_ADVERTISED), the card withholds the stdio pin and names the free door instead.
+    // The card withholds the stdio pin while the published release is not the contract, and the
+    // note is DERIVED from the dated capture (scripts/harness-x/npm-release-state.mjs). Check
+    // the captured publication separately from prepared source, without freezing an old release.
+    if (prepared.version !== capture.published.version) {
+      expect(card.endpoints.mcp.stdio).toBeNull();
+    }
     if (card.endpoints.mcp.stdio === null) {
-      expect(card.endpoints.mcp.stdio_note).toMatch(/deprecated on npm.*use the free door https:\/\/councilof\.ai\/mcp\/free/);
+      expect(card.endpoints.mcp.stdio_note).toContain(
+        `npm csoai-gspc-mcp: the latest published release is ${capture.published.version} `,
+      );
+      expect(card.endpoints.mcp.stdio_note).toContain(capture.published.deprecated ? "is marked deprecated on npm" : "is not marked deprecated on npm");
+      expect(card.endpoints.mcp.stdio_note).toContain(`measured ${capture.checked_at.slice(0, 10)}`);
+      if (prepared.version !== capture.published.version) {
+        expect(card.endpoints.mcp.stdio_note).toContain(
+          `the prepared release ${prepared.version} is not on npm yet (npm's latest published release is ${capture.published.version})`,
+        );
+      }
+      expect(card.endpoints.mcp.stdio_note).toMatch(/[Uu]se the free door https:\/\/councilof\.ai\/mcp\/free/);
       expect(card.endpoints.mcp.free).toBe("https://councilof.ai/mcp/free");
     } else {
+      expect(registry.packages[0].version).toBe(capture.published.version);
       expect(card.endpoints.mcp.stdio).toBe(
         `npx -y ${registry.packages[0].identifier}@${registry.packages[0].version}`,
       );
@@ -206,9 +223,9 @@ describe("leftover: CENSUS_3M is census+digest+queue+lock, remainder UNMEASURED"
     expect(j.lock.n_locked).toBe(40);
     expect(llms).toMatch(/census \+ digest \+ queue \+ lock/);
     expect(llms).toMatch(/Remainder UNMEASURED/);
-    expect(spaceReadme).toMatch(/census, not a grade/);
-    expect(spaceReadme).toMatch(/Remainder UNMEASURED/);
+    expect(spaceReadme).toMatch(/Listing a model in a census is discovery, not measurement/);
+    expect(spaceReadme).toMatch(/\| UNMEASURED \| An explicit coverage gap \|/);
     expect(spaceReadme).not.toMatch(/Fifteen axes carry a signed measurement/);
-    expect(spaceReadme).toMatch(/Not a mill/);
+    expect(spaceReadme).toMatch(/does not run inference or new evaluations/);
   });
 });

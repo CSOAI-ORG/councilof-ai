@@ -1,0 +1,102 @@
+{
+  "title": "AI disclosures to workflow evidence: six questions a buyer can check",
+  "document_date": "2026-10-29",
+  "kind": "documentary research and proposed checks",
+  "summary": "A reusable evidence checklist for one agent workflow, derived as CSOAI analysis after reviewing public AI-company disclosures.",
+  "scope": "Selected public-document sections reviewed. No issuer, model or customer deployment was tested or scored.",
+  "measurement_performed": false,
+  "issuer_assessed": false,
+  "signed": false,
+  "note_url": "https://councilof.ai/interop/ai-disclosures-to-workflow-evidence-2026-10-29.md",
+  "data_url": "https://councilof.ai/interop/ai-disclosures-to-workflow-evidence-2026-10-29.json",
+  "questions": [
+    {
+      "id": "scope",
+      "question": "What exact task and deployment does the evidence cover?",
+      "retain": "System and model version, tool versions, configuration, test inputs, expected output and actual returned artifact.",
+      "control": "A result for a different version or task must not satisfy this request."
+    },
+    {
+      "id": "authority",
+      "question": "Did actions stay within the authority granted?",
+      "retain": "Allowed actions, relevant approval or refusal, tool requests, execution log and observed effects.",
+      "control": "In a controlled fixture, a declined or out-of-scope action must remain unexecuted."
+    },
+    {
+      "id": "environment",
+      "question": "Was the environment actually bounded as declared?",
+      "retain": "Observed network and tool restrictions, permitted targets, environment configuration and containment checks.",
+      "control": "A harmless test against an operator-owned blocked destination must demonstrate the restriction; no third-party intrusion."
+    },
+    {
+      "id": "integrity",
+      "question": "Can a recipient verify and reopen the same evidence?",
+      "retain": "Original artifact, digest, named signing key where a signature exists, verification result and retained bytes.",
+      "control": "Change one byte in a copy and check that the integrity verification rejects it; keep the original."
+    },
+    {
+      "id": "outcome",
+      "question": "Did the returned work satisfy independently stated requirements?",
+      "retain": "Expected results, actual values, checker version, failures, omissions and unsupported features.",
+      "control": "A deliberately wrong result and an unrelated passing artifact must not be accepted as this delivery."
+    },
+    {
+      "id": "change",
+      "question": "What change invalidates the result or requires another check?",
+      "retain": "Original scope and date, expiry or change conditions, correction history and any later result linked to the same finding.",
+      "control": "A changed deployment or an unrelated retest must not silently close the original finding."
+    }
+  ],
+  "sources": [
+    {
+      "id": "anthropic-s1",
+      "title": "Anthropic S-1, 26 October 2026",
+      "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
+      "sections": [
+        "Risk Factors: evaluation limits and agent behaviour",
+        "Management’s Discussion and Analysis: Approach to Claude Diffusion"
+      ],
+      "reviewed_on": "2026-10-29"
+    },
+    {
+      "id": "cerebras-s1",
+      "title": "Cerebras S-1, 17 April 2026",
+      "url": "https://www.sec.gov/Archives/edgar/data/2021728/000162828026025762/cerebras-sx1april2026.htm",
+      "sections": [
+        "Risk Factors: customer concentration and infrastructure commitments",
+        "Management’s Discussion and Analysis: cost of revenue"
+      ],
+      "reviewed_on": "2026-10-29"
+    },
+    {
+      "id": "openai-announcement",
+      "title": "OpenAI confidential draft S-1 announcement, 8 June 2026",
+      "url": "https://openai.com/index/openai-submits-confidential-s-1/",
+      "sections": [
+        "Company announcement"
+      ],
+      "reviewed_on": "2026-10-29"
+    },
+    {
+      "id": "safe72-feedback",
+      "title": "QSAFP-Core response on SAFE #72, 28 October 2026",
+      "url": "https://github.com/OpenSecureAIAlliance/wg-safe/issues/72#issuecomment-6460676177",
+      "sections": [
+        "External response: requested profile/conformance refinements"
+      ],
+      "reviewed_on": "2026-10-29"
+    }
+  ],
+  "next_step": {
+    "label": "Discuss one measurement or evidence-review request",
+    "url": "https://councilof.ai/contact/?arm=run",
+    "required_context": [
+      "System or public endpoint",
+      "Exact task or claim",
+      "Evidence already available",
+      "Required output",
+      "Desired delivery date"
+    ],
+    "terms": "Scope, availability and terms must be agreed before an order."
+  }
+}

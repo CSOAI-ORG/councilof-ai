@@ -12,6 +12,11 @@
 Stdio MCP server for the live GSPC board and the signed measurement cards at
 [councilof.ai](https://councilof.ai). Zero dependencies. Node >= 20.
 
+Council of AI is an operating AI measurement and evidence organisation run by
+CSOAI Ltd. Use this server to read published results and inspect their supporting
+records. [Documented external use and distribution evidence](https://councilof.ai/traction/)
+identify which work others have used and what each observation establishes.
+
 **Doctrine, enforced in the tools, not just stated here:** we measure, never
 certify. Verdicts are three-state — VALID / INVALID (with the reason) /
 UNCHECKABLE — never two-state. An unmeasured axis is a first-class answer, not

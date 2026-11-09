@@ -48,7 +48,7 @@ import run_bench  # noqa: E402
 MILL = run_bench.MILL
 
 
-def test_grader_identity() -> list[str]:
+def check_grader_identity() -> list[str]:
     """run_bench must use the mill's grader OBJECT, not a copy of it."""
     failures = []
     if run_bench.MILL is not MILL:
@@ -61,7 +61,7 @@ def test_grader_identity() -> list[str]:
     return failures
 
 
-def test_prompt_parity() -> list[str]:
+def check_prompt_parity() -> list[str]:
     """The prompt must be byte-identical to the mill's, and a one-option menu refused."""
     failures = []
     labels = ["COMPLY", "REFUSE"]
@@ -88,7 +88,7 @@ def test_prompt_parity() -> list[str]:
     return failures
 
 
-def test_grader_behaviour() -> list[str]:
+def check_grader_behaviour() -> list[str]:
     """The properties the mill's docstring claims, checked here."""
     failures = []
     labels = ["COMPLY", "REFUSE"]
@@ -140,7 +140,7 @@ def test_grader_behaviour() -> list[str]:
     return failures
 
 
-def test_denominator_rule() -> list[str]:
+def check_denominator_rule() -> list[str]:
     """An unparsed answer must LEAVE the denominator. run_bench counts n = total - unparsed."""
     failures = []
     labels = ["COMPLY", "REFUSE"]
@@ -159,7 +159,7 @@ def test_denominator_rule() -> list[str]:
     return failures
 
 
-def test_banks_load() -> list[str]:
+def check_banks_load() -> list[str]:
     """Every published bank must load through the mill's own loader, and the banks whose
     menu has fewer than two options must be REFUSED rather than graded."""
     failures = []
@@ -184,14 +184,37 @@ def test_banks_load() -> list[str]:
     return failures
 
 
+# Pytest must assert the self-check findings rather than silently accepting a
+# nonempty returned list. The network bank census remains an explicit CLI check.
+
+def test_grader_identity():
+    failures = check_grader_identity()
+    assert not failures, "\n".join(failures)
+
+
+def test_prompt_parity():
+    failures = check_prompt_parity()
+    assert not failures, "\n".join(failures)
+
+
+def test_grader_behaviour():
+    failures = check_grader_behaviour()
+    assert not failures, "\n".join(failures)
+
+
+def test_denominator_rule():
+    failures = check_denominator_rule()
+    assert not failures, "\n".join(failures)
+
+
 def main() -> int:
     rc = 0
     checks = (
-        ("grader-identity", test_grader_identity),
-        ("prompt-parity", test_prompt_parity),
-        ("grader-behaviour", test_grader_behaviour),
-        ("denominator-rule", test_denominator_rule),
-        ("banks-load", test_banks_load),
+        ("grader-identity", check_grader_identity),
+        ("prompt-parity", check_prompt_parity),
+        ("grader-behaviour", check_grader_behaviour),
+        ("denominator-rule", check_denominator_rule),
+        ("banks-load", check_banks_load),
     )
     for name, fn in checks:
         failures = fn()

@@ -1,0 +1,13 @@
+{
+  "slug": "cra",
+  "title": "Cyber Resilience Act — AI digital element readiness",
+  "doctrine": "human-in-the-loop attestation of evidence — NOT conformity certification; pipeline posture only until counsel clears the crosswalk",
+  "segments": ["enterprise", "sme", "fortune500"],
+  "checkpoints": [
+    {"id": "cra.behaviour-cards", "requirement": "Embedded model's behaviour carries signed cards", "mode": "machine", "evidence": {"kind": "bundle", "obligation": "cra"}},
+    {"id": "cra.drift-recompute", "requirement": "Drift-recompute evidence available (continuous support posture)", "mode": "machine", "evidence": {"kind": "bundle", "obligation": "cra", "subjectFilter": "drift|recompute"}},
+    {"id": "cra.vuln-reporting-flow", "requirement": "24h/72h/14d ENISA reporting flow documented and rehearsed (live since 2026-09-11)", "mode": "human"},
+    {"id": "cra.sbom-linked", "requirement": "SBOM references the model component and this evidence pack", "mode": "human"},
+    {"id": "cra.accountable-owner", "requirement": "Named accountable owner signs this attestation cycle", "mode": "human"}
+  ]
+}

@@ -21,6 +21,7 @@ import {
   type ToolResult,
 } from "../lib/sovTools";
 import { stateMeaning } from "@/lib/resultCard";
+import { hashArgs, recordToolReceipt } from "@/lib/toolReceipts";
 
 export type JsonSchema = {
   type?:
@@ -363,6 +364,13 @@ export function challengeFromResult(
         amount,
         resource,
         nonce: typeof a.nonce === "string" ? a.nonce : null,
+        ...(() => {const identity=bag.purchase_request??holder.purchase_request;
+          if(!identity||typeof identity!=="object"||Array.isArray(identity))return {};
+          const r=identity as Record<string,unknown>;
+          return typeof r.url==="string"&&r.resource===resource&&(r.method==="GET"||r.method==="POST")&&
+            typeof r.body_sha256==="string"&&/^[a-f0-9]{64}$/.test(r.body_sha256)
+            ?{purchaseRequest:{url:r.url,resource,method:r.method,body_sha256:r.body_sha256}}:{};
+        })(),
         maxTimeoutSeconds:
           typeof a.maxTimeoutSeconds === "number" ? a.maxTimeoutSeconds : null,
         extra:
@@ -648,6 +656,16 @@ export default function ToolRunner({
       const result = normalizeToolResult(
         await callTool(tool.name, parsed.args),
       );
+      // Local receipt (plan item P5, 2026-11-02): tool, door, outcome and the hash of the
+      // arguments — never the arguments. Recording must never affect the run, so it is
+      // fire-and-forget with every failure swallowed inside the lib.
+      void hashArgs(parsed.args).then((argsHash) =>
+        recordToolReceipt({
+          tool: tool.name,
+          argsHash,
+          outcome: resultOutcome(result) ?? (result.ok ? "OK" : "ERROR"),
+        }),
+      );
       if (
         mountedRef.current &&
         paymentContextMatches(
@@ -705,6 +723,15 @@ export default function ToolRunner({
       const paidCall = paymentCallForContext(context, paymentHeader);
       const result = normalizeToolResult(
         await callTool(paidCall.toolName, paidCall.args),
+      );
+      // Same local receipt as the free run (P5): the paid call is recorded too, with its
+      // outcome word; the receipt says nothing about settlement beyond that word.
+      void hashArgs(paidCall.args).then((argsHash) =>
+        recordToolReceipt({
+          tool: paidCall.toolName,
+          argsHash,
+          outcome: resultOutcome(result) ?? (result.ok ? "OK" : "ERROR"),
+        }),
       );
       if (
         mountedRef.current &&

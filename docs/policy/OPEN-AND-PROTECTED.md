@@ -24,7 +24,7 @@ counsel. Nothing here is a legal conclusion.
 
 | artefact | licence | examples |
 |---|---|---|
-| New code and new package versions | **Apache-2.0** | `csoai-gspc` (PyPI), `csoai-gspc-mcp` (npm); `councilof-mcp` 1.0.2 and `@csoai/layer0` 0.2.0 are staged in this lane |
+| New code and new package versions | **Apache-2.0** | `csoai-gspc` (PyPI), `csoai-gspc-mcp` (npm), `@csoai/layer0` (npm, published 2026-10-30); `councilof-mcp` 1.0.2 is staged in this lane |
 | Data | **CC-BY-4.0** | GSPC board data, census records (`csoai/mcp-remote-census`), measurement datasets |
 | Specifications | **CC0-1.0** | `/spec/claim-maintenance/` v0.1 |
 | Schemas, verifiers, test fixtures | licence of the artefact they ship in | card schemas, `HOW-TO-VERIFY`, the census and rights-gate tests |

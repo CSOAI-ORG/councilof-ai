@@ -2,13 +2,13 @@
   {
     "slug": "iso42001-vs-etsi304223",
     "id": "aeo-iso42001-vs-etsi304223",
-    "title": "ISO/IEC 42001 vs ETSI EN 304 223: Choosing the Right AI Governance Standard",
-    "body": "Two landmark standards now govern AI systems in the European and international market, and procurement teams need to understand the difference. ISO/IEC 42001 (published December 2023, amended 2025) is a management-system standard: it tells you how to run an AI management system with PDCA cycles, leadership commitment, risk assessment, and continual improvement. It is certifiable by accredited bodies and maps naturally to existing ISO 27001 and ISO 9001 programmes. ETSI EN 304 223 (published January 2026) is a technical cybersecurity standard for AI: its 13 principles span secure design, development, deployment, maintenance, and end-of-life, with specific verifiable checks for threat modelling, SBOM, provenance, vulnerability scanning, and incident response. The Council of AI maps both: ISO 42001 provides the governance wrapper (the management-system PDCA cycle that proves you are paying attention), while ETSI EN 304 223 provides the technical teeth (the 13 verifiable checks that prove your system is actually secure). A procurement team should ask for both: ISO 42001 as the organisation's management-system evidence, and an ETSI EN 304 223 aligned measurement record (signed GSPC card) for the specific AI system being procured. The combination answers two questions: Do you manage AI responsibly? AND Is this particular system secure? -- questions that a single standard cannot answer alone.",
+    "title": "ISO/IEC 42001 and ETSI EN 304 223",
+    "body": "ISO/IEC 42001 addresses an organisation's AI management system; ETSI EN 304 223 addresses baseline cybersecurity for AI models and systems. They support different review questions.\n\nISO/IEC 42001:2023 specifies requirements for establishing and improving an AI management system. ETSI EN 304 223 V2.1.1, published in December 2025, sets out lifecycle security requirements; ETSI's January 2026 announcement describes 13 principles across five phases.\n\nFor procurement, identify the organisation, system, version, intended use and applicable requirements first. Then ask which records support each requirement and what remains untested. Council's scoped measurement records can contribute evidence where the method is relevant. A signed card or a thematic crosswalk does not establish conformity with either complete standard, certify an organisation, or prove a system secure.\n\nReviewed 4 November 2026. Use the applicable standard edition and an agreed assessment scope.",
     "references": [
-      "ISO/IEC 42001:2023/Amd 1:2025 -- AI management system standard",
-      "ETSI EN 304 223 V1.1.1 (2026-01) -- Cybersecurity for AI",
-      "Council of AI GSPC governance scoring methodology",
-      "CSOAI Verified Measurement Credential standard (signed GSPC card)"
+      "ISO/IEC 42001:2023 — https://www.iso.org/standard/42001",
+      "ETSI EN 304 223 V2.1.1 — https://www.etsi.org/deliver/etsi_en/304200_304299/304223/02.01.01_60/en_304223v020101p.pdf",
+      "ETSI publication record — https://portal.etsi.org/webapp/WorkProgram/Report_WorkItem.asp?WKI_ID=74952",
+      "Council measurement methodology — https://councilof.ai/methodology/"
     ],
     "audience": [
       "procurement-officer",
@@ -19,14 +19,12 @@
   {
     "slug": "ietf-scitt-rfc9424-ai-attestation",
     "id": "aeo-ietf-scitt-rfc9424-ai-attestation",
-    "title": "IETF SCITT RFC 9943 and AI Supply-Chain Attestation — Turning Model Claims Into Verifiable Evidence",
-    "body": "RFC 9943 defines the IETF SCITT architecture for trustworthy and transparent digital supply chains. In that architecture, an issuer creates a Signed Statement as a COSE_Sign1 message; registration with a Transparency Service can add a receipt, producing a Transparent Statement. A signed JSON object is not automatically either one. Council of AI currently publishes its own Ed25519-signed JSON measurement evidence, but does not yet publish a verified COSE_Sign1 conversion or a receipt from an identified SCITT Transparency Service. That integration remains planned. Operators can prepare honestly by binding every claim to an artifact digest, preserving the measurement method and scope, and verifying issuer signatures independently; they should only describe an item as SCITT-registered when a verifiable transparency-service receipt exists.",
+    "title": "SCITT: signed statements and receipts",
+    "body": "SCITT separates a signed claim from the receipt showing its registration with a transparency service. That distinction helps reviewers inspect provenance without confusing it with truth.\n\nRFC 9943 describes the SCITT architecture. Signed Statements use COSE_Sign1; a Transparency Service can issue a receipt that is combined with a statement. A signed JSON record does not become a SCITT Transparent Statement merely because it has a signature. The RFC also explains that issuers can make false statements.\n\nCouncil publishes signed measurement evidence in its own formats. For any proposed SCITT integration, inspect the exact conversion, issuer key, identified service, registration policy and verifiable receipt before claiming interoperability. Preserve the original artifact and method references so a reviewer can compare the claim with the measurement. This explainer does not assert that Council's published JSON cards are SCITT-registered.\n\nReviewed 4 November 2026.",
     "references": [
-      "RFC 9943: An Architecture for Trustworthy and Transparent Digital Supply Chains",
-      "RFC 9052: CBOR Object Signing and Encryption (COSE): Structures and Process",
-      "RFC 9942: CBOR Object Signing and Encryption (COSE) Receipts",
-      "draft-ietf-scitt-scrapi: SCITT Reference APIs",
-      "Council of AI measurement-card verifier (councilof.ai/gspc-verify)"
+      "RFC 9943 — https://www.rfc-editor.org/info/rfc9943/",
+      "Council measurement-card verifier — https://councilof.ai/gspc-verify/",
+      "Council verification instructions — https://councilof.ai/signed/HOW-TO-VERIFY.md"
     ],
     "audience": [
       "ai-operator",
@@ -38,13 +36,12 @@
   {
     "slug": "fedramp-oscal-sept30-mandate",
     "id": "aeo-fedramp-oscal-sept30-mandate",
-    "title": "FedRAMP OSCAL: The September 30 Machine-Readable Authorization Milestone",
-    "body": "FedRAMP is moving cloud authorization packages to OSCAL -- the Open Security Controls Assessment Language -- and the September 30 fiscal-year boundary is the milestone when machine-readable, OSCAL-based submission becomes the expected format for new packages. OSCAL is NIST's standard for expressing security controls, system security plans, and assessment results as structured data instead of prose documents, so a system security plan is not a PDF an assessor reads by eye but a machine-readable package a tool can validate against NIST SP 800-53 controls. The September 30 milestone matters for two reasons. First, it aligns with the federal fiscal-year close, so a cloud service provider seeking authorization on the new track should have its control inventory and system security plan expressed in OSCAL before that date to avoid a manual, slower review path. Second, OSCAL-based packages are the natural substrate for a verified measurement credential: because the control statements are already structured and machine-readable, an independent signature over the package proves the controls were asserted as-stated and unaltered since submission, turning a self-asserted security narrative into a checkable record. The Council of AI treats the FedRAMP OSCAL transition as the same problem as its own containment work: monitored containment, not provable isolation. A machine-readable package plus a signature does not prove a cloud system is secure -- it proves the security claim is well-formed, attributable, and verifiable, which is the honest, audit-grade version of the guarantee buyers actually need.",
+    "title": "FedRAMP: machine-readable evidence",
+    "body": "FedRAMP evidence formats and transition dates depend on the applicable programme rules. There is no universal September 30 OSCAL deadline established by this explainer.\n\nThe final FedRAMP Consolidated Rules for 2026 list 1 January 2027 as the general mandatory-adoption milestone, subject to specific applicability and effective dates. Rev5 rule FRC-CSO-JSN requires JSON valid against a corresponding FedRAMP schema when a rule supplies one, unless that rule specifies otherwise. Check the selected path, class, applicable rules and current transition provisions before preparing a submission.\n\nStructured evidence can make a review easier to reproduce, but format validation, cryptographic integrity, assessment and the authority's decision are separate checks. Council measurement records may support a defined evidence question; they do not constitute a FedRAMP package, accepted assessment or authorisation by themselves. Agree any mapping and delivery scope with the responsible provider and assessor.\n\nReviewed 4 November 2026; this replaces the earlier generic September 30 framing.",
     "references": [
-      "NIST SP 800-53 Rev 5 -- Security and Privacy Controls for Information Systems and Organizations",
-      "NIST OSCAL -- Open Security Controls Assessment Language",
-      "FedRAMP authorization boundary and security package requirements",
-      "CSOAI Verified Measurement Credential standard"
+      "FedRAMP final CR26 timeline — https://www.fedramp.gov/2026/timeline/",
+      "FedRAMP Rev5 rules, including FRC-CSO-JSN — https://www.fedramp.gov/2026/providers/rev5/rules/fedramp-certification/",
+      "NIST OSCAL — https://pages.nist.gov/OSCAL/"
     ],
     "audience": [
       "cloud-service-provider",
@@ -55,13 +52,13 @@
   {
     "slug": "council-of-europe-ai-treaty-framework-convention",
     "id": "aeo-council-of-europe-ai-treaty-framework-convention",
-    "title": "Council of Europe AI Treaty (Framework Convention on AI, Human Rights, Democracy and the Rule of Law, CETS No. 225) — Ratification Status and What It Asks of Parties",
-    "body": "The Council of Europe Framework Convention on Artificial Intelligence and Human Rights, Democracy and the Rule of Law (CETS No. 225) is the first international treaty on AI designed to be legally binding on the States and organisations that become Parties to it. Not in force. Opened for signature 5 September 2024; one ratification (European Union, 15 May 2026) as of the Treaty Office status read on 29 September 2026 (chart \"Status as of 29/09/2026\"); entry into force requires five signatories including at least three Council of Europe member States (Art. 30(3)). The chart lists 21 signatories: 15 Council of Europe member States (including the United Kingdom, which signed on 5 September 2024 and has not ratified), five non-member States (Canada, Israel, Japan, the United States and Uruguay) and the European Union. No State has ratified. Entry into force falls on the first day of the month after three months have passed from the fifth qualifying ratification. Until then the Council of Europe's Committee on Digital Policies (CDNET) acts as custodian of the Convention; the Conference of the Parties is established on entry into force. Who the obligations bind: the Parties. Each Party adopts or maintains measures in its own law to give effect to the Convention, for example measures on remedies, including documenting relevant information and making it available to affected persons (Art. 14), and measures for the identification, assessment, prevention and mitigation of risks posed by AI systems (Art. 16). Each Party reports to the Conference of the Parties on the activities it has undertaken to give effect to the Convention (Art. 24). Activities of private actors are addressed through the approach each Party chooses (Art. 3), so what an organisation has to do depends on the domestic law of the Party where it operates, once that Party is bound. The Convention does not require any organisation to use CSOAI or any other provider's records. To follow the status, read the Treaty Office chart of signatures and ratifications, which is the authoritative source.",
+    "title": "Council of Europe AI Treaty: scope and status",
+    "body": "The Council of Europe AI Framework Convention concerns human rights, democracy and the rule of law across the AI lifecycle. It addresses obligations of its Parties.\n\nCETS No. 225 opened for signature on 5 September 2024. Its entry-into-force mechanism requires five ratifications, including at least three Council of Europe member States. The Convention addresses matters including remedies and risk assessment. What a private organisation must do depends on the applicable domestic measures and jurisdiction; the treaty does not require use of Council of AI products.\n\nFor current signatures, ratifications, declarations and entry-into-force status, consult the Treaty Office chart. This explainer does not repeat the September 2026 count as a current observation. Council's previous dated correction remains available in its corrections ledger.\n\nA practical evidence review can identify the system, affected people, decision, relevant records and unresolved questions. That work supports scrutiny; it does not determine treaty compliance.\n\nReviewed 4 November 2026. No new live ratification count is asserted.",
     "references": [
-      "Council of Europe Treaty Office — Chart of signatures and ratifications of Treaty 225 (https://www.coe.int/en/web/conventions/full-list?module=signatures-by-treaty&treatynum=225)",
-      "Council of Europe CETS No. 225 — Framework Convention on Artificial Intelligence and Human Rights, Democracy and the Rule of Law (https://rm.coe.int/1680afae3c)",
-      "Council of Europe Explanatory Report to CETS No. 225 (https://rm.coe.int/1680afae67)",
-      "CSOAI corrections ledger, C-2026-0929-03 (https://councilof.ai/api/corrections)"
+      "CETS No. 225 text — https://rm.coe.int/1680afae3c",
+      "Treaty Office details — https://www.coe.int/en-GB/web/conventions/full-list2?module=treaty-detail&treatynum=225",
+      "Treaty Office signatures and ratifications — https://www.coe.int/en/web/conventions/full-list?module=signatures-by-treaty&treatynum=225",
+      "Council corrections ledger, including C-2026-0929-03 — https://councilof.ai/api/corrections"
     ],
     "audience": [
       "c-suite",
@@ -74,13 +71,13 @@
   {
     "slug": "colorado-chatbot-rulemaking",
     "id": "aeo-colorado-chatbot-rulemaking",
-    "title": "Colorado Chatbot Rulemaking Timeline — Disclosure and High-Risk AI Deadlines",
-    "body": "Colorado runs two converging regulatory clocks for AI. First, the Colorado AI Act (SB 24-205) tasks the Attorney General with adopting rules governing high-risk AI systems, including the consumer-disclosure and algorithmic-discrimination duties that take effect in 2026. Second, Colorado's standalone chatbot-disclosure law (C.R.S. 6-1-716) requires that an automated system interacting with a consumer clearly disclose that it is not a human -- a rulemaking and enforcement track that now overlaps the AI Act's transparency regime. For a verification-first operator, the timeline matters because disclosure alone is not measurement. A chatbot that announces 'I am an AI' has made a claim; it has not produced a verified measurement credential proving its boundary is instrumented, its refusal behavior is measured, and its incidents are logged. The Council of AI positions the Colorado rulemaking window as an answer-first procurement moment: deployers who arrive at the H2 2026 rulemaking hearings already carrying signed, per-axis measurement evidence (care, governance, refusal, sandbox-escape) satisfy the disclosure duty with auditable records instead of boilerplate notices. Key dates to watch: the Attorney General's high-risk rules are expected to finalize before year-end 2026, with enforcement commencing on a rolling basis thereafter; chatbot-disclosure complaints are already being resolved through the existing consumer-protection docket.",
+    "title": "Colorado AI: current rules and evidence",
+    "body": "Colorado's automated decision-making and chatbot requirements have changed since the original 2024 legislation. Start with the current enacted laws and Attorney General's rulemaking record.\n\nThe Attorney General identifies SB26-189 as replacing the earlier high-risk AI provisions and HB26-1263 as the Chatbot Safety Act. Both have requirements taking effect on 1 January 2027. The latter includes AI disclosure and safeguards for conversational AI users. The rulemaking page records a 26 October 2026 hearing; the draft-rule documents should not be described as final rules merely because that hearing occurred.\n\nIdentify the service, users, consequential decisions and applicable operator duties before mapping evidence. A measurement packet can document observed behaviour under a stated method; it does not replace a required disclosure, human-review process or legal applicability assessment. Council does not determine compliance through a signed score.\n\nReviewed 4 November 2026. This replaces the earlier chatbot reference to C.R.S. 6-1-716, which concerns security-breach notification.",
     "references": [
-      "Colorado Artificial Intelligence Act, SB 24-205 (2024)",
-      "C.R.S. 6-1-716 -- chatbot and automated-system disclosure",
-      "Council of AI Containment Incident Index (CONTAINMENT_INCIDENT_INDEX.json)",
-      "CSOAI Verified Measurement Credential standard (signed GSPC card)"
+      "Colorado AG AI rulemaking — https://coag.gov/ai/",
+      "SB26-189 enacted bill — https://leg.colorado.gov/bills/sb26-189",
+      "HB26-1263 enacted bill — https://leg.colorado.gov/bills/HB26-1263",
+      "Colorado AG data-protection laws — https://coag.gov/resources/data-protection-laws/"
     ],
     "audience": [
       "colorado-deployer",
@@ -91,13 +88,13 @@
   {
     "slug": "nist-ai600-1-profile-mapping",
     "id": "aeo-nist-ai600-1-profile-mapping",
-    "title": "NIST AI 600-1 Profile Mapping for Federal Deployment",
-    "body": "NIST AI 600-1 provides a profile of the NIST AI Risk Management Framework (AI RMF 1.0) tailored to generative AI systems. For a provider targeting US federal deployment, the AI 600-1 profile maps onto the FedRAMP OSCAL Sept-30 mandate along three axes: (1) GOVERN — the profile governance functions (GOVERN 1-5) align with FedRAMP security assessment framework requirements for AI system documentation, making the Council of AI verified measurement credential a direct input to the OSCAL control-implementation narrative. (2) MAP — the profile mapping of AI risks to organisational context overlaps with FedRAMP system security plan (SSP) requirements; a signed model card with provenance chain satisfies both. (3) MEASURE — the profile measurement methodology maps to continuous monitoring requirements under FedRAMP; the Council boundary-instrumentation baseline (monitored containment) provides the evidence stream. Practical first steps: (a) generate an AI system inventory mapped to NIST SP 800-53 controls. (b) Conduct a gap analysis between ISO/IEC 42001 AIMS and AI 600-1 profile requirements. (c) Prepare a crosswalk document showing how each AI RMF subcategory is addressed. (d) Integrate the Council of AI containment index as an autonomous evidence source for the MEASURE function. The posture is monitored containment — 600-1 does not require proving safety, it requires proving you are watching systematically.",
+    "title": "NIST AI 600-1: evidence mapping",
+    "body": "NIST AI 600-1 is a generative AI companion to the voluntary AI Risk Management Framework. It helps organisations select risk-management actions appropriate to their context.\n\nNIST published the profile on 26 July 2024. To use it in an evidence review, identify the relevant risk and suggested action, assign an owner, and link the supporting records and remaining questions. A test result should name its system version, inputs, method, date and limitations.\n\nFederal deployment has additional, separately applicable requirements. A signed model card does not automatically satisfy both NIST guidance and FedRAMP rules, and this page establishes no complete crosswalk between them. Council's published instruments and records can support a scoped measurement task where relevant; the responsible organisation still needs to determine applicability, assess the evidence and complete the required process.\n\nReviewed 4 November 2026. NIST AI 600-1 is a published profile, not the earlier draft.",
     "references": [
-      "NIST AI 100-1 (AI RMF 1.0)",
-      "NIST AI 600-1 (Generative AI Profile, draft)",
-      "FedRAMP OSCAL Mandate Sept-30 2026",
-      "Council of AI Containment Incident Index"
+      "NIST AI RMF and Generative AI Profile — https://www.nist.gov/itl/ai-risk-management-framework",
+      "NIST AI 600-1 — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "FedRAMP current rules — https://www.fedramp.gov/2026/",
+      "Council measurement methodology — https://councilof.ai/methodology/"
     ],
     "audience": [
       "federal-CTO",
@@ -108,13 +105,12 @@
   {
     "slug": "eu-ai-act-art5-prohibited-practices",
     "id": "aeo-eu-ai-act-art5-prohibited-practices",
-    "title": "EU AI Act Article 5 — Prohibited AI Practices: What Is Banned and When",
-    "body": "Article 5 of the EU AI Act lists eight categories of AI practice that are prohibited outright — not regulated, not risk-classified, but banned with immediate effect from 2 February 2025. The eight prohibitions are: (1) subliminal, manipulative, or deceptive techniques that materially distort behaviour and cause harm; (2) exploitation of vulnerabilities of persons due to age or disability; (3) social scoring by public authorities leading to detrimental treatment; (4) individual criminal risk assessments based solely on profiling; (5) untargeted scraping of facial images for facial recognition databases; (6) emotion recognition in the workplace or education (with medical/safety exceptions); (7) biometric categorisation inferring sensitive characteristics (race, political opinion, religion, sexual orientation); (8) real-time remote biometric identification in publicly accessible spaces for law enforcement (narrow judicial-authorisation exceptions apply). The distinction matters for procurement: a vendor cannot mitigate a prohibited practice with a risk assessment — Article 5 systems are illegal to place on the EU market, period. The Council of AI verified measurement credential tests for Art 5 compliance by checking that no prohibited categorisation, scoring, or manipulation path exists in the evaluated system pipeline — not that it is low risk, but that the prohibited pathway is architecturally absent. For operators uncertain whether a system touches Art 5 territory, the Council containment measurement card provides a boundary audit showing which data flows touch prohibited inference categories.",
+    "title": "EU AI Act Article 5: prohibited practices",
+    "body": "Article 5 of the EU AI Act identifies prohibited practices through defined conditions and, for some provisions, specific exceptions. Read the current text for the proposed use.\n\nAn evidence review should begin with intended purpose, affected people, deployment context and the behaviour in question. Record which provision may apply, what observations support the analysis and what needs legal or technical investigation. Avoid treating a short list of categories as a complete applicability test.\n\nCouncil's instruments can produce bounded observations where a test method is relevant. Passing a finite test bank cannot demonstrate that every prohibited pathway is absent from a system. A signed result also does not legalise an otherwise prohibited practice or establish Article 5 compliance. A useful packet keeps the observed result, the provider's claims and the applicability decision separate.\n\nReviewed 4 November 2026 against the Commission's current Article 5 reference; verify the applicable legal text before a deployment decision.",
     "references": [
-      "EU AI Act 2024/1689, Article 5 — Prohibited AI Practices",
-      "Council of AI Containment Incident Index",
-      "CSOAI Verified Measurement Credential (signed GSPC card)",
-      "European Commission AI Act implementation guidelines (draft)"
+      "European Commission AI Act Service Desk, Article 5 — https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-5",
+      "Council measurement scope and limitations — https://councilof.ai/honesty/",
+      "Council measurement methodology — https://councilof.ai/methodology/"
     ],
     "audience": [
       "procurement-officer",
@@ -126,12 +122,12 @@
   {
     "slug": "eu-art50-2-machine-marking",
     "id": "aeo-eu-art50-2-machine-marking",
-    "title": "EU AI Act Article 50(2) Machine-Readable Marking — What Deployers Must Do",
-    "body": "EU AI Act Article 50(2) requires providers of AI systems that generate synthetic audio, image, video, or text content to mark the output in a machine-readable format and label it as artificially generated or manipulated. The obligation is not optional disclosure -- it is a technical marking duty that binds from the moment the general-purpose AI transparency provisions became applicable in August 2026. For a verification-first operator, machine-readable marking is the natural bridge to a verified measurement credential: provenance metadata travels with the artifact, and an independent signature over the provenance record makes the marking auditable rather than self-asserted. The Council of AI treats Article 50(2) marking as a boundary-instrumentation problem, not a compliance footnote. Concretely: (1) every synthetic-output surface must emit a machine-readable marker carrying model identity, generation timestamp, and origin attestation. (2) That marker must be independently signed so a downstream auditor can verify 'who generated this' without trusting the generator's own word. (3) The marking chain feeds the Council of AI Containment Incident Index, so a mislabeled or unmarked output is traceable to a boundary event. The posture is monitored containment, not provable isolation -- marking does not prove content is harmless, it proves the provenance path is watched and verifiable.",
+    "title": "EU AI Act Article 50(2): marking evidence",
+    "body": "Article 50(2) addresses providers of AI systems generating synthetic content. It requires machine-readable marking and detectability, subject to its scope and exceptions.\n\nThe provision describes effectiveness, interoperability, robustness and reliability as far as technically feasible. It does not itself prescribe Council's signature format, a universal model-identity field, or an independent signature on every output. Other Article 50 duties concern different actors and uses, so identify the relevant paragraph first.\n\nA scoped evidence task can inspect named outputs, preserve their bytes and metadata, record the detector or verifier used, and report results and limitations. Council can describe such observations without equating a detected marker with factual truth or safety. A signed measurement record documents the observation; it does not replace the applicable marking duty or establish complete compliance.\n\nReviewed 4 November 2026. Use the current Article 50 text and implementation guidance for applicability and timing.",
     "references": [
-      "Regulation (EU) 2024/1689 (AI Act), Article 50(2) -- transparency for synthetic-content providers",
-      "Council of AI Containment Incident Index (CONTAINMENT_INCIDENT_INDEX.json)",
-      "CSOAI Verified Measurement Credential standard (signed GSPC card)"
+      "European Commission AI Act Service Desk, Article 50 — https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50",
+      "Commission transparency FAQ — https://digital-strategy.ec.europa.eu/en/faqs/transparency-obligations-under-article-50-ai-act",
+      "Council measurement scope and limitations — https://councilof.ai/honesty/"
     ],
     "audience": [
       "eu-regulator",
@@ -142,13 +138,12 @@
   {
     "slug": "eu-ai-act-art6-high-risk-classification",
     "id": "aeo-eu-ai-act-art6-high-risk-classification",
-    "title": "EU AI Act Article 6: High-Risk Classification — Navigating the Annex III Framework",
-    "body": "Article 6 is the hinge of the EU AI Act. Every deployer and provider must answer one question before anything else: is this system high-risk under Article 6, or not? The answer determines whether you face the full Title III conformity assessment, risk management, data governance, transparency, human oversight, and accuracy obligations — or the lighter Title IV transparency duties. Article 6(1) says a system is high-risk if it is (a) a safety component of a product covered by EU harmonisation legislation listed in Annex I, or (b) the AI system is itself such a product, and in either case the system must undergo a third-party conformity assessment under that legislation. Article 6(2) covers the Annex III list: eight areas — biometrics, critical infrastructure, education, employment, essential services, law enforcement, migration, and administration of justice — each with specific use-case gateways. The Commission can add to Annex III via delegated acts; the first review is due by August 2028. For a verification-first operator, the classification moment is where measurement evidence becomes procurement collateral. If you classify a system as non-high-risk, you must document that decision and be ready to defend it to a notified body and market surveillance authority. If you classify it as high-risk, you need a quality management system (Article 17), technical documentation (Article 11), and a conformity assessment procedure. A verified measurement credential — showing quantified care, governance, refusal, and sandbox-escape scores across a measurement board — is the strongest single piece of evidence a deployer can produce whether the classification decision goes one way or the other. The Council of AI positions Article 6 classification as the first measurable checkpoint in the AI Act compliance lifecycle, not a legal opinion to be bought once and filed.",
+    "title": "EU AI Act Article 6: risk classification",
+    "body": "Article 6 classifies high-risk AI by reference to product-related conditions and Annex III uses. Classification depends on the system and intended use, including applicable exceptions.\n\nA useful review records the product or use case, role of the organisation, relevant provision, reasoned assessment and supporting material. Check the current consolidated text, guidance and application dates; a generic score cannot determine the classification. Where a provider relies on the Annex III exception, the relevant assessment and registration requirements must also be examined.\n\nCouncil measurement records may inform a specific technical question in that review. They do not replace classification reasoning, risk management, documentation or any applicable conformity process. No measurement credential is presented here as the strongest or sufficient evidence for every system. Identify what each record establishes and the decisions that remain with the responsible people.\n\nReviewed 4 November 2026 against the Commission's current Article 6 reference.",
     "references": [
-      "Regulation (EU) 2024/1689 (EU AI Act), Articles 6-7, Annexes I and III",
-      "Commission Guidelines on the classification of high-risk AI systems (expected Q4 2026)",
-      "Council of AI Containment Incident Index (CONTAINMENT_INCIDENT_INDEX.json)",
-      "CSOAI Verified Measurement Credential standard (signed GSPC card)"
+      "European Commission AI Act Service Desk, Article 6 — https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-6",
+      "Council measurement methodology — https://councilof.ai/methodology/",
+      "Council measurement scope and limitations — https://councilof.ai/honesty/"
     ],
     "audience": [
       "eu-deployer",
@@ -160,12 +155,12 @@
   {
     "slug": "what-is-monitored-containment",
     "id": "aeo-what-is-monitored-containment",
-    "title": "What Is Monitored Containment? — Council of AI Boundary Posture, Explained",
-    "body": "Monitored containment is the honest alternative to claiming provable isolation. A provably isolated system would require a mathematical guarantee that no failure can ever cross a boundary — a claim no operator can credibly make about a live AI system, and one the Council of AI explicitly refuses to make. Monitored containment requires declared boundaries, event capture, review, and incident response. This public surface does not demonstrate continuous coverage; an event is auditable only when its linked record states the scope and carries verifiable evidence. The posture is monitored containment, not provable isolation — neither isolation nor complete observation is proved without scoped evidence. The measurement side is a verified measurement credential: rather than a vendor self-attesting that its system stayed in bounds, a verifiable signature over a published measurement record can let an auditor test whether that specific record changed after signing. In practice this means three things. (1) Boundary instrumentation: the surfaces where a model or agent touches the outside are wrapped in logging that captures identity, timestamp, and outcome. (2) Scoped measurement: when instrumentation produces an admitted record, that record can enter an index with its observation time and limitations. (3) Independent verification: a measurement is verifiable only when its specific linked record carries a valid signature, so the claim 'we watched it' is auditable rather than self-asserted. Monitored containment is therefore not a weaker version of isolation — it is a different, and more defensible, claim: what a signed record can establish is limited to its declared scope and observation time.",
+    "title": "Monitored containment: scope and evidence",
+    "body": "Monitored containment describes a proposed operating posture: define a boundary, observe relevant events and review evidence of failures or changes. Coverage must be demonstrated for the named deployment.\n\nA useful record identifies the system, boundary, observation period, capture method, event and limitations. Missing observations, an unavailable source and a tested failure are different outcomes. A monitoring design or a published index alone does not establish continuous observation, a staffed response service or successful remediation.\n\nCouncil's measurement and verification tools help readers inspect specific published records. Cryptographic verification can establish record integrity under the applicable trust assumptions; it does not establish that every event was captured, that the recorded claim is true, or that a boundary cannot be crossed. Operational monitoring and incident handling require their own implemented controls, permissions and accountable people.\n\nReviewed 4 November 2026. Read the scope and date of each linked result before relying on it.",
     "references": [
-      "Council of AI Containment Incident Index (CONTAINMENT_INCIDENT_INDEX.json)",
-      "CSOAI Verified Measurement Credential standard (signed GSPC card)",
-      "Council Signal measurement methodology"
+      "Council measurement methodology — https://councilof.ai/methodology/",
+      "Council measurement scope and limitations — https://councilof.ai/honesty/",
+      "Council record verifier — https://councilof.ai/gspc-verify/"
     ],
     "audience": [
       "c-suite",
@@ -177,14 +172,13 @@
   {
     "slug": "verified-measurement-credential",
     "id": "aeo-verified-measurement-credential",
-    "title": "Verified Measurement Credential — What It Means and How to Verify",
-    "body": "A verified measurement credential is a signed, auditable assertion that a specific measurement was taken at a specific time by a specific instrument, and that the result has not been altered since. The Council of AI issues signed measurement cards for AI-system evaluations on the living board (GET /api/gspc — quote its totals.public_count live). Each card carries an Ed25519 signature over a canonical body hash, with a published public key at did:web:csoai.org#card-attestation-1. To verify: (1) obtain the signed JSON, (2) recompute the hash in the browser at /gspc-verify or with /signed/verify-card.mjs, (3) confirm VALID under the published key. Three states only: VALID, INVALID, UNCHECKABLE. This is not a security guarantee and not a certification. The card says the board was measured and the numbers are unaltered. Empty cells stay empty.",
+    "title": "Signed measurement cards: how to verify",
+    "body": "A Council measurement card records an issuer's measurement claim. Verifying its signature checks the signed bytes against the expected key; it does not independently repeat the measurement.\n\nObtain the exact record and identify its format, signing key and verification procedure. Use the browser verifier or the documented script only for the record profiles it supports. Pin the expected public key from the published trust information, rather than trusting a replacement key supplied inside an arbitrary file. Read hash integrity, signature validity, inclusion and current board admission as separate results where the format distinguishes them.\n\nThe verifier reports VALID, INVALID or UNCHECKABLE for the check performed. A missing key or unsupported profile must remain unresolved rather than be treated as a successful check. Read the underlying method, evidence, date and corrections to assess the measurement claim. Neither a valid signature nor a signed card certifies a model's safety or legal compliance.\n\nReviewed 4 November 2026 against the published verification instructions and verifier source.",
     "references": [
-      "https://councilof.ai/gspc-verify",
-      "https://councilof.ai/signed/HOW-TO-VERIFY.md",
-      "CSOAI Verified Measurement Credential specification",
-      "NIST IR 8475 (digital credential formats)",
-      "ISO/IEC 42001 AI Management System audit requirements"
+      "Council browser verifier — https://councilof.ai/gspc-verify/",
+      "Council verification instructions and profile limits — https://councilof.ai/signed/HOW-TO-VERIFY.md",
+      "Council published keys — https://councilof.ai/.well-known/did.json",
+      "Council corrections — https://councilof.ai/corrections/"
     ],
     "audience": [
       "regulator",
@@ -196,12 +190,13 @@
   {
     "slug": "council-signal-measurement",
     "id": "aeo-council-signal-measurement",
-    "title": "Council Signal: How Governance Measurement Works",
-    "body": "Council Signal is the measurement backbone of the Council of AI. It asks how a specific governance claim can be tested instead of merely asserted. Published GSPC items use frozen banks and deterministic scoring; selected results are issued as Ed25519-signed cards that a third party can verify. The current board state comes from GET /api/gspc. Ties remain ties and unmeasured cells remain explicit. A signed card binds specific bytes and a signer; it does not certify a model as safe or imply a Council vote.",
+    "title": "Council Signal: governance measurement",
+    "body": "Council Signal describes the measurement work behind Council's published evidence: turn a stated governance question into an inspectable procedure and a bounded result.\n\nPublished GSPC instruments use specified banks and scoring methods. Read the exact method and version for the result in question; do not assume every declared axis has been measured or that different instruments are interchangeable. Current board admission and measurement states come from /api/gspc. Ties and unmeasured cells remain explicit.\n\nSelected records are signed so another reader can verify their integrity. That verification is separate from reproducing the experiment, evaluating the method or deciding whether the result is relevant to a deployment. A signed record does not imply an independent Council vote, legal authority or a safety certification. Users can inspect the methods, test a supported record and consult corrections without purchasing a favourable result.\n\nReviewed 4 November 2026.",
     "references": [
-      "Council of AI board measurement methodology (live count: GET /api/gspc totals.public_count)",
-      "CSOAI Verified Measurement Credential standard (signed GSPC card)",
-      "ETSI EN 304 223: Cybersecurity for AI (13 principles, January 2026)"
+      "Council measurement methodology — https://councilof.ai/methodology/",
+      "Current GSPC board data — https://councilof.ai/api/gspc",
+      "Council browser verifier — https://councilof.ai/gspc-verify/",
+      "Council corrections — https://councilof.ai/corrections/"
     ],
     "audience": [
       "regulator",

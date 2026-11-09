@@ -304,8 +304,26 @@ const scanLeaves = (cleaned, out) => {
     // header saying whose money it is. That is why "£500-2,000" under an "Other Providers"
     // heading was not stood down by FOREIGN_MONEY. Stripping first makes CONTEXT_WINDOW
     // mean what it says: characters a reader would actually see.
-    const before = cleaned.slice(0, m.index).replace(/<[^>]+>/g, " ");
-    const after = cleaned.slice(m.index + m[0].length).replace(/<[^>]+>/g, " ");
+    //
+    // BOUNDED NEIGHBOURHOOD (2026-11-01). This used to strip the ENTIRE document prefix
+    // and suffix for every leaf — O(document × leaves) — which blew the CI heap (2 GB OOM,
+    // exit 134) on multi-megabyte prerendered and mirrored pages. Now each leaf strips a
+    // raw span around itself, widened ×4 until it yields a full CONTEXT_WINDOW of stripped
+    // text (or hits the document edge). Same visible window in every case, linear total work.
+    let span = CONTEXT_WINDOW * 4;
+    let before, after;
+    for (;;) {
+      const start = Math.max(0, m.index - span);
+      const end = Math.min(cleaned.length, m.index + m[0].length + span);
+      before = cleaned.slice(start, m.index).replace(/<[^>]+>/g, " ");
+      after = cleaned.slice(m.index + m[0].length, end).replace(/<[^>]+>/g, " ");
+      if (
+        (before.replace(/\s+/g, "").length >= CONTEXT_WINDOW || start === 0) &&
+        (after.replace(/\s+/g, "").length >= CONTEXT_WINDOW || end === cleaned.length)
+      ) break;
+      if (span >= cleaned.length) break;
+      span *= 4;
+    }
     const ctx = before.slice(-CONTEXT_WINDOW) + " " + text + " " + after.slice(0, CONTEXT_WINDOW);
     out.push({ text, ctx });
   }

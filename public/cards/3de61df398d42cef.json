@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-25T09:54:36Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "meta",
+      "surface": "art50_marking",
+      "url": "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/",
+      "prev_sha256": "0fbc41f1578071e6b89287d3d97611b96ae1e787441d35be5032a25ceeb0c454",
+      "new_sha256": "56a31c414655498658a49e7bcb4e1e6c86aaaaa08acac3b9d0631bc36b9cd007",
+      "prev_bytes_sha256": "3d722fd59095e6f4f1d1aeef0e6d64c622ce96b5acd6ed739a6e4813c2054951",
+      "new_bytes_sha256": "4d425bdfc4f153348411e22316e6fec75f4dd1b7d4846aadfdd8b6f3425c8d5b",
+      "prev_fetched_at": "2026-09-14T10:50:27Z",
+      "fetched_at": "2026-10-25T09:54:36Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 525611,
+        "new": 525745
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3de61df398d42cefd3f20fbd482c74d88c0d4629f9fe25ead1f2c8fb6afefc32",
+    "sig_ed25519": "6c7eab3ffd1d1c379cda1e1b1e0c8edf4926aa1c9c86178080af22158243f5add1c4e19bf193c5ba61b88ec9e829cab117094cea2136ad3d6cb2751dcf9e9907",
+    "source_urls": [
+      "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/"
+    ],
+    "subject": "Meta — art50_marking: bytes changed 2026-10-25",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:meta",
+      "surface:art50_marking",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "229c78d215dc1b24e0d1995d374f2366f49850f6186bc36b67b1160c3e0dc5d5",
+    "0f451820328830d5c4f42d3e54dc2b10e6f25aff803cfb023a8abdf6f48c92fb",
+    "15bfc5fa046e4db8c55fef9dcf8a71ca6514db4b133b62aa1ee853923c2db1f8",
+    "9cd8abc6a7f35e6258cb2610de95c38ff6dcc05d6c00ed23e4363353a857007a",
+    "9b3b2c8084a09395813e5402b05a736f53129192ce0cdab407f6d36886d0086c",
+    "5c925569a940198c345b4eee3a2ce0100647efd74bf52e33ecbea62d8fb8da7c",
+    "1db97de4f1ebe5d42f878a5922f46fdfff8ba6db6183bcfddaab819602644f80",
+    "2347810be70cf927d205598cdda9d0d6536a0fb064d55814988e4d6f20499c3d",
+    "698022b669e991ba5f21c904d323f321e46b6a7c9ff3d6222083d469bca0a693"
+  ]
+}
