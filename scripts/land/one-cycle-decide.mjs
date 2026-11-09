@@ -135,10 +135,24 @@ export function decide(state) {
     };
   }
 
-  if (state?.prState === "merged" || state?.prState === "closed") {
+  // MERGED AND CLOSED ARE TWO STATES, AND THE RECEIPT MUST TELL THEM APART. A pull request that
+  // merged and one that was closed without merging are both `state: "closed"` in the REST API, so
+  // a receipt that only carries the API's `state` cannot say whether the change LANDED or was
+  // DROPPED. MEASURED 2026-11-09: PR #4148 merged as 1d53df3cf and this instrument's receipt
+  // said "the pull request is closed" — true of the API field, and useless to a reader who has to
+  // know whether the work reached master. The two reasons below say which one happened.
+  if (state?.prState === "merged") {
     return {
       action: ACTIONS.DONE,
-      reason: `the pull request is ${state.prState}`,
+      reason: "the pull request is merged — the change landed",
+      detail: { behind },
+    };
+  }
+
+  if (state?.prState === "closed") {
+    return {
+      action: ACTIONS.DONE,
+      reason: "the pull request is closed and was NOT merged — the change did not land",
       detail: { behind },
     };
   }
@@ -263,11 +277,16 @@ export function fixtures() {
       name: "a merged pull request is done",
       state: { prState: "merged", draft: false, armed: true, behind: 0, readComplete: true, required: green },
       action: ACTIONS.DONE,
+      reason: /merged/,
     },
     {
       name: "a closed pull request is done",
       state: { prState: "closed", draft: false, armed: false, behind: 4, readComplete: true, required: green },
       action: ACTIONS.DONE,
+      // The receipt must say the change DID NOT LAND. A closed pull request that was never merged
+      // is a dropped change, and a receipt that reads only "closed" is indistinguishable from one
+      // that read "merged".
+      reason: /NOT merged.*did not land/,
     },
     {
       name: "a draft must be made ready before anything else",
