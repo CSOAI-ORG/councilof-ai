@@ -87,3 +87,29 @@ model improvement, human approval or an observed business effect.
 The release owner retains protected review, merge and deployment. This document
 is a handoff, not another owner's acknowledgement. No upstream reply is sent,
 and no production repair, independent acceptance or financial value is inferred.
+
+## Compatibility follow-through and final scoped rerun
+
+The first hosted full-library run for head
+`4dd24230879e7a60e8f20b7ce3823ae93e0dc786` correctly failed the retained
+`test_native_judges.py::test_missing_rail_decision_is_not_permission` contract:
+missing rail decisions must stay UNMEASURED, not be reclassified UNCHECKABLE.
+Run `42589831797`, job `129068482965`, returned 1 failed, 478 passed and
+1 skipped (optional in-toto-attestation absent), plus 110 passing subtests.
+The failure is retained; it is not described as an unrelated CI problem.
+
+The importer now preserves UNMEASURED for missing individual decisions as well
+as absent traces, while explicit invalid/conflicting values remain UNCHECKABLE.
+The pre-existing native-judge test was not changed or weakened. A new mixed
+known/missing-rail test checks both orders and requires a withheld aggregate.
+A separate provenance test also requires the input digest to be labelled
+`trace sha256`, not an unverified configuration digest.
+
+At 2026-11-09T09:02:10Z-09:02:14Z the scoped local suite ran **43 unittest
+methods**, all successful, including the same three mutation controls.
+Final scoped log SHA-256:
+`cb8d8bd4523897b2db0f55d9634a8703cd09831301f04896f07be9d373284b5c`.
+The Vitest bridge now requires at least those 43 methods. Historical 41- and
+42-method receipts are retained separately, not relabelled as later runs.
+The final commit still needs its own hosted full-library/required-check result;
+earlier head results cannot qualify it. No merge or deployment is claimed.
