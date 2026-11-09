@@ -227,7 +227,7 @@ def ingest(
 
         out.append(E.build(
             subject={"kind": "model_run", "locator": f"{subject}#{turn_id}",
-                     "declared_by": f"source-reported nemo-guardrails {ver} config sha256:{sha}"},
+                     "declared_by": f"source-reported nemo-guardrails {ver} trace sha256:{sha}"},
             claim={"text": f"Normalised rail trace turn {turn_id} on {model_id}: "
                            f"expected_action={expected_action}; observed_action={observed.get('observed_action')}.",
                    "source_url": source_url, "source_sha256": sha, "read_at": read_at},
