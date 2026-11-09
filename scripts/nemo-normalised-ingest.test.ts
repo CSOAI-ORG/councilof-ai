@@ -21,7 +21,7 @@ function runPython(pattern: string, minimumTests: number) {
 
 describe("Council-normalised NeMo evidence import", () => {
   it("rejects unknown decisions and detects weakened private implementations", () => {
-    runPython("test_nemo_guardrails*.py", 41);
+    runPython("test_nemo_guardrails*.py", 43);
   }, 30_000);
   it("retains existing NVIDIA/global ingest and renderer contracts", () => {
     runPython("test_global_and_nvidia_ingest.py", 2);
