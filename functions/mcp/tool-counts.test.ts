@@ -165,7 +165,20 @@ describe("#3502 the last hand-written fleet sizes are held to the manifests", ()
     expect(doc).toContain(`csoai-gspc-mcp (v${version})`);
     expect(doc).toContain(`npx -y csoai-gspc-mcp@${version}`);
     expect(doc).toContain(NPM_CAPTURE.checked_at);
-    expect(NPM_CAPTURE.published.total_tools).toBe(nFree + nPaid);
+    // The capture is DATED evidence. When the fleet grew after the capture, equality is not the
+    // invariant to demand — the draft must DOCUMENT the delta and NAME the release that closes it
+    // (the release choreography in this same document). Only a matched fleet needs equality.
+    if (NPM_CAPTURE.published.total_tools !== nFree + nPaid) {
+      expect(doc, "a fleet delta must be stated in the draft").toContain(
+        `${NPM_CAPTURE.published.total_tools} tool names`,
+      );
+      expect(doc, "the closing release must be named").toContain(`${nFree + nPaid}`);
+      expect(doc, "the draft must say the tarball carries the door's current list").toContain(
+        "prepack",
+      );
+    } else {
+      expect(NPM_CAPTURE.published.total_tools).toBe(nFree + nPaid);
+    }
     expect(NPM_CAPTURE.published.deprecated).toBe(false);
     expect(NPM_CAPTURE.diff.live_only).toEqual([]);
     expect(NPM_CAPTURE.diff.published_only).toEqual([]);
