@@ -1,0 +1,70 @@
+{
+ "schema": "csoai.feed.model/0.1",
+ "feed": "model/m-4eea333d1336",
+ "as_of": "2026-08-19T09:24:39.174226+00:00",
+ "model_ref": "4eea333d13365cb4",
+ "identity_note": "the model identifier resolves via the signed card corpus (public/signed/cards, card-matrix.json); raw identifiers are not published on this surface",
+ "cards": 8,
+ "axes_covered": [
+  "arc-30",
+  "care",
+  "gov",
+  "gsm8k-30",
+  "jail-escape-detection",
+  "mmlu-30",
+  "swag-30",
+  "swarm-candidates"
+ ],
+ "variation_note": "same-fixture runs across this model's variations live here; deltas between models are the variation evidence",
+ "measurements": [
+  {
+   "id": "31bcd0b2f21af1fb22cd4d74aeb392870bd068b0b507eb59dd366ae4d1504c5d",
+   "axis": "swarm-candidates",
+   "accuracy": 0.1481,
+   "created": "2026-08-19T09:24:39.159139+00:00"
+  },
+  {
+   "id": "49196caeba7592579c2ace80a854f14ff8c10d762813fa8834f6e7a4bed84e5d",
+   "axis": "care",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.159037+00:00"
+  },
+  {
+   "id": "8f55e463d73917d2a1c10dea041db0a57fbfb2dba622b8e9a9705429fde4b886",
+   "axis": "gsm8k-30",
+   "accuracy": 0.5333,
+   "created": "2026-08-19T09:24:39.158804+00:00"
+  },
+  {
+   "id": "c42bda59a7df7627956f385401f5f94c8e71046c6eee11a1d9573d478f7d0a37",
+   "axis": "jail-escape-detection",
+   "accuracy": 0.5211,
+   "created": "2026-08-19T09:24:39.159179+00:00"
+  },
+  {
+   "id": "c5ed9722949d019b77d8752f2be255acd53165ccabbc6bbf56243cd3ecd7bbca",
+   "axis": "mmlu-30",
+   "accuracy": 0.9667,
+   "created": "2026-08-19T09:24:39.158727+00:00"
+  },
+  {
+   "id": "cc4aa43e1515e9a6906a6a0457700c104ece367909bf2823aefc2763b7bde99c",
+   "axis": "arc-30",
+   "accuracy": 1,
+   "created": "2026-08-19T09:24:39.158972+00:00"
+  },
+  {
+   "id": "cfba2ad1aaf8c3586d692a3b1f138f5e86f2adb0ac84f49353482c6fe8640b73",
+   "axis": "gov",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.159098+00:00"
+  },
+  {
+   "id": "d2785c1a875bc71db65e1f9caf8591e2f76d84ee6afc992ef9a832d2566dba5c",
+   "axis": "swag-30",
+   "accuracy": 0.5333,
+   "created": "2026-08-19T09:24:39.158906+00:00"
+  }
+ ],
+ "verify": "https://councilof.ai/gspc-verify/"
+}

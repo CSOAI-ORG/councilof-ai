@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-08T03:35:10Z",
- "source_commit": "ff0fbe8f3ad8aca4d02aa66d41e709b573ca091a",
+ "as_of": "2026-11-08T04:46:22Z",
+ "source_commit": "2998e55473f2fefc66b934e66ffe94b6114048d6",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; on a row whose served_bytes reads 'as-published', a match means you hold what the estate published. Three things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects; and the EDGE rewrites some HTML in transit, so on a row whose served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the bytes the site serves are NOT the bytes published here, and on a 'per-request' row they differ on every fetch, so no digest of them can be reproduced by anyone, including us. A row whose served state is hf-mirror is a different case again: the bytes come from the HuggingFace evidence mirror, which is a SEPARATE HOST whose membership this index does not record, so the row's digest is checkable only while the mirror still holds the file. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -28,9 +28,9 @@
    "as-published": 16364,
    "edge-transformed-per-request": 1
   },
-  "digests_taken_from_the_built_tree": 0,
-  "digests_taken_from_the_injectors_transform": 53,
-  "digests_taken_from_the_tree_bytes": 3066,
+  "digests_taken_from_the_built_tree": 3119,
+  "digests_taken_from_the_injectors_transform": 0,
+  "digests_taken_from_the_tree_bytes": 0,
   "digests_not_comparable_no_built_tree": 0,
   "excluded_the_index_itself": 1,
   "excluded_not_present_in_the_tree": 0

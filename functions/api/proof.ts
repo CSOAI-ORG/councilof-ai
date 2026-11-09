@@ -1,3 +1,4 @@
+import { postObservationState } from "./_bookkeeping_budget";
 import { recordPaidResponse, markPaidUndeliveredResponse } from "./_x402_delivery_record";
 /**
  * GET /api/proof — inclusion proofs for public-root leaves.
@@ -213,7 +214,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       200,
       // Echo settlement back per x402 when the facilitator returned one; omitted otherwise.
       payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-    ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+    ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
   }
 
   if (!/^[0-9a-f]{64}$/.test(sha)) {
