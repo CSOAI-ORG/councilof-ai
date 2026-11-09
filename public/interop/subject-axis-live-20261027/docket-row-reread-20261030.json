@@ -1,0 +1,2312 @@
+{
+ "schema": "csoai.docket-row-reread/0.1",
+ "observed_at": "2026-10-30T04:17:46.700Z",
+ "published_at": "2026-10-30T04:50:31.225Z",
+ "subject": "the 130-row jewel state table (docs/GSPC-JEWEL-STATE-TABLE-2026-10-27.md)",
+ "baseline_table_dated": "2026-10-27",
+ "what_this_is": "A dated, status-level re-read of the third-party surfaces the docket rows name, compared with the reading each row recorded on 2026-10-27.",
+ "what_this_is_not": "NOT a text-level wave. The state table records HTTP status and bytes, not a capture-time visible-text digest, so there is no digest baseline to diff against. This measures reachability and status. The visible-text digest IS computed on every read, so the NEXT reading of this table has a digest baseline and can be text-level.",
+ "method": {
+  "reader": "Node fetch, not Python urllib: councilof.ai returns 200 to Node/curl and 403 to urllib under the Cloudflare rule `public-data: no BIC`.",
+  "extractor": "csoai-visible-text/2",
+  "extractor_source": "scripts/claim-capture.mjs, fetched from master",
+  "extractor_sha256": "10432c76c61b34ff9b726d2341844833b3e9a7fef19e5b77e5e545c45483559d",
+  "extractor_sha256_pinned_in": "public/spec/claim-maintenance/v0.2/reference/manifest.json",
+  "extractor_sha256_matches_pin": true,
+  "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+  "timeout_ms": 25000,
+  "concurrency": 6
+ },
+ "negative_control": {
+  "url": "path:/__csoai-negative-control-never-exists__",
+  "url_form": "path-only",
+  "host": "councilof.ai",
+  "path": "/__csoai-negative-control-never-exists__",
+  "status": 404,
+  "reachable": false,
+  "required": "unreachable",
+  "passed": true,
+  "note": "a control that cannot exist is read first; if the reader reports it reachable, the whole run is void. The control path is published in the path-only form because it is by construction a path the site does not serve."
+ },
+ "counts": {
+  "jewel_rows": 130,
+  "distinct_urls": 126,
+  "n_valid": 89,
+  "n_unreachable": 37,
+  "status_changed": 6,
+  "became_unreachable": 3,
+  "became_reachable": 1
+ },
+ "thresholds": {
+  "n_valid >= 30 (the slot own threshold)": "MET",
+  "negative control discriminates": "MET"
+ },
+ "rendering_convention": {
+  "rule": "an unserved same-origin path is published as `path:/…` with its host and path in separate fields, never as a full URL; third-party URLs are published whole",
+  "why": "the link-gate fails a PR that publishes a same-origin URL for a path the site does not serve, and this artefact measures 404s including some on our own host; the convention is the estate's own, used in public/interop/subject-axis-live-20261027/audit-laneA-CJ-01-CJ-50.json"
+ },
+ "table_defects": {
+  "what": "the published state table cuts its Evidence cells at a fixed character budget, and where a URL lands on the cut the published table carries a malformed URL - the fragment ends at the cell boundary with no terminator",
+  "counted_from": "docs/GSPC-JEWEL-STATE-TABLE-2026-10-27.md on master, read directly, and confirmed against this run's reads",
+  "proven_cells": 10,
+  "distinct_fragments": 10,
+  "rows": [
+   "CJ-01",
+   "CJ-06",
+   "CJ-15",
+   "CJ-32",
+   "CJ-36",
+   "CJ-38",
+   "CJ-42",
+   "CJ-73",
+   "CJ-91",
+   "N-03"
+  ],
+  "fragments": [
+   "path:/spec/claim-maintenanc",
+   "https://da",
+   "https://www.canada.ca/en/department-finance/news/2026/03/canada-announces-progress-to-est",
+   "https://www.iana.or",
+   "https://eic.ecuropa",
+   "https://www.ukri.or",
+   "https://xrpl.org/ecosystem/gl",
+   "https://www.presidency",
+   "https://openinventionnetwork.com/community-of-lice",
+   "https://genorma.com/en/standards/pren-iso-iec-232"
+  ],
+  "indeterminate_cells": 1,
+  "indeterminate_rows": [
+   "CJ-80"
+  ],
+  "indeterminate_detail": [
+   {
+    "row": "CJ-80",
+    "jewel": "W3C State of the Web in the AI Era (TPAC Oct 29)",
+    "published_fragment": "https://www.w3.org/2026/TPA",
+    "status_today": 403,
+    "error_today": null,
+    "reason": "the cell ends in a URL fragment and the host refuses this client, so the read cannot distinguish a cut fragment from a live path"
+   }
+  ],
+  "not_repaired": "the full URL behind each fragment is not recorded anywhere in the estate, so repairing the cells would require guessing one. A guessed URL in a state table is a fabricated measurement, so the defect is recorded here instead of being quietly patched.",
+  "detail": [
+   {
+    "row": "CJ-01",
+    "jewel": "Claim maintenance category (zero incumbents)",
+    "published_fragment": "path:/spec/claim-maintenanc",
+    "status_today": 404,
+    "error_today": null,
+    "reason": "the Evidence cell is cut at the table column boundary and the URL is cut with it"
+   },
+   {
+    "row": "CJ-06",
+    "jewel": "SCITT claim-card I-D (name free)",
+    "published_fragment": "https://da",
+    "status_today": 0,
+    "error_today": "TypeError",
+    "reason": "the Evidence cell is cut at the table column boundary and the URL is cut with it"
+   },
+   {
+    "row": "CJ-15",
+    "jewel": "DSRB (forming defence bank)",
+    "published_fragment": "https://www.canada.ca/en/department-finance/news/2026/03/canada-announces-progress-to-est",
+    "status_today": 404,
+    "error_today": null,
+    "reason": "the Evidence cell is cut at the table column boundary and the URL is cut with it"
+   },
+   {
+    "row": "CJ-32",
+    "jewel": "URN namespace urn:csoai",
+    "published_fragment": "https://www.iana.or",
+    "status_today": 0,
+    "error_today": "TypeError",
+    "reason": "the Evidence cell is cut at the table column boundary and the URL is cut with it"
+   },
+   {
+    "row": "CJ-36",
+    "jewel": "EIC Pathfinder DeepRAP (€0.5–4M, Oct 28)",
+    "published_fragment": "https://eic.ecuropa",
+    "status_today": 0,
+    "error_today": "TypeError",
+    "reason": "the Evidence cell is cut at the table column boundary and the URL is cut with it"
+   },
+   {
+    "row": "CJ-38",
+    "jewel": "KTP R3 (Oct 14, ~85%)",
+    "published_fragment": "https://www.ukri.or",
+    "status_today": 0,
+    "error_today": "TypeError",
+    "reason": "the Evidence cell is cut at the table column boundary and the URL is cut with it"
+   },
+   {
+    "row": "CJ-42",
+    "jewel": "XRPL GLOW retro (pays completed work)",
+    "published_fragment": "https://xrpl.org/ecosystem/gl",
+    "status_today": 404,
+    "error_today": null,
+    "reason": "the Evidence cell is cut at the table column boundary and the URL is cut with it"
+   },
+   {
+    "row": "CJ-73",
+    "jewel": "White House Accord (6 labs, no criteria)",
+    "published_fragment": "https://www.presidency",
+    "status_today": 0,
+    "error_today": "TypeError",
+    "reason": "the Evidence cell is cut at the table column boundary and the URL is cut with it"
+   },
+   {
+    "row": "CJ-91",
+    "jewel": "OIN licensee directory entry 0898 CSOAI LTD",
+    "published_fragment": "https://openinventionnetwork.com/community-of-lice",
+    "status_today": 404,
+    "error_today": null,
+    "reason": "the Evidence cell is cut at the table column boundary and the URL is cut with it"
+   },
+   {
+    "row": "N-03",
+    "jewel": "ISO/IEC DIS 23282 NLP evaluation ballot (closes Nov 25)",
+    "published_fragment": "https://genorma.com/en/standards/pren-iso-iec-232",
+    "status_today": 404,
+    "error_today": null,
+    "reason": "the Evidence cell is cut at the table column boundary and the URL is cut with it"
+   }
+  ]
+ },
+ "delta": [
+  {
+   "rows": [
+    "CJ-08"
+   ],
+   "target": "https://www.w3.org/community/agent-conformance/participants",
+   "target_form": "absolute-url",
+   "recorded_status": 200,
+   "recorded_bytes": 34200,
+   "status": 403,
+   "bytes": 5893,
+   "visible_text_sha256": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+   "ms": 101,
+   "error": null,
+   "status_changed": true,
+   "bytes_changed": true,
+   "became_unreachable": true,
+   "became_reachable": false
+  },
+  {
+   "rows": [
+    "CJ-09"
+   ],
+   "target": "https://www.w3.org/community/agent-identity/participants",
+   "target_form": "absolute-url",
+   "recorded_status": 200,
+   "recorded_bytes": 78413,
+   "status": 403,
+   "bytes": 5884,
+   "visible_text_sha256": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+   "ms": 49,
+   "error": null,
+   "status_changed": true,
+   "bytes_changed": true,
+   "became_unreachable": true,
+   "became_reachable": false
+  },
+  {
+   "rows": [
+    "CJ-25"
+   ],
+   "target": "https://claude.ai/directory",
+   "target_form": "absolute-url",
+   "recorded_status": 403,
+   "recorded_bytes": null,
+   "status": 200,
+   "bytes": 156627,
+   "visible_text_sha256": "3627393b4bb93c809b0e38d6a37ff4c1fd7f84f269037ef5c9a283671ecf4eec",
+   "ms": 194,
+   "error": null,
+   "status_changed": true,
+   "bytes_changed": false,
+   "became_unreachable": false,
+   "became_reachable": true
+  },
+  {
+   "rows": [
+    "CJ-43"
+   ],
+   "target": "https://www.opensource.org/",
+   "target_form": "absolute-url",
+   "recorded_status": 200,
+   "recorded_bytes": 225880,
+   "status": 403,
+   "bytes": 2876,
+   "visible_text_sha256": "2c8416b30d487934a66e570e98efd93b71a47bc4e56991ddfd4e7054264b0bce",
+   "ms": 181,
+   "error": null,
+   "status_changed": true,
+   "bytes_changed": true,
+   "became_unreachable": true,
+   "became_reachable": false
+  },
+  {
+   "rows": [
+    "CJ-43"
+   ],
+   "target": "https://www.opensource.org/metrics",
+   "target_form": "absolute-url",
+   "recorded_status": 404,
+   "recorded_bytes": null,
+   "status": 403,
+   "bytes": 2876,
+   "visible_text_sha256": "2c8416b30d487934a66e570e98efd93b71a47bc4e56991ddfd4e7054264b0bce",
+   "ms": 170,
+   "error": null,
+   "status_changed": true,
+   "bytes_changed": false,
+   "became_unreachable": false,
+   "became_reachable": false
+  },
+  {
+   "rows": [
+    "CJ-83"
+   ],
+   "target": "https://www.un.org/en/scientific-panel-on-ai",
+   "target_form": "absolute-url",
+   "recorded_status": 403,
+   "recorded_bytes": null,
+   "status": 404,
+   "bytes": 65373,
+   "visible_text_sha256": "dba8b2bd301ff942137a33287b8d24663e9382470975de1866568e7dc319be71",
+   "ms": 502,
+   "error": null,
+   "status_changed": true,
+   "bytes_changed": false,
+   "became_unreachable": false,
+   "became_reachable": false
+  }
+ ],
+ "reads": [
+  {
+   "rows": [
+    "CJ-01",
+    "CJ-02"
+   ],
+   "jewel": "Claim maintenance category (zero incumbents)",
+   "target": "https://councilof.ai/claim-maintenance/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 133126,
+   "visible_text_sha256": "29956371376ebd7332f6988f8a92a68a2f2cbba283bcccef5823affeef9a11bd",
+   "visible_text_bytes": 19361,
+   "ms": 67,
+   "error": null,
+   "final_target": "https://councilof.ai/claim-maintenance/"
+  },
+  {
+   "rows": [
+    "CJ-01"
+   ],
+   "jewel": "Claim maintenance category (zero incumbents)",
+   "target": "path:/spec/claim-maintenanc",
+   "target_form": "path-only",
+   "status": 404,
+   "ok": false,
+   "bytes": 14193,
+   "visible_text_sha256": "834d0793c84c9fd40e43dbd0aa431d2a319c5ba02a39efaba3e6416e501fc6be",
+   "visible_text_bytes": 804,
+   "ms": 72,
+   "error": null,
+   "host": "councilof.ai",
+   "path": "/spec/claim-maintenanc",
+   "final_target": "path:/spec/claim-maintenanc",
+   "final_host": "councilof.ai",
+   "final_path": "/spec/claim-maintenanc"
+  },
+  {
+   "rows": [
+    "CJ-02"
+   ],
+   "jewel": "Corrections ledger (93 entries)",
+   "target": "https://councilof.ai/api/corrections",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 248487,
+   "visible_text_sha256": "7e8c05bd5a7f6478f3b328799b75b37fa9c9f0a9f4964f464601bbf1e93dd5b1",
+   "visible_text_bytes": 235889,
+   "ms": 568,
+   "error": null,
+   "final_target": "https://councilof.ai/api/corrections"
+  },
+  {
+   "rows": [
+    "CJ-03"
+   ],
+   "jewel": "FractalAI unsolicited conformant implementation",
+   "target": "https://registry.npmjs.org/@fractalai/pqc-agent-receipts-conformance",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 18523,
+   "visible_text_sha256": "bf6613828a2a5ecaa824cebcec7d4d37c51bc17bc7dd564b6ec42f5fd6692e18",
+   "visible_text_bytes": 18456,
+   "ms": 485,
+   "error": null,
+   "final_target": "https://registry.npmjs.org/@fractalai/pqc-agent-receipts-conformance"
+  },
+  {
+   "rows": [
+    "CJ-05"
+   ],
+   "jewel": "Third-party IETF citation of capsule draft (Gruszka -03)",
+   "target": "https://www.ietf.org/archive/id/draft-gruszka-evaluation-receipt-mappings-03.txt",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 139085,
+   "visible_text_sha256": "69dc251d1dd154dc271c60925d7f528d196be0fd53c0f71bf7f06df00f8041d2",
+   "visible_text_bytes": 116293,
+   "ms": 207,
+   "error": null,
+   "final_target": "https://www.ietf.org/archive/id/draft-gruszka-evaluation-receipt-mappings-03.txt"
+  },
+  {
+   "rows": [
+    "CJ-06"
+   ],
+   "jewel": "SCITT claim-card I-D (name free)",
+   "target": "https://da",
+   "target_form": "absolute-url",
+   "status": 0,
+   "ok": false,
+   "bytes": 0,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 5003,
+   "error": "TypeError"
+  },
+  {
+   "rows": [
+    "CJ-07"
+   ],
+   "jewel": "Two I-Ds already on datatracker (framing-space, measurement-capsule)",
+   "target": "https://datatracker.ietf.org/api/v1/doc/document/?name__startswith=draft-templeman",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 3788,
+   "visible_text_sha256": "7b1e4c3fd2352fa24a6ca6ba0fd993fa848b38e21c5a8771bd15bf0c1738a456",
+   "visible_text_bytes": 3720,
+   "ms": 442,
+   "error": null,
+   "final_target": "https://datatracker.ietf.org/api/v1/doc/document/?name__startswith=draft-templeman"
+  },
+  {
+   "rows": [
+    "CJ-08"
+   ],
+   "jewel": "W3C CG participant seat (publicly listed)",
+   "target": "https://www.w3.org/community/agent-conformance/participants",
+   "target_form": "absolute-url",
+   "status": 403,
+   "ok": false,
+   "bytes": 5893,
+   "visible_text_sha256": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+   "visible_text_bytes": 16,
+   "ms": 101,
+   "error": null,
+   "final_target": "https://www.w3.org/community/agent-conformance/participants"
+  },
+  {
+   "rows": [
+    "CJ-09"
+   ],
+   "jewel": "W3C Agent Identity CG formalizes our posts into 6 rules",
+   "target": "https://www.w3.org/community/agent-identity/participants",
+   "target_form": "absolute-url",
+   "status": 403,
+   "ok": false,
+   "bytes": 5884,
+   "visible_text_sha256": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+   "visible_text_bytes": 16,
+   "ms": 49,
+   "error": null,
+   "final_target": "https://www.w3.org/community/agent-identity/participants"
+  },
+  {
+   "rows": [
+    "CJ-10"
+   ],
+   "jewel": "x402 Foundation engagement validated same-day (Base-ledger data)",
+   "target": "https://github.com/x402-foundation",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 211467,
+   "visible_text_sha256": "a0b3e1b7f1ea7e18ae47beae2635bd49f682db80d70b6818ec48310985b9d21e",
+   "visible_text_bytes": 3833,
+   "ms": 506,
+   "error": null,
+   "final_target": "https://github.com/x402-foundation"
+  },
+  {
+   "rows": [
+    "CJ-11"
+   ],
+   "jewel": "NIST AI Consortium LOI",
+   "target": "https://www.nist.gov/artificial-intelligence/nist-ai-consortium",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 81545,
+   "visible_text_sha256": "34519166ebbb143351e86809d3e7c3eaee3b978c2faf44f209ff754ba3f7e963",
+   "visible_text_bytes": 5805,
+   "ms": 765,
+   "error": null,
+   "final_target": "https://www.nist.gov/super-intelligence/nist-ai-consortium"
+  },
+  {
+   "rows": [
+    "CJ-13"
+   ],
+   "jewel": "Circle 'trusted discovery: MISSING' capstone",
+   "target": "https://www.circle.com/blog/building-the-open-agentic-economy",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 247427,
+   "visible_text_sha256": "f72926389cacd9980c9d4ddab2933b39ad2fb3ce264ceedbbc9369dabb433a86",
+   "visible_text_bytes": 24317,
+   "ms": 233,
+   "error": null,
+   "final_target": "https://www.circle.com/blog/building-the-open-agentic-economy"
+  },
+  {
+   "rows": [
+    "CJ-14"
+   ],
+   "jewel": "GLEIF Model (c) third-party attestation market",
+   "target": "https://www.gleif.org/en",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 205526,
+   "visible_text_sha256": "feb25e493d6a9ecc412e4be8c8c95e3a14fc838eeb255d75ca3006ec7452ae73",
+   "visible_text_bytes": 13146,
+   "ms": 1602,
+   "error": null,
+   "final_target": "https://www.gleif.org/en"
+  },
+  {
+   "rows": [
+    "CJ-14"
+   ],
+   "jewel": "GLEIF Model (c) third-party attestation market",
+   "target": "https://www.gleif.org/en/lei-data",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 223024,
+   "visible_text_sha256": "bbea95b316771fdb4073492772b9a66432be3764fc06971e366e0132cf018a1c",
+   "visible_text_bytes": 21870,
+   "ms": 1719,
+   "error": null,
+   "final_target": "https://www.gleif.org/en/lei-data/access-and-use-lei-data"
+  },
+  {
+   "rows": [
+    "CJ-14"
+   ],
+   "jewel": "GLEIF Model (c) third-party attestation market",
+   "target": "https://search.gleif.org/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 810,
+   "visible_text_sha256": "076b99e92b64fbe7f6a5cc839e9edb3896592878d019da09b51e9cf413ddd5c7",
+   "visible_text_bytes": 10,
+   "ms": 260,
+   "error": null,
+   "final_target": "https://search.gleif.org/"
+  },
+  {
+   "rows": [
+    "CJ-15"
+   ],
+   "jewel": "DSRB (forming defence bank)",
+   "target": "https://www.canada.ca/en/department-finance.html",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 42309,
+   "visible_text_sha256": "4110d2a67ed0a315e7caa9d2f71c5657f2b356b84d6b058be251212d66d568dc",
+   "visible_text_bytes": 3876,
+   "ms": 281,
+   "error": null,
+   "final_target": "https://www.canada.ca/en/department-finance.html"
+  },
+  {
+   "rows": [
+    "CJ-15"
+   ],
+   "jewel": "DSRB (forming defence bank)",
+   "target": "https://www.canada.ca/en/department-finance/news/2026/03/canada-announces-progress-to-est",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 14979,
+   "visible_text_sha256": "eb64f5b3543ea205746d2cae25da6024e1d80e997564828d5d0cf678d7cbdeab",
+   "visible_text_bytes": 1496,
+   "ms": 241,
+   "error": null,
+   "final_target": "https://www.canada.ca/en/department-finance/news/2026/03/canada-announces-progress-to-est.html"
+  },
+  {
+   "rows": [
+    "CJ-16"
+   ],
+   "jewel": "Appia Foundation (conformity assessment, whales on roster)",
+   "target": "https://www.linuxfoundation.org/press/linux-foundation-launches-appia-foundation-to-establish-standardized-conformity-specifications-across-the-ai-value-chain",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 100706,
+   "visible_text_sha256": "0daa3c976000e9129307efe9ab3164ed0520a50d4b7b54886e52165ede349f57",
+   "visible_text_bytes": 13960,
+   "ms": 252,
+   "error": null,
+   "final_target": "https://www.linuxfoundation.org/press/linux-foundation-launches-appia-foundation-to-establish-standardized-conformity-specifications-across-the-ai-value-chain"
+  },
+  {
+   "rows": [
+    "CJ-17"
+   ],
+   "jewel": "TRACE (LF) composes SCITT/RATS/EAT/SLSA",
+   "target": "https://github.com/aaif/project-proposals/issues/42",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 513158,
+   "visible_text_sha256": "1cd40d5bb514a4340efc3dfa219bfae01cc069ba56cf894f6eb10a83895d4f8a",
+   "visible_text_bytes": 34602,
+   "ms": 1102,
+   "error": null,
+   "final_target": "https://github.com/aaif/project-proposals/issues/42"
+  },
+  {
+   "rows": [
+    "CJ-18"
+   ],
+   "jewel": "OSAIA shaping window (no officers published)",
+   "target": "https://osaia.org/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 520021,
+   "visible_text_sha256": "cc0b5de75276ec5f001390a761f79ba3e56e74d2e40debddbffd585bf37beed7",
+   "visible_text_bytes": 21175,
+   "ms": 808,
+   "error": null,
+   "final_target": "https://osaia.org/"
+  },
+  {
+   "rows": [
+    "CJ-19"
+   ],
+   "jewel": "ITU Focus Group (free, open)",
+   "target": "https://www.itu.int/en/ITU-T/focusgroups/Pages/default.aspx",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 134408,
+   "visible_text_sha256": "527b2f0c78d04d28a0d6a8cc9f8cb942afd98b6d7bef40c8ff7f2b4a0590f606",
+   "visible_text_bytes": 4662,
+   "ms": 2144,
+   "error": null,
+   "final_target": "https://www.itu.int/en/ITU-T/focusgroups/Pages/default.aspx"
+  },
+  {
+   "rows": [
+    "CJ-19"
+   ],
+   "jewel": "ITU Focus Group (free, open)",
+   "target": "https://www.itu.int/en/ITU-T/focusgroups/ai/",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 674,
+   "visible_text_sha256": "bf599881101ca656921c4dda25c47259ca8445011ad1fb0a1f39bf9132b0a072",
+   "visible_text_bytes": 14,
+   "ms": 322,
+   "error": null,
+   "final_target": "https://www.itu.int/en/ITU-T/focusgroups/ai/"
+  },
+  {
+   "rows": [
+    "CJ-20"
+   ],
+   "jewel": "UKAS AIMS technical-expert channel (free)",
+   "target": "https://www.ukas.com/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 273879,
+   "visible_text_sha256": "d16865f970e37b8e1e189d37de2d98fa25e46c3cfcd38a8c29326320c7c03c95",
+   "visible_text_bytes": 9576,
+   "ms": 133,
+   "error": null,
+   "final_target": "https://www.ukas.com/"
+  },
+  {
+   "rows": [
+    "CJ-21"
+   ],
+   "jewel": "AIQI Consortium + free ISO 42001 course",
+   "target": "https://aiqiconsortium.org/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 203194,
+   "visible_text_sha256": "2a33559e8c98b780b915a6e3e1ff7363f4e2d3d948456bb2753f3310522e853a",
+   "visible_text_bytes": 2622,
+   "ms": 763,
+   "error": null,
+   "final_target": "https://www.aiqi.org/"
+  },
+  {
+   "rows": [
+    "CJ-22"
+   ],
+   "jewel": "IETF 127 hackathon SCITT time-anchor",
+   "target": "https://www.ietf.org/meeting/127/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 96611,
+   "visible_text_sha256": "95099eafff2d3c26c90578a48ca802de073d5465c174dba92a768c58abac7b12",
+   "visible_text_bytes": 6179,
+   "ms": 142,
+   "error": null,
+   "final_target": "https://www.ietf.org/meeting/127/"
+  },
+  {
+   "rows": [
+    "CJ-23"
+   ],
+   "jewel": "OpenID AuthZEN self-certification (automated, public)",
+   "target": "https://openid.net/groups/authzen/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 150213,
+   "visible_text_sha256": "065189a38d4c9cc0522ef26fbe64d16bc2905a84cf4d2f18b8a5612ff222888f",
+   "visible_text_bytes": 11180,
+   "ms": 1101,
+   "error": null,
+   "final_target": "https://openid.net/wg/authzen/"
+  },
+  {
+   "rows": [
+    "CJ-23"
+   ],
+   "jewel": "OpenID AuthZEN self-certification (automated, public)",
+   "target": "https://openid.net/certification/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 132979,
+   "visible_text_sha256": "098a3db3dc091b31f2a9996fcd615a210b251c41921dfbc2d03814747abef964",
+   "visible_text_bytes": 8379,
+   "ms": 67,
+   "error": null,
+   "final_target": "https://openid.net/certification/"
+  },
+  {
+   "rows": [
+    "CJ-24"
+   ],
+   "jewel": "x402scan validator self-cert",
+   "target": "https://www.x402scan.com/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 2085897,
+   "visible_text_sha256": "26e3716af91afa8aab39d59b81a0825592d24a15d830c2aabab4fd4389942b0b",
+   "visible_text_bytes": 34,
+   "ms": 991,
+   "error": null,
+   "final_target": "https://www.x402scan.com/"
+  },
+  {
+   "rows": [
+    "CJ-25"
+   ],
+   "jewel": "Claude MCP directory (opened Sep 25)",
+   "target": "https://claude.ai/directory",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 156627,
+   "visible_text_sha256": "3627393b4bb93c809b0e38d6a37ff4c1fd7f84f269037ef5c9a283671ecf4eec",
+   "visible_text_bytes": 614,
+   "ms": 194,
+   "error": null,
+   "final_target": "https://claude.ai/directory"
+  },
+  {
+   "rows": [
+    "CJ-26"
+   ],
+   "jewel": "Docker MCP Catalog (remote, no Dockerfile)",
+   "target": "https://github.com/docker/mcp-registry",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 277175,
+   "visible_text_sha256": "392900350b7cffc647d8b0c2cb748a6959e5bc9ae57f29b88730498621fb7fa2",
+   "visible_text_bytes": 6629,
+   "ms": 465,
+   "error": null,
+   "final_target": "https://github.com/docker/mcp-registry"
+  },
+  {
+   "rows": [
+    "CJ-26"
+   ],
+   "jewel": "Docker MCP Catalog (remote, no Dockerfile)",
+   "target": "https://github.com/docker/mcp-registry/tree/main/servers",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 427597,
+   "visible_text_sha256": "bcfb066eb055bb8438bfcc920fd094ad8b5bb8a941bc5fd048d65fae90c3db77",
+   "visible_text_bytes": 5636,
+   "ms": 571,
+   "error": null,
+   "final_target": "https://github.com/docker/mcp-registry/tree/main/servers"
+  },
+  {
+   "rows": [
+    "CJ-27"
+   ],
+   "jewel": "AgentCash marketplace (July)",
+   "target": "https://agentcash.dev/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 562456,
+   "visible_text_sha256": "b618303c49291371f7ab6ffe5a7a45b995a5b673e51bdec459eaa93480528524",
+   "visible_text_bytes": 5655,
+   "ms": 2156,
+   "error": null,
+   "final_target": "https://agentcash.dev/"
+  },
+  {
+   "rows": [
+    "CJ-27"
+   ],
+   "jewel": "AgentCash marketplace (July)",
+   "target": "https://agentcash.dev/docs/sell-to-agents",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 259852,
+   "visible_text_sha256": "04f3fa8060c04009d4f16395bebb410d3f52ee99e26e2454097ed682c79894c9",
+   "visible_text_bytes": 2640,
+   "ms": 242,
+   "error": null,
+   "final_target": "https://agentcash.dev/docs/sell-to-agents"
+  },
+  {
+   "rows": [
+    "CJ-28"
+   ],
+   "jewel": "ARD well-known file",
+   "target": "https://councilof.ai/.well-known/ard.json",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 3275,
+   "visible_text_sha256": "91f98016f84d9f972c283138c709c57968f2b51e1d4d5de56356ff7a8081da2c",
+   "visible_text_bytes": 2664,
+   "ms": 38,
+   "error": null,
+   "final_target": "https://councilof.ai/.well-known/ard.json"
+  },
+  {
+   "rows": [
+    "CJ-28"
+   ],
+   "jewel": "ARD well-known file",
+   "target": "https://agenticresourcediscovery.org/context/v1'",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 17366,
+   "visible_text_sha256": "70ce6cdefaac01742a3349137f61eb31ef5bb0f0dd4a029889d5266c65e76dc8",
+   "visible_text_bytes": 507,
+   "ms": 240,
+   "error": null,
+   "final_target": "https://agenticresourcediscovery.org/context/v1'"
+  },
+  {
+   "rows": [
+    "CJ-29"
+   ],
+   "jewel": "IANA well-known URI (claim-card.json)",
+   "target": "https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 69792,
+   "visible_text_sha256": "f501eab4b9a72867f647bbaccc36847bb8faa638117309812c588aa8faf47bcd",
+   "visible_text_bytes": 15424,
+   "ms": 1117,
+   "error": null,
+   "final_target": "https://www.iana.org/assignments/well-known-uris"
+  },
+  {
+   "rows": [
+    "CJ-30"
+   ],
+   "jewel": "Vendor media type application/vnd.csoai.claim-card+json",
+   "target": "https://www.iana.org/assignments/media-types/media-types.xhtml",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 761666,
+   "visible_text_sha256": "931264f5488829b55939d212b90b1b09dbd3024e1148fb8416bdfbae9d9dd262",
+   "visible_text_bytes": 205612,
+   "ms": 18922,
+   "error": null,
+   "final_target": "https://www.iana.org/assignments/media-types"
+  },
+  {
+   "rows": [
+    "CJ-31"
+   ],
+   "jewel": "DID method registration",
+   "target": "https://w3c-ccg.github.io/did-method-registry/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 312,
+   "visible_text_sha256": "ff6158335e21ba4067a56e4673eef669ad9df3c52debe3c1d2e86c19821224e3",
+   "visible_text_bytes": 69,
+   "ms": 213,
+   "error": null,
+   "final_target": "https://w3c-ccg.github.io/did-method-registry/"
+  },
+  {
+   "rows": [
+    "CJ-32"
+   ],
+   "jewel": "URN namespace urn:csoai",
+   "target": "https://www.iana.org/assignments/urn-ns/",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 4216,
+   "visible_text_sha256": "54a9a5569764776df2f7ab2e41ee34b00aab97aa77194819e20e00f61fe91cf4",
+   "visible_text_bytes": 651,
+   "ms": 838,
+   "error": null,
+   "final_target": "https://www.iana.org/assignments/urn-ns"
+  },
+  {
+   "rows": [
+    "CJ-32"
+   ],
+   "jewel": "URN namespace urn:csoai",
+   "target": "https://www.iana.or",
+   "target_form": "absolute-url",
+   "status": 0,
+   "ok": false,
+   "bytes": 0,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 23,
+   "error": "TypeError"
+  },
+  {
+   "rows": [
+    "CJ-34"
+   ],
+   "jewel": "ERC-8004 Validation Registry (zero deployments)",
+   "target": "https://www.8004scan.io/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 294428,
+   "visible_text_sha256": "4d5c829721d66b9c467a9ad9ed9cf41edf476687556fd0d2883db728e8a482ad",
+   "visible_text_bytes": 14504,
+   "ms": 589,
+   "error": null,
+   "final_target": "https://8004scan.io/"
+  },
+  {
+   "rows": [
+    "CJ-35"
+   ],
+   "jewel": "Circle Marketplace census",
+   "target": "https://www.circle.com/agent-stack",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 262757,
+   "visible_text_sha256": "dd2c6c1d483ab01343e8584b8901e7f9d510f3b02bef3939014b2d1eb3d85476",
+   "visible_text_bytes": 14473,
+   "ms": 65,
+   "error": null,
+   "final_target": "https://www.circle.com/agent-stack"
+  },
+  {
+   "rows": [
+    "CJ-36"
+   ],
+   "jewel": "EIC Pathfinder DeepRAP (€0.5–4M, Oct 28)",
+   "target": "https://eic.ecuropa",
+   "target_form": "absolute-url",
+   "status": 0,
+   "ok": false,
+   "bytes": 0,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 24,
+   "error": "TypeError"
+  },
+  {
+   "rows": [
+    "CJ-38"
+   ],
+   "jewel": "KTP R3 (Oct 14, ~85%)",
+   "target": "https://www.ukri.org/opportunities/knowledge-transfer-partnerships/",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 62887,
+   "visible_text_sha256": "a3329c5d40db9a9da6497bcb52b06b013b122191599c3016c7774830b4f52710",
+   "visible_text_bytes": 2165,
+   "ms": 478,
+   "error": null,
+   "final_target": "https://www.ukri.org/opportunities/knowledge-transfer-partnerships/"
+  },
+  {
+   "rows": [
+    "CJ-38"
+   ],
+   "jewel": "KTP R3 (Oct 14, ~85%)",
+   "target": "https://www.ukri.or",
+   "target_form": "absolute-url",
+   "status": 0,
+   "ok": false,
+   "bytes": 0,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 48,
+   "error": "TypeError"
+  },
+  {
+   "rows": [
+    "CJ-39"
+   ],
+   "jewel": "Manifund regranting (rolling)",
+   "target": "https://manifund.org/about/open-call",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 44685,
+   "visible_text_sha256": "31f5dd455eb39b5d731f7fdca2560c71c923c7de140c4cd1e5f7004dc2b844f8",
+   "visible_text_bytes": 1400,
+   "ms": 845,
+   "error": null,
+   "final_target": "https://manifund.org/about/open-call"
+  },
+  {
+   "rows": [
+    "CJ-40"
+   ],
+   "jewel": "NLnet NGI Zero (€5–50k)",
+   "target": "https://nlnet.nl/propose/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 43246,
+   "visible_text_sha256": "ac8c7b4c9dc90aa3252bc9fcfa1018bb4e99ee8a19403c7461764924049f3607",
+   "visible_text_bytes": 9294,
+   "ms": 278,
+   "error": null,
+   "final_target": "https://nlnet.nl/propose/"
+  },
+  {
+   "rows": [
+    "CJ-41"
+   ],
+   "jewel": "DSIT AI Assurance Fund £11M",
+   "target": "https://www.gov.uk/ai-assurance-fund",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 52491,
+   "visible_text_sha256": "6df5d744b9d99913162fce8e2b414285ba9b5f36653709e4b6aadbf397f464c8",
+   "visible_text_bytes": 3019,
+   "ms": 137,
+   "error": null,
+   "final_target": "https://www.gov.uk/ai-assurance-fund"
+  },
+  {
+   "rows": [
+    "CJ-41"
+   ],
+   "jewel": "DSIT AI Assurance Fund £11M",
+   "target": "https://www.gov.uk/government/collections/ai-assurance-fund",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 52491,
+   "visible_text_sha256": "6df5d744b9d99913162fce8e2b414285ba9b5f36653709e4b6aadbf397f464c8",
+   "visible_text_bytes": 3019,
+   "ms": 421,
+   "error": null,
+   "final_target": "https://www.gov.uk/government/collections/ai-assurance-fund"
+  },
+  {
+   "rows": [
+    "CJ-42"
+   ],
+   "jewel": "XRPL GLOW retro (pays completed work)",
+   "target": "https://xrpl.org/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 369265,
+   "visible_text_sha256": "841d44ac3a2f3f4ea93da5abe5f401f7e6759af0d50b6be08149c6fddb81ea35",
+   "visible_text_bytes": 5115,
+   "ms": 274,
+   "error": null,
+   "final_target": "https://xrpl.org/"
+  },
+  {
+   "rows": [
+    "CJ-42"
+   ],
+   "jewel": "XRPL GLOW retro (pays completed work)",
+   "target": "https://xrpl.org/ecosystem/projects/glow.html",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 339864,
+   "visible_text_sha256": "a3799fbd643bd165fbbeafd27271925acce8d5723de1694f668ccea4d4ac2d78",
+   "visible_text_bytes": 1725,
+   "ms": 358,
+   "error": null,
+   "final_target": "https://xrpl.org/ecosystem/projects/glow.html"
+  },
+  {
+   "rows": [
+    "CJ-42"
+   ],
+   "jewel": "XRPL GLOW retro (pays completed work)",
+   "target": "https://xrpl.org/oss/glow.html",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 339864,
+   "visible_text_sha256": "a3799fbd643bd165fbbeafd27271925acce8d5723de1694f668ccea4d4ac2d78",
+   "visible_text_bytes": 1725,
+   "ms": 230,
+   "error": null,
+   "final_target": "https://xrpl.org/oss/glow.html"
+  },
+  {
+   "rows": [
+    "CJ-42"
+   ],
+   "jewel": "XRPL GLOW retro (pays completed work)",
+   "target": "https://xrpl.org/ecosystem/gl",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 339864,
+   "visible_text_sha256": "a3799fbd643bd165fbbeafd27271925acce8d5723de1694f668ccea4d4ac2d78",
+   "visible_text_bytes": 1725,
+   "ms": 179,
+   "error": null,
+   "final_target": "https://xrpl.org/ecosystem/gl"
+  },
+  {
+   "rows": [
+    "CJ-43"
+   ],
+   "jewel": "OSO metrics registration (retro clock)",
+   "target": "https://www.opensource.org/",
+   "target_form": "absolute-url",
+   "status": 403,
+   "ok": false,
+   "bytes": 2876,
+   "visible_text_sha256": "2c8416b30d487934a66e570e98efd93b71a47bc4e56991ddfd4e7054264b0bce",
+   "visible_text_bytes": 24,
+   "ms": 181,
+   "error": null,
+   "final_target": "https://www.opensource.org/"
+  },
+  {
+   "rows": [
+    "CJ-43"
+   ],
+   "jewel": "OSO metrics registration (retro clock)",
+   "target": "https://www.opensource.org/metrics",
+   "target_form": "absolute-url",
+   "status": 403,
+   "ok": false,
+   "bytes": 2876,
+   "visible_text_sha256": "2c8416b30d487934a66e570e98efd93b71a47bc4e56991ddfd4e7054264b0bce",
+   "visible_text_bytes": 24,
+   "ms": 170,
+   "error": null,
+   "final_target": "https://www.opensource.org/metrics"
+  },
+  {
+   "rows": [
+    "CJ-43"
+   ],
+   "jewel": "OSO metrics registration (retro clock)",
+   "target": "https://osmfoundation.org/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 44072,
+   "visible_text_sha256": "e9f726fe909b5ce4a2c327222b9388407cca83849cf3817e70c81eb57b509921",
+   "visible_text_bytes": 3318,
+   "ms": 317,
+   "error": null,
+   "final_target": "https://osmfoundation.org/"
+  },
+  {
+   "rows": [
+    "CJ-44"
+   ],
+   "jewel": "Base Builder Code (ERC-8021)",
+   "target": "https://base.org/build",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 63739,
+   "visible_text_sha256": "2430e92352ca33d8b7a33e6e205079114bbd541dd75ef1fc98033c86e7ccaa44",
+   "visible_text_bytes": 419,
+   "ms": 280,
+   "error": null,
+   "final_target": "https://www.base.org/build"
+  },
+  {
+   "rows": [
+    "CJ-45"
+   ],
+   "jewel": "attestation-rail proof-pointer first attestation",
+   "target": "https://eips.ethereum.org/EIPS/eip-7546",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 37746,
+   "visible_text_sha256": "b62dfa7dca30e773ee6217fa7afe66cc6469e917448ade1bf3b7a13cee9a285d",
+   "visible_text_bytes": 15752,
+   "ms": 234,
+   "error": null,
+   "final_target": "https://eips.ethereum.org/EIPS/eip-7546"
+  },
+  {
+   "rows": [
+    "CJ-46"
+   ],
+   "jewel": "Inngot Sollomon IP valuation",
+   "target": "https://www.inngot.co.uk/",
+   "target_form": "absolute-url",
+   "status": 0,
+   "ok": false,
+   "bytes": 0,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 213,
+   "error": "TypeError"
+  },
+  {
+   "rows": [
+    "CJ-47"
+   ],
+   "jewel": "UK IPO marks (4 classes £385)",
+   "target": "https://www.ipo.gov.uk/",
+   "target_form": "absolute-url",
+   "status": 403,
+   "ok": false,
+   "bytes": 717744,
+   "visible_text_sha256": "c4540f4120bda2b6bee0b339643d052574939eafa71b5b614c763fd5bfb148c5",
+   "visible_text_bytes": 589,
+   "ms": 234,
+   "error": null,
+   "final_target": "https://www.ipo.gov.uk/"
+  },
+  {
+   "rows": [
+    "CJ-48"
+   ],
+   "jewel": "Dual-anchor timestamps (eIDAS QTSP + OpenTimestamps)",
+   "target": "https://councilof.ai/root.json",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 25997,
+   "visible_text_sha256": "179a22d776dccfa5d26d399683fa522069cf87f6519ada9e9b9db65b5a97f84a",
+   "visible_text_bytes": 24646,
+   "ms": 46,
+   "error": null,
+   "final_target": "https://councilof.ai/root.json"
+  },
+  {
+   "rows": [
+    "CJ-49"
+   ],
+   "jewel": "State of Claim Maintenance report #1",
+   "target": "path:/state-of-claim-maintenance",
+   "target_form": "path-only",
+   "status": 404,
+   "ok": false,
+   "bytes": 14193,
+   "visible_text_sha256": "834d0793c84c9fd40e43dbd0aa431d2a319c5ba02a39efaba3e6416e501fc6be",
+   "visible_text_bytes": 804,
+   "ms": 74,
+   "error": null,
+   "host": "councilof.ai",
+   "path": "/state-of-claim-maintenance",
+   "final_target": "path:/state-of-claim-maintenance",
+   "final_host": "councilof.ai",
+   "final_path": "/state-of-claim-maintenance"
+  },
+  {
+   "rows": [
+    "CJ-49",
+    "CJ-50"
+   ],
+   "jewel": "State of Claim Maintenance report #1",
+   "target": "https://councilof.ai/reports/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 94922,
+   "visible_text_sha256": "490b4060d544141a791a8c69c2ac1bcbb59d5db1cb26949ef2afbb52149e24b1",
+   "visible_text_bytes": 7235,
+   "ms": 131,
+   "error": null,
+   "final_target": "https://councilof.ai/reports/"
+  },
+  {
+   "rows": [
+    "CJ-50"
+   ],
+   "jewel": "The Ecosystem Health Board",
+   "target": "path:/ecosystem-health",
+   "target_form": "path-only",
+   "status": 404,
+   "ok": false,
+   "bytes": 14193,
+   "visible_text_sha256": "834d0793c84c9fd40e43dbd0aa431d2a319c5ba02a39efaba3e6416e501fc6be",
+   "visible_text_bytes": 804,
+   "ms": 694,
+   "error": null,
+   "host": "councilof.ai",
+   "path": "/ecosystem-health",
+   "final_target": "path:/ecosystem-health",
+   "final_host": "councilof.ai",
+   "final_path": "/ecosystem-health"
+  },
+  {
+   "rows": [
+    "CJ-50"
+   ],
+   "jewel": "The Ecosystem Health Board",
+   "target": "path:/health-board",
+   "target_form": "path-only",
+   "status": 404,
+   "ok": false,
+   "bytes": 14193,
+   "visible_text_sha256": "834d0793c84c9fd40e43dbd0aa431d2a319c5ba02a39efaba3e6416e501fc6be",
+   "visible_text_bytes": 804,
+   "ms": 74,
+   "error": null,
+   "host": "councilof.ai",
+   "path": "/health-board",
+   "final_target": "path:/health-board",
+   "final_host": "councilof.ai",
+   "final_path": "/health-board"
+  },
+  {
+   "rows": [
+    "CJ-55"
+   ],
+   "jewel": "Petri + Bloom (Anthropic auditing)",
+   "target": "https://github.com/anthropics/petri",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 230742,
+   "visible_text_sha256": "0cbf2b3703d46eae2a264a18db215ae928a2c53f30504b2dc2d201b840485d5c",
+   "visible_text_bytes": 2762,
+   "ms": 222,
+   "error": null,
+   "final_target": "https://github.com/anthropics/petri"
+  },
+  {
+   "rows": [
+    "CJ-55"
+   ],
+   "jewel": "Petri + Bloom (Anthropic auditing)",
+   "target": "https://github.com/an",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 167235,
+   "visible_text_sha256": "e5f14cc4c9237a4bc6be82bcb024afb0bbd67b0ce4f5bd9528c2743692d2827c",
+   "visible_text_bytes": 3779,
+   "ms": 319,
+   "error": null,
+   "final_target": "https://github.com/an"
+  },
+  {
+   "rows": [
+    "CJ-73"
+   ],
+   "jewel": "White House Accord (6 labs, no criteria)",
+   "target": "https://www.presidency",
+   "target_form": "absolute-url",
+   "status": 0,
+   "ok": false,
+   "bytes": 0,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 25,
+   "error": "TypeError"
+  },
+  {
+   "rows": [
+    "CJ-74"
+   ],
+   "jewel": "Artificial Analysis Cyber Index Alliance (join invite)",
+   "target": "https://artificialanalysis.ai/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 1520931,
+   "visible_text_sha256": "c6eb37f8867ebf7acb6a5d282a8b5c3059013364e95bc1302ee6c5633549d8c4",
+   "visible_text_bytes": 12131,
+   "ms": 642,
+   "error": null,
+   "final_target": "https://artificialanalysis.ai/"
+  },
+  {
+   "rows": [
+    "CJ-75"
+   ],
+   "jewel": "Cloudflare Monetization Gateway beta (x402/MCP/A2A)",
+   "target": "https://developers.cloudflare.com/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 201444,
+   "visible_text_sha256": "d0c7d86653cc33e373a2dceb65734e9c21e85aeb74185b04b62f829777b1a67c",
+   "visible_text_bytes": 9668,
+   "ms": 122,
+   "error": null,
+   "final_target": "https://developers.cloudflare.com/"
+  },
+  {
+   "rows": [
+    "CJ-76"
+   ],
+   "jewel": "BoE Bailey 'rigorous testing, evidence, standards'",
+   "target": "https://www.bankofengland.co.uk/speeches",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 77109,
+   "visible_text_sha256": "47b80b88188896ff175fff3680374d95af2053b7587ba2d8a93fda6d88d42a53",
+   "visible_text_bytes": 4877,
+   "ms": 443,
+   "error": null,
+   "final_target": "https://www.bankofengland.co.uk/news/speeches"
+  },
+  {
+   "rows": [
+    "CJ-77"
+   ],
+   "jewel": "NIST NCCoE 600+ identity comments (webinar Oct 28)",
+   "target": "https://www.nccoe.nist.gov/projects/identity",
+   "target_form": "absolute-url",
+   "status": 403,
+   "ok": false,
+   "bytes": 5790,
+   "visible_text_sha256": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+   "visible_text_bytes": 16,
+   "ms": 354,
+   "error": null,
+   "final_target": "https://www.nccoe.nist.gov/projects/identity"
+  },
+  {
+   "rows": [
+    "CJ-78"
+   ],
+   "jewel": "Mastercard Agent Pay for Machines on x402",
+   "target": "https://www.mastercard.com/newsroom",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 8252,
+   "visible_text_sha256": "6628e57030d448a4670ecdcc64aa8baf380756c423b849d095eb4085855d01f3",
+   "visible_text_bytes": 55,
+   "ms": 635,
+   "error": null,
+   "final_target": "https://www.mastercard.com/newsroom"
+  },
+  {
+   "rows": [
+    "CJ-79"
+   ],
+   "jewel": "Visa + BILL + Billtrust live pilot",
+   "target": "https://www.bill.com",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 410720,
+   "visible_text_sha256": "13cbcd4c613ec910f886dec4f0c2ae2d03269ca3da7259718cb854787f1c5505",
+   "visible_text_bytes": 12905,
+   "ms": 151,
+   "error": null,
+   "final_target": "https://www.bill.com/"
+  },
+  {
+   "rows": [
+    "CJ-80"
+   ],
+   "jewel": "W3C State of the Web in the AI Era (TPAC Oct 29)",
+   "target": "https://www.w3.org/TPAC/",
+   "target_form": "absolute-url",
+   "status": 403,
+   "ok": false,
+   "bytes": 5746,
+   "visible_text_sha256": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+   "visible_text_bytes": 16,
+   "ms": 59,
+   "error": null,
+   "final_target": "https://www.w3.org/TPAC/"
+  },
+  {
+   "rows": [
+    "CJ-80"
+   ],
+   "jewel": "W3C State of the Web in the AI Era (TPAC Oct 29)",
+   "target": "https://www.w3.org/2025/TPAC/",
+   "target_form": "absolute-url",
+   "status": 403,
+   "ok": false,
+   "bytes": 5761,
+   "visible_text_sha256": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+   "visible_text_bytes": 16,
+   "ms": 67,
+   "error": null,
+   "final_target": "https://www.w3.org/2025/TPAC/"
+  },
+  {
+   "rows": [
+    "CJ-80"
+   ],
+   "jewel": "W3C State of the Web in the AI Era (TPAC Oct 29)",
+   "target": "https://www.w3.org/2026/TPA",
+   "target_form": "absolute-url",
+   "status": 403,
+   "ok": false,
+   "bytes": 5755,
+   "visible_text_sha256": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+   "visible_text_bytes": 16,
+   "ms": 69,
+   "error": null,
+   "final_target": "https://www.w3.org/2026/TPA"
+  },
+  {
+   "rows": [
+    "CJ-81"
+   ],
+   "jewel": "Anthropic third-party evaluator proposal (Dec 15)",
+   "target": "https://www.anthropic.com/research",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 363657,
+   "visible_text_sha256": "8f5489e6f85279a7c3701b6c96220a604e6736ff25ce0823d8c6546df0c5cf62",
+   "visible_text_bytes": 10233,
+   "ms": 285,
+   "error": null,
+   "final_target": "https://www.anthropic.com/research"
+  },
+  {
+   "rows": [
+    "CJ-82"
+   ],
+   "jewel": "BridgeAI 'AI for Assurance and Compliance' (Dec 8)",
+   "target": "https://www.bridgeai.org",
+   "target_form": "absolute-url",
+   "status": 0,
+   "ok": false,
+   "bytes": 0,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 919,
+   "error": "TypeError"
+  },
+  {
+   "rows": [
+    "CJ-82"
+   ],
+   "jewel": "BridgeAI 'AI for Assurance and Compliance' (Dec 8)",
+   "target": "https://bridgeai.org",
+   "target_form": "absolute-url",
+   "status": 0,
+   "ok": false,
+   "bytes": 0,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 114,
+   "error": "TypeError"
+  },
+  {
+   "rows": [
+    "CJ-83"
+   ],
+   "jewel": "UN Scientific Panel: 'no reliable control methods exist'",
+   "target": "https://www.un.org/en/scientific-panel-on-ai",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 65373,
+   "visible_text_sha256": "dba8b2bd301ff942137a33287b8d24663e9382470975de1866568e7dc319be71",
+   "visible_text_bytes": 852,
+   "ms": 502,
+   "error": null,
+   "final_target": "https://www.un.org/en/scientific-panel-on-ai"
+  },
+  {
+   "rows": [
+    "CJ-85"
+   ],
+   "jewel": "AISI Astra 29.2% (unreproducible)",
+   "target": "https://www.aisi.gov.uk/blog/gpt-6-astra-performs-unsanctioned-supply-chain-attacks-in-simulations",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 38700,
+   "visible_text_sha256": "c03097bccb749ab2a090069042421d13686806124b4634ee0ced7a527f6b35f2",
+   "visible_text_bytes": 14253,
+   "ms": 228,
+   "error": null,
+   "final_target": "https://www.aisi.gov.uk/blog/gpt-6-astra-performs-unsanctioned-supply-chain-attacks-in-simulations"
+  },
+  {
+   "rows": [
+    "CJ-86"
+   ],
+   "jewel": "NYC Intro 2602 validator liability ($25k/instance)",
+   "target": "https://council.nyc.gov/press/2026/09/25/3252/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 86782,
+   "visible_text_sha256": "4687ac18fbf6aea39a42a9a69e65b933ff7ad47fa421d3f97af9dcb71ff2c2fe",
+   "visible_text_bytes": 17465,
+   "ms": 844,
+   "error": null,
+   "final_target": "https://council.nyc.gov/press/2026/09/25/3252/"
+  },
+  {
+   "rows": [
+    "CJ-87"
+   ],
+   "jewel": "SAFA (labs' self-regulator)",
+   "target": "https://safa.ai",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 114,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 380,
+   "error": null,
+   "final_target": "https://safa.ai/"
+  },
+  {
+   "rows": [
+    "CJ-89"
+   ],
+   "jewel": "Sigstore PQ pivot pending",
+   "target": "https://www.sigstore.dev/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 4297,
+   "visible_text_sha256": "9ca3892c58c2389cfbbb8a865d21a7d06d0b4896bcc12d7b86576bb51a583138",
+   "visible_text_bytes": 19,
+   "ms": 433,
+   "error": null,
+   "final_target": "https://www.sigstore.dev/"
+  },
+  {
+   "rows": [
+    "CJ-90"
+   ],
+   "jewel": "AP2 v0.2 → FIDO with PaymentReceipt primitive",
+   "target": "https://ap2-protocol.org",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 52918,
+   "visible_text_sha256": "2b6a74d88f6bd124e6818b2ea7f768a2efbb14266d3c4536fc153c5cc411e0fa",
+   "visible_text_bytes": 7015,
+   "ms": 554,
+   "error": null,
+   "final_target": "https://ap2-protocol.org/"
+  },
+  {
+   "rows": [
+    "CJ-91"
+   ],
+   "jewel": "OIN licensee directory entry 0898 CSOAI LTD",
+   "target": "https://openinventionnetwork.com/community-of-lice",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 272339,
+   "visible_text_sha256": "9e938e953055736d72a55cc1431a5fa4bba257c9a34e4e9c837b60a400a0f283",
+   "visible_text_bytes": 6365,
+   "ms": 913,
+   "error": null,
+   "final_target": "https://openinventionnetwork.com/community-of-lice"
+  },
+  {
+   "rows": [
+    "CJ-92"
+   ],
+   "jewel": "LOT Network member directory",
+   "target": "https://lotnet.com/members/?dir=1&name_directory_startswith=C",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 304131,
+   "visible_text_sha256": "c1eec38ba7185f92d04b9698a185ed6a661a473778b95af8ef3d0fb08abe68dc",
+   "visible_text_bytes": 22993,
+   "ms": 1953,
+   "error": null,
+   "final_target": "https://lotnet.com/members/?dir=1&name_directory_startswith=C"
+  },
+  {
+   "rows": [
+    "CJ-93"
+   ],
+   "jewel": "C2PA contributor roster",
+   "target": "https://c2pa.org/membership/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 254902,
+   "visible_text_sha256": "af7f16e9f89391ff32423bf3cb7f0ad2d0b93cd9aaae591bb97f84e9588d7e56",
+   "visible_text_bytes": 998,
+   "ms": 992,
+   "error": null,
+   "final_target": "https://c2pa.org/membership/"
+  },
+  {
+   "rows": [
+    "CJ-94"
+   ],
+   "jewel": "AQUIX agent #539 with live telemetry",
+   "target": "https://aquix.ai/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 113424,
+   "visible_text_sha256": "bc989031538f351e5c2b0e71e0df604350cccb42dd44174695b6c7e0bd57e3c2",
+   "visible_text_bytes": 14923,
+   "ms": 601,
+   "error": null,
+   "final_target": "https://aquix.ai/"
+  },
+  {
+   "rows": [
+    "CJ-95"
+   ],
+   "jewel": "gold-402 September Featured Pick",
+   "target": "https://raw.githubusercontent.com/Haustorium12/gold-402/main/FEATURED.md",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 16756,
+   "visible_text_sha256": "1bb21bffe35927a36a30924d971b12cf9e8147d7b5ecd59d225f8b33ae68af5c",
+   "visible_text_bytes": 16675,
+   "ms": 325,
+   "error": null,
+   "final_target": "https://raw.githubusercontent.com/Haustorium12/gold-402/main/FEATURED.md"
+  },
+  {
+   "rows": [
+    "CJ-96"
+   ],
+   "jewel": "SuperInstance 'csoai measures; candor governs'",
+   "target": "https://superinstance.ai",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 1644,
+   "visible_text_sha256": "f33cfa635c113ab1cb714fc874d5bca5a506c24ff145007cf818d1a23fc0c5e3",
+   "visible_text_bytes": 317,
+   "ms": 187,
+   "error": null,
+   "final_target": "https://superinstance.ai/"
+  },
+  {
+   "rows": [
+    "CJ-97"
+   ],
+   "jewel": "Aura-core fail-closed GSPC proxy",
+   "target": "https://raw.githubusercontent.com/MVPuknowme/Aura-core/MVPuknowme/api/skygrid/gspc.mjs",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 3714,
+   "visible_text_sha256": "ff5b456edf88e8ea34d8a137e47059e76224692903a156cac4140497544c3539",
+   "visible_text_bytes": 3681,
+   "ms": 282,
+   "error": null,
+   "final_target": "https://raw.githubusercontent.com/MVPuknowme/Aura-core/MVPuknowme/api/skygrid/gspc.mjs"
+  },
+  {
+   "rows": [
+    "CJ-99"
+   ],
+   "jewel": "arXiv 2609.14721 academic citation (template critique)",
+   "target": "https://arxiv.org/abs/2609.14721",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 42015,
+   "visible_text_sha256": "4827aff4149c37749bd1e0fb3c28f1a5837c631c0946ea17d91b55cbd818f330",
+   "visible_text_bytes": 4764,
+   "ms": 354,
+   "error": null,
+   "final_target": "https://arxiv.org/abs/2609.14721"
+  },
+  {
+   "rows": [
+    "CJ-100"
+   ],
+   "jewel": "stork.ai editorial review (Oct 8)",
+   "target": "https://stork.ai/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 233624,
+   "visible_text_sha256": "92665488a90526d3cc54e5343153fc524ff147752b4c7699ef7d2ca159cf8ddd",
+   "visible_text_bytes": 15336,
+   "ms": 975,
+   "error": null,
+   "final_target": "https://www.stork.ai/"
+  },
+  {
+   "rows": [
+    "N-01"
+   ],
+   "jewel": "BS EN/prEN 18283 bias standard comment (closes Nov 24)",
+   "target": "https://standardsdevelopment.bsigroup.com/projects/2026-00938",
+   "target_form": "absolute-url",
+   "status": 0,
+   "ok": false,
+   "bytes": 0,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 1418,
+   "error": "TypeError"
+  },
+  {
+   "rows": [
+    "N-02"
+   ],
+   "jewel": "prEN ISO/IEC 42006 enquiry (closes Oct 29 — 3 DAYS)",
+   "target": "https://genorma.com/en/standards/pren-iso-iec-42006",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 23725,
+   "visible_text_sha256": "b4e89a6686bc4725b29f7353c41e7f9f8ef48cf004c86d730f8d2d8795d46d15",
+   "visible_text_bytes": 2979,
+   "ms": 1172,
+   "error": null,
+   "final_target": "https://genorma.com/en/standards/pren-iso-iec-42006"
+  },
+  {
+   "rows": [
+    "N-03"
+   ],
+   "jewel": "ISO/IEC DIS 23282 NLP evaluation ballot (closes Nov 25)",
+   "target": "https://genorma.com/en/standards/iso-iec-dis-23282",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 22606,
+   "visible_text_sha256": "99bf76fdd263b40a3f6e3299e6abbaa5b9cb8597d7dba1eb9fceb9d55cb7092b",
+   "visible_text_bytes": 2616,
+   "ms": 1030,
+   "error": null,
+   "final_target": "https://genorma.com/en/standards/iso-iec-dis-23282"
+  },
+  {
+   "rows": [
+    "N-03"
+   ],
+   "jewel": "ISO/IEC DIS 23282 NLP evaluation ballot (closes Nov 25)",
+   "target": "https://genorma.com/en/standards/pren-iso-iec-232",
+   "target_form": "absolute-url",
+   "status": 404,
+   "ok": false,
+   "bytes": 18672,
+   "visible_text_sha256": "6945db5c18ae437423ad4e48acdc61cd0287387de7e72d183cc64ddef52dcb6c",
+   "visible_text_bytes": 1829,
+   "ms": 723,
+   "error": null,
+   "final_target": "https://genorma.com/en/standards/pren-iso-iec-232"
+  },
+  {
+   "rows": [
+    "N-04"
+   ],
+   "jewel": "BSI three new AI certification schemes (Oct 14)",
+   "target": "https://groupsiteppdmig.bsigroup.com/en-GB/insights-and-media/media-centre/press-releases/2026/october/new-ai-schemes-launched-to-help-companies-demonstrate-responsible-deployment-manage-risk-and-meet-regulatory-and-mark",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 250586,
+   "visible_text_sha256": "81baaab455d90ec36891b96ebd5cb38c8b003e324635ff3a1b613bf6a3bfdc3f",
+   "visible_text_bytes": 15528,
+   "ms": 2046,
+   "error": null,
+   "final_target": "https://groupsiteppdmig.bsigroup.com/en-GB/insights-and-media/Search?searchText=*&filterBy=all&pagetypes=news"
+  },
+  {
+   "rows": [
+    "N-05"
+   ],
+   "jewel": "AICPA × AIUC-1 joint agent certification (Oct 19)",
+   "target": "https://www.aicpa-cima.com/news/article/auditors-meet-urgent-demand-for-ai-assurance-with-new-offering-from-aicpa-and-aiuc",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 289924,
+   "visible_text_sha256": "04ae0676f9bc2c40ac18ea06141c7bd2814e8ea964391658f989699bd9e968c9",
+   "visible_text_bytes": 5437,
+   "ms": 1223,
+   "error": null,
+   "final_target": "https://www.aicpa-cima.com/news/article/auditors-meet-urgent-demand-for-ai-assurance-with-new-offering-from-aicpa-and-aiuc"
+  },
+  {
+   "rows": [
+    "N-06"
+   ],
+   "jewel": "EN 18286:2026 cited in OJEU (Oct 14)",
+   "target": "https://eur-lex.europa.eu/eli/dec_impl/2026/2274/oj",
+   "target_form": "absolute-url",
+   "status": 202,
+   "ok": true,
+   "bytes": 2035,
+   "visible_text_sha256": null,
+   "visible_text_bytes": null,
+   "ms": 184,
+   "error": null,
+   "final_target": "https://eur-lex.europa.eu/eli/dec_impl/2026/2274/oj"
+  },
+  {
+   "rows": [
+    "N-07"
+   ],
+   "jewel": "International Programme on AI Evaluation (priority Nov 13, final Dec 11)",
+   "target": "https://ai-evaluation.org/apply",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 277911,
+   "visible_text_sha256": "18e4e587f986a1eb88b8c8715ecb301926c0e80365f320cfcc75a336c2f1e70f",
+   "visible_text_bytes": 7680,
+   "ms": 429,
+   "error": null,
+   "final_target": "https://ai-evaluation.org/apply"
+  },
+  {
+   "rows": [
+    "N-08"
+   ],
+   "jewel": "AWS Agentic AI CFP (Nov 4)",
+   "target": "https://www.amazon.science/research-awards/call-for-proposals/aws-agentic-ai-call-for-proposals-fall-2026",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 273385,
+   "visible_text_sha256": "e6ef8282cddb6fa54bb2b2874044ebb8015a16e8d2e740a9fc25155700171989",
+   "visible_text_bytes": 49530,
+   "ms": 246,
+   "error": null,
+   "final_target": "https://www.amazon.science/research-awards/call-for-proposals/aws-agentic-ai-call-for-proposals-fall-2026"
+  },
+  {
+   "rows": [
+    "N-09"
+   ],
+   "jewel": "Amazon ARA Multilingual & Contextual AI Evaluation (Nov 4)",
+   "target": "https://www.amazon.science/research-awards/call-for-proposals/multilingual-and-contextual-ai-evaluation-call-for-proposals-fall-2026",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 277113,
+   "visible_text_sha256": "0528dc54aa961f9339a007c68d36c7e0ffd90ff25fd400998248c58414dc28d3",
+   "visible_text_bytes": 52238,
+   "ms": 139,
+   "error": null,
+   "final_target": "https://www.amazon.science/research-awards/call-for-proposals/multilingual-and-contextual-ai-evaluation-call-for-proposals-fall-2026"
+  },
+  {
+   "rows": [
+    "N-10"
+   ],
+   "jewel": "NSF 26-512 AI Datasets (Nov 4)",
+   "target": "https://www.nsf.gov/funding/opportunities/ai-datasets-unlocking-dataset-value-ai-enabled-scientific-discovery/nsf26-512/solicitation",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 91639,
+   "visible_text_sha256": "0de2c6f585359820af6498e15ed1e351ced56349c55d81284df7ee8bf76eae05",
+   "visible_text_bytes": 29202,
+   "ms": 276,
+   "error": null,
+   "final_target": "https://www.nsf.gov/funding/opportunities/ai-datasets-unlocking-dataset-value-ai-enabled-scientific-discovery/nsf26-512/solicitation"
+  },
+  {
+   "rows": [
+    "N-11"
+   ],
+   "jewel": "NSF 26-513 State & Regional AI Infrastructure Hubs (Nov 4)",
+   "target": "https://www.nsf.gov/funding/opportunities/us-national-science-foundation-state-regional-artificial/nsf26-513/solicitation",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 100451,
+   "visible_text_sha256": "fe0dbf5c56585317379515219d6396efde648f331c3fd00dc843c0a7a542b26f",
+   "visible_text_bytes": 37108,
+   "ms": 268,
+   "error": null,
+   "final_target": "https://www.nsf.gov/funding/opportunities/us-national-science-foundation-state-regional-artificial/nsf26-513/solicitation"
+  },
+  {
+   "rows": [
+    "N-12"
+   ],
+   "jewel": "Innovate UK 'Efficient, Structured and Controllable AI' (Nov 18)",
+   "target": "https://apply-for-innovation-funding.service.gov.uk/competition/2582/overview/9fdb47a5-011c-4c47-ac5e-c426e295fe89",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 93799,
+   "visible_text_sha256": "eeafe94f05a584582c285aac883ed9e891a57c80dcf20881ee338ec8ab4ee46f",
+   "visible_text_bytes": 44259,
+   "ms": 395,
+   "error": null,
+   "final_target": "https://apply-for-innovation-funding.service.gov.uk/competition/2582/overview/9fdb47a5-011c-4c47-ac5e-c426e295fe89"
+  },
+  {
+   "rows": [
+    "N-13"
+   ],
+   "jewel": "Innovate UK 'Frontier/Next-Gen AI Technologies' (Nov 11)",
+   "target": "https://apply-for-innovation-funding.service.gov.uk/competition/2584/overview/4c7afb5d-4572-4ef2-9507-73ef2dec8ec8",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 94043,
+   "visible_text_sha256": "b096e13cb7d7a1fe434a7d1db449ba3cb8d538711229dfe23355ac24f1ea1f99",
+   "visible_text_bytes": 44329,
+   "ms": 295,
+   "error": null,
+   "final_target": "https://apply-for-innovation-funding.service.gov.uk/competition/2584/overview/4c7afb5d-4572-4ef2-9507-73ef2dec8ec8"
+  },
+  {
+   "rows": [
+    "N-14"
+   ],
+   "jewel": "OpenAI Cybersecurity Grant Program (rolling)",
+   "target": "https://openai.com/index/openai-cybersecurity-grant-program/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 326370,
+   "visible_text_sha256": "514c4c3f7c870a9de68ebaaf4cc2387e79c66a59a728e6cfe3077655208e41e8",
+   "visible_text_bytes": 5750,
+   "ms": 849,
+   "error": null,
+   "final_target": "https://openai.com/index/openai-cybersecurity-grant-program/"
+  },
+  {
+   "rows": [
+    "N-15"
+   ],
+   "jewel": "Foresight AI for Science & Safety Nodes RFP (Oct 31)",
+   "target": "https://foresight.org/grants/ai-science-safety-nodes-rfp-local-compute/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 185112,
+   "visible_text_sha256": "fe1a25c9886688daf66505c884f8ff0bc285cb954aa1f1a945b12517ced680be",
+   "visible_text_bytes": 9261,
+   "ms": 410,
+   "error": null,
+   "final_target": "https://foresight.org/grants/ai-science-safety-nodes-rfp-local-compute/"
+  },
+  {
+   "rows": [
+    "N-16"
+   ],
+   "jewel": "HORIZON-BRIDGING-2027-01-13 EU Frontier AI Initiative RIA (Feb 2027)",
+   "target": "https://hadea.ec.europa.eu/calls-proposals/horizon-europe-digital-bridging-actions-2027_en",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 74061,
+   "visible_text_sha256": "39fcde3094c683b8a39961d222295208c7a1ff1de3b97b01f0eafdd651f5c367",
+   "visible_text_bytes": 2198,
+   "ms": 673,
+   "error": null,
+   "final_target": "https://hadea.ec.europa.eu/calls-proposals/horizon-europe-digital-bridging-actions-2027_en"
+  },
+  {
+   "rows": [
+    "N-17"
+   ],
+   "jewel": "AWS Agent Registry GA APIs",
+   "target": "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 303950,
+   "visible_text_sha256": "cc11c46bb65cc3963618d3ebf6c022787bdde50225179225a3855ba67f2a66c5",
+   "visible_text_bytes": 7807,
+   "ms": 393,
+   "error": null,
+   "final_target": "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/"
+  },
+  {
+   "rows": [
+    "N-18"
+   ],
+   "jewel": "AAIF Sandbox phase + 4 new projects (Oct 22)",
+   "target": "https://aaif.io/blog/aaif-sandbox-phase",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 133700,
+   "visible_text_sha256": "d8c6da72c14fe3287cb33215cad78485fb94a4700906ba2c5304d49b490417f8",
+   "visible_text_bytes": 7753,
+   "ms": 1682,
+   "error": null,
+   "final_target": "https://aaif.io/blog/aaif-sandbox-phase"
+  },
+  {
+   "rows": [
+    "N-19"
+   ],
+   "jewel": "CDF AI SIG (Continuous Delivery Foundation)",
+   "target": "https://github.com/cdfoundation/AI",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 290616,
+   "visible_text_sha256": "83e71c24db2e9ee48d1437f52d6c61dca479b5922f7934e9ec22f51b51bb7a4c",
+   "visible_text_bytes": 17236,
+   "ms": 917,
+   "error": null,
+   "final_target": "https://github.com/cdfoundation/AI"
+  },
+  {
+   "rows": [
+    "N-20"
+   ],
+   "jewel": "Agentic SOC Alliance (15 founders)",
+   "target": "https://www.extrahop.com/agentic-soc-alliance",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 177418,
+   "visible_text_sha256": "1feb7189f9788ab17e553c1711f89862f53039e53f70103b8bb4e201130d9b92",
+   "visible_text_bytes": 9955,
+   "ms": 548,
+   "error": null,
+   "final_target": "https://www.extrahop.com/agentic-soc-alliance"
+  },
+  {
+   "rows": [
+    "N-21"
+   ],
+   "jewel": "Prosus Vending Bench (Apache-2.0)",
+   "target": "https://github.com/ProsusAI/vending-bench",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 301329,
+   "visible_text_sha256": "96fd1acd24ec95b1a5bdbff146ed82ccf586a1862a28ecd47da79010dff412fb",
+   "visible_text_bytes": 10472,
+   "ms": 810,
+   "error": null,
+   "final_target": "https://github.com/ProsusAI/vending-bench"
+  },
+  {
+   "rows": [
+    "N-22"
+   ],
+   "jewel": "NIST AITE programme",
+   "target": "https://pages.nist.gov/ai-technology-evaluation/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 28752,
+   "visible_text_sha256": "7c8a05b00231f37b3728a2cf766d2e934d5891823831a078943bf0e24ce80450",
+   "visible_text_bytes": 6900,
+   "ms": 496,
+   "error": null,
+   "final_target": "https://pages.nist.gov/ai-technology-evaluation/"
+  },
+  {
+   "rows": [
+    "N-23"
+   ],
+   "jewel": "AAIF Voice Agents Forum (SF, Nov 5)",
+   "target": "https://luma.com/voiceagentssf",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 163096,
+   "visible_text_sha256": "98db64fc62a47fa83be930c3070e5068fd8175dc1fcdc45df473fd9a334dd2cf",
+   "visible_text_bytes": 4835,
+   "ms": 526,
+   "error": null,
+   "final_target": "https://luma.com/voiceagentssf"
+  },
+  {
+   "rows": [
+    "N-24"
+   ],
+   "jewel": "AWS CDS Agentic AI Partner Hackathon (Oct 28)",
+   "target": "https://aws-cds-partner.devpost.com/",
+   "target_form": "absolute-url",
+   "status": 403,
+   "ok": false,
+   "bytes": 5727,
+   "visible_text_sha256": "301dc171e5fa8c5fdeb69592a92a5c378f5f758f68d2338200235d60eb04b9ad",
+   "visible_text_bytes": 16,
+   "ms": 105,
+   "error": null,
+   "final_target": "https://aws-cds-partner.devpost.com/"
+  },
+  {
+   "rows": [
+    "N-25"
+   ],
+   "jewel": "Agentic AI Hackathon 2026 (Ulster University)",
+   "target": "https://theamse.org/hackathon/AgenticAIHackathon2026",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 54615,
+   "visible_text_sha256": "cb43448f6bc1084f8cb95888594835714c999bdbe3251a98de4d7117ddba94fc",
+   "visible_text_bytes": 3516,
+   "ms": 1232,
+   "error": null,
+   "final_target": "https://theamse.org/hackathon/AgenticAIHackathon2026"
+  },
+  {
+   "rows": [
+    "N-26"
+   ],
+   "jewel": "Bharat Agentic-AI Hackathon (Code for India)",
+   "target": "https://codeforindia.org/hackathon",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 53464,
+   "visible_text_sha256": "084d77bdc5b80304bb909d312e35962f20396dc117357f2b8ff611a601d7c0ff",
+   "visible_text_bytes": 7888,
+   "ms": 601,
+   "error": null,
+   "final_target": "https://codeforindia.org/hackathon"
+  },
+  {
+   "rows": [
+    "N-27"
+   ],
+   "jewel": "oneAPI DevSummit CFP (event Dec 1)",
+   "target": "https://uxlfoundation.org/events/oneapi-devsummit-hosted-by-uxl-foundation-2026/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 186589,
+   "visible_text_sha256": "fa0d98a462f3442d948ece84ee1d7b3a7cde10ca25c4bd5d96c428155bb248db",
+   "visible_text_bytes": 5050,
+   "ms": 563,
+   "error": null,
+   "final_target": "https://uxlfoundation.org/events/oneapi-devsummit-hosted-by-uxl-foundation-2026/"
+  },
+  {
+   "rows": [
+    "N-28"
+   ],
+   "jewel": "AAMAS 2027 (Blue Sky Nov 5 / papers Nov 12)",
+   "target": "https://warwick.ac.uk/fac/sci/dcs/aamas2027/calls/call-for-blue-sky-ideas/",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 42057,
+   "visible_text_sha256": "a4870ed4828e2f1bab0a9b06e27597f453324c970e8162970beda1459a57c854",
+   "visible_text_bytes": 7300,
+   "ms": 154,
+   "error": null,
+   "final_target": "https://warwick.ac.uk/fac/sci/dcs/aamas2027/calls/call-for-blue-sky-ideas/"
+  },
+  {
+   "rows": [
+    "N-29"
+   ],
+   "jewel": "ICAART 2027 (workshop/abstract Dec 3)",
+   "target": "https://icaart.scitevents.org/CallForPapers.aspx?y=2027",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 390340,
+   "visible_text_sha256": "6632104e2b35548c0e351eb12bbf848f5a4f3495f018cc9498e183d9d727200c",
+   "visible_text_bytes": 51976,
+   "ms": 8279,
+   "error": null,
+   "final_target": "https://icaart.scitevents.org/CallForPapers.aspx?y=2027"
+  },
+  {
+   "rows": [
+    "N-30"
+   ],
+   "jewel": "NIST SP 800-82r4 ipd comments (Nov 30)",
+   "target": "https://csrc.nist.gov/pubs/sp/800/82/r4/ipd",
+   "target_form": "absolute-url",
+   "status": 200,
+   "ok": true,
+   "bytes": 51273,
+   "visible_text_sha256": "1fc7ed8a1b4cc46698fe438c1a0864ee080ec2701e4ad9f15a5e6fb3b0797fda",
+   "visible_text_bytes": 7616,
+   "ms": 455,
+   "error": null,
+   "final_target": "https://csrc.nist.gov/pubs/sp/800/82/r4/ipd"
+  }
+ ]
+}

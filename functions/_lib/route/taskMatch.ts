@@ -132,6 +132,11 @@ export const PURPOSE: Record<string, Pattern[]> = {
     { re: /\bper server\b|\bserver evidence\b|\babout (a|one|this) server\b/, w: 3 },
     { re: /\bendpoint\b/, w: 2 },
   ],
+  framework_readiness: [
+    { re: /\b(readiness|checklist)\b/, w: 5 },
+    { re: /\b(eu[- ]ai[- ]act|dora|nis2|gdpr|iso[- ]27001|nist( csf)?|soc ?2|pci( dss)?|cra)\b/, w: 3 },
+    { re: /\bwhat (do|would) i need\b|\bwhere do i start\b|\bprepare for\b|\bcomply\b/, w: 3 },
+  ],
   evidence_bundle_preview: [
     { re: OBLIGATION, w: 3 },
     { re: new RegExp(`(?=.*${OBLIGATION.source})(?=.*\\b(evidence|records?|cards?|signed)\\b)`), w: 3 },

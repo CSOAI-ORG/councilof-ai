@@ -3,16 +3,34 @@ import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { renderAll, renderAxesIndex, staleOwnedFiles } from "./build-axis-pages.mjs";
+import { loadBoard, renderAll, renderAxesIndex, staleOwnedFiles } from "./build-axis-pages.mjs";
 
 const OWNER_GATED = "HIDDEN_PENDING_OWNER_GO";
+
+/**
+ * The canonical axis id set is the ONE alias table: "keys are the canonical axis ids
+ * exactly as GET https://councilof.ai/api/gspc spells them (axes[].axis)". It is a
+ * mirror of the axis modules, and functions/mcp/axis-aliases.test.ts already fails if
+ * a key stops being a board row. Comparing the commit board against it is a real
+ * cross-check, and it lets this test DERIVE the axis set instead of typing a count
+ * that goes stale the moment a slot is declared. A typed count here was the estate
+ * repeating the exact defect it repaired in canon.json: a frozen number (23/23/0)
+ * that turns a legitimate growth into a red build — that one held a correct live
+ * board red for 114 consecutive runs. Declaring the 34th axis made this assert 33
+ * and fail, which is the frozen number talking, not the board.
+ */
+const CANONICAL_AXES = Object.keys(
+  JSON.parse(
+    readFileSync(new URL("../../functions/mcp/axis-aliases.json", import.meta.url), "utf8"),
+  ).axes,
+);
 
 /**
  * A board shaped like the live one: 14 model-comparison axes, 9 deterministic-fact
  * axes, 10 declared subject slots. One of the slots stands in for regulator-transparency,
  * which the owner is still holding.
  */
-function board({ gated = ["slot-9"] } = {}) {
+function board({ gated = ["slot-8"] } = {}) {
   const cmp = Array.from({ length: 14 }, (_, i) => ({
     axis: `cmp-${i}`,
     family: "gspc",
@@ -29,7 +47,7 @@ function board({ gated = ["slot-9"] } = {}) {
     status: "MEASURED",
     n: 8,
   }));
-  const slots = Array.from({ length: 10 }, (_, i) => ({
+  const slots = Array.from({ length: 9 }, (_, i) => ({
     axis: `slot-${i}`,
     family: "subject",
     kind: "declared-slot",
@@ -39,9 +57,23 @@ function board({ gated = ["slot-9"] } = {}) {
     bench: "pending frozen bank",
     ...(gated.includes(`slot-${i}`) ? { public_pages: OWNER_GATED } : {}),
   }));
+  // One subject axis has been PROMOTED: measured, with a frozen sha-pinned bank behind it
+  // (claim-maintenance, 2026-10-29 — the first measured subject axis). It is still a subject
+  // axis: no model fleet answers it, so no separation test applies to it.
+  const measuredSubject = {
+    axis: "slot-promoted",
+    family: "subject",
+    kind: "measured-subject",
+    status: "MEASURED",
+    n: 174,
+    method_status: "meets-rule",
+    bank_sha256: "a".repeat(64),
+    task: "is a captured public claim still served unchanged, changed, withdrawn or unreachable",
+    bench: "claim-maintenance v0.2 re-read wave",
+  };
   return {
-    axes: [...cmp, ...facts, ...slots],
-    totals: { public_count: "33 axes · 23 measured · 0 of 14 model-comparison axes separated a leader" },
+    axes: [...cmp, ...facts, ...slots, measuredSubject],
+    totals: { public_count: "33 axes · 24 measured · 0 of 14 model-comparison axes separated a leader" },
     state_enum: { separation: ["SEPARATED", "TIE", "UNTESTED"] },
   };
 }
@@ -51,9 +83,29 @@ test("the axes index counts each kind by the board's own kind, not by 'not a fac
   // 14 model-comparison axes — the board says 14, so the page must say 14.
   assert.match(html, /<h2>14 model-comparison axes<\/h2>/);
   assert.match(html, /<h2>9 deterministic-fact axes<\/h2>/);
-  assert.match(html, /<h2>10 declared subject slots<\/h2>/);
+  // Nine declared subject slots and ONE measured subject axis: a promoted slot is measured,
+  // so filing it under "declared subject slots" would understate what has been measured.
+  assert.match(html, /<h2>9 declared subject slots<\/h2>/);
+  assert.match(html, /<h2>1 measured subject axes<\/h2>/);
   // The old bug filed 24 axes under "model-comparison" (14 + 10 slots).
   assert.doesNotMatch(html, /<h2>24 model-comparison axes<\/h2>/);
+});
+
+test("a measured subject axis is filed under its own heading, never as a declared slot", () => {
+  const html = renderAxesIndex(board({ gated: [] }));
+  const measuredSection = html.slice(html.indexOf("measured subject axes"));
+  assert.match(measuredSection, /data-axis="slot-promoted"/);
+  assert.match(measuredSection, /data-status="MEASURED"/);
+  assert.match(measuredSection, /174/);
+  // No model fleet answers a subject axis, so no point leader and no separation token.
+  assert.doesNotMatch(measuredSection, /Point leader/);
+  assert.doesNotMatch(measuredSection, /data-separation="TIE"/);
+  // And it is not among the declared slots.
+  const declaredSection = html.slice(
+    html.indexOf("declared subject slots"),
+    html.indexOf("measured subject axes"),
+  );
+  assert.doesNotMatch(declaredSection, /data-axis="slot-promoted"/);
 });
 
 test("a declared subject slot is never filed under the model-comparison heading", () => {
@@ -63,11 +115,12 @@ test("a declared subject slot is never filed under the model-comparison heading"
     html.indexOf("deterministic-fact axes"),
   );
   assert.doesNotMatch(cmpSection, /slot-0/);
-  assert.doesNotMatch(cmpSection, /slot-9/);
+  assert.doesNotMatch(cmpSection, /slot-8/);
+  assert.doesNotMatch(cmpSection, /slot-promoted/);
   // The slots are present, in their own section.
   const slotSection = html.slice(html.indexOf("declared subject slots"));
   assert.match(slotSection, /slot-0/);
-  assert.match(slotSection, /slot-9/);
+  assert.match(slotSection, /slot-8/);
 });
 
 test("a declared slot row states its state and n, and claims no point leader", () => {
@@ -82,6 +135,9 @@ test("a declared slot row states its state and n, and claims no point leader", (
 test("an axis whose kind the board does not name is shown, but not counted into a group", () => {
   const b = board({ gated: [] });
   b.axes.push({ axis: "mystery-axis", family: "subject", status: "UNMEASURED", n: 0 });
+  // The board payload and its totals must agree or the generator refuses to render
+  // (LID_COUNT_MISMATCH), so a doctored payload updates its own totals too.
+  b.totals = { ...b.totals, public_count: "34 axes · 23 measured · 0 of 14 model-comparison axes separated a leader" };
   const html = renderAxesIndex(b);
   assert.match(html, /<h2>1 axes of an unnamed kind<\/h2>/);
   assert.match(html, /mystery-axis/);
@@ -119,7 +175,93 @@ test("the axes index page says 32 where the board serves 33, because one slot is
   const out = renderAll(board());
   assert.match(out["axes.html"], /<h1>All 32 GSPC axes<\/h1>/);
   // The lid is the board's own totals, left as served.
-  assert.match(out["axes.html"], /33 axes · 23 measured/);
+  assert.match(out["axes.html"], /33 axes · 24 measured/);
+});
+
+test("the index reconciles the board's totals with the rows it lists when slots are owner-held", () => {
+  const b = board();
+  const html = renderAll(b)["axes.html"];
+  // Two counts about one set, and the difference stated in neither's place is an error
+  // to the reader. Every number here is DERIVED from the fixture — the lane keeps the
+  // fixture's measured count synced to the live board, and a typed "23" went red the
+  // moment the board said 24. The invariant, not the number, is what is pinned.
+  const lidLead = parseInt(b.totals.public_count.match(/^(\d+)/)[1], 10);
+  const shown = parseInt(html.match(/<h1>All (\d+) GSPC axes<\/h1>/)[1], 10);
+  const held = lidLead - shown;
+  assert.equal(shown, lidLead - 1, "the fixture holds back exactly one slot");
+  assert.match(html, new RegExp(`${lidLead} axes · \\d+ measured`));
+  assert.match(
+    html,
+    new RegExp(`The board serves ${lidLead} axes; ${held} is owner-gated pending go, so this page lists ${shown}\\.`),
+  );
+  // The held axis is a count, never a leak.
+  assert.doesNotMatch(html, /slot-9/);
+});
+
+test("the index stays silent when the board totals equal the rows shown", () => {
+  const html = renderAll(board({ gated: [] }))["axes.html"];
+  assert.doesNotMatch(html, /owner-gated pending go/);
+});
+
+test("a totals row the reconciliation cannot explain refuses to render", () => {
+  const b = board();
+  // A totals count that can never equal shown+held, whatever the fixture grows to.
+  b.totals = { ...b.totals, public_count: "999999 axes · 23 measured" };
+  assert.throws(() => renderAll(b), /LID_COUNT_MISMATCH/);
+});
+
+test("the commit board renders exactly its public canonical axes without promoting the owner-held slots", async () => {
+  const live = await loadBoard();
+  const allIds = live.axes.map((row) => row.axis);
+  // DERIVED, never typed. The commit board and the canonical alias table must agree
+  // on the axis SET, not merely on a number.
+  assert.deepEqual([...allIds].sort(), [...CANONICAL_AXES].sort());
+  assert.equal(allIds.length, CANONICAL_AXES.length);
+  assert.equal(new Set(allIds).size, CANONICAL_AXES.length);
+  assert.ok(allIds.includes("regulator-transparency"));
+
+  const gatedIds = live.axes
+    .filter((row) => row.public_pages === OWNER_GATED)
+    .map((row) => row.axis);
+  const publicIds = live.axes
+    .filter((row) => row.public_pages !== OWNER_GATED)
+    .map((row) => row.axis)
+    .sort();
+  // The owner-held count is whatever the board says it is. Typing "1" here froze the
+  // public count at 32 and broke the moment a second slot was held back.
+  assert.ok(gatedIds.length > 0, "the owner is still holding at least one slot");
+  assert.equal(publicIds.length, allIds.length - gatedIds.length);
+  assert.ok(!publicIds.includes("regulator-transparency"));
+
+  const out = renderAll(live);
+  const renderedIds = Object.keys(out)
+    .filter((path) => path.startsWith("axis/"))
+    .map((path) => path.slice("axis/".length, -".html".length))
+    .sort();
+  assert.deepEqual(renderedIds, publicIds);
+  assert.equal(out["axis/regulator-transparency.html"], undefined);
+  // Every owner-held slot gets no page and no row in the index — named, not counted.
+  for (const id of gatedIds) {
+    assert.equal(out[`axis/${id}.html`], undefined);
+    assert.doesNotMatch(out["axes.html"], new RegExp(`data-axis="${id}"`));
+  }
+  // The headings count the PUBLIC axes, so they are derived from the board too.
+  const publicSlots = live.axes.filter(
+    (row) => row.public_pages !== OWNER_GATED && row.kind === "declared-slot",
+  ).length;
+  assert.match(out["axes.html"], new RegExp(`<h1>All ${publicIds.length} GSPC axes</h1>`));
+  if (publicSlots > 0) {
+    assert.match(out["axes.html"], new RegExp(`<h2>${publicSlots} declared subject slots</h2>`));
+  } else {
+    assert.doesNotMatch(out["axes.html"], /declared subject slots/);
+  }
+  // A MEASURED subject axis is not a declared slot: it has a real n over a frozen
+  // sha-pinned bank, so it is filed under its own heading. That count is derived
+  // from the public board rows as well, never typed.
+  const measuredSubjects = live.axes.filter(
+    (row) => row.public_pages !== OWNER_GATED && row.kind === "measured-subject",
+  ).length;
+  assert.match(out["axes.html"], new RegExp(`<h2>${measuredSubjects} measured subject axes</h2>`));
 });
 
 test("a declared slot's own page offers no separation machinery", () => {

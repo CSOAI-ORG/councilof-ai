@@ -3,9 +3,9 @@
  * build-axis-reports.mjs — one report per (GSPC board slot × subject), derived from signed cards.
  *
  * WHAT IT JOINS
- *   1. the 23 board slots      — functions/api/_gspc_axes_{a,b,c,fin}.ts, bundled with esbuild and
+ *   1. every board slot       — functions/api/_gspc_axes_{a,b,c,fin,d}.ts, bundled with esbuild and
  *                                executed, so the slot list, kind and status are the SAME bytes that
- *                                GET /api/gspc serves. Never a second list of axes.
+ *                                GET /api/gspc serves. Never a second list of axes or a typed total.
  *   2. the signed card corpus  — public/signed/card-matrix.json (one cell per model × corpus-axis) and
  *                                the card file behind every cell, verified (id + Ed25519) before use.
  *   3. the crosswalk           — client/src/data/regulator-crosswalk.json: obligation POINTERS
@@ -36,7 +36,7 @@
  *   node scripts/build-axis-reports.mjs            # write public/reports/**
  *   node scripts/build-axis-reports.mjs --check    # regenerate in memory; exit 1 if the tree is stale
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, rmSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, lstatSync, rmSync, rmdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join, relative } from "node:path";
@@ -65,17 +65,18 @@ export function slugify(id) {
   return String(id).toLowerCase().replace(/[^a-z0-9.]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
-// ─── the 23 slots: run the same modules /api/gspc imports ───────────────────
+// ─── every slot: run the same modules /api/gspc imports ────────────────────
 export async function loadSlots(repo = REPO_DEFAULT) {
   const { build } = await import("esbuild");
   const api = join(repo, "functions/api");
-  const entry = ["a", "b", "c", "fin"].map((s) => `export { AXES_${s.toUpperCase()} } from "./_gspc_axes_${s}";`).join("\n");
+  const modules = ["a", "b", "c", "fin", "d"];
+  const entry = modules.map((s) => `export { AXES_${s.toUpperCase()} } from "./_gspc_axes_${s}";`).join("\n");
   const r = await build({
     stdin: { contents: entry, resolveDir: api, loader: "ts" },
     bundle: true, format: "esm", platform: "neutral", write: false, logLevel: "silent",
   });
   const mod = await import("data:text/javascript;base64," + Buffer.from(r.outputFiles[0].text).toString("base64"));
-  const slots = [...mod.AXES_A, ...mod.AXES_B, ...mod.AXES_C, ...mod.AXES_FIN];
+  const slots = modules.flatMap((s) => mod[`AXES_${s.toUpperCase()}`]);
   const ids = new Set();
   for (const s of slots) {
     if (ids.has(s.axis)) throw new Error(`duplicate slot id ${s.axis}`);
@@ -231,6 +232,15 @@ export async function buildTree({ repo = REPO_DEFAULT, slots, verify, now = null
       axisEntries.push(entry);
       continue;
     }
+    if (slot.kind === "measured-subject") {
+      // A MEASURED subject axis measures its own subject class, not model subjects: the
+      // bank holds one outcome per item in that class. There is no per-model card to join,
+      // so the index carries the axis's own n and its outcome breakdown and says so.
+      entry.status = "MEASURED";
+      entry.reason = "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report";
+      axisEntries.push(entry);
+      continue;
+    }
     if (slot.kind === "deterministic-facts") {
       entry.reason = "measures issuers, series or sources rather than model subjects; the signed card corpus holds no per-subject cell for this axis";
       axisEntries.push(entry);
@@ -323,7 +333,7 @@ export async function buildTree({ repo = REPO_DEFAULT, slots, verify, now = null
       not_a: "grade, rank, conformity mark, or legal determination. Measurement, not certification. Verification is free.",
     },
     generated_from: {
-      slots: "functions/api/_gspc_axes_{a,b,c,fin}.ts — executed, the same modules GET /api/gspc imports",
+      slots: "functions/api/_gspc_axes_{a,b,c,fin,d}.ts — executed, the same modules GET /api/gspc imports",
       cards: "public/signed/card-matrix.json and the verified card file behind every cell",
       crosswalk: "client/src/data/regulator-crosswalk.json (pointers + board_axis join)",
       roots: "public/interop/card-root-*.json leaves",
@@ -405,15 +415,67 @@ export function renderMd(r) {
 }
 
 // ─── disk: write / check ─────────────────────────────────────────────────────
-function walkOwned(outDir) {
-  // Owned: index.json and every file inside a subject subdirectory. Top-level files that are not
-  // index.json belong to other producers (e.g. the body-report) and are never touched.
-  const owned = [];
-  if (!existsSync(outDir)) return owned;
-  for (const e of readdirSync(outDir, { withFileTypes: true })) {
-    if (e.isDirectory()) {
-      for (const f of readdirSync(join(outDir, e.name))) owned.push(`${e.name}/${f}`);
-    } else if (e.name === "index.json") owned.push("index.json");
+function pathPart(value) {
+  return typeof value === "string" && value.length > 0 && value !== "." && value !== ".."
+    && !/[\\/\0]/.test(value);
+}
+
+function reportRelative(slug, axis, extension) {
+  if (!pathPart(slug) || !pathPart(axis)) throw new Error("axis-reports: invalid owned report identity");
+  return `${slug}/${axis}.${extension}`;
+}
+
+function lstatIfPresent(path) {
+  try { return lstatSync(path); } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+function assertOutputPath(repo, rel) {
+  const parts = rel.split("/");
+  if (!parts.every(pathPart) || (rel !== "index.json" && (parts.length !== 2 || !/\.(json|md)$/.test(parts[1])))) {
+    throw new Error(`axis-reports: invalid output path ${rel}`);
+  }
+  // Refuse existing symlinks and nonregular leaves before any mutation. These
+  // checks protect the declared checkout paths; they are not a hostile-filesystem sandbox.
+  const components = ["public", "reports", ...parts];
+  let current = repo;
+  for (let i = 0; i < components.length; i++) {
+    current = join(current, components[i]);
+    const st = lstatIfPresent(current);
+    if (!st) continue;
+    if (st.isSymbolicLink() || (i < components.length - 1 ? !st.isDirectory() : !st.isFile())) {
+      throw new Error(`axis-reports: unsafe output path ${current}`);
+    }
+  }
+}
+
+function previousOwnedPaths(repo) {
+  assertOutputPath(repo, "index.json");
+  const indexPath = join(repo, "public/reports/index.json");
+  if (!lstatIfPresent(indexPath)) return new Set();
+  let index;
+  try { index = JSON.parse(readFileSync(indexPath, "utf8")); } catch {
+    throw new Error("axis-reports: previous index is unreadable; preserving existing reports");
+  }
+  if (!index || index.schema !== SCHEMA_INDEX || !Array.isArray(index.reports)
+      || !/^[a-f0-9]{64}$/.test(index.canonical_sha256 ?? "")
+      || canonicalHash(index) !== index.canonical_sha256) {
+    throw new Error("axis-reports: previous index is not a verified axis-report index; preserving existing reports");
+  }
+  // The previous generated index is the ownership manifest. A directory name,
+  // filename extension or new unrelated report cannot confer deletion ownership.
+  const owned = new Set(["index.json"]);
+  for (const report of index.reports) {
+    if (!report || typeof report !== "object") throw new Error("axis-reports: malformed previous report reference");
+    for (const extension of ["json", "md"]) {
+      const rel = reportRelative(report.slug, report.axis, extension);
+      if (report[`path_${extension}`] !== `/reports/${rel}` || owned.has(rel)) {
+        throw new Error("axis-reports: ambiguous or invalid previous report path; preserving existing reports");
+      }
+      owned.add(rel);
+    }
   }
   return owned;
 }
@@ -423,8 +485,9 @@ function sizeOf(dir) {
   const walk = (d) => {
     for (const e of readdirSync(d, { withFileTypes: true })) {
       const p = join(d, e.name);
+      if (e.isSymbolicLink()) continue; // never follow an unrelated producer's symlink
       if (e.isDirectory()) walk(p);
-      else { files += 1; bytes += statSync(p).size; }
+      else if (e.isFile()) { files += 1; bytes += lstatSync(p).size; }
     }
   };
   if (existsSync(dir)) walk(dir);
@@ -433,9 +496,17 @@ function sizeOf(dir) {
 
 export async function writeTree({ repo = REPO_DEFAULT, check = false, ...opts } = {}) {
   const outDir = join(repo, "public/reports");
+  const onDisk = previousOwnedPaths(repo);
   const { files, index } = await buildTree({ repo, ...opts });
   const stale = [];
-  const onDisk = new Set(walkOwned(outDir));
+  // Validate the whole mutation set first. A new output may not overwrite an
+  // existing file that the previous valid index did not own.
+  for (const rel of new Set([...onDisk, ...files.keys()])) {
+    assertOutputPath(repo, rel);
+    if (files.has(rel) && lstatIfPresent(join(outDir, rel)) && !onDisk.has(rel)) {
+      throw new Error(`axis-reports: output collision with an unowned file ${rel}`);
+    }
+  }
 
   for (const [rel, f] of files) {
     const abs = join(outDir, rel);
@@ -459,9 +530,9 @@ export async function writeTree({ repo = REPO_DEFAULT, check = false, ...opts } 
   for (const rel of onDisk) {
     stale.push(`${rel} (orphan)`);
     if (!check) {
-      rmSync(join(outDir, rel));
+      rmSync(join(outDir, rel), { force: true });
       const d = join(outDir, dirname(rel));
-      if (dirname(rel) !== "." && existsSync(d) && readdirSync(d).length === 0) rmSync(d);
+      if (dirname(rel) !== "." && existsSync(d) && readdirSync(d).length === 0) rmdirSync(d);
     }
   }
   const c = index.counts;
@@ -487,3 +558,4 @@ if (isMain) {
   const check = process.argv.includes("--check");
   writeTree({ check }).then((r) => process.exit(r.ok ? 0 : 1), (e) => { console.error(`✗ axis-reports: ${e.message}`); process.exit(1); });
 }
+

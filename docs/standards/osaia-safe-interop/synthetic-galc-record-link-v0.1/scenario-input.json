@@ -1,0 +1,1460 @@
+{
+  "profile": "safe-galc",
+  "profile_version": "0.1",
+  "lifecycle_id": "urn:uuid:00000000-0000-4000-8000-000000000002",
+  "transition_id": "urn:example:csoai-synthetic:transition:target-1:a-to-b",
+  "created_at": "2026-01-01T00:30:01Z",
+  "producer": {
+    "id": "urn:example:csoai-synthetic:principal:fixture-author",
+    "trust_domain": "fixture.example"
+  },
+  "records": [
+    {
+      "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+      "record_type": "proposal",
+      "schema_id": "urn:example:csoai-synthetic:schema:proposal:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:requester-1",
+        "trust_domain": "requester.example"
+      },
+      "issued_at": "2026-01-01T00:00:00Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "data": {
+        "originating_principal": {
+          "id": "urn:example:csoai-synthetic:principal:requester-1",
+          "trust_domain": "requester.example",
+          "role": "requesting-agent"
+        },
+        "authority_ref": "urn:example:csoai-synthetic:authority:delegation-requester-1",
+        "action": "synthetic_update",
+        "target": {
+          "id": "urn:example:csoai-synthetic:target:target-1",
+          "trust_domain": "provider.example",
+          "resource_type": "synthetic-resource"
+        },
+        "parameters_digest": "sha256:e41c2c0d13090b38b47eae9154e12786d3c648af70710fd6c7d8831367685ca3",
+        "before_state": {
+          "id": "urn:example:csoai-synthetic:state:target-1:before",
+          "digest": "sha256:e45b56bb46ee99f274bbc3f64857b66b88d817db5ffc8d9a600a7bdc71e58962",
+          "schema_id": "urn:example:csoai-synthetic:schema:synthetic-state:1",
+          "predicate": "field == 'A'"
+        },
+        "intended_transition": {
+          "id": "urn:example:csoai-synthetic:state:target-1:after",
+          "digest": "sha256:691281e761a57f91568c3e1e4f779bd1831fa6d8c83e3acb8633369f72f8def2",
+          "schema_id": "urn:example:csoai-synthetic:schema:synthetic-state:1",
+          "predicate": "field == 'B'"
+        },
+        "evidence_refs": [
+          "urn:example:csoai-synthetic:context:baseline-read-1"
+        ],
+        "context_refs": [
+          "urn:example:csoai-synthetic:context:baseline-read-1"
+        ],
+        "consequence_class": "synthetic-bounded",
+        "nonce": "idem-synthetic-0001"
+      }
+    },
+    {
+      "record_id": "urn:example:csoai-synthetic:record:determination-1",
+      "record_type": "governance_determination",
+      "schema_id": "urn:example:csoai-synthetic:schema:governance_determination:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:eb3b9d32ae021c2d0ec915463e29ee286e9294b08a6ac30c7828734266601981",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:governance-1",
+        "trust_domain": "governance.example"
+      },
+      "issued_at": "2026-01-01T00:00:10Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "data": {
+        "proposal_ref": {
+          "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+          "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3"
+        },
+        "outcome": "allow",
+        "policy_ref": "urn:example:csoai-synthetic:policy:synthetic-update:1",
+        "authority_evidence_refs": [
+          "urn:example:csoai-synthetic:authority:delegation-requester-1",
+          "urn:example:csoai-synthetic:authority:approval-1",
+          "urn:example:csoai-synthetic:authority:approver-mandate-1"
+        ],
+        "reason_codes": [
+          "policy_allow"
+        ],
+        "issued_at": "2026-01-01T00:00:10Z",
+        "not_before": "2026-01-01T00:00:10Z",
+        "not_after": "2026-01-01T00:01:10Z",
+        "max_uses": 1,
+        "material_change_invalidators": [
+          "actor",
+          "authority",
+          "target",
+          "action",
+          "parameters",
+          "before_state",
+          "policy",
+          "revocation"
+        ],
+        "revocation": {
+          "status": "not_revoked",
+          "checked_at": "2026-01-01T00:00:10Z",
+          "reference": "urn:example:csoai-synthetic:revocation:determination-1"
+        }
+      }
+    },
+    {
+      "record_id": "urn:example:csoai-synthetic:record:enforcement-1",
+      "record_type": "enforcement_event",
+      "schema_id": "urn:example:csoai-synthetic:schema:enforcement_event:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:18ab8818246b0bb1b838e93829e14d95a0fe752af4f93ba2768ce9e18c855141",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:boundary-1",
+        "trust_domain": "boundary.example"
+      },
+      "issued_at": "2026-01-01T00:05:00Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "data": {
+        "determination_ref": {
+          "record_id": "urn:example:csoai-synthetic:record:determination-1",
+          "digest": "sha256:eb3b9d32ae021c2d0ec915463e29ee286e9294b08a6ac30c7828734266601981"
+        },
+        "proposal_ref": {
+          "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+          "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3"
+        },
+        "acceptance_outcome": "rejected",
+        "enforcement_point": {
+          "id": "urn:example:csoai-synthetic:principal:boundary-1",
+          "trust_domain": "boundary.example",
+          "role": "enforcement-point"
+        },
+        "actual_actor": {
+          "id": "urn:example:csoai-synthetic:principal:requester-1",
+          "trust_domain": "requester.example",
+          "role": "requesting-agent"
+        },
+        "actual_action": "synthetic_update",
+        "actual_target": {
+          "id": "urn:example:csoai-synthetic:target:target-1",
+          "trust_domain": "provider.example",
+          "resource_type": "synthetic-resource"
+        },
+        "actual_parameters_digest": "sha256:05f9052593333b27b224c8318540abb79346146d50681035906f5c91616eed87",
+        "checks": [
+          {
+            "check": "determination_validity",
+            "result": "fail",
+            "checked_at": "2026-01-01T00:05:00Z",
+            "evidence_refs": [
+              "urn:example:csoai-synthetic:record:determination-1"
+            ]
+          },
+          {
+            "check": "evidence_freshness",
+            "result": "pass",
+            "checked_at": "2026-01-01T00:05:00Z",
+            "evidence_refs": [
+              "urn:example:csoai-synthetic:context:baseline-read-2"
+            ]
+          },
+          {
+            "check": "revocation",
+            "result": "pass",
+            "checked_at": "2026-01-01T00:05:00Z",
+            "evidence_refs": [
+              "urn:example:csoai-synthetic:revocation:determination-1"
+            ]
+          }
+        ],
+        "nonce": "idem-synthetic-0001",
+        "irreversible_boundary_crossed": false,
+        "reason_codes": [
+          "determination_expired"
+        ]
+      }
+    },
+    {
+      "record_id": "urn:example:csoai-synthetic:record:determination-2",
+      "record_type": "governance_determination",
+      "schema_id": "urn:example:csoai-synthetic:schema:governance_determination:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:1de22068187e5f930920db41825f779dfcc4df5a9182dac2e230618b1c3f9b31",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:governance-1",
+        "trust_domain": "governance.example"
+      },
+      "issued_at": "2026-01-01T00:06:00Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "data": {
+        "proposal_ref": {
+          "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+          "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3"
+        },
+        "outcome": "allow",
+        "policy_ref": "urn:example:csoai-synthetic:policy:synthetic-update:1",
+        "authority_evidence_refs": [
+          "urn:example:csoai-synthetic:authority:delegation-requester-1",
+          "urn:example:csoai-synthetic:authority:approval-2",
+          "urn:example:csoai-synthetic:authority:approver-mandate-1"
+        ],
+        "reason_codes": [
+          "policy_allow"
+        ],
+        "issued_at": "2026-01-01T00:06:00Z",
+        "not_before": "2026-01-01T00:06:00Z",
+        "not_after": "2026-01-01T00:07:00Z",
+        "max_uses": 1,
+        "material_change_invalidators": [
+          "actor",
+          "authority",
+          "target",
+          "action",
+          "parameters",
+          "before_state",
+          "policy",
+          "revocation"
+        ],
+        "revocation": {
+          "status": "not_revoked",
+          "checked_at": "2026-01-01T00:06:00Z",
+          "reference": "urn:example:csoai-synthetic:revocation:determination-2"
+        }
+      }
+    },
+    {
+      "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+      "record_type": "enforcement_event",
+      "schema_id": "urn:example:csoai-synthetic:schema:enforcement_event:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:768d1c1e240717d987f980849d3075bd9737c5d07eaa96d8798f553fa63a2c4c",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:boundary-1",
+        "trust_domain": "boundary.example"
+      },
+      "issued_at": "2026-01-01T00:06:05Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "data": {
+        "determination_ref": {
+          "record_id": "urn:example:csoai-synthetic:record:determination-2",
+          "digest": "sha256:1de22068187e5f930920db41825f779dfcc4df5a9182dac2e230618b1c3f9b31"
+        },
+        "proposal_ref": {
+          "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+          "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3"
+        },
+        "acceptance_outcome": "accepted",
+        "enforcement_point": {
+          "id": "urn:example:csoai-synthetic:principal:boundary-1",
+          "trust_domain": "boundary.example",
+          "role": "enforcement-point"
+        },
+        "actual_actor": {
+          "id": "urn:example:csoai-synthetic:principal:requester-1",
+          "trust_domain": "requester.example",
+          "role": "requesting-agent"
+        },
+        "actual_action": "synthetic_update",
+        "actual_target": {
+          "id": "urn:example:csoai-synthetic:target:target-1",
+          "trust_domain": "provider.example",
+          "resource_type": "synthetic-resource"
+        },
+        "actual_parameters_digest": "sha256:05f9052593333b27b224c8318540abb79346146d50681035906f5c91616eed87",
+        "checks": [
+          {
+            "check": "determination_validity",
+            "result": "pass",
+            "checked_at": "2026-01-01T00:06:05Z",
+            "evidence_refs": [
+              "urn:example:csoai-synthetic:record:determination-2"
+            ]
+          },
+          {
+            "check": "revocation",
+            "result": "pass",
+            "checked_at": "2026-01-01T00:06:05Z",
+            "evidence_refs": [
+              "urn:example:csoai-synthetic:revocation:determination-2"
+            ]
+          },
+          {
+            "check": "use_count",
+            "result": "pass",
+            "checked_at": "2026-01-01T00:06:05Z",
+            "evidence_refs": [
+              "urn:example:csoai-synthetic:record:determination-2"
+            ]
+          },
+          {
+            "check": "material_change",
+            "result": "pass",
+            "checked_at": "2026-01-01T00:06:05Z",
+            "evidence_refs": [
+              "urn:example:csoai-synthetic:context:baseline-read-2"
+            ]
+          },
+          {
+            "check": "scope_containment",
+            "result": "pass",
+            "checked_at": "2026-01-01T00:06:05Z",
+            "evidence_refs": [
+              "urn:example:csoai-synthetic:method:scope-containment:1",
+              "urn:example:csoai-synthetic:parameters:proposed",
+              "urn:example:csoai-synthetic:parameters:presented"
+            ]
+          }
+        ],
+        "nonce": "idem-synthetic-0001",
+        "irreversible_boundary_crossed": false,
+        "reason_codes": []
+      }
+    },
+    {
+      "record_id": "urn:example:csoai-synthetic:record:execution-1",
+      "record_type": "execution_result",
+      "schema_id": "urn:example:csoai-synthetic:schema:execution_result:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:provider-1",
+        "trust_domain": "provider.example"
+      },
+      "issued_at": "2026-01-01T00:06:20Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "data": {
+        "enforcement_ref": {
+          "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+          "digest": "sha256:768d1c1e240717d987f980849d3075bd9737c5d07eaa96d8798f553fa63a2c4c"
+        },
+        "operation": "synthetic_update",
+        "actor": {
+          "id": "urn:example:csoai-synthetic:principal:requester-1",
+          "trust_domain": "requester.example",
+          "role": "requesting-agent"
+        },
+        "target": {
+          "id": "urn:example:csoai-synthetic:target:target-1",
+          "trust_domain": "provider.example",
+          "resource_type": "synthetic-resource"
+        },
+        "parameters_digest": "sha256:05f9052593333b27b224c8318540abb79346146d50681035906f5c91616eed87",
+        "result_status": "unknown",
+        "substrate": {
+          "id": "urn:example:csoai-synthetic:principal:provider-1",
+          "trust_domain": "provider.example",
+          "role": "execution-substrate"
+        },
+        "started_at": "2026-01-01T00:06:06Z",
+        "output_refs": [],
+        "indicators": {
+          "retry": false,
+          "replay": false,
+          "duplicate": false,
+          "rollback": false,
+          "compensation": false
+        }
+      }
+    },
+    {
+      "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+      "record_type": "reconciliation_result",
+      "schema_id": "urn:example:csoai-synthetic:schema:reconciliation_result:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:95d5060aa139f6a9223f54d4f630bc4489a527a9ada4490eae5de76d91374a7b",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "issued_at": "2026-01-01T00:06:30Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "data": {
+        "record_refs": [
+          {
+            "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+            "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:determination-2",
+            "digest": "sha256:1de22068187e5f930920db41825f779dfcc4df5a9182dac2e230618b1c3f9b31"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+            "digest": "sha256:768d1c1e240717d987f980849d3075bd9737c5d07eaa96d8798f553fa63a2c4c"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:execution-1",
+            "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+          }
+        ],
+        "expected_transition": {
+          "id": "urn:example:csoai-synthetic:state:target-1:after",
+          "digest": "sha256:691281e761a57f91568c3e1e4f779bd1831fa6d8c83e3acb8633369f72f8def2",
+          "schema_id": "urn:example:csoai-synthetic:schema:synthetic-state:1",
+          "predicate": "field == 'B'"
+        },
+        "observed_state_refs": [],
+        "method": "synthetic-predicate-and-report-comparison",
+        "method_version": "1",
+        "result": "missing",
+        "reason_codes": [
+          "execution_unknown",
+          "observation_missing"
+        ],
+        "residual_grounding_uncertainty": "Completion was not established and no resulting-state observation existed at this time.",
+        "reconciler": {
+          "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+          "trust_domain": "review.example",
+          "role": "lifecycle-reconciler"
+        }
+      },
+      "extensions": {
+        "csoai_source_payload": {
+          "schema_id": "urn:example:csoai-synthetic:schema:effect-finding:1",
+          "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+          "digest_algorithm": "sha-256",
+          "digest": "sha256:c887218821504fc120872b1165f09fca3c34a198d9330c9a4e27ab5f56cdec35",
+          "payload": {
+            "id": "F1",
+            "external_effect_status": "unknown",
+            "basis": [
+              "urn:example:csoai-synthetic:record:execution-1"
+            ],
+            "supersedes": null
+          },
+          "mapping_note": "CSOAI source finding, kept in its own vocabulary. unknown here is not result_status unknown and is not the reconciliation result. No conversion was evaluated."
+        }
+      }
+    },
+    {
+      "record_id": "urn:example:csoai-synthetic:record:observation-1",
+      "record_type": "observation",
+      "schema_id": "urn:example:csoai-synthetic:schema:observation:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:437f9ba7ddd7e8c4a34f77b0e0262882e10eaaa9093d88387273214870145111",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:sink-reader-1",
+        "trust_domain": "sink.example"
+      },
+      "issued_at": "2026-01-01T00:10:00Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "data": {
+        "observer": {
+          "id": "urn:example:csoai-synthetic:principal:sink-reader-1",
+          "trust_domain": "sink.example",
+          "role": "state-observer"
+        },
+        "method": "synthetic-sink-record-read",
+        "method_version": "1",
+        "target": {
+          "id": "urn:example:csoai-synthetic:target:target-1",
+          "trust_domain": "provider.example",
+          "resource_type": "synthetic-resource"
+        },
+        "execution_ref": {
+          "record_id": "urn:example:csoai-synthetic:record:execution-1",
+          "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+        },
+        "transition_ref": "urn:example:csoai-synthetic:transition:target-1:a-to-b",
+        "observed_state": {
+          "id": "urn:example:csoai-synthetic:state:target-1:after",
+          "digest": "sha256:691281e761a57f91568c3e1e4f779bd1831fa6d8c83e3acb8633369f72f8def2",
+          "schema_id": "urn:example:csoai-synthetic:schema:synthetic-state:1",
+          "predicate": "field == 'B'"
+        },
+        "observed_at": "2026-01-01T00:10:00Z",
+        "freshness_seconds": 60,
+        "independence_basis": "Not claimed. A test double written by the fixture author; no separate administration, key or data path.",
+        "limitations": [
+          "Synthetic. No sink was read.",
+          "A sink record that satisfies the predicate does not show which operation produced it."
+        ]
+      }
+    },
+    {
+      "record_id": "urn:example:csoai-synthetic:record:observation-2",
+      "record_type": "observation",
+      "schema_id": "urn:example:csoai-synthetic:schema:observation:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:5352e066f2be9e78d0fb7bf3c4a59d83b8235aa9aab4490ee64eb36ca04602f4",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:affected-party-1",
+        "trust_domain": "people.example"
+      },
+      "issued_at": "2026-01-01T00:20:00Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "data": {
+        "observer": {
+          "id": "urn:example:csoai-synthetic:principal:affected-party-1",
+          "trust_domain": "people.example",
+          "role": "affected-party",
+          "identity_binding_ref": "urn:example:csoai-synthetic:identity-binding:affected-party-1"
+        },
+        "method": "synthetic-affected-party-report",
+        "method_version": "1",
+        "target": {
+          "id": "urn:example:csoai-synthetic:target:target-1",
+          "trust_domain": "provider.example",
+          "resource_type": "synthetic-resource"
+        },
+        "execution_ref": {
+          "record_id": "urn:example:csoai-synthetic:record:execution-1",
+          "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+        },
+        "transition_ref": "urn:example:csoai-synthetic:transition:target-1:a-to-b",
+        "observed_state": {
+          "id": "urn:example:csoai-synthetic:state:target-1:reported-by-affected-party",
+          "digest": "sha256:245515781588f09e1a1ce869ec1bfffc14935a089f154560d29ed9d2d5face80",
+          "schema_id": "urn:example:csoai-synthetic:schema:synthetic-state:1",
+          "predicate": "field == 'B' and reported_impact == 'contested'"
+        },
+        "observed_at": "2026-01-01T00:20:00Z",
+        "freshness_seconds": 3600,
+        "independence_basis": "Not claimed. Self-report by the affected party.",
+        "limitations": [
+          "Synthetic. No person took part.",
+          "Self-report by the affected party; not corroborated.",
+          "The report contests the impact. It requests no new action; a request would be a new proposal with its own determination."
+        ]
+      }
+    },
+    {
+      "record_id": "urn:example:csoai-synthetic:record:observation-3",
+      "record_type": "observation",
+      "schema_id": "urn:example:csoai-synthetic:schema:observation:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:1b5b9d143314f5045e8f7a461ba780bfd421141cab8bafaa9a6661df06b20405",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:affected-party-1",
+        "trust_domain": "people.example"
+      },
+      "issued_at": "2026-01-01T00:25:00Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "data": {
+        "observer": {
+          "id": "urn:example:csoai-synthetic:principal:affected-party-1",
+          "trust_domain": "people.example",
+          "role": "affected-party",
+          "identity_binding_ref": "urn:example:csoai-synthetic:identity-binding:affected-party-1"
+        },
+        "method": "synthetic-affected-party-report",
+        "method_version": "1",
+        "target": {
+          "id": "urn:example:csoai-synthetic:target:target-1",
+          "trust_domain": "provider.example",
+          "resource_type": "synthetic-resource"
+        },
+        "execution_ref": {
+          "record_id": "urn:example:csoai-synthetic:record:execution-1",
+          "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+        },
+        "transition_ref": "urn:example:csoai-synthetic:transition:target-1:a-to-b",
+        "observed_state": {
+          "id": "urn:example:csoai-synthetic:state:target-1:reported-by-affected-party",
+          "digest": "sha256:245515781588f09e1a1ce869ec1bfffc14935a089f154560d29ed9d2d5face80",
+          "schema_id": "urn:example:csoai-synthetic:schema:synthetic-state:1",
+          "predicate": "field == 'B' and reported_impact == 'contested'"
+        },
+        "observed_at": "2026-01-01T00:25:00Z",
+        "freshness_seconds": 3600,
+        "independence_basis": "Not claimed. Self-report by the affected party.",
+        "limitations": [
+          "Synthetic. No person took part.",
+          "Self-report by the affected party; not corroborated.",
+          "The report contests the impact. It requests no new action; a request would be a new proposal with its own determination.",
+          "A repeat of the report in observation-2 about the same reported state. A second observation, not a second failure."
+        ]
+      }
+    },
+    {
+      "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+      "record_type": "reconciliation_result",
+      "schema_id": "urn:example:csoai-synthetic:schema:reconciliation_result:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "digest_algorithm": "sha-256",
+      "digest": "sha256:ca452e03a242f4940fe8ac964c6615ee2a34b4bab4a7b86960a95ed088ad4798",
+      "producer": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "issued_at": "2026-01-01T00:30:00Z",
+      "availability": "available",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      },
+      "anchor": {
+        "status": "unanchored"
+      },
+      "custody": {
+        "status": "never_provided",
+        "verifier": {
+          "id": "urn:example:csoai-synthetic:principal:fixture-author",
+          "trust_domain": "fixture.example"
+        },
+        "method": "declaration-by-fixture-author",
+        "method_version": "1",
+        "evidence_basis": [
+          {
+            "record_id": "urn:example:csoai-synthetic:custody:none",
+            "digest": "sha256:51771b340a3c28a9a94688ab3c7df1be6794017de3cac3d6bf0ae8ed6aa912b9"
+          }
+        ],
+        "limitations": [
+          "Synthetic. No custody evidence exists for this record."
+        ]
+      },
+      "supersedes": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+        "digest": "sha256:95d5060aa139f6a9223f54d4f630bc4489a527a9ada4490eae5de76d91374a7b"
+      },
+      "data": {
+        "record_refs": [
+          {
+            "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+            "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:determination-2",
+            "digest": "sha256:1de22068187e5f930920db41825f779dfcc4df5a9182dac2e230618b1c3f9b31"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+            "digest": "sha256:768d1c1e240717d987f980849d3075bd9737c5d07eaa96d8798f553fa63a2c4c"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:execution-1",
+            "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:observation-1",
+            "digest": "sha256:437f9ba7ddd7e8c4a34f77b0e0262882e10eaaa9093d88387273214870145111"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:observation-2",
+            "digest": "sha256:5352e066f2be9e78d0fb7bf3c4a59d83b8235aa9aab4490ee64eb36ca04602f4"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:observation-3",
+            "digest": "sha256:1b5b9d143314f5045e8f7a461ba780bfd421141cab8bafaa9a6661df06b20405"
+          }
+        ],
+        "expected_transition": {
+          "id": "urn:example:csoai-synthetic:state:target-1:after",
+          "digest": "sha256:691281e761a57f91568c3e1e4f779bd1831fa6d8c83e3acb8633369f72f8def2",
+          "schema_id": "urn:example:csoai-synthetic:schema:synthetic-state:1",
+          "predicate": "field == 'B'"
+        },
+        "observed_state_refs": [
+          {
+            "record_id": "urn:example:csoai-synthetic:record:observation-1",
+            "digest": "sha256:437f9ba7ddd7e8c4a34f77b0e0262882e10eaaa9093d88387273214870145111"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:observation-2",
+            "digest": "sha256:5352e066f2be9e78d0fb7bf3c4a59d83b8235aa9aab4490ee64eb36ca04602f4"
+          },
+          {
+            "record_id": "urn:example:csoai-synthetic:record:observation-3",
+            "digest": "sha256:1b5b9d143314f5045e8f7a461ba780bfd421141cab8bafaa9a6661df06b20405"
+          }
+        ],
+        "method": "synthetic-predicate-and-report-comparison",
+        "method_version": "1",
+        "result": "conflicting",
+        "reason_codes": [
+          "observation_conflict",
+          "execution_unknown"
+        ],
+        "residual_grounding_uncertainty": "The sink read is consistent with the expected transition under the declared method. Two reports from the affected party contest the resulting state; both refer to one reported state. The execution record still says unknown. Nothing is discarded.",
+        "reconciler": {
+          "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+          "trust_domain": "review.example",
+          "role": "lifecycle-reconciler"
+        }
+      },
+      "extensions": {
+        "csoai_source_payload": {
+          "schema_id": "urn:example:csoai-synthetic:schema:effect-finding:1",
+          "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+          "digest_algorithm": "sha-256",
+          "digest": "sha256:ea93d6b393288fd356d9c00e1a407fe76064fb2bc0c9c66b57167ab85fcd2094",
+          "payload": {
+            "id": "F2",
+            "external_effect_status": "observed",
+            "basis": [
+              "urn:example:csoai-synthetic:record:observation-1",
+              "urn:example:csoai-synthetic:state:target-1:after"
+            ],
+            "supersedes": "F1"
+          },
+          "mapping_note": "CSOAI source finding, kept in its own vocabulary. observed here sits beside result_status unknown and a conflicting reconciliation result. None is derived from another. No conversion was evaluated."
+        }
+      }
+    }
+  ],
+  "links": [
+    {
+      "link_id": "urn:example:csoai-synthetic:link:evaluates-1",
+      "relation": "evaluates",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:determination-1",
+        "digest": "sha256:eb3b9d32ae021c2d0ec915463e29ee286e9294b08a6ac30c7828734266601981"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+        "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:governance-1",
+        "trust_domain": "governance.example"
+      },
+      "asserted_at": "2026-01-01T00:00:10Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:evaluates-2",
+      "relation": "evaluates",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:determination-2",
+        "digest": "sha256:1de22068187e5f930920db41825f779dfcc4df5a9182dac2e230618b1c3f9b31"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+        "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:governance-1",
+        "trust_domain": "governance.example"
+      },
+      "asserted_at": "2026-01-01T00:06:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:enforces-1",
+      "relation": "enforces",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:enforcement-1",
+        "digest": "sha256:18ab8818246b0bb1b838e93829e14d95a0fe752af4f93ba2768ce9e18c855141"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:determination-1",
+        "digest": "sha256:eb3b9d32ae021c2d0ec915463e29ee286e9294b08a6ac30c7828734266601981"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:boundary-1",
+        "trust_domain": "boundary.example"
+      },
+      "asserted_at": "2026-01-01T00:05:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:enforces-2",
+      "relation": "enforces",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+        "digest": "sha256:768d1c1e240717d987f980849d3075bd9737c5d07eaa96d8798f553fa63a2c4c"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:determination-2",
+        "digest": "sha256:1de22068187e5f930920db41825f779dfcc4df5a9182dac2e230618b1c3f9b31"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:boundary-1",
+        "trust_domain": "boundary.example"
+      },
+      "asserted_at": "2026-01-01T00:06:05Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:attempts-1",
+      "relation": "attempts",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:execution-1",
+        "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+        "digest": "sha256:768d1c1e240717d987f980849d3075bd9737c5d07eaa96d8798f553fa63a2c4c"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:provider-1",
+        "trust_domain": "provider.example"
+      },
+      "asserted_at": "2026-01-01T00:06:20Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:observes-1",
+      "relation": "observes",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:observation-1",
+        "digest": "sha256:437f9ba7ddd7e8c4a34f77b0e0262882e10eaaa9093d88387273214870145111"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:execution-1",
+        "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:sink-reader-1",
+        "trust_domain": "sink.example"
+      },
+      "asserted_at": "2026-01-01T00:10:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:observes-2",
+      "relation": "observes",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:observation-2",
+        "digest": "sha256:5352e066f2be9e78d0fb7bf3c4a59d83b8235aa9aab4490ee64eb36ca04602f4"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:execution-1",
+        "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:affected-party-1",
+        "trust_domain": "people.example"
+      },
+      "asserted_at": "2026-01-01T00:20:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:observes-3",
+      "relation": "observes",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:observation-3",
+        "digest": "sha256:1b5b9d143314f5045e8f7a461ba780bfd421141cab8bafaa9a6661df06b20405"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:execution-1",
+        "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:affected-party-1",
+        "trust_domain": "people.example"
+      },
+      "asserted_at": "2026-01-01T00:25:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-1",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+        "digest": "sha256:95d5060aa139f6a9223f54d4f630bc4489a527a9ada4490eae5de76d91374a7b"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+        "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:06:30Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-2",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+        "digest": "sha256:95d5060aa139f6a9223f54d4f630bc4489a527a9ada4490eae5de76d91374a7b"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:determination-2",
+        "digest": "sha256:1de22068187e5f930920db41825f779dfcc4df5a9182dac2e230618b1c3f9b31"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:06:30Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-3",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+        "digest": "sha256:95d5060aa139f6a9223f54d4f630bc4489a527a9ada4490eae5de76d91374a7b"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+        "digest": "sha256:768d1c1e240717d987f980849d3075bd9737c5d07eaa96d8798f553fa63a2c4c"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:06:30Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-4",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+        "digest": "sha256:95d5060aa139f6a9223f54d4f630bc4489a527a9ada4490eae5de76d91374a7b"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:execution-1",
+        "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:06:30Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-5",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+        "digest": "sha256:ca452e03a242f4940fe8ac964c6615ee2a34b4bab4a7b86960a95ed088ad4798"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:proposal-1",
+        "digest": "sha256:b7868acdd8d7ac7cc300a00917cc77686834b7d4c34d4a2d99d5fb79f38b76e3"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:30:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-6",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+        "digest": "sha256:ca452e03a242f4940fe8ac964c6615ee2a34b4bab4a7b86960a95ed088ad4798"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:determination-2",
+        "digest": "sha256:1de22068187e5f930920db41825f779dfcc4df5a9182dac2e230618b1c3f9b31"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:30:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-7",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+        "digest": "sha256:ca452e03a242f4940fe8ac964c6615ee2a34b4bab4a7b86960a95ed088ad4798"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:enforcement-2",
+        "digest": "sha256:768d1c1e240717d987f980849d3075bd9737c5d07eaa96d8798f553fa63a2c4c"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:30:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-8",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+        "digest": "sha256:ca452e03a242f4940fe8ac964c6615ee2a34b4bab4a7b86960a95ed088ad4798"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:execution-1",
+        "digest": "sha256:f19673b7c4afd92ccc275dc1df9e2e919fd8109cc270adda437575d7a5854c69"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:30:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-9",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+        "digest": "sha256:ca452e03a242f4940fe8ac964c6615ee2a34b4bab4a7b86960a95ed088ad4798"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:observation-1",
+        "digest": "sha256:437f9ba7ddd7e8c4a34f77b0e0262882e10eaaa9093d88387273214870145111"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:30:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-10",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+        "digest": "sha256:ca452e03a242f4940fe8ac964c6615ee2a34b4bab4a7b86960a95ed088ad4798"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:observation-2",
+        "digest": "sha256:5352e066f2be9e78d0fb7bf3c4a59d83b8235aa9aab4490ee64eb36ca04602f4"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:30:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:reconciles-11",
+      "relation": "reconciles",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+        "digest": "sha256:ca452e03a242f4940fe8ac964c6615ee2a34b4bab4a7b86960a95ed088ad4798"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:observation-3",
+        "digest": "sha256:1b5b9d143314f5045e8f7a461ba780bfd421141cab8bafaa9a6661df06b20405"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:30:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    },
+    {
+      "link_id": "urn:example:csoai-synthetic:link:supersedes-1",
+      "relation": "supersedes",
+      "source": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-2",
+        "digest": "sha256:ca452e03a242f4940fe8ac964c6615ee2a34b4bab4a7b86960a95ed088ad4798"
+      },
+      "target": {
+        "record_id": "urn:example:csoai-synthetic:record:reconciliation-1",
+        "digest": "sha256:95d5060aa139f6a9223f54d4f630bc4489a527a9ada4490eae5de76d91374a7b"
+      },
+      "asserted_by": {
+        "id": "urn:example:csoai-synthetic:principal:reconciler-1",
+        "trust_domain": "review.example"
+      },
+      "asserted_at": "2026-01-01T00:30:00Z",
+      "schema_id": "urn:example:csoai-synthetic:schema:lifecycle-link:1",
+      "canonicalization_id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+      "integrity": {
+        "status": "insufficient_evidence",
+        "method": "sha-256 digest under the declared local rule; no signature"
+      }
+    }
+  ],
+  "evaluation_contract": {
+    "property_set_id": "safe-galc/0.1/full-lifecycle",
+    "mandatory_properties": [
+      "component_integrity",
+      "proposal_binding",
+      "authority_validity",
+      "determination_validity",
+      "enforcement_binding",
+      "execution_binding",
+      "consequence_binding",
+      "replay_resistance"
+    ],
+    "aggregation_rule_id": "safe-galc/0.1/mandatory-precedence",
+    "aggregation_rule_version": "1",
+    "verifier_method_id": "urn:example:csoai-synthetic:method:no-verifier-run",
+    "verifier_method_version": "0",
+    "independence": {
+      "status": "not_claimed",
+      "basis": [
+        "No verifier was run on this fixture."
+      ]
+    }
+  },
+  "limitations": [
+    "Synthetic. Every record, identifier, time, state, approval, person and digest input is invented.",
+    "Scenario input only. It carries no evaluations and no overall_result because no verifier was run.",
+    "Digests are real SHA-256 values under a local fixture rule. They show the references are consistent, nothing more."
+  ],
+  "extensions": {
+    "csoai_synthetic": {
+      "fixture_id": "CSOAI-SAFE-GALC-RECORD-LINK-002",
+      "source": "synthetic only",
+      "record_digest_covers": "the record's data member",
+      "verification_context_ref": {
+        "id": "urn:example:csoai-synthetic:verification-context:record-link-002",
+        "digest": "sha256:1781808d5c16e824712a56bf485725f166b070cf6cae2bd260436bdcf8bb3957"
+      }
+    }
+  }
+}

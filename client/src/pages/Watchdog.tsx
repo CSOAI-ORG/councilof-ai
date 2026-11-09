@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
 import { verifyRecord } from "@/lib/recordVerify";
-// Shared with the server-side router (#3141): 4xx/5xx/timeout is UNCHECKABLE, never FAILED.
-import { retrievalState } from "../../../functions/_lib/watchdogRoute";
+import WorkingGroups from "@/components/WorkingGroups";
+import { readWatchdogJson as getJson } from "@/lib/watchdogRead";
 import {
   CORRECTIONS_URL,
   REGISTER_URL,
@@ -14,8 +14,6 @@ import {
   libraryHref,
   parseJourney,
   registryPath,
-  retrievalFailed,
-  sha256Hex,
   sidecarPath,
   signatureResult,
   summariseRegister,
@@ -39,23 +37,6 @@ import { NLM_CHECKED_ON, NLM_IDS, NLM_NAMED, NLM_SOURCE, ZENODO_REDIRECTED, ZENO
 const FOCUS = "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 const TOMBSTONES = { checkedOn: NLM_CHECKED_ON, ids: ZENODO_TOMBSTONED };
 
-async function getJson(url: string): Promise<Retrieval<{ json: unknown; text: string }>> {
-  const fetchedAt = new Date().toISOString();
-  try {
-    const res = await fetch(url, { cache: "no-store", headers: { accept: "application/json" } });
-    if (retrievalState(res.status) === "UNCHECKABLE" || !res.ok) return retrievalFailed(`HTTP ${res.status}`, fetchedAt, res.status);
-    const text = await res.text();
-    try {
-      return { state: "OK", value: { json: JSON.parse(text), text }, fetchedAt, status: res.status, sha256: await sha256Hex(text) };
-    } catch {
-      return retrievalFailed("The response was not JSON", fetchedAt, res.status);
-    }
-  } catch (e) {
-    // A network error or timeout maps through the same helper: retrievalState(null, true) is UNCHECKABLE.
-    return retrievalFailed(e instanceof Error ? e.message : "Network error", fetchedAt);
-  }
-}
-
 function Chip({ word }: { word: string }) {
   return <span className="inline-flex items-center rounded-md border border-border px-2 py-0.5 font-mono text-xs font-semibold text-foreground">{word}</span>;
 }
@@ -76,6 +57,7 @@ export default function Watchdog() {
     return () => window.removeEventListener("popstate", on);
   }, []);
   const params = useMemo(() => parseJourney(search), [search]);
+  const showGroups = new URLSearchParams(search).get("view") === "groups";
   const go = useCallback((href: string) => {
     window.history.pushState(null, "", href);
     setSearch(window.location.search);
@@ -92,11 +74,14 @@ export default function Watchdog() {
         <Link href="/dashboard" className={`inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm font-semibold ${FOCUS}`}>
           Ask a question
         </Link>
-        <button type="button" onClick={() => go("/watchdog/")} aria-pressed={params.view === "claims"} className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold ${FOCUS}`}>
+        <button type="button" onClick={() => go("/watchdog/")} aria-pressed={!showGroups && params.view === "claims"} className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold ${FOCUS}`}>
           Claims
         </button>
         <button type="button" onClick={() => go(libraryHref())} aria-pressed={params.view === "library"} className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold ${FOCUS}`} data-testid="watchdog-library-tab">
           Research library
+        </button>
+        <button type="button" onClick={() => go("/watchdog/?view=groups")} aria-pressed={showGroups} className={`min-h-11 rounded-lg border border-border px-3 text-sm font-semibold ${FOCUS}`}>
+          Working groups
         </button>
         <Link href="/board" className={`inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm ${FOCUS}`}>
           Live board
@@ -105,7 +90,7 @@ export default function Watchdog() {
           Corrections
         </Link>
       </div>
-      {params.view === "library" ? <Library /> : <Claims params={params} go={go} />}
+      {showGroups ? <WorkingGroups /> : params.view === "library" ? <Library /> : <Claims params={params} go={go} />}
     </div>
   );
 }
@@ -116,16 +101,18 @@ function Claims({ params, go }: { params: ReturnType<typeof parseJourney>; go: (
 
   useEffect(() => {
     let off = false;
-    getJson(REGISTER_URL).then(async (r) => {
+    const controller = new AbortController();
+    getJson(REGISTER_URL, controller.signal).then(async (r) => {
       if (off) return;
       setRegister(r);
       if (r.state !== "OK") return;
       const live = summariseRegister(r.value.json).live;
-      const got = await Promise.all(live.map(async (l) => [l.registryId, await getJson(l.url)] as const));
+      const got = await Promise.all(live.map(async (l) => [l.registryId, await getJson(l.url, controller.signal)] as const));
       if (!off) setRegistries(Object.fromEntries(got));
     });
     return () => {
       off = true;
+      controller.abort();
     };
   }, []);
 
@@ -141,7 +128,7 @@ function Claims({ params, go }: { params: ReturnType<typeof parseJourney>; go: (
     return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   }, [claims]);
 
-  if (params.registry && params.claim) return <ClaimDetail registryId={params.registry} claimId={params.claim} go={go} />;
+  if (params.registry && params.claim) return <ClaimDetail key={params.registry + ":" + params.claim} registryId={params.registry} claimId={params.claim} go={go} />;
 
   return (
     <section className="mt-8" aria-labelledby="wd-claims">
@@ -196,35 +183,66 @@ function ClaimDetail({ registryId, claimId, go }: { registryId: string; claimId:
   const [results, setResults] = useState<ThreeResults | null>(null);
   const [busy, setBusy] = useState(false);
   const path = registryPath(registryId);
+  const revision = useRef(0);
+  const reads = useRef<AbortController | null>(null);
 
   const load = useCallback(() => {
+    const current = ++revision.current;
+    reads.current?.abort();
+    const controller = new AbortController();
+    reads.current = controller;
     setResults(null);
-    if (path) getJson(path).then(setReg);
-    getJson(CORRECTIONS_URL).then(setCorr);
+    setBusy(false);
+    setReg(null);
+    setCorr(null);
+    if (path) getJson(path, controller.signal).then((r) => {
+      if (revision.current === current) setReg(r);
+    });
+    getJson(CORRECTIONS_URL, controller.signal).then((r) => {
+      if (revision.current === current) setCorr(r);
+    });
   }, [path]);
-  useEffect(load, [load]);
+  useEffect(() => {
+    load();
+    return () => {
+      ++revision.current;
+      reads.current?.abort();
+    };
+  }, [load]);
 
   const claim = reg?.state === "OK" ? claimsFromRegistry(reg.value.json).find((c) => c.claimId === claimId) ?? null : null;
 
   const verify = async () => {
     if (!claim || reg?.state !== "OK") return;
+    const current = revision.current;
     setBusy(true);
-    const inclusion = await verifyInclusion(claim.inclusion);
-    const side = sidecarPath(registryId);
-    const sc = side ? await getJson(side) : null;
-    let sigState: string | null = null;
-    let pinned: string | null = null;
-    let reasons: string[] = [];
-    if (sc?.state === "OK") {
-      const v = await verifyRecord(sc.value.text);
-      sigState = v.state;
-      reasons = v.reasons;
-      const p = (sc.value.json as { payload?: { artifact?: { sha256?: unknown } } })?.payload?.artifact?.sha256;
-      pinned = typeof p === "string" ? p : null;
-    } else sigState = "UNCHECKABLE";
-    const signature = sc?.state === "OK" ? signatureResult(sigState, pinned, reg.sha256 ?? null, reasons) : { result: "UNCHECKABLE" as const, detail: `The signed sidecar could not be read (${sc ? sc.reason : "no path"}).` };
-    setResults({ signature, inclusion, conclusion: conclusionResult(claim) });
-    setBusy(false);
+    setResults(null);
+    let inclusion: ThreeResults["inclusion"] = { result: "UNCHECKABLE", detail: "Root inclusion could not be checked in this browser." };
+    let signature: ThreeResults["signature"] = { result: "UNCHECKABLE", detail: "The signature could not be checked in this browser." };
+    try {
+      try {
+        inclusion = await verifyInclusion(claim.inclusion);
+      } catch {
+        // A verifier exception is not an invalid proof or a finding about the claim.
+      }
+      if (revision.current !== current) return;
+      const side = sidecarPath(registryId);
+      const sc = side ? await getJson(side, reads.current?.signal) : null;
+      if (sc?.state === "OK") {
+        const v = await verifyRecord(sc.value.text);
+        const p = (sc.value.json as { payload?: { artifact?: { sha256?: unknown } } })?.payload?.artifact?.sha256;
+        signature = signatureResult(v.state, typeof p === "string" ? p : null, reg.sha256 ?? null, v.reasons);
+      } else {
+        signature = { result: "UNCHECKABLE", detail: "The signed sidecar could not be read (" + (sc ? sc.reason : "no path") + ")." };
+      }
+    } catch {
+      // Keep any independently completed inclusion result and allow a retry.
+    } finally {
+      if (revision.current === current) {
+        setResults({ signature, inclusion, conclusion: conclusionResult(claim) });
+        setBusy(false);
+      }
+    }
   };
 
   return (

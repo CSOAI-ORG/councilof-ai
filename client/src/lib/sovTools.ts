@@ -1,3 +1,4 @@
+import { purchaseSessionSnapshot, samePurchaseSession } from "./buyerPurchases";
 // sovTools — the bridge from the front end to the published MCP server.
 //
 // WHAT WAS WRONG (found by operating it, 2026-08-26): every call went to POST /api/mcp,
@@ -41,27 +42,47 @@ export type ToolListing =
 /**
  * tools/list on one door. The default is /mcp (the free tools plus the paid ones); "/mcp/free" is
  * the door /connect installs, so a count shown next to an install line is read from that door.
+ *
+ * 2026-11-02: results are cached per door for 60 s. Three surfaces ask for the same listing on one
+ * dashboard load (the workspace composer, the tools pane, the status strip) — three identical
+ * JSON-RPC POSTs for data that changes only at deploy time. The cache holds BOTH states: a door
+ * that answered "unreachable" is retried after the TTL, not on every render.
  */
+const LIST_CACHE_TTL_MS = 60_000;
+const listCache = new Map<McpDoor, { at: number; listing: ToolListing }>();
+
 export async function listTools(door: McpDoor = "/mcp"): Promise<ToolListing> {
+  const hit = listCache.get(door);
+  if (hit && Date.now() - hit.at < LIST_CACHE_TTL_MS) return hit.listing;
   try {
     const d = await mcpRpc(
       "tools/list",
       {},
       { allowPublicCatalogFallback: true, door },
     );
-    if (d && d.error) return { state: "unreachable", reason: String(d.error.message || "the server returned an error") };
-    const tools = d && d.result && d.result.tools;
-    if (!Array.isArray(tools)) return { state: "unreachable", reason: "the reply carried no tools list" };
-    return { state: "ok", tools };
+    let listing: ToolListing;
+    if (d && d.error) listing = { state: "unreachable", reason: String(d.error.message || "the server returned an error") };
+    else {
+      const tools = d && d.result && d.result.tools;
+      if (!Array.isArray(tools)) listing = { state: "unreachable", reason: "the reply carried no tools list" };
+      else listing = { state: "ok", tools };
+    }
+    listCache.set(door, { at: Date.now(), listing });
+    return listing;
   } catch (e) {
-    return { state: "unreachable", reason: e instanceof Error ? e.message : "the request failed" };
+    const listing: ToolListing = { state: "unreachable", reason: e instanceof Error ? e.message : "the request failed" };
+    listCache.set(door, { at: Date.now(), listing });
+    return listing;
   }
 }
 
 // Actually run a tool and get a real, governed result back.
 export async function callTool(name: string, args: Record<string, any>): Promise<ToolResult> {
   try {
-    const d = await mcpRpc("tools/call", { name, arguments: args });
+    const session=purchaseSessionSnapshot();
+    if(!session.readable && typeof args.x_payment==="string" && args.x_payment)throw new Error("Session storage unavailable before payment dispatch");
+    const d = await mcpRpc("tools/call",{name,arguments:args},{...(session.readable&&session.token?{buyerToken:session.token}:{})});
+    if(session.token&&!samePurchaseSession(session.token))return {ok:false,state:"unreachable",text:"The session changed; this result was discarded. Inspect the original account\'s saved purchases before signing or retrying."};
     if (d && d.error) return { ok: false, state: "unreachable", text: "The MCP runtime declined: " + (d.error.message || "unknown"), raw: d };
     const content = Array.isArray(d?.result?.content) ? d.result.content : [];
     const text = content.map((c: any) => c && c.text).filter(Boolean).join("\n") || JSON.stringify(d && d.result ? d.result : d);
@@ -104,11 +125,24 @@ export async function sealArtifact(artifact: string): Promise<ToolResult> {
   return { ok: false, text: "Seal unavailable." };
 }
 
-// Friendly labels for the known live tools.
+// Friendly labels for the well-known fleet tools, used by ToolRunner as display sugar.
+// 2026-11-02: replaced the five stale meok_* entries — no tool by those names has been served by
+// the doors since the honesty purge, so the table could never match and every runner fell back to
+// the raw name. This table stays DISPLAY ONLY: the fleet itself is whatever tools/list returns,
+// and ToolRunner falls back to the raw name for anything not listed here. It must never grow into
+// a hand-typed catalogue (the mcpTools.ts rule: a typed tool list is a number typed by hand).
 export const TOOL_META: Record<string, { glyph: string; label: string }> = {
-  meok_govern: { glyph: "⚖", label: "What governs this?" },
-  meok_sign: { glyph: "✶", label: "Seal to Layer 0" },
-  meok_verify: { glyph: "✓", label: "Verify a seal" },
-  meok_talk: { glyph: "◉", label: "Ask the Council" },
-  meok_agent_card: { glyph: "🪪", label: "Agent card" },
+  board_totals: { glyph: "▦", label: "Live board totals" },
+  get_axis: { glyph: "◫", label: "One axis in full" },
+  verify_card: { glyph: "✓", label: "Verify a record" },
+  verify_inclusion: { glyph: "⊙", label: "Prove root inclusion" },
+  get_root: { glyph: "⚿", label: "Read the public root" },
+  get_card: { glyph: "▤", label: "Fetch one card" },
+  list_cards: { glyph: "☰", label: "List signed cards" },
+  x402_trust: { glyph: "◈", label: "x402 door census" },
+  mcp_trust: { glyph: "◉", label: "MCP handshake census" },
+  route: { glyph: "→", label: "Route a task" },
+  measurement_index: { glyph: "▥", label: "Capsule index" },
+  server_evidence: { glyph: "▦", label: "Per-endpoint evidence" },
+  evidence_bundle_preview: { glyph: "❐", label: "Evidence bundle preview" },
 };

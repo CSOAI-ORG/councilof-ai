@@ -8,7 +8,7 @@
   "not_a": "grade, rank, conformity mark, or legal determination. Measurement, not certification. Verification is free."
  },
  "generated_from": {
-  "slots": "functions/api/_gspc_axes_{a,b,c,fin}.ts — executed, the same modules GET /api/gspc imports",
+  "slots": "functions/api/_gspc_axes_{a,b,c,fin,d}.ts — executed, the same modules GET /api/gspc imports",
   "cards": "public/signed/card-matrix.json and the verified card file behind every cell",
   "crosswalk": "client/src/data/regulator-crosswalk.json (pointers + board_axis join)",
   "roots": "public/interop/card-root-*.json leaves",
@@ -17,10 +17,11 @@
  "as_of": "2026-08-19T09:24:39.174226+00:00",
  "as_of_field": "the newest body.created stamp across the cards — when the last card was measured, never when this file was generated",
  "counts": {
-  "axes": 23,
+  "axes": 34,
   "axes_by_kind": {
    "model-comparison": 14,
-   "deterministic-facts": 9
+   "deterministic-facts": 9,
+   "measured-subject": 11
   },
   "axes_with_subject_reports": 9,
   "subjects_in_corpus": 64,
@@ -870,6 +871,215 @@
    },
    "subject_reports": "none",
    "reason": "measures issuers, series or sources rather than model subjects; the signed card corpus holds no per-subject cell for this axis"
+  },
+  {
+   "axis": "lab-practice",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+   "task": "does an AI lab publish its evaluations, safety framework and incident reports",
+   "status": "MEASURED",
+   "n": 37,
+   "n_unit": "subjects in the frozen frame",
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
+  },
+  {
+   "axis": "company-practice",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+   "task": "does a non-lab AI company publish safety, evaluation, incident, model-card and contact material",
+   "status": "MEASURED",
+   "n": 40,
+   "n_unit": "subjects in the frozen frame",
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
+  },
+  {
+   "axis": "measurer-integrity",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+   "task": "does an evaluation organisation publish methods, test sets, attestation and a reproduction route",
+   "status": "MEASURED",
+   "n": 40,
+   "n_unit": "subjects in the frozen frame",
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
+  },
+  {
+   "axis": "harness-fidelity",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+   "task": "does an evaluation harness pin its dependencies, publish a must-fail control, isolate execution and document reproduction",
+   "status": "MEASURED",
+   "n": 36,
+   "n_unit": "subjects in the frozen frame",
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
+  },
+  {
+   "axis": "interop-conformance",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+   "task": "does an interoperability or standards group publish a schema, a wire binding, conformance vectors and a versioned spec",
+   "status": "MEASURED",
+   "n": 34,
+   "n_unit": "subjects in the frozen frame",
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
+  },
+  {
+   "axis": "humanoid-deployment",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+   "task": "does a humanoid lab publish control, safety-limit, dexterity, hardware-bus and simulation material",
+   "status": "MEASURED",
+   "n": 35,
+   "n_unit": "subjects in the frozen frame",
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
+  },
+  {
+   "axis": "regulator-transparency",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+   "task": "factual presence checks on public regulatory artefacts (guidance, consultation, enforcement, open data, contact route); no ratings",
+   "status": "MEASURED",
+   "n": 41,
+   "n_unit": "subjects in the frozen frame",
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
+  },
+  {
+   "axis": "interpretability-reproducibility",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+   "task": "does an interpretability group publish method, checkpoints, a reproducible notebook and peer-reviewed material",
+   "status": "MEASURED",
+   "n": 33,
+   "n_unit": "subjects in the frozen frame",
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
+  },
+  {
+   "axis": "claim-maintenance",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "claim-maintenance v0.2 re-read wave",
+   "task": "at each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true",
+   "status": "MEASURED",
+   "n": 174,
+   "n_unit": null,
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
+  },
+  {
+   "axis": "serving-fidelity",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+   "task": "does an inference runtime document sampling control, quantisation, KV/attention strategy, latency metrics and parallelism",
+   "status": "MEASURED",
+   "n": 38,
+   "n_unit": "subjects in the frozen frame",
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
+  },
+  {
+   "axis": "watchdog-ingest",
+   "kind": "measured-subject",
+   "family": "subject",
+   "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+   "task": "does the subject offer a third party a documented route to report a problem, with a response commitment and a machine-readable path",
+   "status": "MEASURED",
+   "n": 106,
+   "n_unit": "subjects in the frozen frame",
+   "source_axes": [],
+   "obligations": "UNMAPPED",
+   "reports": {
+    "total": 0,
+    "measured": 0,
+    "unmeasured": 0
+   },
+   "subject_reports": "none",
+   "reason": "a measured SUBJECT axis: the run measured this axis's own subject class, not model subjects, so there is no per-subject card report"
   }
  ],
  "subjects": [
@@ -5334,6 +5544,6 @@
   }
  ],
  "canonical_rule": "canonical_sha256 = sha256(canonical JSON of this object minus generated_at and canonical_sha256; keys sorted, no whitespace)",
- "generated_at": "2026-10-07T12:09:39.232Z",
- "canonical_sha256": "e364199201736a97e2ded5e0cad830d57ed20241723db9b0fb0b04c2bfeb6d7c"
+ "generated_at": "2026-08-19T09:24:39.174226+00:00",
+ "canonical_sha256": "2a1af7f5019d227e0ab1a8fb64dd96dce0cdbf4ed843a08b891d6acaeed3fb75"
 }

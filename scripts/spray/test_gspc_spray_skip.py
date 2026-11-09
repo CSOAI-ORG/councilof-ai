@@ -157,6 +157,54 @@ def test_hf_viewer_refuses_inconsistent_printed_totals():
         spray.hf_viewer_files(truth)
 
 
+def test_hf_viewer_reuses_identical_table_with_different_parquet_encoding():
+    import pyarrow.parquet as pq
+
+    truth = _viewer_truth()
+    fresh = spray.hf_viewer_files(truth)
+    table = pq.read_table(io.BytesIO(fresh["board.parquet"]))
+    alternate = io.BytesIO()
+    pq.write_table(table, alternate, compression="gzip", use_dictionary=False)
+    existing = alternate.getvalue()
+    assert existing != fresh["board.parquet"]
+    reused = spray.hf_viewer_files(truth, existing_parquet=existing)
+    assert reused["board.parquet"] == existing
+    assert reused["board.jsonl"] == fresh["board.jsonl"]
+    assert spray.hf_viewer_files(truth, existing_parquet=reused["board.parquet"]) == reused
+
+
+@pytest.mark.parametrize("change", ["value", "row_order", "column_order", "type", "metadata", "null"])
+def test_hf_viewer_does_not_reuse_a_different_table(change):
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    truth = _viewer_truth()
+    fresh = spray.hf_viewer_files(truth)
+    table = pq.read_table(io.BytesIO(fresh["board.parquet"]))
+    if change == "value":
+        rows = table.to_pylist()
+        rows[0]["status"] = "UNMEASURED"
+        table = pa.Table.from_pylist(rows, schema=table.schema)
+    elif change == "row_order":
+        table = table.take([1, 0])
+    elif change == "column_order":
+        table = table.select(list(reversed(table.schema.names)))
+    elif change == "type":
+        table = table.set_column(4, "n", table.column("n").cast(pa.int32()))
+    elif change == "metadata":
+        table = table.replace_schema_metadata({b"unreviewed": b"changed"})
+    else:
+        table = table.set_column(4, "n", pa.array([None, 4], type=pa.int64()))
+    alternate = io.BytesIO()
+    pq.write_table(table, alternate)
+    assert spray.hf_viewer_files(truth, existing_parquet=alternate.getvalue()) == fresh
+
+
+def test_hf_viewer_recovers_corrupt_parquet_without_reusing_it():
+    truth = _viewer_truth()
+    assert spray.hf_viewer_files(truth, existing_parquet=b"invalid parquet") == spray.hf_viewer_files(truth)
+
+
 def test_hf_dataset_companions_refresh_only_bounded_provenance_and_inventory():
     tr = _viewer_truth()
     paragraph = "The default viewer files (`board.parquet` and `board.jsonl`) were old."
@@ -200,7 +248,7 @@ def test_hf_dataset_card_removes_stale_counts_and_alias_inventory():
                        for path in changed).encode()
     files = spray.hf_dataset_companions(readme, manifest, tr, changed)
     text = files["README.md"].decode()
-    assert "2 declared slots and 2 measured axes" in text
+    assert "2 declared slots, 2 measured and 0 unmeasured axes" in text
     assert "23 declared slots" not in text
     assert f"| `board.json` | {len(tr['board_bytes'])} |" in text
     assert f"| `living-board.json` | {len(tr['board_bytes'])} |" in text
@@ -305,7 +353,7 @@ def _truth():
 def test_kaggle_page_text_is_derived_from_the_truth_only():
     subtitle, description = spray.kaggle_page_text(_truth())
     assert "2026-09-14T03:12:56Z" in subtitle
-    assert description.startswith("22 axes measured · not a certificate.")
+    assert "\n22 axes measured · not a certificate.\n" in description
     assert description.endswith("spray-fingerprint: " + "9" * 64)
     assert not spray.BANNED.search(description)
 
@@ -348,6 +396,8 @@ def test_spray_follows_the_deploy_workflow_by_its_exact_name():
     coupling, and pin the guard that a cancelled or failed deploy — which moved nothing at the apex —
     is skipped."""
     deploy_name = _workflow_name(WORKFLOWS / "deploy.yml")
+    # GitHub workflow filters are globs; JSON supplies YAML double-quote escaping.
+    deploy_filter = json.dumps("".join("\\" + c if c in "\\*?+![]" else c for c in deploy_name))
     # Every workflow whose workflow_run trigger follows the deploy by its `name:` string — a rename
     # of deploy.yml silently stops all of them (2026-09-15: spray; 2026-09-20 audit found the other
     # four had been dead since the 'gated production branch' rename). Pin them all.
@@ -361,9 +411,10 @@ def test_spray_follows_the_deploy_workflow_by_its_exact_name():
     for follower in followers:
         text = (WORKFLOWS / follower).read_text(encoding="utf-8")
         assert "workflow_run:" in text, follower
-        assert f'- "{deploy_name}"' in text or f'workflows: ["{deploy_name}"]' in text, follower
-        # Failing control: the coupling is byte-exact — one extra character and the trigger is a miss.
-        assert f'- "{deploy_name}x"' not in text, follower
+        assert f'- {deploy_filter}' in text or f'workflows: [{deploy_filter}]' in text, follower
+        # An unescaped producer name is not a literal workflow filter.
+        assert f'- {json.dumps(deploy_name)}' not in text, follower
+        assert f'workflows: [{json.dumps(deploy_name)}]' not in text, follower
     spray_text = (WORKFLOWS / "gspc-spray.yml").read_text(encoding="utf-8")
     assert "github.event.workflow_run.conclusion == 'success'" in spray_text
     assert _workflow_name(WORKFLOWS / "gspc-spray.yml") == "gspc-spray"

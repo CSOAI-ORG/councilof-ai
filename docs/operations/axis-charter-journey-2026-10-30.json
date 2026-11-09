@@ -1,0 +1,324 @@
+{
+  "state": "PASS",
+  "scope": "Actual component + production CSS + actual GET and HITL handlers on loopback; fixture storage and captured board; not a deployed-site or genuine-human acceptance",
+  "source_sha256": {
+    "scripts/axis-specialists.browser.mjs": "315b405aecf01fc3ee21b1d385478b9976ef79b2d95d4459dae85c3638e58904",
+    "scripts/axis-specialists.mjs": "24a1da358ff2d2e69b0af84dcf9ce6d1fd0991415a063d1009b9a465381c4261",
+    "client/src/components/gspc/CouncilAxisSpecialistPane.tsx": "30988537e9bc07273a0f1646838d6dc865e4ceaa22161ca8ca396eaf66be63ed",
+    "client/src/components/gspc/AxisReviewPanel.tsx": "5ee2cab6db9b3a72b9af66e486bd62a8d3b6a949b7204ee64ccdc427bfe2419d",
+    "client/src/lib/axisSpecialistReview.ts": "eb2a76639a9e5e4e7aa1c8fda676dc119919d1b185b708ec5b9b4107c919571c",
+    "client/src/components/HitlConsole.tsx": "37a4462c459015d3596a7e03f912817db4a18f08345b0a4126219f13cefcf7d5",
+    "functions/api/hitl.ts": "f8ada2a845beca60443b5669eeb13d4186109b46ed116816b8e041b13e15d62f",
+    "functions/api/_hitl.ts": "4fe215eba4ecfd5f72a483da9422c8355f0a550e3a7541fa7b34df08ddd374d6",
+    "public/axis-specialists/bundle.json": "572d2ce0b31d6b98a46ef0f8059f008f2d44a999dfcc5ae3470584f4a22879b1",
+    "public/axis-specialists/index.json": "63b639ee9185a28a7ee0d1c9101a17b02c8ba7bc6062e0d2213567be76e1a461",
+    "council-os/axis-specialists/charter-map.json": "73a793ba1c0f99d0a6b5fd911f7288464d83cf3a20e5921320ec2a2d34c60f76",
+    "public/.well-known/constitutional-harness.json": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e"
+  },
+  "checks": [
+    {
+      "name": "measured audit labels declarations and human review honestly",
+      "state": "PASS"
+    },
+    {
+      "name": "all 33 axes render their own audit without fallback",
+      "state": "PASS"
+    },
+    {
+      "name": "unmeasured axis retains measurement gap",
+      "state": "PASS"
+    },
+    {
+      "name": "bad-count refuses evidence without crashing",
+      "state": "PASS"
+    },
+    {
+      "name": "wrong-axis refuses evidence without crashing",
+      "state": "PASS"
+    },
+    {
+      "name": "unknown-state refuses evidence without crashing",
+      "state": "PASS"
+    },
+    {
+      "name": "forged-proposal refuses evidence without crashing",
+      "state": "PASS"
+    },
+    {
+      "name": "503 retry restores the requested axis",
+      "state": "PASS"
+    },
+    {
+      "name": "late previous-axis response cannot replace current selection",
+      "state": "PASS"
+    },
+    {
+      "name": "mobile layout fits and exposes HOLD",
+      "state": "PASS"
+    },
+    {
+      "name": "browser has no page errors or write requests",
+      "state": "PASS"
+    },
+    {
+      "name": "explicit review handoff uses the actual handler and existing console",
+      "state": "PASS"
+    },
+    {
+      "name": "a stateless response is not labelled recorded",
+      "state": "PASS"
+    },
+    {
+      "name": "unconfirmed writes remain locked across axis selection with no retry",
+      "state": "PASS"
+    },
+    {
+      "name": "a changed review response never enters the decision console",
+      "state": "PASS"
+    },
+    {
+      "name": "handoff never sends a decision or creates execution authority",
+      "state": "PASS"
+    }
+  ],
+  "axes": 33,
+  "page_errors": [],
+  "api_requests": [
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/governance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/safety"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/provenance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/continuity"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/conformance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/openness"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/machinery-conformity"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/care"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/cross-reality"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/detector-interop"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/art5-safeguard"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/swarm"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/affect"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/jail"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/effect-binding"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/provenance-controls"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/reserve-attestation"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/regulatory-framework"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/distribution-integrity"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/custody-disclosure"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/ai-adoption-components"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/labour-components"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/humanoid-labour-index"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/lab-practice"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/company-practice"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/measurer-integrity"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/harness-fidelity"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/interop-conformance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/humanoid-deployment"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/regulator-transparency"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/interpretability-reproducibility"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/claim-maintenance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/serving-fidelity"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/lab-practice"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/governance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/governance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/governance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/governance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/governance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/governance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/safety"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/governance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/safety"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/governance"
+    },
+    {
+      "method": "POST",
+      "path": "/api/hitl/challenge"
+    },
+    {
+      "method": "GET",
+      "path": "/api/hitl/record"
+    },
+    {
+      "method": "GET",
+      "path": "/api/hitl"
+    },
+    {
+      "method": "GET",
+      "path": "/api/hitl/challenges"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/safety"
+    },
+    {
+      "method": "POST",
+      "path": "/api/hitl/challenge"
+    },
+    {
+      "method": "GET",
+      "path": "/api/hitl/record"
+    },
+    {
+      "method": "GET",
+      "path": "/api/hitl"
+    },
+    {
+      "method": "GET",
+      "path": "/api/hitl/challenges"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/provenance"
+    },
+    {
+      "method": "POST",
+      "path": "/api/hitl/challenge"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/safety"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/provenance"
+    },
+    {
+      "method": "GET",
+      "path": "/api/axis-specialists/continuity"
+    },
+    {
+      "method": "POST",
+      "path": "/api/hitl/challenge"
+    }
+  ]
+}

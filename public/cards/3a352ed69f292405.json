@@ -1,0 +1,119 @@
+{
+  "card": {
+    "as_of": "2026-10-29T11:03:05Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:VBILL:bsc",
+      "symbol": "VBILL",
+      "product": "VanEck Treasury Fund",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x14d72634328c4d03bba184a48081df65f1911279",
+      "block": 130461814,
+      "block_hash": "0xddbb71cafc71c1021c38c94e225670e55588e2bd7feb6b5935f6b10f86e30918",
+      "block_time": "2026-10-29T11:03:05Z",
+      "rpc": "bsc-rpc.publicnode.com",
+      "checked": {
+        "name": "VanEck Treasury Fund",
+        "symbol": "VBILL",
+        "decimals": 6,
+        "totalSupply": 21652713810000,
+        "isPaused": false,
+        "owner": "0x59c1eacec450c57dcb9b8725d0f96635c2b676ee",
+        "eip1967_implementation": "0xcd01d1c5c78ad428cd01913d4664c20ed1e61923"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+      ],
+      "attests": "historical permission state at block 130461814 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3a352ed69f292405d524ac66c168accb948ae443d8020a28db57aab6c57c86c1",
+    "sig_ed25519": "7e8d0ac61341a76c7e9cbdd3e98b8929157221f6288ce1302e3ec14c3586b52614ec3a499ede879857fef6fa983efa3fa051391c85d87e41bb4dbf0c78465b0c",
+    "source_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://bscscan.com/token/0x14d72634328c4d03bba184a48081df65f1911279"
+    ],
+    "subject": "evm:VBILL:bsc permission state at block 130461814",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:VBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "385914aef63743c19ada07e7317e54a26cd570defc8757d0a166d6143f0ea7ff",
+    "3196c88e53e945a9c0402cf5dead310625a56d5a2acca0a8a1ce9500afb38418",
+    "7f1b05fba95975ff8e056903262af5cbd7a9b052da5ccf0ff1ed7f37e2c1e6cb",
+    "d3a6813156e0b8ad3665b4722481aba2bbb458e456256da7235bea5ec5aa71dd",
+    "b1a0b0ff0c4a1e72d21a1574ffafd858189a32e20e5d39ff96a8b5b8fe969a7d",
+    "ce7ccc6ab4a16988bc879502e68b07fe4575b877311b71adf170a851ebb3f5ce",
+    "44666dada14ccc082f9bd716911d1ebda6d69d45f1ec4e7ca66ba9ea01e32c34",
+    "9a5a409e85a1cc9e83a06f77730199b0170e081e682927c9e7d6cfc8b2b9d8b9",
+    "c69c5af55f87958987682fc776f123667a259421cb93f9e6e30a2fa5e78de2db"
+  ]
+}

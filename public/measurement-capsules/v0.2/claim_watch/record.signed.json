@@ -5,26 +5,26 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/2026-10-01/claim_watch/record.json",
-   "sha256": "1647b07db74e3b3569367c4423d80fd7b42c52ae287fb0078786e7acc12f9ce2",
+   "path": "measurement-capsules/v0.2/2026-10-25/claim_watch/record.json",
+   "sha256": "e29a804a9473ff279056e7c8b0e0828f974de41585023a0d0d27ae4d7517d3b4",
    "schema": "csoai.measurement-capsule-batch/0.2",
-   "as_of": "2026-10-01T08:10:18Z"
+   "as_of": "2026-10-25T08:30:27Z"
   },
-  "merkle_root": "5e6440b6f9fbccdc2dca66aff3c79c02f649ccb56cd795d0f043b651dd50c32e",
+  "merkle_root": "5309370a2877655b5a8372c6e48cee47004d10ed11dfa9bd932dec8edcad6ef7",
   "n_capsules": 1,
   "states": {
-   "QUARANTINED": 1
+   "UNCONFIRMED": 1
   },
-  "capsules_sha256": "70451eda2d8166b9a61084f5c01b8ff57210a7016d97ab0320b4c730f2b827ed",
+  "capsules_sha256": "9debd4942cf745d695542b15a60ab8cbd556c9a00cbfde3d99ba837ed560968e",
   "adapter": "claim_watch",
   "kind": "measurement.claim_watch"
  },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "610c40276536196c5174b411937a007d59cbd25a1bcec9349daaf2ca37f1c68279fa9115b6b497be82da47ae6a46fbf01988d61e5f9d06a89ad047c3fc2bcf07",
-  "payload_sha256": "758ff0c1d99aba0c67fa1c9af8ccbc4257bf3281a93d08bfa3f15f269d20c3d8",
-  "signed_at": "2026-10-01T08:10:21.594Z"
+  "sig_ed25519": "25bc1896a1cb0e47a4f00c888f145055f0e9977529240832f54eeb4ed5d9f1650e552e725297027be3f0701edc2a65988c5d89d4ef43dd8acd206f6adb8e1907",
+  "payload_sha256": "8e0e81fe59e3d83de9b6aa2e618143c6be85f39ae97e9977335aa69ac402408a",
+  "signed_at": "2026-10-25T08:30:28.685Z"
  },
  "local_verification": {
   "result": "VERIFIES",

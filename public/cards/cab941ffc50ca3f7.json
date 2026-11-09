@@ -1,0 +1,119 @@
+{
+  "card": {
+    "as_of": "2026-10-30T05:10:40Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "as_of": "2026-10-30T05:10:40Z",
+      "count_grammar": "n counts SOURCES PROBED. REACHABLE, UNCHECKABLE and UNREACHABLE are different facts and are never summed into one figure.",
+      "kind": "csoai.watchdog.intake/0.1",
+      "not_a_grade": true,
+      "published_gaps": 7,
+      "reachable": 18,
+      "routing_human_decision": "HOLD",
+      "routing_rows": 43,
+      "run_id": "20261030T051040Z",
+      "source_states": {
+        "atlas-current": "REACHABLE",
+        "atlas-manifest": "REACHABLE",
+        "cisa-kev": "REACHABLE",
+        "depsdev": "REACHABLE",
+        "ghsa-api": "REACHABLE",
+        "go-vuln": "REACHABLE",
+        "hf-models": "REACHABLE",
+        "in-toto": "REACHABLE",
+        "mitre-cve": "REACHABLE",
+        "nvd-cve-api": "REACHABLE",
+        "openrouter": "REACHABLE",
+        "openssf-scorecard": "REACHABLE",
+        "osv-query": "REACHABLE",
+        "owasp-asvs": "REACHABLE",
+        "owasp-llm-top10": "REACHABLE",
+        "rekor-log": "REACHABLE",
+        "safe-repo": "REACHABLE",
+        "slsa": "REACHABLE"
+      },
+      "sources_probed": 18,
+      "state": "PROBED",
+      "uncheckable": 0,
+      "unreachable": 0
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "cab941ffc50ca3f75a2103d1ed1678a9b46a0197fc5a25ab3de8095ff2256d91",
+    "sig_ed25519": "6dce305b5e0eba4d45bedd9a48422f1b2e6e72066aa105e9158a31d5c2d3bd7c97ad0bfd507d1ad7452e13cb725f1eae9628ba87d5f6c6c2a736d910137aa900",
+    "source_urls": [
+      "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+      "https://services.nvd.nist.gov/rest/json/cves/2.0?resultsPerPage=1&startIndex=0",
+      "https://api.github.com/advisories?per_page=30",
+      "https://api.osv.dev/v1/query",
+      "https://cveawg.mitre.org/api/cve/CVE-2021-44228",
+      "https://vuln.go.dev/index/modules.json",
+      "https://api.deps.dev/v3alpha/systems/npm/packages/left-pad",
+      "https://huggingface.co/api/models?limit=30",
+      "https://openrouter.ai/api/v1/models",
+      "https://raw.githubusercontent.com/mitre-atlas/atlas-data/main/dist/v6/ATLAS-2026.10.yaml",
+      "https://raw.githubusercontent.com/mitre-atlas/atlas-data/main/dist/manifest.yaml",
+      "https://raw.githubusercontent.com/OWASP/www-project-top-10-for-large-language-model-applications/refs/heads/main/README.md",
+      "https://raw.githubusercontent.com/OWASP/ASVS/master/README.md",
+      "https://rekor.sigstore.dev/api/v1/log",
+      "https://api.securityscorecards.dev/projects/github.com/ossf/scorecard",
+      "https://raw.githubusercontent.com/OpenSecureAIAlliance/wg-safe/main/README.md",
+      "https://raw.githubusercontent.com/slsa-framework/slsa/main/README.md",
+      "https://raw.githubusercontent.com/in-toto/attestation/main/README.md"
+    ],
+    "subject": "Public watchdog and incident-source intake — pinned public sources probed at one instant. Reachability of a source, not a judgement about it.",
+    "surface": "public.notice",
+    "tags": [
+      "watchdog-intake",
+      "public-sources",
+      "watchdog-ingest-axis"
+    ],
+    "unmeasured": [
+      "whether any source's content is correct, complete or current",
+      "whether a source that answered is trustworthy — reachability is not trust",
+      "any judgement about a subject's safety, licensing or regulatory status"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "637f718630fa085aed249c58934f41ccc93f5db6a801b84ea57874d7a963abea",
+    "a39cf043db17c34491b3db03d9fb2f8672e7f1c39868cc023b1874d1bb08e8c4",
+    "00a01db3c93bc561cbf0e756b1d533fe9243baefdee08856e0f068d9722906b0",
+    "44c38ec2cc0a79f020f751480707d74e00362465c0f8b4c24750b9528a874870",
+    "f87600f826dd908374c5db0073aaac3836b3c31a847b7b72344539be85f1c093",
+    "e1b286f7077ccd03758f54427eecc302fd4e862dddc61cbe6603941d6fe55151",
+    "97c0ef944e4424041d3e50d3e7b59c982d39af6f8d6c7739479825498449bb00",
+    "9e6dad1af1cc2058ae946e2aae5960f91b331539e3ac2b76c6e5f588a23b2d2f",
+    "f22cb68ea6d7ebf5485ca0b008970e2533173113057abe2e2f5b4147b176d22a"
+  ]
+}

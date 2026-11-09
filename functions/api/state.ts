@@ -126,7 +126,7 @@ const SRC_RWA = "public/interop/rwa-registry.json";
 const SRC_MCP = "evidence/mcp-registry.json";
 const SRC_CENSUS = "public/signed/hub-census-baseline.json";
 const SRC_PUBLIC_ROOT = "public/root.json";
-const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
+const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin,d}.ts (the arrays /api/gspc derives from)";
 
 const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? null;
 
@@ -154,7 +154,7 @@ const liveByFamily = {
   gspc: {
     axes: LIVE_AXES.filter((a) => a.family === "gspc").length,
     measured: LIVE_AXES.filter((a) => a.family === "gspc" && a.status === "MEASURED").length,
-    note: "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically.",
+    note: "The 14 behavioural model-comparison axes plus effect-binding (deterministic-facts server probe).",
   },
   financial: {
     axes: LIVE_AXES.filter((a) => a.family === "financial").length,
@@ -162,6 +162,14 @@ const liveByFamily = {
     note:
       "The 8 financial/domain axes (ADR-001), all MEASURED as deterministic-facts runs. " +
       "Measured is not scored. None has a leader, an accuracy or a separation determination.",
+  },
+  subject: {
+    axes: LIVE_AXES.filter((a) => a.family === "subject").length,
+    measured: LIVE_AXES.filter((a) => a.family === "subject" && a.status === "MEASURED").length,
+    note:
+      "The 10 subject-family declared slots (labs, companies, measurers, harnesses, interop groups, " +
+      "humanoid deployments, regulators, interpretability groups, claimed subjects, serving endpoints). " +
+      "An unmeasured slot is a published gap, not a zero.",
   },
 };
 const liveMeasuredOn: string = MEASURED_ON.date;

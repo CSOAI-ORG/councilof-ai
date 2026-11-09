@@ -211,20 +211,37 @@ CANDIDATES = [
     {
         "reader": "mlcommons_modelbench",
         "role": "SAFETY_BENCHMARK_RUNNER",
-        "access": "PUBLIC_OPEN_SOURCE",
+        "access": "PUBLIC_CODE_CONTROLLED_BENCHMARK_RESOURCES",
         "families": ["safety_benchmarks", "model_risk_reporting"],
         "repo": "mlcommons/modelbench",
+        "observation_scope": "PUBLIC_HARNESS_REPOSITORY_METADATA_ONLY",
+        "shared_repository_note": "The runner and benchmark-family reader roles both observe ModelBench; these are not two distinct runners.",
+        "code_license": "Apache-2.0",
+        "code_license_source": "https://github.com/mlcommons/modelbench/blob/a23357d9cc07af9ac25d4f22b397f4842a1d485e/LICENSE.md",
+        "resource_access_note": "Public harness code does not grant access to confidential Official prompts or the hosted evaluator; the runner requires evaluator credentials.",
+        "publication_policy_url": "https://mlcommons.org/ailuminate/citing-results/",
+        "publication_note": "Only authorised Official results may be published. Practice, offline-practice and public-demo-set results are internal only.",
+        "reviewed_on": "2026-11-06",
         "count": None,
         "count_note": "A runner and report generator for safety benchmarks.",
     },
     {
         "reader": "mlcommons_ailuminate",
         "role": "AI_RISK_ASSESSMENT_SUITE",
-        "access": "PUBLIC_OPEN_SOURCE",
+        "access": "PUBLIC_METHOD_CONTROLLED_OFFICIAL_BENCHMARK",
         "families": ["risk_assessment", "safety_benchmarks"],
-        "repo": "mlcommons/ailuminate",
+        "repo": "mlcommons/modelbench",
+        "observation_scope": "PUBLIC_HARNESS_REPOSITORY_METADATA_ONLY",
+        "shared_repository_note": "The runner and benchmark-family reader roles both observe ModelBench; these are not two distinct runners.",
+        "benchmark_source": "https://mlcommons.org/ailuminate/",
+        "benchmark_versions": {"safety": "1.2.1", "jailbreak": "1.1", "assessment_standard": "1.4"},
+        "method_sources": ["https://mlcommons.org/ailuminate/safety/", "https://mlcommons.org/ailuminate/assessment-standard/"],
+        "resource_access_note": "Official prompts are confidential. Safety and Jailbreak are generally available through Candela; a public harness repository is not the Official benchmark data or evaluator.",
+        "publication_policy_url": "https://mlcommons.org/ailuminate/citing-results/",
+        "publication_note": "Only authorised Official results may be published. Practice, offline-practice and public-demo-set results are internal only.",
+        "reviewed_on": "2026-11-06",
         "count": None,
-        "count_note": "The AILuminate v1.1 risk-assessment suite.",
+        "count_note": "The AILuminate benchmark family; versions are dated method references, not runtime observations. Repository metadata below describes its public harness only.",
     },
 ]
 
@@ -324,15 +341,15 @@ def _count_tree(tree: list[dict], spec: dict) -> int | None:
 # What CSOAI does not have, per reader. Every comparison names the field path it rests on.
 # The counts are not comparable units, and saying so is part of the answer.
 READER_GAPS = {
-    "helm": "HELM carries 290 scenario definition modules; CSOAI's board declares 33 axis slots, "
-            "of which 23 carry a run. The units differ — one frozen bank per axis against 290 "
+    "helm": "HELM carries 290 scenario definition modules; CSOAI's board declares {axes} axis slots, "
+            "of which {measured} carry a run. The units differ — one frozen bank per axis against 290 "
             "scenario modules — so the numbers are not a scoreboard. The difference is depth per "
             "axis, not slot count.",
     "inspect_ai": "Inspect's portable log artifact is the closest thing in this universe to a "
                   "replayable measurement record. CSOAI publishes no comparable per-run log "
                   "schema: its 9 deterministic-fact run artifacts are content-addressed, and 7 of "
                   "them are unsigned.",
-    "inspect_evals": "55 registered evals against 33 declared axis slots. Different units again: "
+    "inspect_evals": "55 registered evals against {slots} declared axis slots. Different units again: "
                      "a registered eval is a task suite, an axis is a measured behavioural family.",
     "control_arena": "27 control-task definition files. CSOAI has no control-task suite: its "
                      "swarm and cross-reality axes are behavioural fleet measurements over a "
@@ -361,7 +378,7 @@ READER_GAPS = {
     "metr_rebench": "A protocol for repeated runs to control variance. CSOAI's separation rule "
                     "is the board's own; there is no published repeated-run protocol for third "
                     "parties to reproduce it with.",
-    "lm_eval_harness": "221 task directories against 33 declared axis slots. A task adapter "
+    "lm_eval_harness": "221 task directories against {slots} declared axis slots. A task adapter "
                        "library and a behavioural axis are different objects; the counts are "
                        "not comparable and are not offered as a comparison.",
     "long_form_factuality": "A published long-form factuality prompt set, scored by the SAFE "
@@ -406,10 +423,40 @@ def _count_jsonl_objects(repo: str, branch: str, paths: list[str]) -> tuple[int 
     return total, "MEASURED", f"{len(paths)} files at {branch}"
 
 
-def observe(candidate: dict) -> dict:
+# The board's own count, in words, DERIVED from the board read this script makes.
+# It used to be typed ("33 axis slots, of which 23 carry a run"), which meant the prose
+# froze the board at the value it had the day the map was written: the moment the board
+# grew, the map would have contradicted the very quote it carries beside it, and nothing
+# in this file would have said so. GROWTH IS PUBLISHED, SHRINKAGE IS DRIFT — the same
+# grammar the rest of the estate applies to the axis count.
+def board_phrase(board: dict) -> dict:
+    totals = (board or {}).get("totals") or {}
+    axes = totals.get("axes")
+    measured = totals.get("measured_axes")
+    unmeasured = totals.get("unmeasured_axes")
+    if not isinstance(axes, int):
+        # No board, no number. An absent count is never a zero and never a guess.
+        return {
+            "axes": "an unknown number of",
+            "slots": "an unknown number of",
+            "measured": "an unknown number",
+            "unmeasured": "an unknown number",
+            "unavailable": True,
+        }
+    return {
+        "axes": str(axes),
+        "slots": str(axes),
+        "measured": str(measured) if isinstance(measured, int) else "an unknown number",
+        "unmeasured": str(unmeasured) if isinstance(unmeasured, int) else "an unknown number",
+        "unavailable": False,
+    }
+
+
+def observe(candidate: dict, phrase: dict) -> dict:
     repo = candidate["repo"]
     out = dict(candidate)
-    out["csoai_gap"] = READER_GAPS.get(candidate["reader"])
+    gap = READER_GAPS.get(candidate["reader"])
+    out["csoai_gap"] = gap.format(**phrase) if gap else gap
     meta, status, digest = _json(f"https://api.github.com/repos/{repo}")
     out["api_source"] = f"https://api.github.com/repos/{repo}"
     out["api_response_sha256"] = digest or None
@@ -488,85 +535,123 @@ def read_board() -> dict:
 
 
 def csoai_gaps(board: dict) -> list[dict]:
-    """The gaps on OUR side, each quoted from the live board by field path.
+    """Quote captured board counters by native field path, without inventing missing facts.
 
-    Every value here is read out of the board payload that this run fetched, and the field
-    path is recorded beside it, so a reader can re-quote it without trusting this file.
-    An unmeasured axis is a visible gap, never a zero and never a failure.
+    Counts are reported by the board, not independently re-measured here. In particular,
+    reported signing counts are not cryptographic verification of the artifacts.
     """
-    if board.get("state") != "OBSERVED":
+    def obj(value):
+        return value if isinstance(value, dict) else {}
+
+    def count(value):
+        return value if type(value) is int and value >= 0 else None
+
+    def counts_known(*values):
+        return all(value is not None for value in values)
+
+    if not isinstance(board, dict) or board.get("state") != "OBSERVED":
         return [{
-            "gap": "CSOAI's own coverage could not be read, so no gap could be stated.",
-            "state": "UNREACHABLE",
+            "gap": "The captured board is unavailable or uncheckable; coverage cannot be stated.",
+            "state": "UNREACHABLE" if obj(board).get("state") == "UNREACHABLE" else "UNCHECKABLE",
             "field_path": "/api/gspc",
             "value": None,
         }]
-    totals = board.get("totals") or {}
-    by_family = totals.get("by_family") or {}
-    subject = by_family.get("subject") or {}
-    attest = totals.get("financial_run_attestations") or {}
-    gaps = [
+    totals = obj(board.get("totals"))
+    by_family = obj(totals.get("by_family"))
+    subject = obj(by_family.get("subject"))
+    attest = obj(totals.get("financial_run_attestations"))
+    declared = count(subject.get("axes"))
+    measured = count(subject.get("measured"))
+    subject_known = counts_known(declared, measured) and measured <= declared
+    separated = count(totals.get("separated_leads"))
+    ties = count(totals.get("ties"))
+    untested = count(totals.get("untested_separations"))
+    comparison = count(totals.get("comparison_axes"))
+    slots = count(totals.get("axes"))
+    # A supplied scope counter must be valid; it bounds attribution/separation counts.
+    scope_known = "comparison_axes" not in totals or comparison is not None
+    if comparison is not None and slots is not None:
+        scope_known = scope_known and comparison <= slots
+    bound = comparison if comparison is not None else slots
+    separation_known = counts_known(separated, ties, untested) and scope_known
+    if separation_known and bound is not None:
+        separation_known = separated + ties + untested <= bound
+    runs = count(attest.get("run_artifacts"))
+    signed = count(attest.get("ed25519_signed"))
+    unsigned = count(attest.get("content_addressed_unsigned"))
+    signing_known = counts_known(runs, signed, unsigned) and signed + unsigned == runs
+    board_measured = count(totals.get("measured_axes"))
+    board_unmeasured = count(totals.get("unmeasured_axes"))
+    coverage_known = counts_known(slots, board_measured, board_unmeasured) and board_measured + board_unmeasured == slots
+
+    def attribution(counter_key, axes_key, state_prefix, description):
+        value = count(totals.get(counter_key))
+        raw_axes = totals.get(axes_key)
+        axes = raw_axes if isinstance(raw_axes, list) and all(
+            isinstance(axis, str) and axis.strip() and axis == axis.strip() for axis in raw_axes
+        ) and len(set(raw_axes)) == len(raw_axes) else None
+        known = value is not None and scope_known and axes is not None and len(axes) == value
+        if known and bound is not None:
+            known = value <= bound
+        return {
+            "gap": f"The captured board reports {value} {'axis' if value == 1 else 'axes'} {description}. This is a reported attribution count, not a score or overall rank."
+                   if known else "The captured board's attribution count is UNCHECKABLE because its count, scope or axis list is missing, malformed or inconsistent.",
+            "state": f"{state_prefix}={value}" if known else "UNCHECKABLE",
+            "field_path": f"/api/gspc totals.{counter_key}",
+            "value": value if known else None,
+            "axes": axes if known else None,
+        }
+
+    return [
         {
-            "gap": "The whole subject axis family is declared and unmeasured: "
-                   "lab practice, company practice, measurer integrity, harness fidelity, "
-                   "interop conformance, humanoid deployment, regulator transparency, "
-                   "interpretability/reproducibility, claim maintenance and serving fidelity.",
-            "state": "MEASURED=0",
+            "gap": (
+                f"The subject axis family declares {declared} axes; {measured} carry a measurement "
+                f"and {declared - measured} remain unmeasured. Subject coverage is not a model-comparison score or rank."
+            ) if subject_known else "Subject-family coverage is UNCHECKABLE because its declared/measured counts are missing or inconsistent.",
+            "state": f"MEASURED={measured}" if subject_known else "UNCHECKABLE",
             "field_path": "/api/gspc totals.by_family.subject.measured",
-            "value": subject.get("measured"),
-            "declared": subject.get("axes"),
-            "note": subject.get("note"),
+            "value": measured if subject_known else None,
+            "declared": declared,
+            "note": subject.get("note") if isinstance(subject.get("note"), str) else None,
         },
         {
-            "gap": "No model-comparison axis separates a leader, so the board states TIE and "
-                   "UNTESTED rather than a ranking.",
-            "state": "SEPARATED_LEADS=0",
+            "gap": (
+                f"The captured board reports these model-comparison axis counts: SEPARATED {separated}, TIE {ties}, UNTESTED {untested}. "
+                "These are distinct reported states."
+            ) if separation_known else "Model-comparison separation counts are UNCHECKABLE because counters or scope are missing, malformed or inconsistent.",
+            "state": f"SEPARATED_LEADS={separated}" if separation_known else "UNCHECKABLE",
             "field_path": "/api/gspc totals.separated_leads",
-            "value": totals.get("separated_leads"),
-            "ties": totals.get("ties"),
-            "untested_separations": totals.get("untested_separations"),
+            "value": separated if separation_known else None,
+            "ties": ties if separation_known else None,
+            "untested_separations": untested if separation_known else None,
         },
         {
-            "gap": "Most deterministic-fact run artifacts are content-addressed but unsigned, "
-                   "so the evidence chain for those axes rests on identity of bytes, not on a "
-                   "signer.",
-            "state": "PARTIALLY_SIGNED",
+            "gap": (
+                f"The captured board reports {runs} deterministic-fact run artifacts: {signed} labelled Ed25519-signed and {unsigned} content-addressed unsigned. "
+                "These are reported counts; this directory does not cryptographically verify signatures."
+            ) if signing_known else "Reported run-attestation counts are UNCHECKABLE because the counters are missing, malformed or do not sum to the reported artifact total.",
+            "state": f"REPORTED_ED25519_SIGNED={signed}" if signing_known else "UNCHECKABLE",
             "field_path": "/api/gspc totals.financial_run_attestations.ed25519_signed",
-            "value": attest.get("ed25519_signed"),
-            "run_artifacts": attest.get("run_artifacts"),
-            "content_addressed_unsigned": attest.get("content_addressed_unsigned"),
+            "value": signed if signing_known else None,
+            "run_artifacts": runs if signing_known else None,
+            "content_addressed_unsigned": unsigned if signing_known else None,
         },
+        attribution("uncarded_leaders_dropped", "uncarded_leaders_dropped_axes", "UNCARDED_LEADERS_DROPPED",
+                    "in its uncarded-leaders-dropped count"),
+        attribution("own_leaders_excluded", "own_leaders_excluded_axes", "OWN_MODELS_EXCLUDED",
+                    "with its own models excluded from public leader attribution"),
         {
-            "gap": "Three measured axes carry no public leader, because the named leader holds "
-                   "no signed per-model card in the public card index. The axis stays MEASURED; "
-                   "the unverifiable leader claim is dropped rather than invented.",
-            "state": "LEADER_DROPPED",
-            "field_path": "/api/gspc totals.uncarded_leaders_dropped",
-            "value": totals.get("uncarded_leaders_dropped"),
-            "axes": totals.get("uncarded_leaders_dropped_axes"),
-        },
-        {
-            "gap": "Our own specialist models are excluded from public leader attribution on "
-                   "eight axes, so the public board reports external leaders only. This is a "
-                   "governance rule, not a measurement gap, and it is stated rather than hidden.",
-            "state": "OWN_MODELS_EXCLUDED",
-            "field_path": "/api/gspc totals.own_leaders_excluded",
-            "value": totals.get("own_leaders_excluded"),
-            "axes": totals.get("own_leaders_excluded_axes"),
-        },
-        {
-            "gap": "The board's scale is declared slots, not a published catalogue of task "
-                   "definitions. Readers here that publish task directories are not comparable "
-                   "to us by count; the comparison is in what is published, not how many rows "
-                   "there are.",
-            "state": "DECLARED_SLOTS",
+            "gap": (
+                f"The captured board declares {slots} axis slots: {board_measured} measured and {board_unmeasured} unmeasured. "
+                "Axis slots and repository task modules are different units and are not comparable by count."
+            ) if coverage_known else "Board slot coverage is UNCHECKABLE because slot/measured/unmeasured counters are missing, malformed or inconsistent.",
+            "state": f"DECLARED_SLOTS={slots}" if coverage_known else "UNCHECKABLE",
             "field_path": "/api/gspc totals.axes",
-            "value": totals.get("axes"),
-            "measured_axes": totals.get("measured_axes"),
-            "unmeasured_axes": totals.get("unmeasured_axes"),
+            "value": slots if coverage_known else None,
+            "measured_axes": board_measured if coverage_known else None,
+            "unmeasured_axes": board_unmeasured if coverage_known else None,
         },
     ]
-    return gaps
 
 
 def main() -> int:
@@ -575,8 +660,9 @@ def main() -> int:
     args = ap.parse_args()
     out_dir = ROOT / args.out
 
-    observed = [observe(c) for c in CANDIDATES]
     board = read_board()
+    phrase = board_phrase(board)
+    observed = [observe(c, phrase) for c in CANDIDATES]
 
     doc = {
         "schema": "csoai.ai-eval-universe/0.1",
@@ -611,10 +697,10 @@ def main() -> int:
             "axes": board.get("axes"),
             "response_sha256": board.get("response_sha256"),
             "note": (
-                "Quoted from the live board by field name. The board declares 33 axis slots; "
-                "23 are MEASURED, 10 are declared with no run behind them. An unmeasured axis is "
-                "a visible gap, not a zero, and never a fail."
-            ),
+                "Quoted from the live board by field name. The board declares {axes} axis slots; "
+                "{measured} are MEASURED, {unmeasured} are declared with no run behind them. An "
+                "unmeasured axis is a visible gap, not a zero, and never a fail."
+            ).format(**phrase),
         },
     }
     doc["snapshot_sha256"] = hashlib.sha256(

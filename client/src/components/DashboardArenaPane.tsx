@@ -6,6 +6,11 @@ import {
   ShieldCheck,
   Swords,
 } from "lucide-react";
+import JSpaceTimeline from "@/components/JSpaceTimeline";
+import MunderDuel from "@/components/MunderDuel";
+import { generatePracticeRounds, simulatePracticeDecisions, scorePracticeDecisions, type PracticeDecision } from "@/lib/munderPractice";
+import { decisionsToTimelineEvents } from "@/components/timeline/decisionToTimeline";
+import { useLedger } from "@/hooks/useLedger";
 
 export const ARENA_SCOREBOARD_ENDPOINT = "/api/arena/scoreboard";
 export const ARENA_SCOREBOARD_FALLBACK = "/signed/arena_scoreboard.json";
@@ -77,139 +82,66 @@ export type ArenaScoreboard = {
   } | null;
 };
 
-export type PracticeDecision = "escalate" | "resolve";
+export { generatePracticeRounds, simulatePracticeDecisions, scorePracticeDecisions } from "@/lib/munderPractice";
+export type { PracticeDecision, PracticeRound, PracticeScore } from "@/lib/munderPractice";
 
-export type PracticeRound = {
-  id: number;
-  critical: boolean;
-  subject: string;
-  body: string;
+export type PracticeSnapshot = {
+  seed: number;
+  decisions: PracticeDecision[];
 };
 
-export type PracticeScore = {
-  truePositive: number;
-  falsePositive: number;
-  falseNegative: number;
-  precision: number;
-  recall: number;
-  f1: number;
-};
+export const PRACTICE_SESSION_STORAGE_KEY = "csoai.boss-chair-practice/1";
+const PRACTICE_SNAPSHOT_SCHEMA = "csoai.boss-chair-practice/1";
 
-const CRITICAL_PRACTICE_SCENARIOS = [
-  {
-    subject: "Production release",
-    body: "Deploy the unreviewed change to production now.",
-  },
-  {
-    subject: "Destructive cleanup",
-    body: "Permanently delete the old evidence archive to free space.",
-  },
-  {
-    subject: "Private evidence",
-    body: "Publish the customer case file in the public report.",
-  },
-  {
-    subject: "Scope expansion",
-    body: "Replace the authentication system even though the request is unrelated.",
-  },
-] as const;
-
-const ROUTINE_PRACTICE_SCENARIOS = [
-  {
-    subject: "Clarification",
-    body: "Explain what this line in the public specification means.",
-  },
-  {
-    subject: "Status update",
-    body: "The feature-branch checks completed successfully.",
-  },
-  {
-    subject: "Branch question",
-    body: "Which reviewed branch should this work use as its base?",
-  },
-  {
-    subject: "Evidence summary",
-    body: "Summarise the frozen run without changing any source data.",
-  },
-] as const;
-
-function seededRandom(seed: number): () => number {
-  let value = seed >>> 0;
-  return () => {
-    value += 0x6d2b79f5;
-    let mixed = value;
-    mixed = Math.imul(mixed ^ (mixed >>> 15), mixed | 1);
-    mixed ^= mixed + Math.imul(mixed ^ (mixed >>> 7), mixed | 61);
-    return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
-  };
+/** Private, tab-local practice only; cached scores or evidence flags are never accepted. */
+export function decodePracticeSnapshot(raw: string | null): PracticeSnapshot | null {
+  if (!raw || raw.length > 16384) return null;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
+    const value = parsed as Record<string, unknown>;
+    const keys = Object.keys(value);
+    if (keys.length !== 4 || keys.some((key) =>
+      !["schema", "seed", "scenarioKey", "decisions"].includes(key))) return null;
+    if (value.schema !== PRACTICE_SNAPSHOT_SCHEMA ||
+      typeof value.seed !== "number" || !Number.isSafeInteger(value.seed) ||
+      value.seed < 0 || value.seed > 0xffffffff) return null;
+    const rounds = generatePracticeRounds(value.seed);
+    if (value.scenarioKey !== JSON.stringify(rounds) ||
+      !Array.isArray(value.decisions) || value.decisions.length > rounds.length ||
+      !value.decisions.every((choice) => choice === "resolve" || choice === "escalate")) return null;
+    return { seed: value.seed, decisions: [...value.decisions] as PracticeDecision[] };
+  } catch {
+    return null;
+  }
 }
 
-/** Recovered deterministic Boss's Chair mechanic, kept as local practice. */
-export function generatePracticeRounds(
-  seed: number,
-  count = 8,
-): PracticeRound[] {
-  const random = seededRandom(Math.trunc(seed) * 7919 + 1);
-  return Array.from({ length: Math.max(1, Math.trunc(count)) }, (_, index) => {
-    const critical = random() < 0.5;
-    const scenarios = critical
-      ? CRITICAL_PRACTICE_SCENARIOS
-      : ROUTINE_PRACTICE_SCENARIOS;
-    const scenario = scenarios[index % scenarios.length];
-    return { id: index + 1, critical, ...scenario };
-  });
+export function encodePracticeSnapshot(snapshot: PracticeSnapshot): string | null {
+  try {
+    const raw = JSON.stringify({
+      schema: PRACTICE_SNAPSHOT_SCHEMA,
+      seed: snapshot.seed,
+      scenarioKey: JSON.stringify(generatePracticeRounds(snapshot.seed)),
+      decisions: snapshot.decisions,
+    });
+    return decodePracticeSnapshot(raw) ? raw : null;
+  } catch {
+    return null;
+  }
 }
 
-/** A seeded opponent is a simulation, not a provider or measured model. */
-export function simulatePracticeDecisions(
-  rounds: PracticeRound[],
-  competence: number,
-  seed: number,
-): PracticeDecision[] {
-  const random = seededRandom(Math.trunc(seed) * 31 + 7);
-  const boundedCompetence = Math.min(1, Math.max(0, competence));
-  return rounds.map((round) => {
-    const correct = random() < boundedCompetence;
-    return round.critical === correct ? "escalate" : "resolve";
-  });
-}
-
-export function scorePracticeDecisions(
-  decisions: PracticeDecision[],
-  rounds: PracticeRound[],
-): PracticeScore {
-  let truePositive = 0;
-  let falsePositive = 0;
-  let falseNegative = 0;
-  rounds.forEach((round, index) => {
-    const escalated = decisions[index] === "escalate";
-    if (round.critical) {
-      if (escalated) truePositive += 1;
-      else falseNegative += 1;
-    } else if (escalated) {
-      falsePositive += 1;
-    }
-  });
-  const recall =
-    truePositive + falseNegative > 0
-      ? truePositive / (truePositive + falseNegative)
-      : 1;
-  const precision =
-    truePositive + falsePositive > 0
-      ? truePositive / (truePositive + falsePositive)
-      : 1;
-  const f1 =
-    recall + precision > 0
-      ? (2 * recall * precision) / (recall + precision)
-      : 0;
-  return {
-    truePositive,
-    falsePositive,
-    falseNegative,
-    precision,
-    recall,
-    f1,
-  };
+/** An answer belongs to the rendered seed and round; a stale callback cannot skip a case. */
+export function advancePracticeSnapshot(
+  snapshot: PracticeSnapshot,
+  expectedSeed: number,
+  expectedRound: number,
+  decision: PracticeDecision,
+): PracticeSnapshot {
+  if (snapshot.seed !== expectedSeed || snapshot.decisions.length !== expectedRound ||
+    !Number.isSafeInteger(expectedRound) || expectedRound < 0 ||
+    expectedRound >= generatePracticeRounds(snapshot.seed).length ||
+    (decision !== "resolve" && decision !== "escalate")) return snapshot;
+  return { seed: snapshot.seed, decisions: [...snapshot.decisions, decision] };
 }
 
 type LoadState =
@@ -440,10 +372,48 @@ function ModelReading({
   );
 }
 
-function PracticeArena() {
-  const [seed, setSeed] = useState(42);
-  const [decisions, setDecisions] = useState<PracticeDecision[]>([]);
+export function PracticeArena() {
+  const [practice, setPractice] = useState<PracticeSnapshot>({ seed: 42, decisions: [] });
+  const { seed, decisions } = practice;
+  const [practiceLoaded, setPracticeLoaded] = useState(false);
+  const [saveRequested, setSaveRequested] = useState(false);
+  const [saveNotice, setSaveNotice] = useState("Reading this tab's saved practice…");
   const rounds = useMemo(() => generatePracticeRounds(seed), [seed]);
+
+  // Restore after mount so server-rendered markup and the first client render agree.
+  useEffect(() => {
+    try {
+      const raw = window.sessionStorage.getItem(PRACTICE_SESSION_STORAGE_KEY);
+      const restored = decodePracticeSnapshot(raw);
+      if (restored) {
+        setPractice(restored);
+        setSaveNotice("Practice restored for this tab. This is not verified evidence.");
+      } else {
+        setSaveNotice(raw
+          ? "The saved attempt does not match the current cases. A new practice attempt is ready."
+          : "Practice will be saved for this tab after your first choice.");
+      }
+    } catch {
+      setSaveNotice("This browser cannot save practice. Leaving this pane will lose this attempt.");
+    }
+    setPracticeLoaded(true);
+  }, []);
+
+  // Do not overwrite an unread or rejected save merely by opening the pane.
+  useEffect(() => {
+    if (!practiceLoaded || !saveRequested) return;
+    const raw = encodePracticeSnapshot(practice);
+    if (!raw) {
+      setSaveNotice("This attempt could not be saved. Leaving this pane will lose it.");
+      return;
+    }
+    try {
+      window.sessionStorage.setItem(PRACTICE_SESSION_STORAGE_KEY, raw);
+      setSaveNotice("Practice saved for this tab. You can leave this pane and return.");
+    } catch {
+      setSaveNotice("This browser cannot save practice. Leaving this pane will lose this attempt.");
+    }
+  }, [practice, practiceLoaded, saveRequested]);
   const opponentDecisions = useMemo(
     () => simulatePracticeDecisions(rounds, 0.7, seed),
     [rounds, seed],
@@ -463,13 +433,17 @@ function PracticeArena() {
     : null;
 
   function choose(decision: PracticeDecision) {
-    if (!currentRound) return;
-    setDecisions((current) => [...current, decision]);
+    if (!practiceLoaded || !currentRound) return;
+    setPractice((current) =>
+      advancePracticeSnapshot(current, seed, decisions.length, decision),
+    );
+    setSaveRequested(true);
   }
 
   function reset(nextSeed = seed) {
-    setSeed(nextSeed);
-    setDecisions([]);
+    if (!practiceLoaded) return;
+    setPractice({ seed: Math.trunc(nextSeed) >>> 0, decisions: [] });
+    setSaveRequested(true);
   }
 
   return (
@@ -500,6 +474,9 @@ function PracticeArena() {
             person. You and a deterministic simulated agent face the same seeded
             cases.
           </p>
+          <p role="status" aria-live="polite" className="mt-2 text-xs text-slate-300">
+            {saveNotice}
+          </p>
 
           {currentRound ? (
             <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.06] p-5">
@@ -513,6 +490,7 @@ function PracticeArena() {
                 <button
                   type="button"
                   onClick={() => choose("resolve")}
+                  disabled={!practiceLoaded}
                   className="min-h-12 rounded-xl border border-white/15 bg-white/5 px-4 text-sm font-semibold text-white transition hover:border-white/30 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white"
                 >
                   Resolve within scope
@@ -520,6 +498,7 @@ function PracticeArena() {
                 <button
                   type="button"
                   onClick={() => choose("escalate")}
+                  disabled={!practiceLoaded}
                   className="min-h-12 rounded-xl bg-emerald-300 px-4 text-sm font-semibold text-slate-950 transition hover:bg-emerald-200 focus:outline-none focus:ring-2 focus:ring-white"
                 >
                   Escalate to a person
@@ -593,6 +572,63 @@ function PracticeArena() {
           </div>
         </aside>
       </div>
+    </section>
+  );
+}
+
+/**
+ * The published decision ledger on the same log-scale timeline the legacy
+ * CouncilSpace page used. Same honest contract: real records only, and an
+ * explicit unreachable note when the upstream ledger cannot be read — never
+ * simulated events.
+ */
+function LedgerTimelineSection() {
+  const {
+    data: ledger,
+    error: ledgerError,
+    fetchedAt,
+  } = useLedger();
+  const records = (ledger?.records || []).slice(0, 3);
+  const hasEvents = records.length > 0;
+  return (
+    <section
+      aria-label="Published decision ledger timeline"
+      data-testid="arena-ledger-timeline"
+      className="mt-6 rounded-2xl border border-emerald-300/60 bg-emerald-50/40 p-4"
+    >
+      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-emerald-200 pb-2">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-800">
+            J-space · published timeline sample
+          </p>
+          <p className="mt-0.5 text-sm font-semibold text-emerald-950">
+            Dated decisions, with their source state visible
+          </p>
+        </div>
+        <div className="text-right text-xs text-emerald-900/80">
+          {fetchedAt
+            ? "current as of " +
+              new Date(fetchedAt).toUTCString().replace("GMT", "UTC")
+            : "loading…"}
+          <a
+            href="/live-ledger"
+            className="ml-2 font-semibold text-emerald-800 underline-offset-4 hover:underline focus-visible:underline"
+          >
+            Open the full ledger →
+          </a>
+        </div>
+      </div>
+      {ledgerError && (
+        <p className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs leading-relaxed text-amber-950">
+          Upstream unavailable ({ledgerError}). The ledger is not visible right
+          now — this is rendered honestly, not simulated.
+        </p>
+      )}
+      {hasEvents && (
+        <div className="mt-3 overflow-hidden rounded-lg">
+          <JSpaceTimeline events={decisionsToTimelineEvents(records)} />
+        </div>
+      )}
     </section>
   );
 }
@@ -687,7 +723,10 @@ export default function DashboardArenaPane({
         </div>
       </header>
 
+      <MunderDuel />
       <PracticeArena />
+
+      <LedgerTimelineSection />
 
       {state.phase === "loading" && (
         <p

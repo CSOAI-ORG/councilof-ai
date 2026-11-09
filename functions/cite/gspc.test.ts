@@ -73,16 +73,16 @@ describe("/cite/gspc: two references, each with what it is", () => {
     const off = factsFromPayload({
       ...CAPTURE,
       doi_status: "UNAVAILABLE",
-      doi_status_note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
+      doi_status_note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json).",
     });
     const b = bibtex(off, NOW());
     expect(b).toContain(`doi       = {${CAPTURE.doi}}`);
     expect(b).not.toContain("https://doi.org/");
-    expect(b).toContain("Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending");
+    expect(b).toContain("Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json)");
     expect((b.match(/{/g) ?? []).length).toBe((b.match(/}/g) ?? []).length);
     const c = csl(off, NOW()) as any[];
     expect(c[1].DOI).toBe(CAPTURE.doi);
     expect(c[1].URL).toBeUndefined();
-    expect(c[1].note).toContain("appeal pending");
+    expect(c[1].note).toContain("no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json)");
   });
 });

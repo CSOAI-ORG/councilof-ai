@@ -1,0 +1,108 @@
+{
+  "schema": "csoai.interop-listing-control/0.1",
+  "ran_at": "2026-10-28T08:42:40Z",
+  "pairs_with": "a2a-directories-20260930T103424Z.json",
+  "why": "A census proves it counted; only a failed case proves the counter can fail. The A2A directory census had no negative control, so nothing in it could be read as evidence that the counter can reject.",
+  "rule": "Where the estate's A2A agent is listed, and where it is not. Every row is a probe of the DIRECTORY, never of our own filesystem. This file mirrors mcp-directories.json deliberately: that file was wrong six times in one day, and every one of those errors came from answering 'do we hold a note saying we are listed' instead of asking the directory. UNKNOWN is a permitted state and is not NOT_LISTED.",
+  "rule_as_implemented": "a probed row counts as a REAL directory iff state != 'NOT_A_DIRECTORY' and surface != 'ours'. UNKNOWN is a permitted state and is not NOT_LISTED.",
+  "rule_source": "the census's own principle and surface_note; no new taxonomy is introduced here.",
+  "controls": {
+    "control:real": {
+      "expected": "REAL",
+      "got": "REAL",
+      "passed": true,
+      "id": "control:real"
+    },
+    "control:not-a-directory": {
+      "expected": "NOT_REAL",
+      "got": "NOT_REAL",
+      "passed": true,
+      "id": "control:not-a-directory"
+    },
+    "control:ours-must-be-rejected": {
+      "expected": "NOT_REAL",
+      "got": "NOT_REAL",
+      "passed": true,
+      "id": "control:ours-must-be-rejected"
+    }
+  },
+  "published_census_selfcheck": {
+    "probed": 3,
+    "real_under_the_rule": 1,
+    "published_real_directories": 1,
+    "probed_matches": true,
+    "real_matches": true,
+    "listed_under_the_rule": 1,
+    "published_listed": 1,
+    "listed_matches": true
+  },
+  "both_behaved": true,
+  "grader_can_fail": {
+    "injected_defect": "the `surface == 'ours'` exclusion is removed, so a row answered from our own filesystem would be counted as evidence about a third party",
+    "control": "control:ours-must-be-rejected",
+    "verdict_without_defect": "NOT_REAL",
+    "verdict_with_defect": "REAL",
+    "detected": true
+  },
+  "abort_rule": "if any control fails, or the published census's own totals do not reproduce under this rule, the control run is ABORTED and the census is not re-published. A control that cannot fail is not a control.",
+  "raw": {
+    "controls": {
+      "control:real": {
+        "expected": "REAL",
+        "got": "REAL",
+        "passed": true,
+        "id": "control:real"
+      },
+      "control:not-a-directory": {
+        "expected": "NOT_REAL",
+        "got": "NOT_REAL",
+        "passed": true,
+        "id": "control:not-a-directory"
+      },
+      "control:ours-must-be-rejected": {
+        "expected": "NOT_REAL",
+        "got": "NOT_REAL",
+        "passed": true,
+        "id": "control:ours-must-be-rejected"
+      }
+    },
+    "selfcheck": {
+      "probed": 3,
+      "real_under_the_rule": 1,
+      "published_real_directories": 1,
+      "probed_matches": true,
+      "real_matches": true,
+      "listed_under_the_rule": 1,
+      "published_listed": 1,
+      "listed_matches": true
+    }
+  },
+  "raw_flipped": {
+    "controls": {
+      "control:real": {
+        "expected": "REAL",
+        "got": "REAL",
+        "passed": true,
+        "id": "control:real"
+      },
+      "control:not-a-directory": {
+        "expected": "NOT_REAL",
+        "got": "NOT_REAL",
+        "passed": true,
+        "id": "control:not-a-directory"
+      },
+      "control:ours-must-be-rejected": {
+        "expected": "NOT_REAL",
+        "got": "REAL",
+        "passed": false,
+        "id": "control:ours-must-be-rejected"
+      }
+    }
+  },
+  "passed": true,
+  "what_this_does_not_establish": [
+    "It does not re-run the census. The A2A directory census has no generator in this repository, so this control exercises the census's OWN published rule against its OWN published data.",
+    "It does not re-probe any directory. The states are as published on 2026-09-30.",
+    "It does not prove the probe of each directory was correct; it proves the COUNTING over the probes can reject a malformed row."
+  ]
+}

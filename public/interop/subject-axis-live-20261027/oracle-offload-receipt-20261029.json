@@ -1,0 +1,90 @@
+{
+ "schema": "csoai.offload-receipt/0.1",
+ "measured_at": "2026-10-29T09:41:00Z",
+ "corrected_at": "2026-10-29T09:41:00Z",
+ "subject": "the Oracle bulk offload",
+ "source": {
+  "host": "oracle-micro-2",
+  "address": "141.147.73.85",
+  "path": "/evac-bulk",
+  "files": 1226000,
+  "bytes": 43690453268,
+  "gib_approx": 40.7,
+  "state": "ALIVE_AND_REACHABLE",
+  "read_speed_local_mb_s": 28,
+  "read_speed_over_the_wire_mb_s": 5.1,
+  "read_speed_note": "4 parallel streams; 8 streams gave 5.3 MB/s — no further gain"
+ },
+ "route": {
+  "shape": "direct pod -> Oracle pull, over SSH agent forwarding",
+  "mac_role": "key broker only; the Mac is not in the data path",
+  "command": "ssh -A rp-3090-now 'rsync -a --partial --append-verify --info=progress2 oracle-micro-2:/evac-bulk/ /workspace/csoai/oracle-offload/'",
+  "resumable": true,
+  "verification": "--partial --append-verify verifies against the source and reconciles with the 453,102 files already on the pod from the run paused on 16 October",
+  "estimated_duration": "about 2 hours 25 minutes at ~5 MB/s aggregate, bound by Oracle's egress",
+  "why_not_through_the_mac": "it needs a local 29-44 GB staging copy on a volume with about 1.7 GB free"
+ },
+ "destinations_measured": [
+  {
+   "path": "/workspace",
+   "filesystem": "mfs#euro-3.runpod.net:9421",
+   "kind": "shared MooseFS network filesystem",
+   "reported_free": "436 TB",
+   "measured_write": "Disk quota exceeded",
+   "measured_at": "2026-10-29T09:41:00Z",
+   "probe": "64 MiB at /workspace/csoai/.qprobe3",
+   "state": "QUOTA_BLOCKED",
+   "note": "df reports 436 TB free and the write still fails: the free space is not this user's"
+  },
+  {
+   "path": "/root",
+   "filesystem": "overlay",
+   "kind": "container overlay volume, 20 GB total",
+   "reported_free": "9.6 GB",
+   "measured_write": "64 MiB at 3.5 GB/s",
+   "state": "WRITABLE_BUT_TOO_SMALL",
+   "note": "the bulk is 43.7 GB and the overlay has 9.6 GB free"
+  },
+  {
+   "path": "/tmp",
+   "filesystem": "overlay",
+   "reported_free": "9.6 GB",
+   "state": "SAME_VOLUME_AS_ROOT"
+  }
+ ],
+ "decision": {
+  "state": "RE_DECISION_REQUIRED",
+  "previous_state": "DECIDED: the pod /workspace/csoai/oracle-offload/",
+  "reason": "neither candidate destination on the pod can take the bulk: the shared mount is quota-blocked and the overlay has 9.6 GB free against 43.7 GB",
+  "owner_gate": "a third destination — a different pod, a larger volume, or an object store — is an owner decision"
+ },
+ "transfer_started": false,
+ "contradicted_claims": [
+  {
+   "claim": "the 7.6 GB pod quota is gone",
+   "was_in": "the first version of this receipt",
+   "state": "CONTRADICTED",
+   "why": "it is a per-user quota on a shared filesystem and it is still in force; the 40 GB write that seemed to disprove it landed on the overlay volume, not on the shared mount",
+   "evidence": "/workspace/csoai already holds 26 GB, so the quota is spent rather than absent"
+  }
+ ],
+ "claims_that_stand": [
+  {
+   "claim": "the estate's ssh config marks oracle-micro (145.241.232.16) as DEAD",
+   "state": "STILL_FALSE",
+   "detail": "the host is alive and reachable; it is micro2 — the host the plan calls Oracle — whose guest wedged and then recovered. The config's dead-host entry names the wrong machine."
+  },
+  {
+   "claim": "m2 and oracle-micro are not the source",
+   "state": "STILL_TRUE",
+   "detail": "m2 holds 2,061,092 files; oracle-micro carries an August-era generation of 267K files; the source is 1,226,000 files"
+  }
+ ],
+ "side_effects": {
+  "source_deleted": false,
+  "pod_probe_files_removed": true,
+  "pod_probe_files_note": "both probe files were removed after the 2026-10-29T09:41:00Z measurement"
+ },
+ "source_document": "docs/GSPC-ORACLE-OFFLOAD-RECEIPT-2026-10-29.md",
+ "not_a_certification": "This is a file-movement receipt: what the source measured, where the bytes were going to go, how fast, what was not done, and — where a first measurement turned out to be wrong — what the correction is."
+}

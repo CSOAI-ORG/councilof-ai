@@ -1,6 +1,6 @@
 # GSPC for Dify
 
-GSPC: read the live measurement board, verify Ed25519-signed measurement cards and capsules, and list the already-signed cards relevant to one obligation. 47 read-only tools, each a direct call to the free MCP door https://councilof.ai/mcp/free (no sign-in).
+GSPC: read the live measurement board, verify Ed25519-signed measurement cards and capsules, and list the already-signed cards relevant to one obligation. 49 read-only tools, each a direct call to the free MCP door https://councilof.ai/mcp/free (no sign-in).
 Dify can also add the same door with no plugin at all: Tools → MCP → Add MCP Server (HTTP) → https://councilof.ai/mcp/free.
 
 - `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.
@@ -50,6 +50,8 @@ Dify can also add the same door with no plugin at all: Tools → MCP → Add MCP
 - `axis_interpretability-reproducibility` — The interpretability-reproducibility axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
 - `axis_claim-maintenance` — The claim-maintenance axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
 - `axis_serving-fidelity` — The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
+- `axis_watchdog-ingest` — The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
+- `framework_readiness` — A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra.
 
 RENDERED, NOT SUBMITTED: the Marketplace route is a PR of `gspc.difypkg` to langgenius/dify-plugins from a public account (owner step).
 

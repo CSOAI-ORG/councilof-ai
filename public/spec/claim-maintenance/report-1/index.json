@@ -1,0 +1,63 @@
+{
+ "schema": "csoai.state-of-claim-maintenance/0.1",
+ "report_number": 1,
+ "title": "State of Claim Maintenance — report #1",
+ "published_at": "2026-10-30T05:07:49.965Z",
+ "derived_from": {
+  "url": "https://councilof.ai/spec/claim-maintenance/register.json",
+  "http": 200,
+  "bytes": 69740,
+  "sha256": "434c9258bf4ee0b7d894c66c224f91963b8c9dab18e19187bd646bdd3e848214",
+  "register_as_of": "2026-10-08T05:40:55Z",
+  "rule": "every field below is read from those exact bytes. Nothing is derived, interpolated or estimated."
+ },
+ "totals": {
+  "registries": 3,
+  "registry_files_on_disk": 7,
+  "registries_superseded": 4,
+  "subjects": 28,
+  "claims": 99,
+  "claims_conforming_to_artifact_schema": 91,
+  "by_state": {
+   "CLAIM_CAPTURED": 1,
+   "CLAIM_MEASURED": 33,
+   "UNMEASURED": 39,
+   "UNCHECKABLE": 26
+  }
+ },
+ "scheduling": {
+  "subjects_with_a_scheduled_next_read": 0,
+  "subjects_with_a_due_unrun_next_read": 0,
+  "subjects_with_a_completed_scheduled_read": 21,
+  "subjects_with_a_retry_required": 0,
+  "subjects_with_due_execution_unverified": 5
+ },
+ "what_this_is": "a dated reading of the claim-maintenance register, published so the register's own state can be read without running the register and without trusting this page.",
+ "what_this_is_not": [
+  "not a certification, a rank, a grade or a score",
+  "not a statement that the claim-maintenance axis is MEASURED - the axis carries its own status, and this report neither moves it nor pre-empts the decision that moves it",
+  "not a claim that any individual captured claim is true; it reports how many claims the register holds and in which states the register places them",
+  "not a measurement of any model, system or vendor"
+ ],
+ "states_are_the_register_s_own": "CLAIM_CAPTURED, CLAIM_MEASURED, UNMEASURED and UNCHECKABLE are the register's own vocabulary. UNMEASURED is a declared position with no run behind it. UNCHECKABLE is a cell the method could not settle. Neither is a zero, and a refusal is never converted to a zero.",
+ "correction_carried_here": {
+  "what_was_published": "a 30 September working note recorded \"subjects with scheduled next read: 26\" and \"scheduled subject coverage: 92.86%\" (26 of 28 subjects), derived from the register version then live.",
+  "what_the_register_says_now": {
+   "subjects_with_a_scheduled_next_read": 0,
+   "subjects_with_a_due_unrun_next_read": 0,
+   "subjects_with_a_completed_scheduled_read": 21
+  },
+  "state": "the 92.86% coverage figure is superseded by this reading. The note received a dated correction on 2026-10-30; a dated record is not rewritten and the error is kept visible.",
+  "note_location": "_alignment/CLAIM-MAINTENANCE-CATEGORY-CONVERGENCE-20260930.md (a working document, not a published estate page)"
+ },
+ "reproduces_from": [
+  "https://councilof.ai/spec/claim-maintenance/register.json",
+  "https://councilof.ai/spec/claim-maintenance/"
+ ],
+ "related": [
+  "https://councilof.ai/claim-maintenance/",
+  "https://councilof.ai/spec/claim-maintenance/v0.2/",
+  "https://councilof.ai/api/gspc?axis=claim-maintenance"
+ ],
+ "not_a_certification": "This report counts rows in a register. It decides nothing about whether any measured claim is true, and it grants no status to any subject."
+}

@@ -285,7 +285,7 @@ describe("Council OS tabs", () => {
       expect(g.description.length).toBeGreaterThan(20);
     }
     const verify = DASHBOARD_NAV_GROUPS.find((g) => g.id === "verify")!;
-    expect(verify.tabs.map((t) => t.id)).toEqual(["verify", "evidence"]);
+    expect(verify.tabs.map((t) => t.id)).toEqual(["verify", "evidence", "evidence-delivery", "axis-specialists"]);
 
     const ids = DASHBOARD_TABS.map((t) => t.id);
     expect(ids).toEqual([
@@ -296,6 +296,8 @@ describe("Council OS tabs", () => {
       "mine",
       "verify",
       "evidence",
+      "evidence-delivery",
+      "axis-specialists",
       "board",
       "models",
       "matrix",
@@ -307,10 +309,17 @@ describe("Council OS tabs", () => {
       "swift",
       "evidence-index",
       "learn",
-      "research",
-      "space",
+      "evidence-learning",
+      // Menu extension (PR 3730, 2 Nov): Academy, The Ruler (games) and H.I.M. review
+      // join the canonical destination space — Academy beside Learning, Ruler beside
+      // Games, H.I.M. beside the human-review console.
+      "academy",
       "play",
+      "ruler",
+      "space",
+      "research",
       "staff",
+      "him",
       "sovx",
       "corrections",
       "claims",
@@ -555,3 +564,4 @@ describe("menuTrail names a pane in the menu's own words", () => {
     expect(sidebarLabel("board")).toBe("Leaderboard");
   });
 });
+

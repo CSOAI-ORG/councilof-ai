@@ -2,7 +2,7 @@ import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, Copy, PlugZap, ShieldCheck, Terminal } from "lucide-react";
 import WatchlistPane from "@/components/WatchlistPane";
-import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
+import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES, READINESS_FRAMEWORKS } from "@/lib/mcpTools";
 import { setMetaDescription } from "@/lib/utils";
 import PypiLiveBadge from "@/components/momentum/PypiLiveBadge";
 import EXTENSION_MANIFEST from "../../../extensions/chrome-gspc-verify/manifest.json";
@@ -177,6 +177,40 @@ export default function ToolsPage() {
         <strong>What verification checks:</strong> supported checks compare a record's bytes, hash and, where applicable, signature.
         A valid signature does not establish that the underlying claim is correct. Browser verification is free.
       </div>
+      {/* Governance library (2026-11-02): one row per framework the readiness tool accepts. The
+          framework list is READ from the tool's enum (client/src/lib/mcpTools.ts) — the same file the
+          door serves — so a framework added to the tool appears here without a second list drifting.
+          The honest split: what runs here today (the checklist, free, on the door) vs what is only in
+          preparation. Nothing on this page is a compliance determination. */}
+      <section id="governance-library" aria-labelledby="govlib-h" className="mt-8 rounded-2xl border border-slate-200 bg-white p-5" data-testid="governance-library">
+        <h2 id="govlib-h" className="text-base font-bold text-slate-900">Governance library</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          A readiness checklist for each framework below runs free on the tools door — it lays out, per
+          published provision, the evidence that would show readiness and the question it opens for your
+          compliance function. It is preparation work: not a score, not legal advice, and never a
+          determination of your status under any framework.
+        </p>
+        <ul className="mt-4 grid list-none gap-2 p-0 sm:grid-cols-3">
+          {READINESS_FRAMEWORKS.map((id) => (
+            <li key={id}>
+              <a
+                href={`/dashboard?tab=tools&tool=framework_readiness&framework=${encodeURIComponent(id)}`}
+                data-testid={`govlib-${id}`}
+                className="inline-flex min-h-11 w-full items-center justify-between gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-emerald-800 transition hover:border-emerald-300 hover:bg-emerald-50"
+              >
+                <span className="truncate">{id}</span>
+                <ArrowRight className="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-xs leading-6 text-slate-500">
+          Runs on councilof.ai today: the <span className="font-mono text-[11px]">framework_readiness</span> checklist
+          ({READINESS_FRAMEWORKS.length} frameworks, free, no account). In preparation: per-control evidence
+          packs that tie your own artefacts to signed records. Nothing here runs your data through a model;
+          the checklist is deterministic, and this page does not list tools we cannot execute.
+        </p>
+      </section>
       <section id="extension" aria-labelledby="extension-h" className="mt-8 rounded-2xl border border-slate-200 bg-white p-5" data-testid="tools-extension">
         <h2 id="extension-h" className="text-base font-bold text-slate-900">Browser extension (Chrome, load unpacked)</h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">

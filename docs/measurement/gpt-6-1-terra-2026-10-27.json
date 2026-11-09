@@ -3,6 +3,16 @@
   "record_id": "gpt-6-1-terra-2026-10-27",
   "produced_at": "2026-10-27T04:30:00Z",
   "produced_by": "Council of AI — no measurement was run by CSOAI for this record; see what_this_is",
+  "corrected_at": "2026-10-29T09:10:50Z",
+  "corrections": [
+    {
+      "date": "2026-10-29",
+      "what_changed": "In comparison_to_csoai.how_the_terra_run_is_built: the harness description now names the probe's real location (inspect_tasks/gspc_governance.py in the sibling Kimi regeneration repo) instead of harness/tasks/gspc_governance.py; the command now names that real path; a new field the_terra_command_on_this_estate carries the command that actually runs here (harness/bench/run_bench.py --axis governance); the denominator rule is now attributed to the estate's read_label rather than to the probe; the precedent carries a provenance note saying its schema is registered nowhere in this estate; and the arm-split paragraph no longer names benchmark/federation/probe-bench-arm-split.mjs, which does not exist.",
+      "what_was_wrong": "The record cited a harness path that has never existed in this repository, described a denominator rule the cited probe does not implement, and named an arm-split tool that does not exist. A reader who tried to reproduce the run from this record would have failed at the first command.",
+      "why_it_was_wrong": "The probe and the comparison it came from were carried out in a sibling repository and reported back as if they were this estate's own harness and records. The arithmetic in the precedent is self-consistent, so nothing here says a run did not happen; what is wrong is that the published record pointed readers at paths and schemas that no reader of councilof.ai can resolve.",
+      "not_changed": "Every published third-party benchmark row, its provenance class and its source are untouched, and the headline finding is unchanged: on CSOAI's own banks GPT-6.1 Terra is UNMEASURED. The board's governance figures the record quotes were re-read from the live board on 2026-10-29 and agree (n=237, accuracy 0.5865, TIE, mistral:7b 139/237 vs deepseek-r1:8b 128/237, exact McNemar p=0.3787)."
+    }
+  ],
   "what_this_is": "A dated, sourced record of the benchmark numbers other parties have published for one frontier model, so that the number can be cited, compared and later replaced by a CSOAI run when a funded credential exists. Every row carries its own provenance class and its own source URL.",
   "what_this_does_not_establish": [
     "That CSOAI measured GPT-6.1 Terra. It did not. Every number here is someone else's number.",
@@ -428,11 +438,13 @@
       "own_model_cards_note": "These are in-lane results on our own models. The public board does not rank our own models and does not count them in totals.separated_leads. They are printed here so the Terra comparison has a CSOAI side to point at, not because they compete with anything on this page."
     },
     "how_the_terra_run_is_built": {
-      "harness": "an Inspect eval on a frozen 24-item statute-anchored governance probe (harness/tasks/gspc_governance.py): deterministic exact-token grading, no model judges another model, and an unreadable answer is UNMEASURED (NOANSWER) rather than wrong",
-      "the_terra_command": "inspect eval gspc_governance.py --model openrouter/openai/gpt-6.1-terra",
+      "harness": "A 24-item statute-anchored EU AI Act risk-tier probe. It is real, but it is NOT in this repository: the file is inspect_tasks/gspc_governance.py in the sibling Kimi regeneration repo, written as an Inspect AI task (inspect_ai Task plus a deterministic exact-token scorer over PROHIBITED | HIGH_RISK | LIMITED_RISK | MINIMAL_RISK; no model judges another model). Its own docstring pins the 24 items by that file's commit SHA and declines to quote an interval below usable_n >= 30 because this axis is n=24. Two corrections to what this record said before 2026-10-29: the path harness/tasks/gspc_governance.py has never existed in this repository and is on no branch, and the probe's scorer returns Score(value=1 if got == target.text else 0), so an answer it cannot parse is WRONG there, not UNMEASURED. The NOANSWER denominator rule is this estate's own: read_label in harness/gspc-top100/mill_hub_queue.py, used by harness/bench/run_bench.py. The probe is runnable only by whoever holds that sibling repository; nothing published here carries it.",
+      "the_terra_command": "cd <kimi-regeneration-repo> && inspect eval inspect_tasks/gspc_governance.py --model openrouter/openai/gpt-6.1-terra   # runs against the sibling repository's probe, which this estate does not publish",
+      "the_terra_command_on_this_estate": "python3 harness/bench/run_bench.py --axis governance --model openrouter/openai/gpt-6.1-terra --base-url https://openrouter.ai/api/v1 --out terra-gov.json   # 237 items from csoai/gspc-gov (sha256 9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5), graded by the mill's read_label, where an unreadable answer leaves the denominator",
       "credential_needed": "OPENROUTER_API_KEY with credit (the key on this machine authenticates but answers chat completions with HTTP 402 'This account never purchased credits')",
       "precedent": {
         "record_schema": "council-os.paired-model-comparison/0.1",
+        "provenance": "This comparison was run on the sibling Kimi regeneration repo's 24-item probe, not on anything this estate publishes. Its record schema, council-os.paired-model-comparison/0.1, is registered nowhere in this repository, and the only two files that carry that schema are this record and its Markdown companion. The run is therefore NOT independently verifiable from councilof.ai, and it is reproduced here as an operator-run precedent, not as a measurement this estate published. The counts are internally consistent: 24 items, Kimi 24 correct, MEOK 9 correct, 15 discordant all in one direction, and the two-sided exact McNemar p = 2 x 0.5^15 = 6.103515625e-05.",
         "date": "2026-10-27",
         "axis": "governance",
         "n": 24,
@@ -457,14 +469,15 @@
         "exploratory_mcnemar_exact_two_sided_p": 6.103515625e-05,
         "the_record_s_own_limits": "n=24 is below the harness interval-publication threshold of usable_n>=30, so no confidence interval, rank, certification or independent separation claim is asserted; and MEOK and CSOAI/GSPC are affiliated, so this is an operator-run comparison, not independent leaderboard confirmation"
       },
-      "the_arm_split_must_accompany_the_number": "MEOK is not a bare model behind an API: on a probe the MEOK arm was observed answering with routed_model gspc-statutory-arbiter-seat13, a deterministic statutory arbiter route rather than a model. A like-for-like comparison must publish, beside the score, how many items each arm answered without a model. The estate already has the tooling (benchmark/federation/probe-bench-arm-split.mjs) that computes the split from a record's own per-item ledgers.",
+      "the_arm_split_must_accompany_the_number": "MEOK is not a bare model behind an API: on a probe the MEOK arm was observed answering with routed_model gspc-statutory-arbiter-seat13, a deterministic statutory arbiter route rather than a model. A like-for-like comparison must publish, beside the score, how many items each arm answered without a model. Correction (2026-10-29): the tooling this record named, benchmark/federation/probe-bench-arm-split.mjs, does not exist. This repository has no benchmark/ directory and no commit on any branch has ever contained that path. The tooling that does exist here for a paired comparison against a MEOK arm is harness/bench/paired_comparison.py, with harness/bench/meok_openai_shim.py for the arm's endpoint; the arm split itself is computed from the run's own per-item ledgers. The route name gspc-statutory-arbiter-seat13 appears nowhere in this estate either, so that observation comes from the sibling repo and is not verifiable here.",
       "what_a_run_would_produce": [
-        "the per-item Inspect log for the Terra arm",
+        "the per-item log for the Terra arm, from whichever harness is actually used",
         "the paired comparison against the MEOK arm, with the arm split, the usable_n and unmeasured counts, and the exact McNemar on the discordant items",
         "a full 237-item GSPC-gov run graded by the mill's read_label (harness/bench/run_bench.py), which is the number that would give Terra a cell on the board next to the 139/237 and 128/237 the board already publishes",
-        "a row in this record that moves Terra from UNMEASURED to measured"
+        "a row in this record that moves Terra from UNMEASURED to measured, with the run's own provenance class"
       ]
-    }
+    },
+    "the_arm_split_must_accompany_the_number": "MEOK is not a bare model behind an API: on a probe the MEOK arm was observed answering with routed_model gspc-statutory-arbiter-seat13, a deterministic statutory arbiter route rather than a model. A like-for-like comparison must publish, beside the score, how many items each arm answered without a model. Correction (2026-10-29): the tooling this record named, benchmark/federation/probe-bench-arm-split.mjs, does not exist. This repository has no benchmark/ directory and no commit on any branch has ever contained that path. The tooling that does exist here for a paired comparison against a MEOK arm is harness/bench/paired_comparison.py, with harness/bench/meok_openai_shim.py for the arm's endpoint; the arm split itself is computed from the run's own per-item ledgers. The route name gspc-statutory-arbiter-seat13 appears nowhere in this estate either, so that observation comes from the sibling repo and is not verifiable here."
   },
   "blockers_to_a_real_comparison": [
     {

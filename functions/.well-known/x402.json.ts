@@ -20,6 +20,7 @@ import { OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL, X402_SIGNER_KID } from 
 import { USDC_BASE } from "../api/_skus";
 import { challengeAccept, toV1Requirements, x402Accepts, type X402Env } from "../api/_x402";
 import {
+  COVERAGE_EVIDENCE_DESCRIPTION,
   PROOF_BUNDLE_DESCRIPTION,
   RECEIPTS_BATCH_DESCRIPTION,
   REQUEST_ATTESTATION_DESCRIPTION,
@@ -68,6 +69,8 @@ export const OFFERS: Record<string, ListingOffer> = {
   "/api/discover/ondo": { skuId: "request_attestation", tier: "per_request", amountAtomic: "0" },
   "/api/discover/ondo-ousg": { skuId: "request_attestation", tier: "per_request", amountAtomic: "0" },
   "/api/request-attestation": { skuId: "request_attestation", tier: "per_request" },
+  // COVERAGE EVIDENCE (TUI-2): the assembled row door charges its PATH, buyer query never listed.
+  "/api/coverage-evidence": { skuId: "coverage_evidence", tier: "per_request", productId: "csoai.product.coverage_evidence", pathScoped: true },
   "/api/evidence-bundle": { skuId: "evidence_bundle", tier: "bundle" },
   "/api/signed-data-feed": { skuId: "issuance", tier: "reserve" },
   "/api/proof": { skuId: "issuance", tier: "reserve" },
@@ -168,6 +171,13 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       },
     },
     resources: [
+      // TUI-2 COVERAGE EVIDENCE (2026-10-13): the assembled evidence row for one named asset
+      // from the dated coverage record (finance/full-spread PR #13). Discovery gap: agents could
+      // see aggregate coverage counts but had no per-asset payable resource carrying the
+      // provenance digests. pathScoped — the buyer's asset query never becomes a catalogue row.
+      { method: "GET", url: `${origin}/api/coverage-evidence?asset=tether`, paid_for: "assembly", free_preview: `${origin}/api/coverage-evidence?asset=tether&preview=1`,
+        description: COVERAGE_EVIDENCE_DESCRIPTION,
+        ...req(`${origin}/api/coverage-evidence?asset=tether`, COVERAGE_EVIDENCE_DESCRIPTION)  },
       // The resource the x402 Bazaar indexed first (2026-09-05), and it was missing from the
       // document agents read after they find the domain. Discovery pointed one way and the
       // catalogue the other: an agent arriving from the Bazaar landed on /api/free-door, and an
@@ -353,6 +363,8 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       "A resource that carries no_sale reads live state before it offers anything. Unpaid, it answers 402 with this entry's accepts[] when that read succeeds; otherwise it answers no_sale.status with a JSON body that contains every field of no_sale.body, requests no payment and sends nothing to a facilitator. Read that answer as the door declining to sell. Any other non-402 answer from a listed resource is a mismatch between this manifest and the door.",
     not: ["score", "certificate", "filled-cells", "pay-to-pass", "rank"],
     catalog: `${origin}/api/x402`,
+    // The public signed-card catalogue (free; distinct from `catalog`, the x402 resource list).
+    public_catalog: `${origin}/catalog.json`,
     board: `${origin}/api/gspc`,
     verify: `${origin}/gspc-verify`,
     explainer: `${origin}/pricing`,

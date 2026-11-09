@@ -248,6 +248,21 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Blog Keeping Ai Claims Current"
  },
  {
+  "path": "/blog/owasp-asi-ten-of-ten",
+  "comp": "BlogPost",
+  "title": "Blog Owasp Asi Ten Of Ten"
+ },
+ {
+  "path": "/blog/the-leaderboard-illusion-is-real",
+  "comp": "BlogPost",
+  "title": "Blog The Leaderboard Illusion Is Real"
+ },
+ {
+  "path": "/blog/we-attack-ourselves-every-night",
+  "comp": "BlogPost",
+  "title": "Blog We Attack Ourselves Every Night"
+ },
+ {
   "path": "/board",
   "comp": "MeasurementBoard",
   "title": "Measurement Board"
@@ -266,6 +281,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/boards/mcp",
   "comp": "McpTrustBoard",
   "title": "Mcp Trust Board"
+ },
+ {
+  "path": "/brand",
+  "comp": "Brand",
+  "title": "Brand"
  },
  {
   "path": "/bulk-import",
@@ -603,6 +623,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Distribution Integrity"
  },
  {
+  "path": "/docs",
+  "comp": "DocsHub",
+  "title": "Docs Hub"
+ },
+ {
   "path": "/doctrine",
   "comp": "Doctrine",
   "title": "Doctrine"
@@ -919,8 +944,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/globe",
-  "comp": "Redirect",
-  "title": "Globe"
+  "comp": "WorldGlobe",
+  "title": "World Globe"
  },
  {
   "path": "/glossary",
@@ -974,8 +999,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/gpai",
-  "comp": "GpaiObligations",
-  "title": "Gpai Obligations"
+  "comp": "GpaiMatrix",
+  "title": "Gpai Matrix"
  },
  {
   "path": "/gpai-evidence",
@@ -1086,6 +1111,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/high-risk-ai-systems",
   "comp": "HighRiskSystems",
   "title": "High Risk Systems"
+ },
+ {
+  "path": "/him",
+  "comp": "Him",
+  "title": "Him"
  },
  {
   "path": "/hive",
@@ -1334,13 +1364,13 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/map",
-  "comp": "RelevanceMap",
-  "title": "Relevance Map"
+  "comp": "WorldMap",
+  "title": "World Map"
  },
  {
   "path": "/map-regions",
-  "comp": "RegionsMap",
-  "title": "Regions Map"
+  "comp": "Redirect",
+  "title": "Map Regions"
  },
  {
   "path": "/marketing",
@@ -1353,14 +1383,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Maternal Covenant"
  },
  {
-  "path": "/mcp",
-  "comp": "MCPRegistry",
-  "title": "MCPRegistry"
- },
- {
   "path": "/mcp-tools",
-  "comp": "ToolCommons",
-  "title": "Tool Commons"
+  "comp": "Redirect",
+  "title": "Mcp Tools"
  },
  {
   "path": "/mcps",
@@ -1416,6 +1441,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/meok-law",
   "comp": "JurisdictionEngine",
   "title": "Jurisdiction Engine"
+ },
+ {
+  "path": "/metered",
+  "comp": "X402Catalog",
+  "title": "X402 Catalog"
  },
  {
   "path": "/methodology",
@@ -1744,8 +1774,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/real-world",
-  "comp": "RealWorldMap",
-  "title": "Real World Map"
+  "comp": "Redirect",
+  "title": "Real World"
  },
  {
   "path": "/receipt",
@@ -1761,6 +1791,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/rediscovered",
   "comp": "Lineage",
   "title": "Lineage"
+ },
+ {
+  "path": "/refund-policy",
+  "comp": "RefundPolicy",
+  "title": "Refund Policy"
+ },
+ {
+  "path": "/refunds",
+  "comp": "RefundPolicy",
+  "title": "Refund Policy"
  },
  {
   "path": "/refutation-ledger",
@@ -1779,8 +1819,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/regions",
-  "comp": "RegionsMap",
-  "title": "Regions Map"
+  "comp": "Redirect",
+  "title": "Regions"
  },
  {
   "path": "/register",
@@ -1819,7 +1859,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/relevance-map",
-  "comp": "RelevanceMap",
+  "comp": "Redirect",
   "title": "Relevance Map"
  },
  {
@@ -1859,7 +1899,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/risk-heatmap",
-  "comp": "RiskHeatmap",
+  "comp": "Redirect",
   "title": "Risk Heatmap"
  },
  {
@@ -1921,6 +1961,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/signals/2026-09-24",
   "comp": "SignedMillBatch20260924",
   "title": "Signed Mill Batch20260924"
+ },
+ {
+  "path": "/signup",
+  "comp": "AccountSignup",
+  "title": "Account Signup"
  },
  {
   "path": "/simulate",
@@ -2114,7 +2159,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/tool-commons",
-  "comp": "ToolCommons",
+  "comp": "Redirect",
   "title": "Tool Commons"
  },
  {
@@ -2304,8 +2349,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/world-3d",
-  "comp": "RealWorldMap",
-  "title": "Real World Map"
+  "comp": "Redirect",
+  "title": "World 3d"
  },
  {
   "path": "/world-data",

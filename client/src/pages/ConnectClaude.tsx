@@ -36,6 +36,7 @@ export const ONE_LINE: Record<string, string> = {
         `The ${t.name.slice("axis_".length)} axis on the live GSPC board: status, sample size, accuracy, interval, and the run behind it.`,
       ]),
   ),
+  framework_readiness: "A readiness checklist over nine frameworks: per published provision, the evidence that would show readiness and the question it opens.",
   board_totals: "How many axes the GSPC board carries and how many have a measurement behind them, with the board's dates.",
   get_axis: "One board axis: status, sample size, accuracy and interval where they exist, and a link to the run behind it.",
   verify_card: "Checks a signed measurement card against the published key: VALID, INVALID with the reason, or UNCHECKABLE.",

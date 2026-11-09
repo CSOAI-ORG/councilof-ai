@@ -20,6 +20,7 @@
  * Hugging Face remains a public distribution surface, not a second authority.
  */
 import { useEffect, useId, useState, type ReactNode } from "react";
+import { axisHref } from "@/lib/axisHref";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
 import { axisRunEvidence } from "../board/runEvidence";
 import { axisMeta } from "../../lib/axisRegulation";
@@ -244,11 +245,14 @@ function LeaderText({ a }: { a: GspcAxis }) {
         <span className={muted}> The named leader has no verifiable signed card, so no name is published.</span>
       </span>
     );
-  if (st === "PUBLIC")
+  if (st === "PUBLIC" && a.public_leader_state === "PUBLIC" && a.status === "MEASURED" && a.kind === "model-comparison"
+      && typeof a.leader === "string" && a.leader.trim()
+      && (a.separation === "SEPARATED" || a.separation === "TIE" || a.separation === "UNTESTED"))
     return (
       <span data-testid="leader-text">
-        Leader: <span className="font-semibold">{String(a.leader)}</span>
-        {typeof a.accuracy === "number" ? <> {fmtPct(a.accuracy)}</> : null}
+        {a.separation === "SEPARATED" ? "Separated leader: " : a.separation === "TIE"
+          ? "Reported result (tie): " : "Reported result (separation untested): "}<span className="font-semibold">{String(a.leader)}</span>
+        {typeof a.accuracy === "number" && Number.isFinite(a.accuracy) ? <> {fmtPct(a.accuracy)}{a.accuracy_is ? ` (${a.accuracy_is})` : ""}</> : null}
         {a.separation === "TIE" ? <span className={muted}> · TIE, a point lead is not a measured advantage</span> : null}
       </span>
     );
@@ -267,7 +271,7 @@ function AxisName({ a }: { a: GspcAxis }) {
     return <span className="text-sm font-bold text-slate-900 dark:text-emerald-50">{label}</span>;
   }
   return (
-    <a href={`/gspc/${encodeURIComponent(a.axis)}/`} className="text-sm font-bold text-slate-900 hover:text-emerald-800 dark:text-emerald-50 dark:hover:text-emerald-300">
+    <a href={axisHref(a) ?? undefined} className="text-sm font-bold text-slate-900 hover:text-emerald-800 dark:text-emerald-50 dark:hover:text-emerald-300">
       {label}
     </a>
   );
@@ -372,7 +376,7 @@ export function BoardStrip({
                   </td>
                   <td className={td}>
                     {a.kind === "model-comparison" ? (
-                      <a href={`/gspc/${encodeURIComponent(a.axis)}/`} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
+                      <a href={axisHref(a) ?? undefined} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
                         Axis detail
                       </a>
                     ) : (

@@ -1,0 +1,132 @@
+{
+  "artifact_role": "synthetic_verification_context",
+  "fixture_id": "CSOAI-SAFE-GALC-RECORD-LINK-002",
+  "nature": "declared synthetic test double, not external truth",
+  "limit": "no real signatures, execution, time proofs, people, custody or independent attestation",
+  "digest_rule": {
+    "id": "urn:example:csoai-synthetic:c14n:json-sorted-keys-compact-utf8:1",
+    "statement": "SHA-256 over the UTF-8 bytes of the JSON value written with keys sorted, no insignificant whitespace and non-ASCII characters unescaped. A local fixture rule. No RFC 8785 claim is made.",
+    "state_and_parameter_digests": "computed over the item's value member",
+    "item_digests": "computed over the whole item"
+  },
+  "items": [
+    {
+      "id": "urn:example:csoai-synthetic:authority:delegation-requester-1",
+      "kind": "synthetic authority evidence",
+      "availability": "available",
+      "statement": "The requester may propose synthetic_update on target-1. It may not approve its own proposals."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:authority:approver-mandate-1",
+      "kind": "synthetic authority evidence",
+      "availability": "available",
+      "statement": "The approver may approve synthetic_update on target-1. This is the approver's own authority basis, kept apart from any approval the approver issues."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:authority:approval-1",
+      "kind": "synthetic approval",
+      "availability": "available",
+      "approver_authority_ref": "urn:example:csoai-synthetic:authority:approver-mandate-1",
+      "statement": "Approval of proposal-1. Stated window 2026-01-01T00:00:10Z to 2026-01-01T00:01:10Z. One use."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:authority:approval-2",
+      "kind": "synthetic approval",
+      "availability": "available",
+      "approver_authority_ref": "urn:example:csoai-synthetic:authority:approver-mandate-1",
+      "statement": "A second approval of proposal-1, issued separately. Stated window 2026-01-01T00:06:00Z to 2026-01-01T00:07:00Z. One use. It is not a refresh or an extension of approval-1."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:policy:synthetic-update:1",
+      "kind": "synthetic policy",
+      "availability": "available",
+      "statement": "synthetic_update on target-1 needs a current approval from a holder of approver-mandate-1."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:context:baseline-read-1",
+      "kind": "synthetic context read",
+      "availability": "available",
+      "statement": "Baseline of target-1 read at 2026-01-01T00:00:00Z."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:context:baseline-read-2",
+      "kind": "synthetic context read",
+      "availability": "available",
+      "statement": "Baseline of target-1 read again at 2026-01-01T00:04:50Z. Unchanged. Fresh evidence only; it carries no permission."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:revocation:determination-1",
+      "kind": "synthetic revocation status",
+      "availability": "available",
+      "statement": "No revocation recorded for determination-1."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:revocation:determination-2",
+      "kind": "synthetic revocation status",
+      "availability": "available",
+      "statement": "No revocation recorded for determination-2."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:state:target-1:before",
+      "kind": "synthetic state",
+      "availability": "available",
+      "value": {
+        "field": "A"
+      }
+    },
+    {
+      "id": "urn:example:csoai-synthetic:state:target-1:after",
+      "kind": "synthetic state as held in the sink record",
+      "availability": "available",
+      "value": {
+        "field": "B"
+      }
+    },
+    {
+      "id": "urn:example:csoai-synthetic:state:target-1:reported-by-affected-party",
+      "kind": "synthetic state as reported by the affected party",
+      "availability": "available",
+      "value": {
+        "field": "B",
+        "reported_impact": "contested"
+      }
+    },
+    {
+      "id": "urn:example:csoai-synthetic:parameters:proposed",
+      "kind": "containment operand: parameters in the proposal",
+      "availability": "available",
+      "value": {
+        "field": "B",
+        "max_changes": 2
+      }
+    },
+    {
+      "id": "urn:example:csoai-synthetic:parameters:presented",
+      "kind": "containment operand: parameters presented at enforcement",
+      "availability": "available",
+      "value": {
+        "field": "B",
+        "max_changes": 1
+      }
+    },
+    {
+      "id": "urn:example:csoai-synthetic:method:scope-containment:1",
+      "kind": "declared comparison method",
+      "availability": "available",
+      "run_on_this_fixture": false,
+      "statement": "Presented parameters are contained in the proposed parameters when field is equal and max_changes is less than or equal to the proposed max_changes."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:custody:none",
+      "kind": "custody declaration",
+      "availability": "available",
+      "statement": "No custody receipt, offer, transfer or acceptance evidence exists for any record in this fixture."
+    },
+    {
+      "id": "urn:example:csoai-synthetic:identity-binding:affected-party-1",
+      "kind": "synthetic identity binding",
+      "availability": "available",
+      "statement": "Invented. No person took part."
+    }
+  ]
+}

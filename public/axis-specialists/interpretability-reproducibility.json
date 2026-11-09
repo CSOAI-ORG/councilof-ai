@@ -1,0 +1,232 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "interpretability-reproducibility",
+  "specialist": {
+    "id": "meok-interpretability-reproducibility-specialist",
+    "cluster_id": "meok-axis-interpretability-reproducibility",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Design an interpretability instrument that tests whether published artifacts can be independently reproduced, not merely whether explanatory prose exists.",
+    "reviewer_role": "interpretability and reproducibility reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "artifact completeness",
+    "environment pinning",
+    "independent replay",
+    "result equivalence"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-11-02.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-10-28T04:25:30.845Z",
+      "source": "/interop/axis-banks/interpretability-reproducibility-20261102.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "d8466bcdab98d93fa1f571768a74cf7e948b0520adc1acc3aad14269f9d7040a",
+    "axis_row": {
+      "axis": "interpretability-reproducibility",
+      "family": "subject",
+      "kind": "measured-subject",
+      "applies_to": "interpretability-groups",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an interpretability group publish method, checkpoints, a reproducible notebook and peer-reviewed material",
+      "n": 33,
+      "status": "MEASURED",
+      "method_status": "meets-rule",
+      "method": "scripts/subject-axis/subject-axis-live-run.mjs",
+      "method_sha": "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
+      "rate": 0.9091,
+      "rate_scale": "fraction",
+      "rate_rule": "presence of at least 3 of 5 declared classes",
+      "bank": "interop/axis-banks/interpretability-reproducibility-20261102.json",
+      "bank_sha256": "d72980fd27f31ff6a2fa63287b4b018219b91785ba03078d8f841b8e581bdd2d",
+      "frame_sha256": "79ad279f7b58ee19e2997e5a76a2cf0634d573f6a9eb21cbf363bc8333984d28",
+      "facts_as_of": "2026-10-28T04:25:30.845Z",
+      "evidence_url": "/interop/axis-banks/interpretability-reproducibility-20261102.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "n_unit": "subjects in the frozen frame",
+      "colour": "hsl(280 62% 52%)",
+      "hue": 280,
+      "note": "33 subjects from a frozen frame of 35 (2 refusals recorded, never converted to failures). rate 0.9091 = share meeting at least 3 of 5 declared presence classes (4-of-5 0.5152, 5-of-5 0.1818). Class census: mechanistic 32, sparse 11, pretrained 21, reproducible 26, peer 29. 33/33 must-fail negative controls caught. Presence of a string in public bytes at a stated time is not evidence of quality, truth or compliance.",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-10-28T04:25:30.845Z",
+        "source": "/interop/axis-banks/interpretability-reproducibility-20261102.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist interpretability-reproducibility audits only the interpretability-reproducibility row",
+      "evidence": "interpretability-reproducibility"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-interpretability-reproducibility; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "MEASUREMENT_KIND",
+      "state": "FINDING",
+      "detail": "unknown measurement kind measured-subject"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "meets-rule"
+    }
+  ],
+  "summary": {
+    "checks": 5,
+    "passed": 4,
+    "declared": 0,
+    "findings": 1,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "treat explanatory prose as reproduction and require evidence-class failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "ignore environment drift and require replay-manifest failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "interpretability-reproducibility-proposal-1",
+      "proposal": "define a reproduction manifest for code, data, environment and expected outputs",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "interpretability-reproducibility-proposal-2",
+      "proposal": "propose thirty interpretability artifacts with independent replay outcomes",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_interpretability-reproducibility",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/interpretability-reproducibility",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "interpretability and reproducibility reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "874c321d7869a84514b5f7eab758cdfe9d33e7da2bd92f306f6fd9a1c443c9ed",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "applies_to",
+      "method_status",
+      "n",
+      "status"
+    ],
+    "measurement_url": "/api/gspc/axis/interpretability-reproducibility",
+    "competency_url": "/api/hitl/modules/interpretability-reproducibility",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}

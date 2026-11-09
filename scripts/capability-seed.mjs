@@ -23,7 +23,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import {
   REPO, REGISTRY_PATH, SCHEMA, routeTable, servedApiRoutes, lifecycleFromSource,
-  routerSkillIds,
+  routerSkillIds, WITHDRAWN_LIFECYCLES,
 } from "./capability-registry.mjs";
 
 const readJSON = (p) => JSON.parse(readFileSync(p, "utf8"));
@@ -335,6 +335,19 @@ for (const c of merged) {
     (listedMethods
       ? listedMethods.has(String(c.method || "").toUpperCase())
       : fixedApiSource);
+
+  // A WITHDRAWN route (RETIRED / DOOR_CLOSED) is in the producer's reach and deliberately not
+  // published: build_openapi.py drops it, so it is taken off the openapi surface and NAMED here.
+  if (inScope && WITHDRAWN_LIFECYCLES.has(c.lifecycle)) {
+    c.surfaces = c.surfaces.filter((s) => s !== "openapi");
+    openapiGap.push({
+      id: c.id,
+      path: c.path,
+      method: c.method,
+      reason: `withdrawn (${c.lifecycle}): the handler still answers its fail-closed ${EXPECT[c.lifecycle][0]}, and a withdrawn route is not listed in public/openapi.json`,
+    });
+    continue;
+  }
 
   if (inScope) {
     if (!c.surfaces.includes("openapi")) c.surfaces = ["openapi", ...c.surfaces];

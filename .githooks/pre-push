@@ -38,4 +38,25 @@ while read -r local_ref local_sha remote_ref remote_sha; do
   fi
 done
 [ -x "$ROOT/scripts/pre-push-gates.sh" ] || exit 0
+
+# THE PRERENDER'S BROWSER LIVES OUTSIDE THE RECLAIMABLE CACHE.
+# Playwright's default browser directory is ~/Library/Caches/ms-playwright, and a
+# disk reclaim on this machine has deleted it THREE times in one morning —
+# once mid-push, while this very gate was running. Every time, the gate
+# reported "Chromium for Playwright is not installed", which reads like a
+# missing dependency but is a reclaim having taken a regenerable cache that
+# the gate genuinely needs.
+#
+# The browsers are therefore installed at a stable path and the environment
+# points Playwright at it. If that path is missing, the gate says so; it does
+# not silently fall back to a cache that a reclaim will take again.
+export PLAYWRIGHT_BROWSERS_PATH="${PLAYWRIGHT_BROWSERS_PATH:-$HOME/csoai-logs/ms-playwright}"
+if [ ! -d "$PLAYWRIGHT_BROWSERS_PATH" ]; then
+  echo "pre-push: the prerender browser is not at $PLAYWRIGHT_BROWSERS_PATH" >&2
+  echo "  install it there with:" >&2
+  echo "    PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH node node_modules/playwright/cli.js install chromium" >&2
+  exit 1
+fi
+export PLAYWRIGHT_BROWSERS_PATH
+
 "$ROOT/scripts/pre-push-gates.sh" "$@"

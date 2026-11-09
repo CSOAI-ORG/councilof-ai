@@ -1,0 +1,240 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "harness-fidelity",
+  "specialist": {
+    "id": "meok-harness-fidelity-specialist",
+    "cluster_id": "meok-axis-harness-fidelity",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Design a same-model, same-bank, cross-harness reproducibility method with transport, decoding and prompt-rendering differences isolated.",
+    "reviewer_role": "evaluation harness reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "model identity",
+    "bank identity",
+    "decoding controls",
+    "transport and rendering parity"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-11-02.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-11-02T04:20:54.265Z",
+      "source": "/interop/axis-banks/harness-fidelity-20261102.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "aced7b6a217213eac91a6bfdf39f3f877960ae2f243678329caf5e28bd169402",
+    "axis_row": {
+      "axis": "harness-fidelity",
+      "family": "subject",
+      "kind": "measured-subject",
+      "applies_to": "harnesses",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does an evaluation harness pin its dependencies, publish a must-fail control, isolate execution and document reproduction",
+      "n": 36,
+      "status": "MEASURED",
+      "method_status": "meets-rule",
+      "method": "scripts/subject-axis/build_harness_fidelity.mjs",
+      "method_sha": "1ec4ee46eb119cae5832ed2ffeb1a203609e11c67523231d25be6240b3ff9ab4",
+      "rate": 0.6667,
+      "rate_scale": "fraction",
+      "rate_rule": "presence of at least 3 of 5 declared classes",
+      "bank": "interop/axis-banks/harness-fidelity-20261102.json",
+      "bank_sha256": "3f10dc5f034f3ccf5e6522606cfdc3e4bd4ebcf1a86adc2a28420fba41822a3b",
+      "frame_sha256": "58b661700d97a909a49732ab0843e59e4de90399abe06df5913782911f4dc441",
+      "facts_as_of": "2026-11-02T04:20:54.265Z",
+      "evidence_url": "/interop/axis-banks/harness-fidelity-20261102.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "n_unit": "subjects in the frozen frame",
+      "colour": "hsl(230 62% 52%)",
+      "hue": 230,
+      "note": "36 subjects from a frozen frame of 40 (4 refusals recorded, never converted to failures). rate 0.6667 = share meeting at least 3 of 5 declared presence classes (4-of-5 0.3611, 5-of-5 0). Class census: pinned 23, must 1, isolation 20, reproduction 29, published 26. 36/36 must-fail negative controls caught. Presence of a string in public bytes at a stated time is not evidence of quality, truth or compliance.",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-11-02T04:20:54.265Z",
+        "source": "/interop/axis-banks/harness-fidelity-20261102.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist harness-fidelity audits only the harness-fidelity row",
+      "evidence": "harness-fidelity"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-harness-fidelity; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "MEASUREMENT_KIND",
+      "state": "FINDING",
+      "detail": "unknown measurement kind measured-subject"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "meets-rule"
+    }
+  ],
+  "summary": {
+    "checks": 5,
+    "passed": 4,
+    "declared": 0,
+    "findings": 1,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "change the bank between harnesses and require comparability failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "attribute a transport error to model behavior and require error-class failure",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "harness-fidelity-proposal-1",
+      "proposal": "publish a two-harness reference replay before expanding the matrix",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "harness-fidelity-proposal-2",
+      "proposal": "define at least thirty valid paired runs with decoding and transport manifests",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_harness-fidelity",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/harness-fidelity",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "evaluation harness reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "3fd807325003ac117158b203f999938799635e93b68702a11ad1f8e5ec0066a0",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 8,
+        "title": "Runtime isolation is least privilege"
+      },
+      {
+        "article": 9,
+        "title": "Credentials are not agent memory"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "applies_to",
+      "method_status",
+      "n",
+      "status"
+    ],
+    "measurement_url": "/api/gspc/axis/harness-fidelity",
+    "competency_url": "/api/hitl/modules/harness-fidelity",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}

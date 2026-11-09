@@ -1,0 +1,55 @@
+export function evidenceDeliveryInput() {
+  return {
+    draft: {
+      schema: "csoai.local-evidence-draft/1.2",
+      receipt_id: "csoai-local-aaaaaaaaaaaaaaaa-m fixture",
+      artifact_state: "UNSIGNED_LOCAL_DRAFT",
+      claim_state: "LOCAL_DRAFT_REVIEWED",
+      measurement_state: "LOCAL_OBSERVATION_NOT_INDEPENDENT_MEASUREMENT",
+      certification: false,
+      created_at: "2026-10-26T12:00:00.000Z",
+      method: {
+        id: "local-evidence-draft/1.3.1",
+        digest_algorithm: "SHA-256",
+        negative_control: "append fixed suffix; require digest divergence",
+      },
+      industry: { id: "security", name: "Security", craft: "Control drift", gspc_axes: ["governance"], standards_map: [] },
+      subject: { id: "subject-001", input_name: "source.txt", input_kind: "text" },
+      evidence: {
+        input_sha256: "a".repeat(64),
+        negative_control_sha256: "b".repeat(64),
+        negative_control_result: "DIVERGENT",
+        observed_state: "Observed source bytes locally.",
+        limitations: "No independent retrieval or measurement.",
+        incidents_or_near_misses: "None observed.",
+        intervention_point: "Reviewer can stop export.",
+      },
+      claim_boundary: {
+        current_local_evidence_only: true,
+        captured_at: "2026-10-26T12:00:00.000Z",
+        capture_is_not_a_finding: true,
+        continuous_watch: false,
+        supersedes_receipt: null,
+        correction_history: "Explicit receipt linkage only; no ledger write performed",
+      },
+      meok_him: {
+        human_in_loop: true,
+        reviewer: "Nick · reviewer",
+        review_decision: "approve",
+        intervention_status: "available",
+        review_notes: "Reviewed source and limits.",
+      },
+      commercial: {
+        engagement: "Evidence pilot",
+        customer_or_team: "Security team",
+        delivery_stage: "draft",
+        reported_value: "",
+        currency: "GBP",
+        review_cadence: "one-off",
+        next_review_date: null,
+        value_basis: "SELF_REPORTED_NOT_PAYMENT_VERIFIED",
+      },
+      non_claims: ["Not a CSOAI signature", "Not third-party or independent measurement"],
+    },
+  };
+}

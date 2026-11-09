@@ -1,0 +1,121 @@
+{
+  "card": {
+    "as_of": "2026-10-29T14:18:32Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:TBILL:bsc",
+      "symbol": "TBILL",
+      "product": "OpenEden T-Bills",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x5b4681f0d7a01b817675f25892d3ad73572fd1d9",
+      "block": 130487833,
+      "block_hash": "0x84687ed29ac08a828407956a131b068ea3124fd60a54d4e1e6b2a92ae951288e",
+      "block_time": "2026-10-29T14:18:32Z",
+      "rpc": "bsc-rpc.publicnode.com",
+      "checked": {
+        "name": "OpenEden T-Bills",
+        "symbol": "TBILL",
+        "decimals": 18,
+        "totalSupply": "217941772693685289576077342",
+        "owner": "0x3ba6c5437232156baacba5c084c8a746e3217ed6",
+        "kycManager": "0xd9cf8c5bb16422d992595f3e3342de25fe7f5cf9",
+        "eip1967_implementation": "0xf3c7bbd9f91de0664a3e2ec5063e45872da472d9"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 130487833 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c32fe7ea09ac78bc3766a57a4555b71dc6b711625a966595ab05135451505582",
+    "sig_ed25519": "6791d11a817214d6a6487ed2d7edbd3cc5e43fefc54101d28ddb8b20de28d80ffddb4870e8bdc0df6db3be9186e821eff825a2fbccbb2fde0064b32bd56c7501",
+    "source_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://docs.openeden.com/tbill/smart-contract-addresses"
+    ],
+    "subject": "evm:TBILL:bsc permission state at block 130487833",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:TBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "aa39f0973cbdcc4609774f44fb6c7bad1afc651bf8a984e5e5c7614885afaaeb",
+    "f57370dc6e058cd9ce036f1a4df0dddd0505d835c93700a3af77b6ba4823e89b",
+    "5a1ea11aa69f5859e0da9c26e7cd1fead39ed3b5bfb98d3e179ecb24b5ab4650",
+    "bda4cf92138c6157827ee0c8b5bbc44f12d65dd7f767c972699567acd91cc5df",
+    "eb08762c863e5732dd9b8fb5b864059402093ba931458bc7788c0ded10cc56f2",
+    "398c6f2c464d4d122f89976dace34f87dd6c9c34396f14c132a9b3eaf50e06d5",
+    "44666dada14ccc082f9bd716911d1ebda6d69d45f1ec4e7ca66ba9ea01e32c34",
+    "006b22471d09a20f1fe7aabf07819943ed692f6704749e7cbb66f7b6ea425796",
+    "188d3f3824e867ed9d8b6d0734e2b748456578c4dfc63df2b2b6d81fe3916eb5"
+  ]
+}

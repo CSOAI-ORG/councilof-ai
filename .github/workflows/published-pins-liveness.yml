@@ -1,0 +1,72 @@
+name: Published-pin liveness (scheduled sweep)
+
+# The networked half of the pin-liveness check. The offline half - the integrity of the published
+# record of pins that do not resolve - blocks every PR that touches a gated path, in pr-gates.yml.
+# This workflow answers the other question: does a pin we publish still resolve for an anonymous
+# reader?
+#
+# WHY IT IS NOT A REQUIRED PR CHECK
+# A required check has to be able to fail only when the thing it checks is wrong. This one asks a
+# third party, and a third party can answer "429" or "503" for reasons that have nothing to do
+# with our pins. A gate that goes red because a hub is busy teaches people to re-run it, and a
+# gate people re-run protects nothing. So the probe runs on a schedule, where a red result is a
+# fact about production, and it rotates over every published revision.
+#
+# A pin that dies is NOT hidden. The sweep writes the record of pins that do not resolve, and a
+# pin that is not in that record fails the run. To record one, add it to
+# public/interop/published-pin-not-publicly-verifiable.json with the reason and the date it was
+# observed; the entry then ages out after 90 days and must be re-reviewed.
+
+on:
+  schedule:
+    # Hourly, on the hour. The sample rotates by UTC hour, so every published revision is
+    # visited within a day and a dead pin is found within hours rather than at the next release.
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      full:
+        description: 'Sweep every published revision instead of the rotating sample (slow; the hub rate-limits bursts)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: published-pins-liveness
+  cancel-in-progress: false
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+
+      - name: The gate can fail
+        run: node scripts/review/published-pins-liveness.mjs --selftest
+
+      - name: Sweep the published pins
+        run: |
+          set -euo pipefail
+          if [ "${{ inputs.full }}" = "true" ]; then
+            node scripts/review/published-pins-liveness.mjs --root . --full --delay-ms 4000 --retries 4 \
+              --json-out pin-liveness.json
+          else
+            node scripts/review/published-pins-liveness.mjs --root . --sample 40 --delay-ms 1500 --retries 3 \
+              --json-out pin-liveness.json
+          fi
+
+      - name: The published record of not-publicly-verifiable pins is still sound
+        if: always()
+        run: node scripts/review/published-pins-liveness.mjs --root . --record-only
+
+      - name: Keep the sweep record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pin-liveness-${{ github.run_id }}
+          path: pin-liveness.json
+          if-no-files-found: ignore

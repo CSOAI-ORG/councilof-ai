@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-10-24T09:38:04Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "xai",
+      "surface": "pricing",
+      "url": "https://x.ai/api",
+      "prev_sha256": "e6d3af99733af2a3e1c0721badb5d89d4158d606a265992cbdc5c18d1974018c",
+      "new_sha256": "07d38505c3f10fdba1a02f78bfbaf51952eb18da4013fcd3bc78a2f7b0eae351",
+      "prev_bytes_sha256": "75d5d19198a7cd4c5a0513c2d48a43060d94c79a043e3f3d05473d5fc1a6c616",
+      "new_bytes_sha256": "bebf4b6163bcf255b4706c30fab4a0292375969f503bc52d013e7ed9040c22a5",
+      "prev_fetched_at": "2026-09-14T10:50:36Z",
+      "fetched_at": "2026-10-24T09:38:04Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 353087,
+        "new": 363845
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3d36ba3233c3a22cd5adfb1daa70ecb2d189f86dc27e409218a8ec97d24fb97a",
+    "sig_ed25519": "5742c7b9cf822a3a51dbcc23766087b565a9d9d4540d2665eef2bbe7911bcf235cbeeff123b53aa91cbd607bf8344ddc2b3dece05c4e1eb053395cd787265006",
+    "source_urls": [
+      "https://x.ai/api"
+    ],
+    "subject": "xAI — pricing: bytes changed 2026-10-24",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:xai",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "04185ebdb82edb330bc0408dd3cb40ece91f38bc0e4f8116bd772f5712ad9c81",
+    "9bb83cbdab80aedf074aab6d7910a7e522037f5988cbf9b0343c8e120acedd4c",
+    "d2e45d7006f352929931310c7f00b7ac488d5fdc209236b922066c2e2ae655e0",
+    "eb2fe74d3f90e5faa9076b5a3e066b00ae2c858295ef0b9ef98834c5f35cfe35",
+    "efefde0bdbde6a5ef3b08ff4cbda7b7d444de4d9cb0b59993fca5e915dc6b347",
+    "c24a552961875d80db6f0e10ab4bf29f0339811437421181b827ade4ac2ba245",
+    "3f6a8c321b6a867134a9fb644beb189d2e468e06ca88aab0c23eccadcbcc5810",
+    "2347810be70cf927d205598cdda9d0d6536a0fb064d55814988e4d6f20499c3d",
+    "698022b669e991ba5f21c904d323f321e46b6a7c9ff3d6222083d469bca0a693"
+  ]
+}

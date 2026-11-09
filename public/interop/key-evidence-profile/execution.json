@@ -1,0 +1,65 @@
+{
+  "additional_profile_cases": 3,
+  "baseline_cases_and_mutations": 21,
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "upstream/trust/key-evidence-states-v0/check.py"
+      ],
+      "exit_code": 0,
+      "log": "baseline.txt",
+      "log_sha256": "d35999b40f0acbc03dfe74edc863a66c0852b7b81ce6b784332cb4df30f89d6f"
+    },
+    {
+      "command": [
+        "python3",
+        "test_profile.py"
+      ],
+      "exit_code": 0,
+      "log": "profile-tests.txt",
+      "log_sha256": "85f4afbce92638554346af564c94964da9b66a6cf059bdd2e256bfd761c5b051"
+    },
+    {
+      "command": [
+        "python3",
+        "replay.py"
+      ],
+      "exit_code": 0,
+      "log": "replay.txt",
+      "log_sha256": "6759461411b44a41edce6ca04d66d5db933a7ee7e69e4681d3ee95d02563dfbd"
+    },
+    {
+      "command": [
+        "python3",
+        "replay.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log": "replay-check.txt",
+      "log_sha256": "e159b964f2b93fd916c35196ee470535dacd852fa023c4123f9af557dc9625c3"
+    }
+  ],
+  "environment": {
+    "dependencies": {
+      "cryptography": "50.0.2",
+      "rfc8785": "0.1.4"
+    },
+    "machine": "x86_64",
+    "python": "3.12.16",
+    "system": "Linux"
+  },
+  "execution_authority": false,
+  "independent_implementation": false,
+  "observed_at": "2026-10-30T08:37:08.338582+00:00",
+  "profile_test_methods": 23,
+  "schema": "council.key-evidence-execution/1",
+  "sources": {
+    "capture.py": "2040747373d20bd78f86f9e37839cf7eaf566717a6820a336583a8063efe4761",
+    "profile.py": "e2555fdd62f39a075e09a55c254a01d229a55c5ebed85b744be271df8e3afc3a",
+    "replay.py": "2cfeace60563d608c419377a07f39e4a2569786c5d92b9075dcd7162efc05a9b",
+    "requirements.txt": "6245940e3b65e73edb34f73ca9e7c7d1161905f12984067c5e50e01ad97c4043",
+    "test_profile.py": "0507cdf2a1227ce1cd20b5e2a4a5e6b4d3798cc28d65ef344996c5b8c61c9ec7",
+    "upstream_manifest.json": "a8f8fd619c521fafe1bc9f33c6b3df412dd32deb07c9b9a18b7e9fd7aa42d56b"
+  }
+}

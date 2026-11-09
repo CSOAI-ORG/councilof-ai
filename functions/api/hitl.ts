@@ -1,3 +1,9 @@
+/**
+ * Public oversight state, live-board knowledge checks, challenges, and decision records.
+ * Recording a decision requires a configured shared operator token. A matching answer
+ * and a caller-supplied operator label do not establish identity, human presence,
+ * professional competence, or execution authority.
+ */
 // functions/api/hitl.ts — the human-in-the-loop surface.
 //
 //   GET  /api/hitl                 the oversight state: policy, gates, modules, counts
@@ -44,6 +50,7 @@ import {
   decisionPathOpen,
   deriveModule,
   deriveModules,
+  getChallenge,
   handlesSensitiveData,
   hitlStore,
   listChallenges,
@@ -63,6 +70,17 @@ import {
   type HitlEnv,
   type HitlReceipt,
 } from "./_hitl";
+
+/** Response interpretation only; never part of a signed receipt payload. */
+export const HITL_ASSESSMENT_SCOPE = Object.freeze({
+  decision_recording_credential: "SHARED_OPERATOR_TOKEN",
+  operator_label: "CALLER_SUPPLIED",
+  operator_identity: "NOT_VERIFIED",
+  human_presence: "NOT_ESTABLISHED",
+  competency_verified_meaning: "LIVE_BOARD_ANSWER_MATCH_ONLY",
+  professional_competence: "NOT_ASSESSED",
+  execution_authority: false,
+} as const);
 
 const CORS: Record<string, string> = {
   "access-control-allow-origin": "*",
@@ -164,8 +182,18 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
 
   const board = await loadBoard(origin);
   const store = hitlStore(ctx.env);
-  const challenges = await listChallenges(store);
-  const receipts = await listReceipts(store);
+  let challenges: HitlChallenge[];
+  let receipts: HitlReceipt[];
+  try {
+    [challenges, receipts] = await Promise.all([
+      listChallenges(store, 50, true), listReceipts(store, 50, true),
+    ]);
+  } catch {
+    return json({
+      ok: false, store_bound: Boolean(store), storage_state: "READ_FAILED",
+      error: "decision history could not be read; no empty-ledger claim is made",
+    }, 503);
+  }
   const decidedIds = new Set(receipts.map((r) => r.challenge?.id).filter(Boolean));
   const completed = await listCompletedModules(store);
 
@@ -185,6 +213,7 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     }
     return json({
       ...publicModule(mod, completed.includes(mod.id)),
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       completed_modules: completed,
     });
   }
@@ -194,6 +223,7 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
     const modules = deriveModules(board);
     return json({
       schema: "csoai.hitl-curriculum/0.1",
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       policy: HITL_POLICY,
       derived_from: "GET /api/gspc → axes[] (read live on every request)",
       count: modules.length,
@@ -222,12 +252,14 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
   if (path === "record") {
     return json({
       schema: "csoai.hitl-record/0.1",
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       policy: HITL_POLICY,
       store_bound: Boolean(store),
       count: receipts.length,
       receipts: receipts.map(publicReceipt),
+      history_scope: { limit: 50, complete: false, consistency: "eventual", selection: "KV_KEY_ORDER" },
       note: store
-        ? "Every decision recorded on this deployment, with its signature state."
+        ? "A bounded view of recorded decisions, including historical decisions, with their signature states. This is not an exhaustive ledger or current execution authority."
         : "No decision store is bound to this deployment, so this is an empty ledger — which is not the same as 'no decision was ever taken'.",
     });
   }
@@ -237,22 +269,24 @@ export const onRequestGet: PagesFunction<HitlEnv> = async (ctx) => {
   const counts = decisionCounts(challenges, receipts);
   return json({
     schema: HITL_STATE_SCHEMA,
+    assessment_scope: HITL_ASSESSMENT_SCOPE,
     policy: HITL_POLICY,
     title: "Human in the loop",
     one_line:
-      "A measurement says what was observed. It never says what should happen. The acts — publish, release, send, approve — wait for a competent, named human.",
+      "Record a review decision after a live-board knowledge check. Human identity, professional competence and action authority require separate evidence.",
     statutory_basis: "EU AI Act Art. 14 (human oversight) · Art. 4 (AI literacy) · ETSI EN 304 223 P11",
     decisions: [...HITL_DECISIONS],
     receipt_schema: HITL_RECEIPT_SCHEMA,
     challenge_schema: HITL_CHALLENGE_SCHEMA,
     review_queue_summary: counts,
     counts_are: store
-      ? "the persisted ledger of this deployment"
+      ? "counts in a bounded, eventually consistent view of challenges and historical decisions; not current execution authority"
       : "an empty ledger — no decision store is bound, so these zeros are not a claim that nothing was ever decided",
     store_bound: Boolean(store),
-    decision_path: decisionPathOpen(ctx.env) ? "open" : "locked",
-    decision_path_note: decisionPathOpen(ctx.env)
-      ? "An operator token is configured. A decision requires it."
+    decision_path: decisionPathOpen(ctx.env) && store ? "open" : "locked",
+    decision_path_note: decisionPathOpen(ctx.env) && store
+      ? "An operator token and decision store are configured. Recording requires an acknowledged write; this is not execution authority."
+      : !store ? "No decision store is bound, so a decision cannot be recorded."
       : "No operator token is configured, so a decision cannot be taken on this deployment. This is deliberate: a public endpoint that accepts an approval from anyone is not a human in the loop.",
     operator_token_configured: decisionPathOpen(ctx.env),
     signing_key_configured: signingKeyConfigured(ctx.env),
@@ -334,11 +368,19 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       facts: typeof body?.facts === "string" ? body.facts : null,
       required_module: null,
     });
-    await putChallenge(store, challenge);
+    const stored = await putChallenge(store, challenge);
+    if (store && !stored) {
+      return json({
+        ok: false, stored: false, storage_state: "WRITE_UNCONFIRMED",
+        error: "challenge storage did not acknowledge the write",
+        challenge_id: challenge.id,
+        note: "The write outcome is unconfirmed. Do not treat this as a recorded challenge.",
+      }, 503);
+    }
     return json(
       {
         ...challenge,
-        stored: Boolean(store),
+        stored,
         note: store
           ? "Recorded and waiting for a human. The decision path needs the operator token and a competency check."
           : "Raised. No decision store is bound, so this challenge is not persisted — carry it to the decision endpoint.",
@@ -368,7 +410,7 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
     }
 
     const module = checked.module;
-    const stored = await markModuleCompleted(store, module.id, {
+    const stored = checked.correct && await markModuleCompleted(store, module.id, {
       module_id: module.id,
       axis: module.axis,
       at: new Date().toISOString(),
@@ -383,6 +425,7 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       correct_option: module.correct_option,
       explanation: module.explanation,
       oversight_gate_unlocked: checked.correct,
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       recorded: stored,
       note: checked.correct
         ? "Correct. The decision endpoint re-checks this answer against the live record at the moment of signing, so a stale answer cannot pass."
@@ -416,6 +459,13 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       );
     }
 
+    if (!store) {
+      return json({
+        ok: false, stored: false, storage_state: "UNBOUND",
+        error: "a decision store is required before recording a decision",
+      }, 503);
+    }
+
     const decision = String(body?.decision ?? "").trim().toUpperCase() as HitlDecision;
     if (!HITL_DECISIONS.includes(decision)) {
       return json(
@@ -428,9 +478,43 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       );
     }
 
-    const challenge = body?.challenge as HitlChallenge | undefined;
-    if (!challenge || typeof challenge !== "object" || !challenge.id) {
+    const presented = body?.challenge as HitlChallenge | undefined;
+    if (!presented || typeof presented !== "object" || Array.isArray(presented) ||
+        typeof presented.id !== "string" || !/^chl_[a-f0-9]{16}$/.test(presented.id)) {
       return json({ ok: false, error: "challenge is required" }, 400);
+    }
+    let challenge = presented;
+    // A queue item deliberately omits private fields. Resolve the exact original only
+    // inside this authenticated boundary; never reconstruct its missing hash inputs or
+    // replace a malformed full challenge silently. An id alone is insufficient: bind
+    // every displayed action field so a substituted/stale view cannot be approved.
+    const isQueueProjection = !["schema", "policy", "source", "facts"].some(
+      key => Object.prototype.hasOwnProperty.call(presented, key),
+    );
+    if (isQueueProjection) {
+      let original: HitlChallenge | null;
+      try {
+        original = await getChallenge(store, presented.id);
+      } catch (error) {
+        const invalid = error instanceof Error && error.message === "HITL_CHALLENGE_INVALID";
+        return json({
+          ok: false, stored: false,
+          storage_state: invalid ? "CHALLENGE_INVALID" : "READ_FAILED",
+          error: invalid ? "the stored challenge does not verify" : "the original challenge could not be read",
+        }, invalid ? 422 : 503);
+      }
+      if (!original) {
+        return json({
+          ok: false, stored: false, storage_state: "CHALLENGE_UNAVAILABLE",
+          error: "the original challenge is not available in this read",
+          note: "The store is eventually consistent. No decision was recorded by this request; a missing read does not prove absence.",
+        }, 503);
+      }
+      const displayedFields = ["axis", "subject", "proposed_action", "raised_by", "at", "required_module"] as const;
+      if (displayedFields.some(key => !Object.prototype.hasOwnProperty.call(presented, key) || presented[key] !== original[key])) {
+        return json({ ok: false, error: "the displayed challenge does not match the stored original" }, 422);
+      }
+      challenge = original;
     }
     if (!(await verifyChallenge(challenge))) {
       return json(
@@ -482,7 +566,6 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
 
     const operator = String(body?.operator ?? "").trim() || "the operator";
     const note = String(body?.note ?? "").trim();
-    const completed = await listCompletedModules(store);
 
     const receipt = await buildReceipt({
       operator,
@@ -490,17 +573,34 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
       decision,
       note: note || `Competency-verified human-in-the-loop decision (${checked.module.id})`,
       competency_verified: true,
-      completed_modules: Array.from(new Set([...completed, checked.module.id])).sort(),
+      // The shared practice store has no learner identity. Only this request's
+      // rechecked module belongs in this decision; do not attribute others' history.
+      completed_modules: [checked.module.id],
       module_id: checked.module.id,
-      challenge,
+      // Sign the public projection, with the original id still binding its full content.
+      // Do not disclose private context through the new decision or public history.
+      // Existing signed receipts remain byte-for-byte unchanged.
+      challenge: { ...challenge, source: null, facts: null },
       at: new Date().toISOString(),
       signingKey: ctx.env.BOARD_SIGN_KEY_PKCS8_B64,
     });
 
-    await putReceipt(store, receipt);
+    const stored = await putReceipt(store, receipt);
+    if (!stored) {
+      return json({
+        ok: false, stored: false, storage_state: "WRITE_UNCONFIRMED",
+        error: "decision storage did not acknowledge the write",
+        challenge_id: challenge.id,
+        note: "The write outcome is unconfirmed. Reconcile stored history before submitting another decision. No execution authority is granted.",
+      }, 503);
+    }
 
     return json({
       ok: true,
+      stored: true,
+      storage_state: "WRITE_ACKNOWLEDGED",
+      execution_authority: false,
+      assessment_scope: HITL_ASSESSMENT_SCOPE,
       blocked_by_competency_gate: false,
       receipt: publicReceipt(receipt),
       note: receipt.signature.value_hex
@@ -514,3 +614,5 @@ export const onRequestPost: PagesFunction<HitlEnv> = async (ctx) => {
 
 /** HEAD answers what GET answers, with no body (functions/api/_head.ts). */
 export const onRequestHead = headFromGet(onRequestGet);
+
+

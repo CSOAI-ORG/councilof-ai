@@ -3,6 +3,7 @@
 // bank, sign, train, repair or promote. A source-change candidate is never a measurement.
 import { headFromGet } from "./_head";
 import registry from "./_gspc_research_semantics.json";
+import { researchSourceMetadata } from "../../scripts/research/source-metadata.mjs";
 
 type JsonObject = Record<string, unknown>;
 const OUTPUT_SCHEMA = "csoai.gspc-research-plan/0.1";
@@ -79,7 +80,8 @@ function measuredContext(axis: JsonObject) {
     "accuracy_is", "separation", "separation_basis", "separation_untested_reason",
     "fleet_mean", "dataset", "dataset_url", "dataset_url_state", "evidence_url",
     "coverage", "coverage_note", "measurement_time", "run_attestation",
-    "public_leader_state", "method_status", "note",
+    "public_leader_state", "method_status", "note", "applies_to",
+    "rate", "rate_scale", "rate_rule", "method", "method_sha", "bank", "bank_sha256",
   ];
   const context: JsonObject = {
     classification: "PUBLISHED_BOARD_MEASUREMENT",
@@ -113,10 +115,13 @@ export async function onRequestGet({ request }: { request: Request }) {
 
   const plans = measured.map((axis) => {
     const semantics = byId.get(axis.axis as string)!;
-    const sources = semantics.source_ids.map((id) => ({ id, ...registry.sources[id as keyof typeof registry.sources] }));
+    const sources = semantics.source_ids.map((id) => {
+      const source = registry.sources[id as keyof typeof registry.sources];
+      return { id, publisher: source.publisher, title: source.title, url: source.url, ...researchSourceMetadata(source) };
+    });
     return {
       axis: axis.axis,
-      research_state: "WATCH_CONFIGURED",
+      research_state: sources.some(source => source.watch === true) ? "WATCH_CONFIGURED" : "REFERENCE_ONLY",
       candidate_state: "NO_CANDIDATE_IN_THIS_RESPONSE",
       candidate_is_measurement: false,
       measurement: measuredContext(axis),

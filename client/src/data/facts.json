@@ -31,17 +31,17 @@
         "totals.quotable_axes"
       ],
       "observed": {
-        "value": "33 axes · 23 measured",
-        "axes": 33,
-        "measured_axes": 23,
-        "unmeasured_axes": 10,
-        "quotable_axes": 23,
+        "value": "34 axes · 34 measured",
+        "axes": 34,
+        "measured_axes": 34,
+        "unmeasured_axes": 0,
+        "quotable_axes": 34,
         "public_leader_count": 9,
         "model_fleets": 14,
         "fact_runs": 9,
-        "items": 1230,
-        "lid": "23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
-        "observed_at": "2026-10-16",
+        "items": 1844,
+        "lid": "34 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
+        "observed_at": "2026-11-02",
         "binding": false,
         "producer": "scripts/refresh-board-observation.mjs — every field is copied verbatim from the endpoint's totals; never hand-edited.",
         "note": "Observation only, recorded so a surface that has not yet fetched the board can render the last observed state, dated, and so the gate can detect drift. If this disagrees with the endpoint, the ENDPOINT wins and this block is stale: run `node scripts/refresh-board-observation.mjs` (or `--check` to fail on drift). The slot count and the measured count are different kinds and travel together; quote `value` (totals.public_count) or `lid`, never one integer alone."
@@ -215,10 +215,25 @@
       "rule": "Explicit list only: exact prerendered paths, no glob, no date rule. A listed file is exempt from the axis-count rule ONLY for the count it historically records (historical_axes); any other count in it is still checked, and every other rule still applies. Listed files are never edited to satisfy the gate; signed ones stay byte-identical. Any file not listed, including every live surface, still fails on a stale count.",
       "files": [
         {
+          "path": "interop/canonical-estate-view-2026-10-08/view.json",
+          "date": "2026-10-08",
+          "historical_axes": [
+            22,
+            23
+          ],
+          "reason": "Dated canonical estate view compiled 2026-10-08. Its confirmed_divergences catalogue quotes the board as it stood on three dated reads -- 23 axes on 2026-10-08, 23 axes at the 2026-09-17 frozen read, and 22 axes at the 2026-08-18 stamp -- and every value carries its own as_of and source. A dated record is never edited to match a later board, so it is exempt for the counts it records and for no other."
+        },
+        {
           "path": "claims/claimreg-ai-assurance-and-settlement-2026-09-23.json",
           "date": "2026-09-23",
           "historical_axes": 23,
           "reason": "Dated claim register (rev1) of 2026-09-23. Historical record: states the board as it was on its date (23 axes); never edited, a dated record is not current copy."
+        },
+        {
+          "path": "interop/claim-feed-2026-10-09/claim.json",
+          "date": "2026-10-09",
+          "historical_axes": 23,
+          "reason": "Dated claim-feed entry of 2026-10-09. Its assertion records the board totals it read on its date -- 23 axes -- against the source and the sha256 it fetched then. A dated claim is never edited to match a later board, so it is exempt for that count and for no other."
         },
         {
           "path": "claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
@@ -297,6 +312,72 @@
           "date": "2026-09-29",
           "historical_axes": 23,
           "reason": "Signed board freeze: byte-identical forever; its 23 is the board it signed."
+        },
+        {
+          "path": "completion.json",
+          "date": "2026-11-02",
+          "historical_axes": 33,
+          "reason": "Dated completion LEDGER, re-measured 2026-11-02 twice: once after the 34th slot deployed, and again after the deploy that measured the ten remaining subject axes. It is a log of receipts, not a snapshot: each entry carries its own 'at' and states the board as it was on that date, and a dated receipt is never edited. Its newest receipts (2026-11-02T07:10:08Z) record the live board - 34 axes · 34 measured, 0 unmeasured - and the live door - 53 tools, 48 free + 5 metered, 34 of them the board's named axes. Its earlier same-day receipt recorded 34 axes · 23 measured, when watchdog-ingest was still a declared slot, and a published slot is not a measurement. It still carries the older 2026-10-25 receipt that read 33 axes, and the 2026-10-26 MCP receipt that named 33 axis tools, which is why the exemption is for 33 and not for 34: the file records every board the estate has published and the rule exempts only the count it historically recorded. Re-measure by APPENDING a new receipt, never by editing an old one; scripts/completion_audit.py re-measures the audit artefact beside it."
+        },
+        {
+          "path": "interop/ai-eval-universe-2026-10/index.json",
+          "date": "2026-10-30",
+          "historical_axes": 33,
+          "reason": "Dated universe map quoting the live board by field name with its response sha256. Its counts are the board it read on its date; the generator now derives them from that same read, so the next deliberate run carries the new count itself."
+        },
+        {
+          "path": "interop/subject-axis-live-20261027/audit-laneD-planned-not-done.json",
+          "date": "2026-10-27",
+          "historical_axes": 33,
+          "reason": "Dated subject-axis audit of 2026-10-27. Its 33 is the board that existed when the lane D audit ran; the receipts it binds are byte-identical evidence of that run and are never edited."
+        },
+        {
+          "path": "interop/subject-axis-live-20261027/outreach-send-receipts-20261029.json",
+          "date": "2026-10-29",
+          "historical_axes": 33,
+          "reason": "Dated outreach receipt set of 2026-10-29. The receipts record what was sent and what the board said on that date; a receipt is never edited to match a later board."
+        },
+        {
+          "path": "interop/universal-watchdog-incident-harness-v1.json",
+          "date": "2026-10-30",
+          "historical_axes": 33,
+          "reason": "Dated lane artifact (generated_at 2026-10-30T09:30Z) proposing a CANDIDATE 34th axis. Its 33 is the board that existed when it was written; the candidate was never admitted, so the file is a dated proposal and is never edited to match a later board."
+        },
+        {
+          "path": "interop/playwright-cypress-inspect-e2e-audit-v1.json",
+          "date": "2026-10-30",
+          "historical_axes": 33,
+          "reason": "Dated lane artifact (generated_at 2026-10-30T11:00:00Z). Its 33 is the board that existed when the audit ran; a dated audit is not current copy."
+        },
+        {
+          "path": "interop/gspc-meta-benchmark-and-hf-evidence-v1.json",
+          "date": "2026-10-31",
+          "historical_axes": 33,
+          "reason": "Dated lane artifact published on master on 2026-10-31. Its 33 is the board that existed when it was written; never edited, re-measure by re-running the lane's own producer."
+        },
+        {
+          "path": "interop/end-to-end-product-ux-and-pipeline-audit-v1.json",
+          "date": "2026-10-31",
+          "historical_axes": 33,
+          "reason": "Dated lane artifact published on master on 2026-10-31. Its 33 is the board that existed when it was written; never edited, re-measure by re-running the lane's own producer."
+        },
+        {
+          "path": "interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+          "date": "2026-10-31",
+          "historical_axes": 33,
+          "reason": "Dated lane artifact published on master on 2026-10-31. Its 33 is the board that existed when it was written; never edited, re-measure by re-running the lane's own producer."
+        },
+        {
+          "path": "jewels/master-catalogue/index.json",
+          "date": "2026-11-01",
+          "historical_axes": 33,
+          "reason": "Master Catalogue of All Jewels, 2026-11-01 edition, published on master by #3686. Its live_state is a dated READ of https://councilof.ai/api/gspc taken at read_at 2026-11-01T04:44:45.304Z, which returned 33 axes / 23 measured / 10 unmeasured. Historical record: it states the board as it was on its date (33 axes); the 34th axis (watchdog-ingest) is a declared slot that is NOT yet on the live board, so the recorded read is still true of the surface it names. Never edited, a dated record is not current copy; re-measure by re-running the catalogue's own read."
+        },
+        {
+          "path": "jewels/master-catalogue/index.html",
+          "date": "2026-11-01",
+          "historical_axes": 33,
+          "reason": "Master Catalogue of All Jewels HTML edition (2026-11-01), published on master by #3686 alongside jewels/master-catalogue/index.json. Renders the same dated read of https://councilof.ai/api/gspc taken at read_at 2026-11-01T04:44:45.304Z (33 axes / 23 measured / 10 unmeasured) before the 34th declared slot deployed. Historical record: never edited; re-measure by re-running the catalogue read after deploy."
         }
       ]
     }

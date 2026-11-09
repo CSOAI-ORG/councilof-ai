@@ -47,18 +47,24 @@ describe("the measurement skills are wired in all four places", () => {
   it("2: the alias is the same bytes as the card", () => {
     expect(readFileSync(resolve(__dirname, "../../public/.well-known/agent.json")).equals(readFileSync(resolve(__dirname, "../../public/.well-known/agent-card.json")))).toBe(true);
   });
-  it("4: the directory census recount is superseded, not edited — the old bytes keep their proof at a dated path", () => {
+  it("4: the directory census recount is superseded, not edited — old bytes keep their hash and declared proof state", () => {
     const doc = J("public/interop/a2a-directories.json");
     expect(doc.our_agent.skills).toBe(SKILL_IDS.length);
-    // Walk the supersession chain: every link's old bytes still hash to what the newer file recorded and
-    // keep their proof, the count falls at each recount, and one recount is the one that added these skills.
+    // Walk the supersession chain: every link's old bytes still hash to what the newer file recorded.
+    // A link either names its nonempty proof or explicitly declares ots:null; in the latter case the
+    // predecessor itself must say NOT_STAMPED. Never invent a proof pointer for historically unsigned bytes.
+    // The count falls at each recount, and one recount is the one that added these skills.
     // (2026-09-30: evidence-bundle made it 10 -> 11, so the measurement recount is no longer the newest link.)
     const counts: number[] = [doc.our_agent.skills];
     let cur = doc;
     while (cur.supersedes?.path && counts.length < 10) {
       const old = readFileSync(resolve(__dirname, "../..", `public${cur.supersedes.path}`));
       expect(createHash("sha256").update(old).digest("hex")).toBe(cur.supersedes.sha256);
-      expect(readFileSync(resolve(__dirname, "../..", `public${cur.supersedes.ots}`)).length).toBeGreaterThan(0);
+      if (cur.supersedes.ots === null) {
+        expect(JSON.parse(old.toString()).ots_state).toMatch(/^NOT_STAMPED:/);
+      } else {
+        expect(readFileSync(resolve(__dirname, "../..", `public${cur.supersedes.ots}`)).length).toBeGreaterThan(0);
+      }
       cur = JSON.parse(old.toString());
       counts.push(cur.our_agent.skills);
     }

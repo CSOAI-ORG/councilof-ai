@@ -1,0 +1,32 @@
+{
+ "schema": "csoai.measurement-card/0.1",
+ "kind": "claim-maintenance-wave",
+ "axis": "claim-maintenance",
+ "wave": 3,
+ "run_id": "claim-maintenance-wave3-20261028",
+ "observed_at": "2026-10-28T03:18:49.884Z",
+ "authority_state": "measurement_only_not_a_certification",
+ "n_subjects": 77,
+ "n_valid": 77,
+ "n_valid_min": 30,
+ "counts": {
+  "TEXT_CHANGED": 32,
+  "TEXT_UNCHANGED": 45
+ },
+ "baseline": {
+  "wave": 2,
+  "observed_at": "2026-10-27T08:09:16.700Z",
+  "text_digest_baseline": true
+ },
+ "negative_control": {
+  "kind": "text-digest recomputation",
+  "result": "DISCRIMINATING (see runner)"
+ },
+ "method_sha256": "0a0a89b502985b656ea455d22f2e4f9fb849b238d78ac761ab6cc40e9d73f1ff",
+ "runner": "wave3.mjs",
+ "not_a_certification": true,
+ "no_third_party_named_from_a_delta": true,
+ "content_id": "30acaa37a95efecd0418a2d39f29ea4afb17767f21003def604e98035575a09e",
+ "sig_ed25519": null,
+ "signature_state": "UNSIGNED_DRY_RUN"
+}

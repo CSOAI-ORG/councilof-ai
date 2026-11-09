@@ -1,0 +1,112 @@
+{
+  "card": {
+    "as_of": "2026-10-28T21:02:18Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-impersonation-scan/0.1",
+      "status": "PROBED",
+      "as_of": "2026-10-28T21:02:18Z",
+      "counts": {
+        "RLUSD": {
+          "matches": 1,
+          "not_in_verified_set": 17,
+          "unmeasured": 0
+        },
+        "XSGD": {
+          "matches": 1,
+          "not_in_verified_set": 1,
+          "unmeasured": 0
+        },
+        "USDC": {
+          "matches": 1,
+          "not_in_verified_set": 3,
+          "unmeasured": 0
+        },
+        "AUDD": {
+          "matches": 1,
+          "not_in_verified_set": 0,
+          "unmeasured": 0
+        }
+      },
+      "scan_coverage": {
+        "source": "api.xrpscan.com/api/v1/tokens",
+        "window": "ranking offsets 0..11900 (pages of 100, stops early at first empty page)",
+        "n_scanned": 11900,
+        "pages_ok": 119,
+        "pages_uncheckable": 1,
+        "uncheckable_offsets": [
+          1400
+        ],
+        "page_digest_count": 119,
+        "verification_limit": "pages with watched-code hits have raw archives; no-hit pages are digest-only, so their absence observations are not independently replayable from this repository",
+        "long_tail": "UNMEASURED — issuance below the ranking window is not enumerated"
+      },
+      "unmeasured": [
+        "UNMEASURED — issuance below the ranking window is not enumerated"
+      ],
+      "not_a_verdict": true,
+      "wording": "issuer not in the archived verified set — legitimacy UNMEASURED"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "bd63aea714927c4ad3680e5e21bb0948cc2474e317dc1efcbced7e3cb2aaafa0",
+    "sig_ed25519": "0f06c8cad7a7bc64d3d42bae7fbeb5ab96315e488b18918b4482c85f70b24a935eec8aaec199d9f394be5558464dea40b0d371dde737ef875060c80ca38e1909",
+    "source_urls": [
+      "https://api.xrpscan.com/api/v1/tokens",
+      "https://councilof.ai/interop/xrpl-impersonation-2026-09/latest.json"
+    ],
+    "subject": "XRPL stablecoin-code impersonation watch — daily scan",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "impersonation-watch",
+      "daily-scan",
+      "xrpl-impersonation-2026-09"
+    ],
+    "unmeasured": [
+      "UNMEASURED — issuance below the ranking window is not enumerated"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "dfdbc85d3bfe2e8a789c15d51a8bb2a21ccfa89e37b1d2e5a2af71fca763f904",
+    "88589996670786482b767e532911ade5e87126a6b59d888328bbb2e440b1ccb6",
+    "372d19391edfce923017ceaedc26c8572e37607e0619fda56f708a419b2f4454",
+    "d077c4ca53d3f64574ea48ad0452a657ddc4bfe39835597fa97955cd63383b17",
+    "92f6018327e0ff7c3e0886bf00077858e0c855fe564f11ae02e5ab0c9c595fa0",
+    "85bb8d0592ffb8beb2592031d495c4e259d260d3afaa34c9de15aa4fa921bcc0",
+    "023677f997889dc2ace320f3c9e5ad843a0c2a63687ccc596611ec9e44e803ef",
+    "7adbfe29f89aae3a2ad7f706b4ae661289468be05b3bf70b925275c92246155a",
+    "ae90ef4271b029ac7fdc3d2eda4203dc7efff0de7cdc4c78b8b35e5dc1f3f756"
+  ]
+}

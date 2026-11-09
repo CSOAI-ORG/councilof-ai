@@ -1,6 +1,12 @@
 ---
 license: cc-by-4.0
 pretty_name: CSOAI fleet status (public summary)
+configs:
+- config_name: default
+  data_files:
+  - split: train
+    path: fleet_status.public.json
+  field: jobs
 ---
 # csoai/fleet-status
 

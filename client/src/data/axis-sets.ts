@@ -830,7 +830,7 @@ export const AXIS_SETS: AxisSet[] = [
       "That a financial row is a rating, a risk opinion, or investment advice. It records which flags an account carries — what that implies about risk is not measured here.",
     ],
     relation:
-      "This is the only set whose count belongs in a sentence about 'the board'. The other sets measure different things over different populations, so they carry their own counts by design.",
+      "This page shows only rows cleared for public-page display. The full GET /api/gspc count includes rows withheld from this view pending the owner's release decision, so the visible-row count here can be lower. This is a display filter; the API itself remains public and is the authority for its full count. The other sets measure different things over different populations, so their counts are separate by design.",
     countAuthority: "GET /api/gspc → totals.public_count",
     artifact: { href: "/api/gspc", label: "/api/gspc" },
     detailPage: { href: "/dashboard?tab=board", label: "the full board, axis by axis" },

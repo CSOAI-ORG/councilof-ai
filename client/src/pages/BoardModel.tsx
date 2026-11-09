@@ -7,6 +7,7 @@
  * axes, which grade records, not models. Nothing is typed and nothing is estimated.
  */
 import { useEffect, useMemo } from "react";
+import { axisHref } from "@/lib/axisHref";
 import { Link, useSearch } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { useLiveJson } from "@/components/gspc/useLiveJson";
@@ -185,7 +186,7 @@ export default function BoardModel() {
                   data-testid={`model-cell-${c.kind}`}
                 >
                   <div>
-                    <Link href={`/gspc/${c.axis}`} className="text-sm font-semibold text-gray-900 underline">
+                    <Link href={axisHref(a) ?? undefined} className="text-sm font-semibold text-gray-900 underline">
                       {c.axis}
                     </Link>
                     {a?.task && <span className="block text-xs text-gray-600">{a.task}</span>}

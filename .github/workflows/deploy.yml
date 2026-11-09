@@ -38,20 +38,12 @@ jobs:
       - name: No committed conflict markers (blocks the 2026-08-24 build break)
         run: node scripts/no-conflict-markers.mjs
 
-      # Trigger-coupling guard. workflow_run couples a follow-on workflow to THIS
-      # workflow by its `name:` string and nothing else. A rename here with no
-      # matching edit in the five followers stops them silently — no red anywhere
-      # (found 2026-09-20 in a local rename lane). Check the coupling here, in the
-      # renamed file's own guard chain, where a rename cannot avoid running.
-      - name: Trigger-coupling guard — follow-on workflows pin this workflow's exact name
+      # Filter values are GitHub globs: a literal + in this name must be escaped.
+      # Parse active trigger lists, not comments or literal runtime conditions.
+      - name: Trigger-coupling guard — five exact literal workflow filters
         run: |
-          set -eu
-          name=$(sed -n 's/^name: *//p' .github/workflows/deploy.yml | head -1 | tr -d '"' | tr -d "'")
-          for f in post-deploy-verify claims-e2e sov-stack-e2e hf-gspc-surface-sync gspc-spray; do
-            grep -qF "$name" ".github/workflows/$f.yml" \
-              || { echo "::error::$f.yml no longer references this workflow's name — a rename here must be applied there too"; exit 1; }
-          done
-          echo "trigger-coupling OK: 5 followers pin '$name'"
+          node --test scripts/workflow-trigger-coupling.node-test.mjs
+          node scripts/workflow-trigger-coupling.mjs
 
       - name: Wallet secret gate — no private key material in tracked release inputs
         run: |
@@ -109,8 +101,34 @@ jobs:
       - name: Pages size guard — 25 MiB per-file limit (source assets)
         run: node scripts/pages-size-guard.mjs public --packed-history-projection --exclude proofs,cards
 
+      - name: Native canvas build prerequisites
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+            build-essential pkg-config libpixman-1-dev \
+            libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+
       - name: Install deps
         run: npm ci --no-audit --no-fund
+
+      - name: Native canvas runtime smoke
+        timeout-minutes: 1
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const assert = require('node:assert/strict');
+          const { createCanvas } = require('canvas');
+          const canvas = createCanvas(2, 2);
+          const context = canvas.getContext('2d');
+          context.fillStyle = '#112233';
+          context.fillRect(0, 0, 2, 2);
+          assert.deepEqual(Array.from(context.getImageData(0, 0, 2, 2).data),
+            [17, 34, 51, 255, 17, 34, 51, 255, 17, 34, 51, 255, 17, 34, 51, 255]);
+          const png = canvas.toBuffer('image/png');
+          assert.ok(Buffer.isBuffer(png) && png.length > 8);
+          assert.deepEqual(Array.from(png.subarray(0, 8)), [137, 80, 78, 71, 13, 10, 26, 10]);
+          console.log('Native canvas smoke: PASS (2x2 RGBA and PNG signature; RAM only)');
+          NODE
 
       # No release may present a stale sidecar as current or serve plaintext / mismatched
       # files under an .ots extension. This is intentionally red until the historical
@@ -128,7 +146,23 @@ jobs:
           npm run ts-ratchet
 
       - name: Build client
-        run: npm run build:client
+        # HF_TOKEN so the bench-suite build's hub fetch is authenticated. The banks are
+        # public, so the token cannot change a byte — it only raises the rate limit the hub
+        # applies, and an ANONYMOUS fetch was answering 429 at random and failing the BUILD,
+        # which is this deploy. See scripts/surface/hub-fetch.mjs.
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          node scripts/build-council-native-panel.mjs --check
+          npm run build:client
+
+      - name: Verify the one-build Coliseum mirror
+        run: >-
+          python3 scripts/sync_hf_coliseum.py --artifact dist/hf-coliseum
+          --expected-sha "$GITHUB_SHA" --verify-only
+
+      - name: Brand gate for the generated Coliseum mirror
+        run: node scripts/brand-gate.mjs dist/hf-coliseum
 
       # The host deliberately keeps an honest 404 catch-all. Materialise the canonical
       # workspace before the fast shell gate so a cold /dashboard request tests the same
@@ -202,6 +236,21 @@ jobs:
         run: |
           node scripts/link-gate.mjs --selftest
           node scripts/link-gate.mjs dist/client
+
+      # link-gate reads a LINK in a MACHINE surface: it walks .json files only
+      # (scripts/link-gate.mjs, `if (!f.endsWith(".json")) continue`). An href in
+      # an HTML page is invisible to it, which is why the homepage's nine dead
+      # axis links survived every green build until 2026-11-06.
+      #
+      # axis-route-gate closes exactly that gap for axis routes, and it knows
+      # which route each axis owns because it reads the route map the axis-page
+      # generator publishes from the same payload it rendered the pages from. It
+      # fails closed on its own crash, and its selftest reproduces the historical
+      # defect before its verdict is trusted.
+      - name: Axis-route gate — every axis link resolves on the shipped tree
+        run: |
+          node scripts/surface/axis-route-gate.mjs --selftest
+          node scripts/surface/axis-route-gate.mjs dist/client
 
       - name: Copy corrected field pages from source into dist (vite skips public/*.html)
         run: |
@@ -285,6 +334,14 @@ jobs:
         run: |
           node scripts/axis-state-gate.mjs --selftest
           node scripts/axis-state-gate.mjs dist/client --board-reference prerender-board-reference.json
+
+      # D17 (work plan): the board's run_attestation strings are claims about the run
+      # artefacts' bytes. This gate reads the bytes and blocks on drift — a typed value
+      # where a pointer belongs may not move silently.
+      - name: Fin run-attestation gate — board strings agree with the run artefacts
+        run: |
+          node scripts/gate-fin-run-attestation.mjs --selftest
+          node scripts/gate-fin-run-attestation.mjs
 
       - name: Dist bundle guard — stranger paths + API functions present
         run: |
@@ -469,6 +526,16 @@ jobs:
         env:
           FLEET_LOCK_LIVE: "1"
         run: npx vitest run functions/mcp/tool-fleet.lock.test.ts
+
+      # Retain the exact mirror produced by the SAME Vite build above. The existing
+      # guarded HF writer consumes this only after this deployment succeeds.
+      - name: Retain the built Coliseum mirror for the existing HF writer
+        uses: actions/upload-artifact@v4
+        with:
+          name: coliseum-mirror-${{ github.sha }}
+          path: dist/hf-coliseum/
+          if-no-files-found: error
+          retention-days: 7
 
       # csoai.org is the static apex (csoai-site-deploy.yml ← csoai-static-deploy2).
       # Do NOT redeploy the SPA to csoai-site — that overwrites did:web:csoai.org.

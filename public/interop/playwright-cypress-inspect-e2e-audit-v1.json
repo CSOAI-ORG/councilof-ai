@@ -1,0 +1,288 @@
+{
+  "schema": "csoai.playwright-cypress-inspect-e2e-audit/1.0",
+  "generated_at": "2026-10-30T11:00:00Z",
+  "title": "CSOAI GSPC End-User Playwright, Cypress, Browser DevTools Inspect, UK AISI Inspect AI & Offline Inspector End-to-End Value Audit",
+  "doctrine": "Measurement, not certification. Anyone can re-check at https://councilof.ai/verify",
+  "board_scope_statement": "Honest coverage boundary: 33 canonical axes · 23 measured · 10 explicitly UNMEASURED on GET /api/gspc plus Candidate Axis 34 (public-incident-vigilance, n=36) in the Watchdog lane.",
+  "counts": {
+    "playwright_chromium_e2e_tests_passed": 4,
+    "viewports_verified": 2,
+    "my_results_tabs_verified": 7,
+    "my_results_free_preview_options": 19,
+    "my_results_live_inspect_options": 6,
+    "window_csoai_inspect_methods": 7,
+    "offline_inspector_vitest_passed": 43,
+    "offline_inspector_python_tests_passed": 37,
+    "published_interop_artifacts_verified": 14,
+    "hf_space_mirrors_byte_identical": 14
+  },
+  "browser_devtools_inspect_surface": {
+    "surface_path": "public/my-results/index.html",
+    "public_url": "https://councilof.ai/my-results",
+    "html_sha256": "df0b0196e7665b74388aaf42f2f91da585f2a06961a9e9ac676f2a242c768a9b",
+    "tabs_count": 7,
+    "tab_ids": [
+      "step-1-lookup",
+      "step-2-preview",
+      "step-3-receipts",
+      "step-4-verify",
+      "step-5-watch",
+      "step-6-care-sandbox",
+      "step-7-automation"
+    ],
+    "panels_count": 7,
+    "free_preview_options_count": 19,
+    "live_inspect_options_count": 6,
+    "live_inspect_option_ids": [
+      "dom_a11y_e2e",
+      "live_hf_14_axes",
+      "article1_care_ablation",
+      "watchdog_12_dbs",
+      "underwriter_cobol_s1_safe",
+      "uk_aisi_and_offline_zip"
+    ],
+    "has_jsonld_dataset": true,
+    "jsonld_distributions_count": 6,
+    "has_window_csoai_inspect_api": true,
+    "window_csoai_inspect_methods": [
+      "summary",
+      "auditDomAndA11y",
+      "liveHf14Axes",
+      "careAblation",
+      "watchdog12Dbs",
+      "underwriterFlywheel",
+      "ukAisiAndOfflineZip"
+    ],
+    "has_live_14_axis_hf_matrix_in_step1": true,
+    "has_12_db_watchdog_harness_in_step7": true,
+    "has_live_inspector_in_step7": true,
+    "responsive_mobile_css_guard": true,
+    "public_price_strings_present": false,
+    "status": "VERIFIED_BROWSER_DEVTOOLS_INSPECT_READY"
+  },
+  "playwright_and_cypress_e2e": {
+    "playwright_chromium_e2e": {
+      "spec_path": "e2e/tests/my-results-inspect-value.spec.ts",
+      "spec_sha256": "3175491d76772692315c3643b59fe194ada22f4f893d825cd493bfd07c295fc9",
+      "config_path": "e2e/playwright.config.ts",
+      "shell_config_path": "e2e/playwright.shell.config.ts",
+      "viewports_tested": [
+        {
+          "label": "desktop",
+          "width": 1280,
+          "height": 800,
+          "horizontal_overflow": false,
+          "page_errors": 0
+        },
+        {
+          "label": "mobile",
+          "width": 390,
+          "height": 844,
+          "horizontal_overflow": false,
+          "page_errors": 0
+        }
+      ],
+      "routes_verified_in_chromium": [
+        "/my-results/",
+        "/working-groups/",
+        "/constitutional-harness/"
+      ],
+      "interactive_controls_exercised": [
+        "#model-search-input",
+        "#model-search-btn",
+        "#preview-door-select",
+        "#run-preview-btn",
+        "#sandbox-scenario-select",
+        "#run-sandbox-btn",
+        "#run-hitl-dispatch-btn",
+        "#watchdog-db-select",
+        "#run-watchdog-harness-btn",
+        "#inspect-surface-select",
+        "#run-live-inspect-btn",
+        "window.CSOAI_INSPECT.auditDomAndA11y()"
+      ],
+      "tests_passed": 4,
+      "tests_total": 4,
+      "verifies_window_csoai_inspect": true,
+      "status": "PASSED_HEADLESS_CHROMIUM"
+    },
+    "cypress_e2e_and_cyrus_mehta_exact_mcnemar": {
+      "cypress_config_path": "cypress.config.ts",
+      "cypress_spec_path": "cypress/e2e/csoai-e2e.cy.ts",
+      "cypress_spec_sha256": "08e814643b0bc84bc9fe4aa087a4b2d51724cf57e2c6a23bfcf36b07990c3913",
+      "includes_section_12_my_results_inspector": true,
+      "cyrus_mehta_exact_conditional_binomial_test": {
+        "reference": "Mehta, Cyrus R., and Pralay Senchaudhuri (2003), Exact conditional two-sided binomial McNemar test on discordant pairs (b vs c)",
+        "decision_threshold": "p < 0.05 on discordant pairs (b + c > 0) required for SEPARATED; otherwise TIE",
+        "applications_verified": [
+          "14-Axis Live HF Router Official Report (jail SEPARATED at b=7, c=0, p=0.015625; 13 axes TIE)",
+          "4-Domain Article-1 Care Paired A/B/C Ablation (N=144, b=77, c=0, p < 1e-6 SEPARATED)",
+          "Live HF CARE-PSY-v1 360-Completion Run (4/5 open-weight models SEPARATED with p < 0.05)",
+          "COBOL COMP-3 to ISO-20022 pacs.008 Parity (n=36, b=25, c=0, p = 5.96e-8 SEPARATED)"
+        ]
+      },
+      "status": "VERIFIED"
+    }
+  },
+  "uk_aisi_and_offline_zip_inspectors": {
+    "uk_aisi_inspect_ai_integration": {
+      "task_file": "harness/bench/inspect_task.py",
+      "task_sha256": "812e2a247a3a7c60edd2d4feb602ffae5bec3a0cd27c8821214e2c9a3327799c",
+      "inspect_ai_pinned_version": "0.3.259",
+      "enforces_frozen_bank_sha256": true,
+      "registered_metrics": [
+        "accuracy_over_all_items",
+        "parsed_coverage",
+        "accuracy_among_parsed"
+      ],
+      "canonical_scorer": "canonical_gspc",
+      "status": "VERIFIED_INSPECT_AI_TASK"
+    },
+    "csoai_offline_zip_evidence_inspector": {
+      "builder_script": "scripts/review/build-offline-inspector.mjs",
+      "builder_sha256": "9f6dbf15ed2caa7e4f23f4752a1b49eee7b23765c04ca2932d746e44cc35acda",
+      "browser_verifier_lib": "client/src/lib/inspectionPacket.ts",
+      "browser_verifier_sha256": "3b086d8e932e2406f93f52f5cc9cebebe6ccc27e886ea921763e9ad1ae3b3e4e",
+      "zip_reader_lib": "client/src/lib/inspectionPacketZip.ts",
+      "zip_reader_sha256": "dfb1dd9579a685d52f50b461bfa3c290f4836344e4f382008f3c5838a7cfb740",
+      "python_verifier_lib": "scripts/readers/inspection_packet.py",
+      "python_verifier_sha256": "12574f16dbdbf843daf48c09f265bafe06a37b7aa2f2a15d94f1c1f9c74f5694",
+      "python_report_lib": "scripts/readers/inspection_report.py",
+      "python_report_sha256": "b2771e989c3d9bf068e231153c69c020f6e8a2a53c384850288c6ea97791f1f1",
+      "csp_network_isolation": true,
+      "max_packet_size_bytes": 4000000,
+      "vitest_unit_tests_passed": 43,
+      "python_unit_tests_passed": 37,
+      "status": "VERIFIED_OFFLINE_ZERO_NETWORK_INSPECTOR"
+    }
+  },
+  "published_artifact_value_inventory": [
+    {
+      "filename": "gspc-live-hf-14-axes-official-report-v1.json",
+      "description": "14-Axis Canonical Model-Comparison Live HF Router Report (3,540 Live Completions, 885 Items × 4 Models)",
+      "public_url": "https://councilof.ai/interop/gspc-live-hf-14-axes-official-report-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "f4ae40f62121521822aeeb5fa0c48c074784886a891c8157aeecefae7a4c49d7"
+    },
+    {
+      "filename": "gspc-live-hf-router-care-psy-v1-run.json",
+      "description": "Live HF Router CARE-PSY-v1 Run (360 Live HTTP 200 Completions across 5 Open-Weight Models × 2 Conditions)",
+      "public_url": "https://councilof.ai/interop/gspc-live-hf-router-care-psy-v1-run.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "d0f0805427f5aea448cf22bfbd6e4c169ba93ed941253f28e5cf76e97b5967f8"
+    },
+    {
+      "filename": "gspc-live-hf-four-domain-144-receipts.json",
+      "description": "Live HF Router 4-Domain 144-Item Article-1 Care Verbatim Completion Receipts (576 Live Completions)",
+      "public_url": "https://councilof.ai/interop/gspc-live-hf-four-domain-144-receipts.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "8ecf709b340548f7a1004a82010125a13a3e80cba78423d069032ff31739a8af"
+    },
+    {
+      "filename": "article1-care-open-model-ablation-proof-v1.json",
+      "description": "Within-Subject Paired A/B/C Article-1 Care Ablation Proof across GSPC Care, Exams, Arenas & Games (N=144)",
+      "public_url": "https://councilof.ai/interop/article1-care-open-model-ablation-proof-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "e1eff82e35cc5706533bc9741c5e172058063c66007d6060de887d14e7b3d3c7"
+    },
+    {
+      "filename": "universal-watchdog-incident-harness-v1.json",
+      "description": "Universal Public Watchdog Layer-0 Incident Harness (12 Global Databases, n=36, Candidate Axis-34 & WG-SAFE)",
+      "public_url": "https://councilof.ai/interop/universal-watchdog-incident-harness-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "ca92ff3181e645d03ea29077287d059983cbb84589eb22f6f75c8b60f00c354a"
+    },
+    {
+      "filename": "gspc-meta-benchmark-and-hf-evidence-v1.json",
+      "description": "Axis #26 Measurer-Integrity Meta-Benchmark across 12 Benchmarks + Coliseum / City / Council Space",
+      "public_url": "https://councilof.ai/interop/gspc-meta-benchmark-and-hf-evidence-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "889ca144016e4c4811a1e417f4af72c60c0a82f696d22795b2d990494875eb8c"
+    },
+    {
+      "filename": "constitutional-charter-gspc-layer0-crosswalk-v1.json",
+      "description": "Constitutional Charter (22 Operational Articles, CH-01..CH-16, 52 Source Articles) × 33 Canonical Axes Crosswalk",
+      "public_url": "https://councilof.ai/interop/constitutional-charter-gspc-layer0-crosswalk-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "5bc5648e011829a7b761c73dad2d77818baa63ef4437c1443424ba6a7e0ecb9d"
+    },
+    {
+      "filename": "institutional-underwriter-x402-ras-flywheel-v1.json",
+      "description": "Institutional Underwriter 6-Dimension Matrix, 4-Layer Root Ceremony, 25 SKUs, 27 x402 Doors & 6 HITL Lanes",
+      "public_url": "https://councilof.ai/interop/institutional-underwriter-x402-ras-flywheel-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "958bfb1912d0c9150a82ef88c199b1cf386821fef7e25d61d988a2d1d5612479"
+    },
+    {
+      "filename": "cobol-bridge-iso20022-parity-evidence-v1.json",
+      "description": "COBOL COMP-3 Packed-Decimal to ISO-20022 pacs.008 Deterministic Parity (n=36, Exact McNemar p=5.96e-8)",
+      "public_url": "https://councilof.ai/interop/cobol-bridge-iso20022-parity-evidence-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "4e0bf8296a2f35e6d2e78116e24e3332944f5389151b51fe9cee99e1803ff739"
+    },
+    {
+      "filename": "s1-ipo-measurement-readiness-v1.json",
+      "description": "Permissionless SEC Form S-1 / 10-K / 8-K Risk-Factor to 33-Axis GSPC Measurement Readiness Bulletin",
+      "public_url": "https://councilof.ai/interop/s1-ipo-measurement-readiness-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "4c3e98d7da0891d8b8d7e651054bf192c919372b004cf86954367dd41f55768c"
+    },
+    {
+      "filename": "safe-fluid-reverification-daily-signal-v1.json",
+      "description": "Frozen-to-Fluid SAFE Re-Verification Daily Signal across 9 Regulated Sector Domains (<= 3,072-Byte Capsules)",
+      "public_url": "https://councilof.ai/interop/safe-fluid-reverification-daily-signal-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "c393e13c344b447b6d3b3b37f24d0b79bf00fcc51399420bd7b9136a4db64e3d"
+    },
+    {
+      "filename": "care-article1-open-research-registry-v1.json",
+      "description": "Article-1 Care 18-Source License-Gated Open Research Registry & Disjoint MP-DPO Batch v1.2",
+      "public_url": "https://councilof.ai/interop/care-article1-open-research-registry-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "0b596896cef05cb48ce08320bc136fc0e4c5d176f6f7aa014b8705902cf4c147"
+    },
+    {
+      "filename": "psychosis-delusion-guard-bank-v1.json",
+      "description": "Frozen 36-Item CARE-PSY-v1 AI Psychosis & Delusion Non-Reinforcement Bank (24 Positive + 12 Negative Controls)",
+      "public_url": "https://councilof.ai/interop/psychosis-delusion-guard-bank-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "ee6dda5c41563af295a4896f105e7667685fe39d60af610032475eaa6bcb6d24"
+    },
+    {
+      "filename": "end-to-end-product-ux-and-pipeline-audit-v1.json",
+      "description": "12-Product End-to-End Public UX, 7-Tab /my-results Hub & 7 Autonomous/HITL Pipeline Audit",
+      "public_url": "https://councilof.ai/interop/end-to-end-product-ux-and-pipeline-audit-v1.json",
+      "exists_in_public_interop": true,
+      "exists_in_hf_space": true,
+      "byte_identical_mirror": true,
+      "sha256": "f02fa079dd347ae8058055a6c352eea2572f06ba11476fea545af1a088c0a016"
+    }
+  ],
+  "audit_sha256": "e942102b14eb21b0b5ac97217649a714b9d53ae81b443f35b1f7b660fa2e575d"
+}

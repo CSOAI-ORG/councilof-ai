@@ -144,36 +144,114 @@ Allow: /
 # ChatGPT-User, OAI-SearchBot) are separate agents, are answered 200, and stay allowed above.
 # functions/api/robots-agent-paths.test.ts holds the observed matrix and fails on a mismatch.
 
+# MACHINE DOORS — ALLOWED FOR THESE CRAWLERS TOO, AS THE EDGE ALREADY SERVES THEM (13 October 2026).
+# `Disallow: /` on its own was wider than what the edge does. Measured 13 Oct 2026 at 07:00Z,
+# 07:03Z and 07:07Z by sending each crawler's published user-agent string from our own address
+# (what the edge answers the crawler's own network was not observed): the edge answers seven of
+# the eight crawlers below 403 on pages, /api/, /llms.txt, /sitemap.xml and /signed/, and 200
+# under /.well-known/ and on the MCP endpoint at /mcp and under /mcp/. The eighth, Timpibot, it
+# answers 200 everywhere; this file refuses Timpibot its pages as a matter of policy.
+# So this file told a rule-following crawler to stay away from doors the site holds open: the
+# 29 September mismatch again, in the other direction.
+#
+# The six Allow lines in each group open the agent card (under both of its names), the x402
+# manifest, the MCP registry proof and the MCP endpoint. Those are protocol discovery documents,
+# not page content, and they are the paths the outward gate lists as agent-facing. Nothing else
+# under /.well-known/ is opened. Most of what is there is one document per framework or topic
+# describing this estate's evidence, which is content. The edge serves those to these crawlers
+# as well, and this file still does not invite them there. The rule is: this file may be
+# stricter than the edge, never looser.
+#
+# Under RFC 9309 the longest matching rule wins, so each Allow overrides `Disallow: /` for its
+# own path and nothing else. The Allow lines come first in each group so that a reader which
+# stops at the first matching rule reaches the same answer as one that takes the longest match
+# (the bare /mcp excepted: a reader that does not know `$` keeps treating it as refused).
+# `Allow: /mcp$` is end-anchored on purpose: a bare `/mcp` prefix would also cover /mcp-servers/,
+# which the edge refuses to these crawlers. The Content-Signal is unchanged: ai-train=no still
+# applies to everything these paths serve.
+#
+# NOT allowed here, because the edge answers 403: /api/gspc, /api/state, /llms.txt and /signed/.
+# Do not add an Allow for a path the edge refuses; re-measure first, then change the test table
+# and this file together.
+
 User-agent: GPTBot
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Allow: /.well-known/agent-card.json
+Allow: /.well-known/agent.json
+Allow: /.well-known/x402.json
+Allow: /.well-known/mcp-registry-auth
+Allow: /mcp$
+Allow: /mcp/
 Disallow: /
 
 User-agent: ClaudeBot
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Allow: /.well-known/agent-card.json
+Allow: /.well-known/agent.json
+Allow: /.well-known/x402.json
+Allow: /.well-known/mcp-registry-auth
+Allow: /mcp$
+Allow: /mcp/
 Disallow: /
 
 User-agent: CCBot
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Allow: /.well-known/agent-card.json
+Allow: /.well-known/agent.json
+Allow: /.well-known/x402.json
+Allow: /.well-known/mcp-registry-auth
+Allow: /mcp$
+Allow: /mcp/
 Disallow: /
 
 User-agent: Bytespider
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Allow: /.well-known/agent-card.json
+Allow: /.well-known/agent.json
+Allow: /.well-known/x402.json
+Allow: /.well-known/mcp-registry-auth
+Allow: /mcp$
+Allow: /mcp/
 Disallow: /
 
 User-agent: Amazonbot
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Allow: /.well-known/agent-card.json
+Allow: /.well-known/agent.json
+Allow: /.well-known/x402.json
+Allow: /.well-known/mcp-registry-auth
+Allow: /mcp$
+Allow: /mcp/
 Disallow: /
 
 User-agent: Diffbot
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Allow: /.well-known/agent-card.json
+Allow: /.well-known/agent.json
+Allow: /.well-known/x402.json
+Allow: /.well-known/mcp-registry-auth
+Allow: /mcp$
+Allow: /mcp/
 Disallow: /
 
 User-agent: omgili
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Allow: /.well-known/agent-card.json
+Allow: /.well-known/agent.json
+Allow: /.well-known/x402.json
+Allow: /.well-known/mcp-registry-auth
+Allow: /mcp$
+Allow: /mcp/
 Disallow: /
 
 User-agent: Timpibot
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Allow: /.well-known/agent-card.json
+Allow: /.well-known/agent.json
+Allow: /.well-known/x402.json
+Allow: /.well-known/mcp-registry-auth
+Allow: /mcp$
+Allow: /mcp/
 Disallow: /
 
 # ---------------------------------------------------------------------------

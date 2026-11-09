@@ -1,0 +1,240 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "watchdog-ingest",
+  "specialist": {
+    "id": "meok-watchdog-ingest-specialist",
+    "cluster_id": "meok-axis-watchdog-ingest",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit the daily public watchdog and incident intake: that each pinned source was probed on schedule, that each answer carried the shape its publisher documents, and that no unreachable or unparseable source is ever reported as a count of zero.",
+    "reviewer_role": "public watchdog intake reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "pinned-source reachability and parseability",
+    "REACHABLE vs UNREACHABLE vs UNCHECKABLE separation",
+    "daily run freshness and published index agreement",
+    "unpinned findings stay visible as gaps"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-11-02.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-11-02T04:17:24.499Z",
+      "source": "/interop/axis-banks/watchdog-ingest-20261102.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "735ec87fbd3525f1ebf2c0b774145d0ada589252325526dedcc995b47cd46a1e",
+    "axis_row": {
+      "axis": "watchdog-ingest",
+      "family": "subject",
+      "kind": "measured-subject",
+      "applies_to": "public-watchdog-and-incident-sources",
+      "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+      "task": "does the subject offer a third party a documented route to report a problem, with a response commitment and a machine-readable path",
+      "n": 106,
+      "status": "MEASURED",
+      "method_status": "meets-rule",
+      "method": "scripts/subject-axis/build_missing_axes.mjs",
+      "method_sha": "eeabfeb8a0515d719840d33c2a9320bd8279b7da7db17fc537acd23632509b5b",
+      "rate": 0.1981,
+      "rate_scale": "fraction",
+      "rate_rule": "presence of at least 3 of 5 declared classes",
+      "public_pages": "HIDDEN_PENDING_OWNER_GO",
+      "bank": "interop/axis-banks/watchdog-ingest-20261102.json",
+      "bank_sha256": "8c5a3438294a8dc56baf9fb879b6a336b90bccd5a5a45e3944016b834dff2e88",
+      "frame_sha256": "0a4876147edfbf18848bbfe17f32a7e4a92a710e68c76ff4481998b9bbbe5d2a",
+      "facts_as_of": "2026-11-02T04:17:24.499Z",
+      "evidence_url": "/interop/axis-banks/watchdog-ingest-20261102.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
+      "n_unit": "subjects in the frozen frame",
+      "colour": "hsl(310 62% 52%)",
+      "hue": 310,
+      "note": "106 subjects from a frozen frame of 123 (17 refusals recorded, never converted to failures). rate 0.1981 = share meeting at least 3 of 5 declared presence classes (4-of-5 0.0472, 5-of-5 0.0094). Class census: security 15, reporting 67, whistleblow 14, machine 26, response 40. 106/106 must-fail negative controls caught. Presence of a string in public bytes at a stated time is not evidence of quality, truth or compliance.",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-11-02T04:17:24.499Z",
+        "source": "/interop/axis-banks/watchdog-ingest-20261102.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist watchdog-ingest audits only the watchdog-ingest row",
+      "evidence": "watchdog-ingest"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-watchdog-ingest; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "FINDING",
+      "detail": "required evidence missing: n_note",
+      "evidence": [
+        "n_note"
+      ]
+    },
+    {
+      "id": "MEASUREMENT_KIND",
+      "state": "FINDING",
+      "detail": "unknown measurement kind measured-subject"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "meets-rule"
+    }
+  ],
+  "summary": {
+    "checks": 5,
+    "passed": 3,
+    "declared": 0,
+    "findings": 2,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "point a pinned source at a dead host and require the row to read UNREACHABLE, never 0",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "serve HTML where a feed is documented and require UNCHECKABLE, never a zero count",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "watchdog-ingest-proposal-1",
+      "proposal": "freeze the daily run window and sha-pin it so the axis can carry a real n instead of staying a declared slot",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "watchdog-ingest-proposal-2",
+      "proposal": "open a data request with the AI Incident Database maintainers for a public incident export path, since the site serves HTML only",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_watchdog-ingest",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/watchdog-ingest",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "public watchdog intake reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "ba12a0bd03beda470e73c881213e4e4d0453575f625f06452a6219893c202185",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 14,
+        "title": "Regulatory determination is outside CSOAI"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "applies_to",
+      "method",
+      "method_sha",
+      "method_status",
+      "n_note"
+    ],
+    "measurement_url": "/api/gspc/axis/watchdog-ingest",
+    "competency_url": "/api/hitl/modules/watchdog-ingest",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}

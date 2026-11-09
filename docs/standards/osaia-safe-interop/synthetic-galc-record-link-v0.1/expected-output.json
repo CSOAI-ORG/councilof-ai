@@ -1,0 +1,68 @@
+{
+  "fixture_id": "CSOAI-SAFE-GALC-RECORD-LINK-002",
+  "scope": "record and link position expectations only, NOT SAFE-GALC property results",
+  "records_by_type": {
+    "proposal": 1,
+    "governance_determination": 2,
+    "enforcement_event": 2,
+    "execution_result": 1,
+    "observation": 3,
+    "reconciliation_result": 2
+  },
+  "links_by_relation": {
+    "evaluates": 2,
+    "enforces": 2,
+    "attempts": 1,
+    "observes": 3,
+    "reconciles": 11,
+    "supersedes": 1,
+    "transforms": 0
+  },
+  "enforcement_outcomes": {
+    "rejected": 1,
+    "accepted": 1
+  },
+  "executions_under_a_rejected_enforcement": 0,
+  "reaction_observations": 2,
+  "distinct_reported_states_in_reaction_observations": 1,
+  "superseded_records_retained": [
+    "urn:example:csoai-synthetic:record:reconciliation-1"
+  ],
+  "three_vocabularies_side_by_side": {
+    "source_external_effect_status": {
+      "F1": "unknown",
+      "F2": "observed"
+    },
+    "execution_result_status": {
+      "execution-1": "unknown"
+    },
+    "reconciliation_result": {
+      "reconciliation-1": "missing",
+      "reconciliation-2": "conflicting"
+    },
+    "note": "Three vocabularies in three positions. None is derived from another."
+  },
+  "verifier_outputs": {
+    "evaluations": "NOT_EVALUATED",
+    "overall_result": "NOT_EVALUATED",
+    "reason": "No SAFE-GALC verifier was run. The scenario input carries neither field."
+  },
+  "proposed_comparisons": {
+    "C1": "NOT_EVALUATED",
+    "C2": "NOT_EVALUATED",
+    "C3": "NOT_EVALUATED",
+    "C4": "NOT_EVALUATED",
+    "C5": "NOT_EVALUATED",
+    "C6": "NOT_EVALUATED"
+  },
+  "forbidden_inference": [
+    "Fresh evidence does not renew an expired determination.",
+    "A rejected enforcement event has no execution record, and none may be invented.",
+    "An accepted enforcement event is not a completed operation.",
+    "Unequal parameter digests do not by themselves show an out-of-scope action.",
+    "Two reaction observations of one reported state are not two failures.",
+    "external_effect_status is not execution completion, reconciliation success or external truth.",
+    "A later reconciliation does not delete the earlier one or any observation.",
+    "Linked records do not show that anything happened. Every record here is invented."
+  ]
+}

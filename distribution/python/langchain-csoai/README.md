@@ -19,7 +19,9 @@ invented number is ever returned). Measurement only: a card is evidence, never a
 
 `verify_card` takes `card_id` (the full 64-hex id) or `card` (the JSON) and returns `VALID`,
 `INVALID` with the reason, or `UNCHECKABLE` — "could not check" is never "forged". It is free, always.
-The same verdicts are served by the remote MCP server at https://councilof.ai/mcp.
+The remote MCP servers (https://councilof.ai/mcp/free and https://councilof.ai/mcp) take different arguments: their `verify_card`
+takes `card` only (the JSON, a councilof.ai URL, or the 64-hex id), and `get_card` takes `sha256`.
+Passing `card_id` to the MCP tool is an input validation error.
 
 Data: https://councilof.ai/api/gspc · Corrections ledger: https://councilof.ai/corrections/ (JSON: https://councilof.ai/api/corrections) · Verify a card, free: https://councilof.ai/gspc-verify/
 

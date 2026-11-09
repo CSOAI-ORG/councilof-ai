@@ -52,6 +52,8 @@ describe("lookup: per server, not totals", () => {
       expect(html).toContain(String(c.observed_at));
     }
     expect(html.match(/data-testid="verify-capsule"/g)?.length).toBe(r.capsules.length);
+    expect(html.match(/data-testid="save-capsule"/g)?.length).toBe(r.capsules.length);
+    expect(html).toContain("The export is unsigned");
     expect(html).toContain("Declared vs observed");
   });
 
@@ -113,3 +115,4 @@ describe("verify this capsule: re-derived in the page's own code path", () => {
     expect(v.state).toBe("NOT_PUBLISHED");
   });
 });
+

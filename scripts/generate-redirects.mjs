@@ -34,6 +34,12 @@ const FUNCTIONS_DIR = join(ROOT, "functions");
 // Function-owned routes must not receive generic bare-to-slash redirects. A
 // sparse checkout without functions/ cannot make that decision safely.
 if (!existsSync(FUNCTIONS_DIR)) {
+  // In --check mode a missing input is UNCHECKABLE, not a finding about the file: the store
+  // could not answer, so it makes no claim.
+  if (process.argv.includes("--check")) {
+    console.error("? redirects: UNCHECKABLE — functions/ is absent, so no generation is possible");
+    process.exit(2);
+  }
   throw new Error("[redirects] functions/ is required to exclude Pages Function routes");
 }
 
@@ -54,7 +60,28 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
   .filter((p, i, a) => a.indexOf(p) === i)
   .sort();
 
+// A route whose whole body is a client <Redirect> stub is not a page: the SPA renders
+// nothing at it, so the prerenderer would snapshot a bare hop and the bare→slash
+// canonicaliser below would canonicalise the stub to /<path>/ — a directory that does
+// not exist — which is exactly how /regions, /relevance-map and /risk-heatmap became
+// silent 404s (found 2026-11-02). Emit the hop as a real redirect rule instead, and
+// keep the stub off the bare→slash list.
+const REDIRECT_STUBS = new Map(
+  [...src.matchAll(
+    /<Route\s+path=["']([^"']+)["']>\s*\{\(\)\s*=>\s*<Redirect\s+to=["']([^"']+)["']\s*\/?\s*>\s*\}\s*<\/Route>/g,
+  )]
+    .map((m) => [m[1], m[2]])
+    .filter(([p]) => p.startsWith("/") && !p.includes(":") && !p.includes("*")),
+);
+
 const EXISTING = [
+  // /gspc/field shipped for six hours on 2026-11-01 as a second, static board surface. It
+  // duplicated the board page and its own Wilson bars (components/gspc/LivingBoard.tsx), which
+  // is the fragmentation /board exists to end. The cross-axis read it carried now lives in
+  // components/gspc/BoardField.tsx, mounted on /board; the URL is retired into the page that owns
+  // the numbers rather than left as a fifth board.
+  "/gspc/field  /board  308",
+  "/gspc/field/ /board  308",
   // The hand-authored /arena tree was a second, stale product surface. Keep
   // historical machine evidence in public/arena/*.json{,l}, but route every
   // former human page into the one Council OS play surface. Exact rules are
@@ -74,6 +101,10 @@ const EXISTING = [
   // /alliance-map published a register of other organisations' claims for one morning.
   // Maintaining that register is the alliance's job, not ours; our own membership is a
   // row on /memberships, which is what the page was reached for.
+  // /games 404s: only /games/ruler answers under /games*, and the Ruler is the canonical
+  // game door (menu audit 2 Nov 2026). The bare hub path lands on the real game.
+  "/games                /games/ruler         308",
+  "/games/               /games/ruler         308",
   "/alliance-map          /memberships         308",
   "/alliance-map/         /memberships         308",
   // Withdrawn 6 Oct 2026 for breaking standing doctrine. /authority handed out embeddable
@@ -103,6 +134,9 @@ const EXISTING = [
   "/conflicts/           /independence/       308",
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
+  // Preserve the published evidence-event identifier and the former plugin card address.
+  "/spec/evidence-event/v0.1  /spec/evidence-event/v0.1/  308",
+  "/agents/csoai-agent.json  /.well-known/agent-card.json  308",
   // Eat lid 2026-09-01 (still true 2026-09-06): GET /publisher-health.json 200,
   // GET /signed/publisher-health.json 404. The writer is scripts/publish_public_root.py
   // and it emits one file at public/publisher-health.json. A second copy under
@@ -143,7 +177,12 @@ const EXISTING = [
   "/sov-town-lab   /gspc-arena?view=towns  308",
   "/sov-towns      /gspc-arena?view=towns  308",
   "/towns          /gspc-arena?view=towns  308",
-  "/globe          /globe3d.html           308",
+  // 2026-11-02: /globe serves the WorldGlobe page again (client/src/pages/WorldGlobe.tsx,
+  // which itself wraps the static globe3d.html as its immersive layer). The exact
+  // /globe -> /globe3d.html 308 here used to shadow that route, and the stale
+  // public/globe.html shell behind it drifted from every live surface, so both went.
+  // public/globe3d.html stays: it is the iframe WorldGlobe mounts, not a door.
+  "/tool-commons   /dashboard?tab=tools  308",
   "/byzantine            /council   308",
   "/byzantine-consensus  /council   308",
   "/bft                  /council   308",
@@ -430,7 +469,6 @@ const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([
   "/404",        // hosting fallback; intentionally exists outside the SPA
   "/advisory",   // reviewed legacy hand-off page
   "/benchmarks", // static-first benchmark registry
-  "/globe",      // exact /globe -> /globe3d.html redirect owns this door
   "/governance", // static discovery bundle (#2777) owns this door; app route retired
 ]);
 const publicHtmlRouteCollisions = routes
@@ -450,10 +488,19 @@ const funcOwnsPath = (p) => {
   const rel = normFrom(p).replace(/^\//, "");
   return !!rel && existsSync(join(FUNCTIONS_DIR, rel + ".ts"));
 };
+// Stubs whose `from` a hand rule already claims are skipped here (first rule wins and
+// a duplicated `from` is exactly the drift this file exists to prevent); the rest are
+// emitted as real static rules so the hop happens at the edge, not after a 5 MB bundle.
+const REDIRECT_RULES = [...REDIRECT_STUBS.entries()]
+  .filter(([p]) => !CLAIMED_FROM.has(normFrom(p)))
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([p, to]) => `${p}  ${to}  308`);
+
 const ROUTE_SLASH = routes
   .map(normFrom)
   .filter((p) => p !== "/")
   .filter((p) => !CLAIMED_FROM.has(p))
+  .filter((p) => !REDIRECT_STUBS.has(p))
   .filter((p) => !RETIRED_CODENAME.test(p))
   .filter((p) => !publicOwnsPath(p))
   .filter((p) => !funcOwnsPath(p))
@@ -503,6 +550,9 @@ const STATIC_RULES = [
   "# --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---",
   ...PERSONA_SLASH.flatMap((p) => [`/${p}  /${p}/  308`]),
   ...PERSONA_FOR_SLASH.map((p) => `/for/${p}  /for/${p}/  308`),
+  "",
+  `# --- client <Redirect> stub routes: hop at the edge, not in the bundle (${REDIRECT_RULES.length}) ---`,
+  ...REDIRECT_RULES,
   "",
   `# --- every other concrete <Route> bare path → its prerendered trailing-slash (${ROUTE_SLASH.length}) ---`,
   ...ROUTE_SLASH,
@@ -560,7 +610,46 @@ const lines = [
   "",
 ];
 
-writeFileSync(OUT, lines.join("\n"));
+// WHY A --check MODE. public/_redirects is COMMITTED and this script rewrites it on every
+// build. Nothing compared the two. The concrete miss it let through: on 2026-11-06 #3847
+// (857a6cc02) moved /mcp from an App.tsx route to a Pages Function, changing App.tsx only.
+// The committed _redirects kept a `/mcp  /mcp/  308` rule for a route that no longer existed
+// (and that the edge never applied anyway, because the Function answers /mcp directly with
+// 200), while the build produced a file without it. The live edge was correct; the committed
+// artefact was the fiction, and every deploy silently overwrote it.
+//
+// Exit codes: 0 = committed bytes match a fresh generation. 1 = they differ (a finding).
+// 2 = an input needed to generate is absent (UNCHECKABLE — not a finding about the file).
+const CHECK_MODE = process.argv.includes("--check");
+const next = lines.join("\n");
+
+if (CHECK_MODE) {
+  const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : null;
+  if (current === next) {
+    console.log(`✓ redirects: up to date — ${lines.length} lines match a fresh generation`);
+    process.exit(0);
+  }
+  const have = new Set((current ?? "").split("\n"));
+  const want = new Set(next.split("\n"));
+  const stale = [...have].filter((l) => !want.has(l) && l.trim() && !l.trim().startsWith("#"));
+  const absent = [...want].filter((l) => !have.has(l) && l.trim() && !l.trim().startsWith("#"));
+  console.error("✗ redirects: STALE — public/_redirects does not match a fresh generation.");
+  console.error(`    committed ${(current ?? "").split("\n").length} lines · fresh ${next.split("\n").length} lines`);
+  if (stale.length) {
+    console.error(`    rules only in the committed file (${stale.length}):`);
+    for (const l of stale.slice(0, 12)) console.error(`      - ${l}`);
+    if (stale.length > 12) console.error(`      … and ${stale.length - 12} more`);
+  }
+  if (absent.length) {
+    console.error(`    rules only in a fresh generation (${absent.length}):`);
+    for (const l of absent.slice(0, 12)) console.error(`      + ${l}`);
+    if (absent.length > 12) console.error(`      … and ${absent.length - 12} more`);
+  }
+  console.error(`    fix: node scripts/generate-redirects.mjs && git add public/_redirects`);
+  process.exit(1);
+}
+
+writeFileSync(OUT, next);
 const nStatic = STATIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length;
 const nDynamic = DYNAMIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length + 1; // +1 catch-all
 console.log(`[redirects] ${routes.length} app routes detected (not emitted; catch-all covers them)`);

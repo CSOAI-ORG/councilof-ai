@@ -1,0 +1,732 @@
+{
+  "schema": "csoai.subject-axis-live-run/1.0",
+  "run_id": "subject-axis-live-run-20261027",
+  "observed_at": "2026-10-28T04:25:30.845Z",
+  "method_sha256": "1c52eb8d023c452954a42465a5f54a70ebd44e116764a82acf1080c08cc5fdb7",
+  "authority_state": "measurement_only_not_a_certification",
+  "signed": false,
+  "writes_board": false,
+  "claim_maintenance_wave2": {
+    "n_subjects": 77,
+    "n_valid": 75,
+    "meets_n30_gate": true,
+    "counts": {
+      "total_claims": 77,
+      "reachable": 75,
+      "unchanged_vs_wave1": 13,
+      "changed_vs_wave1": 62,
+      "withdrawn_vs_wave1": 1,
+      "unreachable_vs_wave1": 1,
+      "churn_stable": 71,
+      "churn_unstable": 4,
+      "candidate_material_change": 58,
+      "not_distinguishable_churn": 4
+    },
+    "negative_control": "DISCRIMINATING"
+  },
+  "subject_axes_banks": [
+    {
+      "axis": "measurer-integrity",
+      "n_grid": 40,
+      "n_valid": 40,
+      "score": 0.925,
+      "n_bar": 37,
+      "neg_caught": 40,
+      "pos_passed": 40,
+      "live_match": 0,
+      "source_grid_observed_at": null,
+      "bytes_changed_since_grid": 40,
+      "class_census": {
+        "frozen_digest_or_checksum": {
+          "n_present": 39,
+          "n_subjects": 40,
+          "share": 0.975
+        },
+        "contamination_or_canary": {
+          "n_present": 8,
+          "n_subjects": 40,
+          "share": 0.2
+        },
+        "statistical_uncertainty": {
+          "n_present": 37,
+          "n_subjects": 40,
+          "share": 0.925
+        },
+        "cryptographic_attestation": {
+          "n_present": 37,
+          "n_subjects": 40,
+          "share": 0.925
+        },
+        "reproducibility_command": {
+          "n_present": 31,
+          "n_subjects": 40,
+          "share": 0.775
+        }
+      },
+      "bar_scores": {
+        "bar_3_of_5": {
+          "n_meeting": 37,
+          "n_subjects": 40,
+          "score": 0.925,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_4_of_5": {
+          "n_meeting": 31,
+          "n_subjects": 40,
+          "score": 0.775,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_5_of_5": {
+          "n_meeting": 8,
+          "n_subjects": 40,
+          "score": 0.2,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        }
+      },
+      "frame": {
+        "population_description": "the 40 candidates frozen in measurer-integrity.discovery-v1.json for axis measurer-integrity",
+        "inclusion_rule": "Every candidate in the frozen file was attempted exactly once at run time; no candidate was added, dropped, substituted or re-ordered. The file digest is published, so the population is checkable.",
+        "frame_file": "/Users/nicholas/_alignment/axis-runs-20261024/measurer-integrity.discovery-v1.json",
+        "frame_file_sha256": "7e176bbbdc3ed56041bd2ff499f5cd6e897d9b6762492745c3ac90419cc91820",
+        "frame_date": null,
+        "n_frame": 40,
+        "n_attempted": 40,
+        "n_reachable": 40,
+        "reachability": 1,
+        "sample_type": "curated convenience sample — the estate's own candidate list, not a probability sample of the axis population",
+        "what_this_frame_does_not_license": "A rate over a curated convenience sample cannot be read as a population rate. It is a rate over this list, on this date, with this reader.",
+        "reader_note": "This run's reader is NOT the sha-pinned reader that produced the frame file, so byte digests are not comparable across the two without re-running the frame under the pinned reader."
+      },
+      "g2_score_acceptable": true
+    },
+    {
+      "axis": "interop-conformance",
+      "n_grid": 38,
+      "n_valid": 34,
+      "score": 0.6471,
+      "n_bar": 22,
+      "neg_caught": 34,
+      "pos_passed": 34,
+      "live_match": 6,
+      "source_grid_observed_at": null,
+      "bytes_changed_since_grid": 28,
+      "class_census": {
+        "formal_schema_spec": {
+          "n_present": 12,
+          "n_subjects": 34,
+          "share": 0.3529
+        },
+        "cryptographic_binding": {
+          "n_present": 32,
+          "n_subjects": 34,
+          "share": 0.9412
+        },
+        "conformance_vectors": {
+          "n_present": 4,
+          "n_subjects": 34,
+          "share": 0.1176
+        },
+        "versioned_standard_or_rfc": {
+          "n_present": 16,
+          "n_subjects": 34,
+          "share": 0.4706
+        },
+        "wire_transport_binding": {
+          "n_present": 33,
+          "n_subjects": 34,
+          "share": 0.9706
+        }
+      },
+      "bar_scores": {
+        "bar_3_of_5": {
+          "n_meeting": 22,
+          "n_subjects": 34,
+          "score": 0.6471,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_4_of_5": {
+          "n_meeting": 7,
+          "n_subjects": 34,
+          "score": 0.2059,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_5_of_5": {
+          "n_meeting": 2,
+          "n_subjects": 34,
+          "score": 0.0588,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        }
+      },
+      "frame": {
+        "population_description": "the 38 candidates frozen in interop-conformance.discovery-v1.json for axis interop-conformance",
+        "inclusion_rule": "Every candidate in the frozen file was attempted exactly once at run time; no candidate was added, dropped, substituted or re-ordered. The file digest is published, so the population is checkable.",
+        "frame_file": "/Users/nicholas/_alignment/axis-runs-20261024/interop-conformance.discovery-v1.json",
+        "frame_file_sha256": "1cfcd35f73370eba4c77eee753558ed3bf9920ab73acc7cf223a3f0997f7c1c8",
+        "frame_date": null,
+        "n_frame": 38,
+        "n_attempted": 38,
+        "n_reachable": 34,
+        "reachability": 0.8947,
+        "sample_type": "curated convenience sample — the estate's own candidate list, not a probability sample of the axis population",
+        "what_this_frame_does_not_license": "A rate over a curated convenience sample cannot be read as a population rate. It is a rate over this list, on this date, with this reader.",
+        "reader_note": "This run's reader is NOT the sha-pinned reader that produced the frame file, so byte digests are not comparable across the two without re-running the frame under the pinned reader."
+      },
+      "g2_score_acceptable": true
+    },
+    {
+      "axis": "humanoid-deployment",
+      "n_grid": 37,
+      "n_valid": 35,
+      "score": 0.4571,
+      "n_bar": 16,
+      "neg_caught": 35,
+      "pos_passed": 35,
+      "live_match": 1,
+      "source_grid_observed_at": null,
+      "bytes_changed_since_grid": 34,
+      "class_census": {
+        "whole_body_or_torque_control": {
+          "n_present": 16,
+          "n_subjects": 35,
+          "share": 0.4571
+        },
+        "safety_stop_or_iso_limits": {
+          "n_present": 3,
+          "n_subjects": 35,
+          "share": 0.0857
+        },
+        "bimanual_or_dexterous": {
+          "n_present": 18,
+          "n_subjects": 35,
+          "share": 0.5143
+        },
+        "hardware_bus_or_rtos": {
+          "n_present": 22,
+          "n_subjects": 35,
+          "share": 0.6286
+        },
+        "sim_to_real_or_urdf": {
+          "n_present": 22,
+          "n_subjects": 35,
+          "share": 0.6286
+        }
+      },
+      "bar_scores": {
+        "bar_3_of_5": {
+          "n_meeting": 16,
+          "n_subjects": 35,
+          "score": 0.4571,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_4_of_5": {
+          "n_meeting": 10,
+          "n_subjects": 35,
+          "score": 0.2857,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_5_of_5": {
+          "n_meeting": 1,
+          "n_subjects": 35,
+          "score": 0.0286,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        }
+      },
+      "frame": {
+        "population_description": "the 37 candidates frozen in humanoid-deployment.discovery-v1.json for axis humanoid-deployment",
+        "inclusion_rule": "Every candidate in the frozen file was attempted exactly once at run time; no candidate was added, dropped, substituted or re-ordered. The file digest is published, so the population is checkable.",
+        "frame_file": "/Users/nicholas/_alignment/axis-runs-20261024/humanoid-deployment.discovery-v1.json",
+        "frame_file_sha256": "f7312869fd6a27ceec48afd62e61d76e7fb99d3eb2a589dc0832fe58561b608b",
+        "frame_date": null,
+        "n_frame": 37,
+        "n_attempted": 37,
+        "n_reachable": 35,
+        "reachability": 0.9459,
+        "sample_type": "curated convenience sample — the estate's own candidate list, not a probability sample of the axis population",
+        "what_this_frame_does_not_license": "A rate over a curated convenience sample cannot be read as a population rate. It is a rate over this list, on this date, with this reader.",
+        "reader_note": "This run's reader is NOT the sha-pinned reader that produced the frame file, so byte digests are not comparable across the two without re-running the frame under the pinned reader."
+      },
+      "g2_score_acceptable": true
+    },
+    {
+      "axis": "interpretability-reproducibility",
+      "n_grid": 35,
+      "n_valid": 33,
+      "score": 0.9091,
+      "n_bar": 30,
+      "neg_caught": 33,
+      "pos_passed": 33,
+      "live_match": 2,
+      "source_grid_observed_at": null,
+      "bytes_changed_since_grid": 31,
+      "class_census": {
+        "mechanistic_or_circuit_method": {
+          "n_present": 32,
+          "n_subjects": 33,
+          "share": 0.9697
+        },
+        "sparse_autoencoder_or_features": {
+          "n_present": 11,
+          "n_subjects": 33,
+          "share": 0.3333
+        },
+        "pretrained_checkpoints_or_hub": {
+          "n_present": 21,
+          "n_subjects": 33,
+          "share": 0.6364
+        },
+        "reproducible_notebook_or_colab": {
+          "n_present": 26,
+          "n_subjects": 33,
+          "share": 0.7879
+        },
+        "peer_reviewed_or_arxiv": {
+          "n_present": 29,
+          "n_subjects": 33,
+          "share": 0.8788
+        }
+      },
+      "bar_scores": {
+        "bar_3_of_5": {
+          "n_meeting": 30,
+          "n_subjects": 33,
+          "score": 0.9091,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_4_of_5": {
+          "n_meeting": 17,
+          "n_subjects": 33,
+          "score": 0.5152,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_5_of_5": {
+          "n_meeting": 6,
+          "n_subjects": 33,
+          "score": 0.1818,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        }
+      },
+      "frame": {
+        "population_description": "the 35 candidates frozen in interpretability-reproducibility.discovery-v1.json for axis interpretability-reproducibility",
+        "inclusion_rule": "Every candidate in the frozen file was attempted exactly once at run time; no candidate was added, dropped, substituted or re-ordered. The file digest is published, so the population is checkable.",
+        "frame_file": "/Users/nicholas/_alignment/axis-runs-20261024/interpretability-reproducibility.discovery-v1.json",
+        "frame_file_sha256": "79ad279f7b58ee19e2997e5a76a2cf0634d573f6a9eb21cbf363bc8333984d28",
+        "frame_date": null,
+        "n_frame": 35,
+        "n_attempted": 35,
+        "n_reachable": 33,
+        "reachability": 0.9429,
+        "sample_type": "curated convenience sample — the estate's own candidate list, not a probability sample of the axis population",
+        "what_this_frame_does_not_license": "A rate over a curated convenience sample cannot be read as a population rate. It is a rate over this list, on this date, with this reader.",
+        "reader_note": "This run's reader is NOT the sha-pinned reader that produced the frame file, so byte digests are not comparable across the two without re-running the frame under the pinned reader."
+      },
+      "g2_score_acceptable": true
+    },
+    {
+      "axis": "company-practice",
+      "n_grid": 50,
+      "n_valid": 40,
+      "score": 0.675,
+      "n_bar": 27,
+      "neg_caught": 40,
+      "pos_passed": 40,
+      "live_match": 0,
+      "source_grid_observed_at": "2026-10-24T05:00:12Z",
+      "bytes_changed_since_grid": 40,
+      "class_census": {
+        "safety": {
+          "n_present": 28,
+          "n_subjects": 40,
+          "share": 0.7
+        },
+        "evaluations": {
+          "n_present": 27,
+          "n_subjects": 40,
+          "share": 0.675
+        },
+        "incidents": {
+          "n_present": 21,
+          "n_subjects": 40,
+          "share": 0.525
+        },
+        "model_cards": {
+          "n_present": 2,
+          "n_subjects": 40,
+          "share": 0.05
+        },
+        "contact": {
+          "n_present": 37,
+          "n_subjects": 40,
+          "share": 0.925
+        }
+      },
+      "bar_scores": {
+        "bar_3_of_5": {
+          "n_meeting": 27,
+          "n_subjects": 40,
+          "score": 0.675,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_4_of_5": {
+          "n_meeting": 16,
+          "n_subjects": 40,
+          "score": 0.4,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_5_of_5": {
+          "n_meeting": 0,
+          "n_subjects": 40,
+          "score": 0,
+          "is_endpoint": true,
+          "g2_score_acceptable": false
+        }
+      },
+      "frame": {
+        "population_description": "the 50 candidates frozen in company-practice.discovery-v1.json for axis company-practice",
+        "inclusion_rule": "Every candidate in the frozen file was attempted exactly once at run time; no candidate was added, dropped, substituted or re-ordered. The file digest is published, so the population is checkable.",
+        "frame_file": "/Users/nicholas/_alignment/axis-runs-20261024/company-practice.discovery-v1.json",
+        "frame_file_sha256": "18983fcefdea5b0d26bec917c54fc787705b79f34cb7508ddec83d0ef9e72a0d",
+        "frame_date": "2026-10-24T05:00:12Z",
+        "n_frame": 50,
+        "n_attempted": 50,
+        "n_reachable": 40,
+        "reachability": 0.8,
+        "sample_type": "curated convenience sample — the estate's own candidate list, not a probability sample of the axis population",
+        "what_this_frame_does_not_license": "A rate over a curated convenience sample cannot be read as a population rate. It is a rate over this list, on this date, with this reader.",
+        "reader_note": "This run's reader is NOT the sha-pinned reader that produced the frame file, so byte digests are not comparable across the two without re-running the frame under the pinned reader."
+      },
+      "g2_score_acceptable": true
+    },
+    {
+      "axis": "lab-practice",
+      "n_grid": 40,
+      "n_valid": 37,
+      "score": 0.7027,
+      "n_bar": 26,
+      "neg_caught": 37,
+      "pos_passed": 37,
+      "live_match": 6,
+      "source_grid_observed_at": "2026-10-24T04:25:38Z",
+      "bytes_changed_since_grid": 31,
+      "class_census": {
+        "safety_or_alignment": {
+          "n_present": 29,
+          "n_subjects": 37,
+          "share": 0.7838
+        },
+        "evaluation_or_redteam": {
+          "n_present": 26,
+          "n_subjects": 37,
+          "share": 0.7027
+        },
+        "model_or_system_card": {
+          "n_present": 11,
+          "n_subjects": 37,
+          "share": 0.2973
+        },
+        "incident_or_disclosure": {
+          "n_present": 27,
+          "n_subjects": 37,
+          "share": 0.7297
+        },
+        "governance_or_charter": {
+          "n_present": 33,
+          "n_subjects": 37,
+          "share": 0.8919
+        }
+      },
+      "bar_scores": {
+        "bar_3_of_5": {
+          "n_meeting": 26,
+          "n_subjects": 37,
+          "score": 0.7027,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_4_of_5": {
+          "n_meeting": 21,
+          "n_subjects": 37,
+          "score": 0.5676,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_5_of_5": {
+          "n_meeting": 9,
+          "n_subjects": 37,
+          "score": 0.2432,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        }
+      },
+      "frame": {
+        "population_description": "the 40 candidates frozen in lab-practice.discovery.json for axis lab-practice",
+        "inclusion_rule": "Every candidate in the frozen file was attempted exactly once at run time; no candidate was added, dropped, substituted or re-ordered. The file digest is published, so the population is checkable.",
+        "frame_file": "/Users/nicholas/_alignment/axis-runs-20261024/lab-practice.discovery.json",
+        "frame_file_sha256": "7f3c3c9843b8f6451e925e326dfef24ffd3c328e5e1d19cdb25efa7d0f0c34cb",
+        "frame_date": "2026-10-24T04:25:38Z",
+        "n_frame": 40,
+        "n_attempted": 40,
+        "n_reachable": 37,
+        "reachability": 0.925,
+        "sample_type": "curated convenience sample — the estate's own candidate list, not a probability sample of the axis population",
+        "what_this_frame_does_not_license": "A rate over a curated convenience sample cannot be read as a population rate. It is a rate over this list, on this date, with this reader.",
+        "reader_note": "This run's reader is NOT the sha-pinned reader that produced the frame file, so byte digests are not comparable across the two without re-running the frame under the pinned reader."
+      },
+      "g2_score_acceptable": true
+    },
+    {
+      "axis": "regulator-transparency",
+      "n_grid": 46,
+      "n_valid": 41,
+      "score": 0.9268,
+      "n_bar": 38,
+      "neg_caught": 41,
+      "pos_passed": 41,
+      "live_match": 5,
+      "source_grid_observed_at": "2026-10-24T04:59:57Z",
+      "bytes_changed_since_grid": 36,
+      "class_census": {
+        "statutory_or_guidance_text": {
+          "n_present": 41,
+          "n_subjects": 41,
+          "share": 1
+        },
+        "consultation_or_docket": {
+          "n_present": 31,
+          "n_subjects": 41,
+          "share": 0.7561
+        },
+        "enforcement_or_register": {
+          "n_present": 35,
+          "n_subjects": 41,
+          "share": 0.8537
+        },
+        "machine_readable_or_open_data": {
+          "n_present": 39,
+          "n_subjects": 41,
+          "share": 0.9512
+        },
+        "contact_or_redress": {
+          "n_present": 37,
+          "n_subjects": 41,
+          "share": 0.9024
+        }
+      },
+      "bar_scores": {
+        "bar_3_of_5": {
+          "n_meeting": 38,
+          "n_subjects": 41,
+          "score": 0.9268,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_4_of_5": {
+          "n_meeting": 34,
+          "n_subjects": 41,
+          "score": 0.8293,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_5_of_5": {
+          "n_meeting": 29,
+          "n_subjects": 41,
+          "score": 0.7073,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        }
+      },
+      "frame": {
+        "population_description": "the 46 candidates frozen in regulator-transparency.expanded-v1.json for axis regulator-transparency",
+        "inclusion_rule": "Every candidate in the frozen file was attempted exactly once at run time; no candidate was added, dropped, substituted or re-ordered. The file digest is published, so the population is checkable.",
+        "frame_file": "/Users/nicholas/_alignment/axis-runs-20261024/regulator-transparency.expanded-v1.json",
+        "frame_file_sha256": "eb7d23d861fc6151f7b6ebb77e173bc70e22d4d5d76f7f062fcd0d41106d8b23",
+        "frame_date": "2026-10-24T04:59:57Z",
+        "n_frame": 46,
+        "n_attempted": 46,
+        "n_reachable": 41,
+        "reachability": 0.8913,
+        "sample_type": "curated convenience sample — the estate's own candidate list, not a probability sample of the axis population",
+        "what_this_frame_does_not_license": "A rate over a curated convenience sample cannot be read as a population rate. It is a rate over this list, on this date, with this reader.",
+        "reader_note": "This run's reader is NOT the sha-pinned reader that produced the frame file, so byte digests are not comparable across the two without re-running the frame under the pinned reader."
+      },
+      "g2_score_acceptable": true
+    },
+    {
+      "axis": "harness-fidelity",
+      "n_grid": 38,
+      "n_valid": 38,
+      "score": 1,
+      "n_bar": 38,
+      "neg_caught": 38,
+      "pos_passed": 38,
+      "live_match": 0,
+      "source_grid_observed_at": "2026-10-28T04:19:00Z",
+      "bytes_changed_since_grid": 38,
+      "class_census": {
+        "deterministic_seed_or_temp": {
+          "n_present": 38,
+          "n_subjects": 38,
+          "share": 1
+        },
+        "sandbox_or_container_isolation": {
+          "n_present": 38,
+          "n_subjects": 38,
+          "share": 1
+        },
+        "opentelemetry_or_structured_trace": {
+          "n_present": 38,
+          "n_subjects": 38,
+          "share": 1
+        },
+        "statistical_or_exact_scorer": {
+          "n_present": 38,
+          "n_subjects": 38,
+          "share": 1
+        },
+        "mcp_or_tool_protocol": {
+          "n_present": 38,
+          "n_subjects": 38,
+          "share": 1
+        }
+      },
+      "bar_scores": {
+        "bar_3_of_5": {
+          "n_meeting": 38,
+          "n_subjects": 38,
+          "score": 1,
+          "is_endpoint": true,
+          "g2_score_acceptable": false
+        },
+        "bar_4_of_5": {
+          "n_meeting": 38,
+          "n_subjects": 38,
+          "score": 1,
+          "is_endpoint": true,
+          "g2_score_acceptable": false
+        },
+        "bar_5_of_5": {
+          "n_meeting": 38,
+          "n_subjects": 38,
+          "score": 1,
+          "is_endpoint": true,
+          "g2_score_acceptable": false
+        }
+      },
+      "frame": {
+        "population_description": "the 38 candidates frozen in harness-fidelity.discovery-v1.json for axis harness-fidelity",
+        "inclusion_rule": "Every candidate in the frozen file was attempted exactly once at run time; no candidate was added, dropped, substituted or re-ordered. The file digest is published, so the population is checkable.",
+        "frame_file": "/Users/nicholas/_alignment/axis-runs-20261024/harness-fidelity.discovery-v1.json",
+        "frame_file_sha256": "9723a01cf4a042df9bf2ae7e59d346508870f63639b31fac7b548f892e57ce7e",
+        "frame_date": "2026-10-28T04:19:00Z",
+        "n_frame": 38,
+        "n_attempted": 38,
+        "n_reachable": 38,
+        "reachability": 1,
+        "sample_type": "curated convenience sample — the estate's own candidate list, not a probability sample of the axis population",
+        "what_this_frame_does_not_license": "A rate over a curated convenience sample cannot be read as a population rate. It is a rate over this list, on this date, with this reader.",
+        "reader_note": "This run's reader is NOT the sha-pinned reader that produced the frame file, so byte digests are not comparable across the two without re-running the frame under the pinned reader."
+      },
+      "g2_score_acceptable": false
+    },
+    {
+      "axis": "serving-fidelity",
+      "n_grid": 38,
+      "n_valid": 38,
+      "score": 0.7895,
+      "n_bar": 30,
+      "neg_caught": 38,
+      "pos_passed": 38,
+      "live_match": 0,
+      "source_grid_observed_at": "2026-10-28T04:19:00Z",
+      "bytes_changed_since_grid": 38,
+      "class_census": {
+        "logprobs_or_sampling_control": {
+          "n_present": 4,
+          "n_subjects": 38,
+          "share": 0.1053
+        },
+        "low_bit_quantization": {
+          "n_present": 38,
+          "n_subjects": 38,
+          "share": 1
+        },
+        "kv_cache_or_paged_attention": {
+          "n_present": 13,
+          "n_subjects": 38,
+          "share": 0.3421
+        },
+        "latency_and_throughput_metrics": {
+          "n_present": 38,
+          "n_subjects": 38,
+          "share": 1
+        },
+        "multi_accelerator_or_tensor_parallel": {
+          "n_present": 30,
+          "n_subjects": 38,
+          "share": 0.7895
+        }
+      },
+      "bar_scores": {
+        "bar_3_of_5": {
+          "n_meeting": 30,
+          "n_subjects": 38,
+          "score": 0.7895,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_4_of_5": {
+          "n_meeting": 13,
+          "n_subjects": 38,
+          "score": 0.3421,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        },
+        "bar_5_of_5": {
+          "n_meeting": 4,
+          "n_subjects": 38,
+          "score": 0.1053,
+          "is_endpoint": false,
+          "g2_score_acceptable": true
+        }
+      },
+      "frame": {
+        "population_description": "the 38 candidates frozen in serving-fidelity.discovery-v1.json for axis serving-fidelity",
+        "inclusion_rule": "Every candidate in the frozen file was attempted exactly once at run time; no candidate was added, dropped, substituted or re-ordered. The file digest is published, so the population is checkable.",
+        "frame_file": "/Users/nicholas/_alignment/axis-runs-20261024/serving-fidelity.discovery-v1.json",
+        "frame_file_sha256": "6264257697d4732e92ba1a90bdeb0f558f89adbdbbee4f7465ceca0b5748bfc6",
+        "frame_date": "2026-10-28T04:19:00Z",
+        "n_frame": 38,
+        "n_attempted": 38,
+        "n_reachable": 38,
+        "reachability": 1,
+        "sample_type": "curated convenience sample — the estate's own candidate list, not a probability sample of the axis population",
+        "what_this_frame_does_not_license": "A rate over a curated convenience sample cannot be read as a population rate. It is a rate over this list, on this date, with this reader.",
+        "reader_note": "This run's reader is NOT the sha-pinned reader that produced the frame file, so byte digests are not comparable across the two without re-running the frame under the pinned reader."
+      },
+      "g2_score_acceptable": true
+    }
+  ],
+  "synthetic_bank_finding": {
+    "what": "The 10 subject-axis banks of 2026-10-25 use formula-generated metric values and verify only their own minted bytes.",
+    "evidence": "build_csoai_subject_and_datasets_banks.py: canonical_metric_value = round(0.85 + ((idx % 12) * 0.01), 4); expected_payload_sha256 = sha256(canonical(payload)) over the builder payload itself.",
+    "consequence": "Those banks are CANDIDATE_FINDING and must not be promoted as measurements. The banks written by this run carry live-fetched bytes instead."
+  },
+  "board_promotion_blockers": [
+    "Board admission for a subject axis needs a signed card under the council signing path; signing is the owner gate (g2_gate.py: \"Enabling any signing from this list is Nick's call\").",
+    "Materiality of a claim delta is a human adjudication; this run never automates that verdict.",
+    "The crosswalk router coverage that the bank derivation depends on is still gated on council PR #3504 (published crosswalk maps 7 of 417 provisions)."
+  ]
+}

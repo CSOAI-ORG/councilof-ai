@@ -1,0 +1,58 @@
+name: cron-watch (silent-dead schedule detector)
+
+# GitHub cron silently drops under load — this repo has known it since 2026-09-13
+# (bot-checks-sweeper.yml header) — and a schedule that stops firing produces no failure
+# signal anywhere. Two real losses on 2026-11-03: the org profile's daily derivation had
+# not fired for 50 days while its output rotted, and three workflows carry schedules that
+# have never fired at all. This watch sweeps every scheduled workflow on the estate once
+# a day, opens ONE issue when anything exceeds budget, updates it while offenders remain,
+# and closes it when the estate is healthy again.
+#
+# Runs on SNAPSHOT_PR_TOKEN with a GITHUB_TOKEN fallback; the fallback can read everything
+# the sweep needs, and issue write comes from the permissions block either way.
+
+on:
+  schedule:
+    - cron: "41 7 * * *"
+  # PRIMARY signal, per the bot-checks-sweeper doctrine: GitHub cron drops under load
+  # (three silent misses in one week by 2026-11-03), while an event-triggered run fires
+  # reliably. GSPC Continuous Measurement completes every hour; each completion sweeps
+  # cron health for free (the sweep is idempotent and dedupes into one issue).
+  workflow_run:
+    workflows: ["GSPC Continuous Measurement"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "apply (open/update the issue) — default dry-run"
+        type: choice
+        required: false
+        default: dry-run
+        options: [dry-run, apply]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: hygiene-cron-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Sweep scheduled workflows for silent death
+        env:
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          # schedule AND workflow_run are the automated paths and both apply; only an
+          # explicit manual dispatch can choose dry-run.
+          MODE="${{ github.event_name == 'workflow_dispatch' && (inputs.apply || 'dry-run') || 'apply' }}"
+          node scripts/hygiene/cron-watch.mjs --budget-hours 48 --apply-if "$MODE"

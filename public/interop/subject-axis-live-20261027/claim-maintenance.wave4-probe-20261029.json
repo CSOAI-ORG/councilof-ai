@@ -1,0 +1,2264 @@
+{
+  "schema": "csoai.claim-maintenance-wave4-probe/1.0",
+  "axis": "claim-maintenance",
+  "wave": 4,
+  "run_id": "claim-maintenance-wave4-probe-20261029",
+  "started_at": "2026-10-29T02:44:47.795Z",
+  "observed_at": "2026-10-29T02:45:25.421Z",
+  "authority_state": "measurement_only_not_a_certification",
+  "signed": false,
+  "writes_ledger": false,
+  "baseline_wave2_file": "out/claim-maintenance.wave2-20261027.json",
+  "baseline_wave3_file": "out/claim-maintenance.wave3-20261028.json",
+  "method": {
+    "reader": "Node fetch (not urllib). councilof.ai returns 200 to Node/curl and 403 to urllib under the Cloudflare rule `public-data: no BIC`.",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "accept_header": "text/html,*/*",
+    "max_bytes_cap": 400000,
+    "timeout_ms": 15000,
+    "concurrency": 8,
+    "read_gap_ms": 30000,
+    "reads_per_url": 2,
+    "extract_text_source": "wave3.mjs lines 18-27, copied verbatim",
+    "extract_text": "function extractText(html) {\n  let s = html\n    .replace(/<script[\\s\\S]*?<\\/script>|<style[\\s\\S]*?<\\/style>|<!--[\\s\\S]*?-->/gi, '')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&').replace(/&lt;/gi, '<')\n    .replace(/&gt;/gi, '>').replace(/&quot;/gi, '\"').replace(/&#39;|&apos;/gi, \"'\")\n    .replace(/&#(\\d+);/g, (_, d) => String.fromCodePoint(Number(d)))\n    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)));\n  return s.replace(/\\s+/g, ' ').trim();\n}",
+    "text_digest": "sha256(utf8(extractText(first 400000 bytes of response body)))",
+    "text_capture": "every read's extracted visible text is written to disk under out/wave4-text-20261029/ for inspection",
+    "network_scope": "GET only, to the 77 monitored public claim URLs and nothing else"
+  },
+  "n_subjects": 77,
+  "records": [
+    {
+      "n": 1,
+      "url": "https://openai.com/safety/",
+      "subject": "OpenAI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "UNSTABLE_WITHIN_RUN",
+      "wave2_text_sha256_read1": "796dcb89e5fbd24d0b03e1885f81731485c7f860d58f421497c76f586a1585bc",
+      "wave2_text_sha256_read2": "d6108321cca03b934e8405aab853ac1b201167fa6dfc69161026def7e6543ea4",
+      "wave3_observed_text_sha256": "9e17b254dc7554a8eabc4ada7a6d3a8931d41a0000ed4e61059c89d258ee61d2",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "3aa466d401f729f411afc9faf33209086e7cbb2b4a13ba1e4985b7cae8c4b20a",
+        "raw_sha256": "800a70e6b5f26d438f3208f80d107f19045b99900da93bc72a9d54503def10d0",
+        "latency_ms": 420,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/01-openai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "3aa466d401f729f411afc9faf33209086e7cbb2b4a13ba1e4985b7cae8c4b20a",
+        "raw_sha256": "800a70e6b5f26d438f3208f80d107f19045b99900da93bc72a9d54503def10d0",
+        "latency_ms": 237,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/01-openai.read2.txt"
+      }
+    },
+    {
+      "n": 2,
+      "url": "https://www.anthropic.com/responsible-scaling-policy",
+      "subject": "Anthropic",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "684b99f8950f8f7249009bf4053448d0cf4c004887b727cc7ca532b09235ae68",
+      "wave2_text_sha256_read2": "684b99f8950f8f7249009bf4053448d0cf4c004887b727cc7ca532b09235ae68",
+      "wave3_observed_text_sha256": "684b99f8950f8f7249009bf4053448d0cf4c004887b727cc7ca532b09235ae68",
+      "read1": {
+        "status": 200,
+        "bytes": 244260,
+        "text_sha256": "684b99f8950f8f7249009bf4053448d0cf4c004887b727cc7ca532b09235ae68",
+        "raw_sha256": "6a2798f8dad5170de3e690dfbc9fc3f112e520e5a20ca90f09f91675249d2a89",
+        "latency_ms": 353,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/02-anthropic.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 243910,
+        "text_sha256": "684b99f8950f8f7249009bf4053448d0cf4c004887b727cc7ca532b09235ae68",
+        "raw_sha256": "f7c6d477597ea9c638799329cad9ce4ca83ce9adbc467493bd3a80a0eaf0f3a1",
+        "latency_ms": 252,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/02-anthropic.read2.txt"
+      }
+    },
+    {
+      "n": 3,
+      "url": "https://deepmind.google/responsibility-and-safety/",
+      "subject": "Google DeepMind",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "cbcacc9a1e0bf78ec83cc7bbf6899f148e82260df9941cc093e760aebf808810",
+      "wave2_text_sha256_read2": "cbcacc9a1e0bf78ec83cc7bbf6899f148e82260df9941cc093e760aebf808810",
+      "wave3_observed_text_sha256": "53a3b2a437bacddf5f0799ef39569badc75e4e87b39ca868d9e619a462cfdd6e",
+      "read1": {
+        "status": 200,
+        "bytes": 145329,
+        "text_sha256": "328bc6e28e7f82a8899bc0a32b4708d792d6444df1d029f66306d8cc2465c3d5",
+        "raw_sha256": "e161f13e662c7e0014047fcaf150bbf8cbd388800a67518a2da8ea5818dcf917",
+        "latency_ms": 278,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/03-google-deepmind.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 145329,
+        "text_sha256": "328bc6e28e7f82a8899bc0a32b4708d792d6444df1d029f66306d8cc2465c3d5",
+        "raw_sha256": "e161f13e662c7e0014047fcaf150bbf8cbd388800a67518a2da8ea5818dcf917",
+        "latency_ms": 281,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/03-google-deepmind.read2.txt"
+      }
+    },
+    {
+      "n": 4,
+      "url": "https://www.microsoft.com/en-us/ai/responsible-ai",
+      "subject": "Microsoft AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "UNSTABLE_WITHIN_RUN",
+      "wave2_text_sha256_read1": "79471b1bb071906e57a051cf311b2c83ea7509df537e629986fcc1b404057585",
+      "wave2_text_sha256_read2": "b39b7fac9dab5438bda855df2c72dc27deff77605cf75a01191343771a3169d3",
+      "wave3_observed_text_sha256": "d25acb50f222e105f99510a43f6d52d565de951cd86f8f9c23325875b34cb17b",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "8caf40a315f88e1046287d399e0b8687ee6d53b494f81467595ba80b3c69a23c",
+        "raw_sha256": "24f7fbca24c26cfde64e036372b6d032dbeed531da743c3bf199456e91e58222",
+        "latency_ms": 348,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/04-microsoft-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "b8f7943c22f0f31bdc2b015f8560e61bd0127b19b95282620c5992c27f301c56",
+        "raw_sha256": "d1ab56da6bb2049067f9c99928032d86e8823b07a63653585f03c6097b6fb7af",
+        "latency_ms": 324,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/04-microsoft-ai.read2.txt"
+      }
+    },
+    {
+      "n": 5,
+      "url": "https://x.ai/safety",
+      "subject": "xAI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "UNKNOWN_UNREACHABLE",
+      "wave2_text_sha256_read1": null,
+      "wave2_text_sha256_read2": null,
+      "wave3_observed_text_sha256": "da221a475c99128791c9e3d50f0e0bc0fe124c61f9b96065cf669fe1f25a086e",
+      "read1": {
+        "status": 403,
+        "bytes": 5838,
+        "text_sha256": "775537a3f970184744d1677d1bc04c3ad01bd91ba1af48658454c8a1cb60dfa9",
+        "raw_sha256": "02198afcfec323eec2425405dbf562b6e033f36bcd7800e10c7ba237ccb69d7b",
+        "latency_ms": 120,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/05-xai.read1.txt"
+      },
+      "read2": {
+        "status": 403,
+        "bytes": 5838,
+        "text_sha256": "3d544808bea52e795b735e4dae067bb68ec2ca736aa6383a76a25b648ce805f6",
+        "raw_sha256": "ba152846b236086c78b06ed241fd087ac9103ee4a03a13b4d638b6e4a796cb41",
+        "latency_ms": 58,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/05-xai.read2.txt"
+      }
+    },
+    {
+      "n": 6,
+      "url": "https://mistral.ai/products/studio/",
+      "subject": "Mistral AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "28527f67dff9d4481d40c290470bc114edb96f6c7dad7771a2ee0450ece45b60",
+      "wave2_text_sha256_read2": "28527f67dff9d4481d40c290470bc114edb96f6c7dad7771a2ee0450ece45b60",
+      "wave3_observed_text_sha256": "28527f67dff9d4481d40c290470bc114edb96f6c7dad7771a2ee0450ece45b60",
+      "read1": {
+        "status": 200,
+        "bytes": 244238,
+        "text_sha256": "28527f67dff9d4481d40c290470bc114edb96f6c7dad7771a2ee0450ece45b60",
+        "raw_sha256": "5bcda2068d3cafda34d2bde7b6b12de1ce774e54c54854ce44223ff85697e5f9",
+        "latency_ms": 289,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/06-mistral-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 244238,
+        "text_sha256": "28527f67dff9d4481d40c290470bc114edb96f6c7dad7771a2ee0450ece45b60",
+        "raw_sha256": "5bcda2068d3cafda34d2bde7b6b12de1ce774e54c54854ce44223ff85697e5f9",
+        "latency_ms": 262,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/06-mistral-ai.read2.txt"
+      }
+    },
+    {
+      "n": 7,
+      "url": "https://www.ai21.com/",
+      "subject": "AI21 Labs",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "21bbc1095fea7850a1bf2e32ebb72d8561c4fb6d424cb4041b8e9ca25c1e9f76",
+      "wave2_text_sha256_read2": "21bbc1095fea7850a1bf2e32ebb72d8561c4fb6d424cb4041b8e9ca25c1e9f76",
+      "wave3_observed_text_sha256": "21bbc1095fea7850a1bf2e32ebb72d8561c4fb6d424cb4041b8e9ca25c1e9f76",
+      "read1": {
+        "status": 200,
+        "bytes": 76602,
+        "text_sha256": "21bbc1095fea7850a1bf2e32ebb72d8561c4fb6d424cb4041b8e9ca25c1e9f76",
+        "raw_sha256": "e0a3b8f07fe6850a0c23c4f0e64c84c02841da7481742b15d8c7551cfac59e60",
+        "latency_ms": 156,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/07-ai21-labs.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 76602,
+        "text_sha256": "21bbc1095fea7850a1bf2e32ebb72d8561c4fb6d424cb4041b8e9ca25c1e9f76",
+        "raw_sha256": "1b4664cc9bf26b4bd77d192602787ab420f20724d00b86ae4aae0750c4080302",
+        "latency_ms": 118,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/07-ai21-labs.read2.txt"
+      }
+    },
+    {
+      "n": 8,
+      "url": "https://stability.ai/safety",
+      "subject": "Stability AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "dbed3c1e210754b6855de0af2824858337837eaea95af44a4d4b5ba72f4e1a58",
+      "wave2_text_sha256_read2": "dbed3c1e210754b6855de0af2824858337837eaea95af44a4d4b5ba72f4e1a58",
+      "wave3_observed_text_sha256": "62ecae5b3442abee707dbb88f03736bf4aeac86fb4045f64a195fe0c40e87c99",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "4318656408a97ff121287b3f7bcd3e6dff80cf47c2d7775ff375c74bc8bd6781",
+        "raw_sha256": "0ea80ec2fcc71cdf2cefd0644e4fdfa73358fe9ded56a7309ecc053931d8c1dc",
+        "latency_ms": 433,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/08-stability-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "4318656408a97ff121287b3f7bcd3e6dff80cf47c2d7775ff375c74bc8bd6781",
+        "raw_sha256": "0ea80ec2fcc71cdf2cefd0644e4fdfa73358fe9ded56a7309ecc053931d8c1dc",
+        "latency_ms": 265,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/08-stability-ai.read2.txt"
+      }
+    },
+    {
+      "n": 9,
+      "url": "https://huggingface.co/blog/ethics-soc-7",
+      "subject": "Hugging Face",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "f4404f4177059e7750f39727ebddbf9a9265019e07f7a7aac0309f7a4d6dfb76",
+      "wave2_text_sha256_read2": "f4404f4177059e7750f39727ebddbf9a9265019e07f7a7aac0309f7a4d6dfb76",
+      "wave3_observed_text_sha256": "fcba3cf67e2db3ff48107c2c8e72a6943cb201db05ae3de126e95caabefe21d1",
+      "read1": {
+        "status": 200,
+        "bytes": 231870,
+        "text_sha256": "fcba3cf67e2db3ff48107c2c8e72a6943cb201db05ae3de126e95caabefe21d1",
+        "raw_sha256": "e6a721f11fd341e9b1dcc9c8f577f924097a9d0232847ab41594485c03a11d8a",
+        "latency_ms": 320,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/09-hugging-face.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 231870,
+        "text_sha256": "fcba3cf67e2db3ff48107c2c8e72a6943cb201db05ae3de126e95caabefe21d1",
+        "raw_sha256": "e5908c436bd70602108ee2da773b02d1574693e784fb1394f709e5d31dbc6a2a",
+        "latency_ms": 261,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/09-hugging-face.read2.txt"
+      }
+    },
+    {
+      "n": 10,
+      "url": "https://eleuther.ai/",
+      "subject": "EleutherAI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "9e14aaea49788607a9c01b4d672c1274efd8cbe5a7650e40f8420aed6bdcbf2a",
+      "wave2_text_sha256_read2": "9e14aaea49788607a9c01b4d672c1274efd8cbe5a7650e40f8420aed6bdcbf2a",
+      "wave3_observed_text_sha256": "9e14aaea49788607a9c01b4d672c1274efd8cbe5a7650e40f8420aed6bdcbf2a",
+      "read1": {
+        "status": 200,
+        "bytes": 24751,
+        "text_sha256": "9e14aaea49788607a9c01b4d672c1274efd8cbe5a7650e40f8420aed6bdcbf2a",
+        "raw_sha256": "599c9be3595cbd58fc194103fc64f9fff1fd7b89a0f04a98631a3d6c2ef4607e",
+        "latency_ms": 327,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/10-eleutherai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 24751,
+        "text_sha256": "9e14aaea49788607a9c01b4d672c1274efd8cbe5a7650e40f8420aed6bdcbf2a",
+        "raw_sha256": "599c9be3595cbd58fc194103fc64f9fff1fd7b89a0f04a98631a3d6c2ef4607e",
+        "latency_ms": 311,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/10-eleutherai.read2.txt"
+      }
+    },
+    {
+      "n": 11,
+      "url": "https://allenai.org/",
+      "subject": "Allen Institute for AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "a662b75f2a09cf6734299e44284368a06bade3fea3e661a0b32da2590f5045cf",
+      "wave2_text_sha256_read2": "a662b75f2a09cf6734299e44284368a06bade3fea3e661a0b32da2590f5045cf",
+      "wave3_observed_text_sha256": "a662b75f2a09cf6734299e44284368a06bade3fea3e661a0b32da2590f5045cf",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "a662b75f2a09cf6734299e44284368a06bade3fea3e661a0b32da2590f5045cf",
+        "raw_sha256": "f21e87ca22fd8673d0b2ff7ba0ff4b0393d1d3eebb5b6d8188d529cc1dff932b",
+        "latency_ms": 1135,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/11-allen-institute-for-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "a662b75f2a09cf6734299e44284368a06bade3fea3e661a0b32da2590f5045cf",
+        "raw_sha256": "f21e87ca22fd8673d0b2ff7ba0ff4b0393d1d3eebb5b6d8188d529cc1dff932b",
+        "latency_ms": 1422,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/11-allen-institute-for-ai.read2.txt"
+      }
+    },
+    {
+      "n": 12,
+      "url": "https://www.nvidia.com/en-us/ai/",
+      "subject": "NVIDIA",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "59d4e9d2b05ae4e7bc471039b0a7303a4af3d58cb640bc18a63fe5b7c4d9a0a0",
+      "wave2_text_sha256_read2": "59d4e9d2b05ae4e7bc471039b0a7303a4af3d58cb640bc18a63fe5b7c4d9a0a0",
+      "wave3_observed_text_sha256": "59d4e9d2b05ae4e7bc471039b0a7303a4af3d58cb640bc18a63fe5b7c4d9a0a0",
+      "read1": {
+        "status": 200,
+        "bytes": 329953,
+        "text_sha256": "59d4e9d2b05ae4e7bc471039b0a7303a4af3d58cb640bc18a63fe5b7c4d9a0a0",
+        "raw_sha256": "59303d8ef30499414c2331c38c16e9fc5eca2c0faf05a09e149b9143720e37e1",
+        "latency_ms": 278,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/12-nvidia.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 329953,
+        "text_sha256": "59d4e9d2b05ae4e7bc471039b0a7303a4af3d58cb640bc18a63fe5b7c4d9a0a0",
+        "raw_sha256": "59303d8ef30499414c2331c38c16e9fc5eca2c0faf05a09e149b9143720e37e1",
+        "latency_ms": 145,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/12-nvidia.read2.txt"
+      }
+    },
+    {
+      "n": 13,
+      "url": "https://aws.amazon.com/ai/responsible-ai/",
+      "subject": "Amazon AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "c3e493e7da304c6f0b421198ce86e8dc94c7315b0d9c2f12a3d8ac7dd8e6575c",
+      "wave2_text_sha256_read2": "c3e493e7da304c6f0b421198ce86e8dc94c7315b0d9c2f12a3d8ac7dd8e6575c",
+      "wave3_observed_text_sha256": "c3e493e7da304c6f0b421198ce86e8dc94c7315b0d9c2f12a3d8ac7dd8e6575c",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "c3e493e7da304c6f0b421198ce86e8dc94c7315b0d9c2f12a3d8ac7dd8e6575c",
+        "raw_sha256": "5f5f28da6d68e50cf25f770edb176e821e2c91e355c774b9f568b6b44d60e0c4",
+        "latency_ms": 275,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/13-amazon-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "c3e493e7da304c6f0b421198ce86e8dc94c7315b0d9c2f12a3d8ac7dd8e6575c",
+        "raw_sha256": "f8bd2dddf401c1019655b531bbf87c3afc079af9d6fef52f0b46680ac969d440",
+        "latency_ms": 225,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/13-amazon-ai.read2.txt"
+      }
+    },
+    {
+      "n": 14,
+      "url": "https://www.apple.com/privacy/",
+      "subject": "Apple",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "ce73efdf47b8fee2178c8efb3ced5c2614b3caca7ce06d0d71cf88ccca702116",
+      "wave2_text_sha256_read2": "ce73efdf47b8fee2178c8efb3ced5c2614b3caca7ce06d0d71cf88ccca702116",
+      "wave3_observed_text_sha256": "ce73efdf47b8fee2178c8efb3ced5c2614b3caca7ce06d0d71cf88ccca702116",
+      "read1": {
+        "status": 200,
+        "bytes": 255789,
+        "text_sha256": "ce73efdf47b8fee2178c8efb3ced5c2614b3caca7ce06d0d71cf88ccca702116",
+        "raw_sha256": "381c1dfef85d654e6d836bc561b9c5f0741fa59716533c501a17ad11d10e8e45",
+        "latency_ms": 199,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/14-apple.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 255789,
+        "text_sha256": "ce73efdf47b8fee2178c8efb3ced5c2614b3caca7ce06d0d71cf88ccca702116",
+        "raw_sha256": "381c1dfef85d654e6d836bc561b9c5f0741fa59716533c501a17ad11d10e8e45",
+        "latency_ms": 125,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/14-apple.read2.txt"
+      }
+    },
+    {
+      "n": 15,
+      "url": "https://www.ibm.com/trust/responsible-technology",
+      "subject": "IBM",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "07aa9fb9b6786bbf3bae278908f6bd2a4123b0640d32567ad7238c1380a5fd02",
+      "wave2_text_sha256_read2": "07aa9fb9b6786bbf3bae278908f6bd2a4123b0640d32567ad7238c1380a5fd02",
+      "wave3_observed_text_sha256": "07aa9fb9b6786bbf3bae278908f6bd2a4123b0640d32567ad7238c1380a5fd02",
+      "read1": {
+        "status": 200,
+        "bytes": 219660,
+        "text_sha256": "07aa9fb9b6786bbf3bae278908f6bd2a4123b0640d32567ad7238c1380a5fd02",
+        "raw_sha256": "e2b3adc347eadd61bb411505f0eef4d0805d85be0c7d09522b3a77b7148b83ad",
+        "latency_ms": 1060,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/15-ibm.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 219660,
+        "text_sha256": "07aa9fb9b6786bbf3bae278908f6bd2a4123b0640d32567ad7238c1380a5fd02",
+        "raw_sha256": "e2b3adc347eadd61bb411505f0eef4d0805d85be0c7d09522b3a77b7148b83ad",
+        "latency_ms": 136,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/15-ibm.read2.txt"
+      }
+    },
+    {
+      "n": 16,
+      "url": "https://www.baai.ac.cn/zh-cn/",
+      "subject": "BAAI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "b3801a8d8c3cd7e7e596e5438c37c7a77fee8a32820b59cf020a543fec3b844c",
+      "wave2_text_sha256_read2": "b3801a8d8c3cd7e7e596e5438c37c7a77fee8a32820b59cf020a543fec3b844c",
+      "wave3_observed_text_sha256": "b3801a8d8c3cd7e7e596e5438c37c7a77fee8a32820b59cf020a543fec3b844c",
+      "read1": {
+        "status": 200,
+        "bytes": 1637,
+        "text_sha256": "b3801a8d8c3cd7e7e596e5438c37c7a77fee8a32820b59cf020a543fec3b844c",
+        "raw_sha256": "0f63dd474d30145b425744a769b13459f5c233cedb74f66366068d593f648a38",
+        "latency_ms": 987,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/16-baai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 1637,
+        "text_sha256": "b3801a8d8c3cd7e7e596e5438c37c7a77fee8a32820b59cf020a543fec3b844c",
+        "raw_sha256": "0f63dd474d30145b425744a769b13459f5c233cedb74f66366068d593f648a38",
+        "latency_ms": 320,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/16-baai.read2.txt"
+      }
+    },
+    {
+      "n": 17,
+      "url": "https://qwenlm.github.io/",
+      "subject": "Alibaba Qwen",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "f7ad07ed2c02ed5f5742b4a541517f44ce5a261c90682e39b74e141b01893ce1",
+      "wave2_text_sha256_read2": "f7ad07ed2c02ed5f5742b4a541517f44ce5a261c90682e39b74e141b01893ce1",
+      "wave3_observed_text_sha256": "f7ad07ed2c02ed5f5742b4a541517f44ce5a261c90682e39b74e141b01893ce1",
+      "read1": {
+        "status": 200,
+        "bytes": 17307,
+        "text_sha256": "f7ad07ed2c02ed5f5742b4a541517f44ce5a261c90682e39b74e141b01893ce1",
+        "raw_sha256": "f874cc1c99c3454e3ea933dac9790e5cb329e25bf5766b270ab9e38bd780bffe",
+        "latency_ms": 199,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/17-alibaba-qwen.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 17307,
+        "text_sha256": "f7ad07ed2c02ed5f5742b4a541517f44ce5a261c90682e39b74e141b01893ce1",
+        "raw_sha256": "f874cc1c99c3454e3ea933dac9790e5cb329e25bf5766b270ab9e38bd780bffe",
+        "latency_ms": 173,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/17-alibaba-qwen.read2.txt"
+      }
+    },
+    {
+      "n": 18,
+      "url": "https://www.deepseek.com/",
+      "subject": "DeepSeek",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "354dfe001a08ed79d0c662b23778c931971cdd21394f779be7d6e8317cc1f371",
+      "wave2_text_sha256_read2": "354dfe001a08ed79d0c662b23778c931971cdd21394f779be7d6e8317cc1f371",
+      "wave3_observed_text_sha256": "354dfe001a08ed79d0c662b23778c931971cdd21394f779be7d6e8317cc1f371",
+      "read1": {
+        "status": 200,
+        "bytes": 115730,
+        "text_sha256": "354dfe001a08ed79d0c662b23778c931971cdd21394f779be7d6e8317cc1f371",
+        "raw_sha256": "7cdee93e188e9a17a50513845f844afb0e54aaef1cab32b307457a3bc237d81a",
+        "latency_ms": 1062,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/18-deepseek.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 115730,
+        "text_sha256": "354dfe001a08ed79d0c662b23778c931971cdd21394f779be7d6e8317cc1f371",
+        "raw_sha256": "7cdee93e188e9a17a50513845f844afb0e54aaef1cab32b307457a3bc237d81a",
+        "latency_ms": 161,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/18-deepseek.read2.txt"
+      }
+    },
+    {
+      "n": 19,
+      "url": "https://www.moonshot.cn/",
+      "subject": "Moonshot AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "1397206665e95d2c1b930ae5e39d7f72b8a51bfd1ac5cc676abe47bc86fc716a",
+      "wave2_text_sha256_read2": "1397206665e95d2c1b930ae5e39d7f72b8a51bfd1ac5cc676abe47bc86fc716a",
+      "wave3_observed_text_sha256": "1397206665e95d2c1b930ae5e39d7f72b8a51bfd1ac5cc676abe47bc86fc716a",
+      "read1": {
+        "status": 200,
+        "bytes": 98243,
+        "text_sha256": "1397206665e95d2c1b930ae5e39d7f72b8a51bfd1ac5cc676abe47bc86fc716a",
+        "raw_sha256": "57608e749c6ad02aae750a31a71d9e754f75dd6bfaba9e98f1e2a51139d66bef",
+        "latency_ms": 1534,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/19-moonshot-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 98243,
+        "text_sha256": "1397206665e95d2c1b930ae5e39d7f72b8a51bfd1ac5cc676abe47bc86fc716a",
+        "raw_sha256": "57608e749c6ad02aae750a31a71d9e754f75dd6bfaba9e98f1e2a51139d66bef",
+        "latency_ms": 1314,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/19-moonshot-ai.read2.txt"
+      }
+    },
+    {
+      "n": 20,
+      "url": "https://chat.z.ai/",
+      "subject": "Z.ai",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "6bee3b22d9a355288ff0024bf2898ccc23a58b9b57f1c0531e6c052393b544a9",
+      "wave2_text_sha256_read2": "6bee3b22d9a355288ff0024bf2898ccc23a58b9b57f1c0531e6c052393b544a9",
+      "wave3_observed_text_sha256": "6bee3b22d9a355288ff0024bf2898ccc23a58b9b57f1c0531e6c052393b544a9",
+      "read1": {
+        "status": 200,
+        "bytes": 15939,
+        "text_sha256": "6bee3b22d9a355288ff0024bf2898ccc23a58b9b57f1c0531e6c052393b544a9",
+        "raw_sha256": "4d15f3ed6716e3baa1c968def3f03d7eb59f1b708d89a5e40368a2cde04b44d9",
+        "latency_ms": 741,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/20-z-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 15939,
+        "text_sha256": "6bee3b22d9a355288ff0024bf2898ccc23a58b9b57f1c0531e6c052393b544a9",
+        "raw_sha256": "4d15f3ed6716e3baa1c968def3f03d7eb59f1b708d89a5e40368a2cde04b44d9",
+        "latency_ms": 342,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/20-z-ai.read2.txt"
+      }
+    },
+    {
+      "n": 21,
+      "url": "https://www.minimax.cn/",
+      "subject": "MiniMax",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "1d0908b9673aa2f488a11afc72f27f359d598a2c6bedcc8f0f37fcf69b816966",
+      "wave2_text_sha256_read2": "1d0908b9673aa2f488a11afc72f27f359d598a2c6bedcc8f0f37fcf69b816966",
+      "wave3_observed_text_sha256": "1d0908b9673aa2f488a11afc72f27f359d598a2c6bedcc8f0f37fcf69b816966",
+      "read1": {
+        "status": 200,
+        "bytes": 266882,
+        "text_sha256": "1d0908b9673aa2f488a11afc72f27f359d598a2c6bedcc8f0f37fcf69b816966",
+        "raw_sha256": "8e7289b71cc89373a47b7a081f9d0f593052401df7254bbee582a83922375d73",
+        "latency_ms": 2407,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/21-minimax.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 266882,
+        "text_sha256": "1d0908b9673aa2f488a11afc72f27f359d598a2c6bedcc8f0f37fcf69b816966",
+        "raw_sha256": "6cade8e99b67aabba603452ae6d8d940be69cd15932449467718f848be32129c",
+        "latency_ms": 2987,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/21-minimax.read2.txt"
+      }
+    },
+    {
+      "n": 22,
+      "url": "https://www.01.ai/",
+      "subject": "01.AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "4d23c88daccd988c399ffea4c200f9e611a1208cac592602879f55a81f72bb9d",
+      "wave2_text_sha256_read2": "4d23c88daccd988c399ffea4c200f9e611a1208cac592602879f55a81f72bb9d",
+      "wave3_observed_text_sha256": "4d23c88daccd988c399ffea4c200f9e611a1208cac592602879f55a81f72bb9d",
+      "read1": {
+        "status": 200,
+        "bytes": 33464,
+        "text_sha256": "4d23c88daccd988c399ffea4c200f9e611a1208cac592602879f55a81f72bb9d",
+        "raw_sha256": "75330a70ac90db1405fbf57220e5894af765ac7c721b13778fba90d461daab5d",
+        "latency_ms": 964,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/22-01-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 33464,
+        "text_sha256": "4d23c88daccd988c399ffea4c200f9e611a1208cac592602879f55a81f72bb9d",
+        "raw_sha256": "75330a70ac90db1405fbf57220e5894af765ac7c721b13778fba90d461daab5d",
+        "latency_ms": 886,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/22-01-ai.read2.txt"
+      }
+    },
+    {
+      "n": 23,
+      "url": "https://reka.ai/",
+      "subject": "Reka AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "766cd195da8a70af3420ce8969a9d367b14eaabf45655d2a351002346d149b5f",
+      "wave2_text_sha256_read2": "766cd195da8a70af3420ce8969a9d367b14eaabf45655d2a351002346d149b5f",
+      "wave3_observed_text_sha256": "766cd195da8a70af3420ce8969a9d367b14eaabf45655d2a351002346d149b5f",
+      "read1": {
+        "status": 200,
+        "bytes": 351243,
+        "text_sha256": "766cd195da8a70af3420ce8969a9d367b14eaabf45655d2a351002346d149b5f",
+        "raw_sha256": "3c4f6bfe80eb09a6c71c8fe86e2952b6d7679bdeffd302b6b3b3eb2d74851f36",
+        "latency_ms": 228,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/23-reka-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 351243,
+        "text_sha256": "766cd195da8a70af3420ce8969a9d367b14eaabf45655d2a351002346d149b5f",
+        "raw_sha256": "3c4f6bfe80eb09a6c71c8fe86e2952b6d7679bdeffd302b6b3b3eb2d74851f36",
+        "latency_ms": 134,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/23-reka-ai.read2.txt"
+      }
+    },
+    {
+      "n": 24,
+      "url": "https://www.together.ai/",
+      "subject": "Together AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "179946e96eb69db77b7091b9ffa057d7bffcdf471a3fec5d804e442e9f8ef0e1",
+      "wave2_text_sha256_read2": "179946e96eb69db77b7091b9ffa057d7bffcdf471a3fec5d804e442e9f8ef0e1",
+      "wave3_observed_text_sha256": "179946e96eb69db77b7091b9ffa057d7bffcdf471a3fec5d804e442e9f8ef0e1",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "8d813995d8201286d912c8107191538323c9ff7641b5fc3b3ab1994e33f6c4de",
+        "raw_sha256": "2521514522fcceed1049c7a30bc76a3cb243f352077d689cbe943b472afb29c7",
+        "latency_ms": 154,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/24-together-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "8d813995d8201286d912c8107191538323c9ff7641b5fc3b3ab1994e33f6c4de",
+        "raw_sha256": "2521514522fcceed1049c7a30bc76a3cb243f352077d689cbe943b472afb29c7",
+        "latency_ms": 96,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/24-together-ai.read2.txt"
+      }
+    },
+    {
+      "n": 25,
+      "url": "https://groq.com/",
+      "subject": "Groq",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "112299ef6cc671993c5804b69d2447147485d70033754c25457724d0bf1d19dd",
+      "wave2_text_sha256_read2": "112299ef6cc671993c5804b69d2447147485d70033754c25457724d0bf1d19dd",
+      "wave3_observed_text_sha256": "112299ef6cc671993c5804b69d2447147485d70033754c25457724d0bf1d19dd",
+      "read1": {
+        "status": 200,
+        "bytes": 55004,
+        "text_sha256": "112299ef6cc671993c5804b69d2447147485d70033754c25457724d0bf1d19dd",
+        "raw_sha256": "a2e774bce11cb0c82ce7c1d8abf1d4ca728d7ab8d134577d118cda7f1ab6f227",
+        "latency_ms": 246,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/25-groq.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 55004,
+        "text_sha256": "112299ef6cc671993c5804b69d2447147485d70033754c25457724d0bf1d19dd",
+        "raw_sha256": "a2e774bce11cb0c82ce7c1d8abf1d4ca728d7ab8d134577d118cda7f1ab6f227",
+        "latency_ms": 336,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/25-groq.read2.txt"
+      }
+    },
+    {
+      "n": 26,
+      "url": "https://sakana.ai/",
+      "subject": "Sakana AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "d456ff2f80948cd7d80f015008517daa28a8f5eb2b8580735a1edced896fcd18",
+      "wave2_text_sha256_read2": "d456ff2f80948cd7d80f015008517daa28a8f5eb2b8580735a1edced896fcd18",
+      "wave3_observed_text_sha256": "d456ff2f80948cd7d80f015008517daa28a8f5eb2b8580735a1edced896fcd18",
+      "read1": {
+        "status": 200,
+        "bytes": 42285,
+        "text_sha256": "d456ff2f80948cd7d80f015008517daa28a8f5eb2b8580735a1edced896fcd18",
+        "raw_sha256": "9ea115f6500b2d1d6af0fda6ca3d46afab19c5488dba5535e0720a914b3f4768",
+        "latency_ms": 218,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/26-sakana-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 42285,
+        "text_sha256": "d456ff2f80948cd7d80f015008517daa28a8f5eb2b8580735a1edced896fcd18",
+        "raw_sha256": "9ea115f6500b2d1d6af0fda6ca3d46afab19c5488dba5535e0720a914b3f4768",
+        "latency_ms": 249,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/26-sakana-ai.read2.txt"
+      }
+    },
+    {
+      "n": 27,
+      "url": "https://www.cerebras.ai/",
+      "subject": "Cerebras",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "ea34d7c5593bea9de51bb70240e9b29912f999567951bbfd3b7380e7a8cb0b26",
+      "wave2_text_sha256_read2": "ea34d7c5593bea9de51bb70240e9b29912f999567951bbfd3b7380e7a8cb0b26",
+      "wave3_observed_text_sha256": "87813eabfff532850ee3f184d75494ab661459cb36eea0b5f9b63315367bbbd3",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "4ade3f29732aece16adb8514de4b02e990ec65d5f101a25bfc314dc652a721b8",
+        "raw_sha256": "5a1d621c0d4054a0ad12b7632f81562cbe63cddbdc15fd5a501903680eaba7f8",
+        "latency_ms": 621,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/27-cerebras.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "4bc0282a4e8f0d17b65c5c4660f978403f47c8c5c623b47ac2954246bb2205ba",
+        "raw_sha256": "3eb817b6e48604eb920f1deec22125a09e64cf48c8569baf179fbf979458b433",
+        "latency_ms": 764,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/27-cerebras.read2.txt"
+      }
+    },
+    {
+      "n": 28,
+      "url": "https://inflection.ai/",
+      "subject": "Inflection AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "28a300148a416e2d71d74c7e890fb4aa34a78e950cb047c36afbb6944e982e10",
+      "wave2_text_sha256_read2": "28a300148a416e2d71d74c7e890fb4aa34a78e950cb047c36afbb6944e982e10",
+      "wave3_observed_text_sha256": "28a300148a416e2d71d74c7e890fb4aa34a78e950cb047c36afbb6944e982e10",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "f6001d19d839336a5880ca814f0a54ed74e6fd776de585492dafbde8b58fbc4c",
+        "raw_sha256": "d39545b10a9c2ab8484f9411539fc5b9faa2eaf41ad2b31e9e0f970b87ce0866",
+        "latency_ms": 290,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/28-inflection-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "f6001d19d839336a5880ca814f0a54ed74e6fd776de585492dafbde8b58fbc4c",
+        "raw_sha256": "d39545b10a9c2ab8484f9411539fc5b9faa2eaf41ad2b31e9e0f970b87ce0866",
+        "latency_ms": 104,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/28-inflection-ai.read2.txt"
+      }
+    },
+    {
+      "n": 29,
+      "url": "https://www.databricks.com/",
+      "subject": "Mosaic / Databricks",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "753715f95c20d2dae7de0be74d8d037b3530a0c0b377d85f376b2e3315a6d34b",
+      "wave2_text_sha256_read2": "753715f95c20d2dae7de0be74d8d037b3530a0c0b377d85f376b2e3315a6d34b",
+      "wave3_observed_text_sha256": "753715f95c20d2dae7de0be74d8d037b3530a0c0b377d85f376b2e3315a6d34b",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "36386604262e43679156fb6d63c365efb8f8d12b2659828074148b514112c78c",
+        "raw_sha256": "62103fc82e387e40acb9cbf080f0ce6ab4b56f15ba2cbac55d0542d41c6c5204",
+        "latency_ms": 559,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/29-mosaic-databricks.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "36386604262e43679156fb6d63c365efb8f8d12b2659828074148b514112c78c",
+        "raw_sha256": "62103fc82e387e40acb9cbf080f0ce6ab4b56f15ba2cbac55d0542d41c6c5204",
+        "latency_ms": 206,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/29-mosaic-databricks.read2.txt"
+      }
+    },
+    {
+      "n": 30,
+      "url": "https://scale.com/",
+      "subject": "Scale AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "a939a4db7cf1697eaf5c8bdb6d74b90935fe2cac21abc522b53aa9953bed0fb2",
+      "wave2_text_sha256_read2": "a939a4db7cf1697eaf5c8bdb6d74b90935fe2cac21abc522b53aa9953bed0fb2",
+      "wave3_observed_text_sha256": "98d1c46d2896e4bf5027c0401bcd2703d6a85a78afbfb51aeabf7eeb0f49fc23",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "fcc84dc8ee16eaa1ba5aa72ebed44040de132bc880c0d92d203cea8cae2c14d3",
+        "raw_sha256": "634e7f34311aaba863c5e4da4ca099200f80ba7cfcece06aff2e4519eb58ebea",
+        "latency_ms": 316,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/30-scale-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "fcc84dc8ee16eaa1ba5aa72ebed44040de132bc880c0d92d203cea8cae2c14d3",
+        "raw_sha256": "634e7f34311aaba863c5e4da4ca099200f80ba7cfcece06aff2e4519eb58ebea",
+        "latency_ms": 155,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/30-scale-ai.read2.txt"
+      }
+    },
+    {
+      "n": 31,
+      "url": "https://sambanova.ai/",
+      "subject": "SambaNova",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "30e16bed0ba5e2d97c7910c744ef7b4c9757ef976d8ee4473f98e03514e5936a",
+      "wave2_text_sha256_read2": "30e16bed0ba5e2d97c7910c744ef7b4c9757ef976d8ee4473f98e03514e5936a",
+      "wave3_observed_text_sha256": "30e16bed0ba5e2d97c7910c744ef7b4c9757ef976d8ee4473f98e03514e5936a",
+      "read1": {
+        "status": 200,
+        "bytes": 175668,
+        "text_sha256": "ec3e276ca25ef2f892fffbc600d424c819b005521e1a542a872bfef6925b6a57",
+        "raw_sha256": "cf6259b9453bba79b20184b0c35f144c1d7a477283b947b4db98b6e8b1d4799d",
+        "latency_ms": 222,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/31-sambanova.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 175668,
+        "text_sha256": "ec3e276ca25ef2f892fffbc600d424c819b005521e1a542a872bfef6925b6a57",
+        "raw_sha256": "cf6259b9453bba79b20184b0c35f144c1d7a477283b947b4db98b6e8b1d4799d",
+        "latency_ms": 85,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/31-sambanova.read2.txt"
+      }
+    },
+    {
+      "n": 32,
+      "url": "https://poolside.ai/",
+      "subject": "Poolside",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "152768365aff203bad079acfbbe302fd265148a7830f5a0853d28b677794b833",
+      "wave2_text_sha256_read2": "152768365aff203bad079acfbbe302fd265148a7830f5a0853d28b677794b833",
+      "wave3_observed_text_sha256": "152768365aff203bad079acfbbe302fd265148a7830f5a0853d28b677794b833",
+      "read1": {
+        "status": 200,
+        "bytes": 288550,
+        "text_sha256": "152768365aff203bad079acfbbe302fd265148a7830f5a0853d28b677794b833",
+        "raw_sha256": "4ad632d618e8916b084af31077fcb5f830d56282a75f3a16974951271ce481b1",
+        "latency_ms": 236,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/32-poolside.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 288550,
+        "text_sha256": "152768365aff203bad079acfbbe302fd265148a7830f5a0853d28b677794b833",
+        "raw_sha256": "4ad632d618e8916b084af31077fcb5f830d56282a75f3a16974951271ce481b1",
+        "latency_ms": 113,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/32-poolside.read2.txt"
+      }
+    },
+    {
+      "n": 33,
+      "url": "https://thinkingmachines.ai/",
+      "subject": "Thinking Machines",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "a993039effbbb8a8cf507d302957a19c85959c0711c690a572f3b3be2eeaf677",
+      "wave2_text_sha256_read2": "a993039effbbb8a8cf507d302957a19c85959c0711c690a572f3b3be2eeaf677",
+      "wave3_observed_text_sha256": "a993039effbbb8a8cf507d302957a19c85959c0711c690a572f3b3be2eeaf677",
+      "read1": {
+        "status": 200,
+        "bytes": 56275,
+        "text_sha256": "a993039effbbb8a8cf507d302957a19c85959c0711c690a572f3b3be2eeaf677",
+        "raw_sha256": "064b66e3bab75aaf2270260e55dbdf10bdda1c74a54213a313bf433d89c788fb",
+        "latency_ms": 170,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/33-thinking-machines.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 56275,
+        "text_sha256": "a993039effbbb8a8cf507d302957a19c85959c0711c690a572f3b3be2eeaf677",
+        "raw_sha256": "064b66e3bab75aaf2270260e55dbdf10bdda1c74a54213a313bf433d89c788fb",
+        "latency_ms": 114,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/33-thinking-machines.read2.txt"
+      }
+    },
+    {
+      "n": 34,
+      "url": "https://fireworks.ai/",
+      "subject": "Fireworks AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "6544d9e0808ce992b558300e078545c072a634357f2b1867f0f8c21584ced65d",
+      "wave2_text_sha256_read2": "6544d9e0808ce992b558300e078545c072a634357f2b1867f0f8c21584ced65d",
+      "wave3_observed_text_sha256": "48e4f28aafb66ef84f3d83948f2b6fd5a518d9557f280a38bc421d947c20ae1c",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "9f29fd0f8bdf3cfde1ab4e4ae54f5e16dfd3d5b9acf7cbe1150efc565f05d96a",
+        "raw_sha256": "9b1637e50c150efe7e8a50847ce29acba87f300e7537fb23ad216baa53c912b3",
+        "latency_ms": 507,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/34-fireworks-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "472c7093a0756a6e0fb7a651af7d1d0ba816483b4f58d5f912a497a12086b8bb",
+        "raw_sha256": "c84897bf3a03b7be170a0485028c4a35de52812f7fdf710ae9a11afebdc2b3dd",
+        "latency_ms": 498,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/34-fireworks-ai.read2.txt"
+      }
+    },
+    {
+      "n": 35,
+      "url": "https://www.ai21.com/blog/",
+      "subject": "AI21",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "cf0952a367398662af4f84b43ebb1542d906571fcd061f7391ba98745ffc02a2",
+      "wave2_text_sha256_read2": "cf0952a367398662af4f84b43ebb1542d906571fcd061f7391ba98745ffc02a2",
+      "wave3_observed_text_sha256": "cf0952a367398662af4f84b43ebb1542d906571fcd061f7391ba98745ffc02a2",
+      "read1": {
+        "status": 200,
+        "bytes": 56170,
+        "text_sha256": "cf0952a367398662af4f84b43ebb1542d906571fcd061f7391ba98745ffc02a2",
+        "raw_sha256": "b5087f7ae57f043f9a16f2f024c6376b33d935676c9839a06775a2232368f2d3",
+        "latency_ms": 64,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/35-ai21.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 56170,
+        "text_sha256": "cf0952a367398662af4f84b43ebb1542d906571fcd061f7391ba98745ffc02a2",
+        "raw_sha256": "0d3ef93d8bd00eb589cdb5fefe785ea3512ffb6c1dbe1cded3cf8996f4670fad",
+        "latency_ms": 125,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/35-ai21.read2.txt"
+      }
+    },
+    {
+      "n": 36,
+      "url": "https://huggingface.co/trust",
+      "subject": "Hugging Face Trust",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "f4f5e8ee18eeb8c518a5b6c5ed2c3224884578921dfcc8781b1beaa4a13ffccf",
+      "wave2_text_sha256_read2": "f4f5e8ee18eeb8c518a5b6c5ed2c3224884578921dfcc8781b1beaa4a13ffccf",
+      "wave3_observed_text_sha256": "d309b6827a38b69add475e7db32f3fa678c5bb07c0ec50e3393c4663e74839c6",
+      "read1": {
+        "status": 200,
+        "bytes": 69863,
+        "text_sha256": "d309b6827a38b69add475e7db32f3fa678c5bb07c0ec50e3393c4663e74839c6",
+        "raw_sha256": "45b97574f3af0b4768999f5d42107438de022b41beb66560312aa31cd78b3efc",
+        "latency_ms": 134,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/36-hugging-face-trust.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 69863,
+        "text_sha256": "d309b6827a38b69add475e7db32f3fa678c5bb07c0ec50e3393c4663e74839c6",
+        "raw_sha256": "648cb22d632d908badfa7dda6d42b1d21f371bb356ee7d0783755d24e41a9574",
+        "latency_ms": 133,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/36-hugging-face-trust.read2.txt"
+      }
+    },
+    {
+      "n": 37,
+      "url": "https://aws.amazon.com/ai/responsible-ai/",
+      "subject": "AWS Responsible AI",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "c3e493e7da304c6f0b421198ce86e8dc94c7315b0d9c2f12a3d8ac7dd8e6575c",
+      "wave2_text_sha256_read2": "c3e493e7da304c6f0b421198ce86e8dc94c7315b0d9c2f12a3d8ac7dd8e6575c",
+      "wave3_observed_text_sha256": "c3e493e7da304c6f0b421198ce86e8dc94c7315b0d9c2f12a3d8ac7dd8e6575c",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "c3e493e7da304c6f0b421198ce86e8dc94c7315b0d9c2f12a3d8ac7dd8e6575c",
+        "raw_sha256": "61920292a073c0e3e95a43a17d4997ffdbb364ae56c6442497006482b6c13a1f",
+        "latency_ms": 202,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/37-aws-responsible-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "c3e493e7da304c6f0b421198ce86e8dc94c7315b0d9c2f12a3d8ac7dd8e6575c",
+        "raw_sha256": "4075b25f7e2ee2ac892b9cd3a4cf5cebe6456ef321eb8cc929eb2e8da0261ada",
+        "latency_ms": 145,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/37-aws-responsible-ai.read2.txt"
+      }
+    },
+    {
+      "n": 38,
+      "url": "https://ai.google/principles/",
+      "subject": "Google AI Principles",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "5ce8f8a4d498d80c898f2d00b08de993e8b644962f7949f4503e606822e0c3da",
+      "wave2_text_sha256_read2": "5ce8f8a4d498d80c898f2d00b08de993e8b644962f7949f4503e606822e0c3da",
+      "wave3_observed_text_sha256": "5ce8f8a4d498d80c898f2d00b08de993e8b644962f7949f4503e606822e0c3da",
+      "read1": {
+        "status": 200,
+        "bytes": 171352,
+        "text_sha256": "5ce8f8a4d498d80c898f2d00b08de993e8b644962f7949f4503e606822e0c3da",
+        "raw_sha256": "6e8ef3edc91d219591ca41b42eb81a32c7cc2e92bd956e017e2b77207bee3566",
+        "latency_ms": 350,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/38-google-ai-principles.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 171352,
+        "text_sha256": "5ce8f8a4d498d80c898f2d00b08de993e8b644962f7949f4503e606822e0c3da",
+        "raw_sha256": "6e8ef3edc91d219591ca41b42eb81a32c7cc2e92bd956e017e2b77207bee3566",
+        "latency_ms": 171,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/38-google-ai-principles.read2.txt"
+      }
+    },
+    {
+      "n": 39,
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/",
+      "subject": "UK ICO",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "87fa1307acfbed0736121d550d10a93baf85439dbc8a804e2ec7a39ac0f9ffab",
+      "wave2_text_sha256_read2": "87fa1307acfbed0736121d550d10a93baf85439dbc8a804e2ec7a39ac0f9ffab",
+      "wave3_observed_text_sha256": "87fa1307acfbed0736121d550d10a93baf85439dbc8a804e2ec7a39ac0f9ffab",
+      "read1": {
+        "status": 200,
+        "bytes": 39819,
+        "text_sha256": "87fa1307acfbed0736121d550d10a93baf85439dbc8a804e2ec7a39ac0f9ffab",
+        "raw_sha256": "a4fca21294fa7faa3ffe799af975f36baf55d716923b87707c497a2d8532b1a8",
+        "latency_ms": 163,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/39-uk-ico.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 39819,
+        "text_sha256": "87fa1307acfbed0736121d550d10a93baf85439dbc8a804e2ec7a39ac0f9ffab",
+        "raw_sha256": "056bed0137dd3ba2a0ba5efa8e5f7b6222682b1c2dad456d03ab2850aa16357d",
+        "latency_ms": 146,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/39-uk-ico.read2.txt"
+      }
+    },
+    {
+      "n": 40,
+      "url": "https://www.fca.org.uk/firms/ai-financial-services",
+      "subject": "UK FCA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "fb03931f641ce52e07c9b9a92bf1da0748370cac34878c715b90dd614a2a3c21",
+      "wave2_text_sha256_read2": "fb03931f641ce52e07c9b9a92bf1da0748370cac34878c715b90dd614a2a3c21",
+      "wave3_observed_text_sha256": "fb03931f641ce52e07c9b9a92bf1da0748370cac34878c715b90dd614a2a3c21",
+      "read1": {
+        "status": 200,
+        "bytes": 183610,
+        "text_sha256": "fb03931f641ce52e07c9b9a92bf1da0748370cac34878c715b90dd614a2a3c21",
+        "raw_sha256": "8a734cacf96d4cf7750a313b684f10c0e5850600dec3eade3c0d88025cd33da1",
+        "latency_ms": 136,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/40-uk-fca.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 183610,
+        "text_sha256": "fb03931f641ce52e07c9b9a92bf1da0748370cac34878c715b90dd614a2a3c21",
+        "raw_sha256": "8a734cacf96d4cf7750a313b684f10c0e5850600dec3eade3c0d88025cd33da1",
+        "latency_ms": 97,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/40-uk-fca.read2.txt"
+      }
+    },
+    {
+      "n": 41,
+      "url": "https://www.gov.uk/government/organisations/competition-and-markets-authority",
+      "subject": "UK CMA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "2fe16928f27ee3123ea1c79a397d360922527612e3242196b8154498a7cc8fb5",
+      "wave2_text_sha256_read2": "2fe16928f27ee3123ea1c79a397d360922527612e3242196b8154498a7cc8fb5",
+      "wave3_observed_text_sha256": "f4264a1a09aeb1773b24564a46a5eb82f8bda0ff8115af53806faf362a0d8f35",
+      "read1": {
+        "status": 200,
+        "bytes": 122030,
+        "text_sha256": "f4264a1a09aeb1773b24564a46a5eb82f8bda0ff8115af53806faf362a0d8f35",
+        "raw_sha256": "5ec8d08c6d995685abd8476df075bd42241f2ffca6c83eaa1c0facaf28db4e99",
+        "latency_ms": 348,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/41-uk-cma.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 122030,
+        "text_sha256": "f4264a1a09aeb1773b24564a46a5eb82f8bda0ff8115af53806faf362a0d8f35",
+        "raw_sha256": "5ec8d08c6d995685abd8476df075bd42241f2ffca6c83eaa1c0facaf28db4e99",
+        "latency_ms": 63,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/41-uk-cma.read2.txt"
+      }
+    },
+    {
+      "n": 42,
+      "url": "https://www.ofcom.org.uk/",
+      "subject": "Ofcom",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "2f380aa05b3f40e833a88e32a9758eb8ffb8d63fad954259cfe0f1644a58fcbd",
+      "wave2_text_sha256_read2": "2f380aa05b3f40e833a88e32a9758eb8ffb8d63fad954259cfe0f1644a58fcbd",
+      "wave3_observed_text_sha256": "cda86a51dde0401e1551b7e8bb6bc6a4551d6dfb432b4437cc41856602834835",
+      "read1": {
+        "status": 200,
+        "bytes": 121922,
+        "text_sha256": "cda86a51dde0401e1551b7e8bb6bc6a4551d6dfb432b4437cc41856602834835",
+        "raw_sha256": "7a6f481a8381c211d421ff117a36a3b5921258b1a0390508ec8836e69a596e4a",
+        "latency_ms": 1037,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/42-ofcom.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 121902,
+        "text_sha256": "cda86a51dde0401e1551b7e8bb6bc6a4551d6dfb432b4437cc41856602834835",
+        "raw_sha256": "a87c55256bb685169ae5549ed0097b2313b6400b38bc258537b7f5b7ee18985b",
+        "latency_ms": 140,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/42-ofcom.read2.txt"
+      }
+    },
+    {
+      "n": 43,
+      "url": "https://www.gov.uk/government/organisations/medicines-and-healthcare-products-regulatory-agency",
+      "subject": "MHRA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "3ac6210647c788d087f2149a2639e3b7306e939197c1a0f7a364be62e639d722",
+      "wave2_text_sha256_read2": "3ac6210647c788d087f2149a2639e3b7306e939197c1a0f7a364be62e639d722",
+      "wave3_observed_text_sha256": "1dcc37fdecdc6a97ed60b7256dc8b3cf08a1d75aa12c19caf591a3ae4b5d29bf",
+      "read1": {
+        "status": 200,
+        "bytes": 118566,
+        "text_sha256": "7ccfc507e3b0000097e54db116aead8546d14252089c766701fb7b0a17fb2fb7",
+        "raw_sha256": "28714b8f5d80155c1468731e42c9c6b78d2f13bd6b22a2baab34ebadb84bbef5",
+        "latency_ms": 338,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/43-mhra.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 118566,
+        "text_sha256": "7ccfc507e3b0000097e54db116aead8546d14252089c766701fb7b0a17fb2fb7",
+        "raw_sha256": "28714b8f5d80155c1468731e42c9c6b78d2f13bd6b22a2baab34ebadb84bbef5",
+        "latency_ms": 26,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/43-mhra.read2.txt"
+      }
+    },
+    {
+      "n": 44,
+      "url": "https://www.gov.uk/government/organisations/department-for-science-innovation-and-technology",
+      "subject": "DSIT",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "a47da623a9c643fe50ef325d5d871874f113c8163084c26829279d73aa63c2a9",
+      "wave2_text_sha256_read2": "a47da623a9c643fe50ef325d5d871874f113c8163084c26829279d73aa63c2a9",
+      "wave3_observed_text_sha256": "f611e676bf48c937b7bf95e19552f67a60cac31529188d6cb7918424f44c1ef8",
+      "read1": {
+        "status": 200,
+        "bytes": 107273,
+        "text_sha256": "f611e676bf48c937b7bf95e19552f67a60cac31529188d6cb7918424f44c1ef8",
+        "raw_sha256": "2a6c007f07d26d69933f789a2d85d9bfe75fbda18f173071272a4964a54d1d03",
+        "latency_ms": 227,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/44-dsit.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 107273,
+        "text_sha256": "f611e676bf48c937b7bf95e19552f67a60cac31529188d6cb7918424f44c1ef8",
+        "raw_sha256": "2a6c007f07d26d69933f789a2d85d9bfe75fbda18f173071272a4964a54d1d03",
+        "latency_ms": 62,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/44-dsit.read2.txt"
+      }
+    },
+    {
+      "n": 45,
+      "url": "https://www.bankofengland.co.uk/",
+      "subject": "Bank of England",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "eddb1dbeeb8a5ad5eba466dd6259d1a1265f4d9b1b171b83496eaabdc20c0df9",
+      "wave2_text_sha256_read2": "eddb1dbeeb8a5ad5eba466dd6259d1a1265f4d9b1b171b83496eaabdc20c0df9",
+      "wave3_observed_text_sha256": "d00ad4dd1b16932d85ab9d13d4595c7f1e001e2d96eb3ee24361e63822ae67b9",
+      "read1": {
+        "status": 200,
+        "bytes": 91393,
+        "text_sha256": "daa81b2410f0e4cf245e7590be65d3d15dd9a419da1b7c63c30e8bb4fc161274",
+        "raw_sha256": "235fd930e25cf84cf667d6e6fd7694fc836ed2f9ae69c2e429be792a8400940f",
+        "latency_ms": 194,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/45-bank-of-england.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 91393,
+        "text_sha256": "daa81b2410f0e4cf245e7590be65d3d15dd9a419da1b7c63c30e8bb4fc161274",
+        "raw_sha256": "07f98be44325d95ccfb0f455da3978900dd989e961b392e7c57494364cef5ded",
+        "latency_ms": 130,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/45-bank-of-england.read2.txt"
+      }
+    },
+    {
+      "n": 46,
+      "url": "https://www.bankofengland.co.uk/prudential-regulation",
+      "subject": "PRA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "858144abba28a4203ec54d33ed9c5e43c4bd007b93dcd499d7c5861bf98d40fe",
+      "wave2_text_sha256_read2": "858144abba28a4203ec54d33ed9c5e43c4bd007b93dcd499d7c5861bf98d40fe",
+      "wave3_observed_text_sha256": "858144abba28a4203ec54d33ed9c5e43c4bd007b93dcd499d7c5861bf98d40fe",
+      "read1": {
+        "status": 200,
+        "bytes": 95033,
+        "text_sha256": "f9e82cc4bc35e5a02ec054a54b06c92512041a2a24f8b88fee621bb886e6489d",
+        "raw_sha256": "d242c41473de22cd912a98090cd679314cc8f11ad0dca9b4221dc1cdd94ad153",
+        "latency_ms": 76,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/46-pra.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 95032,
+        "text_sha256": "f9e82cc4bc35e5a02ec054a54b06c92512041a2a24f8b88fee621bb886e6489d",
+        "raw_sha256": "660e7959285401cd75a7b6c438bd8256477480f07ec205c29d254b19ebe674a0",
+        "latency_ms": 114,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/46-pra.read2.txt"
+      }
+    },
+    {
+      "n": 47,
+      "url": "https://www.frc.org.uk/",
+      "subject": "FRC",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "91f2e7098d49cb991832de50ced00ad421f71074b8555e53f5477e975119279d",
+      "wave2_text_sha256_read2": "91f2e7098d49cb991832de50ced00ad421f71074b8555e53f5477e975119279d",
+      "wave3_observed_text_sha256": "91f2e7098d49cb991832de50ced00ad421f71074b8555e53f5477e975119279d",
+      "read1": {
+        "status": 200,
+        "bytes": 61007,
+        "text_sha256": "91f2e7098d49cb991832de50ced00ad421f71074b8555e53f5477e975119279d",
+        "raw_sha256": "da329477bd43df6fb034504cccbf428d29e33224d9c2f46b1b099e886703f2bf",
+        "latency_ms": 350,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/47-frc.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 61007,
+        "text_sha256": "91f2e7098d49cb991832de50ced00ad421f71074b8555e53f5477e975119279d",
+        "raw_sha256": "da329477bd43df6fb034504cccbf428d29e33224d9c2f46b1b099e886703f2bf",
+        "latency_ms": 77,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/47-frc.read2.txt"
+      }
+    },
+    {
+      "n": 48,
+      "url": "https://www.ofgem.gov.uk/",
+      "subject": "Ofgem",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "57a293fb97a49ae44e558799887da1c9f62bd9e95ab385dc87d2d136ce68f839",
+      "wave2_text_sha256_read2": "57a293fb97a49ae44e558799887da1c9f62bd9e95ab385dc87d2d136ce68f839",
+      "wave3_observed_text_sha256": "84fa4b5e24321f914f07f2b33d1872ea2ee0a338d444530948f6c7d9ebfd4fa3",
+      "read1": {
+        "status": 200,
+        "bytes": 225560,
+        "text_sha256": "e72b5c8d5534b4bc08382f3a5ab49da9c7fa01a753d6d06c709195f31d276d77",
+        "raw_sha256": "1ab66e775e28ea6a5a80922b0c0de15ce6f826a52e514a3dfef197450eb3112b",
+        "latency_ms": 124,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/48-ofgem.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 225560,
+        "text_sha256": "e72b5c8d5534b4bc08382f3a5ab49da9c7fa01a753d6d06c709195f31d276d77",
+        "raw_sha256": "1ab66e775e28ea6a5a80922b0c0de15ce6f826a52e514a3dfef197450eb3112b",
+        "latency_ms": 79,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/48-ofgem.read2.txt"
+      }
+    },
+    {
+      "n": 49,
+      "url": "https://www.fda.gov/",
+      "subject": "US FDA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "3442e29bc97aebbf28c42c4bba47ea9266f6503c7d7a5abc308cb0bc5a354ece",
+      "wave2_text_sha256_read2": "3442e29bc97aebbf28c42c4bba47ea9266f6503c7d7a5abc308cb0bc5a354ece",
+      "wave3_observed_text_sha256": "3442e29bc97aebbf28c42c4bba47ea9266f6503c7d7a5abc308cb0bc5a354ece",
+      "read1": {
+        "status": 200,
+        "bytes": 40627,
+        "text_sha256": "3442e29bc97aebbf28c42c4bba47ea9266f6503c7d7a5abc308cb0bc5a354ece",
+        "raw_sha256": "e230d3fcf9e117df5ce1af02c910a2228d7a3cb120dbb1997d4ce1a71e8c34fa",
+        "latency_ms": 100,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/49-us-fda.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 40627,
+        "text_sha256": "3442e29bc97aebbf28c42c4bba47ea9266f6503c7d7a5abc308cb0bc5a354ece",
+        "raw_sha256": "e230d3fcf9e117df5ce1af02c910a2228d7a3cb120dbb1997d4ce1a71e8c34fa",
+        "latency_ms": 196,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/49-us-fda.read2.txt"
+      }
+    },
+    {
+      "n": 50,
+      "url": "https://www.cqc.org.uk/",
+      "subject": "CQC",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "5c2110e22d8b3abcc95a03b550d01c9c0da9cf929180620f04d95a2352cbeff9",
+      "wave2_text_sha256_read2": "5c2110e22d8b3abcc95a03b550d01c9c0da9cf929180620f04d95a2352cbeff9",
+      "wave3_observed_text_sha256": "1e76876803ddb1d829463fe474f965537d0f2b72fa3a30f56782b7c657f86c8c",
+      "read1": {
+        "status": 200,
+        "bytes": 97842,
+        "text_sha256": "81e98e79c4e34ff77c2dac716c1a26761f478d78dabdd1c20197c1deaf569ce7",
+        "raw_sha256": "c4fa164eeb049d341bd1ef74bbfdf281ef27e8ba06b06cd88b2bdb5930c41ac5",
+        "latency_ms": 88,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/50-cqc.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 97842,
+        "text_sha256": "81e98e79c4e34ff77c2dac716c1a26761f478d78dabdd1c20197c1deaf569ce7",
+        "raw_sha256": "c4fa164eeb049d341bd1ef74bbfdf281ef27e8ba06b06cd88b2bdb5930c41ac5",
+        "latency_ms": 74,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/50-cqc.read2.txt"
+      }
+    },
+    {
+      "n": 51,
+      "url": "https://www.hse.gov.uk/",
+      "subject": "HSE",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "bcd2597bd6457d4c16352edc05a8e8ca51b976649b304764a629ec105aadb390",
+      "wave2_text_sha256_read2": "bcd2597bd6457d4c16352edc05a8e8ca51b976649b304764a629ec105aadb390",
+      "wave3_observed_text_sha256": "bcd2597bd6457d4c16352edc05a8e8ca51b976649b304764a629ec105aadb390",
+      "read1": {
+        "status": 200,
+        "bytes": 47480,
+        "text_sha256": "bcd2597bd6457d4c16352edc05a8e8ca51b976649b304764a629ec105aadb390",
+        "raw_sha256": "a1139118eb935c0cd06c4abda4c5020407dc983e8420facd3a42d3ff13fee65e",
+        "latency_ms": 110,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/51-hse.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 47480,
+        "text_sha256": "bcd2597bd6457d4c16352edc05a8e8ca51b976649b304764a629ec105aadb390",
+        "raw_sha256": "a1139118eb935c0cd06c4abda4c5020407dc983e8420facd3a42d3ff13fee65e",
+        "latency_ms": 158,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/51-hse.read2.txt"
+      }
+    },
+    {
+      "n": 52,
+      "url": "https://www.gov.uk/government/organisations/intellectual-property-office",
+      "subject": "IPO",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "6326b1aed0234b8b3dba60270339d4a55babc0a684a064842c96348607df456e",
+      "wave2_text_sha256_read2": "6326b1aed0234b8b3dba60270339d4a55babc0a684a064842c96348607df456e",
+      "wave3_observed_text_sha256": "2b932ec53dc395cc9b412c84c63607ee187f7ec40f1556e75d02abeddea2c29d",
+      "read1": {
+        "status": 200,
+        "bytes": 128075,
+        "text_sha256": "eb2b1defdc645f6bfe974cb2bf6c5db743912de1421d8860e8ead672b06086bd",
+        "raw_sha256": "cfd873369ffdaf412cd6890dac91783e5a09bd6aea744e592bd9b8a3f2f229c1",
+        "latency_ms": 187,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/52-ipo.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 128075,
+        "text_sha256": "eb2b1defdc645f6bfe974cb2bf6c5db743912de1421d8860e8ead672b06086bd",
+        "raw_sha256": "cfd873369ffdaf412cd6890dac91783e5a09bd6aea744e592bd9b8a3f2f229c1",
+        "latency_ms": 30,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/52-ipo.read2.txt"
+      }
+    },
+    {
+      "n": 53,
+      "url": "https://www.ncsc.gov.uk/",
+      "subject": "NCSC",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "59e1ae0d4a9f97acd3768f1165fcaeb6d755dbd51a0047ba047492dcd25b2b4f",
+      "wave2_text_sha256_read2": "59e1ae0d4a9f97acd3768f1165fcaeb6d755dbd51a0047ba047492dcd25b2b4f",
+      "wave3_observed_text_sha256": "68d976e4434a048e4b061b1848bcc2e1ab997688752fea8c85d51c282674844c",
+      "read1": {
+        "status": 200,
+        "bytes": 251268,
+        "text_sha256": "e8fa26ad065ef2e87e3bd016568ae2f2269f3647935195dd5ae6cb1a87515c99",
+        "raw_sha256": "775218e8c642a4979f5bf7307cee7d030ad0d7adc2af0ba953507d038fae4b97",
+        "latency_ms": 133,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/53-ncsc.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 251268,
+        "text_sha256": "e8fa26ad065ef2e87e3bd016568ae2f2269f3647935195dd5ae6cb1a87515c99",
+        "raw_sha256": "775218e8c642a4979f5bf7307cee7d030ad0d7adc2af0ba953507d038fae4b97",
+        "latency_ms": 188,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/53-ncsc.read2.txt"
+      }
+    },
+    {
+      "n": 54,
+      "url": "https://www.aisi.gov.uk/",
+      "subject": "UK AI Security Institute",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "871198ff9475e6aed7948061e91f4ad8857ce627bf156dc076b0b963c2de5066",
+      "wave2_text_sha256_read2": "871198ff9475e6aed7948061e91f4ad8857ce627bf156dc076b0b963c2de5066",
+      "wave3_observed_text_sha256": "871198ff9475e6aed7948061e91f4ad8857ce627bf156dc076b0b963c2de5066",
+      "read1": {
+        "status": 200,
+        "bytes": 29937,
+        "text_sha256": "871198ff9475e6aed7948061e91f4ad8857ce627bf156dc076b0b963c2de5066",
+        "raw_sha256": "77febcda7e4a7c8f5b54515485dbf823eaab8a803abea8a3fa3d9e2d05fd5d25",
+        "latency_ms": 117,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/54-uk-ai-security-institute.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 29937,
+        "text_sha256": "871198ff9475e6aed7948061e91f4ad8857ce627bf156dc076b0b963c2de5066",
+        "raw_sha256": "77febcda7e4a7c8f5b54515485dbf823eaab8a803abea8a3fa3d9e2d05fd5d25",
+        "latency_ms": 152,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/54-uk-ai-security-institute.read2.txt"
+      }
+    },
+    {
+      "n": 55,
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/ai-office",
+      "subject": "EU AI Office",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "f4fa5ca642e1d23234a157e4f8b37c2b972fa26c695d7c3b7722bc8eaf321ac0",
+      "wave2_text_sha256_read2": "f4fa5ca642e1d23234a157e4f8b37c2b972fa26c695d7c3b7722bc8eaf321ac0",
+      "wave3_observed_text_sha256": "f4fa5ca642e1d23234a157e4f8b37c2b972fa26c695d7c3b7722bc8eaf321ac0",
+      "read1": {
+        "status": 200,
+        "bytes": 80017,
+        "text_sha256": "f4fa5ca642e1d23234a157e4f8b37c2b972fa26c695d7c3b7722bc8eaf321ac0",
+        "raw_sha256": "38f495979182e425c50e5e4e75f1c7b4c5c492dcf72af7e71192aa9fff1c4cde",
+        "latency_ms": 189,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/55-eu-ai-office.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 80017,
+        "text_sha256": "f4fa5ca642e1d23234a157e4f8b37c2b972fa26c695d7c3b7722bc8eaf321ac0",
+        "raw_sha256": "38f495979182e425c50e5e4e75f1c7b4c5c492dcf72af7e71192aa9fff1c4cde",
+        "latency_ms": 161,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/55-eu-ai-office.read2.txt"
+      }
+    },
+    {
+      "n": 56,
+      "url": "https://www.edps.europa.eu/_en",
+      "subject": "EDPS",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "162bf3123ec622996dc63e638beab05a07da470271396cff935cd18cadf81c71",
+      "wave2_text_sha256_read2": "162bf3123ec622996dc63e638beab05a07da470271396cff935cd18cadf81c71",
+      "wave3_observed_text_sha256": "c6de29aad57f505d067a432a473cd71a2b3ad3ec52b25b616a4f06d2df4e4def",
+      "read1": {
+        "status": 200,
+        "bytes": 60682,
+        "text_sha256": "0d180b66221902c45e8a8678d9f062288b071cde2d669a4e7d728896e5b73039",
+        "raw_sha256": "58f677a7260ed68a996fa13f74f1d9d997741b57e6e2d31d50199d1bc8fb67f0",
+        "latency_ms": 105,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/56-edps.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 60682,
+        "text_sha256": "0d180b66221902c45e8a8678d9f062288b071cde2d669a4e7d728896e5b73039",
+        "raw_sha256": "58f677a7260ed68a996fa13f74f1d9d997741b57e6e2d31d50199d1bc8fb67f0",
+        "latency_ms": 167,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/56-edps.read2.txt"
+      }
+    },
+    {
+      "n": 57,
+      "url": "https://www.edpb.europa.eu/home_en",
+      "subject": "EDPB",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "0fc0c57262b73d9dd02ece2acf919ad3e0a0ef769ec3a1d127cea9fb9a82d390",
+      "wave2_text_sha256_read2": "0fc0c57262b73d9dd02ece2acf919ad3e0a0ef769ec3a1d127cea9fb9a82d390",
+      "wave3_observed_text_sha256": "c3a181bec11b50553d62fdba4adc512d86cc635899447f93456c6d4700cd3fe2",
+      "read1": {
+        "status": 200,
+        "bytes": 48152,
+        "text_sha256": "c3a181bec11b50553d62fdba4adc512d86cc635899447f93456c6d4700cd3fe2",
+        "raw_sha256": "84d91895c521864a28988db16b6cc2f6fd385f25c966c45c43d8de3db21a0515",
+        "latency_ms": 306,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/57-edpb.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 48152,
+        "text_sha256": "c3a181bec11b50553d62fdba4adc512d86cc635899447f93456c6d4700cd3fe2",
+        "raw_sha256": "84d91895c521864a28988db16b6cc2f6fd385f25c966c45c43d8de3db21a0515",
+        "latency_ms": 277,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/57-edpb.read2.txt"
+      }
+    },
+    {
+      "n": 58,
+      "url": "https://www.enisa.europa.eu/",
+      "subject": "ENISA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "a31d0e4a4a929c25b614804e6a3b57cc2fba7c0bc57809d04d488ee942af4e45",
+      "wave2_text_sha256_read2": "a31d0e4a4a929c25b614804e6a3b57cc2fba7c0bc57809d04d488ee942af4e45",
+      "wave3_observed_text_sha256": "a31d0e4a4a929c25b614804e6a3b57cc2fba7c0bc57809d04d488ee942af4e45",
+      "read1": {
+        "status": 200,
+        "bytes": 64109,
+        "text_sha256": "a31d0e4a4a929c25b614804e6a3b57cc2fba7c0bc57809d04d488ee942af4e45",
+        "raw_sha256": "1fca801af0d7399819809df5fa7e616dd420118859bdb801fd0f844dae47e019",
+        "latency_ms": 223,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/58-enisa.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 64109,
+        "text_sha256": "a31d0e4a4a929c25b614804e6a3b57cc2fba7c0bc57809d04d488ee942af4e45",
+        "raw_sha256": "1fca801af0d7399819809df5fa7e616dd420118859bdb801fd0f844dae47e019",
+        "latency_ms": 94,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/58-enisa.read2.txt"
+      }
+    },
+    {
+      "n": 59,
+      "url": "https://www.ecb.europa.eu/home/html/index.en.html",
+      "subject": "ECB",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "0e738a69024afcaf1158b8ded3d252b8815f2f5cb5848c7f33444466c66f920b",
+      "wave2_text_sha256_read2": "0e738a69024afcaf1158b8ded3d252b8815f2f5cb5848c7f33444466c66f920b",
+      "wave3_observed_text_sha256": "92281305398f42083e6985be8b98f9e23c746731b0c4ee9d4c1aa6b2595a0699",
+      "read1": {
+        "status": 200,
+        "bytes": 190125,
+        "text_sha256": "65d657ec149deeeff2cdb6a1d64ec585bd68526f655676cb6d307c2811de844b",
+        "raw_sha256": "5f4426b5117ac5d833c818e93d2859725c2e3a1584c6c32594efae47992188ca",
+        "latency_ms": 296,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/59-ecb.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 190125,
+        "text_sha256": "65d657ec149deeeff2cdb6a1d64ec585bd68526f655676cb6d307c2811de844b",
+        "raw_sha256": "ab69f0e3acb914815c4cea1d9339a54afe23224fc819749c03a271b98caf1970",
+        "latency_ms": 211,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/59-ecb.read2.txt"
+      }
+    },
+    {
+      "n": 60,
+      "url": "https://www.esma.europa.eu/",
+      "subject": "ESMA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "516784c60b9d24bb9f82bfd21708f0fdbf285cd6590f2f510152825ce8848483",
+      "wave2_text_sha256_read2": "516784c60b9d24bb9f82bfd21708f0fdbf285cd6590f2f510152825ce8848483",
+      "wave3_observed_text_sha256": "896991b5877a3c84b1a0d31c65c5a9dc0a12dddedcf4390d04d6a0ef1fcfd445",
+      "read1": {
+        "status": 200,
+        "bytes": 96481,
+        "text_sha256": "f8166fcb125000c3dfc8b352d8c1ca8e45f0a4cd2db1c46ab322c316ed4cc68a",
+        "raw_sha256": "95f406e4cf304d30cc4585d40f258d14b61ffd9fc19977f39cee69ff721cbd00",
+        "latency_ms": 218,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/60-esma.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 96481,
+        "text_sha256": "f8166fcb125000c3dfc8b352d8c1ca8e45f0a4cd2db1c46ab322c316ed4cc68a",
+        "raw_sha256": "95f406e4cf304d30cc4585d40f258d14b61ffd9fc19977f39cee69ff721cbd00",
+        "latency_ms": 93,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/60-esma.read2.txt"
+      }
+    },
+    {
+      "n": 61,
+      "url": "https://www.eba.europa.eu/homepage",
+      "subject": "EBA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "64d864f5129d7f5015c4bc64bbf4e5ed0e12114af06cf50991aefbc62360ba3e",
+      "wave2_text_sha256_read2": "64d864f5129d7f5015c4bc64bbf4e5ed0e12114af06cf50991aefbc62360ba3e",
+      "wave3_observed_text_sha256": "64d864f5129d7f5015c4bc64bbf4e5ed0e12114af06cf50991aefbc62360ba3e",
+      "read1": {
+        "status": 200,
+        "bytes": 82800,
+        "text_sha256": "64d864f5129d7f5015c4bc64bbf4e5ed0e12114af06cf50991aefbc62360ba3e",
+        "raw_sha256": "c2b8050cc058639f7af89c75dc7b0c2cb35f8eb2cf0de38b9bc7e11fbc3bca42",
+        "latency_ms": 297,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/61-eba.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 82800,
+        "text_sha256": "64d864f5129d7f5015c4bc64bbf4e5ed0e12114af06cf50991aefbc62360ba3e",
+        "raw_sha256": "c2b8050cc058639f7af89c75dc7b0c2cb35f8eb2cf0de38b9bc7e11fbc3bca42",
+        "latency_ms": 216,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/61-eba.read2.txt"
+      }
+    },
+    {
+      "n": 62,
+      "url": "https://www.eiopa.europa.eu/select-language?destination=/node/1",
+      "subject": "EIOPA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "f2c0e8ea5b50915a43a2208373e17b05770ef0e2d1f5be7343b45c47eb132661",
+      "wave2_text_sha256_read2": "f2c0e8ea5b50915a43a2208373e17b05770ef0e2d1f5be7343b45c47eb132661",
+      "wave3_observed_text_sha256": "f2c0e8ea5b50915a43a2208373e17b05770ef0e2d1f5be7343b45c47eb132661",
+      "read1": {
+        "status": 200,
+        "bytes": 16998,
+        "text_sha256": "f2c0e8ea5b50915a43a2208373e17b05770ef0e2d1f5be7343b45c47eb132661",
+        "raw_sha256": "e0715e4d8c294691e55f7a78ebb58739d669218f4ee5ee6467d89f258cec0418",
+        "latency_ms": 248,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/62-eiopa.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 16998,
+        "text_sha256": "f2c0e8ea5b50915a43a2208373e17b05770ef0e2d1f5be7343b45c47eb132661",
+        "raw_sha256": "e0715e4d8c294691e55f7a78ebb58739d669218f4ee5ee6467d89f258cec0418",
+        "latency_ms": 87,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/62-eiopa.read2.txt"
+      }
+    },
+    {
+      "n": 63,
+      "url": "https://digital-strategy.ec.europa.eu/en",
+      "subject": "DG CNECT",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "4f519715ae20e9b948917742111cfb5c8598cdd16a332b766fb1dc8ddb60e3f0",
+      "wave2_text_sha256_read2": "4f519715ae20e9b948917742111cfb5c8598cdd16a332b766fb1dc8ddb60e3f0",
+      "wave3_observed_text_sha256": "4f519715ae20e9b948917742111cfb5c8598cdd16a332b766fb1dc8ddb60e3f0",
+      "read1": {
+        "status": 200,
+        "bytes": 53860,
+        "text_sha256": "3db709ca52d55eaf285742b928db92884febe35b141ba12c0451991321192301",
+        "raw_sha256": "e57767f10ef7ef1dfd51c7a75a478fc6c9794408f77fb2c1f27dcc85362560aa",
+        "latency_ms": 42,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/63-dg-cnect.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 53860,
+        "text_sha256": "3db709ca52d55eaf285742b928db92884febe35b141ba12c0451991321192301",
+        "raw_sha256": "e57767f10ef7ef1dfd51c7a75a478fc6c9794408f77fb2c1f27dcc85362560aa",
+        "latency_ms": 32,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/63-dg-cnect.read2.txt"
+      }
+    },
+    {
+      "n": 64,
+      "url": "https://oecd.ai/en/",
+      "subject": "OECD AI",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "c6e2ba6c3f8ac719ca85eb83ca68a35a7c6f1ce68fca5aab3da59382407de17a",
+      "wave2_text_sha256_read2": "c6e2ba6c3f8ac719ca85eb83ca68a35a7c6f1ce68fca5aab3da59382407de17a",
+      "wave3_observed_text_sha256": "c6e2ba6c3f8ac719ca85eb83ca68a35a7c6f1ce68fca5aab3da59382407de17a",
+      "read1": {
+        "status": 200,
+        "bytes": 120682,
+        "text_sha256": "c6e2ba6c3f8ac719ca85eb83ca68a35a7c6f1ce68fca5aab3da59382407de17a",
+        "raw_sha256": "42f6db51c8cab7cefb34963b73be8e9338687eca195c8337401cda138f040bc0",
+        "latency_ms": 282,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/64-oecd-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 120682,
+        "text_sha256": "c6e2ba6c3f8ac719ca85eb83ca68a35a7c6f1ce68fca5aab3da59382407de17a",
+        "raw_sha256": "42f6db51c8cab7cefb34963b73be8e9338687eca195c8337401cda138f040bc0",
+        "latency_ms": 230,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/64-oecd-ai.read2.txt"
+      }
+    },
+    {
+      "n": 65,
+      "url": "https://www.nist.gov/super-intelligence",
+      "subject": "NIST",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "930e9a1f7d7fef492e146f49c4c517649dc85d6a56da2c1ccfa58c1c1aec148d",
+      "wave2_text_sha256_read2": "930e9a1f7d7fef492e146f49c4c517649dc85d6a56da2c1ccfa58c1c1aec148d",
+      "wave3_observed_text_sha256": "930e9a1f7d7fef492e146f49c4c517649dc85d6a56da2c1ccfa58c1c1aec148d",
+      "read1": {
+        "status": 200,
+        "bytes": 98750,
+        "text_sha256": "930e9a1f7d7fef492e146f49c4c517649dc85d6a56da2c1ccfa58c1c1aec148d",
+        "raw_sha256": "06073f2ea35de5efc93b4fa2a1c75b251a8d3e0c1c2092344ecb24dc318c4f49",
+        "latency_ms": 367,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/65-nist.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 98750,
+        "text_sha256": "930e9a1f7d7fef492e146f49c4c517649dc85d6a56da2c1ccfa58c1c1aec148d",
+        "raw_sha256": "9a2aff0aca40efbf9f772d3bd313a27ac0ef4a4efae1001bf6fbdfa9906d18dc",
+        "latency_ms": 337,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/65-nist.read2.txt"
+      }
+    },
+    {
+      "n": 66,
+      "url": "https://www.ntia.gov/",
+      "subject": "US NTIA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "910911444ec2adfc413c360de8f52fc2e6cf6ed748a3d257c452049fef0b2bd5",
+      "wave2_text_sha256_read2": "910911444ec2adfc413c360de8f52fc2e6cf6ed748a3d257c452049fef0b2bd5",
+      "wave3_observed_text_sha256": "d297f980a4a7769e318ebb6ac9087578f0cea3b1c5160448660e586e7d7047ef",
+      "read1": {
+        "status": 200,
+        "bytes": 88353,
+        "text_sha256": "7ce28d81534041266c92555ea5ac2760c8d2419b467fdb5774c08c6114cfc477",
+        "raw_sha256": "e988b0eb7e1693fd16ed1c9e86c7251a7c4d9cebdae3d3988f8b3a5ce65be1fe",
+        "latency_ms": 334,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/66-us-ntia.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 88353,
+        "text_sha256": "7ce28d81534041266c92555ea5ac2760c8d2419b467fdb5774c08c6114cfc477",
+        "raw_sha256": "c4fca4d34b0516a8470e5cef324f3b93cd3c727d5e7764897b553c338c7203f9",
+        "latency_ms": 318,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/66-us-ntia.read2.txt"
+      }
+    },
+    {
+      "n": 67,
+      "url": "https://www.cisa.gov/topics/cybersecurity-best-practices/super-intelligence",
+      "subject": "US CISA",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "4af21727a123f8e32a65978af179c0169e0f6499e86e287f378c130bd593ce86",
+      "wave2_text_sha256_read2": "4af21727a123f8e32a65978af179c0169e0f6499e86e287f378c130bd593ce86",
+      "wave3_observed_text_sha256": "4af21727a123f8e32a65978af179c0169e0f6499e86e287f378c130bd593ce86",
+      "read1": {
+        "status": 200,
+        "bytes": 66046,
+        "text_sha256": "4af21727a123f8e32a65978af179c0169e0f6499e86e287f378c130bd593ce86",
+        "raw_sha256": "22b6a3b8dde4f8c3e3068ad9be3952e2ff209ffeebe1debfbf6115254e0223e0",
+        "latency_ms": 201,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/67-us-cisa.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 66046,
+        "text_sha256": "4af21727a123f8e32a65978af179c0169e0f6499e86e287f378c130bd593ce86",
+        "raw_sha256": "22b6a3b8dde4f8c3e3068ad9be3952e2ff209ffeebe1debfbf6115254e0223e0",
+        "latency_ms": 97,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/67-us-cisa.read2.txt"
+      }
+    },
+    {
+      "n": 68,
+      "url": "https://www.unesco.org/en/artificial-intelligence",
+      "subject": "UNESCO AI",
+      "axis": "regulator-transparency",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "668cf7bfe209124679d29bd3c74cd7b3e247790fe152c8a62b9998ab9351af9d",
+      "wave2_text_sha256_read2": "668cf7bfe209124679d29bd3c74cd7b3e247790fe152c8a62b9998ab9351af9d",
+      "wave3_observed_text_sha256": "dd61d26dcf61c7bcb3ddd4b06a64777e0744a50cf25f355a8c251626c3b69598",
+      "read1": {
+        "status": 200,
+        "bytes": 296172,
+        "text_sha256": "dd61d26dcf61c7bcb3ddd4b06a64777e0744a50cf25f355a8c251626c3b69598",
+        "raw_sha256": "df13e92abbb75fca4fb1f8d53df184c9eefa852f12b521d280204f9c87ce2829",
+        "latency_ms": 421,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/68-unesco-ai.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 296172,
+        "text_sha256": "dd61d26dcf61c7bcb3ddd4b06a64777e0744a50cf25f355a8c251626c3b69598",
+        "raw_sha256": "df13e92abbb75fca4fb1f8d53df184c9eefa852f12b521d280204f9c87ce2829",
+        "latency_ms": 570,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/68-unesco-ai.read2.txt"
+      }
+    },
+    {
+      "n": 69,
+      "url": "https://github.com/deepseek-ai/DeepSeek-R1",
+      "subject": "DeepSeek-R1 Repository",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "a5a6bfd640e5244f8073ea3c86e2b4fba6872716fdd3a605685e0c2adcbb5483",
+      "wave2_text_sha256_read2": "a5a6bfd640e5244f8073ea3c86e2b4fba6872716fdd3a605685e0c2adcbb5483",
+      "wave3_observed_text_sha256": "a5a6bfd640e5244f8073ea3c86e2b4fba6872716fdd3a605685e0c2adcbb5483",
+      "read1": {
+        "status": 200,
+        "bytes": 323069,
+        "text_sha256": "07a8f6d45968d044002318d7eca52e3840d0fbafebe0a3520a6acf2cba6f7b06",
+        "raw_sha256": "a0c3d905394efec0857ad6b538923572d29f1faa5aff289905c433d95b80bbdf",
+        "latency_ms": 518,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/69-deepseek-r1-repository.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 323069,
+        "text_sha256": "07a8f6d45968d044002318d7eca52e3840d0fbafebe0a3520a6acf2cba6f7b06",
+        "raw_sha256": "fd81902d4edbe1abe619ae61a544947c8bb9d07a5d46b22568c88b79070c65a2",
+        "latency_ms": 114,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/69-deepseek-r1-repository.read2.txt"
+      }
+    },
+    {
+      "n": 70,
+      "url": "https://github.com/QwenLM/Qwen2.5",
+      "subject": "Alibaba Qwen2.5 Repository",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "UNSTABLE_WITHIN_RUN",
+      "wave2_text_sha256_read1": "52b5501a687c7d7c2fd53fe2195f8c91a29212341b57aba2ec649b8344fd9cb3",
+      "wave2_text_sha256_read2": "3aba193cb6de29bf6ea6462bb7f3e544c3fd2fcbe09cd5c6229c5b4f485e6b67",
+      "wave3_observed_text_sha256": "6b97c2b33937447c33f4b167a8204d7b26761fbd0d4f86fd41ffe7da10e6edab",
+      "read1": {
+        "status": 200,
+        "bytes": 376067,
+        "text_sha256": "54a1e222d94c66d080ad391c9d9dbcaa253db9ceed39e20fa6517190608afa03",
+        "raw_sha256": "943913957e82df8d8e3fa0088436cb6e908065a7d58241372c6d779c4332bb7f",
+        "latency_ms": 933,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/70-alibaba-qwen2-5-repository.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 376067,
+        "text_sha256": "54a1e222d94c66d080ad391c9d9dbcaa253db9ceed39e20fa6517190608afa03",
+        "raw_sha256": "b49c7c01d27008a8fe8af23540a8546539d9863ba74b216c09e6e36c40763290",
+        "latency_ms": 619,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/70-alibaba-qwen2-5-repository.read2.txt"
+      }
+    },
+    {
+      "n": 71,
+      "url": "https://github.com/THUDM/GLM-4",
+      "subject": "Zhipu AI GLM-4 Repository",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "391c2faee5e9c8715fb665bbb11169f9b5819846a15bf37c03173a3751910e1a",
+      "wave2_text_sha256_read2": "391c2faee5e9c8715fb665bbb11169f9b5819846a15bf37c03173a3751910e1a",
+      "wave3_observed_text_sha256": "7ce78d6a128832afccd92dd80e2c2f050ee2ffa449dc97bfd6f5e40c82ea2455",
+      "read1": {
+        "status": 200,
+        "bytes": 361470,
+        "text_sha256": "531f8ebf02bfeecb4196c4804fc0b6b90dc46b3c6c7cf9d4ba18293a0a1b2419",
+        "raw_sha256": "2677bb1c288190607bb3c8eb9f64d57a0e9b6403a73253525e771df742e8fae4",
+        "latency_ms": 782,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/71-zhipu-ai-glm-4-repository.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 361470,
+        "text_sha256": "531f8ebf02bfeecb4196c4804fc0b6b90dc46b3c6c7cf9d4ba18293a0a1b2419",
+        "raw_sha256": "436ad1ab24c9c56128ceb55315ca54e553eb6b54c506cb50340c61555c5a5849",
+        "latency_ms": 659,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/71-zhipu-ai-glm-4-repository.read2.txt"
+      }
+    },
+    {
+      "n": 72,
+      "url": "https://github.com/MoonshotAI/Kimi-k1.5",
+      "subject": "Moonshot Kimi-k1.5 Repository",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_UNCHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "12d212548bdc83b22a5d44a309e9a7b37877ba4e3f414c93804afd1cf73d45d5",
+      "wave2_text_sha256_read2": "12d212548bdc83b22a5d44a309e9a7b37877ba4e3f414c93804afd1cf73d45d5",
+      "wave3_observed_text_sha256": "12d212548bdc83b22a5d44a309e9a7b37877ba4e3f414c93804afd1cf73d45d5",
+      "read1": {
+        "status": 200,
+        "bytes": 207618,
+        "text_sha256": "ee7c23dcfe3c8de88ef61911b9f538058ae339d9eabeaeb12b6b886d82a7d061",
+        "raw_sha256": "e9f731b463944de61e5ad6c5ec4f5d5fc31d4c157416e605d4681aeb52b2edd1",
+        "latency_ms": 509,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/72-moonshot-kimi-k1-5-repository.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 207617,
+        "text_sha256": "ee7c23dcfe3c8de88ef61911b9f538058ae339d9eabeaeb12b6b886d82a7d061",
+        "raw_sha256": "7e80ad5f679fc4cf816068365f209d9823a0514496b6cda7af39b00145ebc4d6",
+        "latency_ms": 60,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/72-moonshot-kimi-k1-5-repository.read2.txt"
+      }
+    },
+    {
+      "n": 73,
+      "url": "https://github.com/MiniMax-AI/MiniMax-01",
+      "subject": "MiniMax-01 Repository",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "UNSTABLE_WITHIN_RUN",
+      "wave2_text_sha256_read1": "3cf1c3493db7d030680939e08dad1ca10fa402a9e20c9ee2b3c4e594372b4a94",
+      "wave2_text_sha256_read2": "9986528f6ca31d27d4b2a72b09e9f4078b3eb13db439b1da4c2400843f8002ae",
+      "wave3_observed_text_sha256": "2c0e031661142bcd035568767d28ab2ba41ea2290f1dd033f27ad7b79e396927",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "87bb3d0211b66e4b9e917287b75325cbfa37f7636450d1d258fee405053111c9",
+        "raw_sha256": "133362d65b42fe777d8c82935618f56144f41c2faa8f8939de5bdf4a0abc1aaa",
+        "latency_ms": 525,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/73-minimax-01-repository.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "87bb3d0211b66e4b9e917287b75325cbfa37f7636450d1d258fee405053111c9",
+        "raw_sha256": "21e25ff30adfd4adfa9c33081a2f1b0318e706de89558b36a527a67facd2aa3d",
+        "latency_ms": 36,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/73-minimax-01-repository.read2.txt"
+      }
+    },
+    {
+      "n": 74,
+      "url": "https://github.com/open-compass/opencompass",
+      "subject": "Shanghai AI Lab OpenCompass",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "92c60e76a02a1f72af52b6ce959a48c0e779c89a93d40e48baa3d143c88ae9a0",
+      "wave2_text_sha256_read2": "92c60e76a02a1f72af52b6ce959a48c0e779c89a93d40e48baa3d143c88ae9a0",
+      "wave3_observed_text_sha256": "f5bf4b505bae44ec9a7a9bc496f5a28237f5fdc59bfc8b1f68db5e8cca154160",
+      "read1": {
+        "status": 200,
+        "bytes": 344565,
+        "text_sha256": "fb4cf4ae1edeaee5a67148c92c2446cffe66d3a390340001c4fa693ddd67c421",
+        "raw_sha256": "63d90016d88defbaee153082be03a4180b09298ba32c209f7f64a29c5b501e4e",
+        "latency_ms": 732,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/74-shanghai-ai-lab-opencompass.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 344566,
+        "text_sha256": "fb4cf4ae1edeaee5a67148c92c2446cffe66d3a390340001c4fa693ddd67c421",
+        "raw_sha256": "223775877e5b3ba793bc048b3807ac535ff3e8f9399ff28636ed96c9e70056bd",
+        "latency_ms": 40,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/74-shanghai-ai-lab-opencompass.read2.txt"
+      }
+    },
+    {
+      "n": 75,
+      "url": "https://github.com/FlagOpen/FlagEmbedding",
+      "subject": "BAAI FlagEmbedding",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "aad12e6f3bda6d32db30dbc854debcdb265e7087e5edd877479b4808a54186eb",
+      "wave2_text_sha256_read2": "aad12e6f3bda6d32db30dbc854debcdb265e7087e5edd877479b4808a54186eb",
+      "wave3_observed_text_sha256": "bee78c5cd8d9328982af5adc1d46c0cadb7a3c1294b33f6d1b21656ce047a872",
+      "read1": {
+        "status": 200,
+        "bytes": 332344,
+        "text_sha256": "be28fcebefe09701c5838784ea38e40df168ccaa1e4c05e803c57a2d4068a218",
+        "raw_sha256": "0c73642c73da06baa571a535c994274ef84e40592b28eb54518f6b152cffb1c3",
+        "latency_ms": 715,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/75-baai-flagembedding.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 332343,
+        "text_sha256": "be28fcebefe09701c5838784ea38e40df168ccaa1e4c05e803c57a2d4068a218",
+        "raw_sha256": "7135d839b26043f9d31ca651318ebd8a47568d09d62e6f24ab93413a61b4c265",
+        "latency_ms": 45,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/75-baai-flagembedding.read2.txt"
+      }
+    },
+    {
+      "n": 76,
+      "url": "https://github.com/NVIDIA/NeMo-Guardrails",
+      "subject": "NVIDIA NeMo Guardrails",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "STABLE",
+      "wave2_text_sha256_read1": "e4dc7d5b22c80558571cb7ee28517e150084659e3bfe8c908c167d25f753fe58",
+      "wave2_text_sha256_read2": "e4dc7d5b22c80558571cb7ee28517e150084659e3bfe8c908c167d25f753fe58",
+      "wave3_observed_text_sha256": "a6eaa2bfd8c1359c768169093915a651790fd3fd68bf6ba5b99a4cce01f220af",
+      "read1": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "8deea60707be268355637f0b656028d94abc9c4ca17e342338b0ab75ad15ab81",
+        "raw_sha256": "c84a8b2b8e43b5d27f0731eb7d01126b28779036822f3a426f2e112f99e097dd",
+        "latency_ms": 697,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/76-nvidia-nemo-guardrails.read1.txt"
+      },
+      "read2": {
+        "status": 200,
+        "bytes": 400000,
+        "text_sha256": "8deea60707be268355637f0b656028d94abc9c4ca17e342338b0ab75ad15ab81",
+        "raw_sha256": "012526c2ae6368989b46d5a7bbb5eba6b8cd71ae2e054e1bd0a20981b280caa9",
+        "latency_ms": 159,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/76-nvidia-nemo-guardrails.read2.txt"
+      }
+    },
+    {
+      "n": 77,
+      "url": "https://github.com/osaia/safe-spec",
+      "subject": "OSAIA SAFE Spec",
+      "axis": "lab-practice",
+      "wave3_outcome_vs_wave2": "TEXT_CHANGED",
+      "wave2_churn_class": "UNKNOWN_UNREACHABLE",
+      "wave2_text_sha256_read1": null,
+      "wave2_text_sha256_read2": null,
+      "wave3_observed_text_sha256": "50156d14cda68d3bb74ce2047a8991df2e3ae1170cdeb85877a849a827b19106",
+      "read1": {
+        "status": 404,
+        "bytes": 230690,
+        "text_sha256": "dc5fb7ba72f955a99f636a5251401380537536c170466235f349e513197cc38c",
+        "raw_sha256": "7abec755dc8682ea0f756f4117359f432c2f5dbf371c59a1f4e16dc55650e0c9",
+        "latency_ms": 244,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/77-osaia-safe-spec.read1.txt"
+      },
+      "read2": {
+        "status": 404,
+        "bytes": 230690,
+        "text_sha256": "dc5fb7ba72f955a99f636a5251401380537536c170466235f349e513197cc38c",
+        "raw_sha256": "ae831394cdf9d0586ae90377c9ee6d6cab3a58639cbb885468fa7ae742b8f252",
+        "latency_ms": 133,
+        "error": "",
+        "text_path": "out/wave4-text-20261029/77-osaia-safe-spec.read2.txt"
+      }
+    }
+  ]
+}

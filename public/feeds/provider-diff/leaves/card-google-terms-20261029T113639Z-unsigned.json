@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Google — terms: bytes changed 2026-10-29",
+ "as_of": "2026-10-29T11:36:45Z",
+ "source_urls": [
+  "https://ai.google.dev/gemini-api/terms"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "google",
+  "surface": "terms",
+  "url": "https://ai.google.dev/gemini-api/terms",
+  "prev_sha256": "ebc89e0b86e799a5203ab7ac1d046e080d8cae3f1f29707f226e98a1f3c75921",
+  "new_sha256": "e2ba98b56581b18e913ff23c33ea0fe7c35c36367f13fff5a3c451b07223add5",
+  "prev_bytes_sha256": "a6fcad0c7b8e4c81a4922ef8170902f97023672b5aeca4cf493d4be252255853",
+  "new_bytes_sha256": "945537b16fd014e3e496f1994efb7af1ef430121caf9fde5c2bb4977e24b4458",
+  "prev_fetched_at": "2026-10-27T10:41:37Z",
+  "fetched_at": "2026-10-29T11:36:45Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 113278,
+   "new": 113449
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": "Tue, 28 Apr 2026 03:23:11 GMT",
+   "new": "Tue, 28 Apr 2026 03:23:11 GMT"
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "2b1b92fdcb727bdfb81dcc44617477b4e197a052d57df9a33f01695cde0177dc",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:google",
+  "surface:terms",
+  "hash-only"
+ ]
+}

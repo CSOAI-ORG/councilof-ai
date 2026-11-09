@@ -1,119 +1,91 @@
-# Promotion proposal — `claim-maintenance` from DECLARED-UNMEASURED to MEASURED
+# Claim-maintenance promotion review — held after evidence correction
 
-*2026-10-28. The evidence is done and verified. What is left is one ruling.*
+Updated 30 October 2026. The earlier promotion recommendation is superseded by this review.
+The 28 October wave remains unchanged as historical evidence; its reported `n_valid = 174`
+must not be used as the admission denominator.
 
-## The rule, and whether the slot meets it
+## What the audit found
 
-The board's own Measure ruling of 2026-10-16 (`functions/api/_gspc_axes_d.ts`):
+The earlier runner read both original and revised registries: 182 rows represented 91 distinct
+claims across 37 source URLs. It also applied visible-text extractor 2 to every source digest.
+That mixed legacy extractor 1 baselines with extractor 2 and treated raw-byte baselines,
+including PDFs and package metadata, as web-page text. Claim Maintenance v0.2 §6.3.1 requires
+comparison with the same extractor and §5.6 requires preservation of digest coverage.
 
-> *"Each is a DECLARED SLOT: kind 'declared-slot', status UNMEASURED, n 0 … An axis becomes
-> MEASURED for its subject only with a frozen, sha-pinned method or bank, n_valid >= 30, passing
-> the gate (queued in bank-next-version). Never a zero score: n 0 means nothing measured, and a
-> declared slot joins no mean, no lid leader and no separation tally."*
+Text absent from an extracted response is not sufficient evidence of withdrawal. A redirect,
+template change, access challenge or different rendering can also remove it from that read.
+The previous runner additionally stopped its timeout after response headers, leaving the body
+read unbounded. Its six historical-file tests checked arithmetic and provenance fields; they
+did not exercise these defects.
 
-| condition | state | evidence |
-|---|---|---|
-| A frozen, sha-pinned method | **MET** | Claim Maintenance spec v0.2, 2026-09-25, published at <https://councilof.ai/spec/claim-maintenance/v0.2/>, with its reference implementation pinned by sha256 in `public/spec/claim-maintenance/v0.2/reference/manifest.json` |
-| n_valid ≥ 30 | **MET** | the wave re-read **182** captured claims and **174** were read (`n_valid = 174`) |
-| A published, dated observation | **MET** | `public/interop/claim-maintenance-wave-2026-10-28.json`, with every register pinned by its own sha256 |
-| The gate | **the owner's call** | see below |
+## Corrected execution
 
-## The wave
+The existing producer, `scripts/measurements/claim-maintenance-wave.mjs`, now:
 
-`scripts/measurements/claim-maintenance-wave.mjs` re-reads every captured claim's source and
-recomputes the visible-text digest with the **spec's own extractor**, imported from
-`scripts/claim-capture.mjs` — not re-implemented, so the wave is the same measurement as the
-captures it compares to.
+- Verifies explicit registry supersession links and artifact integrity, selects one active
+  baseline per subject identifier and claim ID, and retains its complete registry lineage.
+- Uses each baseline's declared digest coverage and extractor. A missing extractor means
+  frozen rule 1. Unknown readers, unsupported encodings and malformed artifacts are held.
+- Fetches each distinct URL once, with a 20-second deadline covering headers and body and an
+  8 MiB body limit. HTTP failures and incomplete bodies never become comparable observations.
+- Freezes source files and input registries before fetching. Complete response bodies are
+  retained by SHA-256 for offline replay, with timestamps and per-source outcomes.
+- Reports `UNCHANGED`, `CHANGED`, `UNREACHABLE` or `UNCOMPARABLE` as observations. It records
+  text absence separately and makes no withdrawal, truth, materiality or silent-change verdict.
+- Refuses to overwrite an existing run, and refuses replay if bytes, rows, denominators or
+  frozen methods disagree. Neither a run nor a replay can promote a board axis.
 
-| outcome | n | meaning |
-|---|---|---|
-| UNCHANGED | 12 | the visible-text digest is the same as at capture |
-| CHANGED | 110 | the page's visible text changed |
-| WITHDRAWN | 52 | the claim's verbatim text is no longer served at its source |
-| UNREACHABLE | 8 | the source could not be fetched at all |
-| **n_valid** | **174** | 182 − 8 unreachable |
+The fresh M4 run completed at **2026-10-30T05:03:22.782Z**:
 
-Six withdrawals were checked by hand against the spec's extractor: for each, neither the full
-claim nor its first six words appear in the page's visible text.
+| Quantity | Result |
+|---|---:|
+| Registry rows inspected | 182 |
+| Distinct active claims | 91 |
+| Distinct sources attempted | 37 |
+| Comparable claims | 87 |
+| Comparable sources | 35 |
+| Unchanged source representations | 26 claims |
+| Changed source representations | 61 claims |
+| Unreachable | 4 claims across 2 sources |
+| Rejected active artifacts | 0 |
 
-## The one thing the method cannot decide — and why that is an owner's ruling, not a bug
+The four unreachable claims returned HTTP 404. Those reads are not withdrawal adjudications.
+Multiple claims share a fetched page; 87 is not a count of independent subjects.
 
-The slot's task wording has **five** outcomes: *"still served unchanged, changed with disclosure,
-changed silently, withdrawn or unreachable"*. The wave settles four of them.
+Result: `public/interop/claim-maintenance-wave-2026-10-30.json`.
+Frozen input SHA-256: `825245659b672120d2ddab3047b2f70971f230d861aaab2317f5b5488d470c90`.
+All 91 rows replayed, including 87 comparable observations. Raw third-party response bodies
+are retained privately on the execution host; the public JSON alone does not reproduce them.
 
-**"Changed with disclosure" versus "changed silently" has no rule.** The published spec v0.2
-defines disclosure at the **artifact** level (§10.3 — a `conflicts` array on the artefact) and
-defines no rule for whether a **source** disclosed its own edit. So every CHANGED row is recorded
-as `CHANGED_DISCLOSURE_NOT_DECIDABLE`, with the reason attached, and the test asserts that no row
-ever claims a verdict the method cannot decide.
+## What remains before admission
 
-**This is the ruling to make.** Three ways to close it, in the estate's own order of preference:
+1. Define and freeze the source-edit disclosure procedure, including evidence locations,
+   observation windows, missed-disclosure uncertainty and reviewer disagreement. Artifact
+   conflict disclosures are a different concept. Absence of a located disclosure is not proof
+   of a silent change.
+2. Define withdrawal evidence beyond text absence and retain human adjudication where required.
+3. Review the sampling unit, shared-source dependence and what this convenience corpus supports.
+4. Complete independent review and the existing authorized signing/admission process against
+   the exact method, inputs and result. A machine-generated review label is not human approval.
 
-1. **Split the axis.** Promote `claim-maintenance` on the four outcomes the evidence settles, and
-   carry the disclosure split as a **separate declared slot** with its own bench
-   (*"pending a published rule for source-disclosed edits"*). The axis's number is then true, and
-   the gap stays visible. The subject family gains a slot; the 33 becomes 34.
-2. **Define the rule and re-run.** Publish what counts as a source disclosure — a dated
-   changelog entry, a version bump, a correction notice the claim's own page links to — and the
-   wave settles five outcomes. One more day after the ruling.
-3. **Publish the axis on four outcomes and say so in its own note.** The axis measures
-   "unchanged / changed / withdrawn / unreachable" and states that the disclosure split is not
-   part of the measurement. Cheapest, and the note carries the limit.
+The board definition and frozen specification remain in force. The earlier proposal to promote
+four outcomes by dropping the fifth requirement is withdrawn. The new observation is useful
+evidence toward completion; it does not itself close the declared axis.
 
-**Recommendation: option 3**, then option 2 when a rule exists. Option 1 is the most honest
-(absence is a result) but it changes the axis count, which is the owner's ruling on 2026-10-16.
+## Validation
 
-## What the axis entry would become
+Run the functional and historical-integrity suites:
 
-The 10 subject axes are all built by one helper, and every one of them is a declared slot. A
-MEASURED subject axis would be the **first of its kind**, which is why this is a ruling and not a
-mechanical edit:
-
-```ts
-// in functions/api/_gspc_axes_d.ts — the shape, for the owner to accept or amend
-{
-  axis: "claim-maintenance",
-  family: "subject",
-  kind: "measured-subject",            // NEW kind: today every subject axis is "declared-slot"
-  applies_to: "claimed-subjects",
-  bench: "claim-maintenance v0.2 re-read wave",
-  task: "at each scheduled re-read, is a captured public claim still served unchanged, changed, "
-      + "withdrawn or unreachable; says nothing about whether the claim is true",
-  n: 174,                               // n_valid, read off the wave — never typed
-  status: "MEASURED",
-  method_status: "meets-rule",
-  method: "claim-maintenance v0.2",
-  method_sha: "<sha256 of the spec's reference manifest>",
-  bank: "public/interop/claim-maintenance-wave-2026-10-28.json",
-  bank_sha256: "<sha256 of the wave file>",
-  hue: 290,
-  colour: "hsl(290 10% 55%)",
-  note: "n_valid 174 of 182 captured claims, re-read 2026-10-28 with the spec's own visible-text "
-      + "extractor. Counts per outcome, never a ranking, and never a statement that a claim is true. "
-      + "The disclosure split ('changed with disclosure' vs 'changed silently') is NOT part of this "
-      + "measurement: the published spec defines disclosure at the artefact level and not for a source's "
-      + "own edit, so those claims are recorded as CHANGED_DISCLOSURE_NOT_DECIDABLE.",
-}
+```sh
+node --test scripts/measurements/claim-maintenance-wave-v02.node-test.mjs \
+  scripts/measurements/claim-maintenance-wave.node-test.mjs
 ```
 
-## What changes on the board when it is promoted
+Replay uses the original result and its adjacent `.evidence` directory:
 
-| | before | after |
-|---|---|---|
-| slots | 33 | 33 (or 34 with option 1) |
-| measured | 23 | 24 |
-| unmeasured | 10 | 9 |
-| the lid | 23 measured of 33 axes | 24 measured of 33 axes |
-| `public_count` | derived | derived (never typed) |
-| separation | unaffected | a subject axis joins no mean, no lid leader and no separation tally — unchanged by the ruling |
+```sh
+node scripts/measurements/claim-maintenance-wave.mjs --replay /private/run/wave.json
+```
 
-The counts are **derived, never typed** (`/api/state` says so in its own bytes), so the promotion
-is a change to one axis entry and the derived counts follow.
-
-## What is NOT claimed
-
-- **Not that any claim is true.** A re-read says what was served today.
-- **Not that a subject did anything wrong.** 52 withdrawals say the text is no longer served; they
-  say nothing about why, and the wave records no allegation.
-- **Not a ranking.** The axis reports counts per outcome, never an order.
-- **Not the disclosure split.** See above.
+The historical 28 October result is preserved byte for byte. Its old counts and outcome labels
+are historical output, not current eligibility or a factual withdrawal finding.

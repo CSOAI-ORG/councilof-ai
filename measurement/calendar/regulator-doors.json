@@ -8,7 +8,8 @@
   "IN_EFFECT": "an application or publication date that has passed",
   "UNVERIFIED": "no official source stating a date could be read; date is null by rule, never guessed"
  },
- "verification_rule": "verification.lane_refetch records a second, independent fetch of the same official URL by the governor lane on 2026-09-14 (FOUND = the evidence text was present in the bytes). Items with lane_refetch NOT_DONE rest on one fetch only and say so.",
+ "verification_rule": "verification.lane_refetch records a second, independent fetch of the same official URL by the governor lane on 2026-09-14 (FOUND = the evidence text was present in the bytes). Items with lane_refetch NOT_DONE rest on one fetch only and say so. An entry re-read after 14 Sep states its own fetches in verification.method.",
+ "linked_from_rule": "Optional. The official page on which source_url was found as a link, for a source that is a file rather than a page. Re-open that page first and follow its link: a site can replace a linked file while the old file stays reachable at its old address (seen 13 Oct 2026 on uk-sovereign-ai-procurement-challenge-4-agents). The alert issue prints it above the file link.",
  "alerts": {
   "offsets_days": [7, 2, 0],
   "applies_to": "status VERIFIED with a date",
@@ -29,12 +30,12 @@
    "date": "2026-09-21",
    "date_kind": "comment_deadline",
    "time_tz": null,
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://www.dfs.ny.gov/industry_guidance/regulatory_activity/financial_services",
    "retrieved_at": "2026-09-14T10:43:16Z",
    "evidence_quote": "Proposal for 23 NYCRR 202 … Notice of Proposed Rulemaking SAPA Executive Order No. 17 July 7, 2026 July 22, 2026 September 21, 2026 (column: Public comment period expires)",
    "verification": {"method": "official regulatory-activity table", "lane_refetch": "FOUND"},
-   "notes": "Stablecoin rule (GENIUS Act context). The quote is a table row, not a sentence. No open NYDFS AI comment period was found on this page."
+   "notes": "Stablecoin rule (GENIUS Act context). The quote is a table row, not a sentence. No open NYDFS AI comment period was found on this page. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the comment deadline (2026-09-21) has passed (issue #2826)."
   },
   {
    "id": "boe-systemic-stablecoin-code-of-practice",
@@ -44,12 +45,12 @@
    "date": "2026-09-22",
    "date_kind": "comment_deadline",
    "time_tz": null,
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://www.bankofengland.co.uk/paper/2026/ps/sterling-denominated-systemic-stablecoin",
    "retrieved_at": "2026-09-14T10:43:12Z",
    "evidence_quote": "The consultation period for this publication closes on 22 September 2026.",
    "verification": {"method": "official publication page", "lane_refetch": "FOUND"},
-   "notes": "The Bank states the Code is to be finalised by end-2026."
+   "notes": "The Bank states the Code is to be finalised by end-2026. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the comment deadline (2026-09-22) has passed (issue #2827)."
   },
   {
    "id": "eba-cp-2026-10",
@@ -74,12 +75,12 @@
    "date": "2026-09-28",
    "date_kind": "comment_deadline",
    "time_tz": "23:59 (zone not stated on the page)",
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://www.eba.europa.eu/publications-and-media/events/consultation-methodology-setting-fines-under-mica",
    "retrieved_at": "2026-09-14T10:43:14Z",
    "evidence_quote": "Deadline for submitting responses: 28/09/2026 at 23:59",
    "verification": {"method": "official consultation page", "lane_refetch": "FOUND"},
-   "notes": "Candidate match for 'EBA CP/2026/10'; not confirmed as the intended instrument."
+   "notes": "Candidate match for 'EBA CP/2026/10'; not confirmed as the intended instrument. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the comment deadline (2026-09-28) has passed (issue #2828)."
   },
   {
    "id": "ec-mica-review-targeted-consultation",
@@ -89,12 +90,12 @@
    "date": "2026-09-30",
    "date_kind": "comment_deadline",
    "time_tz": "23:59 CEST",
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://finance.ec.europa.eu/regulation-and-supervision/consultations-0/targeted-consultation-review-mica-regulation_en",
    "retrieved_at": "2026-09-14T10:43:12Z",
    "evidence_quote": "Targeted consultation on the review of Regulation on the Markets in Crypto-Assets (MiCA) Deadline extend until 30 September 2026",
    "verification": {"method": "official consultation page", "lane_refetch": "FOUND"},
-   "notes": "Deadline was extended. The 23:59 CEST time comes from the first retrieval; the second fetch confirmed the date."
+   "notes": "Deadline was extended. The 23:59 CEST time comes from the first retrieval; the second fetch confirmed the date. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the comment deadline (2026-09-30) has passed (issue #2829)."
   },
   {
    "id": "boe-fca-joint-systemic-stablecoin-regulation",
@@ -104,12 +105,12 @@
    "date": "2026-09-30",
    "date_kind": "comment_deadline",
    "time_tz": null,
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://www.bankofengland.co.uk/paper/2026/boe-and-fcas-approach-to-joint-regulation-of-systemic-stablecoin-issuers",
    "retrieved_at": "2026-09-14T10:43:12Z",
    "evidence_quote": "This consultation closes on 30 September 2026.",
    "verification": {"method": "official publication page", "lane_refetch": "FOUND"},
-   "notes": "Candidate 'BoE/FCA'. The page says the FCA will consult separately, later, on disapplying its rules."
+   "notes": "Candidate 'BoE/FCA'. The page says the FCA will consult separately, later, on disapplying its rules. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the comment deadline (2026-09-30) has passed (issue #2830)."
   },
   {
    "id": "fca-cp26-13-cryptoasset-perimeter-guidance",
@@ -134,27 +135,28 @@
    "date": "2026-10-15",
    "date_kind": "comment_deadline",
    "time_tz": "11:59 PM (zone not stated on the page)",
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://www.nist.gov/news-events/news/2026/08/seeking-public-comment-using-artificial-intelligence-cybersecurity",
    "retrieved_at": "2026-09-14T10:43:13Z",
    "evidence_quote": "The comment period for NIST SP 1353 ipd is open through October 15, 2026, at 11:59 PM.",
    "verification": {"method": "official news page", "lane_refetch": "FOUND"},
-   "notes": "Other NIST doors seen once and not re-fetched, so not listed: NVD modernization RFI and the CSRC 'AI Data Center Security Analysis' draft."
+   "notes": "Other NIST doors seen once and not re-fetched, so not listed: NVD modernization RFI and the CSRC 'AI Data Center Security Analysis' draft. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the comment deadline (2026-10-15) has passed (issue #3295)."
   },
   {
    "id": "uk-sovereign-ai-procurement-challenge-4-agents",
-   "regulator": "UK Sovereign AI (DSIT), challenge with NCSC",
+   "regulator": "UK Sovereign AI Fund (BIST, formerly DSIT), challenge owner NCSC",
    "instrument": "Sovereign AI R&D Procurement Scheme — Challenge 4: Enabling safe AI agent adoption (Batch 1)",
-   "door_type": "funding_competition",
+   "door_type": "procurement_competition",
    "date": "2026-10-16",
    "date_kind": "submission_deadline",
    "time_tz": null,
-   "status": "VERIFIED",
-   "source_url": "https://cdn.prod.website-files.com/699b76e1c0f6def91adc6c77/6a91bbc9a127f0cbf855eab5_Competition%20Guidance%20SovAI%20Procurement%20.pdf",
-   "retrieved_at": "2026-09-14T10:45:33Z",
-   "evidence_quote": "The dates for this financial year are: Batch 1: Submit your proposal by 16 October 2026 to receive an outcome on 13 November",
-   "verification": {"method": "competition guidance PDF linked from sovereignai.gov.uk (hosted on that site's CDN)", "lane_refetch": "FOUND"},
-   "notes": "DISPUTED DATE: an older guidance PDF and press coverage said 1 October 2026. This date comes from the PDF the site links today. Suppliers must be on the Approved Supplier List first. Later batches were reported as 31 Dec 2026 and 26 Feb 2027 but are not listed here."
+   "status": "CLOSED",
+   "source_url": "https://cdn.prod.website-files.com/699b76e1c0f6def91adc6c77/6a91bbc9a127f0cbf855eab5_88997fa64b36e2a85d673c6ccfb5c1eb_Competition%20Guidance%20SovAI%20Procurement%20.pdf",
+   "linked_from": "https://www.sovereignai.gov.uk/offer-beyond-investment",
+   "retrieved_at": "2026-10-13T08:09:08Z",
+   "evidence_quote": "Submit your proposal by 16 October 2026 to receive an outcome on 13 November",
+   "verification": {"method": "competition guidance PDF linked as 'download pdf' under Procurement on linked_from (hosted on that site's CDN); sha256 3085f011a7ca6aa3, PDF created 2026-09-20; second fetch from another machine at 2026-10-13T08:16:16Z returned the same sha256", "lane_refetch": "FOUND"},
+   "notes": "RE-READ 13 Oct 2026. The page now links a different guidance PDF (created 20 Sep 2026; CDN last-modified 2026-09-20T19:01:39Z). The file this entry cited until today (created 28 Aug 2026, sha256 d06481138bc8c040) is still served at its old address but is not linked from the page, so a fetch of the stored link alone read superseded bytes. The 16 October date is the same in both files. New in the current file: Batch 1 'Opens 15 September 2026'; a Full Application goes in 'in line with the Competition Dates'; 'The lead applicant must carry out at least 50% of the work.' It is a procurement competition for an R&D services contract ('This Scheme is a competitive procurement mechanism'), not a consultation and not a grant. Only suppliers on the Approved Supplier List can submit; the list is joined through an Expression of Interest form, which the guidance asks for 'at least two weeks before' a deadline. Later batches in the current file are 31 December 2026 and 26 February 2027; they are not listed here as doors. Kept from the 14 Sep read, not re-checked: an older guidance PDF and press coverage said 1 October 2026. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the submission deadline (2026-10-16) has passed (issue #3307)."
   },
   {
    "id": "ncsc-open-consultation",
@@ -179,12 +181,12 @@
    "date": "2026-10-16",
    "date_kind": "comment_deadline",
    "time_tz": "11:59 PM (Singapore time implied)",
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://www.mas.gov.sg/publications/consultations/2026/consultation-on-proposed-amendments-to-the-payment-services-act-for-stablecoin-regulation",
    "retrieved_at": "2026-09-14T10:45:33Z",
    "evidence_quote": "This consultation closes at 11.59 PM on 16 October 2026.",
    "verification": {"method": "official consultation page (needs a browser user-agent)", "lane_refetch": "FOUND"},
-   "notes": "The MAS AI risk-management guidelines consultation page was unavailable when fetched, so it is not listed."
+   "notes": "The MAS AI risk-management guidelines consultation page was unavailable when fetched, so it is not listed. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the comment deadline (2026-10-16) has passed (issue #3308)."
   },
   {
    "id": "us-treasury-genius-issuance-nprm",
@@ -194,12 +196,12 @@
    "date": "2026-10-19",
    "date_kind": "comment_deadline",
    "time_tz": null,
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://www.federalregister.gov/documents/2026/08/18/2026-16796/genius-act-regulations-on-payment-stablecoin-issuance-offer-and-sale",
    "retrieved_at": "2026-09-14T10:43:16Z",
    "evidence_quote": "Comments on the NPRM must be received on or before October 19, 2026. (Federal Register API: comments_close_on 2026-10-19)",
    "verification": {"method": "Federal Register API document 2026-16796", "lane_refetch": "FOUND"},
-   "notes": "Earlier GENIUS NPRMs from Treasury, OCC and FinCEN closed in Jul–Aug 2026."
+   "notes": "Earlier GENIUS NPRMs from Treasury, OCC and FinCEN closed in Jul–Aug 2026. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the comment deadline (2026-10-19) has passed (issue #3365)."
   },
   {
    "id": "sec-regulation-crypto-assets",
@@ -209,12 +211,12 @@
    "date": "2026-10-20",
    "date_kind": "comment_deadline",
    "time_tz": null,
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://www.federalregister.gov/documents/2026/08/21/2026-17183/regulation-crypto-assets",
    "retrieved_at": "2026-09-14T10:43:16Z",
    "evidence_quote": "Comments should be received on or before October 20, 2026. (Federal Register API: comments_close_on 2026-10-20)",
    "verification": {"method": "Federal Register API document 2026-17183", "lane_refetch": "FOUND"},
-   "notes": "No open SEC AI proposed rule was found among 2026 Federal Register SEC proposed rules."
+   "notes": "No open SEC AI proposed rule was found among 2026 Federal Register SEC proposed rules. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the comment deadline (2026-10-20) has passed (issue #3380)."
   },
   {
    "id": "edpb-guidelines-02-2026-anonymisation",
@@ -224,12 +226,12 @@
    "date": "2026-10-30",
    "date_kind": "comment_deadline",
    "time_tz": "23:59 CET",
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://www.edpb.europa.eu/public-consultations/guidelines-022026-on-anonymisation_en",
    "retrieved_at": "2026-09-14T10:43:14Z",
    "evidence_quote": "Guidelines 02/2026 on Anonymisation Open for feedback Feedback period 08 July - 30 October 2026 (23:59 CET)",
    "verification": {"method": "official public-consultation page", "lane_refetch": "FOUND"},
-   "notes": null
+   "notes": "Kept for the record. Status set to CLOSED by PR on 2026-11-03: the comment deadline (2026-10-30) has passed (issue #3680)."
   },
   {
    "id": "eic-pathfinder-challenges-2026-deeprap",
@@ -239,12 +241,12 @@
    "date": "2026-10-28",
    "date_kind": "submission_deadline",
    "time_tz": null,
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://ec.europa.eu/info/funding-tenders/opportunities/data/topicDetails/horizon-eic-2026-pathfinderchallenges-01-03.json",
    "retrieved_at": "2026-09-14T10:43:16Z",
    "evidence_quote": "status abbreviation \"Open\"; deadlineDates [1793145600000] = 2026-10-28 (portal data endpoint)",
    "verification": {"method": "EU Funding & Tenders portal JSON data endpoint (dates as UTC-midnight timestamps)", "lane_refetch": "FOUND"},
-   "notes": "No clock time is given in the data. Check the portal topic page for the time before relying on it."
+   "notes": "No clock time is given in the data. Check the portal topic page for the time before relying on it. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the submission deadline (2026-10-28) has passed (issue #3623)."
   },
   {
    "id": "eic-accelerator-2026-full-proposal-batch",
@@ -269,12 +271,12 @@
    "date": "2026-10-08",
    "date_kind": "submission_deadline",
    "time_tz": null,
-   "status": "VERIFIED",
+   "status": "CLOSED",
    "source_url": "https://ec.europa.eu/info/funding-tenders/opportunities/data/topicDetails/horizon-cl5-2026-10-d6-03.json",
    "retrieved_at": "2026-09-14T10:43:16Z",
    "evidence_quote": "status \"Open\", deadlineDates include 2026-10-08 (decoded from the portal data endpoint)",
    "verification": {"method": "EU Funding & Tenders portal JSON data endpoint", "lane_refetch": "FOUND"},
-   "notes": "Candidate 'Horizon Europe'. No Cluster 4 AI topic with a late-2026 deadline is open; this GenAI topic is in Cluster 5."
+   "notes": "Candidate 'Horizon Europe'. No Cluster 4 AI topic with a late-2026 deadline is open; this GenAI topic is in Cluster 5. Kept for the record. Status set to CLOSED by PR on 2026-11-03: the submission deadline (2026-10-08) has passed (issue #2989)."
   },
   {
    "id": "horizon-cl4-2026-ai-manufacturing",

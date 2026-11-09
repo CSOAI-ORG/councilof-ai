@@ -92,3 +92,37 @@ Acceptance requires restart-safe installation, one successful private upload wit
 matching bytes, zero-write repeat behavior and evidence a due future attempt is
 actually invoked. Unit tests and one manual run alone do not establish 24/7
 durability. Do not put signing keys on the compute pod.
+
+## Current per-pod results
+
+The existing heartbeat also passes `--current-root /workspace/runs`. The uploader
+retains only the bounded `<pod>/gspc/<model>/<axis>/runs/<run-id>` layout from that
+root. Legacy `--root /workspace/gspc-24x7` transport is unchanged; a direct uploader
+call opts into current runs explicitly with `--current-root`.
+
+Current runs retain exact original bytes, including `gate.json` and an existing
+`HUMAN_RELEASE.json`, in immutable private `current-runs/snapshots` directories.
+An explicit pointer per full original relative run path selects the current
+snapshot. The pointer and whole snapshot share one parent-revision-guarded HF
+commit. Timestamps never select a gate. Repeating unchanged bytes writes nothing;
+a newer missing, invalid, held or incomplete gate replaces the pointer too.
+
+The pinned Actions intake checks pointer identity and every source hash, then
+retains only opaque source-identity hashes, snapshot digests and enumerated gate
+decisions in a review artifact. Original paths, raw gate/release sidecars and
+source manifests stay in private HF. It never feeds current snapshots into the legacy verifier,
+bridge or signer. Even a matching producer candidate receives
+`BLOCKED_OWNER_PRODUCER_HOLD_INTEGRATION`. Missing, malformed, rejected and held
+gates remain private evidence; no historical snapshot is used as a fallback.
+A corrupt current snapshot emits an `UNCHECKABLE` receipt and a failed advisory
+review step; it does not prevent the separate legacy intake from proceeding.
+
+PR #3049 owns house gates and run-of-record selection; PR #2954 owns trusted-bank
+verification and caller adoption. The current bridge has no contract to consume
+producer holds. Those owners must integrate that context before current-run
+admission can be enabled. Function names alone are not permission to bypass it.
+
+The uploader reports closed transport bundles, including held or incomplete
+snapshots. Those counts are not admitted measurements. This source change does
+not install a scheduler, provision credentials, upload runs, release holds, sign
+cards or publish measurements.

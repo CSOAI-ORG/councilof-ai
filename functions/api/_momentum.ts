@@ -478,6 +478,7 @@ export const SELF_READ_DATASETS: readonly SelfReadDataset[] = [
   { id: "csoai/distribution-footprint", when: "request", readers: ["functions/api/_momentum.ts"] },
   { id: "csoai/cross-ledger-supply", when: "request", readers: ["functions/_lib/reach/stablecoins.ts"] },
   { id: "csoai/a2a-card-census", when: "request", readers: ["functions/_lib/reach/agentCards.ts"] },
+  { id: "csoai/councilof-ai-evidence", when: "request", readers: ["functions/cards/[sha].ts"] },
   { id: "csoai/hub-queue", when: "job", readers: ["scripts/hf/hf_jobs_mill.py", "scripts/runpod_gspc_local_mill.py"] },
   { id: "csoai/fleet-status", when: "job", readers: ["fleet/publish_fleet_status.py", "scripts/pubbus/publish-fleet-status.py"] },
   { id: "csoai/gspc-boards", when: "job", readers: ["scripts/watch_public_root.py", "scripts/sync_hf_gspc.py"] },

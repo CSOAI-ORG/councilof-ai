@@ -156,6 +156,11 @@ export default function Distribution() {
             another would invent a ratio nobody measured — it is the most common way an adoption
             figure stops being true, and we would rather publish four blanks than one of those.
           </p>
+          <p className="measure mt-5 text-[15px] leading-relaxed ink-muted">
+            Dated examples of outside execution, implementation and citation are recorded separately on our{" "}
+            <Link href="/traction/#external-use" className="font-semibold text-emerald-300 underline underline-offset-4">operation and external-use page</Link>.
+            {" "}Those specific cases do not establish estate-wide execution or institutional-adoption totals.
+          </p>
         </div>
       </section>
 

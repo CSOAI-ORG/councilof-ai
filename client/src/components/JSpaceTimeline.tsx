@@ -59,18 +59,18 @@ const TAG_WEIGHT: Record<string, number> = {
 
 const NOW = () => Date.now();
 
-// Log-scale: t=0 → far right (now), t=1yr → left third. The line-scale is
-// zoom-out: as time passes, the *same* event drifts left, freeing real-estate
-// for new events. This is the "infinite drawing time" property.
+// Log-scale: t=0 → far right (now); 1 minute ago hugs the right edge and
+// 100 years ago reaches the far left. The line-scale is zoom-out: as time
+// passes, the *same* event drifts left, freeing real-estate for new events.
+// This is the "infinite drawing time" property.
+const MIN_SPAN_MS = 60_000;                  // 1 minute — innermost decade
+const MAX_SPAN_MS = 100 * 365 * 86_400_000;  // 100 years — outermost decade
+const LOG_MIN = Math.log10(MIN_SPAN_MS);
+const LOG_SPAN = Math.log10(MAX_SPAN_MS) - LOG_MIN;
+
 function timeToX(t: number, w: number, now: number): number {
-  const dt = Math.max(1, now - t); // ms
-  const DAY = 86_400_000;
-  const YEAR = 365 * DAY;
-  // log10 of years-ago, clamped to [0.001, 1e3] years
-  const years = Math.min(1e3, Math.max(1e-3, dt / YEAR));
-  const logSpan = Math.log10(1e3) - Math.log10(1e-3); // 6 decades
-  const logYears = Math.log10(years) - Math.log10(1e-3);
-  const frac = Math.min(1, Math.max(0, logYears / logSpan));
+  const dt = Math.min(MAX_SPAN_MS, Math.max(MIN_SPAN_MS, now - t)); // ms
+  const frac = Math.min(1, Math.max(0, (Math.log10(dt) - LOG_MIN) / LOG_SPAN));
   return w - frac * w; // 0 = far right (now), w = far left
 }
 
@@ -144,24 +144,25 @@ export default function JSpaceTimeline({ events, onSelect, height = 220 }: Props
       ctx.stroke();
 
       // Tick marks: decades on log scale (1m, 1h, 1d, 30d, 1y, 10y, 100y).
+      // Each tick is a real wall-clock span so every label lands on its own
+      // time; "now" is painted by the pulse at the right edge below.
       const SPINE = 0.55;
       const FOREST = 0.30;
-      const DECADES = [
-        { years: 1e-3, label: "now" },
-        { years: 1e-2, label: "min" },
-        { years: 1e-1, label: "h" },
-        { years: 1, label: "d" },
-        { years: 30, label: "mo" },
-        { years: 365, label: "y" },
-        { years: 3650, label: "10y" },
-        { years: 36500, label: "100y" },
+      const TICKS_MS = [
+        { ms: 60_000, label: "min" },
+        { ms: 3_600_000, label: "h" },
+        { ms: 86_400_000, label: "d" },
+        { ms: 30 * 86_400_000, label: "mo" },
+        { ms: 365 * 86_400_000, label: "y" },
+        { ms: 10 * 365 * 86_400_000, label: "10y" },
+        { ms: 100 * 365 * 86_400_000, label: "100y" },
       ];
       ctx.fillStyle = "rgba(148,197,255,0.35)";
       ctx.font = `${10 * DPR}px ui-monospace, monospace`;
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
-      for (const d of DECADES) {
-        const x = timeToX(NOW() - d.years * 365 * 86_400_000, w, NOW());
+      for (const d of TICKS_MS) {
+        const x = timeToX(NOW() - d.ms, w, NOW());
         ctx.fillStyle = "rgba(148,197,255,0.18)";
         ctx.fillRect(x, midY - 6 * DPR, 1 * DPR, 12 * DPR);
         ctx.fillStyle = "rgba(148,197,255,0.4)";
@@ -250,6 +251,7 @@ export default function JSpaceTimeline({ events, onSelect, height = 220 }: Props
     const cv = canvasRef.current;
     if (!cv) return;
     const r = cv.getBoundingClientRect();
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
     const x = (ev.clientX - r.left) * cv.width / r.width;
     const y = (ev.clientY - r.top) * cv.height / r.height;
     let bestIdx = -1;
@@ -257,9 +259,9 @@ export default function JSpaceTimeline({ events, onSelect, height = 220 }: Props
     for (let i = 0; i < sorted.length; i++) {
       const e = sorted[i];
       const px = timeToX(e._ts, cv.width, now);
-      const py = cv.height * 0.55 + 0.5 * ((i + 1) % 3) * 14 * (cv.height / 220);
+      const py = cv.height * 0.55 + 0.5 * ((i + 1) % 3) * 14 * DPR;
       const d = Math.hypot(px - x, py - y);
-      if (d < 14 * (cv.width / cv.height) * 8 && d < bestDist) {
+      if (d < 18 * DPR && d < bestDist) {
         bestDist = d;
         bestIdx = i;
       }

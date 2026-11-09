@@ -39,8 +39,14 @@ jobs:
           python3 -m unittest discover -s scripts -p test_runpod_gspc_bridge_to_mill.py
           python3 -m unittest discover -s scripts -p test_runpod_gspc_push_to_hf.py
           python3 -m unittest discover -s scripts -p test_runpod_gspc_upload_heartbeat.py
+          python3 -m unittest discover -s scripts -p test_runpod_current_intake.py
+          python3 -m unittest discover -s scripts -p test_intake_manifest.py
+          python3 -m unittest discover -s scripts -p test_intake_snapshot.py
+          python3 -m unittest discover -s scripts -p test_intake_composition.py
           python3 -m unittest discover -s scripts -p test_pod_loop_supervisor.py
           python3 -m unittest discover -s scripts -p test_runpod_signing_artifact.py
+          python3 -m unittest discover -s scripts -p test_resolve_runpod_trusted_bank.py
+          python3 -m unittest discover -s scripts -p test_runpod_intake_wiring.py
           python3 scripts/verify_runpod_gspc_intake.py --help > /dev/null
 
       - name: Pull the durable intake
@@ -70,10 +76,70 @@ jobs:
               output.write(f"revision={info.sha}\n")
           PY
 
+      - name: Review current-run snapshots without admitting them
+        continue-on-error: true
+        run: |
+          python3 scripts/runpod_gspc_push_to_hf.py \
+            --review-current "$GITHUB_WORKSPACE/intake" \
+            --review-out "$RUNNER_TEMP/current-provenance"
+
+      - name: Retain current-run source and gate decisions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runpod-current-gates-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/current-provenance/
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Stage control-plane trusted banks for --trusted-bank verification
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/trusted-banks"
+          # The jail goldbank is pinned BY DIGEST, so it is staged under its own digest
+          # name, exactly like every other bank, and the resolver's lookup finds it the
+          # same way. A fetch failure is reported and the step CONTINUES: the jail bank
+          # is one axis's worth of runs, and the estate's design is that a run whose
+          # bank cannot be resolved is HELD and recorded, never silently staged.
+          python3 - <<'PY'
+          import hashlib, os, pathlib, shutil
+          from huggingface_hub import hf_hub_download
+
+          out_dir = pathlib.Path(os.environ["RUNNER_TEMP"]) / "trusted-banks"
+          try:
+              jail_path = hf_hub_download(
+                  repo_id="csoai/gspc-jail-goldbank",
+                  repo_type="dataset",
+                  filename="test.jsonl",
+                  revision="df16e7855ff04b90fea19aa5f11f4b86cb466a47",
+                  token=os.environ.get("HF_TOKEN") or None,
+              )
+          except Exception as exc:
+              print(f"::warning::jail goldbank could not be fetched: {exc}")
+              print("jail-pinned runs will be HELD as NO_CONTROL_PLANE_BANK, not staged")
+              raise SystemExit(0)
+          raw = pathlib.Path(jail_path).read_bytes()
+          jail_sha = hashlib.sha256(raw).hexdigest()
+          if jail_sha != "0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a":
+              raise SystemExit(f"jail goldbank digest mismatch: {jail_sha}")
+          shutil.copy2(jail_path, out_dir / f"{jail_sha}.jsonl")
+          PY
+          # Stage every ALLOWLISTED bank from the control plane. The resolver writes
+          # each one under its own digest name, filters by the allowlist (so a bank
+          # nobody pinned can never be handed to the verifier), and reports the pins it
+          # could not materialize -- so a bank that is absent says why, instead of
+          # being reported as a run that failed.
+          python3 scripts/resolve_runpod_trusted_bank.py stage \
+            --repo-root "$GITHUB_WORKSPACE" \
+            --allowlist "$GITHUB_WORKSPACE/scripts/runpod_gspc_bank_allowlist.current.json" \
+            --out-dir "$RUNNER_TEMP/trusted-banks"
+
       - name: Verify every run independently
         run: |
           set -euo pipefail
-          ok=0; legacy=0; bad=0; fatal=0
+          ok=0; legacy=0; held_bank=0; bad=0; fatal=0
           # Every non-VERIFIED run is RECORDED (path + reason code) in intake-rejections.tsv
           # and uploaded as an artifact. A recorded per-run rejection no longer fails the job:
           # the stage step reads ONLY $GITHUB_WORKSPACE/quarantine/verified-*, which the
@@ -87,12 +153,42 @@ jobs:
           # explicitly excluded, so runs moved aside in the dataset are never re-walked.
           printf 'state\tcode\trun_dir\tdetail\n' > intake-rejections.tsv
           : > legacy-intake.txt
+          : > unmatched-trusted-bank.txt
           while IFS= read -r -d '' card; do
             d=$(dirname "$card")
             case "$d" in */quarantine/*) echo "SKIP_QUARANTINED_PATH $d"; continue;; esac
+            rel=${d#"$GITHUB_WORKSPACE/intake/"}
+            trusted_bank=""
+            # The resolver's real CLI is `lookup`, which resolves the run's own
+            # bank_sha256 to a digest-named file in the staged directory. It exits 2
+            # when NO byte-identical control-plane bank exists -- a fact about the
+            # banks, which is recorded as a HOLD. Any OTHER non-zero exit means the
+            # resolver could not decide, which is a fact about the TOOL, and it is
+            # counted as FATAL so the job fails closed rather than publishing a
+            # verdict it did not measure. The previous call used a flag the script
+            # never had, so argparse exited 2 on EVERY run and the `||` branch below
+            # reported all of them as HOLD_CONTROL_PLANE_BANK_ABSENT -- a tool error
+            # presented as a verdict about the banks.
+            # stderr is NOT suppressed: a crash must be visible, not read as "absent".
+            rc_lookup=0
+            trusted_bank=$(python3 scripts/resolve_runpod_trusted_bank.py lookup \
+              --run-dir "$d" \
+              --trusted-banks-dir "$RUNNER_TEMP/trusted-banks") || rc_lookup=$?
+            if [ "$rc_lookup" -ne 0 ]; then
+              if [ "$rc_lookup" -eq 2 ]; then
+                held_bank=$((held_bank+1))
+                printf '%s\n' "$d" >> unmatched-trusted-bank.txt
+                printf 'HOLD_CONTROL_PLANE_BANK_ABSENT\tNO_CONTROL_PLANE_BANK\t%s\tRun bank_sha256 has no byte-identical control-plane bank in repo/HF\n' "$rel" >> intake-rejections.tsv
+              else
+                fatal=$((fatal+1))
+                echo "FATAL_RESOLVER rc=$rc_lookup $d :: the resolver could not decide this run safely"
+              fi
+              continue
+            fi
             rc=0
             out=$(python3 scripts/verify_runpod_gspc_intake.py \
                  --run-dir "$d" \
+                 --trusted-bank "$trusted_bank" \
                  --bank-allowlist "$GITHUB_WORKSPACE/scripts/runpod_gspc_bank_allowlist.current.json" \
                  --quarantine-root "$GITHUB_WORKSPACE/quarantine" 2>&1) || rc=$?
             rel=${d#"$GITHUB_WORKSPACE/intake/"}
@@ -117,7 +213,7 @@ jobs:
             fi
             printf '%s\t%s\t%s\t%s\n' "$state" "$code" "$rel" "$detail" >> intake-rejections.tsv
           done < <(find "$GITHUB_WORKSPACE/intake/gspc-24x7" -name card-unsigned.json -not -path '*/quarantine/*' -print0)
-          echo "VERIFIED $ok · LEGACY_QUARANTINED $legacy · REJECTED $bad · FATAL $fatal"
+          echo "VERIFIED $ok · HELD_NO_CONTROL_PLANE_BANK $held_bank · LEGACY_QUARANTINED $legacy · REJECTED $bad · FATAL $fatal"
           echo "Reasons (recorded, not staged):"; tail -n +2 intake-rejections.tsv | cut -f1,2 | sort | uniq -c || true
           echo "verified=$ok" >> "$GITHUB_OUTPUT"
           [ "$fatal" -eq 0 ] || { echo "verifier could not decide $fatal run(s) safely; failing closed"; exit 1; }
@@ -133,6 +229,7 @@ jobs:
           path: |
             intake-rejections.tsv
             legacy-intake.txt
+            unmatched-trusted-bank.txt
           if-no-files-found: warn
           retention-days: 30
 

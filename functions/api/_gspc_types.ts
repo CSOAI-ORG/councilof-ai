@@ -31,6 +31,12 @@ export interface AxisScore {
   //                               Absent fields are honest absence, never a zero.
   //   kind "declared-slot"      — the slot is published so the gap is public. No
   //                               measurement exists. status is UNMEASURED.
+  //   kind "measured-subject"  — a MEASURED axis in the subject family (first of its kind,
+  //                               2026-10-29): a frozen, sha-pinned method or bank and
+  //                               n_valid >= 30, over the subject class the axis names. No
+  //                               model fleet, so it joins no mean, no lid leader and no
+  //                               separation tally — but it IS measured, so unlike a declared
+  //                               slot it counts towards measured_axes.
   //   family "subject"   — the subject axes (2026-10-16), each applying to ONE subject
   //                        type named in applies_to. Declared slots until a frozen bank exists.
   family: "gspc" | "financial" | "subject";
@@ -40,7 +46,17 @@ export interface AxisScore {
   method_status?: "meets-rule" | `legacy: ${string}` | "no-method: declared slot" | "reviewed, not run";        // subject-family axes: the one subject type the axis measures
   method?: string; method_sha?: string; // declared-slot method reference (not a measurement)
   public_pages?: "HIDDEN_PENDING_OWNER_GO"; // present in the API, hidden from public pages until the owner's go
-  kind: "model-comparison" | "deterministic-facts" | "declared-slot";
+  kind: "model-comparison" | "deterministic-facts" | "declared-slot" | "measured-subject";
+
+  // A MEASURED subject axis carries the bank it measured, and that bank's sha256, so the
+  // number on the board points at bytes a reader can re-read. Absent on a declared slot,
+  // which has no bank because nothing was measured.
+  bank?: string;
+  bank_sha256?: string;
+
+  // The breakdown of a measured subject axis, by outcome, read off its bank. Counts, never
+  // a ranking and never a score: an outcome count says how many items landed there.
+  per_outcome?: Record<string, number>;
 
   // n is the size of whatever was actually measured (items, or instruments for a
   // deterministic-facts axis). 0 on a declared-slot axis means "nothing measured",
@@ -99,6 +115,15 @@ export interface AxisScore {
   // explicit data, not inferred from a content_id: a hash is not a signature.
   // Model-comparison axes use signed per-model cards instead and leave this absent.
   run_attestation?: "ED25519_SIGNED" | "CONTENT_ADDRESSED_UNSIGNED";
+
+  // -- subject-axis presence banks (added 2026-11-02) ------------------------
+  // Additive and optional. A subject axis is a measured subject bank: no fleet,
+  // no leader, no accuracy. "rate" is the fraction of the frozen frame meeting a
+  // declared presence bar. It is NOT accuracy and must never be aggregated as one.
+  rate?: number;
+  rate_scale?: "fraction";
+  rate_rule?: string;
+  frame_sha256?: string;
 
   // How to read a null in per_model. null and 0.0 are different facts (undefined vs
   // measured-zero) and an axis that carries both states which is which.

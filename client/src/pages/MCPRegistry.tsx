@@ -111,6 +111,12 @@ export default function MCPRegistry() {
               <p className="mt-1 text-gray-600">
                 <code className="text-xs">POST /mcp</code> exposes measure · verify · jail-probe · enter-arena for Cursor, Claude, and other agents.
               </p>
+              <a
+                href="/mcp/"
+                className="mt-2 inline-flex min-h-11 items-center text-emerald-700 underline decoration-emerald-300 underline-offset-4 hover:text-emerald-900"
+              >
+                Open the CSOAI MCP setup guide
+              </a>
             </div>
           </div>
         </div>
@@ -148,7 +154,7 @@ export default function MCPRegistry() {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={`Search ${registry.total} MCP tools…`}
+            aria-label="Search MCP tools" placeholder={`Search ${registry.total} MCP tools…`}
             className="pl-11 h-12 text-base"
           />
         </div>
@@ -178,9 +184,12 @@ export default function MCPRegistry() {
           {filtered.map((s) => (
             <Card key={s.slug} className="p-5 flex flex-col border hover:border-emerald-400 hover:shadow-md transition-all">
               <div className="flex items-start justify-between gap-2 mb-2">
-                {/* 2026-09-28: no /mcp/<slug> link. /mcp/* is the MCP server's Pages Function, which
-                    answers 404 for every catalogue slug, so each card linked twice to a dead page. */}
-                <h3 className="font-bold text-base leading-tight">{s.name}</h3>
+                {/* Human-readable catalogue details live under /mcps; /mcp/* is the MCP protocol endpoint. */}
+                <h3 className="font-bold text-base leading-tight">
+                  <Link href={`/mcps/${s.slug}`}>
+                    <span className="text-emerald-900 hover:text-emerald-700 hover:underline">{s.name}</span>
+                  </Link>
+                </h3>
                 {s.builtInHouse && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px] shrink-0">In-house</Badge>}
               </div>
               <p className="text-sm text-gray-600 leading-relaxed flex-1">{s.description}</p>

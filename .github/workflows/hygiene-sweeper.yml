@@ -1,0 +1,67 @@
+name: hygiene sweeper (supersede-close, green-mill auto-merge, branch GC)
+
+# Issue #3746 (owner-ruling 2026-11-02): the automation PR families were designed
+# "human merge is the only gate" and no human ever came — 17 mill landings sat unmerged
+# while daily probes superseded each other into conflicts. This workflow is the standing
+# replacement for that manual pass. What it does, in order:
+#   1. SUPERSEDE-CLOSE: a family with several open PRs keeps its newest; the rest are
+#      closed with a pointer (every run writes the same output paths).
+#   2. GREEN-MILL AUTO-MERGE: the newest open mill landing, with every check green and
+#      nothing pending, gets update-branch + `gh pr merge --squash --auto`. This is how
+#      the mill's measurement cards reach master again.
+#   3. BRANCH GC: closed unmerged family PRs older than 7 days lose their head branch.
+#
+# NEVER touches: drafts, [HOLD]-titled PRs, public-root/pending, art50-index/pending,
+# or any branch outside the four families. Dry-run is the default and prints the plan
+# without changing anything; apply is opt-in per dispatch, and the schedule runs dry-run
+# until the owner flips it (the mode lives in the env line below, one word to change).
+#
+# AUTH: jobs run with SNAPSHOT_PR_TOKEN (same secret catalog-trust-round.yml merges with).
+# A PAT matters twice: a PAT's push fires the required pull_request checks after
+# update-branch (GITHUB_TOKEN's does not — measured truth in bot-checks-sweeper.yml),
+# and a PAT-owned auto-merge satisfies protection the same way the owner's own merges do.
+
+on:
+  schedule:
+    - cron: "23 5,17 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "dry-run (default) prints the plan; apply executes it"
+        type: choice
+        required: false
+        default: dry-run
+        options: [dry-run, apply]
+
+permissions:
+  contents: write        # branch GC
+  pull-requests: write   # close, update-branch, auto-merge
+
+concurrency:
+  group: hygiene-sweeper
+  cancel-in-progress: false
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Sweep (scheduled runs apply; dispatches choose their mode)
+        env:
+          GH_TOKEN: ${{ secrets.SNAPSHOT_PR_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # 2026-11-03: the schedule now applies. Two dry-run validations passed first
+          # (workflow_dispatch 41440871103 and the 2026-11-02T23:53 schedule run — both
+          # SUCCESS, both planning exactly nothing over the live queue, which was the
+          # correct verdict). The rails were already fail-closed: families only, never
+          # drafts, never [HOLD], never the watcher-owned doors, never a merge with a
+          # failing or pending check. An apply-mode mistake closes a data PR that can be
+          # reopened (source datasets retain everything); the rails make one unlikely.
+          MODE="${{ github.event_name == 'schedule' && 'apply' || (inputs.mode || 'dry-run') }}"
+          node scripts/hygiene/sweeper.mjs --mode "$MODE"

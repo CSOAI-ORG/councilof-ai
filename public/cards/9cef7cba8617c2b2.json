@@ -1,0 +1,147 @@
+{
+  "card": {
+    "as_of": "2026-10-29T06:47:15Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:bIB01:avalanche",
+      "symbol": "bIB01",
+      "product": "Backed IB01 $ Treasury Bond 0-1yr",
+      "chain": "avalanche",
+      "chain_id": 43114,
+      "address": "0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "block": 98842955,
+      "block_hash": "0xbdc381b31884b053b98bb59fca9b93a0915a5c91c4404086173c58915614ab18",
+      "block_time": "2026-10-29T06:47:15Z",
+      "rpc": "api.avax.network",
+      "checked": {
+        "name": "Backed IB01 $ Treasury Bond 0-1yr",
+        "symbol": "bIB01",
+        "decimals": 18,
+        "totalSupply": "21000295821000000000000",
+        "isPaused": false,
+        "owner": "0x49754062e35f7591b93cc4f9915965be89643a65",
+        "sanctionsList": "0x40c57923924b5c5c5455c48d93317139addac8fb",
+        "pauser": "0x8768cda7a463dae1baa6b2500efb025ebd7ffc50",
+        "terms": "https://www.backedassets.fi/legal-documentation",
+        "eip1967_implementation": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+        "eip1967_admin": "0xf2057bdff8439dbffce073e14a9854945d5e5644"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "a3f4469076aaf2712e3332b5b16e37c23b45dcee91e8522e06d448e7c5babc88",
+        "bytes": 11205,
+        "url": "/archive/proofs/eip1186/a3f4469076aaf271.json",
+        "rpc": "avalanche-c-chain-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xd269697b4279ac0c88e8e9dca3ba6baaab8990de21a857ce85cd68efaac706f4",
+          "storageHash": "0x4a5123edb3e9be55fd8446bb653dd85fb51708b7f5156b5301fddbbbfab6d72c",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0xf2057bdff8439dbffce073e14a9854945d5e5644",
+            "nodes": 3
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 98842955 on avalanche, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9cef7cba8617c2b25beb78cd0e778c78ddfeb5c1843987195d606dd677846f1f",
+    "sig_ed25519": "9935a9df4448aa8caea74518d3c766bdb2968358f96866832a97e367e778fba0132c8b90890f83e835a5ad1331411f44238d38fe1246268c8884da2fba640201",
+    "source_urls": [
+      "https://api.avax.network/ext/bc/C/rpc",
+      "https://snowscan.xyz/token/0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "https://avalanche-c-chain-rpc.publicnode.com"
+    ],
+    "subject": "evm:bIB01:avalanche permission state at block 98842955",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:avalanche",
+      "coverage:permission-state",
+      "subject:bIB01"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "4168cfcebe78881c603a65962ae7c9a831ff6e92586985a91ae1c1b40f8abe8f",
+    "31ede512e8c9afa67e5bb6495d19b87deddd45a399d8efa2393eb5f36d77cc9c",
+    "bc8a44ace7d20b70ec9bf7129ab379637144b6aa15adb39e8399fcb742187c9b",
+    "0d45b1482df43517ed2700f6f6d40917f43322452f45730ed04d953159cf5047",
+    "faec165971c588214b23d391ac9ffc3a54a518d74ff8ce5270490c1eb7346d9f",
+    "af6725e5155837e36a9ee219a5af18238fcfb79de34402f35493a1558d03d742",
+    "44666dada14ccc082f9bd716911d1ebda6d69d45f1ec4e7ca66ba9ea01e32c34",
+    "cb3bebd03ee36e233aa893d0b515f26fb57dd25d38b1081f676cdd9c55380816",
+    "dcca4da05e145163e7e1bcc94127ffb275df8ed9a866ce5f1c111d3c8821131b"
+  ]
+}

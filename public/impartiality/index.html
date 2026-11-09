@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impartiality and independence — Council of AI</title>
+<meta name="description" content="What we measure, what we refuse to do, and how financial and other pressures on a measurement body are identified and mitigated.">
+<style>
+:root{--ink:#12161c;--mut:#5b6572;--line:#e3e7ec;--bg:#fbfcfd;--acc:#0b6b53;--warn:#8a4b00}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif}
+main{max-width:820px;margin:0 auto;padding:56px 24px 96px}
+h1{font-size:2rem;line-height:1.2;margin:0 0 8px;letter-spacing:-.02em}
+h2{font-size:1.15rem;margin:40px 0 12px;letter-spacing:-.01em}
+.lede{color:var(--mut);font-size:1.05rem;margin:0 0 28px}
+.meta{color:var(--mut);font-size:.86rem;border-top:1px solid var(--line);padding-top:14px;margin-top:48px}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.94rem}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
+code{background:#eef1f4;padding:1px 5px;border-radius:4px;font-size:.9em}
+.note{border-left:3px solid var(--acc);padding:10px 16px;background:#f2f8f6;margin:18px 0}
+a{color:var(--acc)}
+ul{padding-left:22px}
+ol{padding-left:22px}
+</style>
+</head>
+<body>
+<main>
+<h1>Impartiality and independence</h1>
+<p class="lede">A measurement body is only worth what its independence is worth. This page states the separations we hold, the pressures we have identified, and what we do about each.</p>
+
+<div class="note">
+<strong>One sentence.</strong> We measure; we do not certify, accredit, approve or endorse — and no payment changes a state, a rank, a delay or a correction.
+</div>
+
+<h2>The five separations</h2>
+<p>These are load-bearing. Where two of them are collapsed, the evidence stops meaning anything.</p>
+<ol>
+<li><strong>Identity ≠ authority.</strong> Knowing which agent acted does not establish that it was entitled to act.</li>
+<li><strong>Authority ≠ execution.</strong> A delegation in force is not proof that the delegated act occurred.</li>
+<li><strong>Execution ≠ outcome.</strong> A successful API call is never treated as proof of a real-world result.</li>
+<li><strong>Outcome ≠ compliance.</strong> A measured behaviour is not a conformity assessment.</li>
+<li><strong>Signature ≠ truth.</strong> A signature states who signed which bytes. It never states that the content is true.</li>
+</ol>
+
+<h2>What we will not do</h2>
+<table>
+<tr><th>Refusal</th><th>Why</th></tr>
+<tr><td>Certify, accredit, approve or endorse a product, model or organisation</td><td>Those are acts reserved to accredited bodies and regulators. We are neither.</td></tr>
+<tr><td>Issue or cover a third-party attestation (for example SOC 2, ISO certification)</td><td>Only a licensed or accredited issuer can. A measurement mark cannot stand in for one.</td></tr>
+<tr><td>Measure our own products as part of a comparison</td><td>Where our own models appear in a run, they are excluded before comparison and never counted in it.</td></tr>
+<tr><td>Advise on the thing we measure, for a fee</td><td>Consulting on a subject you also score is the classic route to capture.</td></tr>
+<tr><td>Remove or rewrite a correction</td><td>The correction is the record. Annotations are added; history is not deleted.</td></tr>
+<tr><td>Let a payer choose a state, a rank, a delay or a date</td><td>Commercial boundary, published in the <a href="/governance/correction-policy.json">correction policy</a>.</td></tr>
+</table>
+
+<h2>Pressures we have identified, and what we do</h2>
+<table>
+<tr><th>Pressure</th><th>How it shows up</th><th>Mitigation in force</th></tr>
+<tr><td>Financial</td><td>A payer or funder expects a favourable result, or expects a competitor's result delayed.</td><td>No payer may buy a state, rank, delay or correction removal. Revenue is published in aggregate at <a href="/api/revenue">/api/revenue</a>; no payer is named without consent.</td></tr>
+<tr><td>Advocacy</td><td>A body wants to be measured only on the axes where it looks good.</td><td>Axes are published in full, including unmeasured ones. A subject may not select the axes it is measured on.</td></tr>
+<tr><td>Familiarity</td><td>The same reviewer and the same vendor for years.</td><td>Adjudicators declare interests annually and are reassigned on conflict. See the <a href="/governance/conflicts-register.json">conflicts register</a>.</td></tr>
+<tr><td>Intimidation</td><td>Threat of legal action intended to withdraw a true record.</td><td>A published <a href="/complaints/">complaints route</a> with reasons; a withdrawal must state its reason and its date. A withdrawal without a reason is a disappearance, not a correction.</td></tr>
+<tr><td>Competition</td><td>Pressure to disparage a rival of a client.</td><td>No comparative claim is published that is not a measured result with its frame, n and date. Absence of evidence is never published as evidence of absence.</td></tr>
+<tr><td>Self-interest</td><td>The measurer is also the measured.</td><td>Own models excluded from comparisons. First-party claims are held to the same statement rules as third-party claims.</td></tr>
+</table>
+
+<h2>Funding</h2>
+<p>Revenue is settled, non-self, and published in aggregate: distinct paying wallets, number of settlements, and settled amount, with zero-value and self settlements recorded but never counted as buyers. We do not publish a price on the board — metered amounts appear only in a payment challenge.</p>
+<p>Where funding is grant or membership based, it is disclosed in aggregate in the annual report. No funder has editorial control over a state.</p>
+
+<h2>What we cannot claim</h2>
+<p>We are not accredited to ISO/IEC 17020 or ISO/IEC 17025, and nothing on this site should be read as a claim that we are. Those standards describe how an inspection or testing body organises itself; this page borrows their <em>principles</em> — impartiality, confidentiality, complaints, management review — because they are the right principles, not because we hold a certificate.</p>
+<p>Where our method maps to a framework (EU AI Act, NIST AI RMF, ISO/IEC 42001), the mapping is published as <strong>relevance metadata</strong>. It is not a conformity assessment, and it does not establish that any requirement is met. EU AI Act Articles 14, 15 and 72 apply from 2 December 2027; evidence published before then is readiness, not compliance.</p>
+
+<h2>How to challenge our independence</h2>
+<p>If you believe a decision was influenced by a financial or personal interest, use the <a href="/complaints/">complaints route</a> and say so explicitly. Independence complaints are handled by a reviewer with no involvement in the original decision, and the outcome is published in the same aggregate as every other complaint.</p>
+
+<div class="meta">
+Part of the <a href="/standards/house-standard/">House Standard</a>. Companion machine-readable records: <a href="/governance/authority-model.json">authority-model.json</a> · <a href="/governance/committee-registry.json">committee-registry.json</a> · <a href="/governance/correction-policy.json">correction-policy.json</a> · <a href="/governance/conflicts-register.json">conflicts-register.json</a>. Measurement is not certification.
+</div>
+</main>
+</body>
+</html>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation, useSearch } from "wouter";
 import {
   BookOpenCheck,
@@ -31,6 +32,7 @@ import DashboardPane, { hasPane, paneLabel } from "@/components/DashboardPane";
 import { labelForViewPath } from "@/lib/viewLabel";
 import DashboardWorkspace, { SECTION_ACTIONS_ID } from "@/components/DashboardWorkspace";
 import DashboardAccountMenu from "@/components/DashboardAccountMenu";
+import { LanguagePicker } from "@/components/LanguagePicker";
 import CorpusChip from "@/components/CorpusChip";
 import { Header } from "@/components/Header";
 import {
@@ -86,9 +88,24 @@ export function dashboardActiveLabel(activeTab: string, search: string): string 
 }
 
 /**
- * The global menu: the seven sections in labelled groups (Measure, Build, Learn, Markets,
- * Accountability), with the active section's panes nested under it. Shared by the desktop sidebar
- * and the mobile drawer. Grouping adds no section; the sections stay DASHBOARD_NAV_GROUPS.
+ * Menu chrome strings, through i18next. English text from the data files is always
+ * the fallback, so a locale missing a key can never render an empty label.
+ */
+function MenuTitle() {
+  const { t } = useTranslation();
+  return <>{t("dashboard.title", "Menu")}</>;
+}
+
+function MenuTagline() {
+  const { t } = useTranslation();
+  return <>{t("dashboard.tagline", "Independent AI measurements, on request")}</>;
+}
+
+/**
+ * The global menu: plainly named sections with the active section's panes nested under
+ * it. Shared by the desktop sidebar and the mobile drawer. Grouping adds no section; the
+ * sections stay DASHBOARD_NAV_GROUPS. Labels localise through dashboard.groups.<id>.*
+ * (English fallback), keyed by id — never by translated string.
  */
 function SectionLinks({
   activeGroup,
@@ -99,6 +116,7 @@ function SectionLinks({
   activeTab: string;
   onNavigate?: () => void;
 }) {
+  const { t } = useTranslation();
   const byId = new Map(DASHBOARD_NAV_GROUPS.map((g) => [g.id, g]));
   // Recently visited: the last three panes this session opened, other than the one on screen.
   const recent = [...new Map(useActivity().filter((a) => a.kind === "pane" && a.tabId && a.tabId !== activeTab).map((a) => [a.tabId!, a])).values()].slice(0, 3);
@@ -106,7 +124,7 @@ function SectionLinks({
     <div className="space-y-4">
       {recent.length ? (
         <div role="group" aria-label="Recently visited">
-          <p className="px-3 pb-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-slate-600">Recent</p>
+          <p className="px-3 pb-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-slate-600">{t("dashboard.recent", "Recent")}</p>
           <ul className="space-y-0.5">
             {recent.map((a) => (
               <li key={a.tabId}>
@@ -125,7 +143,9 @@ function SectionLinks({
       {MENU_GROUPS.map((mg) => (
         <div key={mg.heading ?? "primary"} role="group" aria-label={mg.heading ?? "Ask"}>
           {mg.heading ? (
-            <p className="px-3 pb-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-slate-600">{mg.heading}</p>
+            <p className="px-3 pb-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-slate-600">
+              {t(`dashboard.headings.${mg.heading.toLowerCase()}`, mg.heading)}
+            </p>
           ) : null}
           <ul className="space-y-1">
             {mg.sections.map((id) => {
@@ -154,7 +174,7 @@ function SectionLinks({
                       )}
                       aria-hidden="true"
                     />
-                    <span className="truncate">{group.label}</span>
+                    <span className="truncate">{t(`dashboard.groups.${group.id}.label`, group.label)}</span>
                   </Link>
                 </li>
               );
@@ -185,11 +205,12 @@ function SupportLinkItem({ link }: { link: SupportLink }) {
 
 /** Support and resources: one disclosure at the foot of the menu. Pages and machine files only. */
 function SupportMenu() {
+  const { t } = useTranslation();
   return (
     <details className="group/support rounded-xl border border-border bg-white" data-testid="ws-support">
       <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 px-3 text-sm font-semibold text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700">
         <LifeBuoy className="h-4 w-4 text-slate-500" aria-hidden="true" />
-        Support and resources
+        {t("dashboard.support", "Support and resources")}
       </summary>
       <ul className="space-y-0.5 border-t border-border p-2">
         {SUPPORT_LINKS.filter((l) => !l.forDevelopers).map((l) => (
@@ -197,7 +218,7 @@ function SupportMenu() {
         ))}
       </ul>
       <p className="border-t border-border px-4 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-        For developers
+        {t("dashboard.forDevelopers", "For developers")}
       </p>
       <ul className="space-y-0.5 px-2 pb-2" aria-label="For developers">
         {SUPPORT_LINKS.filter((l) => l.forDevelopers).map((l) => (
@@ -356,11 +377,12 @@ export default function DashboardLayout({
           <aside
             ref={desktopNavigationRef}
             className="flex w-60 shrink-0 flex-col border-r border-emerald-950/10 bg-white"
-            aria-label="Council OS sections"
+            aria-label="Menu"
           >
             <div className="px-5 pb-3 pt-5">
-              <p className="text-base font-black tracking-tight text-slate-900">Council OS</p>
-              <p className="mt-0.5 text-xs text-slate-600">Independent AI measurements, on request</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Council OS</p>
+              <p className="mt-0.5 text-base font-black tracking-tight text-slate-900"><MenuTitle /></p>
+              <p className="mt-0.5 text-xs text-slate-600"><MenuTagline /></p>
             </div>
             <nav
               id={isSmall ? undefined : NAV_ID}
@@ -372,7 +394,8 @@ export default function DashboardLayout({
                 <SupportMenu />
               </div>
             </nav>
-            <div className="flex items-center justify-between gap-2 border-t border-border p-3">
+            <div className="flex flex-col gap-2 border-t border-border p-3">
+              <LanguagePicker compact />
               <DashboardAccountMenu />
             </div>
           </aside>
@@ -398,7 +421,7 @@ export default function DashboardLayout({
               className="fixed inset-y-0 left-0 z-[61] flex w-[min(20rem,86vw)] flex-col bg-white shadow-2xl"
             >
               <div className="flex h-14 items-center justify-between border-b border-border px-4">
-                <p className="text-sm font-semibold text-slate-900">Council OS</p>
+                <p className="text-sm font-semibold text-slate-900"><MenuTitle /></p>
                 <button
                   type="button"
                   aria-label="Close workspace navigation"
@@ -425,7 +448,8 @@ export default function DashboardLayout({
                   <SupportMenu />
                 </div>
               </nav>
-              <div className="border-t border-border p-3">
+              <div className="flex flex-col gap-2 border-t border-border p-3">
+                <LanguagePicker compact />
                 <DashboardAccountMenu />
               </div>
             </div>

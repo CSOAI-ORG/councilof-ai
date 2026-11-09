@@ -33,7 +33,7 @@ def build_og_tags(title: str, description: str, url: str) -> str:
         f'\n<meta property="og:description" content="{description}" />'
         f'\n<meta property="og:type" content="website" />'
         f'\n<meta property="og:url" content="{url}" />'
-        f'\n<meta property="og:image" content="https://councilof.ai/og-default.png" />'
+        f'\n<meta property="og:image" content="https://councilof.ai/og-image.png" />'
         f'\n<meta name="twitter:card" content="summary_large_image" />'
     )
 

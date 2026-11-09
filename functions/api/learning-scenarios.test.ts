@@ -110,19 +110,23 @@ const regulation = {
 };
 
 function stub(
-  sources: { board?: unknown; findings?: unknown; regulation?: unknown } = {},
+  sources: { board?: unknown; findings?: unknown; regulation?: unknown; dailyIndex?: unknown } = {},
 ) {
-  const calls: { method: string; path: string }[] = [];
+  const calls: { method: string; path: string; redirect?: RequestRedirect }[] = [];
   const values: Record<string, unknown> = {
     "/api/gspc": sources.board === undefined ? board() : sources.board,
     "/signed/findings_index.json":
       sources.findings === undefined ? findings() : sources.findings,
     "/api/regulation":
       sources.regulation === undefined ? regulation : sources.regulation,
+    "/reports/daily-signal/index.json": sources.dailyIndex ?? null,
   };
   vi.stubGlobal(
     "fetch",
     vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+      // Cloudflare Workers throws before sending any request for this mode.
+      // Node's fetch accepts it, so a plain Response stub hid the live outage.
+      if (init?.redirect === "error") throw new TypeError("Unsupported redirect mode: error");
       const url = new URL(
         typeof input === "string"
           ? input
@@ -130,8 +134,9 @@ function stub(
             ? input.href
             : input.url,
       );
-      calls.push({ method: init?.method ?? "GET", path: url.pathname });
+      calls.push({ method: init?.method ?? "GET", path: url.pathname, redirect: init?.redirect });
       const value = values[url.pathname];
+      if (value instanceof Response) return value;
       return value === null
         ? new Response("unavailable", { status: 503 })
         : Response.json(value);
@@ -147,9 +152,60 @@ async function get(path = "/api/learning-scenarios") {
   return { response, text: await response.text() };
 }
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); });
 
 describe("GET /api/learning-scenarios", () => {
+  it("loads source learning with Workers-supported manual redirects", async () => {
+    const calls = stub();
+    const { response, text } = await get("/api/learning-scenarios?axis=governance");
+    expect(response.status).toBe(200);
+    expect(JSON.parse(text).state).toBe("READY");
+    expect(calls).toHaveLength(4);
+    expect(calls.every(call => call.redirect === "manual")).toBe(true);
+  });
+
+  it("rejects a redirected required source without following its location", async () => {
+    const calls = stub({ board: new Response(null, {
+      status: 302, headers: { location: "https://external.example/board" },
+    }) });
+    const { response, text } = await get();
+    expect(response.status).toBe(503);
+    expect(JSON.parse(text).errors).toEqual(["GSPC_SOURCE_UNAVAILABLE_OR_INVALID"]);
+    expect(calls.every(call => call.redirect === "manual")).toBe(true);
+    expect(calls.map(call => call.path)).not.toContain("/board");
+  });
+
+  const dailyIndex = () => ({
+    schema: "csoai.daily-signal-index/0.1", report_count: 1,
+    latest_report_day: "2026-11-06", latest_report_id: "d".repeat(64), signed: false,
+    reports: [{ report_day: "2026-11-06", report_id: "d".repeat(64),
+      json_path: "/reports/daily-signal/2026-11-06.json", markdown_path: "/reports/daily-signal/2026-11-06.md",
+      counts: { events_in_horizon: 8, mapped_events: 0, unmapped_events: 8 }, private_note: "PRIVATE_SENTINEL" }],
+  });
+
+  it("adds optional free report metadata without reading report bodies or granting authority", async () => {
+    vi.useFakeTimers(); vi.setSystemTime(new Date("2026-11-07T03:00:00Z"));
+    const calls = stub({ dailyIndex: dailyIndex() });
+    const { response, text } = await get();
+    expect(response.status).toBe(200);
+    expect(JSON.parse(text).daily_briefing).toMatchObject({ state: "AVAILABLE", report_day: "2026-11-06",
+      source_integrity: "INDEX_DECLARATION_ONLY", grants_authority: false, model_training: false,
+      counts: { events_in_horizon: 8, mapped_events: 0, unmapped_events: 8 }, freshness: { age_days: 1 } });
+    expect(calls.map(c => c.path)).toContain("/reports/daily-signal/index.json");
+    expect(calls.some(c => /2026-11-06\.(json|md)$/.test(c.path))).toBe(false);
+    expect(text).not.toContain("PRIVATE_SENTINEL");
+  });
+
+  it("keeps existing source learning available when optional report metadata is absent or invalid", async () => {
+    for (const daily of [null, { ...dailyIndex(), latest_report_id: "bad" }]) {
+      stub({ dailyIndex: daily });
+      const { response, text } = await get();
+      expect(response.status).toBe(200);
+      expect(JSON.parse(text).daily_briefing.state).toBe("UNAVAILABLE");
+      expect(JSON.parse(text).scenario_count).toBe(22);
+    }
+  });
+
   it("builds deterministic 22-axis scenarios without collapsing evidence classes", async () => {
     const calls = stub();
     const first = await get();
@@ -386,4 +442,35 @@ describe("the board's cardinality is followed, not asserted", () => {
     };
     if (boardAxesForTest) expect(boardAxesForTest(lying)).toBeNull();
   });
+
+  it("accepts the live board's declared subject family without weakening row or total checks", async () => {
+    const current = boardWith(33);
+    current.axes = current.axes.map((axis, index) => index < 22 ? axis : {
+      ...axis,
+      axis: `subject-slot-${index}`,
+      family: "subject",
+      kind: "declared-slot",
+      applies_to: "declared-subject-class",
+      status: "UNMEASURED",
+      n: 0,
+    });
+    current.totals = { axes: 33, measured_axes: 22 };
+    stub({ board: current });
+    const { response, text } = await get();
+    expect(response.status).toBe(200);
+    const body = JSON.parse(text);
+    expect(body.canonical_axis_count).toBe(33);
+    expect(body.scenario_count).toBe(33);
+    expect(body.scenarios[22].board_measurement).toMatchObject({
+      classification: "BOARD_MEASUREMENT_CONTEXT",
+      family: "subject",
+      kind: "declared-slot",
+      status: "UNMEASURED",
+      n: 0,
+    });
+    current.totals.axes = 32;
+    stub({ board: current });
+    expect((await get()).response.status).toBe(503);
+  });
 });
+

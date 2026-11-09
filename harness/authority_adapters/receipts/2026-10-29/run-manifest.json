@@ -1,0 +1,287 @@
+{
+  "observed_start": "2026-10-29T05:10:31.948877+00:00",
+  "observed_end": "2026-10-29T05:10:37.376698+00:00",
+  "source_sha256": {
+    "harness/authority_adapters/__init__.py": "73670dfb90fa468cd8e9100501a11b0eca59d83c46b4d85788e2792d1e812017",
+    "harness/authority_adapters/conftest.py": "615a8eac315cf0f1bcf53d96ead79eeee6091876ae98fac7bc0cc304ae82893f",
+    "harness/authority_adapters/core.py": "3775e4f3f64d5b595de6789b70ccc23b6a0f867b997910abc95db6c9e466d4b1",
+    "harness/authority_adapters/openai_adapter.py": "1282341a2a2e8898bf169f0b3cae48bdbac14bec9137064284da205f6074cf2e",
+    "harness/authority_adapters/retain_checks.py": "4f3d903360b1ef2303d5e89be154d443b1acc3f457109dd9b97941d7b53b1ed9",
+    "harness/authority_adapters/strands_adapter.py": "584bbf551ff2e7fec90e19b4cf46b649e74aba7242f44d87301140a434df4715",
+    "harness/authority_adapters/test_openai.py": "34569441d035db9a1908218d427219a18f05ff1aad2f50ff22df460ccf1fbeaa",
+    "harness/authority_adapters/test_strands.py": "4a73514dc3caa54a5ae673df1d94cb4aa3d0c8ed1f91a66d7994b7f7f37211fd",
+    "harness/authority_adapters/requirements-test.txt": "29ae3be2e74a112bc0fd8ffbd8f3a6b82778e9782e20aed5e5199bcaf307d029",
+    "packages/evidence-fabric/event.py": "144c6a36d462e21283ab9b34a6469bb32c75021da56133813d5a848412270533",
+    "packages/evidence-fabric/schema/evidence-event-0.1.schema.json": "78ce607bf7d025173f5d59b9e9cd2d55e9b72f12964a8b2af24d4cbea4e9f561"
+  },
+  "source_unchanged": true,
+  "versions": {
+    "strands-agents": "1.62.0",
+    "openai-agents": "0.24.0",
+    "openai": "3.41.0",
+    "pytest": "9.2.0",
+    "rfc8785": "0.1.4",
+    "jsonschema": "4.26.0"
+  },
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "acceptance": {
+    "returncode": 0,
+    "cases": [
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_real_review_resume_and_independent_effect_readback",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_reject_is_cancellation_without_authority_consumption",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_ui_approval_does_not_override_host_denial[unissued]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_ui_approval_does_not_override_host_denial[expired]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_ui_approval_does_not_override_host_denial[revoked]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_ui_approval_does_not_override_host_denial[wrong_tenant]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_ui_approval_does_not_override_host_denial[wrong_epoch]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_ui_approval_does_not_override_host_denial[wrong_audience]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_ui_approval_does_not_override_host_denial[wrong_resource]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_ui_approval_does_not_override_host_denial[wrong_version]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_argument_editing_hook_is_checked_at_dispatch[False]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_argument_editing_hook_is_checked_at_dispatch[True]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_after_hook_retry_cannot_repeat_consumed_effect",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_later_tool_selection_hook_cannot_substitute_unpinned_instance",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_outer_middleware_mutation_is_checked_after_hooks",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_cancellation_during_host_check_blocks_effect",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_mutation_while_host_check_waits_is_rejected",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_rewritten_result_does_not_manufacture_observed_effect",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_real_pause_serialized_resume_and_independent_readback",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_reject_prevents_dispatch_even_with_valid_host_lease",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_sdk_approval_does_not_override_host_denial[unissued]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_sdk_approval_does_not_override_host_denial[expired]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_sdk_approval_does_not_override_host_denial[revoked]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_sdk_approval_does_not_override_host_denial[wrong_tenant]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_sdk_approval_does_not_override_host_denial[wrong_epoch]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_sdk_approval_does_not_override_host_denial[wrong_audience]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_sdk_approval_does_not_override_host_denial[wrong_resource]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_sdk_approval_does_not_override_host_denial[wrong_version]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_old_serialized_state_cannot_replay_consumed_authority",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_input_guardrail_stops_before_host_consumption",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_output_guardrail_rejection_does_not_erase_completed_effect",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_ambiguous_or_malformed_arguments_fail_before_host[{\"text\":\"one\",\"text\":\"two\"}]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_ambiguous_or_malformed_arguments_fail_before_host[{\"text\":NaN}]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_ambiguous_or_malformed_arguments_fail_before_host[[]]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_ambiguous_or_malformed_arguments_fail_before_host[null]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_ambiguous_or_malformed_arguments_fail_before_host[{broken]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_changed_arguments_require_fresh_exact_host_scope[False]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_changed_arguments_require_fresh_exact_host_scope[True]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_context_mutation_during_authorization_blocks_dispatch",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_sdk_start_hook_mutation_is_rejected_before_host_consumption",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_non_boolean_host_result_does_not_dispatch[False]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_non_boolean_host_result_does_not_dispatch[None]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_non_boolean_host_result_does_not_dispatch[1]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_non_boolean_host_result_does_not_dispatch[true]",
+        "status": "passed"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_non_boolean_host_result_does_not_dispatch[answer4]",
+        "status": "passed"
+      }
+    ],
+    "log_sha256": "4159daa25c98e7ca14bc9d39ade2e3716f5e0c5a85a258c44181af0aae10bafb",
+    "junit_sha256": "08339591a9582f23e3117d8f28864b60656bc88060f97962488f724b5ccf4d30"
+  },
+  "bypass_control": {
+    "returncode": 1,
+    "cases": [
+      {
+        "class": "harness.authority_adapters.test_strands",
+        "name": "test_ui_approval_does_not_override_host_denial[unissued]",
+        "status": "failure"
+      },
+      {
+        "class": "harness.authority_adapters.test_openai",
+        "name": "test_sdk_approval_does_not_override_host_denial[unissued]",
+        "status": "failure"
+      }
+    ],
+    "log_sha256": "755fbd47554c9bbd9bb98827652901e2c45cd5a1f53734737d66bf3061bf9e45",
+    "junit_sha256": "a562984503a09dcdf2c446ee7dbb28e808db697c425c105f7c6e06df8669366b"
+  },
+  "mutated_core_sha256": "beb66dd347cadbdbc72552aa7b08b64f27fd6eaccdb3ced3f342bcbc4222020d",
+  "bypass_effect_readback": [
+    {
+      "text": "reviewed"
+    },
+    {
+      "text": "reviewed"
+    }
+  ],
+  "control_detected": true,
+  "state": "CONSISTENT"
+}

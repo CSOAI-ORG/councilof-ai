@@ -5,30 +5,30 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/2026-09-30/tool_drift/record.json",
-   "sha256": "c0ef83eeb2d00d058b5ab6f3ecd0ca7f670278fd39a996d202d42a20f19078c0",
+   "path": "measurement-capsules/v0.2/2026-10-24/tool_drift/record.json",
+   "sha256": "5074ec35d880d5c927cc3c07df5e968c6858ad1ac2f1702e5cefa501ee353b0b",
    "schema": "csoai.measurement-capsule-batch/0.2",
-   "as_of": "2026-09-30T08:16:18Z"
+   "as_of": "2026-10-24T08:30:29Z"
   },
-  "merkle_root": "3d12f23d6a96689128717534436d69f4f6e21c475c5311a6c55eb4787969e655",
-  "n_capsules": 497,
+  "merkle_root": "3d9b8698ead5611d1b8246f76d4b53655ae8919b7a8993acb01bdba3b98a8f7e",
+  "n_capsules": 496,
   "states": {
-   "TOOLS_ADDED": 17,
-   "TOOLS_ADDED+TOOLS_REMOVED": 3,
-   "TOOLS_REMOVED": 2,
-   "UNCHANGED_AT_NAME_GRANULARITY": 418,
-   "UNCHECKABLE": 57
+   "TOOLS_ADDED": 63,
+   "TOOLS_ADDED+TOOLS_REMOVED": 8,
+   "TOOLS_REMOVED": 3,
+   "UNCHANGED_AT_NAME_GRANULARITY": 346,
+   "UNCHECKABLE": 76
   },
-  "capsules_sha256": "d11db3e6b89d98c9577aff5c41c1aeb8674f94b37f34a95406fb7454a082e35a",
+  "capsules_sha256": "03d3cd4d3788542fa443bf1243878fff7538f608b6517d657df8e4af53c08297",
   "adapter": "tool_drift",
   "kind": "measurement.tool_drift"
  },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "a1b7166785a6dc00e407e4090baf4e03ef2d7ba7e24109ac5ec8774b4fef9e4b53603f2b5268b19590305ffb8c244759a2476dfa1dc9ebdcee9cec067823fd0d",
-  "payload_sha256": "419348d0489d6223ca9d8c9bbdb891639df53799bc5a5028065a9ddb714a3d3c",
-  "signed_at": "2026-09-30T08:16:26.359Z"
+  "sig_ed25519": "3b35c15454bccae8973ebbb71000519a4f6306f551c71d889f67bf237b6142a8e283d96dd63eba8afd1e1e28a85d85c6c699c0221b34bfe6f24107f952317d0f",
+  "payload_sha256": "c9a4df03b761673b19324dea8825e18a5852426abc57ea218669e9946b21b5b1",
+  "signed_at": "2026-10-24T08:30:31.459Z"
  },
  "local_verification": {
   "result": "VERIFIES",

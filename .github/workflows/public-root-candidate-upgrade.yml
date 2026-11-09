@@ -95,6 +95,11 @@ jobs:
           ref: public-root/pending
           fetch-depth: 0
 
+      - uses: actions/setup-node@v4
+        if: steps.candidate.outputs.exists == 'true'
+        with:
+          node-version: 20
+
       - uses: actions/setup-python@v5
         if: steps.candidate.outputs.exists == 'true'
         with:
@@ -128,12 +133,16 @@ jobs:
           # where it was, which would reconcile the candidate against whichever master the
           # checkout happened to see.
           git fetch origin +refs/heads/master:refs/remotes/origin/master
-          if [ -f scripts/root_candidate_reconcile.py ]; then
-            reconcile=scripts/root_candidate_reconcile.py
-          else
-            reconcile=/tmp/root_candidate_reconcile.py
-            git show origin/master:scripts/root_candidate_reconcile.py > "$reconcile"
-          fi
+          # The TOOL is ALWAYS taken from master, even when the candidate's tree has a copy.
+          # The candidate's copy is whatever was on the branch when it was last merged, and
+          # the tool's behaviour is part of what decides a merge: on 2026-10-29 the tool
+          # learned that a re-stamped artefact resolves to master's bytes and master's proof,
+          # and the candidate's stale copy would have failed closed on the SBOM instead.
+          # A stale tool is a silent wrong answer. The comment above states the intent —
+          # "the TOOL is taken from master; the TREE it works on is the candidate's" — and
+          # this is that comment made true.
+          reconcile=/tmp/root_candidate_reconcile.py
+          git show origin/master:scripts/root_candidate_reconcile.py > "$reconcile"
           # The merge, the derived-view conflict resolution and the rebuild order live in
           # that script, which has a --selftest that proves each failure goes red. The
           # logic is not inline shell here, because inline shell in the root path is
@@ -213,10 +222,46 @@ jobs:
           # llms.txt, so the candidate could not pass the gate and could not merge.
           # Regenerate the views from the manifest just written.
           node scripts/llms-txt.mjs
+          # The llms views quote the manifest's counts and as_of, so rebuilding the
+          # manifest without rebuilding them leaves the views one cycle stale.
+          # Regenerate the views from the manifest just written, then CHECK the
+          # manifest-derived section against it: --timestamps-only compares the
+          # timestamp section of the views against the manifest without fetching
+          # a board and without writing, so a stale as_of is caught here rather
+          # than in the candidate's next gate run.
+          node scripts/llms-txt.mjs --timestamps-only --check
+          # public/reports/* is DERIVED from the tree as well, and it is registered in
+          # docs/operations/PRODUCERS.json, so pr-gates' producers-check compares its
+          # committed output against its producer and fails closed when the bytes move
+          # without a rebuild. The candidate rebuilt the proof bytes, so it disagreed with
+          # its producer and the candidate could not pass the gate. Measured on head
+          # 33c16eea, before the new leaf existed: "axis-reports --check: 2 stale path(s)
+          # under public/reports". Regenerate it from the bytes in this commit, the same
+          # way the manifest and the llms views are regenerated.
+          #
+          # The SBOM is NOT regenerated here, and that is deliberate. The SBOM is STAMPED:
+          # public/interop/sbom-councilof-ai.json has a sibling
+          # public/interop/sbom-councilof-ai.json.ots that proves those exact bytes.
+          # scripts/gen_sbom.py embeds a generation timestamp and the generation commit, so
+          # every run produces different bytes and invalidates the inherited proof.
+          # Measured 2026-10-29: this step regenerated the SBOM, the candidate's
+          # stamped-bytes check went red with "STAMPED BYTES CHANGED WITHOUT A NEW PROOF:
+          # public/interop/sbom-councilof-ai.json now hashes to 84b4968f..., but
+          # public/interop/sbom-councilof-ai.json.ots still proves 33642026...", and the
+          # candidate could not merge.
+          #
+          # A stamped file must not be regenerated in place. The candidate carries master's
+          # stamped SBOM forward unchanged — the reconcile step above merges master into the
+          # candidate, and a re-stamped artefact resolves to master's bytes AND master's
+          # proof — so those bytes still match the proof beside them. Re-stamping is a
+          # separate, explicit act: regenerate the SBOM, mint a fresh proof for it, and
+          # commit both together. The SBOM is therefore not added to the commit below.
+          node scripts/build-axis-reports.mjs
           git add public/interop/ots
           git add public/interop/root-*.json.ots
           git add public/interop/root-witness-*.json public/interop/root-witness-pointer.json
           git add public/llms.txt public/llms-full.txt
+          git add public/reports
           git add public/interop/stablecoin-universe-2026-09/readiness.json public/archive/index.json
           if ! git diff --cached --quiet; then
             git commit -m "public-root: upgrade exact candidate to Bitcoin-confirmed"

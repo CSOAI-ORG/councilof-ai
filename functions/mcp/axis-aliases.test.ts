@@ -211,7 +211,12 @@ describe("get_axis preserves per-axis measurement-time provenance", () => {
     const rows = await boardAxes();
     expect(rows.length).toBeGreaterThan(0);
     expect(new Set(rows.map((row) => row.measurement_time?.state))).toEqual(
-      new Set(["EXACT", "DAY", "NOT_AFTER", "UNCHECKABLE"]),
+      new Set([
+        "EXACT",
+        "DAY",
+        "NOT_AFTER",
+        ...(rows.some((r) => r.status === "UNMEASURED") ? ["UNCHECKABLE"] : []),
+      ]),
     );
     serve(rows);
     for (const row of rows) {

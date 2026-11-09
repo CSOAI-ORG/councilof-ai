@@ -259,11 +259,95 @@ test.describe('Article 50 — Transparency Passport', () => {
 
 // ─── 7. GLOBE / SOVEREIGN ───
 test.describe('Globe & Sovereign Surfaces', () => {
+  // 2026-11-02 consolidation: /globe serves WorldGlobe again (it had drifted to a bare redirect
+  // into the static globe3d.html). Assert the restored page's own heading, not just body length.
   test('WorldGlobe page (/globe) renders', async ({ page }) => {
     await page.goto('/globe', { waitUntil: 'networkidle' });
-    await page.waitForTimeout(1500); // MapLibre takes time
+    await page.waitForTimeout(1500); // Cesium iframe + SVG globe take time
     const body = (await page.textContent('body')) || '';
     expect(body.length).toBeGreaterThan(100);
+    expect(body).toMatch(/AI governance, layered on the world/);
+  });
+
+  // 2026-11-02 consolidation: the map pages are tabs of one World maps page (/map).
+  test('World maps page (/map) tabs render and switch', async ({ page }) => {
+    await page.goto('/map', { waitUntil: 'networkidle' });
+    await expect(page.getByTestId('world-tab-bridges')).toBeVisible();
+    await expect(page.getByTestId('world-panel-bridges')).toBeVisible();
+    await page.getByTestId('world-tab-regions').click();
+    await expect(page).toHaveURL(/tab=regions/);
+    await expect(page.getByTestId('world-panel-regions')).toBeVisible();
+    await page.getByTestId('world-tab-risk').click();
+    await expect(page).toHaveURL(/tab=risk/);
+    await expect(page.getByTestId('world-panel-risk')).toBeVisible();
+    // The worked-example honesty note must ship with the risk tab.
+    await expect(page.getByTestId('world-panel-risk')).toContainText(/worked example/i);
+  });
+
+  // P6 accessibility pass (2026-11-02): the tabs follow the WAI-ARIA tabs pattern —
+  // role=tablist/tab/tabpanel, aria-selected (not just aria-current), panels labelled by their
+  // tab, roving tabIndex, and Arrow/Home keys move selection and focus together.
+  test('World maps tabs follow the ARIA tabs pattern (roles, selection, keyboard)', async ({ page }) => {
+    await page.goto('/map?tab=bridges', { waitUntil: 'networkidle' });
+    const tablist = page.getByRole('tablist', { name: 'World map views' });
+    await expect(tablist).toBeVisible();
+    const tabs = tablist.getByRole('tab');
+    await expect(tabs).toHaveCount(3);
+    // Selection state lives on the tabs; exactly one is selected and it is the URL's tab.
+    await expect(page.getByTestId('world-tab-bridges')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByTestId('world-tab-regions')).toHaveAttribute('aria-selected', 'false');
+    // The active panel is a labelled tabpanel; roving tabIndex keeps one tab stop.
+    const panel = page.getByRole('tabpanel', { name: 'What governs what' });
+    await expect(panel).toBeVisible();
+    await expect(page.getByTestId('world-tab-bridges')).toHaveAttribute('tabindex', '0');
+    await expect(page.getByTestId('world-tab-regions')).toHaveAttribute('tabindex', '-1');
+    // Keyboard: ArrowRight from the selected tab moves selection AND focus.
+    await page.getByTestId('world-tab-bridges').focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(page).toHaveURL(/tab=regions/);
+    await expect(page.getByTestId('world-tab-regions')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByTestId('world-tab-regions')).toBeFocused();
+    await page.keyboard.press('ArrowRight');
+    await expect(page).toHaveURL(/tab=risk/);
+    await page.keyboard.press('Home');
+    await expect(page).toHaveURL(/tab=bridges/);
+    await expect(page.getByTestId('world-tab-bridges')).toBeFocused();
+  });
+
+  // U3 (2026-11-03): the governance library on /tools lists one row per framework the readiness
+  // tool accepts — the rows are DERIVED from the tool's enum, so their count and hrefs must
+  // always match what the door serves. Asserts structure and the honest split, never a number
+  // beyond what the page itself derives.
+  test('Governance library (/tools#governance-library) renders one row per readiness framework', async ({ page }) => {
+    await page.goto('/tools', { waitUntil: 'networkidle' });
+    const library = page.getByTestId('governance-library');
+    await expect(library).toBeVisible();
+    await expect(library.getByRole('heading', { name: 'Governance library' })).toBeVisible();
+    const rows = library.locator('ul a');
+    const hrefs = await rows.evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).getAttribute('href')));
+    expect(hrefs.length).toBeGreaterThanOrEqual(9);
+    for (const href of hrefs) {
+      expect(href).toMatch(/^\/dashboard\?tab=tools&tool=framework_readiness&framework=[a-z0-9-]+$/);
+    }
+    // The honest split: the page names what is in preparation and never claims a determination.
+    await expect(library).toContainText(/In preparation/i);
+    await expect(library).toContainText(/never a determination/i);
+    // Following the first row lands the readiness tool preselected in the workspace pane.
+    await rows.first().click();
+    await expect(page).toHaveURL(/tab=tools&tool=framework_readiness&framework=/);
+    await expect(page.getByTestId('dashboard-tool-canvas')).toBeVisible();
+  });
+
+  test('Old map URLs redirect into their /map tab', async ({ page }) => {
+    await page.goto('/regions', { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(/\/map\?tab=regions/);
+    await expect(page.getByTestId('world-panel-regions')).toBeVisible();
+    await page.goto('/relevance-map', { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(/\/map\?tab=bridges/);
+    await page.goto('/risk-heatmap', { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(/\/map\?tab=risk/);
+    await page.goto('/tool-commons', { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(/\/dashboard\?tab=tools/);
   });
 
   // SovSpace was replaced by the Council Space arena in the Council OS redesign:

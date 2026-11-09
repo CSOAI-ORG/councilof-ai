@@ -1,0 +1,146 @@
+{
+  "card": {
+    "as_of": "2026-10-28T21:00:23Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:BUIDL-I:ethereum",
+      "symbol": "BUIDL-I",
+      "product": "BlackRock USD Institutional Digital Liquidity Fund - I Class",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6a9da2d710bb9b700acde7cb81f10f1ff8c89041",
+      "block": 26293783,
+      "block_hash": "0x35c75b9e385d4cad0b34946ef269292005537fdaf0205bb53a381b1ec97036bf",
+      "block_time": "2026-10-28T21:00:23Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "BlackRock USD Institutional Digital Liquidity Fund - I Class",
+        "symbol": "BUIDL-I",
+        "decimals": 6,
+        "totalSupply": 273566450480100,
+        "isPaused": false,
+        "owner": "0xe01605f6b6dc593b7d2917f4a0940db2a625b09e",
+        "eip1967_implementation": "0x9e2693f54831f6f52b0bb952c2935d26919a3626"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "3381d9edc7e512a7402ce49232918216c9b7c0e8639c47438f16eaaa6314bb4d",
+        "bytes": 10842,
+        "url": "/archive/proofs/eip1186/3381d9edc7e512a7.json",
+        "rpc": "ethereum-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xee8a105971995661291a9f284262a87abf2381b3cdc93b2c8fbeffe4cd636dd9",
+          "storageHash": "0x1bb87dd768add3d02e7b8e40da528aebb5d0715b7715e8deea22df882d2b02c0",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x9e2693f54831f6f52b0bb952c2935d26919a3626",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 2
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 26293783 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "1e6379e499f796e5c9d004973c21804bde4a8e58c335acb0d13e66f9fde22353",
+    "sig_ed25519": "879dc8771a0a05b556964d1309248bbd9d9660ad6aeb3fd2b524357cec5e5d21e53d13e91f66150932cf93b1ae866f551355e29a149943e2518322da1181df0d",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://etherscan.io/token/0x6a9DA2D710BB9B700acde7Cb81F10F1fF8C89041"
+    ],
+    "subject": "evm:BUIDL-I:ethereum permission state at block 26293783",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:BUIDL-I"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "5b08ea729f3d6f66c0a620c2a358d84e042aad9882bdf8b0c1966b3249e809e2",
+    "7e9c865372a6f096e6f8afbff8edbcdc435c6ef22b0a7b521a452cfa9f2ef43e",
+    "fd4891e99825296fd7aeb649a1ab8d5a93f447aee994e0f085aa70adf3d39116",
+    "8a444b83cca3708a04ddfdb4fe96f6b5867268948fb64312ffd30da0b05e3430",
+    "a5bc6f25f0a95d28dc1e74a1feb390249ce3642addd19be603aab8e0691e0a96",
+    "49ddd69a884a7c24447e9e14cfba9255435467ef3c61f04e067a00a9c346ae8a",
+    "1f69b6b7d831c4e9ac1984e61f806f5d2ac9cde6829881f47b1af8e197f91d10",
+    "201c65b10ba3a5f29aa16126faf2c6a15696ac0c1fd8e170a912b9f48ccef9f5",
+    "e2c0b30a71113cf3f7484af4e7abf223254833ab94eeacb0902a90847c1930d3"
+  ]
+}

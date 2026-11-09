@@ -1,0 +1,122 @@
+{
+  "keywords": [
+    "tabular",
+    "artificial intelligence"
+  ],
+  "data": [
+    {
+      "name": "README.md",
+      "description": "Historical release context, axis table and local verification instructions for this captured snapshot. Read alongside the current dataset card and corrections register; the root does not make every derived row individually signed."
+    },
+    {
+      "name": "SNAPSHOT.json",
+      "description": "Snapshot capture time, source hashes, derived coverage counts, transparency-root reference and evidence-bank observations."
+    },
+    {
+      "name": "board.json",
+      "description": "Unmodified source board captured from councilof.ai/api/gspc; contains axis records and the board site attestation."
+    },
+    {
+      "name": "check-board.sh",
+      "description": "Local snapshot verification script. Inspect before running from the extracted snapshot directory; verification is separate from current admission or withdrawal status."
+    },
+    {
+      "name": "gspc-axes.csv",
+      "description": "Notebook-ready table with one row per declared measurement axis and 16 documented result, scope and source-bank columns.\n\n## Column guide\n\n| Column | Meaning |\n| --- | --- |\n| `axis` | Stable measurement axis identifier; one CSV row represents one declared axis. |\n| `family` | Group of related axes, as published by the source board. |\n| `kind` | Evidence type: model-comparison, deterministic-facts or declared-slot. Do not pool these types into one score. |\n| `bench` | Source benchmark or method label for this axis, where provided. |\n| `task` | Source task description or identifier for the recorded measurement. |\n| `n` | Published count for this axis. Its unit depends on the method; absent is not zero. |\n| `status` | Measurement state. MEASURED means evidence exists; UNMEASURED is an explicit coverage gap. |\n| `separation` | Statistical separation result when applicable. TIE and UNTESTED do not establish a separated winner. |\n| `public_leader_state` | Whether a leader can be displayed. SHOWN, NO_SIGNED_CARD and EXCLUDED_OWN_MODEL are display states, not scores. |\n| `leader` | Displayable leader identifier, when available. A displayed leader does not establish a statistically separated win. |\n| `accuracy` | Source accuracy for a model comparison, where provided. Missing or inapplicable values are not zero; inspect the method and separation state. |\n| `fleet_mean` | Mean result over the recorded model fleet, where provided. It does not apply to deterministic fact axes. |\n| `dataset` | Hugging Face identifier of the source dataset, when one is declared. |\n| `dataset_url` | URL of the source dataset, when available. |\n| `bank_state` | Observed availability of the declared evidence bank at capture time. A missing items.jsonl file does not imply zero evidence. |\n| `bank_rows` | Observed evidence-bank rows, excluding canary-only records when counted. Missing values are not zero. |\n\nKeep model comparisons separate from deterministic facts. TIE and UNTESTED are not separated wins. Record this dataset version and the capture time from SNAPSHOT.json.",
+      "columns": [
+        {
+          "name": "axis",
+          "description": "Stable measurement axis identifier; one CSV row represents one declared axis.",
+          "type": "string"
+        },
+        {
+          "name": "family",
+          "description": "Group of related axes, as published by the source board.",
+          "type": "string"
+        },
+        {
+          "name": "kind",
+          "description": "Evidence type: model-comparison, deterministic-facts or declared-slot. Do not pool these types into one score.",
+          "type": "string"
+        },
+        {
+          "name": "bench",
+          "description": "Source benchmark or method label for this axis, where provided.",
+          "type": "string"
+        },
+        {
+          "name": "task",
+          "description": "Source task description or identifier for the recorded measurement.",
+          "type": "string"
+        },
+        {
+          "name": "n",
+          "description": "Published count for this axis. Its unit depends on the method; absent is not zero.",
+          "type": "integer"
+        },
+        {
+          "name": "status",
+          "description": "Measurement state. MEASURED means evidence exists; UNMEASURED is an explicit coverage gap.",
+          "type": "string"
+        },
+        {
+          "name": "separation",
+          "description": "Statistical separation result when applicable. TIE and UNTESTED do not establish a separated winner.",
+          "type": "string"
+        },
+        {
+          "name": "public_leader_state",
+          "description": "Whether a leader can be displayed. SHOWN, NO_SIGNED_CARD and EXCLUDED_OWN_MODEL are display states, not scores.",
+          "type": "string"
+        },
+        {
+          "name": "leader",
+          "description": "Displayable leader identifier, when available. A displayed leader does not establish a statistically separated win.",
+          "type": "string"
+        },
+        {
+          "name": "accuracy",
+          "description": "Source accuracy for a model comparison, where provided. Missing or inapplicable values are not zero; inspect the method and separation state.",
+          "type": "decimal"
+        },
+        {
+          "name": "fleet_mean",
+          "description": "Mean result over the recorded model fleet, where provided. It does not apply to deterministic fact axes.",
+          "type": "decimal"
+        },
+        {
+          "name": "dataset",
+          "description": "Hugging Face identifier of the source dataset, when one is declared.",
+          "type": "string"
+        },
+        {
+          "name": "dataset_url",
+          "description": "URL of the source dataset, when available.",
+          "type": "url"
+        },
+        {
+          "name": "bank_state",
+          "description": "Observed availability of the declared evidence bank at capture time. A missing items.jsonl file does not imply zero evidence.",
+          "type": "string"
+        },
+        {
+          "name": "bank_rows",
+          "description": "Observed evidence-bank rows, excluding canary-only records when counted. Missing values are not zero.",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "name": "gspc-axes.jsonl",
+      "description": "The detailed axis export as newline-delimited JSON. Each line represents one declared axis."
+    },
+    {
+      "name": "manifest.jsonl",
+      "description": "File inventory for the captured release. Use it with SNAPSHOT.json and source hashes when inspecting the package."
+    },
+    {
+      "name": "root.json",
+      "description": "Captured signed transparency root. Its coverage leaves and root signature do not imply every underlying result is an individually signed or admitted measurement."
+    }
+  ]
+}

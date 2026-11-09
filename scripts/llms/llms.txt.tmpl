@@ -23,12 +23,19 @@ stays empty.
 
 ## Canonical company summary
 
-Council of AI is the public measurement service operated by CSOAI Ltd, a company incorporated in
-England and Wales on 2 January 2026 (Companies House 16939677), founded by Nicholas Templeman. It
-publishes independent measurement and claim-maintenance infrastructure for AI systems, agents and
-the endpoints they call: published test instruments, signed records, free verification, a dated
-corrections ledger and machine-readable interfaces. CSOAI measures; it does not certify, accredit or
-issue legal-compliance determinations.
+Council of AI is an operating AI measurement and evidence organisation, operated by CSOAI Ltd,
+a company incorporated in England and Wales on 2 January 2026 (Companies House 16939677), founded
+by Nicholas Templeman. It runs published test instruments and maintains signed records, free
+verification, a dated corrections ledger and machine-readable interfaces for AI systems, agents
+and the endpoints they call. CSOAI measures; it does not certify, accredit or issue legal-compliance
+determinations.
+
+Documented external use: https://councilof.ai/traction/#external-use. This source-linked record
+separates externally operated code execution, implementation of proposals and use of research,
+with dates and limits for each example. Read the individual records before making an adoption
+claim. Package-download events measure technical distribution; they are not unique people,
+customers or independently verified deployments. Operating evidence and company/IP valuation
+are separate assessments.
 
 For operating figures, fetch the named live endpoints rather than freezing a search snippet. The
 417-entry legal corpus is a provision-hash manifest, not a claim that 417 provisions are active
@@ -97,7 +104,7 @@ Claim maintenance is the continuous, independent observation of the public claim
 - Register of every subject we maintain claims on (generated from the registries on disk, never hand-listed): GET https://councilof.ai/api/claims/register — read `totals` and `as_of` live; filter with `?subject=` or `?state=`. Never freeze a subject count or a claim count in this file.
 - Reference implementation anyone can run, including against us (MIT): https://councilof.ai/spec/claim-maintenance/v0.2/reference/claim-capture.mjs (same-site source copy) — captures a claim, hashes it, writes a conforming artifact, and REJECTS a tampered one.
 - Human page: https://councilof.ai/claim-maintenance/
-- Archival deposit, DOI 10.5281/zenodo.22901908 (all versions: 10.5281/zenodo.22901781), CC0: UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (appeal pending; status at https://councilof.ai/interop/zenodo-status.json). Cite the served document of record above until the record is restored. A DOI makes a document citable; it does not make it right.
+- Archival deposit, DOI 10.5281/zenodo.22901908 (all versions: 10.5281/zenodo.22901781), CC0: these named records returned HTTP 410 in the dated record-level checks at https://councilof.ai/interop/zenodo-status.json. Cite the served document of record above. A DOI makes a document citable; it does not make it right.
 - States, and there are exactly four: CLAIM_CAPTURED · CLAIM_MEASURED · UNMEASURED · UNCHECKABLE. UNMEASURED and UNCHECKABLE are first-class and are published as prominently as the others.
 - What it is NOT: not fact-checking, not certification, not auditing, not reputation scoring, not adversarial journalism. No mark, badge, score, rank or index may be derived from any state. Nothing published asserts falsity about anyone. An observed change is never an allegation. A listing is not an endorsement and not an accusation.
 
@@ -176,18 +183,18 @@ Each record below is a dated account of what public sources state, with its sour
 - Disclosure lag, the Medicare statistics portal agent access: https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/ — record https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/record.json (board signature record.signed.json and OpenTimestamps proof record.json.ots beside it)
 - Disclosure lag, the Gemini cyber-evaluation access to outside systems: https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/ — record https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/record.json (same three files)
 - signed-receipts/v1 conformance kit — test vectors, Python and Node runners, reference results; the reference verifier answers UNVERIFIABLE_KEY, never VALID, for a key it cannot resolve: https://councilof.ai/spec/signed-receipts/v1/conformance/ — vectors https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json — specification https://councilof.ai/spec/signed-receipts/
-- COBOL copybook decoding test corpus — records whose correct values are known by construction, with must-fail controls; CC0; results against open-source decoders are held until each project's maintainers have seen them: https://huggingface.co/datasets/csoai/cobol-copybook-decoding-corpus
+- COBOL copybook decoding test corpus — records whose correct values are known by construction, with must-fail controls; CC0. Held private while results against open-source decoders wait for each project's maintainers to have seen them: the dataset address does not open yet, so it is not linked here. Measured results are published through the records feed below the day the hold lifts.
 - All of the signed records above, plus corrections and daily notes, as a feed: https://councilof.ai/feeds/records.xml (Atom) — https://councilof.ai/feeds/records.json (JSON Feed)
 
 ## Measured entities, one page each
 
 Each page shows declared vs observed, the dates, the evidence level and its signed source, and has a machine twin at <page>index.json. None says anything about security, quality or safety, and none is a rating. Operators who opted out, or whose robots.txt refuses CSOAI-census, have no page. Objections and context: https://councilof.ai/census/
 
-- MCP servers (contract parity per host): https://councilof.ai/mcp-servers/ — https://councilof.ai/mcp-servers/<host>/
-- A2A agent cards (listed vs served, signature state): https://councilof.ai/agent-cards/ — https://councilof.ai/agent-cards/<host>/
-- x402 doors and settlement-census hosts: https://councilof.ai/x402/ — https://councilof.ai/x402/<door-or-host>/
-- Tokenised-asset deployments (issuer list vs ledger read): https://councilof.ai/stablecoins/deployments/ — https://councilof.ai/stablecoins/<asset>/<chain>/
-- Sitemap index of all of them: https://councilof.ai/sitemaps/index.xml
+- MCP servers (contract parity per host): https://councilof.ai/mcp-servers/ — one page per host, at the path pattern `/mcp-servers/<host>/`
+- A2A agent cards (listed vs served, signature state): https://councilof.ai/agent-cards/ — one page per host, at `/agent-cards/<host>/`
+- x402 doors and settlement-census hosts: https://councilof.ai/x402/ — one page per door or host, at `/x402/<door-or-host>/`
+- Tokenised-asset deployments (issuer list vs ledger read): https://councilof.ai/stablecoins/deployments/ — one page per deployment, at `/stablecoins/<asset>/<chain>/`
+- Sitemap index of all of them (the real addresses behind the `<…>` patterns above; a pattern is not an address): https://councilof.ai/sitemaps/index.xml
 - Press, machine-readable — what changed in the window, with the command that proves each line, and a named list of what we are NOT announcing: https://councilof.ai/api/press.json (human: https://councilof.ai/press/)
 
 The older https://councilof.ai/feed.xml is a hand-maintained item list kept for its subscribers; its historical titles freeze counts that the live board has moved past. Quote the board, not a feed title.
@@ -199,15 +206,17 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Source-linked SOV World observatory (dated simulation archive; check source date and signature-verification status on the page): https://councilof.ai/world/observatory/
 - Agent card: https://councilof.ai/.well-known/agent-card.json
+- Agent Skills (the 15 executable skills, each with a digest and one SKILL.md): https://councilof.ai/.well-known/agent-skills/index.json — the index lists every skill id and the path of its SKILL.md; each SKILL.md names the exact call it makes. Send a skill to the A2A door (POST https://councilof.ai/api/a2a, header `A2A-Version: 1.0`, JSON-RPC 2.0 `SendMessage`).
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — {{MCP_TOOLS}} tools: {{MCP_FREE_WORD}} free readers plus {{MCP_PAID_WORD}} x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
 - MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the {{MCP_FREE_WORD}} free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
+- Install guide (the canonical remote install for any client, the exact reviewed tool catalog, and the safe first checks): https://councilof.ai/llms-install.md
 - Public root (https://councilof.ai/root.json): Merkle envelope. Read live `sig_ed25519` and the stated preimage fields (`kind`, `schema`, `as_of`, `merkle_root`, `card_count`, `did_intended`). Check the signature against a published pinned key; report an absent signature as unsigned and an unavailable check as UNCHECKABLE. Presence in the root does not by itself establish a GSPC measurement or grade. Verification is free.
 - Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending until an independent `ots verify` confirms a Bitcoin attestation; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
 {{DATED_MILL_ROOT_LINE}}
-- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same {{MCP_TOOLS}}-tool contract as the HTTP door. The published npm release is marked deprecated on npm and carries fewer tools than the HTTP door; until a newer release is published, use https://councilof.ai/mcp/free.
+- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same {{MCP_TOOLS}}-tool contract as the HTTP door. {{NPM_STDIO_SENTENCE}}
 - Verify a server (per-server evidence, in the browser): https://councilof.ai/verify-server/ — every signed measurement capsule keyed to ONE endpoint URL, each re-derivable in the page (capsule id + Merkle inclusion + index signature). States only; an unknown URL is NOT_MEASURED, never clean. Same module as the MCP tools server_evidence / verify_capsule.
 - MCP registry: ai.councilof/gspc → https://councilof.ai/mcp (the canonical, domain-verified name; io.github.CSOAI-ORG/gspc is its deprecated alias for the same door. Query the official registry for the currently published server version.)
-- Smithery: https://smithery.ai/servers/csoai/gspc-mcp — a third-party listing of this door. Its tools[] is Smithery's own snapshot and can lag the door; before relying on it, read the live POST https://councilof.ai/mcp tools/list ({{MCP_TOOLS}} tools: {{MCP_FREE_WORD}} free readers plus {{MCP_PAID_WORD}} x402-metered evidence tools). The older csoai/gspc entry is a stale duplicate.
+- Smithery: the third-party directory listing of this door came and went (removed 2026-11-02), so it is not linked here — the registry line above is the durable pointer. Third-party tools[] snapshots can lag the door; before relying on any listing, read the live POST https://councilof.ai/mcp tools/list ({{MCP_TOOLS}} tools: {{MCP_FREE_WORD}} free readers plus {{MCP_PAID_WORD}} x402-metered evidence tools).
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
@@ -243,10 +252,10 @@ Distribution mirrors reproduce published evidence. The live board (GET /api/gspc
   nobody should read our footprint as a vetting layer, never as an allegation about any registry: we
   assert no falsity about anyone, and a count of our own listings is not a judgement on the ecosystem
   they sit in. If you want to know whether a server does what it says, probe it; we did not vet it.
-- npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`) — published releases are marked deprecated on npm and carry fewer tools; use https://councilof.ai/mcp/free
+- npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`) — {{NPM_STDIO_SHORT}}
 - Glama directory search (flagship discovery UNSTABLE on 2026-09-04; other CSOAI servers are present): https://glama.ai/mcp/servers?query=csoai
 - Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board
-- Zenodo DOI (from live GET /api/gspc `doi`): {{DOI}} — UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (appeal pending; status at https://councilof.ai/interop/zenodo-status.json). Do not follow it as a working link.
+- Methodology DOI (from live GET /api/gspc `doi`): {{DOI}} — the methodology deposit is marked UNAVAILABLE in the dated record-level status at https://councilof.ai/interop/zenodo-status.json. Live methodology: https://councilof.ai/methodology/ (not the deposit's bytes).
 - Where we take part (standards bodies, registries, scholarly ids, regulator filings — each row with its evidence URL, date, what it proves and what it does not): https://councilof.ai/memberships · machine-readable: https://councilof.ai/interop/memberships.json. Participation is not endorsement, and a listing is not adoption. Do not count the rows; read them.
 
 Lid (quote live `totals.lid`): {{LID}}
@@ -254,6 +263,9 @@ Lid (quote live `totals.lid`): {{LID}}
 ## Distribution — measured, PARTIAL, and not adoption
 
 {{DISTRIBUTION_SECTION}}
+## Published interop files (every file under /interop/, with its digest — except the index itself)
+
+{{FILE_INDEX_SECTION}}
 ## Signed evidence records (evidence linked from the board, never counted into it)
 
 {{EVIDENCE_RECORDS_SECTION}}
@@ -264,7 +276,7 @@ Lid (quote live `totals.lid`): {{LID}}
 ## For agents
 
 - One human-readable page for agent builders, rendered from the machine files themselves (ai-catalog, agent card, tools/list, x402.json): https://councilof.ai/agents/
-- A2UI v0.9.1 (the current A2UI release) surfaces: GET https://councilof.ai/api/a2ui/board (the board card) and GET https://councilof.ai/api/a2ui/verify?card=<64-hex card id> (a verify result). Add ?version=v1.0 for the v1.0 Candidate form. AG-UI runs carry the same surface as a CUSTOM event named a2ui.
+- A2UI v0.9.1 (the current A2UI release) surfaces: GET https://councilof.ai/api/a2ui/board (the board card) and, on the same origin, `GET /api/a2ui/verify?card=<64-hex card id>` (a verify result; a pattern, so replace the <…> part with a card id). Add ?version=v1.0 for the v1.0 Candidate form. AG-UI runs carry the same surface as a CUSTOM event named a2ui.
 
 Prefer the keyless board API and verify.
 Cite live `totals.public_count` — never freeze axis counts in prompts.

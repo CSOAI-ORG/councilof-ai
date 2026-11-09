@@ -19,6 +19,19 @@
       "payment": "free"
     },
     {
+      "id": "axis-specialist",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "MEOK Hive axis specialist audits (free, unsigned)",
+      "description": "Read the bounded specialist audit for one exact GSPC axis, or the full index with an empty input. Every axis has its own logical MEOK Hive cluster, mission, evidence checks, negative controls, improvement proposals and human reviewer role. RSI is recommendation-only: no ASI claim, no self-modification, no spend, no deployment and no apply operation. Every proposal stays PROPOSED_NOT_APPLIED under a MEOK H.I.M.-compatible HOLD gate. The existing axis_<id> MCP tools remain the live measurement readers; these audits are unsigned analysis of a captured board, not new measurement or certification.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "benchmark-quality-register",
       "protocols": [
         "a2a"
@@ -90,6 +103,32 @@
       ],
       "title": "Evidence bundle preview: signed cards relevant to one obligation (free)",
       "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it, read from GET /api/evidence-bundle. The same module as the free MCP tool evidence_bundle_preview. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY. Article 53 output is evidence for review, not a legal determination. The assembled OSCAL bundle is the x402 MCP tool evidence_bundle on https://councilof.ai/mcp; this skill never charges. Not a conformity assessment, certification, audit opinion or compliance determination; grants no status.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "evidence-delivery",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Evidence Delivery: unsigned local draft with human review",
+      "description": "Accept one csoai.local-evidence-draft/1.2 declaration whose digest fields differ, whose negative control is DIVERGENT, and whose named MEOK H.I.M. reviewer, decision, notes and local-only boundaries are present. Return a Message containing the declaration and explicit non-claims. Envelope checks only: source bytes are not received or re-hashed. No GSPC measurement, independent verification, certification, signature, anchoring, payment, Task or durable adapter storage is created.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "framework-readiness",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Framework readiness checklist (deterministic)",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. SendMessage with Part.data {\"skill\":\"framework-readiness\",\"input\":{\"framework\":\"<id>\"}} and the answer is computed in-process by the same module the MCP tool framework_readiness calls, so the two doors cannot disagree: per item, the published provision it is keyed to, a plain-words requirement summary, the evidence that would show readiness, and the question it opens for the caller's own compliance function. Optional sector and role are echoed as pointers and notes. There is no score and no pass or fail: a checklist lays out what evidence would be measured, it does not certify compliance, and it is not legal advice or a conformity assessment.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -175,6 +214,19 @@
       "payment": "free"
     },
     {
+      "id": "api-a2a-key",
+      "protocols": [
+        "http"
+      ],
+      "title": "A2a key",
+      "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports GET.",
+      "endpoint": "/api/a2a/key",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-a2a-post",
       "protocols": [
         "http"
@@ -185,6 +237,58 @@
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-a2a-route",
+      "protocols": [
+        "http"
+      ],
+      "title": "A2a route",
+      "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+      "endpoint": "/api/a2a/route",
+      "method": "GET",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-a2a-route-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "A2a route (POST)",
+      "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+      "endpoint": "/api/a2a/route",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-a2a-verify",
+      "protocols": [
+        "http"
+      ],
+      "title": "A2a verify",
+      "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+      "endpoint": "/api/a2a/verify",
+      "method": "GET",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-a2a-verify-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "A2a verify (POST)",
+      "description": "Pages dispatches HEAD only to an onRequestHead export; the door exports a GET that answers 405.",
+      "endpoint": "/api/a2a/verify",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
       "payment": "free"
     },
     {
@@ -396,6 +500,19 @@
       "payment": "free"
     },
     {
+      "id": "api-axis-specialists",
+      "protocols": [
+        "http"
+      ],
+      "title": "MEOK Hive axis specialists",
+      "description": "GET /api/axis-specialists — unsigned MEOK Hive audit index for every GSPC axis. Each specialist has an isolated logical cluster, distinct checks and proposals, and a MEOK H.I.M.-compatible HOLD gate. No apply operation or new measurement.",
+      "endpoint": "/api/axis-specialists",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
       "id": "api-badge",
       "protocols": [
         "http"
@@ -573,7 +690,7 @@
       "description": "POST /api/checkout — public door is closed.",
       "endpoint": "/api/checkout",
       "method": "POST",
-      "lifecycle": "LIVE",
+      "lifecycle": "DOOR_CLOSED",
       "audience": "agent",
       "payment": "free"
     },
@@ -797,6 +914,19 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
+    },
+    {
+      "id": "api-coverage-evidence",
+      "protocols": [
+        "http"
+      ],
+      "title": "Coverage evidence row",
+      "description": "Coverage evidence: one assembled row for one named asset from the dated coverage record, not a live chain read. Returns identity, measurement state with method and measured_at, provenance digests, and this record's honest anchor state: evidence packs UNSIGNED (0 signed) until signing runs. States exactly as recorded: DEEP_MEASURED, UNMEASURED_REASON_DOCUMENTED (reason included) or INDEXED_METADATA_ONLY. Free preview gives identity, state and as_of; verification is free on the public board.",
+      "endpoint": "/api/coverage-evidence",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
     },
     {
       "id": "api-coverage-truth",
@@ -1184,7 +1314,7 @@
       "description": "files — retired until its response can be derived from current evidence.",
       "endpoint": "/api/files",
       "method": "GET",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1197,7 +1327,7 @@
       "description": "files — retired until its response can be derived from current evidence.",
       "endpoint": "/api/files",
       "method": "POST",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1276,6 +1406,32 @@
       "endpoint": "/api/fulfill",
       "method": "GET",
       "lifecycle": "DOOR_CLOSED",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-gate",
+      "protocols": [
+        "http"
+      ],
+      "title": "Gate",
+      "description": "A GET on a POST path is a method error, not a 404.",
+      "endpoint": "/api/gate",
+      "method": "GET",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-gate-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Gate (POST)",
+      "description": "A GET on a POST path is a method error, not a 404.",
+      "endpoint": "/api/gate",
+      "method": "POST",
+      "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
     },
@@ -1587,7 +1743,7 @@
       "description": "memory — retired until its response can be derived from current evidence.",
       "endpoint": "/api/memory",
       "method": "GET",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1600,7 +1756,7 @@
       "description": "memory — retired until its response can be derived from current evidence.",
       "endpoint": "/api/memory",
       "method": "POST",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1627,6 +1783,19 @@
       "endpoint": "/api/mint",
       "method": "GET",
       "lifecycle": "NOT_IMPLEMENTED",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-model-lifecycle",
+      "protocols": [
+        "http"
+      ],
+      "title": "Model lifecycle",
+      "description": "GET /api/model-lifecycle — upstream availability (available / retired / not released) of the model families this estate measures, joined to this estate's own signed measurement for each family. A family with no signed card is UNMEASURED, never zero.",
+      "endpoint": "/api/model-lifecycle",
+      "method": "GET",
+      "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
     },
@@ -1691,7 +1860,7 @@
       "description": "operator — retired until its response can be derived from current evidence.",
       "endpoint": "/api/operator",
       "method": "GET",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1704,7 +1873,7 @@
       "description": "operator — retired until its response can be derived from current evidence.",
       "endpoint": "/api/operator",
       "method": "POST",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -2510,7 +2679,7 @@
       "description": "sandbox — retired until its response can be derived from current evidence.",
       "endpoint": "/api/sandbox",
       "method": "GET",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -2523,7 +2692,7 @@
       "description": "sandbox — retired until its response can be derived from current evidence.",
       "endpoint": "/api/sandbox",
       "method": "POST",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -2637,10 +2806,10 @@
         "http"
       ],
       "title": "Subscribe",
-      "description": "",
+      "description": "POST /api/subscribe — the newsletter signup behind the homepage daily-report band and the footer email capture.",
       "endpoint": "/api/subscribe",
       "method": "GET",
-      "lifecycle": "NOT_IMPLEMENTED",
+      "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
     },
@@ -2650,10 +2819,10 @@
         "http"
       ],
       "title": "Subscribe (POST)",
-      "description": "",
+      "description": "POST /api/subscribe — the newsletter signup behind the homepage daily-report band and the footer email capture.",
       "endpoint": "/api/subscribe",
       "method": "POST",
-      "lifecycle": "NOT_IMPLEMENTED",
+      "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
     },
@@ -2850,6 +3019,19 @@
       "method": "POST",
       "lifecycle": "QUARANTINED_PRE_RELEASE",
       "audience": "human",
+      "payment": "free"
+    },
+    {
+      "id": "api-watchdog-sources",
+      "protocols": [
+        "http"
+      ],
+      "title": "Watchdog sources",
+      "description": "GET /api/watchdog-sources — public-source inventory and last HEAD-only availability snapshot. The response includes source and rights links plus ingestion gates; it never fetches or stores incident records, report text, personal data, or snapshots, and it performs no classification, assignment, GSPC write, or action. Human review remains required before ingestion.",
+      "endpoint": "/api/watchdog-sources",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
       "payment": "free"
     },
     {
@@ -3633,6 +3815,19 @@
       "payment": "free"
     },
     {
+      "id": "axis_watchdog-ingest",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "axis_watchdog-ingest",
+      "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "board_totals",
       "protocols": [
         "mcp"
@@ -3678,6 +3873,19 @@
       ],
       "title": "evidence_bundle_preview",
       "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "framework_readiness",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "framework_readiness",
+      "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",

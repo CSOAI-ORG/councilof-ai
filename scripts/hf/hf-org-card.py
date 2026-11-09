@@ -47,7 +47,7 @@ SNAPSHOT_DOI = "10.5281/zenodo.22293341"
 # 29 Sep 2026: Zenodo blocked the account holding these deposits; every record answers HTTP 410.
 # The DOIs stay as identifiers; no card links them as available. The cards on the Hub were
 # relabelled with exactly these strings, so a producer run and the hand pass land the same bytes.
-ZENODO_NOTICE = "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending."
+ZENODO_NOTICE = "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; no appeal on record (live status: https://councilof.ai/interop/zenodo-status.json)."
 METHODOLOGY_LIVE = "https://councilof.ai/methodology/"
 BOARD_DATASET_URL = "https://huggingface.co/datasets/csoai/gspc-board"
 DOI_TEXT = f"{DOI} ({ZENODO_NOTICE} Live methodology page (not the deposit's bytes): <{METHODOLOGY_LIVE}>)"
@@ -155,7 +155,7 @@ def derive(board: dict | None, reason: str, fetched_at: str) -> dict:
 
 
 def render(d: dict) -> str:
-    out = [OPEN, f"## Live board — derived {d['as_of']} from `GET {API}`", ""]
+    out = [OPEN, "<details>", "<summary>Technical board snapshot and provenance</summary>", "", f"## Live board — derived {d['as_of']} from `GET {API}`", ""]
     if d["state"] != "DERIVED":
         out += [f"**UNCHECKABLE** — `GET {API}` did not answer as a board ({d['reason']}). No table is printed and no number is quoted.", ""]
     else:
@@ -180,7 +180,7 @@ def render(d: dict) -> str:
     out += ["", "[![GSPC](https://councilof.ai/api/badge)](https://councilof.ai/gspc-verify) — live SVG, derived at request time.", "", "| | |", "|---|---|"]
     out += [f"| {k} | <{v}> |" for k, v in LINKS.items()]
     out += [f"| Methodology DOI | {DOI_TEXT} |"]
-    out += ["", "Measurement, not certification. Signed means Ed25519 under `did:web:csoai.org`; nothing here is a certificate, a rank for sale, or a conformity mark.", CLOSE]
+    out += ["", "Measurement, not certification. Signed means Ed25519 under `did:web:csoai.org`; nothing here is a certificate, a rank for sale, or a conformity mark.", "", "</details>", CLOSE]
     return "\n".join(out) + "\n"
 
 
@@ -334,7 +334,7 @@ def scrub_legacy(text: str, lid: str | None, mcp_n: int | None, as_of: str) -> t
             nxt = lines[i + 1] if i + 1 < len(lines) else ""
             if m and "unavailable" not in nxt:
                 out.append(line)
-                new = f"{m.group(1)}note{' ' * max(1, len(m.group(2)) - 1)}= {{DOI record unavailable since 29 Sep 2026 (Zenodo account blocked; appeal pending)}},"
+                new = f"{m.group(1)}note{' ' * max(1, len(m.group(2)) - 1)}= {{DOI record unavailable since 29 Sep 2026 (Zenodo account blocked; no appeal on record)}},"
                 changes.append("bibtex doi note")
                 out.append(new)
                 continue
@@ -752,6 +752,9 @@ def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[st
     ]
     if (repo, kind) == ("csoai/gspc-normalized", "dataset"):
         lines[-1:-1] = ["", NORMALIZED_GUIDE, ""]
+    if repo in ("csoai/README", "csoai/gspc-board"):
+        lines[1:1] = ["<details>", "<summary>File inventory and technical provenance</summary>", ""]
+        lines[-1:-1] = ["", "</details>"]
     return "\n".join(lines) + "\n"
 
 
@@ -882,6 +885,10 @@ def hubcard(repo: str, d: dict, push: bool, out: Path, kind: str = "dataset") ->
     if axis:
         body = splice(body, live_row_block(axis), LIVE_ROW_OPEN, LIVE_ROW_CLOSE, before=HUB_OPEN)
     new = cite_apply(join_front_matter(fm, body), repo)
+    # Keep audited archive/table recipes when this general card producer reruns.
+    from hf_card_metadata import VIEWER_REPAIRS, render as render_metadata
+    if repo in VIEWER_REPAIRS:
+        new = render_metadata(repo, new, VIEWER_REPAIRS[repo], None)
     (dest / "README.md").write_text(new, encoding="utf-8")
     uploads.append((dest / "README.md", "README.md"))
     p, n, fails = score_card(kind, new, sorted(have | {"manifest.jsonl"}), True)

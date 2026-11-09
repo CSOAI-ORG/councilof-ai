@@ -1,0 +1,147 @@
+{
+  "card": {
+    "as_of": "2026-10-29T11:02:59Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USDY:ethereum",
+      "symbol": "USDY",
+      "product": "Ondo U.S. Dollar Yield",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x96f6ef951840721adbf46ac996b59e0235cb985c",
+      "block": 26297972,
+      "block_hash": "0x269714731f209702b3041a4969c6296660e67997cf5cbd900cb6fede313a2e5b",
+      "block_time": "2026-10-29T11:02:59Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "Ondo U.S. Dollar Yield",
+        "symbol": "USDY",
+        "decimals": 18,
+        "totalSupply": "1112635725121824873100510362",
+        "paused": false,
+        "defaultAdminRoleMembers": 1,
+        "blocklist": "0xd8c8174691d936e2c80114ec449037b13421b0a8",
+        "allowlist": "0x5cd9e3a4c9933133b512da1b6ba4672160e0c665",
+        "sanctionsList": "0x40c57923924b5c5c5455c48d93317139addac8fb",
+        "eip1967_implementation": "0xea0f7eebdc2ae40edfe33bf03d332f8a7f617528",
+        "eip1967_admin": "0x3ed61633057da0bc58f84b2b9002845e56f94c19"
+      },
+      "absent": [
+        "isPaused()",
+        "owner()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "8afe84839bb11963f8dbabe2052ca34fc115dd1e1cd4f10780dd2c6e85b4e49a",
+        "bytes": 13965,
+        "url": "/archive/proofs/eip1186/8afe84839bb11963.json",
+        "rpc": "eth.drpc.org",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xa23b20d4f9e75f4bf9bd74d8c1b7f0219547289c67a11dea65370c1810fc1387",
+          "storageHash": "0x8dc7e92264005710b31b00ef5053b1b81468114b564813db204ed57864e7a6b7",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0xea0f7eebdc2ae40edfe33bf03d332f8a7f617528",
+            "nodes": 5
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x3ed61633057da0bc58f84b2b9002845e56f94c19",
+            "nodes": 5
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 26297972 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "180bd8d89aa4de44dfba15d88a52c1020742efa2b6b0e410a51bdbe80891e6eb",
+    "sig_ed25519": "cac0bee272ff6bc00d90151a21940d384aaf20ae589be10062ffdc6c1ffc039bd0ae4a30d9f300ad17cd611874de034553ac1b947bb73e7b4e20f9d4f638df0d",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://etherscan.io/address/0x96f6ef951840721adbf46ac996b59e0235cb985c",
+      "https://eth.drpc.org"
+    ],
+    "subject": "evm:USDY:ethereum permission state at block 26297972",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:USDY"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "8ef2298b92176ad8205a45587f999417442666bfff876b9cc2bb63cf22392b4d",
+    "95937b22dcc7199c992f215c1b7f803c8a57942f5c075a5e18cd2135b9b67f3e",
+    "d125105a16a180e152f580a8dc110939c69f49dd1d2002b0ea490162ef5e88b8",
+    "79547943ed2c7e038f677dd61ee246268b2bf99e2df6ee1317bf1c2087b20bde",
+    "4c49c6cc396474545a2e77313fd11043372848bd905224bee976538e97028ac0",
+    "ff97943f029904d4113c2759555ab78b811401a297777d5c8bb2b3628136b33a",
+    "f309354c96e1daf3e3f987061c2798b9ad22783d33ec15c13ded246b651c1296",
+    "911d0f4c9d1ed9d4835dd04cb4b9cdb8f100ebdaec1bfe5afd189171f81114aa",
+    "e30332fdaeffaf99f4ff2b1d2d57f16861f203394217cf3101bc925e5bbb2f97"
+  ]
+}

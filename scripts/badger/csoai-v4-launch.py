@@ -16,6 +16,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from gspc_live import short_counts
+
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "_queue" / "launch"
 DID = "did:web:csoai.org#card-attestation-1"
@@ -63,7 +65,7 @@ https://councilof.ai""",
 
     "x_twitter": f"""🎯 CSOAI ships the open, signed, Bitcoin-anchored AI measurement substrate.
 
-✓ 22 axes measured
+✓ {short_counts()}
 ✓ Ed25519-signed every card
 ✓ Bitcoin OTS-anchored
 ✓ 44 standards on /.well-known/

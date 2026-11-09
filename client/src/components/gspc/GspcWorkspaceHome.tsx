@@ -34,12 +34,68 @@ import {
 } from "./useLiveJson";
 import { useModelsCount } from "./useModelsCount";
 import { checkWords, chipOf, countsLine, dayLabel, readClaimChecks, registryWords, STATUS_WORDS } from "./claimChecks";
+import { FREE_TOOL_NAMES, FREE_TOOLS } from "@/lib/mcpTools";
 import GetResults from "./GetResults";
 import CorpusCount from "./CorpusCount";
 import { correctionHeadline, correctionHref } from "@/lib/correctionHeadline";
 import ModelCountKey from "@/components/ModelCountKey";
 
 const nf = new Intl.NumberFormat("en-GB");
+
+/**
+ * Run-a-tool strip (2026-11-02 consolidation). The free tools were executable for months yet one
+ * click away from the start screen, behind the For developers card — which read as "no actual
+ * tooling working" (the owner's words). This strip puts a hand-picked, honest shortlist on the
+ * first screen: each chip opens the real tool in the workspace tools pane with its real schema.
+ *
+ * The names are curated but validated against the fleet the door actually serves: a chip whose
+ * tool is no longer in FREE_TOOL_NAMES silently drops off, so the strip can never advertise a
+ * tool the door refuses. Titles come from the same file the door reads (mcpTools.ts), never typed
+ * here. No count is printed — the free-tool count figure lives on the For developers card
+ * (one figure per place).
+ */
+const RUN_NOW_TOOLS = ["board_totals", "get_axis", "verify_card", "get_root", "x402_trust", "mcp_trust"];
+
+function RunNowStrip() {
+  const available = new Set(FREE_TOOL_NAMES);
+  const titleOf = (name: string) => FREE_TOOLS.find((t) => t.name === name)?.title ?? name;
+  const chips = RUN_NOW_TOOLS.filter((name) => available.has(name));
+  if (!chips.length) return null;
+  return (
+    <section aria-labelledby="ws-runnow-h" className="mt-6" data-testid="ws-runnow">
+      <h2 id="ws-runnow-h" className="text-xl font-black tracking-tight text-foreground">
+        Run a live tool now
+      </h2>
+      <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted-foreground">
+        Each chip opens the real tool in the workspace — schema, execution and evidence state,
+        against the live door. The free tools need no account.
+      </p>
+      <ul className="mt-3 flex list-none flex-wrap gap-2 p-0" aria-label="Tools you can run right now">
+        {chips.map((name) => (
+          <li key={name}>
+            <Link
+              href={`/dashboard?tab=tools&tool=${encodeURIComponent(name)}`}
+              title={`${titleOf(name)} — tool ${name}`}
+              className="inline-flex min-h-11 items-center rounded-full border border-emerald-950/20 bg-card px-4 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700/50 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+              data-testid={`ws-runnow-${name}`}
+            >
+              {titleOf(name)}
+            </Link>
+          </li>
+        ))}
+        <li>
+          <Link
+            href="/dashboard?tab=tools"
+            className="inline-flex min-h-11 items-center rounded-full border border-dashed border-emerald-950/30 px-4 text-sm font-bold text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+            data-testid="ws-runnow-all"
+          >
+            All free tools <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+          </Link>
+        </li>
+      </ul>
+    </section>
+  );
+}
 
 /** A figure, its loading placeholder, or its failure in words. */
 export function LiveFigureLine({
@@ -53,29 +109,26 @@ export function LiveFigureLine({
 }) {
   if (read.state === "loading")
     return (
-      <p role="status" aria-live="polite" className="mt-3 text-[13px] text-muted-foreground" data-testid={testId} data-state="loading">
+      <span role="status" aria-live="polite" className="mt-3 block text-[13px] text-muted-foreground" data-testid={testId} data-state="loading">
         <span className="inline-block h-3 w-24 animate-pulse rounded bg-muted align-middle motion-reduce:animate-none" aria-hidden="true" />
         <span className="sr-only">Reading the live figure</span>
-      </p>
+      </span>
     );
   const f = read.state === "ok" ? pick(read.data) : null;
   if (!f)
     return (
-      <p className="mt-3 text-[13px] text-amber-900" data-testid={testId} data-state="unread">
+      <span className="mt-3 block text-[13px] text-amber-900" data-testid={testId} data-state="unread">
         Not read {read.state === "error" ? `(${read.error})` : "(the field is not in the payload)"}. Nothing is shown in its place.
-      </p>
+      </span>
     );
   return (
-    <p className="mt-3 text-[13px] leading-snug text-muted-foreground" data-testid={testId} data-state="live">
-      {/* Where the figure came from is a tooltip, not a line of source paths on the card face. */}
-      <span
-        className="cursor-help font-mono text-base font-black text-foreground"
-        title={`Read from ${f.source}${f.as_of ? ` · as of ${f.as_of}` : ""}`}
-      >
-        {f.value}
-      </span>{" "}
+    <span className="mt-3 block text-[13px] leading-snug text-muted-foreground" data-testid={testId} data-state="live">
+      <span className="font-mono text-base font-black text-foreground">{f.value}</span>{" "}
       {f.label}
-    </p>
+      <span className="mt-1 block break-words text-xs leading-relaxed text-muted-foreground">
+        Source: {f.source || "not supplied"} · {f.as_of ? `As of ${f.as_of}` : "Source date not supplied"}
+      </span>
+    </span>
   );
 }
 
@@ -132,7 +185,7 @@ function WorkspaceBoardCard() {
         Live leaderboard
       </p>
       <h2 id="ws-board-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
-        What the tests show today
+        What the published tests show
       </h2>
       {error ? (
         <p className="mt-4 rounded-2xl border border-amber-500/50 bg-amber-50 px-4 py-3 text-sm text-amber-950" data-testid="ws-board-error">
@@ -157,7 +210,10 @@ function WorkspaceBoardCard() {
           <p className="mt-1 text-sm leading-snug text-muted-foreground" data-testid="ws-board-separation">
             {sepLine ?? (sep ? `${sep.separated} of ${sep.comparison} model-comparison axes separated · ${sep.ties} TIE · ${sep.untested} UNTESTED` : "separation line not in the payload")}
           </p>
-          <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4" data-testid="ws-board-tiles">
+          <p id="ws-visible-axis-scope" className="mt-3 text-sm text-muted-foreground">
+            Breakdown of the {tiles.length} visible axis rows. The headline above covers the full board.
+          </p>
+          <dl aria-describedby="ws-visible-axis-scope" className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4" data-testid="ws-board-tiles">
             {(Object.keys(TILE_WORD) as TileState[])
               .filter((s) => s !== "UNMEASURED" || tiles.some((t) => t.state === s))
               .map((s) => (
@@ -170,7 +226,7 @@ function WorkspaceBoardCard() {
                 </div>
               ))}
           </dl>
-          <ul className="mt-4 flex list-none flex-wrap gap-1.5 p-0" aria-label="Every axis and its state">
+          <ul className="mt-4 flex list-none flex-wrap gap-1.5 p-0" aria-label="Visible axes and their states">
             {tiles.map((t) => (
               <li key={t.axis} title={`${t.axis}: ${TILE_WORD[t.state]}`} className="inline-flex">
                 <span className={`block h-3.5 w-3.5 rounded-[5px] ${TILE_DOT[t.state]}`} aria-hidden="true" />
@@ -514,7 +570,7 @@ export default function GspcWorkspaceHome({
       id: "corrections",
       href: "/dashboard?tab=corrections",
       title: "Corrections",
-      job: "What we got wrong, how it was caught and what changed. Published results are replaced by new ones, never edited.",
+      job: "Dated corrections, supporting evidence and changes to published results. Superseding records preserve the history.",
       img: { base: "/images/home/watchdog", w: 480, h: 268 },
       figure: <LiveFigureLine read={state} pick={correctionsFigure} testId="ws-fig-corrections" />,
     },
@@ -575,6 +631,12 @@ export default function GspcWorkspaceHome({
 
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
         <GetResults onAsk={onAsk ? askLookup : undefined} />
+
+        <RunNowStrip />
+        <p className="mt-3 text-sm text-muted-foreground">
+          Changing evaluation tools?{" "}
+          <a className="font-semibold underline underline-offset-2" href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/product/evaluation-migration-handoff.md">Check what survives a migration</a>.
+        </p>
 
         <div className="mt-6 grid gap-6 xl:grid-cols-12">
           <section id="ws-answers" aria-labelledby="ws-ask-h" className="min-w-0 scroll-mt-4 xl:col-span-7">

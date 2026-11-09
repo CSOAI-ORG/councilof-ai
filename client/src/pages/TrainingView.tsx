@@ -1,6 +1,6 @@
 // TrainingView — the Council OS "Live Training" tab.
 // The frozen→fluid bridge maps selected /api/regulation deadline rows to existing
-// Academy courses. The in-game trainer and per-quest signed record are designs,
+// Academy reference paths. The in-game trainer and per-quest signed record are designs,
 // not shipped capabilities.
 //
 // Register: training attestation, never certification. A completed quest attests
@@ -33,13 +33,13 @@ interface Quest {
 }
 
 const COURSE_MAP: Record<string, { course: string; href: string; town: string }> = {
-  "EU AI Act": { course: "EU AI Act Deep Dive", href: "/credential-training", town: "EU AI Act quest — keep the town's GPAI providers Art 50-transparent" },
-  "Texas TRAIGA (HB 149)": { course: "AI Safety Fundamentals", href: "/credential-training", town: "Texas TRAIGA quest — 60-day cure: find the non-compliant deploy before the AG does" },
-  "California SB 53": { course: "AI Safety Fundamentals", href: "/credential-training", town: "CA SB 53 quest — frontier developer disclosure: who must file and when" },
-  "China GB 45438-2025": { course: "Incident Analysis", href: "/credential-training", town: "GB 45438 quest — spot the AI content missing its mandatory label" },
-  "EU Cyber Resilience Act": { course: "Incident Analysis", href: "/credential-training", town: "CRA quest — 24h early warning: the town's IoT fleet got breached" },
-  "Illinois SB 315": { course: "NIST AI RMF", href: "/credential-training", town: "IL SB 315 quest — first US audit mandate: walk the frontier model through its audit" },
-  "EU Product Liability Directive": { course: "NIST AI RMF", href: "/credential-training", town: "PLD quest — strict liability: trace the defective software's lineage" },
+  "EU AI Act": { course: "Academy reference paths", href: "/academy/", town: "EU AI Act quest — keep the town's GPAI providers Art 50-transparent" },
+  "Texas TRAIGA (HB 149)": { course: "Academy reference paths", href: "/academy/", town: "Texas TRAIGA quest — 60-day cure: find the non-compliant deploy before the AG does" },
+  "California SB 53": { course: "Academy reference paths", href: "/academy/", town: "CA SB 53 quest — frontier developer disclosure: who must file and when" },
+  "China GB 45438-2025": { course: "Academy reference paths", href: "/academy/", town: "GB 45438 quest — spot the AI content missing its mandatory label" },
+  "EU Cyber Resilience Act": { course: "Academy reference paths", href: "/academy/", town: "CRA quest — 24h early warning: the town's IoT fleet got breached" },
+  "Illinois SB 315": { course: "Academy reference paths", href: "/academy/", town: "IL SB 315 quest — first US audit mandate: walk the frontier model through its audit" },
+  "EU Product Liability Directive": { course: "Academy reference paths", href: "/academy/", town: "PLD quest — strict liability: trace the defective software's lineage" },
 };
 
 export default function TrainingView() {
@@ -85,7 +85,7 @@ export default function TrainingView() {
           Frozen → fluid: selected deadline rows from the regulation feed map to{" "}
           <span className="text-emerald-300">course prompts</span>. When a mapped row changes,
           this view can update. What is available today: the deadline feed and
-          the Academy course each quest maps to. The in-game town leg and the signed per-quest
+          the Academy reference paths for reviewing each prompt. The in-game town leg and the signed per-quest
           training record are <span className="text-amber-300">not built yet</span> — the cards
           below say so instead of linking you to a page that cannot train you.
           <span className="text-amber-300"> Attestation of training, never certification of conformity.</span>
@@ -169,8 +169,8 @@ export default function TrainingView() {
         Quest source: /api/regulation (schema csoai.regulation-deadlines/0.1; inspect the response
         for its own source and freshness fields). When the signed per-quest training record
         ships it will attest training against the provision-version at completion time — never a
-        certification of conformity. Today the Academy issues its own completion records; no
-        per-quest record exists yet and none is implied.
+        certification of conformity. Academy completion-record issuance is not open yet, and no
+        per-quest record exists. These links are reference paths, not completed courses or issued records.
         A mapped feed-row change can update this course prompt.
       </p>
     </div>

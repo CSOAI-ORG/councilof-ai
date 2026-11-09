@@ -16,7 +16,7 @@
     "reachable_distinct_servers": 2,
     "unreachable_endpoints": 0,
     "catalogued_not_probed": 6,
-    "tools_probed": 104,
+    "tools_probed": 108,
     "tools_catalogued_not_probed": null,
     "external_catalogues_not_probed": [
       {
@@ -27,8 +27,8 @@
         "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
       }
     ],
-    "started": "2026-10-26T08:25:31.290Z",
-    "finished": "2026-10-26T08:25:32.636Z"
+    "started": "2026-11-03T03:44:55.199Z",
+    "finished": "2026-11-03T03:44:56.172Z"
   },
   "servers": [
     {
@@ -39,11 +39,11 @@
       "role": "primary",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-10-26T08:25:31.866Z",
+      "last_probed": "2026-11-03T03:44:55.595Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 52,
+      "tools_count": 54,
       "tools": [
         {
           "name": "board_totals",
@@ -293,6 +293,18 @@
           "name": "axis_serving-fidelity",
           "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": []
+        },
+        {
+          "name": "axis_watchdog-ingest",
+          "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "framework_readiness",
+          "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+          "required_args": [
+            "framework"
+          ]
         },
         {
           "name": "commission_card",
@@ -341,11 +353,11 @@
       "role": "fallback",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-10-26T08:25:32.196Z",
+      "last_probed": "2026-11-03T03:44:55.855Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 52,
+      "tools_count": 54,
       "tools": [
         {
           "name": "board_totals",
@@ -595,6 +607,18 @@
           "name": "axis_serving-fidelity",
           "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": []
+        },
+        {
+          "name": "axis_watchdog-ingest",
+          "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "framework_readiness",
+          "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+          "required_args": [
+            "framework"
+          ]
         },
         {
           "name": "commission_card",
@@ -643,11 +667,11 @@
       "role": "alias",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-10-26T08:25:32.382Z",
+      "last_probed": "2026-11-03T03:44:56.015Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.4",
-      "tools_count": 52,
+      "tools_count": 54,
       "tools": [
         {
           "name": "board_totals",
@@ -897,6 +921,18 @@
           "name": "axis_serving-fidelity",
           "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": []
+        },
+        {
+          "name": "axis_watchdog-ingest",
+          "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "framework_readiness",
+          "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+          "required_args": [
+            "framework"
+          ]
         },
         {
           "name": "commission_card",
@@ -945,11 +981,11 @@
       "role": "stdio",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-10-26T08:25:32.636Z",
+      "last_probed": "2026-11-03T03:44:56.171Z",
       "http_status": null,
       "protocol_version": "2024-11-05",
-      "server_version": "0.2.3",
-      "tools_count": 52,
+      "server_version": "0.2.5",
+      "tools_count": 54,
       "tools": [
         {
           "name": "board_totals",
@@ -1199,6 +1235,18 @@
           "name": "axis_serving-fidelity",
           "description": "The serving-fidelity axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": []
+        },
+        {
+          "name": "axis_watchdog-ingest",
+          "description": "The watchdog-ingest axis of the live GSPC board at https://councilof.ai/api/gspc — this tool IS the axis, so it takes no argument: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": []
+        },
+        {
+          "name": "framework_readiness",
+          "description": "A deterministic readiness checklist over one governance framework: eu-ai-act, dora, nis2, gdpr, iso-27001, nist-csf, soc2, pci-dss or cra. For each checklist item the tool returns the published provision it is keyed to (article or clause), a plain-words requirement summary, the evidence that would show readiness for it, and the question it opens for your own compliance function. Optional sector gives a pointer to which of the nine frameworks commonly bind that sector; optional role is echoed for your notes. There is no score, no pass or fail, and no status for the caller: a checklist lays out what evidence would be measured, it does not certify compliance, it is not legal advice, and it is not a conformity assessment. Runs no model, fetches nothing, stores nothing; the same arguments always return the same answer.",
+          "required_args": [
+            "framework"
+          ]
         },
         {
           "name": "commission_card",

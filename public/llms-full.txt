@@ -17,12 +17,19 @@ stays empty.
 
 ## Canonical company summary
 
-Council of AI is the public measurement service operated by CSOAI Ltd, a company incorporated in
-England and Wales on 2 January 2026 (Companies House 16939677), founded by Nicholas Templeman. It
-publishes independent measurement and claim-maintenance infrastructure for AI systems, agents and
-the endpoints they call: published test instruments, signed records, free verification, a dated
-corrections ledger and machine-readable interfaces. CSOAI measures; it does not certify, accredit or
-issue legal-compliance determinations.
+Council of AI is an operating AI measurement and evidence organisation, operated by CSOAI Ltd,
+a company incorporated in England and Wales on 2 January 2026 (Companies House 16939677), founded
+by Nicholas Templeman. It runs published test instruments and maintains signed records, free
+verification, a dated corrections ledger and machine-readable interfaces for AI systems, agents
+and the endpoints they call. CSOAI measures; it does not certify, accredit or issue legal-compliance
+determinations.
+
+Documented external use: https://councilof.ai/traction/#external-use. This source-linked record
+separates externally operated code execution, implementation of proposals and use of research,
+with dates and limits for each example. Read the individual records before making an adoption
+claim. Package-download events measure technical distribution; they are not unique people,
+customers or independently verified deployments. Operating evidence and company/IP valuation
+are separate assessments.
 
 For operating figures, fetch the named live endpoints rather than freezing a search snippet. The
 417-entry legal corpus is a provision-hash manifest, not a claim that 417 provisions are active
@@ -34,7 +41,8 @@ must not be rewritten as one.
 
 ## 1. CURRENT MEASUREMENT COVERAGE
 
-The GSPC board: **33 axes · 23 measured** = 14 model-comparison + 9 deterministic-fact.
+The GSPC board: **34 axes · 34 measured**. Read each row's kind and method alongside the totals;
+model-comparison, deterministic-fact and measured-subject rows answer different questions.
 Measurement, not certification. Anyone can re-check.
 
 ### 1a. What MEASURED means here, and what it does not mean
@@ -53,7 +61,7 @@ its own live fields on GET /api/gspc. Read from the same fetch as the snapshot i
 The 9 deterministic-fact axes have no fleet and no leader, so no separation test applies to
 them; they are not counted as untested and they enter no mean.
 
-Therefore: "23 measured of 33" means a run exists behind 23 of the 33 slots and 10 are declared slots with none. It is NOT a claim that
+Therefore: "34 measured of 34" means a run exists behind 34 of the 34 slots and 0 are declared slots with none. It is NOT a claim that
 any axis can tell two models apart, and any phrasing a reader could take that way is wrong. When you
 quote the measured count, quote the four separation fields beside it. TIE is TIE and UNTESTED is not
 a win; both are first-class states and neither is hidden. This section describes the board as it
@@ -71,19 +79,19 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 
 - Catalog: GET https://councilof.ai/api/x402
 - Manifest: GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC)
-- MCP: POST https://councilof.ai/mcp — 52 tools (forty-seven free readers plus five x402-metered). tools/call without `x_payment` returns the route's 402 as structuredContent; pay, then call again with `x_payment`. Quote `paid_tools.names` from GET https://councilof.ai/mcp; do not freeze the list here.
-- HTTP doors (GET → 402 unless `X-PAYMENT` / facilitator settlement):
-  - https://councilof.ai/api/request-attestation?subject=<id>
+- MCP: POST https://councilof.ai/mcp — 54 tools (forty-nine free readers plus five x402-metered). tools/call without `x_payment` returns the route's 402 as structuredContent; pay, then call again with `x_payment`. Quote `paid_tools.names` from GET https://councilof.ai/mcp; do not freeze the list here.
+- HTTP doors (GET → 402 unless `X-PAYMENT` / facilitator settlement). A line in backticks carries a `<slot>`: it is a pattern to fill in on this origin, not an address. Requests that answer as written are listed per door in https://councilof.ai/llms.txt and in https://councilof.ai/.well-known/x402.json (`resources[].url`).
+  - `GET /api/request-attestation?subject=<id>`
     - Follow a commission (free): GET https://councilof.ai/api/commissions — per subject `fulfillment` QUEUED | RETRIEVABLE | UNFULFILLABLE, `retrieval` points at the signed cards, `by_origin` separates OUTSIDE from SELF_TEST. Quote it live; a settled request is not a measurement until a signed card is retrievable.
   - https://councilof.ai/api/eunomia-data?feed=1
   - https://councilof.ai/api/proof?bundle=1
-  - https://councilof.ai/api/rwa/evidence?asset=<symbol>
-  - https://councilof.ai/api/receipts/batch?from=<iso>
-  - https://councilof.ai/api/art50/marking-evidence?url=<https-url>
+  - `GET /api/rwa/evidence?asset=<symbol>`
+  - `GET /api/receipts/batch?from=<iso>`
+  - `GET /api/art50/marking-evidence?url=<https-url>`
   - https://councilof.ai/api/feeds/provider-diff?history=1
-  - https://councilof.ai/api/evidence-bundle?obligation=article-50&subject=<id>&bundle=1
-  - https://councilof.ai/api/wrapper?id=<pair>
-  - https://councilof.ai/api/wrapper/changes?id=<pair>
+  - `GET /api/evidence-bundle?obligation=article-50&subject=<id>&bundle=1`
+  - `GET /api/wrapper?id=<pair>`
+  - `GET /api/wrapper/changes?id=<pair>`
 - Free preview: omit `bundle=1` or add `preview=1` as the 402 body documents. Verify stays free: https://councilof.ai/gspc-verify
 
 ## 2. CURRENT BOARD SNAPSHOT
@@ -98,17 +106,17 @@ board moves, so treat this as a copy and re-fetch for current values.
   "schema": "csoai.gspc-axes/0.5",
   "as_of": null,
   "totals": {
-    "axes": 33,
-    "measured_axes": 23,
-    "unmeasured_axes": 10,
-    "quotable_axes": 23,
-    "public_count": "33 axes · 23 measured",
+    "axes": 34,
+    "measured_axes": 34,
+    "unmeasured_axes": 0,
+    "quotable_axes": 34,
+    "public_count": "34 axes · 34 measured",
     "separation_public_count": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
     "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axes with a RUN behind them; it is not a count of axes with a separated result. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
     "model_fleets": 14,
     "model_fleets_note": "Counts model-comparison AXES (one fleet per axis), not models. The number of distinct models measured is a different quantity, derived from the signed cards: /interop/models-measured.json (list at /models-measured/).",
     "fact_runs": 9,
-    "count_grammar": "33 axes are on the board; 23 of them carry a measurement and 10 are declared slots with no run behind them. The larger number counts slots, the smaller counts measurements — quote both or quote the smaller. A published slot exists so the gap is visible; it is not evidence of anything having been measured. A measurement is not a separated leader either: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED.",
+    "count_grammar": "34 axes are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
     "by_family": {
       "gspc": {
         "axes": 15,
@@ -116,9 +124,9 @@ board moves, so treat this as a copy and re-fetch for current values.
         "note": "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically. Plus effect-binding (ADR-002), a deterministic-facts probe of tool-call SERVERS, not a fleet: n counts servers probed, it has no leader, no accuracy and no separation, and it joins no mean."
       },
       "subject": {
-        "axes": 10,
-        "measured": 0,
-        "note": "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). Declared slots, UNMEASURED until a frozen sha-pinned bank with n_valid >= 30 passes the gate. Census checks are a DISCOVERED check grid, never scores here. No aggregate score and no overall rank."
+        "axes": 11,
+        "measured": 11,
+        "note": "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). All 11 are MEASURED via frozen sha-pinned banks with n_valid >= 30 (kind 'measured-subject'), measuring their own subject class rather than models, so they have no leader, no accuracy and no separation and join no mean. Census checks are a DISCOVERED check grid, never scores here. No aggregate score and no overall rank."
       },
       "financial": {
         "axes": 8,
@@ -153,7 +161,7 @@ board moves, so treat this as a copy and re-fetch for current values.
     },
     "license": "CC-BY-4.0",
     "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
-    "items": 1230,
+    "items": 1844,
     "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
     "comparison_axes": 14,
     "separated_leads": 0,
@@ -162,7 +170,7 @@ board moves, so treat this as a copy and re-fetch for current values.
     "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
     "externally_led_axes": 9,
     "public_leader_count": 9,
-    "lid": "23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
+    "lid": "34 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
     "own_leaders_excluded": 8,
     "own_leaders_excluded_axes": [
       "governance",
@@ -400,82 +408,82 @@ board moves, so treat this as a copy and re-fetch for current values.
     },
     {
       "axis": "lab-practice",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "subject",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "measured-subject",
+      "n": 37,
       "accuracy": null,
       "separation": null
     },
     {
       "axis": "company-practice",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "subject",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "measured-subject",
+      "n": 40,
       "accuracy": null,
       "separation": null
     },
     {
       "axis": "measurer-integrity",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "subject",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "measured-subject",
+      "n": 40,
       "accuracy": null,
       "separation": null
     },
     {
       "axis": "harness-fidelity",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "subject",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "measured-subject",
+      "n": 36,
       "accuracy": null,
       "separation": null
     },
     {
       "axis": "interop-conformance",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "subject",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "measured-subject",
+      "n": 34,
       "accuracy": null,
       "separation": null
     },
     {
       "axis": "humanoid-deployment",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "subject",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "measured-subject",
+      "n": 35,
       "accuracy": null,
       "separation": null
     },
     {
       "axis": "interpretability-reproducibility",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "subject",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "measured-subject",
+      "n": 33,
       "accuracy": null,
       "separation": null
     },
     {
       "axis": "claim-maintenance",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "subject",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "measured-subject",
+      "n": 174,
       "accuracy": null,
       "separation": null
     },
     {
       "axis": "serving-fidelity",
-      "status": "UNMEASURED",
+      "status": "MEASURED",
       "family": "subject",
-      "kind": "declared-slot",
-      "n": 0,
+      "kind": "measured-subject",
+      "n": 38,
       "accuracy": null,
       "separation": null
     }
@@ -483,7 +491,7 @@ board moves, so treat this as a copy and re-fetch for current values.
 }
 ```
 
-## 3. THE AXES — deep reference (33 axes · 23 measured, read live at generation)
+## 3. THE AXES — deep reference (34 axes · 34 measured, read live at generation)
 
 Every block below is rendered from the same GET /api/gspc fetch as the snapshot above; nothing in it is typed. The `row` URL filters the live board to that one axis; `page` is the per-axis reference page; `bank`/`evidence` is what stands behind the row.
 
@@ -718,75 +726,84 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 
 ### lab-practice
 - family: `subject`
-- kind: `declared-slot`
-- status: `UNMEASURED`
-- n: 0
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 37 (subjects in the frozen frame)
 - row: https://councilof.ai/api/gspc?axis=lab-practice
 - page: https://councilof.ai/axis/lab-practice
+- evidence: https://councilof.ai/interop/axis-banks/lab-practice-20261102.json
 
 ### company-practice
 - family: `subject`
-- kind: `declared-slot`
-- status: `UNMEASURED`
-- n: 0
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 40 (subjects in the frozen frame)
 - row: https://councilof.ai/api/gspc?axis=company-practice
 - page: https://councilof.ai/axis/company-practice
+- evidence: https://councilof.ai/interop/axis-banks/company-practice-20261102.json
 
 ### measurer-integrity
 - family: `subject`
-- kind: `declared-slot`
-- status: `UNMEASURED`
-- n: 0
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 40 (subjects in the frozen frame)
 - row: https://councilof.ai/api/gspc?axis=measurer-integrity
 - page: https://councilof.ai/axis/measurer-integrity
+- evidence: https://councilof.ai/interop/axis-banks/measurer-integrity-20261102.json
 
 ### harness-fidelity
 - family: `subject`
-- kind: `declared-slot`
-- status: `UNMEASURED`
-- n: 0
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 36 (subjects in the frozen frame)
 - row: https://councilof.ai/api/gspc?axis=harness-fidelity
 - page: https://councilof.ai/axis/harness-fidelity
+- evidence: https://councilof.ai/interop/axis-banks/harness-fidelity-20261102.json
 
 ### interop-conformance
 - family: `subject`
-- kind: `declared-slot`
-- status: `UNMEASURED`
-- n: 0
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 34 (subjects in the frozen frame)
 - row: https://councilof.ai/api/gspc?axis=interop-conformance
 - page: https://councilof.ai/axis/interop-conformance
+- evidence: https://councilof.ai/interop/axis-banks/interop-conformance-20261102.json
 
 ### humanoid-deployment
 - family: `subject`
-- kind: `declared-slot`
-- status: `UNMEASURED`
-- n: 0
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 35 (subjects in the frozen frame)
 - row: https://councilof.ai/api/gspc?axis=humanoid-deployment
 - page: https://councilof.ai/axis/humanoid-deployment
+- evidence: https://councilof.ai/interop/axis-banks/humanoid-deployment-20261102.json
 
 ### interpretability-reproducibility
 - family: `subject`
-- kind: `declared-slot`
-- status: `UNMEASURED`
-- n: 0
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 33 (subjects in the frozen frame)
 - row: https://councilof.ai/api/gspc?axis=interpretability-reproducibility
 - page: https://councilof.ai/axis/interpretability-reproducibility
+- evidence: https://councilof.ai/interop/axis-banks/interpretability-reproducibility-20261102.json
 
 ### claim-maintenance
 - family: `subject`
-- kind: `declared-slot`
-- status: `UNMEASURED`
-- n: 0
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 174
 - row: https://councilof.ai/api/gspc?axis=claim-maintenance
 - page: https://councilof.ai/axis/claim-maintenance
+- evidence: https://councilof.ai/interop/claim-maintenance-wave-2026-10-28.json
 
 ### serving-fidelity
 - family: `subject`
-- kind: `declared-slot`
-- status: `UNMEASURED`
-- n: 0
+- kind: `measured-subject`
+- status: `MEASURED`
+- n: 38 (subjects in the frozen frame)
 - row: https://councilof.ai/api/gspc?axis=serving-fidelity
 - page: https://councilof.ai/axis/serving-fidelity
+- evidence: https://councilof.ai/interop/axis-banks/serving-fidelity-20261102.json
 
 ## 3a. DATED EFFECT-BINDING PROBE ACCOUNT
 
@@ -813,7 +830,7 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
       "date": "2026-09-02",
       "what_was_wrong": "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis \u00b7 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
       "how_caught": "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive) [custody corrected by C-2026-0925-01: all three shares sit on one host, one failure domain; the split was never performed]. Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
-      "fix": "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots \u00b7 22 measured). The 15/7 file is superseded, not edited. The Pages /api/board-sign path was not used \u2014 it is a 3KB card-sign and cannot carry this snapshot.",
+      "fix": "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots \u00b7 22 measured). The 15/7 file is superseded, not edited. The Pages POST /api/board-sign path was not used \u2014 it is a 3KB card-sign and cannot carry this snapshot.",
       "status": "CORRECTED IN THAT SNAPSHOT \u2014 re-check the current axis arrays and signature state"
     },
     {
@@ -881,7 +898,7 @@ have zero identifier overlap. Machine-readable state: `/interop/root-witness-lat
 
 ## 7. THE MCP DOOR
 
-`POST https://councilof.ai/mcp` — 52 tools: forty-seven free readers plus five x402-metered evidence tools. Quote live `tools/list` and GET https://councilof.ai/mcp; do not freeze names here. tools/call without `x_payment` returns the route's 402 as structuredContent. A 402 is not settlement. Measurement, not certification.
+`POST https://councilof.ai/mcp` — 54 tools: forty-nine free readers plus five x402-metered evidence tools. Quote live `tools/list` and GET https://councilof.ai/mcp; do not freeze names here. tools/call without `x_payment` returns the route's 402 as structuredContent. A 402 is not settlement. Measurement, not certification.
 
 ## 7b. CLAIM MAINTENANCE — the category, the specification, the register
 
@@ -900,7 +917,7 @@ translated without our permission: https://councilof.ai/spec/claim-maintenance/v
   · version index (a published version is never edited; v0.2 supersedes by existing):
     https://councilof.ai/spec/claim-maintenance/
   · cite as: Council of AI. Claim Maintenance, version 0.1. CSOAI Ltd, 2026-09-22.
-    DOI 10.5281/zenodo.22901908 · all versions 10.5281/zenodo.22901781 — UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (status UNCHECKABLE; see https://councilof.ai/interop/zenodo-status.json).
+    DOI 10.5281/zenodo.22901908 · all versions 10.5281/zenodo.22901781 — these records returned HTTP 410; see the dated record-level checks at https://councilof.ai/interop/zenodo-status.json.
     The deposited bytes and the served bytes are identical (same SHA-256), which is why the DOI is
     recorded in a sidecar rather than written into the document of record.
 
@@ -947,6 +964,9 @@ was a number that had stopped being true. Count the rows.
    Free read-only door for chat clients, no key: `POST https://councilof.ai/mcp/free`. Claude Code:
    `claude mcp add --transport http council-of-ai https://councilof.ai/mcp/free`
 2. A2A (agent to agent) — `POST https://councilof.ai/api/a2a`, JSON-RPC v1.0; SendMessage answers
+   Agent Skills: `GET https://councilof.ai/.well-known/agent-skills/index.json` lists the 15
+   executable skills; the index lists every skill id and the path of its `SKILL.md`,
+   and each SKILL.md names the exact call it makes.
    with the live lid derived from /api/gspc. The interface `/.well-known/agent-card.json` names.
 3. AG-UI (agent to user) — `GET https://councilof.ai/api/agui/gspc-state`, SSE STATE_DELTA +
    TEXT_MESSAGE_CONTENT derived from /api/gspc per request. Presentation transport: it renders
@@ -956,6 +976,8 @@ was a number that had stopped being true. Count the rows.
 6. Hermes integration — no public install package is currently advertised
 7. REST + curl — `curl https://councilof.ai/api/gspc`
    If a public source refuses a request, retain its HTTP status and observation time. Report the source as unreachable for that request; do not substitute a cached value or work around an access restriction.
+
+The install guide for those doors — the canonical remote install for any client, the exact reviewed tool catalog, and the safe first checks — is at https://councilof.ai/llms-install.md.
 
 The source-linked SOV World observatory is at https://councilof.ai/world/observatory/.
 It is a dated simulation archive; its source date and upstream signature-verification status are shown on the page.
@@ -1018,16 +1040,16 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-10-28T20:45:55Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-11-07T23:24:56Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 678. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 698. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 677.
-- Still calendar-pending: 1. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 696.
+- Still calendar-pending: 2. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
-- Proofs whose subject is not served beside them: 73 — an anchor a reader cannot check
+- Proofs whose subject is not served beside them: 89 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
 - This producer does not check block headers against a Bitcoin node. `ots verify` against your own
   node does that, and an .ots is not a proof because of its file extension.
@@ -1060,9 +1082,34 @@ Each record below is a dated account of what public sources state, with its sour
 - Disclosure lag, the Medicare statistics portal agent access: https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/ — record https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/record.json (board signature record.signed.json and OpenTimestamps proof record.json.ots beside it)
 - Disclosure lag, the Gemini cyber-evaluation access to outside systems: https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/ — record https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/record.json (same three files)
 - signed-receipts/v1 conformance kit — test vectors, Python and Node runners, reference results; the reference verifier answers UNVERIFIABLE_KEY, never VALID, for a key it cannot resolve: https://councilof.ai/spec/signed-receipts/v1/conformance/ — vectors https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json — specification https://councilof.ai/spec/signed-receipts/
-- COBOL copybook decoding test corpus — records whose correct values are known by construction, with must-fail controls; CC0; results against open-source decoders are held until each project's maintainers have seen them: https://huggingface.co/datasets/csoai/cobol-copybook-decoding-corpus
+- COBOL copybook decoding test corpus — records whose correct values are known by construction, with must-fail controls; CC0. Held private while results against open-source decoders wait for each project's maintainers to have seen them: the dataset address does not open yet, so it is not linked here. Measured results are published through the records feed below the day the hold lifts.
 - All of the signed records above, plus corrections and daily notes, as a feed: https://councilof.ai/feeds/records.xml (Atom) — https://councilof.ai/feeds/records.json (JSON Feed)
 
+## 10d. PUBLISHED INTEROP FILES — every file under /interop/, with its digest (except the index itself)
+
+Derived at generation from https://councilof.ai/interop/file-index.json (same bytes on disk at
+public/interop/file-index.json, schema csoai.interop-file-index/0.2, artifact as_of 2026-11-08T04:46:22Z). It is a
+MEASUREMENT of the published tree, not a list of intentions: each row carries the path, the size,
+the SHA-256 of the bytes and how the file is served.
+
+The index does not list itself. A file cannot carry its own digest — hashing the published index
+gives a digest that depends on the digest — so a row claiming one would be wrong the moment it was
+written. Every OTHER file under /interop/ is listed.
+
+- Files indexed: 16,365. Bytes indexed: 259,218,521.
+- By how they are served: 13,240 hf-mirror; 3,119 pages; 6 retired-bytes.
+- hf-mirror: routed by a 302 redirect to the HuggingFace evidence mirror (scripts/deploy-exclusions.json); the sha256 is of the canonical tree bytes, which are the bytes the mirror holds. THE MIRROR IS A SEPARATE HOST AND ITS MEMBERSHIP IS NOT RECORDED HERE, so this row's claim is true UNDER THE CONDITION THAT THE MIRROR STILL HOLDS THE FILE. MEASURED 2026-11-07: all five mirror classes (mill-cards-signed, mill-cards-unsigned, mill-evidence, the file-kind exclusions and the ots/*.invalid records) resolved ANONYMOUSLY with HTTP 200 and an exact digest match. If the mirror ever stops holding a path, the reader gets HUGGINGFACE's 'Entry not found' — a 404 and a 15-byte body from the mirror, NOT from this site — so a mismatch on one of these rows is a statement about the mirror's membership until it is shown otherwise
+- pages: served by the site build
+- retired-bytes: a retired .invalid record. The estate's Function intercepts every .invalid path and serves it from the retired-bytes archive when that archive holds these exact bytes (200, x-evidence-state: retired-or-invalid-historical-bytes), and answers 404 BY DESIGN when it does not. The sha256 is of the canonical tree bytes, which are the bytes the archive copies verbatim. Which case applies is decided by the archive in force, published at /archive/retired-proof-bytes-v1.json
+- By how the served bytes compare with the published bytes: 16,364 as-published; 1 edge-transformed-per-request.
+- as-published: the bytes the site serves for this path are the bytes the estate published here; the sha256 is checkable against a fetch
+- edge-transformed-per-request: the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate
+- To check one file: fetch its path and hash it. On a row whose served_bytes reads "as-published", a
+  match means you hold the bytes the estate published. On a row the edge rewrites, the bytes the
+  site serves are NOT the bytes published, and on a row the edge rewrites PER REQUEST the served
+  bytes differ on every fetch, so no digest of them can be reproduced. The index says a file is
+  PRESENT and, where it says so, IDENTICAL to what is served — not that it is measured, signed,
+  certified or true.
 ## 11. WE HOLD NO CERTIFICATION UNDER ANY STATUTORY SCHEME
 
 A regulated category adjacent to ours now exists in US state law.

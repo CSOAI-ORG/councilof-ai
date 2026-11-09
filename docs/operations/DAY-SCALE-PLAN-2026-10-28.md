@@ -1,5 +1,20 @@
 # Day-scale plan — what the estate still needs, and what it actually costs
 
+> **30 October correction — promotion assumptions superseded.** The estimates below are a
+> historical plan, not evidence that ten promotions are ready. Use the
+> [current completion review](TEN-AXIS-COMPLETION-2026-10-30.md) and its retained evidence.
+> The regulator census has **six target objects**, not 126 measurement units; 126 was
+> a text-line count. The agent interop census does not automatically measure standards
+> groups or evaluation organisations. Source reachability and keyword totals do not
+> establish the declared constructs. Claim disclosure/withdrawal review, subject identity,
+> applicable methods, behavioral execution and the genuine admission process remain open.
+> A named humanoid registry has also been recovered: 30 programmes comprise 13 announced,
+> 13 pilots and four historically labelled deployed, not 30 verified deployments. The
+> current work includes a real 39-case Tracr example reproduction, with explicit limits.
+> All ten subject axes remain unmeasured; the dates and “blocked by nothing” statements
+> below must not be used as current delivery commitments.
+
+
 *Produced 2026-10-28. Every count below was read from bytes today; every "day" is an estimate for
 work that has not been done, and is marked as such.*
 
@@ -115,5 +130,10 @@ fact table, so the published corpus stops being a lossy 19-model subset of a 57-
   Kimi K3.1 Pro (24/24 vs MEOK's 9/24, paired exact McNemar p = 6.10 × 10⁻⁵). The only missing
   thing is a balance: the OpenRouter key authenticates, lists `openai/gpt-6.1-terra` among 464
   models, and then answers chat completions with HTTP 402.
+  - *Corrected 2026-10-29:* that harness is the sibling Kimi regeneration repo's 24-item probe
+    (`inspect_tasks/gspc_governance.py`), not a path in this repository, and the comparison's schema
+    `council-os.paired-model-comparison/0.1` is registered nowhere in this estate — so neither is
+    verifiable from councilof.ai. What runs **here** is `harness/bench/run_bench.py --axis
+    governance` over the 237-item `csoai/gspc-gov` bank, graded by the mill's `read_label`.
 - **A doctrine that a slot's absence is a result, not a gap** is already in place and is why the
   board can say "10 declared, 0 measured" and mean it.

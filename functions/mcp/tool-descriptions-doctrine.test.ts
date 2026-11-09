@@ -80,6 +80,20 @@ describe("doctrine lint — the scanner (failing first)", () => {
     expect(doctrineViolations("We do not rank. The model is compliant.")).toHaveLength(1);
   });
 
+  it("recognises an exact external publication citation without exempting surrounding claims", () => {
+    const citation = {title:"Artificial Guarantees",url:"https://controlai.org/artificial-guarantees"};
+    expect(jsonViolations(citation,"source")).toEqual([]);
+    expect(jsonViolations({...citation,description:"Guaranteed accurate."},"source")).toHaveLength(1);
+    expect(doctrineViolations("Our service guarantees accurate results.")).toHaveLength(1);
+  });
+
+  it("a modified title, URL or unsupported citation still fails the wording guard", () => {
+    const citation = {title:"Artificial Guarantees",url:"https://controlai.org/artificial-guarantees"};
+    expect(jsonViolations({...citation,title:"Artificial Guarantees certifies you"},"source").length).toBeGreaterThan(0);
+    expect(jsonViolations({...citation,url:citation.url+"/guaranteed-service"},"source").length).toBeGreaterThan(0);
+    expect(jsonViolations({title:citation.title},"source").length).toBeGreaterThan(0);
+  });
+
   it("JSON under a negation key is a denial by construction", () => {
     expect(jsonViolations({ explicitly_not: ["certification", "conformity-assessment"], description: "reads the board" }, "x")).toEqual([]);
     expect(jsonViolations({ description: "a certified reading" }, "x")).toHaveLength(1);

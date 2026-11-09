@@ -53,6 +53,8 @@ export type LobbyTabId =
   | "archive"
   | "attestations"
   | "evidence"
+  | "evidence-delivery"
+  | "axis-specialists"
   | "embed"
   | "art50"
   | "standards"
@@ -67,6 +69,10 @@ export type LobbyTabId =
   | "workbench"
   | "software"
   | "learn"
+  | "evidence-learning"
+  | "academy"
+  | "ruler"
+  | "him"
   | "staff"
   | "research"
   | "play"
@@ -139,6 +145,14 @@ export const LOBBY_TABS: LobbyTab[] = [
     cues: /\b(my results?|my requests?|my orders?|my jobs?|status of my|receipt status)\b/i,
   },
   {
+    id: "evidence-learning",
+    label: "Evidence & learning",
+    blurb: "Read public GSPC evidence, practise source-scope decisions and prepare a local human-review draft. No external action.",
+    path: "",
+    kind: "native",
+    cues: /\b(evidence learning|evidence and learning|evidence literacy|learning bridge)\b/i,
+  },
+  {
     id: "learn",
     label: "Learning arena",
     blurb:
@@ -149,13 +163,29 @@ export const LOBBY_TABS: LobbyTab[] = [
     cues: /\b(learn|learning|training arena|mooc|coach|learning path|fix lab)\b/i,
   },
   {
+    id: "academy",
+    label: "Academy",
+    blurb:
+      "Council Academy — learn the statute and the method. Completion-record issuance is not currently open.",
+    path: "/academy",
+    cues: /\b(academy|council academy|lessons?|curriculum)\b/i,
+  },
+  {
+    id: "him",
+    label: "H.I.M. review",
+    blurb:
+      "The human-in-the-loop layer by name: where an AI proposal stops, who decides, and which gates are live. A receipt records a decision; it does not certify it.",
+    path: "/him",
+    cues: /\b(him|h\.?i\.?m\.?|human in the loop|human review gate|named human)\b/i,
+  },
+  {
     id: "staff",
     label: "Staff & human review",
     blurb:
       "Ask the AI staff, inspect escalations, complete the live-record competency check, and see exactly whether human decisions are unlocked, signed and persisted.",
     path: "",
     kind: "native",
-    cues: /\b(staff|human review|human[- ]in[- ]the[- ]loop|hitl|h\.i\.m\.|competency (?:check|module)|review queue|operator decision)\b/i,
+    cues: /\b(staff|human review|human[- ]in[- ]the[- ]loop|hitl|competency (?:check|module)|review queue|operator decision)\b/i,
   },
   {
     id: "research",
@@ -326,7 +356,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "corrections",
     label: "Corrections",
     blurb:
-      "The public corrections ledger: what we got wrong, how it was caught and what changed, newest first, read live from GET /api/corrections.",
+      "The public corrections ledger: dated changes, their causes and supporting evidence, newest first, read from GET /api/corrections.",
     path: "",
     kind: "native",
     cues: /\b(corrections|what (?:did )?you get wrong|withdrawals?|errata)\b/i,
@@ -356,6 +386,24 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(gpai evidence pack|evidence index|evidence pack|gpai evidence|gpai)\b/i,
+  },
+  {
+    id: "evidence-delivery",
+    label: "Evidence delivery",
+    blurb:
+      "Prepare a local evidence draft with MEOK H.I.M. review, then explicitly submit it for an unsigned Council A2A Message. No GSPC measurement, signature, anchor or durable storage.",
+    path: "",
+    kind: "native",
+    cues: /\b(evidence delivery|deliver evidence|local evidence|unsigned draft|a2a handoff)\b/i,
+  },
+  {
+    id: "axis-specialists",
+    label: "Axis specialists",
+    blurb:
+      "Thirty-three bounded MEOK Hive specialists — one per GSPC axis — with individual audits, negative controls and recommendation-only improvements under MEOK H.I.M. HOLD gates. No proposal is applied.",
+    path: "",
+    kind: "native",
+    cues: /\b(axis specialists?|specialist hive|meok hive|axis audits?|axis improvements?)\b/i,
   },
   {
     id: "embed",
@@ -438,9 +486,9 @@ export const LOBBY_TABS: LobbyTab[] = [
   },
   {
     id: "claimguard",
-    label: "Honesty gate",
+    label: "Measurement scope",
     blurb:
-      "Where our own systems lose our own arena — the ladder, published. Measurement, never a badge.",
+      "Published internal model results, measurement coverage and verification limits.",
     path: "/honesty",
     cues: /\b(honesty|honest|claimguard|claim.?guard|claim check|verify claim|ladder)\b/i,
   },
@@ -483,6 +531,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     kind: "local",
     accent: "gold",
     cues: /\b(play|game|games|local play|duel|coliseum)\b/i,
+  },
+  {
+    id: "ruler",
+    label: "The Ruler",
+    blurb:
+      "Label the same frozen items the published models were measured on, and bet which seat is the model's. Local practice; nothing is sent anywhere.",
+    path: "/games/ruler",
+    accent: "gold",
+    cues: /\b(ruler|labelling game|labeling game|human arm|which seat is the model)\b/i,
   },
 ];
 
@@ -602,7 +659,7 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
   },
   {
     label: "Refutation ledger",
-    blurb: "Killed hypotheses, with the artefacts that killed them.",
+    blurb: "Reviewed research claims, experimental findings and supporting records.",
     path: "/refutation-ledger",
     group: "receipts",
     cues: /\b(refutation(?:s)? ledger|killed hypotheses)\b/i,
@@ -673,6 +730,64 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     path: "/dashboard?tab=standards",
     group: "analyst",
     cues: /\b(regulation feed|reg feed)\b/i,
+  },
+  // Live pages that had no Council OS door (menu audit, 2 Nov 2026). Each path was
+  // opened and seen to answer before being listed here.
+  {
+    label: "Paid services & x402 terms",
+    blurb: "Every paid service, its price and the free preview beside it, with the x402 terms.",
+    path: "/services",
+    group: "product",
+    cues: /\b(paid services?|services and terms|x402 terms|price list|services page)\b/i,
+  },
+  {
+    label: "API docs",
+    blurb: "The documented API surface — endpoints, shapes and the honesty notes beside them.",
+    path: "/api-docs",
+    group: "analyst",
+    cues: /\b(api docs?|api documentation|endpoints?)\b/i,
+  },
+  {
+    label: "GSPC daily reports",
+    blurb: "What changed each day, said the same day — the dated GSPC measurement reports, one per published day.",
+    path: "/notes/daily",
+    group: "record",
+    cues: /\b(daily reports?|gspc daily|daily notes|measurement notes|what changed (?:today|yesterday|each day|daily)|today'?s (?:notes|runs|report)|notes\/daily)\b/i,
+  },
+  {
+    label: "Reach",
+    blurb: "How far this reaches — the honest boundary of what the estate covers.",
+    path: "/reach",
+    group: "record",
+    cues: /\b(reach|how far this reaches|coverage boundary)\b/i,
+  },
+  {
+    label: "Memberships",
+    blurb: "Where we take part — standards groups, registries and the public record of each.",
+    path: "/memberships",
+    group: "audience",
+    cues: /\b(memberships?|where we take part|standards groups?|participations?)\b/i,
+  },
+  {
+    label: "Independence & conflicts",
+    blurb: "Our own model tags, the firewall, and every conflict we publish.",
+    path: "/independence",
+    group: "receipts",
+    cues: /\b(independence|conflicts?|our own model tags?|never ranked)\b/i,
+  },
+  {
+    label: "Article 50 pack",
+    blurb: "The published Article 50(2) marking runbook beside the interactive check — what to prepare, what the mark proves, what it does not.",
+    path: "/packs/eu-article-50",
+    group: "product",
+    cues: /\b(article 50 pack|art\.? ?50 pack|marking runbook|a50 pack)\b/i,
+  },
+  {
+    label: "Tokenised-asset deployments",
+    blurb: "The deployments the tokenised-asset reads cover, as published.",
+    path: "/stablecoins/deployments",
+    group: "record",
+    cues: /\b(tokenised[- ]asset deployments?|tokenized[- ]asset deployments?|stablecoin deployments?)\b/i,
   },
 ];
 
@@ -918,6 +1033,8 @@ const DASHBOARD_NAV_DEFINITION: {
     tabs: [
       { id: "verify", label: "Check a result" },
       { id: "evidence", label: "Evidence pack" },
+      { id: "evidence-delivery", label: "Evidence delivery" },
+      { id: "axis-specialists", label: "Axis specialists" },
     ],
   },
   {
@@ -952,17 +1069,23 @@ const DASHBOARD_NAV_DEFINITION: {
       "Learn how each test works, replay recorded model rounds, practise, and inspect continuous research.",
     tabs: [
       { id: "learn", label: "Learning" },
-      { id: "research", label: "Continuous research" },
-      { id: "space", label: "Model arena" },
+      { id: "evidence-learning", label: "Evidence & learning" },
+      { id: "academy", label: "Academy" },
       { id: "play", label: "Games" },
+      { id: "ruler", label: "The Ruler" },
+      { id: "space", label: "Model arena" },
+      { id: "research", label: "Continuous research" },
     ],
   },
   {
     id: "staff",
     label: "Staff & human review",
     description:
-      "Escalate an AI staff proposal to a named human, check competence against the live record, and inspect decision, signing and persistence gates.",
-    tabs: [{ id: "staff", label: "Staff & human review" }],
+      "Escalate an AI staff proposal to a named human, check understanding of the published record, and inspect decision, signing and persistence gates.",
+    tabs: [
+      { id: "staff", label: "Staff & human review" },
+      { id: "him", label: "H.I.M. review" },
+    ],
   },
   {
     id: "sovx",

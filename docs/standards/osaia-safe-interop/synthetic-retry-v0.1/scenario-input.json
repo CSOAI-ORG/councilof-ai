@@ -1,0 +1,59 @@
+{
+  "attempts": [
+    {
+      "action_id": "A1",
+      "id": "T1",
+      "provider_operation_id": null,
+      "result": "client_timeout"
+    },
+    {
+      "action_id": "A1",
+      "id": "T2",
+      "provider_operation_id": "OP1",
+      "result": "provider_response"
+    }
+  ],
+  "findings": [
+    {
+      "basis": [
+        "O1"
+      ],
+      "external_effect_status": "unknown",
+      "id": "F1",
+      "supersedes": null
+    },
+    {
+      "basis": [
+        "O1",
+        "O2",
+        "RCPT1",
+        "SINK1"
+      ],
+      "external_effect_status": "observed",
+      "id": "F2",
+      "supersedes": "F1"
+    }
+  ],
+  "fixture_id": "CSOAI-SAFE-GALC-RETRY-001",
+  "logical_action": {
+    "id": "A1",
+    "idempotency_key": "IDEMP-1"
+  },
+  "observations": [
+    {
+      "attempt_id": "T1",
+      "evidence_ref": "LOG1",
+      "id": "O1",
+      "provider_operation_id": null,
+      "reported_external_effect_status": "unknown"
+    },
+    {
+      "attempt_id": "T2",
+      "evidence_ref": "RCPT1",
+      "id": "O2",
+      "provider_operation_id": "OP1",
+      "reported_external_effect_status": "observed"
+    }
+  ],
+  "source": "synthetic only"
+}

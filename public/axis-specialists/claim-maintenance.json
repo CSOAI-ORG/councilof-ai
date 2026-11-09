@@ -1,0 +1,234 @@
+{
+  "schema": "csoai.axis-specialist-audit/1.0",
+  "axis": "claim-maintenance",
+  "specialist": {
+    "id": "meok-claim-maintenance-specialist",
+    "cluster_id": "meok-axis-claim-maintenance",
+    "cluster_state": "DECLARED_NOT_PROVISIONED",
+    "mission": "Audit scheduled claim re-reads for unchanged, disclosed-change, silent-change, withdrawn and unreachable states without judging whether the original claim is true.",
+    "reviewer_role": "claim maintenance reviewer",
+    "isolation": "LOGICAL_PER_AXIS",
+    "asi_claimed": false,
+    "rsi_mode": "RECOMMENDATION_ONLY"
+  },
+  "audit_focus": [
+    "capture identity",
+    "change classification",
+    "disclosure detection",
+    "truth non-inference"
+  ],
+  "source": {
+    "schema": "csoai.gspc-axes/0.5",
+    "snapshot": "council-os/axis-specialists/board-2026-11-02.snapshot.json",
+    "measurement_time": {
+      "state": "EXACT",
+      "precision": "instant",
+      "observed_at": "2026-10-28T06:05:00Z",
+      "source": "/interop/claim-maintenance-wave-2026-10-28.json",
+      "source_field": "facts_as_of",
+      "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+    },
+    "axis_row_sha256": "68a24306e899492c0c6a41057c4f1c71137277c673b9af748bd789fd3f9d7cf7",
+    "axis_row": {
+      "axis": "claim-maintenance",
+      "family": "subject",
+      "kind": "measured-subject",
+      "applies_to": "claimed-subjects",
+      "bench": "claim-maintenance v0.2 re-read wave",
+      "task": "at each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true",
+      "n": 174,
+      "status": "MEASURED",
+      "method_status": "meets-rule",
+      "method": "claim-maintenance v0.2",
+      "method_sha": "32470d102112154b14a4d5530d71d7a30ecc2acdc5cd8c906c21f672b1deeef7",
+      "bank": "public/interop/claim-maintenance-wave-2026-10-28.json",
+      "bank_sha256": "a62b017a9081b817613c03887c3c6690597a2016ea175f9d95c211d593db0877",
+      "facts_as_of": "2026-10-28T06:05:00Z",
+      "evidence_url": "/interop/claim-maintenance-wave-2026-10-28.json",
+      "per_outcome": {
+        "UNCHANGED": 12,
+        "CHANGED": 110,
+        "WITHDRAWN": 52,
+        "UNREACHABLE": 8
+      },
+      "colour": "hsl(290 10% 55%)",
+      "hue": 290,
+      "n_note": "Reported DISCOVERED-style as counts per subject class, never a ranking.",
+      "note": "n_valid 174 of 182 captured claims, re-read 2026-10-28 with the spec's own visible-text extractor. Counts per outcome, never a ranking, and never a statement that a claim is true. The disclosure split ('changed with disclosure' vs 'changed silently') is NOT part of this measurement: the published spec defines disclosure at the artefact level and not for a source's own edit, so those claims are recorded as CHANGED_DISCLOSURE_NOT_DECIDABLE.",
+      "measurement_time": {
+        "state": "EXACT",
+        "precision": "instant",
+        "observed_at": "2026-10-28T06:05:00Z",
+        "source": "/interop/claim-maintenance-wave-2026-10-28.json",
+        "source_field": "facts_as_of",
+        "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "AXIS_IDENTITY",
+      "state": "PASS",
+      "detail": "specialist claim-maintenance audits only the claim-maintenance row",
+      "evidence": "claim-maintenance"
+    },
+    {
+      "id": "ISOLATED_CLUSTER",
+      "state": "PASS",
+      "detail": "logical cluster meok-axis-claim-maintenance; no shared write access or cross-axis credentials"
+    },
+    {
+      "id": "AXIS_SPECIFIC_EVIDENCE",
+      "state": "PASS",
+      "detail": "all specialist-required fields are present",
+      "evidence": []
+    },
+    {
+      "id": "MEASUREMENT_KIND",
+      "state": "FINDING",
+      "detail": "unknown measurement kind measured-subject"
+    },
+    {
+      "id": "CURRENT_METHOD_RULE",
+      "state": "PASS",
+      "detail": "meets-rule"
+    }
+  ],
+  "summary": {
+    "checks": 5,
+    "passed": 4,
+    "declared": 0,
+    "findings": 1,
+    "audit_state": "IMPROVEMENT_REQUIRED"
+  },
+  "negative_controls": [
+    {
+      "control": "label an unreachable claim withdrawn and require state-vocabulary failure",
+      "state": "SPECIFIED_NOT_RUN"
+    },
+    {
+      "control": "interpret a silent change as falsehood and require scope rejection",
+      "state": "SPECIFIED_NOT_RUN"
+    }
+  ],
+  "improvement_proposals": [
+    {
+      "id": "claim-maintenance-proposal-1",
+      "proposal": "complete the gated re-read wave with at least thirty claims",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    },
+    {
+      "id": "claim-maintenance-proposal-2",
+      "proposal": "publish claim-state transition fixtures and disclosure-review samples",
+      "state": "PROPOSED_NOT_APPLIED",
+      "requires_human_approval": true
+    }
+  ],
+  "interfaces": {
+    "mcp_read_tool": "axis_claim-maintenance",
+    "a2a_skill": "axis-specialist",
+    "api": "/api/axis-specialists/claim-maintenance",
+    "human_gate": "/api/hitl"
+  },
+  "human_gate": {
+    "policy": "Measurement and Human-in-the-Loop Oversight — Never Certification",
+    "decision": "HOLD",
+    "approval_required": true,
+    "may_apply": false,
+    "reviewer_role": "claim maintenance reviewer",
+    "receipt": null,
+    "note": "No proposal is approved, applied, signed or deployed by this audit."
+  },
+  "non_claims": [
+    "not a new measurement",
+    "not certification",
+    "not ASI",
+    "not autonomous self-improvement",
+    "not a provisioned compute cluster"
+  ],
+  "audit_sha256": "c0a486d207f47abe3043544c07c87a26afe063237d24bb69a5490d535466001c",
+  "charter": {
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "mapping_kind": "REVIEW_CROSS_REFERENCE_NOT_COMPLIANCE",
+    "machine_url": "/.well-known/constitutional-harness.json",
+    "human_url": "/constitutional-harness/",
+    "articles": [
+      {
+        "article": 1,
+        "title": "Measurement is not authority"
+      },
+      {
+        "article": 2,
+        "title": "Default deny"
+      },
+      {
+        "article": 3,
+        "title": "Identity and tenancy are bound"
+      },
+      {
+        "article": 4,
+        "title": "Authority is time-bounded state"
+      },
+      {
+        "article": 5,
+        "title": "Authority may narrow but not silently expand"
+      },
+      {
+        "article": 7,
+        "title": "Research and execution are separate"
+      },
+      {
+        "article": 10,
+        "title": "Effects must be bound to receipts"
+      },
+      {
+        "article": 11,
+        "title": "Verification is separate from invocation"
+      },
+      {
+        "article": 17,
+        "title": "Corrections preserve history"
+      },
+      {
+        "article": 18,
+        "title": "Failure stages stay explicit"
+      },
+      {
+        "article": 19,
+        "title": "No self-approval loop"
+      },
+      {
+        "article": 20,
+        "title": "Consequential changes require owner-visible review"
+      },
+      {
+        "article": 21,
+        "title": "Public claims track actual state"
+      },
+      {
+        "article": 22,
+        "title": "The charter itself is versioned evidence"
+      }
+    ]
+  },
+  "review": {
+    "state": "NOT_SUBMITTED",
+    "execution_authority": false,
+    "required_fields": [
+      "applies_to",
+      "method_status",
+      "n_note",
+      "n",
+      "status"
+    ],
+    "measurement_url": "/api/gspc/axis/claim-maintenance",
+    "competency_url": "/api/hitl/modules/claim-maintenance",
+    "challenge_url": "/api/hitl/challenge",
+    "console_url": "/dashboard?tab=staff",
+    "corrections_url": "/corrections/",
+    "next_step": "Inspect the published evidence and limitations, reproduce the relevant checks and send a bounded proposal for human review.",
+    "note": "A review request is not a decision, signature, measurement admission or permission to execute."
+  }
+}

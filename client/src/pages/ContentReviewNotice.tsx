@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Helmet } from "react-helmet-async";
 import { applyHead, resolveHead, withdrawnName } from "@/lib/seoHead";
 import { blogPostBySlug } from "@/lib/blogSeo";
+import publishedManifest from "@/data/blog-published.json";
 
 /**
  * The withdrawal notice. One component serves every route in
@@ -14,6 +15,13 @@ import { blogPostBySlug } from "@/lib/blogSeo";
  * route: "<what was withdrawn> — withdrawn | Council of AI", with the thing named from the
  * post's own headline where the blog index has it, else from the URL. robots stays noindex:
  * a withdrawal notice is not an article and must not be indexed as one.
+ *
+ * /blog (2026-11-04): the index route itself stays withdrawn per the reviewed manifest
+ * (owner ruling 2026-09-22 keeps a withdrawn record in the reading architecture), but the
+ * notice here now lists the posts that DID pass review and serve at their own exact routes
+ * (client/src/data/blog-published.json is the source; a slug renders only if its record
+ * exists). The withdrawal record and the published state finally live on one page, so a
+ * visitor is never sent from "this is withdrawn" to nowhere.
  */
 export default function ContentReviewNotice() {
   const [location] = useLocation();
@@ -21,6 +29,12 @@ export default function ContentReviewNotice() {
   const name = slug ? blogPostBySlug(slug)?.headline : undefined;
   const head = resolveHead(location, name ? { name } : {});
   const what = name ?? withdrawnName(location);
+  const isBlogIndex = location === "/blog" || location === "/blog/";
+  const publishedPosts = isBlogIndex
+    ? publishedManifest.published
+        .map((p) => blogPostBySlug(p.slug))
+        .filter((p): p is NonNullable<typeof p> => Boolean(p))
+    : [];
 
   useLayoutEffect(() => {
     applyHead(head);
@@ -63,6 +77,33 @@ export default function ContentReviewNotice() {
             Read corrections
           </Link>
         </div>
+
+        {publishedPosts.length > 0 && (
+          <section
+            className="mt-9 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-5"
+            data-testid="published-from-manifest"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-300">
+              Published under the reviewed manifest
+            </p>
+            <p className="mt-2 text-sm leading-6 text-slate-400">
+              These posts passed review and serve at their own routes. Everything else
+              from the legacy corpus stays withdrawn until it is rewritten.
+            </p>
+            <ul className="mt-4 space-y-2.5">
+              {publishedPosts.map((p) => (
+                <li key={p.slug}>
+                  <Link
+                    href={`/blog/${p.slug}`}
+                    className="text-emerald-200 underline decoration-emerald-400/40 underline-offset-4 hover:text-emerald-100"
+                  >
+                    {p.headline}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </section>
     </section>
   );
