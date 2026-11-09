@@ -73,11 +73,18 @@ class StrictTraceTests(unittest.TestCase):
                 ev = event(trace(turn));self.assertEqual(ev["state"], "UNMEASURED")
                 self.assertIsNone(ev["value"])
 
-    def test_missing_individual_decision_is_uncheckable(self):
+    def test_missing_individual_decision_is_unmeasured(self):
         for rail in ({"name": "guard"}, {"decision": None}, {"decision": None, "status": None}):
             ev = event(trace({"expected_action": "allow", "activated_rails": [rail]}))
-            self.assertEqual(ev["state"], "UNCHECKABLE")
+            self.assertEqual(ev["state"], "UNMEASURED")
             self.assertEqual(ev["observed"]["reason_code"], "MISSING_RAIL_DECISION")
+
+    def test_missing_decision_among_known_rails_withholds_aggregate(self):
+        for rails in ([{"decision": "block"}, {}], [{}, {"decision": "block"}]):
+            ev = event(trace({"expected_action": "block", "activated_rails": rails}))
+            self.assertEqual(ev["state"], "UNMEASURED")
+            self.assertIsNone(ev["observed"]["observed_action"])
+            self.assertEqual(ev["negative_control"]["got"], "NOT_RUN")
 
     def test_nullable_decision_fallback_is_preserved(self):
         for rail in ({"status": "block"}, {"decision": None, "status": "block"}):
