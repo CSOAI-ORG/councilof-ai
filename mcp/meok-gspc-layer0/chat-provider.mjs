@@ -114,7 +114,11 @@ async function readBoundedBody(response, signal, prefix) {
     const bytes = Buffer.concat(chunks, size);
     let data;
     try { data = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)); }
-    catch { throw new ChatFailure(`${prefix}_RESPONSE_INVALID`); }
+    catch {
+      // The original H.I.M. bridge surfaced response.json() failures through its
+      // request catch. Preserve that public error code for coordinator clients.
+      throw new ChatFailure(prefix === 'HIM' ? 'HIM_REQUEST_FAILED' : `${prefix}_RESPONSE_INVALID`);
+    }
     return { data, size, sha256: createHash('sha256').update(bytes).digest('hex') };
   } catch (error) {
     cancelReader();
@@ -135,8 +139,9 @@ async function readBoundedBody(response, signal, prefix) {
  * (1..90000, default 30000). Cosmos-only MEOK_CHAT_MAX_TOKENS is 1..4096,
  * default 1024. H.I.M. retains its original model/messages/mode-only envelope.
  *
- * ANSWER_RECEIVED means nonempty model text was received, not that a task was
- * completed. Provenance and model identifiers remain provider assertions.
+ * Cosmos ANSWER_RECEIVED means nonempty model text was received, not that a task
+ * was completed. H.I.M. returns exactly its legacy {answer, provenance} envelope
+ * and permits a deliberate empty string. Provenance remains provider-reported.
  * This adapter neither executes tools nor admits memory or training examples.
  */
 export async function submitChat(args, { env = process.env, fetchImpl = globalThis.fetch } = {}) {
@@ -213,7 +218,12 @@ export async function submitChat(args, { env = process.env, fetchImpl = globalTh
         throw new ChatFailure(`${config.prefix}_RESPONSE_INVALID`);
       }
       const answer = message?.content;
-      if (typeof answer !== 'string' || !answer.trim()) throw new ChatFailure(`${config.prefix}_RESPONSE_INVALID`);
+      if (typeof answer !== 'string' || (config.backend === 'cosmos' && !answer.trim())) {
+        throw new ChatFailure(`${config.prefix}_RESPONSE_INVALID`);
+      }
+      if (config.backend === 'him') {
+        return { answer, provenance: data.meok_provenance ?? null };
+      }
       return {
         state: 'ANSWER_RECEIVED',
         answer,

@@ -86,7 +86,8 @@ function bridge(t, settings) {
 test('stdio routing keeps Cosmos inference separate from coordinator chat and work telemetry', async t => {
   const cosmos = await endpoint(t, () => answer('cosmos text', 'provider-cosmos-model'));
   const him = await endpoint(t, request => request.path === '/api/workstream-telemetry'
-    ? { saved: true } : answer('coordinator text', 'provider-him-model'));
+    ? { saved: true } : answer(request.body.messages[0].content === 'deliberately empty reply'
+      ? '' : 'coordinator text', 'provider-him-model'));
   const call = bridge(t, {
     HIM_URL: him.url,
     MEOK_CHAT_BACKEND: 'cosmos', MEOK_CHAT_BASE_URL: cosmos.url,
@@ -99,8 +100,10 @@ test('stdio routing keeps Cosmos inference separate from coordinator chat and wo
   assert.equal(inference.value.observation.backend, 'cosmos');
   const coordinator = await call('him_say', { text: 'coordinate this' });
   assert.equal(coordinator.rpc.isError, undefined);
-  assert.equal(coordinator.value.answer, 'coordinator text');
-  assert.equal(coordinator.value.observation.backend, 'him');
+  assert.deepEqual(coordinator.value, { answer: 'coordinator text', provenance: null });
+  const empty = await call('him_say', { text: 'deliberately empty reply' });
+  assert.equal(empty.rpc.isError, undefined);
+  assert.deepEqual(empty.value, { answer: '', provenance: null });
   const telemetry = await call('meok_gspc_evaluate_work_step', {
     platform: 'fixture-platform', task_summary: 'fixture work step', exit_code: 0,
   });
@@ -114,7 +117,9 @@ test('stdio routing keeps Cosmos inference separate from coordinator chat and wo
   assert.equal(cosmos.requests[0].headers.authorization, 'Bearer cosmos-only-test-key');
   assert.equal(cosmos.requests[0].body.model, 'configured-cosmos-model');
   assert.equal(Object.hasOwn(cosmos.requests[0].body, 'mode'), false);
-  assert.deepEqual(him.requests.map(request => request.path), ['/v1/chat/completions', '/api/workstream-telemetry']);
+  assert.deepEqual(him.requests.map(request => request.path), [
+    '/v1/chat/completions', '/v1/chat/completions', '/api/workstream-telemetry',
+  ]);
   assert.equal(him.requests[0].body.model, 'meok-canonical-v1');
   assert.equal(him.requests[0].body.mode, 'auto');
   assert.equal(him.requests[0].body.messages[0].content, 'coordinate this');

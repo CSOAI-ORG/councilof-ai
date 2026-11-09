@@ -38,10 +38,7 @@ test('default H.I.M. preserves the exact original envelope without Cosmos creden
     },
   });
   assert.equal(calls, 1);
-  assert.equal(result.answer, 'hello back');
-  assert.deepEqual(result.provenance, { claim: 'provider assertion' });
-  assert.equal(result.limits.provenance_verified, false);
-  assert.equal(result.observation.max_tokens, null);
+  assert.deepEqual(result, { answer: 'hello back', provenance: { claim: 'provider assertion' } });
 });
 
 test('explicit him ignores invalid Cosmos settings and preserves a LAN HIM_URL', async () => {
@@ -56,12 +53,12 @@ test('explicit him ignores invalid Cosmos settings and preserves a LAN HIM_URL',
       return response();
     },
   });
-  assert.equal(result.state, 'ANSWER_RECEIVED');
+  assert.deepEqual(result, { answer: 'An observed answer', provenance: null });
 });
 
 test('H.I.M. accepts legacy error:false but still rejects errors, malformed answers and tool calls', async () => {
   const cases = [
-    [reply('legacy answer', { error: false }), 'ANSWER_RECEIVED', undefined],
+    [reply('legacy answer', { error: false }), undefined, undefined],
     [reply('not an answer', { error: true }), 'UNCHECKABLE', 'HIM_RESPONSE_INVALID'],
     [{ error: false, choices: [] }, 'UNCHECKABLE', 'HIM_RESPONSE_INVALID'],
     [{ error: false, choices: [{ message: { content: 'pending action',
@@ -72,9 +69,28 @@ test('H.I.M. accepts legacy error:false but still rejects errors, malformed answ
     const result = await submitChat({ prompt: 'hello' }, { env: {}, fetchImpl: async () => response(payload) });
     assert.equal(result.state, state);
     assert.equal(result.reason, reason);
-    if (state === 'ANSWER_RECEIVED') assert.equal(result.answer, 'legacy answer');
+    if (state === undefined) assert.deepEqual(result, { answer: 'legacy answer', provenance: null });
     else assert.equal(Object.hasOwn(result, 'answer'), false);
   }
+});
+
+test('H.I.M. preserves deliberate empty strings and exactly the legacy success envelope', async () => {
+  for (const answer of ['actual answer', '', ' \n ']) {
+    const result = await submitChat({ prompt: 'fixture' }, {
+      env: {},
+      fetchImpl: async () => response(reply(answer, { meok_provenance: { reported: true } })),
+    });
+    assert.deepEqual(result, { answer, provenance: { reported: true } });
+  }
+});
+
+test('malformed H.I.M. JSON preserves the existing HIM_REQUEST_FAILED error mapping', async () => {
+  const result = await submitChat({ text: 'fixture' }, {
+    env: {}, fetchImpl: async () => new Response('{broken'),
+  });
+  assert.equal(result.state, 'UNCHECKABLE');
+  assert.equal(result.reason, 'HIM_REQUEST_FAILED');
+  assert.equal(Object.hasOwn(result, 'answer'), false);
 });
 
 test('Cosmos uses only its explicit model and bounded OpenAI body; claims remain separate', async () => {

@@ -72,9 +72,12 @@ bearer through `MEOK_CHAT_API_KEY` in the host's secret store. Optional limits a
 The adapter makes one bounded request, refuses redirects, accepts HTTPS or
 loopback HTTP for Cosmos, caps prompts at 64,000 UTF-8 bytes and responses at two
 MiB, and preserves a deadline while reading the body. It does not retry or
-switch paid providers after an uncertain result. Nonempty text is reported as
-`ANSWER_RECEIVED`; this is neither task completion nor verified model identity.
-Provider provenance remains an unverified assertion. Native tool-call proposals
+switch paid providers after an uncertain result. Cosmos nonempty text is reported
+as `ANSWER_RECEIVED` with request/response hashes and provider observations;
+this is neither task completion nor verified model identity. H.I.M. retains
+its exact legacy `{answer, provenance}` envelope, including a deliberately
+empty string, and its existing malformed-JSON error code. Provider provenance
+remains an unverified assertion. Native tool-call proposals
 are rejected as unsupported; this first integration is text inference.
 
 The [Cosmos Space profile](cosmos-space/README.md) contains the pinned model,
