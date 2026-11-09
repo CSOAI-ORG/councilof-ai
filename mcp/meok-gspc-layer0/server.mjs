@@ -6,6 +6,7 @@
 import { submitWorkStep, readCapabilitySnapshot } from './core.mjs';
 import { readGspcEvidence } from './evidence-context.mjs';
 import { submitChat } from './chat-provider.mjs';
+import { HF_SITUATION_TOOL, reasonHfSituation } from './hf-situation.mjs';
 import path from 'node:path';
 import os from 'node:os';
 import readline from 'node:readline';
@@ -16,6 +17,7 @@ const CAP_DIR = process.env.MEOK_CAPABILITY_DIR || path.join(WS, 'meok-router', 
 const HIM_BASE = process.env.HIM_URL || 'http://127.0.0.1:8787';
 
 const TOOLS = [
+  ...(process.env.MEOK_HF_ENABLED === '1' ? [HF_SITUATION_TOOL] : []),
   {
     name: 'meok_read_gspc_evidence',
     description: 'Read a selected axis from the fixed public GSPC board and retained daily report metadata. Returns source hashes, dates, coverage and limits. No private report ingestion, model training, human approval or execution.',
@@ -88,6 +90,9 @@ const TOOLS = [
 ];
 
 async function handleToolCall(name, args = {}) {
+  if (name === 'meok_reason_situation') {
+    return JSON.stringify(await reasonHfSituation(args), null, 2);
+  }
   if (name === 'meok_read_gspc_evidence') {
     return JSON.stringify(await readGspcEvidence(args), null, 2);
   }
