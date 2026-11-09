@@ -200,7 +200,7 @@ def ingest(
                 "recount_matches_declared": None,
                 "reason_code": reason or "NO_ACTIVATED_RAIL_TRACE",
             }
-            state = "UNCHECKABLE" if reason else "UNMEASURED"
+            state = "UNMEASURED" if reason in (None, "MISSING_RAIL_DECISION") else "UNCHECKABLE"
         elif expected_action is None:
             observed = {**recounted, "recount_matches_declared": None,
                         "reason_code": "EXPECTED_ACTION_NOT_ESTABLISHED"}
