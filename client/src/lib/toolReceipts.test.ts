@@ -96,6 +96,20 @@ describe("toolReceipts", () => {
     expect(list[list.length - 1].tool).toBe("t5"); // oldest five dropped
   });
 
+  it("signals coai:receipts-changed after a record so mounted panes refresh", () => {
+    let fired = 0;
+    const listener = () => { fired += 1; };
+    window.addEventListener("coai:receipts-changed", listener);
+    try {
+      recordToolReceipt({ tool: "get_root", argsHash: "x", outcome: "VALID" });
+      expect(fired).toBe(1);
+      clearToolReceipts();
+      expect(fired).toBe(2);
+    } finally {
+      window.removeEventListener("coai:receipts-changed", listener);
+    }
+  });
+
   it("clear removes everything", () => {
     recordToolReceipt({ tool: "get_root", argsHash: "x", outcome: "VALID" });
     expect(listToolReceipts()).toHaveLength(1);

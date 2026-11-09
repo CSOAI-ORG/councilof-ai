@@ -14,6 +14,7 @@
  * report schema; they are not evidence-fabric process events or signed cards.
  */
 import { createHash } from 'node:crypto';
+import { projectMaintenanceMetadata, readMetadataSourceBytes } from './daily-maintenance-metadata.mjs';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -119,6 +120,7 @@ export function buildDailySignal({clock, crosswalk = null, board = null, claims 
   const orphaned = [...declarations.keys()].filter(key => !seen.has(key)).sort();
   const unmapped = signals.filter(s => s.mapping.state !== 'REVIEWED_DECLARATION').map(s => ({event_sha256: s.event_sha256, date: s.date, instrument: s.instrument, reason: s.mapping.reason}));
   return {schema: 'csoai.daily-signal/0.1', as_of: asOf, horizon_days: horizon, generated_from: generatedFrom,
+    maintenance_metadata: projectMaintenanceMetadata({board, claims, generatedFrom, asOf}),
     headline: {clock_events: clock.events.length, events_in_horizon: signals.length, mapped_events: signals.length - unmapped.length, unmapped_events: unmapped.length, invalid_events: invalidEvents.length, excluded_events: excludedEvents.length},
     signals: signals.sort((a, b) => a.days_until - b.days_until || (a.event_sha256 < b.event_sha256 ? -1 : a.event_sha256 > b.event_sha256 ? 1 : 0)),
     unmapped, invalid_events: invalidEvents, excluded_events: excludedEvents, orphaned_mapping_event_ids: orphaned,
@@ -146,7 +148,7 @@ export function main(argv = process.argv.slice(2), root = resolve(dirname(fileUR
       if (required) throw new Error(`${role}: file missing: ${file}`);
       generatedFrom[role] = {path: file ? relative(root, file) : null, sha256: null, state: 'ABSENT'}; return null;
     }
-    const bytes = readFileSync(file);
+    const bytes = ['board','claims'].includes(role) ? readMetadataSourceBytes(file) : readFileSync(file);
     generatedFrom[role] = {path: relative(root, file), sha256: sha256(bytes), state: 'READ'};
     return JSON.parse(bytes.toString('utf8'));
   };

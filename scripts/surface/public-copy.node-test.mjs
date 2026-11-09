@@ -80,11 +80,18 @@ test('learning copy distinguishes practice from measurements and conformity', ()
 });
 
 test('homepage report link avoids a hardcoded axis count or guaranteed daily delivery', () => {
-  const text = publicCopy('client/src/pages/HomeVerify.tsx');
-  assert.doesNotMatch(text, /33-axis daily report|published before we pitch|have it find you/);
-  assert.match(text, /Measurement reports and evidence updates/);
-  assert.match(text, /coverage, publication date and evidence status/);
-  assert.match(text, /https:\/\/huggingface.co\/datasets\/csoai\/gspc-daily-reports/);
+  const home = publicCopy('client/src/pages/HomeVerify.tsx');
+  const updates = publicCopy('client/src/components/home/HomeUpdates.tsx');
+  // The report contract follows the component actually mounted by the front door; a
+  // correct orphan component must not hide a missing homepage route to the reports.
+  assert.match(home, /from ["']@\/components\/home\/HomeUpdates["']/);
+  assert.match(home, /<HomeUpdates\s*\/>/);
+  assert.doesNotMatch(home + updates, /\b\d+\s*[- ]\s*(?:axis|axes)\b/i);
+  assert.doesNotMatch(home + updates, /published before we pitch|have it find you|guaranteed\s+daily|daily\s+(?:delivery|email|inbox)|delivered\s+(?:every|each)\s+day|every\s+day/i);
+  assert.match(updates, /Measurement reports/);
+  assert.match(updates, /Every source has a date and a scope/);
+  assert.match(updates, /Dated summaries and their evidence status/);
+  assert.match(updates, /href="https:\/\/huggingface.co\/datasets\/csoai\/gspc-daily-reports"/);
 });
 
 

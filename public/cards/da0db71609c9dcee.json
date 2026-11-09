@@ -1,0 +1,101 @@
+{
+  "card": {
+    "as_of": "2026-11-02T13:39:52Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "mistral",
+      "surface": "model_cards",
+      "url": "https://docs.mistral.ai/getting-started/models/models_overview/",
+      "prev_sha256": "8dc52944841b909a5fbf903e562736dd1afea32e107d26c0e23dc823e3cba855",
+      "new_sha256": "b7a14f84e10d209825ad27b5043c30b19cb3cf3427d6ccd3f46693f8706449c4",
+      "prev_bytes_sha256": "b64d6b1cbdf76bef33b9acf895f1a0add00a15b6a4f45308a335f5026b5370ea",
+      "new_bytes_sha256": "e4bb33244998e2a99253191c4d82f62449d230946cb506e721068947859d02dc",
+      "prev_fetched_at": "2026-10-28T12:24:37Z",
+      "fetched_at": "2026-11-02T13:39:52Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 805614,
+        "new": 813362
+      },
+      "etag": {
+        "prev": "\"ppcflfh5hyh90w\"",
+        "new": "\"zckg5cqmx5hezu\""
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "da0db71609c9dceee037df3564b65c689d8d213c09c808b66a6f2a09d2b04518",
+    "sig_ed25519": "370d9f0e6b8463730ca92b9dccb5454f191ac225361ddef8db4235679b878977aae2facfe25f47931c6155e911c5d80f50f6377ea5b070dfd1bf89a6c2083906",
+    "source_urls": [
+      "https://docs.mistral.ai/getting-started/models/models_overview/"
+    ],
+    "subject": "Mistral AI — model_cards: bytes changed 2026-11-02",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:mistral",
+      "surface:model_cards",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "5fbc4b1670a8bdf01cbc33eba56e3f87bd1e568e8888e4f002638107f9f7c7b6",
+    "3e40f406db80474e819228ce345d90214ca35462fa3d6626bcc5fcf30c704476",
+    "8e28f9944b1726f59ef13fef394dc6aa03d06ecfabc5c9bed27df0fd175027ae",
+    "29495b6c3325df269008979c799ac4f43e04901b93e0c28a22663a6af2933a26",
+    "840cb0488d62494557cbe57390b633283195407931d201d132ff9275f935bae7",
+    "5c925569a940198c345b4eee3a2ce0100647efd74bf52e33ecbea62d8fb8da7c",
+    "1db97de4f1ebe5d42f878a5922f46fdfff8ba6db6183bcfddaab819602644f80",
+    "2347810be70cf927d205598cdda9d0d6536a0fb064d55814988e4d6f20499c3d",
+    "698022b669e991ba5f21c904d323f321e46b6a7c9ff3d6222083d469bca0a693"
+  ]
+}

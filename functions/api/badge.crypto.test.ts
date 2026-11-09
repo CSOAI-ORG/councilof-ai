@@ -1,7 +1,7 @@
 /**
  * /api/badge against the REAL card verifier (14 Oct 2026). claim=verified used to return VERIFIED
- * before any check, and a card with signature "" passes verifyCard as valid:true with the Signature
- * check unsigned (ok:null). Every case here runs the full GET handler, the unchanged
+ * before any check. Missing signatures now return UNCHECKABLE from the shared verifier;
+ * the badge must still refuse verified/measured claims. Every case runs the full GET handler, the shared
  * functions/_lib/cardVerify.ts and Node's WebCrypto Ed25519. No private key is used: the negatives
  * need none, and the positive path is covered in badge.test.ts with the verifier's real verdict shape.
  */
@@ -56,9 +56,9 @@ describe("/api/badge with the real verifier: no signature, no verified or measur
     ["unsigned index entry", base, false],
   ];
 
-  it("the control holds: the real verifier calls an empty signature valid:true with the Signature check unsigned", async () => {
+  it("the real verifier refuses an empty signature as UNCHECKABLE/unsigned", async () => {
     const v = await verifyCard(base, []);
-    expect(v.valid).toBe(true);
+    expect(v).toMatchObject({ valid: false, state: "UNCHECKABLE", reasons: ["unsigned"] });
     expect(v.checks.find((c) => c.label === "Signature")).toMatchObject({ ok: null, code: "unsigned" });
   });
 
@@ -77,14 +77,14 @@ describe("/api/badge with the real verifier: no signature, no verified or measur
 
   // What each control actually reads as, not only "not verified": the real verifier RETURNS
   // UNCHECKABLE (key_not_pinned, no throw) for a DID key outside its pin set, INVALID
-  // (untrusted_signer) for an inline unpublished key or a bad signature, and valid:true with an
-  // unsigned Signature row for an empty one.
+  // (untrusted_signer) for an inline unpublished key or a bad signature, and UNCHECKABLE/unsigned
+  // when no signature exists to check.
   const noKey = { id, body, signature: "" };
   const expected: [string, unknown, string, string][] = [
     ["DID key not pinned (returned UNCHECKABLE)", { ...noKey, did: "did:web:example.invalid#k", signature: "00".repeat(64) }, "unavailable", "unchecked"],
     ["untrusted inline public key", { ...base, pubkey: "00".repeat(32), signature: "00".repeat(64) }, "invalid", "invalid signature"],
     ["genuinely invalid Ed25519 signature", { ...base, signature: "00".repeat(64) }, "invalid", "invalid signature"],
-    ["empty signature", base, "invalid", "invalid signature"],
+    ["empty signature", base, "unavailable", "unchecked"],
   ];
   for (const [name, card, state, message] of expected) {
     it(`${name} reads "${message}" in JSON, Shields and SVG`, async () => {

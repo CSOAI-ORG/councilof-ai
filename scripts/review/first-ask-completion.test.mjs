@@ -3,7 +3,7 @@ import { createFirstAskHttpFixture } from "../../e2e/first-ask-http-fixture.mjs"
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { qualifyLocalFirstAskCompletion } from "./first-ask-completion.mjs";
+import { qualifyLocalFirstAskCompletion, qualifyLocalFirstAskWithProtocol } from "./first-ask-completion.mjs";
 
 const fixtureBody = [
   { type: "RUN_STARTED", threadId: "fixture-thread", runId: "fixture-run" },
@@ -327,5 +327,141 @@ test("HTTP progress fixture rejects invalid pause boundaries without leaving old
       assert.equal((await setupFixture(base, fixtureBody, { "x-csoai-e2e-pause-after": value })).status, 400);
       assert.equal((await askFixture(base)).status, 409);
     }
+  });
+});
+
+
+/** Independent protocol evidence is a second channel; old receipt verdicts remain intact. */
+function protocolEvidence(o, failed = true) {
+  const requestSHA256 = createHash("sha256").update(o.request.body).digest("hex");
+  const request = { id: "raw-request-1", frameId: "main-frame-1", loaderId: "main-loader-1", generation: 1,
+    method: "POST", url: o.request.url, bodyBytes: Buffer.byteLength(o.request.body),
+    bodySHA256: requestSHA256, bodyUnavailable: false, redirected: false, activeMainLoaderId: "main-loader-1" };
+  const nonce = "11223344-5566-4788-9abc-001122334455";
+  return { schema: "csoai.first-ask-passive-protocol/2", diagnosticOnly: true,
+    orderingBasis: "one-owned-cdp-session-handler-entry-sequence", ready: true,
+    marker: { nonce }, mainFrameId: "main-frame-1", matchingMarkers: 1, correlationAvailable: true,
+    limits: { events: 96, requests: 8, contexts: 32, faults: 8, markerBytes: 2048, idChars: 256 },
+    eventsTruncated: false, requestsTruncated: false, contextsTruncated: false, faultsTruncated: false,
+    markerTruncated: false, identifierTruncated: false, faults: [],
+    emitter: { enabled: true, emitted: 1, faults: 0, truncated: false },
+    requests: [{ ...request }], joins: [],
+    events: [
+      { receiveSequence: 1, event: "main-frame-navigation", frameId: "main-frame-1", loaderId: "main-loader-1", generation: 1 },
+      { receiveSequence: 2, event: "main-default-context-created", id: 7, uniqueId: "context-unique-1",
+        frameId: "main-frame-1", loaderId: "main-loader-1", generation: 1, origin: o.origin, isDefault: true },
+      { receiveSequence: 3, event: "request", ...request },
+      { receiveSequence: 4, event: "native-eof-console", executionContextId: 7, contextUniqueId: "context-unique-1",
+        contextLoaderId: "main-loader-1", contextMatched: true, frameId: "main-frame-1", generation: 1,
+        nonce, eof: true, nativeFetchId: 1, signalId: 1, url: o.request.url, aborted: false },
+      failed ? { receiveSequence: 5, event: "loading-failed", requestId: "raw-request-1",
+        errorText: "net::ERR_ABORTED", canceled: true, blockedReason: null }
+        : { receiveSequence: 5, event: "loading-finished", requestId: "raw-request-1", encodedDataLength: 1000 },
+    ] };
+}
+const renumberProtocol = p => p.events.forEach((event, index) => { event.receiveSequence = index + 1; });
+
+for (const sameSequence of [false, true]) test("independent raw EOF order can qualify a late legacy callback without rewriting it: " + sameSequence, () => {
+  const o = evidence(true);
+  o.networkEvents[1].receiptSequence = 2; o.eofReceipts[0].receiptSequence = sameSequence ? 2 : 3;
+  const retained = structuredClone(o), p = protocolEvidence(o);
+  assert.equal(qualifyLocalFirstAskCompletion(o).accepted, false);
+  const result = qualifyLocalFirstAskWithProtocol(o, p);
+  assert.equal(result.accepted, true);
+  assert.equal(result.legacyQualification.accepted, false);
+  assert.equal(result.browserNetworkState, "requestfailed");
+  assert.equal(result.browserFailure, "net::ERR_ABORTED");
+  assert.equal(result.protocolProof.nativeEOFSequence, 4);
+  assert.equal(result.protocolProof.terminalSequence, 5);
+  assert.deepEqual(o, retained, "Neither original counters nor raw failure are projected or reordered");
+});
+test("same-session ordinary HTTP finish may precede JS drain", () => {
+  const o = evidence(), p = protocolEvidence(o, false);
+  [p.events[3], p.events[4]] = [p.events[4], p.events[3]]; renumberProtocol(p);
+  assert.equal(qualifyLocalFirstAskWithProtocol(o, p).accepted, true);
+});
+test("contradictory raw failure before EOF refuses even a legacy positive", () => {
+  const o = evidence(true), p = protocolEvidence(o);
+  assert.equal(qualifyLocalFirstAskCompletion(o).accepted, true);
+  [p.events[3], p.events[4]] = [p.events[4], p.events[3]]; renumberProtocol(p);
+  const result = qualifyLocalFirstAskWithProtocol(o, p);
+  assert.equal(result.accepted, false);
+  assert.equal(result.legacyQualification.accepted, true);
+});
+const protocolNegative = [
+  ["missing protocol", (_o, p) => { delete p.schema; }],
+  ["unqualified ordering channel", (_o, p) => { p.orderingBasis = "wall-clock"; }],
+  ["unknown default context", (_o, p) => { p.events[1].isDefault = false; }],
+  ["cross-origin context", (_o, p) => { p.events[1].origin = "https://other.invalid"; }],
+  ["iframe context", (_o, p) => { p.events[1].frameId = "child-frame"; }],
+  ["wrong execution context", (_o, p) => { p.events[3].executionContextId = 8; }],
+  ["reused context identity", (_o, p) => { p.events[3].contextUniqueId = "other-unique-id"; }],
+  ["stale context epoch", (_o, p) => { p.events[1].generation = 2; }],
+  ["stale loader", (_o, p) => { p.events[2].loaderId = "previous-loader"; }],
+  ["marker loader mismatch", (_o, p) => { p.events[3].contextLoaderId = "previous-loader"; }],
+  ["wrong marker nonce", (_o, p) => { p.events[3].nonce = "other"; }],
+  ["wrong native fetch", (_o, p) => { p.events[3].nativeFetchId = 2; }],
+  ["wrong native signal", (_o, p) => { p.events[3].signalId = 2; }],
+  ["aborted native EOF marker", (_o, p) => { p.events[3].aborted = true; }],
+  ["missing raw body", (_o, p) => { p.events[2].bodyUnavailable = true; }],
+  ["raw body digest mismatch", (_o, p) => { p.events[2].bodySHA256 = "0".repeat(64); }],
+  ["raw body byte mismatch", (_o, p) => { p.events[2].bodyBytes++; }],
+  ["redirected raw request", (_o, p) => { p.events[2].redirected = true; }],
+  ["different raw request URL", (_o, p) => { p.events[2].url += "?other"; }],
+  ["wrong terminal request", (_o, p) => { p.events[4].requestId = "other-request"; }],
+  ["other raw failure", (_o, p) => { p.events[4].errorText = "net::ERR_CONNECTION_RESET"; }],
+  ["unknown raw cancellation flag", (_o, p) => { delete p.events[4].canceled; }],
+  ["raw failure before marker", (_o, p) => { [p.events[3], p.events[4]] = [p.events[4], p.events[3]]; renumberProtocol(p); }],
+  ["same raw receipt sequence", (_o, p) => { p.events[4].receiveSequence = p.events[3].receiveSequence; }],
+  ["reordered raw array", (_o, p) => { [p.events[2], p.events[3]] = [p.events[3], p.events[2]]; }],
+  ["missing marker", (_o, p) => { p.events.splice(3, 1); }],
+  ["duplicate marker", (_o, p) => { p.events.splice(4, 0, { ...p.events[3] }); renumberProtocol(p); }],
+  ["second raw question", (_o, p) => { p.events.splice(3, 0, { ...p.events[2] }); renumberProtocol(p); }],
+  ["context destroyed before marker", (_o, p) => { p.events.splice(3, 0, { event: "context-destroyed", executionContextId: 7 }); renumberProtocol(p); }],
+  ["contexts cleared before terminal", (_o, p) => { p.events.splice(4, 0, { event: "contexts-cleared" }); renumberProtocol(p); }],
+  ["native marker emitter failure", (_o, p) => { p.emitter.faults = 1; }],
+  ["native marker emitter truncation", (_o, p) => { p.emitter.truncated = true; }],
+  ["missing collector correlation", (_o, p) => { p.correlationAvailable = false; }],
+  ["capture fault", (_o, p) => { p.faults.push({ stage: "capture" }); }],
+  ["raised capture bound", (_o, p) => { p.limits.events++; }],
+  ...["eventsTruncated", "requestsTruncated", "contextsTruncated", "faultsTruncated",
+    "markerTruncated", "identifierTruncated"].map(key => [key, (_o, p) => { p[key] = true; }]),
+];
+for (const [label, mutate] of protocolNegative) test("same-session protocol refuses " + label, () => {
+  const o = evidence(true), p = protocolEvidence(o);
+  mutate(o, p);
+  assert.equal(qualifyLocalFirstAskWithProtocol(o, p).accepted, false, label);
+});
+for (const [label, mutate] of negative) {
+  // These two legacy callback-order refusals remain tested above against the old API.
+  // Independent raw protocol proof is precisely the additional evidence for this case.
+  if (["browser error received before late native read-done binding", "ambiguous same-sequence browser error"].includes(label)) continue;
+  test("independent protocol proof cannot override legacy semantic refusal: " + label, () => {
+    const o = evidence(true), p = protocolEvidence(o);
+    mutate(o);
+    assert.equal(qualifyLocalFirstAskWithProtocol(o, p).accepted, false, label);
+  });
+}
+test("producer diagnostic reads do not consume the armed fixture and deny browser fetch metadata", { timeout: 5000 }, async () => {
+  await withFirstAskHttpFixture(async base => {
+    assert.equal((await setupFixture(base)).status, 204);
+    const address = "/__e2e/first-ask-fixture-diagnostics", authorized = { "x-csoai-e2e-fixture": "first-ask" };
+    for (const headers of [{}, { ...authorized, origin: base }, { ...authorized, "sec-fetch-mode": "cors" },
+      { ...authorized, "sec-fetch-site": "same-origin" }, { ...authorized, "sec-fetch-dest": "empty" }]) {
+      assert.equal((await fixtureHttpRequest(base, address, "GET", "", headers)).status, 403);
+    }
+    const before = await fixtureHttpRequest(base, address, "GET", "", authorized);
+    assert.equal(before.status, 200);
+    assert.equal(JSON.parse(before.body).requests.length, 0);
+    assert.deepEqual((await askFixture(base)).body, Buffer.from(fixtureBody));
+    const after = await fixtureHttpRequest(base, address, "GET", "", authorized), data = JSON.parse(after.body);
+    assert.equal(after.status, 200);
+    assert.equal(data.schema, "csoai.first-ask-producer-diagnostic/1");
+    assert.equal(data.producerOnly, true);
+    assert.equal(data.requests.length, 1);
+    assert.equal(data.requests[0].requestSHA256, createHash("sha256").update(body).digest("hex"));
+    assert.equal(data.requests[0].responseSHA256, createHash("sha256").update(fixtureBody).digest("hex"));
+    assert.equal(data.requests[0].responseBytes, Buffer.byteLength(fixtureBody));
+    assert.equal((await askFixture(base)).status, 409, "Diagnostic reads never re-arm a consumed fixture");
   });
 });

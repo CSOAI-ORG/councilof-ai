@@ -18,7 +18,7 @@ const HIM_GATES = [
   {
     id: "staff",
     title: "Staff & human review",
-    body: "The live console: escalate an AI staff proposal to a named human, check competence against the current record, and see whether decision, signing and persistence gates are open or deliberately locked.",
+    body: "Inspect an AI staff proposal, answer a reading check against the current record, and see whether decision recording, signing and persistence are available. The console does not establish the operator's identity or authority to execute the proposal.",
     href: "/dashboard?tab=staff",
   },
   {
@@ -30,7 +30,7 @@ const HIM_GATES = [
   {
     id: "axis-specialists",
     title: "Axis specialists under HOLD",
-    body: "Thirty-three bounded specialists — one per GSPC axis — are audited individually, and every recommendation stays under MEOK H.I.M. HOLD gates. No proposal is applied by itself.",
+    body: "Inspect the published specialist roster and its individual audit records. Recommendations stay under MEOK H.I.M. HOLD gates. No proposal is applied by itself.",
     href: "/dashboard?tab=axis-specialists",
   },
   {
@@ -48,7 +48,7 @@ export default function Him() {
         <title>MEOK H.I.M. — the human in the loop · Council of AI</title>
         <meta
           name="description"
-          content="Where an AI proposal stops and a named human decides: the escalation, competence check, operator gate and receipt — one inspectable workflow."
+          content="Inspect an AI proposal, check your understanding of its record and retain a decision receipt. Human identity, authority and executed effects need separate verification."
         />
       </Helmet>
 
@@ -61,13 +61,13 @@ export default function Him() {
             MEOK H.I.M. · Human in the loop
           </p>
           <h1 id="him-h" className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">
-            AI proposes. A named human decides.
+            AI proposes. Review and record the decision.
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-emerald-100/80">
             A measurement records what was observed. It does not grant permission to act.
             MEOK H.I.M. is the name for the human layer kept across Council OS: the escalation,
-            the competence check, the operator gate and the receipt — one inspectable workflow,
-            never a green light the system gives itself.
+            the reading check, the operator gate and the receipt. Recording a decision does not
+            establish the person's identity or authorize the proposed action.
           </p>
           <Link
             href="/dashboard?tab=staff"
@@ -124,10 +124,10 @@ export default function Him() {
             What H.I.M. is not
           </h2>
           <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-amber-950/90">
-            <li>Not autonomous: without configured operator authority, the decision path stays deliberately locked.</li>
+            <li>Not autonomous: the operator token controls access to decision recording; it does not establish a person's identity or permission to execute.</li>
             <li>Never a rubber stamp: the console never turns a missing operator token, signing key or decision store into a green light.</li>
             <li>Not a verdict on itself: a receipt records that a decision happened — it does not certify that the decision was right.</li>
-            <li>Not a measurement: review is a gate on action, separate from what the board measures.</li>
+            <li>Not an execution grant: a recorded review is separate from the acting system's authorization checks and any observed effect.</li>
           </ul>
         </div>
       </section>

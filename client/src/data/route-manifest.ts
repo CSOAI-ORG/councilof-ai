@@ -999,8 +999,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/gpai",
-  "comp": "GpaiObligations",
-  "title": "Gpai Obligations"
+  "comp": "GpaiMatrix",
+  "title": "Gpai Matrix"
  },
  {
   "path": "/gpai-evidence",
@@ -1793,6 +1793,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Lineage"
  },
  {
+  "path": "/refund-policy",
+  "comp": "RefundPolicy",
+  "title": "Refund Policy"
+ },
+ {
+  "path": "/refunds",
+  "comp": "RefundPolicy",
+  "title": "Refund Policy"
+ },
+ {
   "path": "/refutation-ledger",
   "comp": "RefutationLedger",
   "title": "Refutation Ledger"
@@ -1951,6 +1961,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/signals/2026-09-24",
   "comp": "SignedMillBatch20260924",
   "title": "Signed Mill Batch20260924"
+ },
+ {
+  "path": "/signup",
+  "comp": "AccountSignup",
+  "title": "Account Signup"
  },
  {
   "path": "/simulate",

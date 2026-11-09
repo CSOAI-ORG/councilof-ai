@@ -14,7 +14,7 @@
 
 import NPM_CAPTURE from "../../../distribution/npm/npm-publish-check.json";
 import { clientNote, npmReleaseState } from "../../../scripts/harness-x/npm-release-state.mjs";
-import { ALL_TOOL_NAMES } from "./mcpTools";
+import { ALL_TOOL_NAMES, toolSummary } from "./mcpTools";
 
 /**
  * The npm package's release state, DERIVED from the dated capture
@@ -82,7 +82,7 @@ export const NSITES_BOOTSTRAP = [
 ] as const;
 
 export const PLUGIN_HARVEST = {
-  plugin_reads: "Public board, seven MCP tools, signed cards. Consent first.",
+  plugin_reads: `Public board, ${ALL_TOOL_NAMES.length} MCP tools, signed cards. Consent first.`,
   plugin_never: [
     "user chat bodies",
     "covert telemetry",
@@ -189,8 +189,8 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     status: "planted",
     kind: "receipt",
     href: "https://councilof.ai/mcp",
-    plant: "Claude, Cursor, Kimi, Grok — one JSON, seven tools.",
-    note: "board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion. No 23rd axis.",
+    plant: `Claude, Cursor, Kimi, Grok — one JSON, ${ALL_TOOL_NAMES.length} tools.`,
+    note: `${toolSummary(6)}. No 23rd axis.`,
     snippet: MCP_SNIPPET,
   },
   {

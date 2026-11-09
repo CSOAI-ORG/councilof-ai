@@ -97,19 +97,17 @@ td.url{font-size:.8rem;word-break:break-all}
 <table><thead><tr><th>Surface</th><th>Reading</th><th>Source</th></tr></thead><tbody>
 <tr><td>GSPC board</td><td><strong>34 axes · 34 measured · 0 unmeasured</strong></td><td><a href="https://councilof.ai/api/gspc">/api/gspc</a> (HTTP 200)</td></tr>
 <tr><td>Model-comparison separation</td><td>0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED</td><td><a href="https://councilof.ai/api/gspc">/api/gspc</a></td></tr>
-<tr><td>Public root</td><td><strong>428 leaves</strong>, as_of 2026-11-01T15:09:42Z</td><td><a href="https://councilof.ai/root.json">/root.json</a> (HTTP 200)</td></tr>
+<tr><td>Public root</td><td><strong>442 leaves</strong>, as_of 2026-11-07T20:54:37Z</td><td><a href="https://councilof.ai/root.json">/root.json</a> (HTTP 200)</td></tr>
 <tr><td>Corrections ledger</td><td><strong>93 entries</strong></td><td><a href="https://councilof.ai/api/corrections">/api/corrections</a> (HTTP 200)</td></tr>
 <tr><td>x402 catalogue</td><td><strong>30 resources</strong></td><td><a href="https://councilof.ai/api/x402">/api/x402</a> (HTTP 200)</td></tr>
-<tr><td>Agent Skills published</td><td><strong>14</strong> — the product skill <code>meok-canonical</code> is not among them</td><td><a href="https://councilof.ai/.well-known/agent-skills/index.json">/.well-known/agent-skills/index.json</a> (HTTP 200)</td></tr>
+<tr><td>Agent Skills published</td><td><strong>15</strong> — the product skill <code>meok-canonical</code> is not among them</td><td><a href="https://councilof.ai/.well-known/agent-skills/index.json">/.well-known/agent-skills/index.json</a> (HTTP 200)</td></tr>
 <tr><td>Mechanism coverage</td><td>{&quot;PREDICATE&quot;:1,&quot;RELATED_MEASURE&quot;:12,&quot;CROSSWALK_ONLY&quot;:38,&quot;HASH_ONLY&quot;:366}</td><td><a href="https://councilof.ai/mechanism/coverage.json">/mechanism/coverage.json</a> (HTTP 200)</td></tr>
 <tr><td>Claim-maintenance register</td><td>28 subjects · 99 claims · as_of 2026-11-01T07:17:54Z</td><td><a href="https://councilof.ai/spec/claim-maintenance/register.json">/spec/claim-maintenance/register.json</a> (HTTP 200)</td></tr>
-<tr><td>Open pull requests</td><td><strong>51</strong></td><td>GitHub search API</td></tr>
+<tr><td>Open pull requests</td><td><strong>79</strong></td><td>GitHub search API</td></tr>
 </tbody></table>
 
 <h3>The unmeasured axes, as the board reads them today</h3>
-<table><thead><tr><th>Axis</th><th>Family</th><th>Kind</th><th>Status</th><th>n</th></tr></thead><tbody>
-<tr><td colspan="5">—</td></tr>
-</tbody></table>
+<table><thead><tr><th>Axis</th><th>Family</th><th>Kind</th><th>Status</th><th>n</th></tr></thead><tbody><tr><td colspan="5">—</td></tr></tbody></table>
 <p class="note">An unmeasured axis is a declared position with no run behind it, published so the gap is visible. It is never an error and never a zero. As of this reading the board carries <strong>0</strong> unmeasured axes: the <code>watchdog-ingest</code> slot, declared UNMEASURED on 2026-10-30, and the <code>claim-maintenance</code> axis both acquired runs today. The <code>claim-maintenance</code> promotion is named in the corrections table, and the corrections ledger still carries no entry for it. The board is being actively re-measured by other lanes today, so the figure here is a reading at the timestamp above and the live board remains the authority.</p>
 
 <h2>Jewels found since the table was dated</h2>
@@ -124,15 +122,101 @@ td.url{font-size:.8rem;word-break:break-all}
 <tr><td><code>J-163</code></td><td><strong>The per-axis measurement question page</strong></td><td>VERIFIED_CURRENT</td><td class="ns">https://councilof.ai/axis/claim-maintenance -&gt; HTTP 200, 8370 bytes. The measurement question for the claim-maintenance axis, published on its own route.</td><td class="ns">It is a live surface that the 130-row table, dated 2026-10-27, does not name.</td></tr>
 </tbody></table>
 
-<h2>What the other lanes shipped since 2026-11-01</h2>
-<p>Eight sessions work this estate in parallel. This catalogue is the reconciled picture, so what they merged is recorded here with its pull request.</p>
+<h2>What the other lanes shipped since the 2026-11-07 edition</h2>
+<p>Eight sessions work this estate in parallel. This catalogue is the reconciled picture, so what they merged is recorded here with its pull request. <strong>92</strong> pull requests merged between 2026-11-07T00:00:00Z and 2026-11-08T11:24:37.999Z; the list is complete for that window, and the open-pull-request count above is the live one read at the same moment.</p>
 <div class="scroll"><table><thead><tr><th>When (UTC)</th><th>Commit</th><th>Pull request</th></tr></thead><tbody>
-<tr><td>2026-11-02 07:03</td><td><code>41f0e1e4ae</code></td><td class="ns">PR #3737</td></tr>
-<tr><td>2026-11-02 06:26</td><td><code>69af4cc4a9</code></td><td class="ns">PR #3723</td></tr>
-<tr><td>2026-11-02 04:11</td><td><code>8695d6f2ca</code></td><td class="ns">PR #3715</td></tr>
-<tr><td>2026-11-02 03:26</td><td><code>73d4280b3e</code></td><td class="ns">PR #3711</td></tr>
-<tr><td>2026-11-01 18:00</td><td><code>735a3f8259</code></td><td class="ns">PR #3672</td></tr>
-<tr><td>2026-11-01 07:56</td><td><code>d09846079a</code></td><td class="ns">PR #3695</td></tr>
+<tr><td>2026-11-08 11:10</td><td><code>459e20e42f</code></td><td class="ns">PR #4128</td></tr>
+<tr><td>2026-11-08 10:55</td><td><code>73604751dd</code></td><td class="ns">PR #4126</td></tr>
+<tr><td>2026-11-08 10:08</td><td><code>06a04d1f63</code></td><td class="ns">PR #4119</td></tr>
+<tr><td>2026-11-08 09:46</td><td><code>d594748921</code></td><td class="ns">PR #4125</td></tr>
+<tr><td>2026-11-08 09:01</td><td><code>1a9ddef049</code></td><td class="ns">PR #4121</td></tr>
+<tr><td>2026-11-08 08:42</td><td><code>2489fc76c3</code></td><td class="ns">PR #4106</td></tr>
+<tr><td>2026-11-08 08:28</td><td><code>450b7cc63c</code></td><td class="ns">PR #4118</td></tr>
+<tr><td>2026-11-08 08:11</td><td><code>2bba8162ca</code></td><td class="ns">PR #4117</td></tr>
+<tr><td>2026-11-08 07:44</td><td><code>142164b567</code></td><td class="ns">PR #4005</td></tr>
+<tr><td>2026-11-08 07:44</td><td><code>3b526846d3</code></td><td class="ns">PR #4113</td></tr>
+<tr><td>2026-11-08 07:44</td><td><code>10441b796d</code></td><td class="ns">PR #4018</td></tr>
+<tr><td>2026-11-08 06:40</td><td><code>3ab0e66285</code></td><td class="ns">PR #4124</td></tr>
+<tr><td>2026-11-08 06:17</td><td><code>7cb8c3cb44</code></td><td class="ns">PR #4102</td></tr>
+<tr><td>2026-11-08 05:50</td><td><code>8c557b49b1</code></td><td class="ns">PR #4104</td></tr>
+<tr><td>2026-11-08 05:32</td><td><code>7cd3fda4dd</code></td><td class="ns">PR #4109</td></tr>
+<tr><td>2026-11-08 05:09</td><td><code>7c90923c07</code></td><td class="ns">PR #4108</td></tr>
+<tr><td>2026-11-08 04:47</td><td><code>d7c863a333</code></td><td class="ns">PR #4115</td></tr>
+<tr><td>2026-11-08 04:24</td><td><code>e9921fddc5</code></td><td class="ns">PR #4112</td></tr>
+<tr><td>2026-11-08 04:10</td><td><code>2998e55473</code></td><td class="ns">PR #4105</td></tr>
+<tr><td>2026-11-08 03:58</td><td><code>c373e475c0</code></td><td class="ns">PR #4100</td></tr>
+<tr><td>2026-11-08 03:39</td><td><code>a2cbd42fdb</code></td><td class="ns">PR #4103</td></tr>
+<tr><td>2026-11-08 03:32</td><td><code>b1548c3ad5</code></td><td class="ns">PR #4101</td></tr>
+<tr><td>2026-11-08 03:30</td><td><code>9c1004119f</code></td><td class="ns">PR #4099</td></tr>
+<tr><td>2026-11-08 03:15</td><td><code>ff0fbe8f3a</code></td><td class="ns">PR #4033</td></tr>
+<tr><td>2026-11-08 03:10</td><td><code>726d3a205e</code></td><td class="ns">PR #4098</td></tr>
+<tr><td>2026-11-07 23:36</td><td><code>f050631903</code></td><td class="ns">PR #4094</td></tr>
+<tr><td>2026-11-07 22:21</td><td><code>e6d6a6af11</code></td><td class="ns">PR #4096</td></tr>
+<tr><td>2026-11-07 20:01</td><td><code>f5adeb20b8</code></td><td class="ns">PR #4093</td></tr>
+<tr><td>2026-11-07 16:23</td><td><code>bffffdbea0</code></td><td class="ns">PR #4092</td></tr>
+<tr><td>2026-11-07 16:08</td><td><code>eb0f1b166e</code></td><td class="ns">PR #3710</td></tr>
+<tr><td>2026-11-07 15:29</td><td><code>291bbca0db</code></td><td class="ns">PR #4077</td></tr>
+<tr><td>2026-11-07 15:13</td><td><code>30daa3416c</code></td><td class="ns">PR #4078</td></tr>
+<tr><td>2026-11-07 14:59</td><td><code>275b3ca93f</code></td><td class="ns">PR #4088</td></tr>
+<tr><td>2026-11-07 14:45</td><td><code>11bb55b810</code></td><td class="ns">PR #4075</td></tr>
+<tr><td>2026-11-07 14:33</td><td><code>492542ca4c</code></td><td class="ns">PR #4091</td></tr>
+<tr><td>2026-11-07 14:18</td><td><code>9083771fca</code></td><td class="ns">PR #4084</td></tr>
+<tr><td>2026-11-07 14:03</td><td><code>268af31e75</code></td><td class="ns">PR #4066</td></tr>
+<tr><td>2026-11-07 13:45</td><td><code>4b5abf8e98</code></td><td class="ns">PR #4090</td></tr>
+<tr><td>2026-11-07 13:35</td><td><code>6edf352699</code></td><td class="ns">PR #4087</td></tr>
+<tr><td>2026-11-07 13:07</td><td><code>3fa7db3559</code></td><td class="ns">PR #4068</td></tr>
+<tr><td>2026-11-07 12:55</td><td><code>3c470b022c</code></td><td class="ns">PR #4067</td></tr>
+<tr><td>2026-11-07 12:46</td><td><code>f956d52374</code></td><td class="ns">PR #4085</td></tr>
+<tr><td>2026-11-07 12:40</td><td><code>9760a68bf1</code></td><td class="ns">PR #4073</td></tr>
+<tr><td>2026-11-07 12:25</td><td><code>3e1e09c648</code></td><td class="ns">PR #4083</td></tr>
+<tr><td>2026-11-07 12:17</td><td><code>230c947ab1</code></td><td class="ns">PR #4060</td></tr>
+<tr><td>2026-11-07 12:02</td><td><code>92c77ca003</code></td><td class="ns">PR #4063</td></tr>
+<tr><td>2026-11-07 11:46</td><td><code>0affdf8b86</code></td><td class="ns">PR #4070</td></tr>
+<tr><td>2026-11-07 11:34</td><td><code>28a5ae2ee0</code></td><td class="ns">PR #4076</td></tr>
+<tr><td>2026-11-07 11:22</td><td><code>bf5c59a95c</code></td><td class="ns">PR #4074</td></tr>
+<tr><td>2026-11-07 11:05</td><td><code>498e5d3653</code></td><td class="ns">PR #4069</td></tr>
+<tr><td>2026-11-07 10:51</td><td><code>1ec9e6c657</code></td><td class="ns">PR #4071</td></tr>
+<tr><td>2026-11-07 10:49</td><td><code>a05169159d</code></td><td class="ns">PR #4065</td></tr>
+<tr><td>2026-11-07 10:38</td><td><code>286ede0a02</code></td><td class="ns">PR #4061</td></tr>
+<tr><td>2026-11-07 10:22</td><td><code>bdba189e0b</code></td><td class="ns">PR #4062</td></tr>
+<tr><td>2026-11-07 10:05</td><td><code>28b354744c</code></td><td class="ns">PR #4059</td></tr>
+<tr><td>2026-11-07 09:54</td><td><code>3eed4474da</code></td><td class="ns">PR #4054</td></tr>
+<tr><td>2026-11-07 09:39</td><td><code>44769107de</code></td><td class="ns">PR #4016</td></tr>
+<tr><td>2026-11-07 09:25</td><td><code>0924eed6ca</code></td><td class="ns">PR #4055</td></tr>
+<tr><td>2026-11-07 09:12</td><td><code>9135408ea4</code></td><td class="ns">PR #4057</td></tr>
+<tr><td>2026-11-07 09:03</td><td><code>ce1ef89d3a</code></td><td class="ns">PR #4014</td></tr>
+<tr><td>2026-11-07 08:54</td><td><code>479804adc7</code></td><td class="ns">PR #4052</td></tr>
+<tr><td>2026-11-07 08:45</td><td><code>a65ac5d622</code></td><td class="ns">PR #4053</td></tr>
+<tr><td>2026-11-07 08:37</td><td><code>0565f64d84</code></td><td class="ns">PR #4050</td></tr>
+<tr><td>2026-11-07 08:28</td><td><code>a1d0012310</code></td><td class="ns">PR #4047</td></tr>
+<tr><td>2026-11-07 08:20</td><td><code>93ebc94a34</code></td><td class="ns">PR #4049</td></tr>
+<tr><td>2026-11-07 08:09</td><td><code>d81b846ae9</code></td><td class="ns">PR #4048</td></tr>
+<tr><td>2026-11-07 08:08</td><td><code>2193038342</code></td><td class="ns">PR #4045</td></tr>
+<tr><td>2026-11-07 08:05</td><td><code>74fcc8c1a7</code></td><td class="ns">PR #4046</td></tr>
+<tr><td>2026-11-07 07:59</td><td><code>522f896216</code></td><td class="ns">PR #4043</td></tr>
+<tr><td>2026-11-07 07:55</td><td><code>04925af1b6</code></td><td class="ns">PR #4031</td></tr>
+<tr><td>2026-11-07 07:52</td><td><code>d99b2e9973</code></td><td class="ns">PR #4030</td></tr>
+<tr><td>2026-11-07 06:47</td><td><code>f4ba258577</code></td><td class="ns">PR #4040</td></tr>
+<tr><td>2026-11-07 06:33</td><td><code>0cf0c3524a</code></td><td class="ns">PR #4042</td></tr>
+<tr><td>2026-11-07 06:22</td><td><code>aa3f4da658</code></td><td class="ns">PR #4041</td></tr>
+<tr><td>2026-11-07 06:17</td><td><code>11e061b3fc</code></td><td class="ns">PR #4011</td></tr>
+<tr><td>2026-11-07 06:00</td><td><code>437fa4ced2</code></td><td class="ns">PR #4036</td></tr>
+<tr><td>2026-11-07 05:48</td><td><code>4ee6182b2e</code></td><td class="ns">PR #4037</td></tr>
+<tr><td>2026-11-07 05:36</td><td><code>e5497dd59b</code></td><td class="ns">PR #4034</td></tr>
+<tr><td>2026-11-07 05:21</td><td><code>a3350d698f</code></td><td class="ns">PR #4007</td></tr>
+<tr><td>2026-11-07 05:05</td><td><code>a5a77f8cdb</code></td><td class="ns">PR #4029</td></tr>
+<tr><td>2026-11-07 04:56</td><td><code>6416b06c2f</code></td><td class="ns">PR #4021</td></tr>
+<tr><td>2026-11-07 04:51</td><td><code>531a51c533</code></td><td class="ns">PR #4004</td></tr>
+<tr><td>2026-11-07 04:33</td><td><code>f3c4543abd</code></td><td class="ns">PR #3976</td></tr>
+<tr><td>2026-11-07 04:21</td><td><code>0bd295d437</code></td><td class="ns">PR #4020</td></tr>
+<tr><td>2026-11-07 04:01</td><td><code>8b786bb22a</code></td><td class="ns">PR #4022</td></tr>
+<tr><td>2026-11-07 03:47</td><td><code>dce54ef772</code></td><td class="ns">PR #4009</td></tr>
+<tr><td>2026-11-07 03:29</td><td><code>4ead149902</code></td><td class="ns">PR #4024</td></tr>
+<tr><td>2026-11-07 03:23</td><td><code>8a612871cb</code></td><td class="ns">PR #4019</td></tr>
+<tr><td>2026-11-07 03:15</td><td><code>e9504c519a</code></td><td class="ns">PR #4006</td></tr>
+<tr><td>2026-11-07 02:59</td><td><code>01b10c7e55</code></td><td class="ns">PR #4010</td></tr>
+<tr><td>2026-11-07 02:42</td><td><code>48b5450823</code></td><td class="ns">PR #3965</td></tr>
+<tr><td>2026-11-07 02:26</td><td><code>dafbeed3b2</code></td><td class="ns">PR #4003</td></tr>
 </tbody></table></div>
 
 <h2>Rows by state, as state-checked on 2026-10-27</h2>
@@ -1346,6 +1430,6 @@ td.url{font-size:.8rem;word-break:break-all}
 </tbody></table>
 <p class="note">The extractor is the estate's own <code>scripts/claim-capture.mjs</code>, sha256-pinned in the published spec manifest, and the run refuses to measure if the pin does not match. A negative control — a URL that cannot exist — is read first; if the reader reported it reachable, the run would be void.</p>
 
-<p class="note">This catalogue counts and quotes. It decides nothing about whether any measured claim is true, and it grants no status to any subject. Published 2026-11-02T07:16:04.980Z. Measurement, never a certification.</p>
+<p class="note">This catalogue counts and quotes. It decides nothing about whether any measured claim is true, and it grants no status to any subject. Published 2026-11-08T11:24:37.999Z. Supersedes the 2026-11-07 edition; a new edition is a new dated reading, never an edit of an older one. Measurement, never a certification.</p>
 </main>  <script src="/council-workspace-launcher.js" defer></script>
 </body></html>

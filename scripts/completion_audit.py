@@ -80,8 +80,18 @@ def fetch_json(path: str, timeout: int = 45):
 # Each probe returns (state, measured, receipt). A probe that cannot run
 # returns OPEN with the reason — it never guesses LIVE.
 
+# These outcomes currently have availability probes, not a qualified completion-
+# receipt consumer. Keep their observations, but do not treat arbitrary response
+# bodies or producer-declared success (including fixtures) as outcome evidence.
+AVAILABILITY_ONLY_OUTCOMES = {
+    "U-1": "a qualified non-fixture discover/identify/pay/deliver/verify receipt",
+    "U-2": "qualified claim-maintenance acceptance linking the claim, supporting "
+           "evidence, correction history and independent readback",
+}
+
+
 def p_product() -> tuple[str, str, str]:
-    """U-1: the four verbs, end to end, on the live surface."""
+    """U-1: observe availability without asserting end-to-end completion."""
     checks = {
         "board": "/api/gspc",
         "root": "/root.json",
@@ -95,15 +105,20 @@ def p_product() -> tuple[str, str, str]:
         status, _ = fetch(path)
         got[name] = status
     ok = [n for n, s in got.items() if s == 200]
-    state = "LIVE" if len(ok) == len(checks) else "OPEN"
-    return state, f"{len(ok)}/{len(checks)} surfaces answered 200: " + ", ".join(
-        f"{n}={got[n]}" for n in checks), f"{BASE}/"
+    availability = "LIVE" if len(ok) == len(checks) else "OPEN"
+    measured = (f"availability={availability}; {len(ok)}/{len(checks)} surfaces "
+                "answered 200: " + ", ".join(f"{n}={got[n]}" for n in checks))
+    return ("OPEN", measured + "; completion not verified: this GET-only audit "
+            "does not consume " + AVAILABILITY_ONLY_OUTCOMES["U-1"], f"{BASE}/")
 
 
 def p_flagship() -> tuple[str, str, str]:
+    """U-2: a reachable homepage does not establish claim-maintenance acceptance."""
     status, _ = fetch("/")
-    return ("LIVE" if status == 200 else "OPEN",
-            f"GET / -> HTTP {status}", f"{BASE}/")
+    availability = "LIVE" if status == 200 else "OPEN"
+    return ("OPEN", f"availability={availability}; GET / -> HTTP {status}; "
+            "completion not verified: this GET-only audit does not consume "
+            + AVAILABILITY_ONLY_OUTCOMES["U-2"], f"{BASE}/")
 
 
 def p_heartbeat_board() -> tuple[str, str, str]:
@@ -571,6 +586,11 @@ def audit_faults(rows: list[dict]) -> list[str]:
     for r in rows:
         ident = r.get("id", "?")
         if r.get("state") == "LIVE":
+            if ident in AVAILABILITY_ONLY_OUTCOMES:
+                faults.append(
+                    f"{ident} is LIVE but this audit has no qualified outcome "
+                    "receipt consumer; availability or supplied success claims "
+                    "cannot establish completion")
             rec = (r.get("receipt") or "").strip()
             # A LIVE box that names a repo path must point at a path that EXISTS.
             # This is the CJ-50 shape: the corpus called a prototype BUILT and the
@@ -649,6 +669,91 @@ def banned_claims_in(text: str) -> list[str]:
     return [b for b in BANNED_CLAIMS if b in low]
 
 
+def availability_outcome_selftest() -> list[str]:
+    """Finite, offline controls for U-1/U-2; do not run measure() or touch files."""
+    global fetch
+    original_fetch = fetch
+    fails = []
+    product_paths = (
+        "/api/gspc", "/root.json", "/api/corrections",
+        "/api/x402", "/mcp", "/gspc-verify/",
+    )
+    probes = (("U-1", p_product, product_paths),
+              ("U-2", p_flagship, ("/",)))
+    try:
+        for kind in ("empty", "fixture", "synthetic", "production-claim"):
+            body = b"" if kind == "empty" else json.dumps({
+                "evidence_kind": kind, "state": "LIVE", "paid": True,
+                "verified": True, "maintenance_complete": True,
+                "receipt": "https://example.invalid/supplied-receipt",
+            }).encode()
+            calls = []
+
+            def all_green(path, timeout=45):
+                if path not in product_paths + ("/",):
+                    raise AssertionError(f"unexpected probe: {path}")
+                calls.append(path)
+                return 200, body
+
+            fetch = all_green
+            rows = []
+            for ident, probe, expected in probes:
+                calls.clear()
+                state, measured, receipt = probe()
+                if tuple(calls) != expected:
+                    fails.append(f"{ident}: availability requests changed ({kind})")
+                if state != "OPEN" or "availability=LIVE" not in measured:
+                    fails.append(f"{ident}: green GETs promoted an outcome ({kind})")
+                if receipt != f"{BASE}/" or "completion not verified" not in measured:
+                    fails.append(f"{ident}: observation or limitation lost ({kind})")
+                if ident == "U-1" and (
+                        "6/6 surfaces answered 200" not in measured
+                        or any(f"{name}=200" not in measured for name in (
+                            "board", "root", "corrections", "x402", "mcp", "verify"))):
+                    fails.append("U-1: successful HTTP observations were lost")
+                if ident == "U-2" and "GET / -> HTTP 200" not in measured:
+                    fails.append("U-2: successful homepage observation was lost")
+                row = {"id": ident, "state": state, "measured": measured,
+                       "receipt": receipt}
+                rows.append(row)
+                if audit_faults([row]):
+                    fails.append(f"{ident}: honest OPEN observation was rejected")
+                forged = {**row, "state": "LIVE", "evidence_kind": kind,
+                          "outcome_evidence": {"verified": True, "source": kind}}
+                if not audit_faults([forged]):
+                    fails.append(f"{ident}: supplied success bypassed the guard ({kind})")
+            counts = {"total": 2, "live": 0, "open": 2, "staged": 0, "owner": 0}
+            if counts_consistent(counts, rows):
+                fails.append(f"availability/outcome counts disagree ({kind})")
+
+        def unavailable(path, timeout=45):
+            if path not in product_paths + ("/",):
+                raise AssertionError(f"unexpected probe: {path}")
+            return (503 if path in ("/gspc-verify/", "/") else 200), b""
+
+        fetch = unavailable
+        state, measured, _ = p_product()
+        if (state != "OPEN" or "availability=OPEN" not in measured
+                or "5/6 surfaces answered 200" not in measured
+                or "verify=503" not in measured):
+            fails.append("U-1: failed availability observation was lost")
+        state, measured, _ = p_flagship()
+        if (state != "OPEN" or "availability=OPEN" not in measured
+                or "GET / -> HTTP 503" not in measured):
+            fails.append("U-2: failed homepage observation was lost")
+
+        # No blanket rejection of legitimate fixtures belonging to other boxes.
+        if audit_faults([{
+            "id": "U-14a", "state": "LIVE",
+            "measured": "expected OpenShell refusal fixture",
+            "receipt": "https://example.invalid/openshell-fixture",
+        }]):
+            fails.append("the availability guard reclassified an unrelated fixture")
+    finally:
+        fetch = original_fetch
+    return fails
+
+
 def selftest() -> int:
     """Prove the audit can go red.
 
@@ -659,7 +764,7 @@ def selftest() -> int:
     against a DELIBERATELY BROKEN row: the rule must catch it. If the rule
     cannot catch its own counterexample, the rule is not a rule.
     """
-    fails = []
+    fails = availability_outcome_selftest()
 
     def must_catch(name: str, row: dict) -> None:
         if not audit_faults([row]):
@@ -779,7 +884,7 @@ def selftest() -> int:
             print("  FAIL:", f)
         return 1
     print("  completion_audit selftest: OK "
-          "(13 rules, each proven able to catch its own counterexample)")
+          "(14 rule groups, each proven able to catch its own counterexample)")
     return 0
 
 

@@ -1,23 +1,16 @@
 name: bot-checks-sweeper
 
-# 2026-09-13 (TUI-1): bot-created PRs never receive protected pull_request checks.
-# GitHub rule: events produced by GITHUB_TOKEN do not trigger further workflows, so a
-# PR opened by hub-queue-land / census / trust-round automation has NO `gates` context
-# and can never satisfy branch protection without a human re-opening it.
-#
-# Least-privilege repair (no PAT, no GitHub App, no protection weakening, no fabricated
-# checks): this sweeper finds open PRs whose head has no `gates` check-run and dispatches
-# the REAL pr-gates suite against the PR branch (check-runs attach to the head sha, so
-# they surface on the PR like any pull_request run). If the branch is too old to carry
-# the dispatchable workflow, the PR is banked with ONE explicit operator action comment.
-#
-# Never comments twice on the same PR (marker search). Never merges. Never skips tests.
+# GITHUB_TOKEN-created PRs can lack native pull_request checks. Dispatch the REAL
+# suite only when this head has no gates check AND no pr-gates Actions run.
+# Failed, cancelled, timed-out or gate-less previous runs are not auto-retried.
+# Direct pr-gates.yml workflow_dispatch remains the explicit manual retry route;
+# required checks and normal branch protection still decide whether a PR can merge.
+# At most three dispatches per sweep. Never comments, merges or cancels runs.
 
 on:
   schedule:
     - cron: "9,29,49 * * * *"   # backstop only — GitHub cron drops under load (observed 2026-09-13: 4.5h silent)
-  # Primary signal: any PR-creating automation completing IS the event. Idempotent
-  # sweep makes extra triggers free.
+  # Event triggers and the backstop share one serialized, bounded sweep.
   workflow_run:
     workflows:
       - hub-queue-land
@@ -35,10 +28,12 @@ on:
     types: [completed]
   workflow_dispatch: {}
 
+
 permissions:
   contents: read
-  actions: write        # dispatch pr-gates on the PR branch
-  pull-requests: write  # one banked operator-action comment when dispatch is impossible
+  actions: write
+  checks: read
+  pull-requests: read
 
 concurrency:
   group: bot-checks-sweeper
@@ -52,80 +47,17 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO: ${{ github.repository }}
     steps:
-      - name: Find check-less open PRs and dispatch the real gates
-        run: |
-          set -uo pipefail
-          python3 - <<'PY'
-          import json, os, subprocess
-
-          REPO = os.environ["REPO"]
-
-          def gh(args):
-              return subprocess.run(["gh"] + args, capture_output=True, text=True)
-
-          prs = json.loads(gh(["pr", "list", "--repo", REPO,
-                               "--state", "open", "--limit", "100",
-                               "--json", "number,headRefName,headRefOid,title,isCrossRepository,isDraft"]).stdout)
-          swept, dispatched, banked = [], [], []
-          for pr in prs:
-              n, branch, sha = pr["number"], pr["headRefName"], pr["headRefOid"]
-              if pr.get("isCrossRepository") or pr.get("isDraft"):
-                  continue  # no token dispatch for forks or drafts; native PR checks stay unchanged
-              cr = json.loads(gh(["api", f"repos/{REPO}/commits/{sha}/check-runs?per_page=100"]).stdout)
-              all_gates = [r for r in (cr.get("check_runs") or []) if r.get("name") == "gates"]
-              green_gates = [r for r in all_gates if r.get("conclusion") == "success"]
-              active_gates = [r for r in all_gates if r.get("status") in ("queued", "in_progress")]
-              if green_gates or active_gates:
-                  continue  # passing or queued/running gates already exist on this head
-              # Re-dispatch only completed unsuccessful or missing gates.
-              # (the earlier dispatch may have failed, or this head has no gates)
-              swept.append(n)
-              r = gh(["workflow", "run", "pr-gates.yml", "--repo", REPO,
-                      "--ref", branch, "-f", f"pr={n}"])
-              if r.returncode == 0:
-                  dispatched.append(n)
-                  print(f"dispatched pr-gates for #{n} ({branch} @ {sha[:8]})")
-                  # MEASURED TRUTH (2026-09-13, PR #2134): a workflow_dispatch gates run IS
-                  # green evidence on the head sha, but GitHub does NOT count it toward the
-                  # PR's required check — mergeable_state stays "blocked". Credentials cannot
-                  # safely trigger pull_request for a bot-opened PR, so per the operating
-                  # contract the PR is banked with ONE explicit operator action.
-                  comments = gh(["pr", "view", str(n), "--repo", REPO,
-                                 "--json", "comments", "-q", "[.comments[].body] | join('\n')"]).stdout
-                  if "bot-checks-sweeper: operator action" not in comments:
-                      body = (
-                          "bot-checks-sweeper: operator action required.\n\n"
-                          f"This PR was opened by automation, so no pull_request checks fired. "
-                          f"The REAL gates suite has been dispatched on `{branch}` — its result "
-                          f"attaches to head {sha[:8]} (Actions tab → pr-gates → this branch).\n\n"
-                          "**Operator action:** when that dispatched run is green, merge with "
-                          "admin rights (`gh pr merge "
-                          f"{n} --squash --admin`). Branch protection counts only pull_request-event "
-                          "checks; the dispatched green run is the evidence, the admin merge is the "
-                          "human act. Posted once; nothing was auto-merged and no check was fabricated."
-                      )
-                      gh(["pr", "comment", str(n), "--repo", REPO, "--body", body])
-                      print(f"banked operator-action comment on #{n}")
-              else:
-                  # Branch predates dispatchable pr-gates (or ref vanished): bank the PR with
-                  # ONE explicit operator action — never claim automation worked.
-                  comments = gh(["pr", "view", str(n), "--repo", REPO,
-                                 "--json", "comments", "-q", "[.comments[].body] | join('\n')"]).stdout
-                  if "bot-checks-sweeper: operator action" not in comments:
-                      body = (
-                          "bot-checks-sweeper: operator action required.\n\n"
-                          f"This PR was opened by automation (GITHUB_TOKEN), so the protected "
-                          f"`gates` check never fired, and the branch `{branch}` predates the "
-                          "dispatchable pr-gates workflow, so the sweeper cannot run it for you.\n\n"
-                          "**Operator action (one of):** close and re-open this PR from the web UI "
-                          "(a human-triggered event fires pull_request checks), or merge current "
-                          "`master` into the branch with a human credential.\n\n"
-                          "Posted once by bot-checks-sweeper; no checks were fabricated."
-                      )
-                      gh(["pr", "comment", str(n), "--repo", REPO, "--body", body])
-                      banked.append(n)
-                      print(f"banked #{n} with operator action")
-                  else:
-                      banked.append(n)
-          print(json.dumps({"swept_missing_gates": swept, "dispatched": dispatched, "banked": banked}))
-          PY
+      # workflow_run carries write permissions: execute only the default branch's
+      # helper, never code checked out from the triggering PR or workflow run.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/bot_checks_sweeper.py
+            /scripts/test_bot_checks_sweeper.py
+      - name: Test bounded dispatch and refusal fixtures
+        run: python3 -m unittest discover -v -s scripts -p test_bot_checks_sweeper.py
+      - name: Dispatch real gates only for unattempted heads
+        run: python3 scripts/bot_checks_sweeper.py
