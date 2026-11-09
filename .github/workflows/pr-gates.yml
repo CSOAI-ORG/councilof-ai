@@ -310,11 +310,39 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: |
           node --test scripts/workflow-trigger-coupling.node-test.mjs
+          node --test scripts/post-deploy-verification.node-test.mjs
           node scripts/workflow-trigger-coupling.mjs
 
       - name: Outward claims — offline manifest contract selftest
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/outward-claims-guard.mjs --selftest
+
+      - name: Completion audit — offline availability/outcome controls
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          ulimit -v 262144
+          ulimit -t 8
+          timeout 35s python3 -B - <<'PY'
+          import importlib.util, socket
+          from unittest.mock import patch
+          spec = importlib.util.spec_from_file_location('completion_audit_gate', 'scripts/completion_audit.py')
+          audit = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(audit)
+          def forbidden(*args, **kwargs):
+              raise AssertionError('Focused availability gate attempted live or full-audit IO')
+          original_fetch = audit.fetch
+          with patch.object(audit, 'measure', forbidden), \
+               patch.object(audit.urllib.request, 'urlopen', forbidden), \
+               patch.object(socket, 'socket', forbidden), \
+               patch.object(socket, 'getaddrinfo', forbidden), \
+               patch.object(audit.subprocess, 'run', forbidden), \
+               patch.object(audit.tempfile, 'TemporaryDirectory', forbidden):
+              faults = audit.availability_outcome_selftest()
+          assert audit.fetch is original_fetch, 'fetch stub was not restored'
+          if faults:
+              raise AssertionError('\n'.join(faults))
+          print('completion audit availability/outcome controls: PASS')
+          PY
 
       # Runs before `npm ci` so a stamped-byte edit fails in seconds. See the stamped-bytes job above
       # for why (#2871 / deploy run 37590160574). Verified to fail: the selftest goes red when any one
@@ -327,6 +355,15 @@ jobs:
           python3 scripts/stamped-bytes-gate.py --selftest
           python3 scripts/stamped-bytes-gate.py --base HEAD^1 --head HEAD
 
+      - name: Native canvas build prerequisites
+        if: steps.scope.outputs.gated == 'true'
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+            build-essential pkg-config libpixman-1-dev \
+            libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+
       - name: Install deps
         if: steps.scope.outputs.gated == 'true'
         # The Python half matches deploy.yml's install. scripts/ots-manifest-fresh.test.ts (step "Unit
@@ -335,6 +372,25 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
           python3 -m pip install -q cryptography opentimestamps-client jsonschema==4.26.0
+
+      - name: Native canvas runtime smoke
+        if: steps.scope.outputs.gated == 'true'
+        timeout-minutes: 1
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const assert = require('node:assert/strict');
+          const { createCanvas } = require('canvas');
+          const canvas = createCanvas(2, 2);
+          const context = canvas.getContext('2d');
+          context.fillStyle = '#112233';
+          context.fillRect(0, 0, 2, 2);
+          assert.deepEqual(Array.from(context.getImageData(0, 0, 2, 2).data),
+            [17, 34, 51, 255, 17, 34, 51, 255, 17, 34, 51, 255, 17, 34, 51, 255]);
+          const png = canvas.toBuffer('image/png');
+          assert.ok(Buffer.isBuffer(png) && png.length > 8);
+          assert.deepEqual(Array.from(png.subarray(0, 8)), [137, 80, 78, 71, 13, 10, 26, 10]);
+          console.log('Native canvas smoke: PASS (2x2 RGBA and PNG signature; RAM only)');
+          NODE
 
       - name: Instrument liveness - selftest
         if: steps.scope.outputs.gated == 'true'
@@ -643,7 +699,7 @@ jobs:
       - name: Council OS first question — desktop and mobile
         id: council_os_first_question
         if: steps.scope.outputs.gated == 'true'
-        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries|workflow entry and header remain usable at (375|894|1024|1280|1440|1536)px$|Boss.s Chair resume|Munder live|GSPC quests are a styled in-workspace game and never promote play into measurement$|the home header carries a booking door to /assess/ within one click$'
+        run: npm run test:e2e:shell -- e2e/tests/dashboard-home-ask.spec.ts e2e/tests/dashboard-shell.spec.ts --grep 'the first question typed on the start screen gets an answer at (1440|375)px$|local run trace retains progress and interruptions at (1440|375)px$|root, Council OS home and plugin tools keep Ask closed until explicitly opened$|workspace navigation starts minimized and remains usable across layout boundaries|workflow entry and header remain usable at (375|894|1024|1280|1440|1536)px$|Boss.s Chair resume|Munder live|GSPC quests are a styled in-workspace game and never promote play into measurement$|the home header carries a booking door to /assess/ within one click$|ordinary signup has one composed main before and after reload at (1440|390)px$'
 
       - name: Retain Council OS first-question premerge evidence
         if: ${{ always() && steps.scope.outputs.gated == 'true' && (steps.council_os_first_question.outcome == 'success' || steps.council_os_first_question.outcome == 'failure') }}
@@ -654,6 +710,7 @@ jobs:
             test-results/**/trace.zip
             test-results/**/agui-request-lifecycle.json
             test-results/**/agui-local-trace.json
+            test-results/**/published-source-signup-landmark.json
             test-results/**/*.png
           retention-days: 3
           if-no-files-found: warn
