@@ -212,7 +212,11 @@ async function readState() {
   return {
     note: receiptNote,
     state: {
-      prState: pr ? pr.state : "open",
+      // The API's `state` is "closed" for a MERGED pull request too, so it cannot say whether the
+      // change landed or was dropped. `merged` is the field that tells them apart. MEASURED
+      // 2026-11-09: this read passed the raw `state` through, so PR #4148's receipt said "the pull
+      // request is closed" for a pull request that had merged as 1d53df3cf.
+      prState: pr ? (pr.merged ? "merged" : pr.state) : "open",
       draft: Boolean(pr && pr.draft),
       armed: Boolean(pr && pr.auto_merge),
       behind,

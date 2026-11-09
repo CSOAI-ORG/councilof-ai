@@ -71,4 +71,24 @@ describe("one-cycle-decide", () => {
       expect(got.reason.length).toBeGreaterThan(10);
     }
   });
+
+  // WHY THIS CASE. A pull request that merged and one that was closed without merging are BOTH
+  // `state: "closed"` in the REST API. MEASURED 2026-11-09: the receipt for PR #4148 — which
+  // merged as 1d53df3cf — read "the pull request is closed", which is true of the API field and
+  // useless to a reader who has to know whether the change reached master. A receipt that cannot
+  // tell LANDED from DROPPED is the defect this case pins shut.
+  it("tells a merged pull request apart from a closed one that never merged", () => {
+    const required = { passed: [...REQUIRED_CONTEXTS], failed: [], inFlight: [], unreported: [] };
+    const merged = decide({
+      prState: "merged", draft: false, armed: true, behind: 0, readComplete: true, required,
+    });
+    const closed = decide({
+      prState: "closed", draft: false, armed: false, behind: 4, readComplete: true, required,
+    });
+    expect(merged.action).toBe(ACTIONS.DONE);
+    expect(closed.action).toBe(ACTIONS.DONE);
+    expect(merged.reason).not.toBe(closed.reason);
+    expect(merged.reason).toMatch(/merged/);
+    expect(closed.reason).toMatch(/did not land/);
+  });
 });
