@@ -23,7 +23,37 @@ jobs:
           ref: master
 
       - uses: actions/setup-node@v4
-        with: { node-version: '20' }
+        with: { node-version: '20', cache: npm }
+
+      # WHY THIS STEP EXISTS — MEASURED, not guessed. This workflow has failed on EVERY run it has
+      # ever taken — 2026-11-07T22:15Z, 2026-11-08T06:38Z, 13:50Z, 22:26Z, and the hand-dispatched
+      # run 42557435099 on 2026-11-09T03:37Z — with the SAME error, and the error was not the
+      # measurement:
+      #
+      #   Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'esbuild'
+      #     imported from /home/runner/work/councilof-ai/councilof-ai/scripts/surface/commit-board.mjs
+      #
+      # The index was rebuilt SUCCESSFULLY in that very step, one line earlier:
+      #
+      #   DONE files=16370 bytes=259363218 by_served={'pages': 3124, 'retired-bytes': 6, 'hf-mirror': 13240}
+      #
+      # `node scripts/llms-txt.mjs` reaches scripts/surface/commit-board.mjs, which bundles
+      # functions/api/gspc.ts with esbuild (a lazy `await import("esbuild")`). The runner had node
+      # 20 and NO node_modules: this workflow never installed dependencies. So the failure was
+      # STRUCTURAL, not a flake, and it repeated for a day and a half — and because the llms step is
+      # the one that quotes the index's as_of, the producer of the published interop index never
+      # once reached its land step. The index on the site was last rebuilt 2026-11-08T04:46:22Z;
+      # a fresh measurement of master finds 16,370 files against the published 16,365.
+      #
+      # The install is the estate's OWN convention, not a new idea: deploy.yml, pr-gates.yml,
+      # drift-guard.yml, charter-federation.yml and catalogue-live-state.yml all run `npm ci`.
+      # This one did not, and that is the whole defect.
+      #
+      # `--ignore-scripts` is safe for esbuild here, and that was MEASURED rather than assumed:
+      # after an install with --ignore-scripts, esbuild 0.25.0 still bundles (the platform binary
+      # arrives as an optionalDependency and the JavaScript API resolves it directly, so the
+      # skipped postinstall is not what makes it work).
+      - run: npm ci --ignore-scripts --no-audit --no-fund
 
       # WHY THIS EXISTS. public/interop/file-index.json is a MEASUREMENT of the published interop
       # tree: every path, with its size, its sha256 and how it is served. Its promise is that a
