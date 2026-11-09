@@ -40,7 +40,7 @@ current. Current-task applicability, issuer authentication, independent reproduc
 human review and authority remain unestablished. The output creates no canonical
 event, case store, model-weight update, durable memory admission or legal finding.
 The tool is available in this source candidate, not automatically in an installed
-MEOK runtime. Existing chat routing is unchanged; no model provider receives data
+MEOK runtime. Default chat routing is unchanged; no model provider receives data
 as a side effect of reading this tool.
 
 Run its dependency-free fixtures with:
@@ -55,4 +55,42 @@ requests. Installation must retain the shared `public/evidence-learning` modules
 and complete the existing runtime acceptance process.
 
 Measurement, not certification.
+
+## Optional Cosmos chat provider
+
+`meok_route_to_clan` can now use an explicitly configured Cosmos-compatible
+endpoint through `chat-provider.mjs`. H.I.M. remains the default. `him_say` and
+work-step telemetry continue to use the coordinator even when Cosmos chat is
+enabled. A Cosmos bearer is never sent to that coordinator by this adapter.
+
+Set `MEOK_CHAT_BACKEND=cosmos`, `MEOK_CHAT_BASE_URL` and `MEOK_CHAT_MODEL` to
+activate the candidate after qualifying its endpoint. Supply the application
+bearer through `MEOK_CHAT_API_KEY` in the host's secret store. Optional limits are
+`MEOK_CHAT_TIMEOUT_MS` (default 30000, maximum 90000) and
+`MEOK_CHAT_MAX_TOKENS` (default 1024, maximum 4096).
+
+The adapter makes one bounded request, refuses redirects, accepts HTTPS or
+loopback HTTP for Cosmos, caps prompts at 64,000 UTF-8 bytes and responses at two
+MiB, and preserves a deadline while reading the body. It does not retry or
+switch paid providers after an uncertain result. Nonempty text is reported as
+`ANSWER_RECEIVED`; this is neither task completion nor verified model identity.
+Provider provenance remains an unverified assertion. Native tool-call proposals
+are rejected as unsupported; this first integration is text inference.
+
+The [Cosmos Space profile](cosmos-space/README.md) contains the pinned model,
+runtime, hardware estimate, secret configuration, storage mapping and activation
+checks. It is a source candidate until the GPU runtime and actual MEOK tasks
+have been exercised. This change does not enroll other agents automatically or
+start model training.
+
+Run the bounded provider and actual stdio routing fixtures with:
+
+```sh
+node --test mcp/meok-gspc-layer0/chat-provider.node-test.mjs mcp/meok-gspc-layer0/chat-routing.node-test.mjs
+```
+
+`chat-provider.test.ts` invokes those same fixtures in the monorepo Vitest gate.
+They use mocked fetches and temporary loopback servers, with no external model,
+GPU, payment, coordinator or telemetry call.
+
 
