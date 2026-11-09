@@ -4,6 +4,7 @@ import {
   REQUIRED_CONTEXTS,
   decide,
   fixtures,
+  mayMergeNow,
   runFixtures,
   sweep,
 } from "./one-cycle-decide.mjs";
@@ -90,5 +91,30 @@ describe("one-cycle-decide", () => {
     expect(merged.reason).not.toBe(closed.reason);
     expect(merged.reason).toMatch(/merged/);
     expect(closed.reason).toMatch(/did not land/);
+  });
+
+  // WHY THIS CASE. GitHub refuses to arm an auto-merge on a pull request that is ALREADY
+  // mergeable — MEASURED 2026-11-09 on PR #4150: "Pull request is in clean status". An
+  // auto-merge there would have merged it a second later, so the refusal is not an obstacle.
+  // The predicate that decides whether a merge is authorised right now must be TRUE in
+  // exactly one shape of state, and FALSE in every other — including the state where a
+  // required context has not reported at all, which is the one that could merge a change
+  // nobody verified.
+  it("authorises a merge only when the pull request is open, up to date, not a draft, and every required context has passed", () => {
+    const green = { passed: [...REQUIRED_CONTEXTS], failed: [], inFlight: [], unreported: [] };
+    const base = { prState: "open", draft: false, armed: false, behind: 0, readComplete: true, required: green };
+    expect(mayMergeNow(base)).toBe(true);
+    expect(mayMergeNow({ ...base, behind: 1 })).toBe(false);
+    expect(mayMergeNow({ ...base, draft: true })).toBe(false);
+    expect(mayMergeNow({ ...base, readComplete: false })).toBe(false);
+    expect(mayMergeNow({ ...base, prState: "closed" })).toBe(false);
+    expect(mayMergeNow({ ...base, prState: "merged" })).toBe(false);
+    expect(mayMergeNow({ ...base, required: { ...green, inFlight: ["gates"] } })).toBe(false);
+    expect(mayMergeNow({ ...base, required: { ...green, failed: ["gates"] } })).toBe(false);
+    expect(mayMergeNow({ ...base, required: { ...green, unreported: ["gates"] } })).toBe(false);
+    // one required context missing from the passed set — the rest are green
+    expect(mayMergeNow({ ...base, required: { passed: ["gates", "build"], failed: [], inFlight: [], unreported: [] } })).toBe(false);
+    // a run held for approval has not reported at all
+    expect(mayMergeNow({ ...base, runsAwaitingApproval: ["pr-gates"] })).toBe(false);
   });
 });
