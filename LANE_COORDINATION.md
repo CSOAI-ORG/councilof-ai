@@ -628,3 +628,65 @@ volume and reports failures honestly.
 **Still open (owner):** B17 board-sign bearer · DC Authorize · B14 partially reclaimed (disk now 6.2 GiB free — re-measure before more deletions). **This lane:** none — everything in scope ran green.
 
 — claude lane, week close-out 2026-11-07
+
+---
+
+## 2026-11-09 · public-journey-audit lane — two public-surface findings, and one that needs an owner
+
+**Measured, not asserted.** `python3 scripts/audit/published-surface-audit.py` (the estate's own tool,
+unchanged) reports **2 findings, both medium**:
+
+1. **`councilof.ai` serves its Content-Security-Policy as Report-Only.** It protects nothing until it is
+   enforced. The header's own comment names the next step — read the report over a week of production
+   traffic, then promote it — and **that step cannot be run**: the policy names no reporting destination
+   (no `report-uri`, no `report-to`, no `Reporting-Endpoints`) and no collector exists in the tree, so the
+   traffic window is unobservable. Cloudflare's per-zone CSP reporting endpoint does not resolve for this
+   zone. **This lane is not touching `public/_headers`** — it belongs to the published-surface-alignment
+   lane, and the promotion is an owner's production-posture decision. What the lane can do is narrow the
+   question: the static pass over the 843 built files clears `object-src 'none'` (no `<object>`/`<embed>`
+   anywhere), clears `form-action 'self'` (no external form action), and identifies **`frame-src` as the
+   directive that needs a runtime report** — it is undeclared, so `default-src 'self'` governs frames while
+   the built tree references `huggingface.co` and many third-party origins. A reporting destination the
+   estate controls, then the window, then the owner's click.
+2. **`meok.ai` is missing `strict-transport-security`, `permissions-policy` and `x-frame-options`.**
+   **`meok.ai` is not deployed from this repository** — no deployment file, `_headers`, `wrangler`
+   configuration or workflow here serves it; it is a sibling deployment with its own repository, as the
+   estate's own `_headers` comment says ("same estate, same component library"). **The fix belongs to that
+   deployment's owner.** `councilof.ai` carries all five headers. Recording it here so it is not lost.
+
+**A door is a promise only if something published names it.** 61 doors were probed on 2026-11-09 across
+six groups; **51 answered 2xx/3xx; 10 answered 404 and every one of them is named by no published
+surface** (exact-path match against `/catalog.json`, `/llms.txt`, `/llms-full.txt`, `/sitemap.xml`,
+`/openapi.json`, `/`, `/dashboard/`, `/layer0/`, `/interop/`). One of the ten was our own guess — an axis
+slug the board does not publish. **0 dead among published doors.** The doors that answer oddly answer
+honestly: 402 for a declared paid refusal, 400 naming the parameters it needs, and
+`POST /api/evidence-intake` → 503 `WRITER_AUTH_UNAVAILABLE` with `measurement_state: UNMEASURED` and
+`writes_board: false`.
+
+**The deploy, from outside.** `deploy.yml` failed on every master run from 2026-11-06T17:51Z on ONE root
+cause — two stale e2e assertions in `e2e/tests/dashboard-shell.spec.ts`; every later failed step in the
+job was cascade. The estate's own `docs/operations/ALIGNMENT-PLAN-2026-11-03.md` §2 diagnosed and fixed
+the same pair, and the last master deploy (`64630b112`, 2026-11-08T22:30:17Z) is `success`. **Two days of
+master never reached production.** Reproduced locally: the four assertions pass on current master.
+
+**Two stranded lanes that are still stranded, and their real cost.** #3783 (ask-release: 115 commits, 63
+files) and #3784 (public-usability: 12 commits, 85 files) are both still `CONFLICTING`. Merging master
+into #3783 produces **42 conflicts, every one of them inside the lane's own files** — the home hero, the
+dashboard panes, the ask host, the talk panel, the lobby tabs, the live board glance, the route manifest,
+two e2e specs and ten generated axis pages. So the cost is not the 115 commits (most of them are already
+in master's shape); it is 42 per-file judgements of the same question: **does master already implement
+what this lane implemented?** The week plan (`docs/operations/PUBLIC-FRONT-END-LANE-WEEK-PLAN-2026-11-09.md`,
+Track C) carries the rule and the close test.
+
+**The npm client's publish path still needs one human touch.** npm's trusted publisher on `@csoai/layer0`
+reads **CSOAI**, but npm's field is the **GitHub** organization, which is **CSOAI-ORG** — so the OIDC
+exchange matches nothing and npm silently falls back to the placeholder credential (the 0.2.1 publish
+failed with `E404 Not found`, which names neither the cause nor the fix; PR #3656 removed the placeholder
+so the same failure now surfaces as `ENEEDAUTH`). The connection has since **expired** on npm's side
+("This trusted publisher configuration has expired. Delete it and create a new one."). It must be deleted
+and re-created under `CSOAI-ORG`, and that is a **security-key touch** — a human-only step. The bootstrap
+token that published 0.2.0 is **already dead** (npm answers **401** for it) and has been removed from
+`~/.npmrc`; `latest` is still 0.2.0 with no provenance, and npm's staged-package placeholder
+`0.0.0-stage` (2026-10-30T05:14:50Z) is still on the package.
+
+— mavis (public-journey-audit lane), 2026-11-09
