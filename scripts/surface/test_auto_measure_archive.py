@@ -7,6 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from huggingface_hub.errors import EntryNotFoundError
 
 PATH = Path(__file__).with_name("run-auto-measure-once.py")
 spec = importlib.util.spec_from_file_location("auto_measure_driver", PATH)
@@ -49,7 +50,7 @@ class FakeHub:
 
     def download(self, repo, name, repo_type, revision):
         if name not in self.stores[revision]:
-            raise FileNotFoundError(name)
+            raise EntryNotFoundError(name)
         raw = self.stores[revision][name]
         if self.corrupt_readback and revision == "published":
             raw += b"changed"
@@ -234,3 +235,28 @@ def test_readback_tampering_does_not_report_success(tmp_path):
     hub = FakeHub(tmp_path, corrupt_readback=True)
     with pytest.raises(ValueError, match="readback"):
         archive(hub, fixture_receipt())
+
+
+def test_local_cache_disappearance_is_not_remote_missing_entry(tmp_path):
+    hub = FakeHub(tmp_path)
+    snapshot = driver.load_snapshot(hub, hub.download)
+
+    def lost_local_download(repo, name, repo_type, revision):
+        return str(tmp_path / "cache-file-disappeared")
+
+    with pytest.raises(FileNotFoundError):
+        driver.archive_receipt(hub, lost_local_download, snapshot, fixture_receipt(), SimpleNamespace)
+    assert hub.calls == 0
+
+
+def test_results_card_publication_never_contains_measurement_rows():
+    spec = importlib.util.spec_from_file_location("auto_measure_publisher", PATH.with_name("publish-hf-evaluation.py"))
+    publisher = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(publisher)
+    payload = publisher.build_payload("results-card", SOURCE)
+    assert set(payload) == {"README.md", "SOURCE_REVISION.json"}
+    release = json.loads(payload["SOURCE_REVISION.json"])
+    assert release["commit"] == SOURCE and release["target"] == "results-card"
+    assert release["files"] == {"README.md": m.sha256(payload["README.md"])}
+    assert f"/blob/{SOURCE}/scripts/surface/".encode() in payload["README.md"]
+    assert b"/blob/master/" not in payload["README.md"]

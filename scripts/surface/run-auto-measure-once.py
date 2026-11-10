@@ -121,7 +121,7 @@ def archive_receipt(api, download, snapshot, receipt, add_operation):
     existing_file = None
     try:
         existing_file = Path(download(RESULTS_REPO, path, repo_type="dataset", revision=snapshot.revision)).read_bytes()
-    except (EntryNotFoundError, FileNotFoundError):
+    except EntryNotFoundError:
         pass
     if existing_file is not None and existing_file != line:
         raise ArchiveConflict("immutable receipt filename already contains different bytes")

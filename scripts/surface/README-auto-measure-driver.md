@@ -29,6 +29,9 @@ python scripts/surface/run-auto-measure-once.py --run \
 The CLI submits exactly one `/measure_at` request. A client timeout requests cancellation and
 performs no inference retry. The existing Space allocation remains capped at 120 seconds; the
 client timeout defaults to 240 seconds to allow for queue/transport overhead.
+If the existing ZeroGPU quota refuses the request, the attempt marker remains local
+and there is no returned receipt to archive. A later operator invocation requires
+available quota; the CLI does not retry, upgrade hardware, or create a schedule.
 
 Before writing, the CLI reconstructs the complete receipt using the frozen bank's actual expected
 labels, the canonical grader, received full outputs, declared protocol and hashes. Partial windows,
@@ -77,3 +80,13 @@ They cover partial evidence, frozen-gold regrading, internal hash mismatches, ch
 revisions, preservation of historical bytes, duplicate receipts, same-identity conflicts, concurrent
 parents, ambiguous commit failures, orphan receipt completion, immutable filenames and readback
 corruption. Fixture outputs are never published as measurements.
+
+The results dataset card is maintained in `spaces/gspc-auto-measure/RESULTS-README.md`.
+After the normal source review and gates, the existing guarded publisher can mirror
+that card and its source manifest without modifying any measurement rows:
+
+```bash
+python scripts/surface/publish-hf-evaluation.py --target results-card
+python scripts/surface/publish-hf-evaluation.py --target results-card --apply \
+  --expected-head FRESH_RESULTS_SHA --receipt /absolute/path/to/card-publication.json
+```
