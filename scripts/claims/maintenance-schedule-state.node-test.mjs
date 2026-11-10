@@ -125,3 +125,6 @@ test("presence-bearing v0.2 rows can follow historical rows, while an unknown sc
   assert.equal(state(newer).state, "COMPLETED");
   assert.throws(() => fixture({ schema: "csoai.claim-maintenance-check/99" }), /schema/);
 });
+
+// Keep clock regressions in this already-registered Node suite.
+import "./maintenance-clock-regression.node-test.mjs";
