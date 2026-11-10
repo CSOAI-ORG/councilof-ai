@@ -117,11 +117,11 @@ def archive_receipt(api, download, snapshot, receipt, add_operation):
     line = (measurement.canonical_json(receipt) + "\n").encode("utf-8")
     raw = snapshot.raw if existing else snapshot.raw + (b"\n" if snapshot.raw and not snapshot.raw.endswith(b"\n") else b"") + line
     path = receipt_path(receipt)
-    from huggingface_hub.errors import EntryNotFoundError
+    from huggingface_hub.errors import RemoteEntryNotFoundError
     existing_file = None
     try:
         existing_file = Path(download(RESULTS_REPO, path, repo_type="dataset", revision=snapshot.revision)).read_bytes()
-    except EntryNotFoundError:
+    except RemoteEntryNotFoundError:
         pass
     if existing_file is not None and existing_file != line:
         raise ArchiveConflict("immutable receipt filename already contains different bytes")

@@ -7,7 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from huggingface_hub.errors import EntryNotFoundError
+from huggingface_hub.errors import LocalEntryNotFoundError, RemoteEntryNotFoundError
 
 PATH = Path(__file__).with_name("run-auto-measure-once.py")
 spec = importlib.util.spec_from_file_location("auto_measure_driver", PATH)
@@ -50,7 +50,7 @@ class FakeHub:
 
     def download(self, repo, name, repo_type, revision):
         if name not in self.stores[revision]:
-            raise EntryNotFoundError(name)
+            raise RemoteEntryNotFoundError(name)
         raw = self.stores[revision][name]
         if self.corrupt_readback and revision == "published":
             raw += b"changed"
@@ -260,3 +260,15 @@ def test_results_card_publication_never_contains_measurement_rows():
     assert release["files"] == {"README.md": m.sha256(payload["README.md"])}
     assert f"/blob/{SOURCE}/scripts/surface/".encode() in payload["README.md"]
     assert b"/blob/master/" not in payload["README.md"]
+
+
+def test_sdk_local_missing_entry_is_not_remote_absence(tmp_path):
+    hub = FakeHub(tmp_path)
+    snapshot = driver.load_snapshot(hub, hub.download)
+
+    def offline_cache_miss(repo, name, repo_type, revision):
+        raise LocalEntryNotFoundError("network unavailable and no local entry")
+
+    with pytest.raises(LocalEntryNotFoundError):
+        driver.archive_receipt(hub, offline_cache_miss, snapshot, fixture_receipt(), SimpleNamespace)
+    assert hub.calls == 0
