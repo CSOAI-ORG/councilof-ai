@@ -147,15 +147,15 @@ def test_an_unparsed_answer_leaves_the_denominator():
         doc = {"expected": str(labels[0])}
         # the model said something that is not a label
         out = port.process_results(doc, ["I'm sorry, I can't help with that."])
-        assert out == {}, f"{axis_row['axis']}: an unparsed answer was scored {out!r} instead of leaving the denominator"
+        assert "exact_match" not in out and out["n_graded"] == 0 and out["n_attempted"] == 1, f"{axis_row['axis']}: an unparsed answer was scored {out!r} instead of leaving the denominator"
         # a real answer IS scored
         out = port.process_results(doc, [str(labels[0])])
-        assert out == {"exact_match": 1.0}, f"{axis_row['axis']}: a correct answer scored {out!r}"
+        assert out["exact_match"] == 1.0 and out["n_graded"] == 1, f"{axis_row['axis']}: a correct answer scored {out!r}"
         # a wrong-but-parseable answer is a wrong answer (1.0/0.0), never unparsed
         other = [str(x) for x in labels if str(x) != str(labels[0])]
         if other:
             out = port.process_results(doc, [other[0]])
-            assert out == {"exact_match": 0.0}, f"{axis_row['axis']}: a wrong answer scored {out!r}"
+            assert out["exact_match"] == 0.0 and out["n_graded"] == 1, f"{axis_row['axis']}: a wrong answer scored {out!r}"
 
 
 def test_the_canary_row_is_dropped():
@@ -163,7 +163,9 @@ def test_the_canary_row_is_dropped():
     for axis_row in _runnable():
         port = _port_for(axis_row["axis"])
         docs = [{"scenario": "real", "expected": "X"}, {"_canary": "GSPC-CANARY-GUID", "_note": "contaminated"}]
-        kept = port.process_docs(docs)
+        kept = [doc for doc in docs if port.gradeable(doc)]
+        # Actual Dataset lifecycle is covered by test_lm_eval_framework.py.
+        # Keep this parity suite compatible with the existing lightweight PR gate.
         assert len(kept) == 1 and kept[0].get("scenario") == "real", f"{axis_row['axis']}: the canary row was not dropped"
 
 
