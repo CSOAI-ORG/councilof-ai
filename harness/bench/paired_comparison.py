@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The paired-comparison record for one frontier arm, and the MEOK arm's status beside it.
+"""The paired-comparison record for supplied model-deployment or access-condition arms.
 
 Reads the bench runner's own result files (one per arm) and the live board, and writes a
 record that states:
@@ -158,9 +158,9 @@ def arm_record(name: str, res: dict, role: str, notes: list[str]) -> dict:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--frontier", required=True, type=Path)
-    ap.add_argument("--meok", type=Path, default=None, help="the MEOK arm's result file, if it was run")
-    ap.add_argument("--meok-note", default="", help="why the MEOK arm is absent or partial")
+    ap.add_argument("--frontier", required=True, type=Path, help="the first arm's result file (legacy argument name)")
+    ap.add_argument("--meok", type=Path, default=None, help="the second arm's result file (legacy argument name)")
+    ap.add_argument("--meok-note", default="", help="optional second-arm status, including MEOK-specific measurement caveats")
     ap.add_argument("--meok-split", type=Path, default=None, help="the MEOK arm's route ledger, for the arm split")
     ap.add_argument("--out", required=True, type=Path)
     ap.add_argument("--comparison-mode", choices=["model", "access-treatment"], default="model",
@@ -171,7 +171,7 @@ def main() -> int:
     frontier = load(a.frontier)
     meok = load(a.meok) if a.meok and a.meok.exists() else None
     if a.meok and meok is None:
-        print("comparison refused: requested MEOK result file is missing", file=sys.stderr)
+        print("comparison refused: requested second-arm result file is missing", file=sys.stderr)
         return 2
     execution_comparison = None
     if meok is not None:
@@ -187,7 +187,7 @@ def main() -> int:
         return 2
     try:
         arms = [arm_record(frontier.get("model", "frontier"), frontier,
-            "declared access condition A" if treatment else "third-party model", [
+            "declared access condition A" if treatment else "model deployment A", [
                 "The first declared access condition; provider entitlement and model snapshot require separate evidence."
                 if treatment else "A supplied model-deployment receipt; read its execution context and route evidence before attributing the replies to a bare model.",
             ])]
@@ -197,12 +197,11 @@ def main() -> int:
 
     paired = None
     if meok is not None:
-        arms.append(arm_record(meok.get("model", "meok"), meok,
-            "declared access condition B" if treatment else "our own product", [
+        arms.append(arm_record(meok.get("model", "candidate"), meok,
+            "declared access condition B" if treatment else "model deployment B", [
             "The second declared access condition; a changed result does not establish a stronger underlying model."
-            if treatment else "MEOK's own canonical contract declares a chat answer UNMEASURED_CHAT. A paired comparison "
-            "against a measured model therefore compares a measurement with a non-measurement, and the "
-            "difference between the two numbers is not a difference between two models.",
+            if treatment else "A second supplied model-deployment receipt; read its execution context and route evidence "
+            "before attributing the replies to a bare model.",
         ]))
         shared = sorted(set(f_map) & set(m_map))
         both_correct = f_only = m_only = both_wrong = unpaired = 0
@@ -288,9 +287,8 @@ def main() -> int:
         "what_this_does_not_establish": [
             "That any model is better than another. A score on one bank at one time is not a ranking.",
             "That an access-condition difference proves unchanged provider weights or a causal safeguard effect."
-            if treatment else "That MEOK and a third-party model differ by the difference in these two numbers. MEOK's chat answers "
-            "are UNMEASURED by MEOK's own contract, and the MEOK arm's route must be read before any "
-            "difference is read as a model difference.",
+            if treatment else "That a score difference isolates the underlying models. Application routes, system/tool policies, "
+            "provider snapshots and each arm's measurement scope require separate evidence.",
             "That the board's leader and this arm are comparable without saying which denominator each used. The "
             "board counts EVERY item; this record publishes both figures for every arm.",
         ],
@@ -300,7 +298,8 @@ def main() -> int:
         "arm_split_meok": split,
         "board_cell": board_cell,
         "meok_arm_status": ("Legacy field name: the second access condition, not a MEOK product arm." if treatment else
-            a.meok_note or ("comparable result supplied; inspect route and measurement scope" if meok is not None else "the MEOK arm was not run for this record")),
+            a.meok_note or ("second model-deployment receipt supplied; inspect route and measurement scope" if meok is not None else
+                "the second model-deployment arm was not run for this record")),
     }
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")

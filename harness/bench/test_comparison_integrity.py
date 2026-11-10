@@ -280,6 +280,48 @@ def test_access_treatment_cli_labels_conditions_without_model_winner(tmp_path, m
     assert doc['execution_comparison']['left_context_sha256'] == left['execution_context_sha256']
 
 
+@pytest.mark.parametrize('include_candidate', [False, True])
+def test_model_mode_cli_does_not_invent_product_identity(tmp_path, monkeypatch, include_candidate):
+    left, right = result(), result(); c = context()
+    c.update(provider='other-provider', model='synthetic-b', route_id='other-public-route')
+    bind_context(right, c)
+    for name, data in [('reference.json', left), ('candidate.json', right)]:
+        (tmp_path/name).write_text(json.dumps(data))
+    out = tmp_path/'comparison.json'; monkeypatch.setattr(paired, 'board_axis', lambda axis: None)
+    argv = ['paired', '--frontier', str(tmp_path/'reference.json'), '--out', str(out)]
+    if include_candidate: argv.extend(['--meok', str(tmp_path/'candidate.json')])
+    monkeypatch.setattr('sys.argv', argv)
+    assert paired.main() == 0
+    doc = json.loads(out.read_text())
+    assert [arm['role'] for arm in doc['arms']] == ['model deployment A', 'model deployment B'][:len(doc['arms'])]
+    assert len(doc['arms']) == 1 + include_candidate
+    assert all(phrase not in json.dumps(doc) for phrase in ['our own product', 'MEOK', 'UNMEASURED_CHAT'])
+    assert 'measurement scope' in ' '.join(doc['what_this_does_not_establish'])
+    if include_candidate:
+        assert doc['arms'][1]['name'] == 'synthetic-b'
+        assert doc['execution_comparison']['mode'] == 'model'
+        assert doc['paired']['items_paired'] == 2
+        assert doc['paired']['verdict'] == 'TIE'
+    else:
+        assert doc['paired'] is None
+        assert 'not run' in doc['meok_arm_status']
+
+
+def test_explicit_meok_status_and_route_ledger_remain_available(tmp_path, monkeypatch):
+    receipt = tmp_path/'reference.json'; receipt.write_text(json.dumps(result()))
+    split = tmp_path/'routes.jsonl'
+    split.write_text('{"route_type":"chat","measurement_state":"UNMEASURED_CHAT"}\n')
+    note = 'MEOK chat replies remain UNMEASURED_CHAT; no MEOK result supplied.'
+    out = tmp_path/'comparison.json'; monkeypatch.setattr(paired, 'board_axis', lambda axis: None)
+    monkeypatch.setattr('sys.argv', ['paired', '--frontier', str(receipt), '--meok-note', note,
+        '--meok-split', str(split), '--out', str(out)])
+    assert paired.main() == 0
+    doc = json.loads(out.read_text())
+    assert doc['meok_arm_status'] == note
+    assert doc['arm_split_meok']['counts'] == {'chat/UNMEASURED_CHAT': 1}
+    assert doc['paired'] is None
+
+
 def test_mixed_tier_cli_writes_no_ordinary_comparison(tmp_path,monkeypatch):
     left,right=result(),result();c=context();c.update(access_program='anthropic_cvp',cyber_tier='defense');bind_context(right,c)
     for name,data in [('left',left),('right',right)]: (tmp_path/name).write_text(json.dumps(data))
