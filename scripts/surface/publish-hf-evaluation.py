@@ -58,11 +58,16 @@ _module = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_module)
 filter_canaries = _module.process_docs
 '''
-    else:
+    elif target == "auto-measure":
         paths = SPACE_FILES + [str(path.relative_to(ROOT / SPACE)) for path in (ROOT / SPACE / "banks").glob("*.jsonl")]
         payload = {path: source_bytes(f"{SPACE}/{path}", committed) for path in paths}
         payload["README.md"] = payload["README.md"].replace(b"/tree/master/spaces/gspc-auto-measure",
             f"/tree/{commit}/spaces/gspc-auto-measure".encode())
+    elif target == "results-card":
+        payload = {"README.md": source_bytes(f"{SPACE}/RESULTS-README.md", committed).replace(
+            b"/blob/master/scripts/surface/", f"/blob/{commit}/scripts/surface/".encode())}
+    else:
+        raise ValueError(f"unsupported publication target: {target}")
     release = {"schema": "csoai.evaluation-source/1", "repository": "CSOAI-ORG/councilof-ai",
                "commit": commit, "target": target, "producer": "scripts/surface/publish-hf-evaluation.py",
                "files": {path: digest(raw) for path, raw in sorted(payload.items())},
@@ -73,7 +78,7 @@ filter_canaries = _module.process_docs
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--target", choices=["pack", "auto-measure"], required=True)
+    parser.add_argument("--target", choices=["pack", "auto-measure", "results-card"], required=True)
     parser.add_argument("--expected-head")
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--receipt", type=Path)
@@ -87,7 +92,9 @@ def main():
             source_bytes(producer, committed=True)
         subprocess.run(["node", "scripts/surface/build-lm-eval-tasks.mjs", "--check"], cwd=ROOT, check=True)
     payload = build_payload(args.target, commit, committed=args.apply)
-    repo, kind = ("csoai/gspc-lm-eval-tasks", "dataset") if args.target == "pack" else ("csoai/gspc-auto-measure", "space")
+    repo, kind = {"pack": ("csoai/gspc-lm-eval-tasks", "dataset"),
+                  "auto-measure": ("csoai/gspc-auto-measure", "space"),
+                  "results-card": ("csoai/gspc-auto-measure-results", "dataset")}[args.target]
     plan = {"repo": repo, "type": kind, "source_commit": commit, "files": len(payload),
             "bytes": sum(map(len, payload.values())), "apply": args.apply}
     if not args.apply:
