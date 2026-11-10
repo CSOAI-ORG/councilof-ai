@@ -1,10 +1,10 @@
 {
-  "schema": "csoai.gspc-lm-eval-tasks/1",
+  "schema": "csoai.gspc-lm-eval-tasks/2",
   "generated_by": "scripts/surface/build-lm-eval-tasks.mjs",
-  "what_this_is": "One lm-eval task per runnable GSPC axis, generated from the published bank bytes.",
-  "what_this_does_not_establish": "Not a grade, a rank, a certification, or a statement that any model is safe. A TIE is a TIE.",
-  "grader": "gspc-top100.mill_hub_queue.read_label, ported per axis and parity-proven by scripts/surface/lm-eval-parity.node-test.mjs",
-  "unparsed_rule": "an answer that is not one of the bank's labels leaves the denominator; it is never counted as wrong",
+  "grader": "harness/gspc-top100/mill_hub_queue.py::read_label",
+  "grader_sha256": "9f0175deb309a343ecbd01779cfb04b31f2a577fb0024e885e150635f9cb4bc2",
+  "lm_eval_tested_version": "0.4.13",
+  "unparsed_rule": "excluded from accuracy; reported in parse_rate and n_attempted",
   "axes": [
     {
       "axis": "affect",
@@ -19,7 +19,8 @@
       "prompt_key": "item",
       "bank_repo": "gspc-affect",
       "bank_sha256": "5ce11c084a6e968cc49314cfec2898725fb7b01513dc117f869be17b4a263bc7",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-affect/resolve/main/items.jsonl",
+      "bank_revision": "33736b383d7c0b20e6f46f2e0df7a7c350748d36",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-affect/resolve/33736b383d7c0b20e6f46f2e0df7a7c350748d36/items.jsonl",
       "bank_rows_raw": 42,
       "canary_rows_dropped": 1
     },
@@ -34,7 +35,8 @@
       "prompt_key": "item",
       "bank_repo": "gspc-art5",
       "bank_sha256": "60f08ca251d3afb6e085e66cb3e15a5c79b2f4e5422f16221c1fbf026748d672",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-art5/resolve/main/items.jsonl",
+      "bank_revision": "cf1df8c3e688e02efa067e41973560223fe03237",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-art5/resolve/cf1df8c3e688e02efa067e41973560223fe03237/items.jsonl",
       "bank_rows_raw": 37,
       "canary_rows_dropped": 1
     },
@@ -49,7 +51,8 @@
       "prompt_key": "text",
       "bank_repo": "gspc-care",
       "bank_sha256": "3cf9c16dbb6bf5b4b64e342fb3481c1d0d6ceee09c5a1a2e6936b0d4775f2aad",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-care/resolve/main/items.jsonl",
+      "bank_revision": "262246d022537160083223f1cf348282b1f8396b",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-care/resolve/262246d022537160083223f1cf348282b1f8396b/items.jsonl",
       "bank_rows_raw": 201,
       "canary_rows_dropped": 1
     },
@@ -64,7 +67,8 @@
       "prompt_key": "tool",
       "bank_repo": "gspc-mcp",
       "bank_sha256": "9955a9c145640d693773d6cfdbef9554eb8025332b5247da9bc2b9f250908f0b",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-mcp/resolve/main/items.jsonl",
+      "bank_revision": "e1f3824cd63ebbc375cbac45c7f8259bb986aac4",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-mcp/resolve/e1f3824cd63ebbc375cbac45c7f8259bb986aac4/items.jsonl",
       "bank_rows_raw": 36,
       "canary_rows_dropped": 1
     },
@@ -80,7 +84,8 @@
       "prompt_key": "item",
       "bank_repo": "gspc-asi",
       "bank_sha256": "a3ff4e3158a538a90ce7c26c2a402af6d078d66334bf48a93607e26fea689850",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-asi/resolve/main/items.jsonl",
+      "bank_revision": "34988253b732a26c75f695fef6896405f53dfa30",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-asi/resolve/34988253b732a26c75f695fef6896405f53dfa30/items.jsonl",
       "bank_rows_raw": 34,
       "canary_rows_dropped": 1
     },
@@ -96,7 +101,8 @@
       "prompt_key": "item",
       "bank_repo": "gspc-xr",
       "bank_sha256": "9877a2b2f9752f37e00bcc400732ade99ec9f4f8d4f9b066907c588f142fc446",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-xr/resolve/main/items.jsonl",
+      "bank_revision": "b1205946c0293b8002f140b743e04e907d0de2e4",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-xr/resolve/b1205946c0293b8002f140b743e04e907d0de2e4/items.jsonl",
       "bank_rows_raw": 33,
       "canary_rows_dropped": 1
     },
@@ -111,7 +117,8 @@
       "prompt_key": "case",
       "bank_repo": "gspc-det",
       "bank_sha256": "73a30d6d32f4012b11a7ba2138abe8017f74f06faf40ac3f32e0094fe87ba36c",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-det/resolve/main/items.jsonl",
+      "bank_revision": "18d7669ef9cd21c7715d560b62da6ebee278a1e3",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-det/resolve/18d7669ef9cd21c7715d560b62da6ebee278a1e3/items.jsonl",
       "bank_rows_raw": 34,
       "canary_rows_dropped": 1
     },
@@ -128,7 +135,8 @@
       "prompt_key": "scenario",
       "bank_repo": "gspc-gov",
       "bank_sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-gov/resolve/main/items.jsonl",
+      "bank_revision": "beecacfc2136a41d2c23274116770585d7da5c14",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-gov/resolve/beecacfc2136a41d2c23274116770585d7da5c14/items.jsonl",
       "bank_rows_raw": 238,
       "canary_rows_dropped": 1
     },
@@ -144,7 +152,8 @@
       "prompt_key": "case",
       "bank_repo": "gspc-mach",
       "bank_sha256": "fdbe463c3f0268600ebf9e70372db1f27ac5668b30276323e247de86adbbc51c",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-mach/resolve/main/items.jsonl",
+      "bank_revision": "cfc0706fa3731d92e9e78bb33b802a4e27b0fc50",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-mach/resolve/cfc0706fa3731d92e9e78bb33b802a4e27b0fc50/items.jsonl",
       "bank_rows_raw": 34,
       "canary_rows_dropped": 1
     },
@@ -159,7 +168,8 @@
       "prompt_key": "item",
       "bank_repo": "gspc-oss",
       "bank_sha256": "3fc33a13be287fbed8b8f850828194291ae37d1250158e743a6c87d775af6a4f",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-oss/resolve/main/items.jsonl",
+      "bank_revision": "19ea8bea666af826278e4db9a5c42ac462127770",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-oss/resolve/19ea8bea666af826278e4db9a5c42ac462127770/items.jsonl",
       "bank_rows_raw": 33,
       "canary_rows_dropped": 1
     },
@@ -174,7 +184,8 @@
       "prompt_key": "operation",
       "bank_repo": "gspc-prv",
       "bank_sha256": "79711366e29e237a56249f1573ae6bdb5a0f1b3ab78728232c5f25ceebb08c2e",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-prv/resolve/main/items.jsonl",
+      "bank_revision": "d7f2a9b7564dcf368c410c787c83902a7aa8d06d",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-prv/resolve/d7f2a9b7564dcf368c410c787c83902a7aa8d06d/items.jsonl",
       "bank_rows_raw": 33,
       "canary_rows_dropped": 1
     },
@@ -189,7 +200,8 @@
       "prompt_key": "request",
       "bank_repo": "gspc-agi",
       "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
-      "bank_url": "https://huggingface.co/datasets/csoai/gspc-agi/resolve/main/items.jsonl",
+      "bank_revision": "3c72b7514768479384e0eae0aebf0c758220e447",
+      "bank_url": "https://huggingface.co/datasets/csoai/gspc-agi/resolve/3c72b7514768479384e0eae0aebf0c758220e447/items.jsonl",
       "bank_rows_raw": 37,
       "canary_rows_dropped": 1
     }
@@ -197,103 +209,179 @@
   "files": [
     {
       "path": "public/bench/lm-eval/README.md",
-      "sha256": "74be1d90f91324c56bcca140c878e97755d8b65e7c3998dd1d2bf6219be9e5d7"
+      "sha256": "c2a47e19e973ff740fdfb097b288bdff59b1a77ed63102caf3b20e97187c1bf9"
     },
     {
       "path": "public/bench/lm-eval/affect/affect.yaml",
-      "sha256": "512ba615ebafcea14ae58f7162c75c2ef2674068df11a639949cd8e53cb3c8e4"
+      "sha256": "c50af582a15bfd09b99bc7b636826e715119c2761b3124a8ceb859abeffaabf9"
+    },
+    {
+      "path": "public/bench/lm-eval/affect/bank.jsonl",
+      "sha256": "5ce11c084a6e968cc49314cfec2898725fb7b01513dc117f869be17b4a263bc7"
     },
     {
       "path": "public/bench/lm-eval/affect/utils.py",
-      "sha256": "aecda14880c5b5a3523ef127a83bc3941faab1abbbe3d26a4cbe2012763c909b"
+      "sha256": "7ab17fcd3796329df9571179e18c882dd72905225c15c2ae29e9fe37eaa7b2a1"
     },
     {
       "path": "public/bench/lm-eval/art5-safeguard/art5-safeguard.yaml",
-      "sha256": "4abfe9855a4bb1db462b7ef3da377237f6c24a92242ac64f29342b314202d278"
+      "sha256": "0c8da964400b80fded0d03e1c75f6cdbf7cf52db2eed51a152c12c76dd0fa5ec"
+    },
+    {
+      "path": "public/bench/lm-eval/art5-safeguard/bank.jsonl",
+      "sha256": "60f08ca251d3afb6e085e66cb3e15a5c79b2f4e5422f16221c1fbf026748d672"
     },
     {
       "path": "public/bench/lm-eval/art5-safeguard/utils.py",
-      "sha256": "16b48866cc2f2f91aec7b32b74ef96b99b6cf1f76c0eb6c425158b6dbb3caa27"
+      "sha256": "d6d87fa1b4b81a0edd3fac09bac3b1c31a43f35c2da8487d0822db971dfc5b0d"
+    },
+    {
+      "path": "public/bench/lm-eval/care/bank.jsonl",
+      "sha256": "3cf9c16dbb6bf5b4b64e342fb3481c1d0d6ceee09c5a1a2e6936b0d4775f2aad"
     },
     {
       "path": "public/bench/lm-eval/care/care.yaml",
-      "sha256": "24e9df0b85536cef1825d67761fd3e00e167ab75633e9ee6879942204e512cc8"
+      "sha256": "bc51341f5419fdf9eccbca068f5b0e6560d2f6c3cbfeb8aa7843d3fc0c72663e"
     },
     {
       "path": "public/bench/lm-eval/care/utils.py",
-      "sha256": "fefd3b8f0247c08a9de4b8233d1b2303e1fd2c2d037ab3cda9fe48ee13529c9b"
+      "sha256": "3d3873ec6526de05e80354dda93626f44e1c32200412b9024584e042d8eb81f8"
+    },
+    {
+      "path": "public/bench/lm-eval/conformance/bank.jsonl",
+      "sha256": "9955a9c145640d693773d6cfdbef9554eb8025332b5247da9bc2b9f250908f0b"
     },
     {
       "path": "public/bench/lm-eval/conformance/conformance.yaml",
-      "sha256": "8bccd5b92621be7a0e5b16510e95c1d0812915a614b24f712b044a7387b6be89"
+      "sha256": "efb8e299dbdeaed33f63116d9abc1cf85b7a78bc46bed8629440f6bc7fc622f0"
     },
     {
       "path": "public/bench/lm-eval/conformance/utils.py",
-      "sha256": "e7e523a416cd56ce0c7888e0fe35f7182c1d2c84641b1326f6cb59793629b332"
+      "sha256": "ea0df4110d2fd1fecb84408a7e7ac24de0432df0e6cb985c735665fd85bee64e"
+    },
+    {
+      "path": "public/bench/lm-eval/continuity/bank.jsonl",
+      "sha256": "a3ff4e3158a538a90ce7c26c2a402af6d078d66334bf48a93607e26fea689850"
     },
     {
       "path": "public/bench/lm-eval/continuity/continuity.yaml",
-      "sha256": "e2d752cb878ec6d8968b4fba64a1ad5a83aee658c8f6d204f8add9ddb9d7ac05"
+      "sha256": "82c90f8caed97cf618106eca847517f1bf986d53ceb8df66bf85d594e40dcfcf"
     },
     {
       "path": "public/bench/lm-eval/continuity/utils.py",
-      "sha256": "63a287706b17596934291cca0f0ada868b52565a12d8966726b49cc0ff185580"
+      "sha256": "d1230492cdfb51bc8f27041cbf6d4295d66dc080754f874fc6122f57bcdae640"
+    },
+    {
+      "path": "public/bench/lm-eval/cross-reality/bank.jsonl",
+      "sha256": "9877a2b2f9752f37e00bcc400732ade99ec9f4f8d4f9b066907c588f142fc446"
     },
     {
       "path": "public/bench/lm-eval/cross-reality/cross-reality.yaml",
-      "sha256": "268ab0da11a6996eb697e881680a6da9da36eb9718a2195232febcbf67263a33"
+      "sha256": "80b85bdf09353f0252c072b8fd26ba37e4e4f5e335d34ae82b315ab11bc82abb"
     },
     {
       "path": "public/bench/lm-eval/cross-reality/utils.py",
-      "sha256": "dbca7eb5d17012279d6803b7f99091ecefc9b197b6e1cd6f08bce95d6638a0a5"
+      "sha256": "0530740129b116af1ea914f68dde109a096e02672e86dc1d4e86e35c363e18a4"
+    },
+    {
+      "path": "public/bench/lm-eval/detector-interop/bank.jsonl",
+      "sha256": "73a30d6d32f4012b11a7ba2138abe8017f74f06faf40ac3f32e0094fe87ba36c"
     },
     {
       "path": "public/bench/lm-eval/detector-interop/detector-interop.yaml",
-      "sha256": "607e7cc088fcb2743a24c7d010be6c8ed82356cc68f02dbe1eaa0a2623f416f6"
+      "sha256": "50e75f28d66363d5770f9e3eb1f082759d33c2ee98e5324010f5e567cc0345cf"
     },
     {
       "path": "public/bench/lm-eval/detector-interop/utils.py",
-      "sha256": "c3e554726b78b623b17f239f8894bdf5e0e455e1adb783808d52273b185cd814"
+      "sha256": "382c59eff02a977a6ef08d30dc3abeacb7517d10cf95294b12b39d75c72dd70d"
+    },
+    {
+      "path": "public/bench/lm-eval/governance/bank.jsonl",
+      "sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5"
     },
     {
       "path": "public/bench/lm-eval/governance/governance.yaml",
-      "sha256": "e7eaee59919ef2846b2177d9a9e3330a6270fcddeb584c845e72c647ccc5511a"
+      "sha256": "cb3ec4dd444ae82be87347795475f39b50cd76e7fc3a407f54447f0278cfb45b"
     },
     {
       "path": "public/bench/lm-eval/governance/utils.py",
-      "sha256": "119d425d4bb6d6e169975beb951cffb904dfdb28ba889bd49812d19b40f430d1"
+      "sha256": "647505eec34c83a3d6accd9146dbd8720b0d3ad0293816e88056165dcc1cfb0b"
+    },
+    {
+      "path": "public/bench/lm-eval/machinery-conformity/bank.jsonl",
+      "sha256": "fdbe463c3f0268600ebf9e70372db1f27ac5668b30276323e247de86adbbc51c"
     },
     {
       "path": "public/bench/lm-eval/machinery-conformity/machinery-conformity.yaml",
-      "sha256": "cc40b68ce511c6a9ff44e37e43a53f643e835405ad266a90a712bd4e610ae739"
+      "sha256": "edf3c865841d87adfb51104fb74e68982838768f2b2848db6cb91be78dbea901"
     },
     {
       "path": "public/bench/lm-eval/machinery-conformity/utils.py",
-      "sha256": "4d7a18e16fbdfdce1c3bc7c4880bcdab1ef615aff1e0256db44d4ab8c57531cf"
+      "sha256": "5d19e8bc6807696cf924b29db1066f8fca6fb96629553e5ca733850e2acd932a"
+    },
+    {
+      "path": "public/bench/lm-eval/openness/bank.jsonl",
+      "sha256": "3fc33a13be287fbed8b8f850828194291ae37d1250158e743a6c87d775af6a4f"
     },
     {
       "path": "public/bench/lm-eval/openness/openness.yaml",
-      "sha256": "01fa4967e63c65c17a8e92dfc86ebf4652e187a3fc3b5ebda3771d20a8ce5ecc"
+      "sha256": "194a7cbb9dac21a5ca99920052c69431bec5489136cfb3ca9788c43595dfc055"
     },
     {
       "path": "public/bench/lm-eval/openness/utils.py",
-      "sha256": "70691644b5abcd930c250df25d785851001f15542f9fd1688e875d93569b231e"
+      "sha256": "e4c4e43863b9de2f25366404bb9af99ca8c0a010fb56af158bf55a26cf1d4ff3"
+    },
+    {
+      "path": "public/bench/lm-eval/provenance/bank.jsonl",
+      "sha256": "79711366e29e237a56249f1573ae6bdb5a0f1b3ab78728232c5f25ceebb08c2e"
     },
     {
       "path": "public/bench/lm-eval/provenance/provenance.yaml",
-      "sha256": "b0d46c73c4516f0267ed7ef0dd53ac2fa0caacfd4e96b0574056169f60f7646c"
+      "sha256": "c79fb5fe073f0d5042b80bddfde2694d901c36504a008cbfa1d6744249bd7575"
     },
     {
       "path": "public/bench/lm-eval/provenance/utils.py",
-      "sha256": "244e54640ffb591d97cd59d8040086f5deb7078011c45f8a0adbe814963dc931"
+      "sha256": "93991c865303665850404ddb9845956a0033e2f4c2ffdd8d7d79c823f32e009f"
+    },
+    {
+      "path": "public/bench/lm-eval/safety/bank.jsonl",
+      "sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99"
     },
     {
       "path": "public/bench/lm-eval/safety/safety.yaml",
-      "sha256": "135489858e1e987907730b7fa435be3c0c5aea55a6a11a5a9a8f8794375a97eb"
+      "sha256": "27e6b211745a975147f9c75bfff0247f375b206de1ef5534e425e07eae4fc523"
     },
     {
       "path": "public/bench/lm-eval/safety/utils.py",
-      "sha256": "c9b743b68735d7a602c1cc4ddd9282dbdd5dbb4f375a8fb082405e4486282e01"
+      "sha256": "9559736e3d0023a12c3157dfaf532e65fd8a4509fd96fbe40b43314ecafa4413"
+    },
+    {
+      "path": "spaces/gspc-auto-measure/banks.json",
+      "sha256": "f85cef34df7ba35ea51ac408831503b507a5c843e6eb33689544328d54ec48a2"
+    },
+    {
+      "path": "spaces/gspc-auto-measure/banks/gspc-art5.jsonl",
+      "sha256": "60f08ca251d3afb6e085e66cb3e15a5c79b2f4e5422f16221c1fbf026748d672"
+    },
+    {
+      "path": "spaces/gspc-auto-measure/banks/gspc-det.jsonl",
+      "sha256": "73a30d6d32f4012b11a7ba2138abe8017f74f06faf40ac3f32e0094fe87ba36c"
+    },
+    {
+      "path": "spaces/gspc-auto-measure/banks/gspc-mcp.jsonl",
+      "sha256": "9955a9c145640d693773d6cfdbef9554eb8025332b5247da9bc2b9f250908f0b"
+    },
+    {
+      "path": "spaces/gspc-auto-measure/banks/gspc-oss.jsonl",
+      "sha256": "3fc33a13be287fbed8b8f850828194291ae37d1250158e743a6c87d775af6a4f"
+    },
+    {
+      "path": "spaces/gspc-auto-measure/banks/gspc-prv.jsonl",
+      "sha256": "79711366e29e237a56249f1573ae6bdb5a0f1b3ab78728232c5f25ceebb08c2e"
+    },
+    {
+      "path": "spaces/gspc-auto-measure/grader.py",
+      "sha256": "e0534034133c0bb0d7a1ccb4898a92412370986ab3b87747e9b750e01c4ec07c"
     }
   ]
 }

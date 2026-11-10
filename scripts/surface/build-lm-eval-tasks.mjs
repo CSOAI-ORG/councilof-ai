@@ -1,54 +1,8 @@
 #!/usr/bin/env node
-/**
- * build-lm-eval-tasks.mjs — one `lm_eval` task per GSPC axis, so the benchmark is one line for anyone.
- *
- * WHY
- * ───
- * Hugging Face, Kaggle and LMArena all let a third party run someone else's benchmark on their own
- * model with a single command. We published the banks and the board, but not the task: a bank is a
- * JSONL file, and a JSONL file is not a task. This generates the missing layer.
- *
- * THE GRADER IS NOT RE-IMPLEMENTED, IT IS PORTED — AND PROVEN
- * ────────────────────────────────────────────────────────────
- * lm-eval's own `regex` filter returns the string "[invalid]" when nothing matches. That is a
- * WRONG answer. The estate's rule is the opposite: an unparsed answer LEAVES THE DENOMINATOR, it
- * never counts against a model (harness/gspc-top100/mill_hub_queue.py read_label; the reason is
- * written there — a model that merely restates the label menu once scored 1.0000 on an axis
- * without answering anything).
- *
- * So each task carries its own metric, `process_results`, which is a faithful port of read_label
- * and returns `{}` for an unparsed answer: the sample is then not recorded for the metric, which
- * is lm-eval's own mechanism for leaving a sample out of the denominator.
- *
- * `scripts/surface/lm-eval-parity.node-test.mjs` proves that every generated port and the mill
- * agree, case for case, over the estate's own fixtures — including the two regressions (the menu
- * echo and the truncated preamble) that the old predicate got wrong. A port that is not proven is
- * a second grader, and the estate has one grader.
- *
- * ONE DIRECTORY PER AXIS, EACH WITH ITS OWN utils.py
- * ──────────────────────────────────────────────────
- * lm-eval resolves `!function utils.process_results` against the yaml's own directory, and it
- * searches an include path RECURSIVELY. So each axis gets a directory holding its task and a
- * utils.py carrying that axis's label menu. The menu cannot come from the bank: the published
- * rows carry the item and the expected label, not the menu the answer must be drawn from.
- *
- * WHAT IT GENERATES
- * ─────────────────
- *   public/bench/lm-eval/<axis>/<axis>.yaml   one lm-eval task per axis
- *   public/bench/lm-eval/<axis>/utils.py      the mill-exact grader, with that axis's menu
- *   public/bench/lm-eval/README.md             how to run it, and what it does not establish
- *   public/bench/lm-eval/manifest.json         the sha256 of every generated file
- *
- * THE DATA
- * ───────
- * The task reads the PUBLIC bank bytes from the Hub, by URL — no Hub account, no token, no
- * upload. The canary row stays in the bank and is dropped by `process_docs`, on the same rule the
- * mill uses.
- *
- * RUN
- * ───
- *   node scripts/surface/build-lm-eval-tasks.mjs
- *   node scripts/surface/build-lm-eval-tasks.mjs --check
+/** Generate the portable lm-eval pack and Auto-Measure's frozen inputs from the one grader.
+ * First generation resolves each public bank to a Hub commit, then verifies axes.json's hash.
+ * Subsequent builds use the checked-in bytes; --check is offline. --refresh re-resolves the Hub.
+ * No model is called. Public task scores are measurements, never certification or admission.
  */
 import { fetchText } from "./hub-fetch.mjs";
 import { createHash } from "node:crypto";
@@ -57,274 +11,215 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const OUT_TASKS = join(ROOT, "public/bench/lm-eval");
+const PACK = "public/bench/lm-eval";
+const SPACE = "spaces/gspc-auto-measure";
 const CHECK = process.argv.includes("--check");
-
-// The prompt keys the mill walks, in the mill's order. A row's prompt is the FIRST of these that
-// is present and non-empty. Kept identical to mill_hub_queue.PROMPT_KEYS on purpose: the prompt a
-// third party sees here must be the prompt the board was measured with.
+const REFRESH = process.argv.includes("--refresh");
+if (CHECK && REFRESH) throw new Error("--check and --refresh are mutually exclusive");
 const PROMPT_KEYS = ["item", "scenario", "request", "text", "tool", "operation", "case", "prompt", "question"];
+const SPACE_BANKS = new Set(["gspc-mcp", "gspc-oss", "gspc-prv", "gspc-det", "gspc-art5"]);
+const j = value => JSON.stringify(value, null, 2) + "\n";
+const sha256 = text => createHash("sha256").update(text).digest("hex");
+const read = rel => readFileSync(join(ROOT, rel), "utf8");
+const millPath = "harness/gspc-top100/mill_hub_queue.py";
+const mill = read(millPath);
+// Copy the actual constants and function, including its explanation, verbatim. No second grader.
+const graderStart = mill.indexOf("_ANSWER_PREFIX = re.compile(");
+const graderEnd = mill.indexOf("\ndef js_safe_number(", graderStart);
+if (graderStart < 0 || graderEnd < graderStart) throw new Error("canonical grader extraction boundary changed");
+const grader = mill.slice(graderStart, graderEnd).trimEnd() + "\n";
+const graderHash = sha256(grader);
+const graderHeader = `"""Generated from ${millPath}; do not edit.\nread_label source SHA256: ${graderHash}\n"""\nimport re\n\n`;
+const previous = existsSync(join(ROOT, PACK, "manifest.json")) ? JSON.parse(read(`${PACK}/manifest.json`)) : {};
 
-// A canary-only row is one whose keys are a subset of these — the mill's own rule.
-const CANARY_ONLY_KEYS = new Set(["_canary", "_note"]);
-
-const j = (v) => JSON.stringify(v, null, 2) + "\n";
-const sha256 = (text) => createHash("sha256").update(text, "utf8").digest("hex");
-
-/** The mill's row filter: drop canary-only rows, then rows with no prompt or no expected. */
 function gradeable(row) {
   const keys = Object.keys(row);
-  if (keys.length > 0 && keys.every((k) => CANARY_ONLY_KEYS.has(k))) return false;
-  const prompt = PROMPT_KEYS.map((k) => row[k]).find((v) => v);
-  if (!prompt) return false;
-  const expected = row.expected;
-  if (expected === null || expected === undefined || expected === "") return false;
-  return true;
+  if (keys.every(k => ["_canary", "_note"].includes(k))) return false;
+  return PROMPT_KEYS.some(k => row[k]) && row.expected !== null && row.expected !== undefined && row.expected !== "";
 }
 
-/** Which PROMPT_KEY did this bank use? Taken from the bytes, not from a table. */
-function promptKeyOf(rows) {
-  for (const row of rows) {
-    for (const k of PROMPT_KEYS) if (row[k]) return k;
-  }
-  return null;
-}
+function utilsPy(axis) {
+  return graderHeader + grader + `
+import hashlib
+import json
+from pathlib import Path
 
-/**
- * The grader, as a per-axis Python module.
- *
- * The Python source is assembled from an array of lines rather than one template literal: the
- * rule contains a backtick (the strip set) and a backslash, and a template literal would have to
- * escape both — which is exactly the kind of quiet corruption this file must not have.
- */
-function graderPy(labels) {
-  const lines = [
-    '"""The GSPC grader for this axis — a port of the estate\'s own read_label.',
-    "",
-    "DO NOT REWRITE THIS RULE. The board's signed cards were produced with",
-    "harness/gspc-top100/mill_hub_queue.py read_label. This is the same rule, in the shape",
-    "lm-eval needs, and scripts/surface/lm-eval-parity.node-test.mjs proves the two agree case",
-    "for case over the estate's own fixtures — including the two regressions the old predicate",
-    "got wrong.",
-    "",
-    "The rule, in the mill's own words:",
-    "",
-    "    We told the model to reply with exactly one token, so that is what is read: after",
-    "    stripping a <think> block, an 'Answer:' prefix and surrounding punctuation, the reply",
-    "    (or its last line) must BE one of the bank's labels. Anything else is not an answer we",
-    "    can score -- and, crucially, is not a WRONG answer either. The caller excludes it from n",
-    "    rather than counting it against the model.",
-    "",
-    "    Strictness costs coverage, never correctness: a model that will not emit the format",
-    "    yields a smaller n, and n<30 is already unquotable.",
-    '"""',
-    "import re",
-    "",
-    "# This axis's label menu, as published in the bank's own bytes.",
-    "LABELS = " + JSON.stringify(labels),
-    "",
-    '_ANSWER_PREFIX = re.compile(r"^(?:answer|label|response|output)\\s*[:\\-]\\s*", re.I)',
-    '_THINK = re.compile(r"<think>.*?</think>", re.S | re.I)',
-    "_STRIP = " + JSON.stringify("`*_\"'.,:;!?()[]{} "),
-    "",
-    "",
-    "def read_label(txt, labels):",
-    '    """The label the model ACTUALLY answered, or None if it did not answer one."""',
-    "    allowed = {str(x).strip().upper() for x in labels if str(x).strip()}",
-    "    if not allowed:",
-    "        return None",
-    '    body = _THINK.sub(" ", txt or "")',
-    "    lines = [ln.strip() for ln in body.splitlines() if ln.strip()]",
-    '    for cand in ([lines[-1]] if lines else []) + [" ".join(lines)]:',
-    '        c = _ANSWER_PREFIX.sub("", cand).strip().strip(_STRIP).upper()',
-    "        if c in allowed:",
-    "            return c",
-    "    return None",
-    "",
-    "",
-    "def process_docs(documents):",
-    '    """Drop the canary row, if the file carries one. The published bank keeps it; this run does not."""',
-    '    return [d for d in documents if not d.get("_canary")]',
-    "",
-    "",
-    "def process_results(doc, results):",
-    '    """Score one answer. An unparsed answer is NOT a wrong answer: it is not scored at all.',
-    "",
-    "    Returning {} (rather than {\"exact_match\": 0.0}) is lm-eval's own mechanism for leaving a",
-    "    sample out of the denominator: the metric is simply not recorded for that sample.",
-    '    """',
-    "    answer = read_label(results[0], LABELS)",
-    "    if answer is None:",
-    "        return {}",
-    '    expected = str(doc.get("expected", "")).strip().upper()',
-    '    return {"exact_match": 1.0 if answer == expected else 0.0}',
-    "",
-  ];
-  return lines.join("\n");
-}
+LABELS = ${JSON.stringify(axis.label_menu)}
+PROMPT_KEYS = ${JSON.stringify(PROMPT_KEYS)}
+BANK_SHA256 = ${JSON.stringify(axis.bank_sha256)}
+PROMPT_TEMPLATE = ${JSON.stringify(axis.prompt_template)}
 
-/** A YAML double-quoted scalar. */
-function yamlString(s) {
-  return '"' + s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n") + '"';
-}
 
+def gradeable(doc):
+    """The mill's load_bank selection, including numeric zero expected values."""
+    if set(doc) <= {"_canary", "_note"}:
+        return False
+    return any(doc.get(key) for key in PROMPT_KEYS) and doc.get("expected") not in (None, "")
+
+
+def load_bank(**kwargs):
+    """Verify the distributed bytes before Arrow construction; never follow mutable main."""
+    from datasets import Dataset
+    raw = Path(__file__).with_name("bank.jsonl").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != BANK_SHA256:
+        raise ValueError("GSPC bank SHA256 mismatch; refusing to evaluate")
+    rows = [json.loads(line) for line in raw.splitlines() if line.strip()]
+    # from_list otherwise uses only the first row's keys (which may be a canary-only row).
+    keys = sorted({key for row in rows for key in row})
+    return {"train": Dataset.from_list([{key: row.get(key) for key in keys} for row in rows])}
+
+
+def process_docs(documents):
+    """lm-eval requires a Dataset back, including its features and select methods."""
+    return documents.filter(gradeable)
+
+
+def doc_to_text(doc):
+    prompt = next(str(doc[key]) for key in PROMPT_KEYS if doc.get(key))
+    return PROMPT_TEMPLATE.replace("{item}", prompt)
+
+
+def sum_counts(values):
+    return sum(values)
+
+
+def process_results(doc, results):
+    """Conditional accuracy plus explicit coverage; unparsed does not mean incorrect."""
+    answer = read_label(results[0], LABELS)
+    out = {"parse_rate": float(answer is not None), "n_graded": int(answer is not None), "n_attempted": 1}
+    if answer is not None:
+        out["exact_match"] = float(answer == str(doc["expected"]).strip().upper())
+    return out
+`;
+}
 
 async function main() {
-  const axesDoc = JSON.parse(readFileSync(join(ROOT, "public/bench/axes.json"), "utf8"));
-  const runnable = axesDoc.axes.filter((a) => a.runnable && !a.refusal_reason);
-  const refused = axesDoc.axes.filter((a) => a.refusal_reason);
-
+  const axesDoc = JSON.parse(read("public/bench/axes.json"));
+  const runnable = axesDoc.axes.filter(a => a.runnable && !a.refusal_reason);
+  const refused = axesDoc.axes.filter(a => a.refusal_reason);
   const outputs = new Map();
   const taskRows = [];
-
+  const spaceBanks = {};
   for (const axis of runnable) {
-    const repo = axis.bank_repo;
-    const url = axis.bank_url;
-    const text = await fetchText(url);
-    const rows = text.split("\n").filter((l) => l.trim()).map((l) => JSON.parse(l));
+    const bankPath = `${PACK}/${axis.axis}/bank.jsonl`;
+    const prior = previous.axes?.find(a => a.axis === axis.axis);
+    let text, revision;
+    if (!REFRESH && prior?.bank_revision && existsSync(join(ROOT, bankPath))) {
+      text = read(bankPath);
+      revision = prior.bank_revision;
+    } else {
+      if (CHECK) throw new Error(`${axis.axis}: missing frozen bytes/revision; generate once before --check`);
+      const repoInfo = JSON.parse(await fetchText(`https://huggingface.co/api/datasets/csoai/${axis.bank_repo}`));
+      revision = repoInfo.sha;
+      if (!/^[a-f0-9]{40}$/.test(revision)) throw new Error(`${axis.axis}: invalid Hub revision`);
+      text = await fetchText(axis.bank_url.replace(/\/resolve\/[^/]+\//, `/resolve/${revision}/`));
+    }
+    if (sha256(text) !== axis.bank_sha256) throw new Error(`${axis.axis}: bank differs from axes.json hash; update the canonical bank inventory explicitly`);
+    const rows = text.split("\n").filter(line => line.trim()).map(line => JSON.parse(line));
     const kept = rows.filter(gradeable);
-    if (!kept.length) throw new Error(`${axis.axis}: no gradeable rows in ${url}`);
-    const pKey = promptKeyOf(kept);
-    if (!pKey) throw new Error(`${axis.axis}: no prompt field found in the bank`);
-
-    const labels = axis.label_menu;
-    const taskName = `gspc_${axis.axis.replace(/-/g, "_")}`;
-    const prompt = axis.prompt_template.replace("{item}", `{{ ${pKey} }}`);
-
+    if (!kept.length || axis.label_menu.length < 2) throw new Error(`${axis.axis}: no measurable label task`);
+    const allowed = new Set(axis.label_menu.map(v => String(v).trim().toUpperCase()));
+    if (kept.some(row => !allowed.has(String(row.expected).trim().toUpperCase()))) throw new Error(`${axis.axis}: expected value outside declared label menu`);
+    const task = `gspc_${axis.axis.replace(/-/g, "_")}`;
+    const pinnedUrl = axis.bank_url.replace(/\/resolve\/[^/]+\//, `/resolve/${revision}/`);
     const yaml = [
-      `# GSPC — ${axis.axis}`,
-      `# Generated by scripts/surface/build-lm-eval-tasks.mjs from the published bank bytes. Do not hand-edit.`,
-      `#`,
-      `# Bank:        ${repo}`,
-      `# Bank URL:    ${url}`,
-      `# Bank sha256: ${axis.bank_sha256}`,
-      `# Items:       ${kept.length} graded (the canary row is dropped by utils.process_docs)`,
-      `# Labels:      ${labels.join(" | ")}`,
-      `#`,
-      `# The prompt below is the mill's own template. The grader is the mill's own rule, ported into`,
-      `# utils.py and proven equal to harness/gspc-top100/mill_hub_queue.py read_label by`,
-      `# scripts/surface/lm-eval-parity.node-test.mjs. An answer that is not one of the labels leaves`,
-      `# the denominator: it is not a wrong answer.`,
-      `task: ${taskName}`,
-      `dataset_path: json`,
-      `dataset_kwargs:`,
-      `  data_files:`,
-      `    train: ${yamlString(url)}`,
-      `output_type: generate_until`,
-      `test_split: train`,
-      `doc_to_text: ${yamlString(prompt)}`,
-      `doc_to_target: "{{ expected }}"`,
-      `generation_kwargs:`,
-      `  until:`,
-      `    - "\\n\\n"`,
-      `  do_sample: false`,
-      `  temperature: 0.0`,
-      `num_fewshot: 0`,
-      `process_docs: !function utils.process_docs`,
-      `process_results: !function utils.process_results`,
-      `metric_list:`,
-      `  - metric: exact_match`,
-      `    aggregation: mean`,
-      `    higher_is_better: true`,
-      `    ignore_case: true`,
-      `metadata:`,
-      `  version: 1.0`,
-      `  gspc_axis: ${axis.axis}`,
-      `  gspc_labels: ${JSON.stringify(labels)}`,
-      `  gspc_bank_sha256: ${axis.bank_sha256}`,
-      `  gspc_items: ${kept.length}`,
-      `  gspc_grader: "gspc-top100.mill_hub_queue.read_label (ported to utils.py, parity-proven)"`,
-      `  gspc_unparsed_rule: "an answer that is not one of the bank's labels leaves the denominator; it is never counted as wrong"`,
-      `  gspc_caveat: "measurement, never certification; a TIE is a TIE"`,
-      ``,
+      `# Generated by scripts/surface/build-lm-eval-tasks.mjs; do not hand-edit.`,
+      `# Frozen source: ${pinnedUrl}`, `task: ${task}`, `dataset_path: json`,
+      `custom_dataset: !function utils.load_bank`, `test_split: train`, `output_type: generate_until`,
+      `doc_to_text: !function utils.doc_to_text`, `doc_to_target: "{{ expected }}"`,
+      `num_fewshot: 0`, `generation_kwargs:`, `  until: ["\\n\\n"]`, `  do_sample: false`, `  temperature: 0.0`,
+      `process_docs: !function utils.process_docs`, `process_results: !function utils.process_results`,
+      `metric_list:`, `  - metric: exact_match`, `    aggregation: mean`, `    higher_is_better: true`,
+      `  - metric: parse_rate`, `    aggregation: mean`, `    higher_is_better: true`,
+      `  - metric: n_graded`, `    aggregation: !function utils.sum_counts`, `    higher_is_better: true`,
+      `  - metric: n_attempted`, `    aggregation: !function utils.sum_counts`, `    higher_is_better: true`,
+      `metadata:`, `  version: 2.0`, `  gspc_axis: ${axis.axis}`, `  gspc_labels: ${JSON.stringify(axis.label_menu)}`,
+      `  gspc_bank_sha256: ${axis.bank_sha256}`, `  gspc_bank_revision: ${revision}`, `  gspc_items: ${kept.length}`,
+      `  gspc_grader_sha256: ${graderHash}`, `  gspc_caveat: "measurement, never certification; no board admission"`, ""
     ].join("\n");
-    outputs.set(`public/bench/lm-eval/${axis.axis}/${axis.axis}.yaml`, yaml);
-    outputs.set(`public/bench/lm-eval/${axis.axis}/utils.py`, graderPy(labels));
-
-    taskRows.push({
-      axis: axis.axis, task: taskName, items: kept.length, labels, prompt_key: pKey,
-      bank_repo: repo, bank_sha256: axis.bank_sha256, bank_url: url,
-      bank_rows_raw: rows.length, canary_rows_dropped: rows.length - kept.length,
-    });
+    outputs.set(`${PACK}/${axis.axis}/${axis.axis}.yaml`, yaml);
+    outputs.set(`${PACK}/${axis.axis}/utils.py`, utilsPy(axis));
+    outputs.set(bankPath, text);
+    taskRows.push({axis: axis.axis, task, items: kept.length, labels: axis.label_menu,
+      prompt_key: PROMPT_KEYS.find(k => kept[0][k]), bank_repo: axis.bank_repo,
+      bank_sha256: axis.bank_sha256, bank_revision: revision, bank_url: pinnedUrl,
+      bank_rows_raw: rows.length, canary_rows_dropped: rows.length - kept.length});
+    if (SPACE_BANKS.has(axis.bank_repo)) {
+      outputs.set(`${SPACE}/banks/${axis.bank_repo}.jsonl`, text);
+      spaceBanks[`csoai/${axis.bank_repo}`] = {axis: axis.axis, labels: axis.label_menu,
+        prompt_template: axis.prompt_template, file: `banks/${axis.bank_repo}.jsonl`,
+        sha256: axis.bank_sha256, revision, url: pinnedUrl};
+    }
   }
+  const readme = `# Run a GSPC axis with lm-eval
 
-  const readme = [
-    `# Run a GSPC axis with lm-eval`,
-    ``,
-    `One command, on your model, against a frozen published bank.`,
-    ``,
-    "```bash",
-    "pip install lm-eval",
-    "git clone https://huggingface.co/datasets/csoai/gspc-eval .   # or copy this directory",
-    "lm_eval --model hf \\",
-    "  --model_args pretrained=meta-llama/Llama-3.1-8B-Instruct \\",
-    `  --tasks ${taskRows[0].task} \\`,
-    "  --include_path ./lm-eval \\",
-    "  --output_path ./results",
-    "```",
-    ``,
-    `## What is in here`,
-    ``,
-    `- ${taskRows.length} task directories, one per runnable axis: ${taskRows.map((t) => `\`${t.task}\``).join(", ")}.`,
-    `- Each holds its task YAML and a \`utils.py\` — the grader. It is the estate's own \`read_label\`,`,
-    `  ported, and \`scripts/surface/lm-eval-parity.node-test.mjs\` proves the port and`,
-    `  \`harness/gspc-top100/mill_hub_queue.py\` agree, case for case, over the estate's own fixtures.`,
-    `- Each task points at the PUBLIC bank bytes by URL. No account, no token, no upload.`,
-    ``,
-    `## The rule, stated`,
-    ``,
-    `An answer that is not one of the bank's labels **leaves the denominator**. It is not a wrong`,
-    `answer. The number this produces is therefore a coverage-weighted accuracy: a model that will`,
-    `not emit the requested format gets a smaller n, and n below 30 is unquotable. Read the n before`,
-    `the accuracy.`,
-    ``,
-    `## What this does not establish`,
-    ``,
-    `Measurement, not certification. A task score is evidence of a run at a time, on a frozen bank,`,
-    `with one prompt template and one grader. It is not a grade, a rank, a conformity assessment, or a`,
-    `statement that any model is safe. A TIE is a TIE.`,
-    ``,
-    ...(refused.length ? [
-      `## Axes that are deliberately absent`,
-      ``,
-      ...refused.map((a) => `- \`${a.axis}\` — ${a.refusal_reason}`),
-      ``,
-      `A bank whose label menu cannot be answered wrongly cannot be measured, and the refusal is the`,
-      `result, not a gap in this file.`,
-      ``,
-    ] : []),
-  ].join("\n");
-  outputs.set("public/bench/lm-eval/README.md", readme);
+The canonical ${taskRows.length}-axis pack replaces the earlier six-task Hub bridge. Each task carries the
+published bank bytes, checks their SHA256 before loading, and records the exact Hub revision.
+No account or network is required to load the bank. Model access depends on your chosen backend.
 
-  const manifest = {
-    schema: "csoai.gspc-lm-eval-tasks/1",
-    generated_by: "scripts/surface/build-lm-eval-tasks.mjs",
-    what_this_is: "One lm-eval task per runnable GSPC axis, generated from the published bank bytes.",
-    what_this_does_not_establish: "Not a grade, a rank, a certification, or a statement that any model is safe. A TIE is a TIE.",
-    grader: "gspc-top100.mill_hub_queue.read_label, ported per axis and parity-proven by scripts/surface/lm-eval-parity.node-test.mjs",
-    unparsed_rule: "an answer that is not one of the bank's labels leaves the denominator; it is never counted as wrong",
-    axes: taskRows,
-    files: [...outputs.keys()].sort().map((p) => ({ path: p, sha256: sha256(outputs.get(p)) })),
-  };
-  outputs.set("public/bench/lm-eval/manifest.json", j(manifest));
+\`\`\`bash
+pip install 'lm_eval[hf]==0.4.13'
+git clone https://huggingface.co/datasets/csoai/gspc-lm-eval-tasks
+cd gspc-lm-eval-tasks
+lm_eval --model hf \\
+  --model_args pretrained=YOUR_MODEL \\
+  --tasks gspc_provenance --include_path ./lm-eval --log_samples --output_path ./results
+\`\`\`
 
+## Task and grader contract
+
+${taskRows.map(t => `- \`${t.task}\`: ${t.items} eligible items`).join("\n")}
+
+The grader is copied verbatim from \`harness/gspc-top100/mill_hub_queue.py::read_label\`.
+\`scripts/surface/test_lm_eval_parity.py\` checks canonical label and row-selection parity.
+\`scripts/surface/test_lm_eval_framework.py\` verifies bank integrity and the actual Dataset contract, loads all tasks through
+lm-eval and exercises its evaluator with fixed fake responses, without a model call.
+
+\`exact_match\` is accuracy **conditional on a parseable label**. \`parse_rate\`, \`n_graded\` and
+\`n_attempted\` expose the denominator. An unparsed response leaves the accuracy denominator.
+If every response is unparsed, accuracy is unavailable, not zero. Read coverage alongside accuracy.
+The last-line/punctuation rules are exactly the canonical grader's; arbitrary label substrings do
+not count. The task prompt matches the canonical axis template and does not include the gold answer.
+
+## Migration from the six-task bridge
+
+Use \`--include_path ./lm-eval\` and the canonical names. The Hub's old \`tasks/\` entry points remain
+aliases for compatibility: \`gspc_mcp\` → \`gspc_conformance\`, \`gspc_oss\` → \`gspc_openness\`,
+\`gspc_prv\` → \`gspc_provenance\`, \`gspc_asi\` → \`gspc_continuity\`,
+\`gspc_det\` → \`gspc_detector_interop\`, \`gspc_art5\` → \`gspc_art5_safeguard\`.
+Historical six-task results are not upgraded or admitted by replacing the task files.
+The separate legacy garak probe is unchanged and is not covered by this qualification.
+
+## Rebuild and verify
+
+From the Council of AI monorepo, run \`node scripts/surface/build-lm-eval-tasks.mjs --check\`
+and the two Python tests above. \`--check\` is offline. \`--refresh\` resolves current Hub revisions
+but refuses any bank whose bytes differ from the declared hash in \`public/bench/axes.json\`.
+The same producer freezes the five existing Auto-Measure banks and copies the canonical grader.
+
+## Limits
+
+This pack measures a run with a particular prompt, bank and grader. It does not establish a rank,
+certification, safety, or independent GSPC admission. Fewer than 30 graded items remain unquotable
+under the existing policy. No model measurements were made by the framework smoke test.
+
+Excluded axes: ${refused.map(a => `\`${a.axis}\` (${a.refusal_reason})`).join("; ")}.
+`;
+  outputs.set(`${PACK}/README.md`, readme);
+  outputs.set(`${SPACE}/grader.py`, graderHeader + grader + `\nGRADER_SHA256 = ${JSON.stringify(graderHash)}\n`);
+  outputs.set(`${SPACE}/banks.json`, j(spaceBanks));
+  const manifest = {schema: "csoai.gspc-lm-eval-tasks/2", generated_by: "scripts/surface/build-lm-eval-tasks.mjs",
+    grader: `${millPath}::read_label`, grader_sha256: graderHash, lm_eval_tested_version: "0.4.13",
+    unparsed_rule: "excluded from accuracy; reported in parse_rate and n_attempted", axes: taskRows,
+    files: [...outputs.keys()].sort().map(path => ({path, sha256: sha256(outputs.get(path))}))};
+  outputs.set(`${PACK}/manifest.json`, j(manifest));
   let bad = 0;
   for (const [rel, text] of outputs) {
     const abs = join(ROOT, rel);
-    if (CHECK) {
-      const have = existsSync(abs) ? readFileSync(abs, "utf8") : null;
-      if (have !== text) { console.error(`stale: ${rel}`); bad++; }
-    } else {
-      mkdirSync(dirname(abs), { recursive: true });
-      writeFileSync(abs, text);
-    }
+    if (CHECK) { if (!existsSync(abs) || readFileSync(abs, "utf8") !== text) { console.error(`stale: ${rel}`); bad++; } }
+    else { mkdirSync(dirname(abs), {recursive: true}); writeFileSync(abs, text); }
   }
-  if (bad) {
-    console.error(`build-lm-eval-tasks: ${bad} file(s) differ from the generated bytes`);
-    process.exit(3);
-  }
-  const items = taskRows.reduce((n, t) => n + t.items, 0);
-  console.log(`build-lm-eval-tasks: ${outputs.size} file(s) ${CHECK ? "match" : "written"} · ${taskRows.length} tasks · ${items} items · ${refused.length} axes refused`);
+  if (bad) process.exitCode = 3;
+  console.log(`build-lm-eval-tasks: ${outputs.size} files ${CHECK ? "checked" : "written"}; ${taskRows.length} tasks; ${taskRows.reduce((n, t) => n + t.items, 0)} eligible items; ${refused.length} refused axes`);
 }
-
 await main();
