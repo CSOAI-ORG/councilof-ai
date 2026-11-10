@@ -7,6 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+import httpx
 from huggingface_hub.errors import LocalEntryNotFoundError, RemoteEntryNotFoundError
 
 PATH = Path(__file__).with_name("run-auto-measure-once.py")
@@ -50,7 +51,8 @@ class FakeHub:
 
     def download(self, repo, name, repo_type, revision):
         if name not in self.stores[revision]:
-            raise RemoteEntryNotFoundError(name)
+            response = httpx.Response(404, request=httpx.Request("HEAD", "https://huggingface.co/fixture"))
+            raise RemoteEntryNotFoundError(name, response=response)
         raw = self.stores[revision][name]
         if self.corrupt_readback and revision == "published":
             raw += b"changed"
