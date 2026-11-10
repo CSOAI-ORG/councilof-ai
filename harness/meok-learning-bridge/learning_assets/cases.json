@@ -1,0 +1,201 @@
+[
+  {
+    "answer": "B",
+    "axes": [
+      "claim-maintenance",
+      "provenance",
+      "serving-fidelity",
+      "effect-binding",
+      "harness-fidelity"
+    ],
+    "content_sha256": "6701e5f473b8616af4b2f63fb97a56a70b01b23f791b3e318fca65c7c1343134",
+    "evidence_reference": "https://github.com/CSOAI-ORG/councilof-ai/blob/0dd1bcc8fc21344d5967f66df4ba7b053a0834e7/harness/meok-memory-venturi/live-qualification.json",
+    "explanation": "Byte identity is not current applicability. Preserve R1 as history; inspect the changed dependency before using a result for R2.",
+    "facts": "A cached answer used source revision R1. The source is now R2. The old answer still sounds plausible, but its dependency has changed.",
+    "human_editor_review": "PENDING",
+    "id": "revision-change",
+    "options": {
+      "A": "Keep the old answer because its hash is unchanged.",
+      "B": "Recheck access and source state, invalidate affected derived work and recompute or explicitly hold.",
+      "C": "Mark the new source as verified because the old task passed.",
+      "D": "Increase learner XP and reuse the answer."
+    },
+    "origin": "ORIGINAL_SYNTHETIC_TEACHING_FIXTURE",
+    "question": "What is the defensible next step?",
+    "revision": "1",
+    "rights": "Original instructional wording; research software MIT. External source references retain their own rights.",
+    "safe_layers": [
+      "Serving path",
+      "Workflow composition"
+    ],
+    "title": "A cached answer outlives its evidence",
+    "uses_gspc_evaluation_rows": false,
+    "xp_reward": 10
+  },
+  {
+    "answer": "C",
+    "axes": [
+      "measurer-integrity",
+      "harness-fidelity",
+      "serving-fidelity",
+      "interpretability-reproducibility",
+      "safety"
+    ],
+    "content_sha256": "44a184ee2690e133f50f97fc61b74fe880aa62fd438f0093a77195a545dca3d4",
+    "evidence_reference": "csoai/6af283e79737d9a9e08ecbaa (completed synthetic adapter experiment; not a GSPC bank)",
+    "explanation": "The result has no demonstrated discrimination beyond the constant majority comparator. Preserve failure and abstain from general performance claims.",
+    "facts": "In a fictional eight-case test, five targets are HOLD and three are CHECK. A candidate answers HOLD every time and scores 5/8, beating a previous 3/8.",
+    "human_editor_review": "PENDING",
+    "id": "majority-collapse",
+    "options": {
+      "A": "Yes: any higher raw accuracy proves improvement.",
+      "B": "Yes: the training loss decreased.",
+      "C": "No: it matches the majority-class strategy; inspect both classes and independent held-out tasks.",
+      "D": "Yes: a signed report turns the score into proof of generalisation."
+    },
+    "origin": "ORIGINAL_SYNTHETIC_TEACHING_FIXTURE",
+    "question": "Does that result justify promoting the candidate as an improved classifier?",
+    "revision": "1",
+    "rights": "Original instructional wording; research software MIT. External source references retain their own rights.",
+    "safe_layers": [
+      "Model",
+      "Serving path"
+    ],
+    "title": "An apparently better model stops distinguishing cases",
+    "uses_gspc_evaluation_rows": false,
+    "xp_reward": 10
+  },
+  {
+    "answer": "D",
+    "axes": [
+      "governance",
+      "safety",
+      "provenance",
+      "continuity",
+      "conformance",
+      "openness",
+      "machinery-conformity",
+      "care",
+      "cross-reality",
+      "detector-interop",
+      "art5-safeguard",
+      "swarm",
+      "affect",
+      "jail",
+      "effect-binding",
+      "provenance-controls",
+      "reserve-attestation",
+      "regulatory-framework",
+      "distribution-integrity",
+      "custody-disclosure",
+      "ai-adoption-components",
+      "labour-components",
+      "humanoid-labour-index",
+      "lab-practice",
+      "company-practice",
+      "measurer-integrity",
+      "harness-fidelity",
+      "interop-conformance",
+      "humanoid-deployment",
+      "regulator-transparency",
+      "interpretability-reproducibility",
+      "claim-maintenance",
+      "serving-fidelity",
+      "watchdog-ingest"
+    ],
+    "content_sha256": "aae80c1d4348eddc3078a62e4d6517954480a4f994ef28db60dbd1f99dcdb12f",
+    "evidence_reference": "https://github.com/CSOAI-ORG/councilof-ai/blob/ca5ff304cf1766ee73d84c49fc684631deaae113/functions/api/hitl.ts",
+    "explanation": "Learning, identity, professional competence, a decision record and executable authority are different states. XP creates none of the latter.",
+    "facts": "A learner completes all quizzes and earns a badge. A model now proposes changing an external system. No authenticated, current, action-specific approval has been recorded.",
+    "human_editor_review": "PENDING",
+    "id": "xp-not-authority",
+    "options": {
+      "A": "The badge authorises the change.",
+      "B": "The correct quiz answers prove human identity and professional competence.",
+      "C": "A payment is enough to approve the change.",
+      "D": "Only practice progress; the action still needs a separate valid approval and effect check."
+    },
+    "origin": "ORIGINAL_SYNTHETIC_TEACHING_FIXTURE",
+    "question": "What may the learning application infer?",
+    "revision": "1",
+    "rights": "Original instructional wording; research software MIT. External source references retain their own rights.",
+    "safe_layers": [
+      "Human operations",
+      "Authorization and commitment"
+    ],
+    "title": "Practice completion is not an action grant",
+    "uses_gspc_evaluation_rows": false,
+    "xp_reward": 10
+  },
+  {
+    "answer": "A",
+    "axes": [
+      "watchdog-ingest",
+      "care",
+      "openness",
+      "governance",
+      "provenance",
+      "company-practice",
+      "lab-practice"
+    ],
+    "content_sha256": "6845d7917ef80c8a4afdd1b0c602cdf2c02508ead920a471e169990b3b68a278",
+    "evidence_reference": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/6e86cf62755dfe021600bab33061b8ceed46f2db/SAFE.md",
+    "explanation": "Shared learning does not remove sharing restrictions. A synthetic exercise and an incident record must remain separate; no confidential report is ingested here.",
+    "facts": "A confidential incident report is offered as material for a public game and a model-training dataset. No source-rights, privacy, redaction or publication approval is recorded.",
+    "human_editor_review": "PENDING",
+    "id": "restricted-sharing",
+    "options": {
+      "A": "Keep the source restricted, use separately cleared synthetic teaching material and request the appropriate review.",
+      "B": "Publish it because safety work is always exempt from confidentiality.",
+      "C": "Use a content hash to remove all privacy and licensing obligations.",
+      "D": "Offer XP for uploading more incident details."
+    },
+    "origin": "ORIGINAL_SYNTHETIC_TEACHING_FIXTURE",
+    "question": "How should the learning bridge proceed?",
+    "revision": "1",
+    "rights": "Original instructional wording; research software MIT. External source references retain their own rights.",
+    "safe_layers": [
+      "Human operations",
+      "Environment",
+      "Supply chain"
+    ],
+    "title": "Incident learning without disclosure leakage",
+    "uses_gspc_evaluation_rows": false,
+    "xp_reward": 10
+  },
+  {
+    "answer": "C",
+    "axes": [
+      "effect-binding",
+      "conformance",
+      "cross-reality",
+      "distribution-integrity",
+      "claim-maintenance",
+      "swarm"
+    ],
+    "content_sha256": "de209527aa9b4c1df9cbe8aa85e4c71d89da5a485bbb0ebf48df5408117821d9",
+    "evidence_reference": "https://github.com/CSOAI-ORG/councilof-ai/blob/ca5ff304cf1766ee73d84c49fc684631deaae113/docs/governance/council-ai-agent-operating-controls-v0.1.md",
+    "explanation": "Request, execution, observed output, delivery, receipt and settlement are separate. Reconcile before retrying consequential operations.",
+    "facts": "A fresh measurement request timed out. There is no confirmed output or settlement readback. The requester asks the agent to try again immediately.",
+    "human_editor_review": "PENDING",
+    "id": "uncertain-request",
+    "options": {
+      "A": "Report success because the request was sent.",
+      "B": "Automatically resubmit and pay again.",
+      "C": "Reconcile the existing request and effect/settlement state; preserve uncertainty and obtain any needed new scope.",
+      "D": "Treat payment as a favourable measurement."
+    },
+    "origin": "ORIGINAL_SYNTHETIC_TEACHING_FIXTURE",
+    "question": "Which response avoids inventing success or a duplicate effect?",
+    "revision": "1",
+    "rights": "Original instructional wording; research software MIT. External source references retain their own rights.",
+    "safe_layers": [
+      "Tools",
+      "Authorization and commitment",
+      "Workflow composition"
+    ],
+    "title": "A request or payment is not a delivered result",
+    "uses_gspc_evaluation_rows": false,
+    "xp_reward": 10
+  }
+]
