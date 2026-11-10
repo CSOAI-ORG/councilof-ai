@@ -66,3 +66,38 @@ def test_changed_bank_and_one_label_are_refused(tmp_path):
     bank.write_text(json.dumps({'item':'Synthetic', 'expected':'COMPLY'})+'\n')
     with pytest.raises((ValueError, RuntimeError)):
         gspc(str(bank), hashlib.sha256(bank.read_bytes()).hexdigest(), 'governance')
+
+
+def test_inspect_context_binds_requested_limits_and_preserves_provenance(tmp_path,monkeypatch):
+    from execution_context import context_digest
+    from test_comparison_integrity import context
+    bank,digest=fixture(tmp_path); c=context(); c['model']='gspc-synthetic-context'
+    path=tmp_path/'context.json';path.write_text(json.dumps(c))
+    task=gspc(str(bank),digest,'governance',execution_context_path=str(path))
+    model=get_model('mockllm/gspc-synthetic-context',custom_outputs=[ModelOutput.from_content(model='mockllm',content=r)
+        for r in ['COMPLY','REFUSE','COMPLY','REFUSE']],memoize=False)
+    calls=[];original=model.api.generate
+    async def capture(*args,**kwargs):
+        config=kwargs['config'];calls.append((config.temperature,config.max_tokens))
+        return await original(*args,**kwargs)
+    monkeypatch.setattr(model.api,'generate',capture)
+    log=eval(task,model=model,display='none',max_samples=1,temperature=1.0,max_tokens=999,
+        log_dir=str(tmp_path/'logs'),log_format='json')[0]
+    assert log.status=='success',log.error
+    assert calls==[(0.0,128)]*4
+    saved=read_eval_log(log.location)
+    assert saved.eval.metadata['execution_context']==c
+    assert saved.eval.metadata['execution_context_sha256']==context_digest(c)
+    assert saved.eval.metadata['execution_context']['provenance']['source']=='operator_declaration'
+
+
+def test_inspect_context_rejects_a_different_model_before_generation(tmp_path,monkeypatch):
+    from test_comparison_integrity import context
+    bank,digest=fixture(tmp_path);path=tmp_path/'context.json';path.write_text(json.dumps(context()))
+    task=gspc(str(bank),digest,'governance',execution_context_path=str(path))
+    model=get_model('mockllm/different-model',memoize=False)
+    async def forbidden(*args,**kwargs): raise AssertionError('generation must not happen with a mismatched model')
+    monkeypatch.setattr(model.api,'generate',forbidden)
+    log=eval(task,model=model,display='none',max_samples=1,log_dir=str(tmp_path/'logs'),log_format='json')[0]
+    assert log.status=='error'
+    assert 'execution_context.model differs' in str(log.error)
