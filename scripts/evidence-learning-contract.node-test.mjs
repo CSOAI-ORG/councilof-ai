@@ -145,3 +145,183 @@ test('daily briefing view renders exact first-party links and source limits',asy
 });
 
 
+
+// Offline regression cases: synthetic inputs and a minimal view adapter only.
+// These do not establish production availability, browser layout or human acceptance.
+async function reviewHarness(run) {
+ const names=['HTMLElement','customElements','fetch','localStorage','document','setTimeout','clearTimeout'];
+ const prior=new Map(names.map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));
+ const timers=[];
+ Object.assign(globalThis,{HTMLElement:class {},customElements:{get:()=>true},
+  fetch:async()=>{throw Error('UNEXPECTED_NETWORK_REQUEST')},
+  localStorage:{setItem(){},getItem(){return null}},
+  document:{visibilityState:'visible',removeEventListener(){}},
+  setTimeout:(fn,ms)=>{const timer={fn,ms,cleared:false};timers.push(timer);return timer},
+  clearTimeout:timer=>{if(timer)timer.cleared=true}});
+ try {
+  const {CouncilEvidenceLearning}=await import('../public/evidence-learning/element.js');
+  const nodes=new Map([
+   ['[data-learning-summary]',{innerHTML:'OLD_TASK'}],
+   ['[data-scenario-context]',{innerHTML:'OLD_CONTEXT'}],
+   ['[data-daily-briefing]',{innerHTML:''}],
+   ['[data-source-status]',{textContent:''}],
+   ['[data-do="refresh"]',{disabled:false}],
+   ['.status',{textContent:''}]
+  ]);
+  const capture={url:'https://councilof.ai/api/gspc',readAt:'2026-11-06T06:00:00Z',sha256:'a'.repeat(64),data:structuredClone(board)};
+  const view=Object.assign(Object.create(CouncilEvidenceLearning.prototype),{
+   stage:'learn',axis:'governance',capture,scenario:null,scenarioState:'NOT_READ',scenarioNote:'Not read',
+   briefing:null,briefingReadAt:null,briefingAnswer:null,readState:'CACHED',error:'',auto:false,
+   loading:false,notice:'',draft:null,requestId:0,storage:true,storageBlocked:false,isConnected:true,
+   data:{component_version:'0.2.0',progress:{},proposals:{governance:{task:'Saved task',target:'Pinned target',change:'Saved change'}},shots:[],pins:{governance:structuredClone(capture)},lastSource:structuredClone(capture)},
+   shadowRoot:{activeElement:null,querySelector:selector=>nodes.get(selector)||null},
+   renders:0,render(){this.renders++},scheduled:0,schedule(){this.scheduled++},
+   dispatchEvent(){return true}
+  });
+  const scenario=(axis='governance',note='NEW_CONTEXT')=>({schema:'csoai.learning-scenarios/0.1',scenarios:[{axis,board_measurement:{status:'MEASURED'},evidence:{published_state:'PUBLISHED_VERIFIED'},regulation_context:{state:'UNMAPPED',note,pointers:[]}}]});
+  await run({view,nodes,timers,scenario,CouncilEvidenceLearning});
+ } finally {
+  for(const [name,descriptor] of prior){if(descriptor)Object.defineProperty(globalThis,name,descriptor);else delete globalThis[name]}
+ }
+}
+const deferredResponse=()=>{let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve}};
+const turn=()=>new Promise(resolve=>setImmediate(resolve));
+
+test('hardening: 24-hour rollover cannot acquire an exact-time label',()=>{
+ for(const value of ['2026-11-10T24:00:00Z','2026-11-10T24:00:00.000Z','2026-11-10T24:00:00+01:00'])
+  assert.equal(measurementTimeLabel({state:'EXACT',observed_at:value}),'Not supplied or uncheckable',value);
+});
+test('hardening: upper bounds reject clock rollover too',()=>{
+ assert.equal(measurementTimeLabel({state:'NOT_AFTER',not_after:'2026-11-10T24:00:00Z'}),'Not supplied or uncheckable');
+});
+test('hardening: valid offsets and fractional precision are preserved verbatim',()=>{
+ for(const value of ['2026-11-10T00:00:00Z','2026-11-10T23:59:59.123456789Z','2026-11-10T04:30:00+05:45','2026-11-10T04:30:00-03:30'])
+  assert.equal(measurementTimeLabel({state:'EXACT',observed_at:value}),value+' (exact time reported)');
+});
+test('hardening: clock field boundaries reject invalid minutes seconds and offsets',()=>{
+ for(const value of ['2026-11-10T25:00:00Z','2026-11-10T01:60:00Z','2026-11-10T01:00:61Z','2026-11-10T01:00:00+24:00','2026-11-10T01:00:00+02:60','2026-02-30T01:00:00Z'])
+  assert.equal(measurementTimeLabel({state:'EXACT',observed_at:value}),'Not supplied or uncheckable',value);
+});
+test('hardening: every valid hour remains exact and every out-of-range hour is uncheckable',()=>{
+ for(let hour=0;hour<=99;hour++){
+  const value=`2026-11-10T${String(hour).padStart(2,'0')}:00:00Z`;
+  assert.equal(measurementTimeLabel({state:'EXACT',observed_at:value}),hour<24?value+' (exact time reported)':'Not supplied or uncheckable',value);
+ }
+});
+test('hardening: invalid dates cannot leak into coaching as exact measurement time',()=>{
+ const b=structuredClone(board);b.axes[0].measurement_time={state:'EXACT',observed_at:'2026-11-10T24:00:00Z'};
+ const context=coachingContext('governance',{readAt:'2026-11-10T12:00:00Z',data:b});
+ assert.match(context,/Measurement time: Not supplied or uncheckable/);
+ assert.doesNotMatch(context,/24:00:00Z \(exact time reported\)/);
+});
+test('hardening: source pins do not retain nested measurement-time aliases',async()=>{
+ const {captureForStorage}=await import('../public/evidence-learning/contract.mjs');
+ const b=structuredClone(board);b.axes[0].measurement_time={state:'DAY',observed_on:'2026-08-12'};
+ const source={url:'https://councilof.ai/api/gspc',readAt:'2026-11-10T01:00:00Z',sha256:'a'.repeat(64),data:b};
+ const pin=captureForStorage(source);source.data.axes[0].measurement_time.observed_on='2026-11-10';
+ assert.equal(pin.data.axes[0].measurement_time.observed_on,'2026-08-12');
+ pin.data.axes[0].measurement_time.state='UNCHECKABLE';assert.equal(source.data.axes[0].measurement_time.state,'DAY');
+});
+test('hardening: copying a source pin isolates all retained nested metadata',async()=>{
+ const {captureForStorage}=await import('../public/evidence-learning/contract.mjs');
+ const b=structuredClone(board);b.axes[0].family={label:'original'};b.axes[0].measurement_time={state:'DAY',observed_on:'2026-08-12'};
+ const capture={url:'https://councilof.ai/api/gspc',readAt:'2026-11-10T01:00:00Z',sha256:'a'.repeat(64),data:b};
+ const pin=captureForStorage(capture),copy=captureForStorage(pin);
+ copy.data.axes[0].family.label='changed';copy.data.axes[0].measurement_time.observed_on='2026-11-10';
+ assert.equal(pin.data.axes[0].family.label,'original');assert.equal(pin.data.axes[0].measurement_time.observed_on,'2026-08-12');
+ assert.equal(pin.sha256,capture.sha256);assert.equal(pin.readAt,capture.readAt);
+});
+test('hardening: local snapshot totals are not aliases of the current capture',async()=>reviewHarness(async({view})=>{
+ view.readState='SOURCE_READ';
+ await view.click({target:{closest:()=>({dataset:{do:'capture'},hasAttribute:()=>false})}});
+ view.capture.data.totals.axes=99;
+ assert.equal(view.data.shots[0].totals.axes,1);
+}));
+test('refresh: rendered learning markup exposes independent live context regions',async()=>reviewHarness(async({view})=>{
+ const html=view.learn(view.axisRow());
+ assert.match(html,/data-learning-summary/);assert.match(html,/data-scenario-context/);
+ assert.match(html,/data-do="context"/);assert.match(html,/data-daily-briefing/);
+}));
+test('refresh: current scenario is painted without replacing the whole workspace',async()=>reviewHarness(async({view,nodes,scenario})=>{
+ const b=structuredClone(board);b.axes[0].task='NEW_TASK';
+ globalThis.fetch=async url=>Response.json(url.endsWith('/api/gspc')?b:scenario());
+ const pin=JSON.stringify(view.data.pins),proposal=JSON.stringify(view.data.proposals);
+ await view.load({background:true});
+ assert.equal(view.scenario.regulation_context.note,'NEW_CONTEXT');
+ assert.match(nodes.get('[data-scenario-context]').innerHTML,/NEW_CONTEXT/);
+ assert.match(nodes.get('[data-learning-summary]').innerHTML,/NEW_TASK/);
+ assert.equal(view.renders,0);assert.equal(JSON.stringify(view.data.pins),pin);assert.equal(JSON.stringify(view.data.proposals),proposal);
+}));
+test('refresh: starting a refresh hides old context until current evidence arrives',async()=>reviewHarness(async({view,nodes,scenario})=>{
+ view.scenario=scenario().scenarios[0];const waiting=deferredResponse();let calls=0;
+ globalThis.fetch=async()=>++calls===1?waiting.promise:Response.json(scenario());
+ const run=view.load({background:true});
+ try{assert.equal(view.scenario,null);assert.doesNotMatch(nodes.get('[data-scenario-context]').innerHTML,/OLD_CONTEXT/);assert.match(nodes.get('[data-scenario-context]').innerHTML,/being refreshed|Reading/)}
+ finally{waiting.resolve(Response.json(board));await run}
+}));
+test('refresh: a failed scenario read removes stale context and is not called complete',async()=>reviewHarness(async({view,nodes})=>{
+ globalThis.fetch=async url=>url.endsWith('/api/gspc')?Response.json(board):new Response('unavailable',{status:503});
+ await view.load({background:true});
+ assert.equal(view.readState,'SOURCE_READ');assert.equal(view.scenario,null);
+ assert.match(nodes.get('[data-scenario-context]').innerHTML,/unavailable/);
+ assert.doesNotMatch(nodes.get('[data-scenario-context]').innerHTML,/OLD_CONTEXT/);
+ assert.match(nodes.get('.status').textContent,/scenario context unavailable/i);
+ assert.doesNotMatch(nodes.get('.status').textContent,/^Sources refreshed/);
+}));
+test('refresh: board failure removes old scenario while retaining the dated source and proposal',async()=>reviewHarness(async({view,nodes,scenario})=>{
+ view.scenario=scenario().scenarios[0];const before=JSON.stringify(view.capture),pin=JSON.stringify(view.data.pins);
+ globalThis.fetch=async()=>new Response('unavailable',{status:503});
+ await view.load({background:true});
+ assert.equal(view.readState,'CACHED');assert.equal(JSON.stringify(view.capture),before);assert.equal(JSON.stringify(view.data.pins),pin);
+ assert.equal(view.scenario,null);assert.doesNotMatch(nodes.get('[data-scenario-context]').innerHTML,/OLD_CONTEXT/);
+ assert.match(nodes.get('[data-scenario-context]').innerHTML,/unavailable/);
+}));
+test('refresh: unavailable scenario recovers on a later successful read',async()=>reviewHarness(async({view,nodes,scenario})=>{
+ let broken=true;globalThis.fetch=async url=>url.endsWith('/api/gspc')?Response.json(board):broken?new Response('unavailable',{status:503}):Response.json(scenario());
+ await view.load({background:true});broken=false;await view.load({background:true});
+ assert.match(nodes.get('[data-scenario-context]').innerHTML,/NEW_CONTEXT/);
+ assert.doesNotMatch(nodes.get('.status').textContent,/unavailable/i);assert.equal(view.error,'');
+}));
+test('refresh: scenario source text stays escaped on repaint',async()=>reviewHarness(async({view,nodes,scenario})=>{
+ globalThis.fetch=async url=>Response.json(url.endsWith('/api/gspc')?board:scenario('governance','<img src=x onerror=alert(1)>'));
+ await view.load({background:true});const html=nodes.get('[data-scenario-context]').innerHTML;
+ assert.match(html,/&lt;img/);assert.doesNotMatch(html,/<img/);
+}));
+test('refresh: a wrong-axis scenario is not substituted or described as complete',async()=>reviewHarness(async({view,nodes,scenario})=>{
+ globalThis.fetch=async url=>Response.json(url.endsWith('/api/gspc')?board:scenario('safety'));
+ await view.load({background:true});assert.equal(view.scenario,null);
+ assert.match(nodes.get('.status').textContent,/scenario context unavailable/i);
+}));
+test('refresh: an old timeout cannot abort its replacement request',async()=>reviewHarness(async({view,timers,scenario})=>{
+ const first=deferredResponse(),second=deferredResponse();let boards=0;const signals=[];
+ globalThis.fetch=async(url,options)=>{if(url.endsWith('/api/gspc')){signals.push(options.signal);return ++boards===1?first.promise:second.promise}return Response.json(scenario())};
+ const a=view.load({background:true});const b=view.load({background:true});
+ try {timers[0].fn();assert.equal(signals[0].aborted,true);assert.equal(signals[1].aborted,false)}
+ finally{second.resolve(Response.json(board));await b;first.resolve(Response.json(board));await a}
+}));
+test('refresh: obsolete scenario completion cannot overwrite a newer axis',async()=>reviewHarness(async({view,scenario})=>{
+ const waiting=deferredResponse();let seen=false;
+ const b=structuredClone(board);b.axes.push({axis:'safety',task:'Safety task',status:'UNMEASURED',n:0});b.totals.axes=2;b.totals.unmeasured_axes=1;
+ globalThis.fetch=async url=>url.endsWith('/api/gspc')?Response.json(b):url.endsWith('axis=governance')?(seen=true,waiting.promise):Response.json(scenario('safety','CURRENT_SAFETY'));
+ const first=view.load({background:true});for(let n=0;n<50&&!seen;n++)await turn();assert.equal(seen,true);
+ view.axis='safety';await view.load({background:true});waiting.resolve(Response.json(scenario('governance','OBSOLETE')));await first;
+ assert.equal(view.scenario.axis,'safety');assert.equal(view.scenario.regulation_context.note,'CURRENT_SAFETY');
+}));
+test('refresh: expired current request cannot install a late successful response',async()=>reviewHarness(async({view,timers})=>{
+ const waiting=deferredResponse(),before=JSON.stringify(view.capture);
+ globalThis.fetch=async()=>waiting.promise;const run=view.load({background:true});timers[0].fn();
+ const b=structuredClone(board);b.axes[0].task='TOO_LATE';waiting.resolve(Response.json(b));await run;
+ assert.equal(JSON.stringify(view.capture),before);assert.equal(view.readState,'CACHED');assert.notEqual(view.error,'');
+}));
+test('refresh: disconnect prevents late source installation and rescheduling',async()=>reviewHarness(async({view})=>{
+ const waiting=deferredResponse(),before=JSON.stringify(view.capture);
+ globalThis.fetch=async()=>waiting.promise;const run=view.load({background:true});view.isConnected=false;view.disconnectedCallback();
+ waiting.resolve(Response.json(board));await run;assert.equal(JSON.stringify(view.capture),before);assert.equal(view.scheduled,0);assert.equal(view.loading,false);
+}));
+test('refresh: proposal and practice stages preserve the active workspace and pinned source',async()=>reviewHarness(async({view,scenario})=>{
+ globalThis.fetch=async url=>Response.json(url.endsWith('/api/gspc')?board:scenario());
+ const pin=JSON.stringify(view.data.pins),proposal=JSON.stringify(view.data.proposals);
+ for(const stage of ['practice','propose','review']){view.stage=stage;await view.load({background:true})}
+ assert.equal(view.renders,0);assert.equal(JSON.stringify(view.data.pins),pin);assert.equal(JSON.stringify(view.data.proposals),proposal);
+ assert.equal(view.currentDraft().review.execution_allowed,false);
+}));

@@ -88,10 +88,35 @@ if the callback later mutates the input object. Arbitrary callback code can stil
 perform a different operation: effect binding must be enforced at the actual tool
 or gateway boundary and independently checked afterwards.
 
-For compatibility, `attested` and `status: "attested"` mean a gateway attestation
-was returned. They do not mean this client verified its signature, authenticity or
-claim. Missing evidence is `executed_unattested`. `verify()` calls the configured
-gateway and therefore is not a standalone offline verifier.
+For compatibility, `attested` and `status: "attested"` describe receipt, not
+cryptographic verification. A returned receipt must now have the existing
+`csoai.a2a/0.1` envelope shape, match the captured request attribution and input
+digest, echo the supported callback-output digest and encoding, and pass its
+unkeyed episode-digest comparison. Truthy malformed values no longer count as an
+attestation. Legacy transports that omit output binding remain uncheckable until
+they support these fields; consumers must review this deliberate tightening.
+
+`attestationCheck.state: "RECEIVED_UNVERIFIED"` explicitly retains
+`signatureVerification: "NOT_PERFORMED"`, `issuerTrust: "NOT_ESTABLISHED"`,
+`authorityVerified: false` and `independentEffect: "NOT_OBSERVED"`. A
+well-shaped but invalid signature can still have that unverified state. No key
+supplied by a response is trusted, and no signature check is claimed here.
+`verify()` still calls the configured gateway; it is not an offline verifier.
+
+`outputBinding` fingerprints supported plain JSON returned by the callback using
+the existing sorted-key canonical form, labelled `L0_CANONICAL_JSON`. This is not
+the exact bytes of an external artifact and is not independent effect observation.
+Only the digest and encoding are sent, never the callback output itself. Unsupported
+values, accessors, sparse arrays, cycles, non-finite numbers, values deeper than 64
+levels, more than 100,000 visited values or canonical output above 2,000,000 UTF-8
+bytes remain uncheckable. A result changed while receipt retrieval was pending is
+marked `OUTPUT_CHANGED_AFTER_CAPTURE`; the earlier digest is not silently relabelled.
+
+Missing, malformed or mismatched evidence leaves `status: "executed_unattested"`
+and preserves the obtained result and returned receipt for reconciliation. It does
+not re-run the callback, settle a payment, grant authority, create a signing key or
+lift `LOCAL_EXECUTOR_NOT_QUALIFIED`. Consumers must durably retain their exact
+result and evidence before acting on a later mutable object.
 
 ## Acceptance before production
 

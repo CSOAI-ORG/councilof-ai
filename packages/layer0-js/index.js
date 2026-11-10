@@ -42,6 +42,84 @@ const sha256 = (s) =>
     .update(typeof s === "string" ? s : canonicalJson(s))
     .digest("hex");
 
+// Fingerprint supported callback JSON, not arbitrary JavaScript objects or external
+// artifact bytes. Do not invoke getters/toJSON or silently discard unsupported values.
+function bindCallbackResult(value) {
+  const seen = new Set(); let nodes = 0;
+  const encode = (item, depth = 0) => {
+    if (++nodes > 100000 || depth > 64) throw new Error("result limit");
+    if (item === null || typeof item === "boolean" || typeof item === "string") return JSON.stringify(item);
+    if (typeof item === "number" && Number.isFinite(item)) return JSON.stringify(item);
+    if (!item || typeof item !== "object" || seen.has(item)) throw new Error("unsupported result");
+    const array = Array.isArray(item), proto = Object.getPrototypeOf(item);
+    if (!array && proto !== Object.prototype && proto !== null) throw new Error("unsupported result prototype");
+    const descriptors = Object.getOwnPropertyDescriptors(item), keys = Reflect.ownKeys(descriptors);
+    if (keys.some(k => typeof k !== "string" || !("value" in descriptors[k]) ||
+      (!descriptors[k].enumerable && !(array && k === "length")))) throw new Error("unsupported result property");
+    seen.add(item);
+    let text;
+    if (array) {
+      if (keys.length !== item.length + 1) throw new Error("sparse or decorated result array");
+      const parts = [];
+      for (let i = 0; i < item.length; i++) {
+        if (!Object.hasOwn(descriptors, String(i))) throw new Error("sparse result array");
+        parts.push(encode(descriptors[i].value, depth + 1));
+      }
+      text = "[" + parts.join(",") + "]";
+    } else {
+      text = "{" + keys.sort().map(k => JSON.stringify(k) + ":" + encode(descriptors[k].value, depth + 1)).join(",") + "}";
+    }
+    seen.delete(item);
+    if (Buffer.byteLength(text, "utf8") > 2000000) throw new Error("result byte limit");
+    return text;
+  };
+  try {
+    const text = encode(value);
+    if (Buffer.byteLength(text, "utf8") > 2000000) throw new Error("result byte limit");
+    return Object.freeze({ state: "HASHED", sha256: sha256(text), encoding: "L0_CANONICAL_JSON", scope: "CALLBACK_RESULT_ONLY" });
+  } catch {
+    return Object.freeze({ state: "UNCHECKABLE", sha256: null, encoding: null, scope: "CALLBACK_RESULT_ONLY" });
+  }
+}
+
+// This is structural and echoed-binding validation ONLY. No response-provided key
+// or claimed verified flag is trusted. Signature, issuer and actual effect remain
+// separate, unperformed checks. Legacy `attested` means receipt, never verification.
+function checkReturnedAttestation(envelope, expected, output) {
+  const report = (state) => Object.freeze({ state,
+    signatureVerification: "NOT_PERFORMED", issuerTrust: "NOT_ESTABLISHED",
+    authorityVerified: false, independentEffect: "NOT_OBSERVED" });
+  if (envelope === null || envelope === undefined) return report("NO_RECEIPT");
+  try {
+    const object = v => v !== null && typeof v === "object" && !Array.isArray(v);
+    const strings = v => Array.isArray(v) && v.every(x => typeof x === "string");
+    const t = envelope.ts;
+    const time = typeof t === "string" && /^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?Z$/.test(t) &&
+      Number.isFinite(Date.parse(t)) && new Date(t).toISOString().slice(0, 10) === t.slice(0, 10);
+    if (!object(envelope) || envelope.v !== "csoai.a2a/0.1" || typeof envelope.id !== "string" || !envelope.id || !time ||
+      !object(envelope.from) || !object(envelope.to) || !object(envelope.payload) || !object(envelope.policy) ||
+      !strings(envelope.policy.controls) || !strings(envelope.policy.conditions) ||
+      !(envelope.policy.statutory_basis === null || typeof envelope.policy.statutory_basis === "string") ||
+      !object(envelope.episode) || typeof envelope.episode.anchor !== "string" ||
+      !object(envelope.sig) || envelope.sig.alg !== "Ed25519" || typeof envelope.sig.kid !== "string" || !envelope.sig.kid ||
+      typeof envelope.sig.value !== "string" || !/^[A-Za-z0-9+/]{86}==$/.test(envelope.sig.value) ||
+      Buffer.from(envelope.sig.value, "base64").toString("base64") !== envelope.sig.value) return report("MALFORMED_RECEIPT");
+    if (envelope.intent !== "attestation" || envelope.action !== expected.action ||
+      envelope.from.party !== expected.identity || envelope.from.endpoint !== expected.endpoint ||
+      envelope.to.endpoint !== "csoai://ledger" || envelope.payload.inputsHash !== expected.inputsHash ||
+      envelope.payload.decisionState !== expected.decisionState || envelope.policy.decision !== expected.decisionState)
+      return report("REQUEST_BINDING_MISMATCH");
+    if (output.state !== "HASHED") return report("OUTPUT_UNCHECKABLE");
+    if (envelope.payload.outputsHash !== output.sha256 || envelope.payload.outputEncoding !== output.encoding)
+      return report("OUTPUT_BINDING_MISMATCH");
+    const { from, to, action, payload } = envelope;
+    if (envelope.episode.hash !== sha256({ from, to, action, payload })) return report("EPISODE_DIGEST_MISMATCH");
+    return report("RECEIVED_UNVERIFIED");
+  } catch {
+    return report("MALFORMED_RECEIPT");
+  }
+}
+
 const SECRET_KEY_RE =
   /(?:^|_|-)(?:password|passwd|api_key|apikey|secret_key|private_key|access_token|bearer_token|client_secret|credit_card)(?:$|_|-)/i;
 
@@ -288,6 +366,7 @@ export class Layer0 {
       }
     };
     const inputsHash = sha256(inputs);
+    const identity = this.identity, endpoint = this.endpoint;
     stopIfAborted();
     const decision = await this.gate(action, inputs);
     if (!decision || typeof decision !== "object" || Array.isArray(decision) ||
@@ -300,6 +379,7 @@ export class Layer0 {
       throw new Error(`Layer-0 Gate denied: ${decision.reason || action}`);
     }
     const escalated = decision.state === "escalate";
+    const binding = Object.freeze({ action, inputsHash, identity, endpoint, decisionState: decision.state });
     const approval = options.approval ?? options.approvalReceipt ?? decision.approval ?? null;
     if (escalated) {
       if (!approval || typeof approval !== "object" || Array.isArray(approval)) {
@@ -326,6 +406,11 @@ export class Layer0 {
       err.code = "AUTHORIZATION_INPUTS_CHANGED";
       throw err;
     }
+    if (this.identity !== identity || this.endpoint !== endpoint) {
+      const error = new Error("Attribution context changed after the authorization request");
+      error.code = "AUTHORIZATION_CONTEXT_CHANGED";
+      throw error;
+    }
     stopIfAborted();
     let result;
     try {
@@ -335,16 +420,28 @@ export class Layer0 {
     }
     // Evidence-service failure cannot erase a callback result already obtained.
     // Preserve the same executed_unattested contract for custom transports too.
+    const outputBinding = bindCallbackResult(result);
     let attestation = null;
     try {
       attestation = await this._attest(
         action,
         inputs,
         escalated ? { ...decision, approval } : decision,
-        inputsHash
+        inputsHash,
+        outputBinding,
+        binding
       );
     } catch { /* The effect is retained below; no automatic retry or attestation. */ }
-    const attested = Boolean(attestation);
+    let attestationCheck = checkReturnedAttestation(attestation, binding, outputBinding);
+    // A mutable callback object may change while evidence retrieval is pending.
+    // Retain it, but never label its earlier fingerprint as matching this result.
+    if (outputBinding.state === "HASHED") {
+      const returnedBinding = bindCallbackResult(result);
+      if (returnedBinding.sha256 !== outputBinding.sha256) {
+        attestationCheck = Object.freeze({ ...attestationCheck, state: "OUTPUT_CHANGED_AFTER_CAPTURE" });
+      }
+    }
+    const attested = attestationCheck.state === "RECEIVED_UNVERIFIED";
     // Missing attestation is a distinct outcome, never a silent success.
     // An abort after dispatch must not erase a possibly completed effect.
     const status = !attested
@@ -353,18 +450,22 @@ export class Layer0 {
         ? "executed_unapproved"
         : "attested";
     return { result, decision, approval, attestation, attested, status,
+      outputBinding, attestationCheck,
       cancellationRequested: signal?.aborted === true };
   }
 
   // §4 build + sign an A2A attestation envelope via the gateway
-  async _attest(action, inputs, decision, inputsHash = sha256(inputs)) {
+  async _attest(action, inputs, decision, inputsHash = sha256(inputs), outputBinding = null, binding = null) {
+    const identity = binding ? binding.identity : this.identity;
+    const endpoint = binding ? binding.endpoint : this.endpoint;
     return this._post("/api/a2a/route", {
-      from: { endpoint: this.endpoint, party: this.identity },
+      from: { endpoint, party: identity },
       to: { endpoint: "csoai://ledger" },
       intent: "attestation",
       action,
-      payload: { inputsHash, decisionState: decision?.state || null },
-      identity: this.identity,
+      payload: { inputsHash, decisionState: binding ? binding.decisionState : decision?.state || null,
+        outputsHash: outputBinding?.sha256 ?? null, outputEncoding: outputBinding?.encoding ?? null },
+      identity,
     })
       .then((r) => r.envelope || null)
       .catch(() => null);

@@ -9,6 +9,20 @@ const OUTCOMES = new Set([...COMPLETED, "FETCH_FAILED", "UNCONFIRMED"]);
 const HASH = /^[0-9a-f]{64}$/;
 const SCHEMAS = new Set(["csoai.claim-maintenance-check/0.1", "csoai.claim-maintenance-check/0.2"]);
 
+// Validate real calendar/clock values before lexical ordering. All accepted instants
+// have one fixed-width UTC-second representation; no normalization or guessed zone.
+const validDay = (value) => typeof value === "string" &&
+  /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+  Number.isFinite(Date.parse(value + "T00:00:00Z")) &&
+  new Date(value + "T00:00:00Z").toISOString().slice(0, 10) === value;
+const validInstant = (value) => typeof value === "string" &&
+  /^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\dZ$/.test(value) &&
+  validDay(value.slice(0, 10));
+const requireInstant = (value, field) => {
+  if (!validInstant(value)) throw new Error(`invalid ${field}: expected a real UTC-second timestamp`);
+};
+
+
 // maintenance_due.py hashes Python json.dumps(sort_keys=True, ensure_ascii=True).
 // All schema keys are ASCII and all numeric ledger fields are integers.
 export function ledgerCanonical(value) {
@@ -38,8 +52,8 @@ export function verifyOutcomes(raw, capture) {
     if (!SCHEMAS.has(row.schema) || row.seq !== seq || row.prev_hash !== prev ||
         !HASH.test(row_sha256 ?? "") || digest(ledgerCanonical(body)) !== row_sha256 ||
         typeof row.registry_id !== "string" || typeof row.registry_url !== "string" ||
-        !/^\d{4}-\d{2}-\d{2}$/.test(row.due ?? "") ||
-        !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(row.checked_at ?? "") ||
+        !validDay(row.due) ||
+        !validInstant(row.checked_at) ||
         !OUTCOMES.has(row.outcome) || !Array.isArray(row.claim_ids_read) ||
         !Array.isArray(row.claims_fetch_failed) || !Array.isArray(row.claims_unconfirmed)) {
       throw new Error(`invalid check chain/schema at seq ${seq}`);
@@ -59,7 +73,15 @@ export function readOutcomes(dir) {
 }
 
 export function scheduledReadState({ next, asOf, registry, claimIds, ledger }) {
-  if (!next) return { state: "UNSCHEDULED", evidence: null };
+  requireInstant(asOf, "asOf");
+  if (next === null || next === undefined) return { state: "UNSCHEDULED", evidence: null };
+  requireInstant(next, "next");
+  // This function is exported: reject malformed rows even when a caller did not
+  // obtain its ledger through verifyOutcomes(). These checks confer no provenance.
+  if (!Array.isArray(ledger?.rows)) throw new Error("invalid check ledger rows");
+  for (const row of ledger.rows) {
+    if (!validDay(row?.due) || !validInstant(row?.checked_at)) throw new Error("invalid check ledger time");
+  }
   if (next > asOf) return { state: "SCHEDULED", evidence: null };
   const matches = ledger.rows.filter((row) => row.registry_id === registry.id && row.registry_url === registry.url &&
     row.registry_sha256 === registry.sha256 && row.check === "scheduled-read" && row.due <= next.slice(0, 10) &&
