@@ -2,18 +2,18 @@
   "schema": "csoai.storefront/0.1",
   "name": "Council of AI — Product Catalog",
   "register": "measurement, not certification — assessed, not certified",
-  "updated": "2026-11-02",
+  "updated": "2026-11-10",
   "board": {
     "note": "The live measurement board lives at /api/gspc and /arena-scoreboard. No count is frozen here: cite totals.public_count, which carries the slot count and the measured count together — a slot with no run behind it is published UNMEASURED and is never counted as a measurement. Jail is MEASURED with separation TIE. Slot-15 / human-vs-ai are measured in-lane only — not board-quotable."
   },
   "products": [
     {
       "id": "claimguard",
-      "name": "ClaimGuard",
+      "name": "ClaimGuard — scope reference",
       "status": "live",
       "href": "/claimguard",
       "payment": null,
-      "note": "measurement not certification — deterministic claim-vs-signed-artifact checking"
+      "note": "Reference page for measurement scope, limitations and corrections. The legacy ClaimGuard URL currently redirects to /honesty/. Use GSPC Verify for supported record checks; this entry does not claim a standalone checker."
     },
     {
       "id": "gspc-mcp",
@@ -45,15 +45,15 @@
       "status": "live",
       "href": "/gspc-arena",
       "payment": null,
-      "note": "measurement not certification — live measurement scoreboard"
+      "note": "Practice decisions and inspect supporting evidence. Local practice results do not become model measurements, reviewer qualifications or execution authority."
     },
     {
       "id": "arena-scoreboard",
-      "name": "Signed Per-Axis Leaderboard",
+      "name": "Per-axis measurement board",
       "status": "live",
-      "href": "/arena-scoreboard",
+      "href": "/gspc-scoreboard/",
       "payment": null,
-      "note": "measurement not certification — signed per-axis rankings"
+      "note": "Dated per-axis results with method and evidence links. Measured, tied, separation-untested and unmeasured states remain distinct; this is not an overall safety ranking."
     },
     {
       "id": "article-50-pack",
@@ -116,7 +116,7 @@
     }
   },
   "measurement_artefacts": {
-    "note": "Where the measurements live and when each one was last produced. Read the state before you read the age: a dated artefact that is one week old is current, one that is twelve weeks old is not. Every artefact here is measurement, not certification.",
+    "note": "Read the exact version, original observation date, source coverage and declared cadence of each artifact. A catalogue or repository update is not a new measurement. Freshness must be assessed for the specific product and use; historical or superseded data remains labelled.",
     "live": [
       {
         "id": "x402-bazaar-conformance",
@@ -170,5 +170,250 @@
     "href": "/gspc-verify",
     "status": "free",
     "note": "Verification is always free. Cite live totals.public_count — no count is frozen in this catalogue."
-  }
+  },
+  "journey_note": "Task navigation for existing products, data and interfaces. These are not additional SKUs, completed workflows or new authority. The catalogue edition dates the packaging, not the underlying observations.",
+  "journeys": [
+    {
+      "id": "measure",
+      "title": "Inspect generated measurements",
+      "mode": "Published evidence",
+      "summary": "Choose an instrument, inspect its dated run and retrieve the supporting record.",
+      "input": "A named model, endpoint or other supported subject and the question to examine.",
+      "output": "A scoped result with method, observation date, evidence references and explicit unknowns.",
+      "href": "/gspc-scoreboard/",
+      "action": "Open the measurement board",
+      "steps": [
+        "Select the applicable axis and subject.",
+        "Read the sample unit, method and original observation time.",
+        "Open the supporting artifact and retain its exact identifier."
+      ],
+      "boundary": "A published slot is not a completed run. This view does not start a fresh measurement.",
+      "recovery": "Keep the original record and its source/version; use Verify for supported signed records.",
+      "product_ids": [
+        "gspc-arena",
+        "arena-scoreboard",
+        "benchmarks"
+      ],
+      "secondary": {
+        "href": "/api/gspc",
+        "label": "Machine-readable board"
+      }
+    },
+    {
+      "id": "verify",
+      "title": "Verify and keep a record",
+      "mode": "Free verification",
+      "summary": "Check a supported record without turning a signature into a safety claim.",
+      "input": "The exact supported card or evidence packet and its expected subject.",
+      "output": "A verification result that separates valid, invalid and uncheckable conditions.",
+      "href": "/gspc-verify/",
+      "action": "Open the verifier",
+      "steps": [
+        "Select the original record, not a screenshot of its verdict.",
+        "Inspect the supported signature, identity and inclusion checks.",
+        "Retain the original bytes, record identifier and verification scope."
+      ],
+      "boundary": "Integrity is not truth, current authority, certification or evidence that a payment occurred.",
+      "recovery": "Keep the original bytes. On an unsupported format or failed read, preserve UNCHECKABLE instead of calling it false.",
+      "product_ids": [
+        "gspc-verify",
+        "claimguard"
+      ],
+      "secondary": null
+    },
+    {
+      "id": "maintain",
+      "title": "Inspect changes and corrections",
+      "mode": "Dated source history",
+      "summary": "Follow a claim over time without silently rewriting its earlier evidence.",
+      "input": "A claim, subject or source identifier and the versions being compared.",
+      "output": "Available change, withdrawal, unavailable-source and correction records.",
+      "href": "/dashboard?tab=research",
+      "action": "Open continuous research",
+      "steps": [
+        "Locate the relevant published source or claim.",
+        "Compare its original and subsequent records and their dates.",
+        "Inspect the existing correction or recheck status."
+      ],
+      "boundary": "A new report date does not prove a new source read. Source reachability is not a verified incident.",
+      "recovery": "Preserve predecessor and successor references; distinguish unresolved reads from confirmed changes.",
+      "product_ids": [
+        "benchmarks"
+      ],
+      "secondary": {
+        "href": "/api/corrections",
+        "label": "Published correction records"
+      }
+    },
+    {
+      "id": "learn",
+      "title": "Learn from evidence",
+      "mode": "Free practice",
+      "summary": "Practise interpreting a record before preparing a human-review draft.",
+      "input": "An applicable axis and its loaded, dated source record.",
+      "output": "Source-linked practice and a local proposal draft with its limitations.",
+      "href": "/dashboard?tab=evidence-learning",
+      "action": "Open Evidence & Learning",
+      "steps": [
+        "Inspect the source date, status and unknowns.",
+        "Complete a practice question and inspect the explanation.",
+        "Save a source-bound draft or return to the original evidence."
+      ],
+      "boundary": "Practice, points and draft completeness do not establish professional competence or grant authority.",
+      "recovery": "Keep source pins and local work. Failed refreshes must not be treated as new evidence.",
+      "product_ids": [
+        "benchmarks"
+      ],
+      "secondary": {
+        "href": "/academy/exercises/",
+        "label": "Reproduce published exercises"
+      }
+    },
+    {
+      "id": "connect",
+      "title": "Use GSPC in an AI host",
+      "mode": "Host-specific integration",
+      "summary": "Bring the existing evidence reader into a supported tool or use the browser fallback.",
+      "input": "A compatible host and permission to enable the integration in that workspace.",
+      "output": "The documented read-only evidence interface; installed-host results remain separately qualified.",
+      "href": "/connect-gspc/",
+      "action": "Open connection instructions",
+      "steps": [
+        "Choose the documented host or free MCP reader.",
+        "Read a named subject and inspect the evidence returned.",
+        "Retain the result, then disconnect or revoke access through the host."
+      ],
+      "boundary": "A listing or tool manifest is not an installation, universal platform support or authority to execute.",
+      "recovery": "Use the public verifier when the host is unavailable. Preserve evidence IDs rather than copying only summaries.",
+      "product_ids": [
+        "gspc-mcp"
+      ],
+      "secondary": {
+        "href": "/.well-known/mcp.json",
+        "label": "Published MCP manifest"
+      }
+    },
+    {
+      "id": "review",
+      "title": "Prepare a human review",
+      "mode": "Human authority separate",
+      "summary": "Make the proposal and missing evidence understandable to the responsible person.",
+      "input": "An exact source-bound proposal, intended purpose and reviewer role.",
+      "output": "A draft and, only where actually recorded, a separate reviewer disposition.",
+      "href": "/dashboard?tab=staff",
+      "action": "Open staff and human review",
+      "steps": [
+        "Inspect the subject, arguments, destination and evidence revision.",
+        "Check the real reviewer role and the service limitations.",
+        "Keep the actual disposition distinct from any permitted execution and observed effect."
+      ],
+      "boundary": "An operator label, shared token, practice answer or machine signature is not proof of an authenticated human decision.",
+      "recovery": "Keep HOLD or UNKNOWN where identity, authority, storage or an effect has not been established.",
+      "product_ids": [
+        "gspc-verify"
+      ],
+      "secondary": {
+        "href": "/dashboard?tab=him",
+        "label": "H.I.M. explanation workspace"
+      }
+    },
+    {
+      "id": "data",
+      "title": "Reuse a published dataset",
+      "mode": "Component-specific rights",
+      "summary": "Find the data version and its reuse terms before incorporating it into another workflow.",
+      "input": "A named dataset, intended purpose and required period or version.",
+      "output": "The published data and provenance, or an explicit access/licensing enquiry where required.",
+      "href": "/licence-manifest/",
+      "action": "Inspect licences and data sources",
+      "steps": [
+        "Select the exact component and published revision.",
+        "Check code, data and model rights separately.",
+        "Retain the source, version, attribution and correction references."
+      ],
+      "boundary": "Public visibility is not blanket commercial or training permission; private customer data is not included.",
+      "recovery": "Keep the permitted artifact and its digest. Use the existing enquiry route for rights or delivery questions.",
+      "product_ids": [
+        "benchmarks"
+      ],
+      "secondary": {
+        "href": "https://huggingface.co/csoai",
+        "label": "Council on Hugging Face"
+      }
+    },
+    {
+      "id": "sector",
+      "title": "Inspect a sector evidence pack",
+      "mode": "Scoped technical evidence",
+      "summary": "Examine what a particular test observed without turning a mapping into a compliance verdict.",
+      "input": "The relevant system, use case, jurisdiction and provision or technical question.",
+      "output": "Published observations, applicable method references and unresolved coverage.",
+      "href": "/packs/eu-article-50/",
+      "action": "Open content-marking evidence",
+      "steps": [
+        "Read what the pack actually tests.",
+        "Inspect the original sample, method, evidence and date.",
+        "Keep technical findings separate from the responsible professional review."
+      ],
+      "boundary": "A technical marking check is not certification, insurance cover, legal advice or a whole-law assessment.",
+      "recovery": "Preserve the tested source/version; use the current coverage map to see untested and hash-only entries.",
+      "product_ids": [
+        "article-50-pack",
+        "east-west"
+      ],
+      "secondary": {
+        "href": "/mechanism/",
+        "label": "Frozen-corpus coverage and limits"
+      }
+    },
+    {
+      "id": "request",
+      "title": "Request a defined deliverable",
+      "mode": "Scope before payment",
+      "summary": "Use the existing commission or enquiry path for the output you actually need.",
+      "input": "A named subject, optional applicable axis, intended use and requested output.",
+      "output": "A request-attestation receipt and on-file evidence where supported; fresh work needs its own agreed scope.",
+      "href": "/dashboard?tab=measured",
+      "action": "Open the request workspace",
+      "steps": [
+        "Check whether the route supplies existing evidence or new work.",
+        "Review the actual terms for that exact request.",
+        "Retain the request, receipt, delivered artifact and recovery status separately."
+      ],
+      "boundary": "A payment challenge or receipt does not prove a fresh run, completed delivery or recipient acceptance. No automatic second payment on an unknown result.",
+      "recovery": "Recover the original result through the supported account/receipt path. An unresolved outcome requires reconciliation, not a new purchase.",
+      "product_ids": [
+        "ras-booking"
+      ],
+      "secondary": {
+        "href": "/contact?arm=ledger",
+        "label": "Discuss an evidence scope"
+      }
+    },
+    {
+      "id": "practice",
+      "title": "Explore simulations and practice",
+      "mode": "Simulation boundary",
+      "summary": "Use the existing arena without confusing a game result with a measurement.",
+      "input": "A selected published practice task or simulation with its stated rules.",
+      "output": "Local practice feedback or a labelled simulated outcome.",
+      "href": "/gspc-arena/",
+      "action": "Open the practice arena",
+      "steps": [
+        "Read the task, rules and historical-reference limits.",
+        "Run only the supported local practice activity.",
+        "Inspect the feedback and the underlying evidence separately."
+      ],
+      "boundary": "Synthetic opponents, local points and replay are not model calls, training admission, human competence or compliance.",
+      "recovery": "Retain permitted local outputs where offered. Use the canonical board for admitted measurements.",
+      "product_ids": [
+        "gspc-arena",
+        "arena-scoreboard"
+      ],
+      "secondary": {
+        "href": "https://huggingface.co/spaces/csoai/council-coliseum",
+        "label": "Hugging Face practice mirror"
+      }
+    }
+  ]
 }

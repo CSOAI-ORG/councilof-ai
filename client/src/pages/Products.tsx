@@ -1,3 +1,4 @@
+import ProductJourneyGuide from "@/components/ProductJourneyGuide";
 import { Link } from "wouter";
 import { toolSummary } from "@/lib/mcpTools";
 import { useBoardCount } from "@/lib/boardCount";
@@ -107,7 +108,7 @@ const MODULES = [
     name: "Council Academy",
     href: "/academy",
     tag: "Training",
-    what: "A record that a course was completed. It attests learning, never conformity, and is not an accreditation.",
+    what: "Free evidence-literacy practice and reproducible exercises. Local progress and correct answers do not issue credentials or establish professional competence.",
   },
   {
     name: "Request a scoped attestation",
@@ -142,6 +143,8 @@ export default function Products() {
         measurement requirement. Each service identifies its deliverable and coverage.
         Payment does not change a measurement result.
       </p>
+
+      <ProductJourneyGuide />
 
       <section aria-labelledby="products-buying-h" className="mt-8 rounded-2xl border border-emerald-400/30 bg-emerald-950/30 p-6">
         <h2 id="products-buying-h" className="text-xl font-bold">Ask for a defined evidence product</h2>

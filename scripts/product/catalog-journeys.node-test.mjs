@@ -1,0 +1,19 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const catalog=JSON.parse(readFileSync(new URL('../../public/catalog.json',import.meta.url),'utf8'));
+const productIds=['claimguard','gspc-mcp','east-west','gspc-verify','gspc-arena','arena-scoreboard','article-50-pack','benchmarks','mcp-fleet','ras-booking','cobol-bridge'];
+const source=readFileSync(new URL('../../client/src/components/ProductJourneyGuide.tsx',import.meta.url),'utf8');
+const allowedExternal=new Set(['https://huggingface.co/csoai','https://huggingface.co/spaces/csoai/council-coliseum']);
+function safeHref(value){return typeof value==='string'&&((value.startsWith('/')&&!value.startsWith('//')&&!/[\\\s]/.test(value))||allowedExternal.has(value));}
+test('existing catalogue schema and exact product identities are preserved',()=>{assert.equal(catalog.schema,'csoai.storefront/0.1');assert.deepEqual(catalog.products.map(p=>p.id),productIds)});
+test('task identities are unique and do not become more SKUs',()=>{assert.equal(catalog.journeys.length,10);assert.equal(new Set(catalog.journeys.map(j=>j.id)).size,10);assert.match(catalog.journey_note,/not additional SKUs/)});
+for(const j of catalog.journeys){
+ test(`${j.id}: input, output, three steps, limits and recovery are explicit`,()=>{for(const key of ['id','title','mode','summary','input','output','action','boundary','recovery'])assert.ok(typeof j[key]==='string'&&j[key].trim().length>0,key);assert.equal(j.steps.length,3);for(const s of j.steps)assert.ok(typeof s==='string'&&s.length>10);assert.ok(j.product_ids.every(id=>productIds.includes(id)))});
+ test(`${j.id}: primary and optional reference links are scoped`,()=>{assert.ok(safeHref(j.href));if(j.secondary){assert.ok(safeHref(j.secondary.href));assert.ok(j.secondary.label.length>0)}});
+}
+test('payments, withdrawal and demo states are not promoted by navigation',()=>{const p=Object.fromEntries(catalog.products.map(p=>[p.id,p]));assert.equal(p['mcp-fleet'].status,'draft');assert.equal(p['ras-booking'].status,'draft');assert.equal(p['ras-booking'].payment.checkout_url,null);assert.equal(p['ras-booking'].payment.status,'paddle_pending');assert.equal(p['cobol-bridge'].status,'demo');assert.ok(catalog.journeys.every(j=>j.href!=='/mcp-fleet'));assert.equal(catalog.verify.status,'free')});
+test('ClaimGuard reference and practice cannot masquerade as a checker or live score',()=>{const p=Object.fromEntries(catalog.products.map(p=>[p.id,p]));assert.match(p.claimguard.note,/does not claim a standalone checker/);assert.match(p['gspc-arena'].note,/practice/i);assert.equal(p['arena-scoreboard'].href,'/gspc-scoreboard/');assert.doesNotMatch(p['arena-scoreboard'].name,/Leaderboard/)});
+test('freshness is assessed per artifact rather than inferred from catalogue date',()=>{assert.match(catalog.measurement_artefacts.note,/not a new measurement/);assert.doesNotMatch(catalog.measurement_artefacts.note,/one week old is current/)});
+test('one canonical source powers an accessible, non-dispatching task view',()=>{assert.match(source,/import catalog from "\.\.\/\.\.\/\.\.\/public\/catalog\.json"/);assert.match(source,/catalog\.journeys\.map/);assert.match(source,/aria-labelledby="product-journeys-heading"/);assert.match(source,/<summary/);assert.match(source,/<h3/);assert.match(source,/focus-visible/);assert.match(source,/min-h-11/);assert.doesNotMatch(source,/dangerouslySetInnerHTML|fetch\(|localStorage|sendBeacon|autoFocus/);assert.match(source,/catalog\.updated/)});
+test('training, identity and paid request boundaries remain separate',()=>{const j=Object.fromEntries(catalog.journeys.map(j=>[j.id,j]));assert.match(j.learn.boundary,/do not establish professional competence/);assert.match(j.review.boundary,/not proof of an authenticated human/);assert.match(j.request.boundary,/No automatic second payment/);assert.match(j.data.boundary,/not blanket commercial or training permission/)});
