@@ -2,6 +2,7 @@
 Combines compatible categorical predictions only. Not an authentication service.
 """
 from __future__ import annotations
+import copy
 import datetime as dt
 import hashlib
 import json
@@ -24,7 +25,9 @@ def stamp(value: str) -> dt.datetime:
     return out.astimezone(dt.timezone.utc)
 
 def number(v: Any) -> bool:
-    return type(v) in (int,float) and math.isfinite(v)
+    if type(v) not in (int,float):return False
+    try:return math.isfinite(v)
+    except (OverflowError,ValueError):return False
 
 def digest(value: Any) -> str:
     return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':'),
@@ -102,7 +105,7 @@ def join(receipts: list[dict], context: dict, *, now: str,
     out={'kind':'COMPATIBLE_PREDICTION_JOIN_REVIEW','method':'weighted-output-mixture/1',
          'state':'ABSTAIN' if abstain else 'PREDICTION_NOT_OBSERVED',
          'label':None if abstain else labels[best],'probabilities':mixed,
-         'context':dict(context),'observed_at':now,'inputs':refs,
+         'context':copy.deepcopy(context),'observed_at':now,'inputs':refs,
          'normalized_weights':normalized,
          'declared_fault_domains':len(set(domains)),
          'independence_status':'NOT_ESTABLISHED','calibration_status':'NOT_ESTABLISHED',
