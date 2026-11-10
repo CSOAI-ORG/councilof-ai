@@ -290,6 +290,21 @@ It does not compare models and it does not rank.</b></p>
 grading rule is imported from the same module the board uses. A third party can re-derive every
 number on this page from the published bytes.</div>
 
+<h2 id="execution-context">Record execution conditions</h2>
+<p>For a paired comparison, retain the model provider, a non-sensitive route alias, the declared
+cyber-access programme and tier, the application/system/tool policy profile, and the generation settings. Pass these
+declarations to the runner with <code>--execution-context context.json</code>. The receipt records
+the context and its SHA-256 alongside the bank, grader and original answers.</p>
+<p>The paired comparator checks these conditions before calculating a comparison. Missing,
+unknown, changed or incompatible context is reported explicitly. Model comparisons require
+matching access and generation conditions; different providers and model identities remain
+visible as the systems being compared.</p>
+<p>To study the same declared model under different cyber-access conditions, use the explicit
+<code>--comparison-mode access-treatment</code> option. Its result describes a configuration
+difference. Context digests protect the recorded bytes; provider approval must be verified
+separately. Keep credentials and private account or workspace identifiers out of these records.</p>
+<p><a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/harness/bench/README.md">Execution-context template and comparison guide</a></p>
+
 <h2>All banks</h2>
 <div class="wrap">
 <table>
@@ -557,6 +572,8 @@ The runner writes this for you. A submission is a **\`result.json\`** whose:
 | \`grader\` | which rule graded it — \`gspc-top100.mill_hub_queue.read_label\` |
 | \`rows[].prompt_sha256\` | per-item: the exact prompt, hashed |
 | \`rows[].raw answer\` | per-item: what the model actually said |
+| \`execution_context\` | declared provider/route, access conditions, safeguard profile, generation settings and provenance; required for paired inference |
+| \`execution_context_sha256\` | integrity digest of the recorded context; does not establish provider approval |
 
 ## 3. What we will check before publishing anything
 
@@ -568,6 +585,15 @@ The runner writes this for you. A submission is a **\`result.json\`** whose:
    reported as UNMEASURED, not as a low score.
 4. The model id is resolvable and its revision is pinned, so the row names a model and not a moving target.
 5. The canary row was excluded. It is a contamination tripwire, never a task.
+6. Before a paired comparison, the execution contexts are complete and compatible with the
+   declared comparison mode. Historical receipts with missing or unknown context remain
+   readable, but do not qualify for paired inference. Do not fill missing conditions by guessing.
+
+Use \`--execution-context context.json\` when creating a receipt. The default comparator mode
+compares models with matching access and generation conditions. An intentional comparison of
+one declared model under different cyber-access settings uses \`--comparison-mode access-treatment\`
+and reports a configuration difference. See the
+[execution-context template and comparison guide](https://github.com/CSOAI-ORG/councilof-ai/blob/master/harness/bench/README.md).
 
 If any of these fails, the submission is not published and the failure is reported to you. A run that
 cannot be reproduced is not a slower result — it is not a result.
