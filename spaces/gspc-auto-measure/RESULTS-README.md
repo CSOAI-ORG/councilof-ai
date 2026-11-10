@@ -3,6 +3,11 @@ license: cc-by-4.0
 pretty_name: GSPC Auto-Measure Space results (append-only run log)
 tags: [gspc, council-of-ai, measurement, zerogpu, auto-measure]
 size_categories: [n<1K]
+configs:
+  - config_name: default
+    data_files:
+      - split: train
+        path: results.jsonl
 ---
 
 # GSPC Auto-Measure results

@@ -274,3 +274,19 @@ def test_sdk_local_missing_entry_is_not_remote_absence(tmp_path):
     with pytest.raises(LocalEntryNotFoundError):
         driver.archive_receipt(hub, offline_cache_miss, snapshot, fixture_receipt(), SimpleNamespace)
     assert hub.calls == 0
+
+
+def test_dataset_default_reads_only_jsonl_not_provenance_or_duplicate_receipts(tmp_path):
+    from datasets import load_dataset
+
+    archive = tmp_path / "archive"
+    archive.mkdir()
+    (archive / "README.md").write_bytes((driver.SPACE_SOURCE / "RESULTS-README.md").read_bytes())
+    row = {"model": "fixture", "bank": "fixture", "accuracy": 0.5}
+    (archive / "results.jsonl").write_text(json.dumps(row) + "\n")
+    (archive / "SOURCE_REVISION.json").write_text('{"schema":"source-provenance","files":{"README.md":"hash"}}\n')
+    receipts = archive / "receipts"
+    receipts.mkdir()
+    (receipts / "unique-receipt.json").write_text(json.dumps(row) + "\n")
+    dataset = load_dataset(str(archive), split="train")
+    assert dataset.to_list() == [row]
