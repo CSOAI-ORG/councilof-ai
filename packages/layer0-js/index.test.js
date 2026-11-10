@@ -17,7 +17,24 @@ class Stub extends Layer0 {
     this.ran = 0;
   }
   async gate() { return { state: this.state, reason: "policy" }; }
-  async _attest() { return this.attest ? { envelope: { sig: "x" } } : null; }
+  async _attest(action, inputs, decision, inputsHash, output, binding) {
+    if (!this.attest) return null;
+    // Deliberately unsigned synthetic envelope. Structural receipt acceptance is
+    // not signature verification, trusted issuer evidence or human authority.
+    const canon = value => Array.isArray(value) ? "[" + value.map(canon).join(",") + "]"
+      : value && typeof value === "object" ? "{" + Object.keys(value).sort()
+        .map(key => JSON.stringify(key) + ":" + canon(value[key])).join(",") + "}" : JSON.stringify(value);
+    const from = { endpoint: binding.endpoint, party: binding.identity };
+    const to = { endpoint: "csoai://ledger" };
+    const payload = { inputsHash, decisionState: binding.decisionState,
+      outputsHash: output.sha256, outputEncoding: output.encoding };
+    return { v: "csoai.a2a/0.1", id: "synthetic-receipt", ts: "2026-11-10T00:00:00Z",
+      from, to, intent: "attestation", action, payload,
+      policy: { decision: binding.decisionState, controls: [], conditions: [], statutory_basis: null },
+      episode: { hash: "sha256:" + crypto.createHash("sha256")
+        .update(canon({ from, to, action, payload })).digest("hex"), anchor: "fixture-only" },
+      sig: { alg: "Ed25519", kid: "fixture-untrusted", value: Buffer.alloc(64).toString("base64") } };
+  }
 }
 
 test("escalate without an approval receipt does not run", async () => {
@@ -38,6 +55,8 @@ test("escalate with an approval receipt runs and is attested", async () => {
   assert.equal(out.result, "ok:APR-1");
   assert.equal(out.attested, true);
   assert.equal(out.status, "attested");
+  assert.equal(out.attestationCheck.state, "RECEIVED_UNVERIFIED");
+  assert.equal(out.attestationCheck.signatureVerification, "NOT_PERFORMED");
 });
 
 test("the legacy escape flag cannot bypass an escalation", async () => {

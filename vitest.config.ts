@@ -69,6 +69,7 @@ export const NODE_TEST_FILES = [
   // The published-pin liveness gate: a node:test file vitest cannot collect, named here so
   // pr-gates.yml runs it under `node --test` instead of leaving it collected-and-red.
   'scripts/review/published-pins-liveness.test.mjs',
+  'scripts/review/receipt-clock-integrity.node-test.mjs',
   'scripts/sitemap-withdrawal.node-test.mjs',
   'scripts/surface/axis-index-truth.node-test.mjs',
   'scripts/surface/facts-scope.test.mjs',

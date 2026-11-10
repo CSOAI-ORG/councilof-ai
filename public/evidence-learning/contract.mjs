@@ -48,7 +48,7 @@ export function measurementTimeLabel(time) {
     Number.isFinite(Date.parse(value+'T00:00:00Z')) &&
     new Date(value+'T00:00:00Z').toISOString().slice(0,10)===value;
   const instant=value=>typeof value==='string' && day(value.slice(0,10)) &&
-    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(value) &&
+    /^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)$/.test(value) &&
     Number.isFinite(Date.parse(value));
   if(time?.state==='EXACT' && instant(time.observed_at)) return time.observed_at+' (exact time reported)';
   if(time?.state==='DAY' && day(time.observed_on))
@@ -82,7 +82,7 @@ export const STAGES=['observe','learn','practice','propose','review','platforms'
 export function captureForStorage(capture){
  if(!capture||capture.url!==publicURL('/api/gspc')||!/^[a-f0-9]{64}$/.test(capture.sha256||'')||!Number.isFinite(Date.parse(capture.readAt)))throw Error('A dated public-source capture is required.');
  validateBoard(capture.data);
- return {url:capture.url,readAt:capture.readAt,sha256:capture.sha256,data:{schema:capture.data.schema,totals:structuredClone(capture.data.totals),axes:capture.data.axes.map(a=>Object.fromEntries(['axis','task','status','n','bench','kind','family','separation','measurement_time'].filter(k=>a[k]!==undefined).map(k=>[k,a[k]])))}};
+ return {url:capture.url,readAt:capture.readAt,sha256:capture.sha256,data:{schema:capture.data.schema,totals:structuredClone(capture.data.totals),axes:structuredClone(capture.data.axes.map(a=>Object.fromEntries(['axis','task','status','n','bench','kind','family','separation','measurement_time'].filter(k=>a[k]!==undefined).map(k=>[k,a[k]]))))}};
 }
 export function reviewReadiness(proposal,capture){const missing=[];for(const [k,l] of [['task','Task or public claim'],['target','Exact target'],['change','Proposed change and validation']])if(!proposal?.[k]?.trim())missing.push(l);try{captureForStorage(capture)}catch{missing.push('A pinned public-source capture')}return {ready:missing.length===0,missing};}
 export function normalizeLearningState(value){

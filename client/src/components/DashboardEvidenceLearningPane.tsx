@@ -22,7 +22,7 @@ export default function DashboardEvidenceLearningPane() {
       script = document.createElement("script");
       script.type = "module";
       // Asset revision changes with rendered code; local state stays at protocol0.2.0.
-      script.src = "/evidence-learning/element.js?v=0.2.0&rev=23540167dc02";
+      script.src = "/evidence-learning/element.js?v=0.2.0&rev=f3cf19aabf8b";
       script.dataset.councilEvidenceLearning = "1";
     }
     script.addEventListener("load", loaded);
