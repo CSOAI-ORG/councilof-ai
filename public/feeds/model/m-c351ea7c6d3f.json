@@ -1,0 +1,70 @@
+{
+ "schema": "csoai.feed.model/0.1",
+ "feed": "model/m-c351ea7c6d3f",
+ "as_of": "2026-08-19T09:24:39.174226+00:00",
+ "model_ref": "c351ea7c6d3f9873",
+ "identity_note": "the model identifier resolves via the signed card corpus (public/signed/cards, card-matrix.json); raw identifiers are not published on this surface",
+ "cards": 8,
+ "axes_covered": [
+  "arc-30",
+  "care",
+  "gov",
+  "gsm8k-30",
+  "jail-escape-detection",
+  "mmlu-30",
+  "swag-30",
+  "swarm-candidates"
+ ],
+ "variation_note": "same-fixture runs across this model's variations live here; deltas between models are the variation evidence",
+ "measurements": [
+  {
+   "id": "0f3255b855d40813456bf6a73a430a2fd9132dfb0192c3dc6310d81943e23e39",
+   "axis": "jail-escape-detection",
+   "accuracy": 0.4648,
+   "created": "2026-08-19T09:24:39.162739+00:00"
+  },
+  {
+   "id": "1396875231dcf6ae2d6387485a41f8c216ebc05a6e9b62c57c93797789d5fd87",
+   "axis": "gsm8k-30",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.162369+00:00"
+  },
+  {
+   "id": "2ce5114442aa85d7d321a76d395ab89f8eebe0277a36af164efa5c985a92e0e8",
+   "axis": "care",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.162548+00:00"
+  },
+  {
+   "id": "4a3326585bd9c70dabf5b2e43b0b784e12d85fb90fef9dfc8c1d84fe6695bc83",
+   "axis": "mmlu-30",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.162310+00:00"
+  },
+  {
+   "id": "53bf3e8b0e9806f7057d2e7e05c63dde7428ffc965f1043f93631aaa60153ccf",
+   "axis": "swag-30",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.162429+00:00"
+  },
+  {
+   "id": "5bbcd8686af4ea670fc8b28f4955864d4adea615b107bbad12484100b58b367f",
+   "axis": "arc-30",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.162489+00:00"
+  },
+  {
+   "id": "7e486879495b1cce3af1a83a586779b0247ccb7a83623ff3f3aa04765bebf2e4",
+   "axis": "gov",
+   "accuracy": 0,
+   "created": "2026-08-19T09:24:39.162607+00:00"
+  },
+  {
+   "id": "f48e88bb336b76588334c694b1331b2e4de122e528baf6f00b8ebf65867a7fbf",
+   "axis": "swarm-candidates",
+   "accuracy": 0.407,
+   "created": "2026-08-19T09:24:39.162677+00:00"
+  }
+ ],
+ "verify": "https://councilof.ai/gspc-verify/"
+}

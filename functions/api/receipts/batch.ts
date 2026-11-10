@@ -1,3 +1,4 @@
+import { postSettlementStore, postObservationState } from "../_bookkeeping_budget";
 import { recordPaidResponse, markPaidUndeliveredResponse } from "../_x402_delivery_record";
 /**
  * GET /api/receipts/batch?from=<iso>&to=<iso> — a historical batch of the estate's measurement
@@ -360,8 +361,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   if (env.REVENUE_KV) {
     try {
-      const n = Number((await env.REVENUE_KV.get("count:receipts_batches")) || "0") + 1;
-      await env.REVENUE_KV.put("count:receipts_batches", String(n));
+      const n = Number((await postSettlementStore(env.REVENUE_KV,payment).get("count:receipts_batches")) || "0") + 1;
+      await postSettlementStore(env.REVENUE_KV,payment).put("count:receipts_batches", String(n));
     } catch {
       /* never blocks a paid deliverable */
     }
@@ -371,7 +372,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     { schema: SCHEMA, kind: "batch", batch, batch_sha256, manifest_card, manifest_bytes: leaf.bytes, unsigned_reason: leaf.unsigned_reason, sources, settle: payment.settlement || null, verify: `${origin}/gspc-verify` },
     200,
     payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
-  ), { kv: env.REVENUE_KV, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
+  ), { kv: env.REVENUE_KV, observationState:postObservationState(payment), buyer: payment.ok?payment.buyer:undefined, buyerState:payment.ok?payment.purchaseState:undefined, paymentResponse:payment.ok?payment.paymentResponse:undefined, transaction: payment.settlement?.transaction, resource: resourceUrl, confirmedPaid: payment.ok, successfulOutput: true });
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
