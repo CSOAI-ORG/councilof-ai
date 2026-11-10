@@ -1,7 +1,7 @@
 {
  "schema": "csoai.interop-file-index/0.2",
- "as_of": "2026-11-09T22:41:15Z",
- "source_commit": "035aea9a879b7ff6f6094b385c2261a16d3a5cc7",
+ "as_of": "2026-11-10T07:42:45Z",
+ "source_commit": "ca5ff304cf1766ee73d84c49fc684631deaae113",
  "what_this_is": "Every file the estate's committed tree publishes under /interop/, with its size, its sha256 and how it is served. Built by reading the tree, so it is a measurement, not a list of intentions. Three served states occur, because there are three \u2014 a path routed to the mirror is not the same path as one the estate serves from its retired-bytes archive, and a fourth state (retired-bytes-absent) is reserved for a retired record the archive does not hold, which is not emitted because the archive is a deploy-time artefact and naming its membership here would make this index stale on every deploy.",
  "how_to_verify": "sha256 is the digest of the file's bytes as published. Fetch the path and hash it; on a row whose served_bytes reads 'as-published', a match means you hold what the estate published. Three things to know when it does not match: the digest is of the bytes at THIS index's source_commit, and the live site serves the bytes of the currently DEPLOYED commit, so the two agree once that commit is deployed; for pages-served HTML the digest is over the BUILT file, which carries the workspace-launcher script the build injects; and the EDGE rewrites some HTML in transit, so on a row whose served_bytes reads 'edge-transformed' or 'edge-transformed-per-request' the bytes the site serves are NOT the bytes published here, and on a 'per-request' row they differ on every fetch, so no digest of them can be reproduced by anyone, including us. A row whose served state is hf-mirror is a different case again: the bytes come from the HuggingFace evidence mirror, which is a SEPARATE HOST whose membership this index does not record, so the row's digest is checkable only while the mirror still holds the file. For retired-bytes paths the digest is of the canonical bytes, which the archive copies verbatim.",
  "retired": "A retired record is HISTORICAL evidence of a past measurement, never current proof. The estate's server marks these with the response header x-evidence-state: retired-or-invalid-historical-bytes. BEING RETIRED IS NOT THE SAME AS BEING UNREACHABLE: a retired path that is served answers 200 and its bytes verify against the sha256 below; a retired path that is not served answers 404. The `served` field says which.",
@@ -17,20 +17,20 @@
   "edge-transformed-per-request": "the edge rewrites this markup and the rewrite is randomised per request, so the bytes the site serves differ on EVERY fetch; no digest of them can be reproduced, by a reader or by the estate"
  },
  "counts": {
-  "files": 16374,
-  "bytes": 259518024,
+  "files": 16376,
+  "bytes": 259538388,
   "by_served": {
-   "pages": 3128,
+   "pages": 3130,
    "retired-bytes": 6,
    "hf-mirror": 13240
   },
   "by_served_bytes": {
-   "as-published": 16373,
+   "as-published": 16375,
    "edge-transformed-per-request": 1
   },
   "digests_taken_from_the_built_tree": 0,
   "digests_taken_from_the_injectors_transform": 53,
-  "digests_taken_from_the_tree_bytes": 3075,
+  "digests_taken_from_the_tree_bytes": 3077,
   "digests_not_comparable_no_built_tree": 0,
   "excluded_the_index_itself": 1,
   "excluded_not_present_in_the_tree": 0
@@ -112000,23 +112000,30 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/watchdog-intake/20261109T200419Z.json",
+   "bytes": 18780,
+   "sha256": "50653a17ea89bd55d641e1c8318800060a10cb17bf5f48795330f04a58906b42",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/watchdog-intake/_index.json",
    "bytes": 10670,
-   "sha256": "eba84364bdc086a9acdcafa7f62e43ecbf453abc20e835642cf6ffa267205d6a",
+   "sha256": "a8159f062b79227f56e1a056218100b004261f94e217bf02019aad8779a85b7d",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/watchdog-intake/charter-feed.json",
    "bytes": 67324,
-   "sha256": "97572f91e7d98062ee95c336d2aa9018eb90395cfacf4860cd6ee2702a8c9e1d",
+   "sha256": "a43c69a46e259f9220dd25f7ad355cce5e67217089ab6aa97311d3ab00395749",
    "served": "pages",
    "served_bytes": "as-published"
   },
   {
    "path": "/interop/watchdog-intake/latest.json",
    "bytes": 318,
-   "sha256": "6ef00442eb034b555686398f5315f1e1ab4427581bcc622032e1f5a0cfc35455",
+   "sha256": "10f636a429feee07d28f5dba85f358611581c660453b64a3d63a5dd1c06447e2",
    "served": "pages",
    "served_bytes": "as-published"
   },
@@ -114137,6 +114144,13 @@
    "served_bytes": "as-published"
   },
   {
+   "path": "/interop/x402-trust/20261109T223748Z.json",
+   "bytes": 1585,
+   "sha256": "81a58f2558857e2c98552550f2eae536fa8c853f1a83c2b8d16ec66633ab4f48",
+   "served": "pages",
+   "served_bytes": "as-published"
+  },
+  {
    "path": "/interop/x402-trust/index.html",
    "bytes": 1940,
    "sha256": "3a025483c48fcb19b7d57ce87378d0f5234af085789ed8ecbf8b7756d681a1cd",
@@ -114145,8 +114159,8 @@
   },
   {
    "path": "/interop/x402-trust/latest.json",
-   "bytes": 1586,
-   "sha256": "accabf1529dbdb6d181993b55d3cee5ef5dc1f9f60056457ffef2e0154da63c9",
+   "bytes": 1585,
+   "sha256": "81a58f2558857e2c98552550f2eae536fa8c853f1a83c2b8d16ec66633ab4f48",
    "served": "pages",
    "served_bytes": "as-published"
   },
