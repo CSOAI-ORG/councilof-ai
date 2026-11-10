@@ -25,7 +25,7 @@ class ToolTests(unittest.TestCase):
         out=t.academy_correction();self.verify(out);self.assertTrue(out['stale_revision_rejected'])
     def test_question_view_and_choice_binding(self):
         text,rev,packet=t.question_view('claim-maintenance','ai-software','xp-not-authority')
-        self.assertIn('A.',text);self.assertIn('D.',text);self.assertEqual(rev,self.rev);self.assertEqual(json.loads(packet)['axis'],'claim-maintenance')
+        self.assertIn('A.',text);self.assertIn('D.',text);self.assertEqual(rev,b.lesson_packet()['lesson_revision']);self.assertEqual(json.loads(packet)['axis'],'claim-maintenance')
         self.assertNotIn('"answer":',packet)
     def test_unknown_case_and_revision_fail_before_event(self):
         for kwargs in [{'case_id':'not-a-case','registry_revision':self.rev},{'registry_revision':'0'*64},{'answer':True,'registry_revision':self.rev}]:

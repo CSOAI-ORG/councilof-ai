@@ -12,7 +12,7 @@ def mount_learning_tab(json_tool):
             industry=gr.Dropdown([(p['title'],pid) for pid,p in registry['industry_profiles'].items()],value='ai-software',label='Proposed educational context')
         case=gr.Dropdown([(c['title'],c['id']) for c in cases],value='xp-not-authority',label='Original synthetic exercise')
         question=gr.Textbox(label='Exercise and answer choices',lines=13,interactive=False)
-        revision=gr.Textbox(label='Displayed source/lesson revision',interactive=False,value='')
+        revision=gr.Textbox(label='Displayed scoped lesson revision',interactive=False,value='')
         packet=gr.Code(language='json',label='Original path, source-reading check and limits',interactive=False)
         def show(a,i,c):
             try:return question_view(a,i,c)

@@ -53,7 +53,7 @@ class LearningTests(unittest.TestCase):
     def test_answer_keys_not_in_learner_packet(self):
         packet=b.lesson_packet();self.assertNotIn('correct_option',packet['reading_check'])
         self.assertTrue(all('answer' not in c for c in packet['practice_cases']))
-    def test_all20_original_practice_options(self):
+    def test_all_practice_options(self):
         count=0
         for c in self.cases:
             axis=c['axes'][0];row=next(r for r in self.registry['rows'] if r['axis']==axis);industry=row['industry_contexts'][0]
@@ -62,7 +62,7 @@ class LearningTests(unittest.TestCase):
                 out=self.grade([a],axis=axis,industry=industry);count+=1
                 self.assertEqual(out['educational_xp'],10 if answer==c['answer'] else 0)
                 self.assertFalse(any(out['boundaries'].values()))
-        self.assertEqual(count,20)
+        self.assertEqual(count,len(self.cases)*4)
     def test_duplicate_answers_do_not_multiply_xp(self):
         out=self.grade([self.attempt()]*20);self.assertEqual(out['educational_xp'],10);self.assertEqual(out['distinct_attempted'],1)
         self.assertEqual(out['feedback'][0]['attempts_in_request'],20)

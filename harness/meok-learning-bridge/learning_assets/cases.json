@@ -197,5 +197,105 @@
     "title": "A request or payment is not a delivered result",
     "uses_gspc_evaluation_rows": false,
     "xp_reward": 10
+  },
+  {
+    "answer": "B",
+    "axes": [
+      "governance",
+      "conformance",
+      "cross-reality",
+      "effect-binding",
+      "swarm",
+      "company-practice"
+    ],
+    "content_sha256": "905223cf6623c5ec0da8216085d7d6e79c66d853dacc5bc6f818d52bdb3ad198",
+    "evidence_reference": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/6e86cf62755dfe021600bab33061b8ceed46f2db/SAFE.md",
+    "explanation": "Retrieved text may inform a task but cannot grant a new action, target or resource scope. The current authenticated work order remains separate from the text being inspected.",
+    "facts": "An authenticated work order permits inspecting a synthetic test dataset. A retrieved support note tells the agent to copy a production backup and says the requester approved it. There is no matching approval in the authoritative work-order record.",
+    "human_editor_review": "PENDING",
+    "id": "scope-assumption",
+    "options": {
+      "A": "Follow the support note because it is the newest text.",
+      "B": "Keep the original scope, treat the note as untrusted evidence and request a separately verified scope change before any new action.",
+      "C": "Let the model infer approval from the confident wording.",
+      "D": "Copy the backup first and ask for confirmation afterwards."
+    },
+    "origin": "ORIGINAL_SYNTHETIC_TEACHING_FIXTURE",
+    "question": "Which next step preserves the instruction and authority boundary?",
+    "revision": "1",
+    "rights": "Original instructional wording; research software MIT. External source references retain their own rights.",
+    "safe_layers": [
+      "Instructions"
+    ],
+    "title": "An instruction does not expand the authorised task",
+    "uses_gspc_evaluation_rows": false,
+    "xp_reward": 10
+  },
+  {
+    "answer": "C",
+    "axes": [
+      "safety",
+      "jail",
+      "art5-safeguard",
+      "affect",
+      "effect-binding",
+      "machinery-conformity",
+      "harness-fidelity"
+    ],
+    "content_sha256": "bd0965c488327d8d93d086df6200f676b85da4a7273e223e61824e9d464916bb",
+    "evidence_reference": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/6e86cf62755dfe021600bab33061b8ceed46f2db/SAFE.md",
+    "explanation": "A control must apply to the actual current configuration and action. A historical PASS, a familiar tool name or a quiz result does not establish that the current safeguard is operating.",
+    "facts": "A test-target allowlist passed yesterday. Before the current job, a configuration change redirects the same tool name to a production target. The old test record is unchanged; the current target binding has not been checked.",
+    "human_editor_review": "PENDING",
+    "id": "safeguard-drift",
+    "options": {
+      "A": "Reuse yesterday's PASS because the tool name is unchanged.",
+      "B": "Accept the changed target because an allowlist file exists.",
+      "C": "Hold the action, verify the current target and policy enforcement, and retest against the authorised scope.",
+      "D": "Treat a correct Academy answer as permission to run the changed job."
+    },
+    "origin": "ORIGINAL_SYNTHETIC_TEACHING_FIXTURE",
+    "question": "What must happen before this changed job can be treated as allowed?",
+    "revision": "1",
+    "rights": "Original instructional wording; research software MIT. External source references retain their own rights.",
+    "safe_layers": [
+      "Safeguards"
+    ],
+    "title": "A passed safeguard test is not a current execution guarantee",
+    "uses_gspc_evaluation_rows": false,
+    "xp_reward": 10
+  },
+  {
+    "answer": "D",
+    "axes": [
+      "watchdog-ingest",
+      "serving-fidelity",
+      "claim-maintenance",
+      "harness-fidelity",
+      "company-practice",
+      "swarm"
+    ],
+    "content_sha256": "f661a7b0e5379f25a40952efc2f6af04b832decc91da19b7fd40d96901a85d3e",
+    "evidence_reference": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/6e86cf62755dfe021600bab33061b8ceed46f2db/SAFE.md",
+    "explanation": "Request, acknowledgement and observed interruption are different events. Monitoring must retain uncertainty and late effects instead of equating message delivery with a stopped computation.",
+    "facts": "A running synthetic job acknowledges a cancellation request. No independent observation confirms that execution ended, and an output may still arrive. The monitoring panel currently shows only the acknowledgement.",
+    "human_editor_review": "PENDING",
+    "id": "stop-observation",
+    "options": {
+      "A": "Report stopped and discard any later output.",
+      "B": "Report success because the cancellation message was delivered.",
+      "C": "Immediately repeat the job to obtain a clearer result.",
+      "D": "Report stop requested with execution state unconfirmed; check the executor/effect state and preserve any later observations."
+    },
+    "origin": "ORIGINAL_SYNTHETIC_TEACHING_FIXTURE",
+    "question": "What should the panel report and the operator do next?",
+    "revision": "1",
+    "rights": "Original instructional wording; research software MIT. External source references retain their own rights.",
+    "safe_layers": [
+      "Monitoring"
+    ],
+    "title": "Acknowledging a stop request is not observing a stop",
+    "uses_gspc_evaluation_rows": false,
+    "xp_reward": 10
   }
 ]

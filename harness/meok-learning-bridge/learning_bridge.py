@@ -4,7 +4,7 @@ No network, private incident intake, learner identity, authority, signing or tra
 from pathlib import Path
 import copy, hashlib, json, math
 ASSETS=Path(__file__).with_name('learning_assets')
-VERSION='2026-11-10.1'
+VERSION='2026-11-10.2'
 
 def canonical(value):
     return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()
@@ -59,6 +59,22 @@ def _context(axis,industry):
     row=copy.deepcopy(rows[0]);profile=copy.deepcopy(registry['industry_profiles'][industry])
     return registry,cases,revision,row,profile,axis in profile['axes']
 
+
+def _scope_revision(registry,cases,row,industry):
+    # A revision binding, not an access credential or human approval.
+    # Excludes unrelated board rows and unrelated cases; includes the selected
+    # path, reading answer key, current context mapping and applicable exercises.
+    return 'lesson-v1:'+digest({
+        'version':VERSION,
+        'grader_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        'axis':row,
+        'industry_id':industry,
+        'industry_context':registry['industry_profiles'][industry],
+        'applicable_cases':[c for c in cases if row['axis'] in c['axes']],
+        'safe_reference':registry['safe'],
+        'boundaries':_boundary(),
+    })
+
 def learning_catalogue(industry='all'):
     """Inspect dated 34-axis Academy coverage and proposed industry contexts.
 
@@ -76,7 +92,9 @@ def learning_catalogue(industry='all'):
         'kind_counts':{k:sum(r['kind']==k for r in registry['rows']) for k in sorted({r['kind'] for r in registry['rows']})},
         'axis_rows':[{k:r[k] for k in ['axis','kind','bench','task','reported_status','reported_separation','measurement_time','industry_contexts','full_axis_course_review','named_reviewer','review_service_operating']} for r in selected],
         'industry_profiles':copy.deepcopy(registry['industry_profiles']),
-        'practice_case_ids':[c['id'] for c in cases],'safe_reference':registry['safe'],
+        'practice_case_ids':[c['id'] for c in cases],
+        'safe_practice_coverage':{'layers_referenced':len(registry['safe']['layers']),'layers_with_draft_case':len(set(y for c in cases for y in c['safe_layers'])),'human_editorial_approval':False},
+        'safe_reference':registry['safe'],
         'ras':registry['ras'],'existing_orb_mooc':registry['existing_orb_mooc'],'boundaries':_boundary(),
         'limitation':'34 mapped paths are not 34 complete courses, qualified reviewers or verified industry deployments.'}
 
@@ -93,7 +111,9 @@ def lesson_packet(axis='claim-maintenance',industry='ai-software'):
     for c in cases:
         if axis in c['axes']:
             item=copy.deepcopy(c);item.pop('answer');visible.append(item)
-    return {'state':'PRACTICE_MATERIAL_NOT_QUALIFICATION','registry_revision':revision,'axis':axis,
+    return {'state':'PRACTICE_MATERIAL_NOT_QUALIFICATION','registry_revision':revision,
+            'lesson_revision':_scope_revision(registry,cases,row,industry),
+            'submission_binding':'PREFER_SCOPED_LESSON_REVISION; CURRENT_LEGACY_REGISTRY_SUPPORTED','axis':axis,
             'industry_context':industry,'context_mapping':'PROPOSED_MAPPING' if mapped else 'NOT_MAPPED',
             'source_path':row['path'],'reading_check':reading,'practice_cases':visible,
             'board_observation':{k:row[k] for k in ['reported_status','reported_separation','measurement_time']},
@@ -102,8 +122,9 @@ def lesson_packet(axis='claim-maintenance',industry='ai-software'):
                 'required':['named authenticated reviewer','accepted role and scope','case and source revisions','conflict/recusal handling','expiry and revocation','independent effect verification where action is involved']},
             'boundaries':_boundary()}
 
-def _revision(expected,current):
-    if not isinstance(expected,str) or expected!=current:raise ValueError('Stale or missing lesson revision; reopen the lesson before submitting')
+def _revision(expected,current,lesson=None):
+    if not isinstance(expected,str) or not expected or (expected!=current and (lesson is None or expected!=lesson)):
+        raise ValueError('Stale or missing lesson revision; reopen the lesson before submitting')
 
 def reading_feedback(axis,industry,answer,registry_revision):
     """Check a reading answer against the pinned original Council module, without a POST.
@@ -114,12 +135,14 @@ def reading_feedback(axis,industry,answer,registry_revision):
         answer: A, B, C or D for the displayed reading question.
         registry_revision: Exact revision returned by lesson_packet or learning_catalogue.
     """
-    registry,cases,current,row,profile,mapped=_context(axis,industry);_revision(registry_revision,current)
+    registry,cases,current,row,profile,mapped=_context(axis,industry);_revision(registry_revision,current,_scope_revision(registry,cases,row,industry))
     if not mapped:raise ValueError('Axis not mapped to this educational context')
     if type(answer) is not str or answer not in ['A','B','C','D']:raise ValueError('Answer must be A, B, C or D')
     correct=answer==row['reading_check']['correct_option']
     return {'state':'READING_CHECK_ONLY','axis':axis,'registry_revision':current,'correct':correct,
             'explanation':row['reading_check']['explanation'],'xp':0,
+            'lesson_revision':_scope_revision(registry,cases,row,industry),
+            'binding_kind':'SCOPED_LESSON' if registry_revision.startswith('lesson-v1:') else 'LEGACY_REGISTRY',
             'completed_on_public_hitl_ledger':False,'boundaries':_boundary()}
 
 def practice_feedback(axis='claim-maintenance',industry='ai-software',attempts_json='[]',registry_revision=''):
@@ -131,7 +154,7 @@ def practice_feedback(axis='claim-maintenance',industry='ai-software',attempts_j
         attempts_json: At most 20 objects containing exactly case_id, content_sha256 and answer. No names or reports.
         registry_revision: Exact lesson revision; corrections invalidate old attempts.
     """
-    registry,cases,current,row,profile,mapped=_context(axis,industry);_revision(registry_revision,current)
+    registry,cases,current,row,profile,mapped=_context(axis,industry);_revision(registry_revision,current,_scope_revision(registry,cases,row,industry))
     if not mapped:raise ValueError('Axis not mapped to this educational context')
     attempts=strict_json(attempts_json)
     if type(attempts) is not list or len(attempts)>20:raise ValueError('Expected at most 20 practice choices')
@@ -150,6 +173,8 @@ def practice_feedback(axis='claim-maintenance',industry='ai-software',attempts_j
         feedback.append({'case_id':case_id,'content_sha256':c['content_sha256'],'correct':ok,'chosen_answer':a['answer'],
                          'explanation':c['explanation'],'xp_this_distinct_case':earned,'attempts_in_request':counts[case_id]})
     return {'state':'LOCAL_PRACTICE_FEEDBACK','axis':axis,'industry_context':industry,'registry_revision':current,
+            'lesson_revision':_scope_revision(registry,cases,row,industry),
+            'binding_kind':'SCOPED_LESSON' if registry_revision.startswith('lesson-v1:') else 'LEGACY_REGISTRY',
             'feedback':feedback,'distinct_attempted':len(latest),'input_attempts':len(attempts),'educational_xp':xp,
             'xp_rule':'10 per currently correct distinct synthetic case within this submitted history; not cumulative across accounts or sessions.',
             'orb_rank_awarded':None,'orb_bank_progress_changed':False,'replay_inflation_prevented_within_request':True,

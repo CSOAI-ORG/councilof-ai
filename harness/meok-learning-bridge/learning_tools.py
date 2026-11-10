@@ -34,7 +34,7 @@ def academy_reading(axis='claim-maintenance',industry='ai-software',answer='A',r
         axis: Exact GSPC axis ID.
         industry: Proposed educational context ID.
         answer: A, B, C or D from the displayed original reading check.
-        registry_revision: Exact revision returned by academy_lesson; stale revisions are rejected.
+        registry_revision: Displayed lesson_revision, or the exact current legacy registry_revision; stale values are rejected.
     """
     return _record('reading',{'axis':axis,'industry':industry,'answer':answer,'registry_revision':registry_revision},bridge.reading_feedback(axis,industry,answer,registry_revision))
 
@@ -46,10 +46,10 @@ def academy_attempt(axis='claim-maintenance',industry='ai-software',case_id='xp-
         industry: Proposed educational context ID.
         case_id: Applicable original practice case, as returned by academy_lesson.
         answer: A, B, C or D from the displayed practice options.
-        registry_revision: Exact version displayed with the exercise; no implicit refresh.
+        registry_revision: Displayed scoped lesson_revision, or the exact current legacy registry_revision; no implicit refresh.
     """
     packet=bridge.lesson_packet(axis,industry)
-    bridge._revision(registry_revision,packet['registry_revision'])
+    bridge._revision(registry_revision,packet['registry_revision'],packet['lesson_revision'])
     choices=[c for c in packet['practice_cases'] if c['id']==case_id]
     if len(choices)!=1:raise ValueError('No applicable practice case with this identity')
     attempt={'case_id':case_id,'content_sha256':choices[0]['content_sha256'],'answer':answer}
@@ -74,4 +74,4 @@ def question_view(axis,industry,case_id):
     if len(matches)!=1:raise ValueError('This exercise is not mapped to the selected axis; choose xp-not-authority for the cross-cutting exercise')
     case=matches[0]
     body=case['title']+'\n\n'+case['facts']+'\n\n'+case['question']+'\n\n'+'\n'.join(k+'. '+v for k,v in case['options'].items())
-    return body,packet['registry_revision'],json.dumps(packet,sort_keys=True,indent=2,ensure_ascii=False)
+    return body,packet['lesson_revision'],json.dumps(packet,sort_keys=True,indent=2,ensure_ascii=False)
