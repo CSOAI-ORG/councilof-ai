@@ -5,6 +5,8 @@ on:
       - .github/workflows/hf-evaluation-contracts.yml
       - scripts/surface/build-lm-eval-tasks.mjs
       - scripts/surface/publish-hf-evaluation.py
+      - scripts/surface/run-auto-measure-once.py
+      - scripts/surface/test_auto_measure_archive.py
       - scripts/surface/test_lm_eval_*.py
       - public/bench/lm-eval/**
       - public/bench/axes.json
@@ -16,6 +18,8 @@ on:
       - .github/workflows/hf-evaluation-contracts.yml
       - scripts/surface/build-lm-eval-tasks.mjs
       - scripts/surface/publish-hf-evaluation.py
+      - scripts/surface/run-auto-measure-once.py
+      - scripts/surface/test_auto_measure_archive.py
       - scripts/surface/test_lm_eval_*.py
       - public/bench/lm-eval/**
       - public/bench/axes.json
@@ -52,4 +56,5 @@ jobs:
           python -m pytest -q
           scripts/surface/test_lm_eval_parity.py
           scripts/surface/test_lm_eval_framework.py
+          scripts/surface/test_auto_measure_archive.py
           spaces/gspc-auto-measure/test_measurement.py
