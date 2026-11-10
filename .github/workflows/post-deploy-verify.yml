@@ -63,12 +63,28 @@ jobs:
           for HOST in $(echo "$HOSTS" | tr ',' ' '); do
             for EP in $CLIENT_ENDPOINTS; do
               URL="https://$HOST$EP"
-              if python3 -c "import urllib.request,sys;urllib.request.urlopen(sys.argv[1],timeout=20)" "$URL" 2>/dev/null; then
+              if DIAGNOSTIC=$(python3 - "$URL" 2>/dev/null <<'PY'
+          import json, sys, urllib.error, urllib.parse, urllib.request
+          try:
+              with urllib.request.urlopen(sys.argv[1], timeout=20):
+                  pass
+          except Exception as exc:
+              is_http = isinstance(exc, urllib.error.HTTPError)
+              # Only a received HTTP error establishes the final response host.
+              # Never log exception messages, URLs, headers or response bodies.
+              print(json.dumps({
+                  "exception": type(exc).__name__,
+                  "http_status": exc.code if is_http else None,
+                  "final_host": urllib.parse.urlsplit(exc.geturl()).hostname if is_http else None,
+              }))
+              sys.exit(1)
+          PY
+              ); then
                 PASS=$((PASS+1))
                 REPORT="$REPORT\n✅ urllib $HOST$EP"
               else
                 FAIL=$((FAIL+1))
-                REPORT="$REPORT\n❌ urllib (default User-Agent) $HOST$EP"
+                REPORT="$REPORT\n❌ urllib (default User-Agent) $HOST$EP ${DIAGNOSTIC:-diagnostic unavailable}"
               fi
               HCODE=$(curl -s -o /dev/null -I -L -w '%{http_code}' --max-time 20 "$URL" 2>/dev/null || echo "000")
               if [ "$HCODE" = "200" ]; then
