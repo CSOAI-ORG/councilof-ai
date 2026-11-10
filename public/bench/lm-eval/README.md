@@ -1,3 +1,10 @@
+---
+pretty_name: GSPC lm-eval task pack
+tags:
+  - evaluation
+  - lm-eval
+---
+
 # Run a GSPC axis with lm-eval
 
 The canonical 12-axis pack replaces the earlier six-task Hub bridge. Each task carries the

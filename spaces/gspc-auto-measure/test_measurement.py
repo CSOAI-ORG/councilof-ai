@@ -154,3 +154,15 @@ def test_receipt_hash_survives_js_whole_number_round_trip():
     archived = json.loads(m.canonical_json(result))
     assert archived["accuracy_all_attempted"] == 0
     assert m.recovery_state([archived])[0] == 3
+
+
+def test_same_request_identity_with_different_receipt_is_a_conflict():
+    result, _ = fixture_result()
+    retry = copy.deepcopy(result)
+    retry["timestamp"] = "2026-11-10T00:00:01Z"
+    retry["items"][0]["raw_output"] += "\n"
+    retry["items"][0]["raw_output_sha256"] = m.sha256(retry["items"][0]["raw_output"])
+    retry["receipt_sha256"] = m.sha256(m.canonical_json({k: v for k, v in retry.items() if k != "receipt_sha256"}))
+    assert retry["run_id"] == result["run_id"]
+    with pytest.raises(ValueError, match="conflicting"):
+        m.recovery_state([result, retry])

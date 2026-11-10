@@ -151,7 +151,14 @@ async function main() {
         sha256: axis.bank_sha256, revision, url: pinnedUrl};
     }
   }
-  const readme = `# Run a GSPC axis with lm-eval
+  const readme = `---
+pretty_name: GSPC lm-eval task pack
+tags:
+  - evaluation
+  - lm-eval
+---
+
+# Run a GSPC axis with lm-eval
 
 The canonical ${taskRows.length}-axis pack replaces the earlier six-task Hub bridge. Each task carries the
 published bank bytes, checks their SHA256 before loading, and records the exact Hub revision.

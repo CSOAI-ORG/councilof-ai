@@ -35,7 +35,8 @@ must use the `schema: csoai.gspc-auto-measure/2` field when comparing historical
 The Space reads the existing [results dataset](https://huggingface.co/datasets/csoai/gspc-auto-measure-results)
 at an exact revision, verifies each v2 full-receipt SHA256, and recovers the next sequence from archived receipts. Legacy counters that
 restarted are seeded by unique historical receipts. Each bank's window is derived from the global
-sequence, so it no longer depends on a separate in-memory visit counter. An unavailable history
+sequence, so it no longer depends on a separate in-memory visit counter. Only identical full
+receipts deduplicate: conflicting bodies at one sequence fail, even if their request identity matches. An unavailable history
 store fails before inference instead of silently resetting to zero.
 
 **The persistence driver must archive the complete returned JSON.** This Space makes no Hub writes

@@ -87,7 +87,7 @@ def recovery_state(history):
             receipt = {key: value for key, value in row.items() if key != "receipt_sha256"}
             if row.get("receipt_sha256") != sha256(canonical_json(receipt)):
                 raise ValueError("durable receipt SHA256 mismatch")
-            if seq in completed and completed[seq]["run_id"] != row["run_id"]:
+            if seq in completed and completed[seq]["receipt_sha256"] != row["receipt_sha256"]:
                 raise ValueError("conflicting durable sequence receipts")
             completed[seq] = row
             next_sequence = max(next_sequence, seq + 1)
