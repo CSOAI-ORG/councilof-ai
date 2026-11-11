@@ -44,8 +44,9 @@ export function readJailBoard(data: unknown): JailBoardRow | null {
   const measured = a.status === "MEASURED";
   const time = object(a.measurement_time) ? a.measurement_time : null;
   return {
-    status: ["MEASURED", "UNMEASURED", "DRAFT", "SPEC", "PLANNED"].includes(String(a.status))
-      ? String(a.status) : "Not published",
+    status: typeof a.status === "string"
+      && ["MEASURED", "UNMEASURED", "DRAFT", "SPEC", "PLANNED"].includes(a.status)
+      ? a.status : "Not published",
     separation: measured ? separation(a.separation) : "Not published",
     n: measured && typeof a.n === "number" && Number.isSafeInteger(a.n) && a.n > 0 ? a.n : null,
     accuracy: measured && typeof a.accuracy === "number" && Number.isFinite(a.accuracy)
@@ -64,6 +65,7 @@ export function parseJailArchive(value: unknown): JailArchive {
     || value.kind !== "folder" || value.writes_board !== false || value.axis !== "jail"
     || !day(value.as_of) || typeof value.dataset !== "string"
     || !/^[A-Za-z0-9_-]+\/[A-Za-z0-9_.-]+$/.test(value.dataset)
+    || [".", ".."].includes(value.dataset.split("/")[1])
     || value.dataset_url !== `https://huggingface.co/datasets/${value.dataset}`
     || !Array.isArray(value.cards) || value.cards.length > 128) {
     throw new Error("Invalid archived jail index");
@@ -82,28 +84,49 @@ export function parseJailArchive(value: unknown): JailArchive {
 
 /** A failed/oversized/non-JSON response is an error, never a successful empty index. */
 export async function fetchJailArchive(signal: AbortSignal, request: typeof fetch = fetch): Promise<JailArchive> {
+  signal.throwIfAborted();
   const response = await request(JAIL_INDEX_URL, {
     signal, cache: "no-store", redirect: "error", headers: { accept: "application/json" },
   });
-  if (!response.ok) throw new Error(`Archived index returned HTTP ${response.status}`);
+  if (signal.aborted || !response.ok) {
+    // Release unread bodies, without allowing a transport's cancellation promise
+    // to postpone the error or turn an aborted request into a successful read.
+    void response.body?.cancel().catch(() => {});
+    signal.throwIfAborted();
+    throw new Error(`Archived index returned HTTP ${response.status}`);
+  }
   if (!response.body) throw new Error("Archived index has no body");
   const reader = response.body.getReader();
   const chunks: Uint8Array[] = [];
   let length = 0;
+  let finished = false;
+  let cancelled = false;
+  const cancel = () => {
+    if (cancelled) return;
+    cancelled = true;
+    void reader.cancel().catch(() => {});
+  };
+  // Also stop a stalled body when a compatible request adapter does not relay
+  // the AbortSignal to its stream. The component owns the eight-second timer.
+  signal.addEventListener("abort", cancel, { once: true });
   try {
     for (;;) {
+      signal.throwIfAborted();
       const part = await reader.read();
-      if (part.done) break;
+      signal.throwIfAborted();
+      if (part.done) { finished = true; break; }
       length += part.value.byteLength;
       if (length > JAIL_INDEX_LIMIT) {
-        await reader.cancel();
         throw new Error("Archived index exceeds the read limit");
       }
       chunks.push(part.value);
     }
   } finally {
+    signal.removeEventListener("abort", cancel);
+    if (!finished) cancel();
     reader.releaseLock();
   }
+
   const bytes = new Uint8Array(length);
   let offset = 0;
   for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }

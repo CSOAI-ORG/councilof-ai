@@ -91,6 +91,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
+sys.path.insert(0, str(HERE))
+from execution_context import context_digest, load_context
 
 # ── the estate's own grader and prompt builder, imported, not copied ────────────────────
 def _load_mill():
@@ -243,6 +245,9 @@ def main() -> int:
                          "was scored UNPARSED. An unparsed item is not a wrong answer, but a "
                          "truncated budget is our instrument, not the model, and it must not be "
                          "recorded as the model's failure.")
+    ap.add_argument("--temperature", type=float, default=0.0)
+    ap.add_argument("--execution-context", help="public execution metadata JSON; see README. "
+                    "Omitted context remains unknown and cannot qualify a paired comparison.")
     ap.add_argument("--list", action="store_true", help="list the banks and exit")
     args = ap.parse_args()
 
@@ -255,6 +260,14 @@ def main() -> int:
         print("Axes whose bank yields a one-option menu are REFUSED: a prompt that cannot be")
         print("answered wrongly measures format compliance, not the axis.")
         return 0
+
+    try:
+        execution_context = load_context(args.execution_context, model=args.model,
+            live_generation=None if args.answers else {
+                "temperature": args.temperature, "max_tokens": args.max_tokens})
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        print(f"run_bench: invalid execution context: {exc}", file=sys.stderr)
+        return 2
 
     if not args.axis:
         print(f"run_bench: --axis is required. Known: {', '.join(sorted(BANK_REPO))}", file=sys.stderr)
@@ -322,7 +335,8 @@ def main() -> int:
             return 2
         for i, prompt in enumerate(prompts):
             try:
-                answers[i] = ask(args.base_url, args.model, prompt, args.timeout, max_tokens=args.max_tokens)
+                answers[i] = ask(args.base_url, args.model, prompt, args.timeout,
+                                 temperature=args.temperature, max_tokens=args.max_tokens)
             except (urllib.error.URLError, OSError, TimeoutError, json.JSONDecodeError,
                     KeyError, IndexError) as e:
                 answers[i] = ""
@@ -361,7 +375,13 @@ def main() -> int:
         "bank_repo": repo,
         "bank_url": url,
         "bank_sha256": bank_sha,
-        "model": args.model,
+        "model": args.model or (execution_context["model"] if args.execution_context else None),
+        "execution_context": execution_context,
+        "execution_context_sha256": context_digest(execution_context),
+        "execution_context_note": "Supplied access declarations are not authenticated provider grants. "
+            "No context means unknown, never standard or verified access.",
+        "generation_parameters_source": "supplied_context" if args.answers and args.execution_context else
+            "unknown" if args.answers else "runner_parameters",
         "grader": "gspc-top100.mill_hub_queue.read_label",
         "grader_source": "harness/gspc-top100/mill_hub_queue.py read_label() — imported, not copied",
         "grader_source_sha256": hashlib.sha256(Path(MILL.__file__).read_bytes()).hexdigest(),

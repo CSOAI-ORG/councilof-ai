@@ -159,7 +159,8 @@ describe("bounded archive transport", () => {
   it("rejects failed HTTP responses without reading them as records", async () => {
     const response = new Response(JSON.stringify(fixture()), { status: 503 });
     await expect(fetchJailArchive(signal(), async () => response)).rejects.toThrow("HTTP 503");
-    expect(response.bodyUsed).toBe(false);
+    expect(response.bodyUsed).toBe(true);
+    expect(response.body?.locked).toBe(false);
   });
   it("rejects HTML fallback and malformed JSON", async () => {
     for (const body of ["<html>fallback</html>", "{broken"]) {
