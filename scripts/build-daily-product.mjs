@@ -6,6 +6,7 @@
  */
 import { createHash } from 'node:crypto';
 import { maintenanceView } from './daily-maintenance-metadata.mjs';
+import { serviceHandoff, renderServiceHandoff } from './report-service-handoff.mjs';
 import { existsSync, lstatSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -194,6 +195,7 @@ function renderHtml(entries, comparisons, findingPack, maintenance) {
 <section aria-labelledby="maintenance"><h2 id="maintenance">Maintenance metadata</h2><p class="maintenance-summary">${h(maintenanceSummary(maintenance))}</p><p class="muted small">Source metadata only. Exact source-byte changes are distinct from changes in selected metadata; unchanged metadata does not establish unchanged claims, current applicability or permission to act. Source rights remain unknown.</p></section>
 <section aria-labelledby="provenance"><h2 id="provenance">Source provenance</h2><p>Report SHA-256: <code>${latest.sha256}</code></p><p class="muted small">The digest identifies the exact report bytes. It is not a signature or independent confirmation of the source claims.</p>${Object.entries(r.generated_from).sort().map(([role,s])=>`<details><summary>${h(role)} · ${h(s.state)}</summary><p>Source path: <code>${h(s.path)}</code></p><p>SHA-256: <code>${h(s.sha256)}</code></p></details>`).join('')}<p class="small muted">Claim-register source timestamp: ${h(r.corrections.register_as_of)}. General per-source retrieval timestamps are not supplied. Selected declared dates, where present, are in maintenance metadata; report day is not a retrieval time.</p></section>
 <section aria-labelledby="archive"><h2 id="archive">Report archive</h2><div class="table-wrap" tabindex="0" role="region" aria-label="Report archive"><table><caption>Retained dated snapshots, with exact-byte identifiers.</caption><thead><tr><th scope="col">Report day</th><th scope="col">Files</th><th scope="col">SHA-256</th></tr></thead><tbody>${[...entries].reverse().map(e=>`<tr><td>${e.report.as_of}</td><td><a href="${PREFIX + e.filename}">JSON</a> · <a href="${PREFIX + e.report.as_of}.md">Markdown</a></td><td><code>${e.sha256}</code></td></tr>`).join('')}</tbody></table></div><p class="small"><a href="${PREFIX}index.json">Machine-readable archive</a> · <a href="${PREFIX}latest.json">Latest source JSON</a> · <a href="${PREFIX}latest.md">Latest Markdown</a></p></section>
+${renderServiceHandoff(latest)}
 <section aria-labelledby="next"><h2 id="next">Use the evidence</h2><div class="grid-links"><div><a href="/gpai">Explore the GPAI matrix</a><p>Review the evidence requirements and stated limits for model providers.</p></div><div><a href="/claim-maintenance">Maintain a claim</a><p>Follow evidence dependencies, changes and correction history.</p></div><div><a href="/services">Find an evidence service</a><p>Review available products, previews and delivery scope.</p></div></div></section></main><footer><div class="wrap"><span>Council of AI · Measurement and evidence</span><a href="/corrections">Corrections and review</a></div></footer></body></html>\n`;
 }
 
@@ -215,6 +217,7 @@ export function buildProduct(directory) {
   const index = {schema:'csoai.daily-signal-index/0.1', latest_report_id:latest.sha256, latest_report_day:latest.report.as_of, signed:false,
     report_count:entries.length, measurement_count:null, valuation:null, scope:'Retained daily-signal snapshots; report count is not a measurement, framework or customer count.',
     maintenance_metadata:maintenance.at(-1),
+    service_handoff:serviceHandoff(latest),
     reports:entries.map((e,i)=>({report_id:e.sha256, report_day:e.report.as_of, maintenance:maintenance[i].comparison, json_path:PREFIX+e.filename, markdown_path:PREFIX+e.report.as_of+'.md', counts:e.report.headline, comparison:comparisons[i]})).reverse()};
   files.set('index.json', encode(index));
   files.set('index.html', renderHtml(entries, comparisons, findings,maintenance.at(-1)));
