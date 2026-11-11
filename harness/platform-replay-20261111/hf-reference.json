@@ -1,0 +1,22 @@
+{
+  "study": "csoai.platform-replay.20261111.v1",
+  "reference_kind": "Observed hosted inference, not gold labels or task accuracy",
+  "model": "csoai/meok-process-world-v0",
+  "model_revision": "90d6aa6c87629b9f4296142ba2019247b51686c4",
+  "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+  "predictor_sha256": "8ff377179cbb897eea88a590036ba906b449a17a3f936d389835090dd58836e6",
+  "hosted_source_revision": "afdb579fa778a2f967d975fb5235d656077b0dd7",
+  "source_unchanged_during_calls": true,
+  "absolute_tolerance": 1e-12,
+  "cases": [
+    {"id": "case-0", "features": [0,0,0,1,0.3,0.4,0.3,0,1,1,0], "raw": [0.2933720601730284,0.3978952680918304,0.3043470188730933,-0.0008985360223439376], "constrained": [0.2946643557481588,0.399647985422912,0.30568765882892907,0.0]},
+    {"id": "case-1", "features": [0.3,0.4,0.3,0,0.3,0.4,0.3,1,0.5,1,0.25], "raw": [0.009842302953029958,0.6827146200306436,0.30648615148966124,-0.0005293465617385168], "constrained": [0.00985173032526002,0.6833685528429794,0.30677971683176064,0.0]},
+    {"id": "case-2", "features": [0.2,0.5,0.3,0,0.2,0.5,0.3,0,0,1,0.5], "raw": [0.2092148848206153,0.4893526199911915,0.3005755418316313,-0.002224502715848675], "constrained": [0.2,0.5,0.3,0]},
+    {"id": "case-3", "features": [0,0,0,1,0.3,0.4,0.3,1,0.125,0,0.75], "raw": [0.26346569700643274,0.36727246213130293,0.21814186122353668,0.01041320871283602], "constrained": [0.30660743980296223,0.4274122612685315,0.2538619575282646,0.012118341400241556]}
+  ],
+  "live_summary": {"http_calls":14,"successful_responses":12,"expected_invalid_input_errors":2,"direct_neural_predictions":8,"memory_rehearsals":2,"neural_evaluations_inside_rehearsals":16,"exact_cache_hits_inside_rehearsals":8,"revocation_refusals_inside_rehearsals":2},
+  "training": false,
+  "gspc_admitted": false,
+  "customer_authorization_tested": false,
+  "scope": "Existing 980-parameter synthetic process model; no foundation-model training, GPU allocation or production policy changes."
+}
