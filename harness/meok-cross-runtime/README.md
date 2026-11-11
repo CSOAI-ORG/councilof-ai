@@ -25,3 +25,7 @@ Matching outputs across providers establishes portability only for this model an
 Hugging Face retains immutable model/data and this generated research mirror. Kaggle runs the reproducible CPU notebook. Cloudflare can supply bounded application/routing/verification and supported inference services; this specific experiment tests CPU Worker execution only. Full serving, data retention and professional/human review remain under the existing owners. The existing Academy notebook and private HF runtime are not replaced.
 
 Source first in this canonical monorepo, mirrors after publication. No claim is made that nobody else has built cross-runtime inference; the missing item under test is an evidenced connection within this estate.
+
+## Executed results
+
+See REPORT.md and evidence/summary.json. Kaggle version2 completed and every retained prediction was checked. The live HF small-model route matched15 selected rows. The Cloudflare remote-development session matched560rows and passed six refusal controls; the separately created public Preview URLs still returned1042 and are not a qualified public service. The temporary remote session was stopped. Existing Academy, six-variant replay and static Cloudflare mirror are distinct preserved workstreams.
