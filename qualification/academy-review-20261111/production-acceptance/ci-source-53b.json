@@ -1,0 +1,2175 @@
+{
+  "schema": "csoai.ci-observation/0.1",
+  "repository": "CSOAI-ORG/councilof-ai",
+  "pull_request": 4209,
+  "pull_request_url": "https://github.com/CSOAI-ORG/councilof-ai/pull/4209",
+  "head_sha": "53b58299d834f1ddf17b74679811961a639609cf",
+  "observed_at": "2026-11-11 03:29:39 UTC",
+  "scope": "Pull-request workflows returned by GitHub for this exact commit; records observed outcomes, not model capability or production deployment.",
+  "workflows": [
+    {
+      "run_id": 42951952702,
+      "name": "eval-ci",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952702",
+      "jobs": [
+        {
+          "job_id": 130298072008,
+          "name": "bank-gate-and-delta",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952702/job/130298072008",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "eval-CI gate selftest",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "eval-CI bank gate (fail-on-silent-edit)",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "auto-eat honesty (unsigned atoms, pidfile lock)",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "emit QUEUED eval-delta card",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "honesty",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 18,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42951952420,
+      "name": "evidence-handoff-checks",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952420",
+      "jobs": [
+        {
+          "job_id": 130298070758,
+          "name": "offline-contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952420/job/130298070758",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Install test dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Evidence imports and exports",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Held referee continuity and discriminating mutation controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Full registry routing and GPAI packet controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Exact deadline mapping controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Verify committed GPAI matrix against its exact source artifacts",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Verify committed daily archive outputs",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Check retained SDK evidence from the receiver side",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 12,
+              "name": "Approval and discriminating controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 23,
+              "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 24,
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 25,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298070775,
+          "name": "langchain-authority",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952420/job/130298070775",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Install pinned SDK test environment",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Verify dependency consistency",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Exercise review, host authority, execution and effect readback",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 12,
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 13,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298070936,
+          "name": "strands-openai-authority",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952420/job/130298070936",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Install optional SDK qualification environment",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Verify dependency consistency",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Exercise SDKs and retain a discriminating evidence record",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Retain qualification evidence, including failures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 13,
+              "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 14,
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42951952461,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952461",
+      "jobs": [
+        {
+          "job_id": 130298070506,
+          "name": "build",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952461/job/130298070506",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Verify repo structure",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Revenue report evidence and read-only check regressions",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Install verification test dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Require verification dependencies and sources",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "HITL schema cases, plugin assertions and added controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "HITL v0.2 — non-authorizing claim states and the bound authority record",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "HITL v0.2 — the negative control still discriminates",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Approval byte-binding controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 12,
+              "name": "SAFE profile examples and discriminating-power controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 13,
+              "name": "SAFE whole-pack reader regression controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 14,
+              "name": "Read retained SAFE pack offline without authenticating its issuer",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Retain SAFE pack readback including unavailable or failed results",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 29,
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 30,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 31,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42951952516,
+      "name": "lane-guard",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952516",
+      "jobs": [
+        {
+          "job_id": 130298070719,
+          "name": "lane-guard",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952516/job/130298070719",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Selftest — prove the guard catches the violation and passes its negation",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "No symlink where a directory belongs",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42951952436,
+      "name": "conflict-guard",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952436",
+      "jobs": [
+        {
+          "job_id": 130298070865,
+          "name": "conflict-guard",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952436/job/130298070865",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "No committed conflict markers",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42951952482,
+      "name": "GSPC product qualification",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952482",
+      "jobs": [
+        {
+          "job_id": 130298070661,
+          "name": "offline-controls",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952482/job/130298070661",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Install pinned framework",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Public product and actual framework controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42951952427,
+      "name": "crawler-view-gate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952427",
+      "jobs": [
+        {
+          "job_id": 130298071129,
+          "name": "selftest",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952427/job/130298071129",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Gate selftest",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298217386,
+          "name": "crawler-view-production",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952427/job/130298217386",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Crawler view of the canonical build",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Explain advisory result on PRs",
+              "status": "completed",
+              "conclusion": "skipped"
+            },
+            {
+              "number": 6,
+              "name": "Crawler view of the live apex (informational, non-blocking)",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 12,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 13,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42951952383,
+      "name": "native-council-panel",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952383",
+      "jobs": [
+        {
+          "job_id": 130298070957,
+          "name": "native-companion-contract",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952383/job/130298070957",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Native release wiring stays enforced",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Generated UI must match reviewed source",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Unit, Academy and actual MCP SDK checks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Deliberate broken-control sensitivity",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Install Chromium for owned browser fixtures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Actual bundled panel and native host journeys",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 12,
+              "name": "Retain owned browser journey evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 13,
+              "name": "Compose both existing MCP resources and protocol guards",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 14,
+              "name": "Validate loopback preview launcher",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Retain exact preview bytes and their source identity",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 30,
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 31,
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 32,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 33,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42951952486,
+      "name": "safe-companion",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952486",
+      "jobs": [
+        {
+          "job_id": 130298070899,
+          "name": "local-reader (22)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952486/job/130298070899",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Exercise refusal, comparison and report reopening",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Check generated public files",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Install pinned test-only schema validator",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Check unsigned event compatibility",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Check both retained approval byte-link profiles",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 18,
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298071205,
+          "name": "local-reader (24)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952486/job/130298071205",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Exercise refusal, comparison and report reopening",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Check generated public files",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Install pinned test-only schema validator",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Check unsigned event compatibility",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Check both retained approval byte-link profiles",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 18,
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298071274,
+          "name": "evidence-adapter-qualification",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952486/job/130298071274",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Install the qualified test dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Assemble and install the candidate package for offline checks only",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Qualify adapter observations and refusal controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Qualify the full evidence library with retained fixtures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Verify the installed package against canonical golden files",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Retain evidence qualification",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 18,
+              "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 20,
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 21,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298071428,
+          "name": "browser-journeys",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952486/job/130298071428",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Keep the shipped extension on the canonical verifier",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Run npx playwright install --with-deps chromium",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Resolve installed test browser",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Exercise inspect, reopen, compare, host removal and digest recovery",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Retain bounded browser qualification",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 18,
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42951952553,
+      "name": "pr-gates",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553",
+      "jobs": [
+        {
+          "job_id": 130298167207,
+          "name": "wallet-credentials",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553/job/130298167207",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "No wallet private key in any tracked path — selftest, then the index",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298167295,
+          "name": "gates",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553/job/130298167295",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Scope - does this PR touch a gated path?",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Release follow-on trigger contract and negative controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Outward claims — offline manifest contract selftest",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Completion audit — offline availability/outcome controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Stamped bytes - no OTS-stamped file changes without a valid new proof",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Native canvas build prerequisites",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Install deps",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Native canvas runtime smoke",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 12,
+              "name": "Instrument liveness - selftest",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 13,
+              "name": "Dependency security regressions — sanitizer, quoting and proxy trust",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 14,
+              "name": "Offline uploader regressions — isolated network namespace",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "TypeScript debt ratchet — selftest, then non-mutating check",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "node:test registry — selftest, then the real registry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "node engine floor — selftest, then the real scan",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 18,
+              "name": "Unit tests — client, functions and scripts",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Unit tests — node:test files vitest cannot collect",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 20,
+              "name": "Paid delivery regression runtime",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 21,
+              "name": "Paid delivery and API worker offline regressions",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 22,
+              "name": "Restore existing Node 20 build runtime",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 23,
+              "name": "Layer-0 gateway — the comparator can fail",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 24,
+              "name": "Published-pin record integrity — offline, blocking",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 25,
+              "name": "Coliseum publisher offline controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 26,
+              "name": "Build client",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 27,
+              "name": "Verify same-build Coliseum artifact",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 28,
+              "name": "Retain the verified Coliseum candidate from this single build",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 29,
+              "name": "HF mirror gate — excluded dirs must exist on HF before merge",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 30,
+              "name": "Prepare Council OS first-question browser check",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 31,
+              "name": "GPAI matrix and daily evidence journeys — desktop and mobile",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 32,
+              "name": "Retain GPAI and daily evidence journey results",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 33,
+              "name": "Axis specialists — charter and human review journey",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 34,
+              "name": "Retain axis specialist journey evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 35,
+              "name": "Council OS first question — desktop and mobile",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 36,
+              "name": "Retain Council OS first-question premerge evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 37,
+              "name": "Coliseum candidate browsers with the real MEOK provider",
+              "status": "completed",
+              "conclusion": "skipped"
+            },
+            {
+              "number": 38,
+              "name": "Retain Coliseum real-provider candidate evidence",
+              "status": "completed",
+              "conclusion": "skipped"
+            },
+            {
+              "number": 39,
+              "name": "Brand gate — selftest, then the real dist",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 40,
+              "name": "Facts gate — no claim may contradict facts.json",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 41,
+              "name": "Board production anchor — measured axes and card_index unchanged from production",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 42,
+              "name": "Axis-state gate — static axis pages agree with the board",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 43,
+              "name": "Content-promise gate — promises and destinations gated together",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 44,
+              "name": "Council truth gate — no simulated BFT or phantom engine doors",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 45,
+              "name": "Claims register lint — the page must render every claim the register holds",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 46,
+              "name": "Stablecoin readiness gate — indexed is never measured",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 47,
+              "name": "Stablecoin contracts — retained inputs and controlled offline failures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 48,
+              "name": "Root publisher — a failed source never retracts a published measurement",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 49,
+              "name": "OTS upgrader — the calendar's own reason reaches the operator",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 50,
+              "name": "Public-root promotion gate — merge only the bytes whose gates ran",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 51,
+              "name": "Mill receipt readiness — crypto, lifecycle and regulation stay separate",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 52,
+              "name": "Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 53,
+              "name": "Governance discovery — JSON, Council pointers and bound bytes",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 54,
+              "name": "Canary-leak gate — no private canary token in a public surface",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 55,
+              "name": "Well-known index gate — the index must describe the directory",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 56,
+              "name": "x402 census producers — determinism, the n>=30 ladder, and a planted byte",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 57,
+              "name": "Producer manifest — committed outputs must still match their producers",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 58,
+              "name": "SBOM pin — the recorded generation commit must be reachable from this merge ref",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 59,
+              "name": "Stranger verification — signed cards must verify from published bytes",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 60,
+              "name": "Signed GSPC board must verify under its own published recipe",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 61,
+              "name": "Card-verifier package — 33-vector EMILIA boundary must still be pinned",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 62,
+              "name": "Reader tests (scripts/readers/*.node-test.mjs)",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 63,
+              "name": "Python tests (spray parity + skip rules, publisher kinds index)",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 64,
+              "name": "Custody wording guard + publication bus",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 65,
+              "name": "Orphan coverage — tests outside the blanket vitest dirs",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 66,
+              "name": "Orphan coverage — tests outside blanket vitest + deploy gates",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 67,
+              "name": "Published verifier bundle must match a fresh build of its source",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 68,
+              "name": "llms.txt / llms-full.txt match the live board",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 69,
+              "name": "Link gate — published JSON must not point at 404s",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 135,
+              "name": "Post Restore existing Node 20 build runtime",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 136,
+              "name": "Post Paid delivery regression runtime",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 137,
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 138,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 139,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298167389,
+          "name": "root-candidate-reconcile",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553/job/130298167389",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Public-root candidate reconcile - selftest",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298167435,
+          "name": "stamped-bytes",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553/job/130298167435",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Stamped bytes - selftest, then this PR against its base",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298167448,
+          "name": "card-verifier-parity",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553/job/130298167448",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Existing offline verifier fixtures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "All RunPod cards and buyer replay — no network or signing",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298167498,
+          "name": "hold-guard",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553/job/130298167498",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "hold-guard selftest",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Is this PR on hold?",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298167499,
+          "name": "third-party-identifiers",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553/job/130298167499",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "No guarded third-party identifier in any tracked path or file",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298167531,
+          "name": "runpod-intake-wiring",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553/job/130298167531",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "The runpod-intake workflow calls the resolver with a CLI that exists",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298167560,
+          "name": "published-surface-audit-rules",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553/job/130298167560",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Published-surface audit rules - selftest",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "job_id": 130298167568,
+          "name": "claimguard-sweep-rules",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42951952553/job/130298167568",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Disclosure sweep rules - selftest",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "collection_errors": []
+}
