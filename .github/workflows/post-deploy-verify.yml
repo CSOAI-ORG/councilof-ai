@@ -27,72 +27,70 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master' && github.event.workflow_run.head_repository.full_name == github.repository }}
     timeout-minutes: 10
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
       - name: Probe live endpoints on both hosts
         id: probe
         env:
           HOSTS: "councilof.ai,csoai.org"
           ENDPOINTS: "/ /api/gspc /api/cards /root.json /feed /api/feed.xml /api/health /api/state /.well-known/agents/index.json /.well-known/mcp/server-card.json"
           # Public data a stranger's script reads. Each is probed twice more below: with Python's DEFAULT
-          # urllib User-Agent (the CDN's Browser Integrity Check refused it with 403 1010 until 6 Oct 2026),
-          # and with HEAD (Pages answered 404 to HEAD on GET-only functions until the same day).
+          # urllib User-Agent (its observed 403 refusal remains a required failure),
+          # and with HEAD. A separate application-UA control does not replace either probe.
           CLIENT_ENDPOINTS: "/api/gspc /api/state /api/corrections /signed/card_index.json /.well-known/did.json"
         run: |
           set -uo pipefail
           PASS=0
           FAIL=0
           REPORT=""
+          CONTROL_PASS=0
+          CONTROL_FAIL=0
+          CONTROL_REPORT=""
           read -ra HOST_ARRAY <<< "${HOSTS//,/ }"
           read -ra ENDPOINT_ARRAY <<< "$ENDPOINTS"
           read -ra CLIENT_ARRAY <<< "$CLIENT_ENDPOINTS"
           EXPECTED=$(( ${#HOST_ARRAY[@]} * (${#ENDPOINT_ARRAY[@]} + 2 * ${#CLIENT_ARRAY[@]}) ))
+          CONTROL_EXPECTED=$(( ${#HOST_ARRAY[@]} * ${#CLIENT_ARRAY[@]} ))
           for HOST in $(echo "$HOSTS" | tr ',' ' '); do
             for EP in $ENDPOINTS; do
               URL="https://$HOST$EP"
-              CODE=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 20 "$URL" 2>/dev/null || echo "000")
-              if [ "$CODE" = "200" ] || [ "$CODE" = "301" ]; then
+              if DIAGNOSTIC=$(python3 scripts/post-deploy-probe.py --client curl --accept-status 200 --accept-status 301 "$URL"); then
                 PASS=$((PASS+1))
-                REPORT="$REPORT\n✅ $HOST$EP → $CODE"
+                REPORT="$REPORT\n✅ $HOST$EP $DIAGNOSTIC"
               else
                 FAIL=$((FAIL+1))
-                REPORT="$REPORT\n❌ $HOST$EP → $CODE"
+                REPORT="$REPORT\n❌ $HOST$EP ${DIAGNOSTIC:-diagnostic unavailable}"
               fi
             done
           done
-          # Standard HTTP clients. urllib keeps its DEFAULT User-Agent on purpose: adding one here, as the
-          # selftest workflows do, would hide exactly the refusal this probe exists to catch.
+          # urllib keeps its DEFAULT User-Agent in the required observation. The same-library
+          # application-UA control is labelled and counted separately; it cannot earn a required pass.
           for HOST in $(echo "$HOSTS" | tr ',' ' '); do
             for EP in $CLIENT_ENDPOINTS; do
               URL="https://$HOST$EP"
-              if DIAGNOSTIC=$(python3 - "$URL" 2>/dev/null <<'PY'
-          import json, sys, urllib.error, urllib.parse, urllib.request
-          try:
-              with urllib.request.urlopen(sys.argv[1], timeout=20):
-                  pass
-          except Exception as exc:
-              is_http = isinstance(exc, urllib.error.HTTPError)
-              # Only a received HTTP error establishes the final response host.
-              # Never log exception messages, URLs, headers or response bodies.
-              print(json.dumps({
-                  "exception": type(exc).__name__,
-                  "http_status": exc.code if is_http else None,
-                  "final_host": urllib.parse.urlsplit(exc.geturl()).hostname if is_http else None,
-              }))
-              sys.exit(1)
-          PY
-              ); then
+              if DIAGNOSTIC=$(python3 scripts/post-deploy-probe.py --client urllib "$URL"); then
                 PASS=$((PASS+1))
-                REPORT="$REPORT\n✅ urllib $HOST$EP"
+                REPORT="$REPORT\n✅ urllib (default User-Agent) $HOST$EP $DIAGNOSTIC"
               else
                 FAIL=$((FAIL+1))
                 REPORT="$REPORT\n❌ urllib (default User-Agent) $HOST$EP ${DIAGNOSTIC:-diagnostic unavailable}"
               fi
-              HCODE=$(curl -s -o /dev/null -I -L -w '%{http_code}' --max-time 20 "$URL" 2>/dev/null || echo "000")
-              if [ "$HCODE" = "200" ]; then
+              if DIAGNOSTIC=$(python3 scripts/post-deploy-probe.py --client urllib --application-control "$URL"); then
+                CONTROL_PASS=$((CONTROL_PASS+1))
+                CONTROL_REPORT="$CONTROL_REPORT\n✅ urllib (application User-Agent control) $HOST$EP $DIAGNOSTIC"
+              else
+                CONTROL_FAIL=$((CONTROL_FAIL+1))
+                CONTROL_REPORT="$CONTROL_REPORT\n❌ urllib (application User-Agent control) $HOST$EP ${DIAGNOSTIC:-diagnostic unavailable}"
+              fi
+              if DIAGNOSTIC=$(python3 scripts/post-deploy-probe.py --client curl --method HEAD "$URL"); then
                 PASS=$((PASS+1))
-                REPORT="$REPORT\n✅ HEAD $HOST$EP → $HCODE"
+                REPORT="$REPORT\n✅ HEAD $HOST$EP $DIAGNOSTIC"
               else
                 FAIL=$((FAIL+1))
-                REPORT="$REPORT\n❌ HEAD $HOST$EP → $HCODE"
+                REPORT="$REPORT\n❌ HEAD $HOST$EP ${DIAGNOSTIC:-diagnostic unavailable}"
               fi
             done
           done
@@ -101,6 +99,12 @@ jobs:
           echo "expected=$EXPECTED" >> "$GITHUB_OUTPUT"
           echo "report<<EOF" >> "$GITHUB_OUTPUT"
           echo -e "$REPORT" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          echo "control_pass=$CONTROL_PASS" >> "$GITHUB_OUTPUT"
+          echo "control_fail=$CONTROL_FAIL" >> "$GITHUB_OUTPUT"
+          echo "control_expected=$CONTROL_EXPECTED" >> "$GITHUB_OUTPUT"
+          echo "control_report<<EOF" >> "$GITHUB_OUTPUT"
+          echo -e "$CONTROL_REPORT" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
           if [ "$FAIL" -gt 0 ]; then
             echo "::warning::$FAIL endpoint(s) failed post-deploy verification"
@@ -168,6 +172,10 @@ jobs:
           CONTENT_FAIL: ${{ steps.content.outputs.fail }}
           CONTENT_EXPECTED: ${{ steps.content.outputs.expected }}
           CONTENT_REPORT: ${{ steps.content.outputs.report }}
+          CONTROL_PASS: ${{ steps.probe.outputs.control_pass }}
+          CONTROL_FAIL: ${{ steps.probe.outputs.control_fail }}
+          CONTROL_EXPECTED: ${{ steps.probe.outputs.control_expected }}
+          CONTROL_REPORT: ${{ steps.probe.outputs.control_report }}
         with:
           script: |
             const env = process.env;
@@ -187,13 +195,23 @@ jobs:
             });
             // A malformed or interrupted run is unknown, never a zero-failure pass.
             const failed = rows.some(row => !row.complete || row.fail > 0);
+            const control = {
+              pass: count(env.CONTROL_PASS), fail: count(env.CONTROL_FAIL),
+              expected: count(env.CONTROL_EXPECTED),
+            };
+            const controlComplete = env.PROBE_OUTCOME === 'success' &&
+              control.pass !== null && control.fail !== null && control.expected !== null &&
+              control.expected > 0 && control.pass + control.fail === control.expected;
             const body = [
               `## ${failed ? 'FAILED' : 'PASSED'} post-deploy verification`,
               `Deployment commit: ${env.DEPLOY_SHA}`,
               `Deployment run: ${env.DEPLOY_RUN_URL}`,
               'These probes observe the live hosts at verification time; they do not prove which commit the apex serves.',
               ...rows.map(row => `${row.prefix}: ${row.complete ? `${row.pass} pass, ${row.fail} fail of ${row.expected}` : 'UNCHECKABLE — incomplete or invalid probe result'}`),
+              `APPLICATION-UA CONTROL (diagnostic only): ${controlComplete ? `${control.pass} pass, ${control.fail} fail of ${control.expected}` : 'UNCHECKABLE — incomplete or invalid control result'}`,
+              'Control results never replace default-client observations or change required probe counts. A difference does not establish which edge rule caused it.',
               '', '### Endpoint probes', env.PROBE_REPORT || 'No report captured.',
+              '', '### Same-urllib application User-Agent control', env.CONTROL_REPORT || 'No control report captured.',
               '', '### Content probes', env.CONTENT_REPORT || 'No report captured.',
             ].join('\n');
             // Preserve the failure even if writing the human-readable summary fails.

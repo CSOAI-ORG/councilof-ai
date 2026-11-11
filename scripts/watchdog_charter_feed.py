@@ -4,11 +4,11 @@
 THE QUESTION THIS ANSWERS. The user asked: "does the daily report signal index feed the
 charter of wg-safe so then all humans in the loop can deal with [it]?"
 
-The honest answer before this script was: the index existed and the charter existed, and
-NOTHING JOINED THEM. public/interop/watchdog-intake/_index.json is a per-source state table.
-The WG-SAFE charter (OpenSecureAIAlliance/wg-safe) is a set of obligations. The estate's
-human-in-the-loop path is /api/hitl with a HOLD gate on every consequential action. Three
-documents, no seam between them.
+public/interop/watchdog-intake/_index.json is a per-source state table. This script joins
+it to Council-defined review topics and the existing /api/hitl decision-recording path.
+The runtime/oversight topic refers to Council's candidate authority-effect profile,
+not an adopted WG-SAFE charter. The upstream charter status was still under development
+when checked on 11 November 2026; that dated source reference is retained below.
 
 This script is the seam, and it is deliberately SMALL. It reads:
   1. the daily signal index (what the public watchdog layer said today), and
@@ -27,15 +27,14 @@ WHAT IT DELIBERATELY DOES NOT DO.
   record never turns into one. The estate's own rule is that a relevant-to answer is
   never a determination — this file inherits that rule and does not soften it.
 
-  It does NOT open a HITL challenge. A challenge is a human decision with an authority
-  epoch and an expiry, and creating one automatically would put a machine in the seat the
-  HOLD gate reserves for a person. This file produces the QUEUE that a human works from;
-  the challenge is raised by the human (or by the council-staff path, under a human's
-  authority), with scripts/hitl/hitl_probe.py and the hitl-authority-effect-v0.2 schema.
+  It does NOT open a HITL challenge. A challenge is a proposal for review, separate from
+  a human decision and from execution authority. This file produces the QUEUE that a
+  human works from; challenge recording uses the existing /api/hitl path. The separate
+  hitl-authority-effect-v0.2 profile describes scoped authority and observed effects.
 
   It does NOT create credentials, spend, deploy, or approve anything. Every row's
-  human_decision is HOLD and may_apply is false. The axis-specialist registry already
-  pins that shape for all 34 specialists, and this file holds the same line.
+  human_decision is HOLD and may_apply is false. These are routing states, not evidence
+  that a person has reviewed the row or accepted a role.
 
 The output is a proposal queue: a short, prioritized list of what a human should LOOK at,
 with enough context to decide and a digest to bind what they saw.
@@ -43,6 +42,7 @@ with enough context to decide and a digest to bind what they saw.
 from __future__ import annotations
 
 import argparse
+import copy
 import datetime as dt
 import hashlib
 import json
@@ -54,9 +54,11 @@ INTEROP = ROOT / "public" / "interop" / "watchdog-intake"
 
 # ── the charter obligations this estate tracks, and what each one means here ─────────────
 #
-# These are the obligations the estate's own /api/evidence-bundle surface accepts. The
-# list is the estate's, not a re-derivation: the obligation set is the thing the WG-SAFE
-# working group is chartered to make explicit, and the estate publishes against it.
+# These are Council-defined review topics with stable IDs used by existing consumers.
+# A topic may reference legislation or a Council candidate profile; its presence does
+# not determine applicability, adoption or satisfaction. Keep the legacy "charter" ID
+# while correcting its attribution. The external source status is a dated observation,
+# not a live status check or an adoption record.
 #
 # "grid" names the estate's own axis ids that bear on the obligation. "ask" is the
 # question a human is being asked to answer — a QUESTION, never a verdict to confirm.
@@ -76,11 +78,30 @@ OBLIGATIONS = {
         "source_kind": "standard-body",
     },
     "charter": {
-        "label": "WG-SAFE charter — runtime enforcement and human oversight",
+        "label": "Council of AI candidate profile — runtime enforcement and human oversight",
         "grid": ["hitl", "effect-binding"],
         "ask": "does the authority chain for the subject still bind — invocation, effect and "
                "verification as separate objects — and is the human gate still HOLD",
         "source_kind": "standard-body",
+        "reference": {
+            "owner": "Council of AI",
+            "kind": "CANDIDATE_PROFILE",
+            "profile": "csoai.hitl-authority-effect/0.2",
+            "adoption": "NOT_ESTABLISHED",
+            "source_url": "https://github.com/CSOAI-ORG/councilof-ai/blob/"
+                          "b5cef696a1ae17d756bd73897d2e68293d05d94e/"
+                          "docs/standards/osaia-safe-reverification/HITL-AUTHORITY-EFFECT-PROFILE.md",
+            "git_blob_sha": "f7c9af51d7ab897c62e2fa46cb63998e0cea9719",
+            "external_reference": {
+                "name": "SAFE Working Group charter",
+                "relationship": "REFERENCE_ONLY",
+                "status_at_check": "UNDER_DEVELOPMENT",
+                "checked_on": "2026-11-11",
+                "source_url": "https://github.com/OpenSecureAIAlliance/wg-safe/blob/"
+                              "3769437209edac11d745dd58c165b951ed474e27/CHARTER.md",
+                "git_blob_sha": "c74309c122a465a88731f3f7842beb812c89cac4",
+            },
+        },
     },
     "dora": {
         "label": "DORA — ICT third-party oversight",
@@ -130,7 +151,7 @@ def build(index: dict) -> dict:
             # watchdog that stopped answering is a fact a human must know about, and
             # silently dropping it would make the gap invisible.
             answered = sig.get("state") == "REACHABLE"
-            rows.append({
+            row = {
                 "row_id": f"{sig['source_id']}::{oid}",
                 "source_id": sig["source_id"],
                 "source_name": sig.get("name"),
@@ -154,10 +175,10 @@ def build(index: dict) -> dict:
                 "approval_may_be_inferred": False,
                 "challenge_opened": False,
                 "challenge_note": (
-                    "No challenge is opened by this feed. A challenge carries a decision id, an "
-                    "authority epoch, a scope digest and an expiry — creating one here would "
-                    "put a machine in the seat the HOLD gate reserves for a person. Raise it "
-                    "through the council-staff path (/api/hitl, hitl-authority-effect-v0.2)."
+                    "No challenge is opened by this feed. A challenge is a proposal for review; "
+                    "recording it through /api/hitl does not establish human identity or execution "
+                    "authority. Scoped decisions and observed effects require the separate "
+                    "hitl-authority-effect-v0.2 path and its acceptance evidence."
                 ),
                 "is_not": [
                     "a determination of compliance or non-compliance",
@@ -165,7 +186,10 @@ def build(index: dict) -> dict:
                     "an approval to act",
                     "evidence that an obligation is satisfied or unsatisfied",
                 ],
-            })
+            }
+            if "reference" in spec:
+                row["obligation_source"] = copy.deepcopy(spec["reference"])
+            rows.append(row)
 
     # Priority is a routing AID for a human's attention, not a risk score. It is a
     # coarse bucket over observable states, and the bucket names are stated plainly so
