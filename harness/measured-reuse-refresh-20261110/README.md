@@ -29,6 +29,14 @@ At 4,096 records, refresh-and-retain was 1.45x faster than the no-store bypass, 
 
 The first stable phase after dense changes required zero provider computations with either selective reuse or refresh-and-retain, versus 14 with bypass. After the task-definition change, bypass required 16. This supports the specific cache-population mechanism, not an automatic optimal routing policy.
 
+## Reader acceptance and retained evidence
+
+For a single checked route from this publication to an isolated reproduction, see
+[Reader acceptance](ACCEPTANCE.md). Run `python verify_publication.py` to reconcile
+historical source pins, denominators and totals without rerunning the experiment.
+Use its `--replay` option for a fresh, separately retained execution. Neither mode
+changes the historical measurements or confers production authority.
+
 ## Reproduce
 
 Python standard library only. From this directory:
