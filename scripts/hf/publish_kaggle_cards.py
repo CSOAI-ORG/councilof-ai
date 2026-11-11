@@ -60,6 +60,15 @@ def main():
         proposed=json.loads((folder/'dataset-metadata.json').read_text())
         current=metadata(ref);changed=validate(before['metadata'],current,proposed)
         record=dict(ref=ref,status='PREVIEW',changed=changed)
+        if a.publish:
+            # Reconcile the reviewed file inventory before any metadata write.
+            # The post-write read below remains necessary: this API has no
+            # atomic dataset/file-version lease, and names/sizes are not hashes.
+            if before.get('files_complete') is not True:
+                raise ValueError(f'{ref}: complete reviewed file inventory required')
+            expected_files=sorted(before['files'],key=lambda f:f['name'])
+            if files(ref)!=expected_files:
+                raise ValueError(f'{ref}: file inventory changed before publication')
         if a.publish and changed:
             time.sleep(2)
             api.dataset_metadata_update(ref,str(folder))
