@@ -4,6 +4,7 @@ No training, no secrets, no hidden paid model provider, no GSPC admission.
 from pathlib import Path
 import argparse,hashlib,importlib.util,json,math,platform,statistics,time,urllib.request,urllib.error,urllib.parse,sys
 from datetime import datetime,timezone
+from response_contract import decode,validate_prediction
 ROOT=Path(__file__).resolve().parent
 WEIGHTS='9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b'
 TOLERANCE=1e-12
@@ -46,7 +47,7 @@ def run(label,out,edge_url=None,remote_dev_proxy=False):
         with r:raw=r.read(64001);status=r.status;digest=r.headers.get('x-content-sha256');ray=r.headers.get('cf-ray')
         elapsed=time.perf_counter()-begin
         if len(raw)>64000 or digest!=h(raw):raise ValueError('Edge body limit or exact-byte digest mismatch')
-        data=json.loads(raw);ledger.append({'request':requests,'path':path,'status':status,'seconds':elapsed,'response_sha256':digest,'request_sha256':h(body) if body is not None else None,'cf_ray_present':bool(ray)})
+        data=decode(raw);ledger.append({'request':requests,'path':path,'status':status,'seconds':elapsed,'response_sha256':digest,'request_sha256':h(body) if body is not None else None,'cf_ray_present':bool(ray)})
         return status,data
     try:
         if edge_url:
@@ -60,17 +61,22 @@ def run(label,out,edge_url=None,remote_dev_proxy=False):
                 subset=rows[offset:offset+batch_rows];body=json.dumps([r['features'] for r in subset],separators=(',',':'),allow_nan=False).encode()
                 code,result=edge('/v1/predict',body);assert code==200 and result['input_sha256']==h(body) and result['weights_sha256']==WEIGHTS and result['rows']==len(subset)
                 assert not any(result[k] for k in ['signed','persisted','authorises_execution','gspc_admitted','cosmos_loaded'])
+                qualified=validate_prediction(result,body,[r['features'] for r in subset],pred[offset:offset+len(subset)])
+                assert qualified['verified_rows']==len(subset)
                 for j,item in enumerate(result['outputs']):
                     for key,refkey in [('constrained','prediction'),('raw','raw_prediction')]:
                         assert len(item[key])==4 and all(type(v) in (int,float) and math.isfinite(v) for v in item[key])
                         for actual,expected in zip(item[key],pred[offset+j][refkey]):max_delta=max(max_delta,abs(actual-expected));assert abs(actual-expected)<=TOLERANCE
                     checked+=1
+            assert checked==len(rows),'Incomplete output coverage cannot pass'
             negative=[];good=rows[0]['features'];booleans=list(good);booleans[0]=True
             cases=[('wrong_pin',json.dumps([good]).encode(),'0'*64,409,'MODEL_PIN_REQUIRED_OR_MISMATCH'),('bad_json',b'[',WEIGHTS,400,'INVALID_JSON'),('boolean',json.dumps([booleans]).encode(),WEIGHTS,422,'FEATURE_CONTRACT'),('empty_batch',b'[]',WEIGHTS,400,'BATCH_RANGE'),('too_many',json.dumps([good]*9).encode(),WEIGHTS,400,'BATCH_RANGE'),('over_size',b' '*8193,WEIGHTS,413,'BODY_TOO_LARGE')]
             for name,body,pin,want,reason in cases:
                 code,data=edge('/v1/predict',body,pin);assert code==want and data.get('error')==reason and 'outputs' not in data;negative.append(name)
-            code,recovery=edge('/v1/predict',json.dumps([good]).encode());assert code==200
-            report['edge']={'state':'CLOUDFLARE_REMOTE_DEV_PARITY_PASSED' if remote_dev_proxy else 'CLOUDFLARE_PARITY_AND_REFUSALS_PASSED','transport_mode':'WRANGLER_REMOTE_DEVELOPMENT_PROXY' if remote_dev_proxy else 'PUBLIC_PREVIEW_URL','url':edge_url,'rows_compared':checked,'raw_and_constrained_values_compared':checked*8,'requests':requests,'max_absolute_difference':max_delta,'tolerance':TOLERANCE,'negative_controls':negative,'recovery_after_refusal':True,'end_to_end_request_wall_seconds':time.perf_counter()-network_start,'response_digest_checks':requests,'cf_ray_present_count':sum(x['cf_ray_present'] for x in ledger),'preview_expires_at':health['limits']['expires_at'],'remote_GSPC_admission':False,'timing_scope':'Sequential HTTP wall-time including transport/verification, not a provider-kernel latency or throughput benchmark.'}
+            recovery_body=json.dumps([good]).encode()
+            code,recovery=edge('/v1/predict',recovery_body);assert code==200
+            validate_prediction(recovery,recovery_body,[good],[pred[0]])
+            report['edge']={'state':'CLOUDFLARE_REMOTE_DEV_PARITY_PASSED' if remote_dev_proxy else 'CLOUDFLARE_PARITY_AND_REFUSALS_PASSED','transport_mode':'WRANGLER_REMOTE_DEVELOPMENT_PROXY' if remote_dev_proxy else 'PUBLIC_PREVIEW_URL','url':edge_url,'rows_compared':checked,'raw_and_constrained_values_compared':checked*8,'including_exact_rule_values_verified':checked*12,'strict_response_completion_checked':True,'requests':requests,'max_absolute_difference':max_delta,'tolerance':TOLERANCE,'negative_controls':negative,'recovery_after_refusal':True,'end_to_end_request_wall_seconds':time.perf_counter()-network_start,'response_digest_checks':requests,'cf_ray_present_count':sum(x['cf_ray_present'] for x in ledger),'preview_expires_at':health['limits']['expires_at'],'remote_GSPC_admission':False,'timing_scope':'Sequential HTTP wall-time including transport/verification, not a provider-kernel latency or throughput benchmark.'}
             report['state']='CROSS_RUNTIME_PARITY_PASSED'
     except Exception as e:
         report['state']='FAILED';report['failure']={'type':type(e).__name__,'message':str(e)[:350],'requests_completed':requests};raise
