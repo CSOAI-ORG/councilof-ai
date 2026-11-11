@@ -42,3 +42,17 @@ No large-model inference, new weight fitting, paid GPU, private-data publication
 ## Mobile readback correction
 
 A real anonymous Chromium check found that a 390-pixel viewport widened to 511 pixels because the grid inherited the comparison table's intrinsic width. The bounded CSS correction gives grid tracks a zero minimum and keeps wide tables in their own horizontal-scroll container. The candidate produced a 390-pixel document width on the same browser page. Hosted acceptance after this publication remains a separately retained result. No numerical or model code changes.
+
+## Completed post-publication acceptance
+
+The final public HTML/JavaScript/CSS journey was exercised in a fresh anonymous Chromium context using an already-installed browser, without login credentials or new dependencies. All 25 declared checks passed: valid inference, exact served UI/CSS hashes, actual downloaded receipt payload verification, refusal with cleared old output, recovery, empty-row rejection, 560-row and six-checkpoint replay, practice boundaries, eight internal navigation targets, and 390-pixel document layout. No page JavaScript errors were observed during that specific run.
+
+The download was saved and its sorted-JSON payload SHA256 independently recomputed. It explicitly remains unsigned, not persisted by the app and without authority. This establishes the tested export bytes, not the truth of predictions.
+
+The served readback verifies 15 pinned Hub files exactly. Twelve static responses match raw bytes. Two authored HTML files match after removing only the exact inspected host-variable/social-metadata additions. The root README is rendered to HTML and receives only a separate sanity check; full rendered-content equivalence is not claimed.
+
+Earlier attempts remain distinguishable: one browser driver read innerText from a collapsed details block and was corrected to inspect textContent; a later actual browser pass exposed the mobile overflow that was then repaired; a separate TinyFish follow-through was inconclusive. None is silently treated as a complete pass.
+
+See [POST-PUBLICATION.json](POST-PUBLICATION.json), [browser-acceptance.json](browser-acceptance.json) and [served-readback.json](served-readback.json). The tested application code is unchanged by this evidence-only update. Human editorial acceptance, private storage acceptance, actual authority-to-effect and capability promotion remain open with their existing owners.
+
+A concurrent specialist-lane update at 34773cafd575fb138dffdf1b506e9fbb8c1a952c added stronger source/test-count validation to its public reproduction helper and published its own acceptance record. The root UI, CSS and consolidated page were byte-identical to the tested version. This evidence-only publication preserves those 13 specialist changes and the separate owner-controlled [acceptance record](../integration-specialist-review/presentation-v1/acceptance-20261111/index.html). Our earlier 18-test run did execute all 18 tests; the new owner-controlled negative control addresses a different zero-test substitution weakness.

@@ -1,7 +1,7 @@
 {
   "schema": "meok.public-release-readback/1",
   "as_of": "2026-11-11T02:40:44.390863+00:00",
-  "status": "SOURCE_QUALIFIED_HOSTED_READBACK_PENDING",
+  "status": "PUBLIC_SCOPE_COMPLETED_AND_READ_BACK",
   "base_public_revision": "d4994f5d3ce159dc8ab752b6a6875b5cb4b3ec50",
   "goal": "One public research entry point with current-result presentation and verifiable evidence; not a production intelligence claim.",
   "changes": [
@@ -9,7 +9,8 @@
     "A refused input cannot leave a previous successful comparison visible.",
     "Delayed receipt completion is ignored after the input generation changes.",
     "Blank and out-of-range row inputs are refused.",
-    "New release navigation connects the original replay, precision experiment and retained specialist report."
+    "New release navigation connects the original replay, precision experiment and retained specialist report.",
+    "Narrow-screen comparison grid no longer widens the full document; wide tables scroll within their own container."
   ],
   "executed": {
     "original_checks": 37,
@@ -39,7 +40,7 @@
     "paid_compute": false,
     "actual_human_learning_evaluation": false,
     "private_browser_credential_check": "Not retried; previous client-review request remains separate.",
-    "browser_export_download_bytes_verified": false,
+    "browser_export_download_bytes_verified": true,
     "universal_correctness_established": false
   },
   "source_owners": {
@@ -53,5 +54,6 @@
     "service": "TinyFish anonymous public browser",
     "observed": "Public inference, both replays and practice feedback ran. Invalid row 9999 retained earlier successful comparison and record. Export button was exercised, but downloaded bytes were not verified.",
     "basis": "Browser-agent returned report; not an independent expert audit."
-  }
+  },
+  "post_publication_record": "POST-PUBLICATION.json"
 }
