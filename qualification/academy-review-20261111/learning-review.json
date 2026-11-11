@@ -1,0 +1,136 @@
+{
+  "ai_tools": [
+    {
+      "evidence_event_ids": [],
+      "name": "ChatGPT",
+      "role": "Assistance implementing and reviewing the exporter and report; zero model inference calls in the seven-file integrity measurement itself.",
+      "status": "DECLARED_NOT_INDEPENDENTLY_VERIFIED",
+      "version": "GPT-6 Astra Pro"
+    }
+  ],
+  "as_of": "2026-11-11T02:57:59Z",
+  "authority": {
+    "charter_adopted": false,
+    "execution_authorized": false,
+    "gspc_measurement_created": false,
+    "human_identity": "NOT_ESTABLISHED",
+    "independent_review": "NOT_ESTABLISHED",
+    "model_training_performed": false,
+    "publication_authorized": false,
+    "reviewer_competence": "NOT_ESTABLISHED"
+  },
+  "before_after": {
+    "assessment_rows": 0,
+    "authenticated_human_count": null,
+    "declared_participant_handles": 0,
+    "event_ids": [],
+    "human_learning_gain": null,
+    "issues": {},
+    "limits": [
+      "Participant handles, phase labels and correct answers do not prove human participation.",
+      "Structural pairing does not establish comparable task difficulty, causation or human learning."
+    ],
+    "phase_counts": {},
+    "readiness": "HOLD_FOR_QUALIFIED_HUMAN_STUDY",
+    "requirements": [
+      "Authenticated participants and recorded consent for this study",
+      "Qualified reference reviewers and frozen scoring rubric",
+      "Rights-cleared, unseen transfer cases separated from teaching and tuning",
+      "Predeclared pairing, missingness, timing and analysis rules"
+    ],
+    "retention_gain": null,
+    "state": "NOT_ESTABLISHED",
+    "structurally_paired_handles": 0
+  },
+  "bindings": {
+    "card_id": "academy-source-integrity-d54f47759df881c2",
+    "card_sha256": "90b986693e87f41f52352123d7a1968b621123c2706f529ba9ecf282df721adf",
+    "event_refs": [],
+    "events_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "implementation_sha256": {
+      "packages/evidence-fabric/event.py": "144c6a36d462e21283ab9b34a6469bb32c75021da56133813d5a848412270533",
+      "packages/evidence-fabric/render/axis_referee_review.py": "cba456b97f2226b0822125533d512707d4cec7543a6daf58b94c3922d349791d",
+      "packages/evidence-fabric/render/learning_review_report.py": "d7165795c975fa4352003b28c2cae5c9a417752fbd1891adc31b3128e1cac784",
+      "public/schemas/csoai-evaluation-card-0.1.schema.json": "0c68653e5335d7e9abd46058f7261247c52d10b8a7dc596ffe3b01e993e53bb5",
+      "scripts/evaluation_card_verify.py": "07c5f8fef9334e45f929e8d7b7d25c10e4d9594ca83162d631ecf0c7c07b981f"
+    },
+    "item_ledger": {
+      "declared": {
+        "items": 7,
+        "path": "integrity-ledger.jsonl",
+        "sha256": "d54f47759df881c25c3504d05a5c4477c5a168c71ea0a24e0c305726ccf66fa5"
+      },
+      "verification": "NOT_PERFORMED_BY_RENDERER"
+    }
+  },
+  "calibration": {
+    "distinct_cases": 0,
+    "event_ids": [],
+    "groups": [],
+    "human_calibration": "NOT_ESTABLISHED",
+    "input_rows": 0,
+    "interpretation": "FAIL is the positive class. Non-binary candidate outputs remain in reference-class denominators; they are not successful decisions. Confusion counts cover binary pairs only.",
+    "limits": [
+      "Provided labels are not authenticated human judgments or ground truth.",
+      "Semantic near-duplicates and undisclosed training, retrieval or memory contamination are not detected.",
+      "Intervals are descriptive and conditional on the declared sample independence; they do not establish improvement or statistical separation."
+    ],
+    "reference_authentication": "NOT_ESTABLISHED",
+    "rows_by_declared_origin": {},
+    "split_check": "NO_REVIEW_ROWS",
+    "state": "NOT_ESTABLISHED"
+  },
+  "card_validation": "VALID",
+  "denominators": {
+    "answered_by_model_declared": 0,
+    "answered_by_rule_declared": 7,
+    "assessment_rows": 0,
+    "authenticated_human_participants": null,
+    "capture_only_repeats": 0,
+    "duplicate_event_wrappers": 0,
+    "items_held_out_declared": 0,
+    "items_total": 7,
+    "raw_events": 0,
+    "review_rows": 0,
+    "unattributed_or_other_answers": 0,
+    "unique_event_contents": 0,
+    "unique_event_ids": 0
+  },
+  "failure_classes": [],
+  "markdown": "# Evaluation and learning review\n\n## Executive Summary\n\nThe retained card **Council Academy: seven-file source integrity check** reports **MEASURED** for csoai/gspc-academy (d70acfc393cb947edabf9fab4a294f515b3b77b0). The existing card validator accepted its structure and invariants. This review does not rerun the measurement or authenticate its producer.\n\nReported measurement time: 2026-11-11T02:57:59Z. Publication time: 2026-11-11T02:57:59Z.\n\nCard claim boundary, as supplied: Matching bytes establish integrity against this manifest only\\. They do not establish factual accuracy of lessons, source rights, learner identity or competence, reviewer calibration, WG-SAFE endorsement, GSPC admission or action authority\\.\n\n## Data\n\nSuite: academy-seven-source-files, version d70acfc393cb947edabf9fab4a294f515b3b77b0. Declared item total: **7**; declared held-out items: **0**. This count does not verify isolation from training, retrieval, memory or tuning.\n\n| Arm | Kind | Items | Model answered | Rule answered | Other / unattributed |\n| --- | --- | --- | --- | --- | --- |\n| source-integrity | rule | 7 | 0 | 7 | 0 |\n\nEvents: 0 supplied; 0 unique identities; 0 duplicate wrappers; 0 capture-only repeats. Explicit review rows: 0; assessment rows: 0. Authenticated human participant count: **NOT_ESTABLISHED**.\n\nSources declared by the card:\n\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/README\\.md\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/axis-path\\.json\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-council-vote-is-evidence\\.md\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-inception-tracking\\.md\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-kev-delta-live\\.md\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-mcp-handshake-census\\.md\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-what-a-402-proves\\.md\n- https://github\\.com/CSOAI-ORG/councilof-ai/blob/6e25e497e21a820bfb8e2fd668a3d2000522ec00/scripts/hf/academy\\_review\\_assets\\.py\n\nDeclared item ledger: integrity-ledger\\.jsonl; SHA-256 `d54f47759df881c25c3504d05a5c4477c5a168c71ea0a24e0c305726ccf66fa5`. The renderer does not open or verify that ledger; its pointer is retained as supplied.\n\nInput SHA-256: card `90b986693e87f41f52352123d7a1968b621123c2706f529ba9ecf282df721adf`; events `4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`. Event bodies, names and participant handles are not republished.\n\n## Experiments\n\nInstrument: academy\\_review\\_assets\\.checked\\_sources, version 1, kind probe. The source card reports reproduction state **REPRODUCIBLE**. No reproduction command is executed by this report.\n\nRecorded command: python3 scripts/hf/academy\\_review\\_assets\\.py --lock qualification/academy-review-20261111/source-lock\\.json --out \\./academy-review-replay --as-of YYYY-MM-DDTHH:MM:SSZ.\n\nCalibration groups retain candidate, revision, rubric, split and reference origin separately. Split check: **NO\\_REVIEW\\_ROWS**. Source-family declarations are not proof that all leakage has been excluded.\n\n## Results\n\nCard result, as reported: **1\\.0 fraction\\_of\\_pinned\\_files\\_matching\\_hash\\_and\\_size**. No new overall score is computed from other evidence types.\n\n| Arm | Partition | Items | Reported value | Unit |\n| --- | --- | --- | --- | --- |\n| source-integrity | seven-listed-source-files | 7 | 1\\.0 | fraction\\_of\\_pinned\\_files\\_matching\\_hash\\_and\\_size |\n\nCalibration: **NOT_ESTABLISHED**; authenticated human calibration: **NOT_ESTABLISHED**.\n\nFAIL is the positive class. Non-binary candidate outputs remain in reference-class denominators; they are not successful decisions. Confusion counts cover binary pairs only.\n\nBefore/after readiness: **NOT_ESTABLISHED**. Structurally paired participant handles: 0. Human learning and retention gains: **NOT_ESTABLISHED**.\n\nFormal failure-class taxonomy: **NOT_RECORDED in this card**.\n\n## What you learned\n\nThis derived view reconciles declared answer attribution and retained evidence identities. Any computed label agreement is conditional on supplied reference labels; it does not establish their truth or human provenance.\n\nRetained source limitations and claims not established:\n\n- Seven declared public files only; the sample is not representative of all CSOAI materials\\.\n- Zero held-out tasks; the source files were inspected while the exporter was built\\.\n- Source claims and mutable target URLs were not re-tested\\.\n- No model inference, real learner responses, reviewer calibration or human approval was evaluated\\.\n- The source dataset card does not declare a content licence; this export does not infer a new licence\\.\n- Current truth of historical lesson claims\n- Human learning gain or calibrated reviewer competence\n- External independent reproduction\n- Model capability improvement\n- Approval or execution authority\n\nPractice points, model calls, synthetic participants and verified human outcomes are separate quantities. This report awards no rank, appointment or execution permission.\n\n## Next steps\n\nProposed steps remain review decisions, with no automatic adoption, training or publication.\n\n- Review the retained failure cases and missing evidence before selecting a change.\n\nHuman-study readiness requirements:\n\n- Authenticated participants and recorded consent for this study\n- Qualified reference reviewers and frozen scoring rubric\n- Rights-cleared, unseen transfer cases separated from teaching and tuning\n- Predeclared pairing, missingness, timing and analysis rules\n\n## AI tools used\n\nNo AI model is invoked by this renderer. AI roles in the underlying work are separate declarations and are not inferred from report generation.\n\n| Declared tool | Version | Role | Verification |\n| --- | --- | --- | --- |\n| ChatGPT | GPT-6 Astra Pro | Assistance implementing and reviewing the exporter and report; zero model inference calls in the seven-file integrity measurement itself\\. | DECLARED\\_NOT\\_INDEPENDENTLY\\_VERIFIED |\n\nStructural verification uses the existing evaluation-card validator and canonical evidence-event validator. Human identity, reviewer competence, independent acceptance and source truth remain **NOT_ESTABLISHED**.\n",
+  "projection_kind": "LEARNING_REVIEW_REPORT",
+  "projection_sha256": "f5a6f03ca7a0524916d8ac3b80d3e05718fa7c5a6efe31623c6129ac70728e4c",
+  "proposed_decisions": [],
+  "renderer_version": "learning-review-report/1",
+  "sections": [
+    {
+      "body": "The retained card **Council Academy: seven-file source integrity check** reports **MEASURED** for csoai/gspc-academy (d70acfc393cb947edabf9fab4a294f515b3b77b0). The existing card validator accepted its structure and invariants. This review does not rerun the measurement or authenticate its producer.\n\nReported measurement time: 2026-11-11T02:57:59Z. Publication time: 2026-11-11T02:57:59Z.\n\nCard claim boundary, as supplied: Matching bytes establish integrity against this manifest only\\. They do not establish factual accuracy of lessons, source rights, learner identity or competence, reviewer calibration, WG-SAFE endorsement, GSPC admission or action authority\\.",
+      "heading": "Executive Summary"
+    },
+    {
+      "body": "Suite: academy-seven-source-files, version d70acfc393cb947edabf9fab4a294f515b3b77b0. Declared item total: **7**; declared held-out items: **0**. This count does not verify isolation from training, retrieval, memory or tuning.\n\n| Arm | Kind | Items | Model answered | Rule answered | Other / unattributed |\n| --- | --- | --- | --- | --- | --- |\n| source-integrity | rule | 7 | 0 | 7 | 0 |\n\nEvents: 0 supplied; 0 unique identities; 0 duplicate wrappers; 0 capture-only repeats. Explicit review rows: 0; assessment rows: 0. Authenticated human participant count: **NOT_ESTABLISHED**.\n\nSources declared by the card:\n\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/README\\.md\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/axis-path\\.json\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-council-vote-is-evidence\\.md\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-inception-tracking\\.md\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-kev-delta-live\\.md\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-mcp-handshake-census\\.md\n- https://huggingface\\.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-what-a-402-proves\\.md\n- https://github\\.com/CSOAI-ORG/councilof-ai/blob/6e25e497e21a820bfb8e2fd668a3d2000522ec00/scripts/hf/academy\\_review\\_assets\\.py\n\nDeclared item ledger: integrity-ledger\\.jsonl; SHA-256 `d54f47759df881c25c3504d05a5c4477c5a168c71ea0a24e0c305726ccf66fa5`. The renderer does not open or verify that ledger; its pointer is retained as supplied.\n\nInput SHA-256: card `90b986693e87f41f52352123d7a1968b621123c2706f529ba9ecf282df721adf`; events `4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`. Event bodies, names and participant handles are not republished.",
+      "heading": "Data"
+    },
+    {
+      "body": "Instrument: academy\\_review\\_assets\\.checked\\_sources, version 1, kind probe. The source card reports reproduction state **REPRODUCIBLE**. No reproduction command is executed by this report.\n\nRecorded command: python3 scripts/hf/academy\\_review\\_assets\\.py --lock qualification/academy-review-20261111/source-lock\\.json --out \\./academy-review-replay --as-of YYYY-MM-DDTHH:MM:SSZ.\n\nCalibration groups retain candidate, revision, rubric, split and reference origin separately. Split check: **NO\\_REVIEW\\_ROWS**. Source-family declarations are not proof that all leakage has been excluded.",
+      "heading": "Experiments"
+    },
+    {
+      "body": "Card result, as reported: **1\\.0 fraction\\_of\\_pinned\\_files\\_matching\\_hash\\_and\\_size**. No new overall score is computed from other evidence types.\n\n| Arm | Partition | Items | Reported value | Unit |\n| --- | --- | --- | --- | --- |\n| source-integrity | seven-listed-source-files | 7 | 1\\.0 | fraction\\_of\\_pinned\\_files\\_matching\\_hash\\_and\\_size |\n\nCalibration: **NOT_ESTABLISHED**; authenticated human calibration: **NOT_ESTABLISHED**.\n\nFAIL is the positive class. Non-binary candidate outputs remain in reference-class denominators; they are not successful decisions. Confusion counts cover binary pairs only.\n\nBefore/after readiness: **NOT_ESTABLISHED**. Structurally paired participant handles: 0. Human learning and retention gains: **NOT_ESTABLISHED**.\n\nFormal failure-class taxonomy: **NOT_RECORDED in this card**.",
+      "heading": "Results"
+    },
+    {
+      "body": "This derived view reconciles declared answer attribution and retained evidence identities. Any computed label agreement is conditional on supplied reference labels; it does not establish their truth or human provenance.\n\nRetained source limitations and claims not established:\n\n- Seven declared public files only; the sample is not representative of all CSOAI materials\\.\n- Zero held-out tasks; the source files were inspected while the exporter was built\\.\n- Source claims and mutable target URLs were not re-tested\\.\n- No model inference, real learner responses, reviewer calibration or human approval was evaluated\\.\n- The source dataset card does not declare a content licence; this export does not infer a new licence\\.\n- Current truth of historical lesson claims\n- Human learning gain or calibrated reviewer competence\n- External independent reproduction\n- Model capability improvement\n- Approval or execution authority\n\nPractice points, model calls, synthetic participants and verified human outcomes are separate quantities. This report awards no rank, appointment or execution permission.",
+      "heading": "What you learned"
+    },
+    {
+      "body": "Proposed steps remain review decisions, with no automatic adoption, training or publication.\n\n- Review the retained failure cases and missing evidence before selecting a change.\n\nHuman-study readiness requirements:\n\n- Authenticated participants and recorded consent for this study\n- Qualified reference reviewers and frozen scoring rubric\n- Rights-cleared, unseen transfer cases separated from teaching and tuning\n- Predeclared pairing, missingness, timing and analysis rules",
+      "heading": "Next steps"
+    },
+    {
+      "body": "No AI model is invoked by this renderer. AI roles in the underlying work are separate declarations and are not inferred from report generation.\n\n| Declared tool | Version | Role | Verification |\n| --- | --- | --- | --- |\n| ChatGPT | GPT-6 Astra Pro | Assistance implementing and reviewing the exporter and report; zero model inference calls in the seven-file integrity measurement itself\\. | DECLARED\\_NOT\\_INDEPENDENTLY\\_VERIFIED |\n\nStructural verification uses the existing evaluation-card validator and canonical evidence-event validator. Human identity, reviewer competence, independent acceptance and source truth remain **NOT_ESTABLISHED**.",
+      "heading": "AI tools used"
+    }
+  ],
+  "validation_scope": "STRUCTURE_AND_INVARIANTS_NOT_TRUTH_OR_REEXECUTION"
+}

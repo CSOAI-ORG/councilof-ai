@@ -25,18 +25,17 @@ export default function HomeMine() {
         <LivingBoardStrip />
       </div>
 
-      {/* Daily report + newsletter band: the 33-axis signed daily report is
-          published publicly; the signup rides the real /api/subscribe handler
-          (stores to LEADS — verified end-to-end 2026-11-04). */}
-      <div className="section-shell pt-10" data-testid="home-daily-report-band">
+      {/* Link to the report archive without fixing its axis count, cadence or
+          signature state in homepage copy. Each report carries its own scope.
+          NewsletterSignup and the existing subscription handler are unchanged. */}
+      <div className="section-shell pt-10" data-testid="home-report-archive-band">
         <div className="surface-raised border border-border rounded-lg p-6 sm:p-8">
           <h2 className="text-xl font-bold mb-2">
-            The 33-axis daily report — signed, dated, public.
+            Published measurement reports
           </h2>
           <p className="text-muted-foreground text-sm mb-4 max-w-2xl">
-            Every axis, every leaderboard change, every correction — one signed report
-            a day, published before we pitch anything. Read today&apos;s issue or have
-            it find you.
+            Browse dated reports and read each report&apos;s scope, sources and
+            evidence status. Check the publication date before relying on a result.
           </p>
           <div className="flex flex-wrap gap-3 items-center">
             <a
@@ -45,7 +44,7 @@ export default function HomeMine() {
               rel="noopener noreferrer"
               className="inline-flex items-center rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold hover:opacity-90 transition"
             >
-              Read today&apos;s report
+              Browse published reports
             </a>
             <a href="/board/" className="text-sm underline underline-offset-4 hover:text-primary">
               or go straight to the board
