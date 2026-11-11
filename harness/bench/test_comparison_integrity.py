@@ -369,3 +369,56 @@ def test_offline_context_preserves_original_generation_declaration(tmp_path,monk
     assert doc['execution_context']['generation']['max_tokens']==128
     assert doc['generation_parameters_source']=='supplied_context'
     paired.comparable_rows(doc,doc)
+
+
+def test_local_frozen_replay_preserves_bytes_and_declared_context_without_network(tmp_path, monkeypatch):
+    raw = b'{"_canary":"excluded"}\n{"prompt":"First","expected":"COMPLY"}\n{"prompt":"Second","expected":"REFUSE"}\n'
+    bank = tmp_path/'private-bank-location.jsonl'; bank.write_bytes(raw)
+    digest = hashlib.sha256(raw).hexdigest()
+    path = tmp_path/'context.json'; path.write_text(json.dumps(context()))
+    answers = tmp_path/'answers.jsonl'
+    replies = ['<think>retained original reply</think>\nCOMPLY', 'REFUSE']
+    answers.write_text(''.join(json.dumps({'index': i, 'answer': a})+'\n' for i, a in enumerate(replies)))
+    def unexpected_network(*args, **kwargs):
+        raise AssertionError('local answer replay must not fetch a bank or call a model')
+    monkeypatch.setattr(runner, 'fetch', unexpected_network)
+    monkeypatch.setattr(runner, 'ask', unexpected_network)
+    receipts = []
+    for name in ['baseline', 'candidate']:
+        out = tmp_path/(name+'.json')
+        monkeypatch.setattr('sys.argv', ['run', '--axis', 'safety', '--answers', str(answers),
+            '--bank-path', str(bank), '--bank-sha256', digest, '--execution-context', str(path), '--out', str(out)])
+        assert runner.main() == 0
+        doc = json.loads(out.read_text()); receipts.append(doc)
+        assert doc['bank_source'] == 'local_file'
+        assert doc['bank_url'] is None
+        assert doc['bank_repo'] == 'gspc-agi'
+        assert doc['bank_sha256'] == digest
+        assert doc['items_total'] == doc['bank_items_total'] == 2
+        assert [row['answer'] for row in doc['rows']] == replies
+        assert doc['execution_context'] == context()
+        assert doc['generation_parameters_source'] == 'supplied_context'
+        assert str(tmp_path) not in out.read_text()
+    paired.comparable_rows(*receipts)
+
+
+@pytest.mark.parametrize('case', ['missing_digest', 'missing_path', 'invalid_digest', 'changed_bytes'])
+def test_local_bank_binding_failure_makes_no_model_calls_or_receipt(case, tmp_path, monkeypatch, capsys):
+    raw = b'{"prompt":"First","expected":"COMPLY"}\n{"prompt":"Second","expected":"REFUSE"}\n'
+    bank = tmp_path/'bank.jsonl'; bank.write_bytes(raw)
+    digest = hashlib.sha256(raw).hexdigest()
+    options = ['--bank-path', str(bank), '--bank-sha256', digest]
+    if case == 'missing_digest': options = options[:2]
+    elif case == 'missing_path': options = options[2:]
+    elif case == 'invalid_digest': options[-1] = 'not-a-digest'
+    else: bank.write_bytes(raw+b'\n')
+    def unexpected_network(*args, **kwargs):
+        raise AssertionError('unverified bank must fail before any network request')
+    monkeypatch.setattr(runner, 'fetch', unexpected_network)
+    monkeypatch.setattr(runner, 'ask', unexpected_network)
+    out = tmp_path/'result.json'
+    monkeypatch.setattr('sys.argv', ['run', '--axis', 'safety', '--model', 'synthetic-a', '--out', str(out), *options])
+    assert runner.main() == 2
+    assert not out.exists()
+    error = capsys.readouterr().err
+    assert 'supplied together' in error if case.startswith('missing_') else 'SHA-256' in error
