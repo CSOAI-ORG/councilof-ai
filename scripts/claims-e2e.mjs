@@ -3,6 +3,7 @@
 // Robust: createRequire import (works local + CI); waits for lazy-loaded elements before
 // interacting so it never throws a false fail.
 import { createRequire } from "module";
+import { probeBrainHealth, SYSTEM_CARD_TITLE } from "./claims-e2e-contract.mjs";
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
 
@@ -21,22 +22,6 @@ const fail = (c, d) => R.push(`❌ ${c} — ${d}`);
 // when the truth is that nothing was measured, and four identical "Unexpected end of JSON input"
 // lines say neither.
 const unchecked = (c, d) => R.push(`⚠️  ${c} — UNCHECKABLE: ${d}`);
-
-// Is there an API at BRAIN at all? os.meok.ai answers HTTP 200 on EVERY path — /api/health,
-// /api/mcp, /api/sign and / all return the same SPA index.html — so a status-code check passes
-// against a host that has no API deployed. Content-type is what distinguishes them.
-async function brainState() {
-  try {
-    const r = await fetch(BRAIN + "/health", { headers: { accept: "application/json" } });
-    const ct = (r.headers.get("content-type") || "").toLowerCase();
-    if (ct.includes("html")) {
-      return { up: false, why: `${BRAIN} answers HTTP ${r.status} with ${ct} on /health — the SPA catch-all, not an API. No brain is deployed at this host.` };
-    }
-    return { up: true, why: `content-type ${ct}` };
-  } catch (e) {
-    return { up: false, why: `${BRAIN} unreachable: ${e.message}` };
-  }
-}
 
 async function rpc(method, params) {
   const r = await fetch(BRAIN + "/mcp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) });
@@ -91,7 +76,8 @@ async function apiTruth() {
         : fail("MCP tool search filters", `q="${sample}" → ${hit.total} (expected >0), q="zzzz…" → ${miss.total} (expected 0) — the q parameter is not filtering`);
     }
   } catch (e) { fail("MCP tool catalogue", e.message); }
-  const brain = await brainState();
+  // A JSON response alone can be an error or another service's health endpoint.
+  const brain = await probeBrainHealth(BRAIN);
   if (!brain.up) {
     // One clear sentence instead of four "Unexpected end of JSON input" lines that named the
     // symptom and hid the cause. These claims are not refuted; they are unmeasured.
@@ -103,7 +89,7 @@ async function apiTruth() {
     try { const d = await rpc("tools/list"); const n = (d.result?.tools || []).length; n >= 5 ? pass("Live MCP tools", `${n} execute server-side`) : fail("Live MCP tools", `only ${n}`); } catch (e) { fail("tools/list", e.message); }
     try { const d = await rpc("tools/call", { name: "meok_govern", arguments: { industry: "a bank" } }); const t = d.result?.content?.map((c) => c.text).join(" ") || ""; /EU AI Act|DORA|GDPR/.test(t) ? pass("meok_govern executes", t.slice(0, 55)) : fail("meok_govern", "no framework output"); } catch (e) { fail("meok_govern", e.message); }
     try { const r = await fetch(BRAIN + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "claims-test" }) }); const d = await r.json(); (d.signature && d.publicKey) ? pass('CLAIM "Ed25519 signing"', `real sig len=${String(d.signature).length}, alg=${d.alg || "?"}`) : fail("Ed25519 signing", "no signature — the signed claim would be FALSE"); } catch (e) { fail("Ed25519 signing", e.message); }
-    try { const d = await (await fetch(BRAIN + "/health")).json(); d.ok ? pass("Brain health", d.service) : fail("Brain health", "not ok"); } catch (e) { fail("health", e.message); }
+    pass("Brain health", brain.health.service);
   }
   try { const r = await fetch(SITE + "/api/og?title=Test"); (r.status === 200 && (r.headers.get("content-type") || "").includes("image")) ? pass("Dynamic OG", "image/png 200") : fail("Dynamic OG", r.status + ""); } catch (e) { fail("OG", e.message); }
 }
@@ -120,7 +106,7 @@ async function open(b, path) {
 async function sov3Pages(b) {
   const checks = [
     { path: "/sov3-model-card", titleRe: /Model Card/i, bodyRe: /governed sovereign substrate|Oracle GenAI|Qwen3-MoE/i },
-    { path: "/sov3-system-card", titleRe: /System.*Safety Card/i, bodyRe: /care-floor|Containment|governance signal/i },
+    { path: "/sov3-system-card", titleRe: SYSTEM_CARD_TITLE, bodyRe: /care-floor|Containment|governance signal/i },
     { path: "/sov3-whitepaper", titleRe: /Growth by Accretion/i, bodyRe: /accretion|frozen base|invariant/i },
     { path: "/research-transparency", titleRe: /Research.*Transparency/i, bodyRe: /CONFIRMED|RETRACTED|wrong turns/i },
   ];
