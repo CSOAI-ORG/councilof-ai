@@ -1,0 +1,50 @@
+name: measured-reuse-publication
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'harness/measured-reuse-refresh-20261110/**'
+      - '.github/workflows/measured-reuse-publication.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'harness/measured-reuse-refresh-20261110/**'
+      - '.github/workflows/measured-reuse-publication.yml'
+  merge_group:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  measured-reuse-reader-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: harness/measured-reuse-refresh-20261110
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Checker controls must execute, not skip
+        working-directory: harness/measured-reuse-refresh-20261110
+        run: |
+          python - <<'PYTHON'
+          import unittest
+          suite = unittest.defaultTestLoader.discover('.', pattern='test_publication.py')
+          count = suite.countTestCases()
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          good = count == 21 and result.testsRun == 21 and result.wasSuccessful()
+          good = good and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses
+          raise SystemExit(0 if good else 1)
+          PYTHON
+      - name: Verify published records and run the isolated reader journey
+        working-directory: harness/measured-reuse-refresh-20261110
+        run: python verify_publication.py --replay "${{ runner.temp }}/measured-reuse-reader-${{ github.run_id }}-${{ github.run_attempt }}"
+      - name: Retain the actual logs and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measured-reuse-reader-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/measured-reuse-reader-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: warn
+          retention-days: 14
