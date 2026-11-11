@@ -35,7 +35,7 @@ sys.path.insert(0, str(FABRIC))
 from event import check_renderable, jcs  # Existing canonical validator.
 from render.axis_referee_review import content_ref, stamp, strict_json
 
-VERSION = "learning-review-report/1"
+VERSION = "learning-review-report/2"
 MAX_BYTES = 2 * 1024 * 1024
 MAX_EVENTS = 10000
 HEADINGS = ("Executive Summary", "Data", "Experiments", "Results",
@@ -280,7 +280,7 @@ def _before_after(events, card_hash, review_rows):
         row = _bound_payload(ev, "learning_assessment", ASSESSMENT_FIELDS, card_hash)
         if row is None:
             continue
-        if (row["phase"] not in {"PRE", "POST", "RETENTION"}
+        if (row["phase"] not in {"PRE", "POST", "TRANSFER", "RETENTION"}
                 or row["response_label"] not in CANDIDATE_LABELS
                 or row["data_origin"] not in {"SYNTHETIC", "SUPPLIED_REFERENCE"}):
             raise ValueError("unknown assessment phase, label or origin")
@@ -292,10 +292,12 @@ def _before_after(events, card_hash, review_rows):
     participants = defaultdict(list)
     for row in rows:
         participants[row["participant_ref"]].append(row)
-    paired, issues = 0, Counter()
+    paired, transferred, issues = 0, 0, Counter()
     for batch in participants.values():
         pre = [r for r in batch if r["phase"] == "PRE"]
         post = [r for r in batch if r["phase"] == "POST"]
+        transfer = [r for r in batch if r["phase"] == "TRANSFER"]
+        retention = [r for r in batch if r["phase"] == "RETENTION"]
         if not pre or not post:
             issues["MISSING_PRE_OR_POST"] += 1
             continue
@@ -316,11 +318,36 @@ def _before_after(events, card_hash, review_rows):
             issues.update(pair_issues)
         else:
             paired += 1
+        later_issues = set()
+        if not transfer:
+            later_issues.add("MISSING_TRANSFER")
+        else:
+            earlier_cases = {r["case_sha256"] for r in pre + post}
+            if earlier_cases & {r["case_sha256"] for r in transfer}:
+                later_issues.add("REUSED_TRANSFER_CASES")
+            if max(stamp(r["read_at"]) for r in post) >= min(stamp(r["read_at"]) for r in transfer):
+                later_issues.add("POST_TRANSFER_CHRONOLOGY_NOT_ESTABLISHED")
+            if any(r["source_group"] in training_groups for r in transfer):
+                later_issues.add("TRANSFER_SOURCE_OVERLAPS_TRAINING")
+            if not pair_issues and not later_issues:
+                transferred += 1
+        if retention:
+            earlier = pre + post + transfer
+            if {r["case_sha256"] for r in earlier} & {r["case_sha256"] for r in retention}:
+                later_issues.add("REUSED_RETENTION_CASES")
+            if max(stamp(r["read_at"]) for r in earlier) >= min(stamp(r["read_at"]) for r in retention):
+                later_issues.add("RETENTION_CHRONOLOGY_NOT_ESTABLISHED")
+        issues.update(later_issues)
     return {
         "state": "STRUCTURALLY_PAIRED_UNVERIFIED" if paired else "NOT_ESTABLISHED",
         "assessment_rows": len(rows), "declared_participant_handles": len(participants),
         "structurally_paired_handles": paired,
+        "structurally_paired_transfer_handles": transferred,
         "phase_counts": dict(sorted(Counter(r["phase"] for r in rows).items())),
+        "phase_response_label_counts": {
+            phase: dict(sorted(Counter(r["response_label"] for r in rows if r["phase"] == phase).items()))
+            for phase in sorted({r["phase"] for r in rows})
+        },
         "issues": dict(sorted(issues.items())), "event_ids": sorted(r["event_id"] for r in rows),
         "authenticated_human_count": None, "human_learning_gain": None,
         "retention_gain": None, "readiness": "HOLD_FOR_QUALIFIED_HUMAN_STUDY",
@@ -329,7 +356,8 @@ def _before_after(events, card_hash, review_rows):
                          "Rights-cleared, unseen transfer cases separated from teaching and tuning",
                          "Predeclared pairing, missingness, timing and analysis rules"],
         "limits": ["Participant handles, phase labels and correct answers do not prove human participation.",
-                   "Structural pairing does not establish comparable task difficulty, causation or human learning."],
+                   "Structural pairing does not establish comparable task difficulty, causation or human learning.",
+                   "Distinct declared transfer cases do not establish that their content was unseen or held out; public practice content remains inspectable."],
     }
 
 
@@ -471,10 +499,15 @@ def build_report(card_bytes, event_bytes=b"[]", *, as_of, ai_tools=(), proposed_
                                    for metric in (group["failure_detection"], group["correct_acceptance"], group["decision_coverage"])})
         result += "Interval interpretation: " + "; ".join(_md(reason) for reason in interval_reasons) + ".\n\n"
     result += calibration["interpretation"] + "\n\n"
-    result += f"Before/after readiness: **{before_after['state']}**. Structurally paired participant handles: {before_after['structurally_paired_handles']}. Human learning and retention gains: **NOT_ESTABLISHED**."
+    result += f"Before/after readiness: **{before_after['state']}**. Structurally paired participant handles: {before_after['structurally_paired_handles']}. Handles with separate ordered transfer responses: {before_after['structurally_paired_transfer_handles']}. Human learning and retention gains: **NOT_ESTABLISHED**."
     if before_after["assessment_rows"]:
         result += "\n\nDeclared assessment phases: " + _md(json.dumps(before_after["phase_counts"], sort_keys=True)) + ". "
         result += "Pairing issues: " + _md(json.dumps(before_after["issues"], sort_keys=True)) + "."
+        result += "\n\nSupplied response labels by phase (descriptive counts, not authenticated learner results):\n\n"
+        result += _table(["Phase", "PASS", "FAIL", "ABSTAIN", "INVALID", "MISSING"],
+                         [(phase, *(counts.get(label, 0) for label in ("PASS", "FAIL", "ABSTAIN", "INVALID", "MISSING")))
+                          for phase, counts in before_after["phase_response_label_counts"].items()])
+        result += "\n\nDistinct task digests and ordered phase labels do not establish unseen or held-out transfer content."
     if failure_classes:
         result += "\n\n" + _table(["Declared limitation class", "Present", "Source justification"],
                                   [(r["class"], r["present"], r["justification"]) for r in failure_classes])
