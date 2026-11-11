@@ -176,3 +176,14 @@ test('latest machine index and HTML carry the same report-bound handoff',t=>{
 test('new navigation does not change measured coverage, findings or rights',t=>{
  const {dir}=temporary(t);put(dir,fixture());const {files,index}=buildProduct(dir);assert.equal(index.measurement_count,null);assert.equal(index.valuation,null);assert.equal(JSON.parse(files.get('findings.json')).findings.length,4);assert.equal(index.service_handoff.reuse_rights_established,false);
 });
+
+// Preserve the original evidence-browser contract: offers are not findings.
+test('service option articles cannot inflate the retained finding count',t=>{
+ const {dir}=temporary(t);put(dir,fixture());const {files}=buildProduct(dir);
+ const html=files.get('index.html'),f=JSON.parse(files.get('findings.json'));
+ assert.equal((html.match(/<article class="finding">/g)||[]).length,f.findings.length);
+ assert.equal((html.match(/<article class="service-option">/g)||[]).length,4);
+});
+test('the handoff fragment has no finding-class evidence articles',()=>{
+ const html=renderServiceHandoff(handoffEntry());assert.doesNotMatch(html,/<article class="finding">/);assert.equal((html.match(/<article class="service-option">/g)||[]).length,4);
+});
