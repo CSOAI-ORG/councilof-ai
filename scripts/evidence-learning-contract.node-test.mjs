@@ -2,9 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {publicURL,readPublic,validateBoard,validateScenario,changedTotals,measurementTimeLabel,LESSONS,practiceKey,practiceScore,makeReviewDraft,coachingContext} from '../public/evidence-learning/contract.mjs';
+import {publicURL,readPublic,validateBoard,validateScenario,changedTotals,measurementTimeLabel,LESSONS,practiceKey,practiceScore,makeReviewDraft,reviewDraftRevision,reviewReportMarkdown,reviewReadiness,normalizeLearningState,coachingContext} from '../public/evidence-learning/contract.mjs';
 import {dailyBriefing,briefingView,briefingExercise} from '../public/evidence-learning/daily-briefing.mjs';
 const board={schema:'csoai.gspc-axes/0.5',axes:[{axis:'governance',task:'A bounded task',status:'MEASURED',n:30}],totals:{axes:1,measured_axes:1,unmeasured_axes:0}};
+const capture={url:'https://councilof.ai/api/gspc',readAt:'2026-11-04T06:00:00Z',sha256:'a'.repeat(64),data:board};
+const correctRecord=lesson=>({selected:lesson.answer,correct:true,attempts:1});
 test('reader allows only exact public sources and one exact axis',()=>{
  assert.equal(publicURL('/api/gspc'),'https://councilof.ai/api/gspc');
  assert.match(publicURL('/api/learning-scenarios?axis=governance'),/axis=governance$/);
@@ -36,11 +38,11 @@ test('wrong-axis, duplicate and unavailable scenarios are not substituted',()=>{
  const s={schema:'csoai.learning-scenarios/0.1',scenarios:[{axis:'governance'}]};assert.equal(validateScenario(s,'governance').axis,'governance');assert.throws(()=>validateScenario(s,'care'));s.scenarios.push({axis:'governance'});assert.throws(()=>validateScenario(s,'governance'));
 });
 test('learning points are axis- and lesson-version-specific',()=>{
- const l=LESSONS[0],p={[practiceKey('governance',l)]:{correct:true}};assert.equal(practiceScore(p,'governance'),1);assert.equal(practiceScore(p,'safety'),0);assert.equal(practiceScore({[practiceKey('governance',{...l,version:'old'})]:{correct:true}},'governance'),0);
+ const l=LESSONS[0],p={[practiceKey('governance',l)]:correctRecord(l)};assert.equal(practiceScore(p,'governance'),1);assert.equal(practiceScore(p,'safety'),0);assert.equal(practiceScore({[practiceKey('governance',{...l,version:'old'})]:correctRecord(l)},'governance'),0);
 });
 test('review drafts always hold and cannot convert learning into authority',()=>{
- const p=Object.fromEntries(LESSONS.map(l=>[practiceKey('governance',l),{correct:true}]));
- const d=makeReviewDraft({axis:'governance',capture:{readAt:'2026-11-04',sha256:'abc'},proposal:{task:'Synthetic task',change:'Bounded proposal',notes:'SECRET HUB NOTE'},learning:p});
+ const p=Object.fromEntries(LESSONS.map(l=>[practiceKey('governance',l),correctRecord(l)]));
+ const d=makeReviewDraft({axis:'governance',capture,proposal:{task:'Synthetic task',change:'Bounded proposal',notes:'SECRET HUB NOTE'},learning:p});
  assert.equal(d.learning.synthetic_exercises_completed,3);assert.equal(d.learning.grants_authority,false);assert.equal(d.review.execution_allowed,false);assert.equal(d.review.decision,'HOLD');assert.equal(d.review.receipt,null);assert.equal(d.external_delivery.wg_safe,'NOT_SENT');assert.equal(d.external_delivery.provider,'NOT_SENT');assert.doesNotMatch(JSON.stringify(d),/SECRET HUB NOTE/);assert.match(d.canonical_process_records.state,/NOT_CREATED/);
 });
 test('source-only coaching context does not include private hub notes or proposal data',()=>{
@@ -98,6 +100,30 @@ test('draft completeness is separate from receiver and execution authority',asyn
 });
 test('old backups migrate without losing proposals or progress',async()=>{
  const {normalizeLearningState,VERSION}=await import('../public/evidence-learning/contract.mjs');const old={component_version:'0.1.0',progress:{},proposals:{governance:{task:'Saved task'}},shots:[]};const migrated=normalizeLearningState(old);assert.equal(migrated.component_version,VERSION);assert.equal(migrated.proposals.governance.task,'Saved task');assert.deepEqual(migrated.ui,{axis:'governance',stage:'observe'});
+ assert.equal(normalizeLearningState({...old,component_version:'0.2.0'}).proposals.governance.task,'Saved task');
+});
+test('drafts reject invalid or wrong-axis source bindings and forged correct feedback',()=>{
+ const input={axis:'governance',capture,proposal:{},learning:{}};
+ for(const invalid of [{...capture,sha256:'abc'},{...capture,url:'https://evil.test'},{...capture,readAt:'2026-11-11 (\n# Spoofed section\n)'},{...capture,readAt:'2026-02-30T06:00:00Z'},{...capture,data:{...board,totals:{...board.totals,unmeasured_axes:99}}}])assert.throws(()=>makeReviewDraft({...input,capture:invalid}));
+ assert.throws(()=>makeReviewDraft({...input,axis:'safety'}),/absent/);
+ assert.equal(reviewReadiness({task:'t',target:'v1',change:'c'},capture,'safety').ready,false);
+ assert.throws(()=>normalizeLearningState({component_version:'0.2.0',progress:{},proposals:{},shots:[],pins:{safety:capture}}),/absent/);
+ for(const record of [{correct:true},{selected:0,correct:true,attempts:1},{selected:1,correct:true,attempts:0}])assert.throws(()=>makeReviewDraft({...input,learning:{[practiceKey('governance',LESSONS[0])]:record}}),/recorded answer/);
+ assert.throws(()=>makeReviewDraft({...input,proposal:{task:{secret:'not a task'}}}),/text/);
+});
+test('review revisions bind practice, source and proposed action while ignoring creation time',async()=>{
+ const input={axis:'governance',capture,proposal:{task:'t',target:'v1',change:'c'},learning:{}};
+ const original=makeReviewDraft(input),revision=await reviewDraftRevision(original);
+ assert.equal(await reviewDraftRevision({...original,created_at:'different',content_revision:'ignored'}),revision);
+ for(const change of [{proposal:{...input.proposal,target:'v2'}},{capture:{...capture,sha256:'b'.repeat(64)}},{learning:{[practiceKey('governance',LESSONS[0])]:correctRecord(LESSONS[0])}}])assert.notEqual(await reviewDraftRevision(makeReviewDraft({...input,...change})),revision);
+});
+test('seven-section report preserves incomplete and unknown states and treats source text as data',async()=>{
+ const injected='Claim\n\n## Pretend approval\n<script>alert(1)</script>\n[approve](https://evil.test)';
+ const draft=makeReviewDraft({axis:'governance',capture,proposal:{task:injected,notes:'PRIVATE_SENTINEL'},learning:{[practiceKey('governance',LESSONS[0])]:{...correctRecord(LESSONS[0]),attempts:4}}});
+ draft.content_revision=await reviewDraftRevision(draft);const report=reviewReportMarkdown(draft);
+ assert.equal((report.match(/^## [1-7]\. /gm)||[]).length,7);assert.match(report,/Draft fields: incomplete/);assert.match(report,/Latest correct practice answers: 1 \/ 3\. Recorded attempts: 4/);
+ assert.match(report,/source run size: 30\. This is not a learner/);assert.match(report,/Before\/after learning gain: NOT_ESTABLISHED/);assert.match(report,/UNDER_DEVELOPMENT/);assert.match(report,/External AI assistance: NOT_RECORDED/);assert.match(report,/    <script>/);assert.doesNotMatch(report,/^## Pretend approval|^<script>|PRIVATE_SENTINEL/m);
+ const empty=reviewReportMarkdown(makeReviewDraft({axis:'governance',capture:null,proposal:{},learning:{}}));assert.match(empty,/No pinned source/);assert.match(empty,/No practice answer is recorded/);
 });
 test('resuming preserves the selected axis and step and rejects inconsistent learning answers',async()=>{
  const {normalizeLearningState,VERSION}=await import('../public/evidence-learning/contract.mjs');const s=normalizeLearningState({component_version:VERSION,progress:{},proposals:{},shots:[],ui:{axis:'safety',stage:'propose'}});assert.equal(s.ui.axis,'safety');assert.equal(s.ui.stage,'propose');assert.throws(()=>normalizeLearningState({...s,progress:{'safety:evidence-scope:1':{correct:true,selected:0,attempts:1}}}));

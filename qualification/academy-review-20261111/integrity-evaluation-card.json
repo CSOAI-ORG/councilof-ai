@@ -1,0 +1,116 @@
+{
+  "arms": [
+    {
+      "answered_by_model": 0,
+      "answered_by_rule": 7,
+      "description": "Deterministic SHA-256 and byte-length comparisons; zero model calls and zero human review responses.",
+      "id": "source-integrity",
+      "items": 7,
+      "kind": "rule"
+    }
+  ],
+  "claim_boundary": "Matching bytes establish integrity against this manifest only. They do not establish factual accuracy of lessons, source rights, learner identity or competence, reviewer calibration, WG-SAFE endorsement, GSPC admission or action authority.",
+  "corrections": null,
+  "description": "Executed deterministic comparison of seven pinned public source files with declared SHA-256 and byte lengths. The five-row metadata export was generated from these bytes. This is a source integrity check, not a model benchmark, lesson-content review or human learning experiment. The card timestamp records creation of this result artifact; external release/readback is recorded separately.",
+  "every_eval_ever": {
+    "dataset": "csoai/gspc-academy",
+    "eval_date": "2026-11-11",
+    "eval_type": "deterministic-source-audit",
+    "license": null,
+    "metrics": [
+      {
+        "higher_is_better": true,
+        "name": "matching_file_fraction",
+        "unit": "fraction",
+        "value": 1.0
+      }
+    ],
+    "model": null,
+    "not_applicable_reason": "No model answered any item. The source dataset does not declare a content licence; no licence is inferred.",
+    "task": "source-integrity"
+  },
+  "id": "academy-source-integrity-d54f47759df881c2",
+  "instrument": {
+    "grader_sha256": "76079f4341019a77c4c434f7eaf859d4821edfc23b617b166d838d91295fad50",
+    "kind": "probe",
+    "name": "academy_review_assets.checked_sources",
+    "rubric_sha256": "7a415e60654c24c580d4c586739f10518e9592e0933ed26c75134aff870af9e2",
+    "version": "1"
+  },
+  "item_ledger": {
+    "items": 7,
+    "path": "integrity-ledger.jsonl",
+    "sha256": "d54f47759df881c25c3504d05a5c4477c5a168c71ea0a24e0c305726ccf66fa5"
+  },
+  "kind": "evaluation-card",
+  "limitations": [
+    "Seven declared public files only; the sample is not representative of all CSOAI materials.",
+    "Zero held-out tasks; the source files were inspected while the exporter was built.",
+    "Source claims and mutable target URLs were not re-tested.",
+    "No model inference, real learner responses, reviewer calibration or human approval was evaluated.",
+    "The source dataset card does not declare a content licence; this export does not infer a new licence."
+  ],
+  "not_established": [
+    "Current truth of historical lesson claims",
+    "Human learning gain or calibrated reviewer competence",
+    "External independent reproduction",
+    "Model capability improvement",
+    "Approval or execution authority"
+  ],
+  "provenance": {
+    "as_of": "2026-11-11T02:56:10Z",
+    "did": null,
+    "published_at": "2026-11-11T02:56:10Z",
+    "sig_ed25519": null,
+    "source_urls": [
+      "https://huggingface.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/README.md",
+      "https://huggingface.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/axis-path.json",
+      "https://huggingface.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-council-vote-is-evidence.md",
+      "https://huggingface.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-inception-tracking.md",
+      "https://huggingface.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-kev-delta-live.md",
+      "https://huggingface.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-mcp-handshake-census.md",
+      "https://huggingface.co/datasets/csoai/gspc-academy/resolve/d70acfc393cb947edabf9fab4a294f515b3b77b0/lesson-what-a-402-proves.md"
+    ]
+  },
+  "reproduction": {
+    "command": "python3 scripts/hf/academy_review_assets.py --lock qualification/academy-review-20261111/source-lock.json --out ./academy-review-replay --as-of YYYY-MM-DDTHH:MM:SSZ",
+    "environment": "Python 3.10+ standard library; anonymous access to pinned public source files; CPU only.",
+    "inputs": [
+      "qualification/academy-review-20261111/source-lock.json"
+    ],
+    "reason": "Source candidate generated for review; public source release and hosted replay have not yet been verified.",
+    "state": "NOT_PUBLISHED"
+  },
+  "result": {
+    "band": "Exact finite-file integrity count; no population estimate or model comparison.",
+    "p_value": null,
+    "per_arm": [
+      {
+        "arm_id": "source-integrity",
+        "items": 7,
+        "partition": "seven-listed-source-files",
+        "unit": "fraction_of_pinned_files_matching_hash_and_size",
+        "value": 1.0
+      }
+    ],
+    "separated": null,
+    "state": "MEASURED",
+    "unit": "fraction_of_pinned_files_matching_hash_and_size",
+    "value": 1.0
+  },
+  "schema": "https://councilof.ai/schemas/csoai-evaluation-card-0.1.schema.json",
+  "subject": {
+    "id": "csoai/gspc-academy",
+    "kind": "dataset",
+    "url": "https://huggingface.co/datasets/csoai/gspc-academy/tree/d70acfc393cb947edabf9fab4a294f515b3b77b0",
+    "version": "d70acfc393cb947edabf9fab4a294f515b3b77b0"
+  },
+  "suite": {
+    "bank_sha256": "7a415e60654c24c580d4c586739f10518e9592e0933ed26c75134aff870af9e2",
+    "id": "academy-seven-source-files",
+    "items_held_out": 0,
+    "items_total": 7,
+    "version": "d70acfc393cb947edabf9fab4a294f515b3b77b0"
+  },
+  "title": "Council Academy: seven-file source integrity check"
+}
