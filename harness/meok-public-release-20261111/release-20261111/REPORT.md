@@ -38,3 +38,7 @@ The private application now has a separately owned complete-source/saved-copy co
 Research results are dated and source-pinned. Prediction, observation, source integrity, authentication, authority and measurement admission remain distinct. A self-published hash is not an independent signature. A public demo is not customer acceptance. No guarantee of universal or 100-percent correctness is made.
 
 No large-model inference, new weight fitting, paid GPU, private-data publication, protected merge, authority change or new GSPC score is performed by this release. Original evidence remains available. Any genuinely new content or algorithmic result needs its own source, rights, test and promotion review.
+
+## Mobile readback correction
+
+A real anonymous Chromium check found that a 390-pixel viewport widened to 511 pixels because the grid inherited the comparison table's intrinsic width. The bounded CSS correction gives grid tracks a zero minimum and keeps wide tables in their own horizontal-scroll container. The candidate produced a 390-pixel document width on the same browser page. Hosted acceptance after this publication remains a separately retained result. No numerical or model code changes.
