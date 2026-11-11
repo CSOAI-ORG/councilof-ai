@@ -27,11 +27,13 @@ import datetime as dt
 import hashlib
 import importlib.util
 import json
+import os
 import re
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
@@ -67,6 +69,7 @@ PRODUCERS = {
     "scripts/pod-loops/gspc-estate-spray.sh": "via-uploader",  # hf_upload.py --folder
     "scripts/pod-loops/revenue-snapshot.sh": "via-uploader",   # hf_upload.py --readme-if-absent
     "scripts/pod-loops/trust-chain.sh": "via-uploader",        # hf_upload.py --readme-if-absent
+    "scripts/retire-superseded-datasets.py": "via-uploader",   # supersession notice through hf_upload.py
     "scripts/census/build-mcp-remote-census-record.py": "wired",
     "scripts/census/contract-parity.py": "wired",
     "scripts/census/correct-a2a-card-census.py": "edits-live",
@@ -75,6 +78,7 @@ PRODUCERS = {
     "scripts/hf/hf_live_row.py": "edits-live",
     "scripts/hf/hf_card_metadata.py": "edits-live",          # preserves the existing citation/body
     "scripts/hf/polish_frontdoors.py": "template",           # reviewed product templates; content/hash guards
+    "scripts/surface/publish-hf-evaluation.py": "template",  # pinned evaluation pack/results dataset cards
     "scripts/claims/maintenance_due.py": "not-a-card",       # README below the claim-maintenance archive subfolder
     "scripts/measurements/publish-fact-table.py": "template", # dedicated fact-table product card
     "scripts/hf/hf-scrub-daily.py": "edits-live",        # hf-org-card.py scrub_legacy line-edits, commit against the revision read
@@ -85,6 +89,7 @@ PRODUCERS = {
     "scripts/pod-loops/corrections-watch.py": "not-a-card",  # sub-folder README (public/interop/corrections-watch/) in csoai/councilof-ai-evidence, not a dataset card
     "scripts/pod-loops/drift-draft.py": "private",           # csoai/corrections-watch, created --private
     "scripts/sync_hf_gspc.py": "not-a-card",                 # the gspc-board Space shell
+    "scripts/sync_hf_coliseum.py": "not-a-card",             # the council-coliseum Space mirror
     "scripts/harness-x/render.mjs": "not-a-card",            # package and Space READMEs
     "scripts/export-benchmark-quality.mjs": "not-a-card",    # csoai/benchmark-quality-register, not public
 }
@@ -221,6 +226,20 @@ class TheBlock(unittest.TestCase):
 
 
 class TheProducers(unittest.TestCase):
+    def setUp(self):
+        # Card-only imports still honour the uploader's required lanes root.
+        # Keep that runtime contract intact and supply an isolated test root.
+        lanes = tempfile.TemporaryDirectory()
+        self.addCleanup(lanes.cleanup)
+        environment = patch.dict(os.environ, {"LANES": lanes.name})
+        environment.start()
+        self.addCleanup(environment.stop)
+
+    def test_pod_uploader_still_refuses_an_absent_lanes_root(self):
+        with patch.dict(os.environ, {"LANES": ""}), patch.object(Path, "is_dir", return_value=False):
+            with self.assertRaisesRegex(SystemExit, "LANES is unset and no lanes root was found"):
+                load("hf_upload_no_lanes", REPO / "scripts/pod-loops/hf_upload.py")
+
     def test_every_readme_uploader_is_classified_by_name(self):
         found = scan_readme_uploaders()
         unclassified = sorted(found - set(PRODUCERS))

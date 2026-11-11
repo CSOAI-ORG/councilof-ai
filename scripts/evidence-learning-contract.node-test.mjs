@@ -32,6 +32,7 @@ test('public source digest covers original bytes, including a decoded UTF-8 BOM'
 });
 test('board roster is dynamic and count disagreement fails closed',()=>{
  assert.equal(validateBoard(board).axes.length,1);const larger=structuredClone(board);larger.axes.push({axis:'new-axis',task:'Another task',status:'UNMEASURED',n:0});larger.totals.axes=2;larger.totals.unmeasured_axes=1;assert.equal(validateBoard(larger).axes.length,2);
+ const partial=structuredClone(board);delete partial.totals.unmeasured_axes;assert.equal(validateBoard(partial).totals.unmeasured_axes,undefined);
  for(const mutate of [b=>b.totals.axes=99,b=>b.axes.push({...b.axes[0]}),b=>b.axes[0].status='CERTIFIED',b=>b.axes[0].n=-1]){const b=structuredClone(board);mutate(b);assert.throws(()=>validateBoard(b))}
 });
 test('wrong-axis, duplicate and unavailable scenarios are not substituted',()=>{

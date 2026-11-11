@@ -15,7 +15,7 @@ export function validateBoard(b) {
   if(b?.schema!=='csoai.gspc-axes/0.5'||!Array.isArray(b.axes)||!b.axes.length||b.axes.length>500||!b.totals)throw Error('Board schema is unavailable or unrecognised.');
   for(const a of b.axes)if(!a||typeof a.axis!=='string'||!/^[a-z0-9][a-z0-9-]{0,79}$/.test(a.axis)||!states.includes(a.status)||typeof a.task!=='string'||a.task.length>6000||!Number.isSafeInteger(a.n)||a.n<0)throw Error('Board contains an invalid axis.');
   const measured=b.axes.filter(a=>a.status==='MEASURED').length;
-  if(new Set(b.axes.map(a=>a.axis)).size!==b.axes.length||b.totals.axes!==b.axes.length||b.totals.measured_axes!==measured||b.totals.unmeasured_axes!==b.axes.length-measured)throw Error('Board totals and axis records disagree.');
+  if(new Set(b.axes.map(a=>a.axis)).size!==b.axes.length||b.totals.axes!==b.axes.length||b.totals.measured_axes!==measured||(b.totals.unmeasured_axes!==undefined&&b.totals.unmeasured_axes!==b.axes.length-measured))throw Error('Board totals and axis records disagree.');
   return b;
 }
 export async function readPublic(path,{fetcher=fetch,signal}={}) {
@@ -88,7 +88,7 @@ export function makeReviewDraft({axis,capture,proposal,learning}) {
     preparation:{required_fields_present:readiness.ready,missing:readiness.missing,meaning:'Draft completeness only; no receiver acceptance or human authority.'},
     review:{referral:'NOT_SUBMITTED',receiver:'NOT_QUALIFIED',staffing:'NOT_ESTABLISHED',decision:'HOLD',receipt:null,effect:'NOT_OBSERVED',execution_allowed:false},
     canonical_process_records:{event_schema:'csoai.evidence-event/0.1',authority_profile:'csoai.hitl-authority-effect/0.2',state:'NOT_CREATED; qualified acting service must validate and issue canonical events'},
-    reference_context:{academy:'https://councilof.ai/academy/',reproducibility_exercises:'https://councilof.ai/academy/exercises/',human_review:'https://councilof.ai/dashboard?tab=staff',wg_safe:{url:'https://github.com/OpenSecureAIAlliance/wg-safe/blob/3769437209edac11d745dd58c165b951ed474e27/CHARTER.md',status:'UNDER_DEVELOPMENT',observed_on:'2026-11-11',use:'REFERENCE_ONLY; no upstream adoption established'}},
+    reference_context:{academy:'https://councilof.ai/academy/',lesson_index:'https://huggingface.co/datasets/csoai/gspc-academy',replay_notebook:'https://www.kaggle.com/code/nicktempleman/council-academy-evidence-review',reproducibility_exercises:'https://councilof.ai/academy/exercises/',human_review:'https://councilof.ai/dashboard?tab=staff',wg_safe:{url:'https://github.com/OpenSecureAIAlliance/wg-safe/blob/3769437209edac11d745dd58c165b951ed474e27/CHARTER.md',status:'UNDER_DEVELOPMENT',observed_on:'2026-11-11',use:'REFERENCE_ONLY; no upstream adoption established'}},
     external_delivery:{provider:'NOT_SENT',wg_safe:'NOT_SENT',publication:'NOT_PERFORMED'},boundaries:['Local draft only; not a canonical evidence event or case store.','No authenticated reviewer or operator authority established.','No certification, legal determination or change to a GSPC result.']};
 }
 export async function reviewDraftRevision(draft){
@@ -119,7 +119,7 @@ export function reviewReportMarkdown(draft){
   lines.push('','## 6. Next steps','');
   if(draft.preparation.missing.length)lines.push('Complete: '+draft.preparation.missing.join('; ')+'.','');
   lines.push('Have a qualified receiver accept the exact referral, verify the named human and current authority, record a decision through the existing canonical service, and independently observe any approved effect.',
-    `Academy: ${draft.reference_context.academy}`,`Reproducibility exercises: ${draft.reference_context.reproducibility_exercises}`,`Existing human-review status: ${draft.reference_context.human_review}`,
+    `Academy: ${draft.reference_context.academy}`,`Source-linked lesson index: ${draft.reference_context.lesson_index}`,`CPU replay notebook: ${draft.reference_context.replay_notebook}`,`Reproducibility exercises: ${draft.reference_context.reproducibility_exercises}`,`Existing human-review status: ${draft.reference_context.human_review}`,
     `WG-SAFE source: ${draft.reference_context.wg_safe.url}`,`Pinned charter status on ${draft.reference_context.wg_safe.observed_on}: ${draft.reference_context.wg_safe.status}. ${draft.reference_context.wg_safe.use}.`,
     '','## 7. AI tools used','','This component uses deterministic JavaScript and makes no model call. External AI assistance: NOT_RECORDED. Record any model, version, purpose and human checks used in the broader task before submitting the report.','');
   return lines.join('\n');
