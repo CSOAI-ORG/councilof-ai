@@ -12,6 +12,7 @@
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { SUBMISSION_GUIDE_ROUTE } from "./surface/build-bench-suite.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP_TSX = join(ROOT, "client/src/App.tsx");
@@ -568,8 +569,8 @@ const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/") ||
 const SLASH_FAMILIES = [/^\/library\/[a-z0-9-]+$/, /^\/vs\/[a-z0-9-]+$/];
 const servedForm = (p) => (SLASH_FAMILIES.some((re) => re.test(p)) ? `${p}/` : p);
 
-// --- Machine contracts (audit rec 5, lane d971a38) — not App.tsx routes, but
-// prime agent/AEO citation surface. Kept here so regeneration never drops them.
+// --- Machine contracts and source-owned generated discovery pages — not
+// App.tsx routes, but kept here so generation works before their HTML exists.
 const MACHINE_PATHS = [
   ["/api/gspc", "daily", "0.8"],
   ["/api/feed.xml", "daily", "0.7"],
@@ -601,6 +602,10 @@ const MACHINE_PATHS = [
   // sitemap-built held every deploy until it was listed. If the page is ever withdrawn, remove this
   // line in the same change (a sitemap lists what the edge serves).
   ["/extension/", "weekly", "0.5"],
+  // The canonical bench producer owns this route. Its HTML is generated during
+  // build:client; relying only on static-file discovery made pre/post-build
+  // sitemap parity contradictory. The shared declaration also deduplicates it.
+  [SUBMISSION_GUIDE_ROUTE, "weekly", "0.6"],
 ];
 for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
