@@ -22,9 +22,9 @@
     },
     {
       "id": "reproducible-gate",
-      "state": "SOURCE_READY_CI_READBACK_PENDING",
-      "evidence": "fresh-qualification.json",
-      "next": "Require the new scoped workflow before merge; it rejects stale/no-op PASS files."
+      "state": "DONE_EXECUTED_GITHUB_GATE",
+      "evidence": "CI-ACCEPTANCE.json",
+      "next": "Preserve this path-scoped offline gate; protected merge and wider repository checks remain separate."
     },
     {
       "id": "service-lifetime",
