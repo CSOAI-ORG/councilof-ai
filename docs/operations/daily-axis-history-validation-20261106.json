@@ -1,0 +1,198 @@
+{
+  "schema": "codex.daily-axis-history-validation/2",
+  "actor": "Codex",
+  "autoMerge": false,
+  "baseline_head": "b802d52bb06f62ace1d2ee45c43e4b051d1d08ad",
+  "baseline_validation": {
+    "schema": "codex.daily-report-source-validation/1",
+    "actor": "Codex",
+    "autoMerge": false,
+    "scope": "CSOAI-ORG/councilof-ai",
+    "passed": true,
+    "receipt": {
+      "path": "/tmp/codex-reporting-source-controls-pass2-20261106/CONTROL_RESULT.json",
+      "bytes": 3933,
+      "sha256": "eac2ab41fd93486adf9bd9de34201969911e766d19afe6861615ab0d5eea5be8"
+    },
+    "controls": [
+      {
+        "suite": "private",
+        "exit_code": 0,
+        "stop_reason": null,
+        "peak_rss_bytes": 26361856,
+        "elapsed_seconds": 0.5072155760135502,
+        "log_sha256": "33ff17daf47f7632dbb627c7120d55fd98a03fd93705619b26896d0014548698",
+        "tests": {
+          "suite": "private",
+          "run": 32,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 32,
+          "canonical_smoke": null
+        }
+      },
+      {
+        "suite": "public",
+        "exit_code": 0,
+        "stop_reason": null,
+        "peak_rss_bytes": 21925888,
+        "elapsed_seconds": 0.3958777819061652,
+        "log_sha256": "02032cbc7a5b843ab6d78e2f7246667730a69a7a363c00aa1f78f9735cf9011d",
+        "tests": {
+          "suite": "public",
+          "run": 26,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 26,
+          "canonical_smoke": {
+            "canonical_axes": 34,
+            "exact_axis_set": true,
+            "all_hold": true,
+            "all_unavailable_not_zero": true,
+            "no_numeric_comparison": true
+          }
+        }
+      },
+      {
+        "suite": "bash-syntax",
+        "exit_code": 0,
+        "stop_reason": null,
+        "peak_rss_bytes": 782336,
+        "elapsed_seconds": 0.029052506084553897,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": null
+      }
+    ],
+    "source_files": [
+      {
+        "path": "candidate-public/scripts/watchdog_charter_feed.py",
+        "bytes": 26432,
+        "sha256": "502b1417dca66df061e4dcb559ec1840f8608bb8045862d639863d50c0b0c93b"
+      },
+      {
+        "path": "candidate-public/scripts/test_watchdog_charter_feed.py",
+        "bytes": 14148,
+        "sha256": "3de65f6435a095396b3035f03efa40f163f920b9f62a51793f663cc1c68ac6ae"
+      },
+      {
+        "path": "candidate-public/scripts/pod-loops/watchdog-intake.sh",
+        "bytes": 10041,
+        "sha256": "358252fe0e27b879d16985d0de7e3e953a2f15cccfd8c5187cd9b0fcd92c3efb"
+      }
+    ],
+    "canonical_inputs": {
+      "git_base": "185eef60c25f7f7fcf3dd4bc3610aca1d115985d",
+      "sha256": {
+        "registry": "fc915e79716acf0fb5df638838e0bfcb47114920d0f0cdf5b6a7784257dbb8bc",
+        "charter_map": "3cf5ee5aab1a1f363e539c5dcfbb6180e934d8b23fe3f3c108e2fa8898409cff"
+      }
+    },
+    "prior_fixture_failure": {
+      "path": "/tmp/codex-reporting-source-controls-20261106/CONTROL_RESULT.json",
+      "bytes": 3024,
+      "sha256": "de0f72d259bad7a812c1999b4f1b6cd2e0c90dcec189954f30b9b8eb3c5393c1"
+    },
+    "effects": {
+      "real_network": 0,
+      "signing": 0,
+      "generator": 0,
+      "publisher": 0,
+      "loop": 0,
+      "scheduler_changes": 0
+    },
+    "limitations": [
+      "Source PR only; no runtime adoption or publication.",
+      "Signature status/hash binding is not cryptographic verification.",
+      "Human HOLD, incomparable evidence and exact caller Git registry/map dependency retained."
+    ]
+  },
+  "current_public_successor": {
+    "reason": "Classify complete context variation before unchanged observations.",
+    "report": {
+      "schema": "codex.reporting-source-validation/1",
+      "actor": "Codex",
+      "autoMerge": false,
+      "admission": {
+        "utc": "2026-11-06T07:23:55.620843+00:00",
+        "disk_free_bytes": 5594079232,
+        "memory_available_bytes": 501780480,
+        "minimum_disk_free_bytes": 5368709120,
+        "minimum_memory_available_bytes": 335544320
+      },
+      "workers": [
+        {
+          "suite": "public",
+          "exit_code": 0,
+          "stop_reason": null,
+          "peak_rss_bytes": 22102016,
+          "elapsed_seconds": 0.5006567760137841,
+          "log_sha256": "9b86aa0a131a0de16cc1246f2c7e199c10a7437c8d2512ba5de7b1ebf5ef53a6",
+          "tests": {
+            "suite": "public",
+            "run": 27,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "passed": 27,
+            "canonical_smoke": {
+              "canonical_axes": 34,
+              "exact_axis_set": true,
+              "all_hold": true,
+              "all_unavailable_not_zero": true,
+              "no_numeric_comparison": true
+            }
+          }
+        },
+        {
+          "suite": "bash-syntax",
+          "exit_code": 0,
+          "stop_reason": null,
+          "peak_rss_bytes": 991232,
+          "elapsed_seconds": 0.028667829930782318,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tests": null
+        }
+      ],
+      "source_files": [
+        {
+          "path": "candidate-public/scripts/watchdog_charter_feed.py",
+          "bytes": 26432,
+          "sha256": "6ff9c19c7a6c172c593736de376d3c3d9fee6297140b1bce33e93987d68ac8ca"
+        },
+        {
+          "path": "candidate-public/scripts/test_watchdog_charter_feed.py",
+          "bytes": 15786,
+          "sha256": "565974a6f703efb9591e98a5facf316d7ac325c95c05ccda773bbbee7e460a50"
+        },
+        {
+          "path": "candidate-public/scripts/pod-loops/watchdog-intake.sh",
+          "bytes": 10041,
+          "sha256": "358252fe0e27b879d16985d0de7e3e953a2f15cccfd8c5187cd9b0fcd92c3efb"
+        }
+      ],
+      "canonical_input_sha256": {
+        "registry": "fc915e79716acf0fb5df638838e0bfcb47114920d0f0cdf5b6a7784257dbb8bc",
+        "charter_map": "3cf5ee5aab1a1f363e539c5dcfbb6180e934d8b23fe3f3c108e2fa8898409cff"
+      },
+      "real_network_calls": 0,
+      "generator_runs": 0,
+      "publisher_runs": 0,
+      "loop_runs": 0,
+      "signing_calls": 0,
+      "offline_audit_boundary": true,
+      "passed": true
+    },
+    "receipt": {
+      "path": "/tmp/codex-reporting-context-only-controls-20261106/CONTROL_RESULT.json",
+      "bytes": 2218,
+      "sha256": "fad150de17513dda8970d756fee85cc25894a6ce9e6d1a1aa3fe597207162f93"
+    }
+  },
+  "private_source": "PR19/4c685e2d67bbd33fbc1f010f03254738ca2cad83 unchanged;32private controls are prior baseline evidence, not rerun.",
+  "limitations": [
+    "Registry/map exact caller Git snapshot requirement remains.",
+    "Source/test evidence only; no report job/publication/signing/loop/adoption/deploy."
+  ]
+}

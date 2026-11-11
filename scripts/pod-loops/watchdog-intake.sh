@@ -55,13 +55,16 @@ line() { log watchdog-intake "$* date=$D"; }
 # 1. this loop's own clone of the bare repo, sparse to exactly what it needs
 if [ ! -d "$LANE/.git" ]; then
   git clone -q --shared --no-checkout "$BARE" "$LANE" >>"$RUNLOG" 2>&1 || { line "FAIL clone of $BARE into $LANE"; exit 4; }
-  git -C "$LANE" sparse-checkout set --no-cone \
-    '/scripts/watchdog_intake.py' \
-    '/scripts/watchdog_charter_feed.py' \
-    '/scripts/readers/watchdog_intake_reader.py' \
-    '/scripts/adapters/staged_leaves.py' \
-    "/$PUB*" >>"$RUNLOG" 2>&1 || { line "FAIL sparse-checkout in $LANE"; exit 4; }
 fi
+# Refresh this owned lane's declared inputs for existing clones as well as new ones.
+git -C "$LANE" sparse-checkout set --no-cone \
+  '/scripts/watchdog_intake.py' \
+  '/scripts/watchdog_charter_feed.py' \
+  '/council-os/axis-specialists/registry.json' \
+  '/council-os/axis-specialists/charter-map.json' \
+  '/scripts/readers/watchdog_intake_reader.py' \
+  '/scripts/adapters/staged_leaves.py' \
+  "/$PUB*" >>"$RUNLOG" 2>&1 || { line "FAIL sparse-checkout in $LANE"; exit 4; }
 git -C "$LANE" fetch -q origin >>"$RUNLOG" 2>&1 || { line "FAIL fetch in $LANE"; exit 4; }
 # WHICH COMMIT THE DAY IS BUILT ON. The lane's origin is the bare repo this loop was
 # pointed at, so `origin/master` exists ONLY when that repo has a master branch. A
