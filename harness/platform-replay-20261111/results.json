@@ -1,0 +1,71 @@
+{
+  "study": "csoai.platform-replay.20261111.v1",
+  "observed_date": "2026-11-11",
+  "state": "EXECUTED_PLATFORM_REPLAY",
+  "source_runner_commit": "30a6a5a6c0f485adcd43d2d586e2f41cda7cbc38",
+  "runner_sha256": "43ec3956cc8ce931869c41448675316b3180693eb652e83adff39b5c2ef3df32",
+  "hosted": {
+    "platform": "Hugging Face",
+    "source_revision_before": "afdb579fa778a2f967d975fb5235d656077b0dd7",
+    "source_revision_after": "afdb579fa778a2f967d975fb5235d656077b0dd7",
+    "api_calls": 14,
+    "completed_responses": 12,
+    "expected_input_errors": 2,
+    "direct_process_predictions": 8,
+    "cache_rehearsals": 2,
+    "neural_evaluations_inside_rehearsals": 16,
+    "exact_cache_hits_inside_rehearsals": 8,
+    "synthetic_revocation_refusals_inside_rehearsals": 2,
+    "live_runtime_changed": false
+  },
+  "kaggle": {
+    "notebook": "nicktempleman/council-platform-replay-2026-11-11",
+    "version": 1,
+    "status": "COMPLETE",
+    "checker_tests_discovered_and_passed": 21,
+    "original_cache_tests_discovered_and_passed": 49,
+    "skips": 0,
+    "batches_checked": 1440,
+    "fixtures_checked": 192,
+    "history_assertions": 576,
+    "process_outputs_compared": 8,
+    "exact_numeric_matches": 8,
+    "maximum_numeric_difference": 0.0,
+    "declared_absolute_tolerance": 1e-12,
+    "invalid_input_and_digest_controls_passed": 5,
+    "python": "3.13.18",
+    "sqlite": "3.45.1",
+    "run_evidence_sha256": "3598f7b0eaf0060f1f698b34ef5559dac1fed2e3403d2bdbdb78554b1cc5e562",
+    "downloaded_receipts_verified_against_output_manifest": 3,
+    "gpu_requested": false
+  },
+  "cloudflare": {
+    "service": "R2",
+    "state": "NEW_UNSIGNED_RESEARCH_OBJECT_WRITTEN_AND_READ_BACK",
+    "bytes": 18644,
+    "sha256": "2eb9154e415800687f69b3362af6e7d150902119904b116bff4ab080530cde14",
+    "readback_sha256": "2eb9154e415800687f69b3362af6e7d150902119904b116bff4ab080530cde14",
+    "exact_byte_readback": true,
+    "public_access_changed": false,
+    "existing_objects_changed": false,
+    "workers_deployed": false
+  },
+  "alignment": {
+    "related_notebook": "nicktempleman/meok-cross-platform-cpu-replay",
+    "related_scope": "Separate six-variant retained synthetic-bank replay; discovered during this pass, source inspected read-only.",
+    "results_pooled": false,
+    "this_scope": "Current hosted-endpoint parity plus the merged reader/cache suite and R2 retention; no claim of research novelty or independent organizations."
+  },
+  "scope": {
+    "model": "Existing 980-parameter synthetic process predictor",
+    "weights_sha256": "9fbffae6eb2f025a729a74022d041437f630bf06d60b4964019be10b70ba7c8b",
+    "training": false,
+    "new_task_accuracy_measured": false,
+    "foundation_model_calls": 0,
+    "real_tenant_authorization_qualified": false,
+    "gspc_admitted": false,
+    "execution_authority": "NONE",
+    "cost": "UNKNOWN",
+    "energy": "UNKNOWN"
+  }
+}
