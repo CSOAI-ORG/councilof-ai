@@ -20,14 +20,29 @@
       "Optional real-provider Coliseum journey",
       "Artifact for skipped real-provider journey",
       "Crawler advisory-explanation step"
-    ]
+    ],
+    "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42953390131",
+    "evidence": {
+      "file": "ci-release-8a47.json",
+      "sha256": "3a4590018a677c71452f4325876631a596ca312d6ef09af29fa1cd22f2f906ae",
+      "bytes": 70825
+    }
   },
   "deployment": {
     "run_id": 42954629305,
     "head_sha": "ccd06e2d625f5cdc3b8d1f955177dabd3a1c6ed9",
     "event": "push",
     "workflow": ".github/workflows/deploy.yml",
-    "status": "PENDING_COMPLETION"
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/CSOAI-ORG/councilof-ai/actions/runs/42954629305",
+    "successful_jobs": 2,
+    "conditional_anti_clobber_redeploy": "SKIPPED; all production checks passed",
+    "evidence": {
+      "file": "deployment-workflow.json",
+      "sha256": "8e6ed96cc1b25c17c470d42c06951e8b37244eb56ee5de1fe70e24109139d61f",
+      "bytes": 15145
+    }
   },
   "browser_baseline": {
     "url": "https://councilof.ai/dashboard/?tab=evidence-learning",
@@ -43,5 +58,47 @@
   "human_review": "NOT_ESTABLISHED",
   "model_inference_calls_in_source_audit": 0,
   "external_charter_adoption": "NOT_ESTABLISHED",
-  "final_live_acceptance": "PENDING"
+  "final_live_acceptance": "PASS",
+  "verified_at": "2026-11-11T04:23:33.734674+00:00",
+  "record_type": "Software release observations; not a canonical human-review event or execution receipt.",
+  "reconciliation": {
+    "current_master_integrated": "aa8c55c486c3071a4145923effd4c6f5c647de81",
+    "conflict_resolution": "Current-master uploader test file retained verbatim; matching producer census and lazy-runtime fail-closed tests. Academy code and publication assets unchanged.",
+    "uploader_citation_tests_passed": 20
+  },
+  "live_readbacks": {
+    "immediate": {
+      "file": "live-immediate.json",
+      "sha256": "c0bb11b5a8b9975dc168056f0ac7d526e1849792614701ee74d5cc55767f1696",
+      "bytes": 4004
+    },
+    "delayed": {
+      "file": "live-delayed.json",
+      "sha256": "da3c2b41af424de99845bc8fb344998d32428a5d13e14a6284204aafd78896f7",
+      "bytes": 4150
+    },
+    "requests_passed_each": 6,
+    "seconds_after_immediate_completion": 129.231089,
+    "scope": "Both production origins return prerendered homepages and exact merged component/contract bytes."
+  },
+  "browser_acceptance": {
+    "evidence": {
+      "file": "browser-acceptance.json",
+      "sha256": "da279c78e1600d89ae6212d635d04428870485cc442962ce0025aa511ede03e2",
+      "bytes": 2085
+    },
+    "checks_passed": 11,
+    "content_revision": "sha256:2f0c16837d52cfced0fcdb38a54682608c9391c8697745193321b6f10af0853b",
+    "canonical_export_check": {
+      "file": "canonical-export-check.json",
+      "sha256": "08ca91777d72cf095182a4a8dc560ad338d3495b5e719c441b9e9888239b7c01",
+      "bytes": 446
+    },
+    "screenshot": {
+      "file": "browser-acceptance.png",
+      "sha256": "2fa91efb35c9ec8b3a73bb46b92a54f18fa81c80abbd48288018c8b09126fab4",
+      "bytes": 112909
+    },
+    "scenario": "Actual old-version draft, proposals and recorded selected answers migrated through the released component. All answers were scripted software testing, not human learning."
+  }
 }

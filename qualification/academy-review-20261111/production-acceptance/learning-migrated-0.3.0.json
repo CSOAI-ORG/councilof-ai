@@ -1,0 +1,1419 @@
+{
+  "component_version": "0.3.0",
+  "progress": {
+    "governance:evidence-scope:1": {
+      "selected": 1,
+      "correct": true,
+      "attempts": 1,
+      "at": "2026-11-11T03:03:07.200Z"
+    },
+    "governance:human-authority:1": {
+      "selected": 2,
+      "correct": true,
+      "attempts": 1,
+      "at": "2026-11-11T03:03:08.458Z"
+    }
+  },
+  "proposals": {
+    "governance": {
+      "task": "Automated software acceptance check: synthetic practice and saved-draft migration.",
+      "target": "Public governance source captured on 11 November 2026; no human approval.",
+      "change": "Verify that the upgraded component preserves the pinned source and two scripted practice answers, exports seven report sections, and keeps human review and execution unestablished."
+    }
+  },
+  "shots": [],
+  "pins": {
+    "governance": {
+      "url": "https://councilof.ai/api/gspc",
+      "readAt": "2026-11-11T03:00:46.203Z",
+      "sha256": "e19300ad4f9f635c760aa3fd29260cfc833613d5b3972811db4dcdca90731e7c",
+      "data": {
+        "schema": "csoai.gspc-axes/0.5",
+        "totals": {
+          "axes": 34,
+          "measured_axes": 34,
+          "unmeasured_axes": 0,
+          "quotable_axes": 34,
+          "public_count": "34 axes · 34 measured",
+          "separation_public_count": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
+          "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axes with a RUN behind them; it is not a count of axes with a separated result. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
+          "model_fleets": 14,
+          "model_fleets_note": "Counts model-comparison AXES (one fleet per axis), not models. The number of distinct models measured is a different quantity, derived from the signed cards: /interop/models-measured.json (list at /models-measured/).",
+          "fact_runs": 9,
+          "count_grammar": "34 axes are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
+          "by_family": {
+            "gspc": {
+              "axes": 15,
+              "measured": 15,
+              "note": "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically. Plus effect-binding (ADR-002), a deterministic-facts probe of tool-call SERVERS, not a fleet: n counts servers probed, it has no leader, no accuracy and no separation, and it joins no mean."
+            },
+            "subject": {
+              "axes": 11,
+              "measured": 11,
+              "note": "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). All 11 are MEASURED via frozen sha-pinned banks with n_valid >= 30 (kind 'measured-subject'), measuring their own subject class rather than models, so they have no leader, no accuracy and no separation and join no mean. Census checks are a DISCOVERED check grid, never scores here. No aggregate score and no overall rank."
+            },
+            "financial": {
+              "axes": 8,
+              "measured": 8,
+              "as_of": "2026-09-17T12:58:11Z",
+              "reader_state": "REACHABLE",
+              "reader_as_of": "2026-09-15T07:13:43Z",
+              "source": "/interop/financial-facts-as-of.json",
+              "risk_verdict": "UNMEASURED",
+              "note": "The 8 financial/domain axes (ADR-001), all MEASURED as deterministic-facts runs — issuer-account flags read off the public ledger (financial n=16 on the live XRPL reader; provenance-controls n=6) and public statistical series, graded by rule with no model, no fleet and no judgement. None of the eight is a model comparison, so none has a leader, an accuracy or a separation determination, and none contributes to any mean below — measured is not the same as scored. The two former index slots are measured as component facts (ai-adoption-components, labour-components), never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05). as_of is the producer run (scripts/grade_financial_ledgers.py), never a typed 2026-08-25."
+            }
+          },
+          "sweep_note": "Swept 2026-08-26 under ADR-001. The 8 financial/domain axes were ruled in on 2026-08-24 but were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept state. All 8 now carry published deterministic-facts run artifacts. Today 34 of 34 axes on the board carry a run behind them: 14 model-comparison and 9 deterministic-fact axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. 2 run artifacts carry an Ed25519 signature; 7 are content-addressed but unsigned. No signature is inferred from a content_id.",
+          "financial_run_attestations": {
+            "run_artifacts": 9,
+            "ed25519_signed": 2,
+            "content_addressed_unsigned": 7,
+            "signed_axes": [
+              "effect-binding",
+              "provenance-controls"
+            ],
+            "unsigned_axes": [
+              "reserve-attestation",
+              "regulatory-framework",
+              "distribution-integrity",
+              "custody-disclosure",
+              "ai-adoption-components",
+              "labour-components",
+              "humanoid-labour-index"
+            ],
+            "note": "Derived from each deterministic-facts axis's run_attestation field, in BOTH families since 2026-09-22 (effect-binding is a gspc-family fact run). A content_id proves identity of bytes, not signer authorization."
+          },
+          "license": "CC-BY-4.0",
+          "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
+          "items": 1844,
+          "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
+          "comparison_axes": 14,
+          "separated_leads": 0,
+          "ties": 7,
+          "untested_separations": 7,
+          "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
+          "externally_led_axes": 9,
+          "public_leader_count": 9,
+          "lid": "34 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
+          "own_leaders_excluded": 8,
+          "own_leaders_excluded_axes": [
+            "governance",
+            "provenance",
+            "continuity",
+            "conformance",
+            "openness",
+            "care",
+            "art5-safeguard",
+            "affect"
+          ],
+          "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect); 9 axes carry an external public leader. A neutral measurement body does not compare its own models against the vendors it measures. This changes leader attribution and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: every axis still carries a measurement, so the measured count is unchanged. The excluded models' signed cards are untouched — measurement happened; it is simply not published as a public comparison of our own model. The excluded models are system-prompt overlays on stock base models, not trained weights (C-2026-0930-11).",
+          "uncarded_leaders_dropped": 3,
+          "uncarded_leaders_dropped_axes": [
+            "machinery-conformity",
+            "cross-reality",
+            "detector-interop"
+          ],
+          "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes (machinery-conformity, cross-reality, detector-interop) whose named leader was an external model carrying NO signed per-model card in the public card index (/signed/card_index.json). The board's promise is that every named leader links to the Ed25519 card behind it; where no such card exists, no leader or accuracy is asserted rather than invented. Each of these axes stays MEASURED — the fleet aggregate (fleet_mean) is a real measurement — so measured_axes is unchanged; only the unverifiable leader claim is dropped. public_leader_state=NO_SIGNED_CARD on each. This changes leader attribution and the separation/mean tallies (over carded, externally-led axes only), NOT the measured count.",
+          "mean_macro_f1": 0.944,
+          "mean_accuracy": 0.6505,
+          "mean_fleet_mean": 0.5447,
+          "mean_harm": 0.4877,
+          "mean_unparsed_rate": 0.0541,
+          "mean_note": "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any of these means: an axis with no accuracy contributes nothing rather than a zero."
+        },
+        "axes": [
+          {
+            "axis": "governance",
+            "task": "EU AI Act risk-tier classification",
+            "status": "MEASURED",
+            "n": 237,
+            "bench": "GovBench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "TIE",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "safety",
+            "task": "calibrated refusal on paired requests",
+            "status": "MEASURED",
+            "n": 36,
+            "bench": "DefBench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "TIE",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "provenance",
+            "task": "Article 50 marking survival by validity",
+            "status": "MEASURED",
+            "n": 32,
+            "bench": "ProvBench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "TIE",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "continuity",
+            "task": "post-quantum status of a cryptographic assumption",
+            "status": "MEASURED",
+            "n": 33,
+            "bench": "PQCBench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "TIE",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "conformance",
+            "task": "MCP tool conformance",
+            "status": "MEASURED",
+            "n": 35,
+            "bench": "MCPBench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "TIE",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "openness",
+            "task": "licence reasoning versus intended use",
+            "status": "MEASURED",
+            "n": 32,
+            "bench": "OSSBench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "TIE",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "machinery-conformity",
+            "task": "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)",
+            "status": "MEASURED",
+            "n": 33,
+            "bench": "MachBench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "UNTESTED",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "care",
+            "task": "care-cost (protect × help) under paired conduct scenarios",
+            "status": "MEASURED",
+            "n": 199,
+            "bench": "CareBench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "TIE",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "cross-reality",
+            "task": "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+            "status": "MEASURED",
+            "n": 32,
+            "bench": "XRAIV",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "UNTESTED",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "detector-interop",
+            "task": "cross-detector watermark interoperability matrix",
+            "status": "MEASURED",
+            "n": 33,
+            "bench": "DetBench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "UNTESTED",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "art5-safeguard",
+            "task": "EU AI Act Article 5 prohibited-practice trip",
+            "status": "MEASURED",
+            "n": 36,
+            "bench": "Art5Bench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "UNTESTED",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "swarm",
+            "task": "multi-agent coordination safety",
+            "status": "MEASURED",
+            "n": 37,
+            "bench": "SwarmBench v2b",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "UNTESTED",
+            "measurement_time": {
+              "state": "NOT_AFTER",
+              "precision": "instant-upper-bound",
+              "not_after": "2026-08-19T09:24:39.162060+00:00",
+              "source": "/signed/cards/b44335819f7720966b41e2ee26f5798892b0eb8d2571c71e0c9090506f1ff823.json",
+              "source_field": "body.created",
+              "note": "The active wave-2b card proves the measurement existed by this instant; it does not prove the run happened exactly then. Freshness must fail closed when that distinction matters."
+            }
+          },
+          {
+            "axis": "affect",
+            "task": "emotional & embodied safety (manipulation / disclosure / vulnerability)",
+            "status": "MEASURED",
+            "n": 41,
+            "bench": "AffectBench",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "UNTESTED",
+            "measurement_time": {
+              "state": "DAY",
+              "precision": "day",
+              "observed_on": "2026-08-12",
+              "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+              "source_field": "measured",
+              "note": "The source publishes day precision only. No midnight timestamp is invented."
+            }
+          },
+          {
+            "axis": "jail",
+            "task": "escape-attempt detection on a 71-row gold bank of 27 distinct inputs (38 ESCAPE / 33 BENIGN rows) — layer 2 of 2",
+            "status": "MEASURED",
+            "n": 71,
+            "bench": "GoldBank-Detector",
+            "kind": "model-comparison",
+            "family": "gspc",
+            "separation": "UNTESTED",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-08-18T03:22:16Z",
+              "source": "/signed/board_living.json",
+              "source_field": "updated / gold_run",
+              "note": "Gold-run timestamp carried by the published board record; later separation analysis does not refresh the measurement."
+            }
+          },
+          {
+            "axis": "effect-binding",
+            "task": "does authorization bind to the request the server executes, or only to the tool call the agent declared",
+            "status": "MEASURED",
+            "n": 261,
+            "bench": "EffectBench v0.1 (server probe)",
+            "kind": "deterministic-facts",
+            "family": "gspc",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-09-22T05:43:05Z",
+              "source": "/interop/effect-binding-server-probe-2026-09-22.signed.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "provenance-controls",
+            "task": "on-chain issuer control facts (allowlisting / freeze capability / identity domain)",
+            "status": "MEASURED",
+            "n": 6,
+            "bench": "ChainFacts",
+            "kind": "deterministic-facts",
+            "family": "financial",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-09-17T12:58:11Z",
+              "source": "/interop/financial-measure-run-v2.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "reserve-attestation",
+            "task": "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
+            "status": "MEASURED",
+            "n": 16,
+            "bench": "ReserveFacts",
+            "kind": "deterministic-facts",
+            "family": "financial",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-09-17T12:58:11Z",
+              "source": "/interop/financial-measure-run-reserve-attestation.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "regulatory-framework",
+            "task": "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
+            "status": "MEASURED",
+            "n": 16,
+            "bench": "RegimeFacts",
+            "kind": "deterministic-facts",
+            "family": "financial",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-09-17T12:58:11Z",
+              "source": "/interop/financial-measure-run-regulatory-framework.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "distribution-integrity",
+            "task": "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
+            "status": "MEASURED",
+            "n": 16,
+            "bench": "DistributionFacts",
+            "kind": "deterministic-facts",
+            "family": "financial",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-09-17T12:58:11Z",
+              "source": "/interop/financial-measure-run-distribution-integrity.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "custody-disclosure",
+            "task": "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
+            "status": "MEASURED",
+            "n": 16,
+            "bench": "CustodyFacts",
+            "kind": "deterministic-facts",
+            "family": "financial",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-09-17T12:58:11Z",
+              "source": "/interop/financial-measure-run-custody-disclosure.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "ai-adoption-components",
+            "task": "cited EU AI-adoption series (not an index)",
+            "status": "MEASURED",
+            "n": 2,
+            "bench": "Eurostat",
+            "kind": "deterministic-facts",
+            "family": "financial",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-09-17T12:58:11Z",
+              "source": "/interop/financial-measure-run-ai-adoption-components.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "labour-components",
+            "task": "cited EU labour series (not an index)",
+            "status": "MEASURED",
+            "n": 2,
+            "bench": "Eurostat",
+            "kind": "deterministic-facts",
+            "family": "financial",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-09-17T12:58:11Z",
+              "source": "/interop/financial-measure-run-labour-components.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "humanoid-labour-index",
+            "task": "named vendor publishes a dated deployment count on a stable URL? Y/N",
+            "status": "MEASURED",
+            "n": 8,
+            "bench": "Disclosure",
+            "kind": "deterministic-facts",
+            "family": "financial",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-09-17T12:58:11Z",
+              "source": "/interop/financial-measure-run-humanoid-labour-index.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "lab-practice",
+            "task": "does an AI lab publish its evaluations, safety framework and incident reports",
+            "status": "MEASURED",
+            "n": 37,
+            "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-10-28T04:25:30.845Z",
+              "source": "/interop/axis-banks/lab-practice-20261102.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "company-practice",
+            "task": "does a non-lab AI company publish safety, evaluation, incident, model-card and contact material",
+            "status": "MEASURED",
+            "n": 40,
+            "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-10-28T04:25:30.845Z",
+              "source": "/interop/axis-banks/company-practice-20261102.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "measurer-integrity",
+            "task": "does an evaluation organisation publish methods, test sets, attestation and a reproduction route",
+            "status": "MEASURED",
+            "n": 40,
+            "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-10-28T04:25:30.845Z",
+              "source": "/interop/axis-banks/measurer-integrity-20261102.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "harness-fidelity",
+            "task": "does an evaluation harness pin its dependencies, publish a must-fail control, isolate execution and document reproduction",
+            "status": "MEASURED",
+            "n": 36,
+            "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-11-02T04:20:54.265Z",
+              "source": "/interop/axis-banks/harness-fidelity-20261102.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "interop-conformance",
+            "task": "does an interoperability or standards group publish a schema, a wire binding, conformance vectors and a versioned spec",
+            "status": "MEASURED",
+            "n": 34,
+            "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-10-28T04:25:30.845Z",
+              "source": "/interop/axis-banks/interop-conformance-20261102.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "humanoid-deployment",
+            "task": "does a humanoid lab publish control, safety-limit, dexterity, hardware-bus and simulation material",
+            "status": "MEASURED",
+            "n": 35,
+            "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-10-28T04:25:30.845Z",
+              "source": "/interop/axis-banks/humanoid-deployment-20261102.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "regulator-transparency",
+            "task": "factual presence checks on public regulatory artefacts (guidance, consultation, enforcement, open data, contact route); no ratings",
+            "status": "MEASURED",
+            "n": 41,
+            "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-10-28T04:25:30.845Z",
+              "source": "/interop/axis-banks/regulator-transparency-20261102.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "interpretability-reproducibility",
+            "task": "does an interpretability group publish method, checkpoints, a reproducible notebook and peer-reviewed material",
+            "status": "MEASURED",
+            "n": 33,
+            "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-10-28T04:25:30.845Z",
+              "source": "/interop/axis-banks/interpretability-reproducibility-20261102.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "claim-maintenance",
+            "task": "at each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true",
+            "status": "MEASURED",
+            "n": 174,
+            "bench": "claim-maintenance v0.2 re-read wave",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-10-28T06:05:00Z",
+              "source": "/interop/claim-maintenance-wave-2026-10-28.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "serving-fidelity",
+            "task": "does an inference runtime document sampling control, quantisation, KV/attention strategy, latency metrics and parallelism",
+            "status": "MEASURED",
+            "n": 38,
+            "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-10-28T04:25:30.845Z",
+              "source": "/interop/axis-banks/serving-fidelity-20261102.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          },
+          {
+            "axis": "watchdog-ingest",
+            "task": "does the subject offer a third party a documented route to report a problem, with a response commitment and a machine-readable path",
+            "status": "MEASURED",
+            "n": 106,
+            "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+            "kind": "measured-subject",
+            "family": "subject",
+            "measurement_time": {
+              "state": "EXACT",
+              "precision": "instant",
+              "observed_at": "2026-11-02T04:17:24.499Z",
+              "source": "/interop/axis-banks/watchdog-ingest-20261102.json",
+              "source_field": "facts_as_of",
+              "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+            }
+          }
+        ]
+      }
+    }
+  },
+  "lastSource": {
+    "url": "https://councilof.ai/api/gspc",
+    "readAt": "2026-11-11T04:16:56.234Z",
+    "sha256": "e19300ad4f9f635c760aa3fd29260cfc833613d5b3972811db4dcdca90731e7c",
+    "data": {
+      "schema": "csoai.gspc-axes/0.5",
+      "totals": {
+        "axes": 34,
+        "measured_axes": 34,
+        "unmeasured_axes": 0,
+        "quotable_axes": 34,
+        "public_count": "34 axes · 34 measured",
+        "separation_public_count": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
+        "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axes with a RUN behind them; it is not a count of axes with a separated result. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
+        "model_fleets": 14,
+        "model_fleets_note": "Counts model-comparison AXES (one fleet per axis), not models. The number of distinct models measured is a different quantity, derived from the signed cards: /interop/models-measured.json (list at /models-measured/).",
+        "fact_runs": 9,
+        "count_grammar": "34 axes are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
+        "by_family": {
+          "gspc": {
+            "axes": 15,
+            "measured": 15,
+            "note": "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically. Plus effect-binding (ADR-002), a deterministic-facts probe of tool-call SERVERS, not a fleet: n counts servers probed, it has no leader, no accuracy and no separation, and it joins no mean."
+          },
+          "subject": {
+            "axes": 11,
+            "measured": 11,
+            "note": "The subject axes (2026-10-16): each applies to ONE subject type (applies_to). All 11 are MEASURED via frozen sha-pinned banks with n_valid >= 30 (kind 'measured-subject'), measuring their own subject class rather than models, so they have no leader, no accuracy and no separation and join no mean. Census checks are a DISCOVERED check grid, never scores here. No aggregate score and no overall rank."
+          },
+          "financial": {
+            "axes": 8,
+            "measured": 8,
+            "as_of": "2026-09-17T12:58:11Z",
+            "reader_state": "REACHABLE",
+            "reader_as_of": "2026-09-15T07:13:43Z",
+            "source": "/interop/financial-facts-as-of.json",
+            "risk_verdict": "UNMEASURED",
+            "note": "The 8 financial/domain axes (ADR-001), all MEASURED as deterministic-facts runs — issuer-account flags read off the public ledger (financial n=16 on the live XRPL reader; provenance-controls n=6) and public statistical series, graded by rule with no model, no fleet and no judgement. None of the eight is a model comparison, so none has a leader, an accuracy or a separation determination, and none contributes to any mean below — measured is not the same as scored. The two former index slots are measured as component facts (ai-adoption-components, labour-components), never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05). as_of is the producer run (scripts/grade_financial_ledgers.py), never a typed 2026-08-25."
+          }
+        },
+        "sweep_note": "Swept 2026-08-26 under ADR-001. The 8 financial/domain axes were ruled in on 2026-08-24 but were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept state. All 8 now carry published deterministic-facts run artifacts. Today 34 of 34 axes on the board carry a run behind them: 14 model-comparison and 9 deterministic-fact axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. 2 run artifacts carry an Ed25519 signature; 7 are content-addressed but unsigned. No signature is inferred from a content_id.",
+        "financial_run_attestations": {
+          "run_artifacts": 9,
+          "ed25519_signed": 2,
+          "content_addressed_unsigned": 7,
+          "signed_axes": [
+            "effect-binding",
+            "provenance-controls"
+          ],
+          "unsigned_axes": [
+            "reserve-attestation",
+            "regulatory-framework",
+            "distribution-integrity",
+            "custody-disclosure",
+            "ai-adoption-components",
+            "labour-components",
+            "humanoid-labour-index"
+          ],
+          "note": "Derived from each deterministic-facts axis's run_attestation field, in BOTH families since 2026-09-22 (effect-binding is a gspc-family fact run). A content_id proves identity of bytes, not signer authorization."
+        },
+        "license": "CC-BY-4.0",
+        "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
+        "items": 1844,
+        "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
+        "comparison_axes": 14,
+        "separated_leads": 0,
+        "ties": 7,
+        "untested_separations": 7,
+        "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
+        "externally_led_axes": 9,
+        "public_leader_count": 9,
+        "lid": "34 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.",
+        "own_leaders_excluded": 8,
+        "own_leaders_excluded_axes": [
+          "governance",
+          "provenance",
+          "continuity",
+          "conformance",
+          "openness",
+          "care",
+          "art5-safeguard",
+          "affect"
+        ],
+        "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect); 9 axes carry an external public leader. A neutral measurement body does not compare its own models against the vendors it measures. This changes leader attribution and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: every axis still carries a measurement, so the measured count is unchanged. The excluded models' signed cards are untouched — measurement happened; it is simply not published as a public comparison of our own model. The excluded models are system-prompt overlays on stock base models, not trained weights (C-2026-0930-11).",
+        "uncarded_leaders_dropped": 3,
+        "uncarded_leaders_dropped_axes": [
+          "machinery-conformity",
+          "cross-reality",
+          "detector-interop"
+        ],
+        "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes (machinery-conformity, cross-reality, detector-interop) whose named leader was an external model carrying NO signed per-model card in the public card index (/signed/card_index.json). The board's promise is that every named leader links to the Ed25519 card behind it; where no such card exists, no leader or accuracy is asserted rather than invented. Each of these axes stays MEASURED — the fleet aggregate (fleet_mean) is a real measurement — so measured_axes is unchanged; only the unverifiable leader claim is dropped. public_leader_state=NO_SIGNED_CARD on each. This changes leader attribution and the separation/mean tallies (over carded, externally-led axes only), NOT the measured count.",
+        "mean_macro_f1": 0.944,
+        "mean_accuracy": 0.6505,
+        "mean_fleet_mean": 0.5447,
+        "mean_harm": 0.4877,
+        "mean_unparsed_rate": 0.0541,
+        "mean_note": "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any of these means: an axis with no accuracy contributes nothing rather than a zero."
+      },
+      "axes": [
+        {
+          "axis": "governance",
+          "task": "EU AI Act risk-tier classification",
+          "status": "MEASURED",
+          "n": 237,
+          "bench": "GovBench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "TIE",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "safety",
+          "task": "calibrated refusal on paired requests",
+          "status": "MEASURED",
+          "n": 36,
+          "bench": "DefBench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "TIE",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "provenance",
+          "task": "Article 50 marking survival by validity",
+          "status": "MEASURED",
+          "n": 32,
+          "bench": "ProvBench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "TIE",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "continuity",
+          "task": "post-quantum status of a cryptographic assumption",
+          "status": "MEASURED",
+          "n": 33,
+          "bench": "PQCBench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "TIE",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "conformance",
+          "task": "MCP tool conformance",
+          "status": "MEASURED",
+          "n": 35,
+          "bench": "MCPBench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "TIE",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "openness",
+          "task": "licence reasoning versus intended use",
+          "status": "MEASURED",
+          "n": 32,
+          "bench": "OSSBench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "TIE",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "machinery-conformity",
+          "task": "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)",
+          "status": "MEASURED",
+          "n": 33,
+          "bench": "MachBench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "UNTESTED",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "care",
+          "task": "care-cost (protect × help) under paired conduct scenarios",
+          "status": "MEASURED",
+          "n": 199,
+          "bench": "CareBench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "TIE",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "cross-reality",
+          "task": "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+          "status": "MEASURED",
+          "n": 32,
+          "bench": "XRAIV",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "UNTESTED",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "detector-interop",
+          "task": "cross-detector watermark interoperability matrix",
+          "status": "MEASURED",
+          "n": 33,
+          "bench": "DetBench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "UNTESTED",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "art5-safeguard",
+          "task": "EU AI Act Article 5 prohibited-practice trip",
+          "status": "MEASURED",
+          "n": 36,
+          "bench": "Art5Bench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "UNTESTED",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "swarm",
+          "task": "multi-agent coordination safety",
+          "status": "MEASURED",
+          "n": 37,
+          "bench": "SwarmBench v2b",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "UNTESTED",
+          "measurement_time": {
+            "state": "NOT_AFTER",
+            "precision": "instant-upper-bound",
+            "not_after": "2026-08-19T09:24:39.162060+00:00",
+            "source": "/signed/cards/b44335819f7720966b41e2ee26f5798892b0eb8d2571c71e0c9090506f1ff823.json",
+            "source_field": "body.created",
+            "note": "The active wave-2b card proves the measurement existed by this instant; it does not prove the run happened exactly then. Freshness must fail closed when that distinction matters."
+          }
+        },
+        {
+          "axis": "affect",
+          "task": "emotional & embodied safety (manipulation / disclosure / vulnerability)",
+          "status": "MEASURED",
+          "n": 41,
+          "bench": "AffectBench",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "UNTESTED",
+          "measurement_time": {
+            "state": "DAY",
+            "precision": "day",
+            "observed_on": "2026-08-12",
+            "source": "csoai/gspc-peritem-rows-2026-08-12 MANIFEST.json",
+            "source_field": "measured",
+            "note": "The source publishes day precision only. No midnight timestamp is invented."
+          }
+        },
+        {
+          "axis": "jail",
+          "task": "escape-attempt detection on a 71-row gold bank of 27 distinct inputs (38 ESCAPE / 33 BENIGN rows) — layer 2 of 2",
+          "status": "MEASURED",
+          "n": 71,
+          "bench": "GoldBank-Detector",
+          "kind": "model-comparison",
+          "family": "gspc",
+          "separation": "UNTESTED",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-08-18T03:22:16Z",
+            "source": "/signed/board_living.json",
+            "source_field": "updated / gold_run",
+            "note": "Gold-run timestamp carried by the published board record; later separation analysis does not refresh the measurement."
+          }
+        },
+        {
+          "axis": "effect-binding",
+          "task": "does authorization bind to the request the server executes, or only to the tool call the agent declared",
+          "status": "MEASURED",
+          "n": 261,
+          "bench": "EffectBench v0.1 (server probe)",
+          "kind": "deterministic-facts",
+          "family": "gspc",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-09-22T05:43:05Z",
+            "source": "/interop/effect-binding-server-probe-2026-09-22.signed.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "provenance-controls",
+          "task": "on-chain issuer control facts (allowlisting / freeze capability / identity domain)",
+          "status": "MEASURED",
+          "n": 6,
+          "bench": "ChainFacts",
+          "kind": "deterministic-facts",
+          "family": "financial",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-09-17T12:58:11Z",
+            "source": "/interop/financial-measure-run-v2.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "reserve-attestation",
+          "task": "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
+          "status": "MEASURED",
+          "n": 16,
+          "bench": "ReserveFacts",
+          "kind": "deterministic-facts",
+          "family": "financial",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-09-17T12:58:11Z",
+            "source": "/interop/financial-measure-run-reserve-attestation.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "regulatory-framework",
+          "task": "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
+          "status": "MEASURED",
+          "n": 16,
+          "bench": "RegimeFacts",
+          "kind": "deterministic-facts",
+          "family": "financial",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-09-17T12:58:11Z",
+            "source": "/interop/financial-measure-run-regulatory-framework.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "distribution-integrity",
+          "task": "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
+          "status": "MEASURED",
+          "n": 16,
+          "bench": "DistributionFacts",
+          "kind": "deterministic-facts",
+          "family": "financial",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-09-17T12:58:11Z",
+            "source": "/interop/financial-measure-run-distribution-integrity.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "custody-disclosure",
+          "task": "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
+          "status": "MEASURED",
+          "n": 16,
+          "bench": "CustodyFacts",
+          "kind": "deterministic-facts",
+          "family": "financial",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-09-17T12:58:11Z",
+            "source": "/interop/financial-measure-run-custody-disclosure.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "ai-adoption-components",
+          "task": "cited EU AI-adoption series (not an index)",
+          "status": "MEASURED",
+          "n": 2,
+          "bench": "Eurostat",
+          "kind": "deterministic-facts",
+          "family": "financial",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-09-17T12:58:11Z",
+            "source": "/interop/financial-measure-run-ai-adoption-components.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "labour-components",
+          "task": "cited EU labour series (not an index)",
+          "status": "MEASURED",
+          "n": 2,
+          "bench": "Eurostat",
+          "kind": "deterministic-facts",
+          "family": "financial",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-09-17T12:58:11Z",
+            "source": "/interop/financial-measure-run-labour-components.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "humanoid-labour-index",
+          "task": "named vendor publishes a dated deployment count on a stable URL? Y/N",
+          "status": "MEASURED",
+          "n": 8,
+          "bench": "Disclosure",
+          "kind": "deterministic-facts",
+          "family": "financial",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-09-17T12:58:11Z",
+            "source": "/interop/financial-measure-run-humanoid-labour-index.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "lab-practice",
+          "task": "does an AI lab publish its evaluations, safety framework and incident reports",
+          "status": "MEASURED",
+          "n": 37,
+          "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-10-28T04:25:30.845Z",
+            "source": "/interop/axis-banks/lab-practice-20261102.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "company-practice",
+          "task": "does a non-lab AI company publish safety, evaluation, incident, model-card and contact material",
+          "status": "MEASURED",
+          "n": 40,
+          "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-10-28T04:25:30.845Z",
+            "source": "/interop/axis-banks/company-practice-20261102.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "measurer-integrity",
+          "task": "does an evaluation organisation publish methods, test sets, attestation and a reproduction route",
+          "status": "MEASURED",
+          "n": 40,
+          "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-10-28T04:25:30.845Z",
+            "source": "/interop/axis-banks/measurer-integrity-20261102.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "harness-fidelity",
+          "task": "does an evaluation harness pin its dependencies, publish a must-fail control, isolate execution and document reproduction",
+          "status": "MEASURED",
+          "n": 36,
+          "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-11-02T04:20:54.265Z",
+            "source": "/interop/axis-banks/harness-fidelity-20261102.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "interop-conformance",
+          "task": "does an interoperability or standards group publish a schema, a wire binding, conformance vectors and a versioned spec",
+          "status": "MEASURED",
+          "n": 34,
+          "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-10-28T04:25:30.845Z",
+            "source": "/interop/axis-banks/interop-conformance-20261102.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "humanoid-deployment",
+          "task": "does a humanoid lab publish control, safety-limit, dexterity, hardware-bus and simulation material",
+          "status": "MEASURED",
+          "n": 35,
+          "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-10-28T04:25:30.845Z",
+            "source": "/interop/axis-banks/humanoid-deployment-20261102.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "regulator-transparency",
+          "task": "factual presence checks on public regulatory artefacts (guidance, consultation, enforcement, open data, contact route); no ratings",
+          "status": "MEASURED",
+          "n": 41,
+          "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-10-28T04:25:30.845Z",
+            "source": "/interop/axis-banks/regulator-transparency-20261102.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "interpretability-reproducibility",
+          "task": "does an interpretability group publish method, checkpoints, a reproducible notebook and peer-reviewed material",
+          "status": "MEASURED",
+          "n": 33,
+          "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-10-28T04:25:30.845Z",
+            "source": "/interop/axis-banks/interpretability-reproducibility-20261102.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "claim-maintenance",
+          "task": "at each scheduled re-read, is a captured public claim still served unchanged, changed, withdrawn or unreachable; says nothing about whether the claim is true",
+          "status": "MEASURED",
+          "n": 174,
+          "bench": "claim-maintenance v0.2 re-read wave",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-10-28T06:05:00Z",
+            "source": "/interop/claim-maintenance-wave-2026-10-28.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "serving-fidelity",
+          "task": "does an inference runtime document sampling control, quantisation, KV/attention strategy, latency metrics and parallelism",
+          "status": "MEASURED",
+          "n": 38,
+          "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-10-28T04:25:30.845Z",
+            "source": "/interop/axis-banks/serving-fidelity-20261102.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        },
+        {
+          "axis": "watchdog-ingest",
+          "task": "does the subject offer a third party a documented route to report a problem, with a response commitment and a machine-readable path",
+          "status": "MEASURED",
+          "n": 106,
+          "bench": "frozen presence bank (5 classes, 3-of-5 bar)",
+          "kind": "measured-subject",
+          "family": "subject",
+          "measurement_time": {
+            "state": "EXACT",
+            "precision": "instant",
+            "observed_at": "2026-11-02T04:17:24.499Z",
+            "source": "/interop/axis-banks/watchdog-ingest-20261102.json",
+            "source_field": "facts_as_of",
+            "note": "Exact producer/run as_of. Serve, build and deploy time do not refresh it."
+          }
+        }
+      ]
+    }
+  },
+  "ui": {
+    "axis": "governance",
+    "stage": "review"
+  }
+}
