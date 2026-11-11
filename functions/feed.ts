@@ -1,8 +1,8 @@
 /**
  * GET /feed — the card-index feed (JSON by default, RSS 2.0 with ?format=rss).
  *
- * Reads public/root.json (303 sha256 entries), fetches each card from /cards/
- * to extract surface/subject/as_of, and checks /proofs/ for tier classification.
+ * Reads the ordered card index in public/root.json, fetches each card from
+ * /cards/ to extract surface/subject/as_of, and checks /proofs/ for tier classification.
  *
  * Query parameters:
  *   ?format=rss   — RSS 2.0 XML instead of JSON
@@ -14,9 +14,16 @@
  * /api/feed.xml (its handler). This feed is derived from the card index, not
  * hand-curated.
  *
- * Caching: in-memory Map with 5-minute TTL. First request fetches 303 card
- * files + 303 proof checks; subsequent requests (any query combination) read
- * from the cached full list. Cache-control: public, max-age=300 on responses.
+ * Internal caching: completed entries have a 5-minute TTL. The memory cache and an
+ * optional, origin/root-bound Cache API entry retain the same observation time.
+ * A fresh isolate can reuse a completed load in the same edge location. A cache
+ * miss still reads every mirrored card/proof; this does not remove first-cold
+ * fan-out or establish fresh proof availability on a cache hit. Request-scoped
+ * waitUntil may let already-started loading finish after a client disconnects,
+ * within the platform's shared 30-second continuation budget; completion is not
+ * guaranteed and this starts no retry or background job.
+ * Public response Cache-Control remains public, max-age=300; client cache age
+ * is separate from the internal observation timestamp.
  */
 import { headFromGet } from "./api/_head";
 
@@ -30,14 +37,57 @@ interface CardEntry {
   tier: "free" | "proof";
 }
 
-let cardCache: { entries: CardEntry[]; ts: number } | null = null;
+type CardCache = { entries: CardEntry[]; ts: number; origin: string };
+let cardCache: CardCache | null = null;
+
+const EDGE_CACHE_SCHEMA = "csoai.card-feed-cache/1";
+const ENTRY_KEYS = ["as_of", "sha256", "subject", "surface", "tier"];
+
+function fresh(ts: unknown, now: number): ts is number {
+  return typeof ts === "number" && Number.isSafeInteger(ts) && ts <= now && now - ts < CACHE_TTL_MS;
+}
+
+function validEntries(entries: unknown, shas: string[]): entries is CardEntry[] {
+  if (!Array.isArray(entries) || entries.length === 0 || entries.length > shas.length) return false;
+  let next = 0;
+  const seen = new Set<string>();
+  return entries.every((entry) => {
+    if (!entry || typeof entry !== "object" ||
+        Object.keys(entry).sort().join(",") !== ENTRY_KEYS.join(",") ||
+        typeof entry.sha256 !== "string" || !/^[0-9a-f]{64}$/.test(entry.sha256) ||
+        typeof entry.surface !== "string" || typeof entry.subject !== "string" ||
+        typeof entry.as_of !== "string" || !["free", "proof"].includes(entry.tier) ||
+        seen.has(entry.sha256)) return false;
+    const index = shas.indexOf(entry.sha256, next);
+    if (index < 0) return false;
+    next = index + 1;
+    seen.add(entry.sha256);
+    return true;
+  });
+}
+
+async function edgeCacheForRoot(origin: string, root: unknown) {
+  try {
+    const cache = typeof caches === "undefined" ? undefined :
+      (caches as CacheStorage & { default?: Cache }).default;
+    if (!cache) return null;
+    // Bind the complete public root, including its ordering/as_of. Keep only
+    // derived public metadata in this cache; no request headers or card bodies.
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(root)));
+    const rootDigest = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+    const key = new Request(`${origin}/.well-known/csoai-card-feed-cache/v1/${rootDigest}`);
+    return { cache, key, rootDigest };
+  } catch {
+    return null; // Optional transport cache must not replace the existing source path.
+  }
+}
 
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-async function fetchCardEntries(origin: string): Promise<CardEntry[]> {
+async function fetchCardEntries(origin: string, waitUntil?: (promise: Promise<unknown>) => void): Promise<CardEntry[]> {
   // Serve from cache if warm and fresh
-  if (cardCache && Date.now() - cardCache.ts < CACHE_TTL_MS) {
+  if (cardCache?.origin === origin && fresh(cardCache.ts, Date.now())) {
     return cardCache.entries;
   }
 
@@ -59,6 +109,26 @@ async function fetchCardEntries(origin: string): Promise<CardEntry[]> {
   }
 
   const shas = root.card_sha256 as string[];
+
+  const edge = await edgeCacheForRoot(origin, root);
+  if (edge) {
+    try {
+      const response = await edge.cache.match(edge.key);
+      if (response?.status === 200 && response.headers.get("x-csoai-feed-cache") === "1") {
+        const saved = await response.json() as Record<string, unknown>;
+        if (saved.schema === EDGE_CACHE_SCHEMA && saved.origin === origin &&
+            saved.root_digest === edge.rootDigest && fresh(saved.ts, Date.now()) &&
+            validEntries(saved.entries, shas)) {
+          // Preserve the original observation time: reading a cache cannot
+          // renew the 300-second lifetime or reclassify mirror availability.
+          cardCache = { entries: saved.entries, ts: saved.ts, origin };
+          return cardCache.entries;
+        }
+      }
+    } catch {
+      // Missing, corrupt, inaccessible or incompatible cache: read the sources.
+    }
+  }
 
   // Fetch all card + proof files in parallel.
   // Cards give us surface, subject, as_of. Proofs give us tier.
@@ -118,7 +188,23 @@ async function fetchCardEntries(origin: string): Promise<CardEntry[]> {
   }
 
   // Warm the cache
-  cardCache = { entries, ts: Date.now() };
+  cardCache = { entries, ts: Date.now(), origin };
+  if (edge && validEntries(entries, shas)) {
+    const saved = {
+      schema: EDGE_CACHE_SCHEMA, origin, root_digest: edge.rootDigest,
+      ts: cardCache.ts, entries,
+    };
+    try {
+      const write = edge.cache.put(edge.key, Response.json(saved, { headers: {
+        "cache-control": "public, max-age=300",
+        "x-csoai-feed-cache": "1",
+      } })).catch(() => undefined);
+      if (waitUntil) waitUntil(write);
+      else await write;
+    } catch {
+      // Even a synchronous cache/runtime failure leaves the source result intact.
+    }
+  }
   return entries;
 }
 
@@ -154,7 +240,8 @@ ${items}
 </rss>`;
 }
 
-export const onRequestGet: PagesFunction = async ({ request }) => {
+export const onRequestGet: PagesFunction = async (context) => {
+  const { request } = context;
   const url = new URL(request.url);
   const origin = url.origin;
 
@@ -205,7 +292,15 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
 
   let allEntries: CardEntry[];
   try {
-    allEntries = await fetchCardEntries(origin);
+    const loading = fetchCardEntries(origin, context.waitUntil?.bind(context));
+    try {
+      // Keep this request's existing load alive long enough to attempt a cache
+      // fill after disconnect. No promise or I/O is shared with another request.
+      context.waitUntil?.(loading.then(() => undefined, () => undefined));
+    } catch {
+      // A runtime without continuation support still follows the normal await.
+    }
+    allEntries = await loading;
   } catch (e) {
     const msg = e instanceof Error ? e.message : "unknown error";
     return Response.json(
