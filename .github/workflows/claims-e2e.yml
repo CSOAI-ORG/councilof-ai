@@ -1,7 +1,8 @@
 name: Claims E2E (live truth check)
 
-# Verifies every claim on the live site is functionally true — tools execute,
-# seals are real Ed25519, counts match copy. Fails if any claim fails.
+# Checks the enumerated live-site assertions and historical backend contract.
+# An unqualified backend is UNCHECKABLE; either FAIL or UNCHECKABLE exits 1.
+# Signature-field checks do not independently verify an Ed25519 signature.
 #
 # TRIGGER CHANGED 2026-08-26 (push -> workflow_run). This used to fire on EVERY push
 # to master, and it was wrong on its own terms as well as expensive:

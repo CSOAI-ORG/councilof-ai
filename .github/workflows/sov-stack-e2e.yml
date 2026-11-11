@@ -1,8 +1,8 @@
 name: Sov Stack E2E (agentic globe/sim/hive)
 
-# Verifies the unified agentic Sovereign stack on the live site: every surface loads
-# console-clean, interactions fire, and the globe actually RECEIVES its drive commands
-# (postMessage spy). Fails if any surface or drive-path regresses.
+# Checks the enumerated Sovereign UI journeys: surface loading, console output,
+# interactions and globe drive-command delivery (postMessage spy).
+# Fails when a checked surface or drive-path regresses.
 #
 # TRIGGER CHANGED 2026-08-26 (push -> workflow_run), same reasoning as claims-e2e.yml:
 # a live-site check fired on push tested the PREVIOUS build (its `sleep 100` cannot
