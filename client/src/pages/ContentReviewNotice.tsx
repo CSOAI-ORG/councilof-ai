@@ -30,6 +30,7 @@ export default function ContentReviewNotice() {
   const head = resolveHead(location, name ? { name } : {});
   const what = name ?? withdrawnName(location);
   const isBlogIndex = location === "/blog" || location === "/blog/";
+  const isLearningRoute = /^\/(?:courses(?:\/|$)|my-courses(?:\/|$)|free-course(?:\/|$)|training(?:-hub)?(?:\/|$)|dashboard\/progress(?:\/|$))/.test(location);
   const publishedPosts = isBlogIndex
     ? publishedManifest.published
         .map((p) => blogPostBySlug(p.slug))
@@ -66,6 +67,20 @@ export default function ContentReviewNotice() {
           determination, a certification, or proof that a Council runtime operated.
           The underlying files remain preserved for correction and review.
         </p>
+        {isLearningRoute && (
+          <section className="mt-7 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.04] p-5" data-testid="current-academy-learning">
+            <h2 className="text-xl font-bold text-emerald-100">Continue with the current Academy</h2>
+            <p className="mt-3 leading-7 text-slate-300">
+              The current reading tracks and reproducibility exercises are open.
+              Legacy course enrollment, payment and completion-record issuance remain closed.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/learn?track=board" className="rounded-xl bg-emerald-400 px-4 py-2.5 font-bold text-slate-950 hover:bg-emerald-300">Start a reading track</Link>
+              <a href="/academy/exercises/" className="rounded-xl border border-slate-600 px-4 py-2.5 font-semibold hover:border-slate-400">Reproduce a measurement</a>
+              <Link href="/dashboard?tab=evidence-learning" className="rounded-xl border border-slate-600 px-4 py-2.5 font-semibold hover:border-slate-400">Open Evidence &amp; Learning</Link>
+            </div>
+          </section>
+        )}
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/dashboard?tab=board" className="rounded-xl bg-emerald-400 px-4 py-2.5 font-bold text-slate-950 hover:bg-emerald-300">
             Open the measured board
