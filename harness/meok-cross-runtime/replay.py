@@ -17,7 +17,7 @@ def get(url,maximum):
     if len(data)>maximum:raise ValueError('Source response bound exceeded')
     return data
 
-def run(label,out,edge_url=None):
+def run(label,out,edge_url=None,remote_dev_proxy=False):
     out=Path(out);out.mkdir(parents=True,exist_ok=True)
     lock=json.loads((ROOT/'source-lock.json').read_text());vendor=out/'verified-inputs';vendor.mkdir(exist_ok=True)
     for name,record in lock['files'].items():
@@ -51,7 +51,9 @@ def run(label,out,edge_url=None):
     try:
         if edge_url:
             u=urllib.parse.urlsplit(edge_url)
-            if u.scheme!='https' or not u.hostname or not u.hostname.endswith('.workers.dev') or u.username or u.password or u.query or u.fragment or u.path not in ('','/'):raise ValueError('Expected an explicit public workers.dev root URL without credentials or query')
+            public_ok=u.scheme=='https' and u.hostname and u.hostname.endswith('.workers.dev') and not any([u.username,u.password,u.query,u.fragment]) and u.path in ('','/')
+            local_ok=remote_dev_proxy is True and edge_url=='http://127.0.0.1:9191'
+            if not (public_ok or local_ok):raise ValueError('Expected explicit public workers.dev root, or the expressly enabled existing local remote-development proxy on port9191')
             code,health=edge('/health');assert code==200 and health['state']=='RESEARCH_PREVIEW' and health['weights_sha256']==WEIGHTS
             max_delta=0.0;checked=0;batch_rows=8;network_start=time.perf_counter()
             for offset in range(0,len(rows),batch_rows):
@@ -68,7 +70,7 @@ def run(label,out,edge_url=None):
             for name,body,pin,want,reason in cases:
                 code,data=edge('/v1/predict',body,pin);assert code==want and data.get('error')==reason and 'outputs' not in data;negative.append(name)
             code,recovery=edge('/v1/predict',json.dumps([good]).encode());assert code==200
-            report['edge']={'state':'CLOUDFLARE_PARITY_AND_REFUSALS_PASSED','url':edge_url,'rows_compared':checked,'raw_and_constrained_values_compared':checked*8,'requests':requests,'max_absolute_difference':max_delta,'tolerance':TOLERANCE,'negative_controls':negative,'recovery_after_refusal':True,'end_to_end_request_wall_seconds':time.perf_counter()-network_start,'response_digest_checks':requests,'cf_ray_present_count':sum(x['cf_ray_present'] for x in ledger),'preview_expires_at':health['limits']['expires_at'],'remote_GSPC_admission':False,'timing_scope':'Sequential HTTP wall-time including transport/verification, not a provider-kernel latency or throughput benchmark.'}
+            report['edge']={'state':'CLOUDFLARE_REMOTE_DEV_PARITY_PASSED' if remote_dev_proxy else 'CLOUDFLARE_PARITY_AND_REFUSALS_PASSED','transport_mode':'WRANGLER_REMOTE_DEVELOPMENT_PROXY' if remote_dev_proxy else 'PUBLIC_PREVIEW_URL','url':edge_url,'rows_compared':checked,'raw_and_constrained_values_compared':checked*8,'requests':requests,'max_absolute_difference':max_delta,'tolerance':TOLERANCE,'negative_controls':negative,'recovery_after_refusal':True,'end_to_end_request_wall_seconds':time.perf_counter()-network_start,'response_digest_checks':requests,'cf_ray_present_count':sum(x['cf_ray_present'] for x in ledger),'preview_expires_at':health['limits']['expires_at'],'remote_GSPC_admission':False,'timing_scope':'Sequential HTTP wall-time including transport/verification, not a provider-kernel latency or throughput benchmark.'}
             report['state']='CROSS_RUNTIME_PARITY_PASSED'
     except Exception as e:
         report['state']='FAILED';report['failure']={'type':type(e).__name__,'message':str(e)[:350],'requests_completed':requests};raise
