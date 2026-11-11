@@ -87,11 +87,11 @@ test("Rule A keeps integral floats as CPython wrote them", () => {
   assert.equal(text, '{"a":[1.0,2,"\\u00e9"],"b":0.0,"c":{"y":null,"z":1e-06}}');
 });
 
-test("a published card verifies offline under its pinned key, and a tampered copy does not", async () => {
+test("a published card verifies offline under its pinned key, and a tampered copy does not", async (t) => {
   const index = JSON.parse(readFileSync(join(ROOT, "public/signed/card_index.json"), "utf8"));
   const row = index.cards.find((c) => c.card === index.head) || index.cards[0];
   const path = join(ROOT, "public", row.card_url);
-  if (!existsSync(path)) return; // sparse checkout without card bodies
+  if (!existsSync(path)) return t.skip("Sparse checkout has no pinned card bytes; signature verification was not run.");
   const card = runner.parsePreservingNumbers(readFileSync(path, "utf8"));
   const good = await runner.verifyCardParsed(card, index.pubkey);
   assert.deepEqual(good, { state: "VALID", reason: null });
