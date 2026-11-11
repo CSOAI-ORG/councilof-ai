@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 const workflow = readFileSync(new URL('../.github/workflows/post-deploy-verify.yml', import.meta.url), 'utf8');
 const marker = '          script: |\n';
@@ -14,6 +16,7 @@ const complete = {
   PROBE_OUTCOME: 'success', PROBE_PASS: '40', PROBE_FAIL: '0', PROBE_EXPECTED: '40',
   CONTENT_OUTCOME: 'success', CONTENT_PASS: '3', CONTENT_FAIL: '0', CONTENT_EXPECTED: '3',
   PROBE_REPORT: 'Endpoint report', CONTENT_REPORT: 'Content report',
+  CONTROL_PASS: '10', CONTROL_FAIL: '0', CONTROL_EXPECTED: '10', CONTROL_REPORT: 'Application-UA control report',
 };
 
 async function run(changes = {}, summaryError = false) {
@@ -51,6 +54,17 @@ test('the historical 30-pass, 10-failure result fails the verification job', asy
   assert.equal(result.failures.length, 1);
   assert.match(result.summary, /FAILED/);
   assert.match(result.summary, /30 pass, 10 fail of 40/);
+  assert.match(result.summary, /APPLICATION-UA CONTROL \(diagnostic only\): 10 pass, 0 fail of 10/);
+});
+
+test('control failures and missing control evidence remain visible without replacing required observations', async () => {
+  const failed = await run({ CONTROL_PASS: '0', CONTROL_FAIL: '10' });
+  assert.deepEqual(failed.failures, []);
+  assert.match(failed.summary, /APPLICATION-UA CONTROL \(diagnostic only\): 0 pass, 10 fail of 10/);
+  const missing = await run({ CONTROL_PASS: '', CONTROL_FAIL: '', CONTROL_EXPECTED: '' });
+  assert.deepEqual(missing.failures, []);
+  assert.match(missing.summary, /APPLICATION-UA CONTROL \(diagnostic only\): UNCHECKABLE/);
+  assert.match(missing.summary, /never replace default-client observations/);
 });
 
 test('a failed content predicate cannot hide behind passing endpoint probes', async () => {
@@ -62,7 +76,9 @@ test('missing outputs are UNCHECKABLE and fail instead of parsing to NaN', async
   const changes = Object.fromEntries(Object.keys(complete).filter(key => /_(PASS|FAIL|EXPECTED)$/.test(key)).map(key => [key, '']));
   const result = await run(changes);
   assert.equal(result.failures.length, 1);
-  assert.equal((result.summary.match(/UNCHECKABLE/g) || []).length, 2);
+  assert.match(result.summary, /PROBE: UNCHECKABLE/);
+  assert.match(result.summary, /CONTENT: UNCHECKABLE/);
+  assert.match(result.summary, /APPLICATION-UA CONTROL \(diagnostic only\): UNCHECKABLE/);
 });
 
 test('every count rejects malformed, negative, fractional, unsafe and partial numbers', async () => {
@@ -115,6 +131,8 @@ test('the final check always runs, reads outputs through the environment, and ha
   assert.match(workflow, /permissions:\n  contents: read/);
   assert.match(workflow, /workflow_run\.head_branch == 'master'/);
   assert.match(workflow, /workflow_run\.head_repository\.full_name == github\.repository/);
+  assert.match(workflow, /ref: \$\{\{ github\.event\.workflow_run\.head_sha \}\}/);
+  assert.match(workflow, /persist-credentials: false/);
   assert.doesNotMatch(workflow, /createComment|pulls\.list|issues: write|pull-requests: write/);
   assert.doesNotMatch(script, /\$\{\{.*steps\./);
 });
@@ -124,4 +142,16 @@ test('both probe stages export positive planned populations and completed counts
   assert.match(workflow, /echo "expected=\$EXPECTED" >> "\$GITHUB_OUTPUT"/);
   assert.match(workflow, /echo "expected=3" >> "\$GITHUB_OUTPUT"/);
   assert.equal((workflow.match(/echo "pass=\$PASS" >> "\$GITHUB_OUTPUT"/g) || []).length, 2);
+  assert.match(workflow, /--client urllib "\$URL"/);
+  assert.match(workflow, /--client urllib --application-control "\$URL"/);
+  assert.match(workflow, /echo "control_expected=\$CONTROL_EXPECTED"/);
+  assert.doesNotMatch(workflow, /\|\| echo "000"/);
+});
+
+test('actual curl and urllib transports preserve loopback positive, negative and privacy controls', { timeout: 30000 }, () => {
+  const result = spawnSync('python3', ['-m', 'unittest', 'discover', '-s', 'scripts', '-p', 'test_post_deploy_probe.py'], {
+    cwd: fileURLToPath(new URL('../', import.meta.url)), encoding: 'utf8', timeout: 20000,
+  });
+  assert.equal(result.error, undefined, result.error?.message);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
 });
