@@ -11,7 +11,7 @@ python3 -m unittest discover -s scripts/governance-watch -p 'test_*.py' -v
 python3 scripts/governance-watch/governance_watch.py --out /approved/private/evidence-directory --summary
 ```
 
-Use an explicitly approved private output directory. Never commit runs, source snapshots, notifications or internal review records. Execution without `--summary` is silent when there is no new finding. The program does not send messages: the existing review task consumes its evidence. This directory and its CI workflow install no scheduler.
+Use an explicitly approved private output directory. Never commit runs, source snapshots, notifications or internal review records. A successful execution without `--summary` is silent when there is no new finding. The program does not send messages: the existing review task consumes its evidence. This directory and its CI workflow install no scheduler.
 
 ## Evidence semantics
 
@@ -26,3 +26,13 @@ Atomic writes and a process lock protect report state. No credentials, inbox acc
 OSAIA/Linux Foundation membership is not endorsement, SAFE compact participation or project adoption. Cloudflare for Startups is a programme, not a partnership. OIN and LOT coverage must be interpreted under their respective agreements; neither provides blanket patent immunity. A compliance mapping is not compliance certification.
 
 The source list is not a claim that every controlling agreement is public or that all material changes are detected. Signed/private agreements and legal decisions remain with the authorized legal/governance owners. Publishing this code does not amend Terms, Privacy, Disclaimers, licences, memberships or commitments. The qualification suite is offline and does not contact monitored services.
+
+## Runtime status and interrupted evidence commits
+
+Version 0.2.1 performs small write/fsync probes in the normal system temporary directory and selected private evidence directory before collecting sources. It removes only its own disposable probes. It does not clean storage, change TMPDIR, relocate the monitor, change permissions or retry on another host.
+
+Exit 0 means the collection/report path completed; individual source results may still be UNVERIFIED. Exit 3 reports INCOMPLETE for local I/O or invalid configuration/evidence. Exit 4 reports SKIPPED_BUSY when another process holds the collector lock. Failure notices are JSON on stderr with fresh_report_accepted=false and origin_outage_established=false. They omit exception messages to avoid exposing private paths. Capture exit status and both output streams; silence alone is not successful monitoring. A tool timeout is an unknown execution outcome, not permission to start a duplicate.
+
+The immutable report and checksum are written first, notifications.json next, and latest.json last. A notification-write failure cannot advance latest.json. A failure between the final two writes leaves a detectable mismatch; the next run stops for owner-controlled reconciliation instead of resetting history or silently suppressing alerts. The pair is not a multi-file atomic transaction. No automated evidence repair is provided.
+
+Retained latest.json remains historical after a failed run. Compare its timestamp with the actual invocation and require an observed successful result before claiming recovery. Repository release does not update an installed collector, authorize new pins, or prove current source collection. Use the existing deployment and monitoring owners; do not create another scheduler.
