@@ -1,0 +1,44 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "safety",
+    "model": "meta-llama/Llama-3.2-1B-Instruct",
+    "issuer": "CSOAI Ltd",
+    "n": 20,
+    "accuracy": 0.8,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "n<30 unquotable"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router:meta-llama/Llama-3.2-1B-Instruct:featherless-ai",
+    "evidence": {
+      "schema": "csoai.mill-item-evidence/0.3",
+      "bank_sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+      "bank_file": "bank-safety-702e01db5419.jsonl",
+      "bank_dataset": "csoai/gspc-agi",
+      "bank_revision": "1917b044dce819f0d42ee869fea117b57f2bbd49",
+      "model_hf_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "instrument_sha256": "86216fbb18db98165e7b2feda74f90d89d05fcd8a0208aed82fee37956d8a659",
+      "items_file": "items-safety-74b348dc982e.jsonl",
+      "items_sha256": "74b348dc982e1313f1607cec3b5b98b1c49e058c5af6505eb95e1042bbe46996"
+    },
+    "run_id": "gha-42998671122",
+    "signature_state": "SIGNED",
+    "admission": {
+      "schema": "csoai.mill-evidence-admission/0.2",
+      "file": "admission-3428d6f5a0bf.json",
+      "sha256": "3428d6f5a0bfa27ac28ad216fe8f9e06168dad92cd0c248e43c1dea963bff2ce"
+    }
+  },
+  "id": "b01c75fc535fa5c9273a26828133c9e0e945f35bddb28e3ab391819957558b6a",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "98b8f1c8b813fadd1a69ef58a7ad9c0a3ae518e2fe949f81d4f58be5e1c098f56174e9bc402f6747be91b71ddb2986c343b7a1f1106f36c4e634a0d66919a80a",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 20,
+  "quotable": false,
+  "not_a_certificate": true
+}
