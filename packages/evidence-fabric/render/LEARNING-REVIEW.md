@@ -112,7 +112,7 @@ can switch those states. Its tests use explicit synthetic labels only.
 Optional `observed.learning_assessment` metadata must contain exactly
 `card_sha256`, `participant_ref`, `phase`, `case_sha256`, `source_group`,
 `rubric_sha256`, `lesson_revision`, `form_id`, `response_label`, and `data_origin`.
-Phases are `PRE`, `POST`, `RETENTION`; response labels use the candidate-label
+Phases are `PRE`, `POST`, `TRANSFER`, `RETENTION`; response labels use the candidate-label
 vocabulary above; origins are `SYNTHETIC` or `SUPPLIED_REFERENCE`.
 
 The renderer checks explicit per-handle pairing, missing phases, source/case
@@ -123,6 +123,80 @@ Human learning gains, retention gains and human participant counts stay null.
 Comparable task difficulty, consent, qualified reviewers and causal analysis
 remain requirements of an actual study. Participant handles, case text,
 arbitrary event observations and claim text are not republished.
+
+Transfer is counted separately from post-lesson responses. Version 2 also checks
+post/transfer and retention chronology and case reuse, and shows descriptive
+response-label counts by phase. Missing transfer does not disappear into POST.
+Distinct case digests do not establish unseen content or comparable difficulty.
+
+## Usable Academy self-study and import bridge
+
+The existing `/academy/exercises/#self-study` page offers an optional local
+sequence tied to `verify-card`: two before responses, a short lesson, two after
+responses and two transfer scenarios. Its tasks and reference choices are public
+practice content in `public/academy/exercises/study-content.json`. They have not
+been calibrated as a learning study and must not be described as blinded or
+held-out material. The existing live exercise runs and their reproducibility
+transcripts remain separate from the answer sequence.
+
+The browser retains the first response to each task in that local session and
+withholds reference feedback until the sequence ends. It saves an array of
+ordinary `csoai.evidence-event/0.1` records locally; there is no account, new
+canonical event schema, server submission, enrolment or central learner store.
+`Download self-study events (JSON)` keeps a portable copy; the resume control
+validates the complete sequence before replacing local state. The clear control
+removes only this self-study key. Writes require browser locks, compare the
+prior saved bytes and read back the write. Where storage coordination is
+unavailable, the session stays in memory and can be exported. A conflicting tab keeps
+its answers exportable in memory and does not replace the other saved copy.
+
+Imports bind the exact lesson, existing exercise metadata, task text/choices and
+rubric. They reject changed content versions, duplicate JSON keys, malformed or
+future timestamps, reordered phases, repeated attempts, modified answer labels,
+unknown fields, mixed sessions and signatures claiming human identity. An older
+content version stays downloadable as its original bytes but cannot silently
+resume against changed questions. Reopen its matching Git source revision if
+that historical copy needs analysis. The timestamps and hashes remain unsigned
+local declarations; they do not authenticate people or prove that a lesson was
+read. Clearing and restarting does not erase the fact that task content may
+already have been seen.
+
+To attach the retained responses to an explicitly selected existing evaluation
+card as report context and generate the same seven-section renderer output:
+
+```sh
+python3 packages/evidence-fabric/render/academy_learning_import.py \
+  --card /approved/path/evaluation-card.json \
+  --study /approved/path/academy-self-study-events.json \
+  --as-of 2026-11-11T08:00:00Z \
+  --format markdown --output /approved/path/new-self-study-review.md
+```
+
+The importer checks the original events with the canonical validator, recomputes
+response labels against the same published task definitions, preserves those
+source events, and derives explicit `observed.learning_assessment` metadata.
+The card is context chosen by the operator; this does not prove that the person
+saw or used that card. Original event identities and the source-export digest
+are retained. `--format events` writes this original-plus-derived event array for
+the existing renderer; `--format json` writes its full report. `--ai-tools`
+accepts the existing declaration shape; without it, AI use is not recorded.
+Existing output files are never overwritten. Participant handles do not appear
+in the rendered report. Human counts, learning gains, reviewer competence and
+execution authority remain unestablished.
+
+Check the shipped browser code against the Python receiver, including negative
+controls, with:
+
+```sh
+node --test scripts/academy/learning-study.node-test.mjs scripts/academy/exercises.node-test.mjs
+python3 -m unittest discover -s packages/evidence-fabric/render -p 'test_*learning*.py' -v
+node scripts/academy/build-exercises.mjs --check
+```
+
+All fixture responses in these software checks are explicitly `SYNTHETIC`.
+An actual qualified study still needs consenting authenticated participants,
+reviewed unseen tasks, comparable difficulty, an appropriate comparison,
+retention timing, predeclared analysis and independent review.
 
 ## Evidence meaning
 
