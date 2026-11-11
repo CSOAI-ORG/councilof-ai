@@ -16,11 +16,12 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import sys
 import tempfile
 import time
 from urllib.parse import urlparse
 
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 NORMALISER_VERSION = "visible-main/2"
 ROOT = Path(__file__).resolve().parent
 MAX_BYTES = 3_000_000
@@ -318,16 +319,96 @@ def atomic_write(path, data):
 
 
 def load_targets(path):
+    """Reject empty/malformed scope before fetching or promoting any report."""
     targets = json.loads(Path(path).read_text())
+    if not isinstance(targets, list) or not targets:
+        raise ValueError("source configuration must be a non-empty list")
     ids = set()
     for target in targets:
-        if not re.fullmatch(r"[a-z0-9_]+", target["name"]) or target["name"] in ids:
+        if not isinstance(target, dict):
+            raise ValueError("each source must be an object")
+        name, url = target.get("name"), target.get("url")
+        if not isinstance(name, str) or not re.fullmatch(r"[a-z0-9_]+", name) or name in ids:
             raise ValueError("invalid or duplicate target name")
-        ids.add(target["name"])
-        u = urlparse(target["url"])
+        ids.add(name)
+        if not isinstance(url, str):
+            raise ValueError("target URL must be a string")
+        u = urlparse(url)
         if u.scheme != "https" or not u.hostname or u.username or u.password:
             raise ValueError("target must be credential-free HTTPS")
+        if target.get("kind", "html") not in ("html", "json", "text", "security_txt"):
+            raise ValueError("unsupported source kind")
+        for field in ("expect", "required_keys"):
+            values = target.get(field, [])
+            if not isinstance(values, list) or any(not isinstance(x, str) or not x for x in values):
+                raise ValueError("source validation fields must be lists of non-empty strings")
     return targets
+
+
+def check_previous_pair(out, previous):
+    """Refuse an interrupted report/notification commit; never auto-repair history."""
+    notification_path = out / "notifications.json"
+    if previous is None:
+        if notification_path.exists():
+            raise ValueError("notification state exists without a matching latest report")
+        return
+    if not isinstance(previous, dict) or not isinstance(previous.get("results"), list):
+        raise ValueError("invalid previous report")
+    stamp = previous.get("timestamp_utc")
+    if not isinstance(stamp, str) or not re.fullmatch(r"[0-9]{8}T[0-9]{6}(?:[0-9]{6})?Z", stamp):
+        raise ValueError("invalid previous report timestamp")
+    # Validate a real calendar time, not just a timestamp-shaped string.
+    dt.datetime.strptime(stamp, "%Y%m%dT%H%M%S%fZ" if len(stamp) == 22 else "%Y%m%dT%H%M%SZ")
+    notification = json.loads(notification_path.read_text())
+    if (not isinstance(notification, dict) or notification.get("timestamp_utc") != stamp
+            or notification.get("report") != stamp + ".json"
+            or notification.get("new_findings") != previous.get("new_notifications")):
+        raise ValueError("report and notification state disagree; owner review required")
+
+
+def preflight_storage(out):
+    """Test ordinary configured storage, without a fallback, cleanup or relocation."""
+    # These are only this invocation's small disposable probes, never user files.
+    # TemporaryDirectory uses the unchanged system temporary-directory selection.
+    with tempfile.TemporaryDirectory(prefix="governance-preflight-") as temporary:
+        probe_path = Path(temporary) / "probe"
+        with probe_path.open("xb") as stream:
+            stream.write(b"governance storage preflight\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+    fd, name = tempfile.mkstemp(prefix=".watch-preflight-", dir=str(out))
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(b"governance storage preflight\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+    finally:
+        if os.path.exists(name):
+            os.unlink(name)
+
+
+def incomplete_notice(state, reason, error_type=None):
+    """Emit failure to stderr even when disk cannot save a failure record."""
+    notice = {"monitor_version": VERSION, "run_state": state,
+              "observed_at": iso(utcnow()), "reason": reason,
+              "collection_complete": False, "fresh_report_accepted": False,
+              "origin_outage_established": False, "legal_change_established": False}
+    if error_type:
+        notice["error_type"] = error_type
+    # Do not print exception messages: paths, URLs or private history can be embedded.
+    print(json.dumps(notice, sort_keys=True), file=sys.stderr)
+
+
+def main():
+    """An incomplete run is nonzero, never an unchanged-success notification."""
+    try:
+        return run()
+    except OSError as exc:
+        incomplete_notice("INCOMPLETE", "LOCAL_IO_FAILURE", type(exc).__name__)
+        return 3
+    except (ValueError, TypeError, KeyError) as exc:
+        incomplete_notice("INCOMPLETE", "CONFIGURATION_OR_EVIDENCE_INVALID", type(exc).__name__)
+        return 3
 
 
 def run():
@@ -342,12 +423,15 @@ def run():
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            return 0
-        previous = {}
+            incomplete_notice("SKIPPED_BUSY", "EXISTING_COLLECTOR_LOCK")
+            return 4
+        previous = None
         if (out / "latest.json").exists():
             # Fail visibly on corrupt history rather than silently resetting alert state.
             previous = json.loads((out / "latest.json").read_text())
+        check_previous_pair(out, previous)
         targets = load_targets(args.sources)
+        preflight_storage(out)
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
             results = list(pool.map(probe, targets))
         stamp = utcnow().strftime("%Y%m%dT%H%M%S%fZ")
@@ -370,9 +454,11 @@ def run():
         path = out / (stamp + ".json")
         atomic_write(path, raw)
         atomic_write(out / (stamp + ".sha256"), (digest(raw) + "  " + path.name + "\n").encode())
-        atomic_write(out / "latest.json", raw)
         notification = {"timestamp_utc": stamp, "new_findings": report["new_notifications"], "report": path.name}
         atomic_write(out / "notifications.json", (json.dumps(notification, indent=2) + "\n").encode())
+        # latest.json is the final commit point. A failed notification write cannot
+        # replace the previous report. A failure here leaves a detectable mismatch.
+        atomic_write(out / "latest.json", raw)
         if args.summary or report["new_notifications"]:
             print(json.dumps({"report": str(path), "sha256": digest(raw), "checked": len(results),
                 "verified_fetches": sum(r["state"] == "VERIFIED_FETCH" for r in results),
@@ -383,4 +469,4 @@ def run():
 
 
 if __name__ == "__main__":
-    raise SystemExit(run())
+    raise SystemExit(main())
