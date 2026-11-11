@@ -21,9 +21,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { SUBMISSION_GUIDE_ROUTE, renderSubmitPage } from "./surface/build-bench-suite.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITEMAP = join(ROOT, "public/sitemap.xml");
@@ -51,6 +52,29 @@ function run(script, args = []) {
 test("the committed sitemap matches a fresh generation", () => {
   const r = run("generate-sitemap.mjs", ["--check"]);
   assert.equal(r.code, 0, `public/sitemap.xml is stale:\n${r.out}`);
+});
+
+test("the generated submission route has identical sitemap bytes before and after the HTML build", () => {
+  const guide = join(ROOT, "public", SUBMISSION_GUIDE_ROUTE, "index.html");
+  const original = existsSync(guide) ? readFileSync(guide) : null;
+  const sitemap = readFileSync(SITEMAP, "utf8");
+  const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  assert.equal(urls.filter((url) => url === `https://councilof.ai${SUBMISSION_GUIDE_ROUTE}`).length, 1);
+  try {
+    rmSync(guide, { force: true });
+    const beforeBuild = run("generate-sitemap.mjs", ["--check"]);
+    assert.equal(beforeBuild.code, 0, `pre-build guide route drifted:\n${beforeBuild.out}`);
+    assert.ok(beforeBuild.out.includes(`${urls.length} URLs match a fresh generation`));
+    mkdirSync(dirname(guide), { recursive: true });
+    writeFileSync(guide, renderSubmitPage([]));
+    const afterBuild = run("generate-sitemap.mjs", ["--check"]);
+    assert.equal(afterBuild.code, 0, `post-build guide route duplicated or drifted:\n${afterBuild.out}`);
+    assert.ok(afterBuild.out.includes(`${urls.length} URLs match a fresh generation`));
+    assert.equal(readFileSync(SITEMAP, "utf8"), sitemap, "check mode changed the committed sitemap");
+  } finally {
+    if (original === null) rmSync(guide, { force: true });
+    else writeFileSync(guide, original);
+  }
 });
 
 test("the committed redirect table matches a fresh generation", () => {

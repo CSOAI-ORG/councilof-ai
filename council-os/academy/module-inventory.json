@@ -6,22 +6,24 @@
   "completion_rule": "A module is complete only through an exercise whose state is REPRODUCED (your result's sha256 equals the published result's sha256 and the negative control fails). Modules with no exercise are reading or practice; finishing them completes nothing.",
   "totals": {
     "surfaces": 5,
-    "modules": 63,
+    "modules": 64,
     "modules_with_exercise": 10,
     "exercises": 9,
     "findings": {
-      "boundary": 1,
+      "boundary": 2,
+      "certificate_negated": 9,
       "typed_count": 3,
-      "certificate_negated": 7,
       "price": 22,
       "certificate": 52
     },
-    "served_modules": 10,
-    "served_modules_without_exercise": [],
+    "served_modules": 11,
+    "served_modules_without_exercise": [
+      "learn/practice"
+    ],
     "findings_in_served_copy": {
-      "boundary": 1,
-      "typed_count": 1,
-      "certificate_negated": 2
+      "boundary": 2,
+      "certificate_negated": 4,
+      "typed_count": 1
     }
   },
   "exercises": [
@@ -110,6 +112,39 @@
       "served": true,
       "modules": [
         {
+          "id": "learn/practice",
+          "title": "Practise beside published AI results",
+          "level": "Beginner",
+          "stated_minutes": 20,
+          "steps": [
+            {
+              "title": "Read the living board and its limits",
+              "href": "\"/dashboard/?tab=board\""
+            },
+            {
+              "title": "THE RULER — local practice with published AI answers",
+              "href": "\"/games/ruler/\""
+            },
+            {
+              "title": "Check a published card",
+              "href": "\"/gspc-verify/\""
+            },
+            {
+              "title": "What a completion record would mean — issuance is closed",
+              "href": "\"/academy/#completion-records\""
+            }
+          ],
+          "exercises": [],
+          "findings": [
+            {
+              "kind": "boundary",
+              "line": 9,
+              "match": "MEOK",
+              "context": "{ id: \"practice\", name: \"Practise beside published AI results\", level: \"Beginner\", mins: 20, blurb: \"Read a measured result, make your own choices in THE RUL…"
+            }
+          ]
+        },
+        {
           "id": "learn/board",
           "title": "Read the living board",
           "level": "Beginner",
@@ -117,19 +152,19 @@
           "steps": [
             {
               "title": "Open Council OS",
-              "href": "\"/dashboard?tab=home\""
+              "href": "\"/dashboard/?tab=home\""
             },
             {
               "title": "The living board — empty cells stay empty",
-              "href": "\"/gspc-scoreboard\""
+              "href": "\"/dashboard/?tab=board\""
             },
             {
               "title": "Verify a card in your browser",
-              "href": "\"/gspc-verify\""
+              "href": "\"/gspc-verify/\""
             },
             {
               "title": "Ask as the reader you are",
-              "href": "\"/dashboard?ask=&tab=home\" + encodeURIComponent(\"In plain words, what does the Council of AI actually measure?\")"
+              "href": "\"/dashboard/?tab=home&ask=\" + encodeURIComponent(\"In plain words, what does the Council of AI actually measure?\")"
             }
           ],
           "exercises": [
@@ -138,7 +173,15 @@
             "three-corpora",
             "board-stamp"
           ],
-          "findings": []
+          "findings": [
+            {
+              "kind": "certificate",
+              "line": 15,
+              "match": "certifies",
+              "context": "{ id: \"board\", name: \"Read the living board\", level: \"Beginner\", mins: 15, blurb: \"What is measured, what is empty, how to check a card. Finishing a track ce…",
+              "negated": true
+            }
+          ]
         },
         {
           "id": "learn/found",
@@ -175,8 +218,8 @@
           "stated_minutes": 15,
           "steps": [
             {
-              "title": "MEOK Law by jurisdiction",
-              "href": "\"/meok-law\""
+              "title": "Law by jurisdiction",
+              "href": "\"/law\""
             },
             {
               "title": "Framework Temples",
@@ -190,14 +233,7 @@
           "exercises": [
             "article-50-marking"
           ],
-          "findings": [
-            {
-              "kind": "boundary",
-              "line": 20,
-              "match": "MEOK",
-              "context": "{ t: \"MEOK Law by jurisdiction\", href: \"/meok-law\" },"
-            }
-          ]
+          "findings": []
         },
         {
           "id": "learn/sector",
@@ -230,16 +266,16 @@
           "stated_minutes": 30,
           "steps": [
             {
-              "title": "Legacy Bridge",
-              "href": "\"/legacy\""
+              "title": "Measurement capsules — signed, checkable records",
+              "href": "\"/measurement-capsules/\""
             },
             {
-              "title": "Council Towns - the multiplication engine",
-              "href": "\"/towns\""
+              "title": "Services — supported feeds and evidence doors",
+              "href": "\"/services/\""
             },
             {
-              "title": "Services - the whole OS",
-              "href": "\"/services\""
+              "title": "Completion records — how they work",
+              "href": "\"/academy/#completion-records\""
             }
           ],
           "exercises": [
@@ -265,12 +301,16 @@
           "position": 1,
           "steps": [
             {
+              "title": "Verify an outcome before marking completion",
+              "href": "#verify-retained-outcome"
+            },
+            {
               "title": "Layer 0 — the 8 trust controls",
               "href": "/layer0"
             },
             {
-              "title": "The 52-Article Charter",
-              "href": "/charter"
+              "title": "The operational charter",
+              "href": "/constitutional-harness/"
             },
             {
               "title": "SOAI-PDCA methodology",
@@ -286,7 +326,7 @@
           "findings": [
             {
               "kind": "typed_count",
-              "line": 13,
+              "line": 16,
               "match": "8 trust controls",
               "context": "{ name: \"Layer 0 — the 8 trust controls\", href: \"/layer0\" },"
             }
@@ -329,6 +369,10 @@
               "href": "/crosswalks"
             },
             {
+              "title": "THE RULER — local practice with published AI answers",
+              "href": "/games/ruler/"
+            },
+            {
               "title": "Readiness Assessment (free)",
               "href": "/assess"
             },
@@ -348,12 +392,16 @@
           "position": 4,
           "steps": [
             {
-              "title": "Training records — how they work",
-              "href": "/courses"
+              "title": "Completion records — how they work",
+              "href": "#completion-records"
             },
             {
-              "title": "Full course catalog",
-              "href": "/courses"
+              "title": "Verify a signed card in your browser",
+              "href": "/gspc-verify/"
+            },
+            {
+              "title": "H.I.M. — where a named human decides",
+              "href": "/him"
             }
           ],
           "exercises": [
@@ -363,9 +411,9 @@
           "findings": [
             {
               "kind": "certificate",
-              "line": 28,
+              "line": 32,
               "match": "certify",
-              "context": "{ n: 4, title: \"Attest\", blurb: \"Finish a course and get a signed training record. It attests training, not conformity — we certify nothing.\", ring: \"border-…",
+              "context": "{ n: 4, title: \"Attest\", blurb: \"Reproduce a published measurement to earn a free, signed completion record (issuance is not open yet). It records what you r…",
               "negated": true
             }
           ]
@@ -374,9 +422,22 @@
       "page_findings": [
         {
           "kind": "certificate",
-          "line": 6,
+          "line": 7,
           "match": "certifies",
-          "context": "// NB: the fourth path attests TRAINING, never conformity — Council of AI certifies nothing.",
+          "context": "// conformity — Council of AI certifies nothing. /courses is a 308 to the OS lobby, so no module",
+          "negated": true
+        },
+        {
+          "kind": "boundary",
+          "line": 61,
+          "match": "MEOK",
+          "context": "<p className=\"font-mono text-[11px] uppercase tracking-[2px] text-amber-700\">MEOK H.I.M. · the last door on every path</p>"
+        },
+        {
+          "kind": "certificate",
+          "line": 160,
+          "match": "certification",
+          "context": "<li><b>Not a certification.</b> It records one reproduced measurement. It says nothing about your conformity, competence or any system.</li>",
           "negated": true
         }
       ]
@@ -391,9 +452,9 @@
       "component": "DashboardLearningPane",
       "served": true,
       "snapshot": {
-        "file": "public/signed/gspc-board.2026-09-25.signed.json",
+        "file": "public/signed/gspc-board.2026-09-29.signed.json",
         "axes": 23,
-        "status_file": "public/signed/gspc-board.2026-09-25.status.json",
+        "status_file": "public/signed/gspc-board.2026-09-29.status.json",
         "status_state": "CURRENT",
         "current": true
       },
@@ -1458,7 +1519,7 @@
           "findings": [
             {
               "kind": "certificate",
-              "line": 54,
+              "line": 49,
               "match": "certification",
               "context": "\"They require annual certification\",",
               "negated": false
@@ -1471,7 +1532,7 @@
   "sources": [
     {
       "path": "client/src/components/DashboardLearningPane.tsx",
-      "sha256": "e6927231c49849172c2a883effb137d2cc3cc0be2c69e6ae435c09a6c61e850c"
+      "sha256": "f7e218ad4c3fe5e19764b803d2fd42ae89cc0554ad7ac2eb63dd379161efbd74"
     },
     {
       "path": "client/src/data/courses.ts",
@@ -1483,7 +1544,7 @@
     },
     {
       "path": "client/src/data/gspc-learning-paths.ts",
-      "sha256": "7cd352d4407d606f3751768eaa7c576a37a36dda8623cba3e2f581295025b6f3"
+      "sha256": "e132573f19c8faeefbc45ccc068d4460b54160a537b6b086c0bf9b45c92afbbf"
     },
     {
       "path": "client/src/data/modules/australia-ai-ethics-module-1.ts",
@@ -1683,7 +1744,7 @@
     },
     {
       "path": "client/src/data/quizzes.ts",
-      "sha256": "3769396e73df9b8bd9ae3b9b393e68a03286dce55150229820da7a44bca13aa7"
+      "sha256": "7f42a6eb34082e111e81200901ebc9dfeca14095724b1a9961ff655e9cbf5935"
     },
     {
       "path": "client/src/data/widget-courses.ts",
@@ -1691,11 +1752,11 @@
     },
     {
       "path": "client/src/pages/Academy.tsx",
-      "sha256": "becf265c005ba89cfa249d20b1b96bd3d41fffe5a66f0f6b6a6316fefcf06c58"
+      "sha256": "8ee216d939219ad44f68bc8187139ef231f1172f1a8babc22a9a8f6c0d5a490d"
     },
     {
       "path": "client/src/pages/CouncilAcademy.tsx",
-      "sha256": "f89c145990316cde679533d990d2c688ff32db123d1a9539b3a27c100aff2a2a"
+      "sha256": "7ec79569718ad6fef5695b2e93a96f4b5394fdb8ccec6c885abea30bca7c3494"
     }
   ]
 }
