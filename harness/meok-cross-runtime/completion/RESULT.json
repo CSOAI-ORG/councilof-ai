@@ -1,0 +1,79 @@
+{
+  "schema": "csoai.cross-runtime-completion/1",
+  "state": "PUBLIC_PREVIEW_AND_STRICT_ACCEPTANCE_PASSED",
+  "at": "2026-11-11T06:27:28.306560+00:00",
+  "pr": 4212,
+  "original_weights_unchanged": true,
+  "source_bank_reused": true,
+  "public_preview": {
+    "immutable_url": "https://0e29bc3e-csoai-process-replay.nicholastempleman.workers.dev",
+    "alias_url": "https://parity-20261111-csoai-process-replay.nicholastempleman.workers.dev",
+    "state": "PUBLIC_MODEL_RESPONSE_VERIFIED",
+    "normal_production_hostname": "DISABLED_404",
+    "fixed_prediction_expiry": "2026-11-12T00:00:00Z",
+    "base_version": "3e5fea42-e855-4bbb-8293-f574a557a9dc",
+    "base_behaviour": "Deny-all503, no model/data/bindings",
+    "isolated_research_base_deployment_created": true,
+    "councilof_ai_or_csoai_site_production_changed": false,
+    "routing_observation": "Preview and Version URLs returned1042 before the deny-all base deployment; the same original model URLs returned200 afterwards. This is an observed account-specific recovery, not proof of a universal Cloudflare root cause."
+  },
+  "M4": {
+    "rows": 560,
+    "scalar_outputs_checked": 6720,
+    "HTTP_requests": 78,
+    "maximum_difference": 5.551115123125783e-16,
+    "bad_request_controls": 6,
+    "recovery": true
+  },
+  "Kaggle": {
+    "notebook": "nicktempleman/meok-cross-runtime-replay",
+    "version": 3,
+    "status": "COMPLETE",
+    "rows": 560,
+    "scalar_outputs_checked": 6720,
+    "HTTP_requests": 78,
+    "maximum_difference": 5.551115123125783e-16,
+    "bad_request_controls": 6,
+    "recovery": true,
+    "code_cells_read_back": true,
+    "outputs_downloaded": true,
+    "GPU": false,
+    "credentials_used_by_notebook": false
+  },
+  "strict_contract": {
+    "negative_response_cases": 40,
+    "handler_contracts": 25,
+    "actual_response_length_checked": true,
+    "numeric_types_and_counts_checked": true,
+    "input_model_and_limit_bindings_checked": true,
+    "old_false_pass_reproduced_with_local_fake_responses": true,
+    "old_fake_response_reported_success_with_rows": 0,
+    "old_real_runs_reclassified_as_failures": false,
+    "fresh_outputs_required": true,
+    "noop_runner_refused": true
+  },
+  "pipeline": {
+    "workflow": ".github/workflows/meok-cross-runtime-contracts.yml",
+    "automatic_pull_request_and_master_path_gate_added": true,
+    "permissions": "contents:read",
+    "external_accounts_or_provider_requests_in_gate": false,
+    "third_party_dependencies_installed_by_test": false,
+    "GitHub_run_result": "PENDING_AT_SOURCE_PUBLICATION"
+  },
+  "model_quality": {
+    "mean_absolute_error": 0.0028797331109599016,
+    "worst_component_error": 0.7499076603275624,
+    "accuracy_improved": false,
+    "trained_again": false
+  },
+  "boundaries": {
+    "GSPC_admission": false,
+    "independent_organisation_review": false,
+    "human_approval_to_effect_demonstrated": false,
+    "private_runtime_changed": false,
+    "production_master_merged": false,
+    "paid_GPU_or_plan_upgrade": false,
+    "total_billing_checked": false,
+    "durable_customer_data_service": false
+  }
+}

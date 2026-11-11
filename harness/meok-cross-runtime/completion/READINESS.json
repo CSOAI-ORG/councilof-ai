@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.cross-runtime-readiness/1",
+  "scope": "This bounded research route, not a claim to audit all other workstreams",
+  "items": [
+    {
+      "id": "public-route",
+      "state": "DONE_DATED_PREVIEW",
+      "evidence": "RESULT.json",
+      "next": "Keep expiry explicit; production operation is a separate decision."
+    },
+    {
+      "id": "semantic-completeness",
+      "state": "DONE_DECLARED_CONTRACT",
+      "evidence": "response-contract-tests.json",
+      "next": "Preserve exact outputs, not merely a self-consistent hash."
+    },
+    {
+      "id": "external-consumer",
+      "state": "DONE_KAGGLE_V3",
+      "evidence": "kaggle-public-report.json",
+      "next": "Future clients should use the same pinned schema and refusal states."
+    },
+    {
+      "id": "reproducible-gate",
+      "state": "SOURCE_READY_CI_READBACK_PENDING",
+      "evidence": "fresh-qualification.json",
+      "next": "Require the new scoped workflow before merge; it rejects stale/no-op PASS files."
+    },
+    {
+      "id": "service-lifetime",
+      "state": "NOT_ENABLED_AS_PERMANENT",
+      "next": "Select an owned release process, availability objective, spend ceiling, abuse/rate controls and rollback before extending beyond the research deadline."
+    },
+    {
+      "id": "private-source-and-storage",
+      "state": "NOT_ESTABLISHED_BY_THIS_PASS",
+      "next": "Use existing owners to verify authenticated source revisions, access changes and actual durable save/restore/restart behaviour; do not create a duplicate store."
+    },
+    {
+      "id": "human-review-and-effect",
+      "state": "NOT_ESTABLISHED_BY_THIS_PASS",
+      "next": "A named consenting reviewer, exact scoped approval, current revocation/expiry checks and independent effect observation are separate from numerical parity."
+    },
+    {
+      "id": "useful-model-improvement",
+      "state": "NOT_ESTABLISHED_BY_THIS_PASS",
+      "next": "Choose a concrete real task and rights-cleared development examples; keep an untouched evaluation set, report tail failures and whole-job cost, then qualify a candidate. Do not fine-tune against this public replay bank."
+    }
+  ]
+}
