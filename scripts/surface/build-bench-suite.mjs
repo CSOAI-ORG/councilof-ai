@@ -57,6 +57,11 @@ const CHECK = args.includes("--check");
 const outArg = args.find((a) => args[args.indexOf(a) - 1] === "--out");
 const OUT = resolve(ROOT, outArg || "public");
 
+// The producer owns this route before and after its HTML exists. Sitemap discovery
+// imports the same declaration so a clean checkout and a built tree agree.
+export const SUBMISSION_GUIDE_ROUTE = "/bench/submit/";
+const SUBMISSION_GUIDE_MARKDOWN = SUBMISSION_GUIDE_ROUTE.replace(/\/$/, ".md");
+
 const esc = (v) =>
   String(v ?? "")
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -293,7 +298,7 @@ It does not compare models and it does not rank.</b></p>
 <a href="https://huggingface.co/csoai">Hugging Face</a>, the runner is MIT-licensed source, and the
 grading rule is imported from the same module the board uses. Your chosen model service may require
 an account, credentials and paid usage. For reproducible runs, retain the bank bytes and supply
-<code>--bank-path</code> with <code>--bank-sha256</code>; see the <a href="/bench/submit/">submission guide</a>.</div>
+<code>--bank-path</code> with <code>--bank-sha256</code>; see the <a href="${SUBMISSION_GUIDE_ROUTE}">submission guide</a>.</div>
 
 <h2 id="execution-context">Record execution conditions</h2>
 <p>For a paired comparison, retain the model provider, a non-sensitive route alias, the declared
@@ -335,7 +340,7 @@ ${axisPages}
   <li><a href="/bench/axes.json">axes.json</a> — one task spec per axis: bank URL, bank sha256, label menu, prompt template, grader, and how to run it.</li>
   <li><a href="/bench/leaderboard.json">leaderboard.json</a> — the model×axis matrix with per-cell n and separation, including every UNMEASURED axis.</li>
   <li><a href="/bench/openai-eval.yaml">openai-eval.yaml</a> — an OpenAI Evals task per axis, for a third party who wants to run a bank in a few lines.</li>
-  <li><a href="/bench/submit/">Submission guide</a> — how to prepare and submit a verifiable run; also available as <a href="/bench/submit.md">Markdown</a>.</li>
+  <li><a href="${SUBMISSION_GUIDE_ROUTE}">Submission guide</a> — how to prepare and submit a verifiable run; also available as <a href="${SUBMISSION_GUIDE_MARKDOWN}">Markdown</a>.</li>
 </ul>
 
 <h2>What this is not</h2>
@@ -485,8 +490,8 @@ export function renderAxesJson(banks, matrix, board) {
     what_this_does_not_establish: "That any model is good or bad. That a bank is uncontaminated. That the labels are correct. A task spec is an instrument, not a score.",
     live_board: "https://councilof.ai/api/gspc",
     runner: "https://github.com/CSOAI-ORG/councilof-ai — harness/bench/run_bench.py",
-    submit: "https://councilof.ai/bench/submit/",
-    submit_markdown: "https://councilof.ai/bench/submit.md",
+    submit: `https://councilof.ai${SUBMISSION_GUIDE_ROUTE}`,
+    submit_markdown: `https://councilof.ai${SUBMISSION_GUIDE_MARKDOWN}`,
     counting_rule: `${specs.length} published banks, ${specs.filter((s) => s.runnable).length} with a sound answer menu. The board also includes other measurement kinds; this file enumerates model banks, not all board slots.`,
     axes: specs,
   };
@@ -624,7 +629,7 @@ export function renderSubmitPage(banks) {
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Submit a GSPC run | Council of AI</title>
 <meta name="description" content="Prepare a reproducible GSPC receipt: retain bank bytes, declare execution conditions, inspect results and submit for review.">
-<link rel="canonical" href="https://councilof.ai/bench/submit/">
+<link rel="canonical" href="https://councilof.ai${SUBMISSION_GUIDE_ROUTE}">
 <style>
   :root{--fg:#0f1a14;--mut:#5b6b62;--bd:#d8e2dc;--bg:#f7faf8;--acc:#047857}
   *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,sans-serif}
@@ -634,7 +639,7 @@ export function renderSubmitPage(banks) {
   .wrap{overflow-x:auto} table{width:100%;border-collapse:collapse;font-size:.9rem} th,td{text-align:left;padding:.6rem;border-bottom:1px solid var(--bd);vertical-align:top}
   li{margin:.6rem 0} footer{margin-top:3rem;color:var(--mut)} ${SHELL_CSS}
 </style></head><body>${headerHtml()}<main>
-<p><a href="/bench/">← GSPC benchmarks</a> · <a href="/bench/submit.md">Download this guide as Markdown</a></p>
+<p><a href="/bench/">← GSPC benchmarks</a> · <a href="${SUBMISSION_GUIDE_MARKDOWN}">Download this guide as Markdown</a></p>
 ${renderSubmit(banks, "html")}
 <footer>Council of AI — measurement, never certification. This guide and its Markdown version share one content source.</footer>
 </main></body></html>\n`;
@@ -676,8 +681,8 @@ async function main() {
   emit("bench/axes.json", JSON.stringify(renderAxesJson(banks, matrix, board), null, 2) + "\n");
   emit("bench/leaderboard.json", JSON.stringify(renderLeaderboardJson(matrix, board), null, 2) + "\n");
   emit("bench/openai-eval.yaml", renderOpenAiEval(banks));
-  emit("bench/submit.md", renderSubmit(banks));
-  emit("bench/submit/index.html", renderSubmitPage(banks));
+  emit(SUBMISSION_GUIDE_MARKDOWN.slice(1), renderSubmit(banks));
+  emit(`${SUBMISSION_GUIDE_ROUTE.slice(1)}index.html`, renderSubmitPage(banks));
 
   if (CHECK && process.exitCode) {
     console.error("build-bench-suite: the committed bench/ pages are stale. Run: node scripts/surface/build-bench-suite.mjs");
