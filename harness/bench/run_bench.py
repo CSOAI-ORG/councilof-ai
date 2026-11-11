@@ -170,6 +170,18 @@ def load_bank_bytes(axis: str) -> tuple[bytes, str, str]:
     return raw, hashlib.sha256(raw).hexdigest(), url
 
 
+def load_local_bank_bytes(path: str, expected_sha256: str) -> tuple[bytes, str, None]:
+    """Verify retained bank bytes before prompting or grading. A matching digest binds
+    the supplied bytes; it does not authenticate their origin or the declared axis."""
+    if not re.fullmatch(r"[0-9a-fA-F]{64}", expected_sha256):
+        raise ValueError("--bank-sha256 must be a 64-character SHA-256 digest")
+    raw = Path(path).read_bytes()
+    actual = hashlib.sha256(raw).hexdigest()
+    if actual != expected_sha256.lower():
+        raise ValueError(f"local bank SHA-256 mismatch: expected {expected_sha256.lower()}, got {actual}")
+    return raw, actual, None
+
+
 def bank_items(raw: bytes) -> list[tuple[str, str]]:
     """(prompt, expected) pairs, using the mill's own loader semantics.
 
@@ -234,6 +246,8 @@ def main() -> int:
     ap.add_argument("--base-url", default="http://localhost:11434/v1",
                     help="OpenAI-compatible base URL (default: local Ollama)")
     ap.add_argument("--answers", help="JSONL of {index, answer} to score instead of calling a model")
+    ap.add_argument("--bank-path", help="retained JSONL bank bytes; requires --bank-sha256")
+    ap.add_argument("--bank-sha256", help="expected SHA-256 for --bank-path; checked before model calls")
     ap.add_argument("--out", default="-", help="output path, or - for stdout")
     ap.add_argument("--limit", type=int, default=0, help="score only the first N items (0 = all)")
     ap.add_argument("--timeout", type=int, default=120)
@@ -280,9 +294,12 @@ def main() -> int:
 
     repo = BANK_REPO[axis]
     try:
-        raw, bank_sha, url = load_bank_bytes(axis)
-    except (urllib.error.URLError, OSError, TimeoutError) as e:
-        print(f"run_bench: could not read the bank ({BANK_URL.format(repo=repo)}): {e}", file=sys.stderr)
+        if (args.bank_path is None) != (args.bank_sha256 is None):
+            raise ValueError("--bank-path and --bank-sha256 must be supplied together")
+        raw, bank_sha, url = (load_local_bank_bytes(args.bank_path, args.bank_sha256)
+                             if args.bank_path is not None else load_bank_bytes(axis))
+    except (urllib.error.URLError, OSError, TimeoutError, ValueError) as e:
+        print(f"run_bench: could not read and verify the bank: {e}", file=sys.stderr)
         return 2
 
     items = bank_items(raw)
@@ -374,6 +391,7 @@ def main() -> int:
         "axis": axis,
         "bank_repo": repo,
         "bank_url": url,
+        "bank_source": "local_file" if args.bank_path is not None else "published_url",
         "bank_sha256": bank_sha,
         "model": args.model or (execution_context["model"] if args.execution_context else None),
         "execution_context": execution_context,
@@ -397,7 +415,7 @@ def main() -> int:
         "wilson95_over_all_items": wilson(hits, len(items)),
         "wilson95": wilson(hits, n),
         "label_vocabulary": labels,
-        "label_vocabulary_source": "the bank's own `expected` values, read from the fetched bytes",
+        "label_vocabulary_source": "the bank's own `expected` values, read from the loaded bytes",
         "unparsed_rule": "an answer that is not one of the bank's labels leaves the denominator; it is never counted as wrong",
         "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "rows": rows,
