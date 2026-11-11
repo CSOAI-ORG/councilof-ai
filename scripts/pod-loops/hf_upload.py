@@ -57,27 +57,50 @@ def resolve_lanes() -> Path:
     )
 
 
-LANES = resolve_lanes()
-QUEUE = LANES / "out" / "pending-upload.jsonl"
+# Importing the offline card helpers must not require a pod runtime. Upload/token/queue
+# operations still require the same resolved lanes root and fail closed if it is absent.
+LANES = None
+QUEUE = None
+
+
+def runtime_paths():
+    global LANES, QUEUE
+    if LANES is None:
+        LANES = resolve_lanes()
+    if QUEUE is None:
+        QUEUE = LANES / "out" / "pending-upload.jsonl"
+    return LANES, QUEUE
 
 
 def token():
-    f = LANES / ".secrets" / "hf_token"
+    lanes, _ = runtime_paths()
+    f = lanes / ".secrets" / "hf_token"
     if f.is_file() and f.stat().st_size:
         return f.read_text().strip()
     return os.environ.get("HF_TOKEN", "").strip() or None
 
 
 def queue(job):
-    QUEUE.parent.mkdir(parents=True, exist_ok=True)
-    with QUEUE.open("a") as q:
+    _, queue_path = runtime_paths()
+    queue_path.parent.mkdir(parents=True, exist_ok=True)
+    with queue_path.open("a") as q:
         q.write(json.dumps(job) + "\n")
 
 
 def carded(text, repo):
     """`text` with the cite block for `repo` (cite_block.apply), or None when cite_block.py is not found."""
     here = Path(__file__).resolve().parent
-    for d in (here, here.parent / "hf", Path(os.environ.get("REPO") or LANES / "councilof-ai") / "scripts" / "hf"):
+    candidates = [here, here.parent / "hf"]
+    # Resolve the sparse-pod fallback only if neither repository-local candidate exists.
+    if not any((d / "cite_block.py").is_file() for d in candidates):
+        repo_root = os.environ.get("REPO", "").strip()
+        if not repo_root:
+            try:
+                repo_root = (LANES if LANES is not None else resolve_lanes()) / "councilof-ai"
+            except SystemExit:
+                return None
+        candidates.append(Path(repo_root) / "scripts" / "hf")
+    for d in candidates:
         if (d / "cite_block.py").is_file():
             if str(d) not in sys.path:
                 sys.path.insert(0, str(d))
