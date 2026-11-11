@@ -54,6 +54,13 @@ dd{margin:0}
 .result th,.result td{text-align:left;vertical-align:top;padding:.3rem .25rem;border-bottom:1px solid var(--line)}
 .result th{width:7.5rem;font-weight:600;color:var(--muted);font-size:.8rem}
 .note{margin-top:2rem;color:var(--muted);font-size:.9rem}
+.study-choice{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem;border:1px solid var(--line);border-radius:8px;margin:.5rem 0;cursor:pointer}
+.study-choice input{flex:0 0 auto;margin-top:.4rem}
+#self-study fieldset{border:0;padding:0;margin:1rem 0}
+#self-study legend{font-weight:600}
+#self-study button{margin:.35rem .5rem .35rem 0}
+.study-import{display:block;margin:1rem 0}
+.study-import input{display:block;max-width:100%;margin-top:.4rem}
 @media (min-width:40rem){main{padding:2.5rem 1.5rem 4rem}h1{font-size:2.2rem}dl{grid-template-columns:10rem minmax(0,1fr);column-gap:1rem}dt{margin-top:.35rem}}
 </style>
 <!-- generated:lrmi:start -->
@@ -294,6 +301,14 @@ node run-exercises.mjs --json     # the transcript, for your records</code></pre
 <li><b>UNCHECKABLE</b> means the check could not run (a network refusal, a browser without Ed25519). It is not a failure and not a completion.</li>
 <li>Keep your transcript: both results, both digests, the control, and the sha256 of every input you read.</li>
 </ul>
+</section>
+
+<section class="panel" id="self-study" aria-labelledby="study-title">
+<h2 id="study-title">Try a short before-and-after self-study</h2>
+<p>Practice interpreting verified records using the verify-card lesson. Your answers stay in this browser. Export or clear them at any time. This optional sequence is separate from the reproducibility exercises and does not establish professional competence or permission to act.</p>
+<div data-study-body></div>
+<p data-study-status role="status" aria-live="polite"></p>
+<noscript>JavaScript is needed for this optional local sequence. The exercise instructions below remain readable.</noscript>
 </section>
 
 <!-- generated:exercises:start -->
