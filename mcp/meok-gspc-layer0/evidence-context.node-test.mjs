@@ -54,7 +54,8 @@ test('bad arguments reject before any network request', async () => {
 });
 
 test('missing and conflicting board evidence stays unknown, never zero or success', async () => {
-  for (const b of [null, {...board(), totals:{axes:1, measured_axes:0}}, {...board(), schema:'unknown'}]) {
+  for (const b of [null, {...board(), totals:{axes:1, measured_axes:0}},
+    {...board(), totals:{axes:1, measured_axes:1, unmeasured_axes:1}}, {...board(), schema:'unknown'}]) {
     const value = await readGspcEvidence({axis:'governance'}, {fetchImpl:fake(b), now});
     assert.equal(value.state, 'UNCHECKABLE'); assert.equal(value.measurement, null);
     assert.equal(value.reason, 'BOARD_CONTRACT_INVALID');
