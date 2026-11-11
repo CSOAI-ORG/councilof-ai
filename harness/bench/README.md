@@ -2,7 +2,7 @@
 
 This runner evaluates one model's replies against one published GSPC bank using the canonical mill grader and prompt builder. It writes a complete item ledger. It does not submit results, admit a model to the board or establish a ranking.
 
-Python 3 and the repository checkout are sufficient for the runner. Run from the repository root. `--list` works offline; loading public banks requires network access. Scoring existing answers makes no model calls.
+Python 3 and the repository checkout are sufficient for the runner. Run from the repository root. `--list` works offline. The default bank download requires network access; a pinned local bank and existing answers can be scored entirely offline.
 
 ```bash
 python3 harness/bench/run_bench.py --list
@@ -12,13 +12,16 @@ python3 harness/bench/run_bench.py --axis governance --model your-model \
 
 The answers file is JSONL: one object per reply, with a unique zero-based integer `index` and the exact reply in the string `answer`. Keep original model output, including explanations and malformed responses. Do not replace replies with the expected label. Missing items remain visible as unparsed rows. Duplicate, invalid or out-of-range indices are refused.
 
-For a live evaluation, see `python3 harness/bench/run_bench.py --help`. Configure your own endpoint and budget before using it. `--limit` is a development smoke check, not a complete-bank comparison.
+For a live evaluation, use an OpenAI-compatible base URL that accepts `/chat/completions`, the requested model, `temperature` and `max_tokens`, and returns `choices[0].message.content`; configure your endpoint and budget first. If the endpoint requires a bearer key, set `GSPC_RUN_BENCH_API_KEY` (or the fallback `OPENAI_API_KEY`) in your environment; credentials belong outside context files and receipts. For scripts reading Council Pages endpoints, send a descriptive application `User-Agent` as [Cloudflare recommends](https://developers.cloudflare.com/pages/platform/known-issues/#browser-integrity-check-on-pages); the runner and paired comparator already do this, but arbitrary library defaults are not guaranteed to work.
+
+See `python3 harness/bench/run_bench.py --help` for options. `--limit` is a development smoke check, not a complete-bank comparison. Public bank/source access does not require our permission; a model service may require its own account, credentials and paid usage.
 
 ## Read the result
 
 | Field | Meaning |
 | --- | --- |
 | `bank_sha256`, `grader_source_sha256` | Digests of the instrument bytes used. |
+| `bank_source`, `bank_url`, `bank_repo` | `published_url` records the downloaded URL; `local_file` has a null URL and never publishes the local path. The repository name comes from the declared axis, not authenticated file provenance. |
 | `bank_items_total`, `items_total`, `evaluation_scope` | Full bank size, evaluated size and full/partial scope. |
 | `accuracy`, `wilson95` | Accuracy and interval among parsed replies under the canonical rule. |
 | `accuracy_over_all_items`, `wilson95_over_all_items` | Correct replies divided by every evaluated item, including unparsed replies. |
@@ -41,6 +44,27 @@ The tool refuses different banks or graders, changed prompts or gold labels, dup
 The paired test alone does not validate equal compute budgets, uncontaminated test data, system identity, route independence or general superiority. Declare those conditions separately. Inspect differences in response coverage before interpreting a complete-case p-value. Account for multiple testing when selecting among many axes or candidates.
 
 Older result files without grader hashes or full-bank coverage evidence remain historical records. Do not fill those fields by guessing. Re-evaluate retained original replies with the appropriate frozen source and bank, preserving the old artifact and documenting the derivation.
+
+### Replay a retained bank without fetching a moving URL
+
+The default download uses the published bank's `main` URL and records the bytes it actually receives. For repeatable evaluation or historical replay, retain the original JSONL from a fixed dataset commit, its recorded SHA-256 and the source checkout used for grading. Supply that expected digest with `--bank-path`; either option without the other, an invalid digest or changed bytes is refused before any model call or result is written.
+
+With retained original answers and evidenced execution metadata for each arm:
+
+```bash
+python3 harness/bench/run_bench.py --axis safety --model your-baseline-model-id \
+  --bank-path safety-items.jsonl --bank-sha256 THE_RECORDED_64_CHARACTER_SHA256 \
+  --answers baseline-answers.jsonl --execution-context baseline-context.json \
+  --out baseline.json
+python3 harness/bench/run_bench.py --axis safety --model your-candidate-model-id \
+  --bank-path safety-items.jsonl --bank-sha256 THE_RECORDED_64_CHARACTER_SHA256 \
+  --answers candidate-answers.jsonl --execution-context candidate-context.json \
+  --out candidate.json
+python3 harness/bench/paired_comparison.py \
+  --frontier baseline.json --meok candidate.json --out comparison.json
+```
+
+Replace the placeholder with the digest retained from the intended bank, and use each context's actual declared model identifier. The first two commands make no network or model calls; the comparator separately attempts to read current board context. Local replay marks generation settings as `supplied_context`, preserves the original reply strings and records `bank_source: local_file`. A matching hash proves byte identity, not the file's origin, model execution or provider approval. Keep the pinned dataset reference and original receipts with the derivation record; do not present synthetic plumbing checks as model measurements.
 
 ## Declare execution conditions
 
