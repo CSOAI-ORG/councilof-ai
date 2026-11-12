@@ -1,129 +1,257 @@
 #!/usr/bin/env python3
-"""fold_auto_eat.py — bridge auto-eat feed atoms into the ledger signer's inputs.
+"""Fold existing unsigned AUTO-EAT atoms into the existing signer inputs.
 
-The auto-eat loop stages its own namespaced surfaces (autoeat.*) under
-public/interop/auto-eat/ so it NEVER conflicts with the hand-curated human
-ledger. To sign them, this bridge folds each auto-eat surface into
-public/interop/ledger-cards-compact.json and writes the matching
-public/interop/ledger-card-<slug>-unsigned.json atom that
-scripts/sign_ledger_cards.py expects (byte-identical payload).
+No network, signing, measurement, training or authority is performed here.
+The entire input batch is validated before any output replacement. --check
+compares both the ledger payload and the complete unsigned destination atom.
+An unreadable source is not an empty source. A confirmed {} is a valid no-op.
 
-It ONLY adds/updates surfaces beginning with 'autoeat.' — it never touches a
-human surface. Idempotent. It does NOT sign (no keys, and board-sign is OIDC +
-workflow-allowlist gated). Run it just before the existing ledger sign dispatch.
+A source with no staged atom may be delegated to an existing bare ledger key
+only when its payload matches exactly. That row remains the other writer's.
 
-WHICH SURFACES THIS BRIDGE OWNS (2026-10-06). A surface is folded only when the
-eat loop staged an atom for it: public/interop/auto-eat/card-<slug>-unsigned.json,
-or, failing that name, the one staged atom whose payload is byte-identical to the
-surface (the 2026-09-16 A2A and HF mining summaries were staged under dated names,
-card-a2a-mining-summary-2026-09-16-unsigned.json and the HF twin).
-
-A surface with no staged atom whose bare key (the name without 'autoeat.') is
-already a row of the ledger is LEDGER-DIRECT: something else wrote the ledger row
-itself, and this bridge has nothing to fold. That is 11,496 'autoeat.<key>' mirror
-rows that scripts/master_consolidate.py (2026-09-17) wrote into BOTH compacts at
-once (ledger[key] and auto['autoeat.' + key], flags.autoeat), plus eleven
-index/adapter documents committed the same day straight into both files. None of
-them ever had a staged atom on any copy (GitHub master, canon-archive-20261006, or
-the build pod's /workspace). Until this change every one of them was reported as
-"HALT — missing staged atom", so --check failed with drift=11,526 and the gate
-printed only the first four lines. They are counted and reported here, never
-folded, and never given an atom this bridge did not stage.
-
-A surface with no staged atom and no ledger row is still a HALT, and still fails --check.
-
-Usage: python3 fold_auto_eat.py           (fold all staged auto-eat surfaces)
-       python3 fold_auto_eat.py --check    (report only, write nothing; rc=1 if drift)
+File replacements are atomic individually; this is not a multi-file database
+transaction. An I/O failure is nonzero and may require a check/rerun. Writers
+must still honour the repository's single-writer ownership convention.
 """
 from __future__ import annotations
 
 import argparse
 import json
+import math
+import os
+import re
+import stat
 import sys
+import tempfile
+from pathlib import Path
 
 import common as c
 
+MAX_COMPACT_BYTES = 8 * 1024 * 1024
+MAX_LEDGER_BYTES = 64 * 1024 * 1024
+MAX_ATOM_BYTES = 64 * 1024
+MAX_STAGED_ATOMS = 4096
+SURFACE = re.compile(r"autoeat\.[A-Za-z0-9_-]+(?:[./][A-Za-z0-9_-]+)*\Z")
+SCHEMA = "https://councilof.ai/schema/card-v0.json"
+
+
+class FoldError(ValueError):
+    """An invalid/incomplete input must not be reported as a successful fold."""
+
 
 def slug(surface: str) -> str:
-    return surface.replace(".", "-")
+    return c.slug(surface)
 
 
-def staged_atoms() -> dict[bytes, list]:
-    """canonical payload bytes -> [path, ...] for every staged atom in the feed."""
-    by_payload: dict[bytes, list] = {}
-    for p in sorted(c.FEED.glob("card-*-unsigned.json")):
+def canonical(value) -> bytes:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"),
+                      ensure_ascii=False, allow_nan=False).encode("utf-8")
+
+
+def _pairs(items):
+    result = {}
+    for key, value in items:
+        if key in result:
+            raise FoldError("duplicate JSON key")
+        result[key] = value
+    return result
+
+
+def _finite_float(text):
+    value = float(text)
+    if not math.isfinite(value):
+        raise FoldError("nonfinite JSON number")
+    return value
+
+
+def _reject_constant(_):
+    raise FoldError("nonfinite JSON constant")
+
+
+def _read(path: Path, limit: int, snapshots: dict, *, optional=False):
+    """Bound regular-file bytes and remember the exact read for pre-write checks."""
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        if optional:
+            snapshots[path] = None
+            return None
+        raise FoldError(f"missing required file: {path.name}")
+    if not stat.S_ISREG(info.st_mode):
+        raise FoldError(f"not a regular file: {path.name}")
+    if info.st_size > limit:
+        raise FoldError(f"file exceeds byte limit: {path.name}")
+    with path.open("rb") as stream:
+        raw = stream.read(limit + 1)
+    if len(raw) > limit:
+        raise FoldError(f"file exceeds byte limit: {path.name}")
+    snapshots[path] = raw
+    try:
+        value = json.loads(raw.decode("utf-8", errors="strict"),
+                           object_pairs_hook=_pairs,
+                           parse_constant=_reject_constant,
+                           parse_float=_finite_float)
+    except (ValueError, UnicodeError, RecursionError) as exc:
+        raise FoldError(f"invalid JSON in {path.name}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise FoldError(f"expected JSON object: {path.name}")
+    return value
+
+
+def _validate_atom(atom: dict, surface: str, payload: dict, name: str):
+    if atom.get("schema") != SCHEMA or atom.get("surface") != surface:
+        raise FoldError(f"atom identity differs: {name}")
+    if "sig_ed25519" not in atom or atom["sig_ed25519"] is not None:
+        raise FoldError(f"atom is not explicitly unsigned: {name}")
+    if atom.get("state") != "queued":
+        raise FoldError(f"atom is not queued: {name}")
+    if not isinstance(atom.get("payload"), dict) or canonical(atom["payload"]) != canonical(payload):
+        raise FoldError(f"staged payload differs from compact: {name}")
+    flags = payload.get("flags")
+    if isinstance(flags, dict) and flags.get("auto_measured", False) is not False:
+        raise FoldError(f"auto_measured is not false: {name}")
+
+
+def _stable(snapshots: dict) -> None:
+    for path, expected in snapshots.items():
         try:
-            atom = json.loads(p.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
+            info = path.lstat()
+        except FileNotFoundError:
+            if expected is None:
+                continue
+            raise FoldError(f"input disappeared before write: {path.name}")
+        if expected is None or not stat.S_ISREG(info.st_mode):
+            raise FoldError(f"input changed before write: {path.name}")
+        with path.open("rb") as stream:
+            actual = stream.read(len(expected) + 1)
+        if actual != expected:
+            raise FoldError(f"input changed before write: {path.name}")
+
+
+def _atomic_write(path: Path, data: bytes):
+    """Replace one file without exposing truncated bytes; retain its normal mode."""
+    mode = stat.S_IMODE(path.stat().st_mode) if path.exists() else 0o644
+    fd, temporary = tempfile.mkstemp(prefix=".eat-fold-", dir=path.parent)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            os.fchmod(stream.fileno(), mode)
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+
+
+def fold(check: bool = False) -> int:
+    snapshots = {}
+    for directory in (c.INTEROP, c.FEED):
+        if directory.is_symlink() or not directory.is_dir():
+            raise FoldError(f"required directory missing or symlinked: {directory.name}")
+    compact = _read(c.COMPACT, MAX_COMPACT_BYTES, snapshots)
+    if not compact:
+        print("fold: confirmed empty compact object; no staged inputs, no writes")
+        return 0
+    ledger = _read(c.LEDGER_COMPACT, MAX_LEDGER_BYTES, snapshots, optional=True)
+    if ledger is None:
+        ledger = {}
+    atoms = {}
+    staged_paths = sorted(c.FEED.glob("card-*-unsigned.json"))
+    if len(staged_paths) > MAX_STAGED_ATOMS:
+        raise FoldError("too many staged atoms")
+    for path in staged_paths:
+        atoms[path] = _read(path, MAX_ATOM_BYTES, snapshots)
+    planned = []
+    destinations = set()
+    delegated = 0
+    for surface, payload in compact.items():
+        if not surface.startswith("autoeat."):
+            print(f"fold: SKIP non-autoeat surface {surface}")
             continue
-        if isinstance(atom, dict) and isinstance(atom.get("payload"), dict):
-            by_payload.setdefault(c.canonical_bytes(atom["payload"]), []).append(p)
-    return by_payload
+        if not SURFACE.fullmatch(surface) or not isinstance(payload, dict):
+            raise FoldError(f"invalid surface or payload: {surface}")
+        if len(canonical(payload)) > c.MAX_PAYLOAD_BYTES:
+            raise FoldError(f"payload exceeds {c.MAX_PAYLOAD_BYTES} bytes: {surface}")
+        destination = c.INTEROP / f"ledger-card-{slug(surface)}-unsigned.json"
+        if destination in destinations:
+            raise FoldError(f"surface filename collision: {surface}")
+        destinations.add(destination)
+        source = c.FEED / f"card-{slug(surface)}-unsigned.json"
+        atom = atoms.get(source)
+        if atom is None:
+            # Legacy file names are allowed only with the same semantic identity.
+            matches = [(p, a) for p, a in atoms.items()
+                       if a.get("surface") == surface and isinstance(a.get("payload"), dict)
+                       and canonical(a["payload"]) == canonical(payload)]
+            if len(matches) > 1:
+                raise FoldError(f"ambiguous staged atoms: {surface}")
+            if matches:
+                source, atom = matches[0]
+            else:
+                bare = surface[len("autoeat."):]
+                if bare in ledger and canonical(ledger[bare]) == canonical(payload):
+                    delegated += 1
+                    print(f"fold: DELEGATED {surface}; matching bare ledger row, no atom modified")
+                    continue
+                raise FoldError(f"missing matching staged atom: {surface}")
+        _validate_atom(atom, surface, payload, source.name)
+        existing = _read(destination, MAX_ATOM_BYTES, snapshots, optional=True)
+        if existing is not None:
+            # Do not overwrite signed/nonqueued evidence, even on an explicit fold.
+            if "sig_ed25519" not in existing or existing["sig_ed25519"] is not None or existing.get("state") != "queued":
+                raise FoldError(f"destination is not unsigned queued evidence: {destination.name}")
+            if existing.get("schema") != SCHEMA or existing.get("surface") != surface:
+                raise FoldError(f"destination identity differs: {destination.name}")
+        atom_matches = existing is not None and canonical(existing) == canonical(atom)
+        ledger_matches = surface in ledger and canonical(ledger[surface]) == canonical(payload)
+        planned.append((surface, payload, destination, atom, atom_matches, ledger_matches))
+    drift = sum(not a or not l for _, _, _, _, a, l in planned)
+    if check:
+        for surface, _, _, _, a, l in planned:
+            if not a or not l:
+                print(f"fold: DRIFT {surface}; ledger_match={l} atom_match={a}")
+        print(f"fold --check: checked={len(planned)} delegated={delegated} drift={drift}")
+        return 1 if drift else 0
+    # Batch validation above is complete: invalid input cannot cause partial writes.
+    if not drift:
+        print(f"fold: unchanged={len(planned)} delegated={delegated}; no writes")
+        return 0
+    lock = c.INTEROP / ".auto-eat-fold.lock"
+    try:
+        descriptor = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    except FileExistsError as exc:
+        raise FoldError("another fold or retained lock exists; no automatic lock removal") from exc
+    try:
+        os.close(descriptor)
+        _stable(snapshots)
+        ledger_changed = False
+        for surface, payload, destination, atom, atom_matches, ledger_matches in planned:
+            if not atom_matches:
+                _atomic_write(destination, (json.dumps(atom, indent=1, ensure_ascii=False) + "\n").encode("utf-8"))
+            if not ledger_matches:
+                ledger[surface] = payload
+                ledger_changed = True
+        if ledger_changed:
+            # Preserve the existing ledger writer's formatting and unrelated rows.
+            _atomic_write(c.LEDGER_COMPACT, json.dumps(ledger, indent=2).encode("utf-8"))
+    finally:
+        lock.unlink()
+    print(f"fold: folded={drift} checked={len(planned)} delegated={delegated}; unsigned only")
+    return 0
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--check", action="store_true")
-    args = ap.parse_args()
-
-    auto = c.load_compact()  # public/interop/auto-eat/cards-compact.json
-    if not auto:
-        print("fold: nothing staged (auto-eat/cards-compact.json empty/absent)")
-        return 0
-
-    ledger = {}
-    if c.LEDGER_COMPACT.exists():
-        ledger = json.loads(c.LEDGER_COMPACT.read_text(encoding="utf-8"))
-
-    by_payload = staged_atoms()
-    drift = 0
-    folded = 0
-    ledger_direct = 0
-    for surface, payload in auto.items():
-        if not surface.startswith("autoeat."):
-            print(f"fold: SKIP non-autoeat surface {surface}", file=sys.stderr)
-            continue
-        atom_src = c.FEED / f"card-{c.slug(surface)}-unsigned.json"
-        if not atom_src.exists() and isinstance(payload, dict):
-            same = by_payload.get(c.canonical_bytes(payload), [])
-            if len(same) == 1:
-                atom_src = same[0]
-        if not atom_src.exists():
-            if surface[len("autoeat."):] in ledger:
-                ledger_direct += 1
-                continue
-            print(f"fold: HALT {surface} — missing staged atom {atom_src.name}", file=sys.stderr)
-            drift += 1
-            continue
-        raw = c.canonical_bytes(payload)
-        if len(raw) > c.MAX_PAYLOAD_BYTES:
-            print(f"fold: HALT {surface} {len(raw)}B > {c.MAX_PAYLOAD_BYTES}B", file=sys.stderr)
-            drift += 1
-            continue
-        # ledger signer expects ledger-card-<slug>-unsigned.json with payload==compact[surface]
-        atom = json.loads(atom_src.read_text(encoding="utf-8"))
-        atom["payload"] = payload
-        dst = c.INTEROP / f"ledger-card-{slug(surface)}-unsigned.json"
-        if args.check:
-            if ledger.get(surface) != payload or not dst.exists():
-                print(f"fold: DRIFT {surface} (not folded into ledger yet)")
-                drift += 1
-            continue
-        ledger[surface] = payload
-        dst.write_text(json.dumps(atom, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
-        folded += 1
-        print(f"fold: {surface} -> ledger-cards-compact.json + {dst.name}")
-
-    print(f"fold: {ledger_direct} ledger-direct surface(s) (no staged atom; the ledger row is under the bare key) — not this bridge's to fold")
-    if args.check:
-        print(f"fold --check: drift={drift}")
-        return 1 if drift else 0
-
-    # Same layout scripts/master_consolidate.py writes (indent 2, ASCII, no trailing newline), so a
-    # fold changes only the rows it folds rather than reformatting 6.7 MB.
-    c.LEDGER_COMPACT.write_text(json.dumps(ledger, indent=2), encoding="utf-8")
-    print(f"fold: folded={folded} halted={drift} -> {c.LEDGER_COMPACT.name}")
-    return 1 if drift else 0
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true", help="validate and compare; write nothing")
+    args = parser.parse_args()
+    try:
+        return fold(check=args.check)
+    except (FoldError, OSError, ValueError, RecursionError) as exc:
+        print(f"fold: HALT {exc}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

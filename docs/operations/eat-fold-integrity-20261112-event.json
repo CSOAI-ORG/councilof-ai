@@ -1,0 +1,55 @@
+{
+  "schema": "csoai.evidence-event/0.1",
+  "subject": {
+    "kind": "sandbox_run",
+    "locator": "urn:csoai:qualification:eat-fold-integrity:2026-11-12"
+  },
+  "claim": {
+    "text": "The repaired unsigned fold passed its stated controlled regressions and preserved the pinned eight-surface feed during a copy-only replay.",
+    "source_sha256": "b13986111142e494d429d64272916bf925631d3f612dcb343f6a01e00868df91",
+    "read_at": "2026-11-12T01:14:28.608553+00:00"
+  },
+  "method": {
+    "id": "csoai/auto-eat/fold-integrity",
+    "version": "2026-11-12.1",
+    "holder": "csoai",
+    "code_sha256": "d27a5d6ef412de8fa40345f78ee20e6e3e7ea95c3f63d28a32fbd3255f0d5e7d"
+  },
+  "declared": {
+    "source_base": "0663a4395fc331b904804169b47a427c3a712d3d",
+    "feed_revision": "bee70bf94f56d3c327477979e2ac8b57564069ac",
+    "new_test_methods": 41,
+    "signing": false,
+    "training": false
+  },
+  "observed": {
+    "qualification_sha256": "b13986111142e494d429d64272916bf925631d3f612dcb343f6a01e00868df91",
+    "controlled_regressions": "PASS",
+    "deliberate_mutants_detected": 3,
+    "snapshot_surfaces_checked": 8,
+    "copied_surfaces_reconciled": 6,
+    "unrelated_ledger_rows_preserved": true
+  },
+  "state": "PARTIAL",
+  "value": null,
+  "negative_control": {
+    "id": "three-deliberate-fold-mutants",
+    "expected": "ALL_THREE_DETECTED",
+    "got": "ALL_THREE_DETECTED"
+  },
+  "limits": [
+    "Unsigned author-run source qualification, not production deployment or independent verification.",
+    "No signing, human decision, external action or model-training permission is created."
+  ],
+  "supersedes": null,
+  "signature": null,
+  "anchors": {
+    "ots": "none",
+    "rekor": {
+      "log_index": null,
+      "uuid": null
+    }
+  },
+  "maintenance": null,
+  "event_id": "sha256:6ac58539e81e73e66703503481dd94dc257bfcf1909aadb67b37a2e4827998a6"
+}

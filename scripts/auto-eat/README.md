@@ -42,16 +42,16 @@ The loop STAGES and pushes `auto-eat-feed`. It does not sign. To sign a batch
 through the **existing** OIDC path (no new signing authority):
 
 ```bash
-# 1. review the feed branch, then bring its auto-eat files onto master
+# 1. Work only on an isolated review branch/worktree (see council-os/LANE-PROTOCOL.md).
+# Review the exact feed revision; bring only its approved auto-eat paths into that worktree.
 git fetch origin auto-eat-feed
-git checkout master
-git checkout origin/auto-eat-feed -- public/interop/auto-eat
+git restore --source=origin/auto-eat-feed -- public/interop/auto-eat
 
-# 2. fold the LIVE atoms into the ledger signer's inputs
+# 2. Validate and fold unsigned inputs; inspect the diff, then use the normal reviewed PR.
 python3 scripts/auto-eat/fold_auto_eat.py
-git add public/interop/ledger-cards-compact.json public/interop/ledger-card-autoeat-*.json public/interop/auto-eat
-git commit -m "auto-eat: fold feed batch for signing"
-git push origin master
+python3 scripts/auto-eat/fold_auto_eat.py --check
+# Stage only the reviewed output paths. Do not push master directly or bypass its gates.
+# The authorised owner merges the qualified PR before a separate signing dispatch.
 
 # 3. THE ONE DISPATCH — existing allowlisted signer, target=ledger
 gh workflow run hf-fin-shells-measure.yml -f target=ledger
@@ -87,3 +87,19 @@ EAT_PER_SOURCE=25 EAT_MAX_PROBE=40 bash scripts/auto-eat/eat-loop.sh once
 nohup env EAT_INTERVAL=3600 EAT_PIDFILE=/workspace/auto-eat/eat-loop.pid \
   bash scripts/auto-eat/eat-loop.sh loop >> scripts/auto-eat/eat.log 2>&1 &
 ```
+
+## Fold integrity gate — 12 November 2026 candidate
+
+`fold_auto_eat.py --check` now checks both the ledger payload and the complete unsigned destination atom against the matching staged source. A malformed/missing compact source, duplicate/nonfinite JSON, mismatched source payload or identity, unsafe file/path, filename collision, signed/nonqueued evidence or ambiguous legacy atom is a nonzero refusal. Only an explicitly parsed empty object is an empty successful no-op.
+
+The whole batch is validated before output replacements, so a later invalid item cannot cause an earlier valid item to be written. A small exclusive fold lock and exact input recheck detect competing folds and pre-write changes; existing locks are not removed automatically. Each output is replaced atomically, but this is not a multi-file database transaction. An I/O failure can leave recoverable partial staging, returns nonzero and requires `--check`/rerun. Other writers must still honour the repository lane ownership.
+
+An unchanged valid batch does not rewrite files. A matching bare ledger-owned row can remain delegated; that is not proof of a new fold or a signature. The script signs nothing, performs no probes, admits no measurement and does not train a model.
+
+```sh
+python3 scripts/auto-eat/test_fold_auto_eat.py
+python3 scripts/auto-eat/test_honesty.py
+python3 scripts/auto-eat/test_g2_gate.py
+```
+
+The read-only GitHub `auto-eat-integrity` workflow runs these controls for relevant pull requests on Python 3.11 and 3.12. It has no signing, token-writing, deployment or scheduling role. Source tests are not proof that a candidate is merged, deployed or operating on the live queue.
