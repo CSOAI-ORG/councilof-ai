@@ -86,6 +86,9 @@ class RevisionBoundCache:
              dependencies TEXT NOT NULL, payload BLOB NOT NULL, payload_sha TEXT NOT NULL,
              expires REAL NOT NULL, touched REAL NOT NULL)''')
         self.db.execute('CREATE TABLE IF NOT EXISTS cache_epochs (tenant TEXT PRIMARY KEY, epoch INTEGER NOT NULL)')
+        self.db.execute('''CREATE TABLE IF NOT EXISTS cache_source_epochs
+            (tenant TEXT NOT NULL, source TEXT NOT NULL, epoch INTEGER NOT NULL,
+             PRIMARY KEY (tenant, source))''')
         self.db.commit()
         self.closed = False
 
@@ -130,6 +133,16 @@ class RevisionBoundCache:
             result[source] = s.revision
         return dict(sorted(result.items()))
 
+    def _impact_snapshot(self, ctx: HostContext, req: Request) -> dict[str, int]:
+        # Persistent invalidation generations, not authority or source truth.
+        placeholders = ','.join('?' for _ in req.dependencies)
+        rows = self.db.execute(
+            'SELECT source,epoch FROM cache_source_epochs WHERE tenant=? '
+            'AND source IN (' + placeholders + ')',
+            (ctx.tenant, *req.dependencies)).fetchall()
+        epochs = dict(rows)
+        return {source: epochs.get(source, 0) for source in sorted(req.dependencies)}
+
     def run(self, ctx: HostContext, req: Request, *, compute: Callable, verify: Callable) -> dict:
         start = time.perf_counter()
         with self.lock:
@@ -137,10 +150,12 @@ class RevisionBoundCache:
             pins = self._snapshot(ctx, req)
             erow = self.db.execute('SELECT epoch FROM cache_epochs WHERE tenant=?',(ctx.tenant,)).fetchone()
             epoch = erow[0] if erow else 0
+            impact_epochs = self._impact_snapshot(ctx, req)
             descriptor = {'tenant':ctx.tenant, 'principal':ctx.principal,
                           'policy_epoch':ctx.policy_epoch, 'cache_epoch':epoch, 'request_sha256':digest(req.body),
                           'max_reuse_seconds':float(req.ttl_seconds),
-                          'worker':vars(req.worker), 'source_revisions':pins}
+                          'worker':vars(req.worker), 'source_revisions':pins,
+                          'source_impact_epochs':impact_epochs}
             key = digest(canonical(descriptor))
             row = self.db.execute('SELECT payload,payload_sha,expires FROM result_cache WHERE key=?', (key,)).fetchone()
             now = self.clock(); hit = False; corruption_rejected = False
@@ -151,6 +166,7 @@ class RevisionBoundCache:
                     if self._snapshot(ctx, req) != pins: raise Refused('SOURCE_CHANGED_DURING_LOOKUP')
                     after = self.db.execute('SELECT epoch FROM cache_epochs WHERE tenant=?',(ctx.tenant,)).fetchone()
                     if (after[0] if after else 0) != epoch: raise Refused('INVALIDATED_DURING_LOOKUP')
+                    if self._impact_snapshot(ctx, req) != impact_epochs: raise Refused('INVALIDATED_DURING_LOOKUP')
                     self.db.execute('UPDATE result_cache SET touched=? WHERE key=?', (now,key)); self.db.commit()
                     hit = True
                 else:
@@ -168,6 +184,7 @@ class RevisionBoundCache:
             if self._snapshot(ctx, req) != pins: raise Refused('SOURCE_CHANGED_DURING_COMPUTE')
             erow = self.db.execute('SELECT epoch FROM cache_epochs WHERE tenant=?',(ctx.tenant,)).fetchone()
             if (erow[0] if erow else 0) != epoch: raise Refused('INVALIDATED_DURING_COMPUTE')
+            if self._impact_snapshot(ctx, req) != impact_epochs: raise Refused('INVALIDATED_DURING_COMPUTE')
             now = self.clock()
             expiry = min(now + req.ttl_seconds, ctx.expires_at)
             self.db.execute('INSERT OR REPLACE INTO result_cache VALUES (?,?,?,?,?,?,?,?)',
@@ -200,6 +217,11 @@ class RevisionBoundCache:
             if self.closed: raise Refused('CACHE_CLOSED')
             if truncated:
                 self.db.execute('INSERT INTO cache_epochs VALUES (?,1) ON CONFLICT(tenant) DO UPDATE SET epoch=epoch+1',(tenant,))
+            elif affected:
+                self.db.executemany(
+                    'INSERT INTO cache_source_epochs VALUES (?,?,1) '
+                    'ON CONFLICT(tenant,source) DO UPDATE SET epoch=epoch+1',
+                    [(tenant, source) for source in sorted(set(affected))])
             rows = self.db.execute('SELECT key,dependencies FROM result_cache WHERE tenant=?',(tenant,)).fetchall()
             keys = [key for key,deps in rows if truncated or set(affected).intersection(json.loads(deps))]
             self.db.executemany('DELETE FROM result_cache WHERE key=?', [(k,) for k in keys]); self.db.commit()

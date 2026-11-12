@@ -29,3 +29,13 @@ Measured savings are workload-specific. End-to-end timing includes source/access
 ## Integration ownership
 
 Only memory_venturi.py, memory_experiments.py, memory_ui_tools.py and their tests belong to this change. Preserve the other lane's research lab, real Cosmos worker, model lock, consent, source manifest and UI. Mirror exact source files into the existing private Space only after tests and compare-and-swap revision checks. No new Space is required.
+
+## 12 November: consume the targeted-invalidation repair
+
+The r49 research lane reproduced two cases where a matching explicit impact during computation or cached-result validation did not stop the old result from returning. This change consumes that exact qualified cache candidate (SHA256 fee33861233dec6b7e89dbbf91582c0016c9538dd257f796ab9cef493fe1bebc) rather than creating a second cache. Its 12 targeted regressions and all34 existing source tests remain; seven added adoption checks exercise a bounded diagnostic in the existing research tool.
+
+The library now retains per-tenant/source impact generations, captures them with the request and rechecks before reuse/retention. Matching complete impact increments the generation even when no result row has yet been stored. Unrelated sources and tenants preserve reuse. Existing truncated-coverage flushing and host access/source checks remain. This is not atomic cross-service revocation after the final recheck. Source-generation metadata needs an owner-approved retention policy before durable production use.
+
+`memory_rehearsal` adds `targeted_invalidation`: five actual installed-library controls with a pinned cache-code digest, no model calls or private inputs. The existing trained-process replay remains unchanged. The research cache still uses an isolated temporary directory removed after each call; no existing user database or saved copy is migrated.
+
+Run `python -B qualify_adoption.py` for a fresh53-method qualification and an old-source negative control. It does not copy earlier PASS files into the test directory. The exact old cache fails the intended fresh-result assertion; the candidate passes. HF composed qualification and deployed readback must be recorded separately. No new model training, speedup, GSPC admission, reviewer appointment or real-user memory-authority integration is inferred.

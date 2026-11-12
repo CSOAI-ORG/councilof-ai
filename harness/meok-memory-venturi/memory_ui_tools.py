@@ -67,6 +67,59 @@ def process_replay() -> dict:
         'cache_directory_deleted_after_run':True}
 
 
+def targeted_invalidation_replay() -> dict:
+    """Five bounded synthetic controls, executed by the installed cache implementation.
+
+    Source revision deliberately stays constant: explicit dependency invalidation
+    must not depend on a coincidentally changed source hash to prevent stale reuse.
+    This is not a real-user source/permission integration or a latency benchmark.
+    """
+    ctx = HostContext('synthetic-only', 'owned-lab-runner', 'no-actions', 1000.0)
+    worker = WorkerIdentity(*(['targeted-invalidation-fixture'] * 8))
+    req = Request(b'fixed-task', ('source',), worker)
+    rows = []
+    with tempfile.TemporaryDirectory(prefix='meok-impact-check-') as directory:
+        for case in ['during-compute', 'during-hit', 'unrelated-source', 'other-tenant', 'fresh-after-invalidation']:
+            cache = RevisionBoundCache(str(Path(directory)/(case+'.sqlite')),
+                resolve=lambda c, ids: {x:SourceState('unchanged-r1', True) for x in ids},
+                authorise=lambda c, ids: True, clock=lambda:100.0)
+            def execute(compute=None, verify=None):
+                return cache.run(ctx, req, compute=compute or (lambda b,p:b'{}'),
+                    verify=verify or (lambda payload:payload==b'{}'))
+            def invalidate(source='source', tenant='synthetic-only'):
+                return cache.invalidate_from_impact(tenant=tenant, affected=(source,), truncated=False)
+            try:
+                expected = 'FRESH_RESULT'
+                if case=='during-compute':
+                    expected='INVALIDATED_DURING_COMPUTE'
+                    def compute(body,pins):
+                        invalidate();return b'{}'
+                    result=execute(compute=compute)['state']
+                elif case=='during-hit':
+                    execute();expected='INVALIDATED_DURING_LOOKUP'
+                    def verify(payload):
+                        invalidate();return True
+                    result=execute(verify=verify)['state']
+                elif case=='unrelated-source':
+                    execute();invalidate(source='unrelated');expected='REUSED_RESULT';result=execute()['state']
+                elif case=='other-tenant':
+                    execute();invalidate(tenant='different-tenant');expected='REUSED_RESULT';result=execute()['state']
+                else:
+                    old=execute()['cache_key'];invalidate();current=execute();result=current['state']
+                    if old==current['cache_key']:result='OLD_GENERATION_REUSED'
+            except Refused as exc:
+                result=str(exc)
+            finally:
+                count=cache.count();cache.close()
+            passed=result==expected and (count==0 if case in ['during-compute','during-hit'] else count==1)
+            rows.append({'case':case,'expected':expected,'observed':result,'stored_results':count,'passed':passed})
+    return {'state':'DECLARED_CONTROLS_PASSED' if all(x['passed'] for x in rows) else 'CONTROL_FAILURE',
+        'cases':rows,'cache_source_sha256':digest(Path(__file__).with_name('memory_venturi.py').read_bytes()),
+        'source_revision_changes':0,'real_user_authorisation':False,'temporary_directory_removed':True,
+        'provider_calls':0,'cross_process_atomicity_claimed':False,
+        'scope':'Explicit invalidation before the final check; no guarantee about events after that check.'}
+
+
 def memory_rehearsal(seed: int = 17, reuse_percent: int = 80) -> dict:
     """Compare bounded memory policies and replay the existing trained process predictor.
 
@@ -78,6 +131,7 @@ def memory_rehearsal(seed: int = 17, reuse_percent: int = 80) -> dict:
     # Validate first, before accessing assets or creating a cache.
     comparison = lab_memory_venturi(seed, reuse_percent)
     answer = {'cache_experiment':comparison,'trained_process_replay':process_replay(),
+        'targeted_invalidation':targeted_invalidation_replay(),
         'memory_backend':'temporary derived SQLite, destroyed after this rehearsal',
         'production_routes_changed':False,'training_performed':False,
         'llm_inference_calls':0,'canonical_gspc_admission':False,
