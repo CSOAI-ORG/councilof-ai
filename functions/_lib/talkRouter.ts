@@ -35,6 +35,7 @@ import { PAID_TOOL_NAMES, paidToolResult } from "../mcp/_paid";
 import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "../mcp/_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "../mcp/_route";
 import { ROUTER_READ_TOOLS, routerReadResult } from "./talkReads";
+import { isResearchQuery } from "./researchRead.mjs";
 import { BUY_INTENT, buyingAnswer } from "../api/_buying";
 
 type Json = Record<string, unknown>;
@@ -245,6 +246,8 @@ export function routeIntent(raw: string): Plan {
     return { kind: "tools", intent: "is there a best model", calls: [{ tool: "board_totals", args: {} }] };
   // 4c. A named model ("qwen3:8b", "is gpt-4o safe?"): what is published about it, read from the list
   //     built from the signed cards. A count is not a safety verdict, and the answer says so.
+  // Read-only published research remains separate from model scores and paid actions.
+  if (isResearchQuery(text)) return { kind: "tools", intent: "search retained public research", calls: [{tool:"research_evidence_search", args:{query:text}}] };
   const model = extractModel(text);
   if (model) return { kind: "tools", intent: `what is published about ${model}`, calls: [{ tool: "model_lookup", args: { model } }] };
 
@@ -317,6 +320,10 @@ export function citationOf(tool: string, p: Json, origin: string): Citation {
     const idx = rec(p.index);
     if (idx && str(idx.source) && idx.state !== "UNREACHABLE") return { tool, record_id: str(idx.head), url: str(idx.source) };
   }
+  if (tool === "research_evidence_search") {
+    const first = Array.isArray(p.results) ? rec(p.results[0]) : null;
+    return {tool, record_id:str(p.source_revision), url:str(first?.url) ?? str(p.source)};
+  }
   const recordId =
     str(p.id) ?? str(capsuleId?.recomputed) ?? str(p.key) ?? str(p.merkle_root) ?? str(p.index_root) ??
     str(p.sha256) ?? str(p.card_sha256) ?? (tool === "get_axis" && str(p.axis) ? `axis:${p.axis}` : null) ??
@@ -381,6 +388,13 @@ function renderOutcome(o: ToolOutcome): string {
       }
       lines.push(`- ${k}: ${fmt(v)}`);
     }
+    if (o.tool === "research_evidence_search") {
+      for (const value of Array.isArray(p.results) ? p.results : []) {
+        const row = rec(value); if (!row) continue;
+        lines.push(`\n**${fmt(row.title)}**\n${fmt(row.excerpt)}\nSource: ${fmt(row.url)}\nSource SHA-256: ${fmt(row.source_sha256)}`);
+      }
+      if (str(p.note)) lines.push(`\n${p.note}`);
+    }
     if (o.tool === "board_totals" && Array.isArray(p.counts)) {
       for (const c of p.counts as Json[]) lines.push(`- ${c.name}: ${fmt(c.value)} (${fmt(c.kind)})`);
       const sep = rec(p.separation);
@@ -403,7 +417,7 @@ function renderOutcome(o: ToolOutcome): string {
 }
 
 export const HELP_TEXT =
-  "I answer by calling the same tools as POST /mcp (plus three read-only router reads: corrections, Claim Maintenance and the list of models measured) and quoting their output. I can:\n" +
+  "I answer by calling the same tools as POST /mcp (plus read-only router reads for corrections, Claim Maintenance, model records and retained public research) and quoting their output. I can:\n" +
   "- **board totals** — \"what does the board say\" (board_totals)\n" +
   "- **one axis** — \"how did safety measure\" (get_axis)\n" +
   "- **a model** — \"qwen3:8b\" or \"is gpt-4o safe?\" → how many signed results are on file for it, a count and not a verdict (model_lookup)\n" +
@@ -413,6 +427,7 @@ export const HELP_TEXT =
   "- **a signed card** — paste a 64-hex card id (verify_card); \"is <hex> included in the root\" (verify_inclusion)\n" +
   "- **the public root** — \"show the public root\" (get_root); **signed cards** — \"list signed cards\" (list_cards)\n" +
   "- **x402 doors** — \"x402 census\" (x402_trust); **capsules** — \"measurement index\" (measurement_index)\n" +
+  "- **published research** — Find research on Memory Venturi (research_evidence_search); source-linked retained notes, not new scores.\n" +
   "- **corrections** — \"show corrections\" (corrections_summary); **Claim Maintenance** — \"claim maintenance status\" (claim_maintenance_register)\n" +
   "- **paid tools** — commission_card, art50_marking_evidence, rwa_evidence, receipts_batch: I return the 402 challenge; payment comes from your own wallet, never from me.\n" +
   "- **how to buy** — wallet or invoice, and what to email: https://councilof.ai/faq/#buying (the chat answers \"how do I buy?\" with the same statement)\n\n" +
@@ -490,7 +505,7 @@ export async function executePlan(
   }
   const answer =
     outcomes.map(renderOutcome).join("\n\n") +
-    "\n\n_Every line above is a field of the named tool's output (the same tools POST /mcp serves). Measurement, not certification; no trust grade is given._";
+    "\n\n_Every line above is a field of the named tool's output (MCP tools or the explicitly named read-only research/record readers). Measurement, not certification; no trust grade is given._";
   return {
     kind: "tools", intent: plan.intent, grounded: true, answer,
     label: outcomes[0]?.label ?? null, tool_calls: outcomes, citations: outcomes.map((o) => o.citation),

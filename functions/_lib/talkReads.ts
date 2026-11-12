@@ -14,10 +14,12 @@
  * corrections summary says signature_verification: NOT_RUN), remeasures, corrects or publishes.
  */
 import { fetchOriginJson, unreachablePayload } from "../mcp/_board";
+import { researchRead } from "./researchRead.mjs";
+import PUBLIC_RESEARCH from "./research-publication-index.json";
 
 type Json = Record<string, unknown>;
 
-export const ROUTER_READ_TOOLS: ReadonlySet<string> = new Set(["corrections_summary", "claim_maintenance_register", "model_lookup"]);
+export const ROUTER_READ_TOOLS: ReadonlySet<string> = new Set(["corrections_summary", "claim_maintenance_register", "model_lookup", "research_evidence_search"]);
 
 /** An ISO date or datetime string, else null ("UNRECORDED" is a recorded absence, not a date). */
 function isoOf(v: unknown): string | null {
@@ -148,6 +150,15 @@ export async function modelLookup(origin: string, args: Json): Promise<Json> {
 
 /** The same result shape callTool returns for an /mcp tool, so the router renders both alike. */
 export async function routerReadResult(name: string, args: Json, origin: string) {
+  if (name === "research_evidence_search") {
+    const payload = await researchRead(PUBLIC_RESEARCH, args);
+    const summary = payload.state === "RETAINED_PUBLIC_RESEARCH"
+      ? `Found ${payload.results.length} matching retained public research notes. These are source documents, not new measurements.`
+      : payload.state === "NO_RETAINED_MATCH"
+        ? "No matching note in the selected public research set. This does not mean no evidence exists elsewhere."
+        : payload.state === "NEEDS_TOPIC" ? "Name a topic such as Memory Venturi or source revisions." : "The research records could not be checked; no result is substituted.";
+    return {content:[{type:"text" as const,text:summary}],structuredContent:payload,isError:["UNCHECKABLE","INVALID_QUERY"].includes(payload.state)};
+  }
   const payload =
     name === "corrections_summary"
       ? await correctionsSummary(origin, args)
