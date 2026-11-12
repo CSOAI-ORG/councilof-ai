@@ -3,7 +3,7 @@ import "@/styles/home-public-journey.css";
 
 /** Public navigation only: no incident intake, case creation or background inference. */
 export const WATCHDOG_JOURNEYS = [
-  { title: "Inspect a public claim", body: "Find the statement, its source and the date it was recorded. Separate what an organisation says from what the evidence establishes.", href: "/dashboard?tab=watchdog", cta: "Explore public claims", icon: ScanEye },
+  { title: "Inspect a public claim", body: "Find the statement, its source and the date it was recorded. Separate what an organisation says from what the evidence establishes.", href: "/watchdog/", cta: "Explore public claims", icon: ScanEye },
   { title: "Read the supporting material", body: "Open the research library and follow the published references. Check the method and scope before reusing a finding.", href: "/watchdog/?view=library", cta: "Open the research library", icon: FileSearch },
   { title: "See what was corrected", body: "Follow dated corrections and superseding records. An older result remains part of the history, not a promise about today.", href: "/dashboard?tab=corrections", cta: "Read the corrections", icon: History },
 ] as const;

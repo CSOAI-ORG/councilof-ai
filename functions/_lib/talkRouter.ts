@@ -13,8 +13,9 @@
  *      (sharedToolResult / measurementToolResult / paidToolResult), so the answer cannot
  *      disagree with the MCP door.
  *   3. talk(text, origin) returns the tool's own summary line and selected fields verbatim,
- *      a citation (tool name + record id + URL) and the tool's own state label. Nothing is
- *      authored here: every number in an answer is a field of a tool's output.
+ *      a citation (tool name + record id + URL) and the tool's own state label. Measurement
+ *      numbers come from tool output. First-use product help is separately labelled authored
+ *      guidance, with no tool call or measurement claim.
  *
  * WHAT IT DOES NOT DO
  *   - It never pays. x_payment is stripped from every routed call; a paid tool called without it
@@ -36,6 +37,7 @@ import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "../mcp/_evidence";
 import { ROUTE_TOOL_NAMES, routeToolResult } from "../mcp/_route";
 import { ROUTER_READ_TOOLS, routerReadResult } from "./talkReads";
 import { BUY_INTENT, buyingAnswer } from "../api/_buying";
+import { guidanceTopic, guidanceAnswer, type GuidanceTopic } from "./talkGuidance";
 
 type Json = Record<string, unknown>;
 
@@ -44,7 +46,8 @@ export type ToolCall = { tool: string; args: Json };
 export type Plan =
   | { kind: "tools"; intent: string; calls: ToolCall[] }
   | { kind: "needs_input"; intent: string; tool: string; missing: string; example: string }
-  | { kind: "help"; intent: "help" | "unknown" | "buying" };
+  | { kind: "help"; intent: "help" | "unknown" | "buying" }
+  | { kind: "help"; intent: "guidance"; topic: GuidanceTopic };
 
 export type Citation = { tool: string; record_id: string | null; url: string | null };
 
@@ -269,6 +272,10 @@ export function routeIntent(raw: string): Plan {
   if (/\bwhat (does|do) [a-z0-9 .'-]{0,40}\bmeasure\b/.test(t))
     return { kind: "tools", intent: "board totals", calls: [{ tool: "board_totals", args: {} }] };
 
+  // Concrete entities, measurements and procurement keep their existing precedence.
+  const topic = guidanceTopic(text);
+  if (topic) return { kind: "help", intent: "guidance", topic };
+
   if (/^(hi|hey|hello|help|menu|start)\b|what can (you|i)|capabilit|which tools|what tools/.test(t)) return { kind: "help", intent: "help" };
   return { kind: "help", intent: "unknown" };
 }
@@ -447,6 +454,9 @@ export async function executePlan(
   onEvent?: (e: { phase: "start" | "end"; call: ToolCall; outcome?: ToolOutcome; id: string }) => void | Promise<void>,
 ): Promise<TalkAnswer> {
   if (plan.kind === "help") {
+    if (plan.intent === "guidance") {
+      return { kind: "help", intent: "guidance", grounded: false, answer: guidanceAnswer(plan.topic), label: "GUIDANCE", tool_calls: [], citations: [], answered_by: "published product guidance (no tool called)" };
+    }
     // The buying answer is authored in _buying.ts (pinned to client/src/lib/buying.ts), never here.
     // It already carries the product links, the written-scope requirement and the boundary that an
     // enquiry purchases, books, pays for and delivers nothing.

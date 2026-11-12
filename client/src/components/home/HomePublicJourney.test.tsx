@@ -19,7 +19,7 @@ describe("public evidence and learning journeys", () => {
   });
   it("offers real claim, reference and correction journeys, not an incident form", () => {
     const page = render(<HomeWatchdog />);
-    expect(WATCHDOG_JOURNEYS.map((x) => x.href)).toEqual(["/dashboard?tab=watchdog", "/watchdog/?view=library", "/dashboard?tab=corrections"]);
+    expect(WATCHDOG_JOURNEYS.map((x) => x.href)).toEqual(["/watchdog/", "/watchdog/?view=library", "/dashboard?tab=corrections"]);
     expect(page.querySelectorAll("article")).toHaveLength(3);
     expect(page.querySelectorAll("form, input, textarea")).toHaveLength(0);
     expect(page.body.textContent).toContain("not a staffed incident-response service");
