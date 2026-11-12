@@ -156,7 +156,7 @@ export async function routerReadResult(name: string, args: Json, origin: string)
       ? `Found ${payload.results.length} matching retained public research notes. These are source documents, not new measurements.`
       : payload.state === "NO_RETAINED_MATCH"
         ? "No matching note in the selected public research set. This does not mean no evidence exists elsewhere."
-        : payload.state === "NEEDS_TOPIC" ? "Name a topic such as Memory Venturi or source revisions." : "The research records could not be checked; no result is substituted.";
+        : payload.state === "NEEDS_TOPIC" ? "Name a topic such as measured reuse or source revisions." : "The research records could not be checked; no result is substituted.";
     return {content:[{type:"text" as const,text:summary}],structuredContent:payload,isError:["UNCHECKABLE","INVALID_QUERY"].includes(payload.state)};
   }
   const payload =

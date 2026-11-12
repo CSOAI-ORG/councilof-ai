@@ -41,7 +41,7 @@ export async function researchRead(index, args = {}) {
   if (!args || typeof args !== 'object' || Array.isArray(args)) return {...base, state:'INVALID_QUERY', results:[], reason:'SUPPLY_ONE_BOUNDED_QUERY'};
   if (typeof args.query !== 'string' || !args.query.trim() || args.query.length > 1000 || Object.keys(args).some(k => k !== 'query')) return {...base, state:'INVALID_QUERY', results:[], reason:'SUPPLY_ONE_BOUNDED_QUERY'};
   const q = tokens(args.query);
-  if (!q.length) return {...base, state:'NEEDS_TOPIC', results:[], reason:'NAME_A_RESEARCH_TOPIC', note:'Name a topic such as Memory Venturi, source revisions or research-cycle retrieval. ' + SCOPE};
+  if (!q.length) return {...base, state:'NEEDS_TOPIC', results:[], reason:'NAME_A_RESEARCH_TOPIC', note:'Name a topic such as measured reuse, source revisions or research-cycle retrieval. ' + SCOPE};
   const ranked = index.records.map((row, order) => {
     const title = new Set(tokens(row.title + ' ' + row.path));
     const body = new Set(tokens(row.text));

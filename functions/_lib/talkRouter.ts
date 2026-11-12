@@ -427,7 +427,7 @@ export const HELP_TEXT =
   "- **a signed card** — paste a 64-hex card id (verify_card); \"is <hex> included in the root\" (verify_inclusion)\n" +
   "- **the public root** — \"show the public root\" (get_root); **signed cards** — \"list signed cards\" (list_cards)\n" +
   "- **x402 doors** — \"x402 census\" (x402_trust); **capsules** — \"measurement index\" (measurement_index)\n" +
-  "- **published research** — Find research on Memory Venturi (research_evidence_search); source-linked retained notes, not new scores.\n" +
+  "- **published research** — Find research on measured reuse (research_evidence_search); source-linked retained notes, not new scores.\n" +
   "- **corrections** — \"show corrections\" (corrections_summary); **Claim Maintenance** — \"claim maintenance status\" (claim_maintenance_register)\n" +
   "- **paid tools** — commission_card, art50_marking_evidence, rwa_evidence, receipts_batch: I return the 402 challenge; payment comes from your own wallet, never from me.\n" +
   "- **how to buy** — wallet or invoice, and what to email: https://councilof.ai/faq/#buying (the chat answers \"how do I buy?\" with the same statement)\n\n" +

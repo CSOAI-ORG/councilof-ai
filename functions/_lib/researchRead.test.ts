@@ -35,7 +35,13 @@ describe('public research user journey', () => {
 });
 
 describe('public research source and refusal contract', () => {
-  it('keeps internal aliases out of the served publication data', () => expect(JSON.stringify(INDEX)).not.toMatch(/\b(venturi|sovos|sov6|owem)\b/i));
+  it('keeps internal aliases out of served data and authored help', async () => {
+    expect(JSON.stringify(INDEX)).not.toMatch(/\b(venturi|sovos|sov6|owem)\b/i);
+    for (const question of ['help', 'Find research evidence']) {
+      const answer = await talk(question, 'https://councilof.ai');
+      expect(answer.answer).not.toMatch(/\b(venturi|sovos|sov6|owem)\b/i);
+    }
+  });
   it('all bundled excerpts match their recorded bytes', () => {
     for (const row of INDEX.records) expect(createHash('sha256').update(row.text).digest('hex')).toBe(row.text_sha256);
   });
