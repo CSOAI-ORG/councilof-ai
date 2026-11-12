@@ -14,6 +14,10 @@ on:
                            # schedule event inside the 30 newest runs of any event and
                            # called a live schedule dead. Fixed 2026-11-06.)
 
+concurrency:
+  group: crawler-view-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # Selftest proves the gate can fail before trusting it to pass. Always required.
   selftest:
