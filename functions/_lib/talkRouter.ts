@@ -250,7 +250,8 @@ export function routeIntent(raw: string): Plan {
   // 4c. A named model ("qwen3:8b", "is gpt-4o safe?"): what is published about it, read from the list
   //     built from the signed cards. A count is not a safety verdict, and the answer says so.
   // Read-only published research remains separate from model scores and paid actions.
-  if (isResearchQuery(text)) return { kind: "tools", intent: "search retained public research", calls: [{tool:"research_evidence_search", args:{query:text}}] };
+  // Preserve the existing authored product/navigation help before lexical research lookup.
+  if (isResearchQuery(text) && !guidanceTopic(text)) return { kind: "tools", intent: "search retained public research", calls: [{tool:"research_evidence_search", args:{query:text}}] };
   const model = extractModel(text);
   if (model) return { kind: "tools", intent: `what is published about ${model}`, calls: [{ tool: "model_lookup", args: { model } }] };
 

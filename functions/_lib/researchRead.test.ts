@@ -23,6 +23,9 @@ describe('public research user journey', () => {
     expect(answer.answer).toContain('not an exhaustive or live search');
     expect(answer.citations[0].url).toMatch(/^https:\/\/github.com\/CSOAI-ORG\/councilof-ai\/blob\//);
   });
+  it('preserves research-library navigation from the existing onboarding route', () => {
+    expect(routeIntent('Where can I find the research library in Watchdog?')).toEqual({kind:'help',intent:'guidance',topic:'watchdog'});
+  });
   it('keeps existing board routing', () => expect(routeIntent('What does the leaderboard show?')).toMatchObject({calls:[{tool:'board_totals'}]}));
   it('keeps actual paid requests behind the existing payment route', () => expect(routeIntent('commission a card for https://example.com/mcp research')).toMatchObject({calls:[{tool:'commission_card'}]}));
   it('keeps explicit endpoint questions ahead of research keywords', () => expect(routeIntent('research evidence for https://example.com/mcp')).toMatchObject({calls:[{tool:'server_evidence'}]}));
