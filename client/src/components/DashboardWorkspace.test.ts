@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { askOnHome, CANDIDATE_INTAKE_LIVE, paneForTool } from "./DashboardWorkspace";
+import { askInUnifiedPane, askOnHome, CANDIDATE_INTAKE_LIVE, paneForTool } from "./DashboardWorkspace";
 import { LOBBY_TABS } from "./lobby/tabs";
 
 describe("canonical dashboard workspace", () => {
@@ -80,15 +80,43 @@ describe("canonical dashboard workspace", () => {
     expect(keepInChat).not.toHaveBeenCalled();
   });
 
-  it("records the session-history turn only under talkOwnsHome, so the canvas never swaps mid-run (#2834)", () => {
+  it("routes every free-text entry point through the one AskHost and preserves explicit pane commands", () => {
+    const open = vi.fn();
+    const record = vi.fn();
+    expect(askInUnifiedPane("  what does the board say  ", "server-thread-1", open, record)).toBe(true);
+    expect(open).toHaveBeenCalledWith("what does the board say", "server-thread-1");
+    expect(record).toHaveBeenCalledWith({ kind: "ask", label: "what does the board say" });
+    expect(askInUnifiedPane("show the board", null, open, record)).toBe(false);
+    expect(askInUnifiedPane("   ", null, open, record)).toBe(false);
+    expect(open).toHaveBeenCalledTimes(1);
+  });
+
+  it("removes the second home TalkPanel and mirrors the Ask lifecycle into the same history rail", () => {
     const source = readFileSync(resolve(__dirname, "./DashboardWorkspace.tsx"), "utf8")
       .replace(/\/\*[\s\S]*?\*\//g, "")
       .replace(/^\s*\/\/.*$/gm, "");
-    expect(source).toMatch(/const hasConversation = Boolean\(chat\.active\?\.turns\.length\) && !talkOwnsHome;/);
-    expect(source).toMatch(/const askTalk = useCallback\(\s*\(text: string\) =>\s*askOnHome\(/);
-    expect(source).toMatch(/keepInChat: \(question\) => \{\s*setTalkOwnsHome\(true\);\s*chat\.recordUserMessage\(question\);/);
-    // recordUserMessage appears once: inside keepInChat, after talkOwnsHome.
-    expect(source.match(/recordUserMessage/g)?.length).toBe(1);
+    expect(source).toContain("ASK_RUN_STARTED");
+    expect(source).toContain("ASK_RUN_SETTLED");
+    expect(source).toContain("ASK_THREAD_SELECT");
+    expect(source).toContain("chat.recordUserMessage(detail.question, detail.threadId)");
+    expect(source).toContain("chat.recordCouncilMessage(detail.text, detail.status, detail.threadId)");
+    expect(source).toContain("talk={null}");
+    expect(source).not.toContain("talkOwnsHome");
+    expect(source).not.toContain("<TalkPanel");
+  });
+
+  it("keeps the Ask host on the selected AG-UI thread and records the real run lifecycle", () => {
+    const host = readFileSync(resolve(__dirname, "./ask/AskHost.tsx"), "utf8");
+    const pane = readFileSync(resolve(__dirname, "./ask/AskPane.tsx"), "utf8");
+    const talk = readFileSync(resolve(__dirname, "./talk/TalkPanel.tsx"), "utf8");
+    expect(host).toContain("ASK_THREAD_SELECT");
+    expect(host).toContain("ASK_RUN_STARTED");
+    expect(pane).toContain("ASK_RUN_SETTLED");
+    expect(pane).toContain("onRunStarted=");
+    expect(pane).toContain("onRunSettled=");
+    expect(talk).toContain("onRunStarted?.(text, sessionThread)");
+    expect(talk).toContain("onRunSettled?.(final, sessionThread)");
+    expect(talk).toContain("setThreadId: (threadId: string | null)");
   });
 
   it("offers no candidate-evidence receipt while network intake is not live (tools audit, 6 Oct 2026)", () => {

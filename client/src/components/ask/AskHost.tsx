@@ -12,7 +12,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useLocation, useSearch } from "wouter";
 import { MessageSquareText } from "lucide-react";
-import { ASK_MOBILE_QUERY, ASK_OPEN, PALETTE_OPEN, isAskEntryRoute, recordRecent, shouldAutoOpenAsk, type AskOpenDetail } from "@/components/ask/askBus";
+import { ASK_MOBILE_QUERY, ASK_OPEN, ASK_RUN_STARTED, ASK_THREAD_SELECT, PALETTE_OPEN, isAskEntryRoute, recordRecent, shouldAutoOpenAsk, type AskOpenDetail, type AskThreadSelectDetail } from "@/components/ask/askBus";
 
 const AskPane = lazy(() => import("@/components/ask/AskPane"));
 const CommandPalette = lazy(() => import("@/components/ask/CommandPalette"));
@@ -23,7 +23,9 @@ export default function AskHost() {
   const [palette, setPalette] = useState(false);
   const [askMounted, setAskMounted] = useState(false);
   const [askOpen, setAskOpen] = useState(false);
-  const [question, setQuestion] = useState<{ text: string; n: number } | null>(null);
+  const [question, setQuestion] = useState<{ text: string; n: number; threadId?: string | null } | null>(null);
+  const [threadId, setThreadId] = useState<string | null>(null);
+  const threadIdRef = useRef<string | null>(null);
   const [entryRoute, setEntryRoute] = useState(false);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
@@ -44,6 +46,8 @@ export default function AskHost() {
     }
   }, [location, search]);
 
+  useEffect(() => { threadIdRef.current = threadId; }, [threadId]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "k" || e.altKey || e.shiftKey) return;
@@ -56,14 +60,32 @@ export default function AskHost() {
       if (!returnFocusRef.current && document.activeElement instanceof HTMLElement && document.activeElement !== document.body) {
         returnFocusRef.current = document.activeElement;
       }
-      const q = (e as CustomEvent<AskOpenDetail>).detail?.question;
+      const detail = (e as CustomEvent<AskOpenDetail>).detail;
+      const q = detail?.question;
+      const selectedThread = detail && Object.prototype.hasOwnProperty.call(detail, "threadId") ? detail.threadId ?? null : threadIdRef.current;
+      if (detail && Object.prototype.hasOwnProperty.call(detail, "threadId")) {
+        threadIdRef.current = selectedThread;
+        setThreadId(selectedThread);
+      }
       setAskMounted(true);
       setAskOpen(true);
-      if (q) setQuestion((prev) => ({ text: q, n: (prev?.n ?? 0) + 1 }));
+      if (q) setQuestion((prev) => ({ text: q, n: (prev?.n ?? 0) + 1, threadId: selectedThread }));
+    };
+    const onThreadSelect = (e: Event) => {
+      const id = (e as CustomEvent<AskThreadSelectDetail>).detail.threadId;
+      threadIdRef.current = id;
+      setThreadId(id);
+    };
+    const onRunStarted = (e: Event) => {
+      const id = (e as CustomEvent<{ threadId: string }>).detail.threadId;
+      threadIdRef.current = id;
+      setThreadId(id);
     };
     window.addEventListener("keydown", onKey);
     window.addEventListener(PALETTE_OPEN, onPalette);
     window.addEventListener(ASK_OPEN, onAsk);
+    window.addEventListener(ASK_THREAD_SELECT, onThreadSelect);
+    window.addEventListener(ASK_RUN_STARTED, onRunStarted);
     try {
       if (window.sessionStorage.getItem("coai:ui-agent-consent") === "1") void import("@/lib/uiActions").then((m) => m.installAgentBridge());
     } catch {
@@ -73,6 +95,8 @@ export default function AskHost() {
       window.removeEventListener("keydown", onKey);
       window.removeEventListener(PALETTE_OPEN, onPalette);
       window.removeEventListener(ASK_OPEN, onAsk);
+      window.removeEventListener(ASK_THREAD_SELECT, onThreadSelect);
+      window.removeEventListener(ASK_RUN_STARTED, onRunStarted);
     };
   }, []);
 
@@ -114,6 +138,7 @@ export default function AskHost() {
               });
             }}
             question={question}
+            threadId={threadId}
           />
         </Suspense>
       ) : null}

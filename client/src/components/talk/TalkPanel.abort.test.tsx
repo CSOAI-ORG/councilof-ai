@@ -38,11 +38,11 @@ vi.mock("@/lib/aguiTalk", async () => {
 let root: Root | null = null;
 let container: HTMLDivElement | null = null;
 
-function mount(): { ask: () => void; unmount: () => void } {
+function mount(callbacks: { onRunStarted?: (question: string, threadId: string) => void; onRunSettled?: (run: any, threadId: string) => void } = {}): { ask: () => void; unmount: () => void; setThreadId: (id: string | null) => void } {
   container = document.createElement("div");
   document.body.appendChild(container);
   const ref = createRef<TalkPanelHandle>();
-  act(() => { root = createRoot(container!); root!.render(<TalkPanel ref={ref} hideSuggestions />); });
+  act(() => { root = createRoot(container!); root!.render(<TalkPanel ref={ref} hideSuggestions {...callbacks} />); });
   const ask = () => {
     const input = container!.querySelector("#talk-input") as HTMLInputElement | null;
     const form = input?.closest("form") as HTMLFormElement | null;
@@ -55,7 +55,7 @@ function mount(): { ask: () => void; unmount: () => void } {
     act(() => { form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })); });
   };
   const unmount = () => { act(() => { root?.unmount(); root = null; }); container?.remove(); container = null; };
-  return { ask, unmount };
+  return { ask, unmount, setThreadId: (id) => ref.current?.setThreadId?.(id) };
 }
 
 beforeEach(() => {
@@ -85,6 +85,20 @@ describe("TalkPanel aborts only a run that is still in flight", () => {
     // would make the browser report a failure that did not happen.
     unmount();
     expect(runState.signal?.aborted).toBe(false);
+  });
+
+  it("records one start and one settled result with the same selected server thread", async () => {
+    const onRunStarted = vi.fn();
+    const onRunSettled = vi.fn();
+    const { ask, setThreadId } = mount({ onRunStarted, onRunSettled });
+    setThreadId("history-thread-42");
+    ask();
+    expect(onRunStarted).toHaveBeenCalledTimes(1);
+    expect(onRunStarted).toHaveBeenCalledWith("What is measured about github.com?", "history-thread-42");
+    await act(async () => { runState.resolve?.(); await Promise.resolve(); });
+    expect(onRunSettled).toHaveBeenCalledTimes(1);
+    expect(onRunSettled.mock.calls[0][0].status).toBe("interrupted");
+    expect(onRunSettled.mock.calls[0][1]).toBe("history-thread-42");
   });
 
   it("DOES abort a run that is still in flight when the pane goes away", () => {

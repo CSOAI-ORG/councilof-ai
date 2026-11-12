@@ -4,6 +4,8 @@ import {
   matchGuardedActionIntent,
   matchSafeMcpReadIntent,
   runSafeMcpRead,
+  appendAskUserTurn,
+  appendAskCouncilTurn,
 } from "./useLobbyChat";
 
 describe("lobby chat axis evidence intent", () => {
@@ -111,5 +113,29 @@ describe("lobby chat MCP read routing", () => {
     expect(reply.state).toBe("unreachable");
     expect(reply.text).toMatch(/no cached value was substituted/i);
     expect(reply.text).toMatch(/no write, payment, signature/i);
+  });
+});
+
+describe("unified Ask history bridge", () => {
+  it("creates a named session thread bound to the AG-UI server thread id", () => {
+    const result = appendAskUserTurn([], null, "  What does the board show?  ", "server-thread-1", "2026-11-12T02:00:00.000Z");
+    expect(result.threads).toHaveLength(1);
+    expect(result.threads[0].title).toBe("What does the board show?");
+    expect(result.threads[0].remoteThreadId).toBe("server-thread-1");
+    expect(result.threads[0].turns).toEqual([{ role: "user", text: "What does the board show?", at: "2026-11-12T02:00:00.000Z" }]);
+  });
+
+  it("appends the real assistant result to the same thread, not another selected thread", () => {
+    const first = appendAskUserTurn([], null, "First question", "thread-a", "2026-11-12T02:00:00.000Z");
+    const second = appendAskUserTurn(first.threads, null, "Second question", "thread-b", "2026-11-12T02:01:00.000Z");
+    const result = appendAskCouncilTurn(second.threads, "The published board says 34 results.", "done", "thread-a", "2026-11-12T02:00:05.000Z");
+    expect(result.find((t) => t.remoteThreadId === "thread-a")?.turns.map((t) => t.role)).toEqual(["user", "council"]);
+    expect(result.find((t) => t.remoteThreadId === "thread-b")?.turns.map((t) => t.role)).toEqual(["user"]);
+  });
+
+  it("does not fabricate a reply for an unknown thread or an empty result", () => {
+    const first = appendAskUserTurn([], null, "Question", "thread-a", "2026-11-12T02:00:00.000Z");
+    expect(appendAskCouncilTurn(first.threads, "answer", "done", "thread-unknown")).toBe(first.threads);
+    expect(appendAskCouncilTurn(first.threads, "   ", "done", "thread-a")).toBe(first.threads);
   });
 });

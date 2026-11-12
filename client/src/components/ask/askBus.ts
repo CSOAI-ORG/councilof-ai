@@ -9,8 +9,20 @@
 
 export const ASK_OPEN = "council:ask-open";
 export const PALETTE_OPEN = "council:palette-open";
+export const ASK_THREAD_SELECT = "council:ask-thread-select";
+export const ASK_RUN_STARTED = "council:ask-run-started";
+export const ASK_RUN_SETTLED = "council:ask-run-settled";
 
-export type AskOpenDetail = { question?: string };
+export type AskOpenDetail = { question?: string; threadId?: string | null };
+export type AskThreadSelectDetail = { threadId: string | null };
+export type AskRunStartedDetail = { question: string; threadId: string };
+export type AskRunSettledDetail = {
+  question: string;
+  threadId: string;
+  text: string;
+  status: string;
+  error?: string;
+};
 
 /**
  * Below this width the Ask pane is a bottom sheet over the page (AskPane's own `sm` breakpoint,
@@ -32,8 +44,10 @@ export function shouldAutoOpenAsk(_location: string, _search: string, _mobile: b
   return false;
 }
 
-export function openAsk(question?: string): void {
-  window.dispatchEvent(new CustomEvent<AskOpenDetail>(ASK_OPEN, { detail: { question } }));
+export function openAsk(question?: string, threadId?: string | null): void {
+  const detail: AskOpenDetail = { question };
+  if (threadId !== undefined) detail.threadId = threadId;
+  window.dispatchEvent(new CustomEvent<AskOpenDetail>(ASK_OPEN, { detail }));
 }
 
 export function openPalette(): void {
