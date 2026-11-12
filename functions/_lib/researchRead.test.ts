@@ -35,14 +35,15 @@ describe('public research user journey', () => {
 });
 
 describe('public research source and refusal contract', () => {
-  it('all bundled text matches its recorded bytes', () => {
-    for (const row of INDEX.records) expect(createHash('sha256').update(row.text).digest('hex')).toBe(row.sha256);
+  it('keeps internal aliases out of the served publication data', () => expect(JSON.stringify(INDEX)).not.toMatch(/\b(venturi|sovos|sov6|owem)\b/i));
+  it('all bundled excerpts match their recorded bytes', () => {
+    for (const row of INDEX.records) expect(createHash('sha256').update(row.text).digest('hex')).toBe(row.text_sha256);
   });
   it('returns at most three real pinned records', async () => {
     const result = await researchRead(INDEX,{query:question});
     expect(result.results.length).toBeGreaterThan(0);
     expect(result.results.length).toBeLessThanOrEqual(3);
-    for (const row of result.results) expect(INDEX.records.some(x => x.url===row.url && x.sha256===row.source_sha256)).toBe(true);
+    for (const row of result.results) expect(INDEX.records.some(x => x.url===row.url && x.source_sha256===row.source_sha256)).toBe(true);
     expect(result.grants_authority).toBe(false);
     expect(result.model_called).toBe(false);
     expect(result.new_measurement).toBe(false);
