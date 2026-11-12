@@ -12,6 +12,10 @@ on:
       - '.github/workflows/measured-reuse-publication.yml'
   merge_group:
   workflow_dispatch:
+concurrency:
+  group: measured-reuse-publication-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:
