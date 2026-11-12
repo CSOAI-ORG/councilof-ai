@@ -117,3 +117,73 @@ test('input and output symlinks are refused, including dangling outputs',t=>{
 test('oversized files, empty archives and unsupported CLI flags fail',t=>{
   const {root,dir}=temporary(t);assert.throws(()=>loadArchive(dir),/No dated/);put(dir,fixture());writeFileSync(join(dir,'2026-11-04.json'),' '.repeat(2*1024*1024+1));assert.throws(()=>loadArchive(dir),/2 MiB/);assert.throws(()=>main(['--deploy'],root),/Usage/);
 });
+
+// Report-to-existing-offer navigation: no new price, SKU, authority or source facts.
+import {serviceHandoff, renderServiceHandoff} from './report-service-handoff.mjs';
+const handoffEntry=()=>({filename:'2026-11-04.json',sha256:H,report:fixture()});
+test('handoff binds the exact retained report identity',()=>{
+ const v=serviceHandoff(handoffEntry());assert.equal(v.report_id,H);assert.equal(v.report_day,'2026-11-04');assert.equal(v.report_source,'/reports/daily-signal/2026-11-04.json');
+});
+test('four navigation options reuse three canonical product identifiers',()=>{
+ const v=serviceHandoff(handoffEntry());assert.equal(v.options.length,4);assert.deepEqual([...new Set(v.options.map(x=>x.product_id))],['evidence_bundle','provider_diff_feed','data_feed']);
+});
+test('each option starts with a free preview and a separately labelled current quote',()=>{
+ for(const o of serviceHandoff(handoffEntry()).options){assert.ok(o.preview_path.startsWith('/api/'));assert.ok(o.quote_path.startsWith('/api/'));assert.notEqual(o.preview_path,o.quote_path);assert.ok(o.scope.length>40);assert.ok(o.does_not_establish.length>20);}
+ const html=renderServiceHandoff(handoffEntry());assert.equal((html.match(/Inspect free preview/g)||[]).length,4);assert.equal((html.match(/Request current x402 quote/g)||[]).length,4);
+});
+test('no fixed price, payment permission or delivery state is inferred',()=>{
+ const v=serviceHandoff(handoffEntry());assert.equal(v.payment_attempted,false);assert.equal(v.delivery_verified,false);assert.equal(v.applicability_determined,false);assert.equal(v.report_is_the_paid_deliverable,false);assert.equal(v.reuse_rights_established,false);assert.equal(v.commercial_state,'NAVIGATION_ONLY_NO_LIVE_OFFER_CHECK');
+ assert.doesNotMatch(JSON.stringify(v),/"(?:price|amount|payTo|private_key)"|\$\d/);
+});
+test('legal relevance is reader selected, not inferred from a report title',()=>{
+ const e=handoffEntry();e.report.signals[0].instrument='AI Act Article 53';e.report.signals[0].mapping.state='REVIEWED_DECLARATION';
+ assert.deepEqual(serviceHandoff(e),serviceHandoff(handoffEntry()));assert.equal(serviceHandoff(e).selection_basis,'READER_CHOICE_NOT_LEGAL_APPLICABILITY');
+});
+test('untrusted source words cannot create new links or HTML',()=>{
+ const e=handoffEntry();e.report.signals[0].instrument='<img src=x onerror=alert(1)>';e.report.signals[0].mapping.reason='https://attacker.invalid/buy';
+ const html=renderServiceHandoff(e);assert.doesNotMatch(html,/attacker|<img|<script|onerror/);
+});
+test('source payload cannot overwrite fixed offer URLs',()=>{
+ const e=handoffEntry();e.report.offers=[{quote_path:'https://attacker.invalid/'}];e.report.quote_path='javascript:alert(1)';
+ assert.deepEqual(serviceHandoff(e),serviceHandoff(handoffEntry()));
+});
+test('fresh work stays an input-scoped request, never a paid booking',()=>{
+ const f=serviceHandoff(handoffEntry()).fresh_work;assert.equal(f.request_path,'/contact/?arm=run');assert.equal(f.state,'INPUT_SCOPE_AND_CURRENT_TERMS_REQUIRED');assert.match(f.note,/not a booking/);assert.equal(f.existing_product_ids.length,3);
+});
+test('verification and catalogue remain existing free/read-only references',()=>{
+ const v=serviceHandoff(handoffEntry());assert.equal(v.catalog_path,'/api/x402');assert.equal(v.instructions_path,'/quickstart/');assert.equal(v.free_verification_path,'/gspc-verify');assert.match(renderServiceHandoff(handoffEntry()),/Verification stays free/);
+});
+test('freshness and repeat use are not invented by rendering',()=>{
+ const v=serviceHandoff(handoffEntry());assert.match(v.repeat_trigger,/unchanged quote is not new evidence/);assert.match(v.options[2].scope,/new report date does not make the records fresh/);assert.match(v.options[3].does_not_establish,/Not recurring cadence/);
+});
+test('new report bytes change only the handoff reference, not service facts',()=>{
+ const e=handoffEntry(),first=serviceHandoff(e);e.sha256=H2;const next=serviceHandoff(e);assert.notEqual(next.report_id,first.report_id);assert.deepEqual(next.options,first.options);
+});
+test('returned handoffs do not share mutable nested objects',()=>{
+ const a=serviceHandoff(handoffEntry());a.options[0].quote_path='/changed';a.fresh_work.existing_product_ids.push('new');assert.notEqual(serviceHandoff(handoffEntry()).options[0].quote_path,'/changed');assert.equal(serviceHandoff(handoffEntry()).fresh_work.existing_product_ids.length,3);
+});
+test('malformed report references cannot enter href or code fields',()=>{
+ for(const change of [e=>e.sha256='<script>',e=>e.filename='../../private',e=>e.report.as_of='2026-02-30',e=>e.report.as_of='bad']){const e=handoffEntry();change(e);assert.throws(()=>serviceHandoff(e));}
+});
+test('handoff rendering is deterministic, static and has no purchase-on-load action',()=>{
+ const e=handoffEntry();assert.equal(renderServiceHandoff(e),renderServiceHandoff(e));assert.doesNotMatch(renderServiceHandoff(e),/<script|<form|onclick|fetch\(/);assert.match(renderServiceHandoff(e),/A quote is not a purchase/);
+});
+test('latest machine index and HTML carry the same report-bound handoff',t=>{
+ const {dir}=temporary(t);put(dir,fixture());const {files,index}=buildProduct(dir);const serialized=JSON.parse(files.get('index.json'));
+ assert.equal(index.service_handoff.report_id,index.latest_report_id);assert.deepEqual(serialized.service_handoff,index.service_handoff);
+ const html=files.get('index.html');assert.ok(html.includes(renderServiceHandoff({filename:'2026-11-04.json',sha256:index.latest_report_id,report:fixture()})));assert.equal(files.get('latest.md'),files.get('2026-11-04.md'));
+});
+test('new navigation does not change measured coverage, findings or rights',t=>{
+ const {dir}=temporary(t);put(dir,fixture());const {files,index}=buildProduct(dir);assert.equal(index.measurement_count,null);assert.equal(index.valuation,null);assert.equal(JSON.parse(files.get('findings.json')).findings.length,4);assert.equal(index.service_handoff.reuse_rights_established,false);
+});
+
+// Preserve the original evidence-browser contract: offers are not findings.
+test('service option articles cannot inflate the retained finding count',t=>{
+ const {dir}=temporary(t);put(dir,fixture());const {files}=buildProduct(dir);
+ const html=files.get('index.html'),f=JSON.parse(files.get('findings.json'));
+ assert.equal((html.match(/<article class="finding">/g)||[]).length,f.findings.length);
+ assert.equal((html.match(/<article class="service-option">/g)||[]).length,4);
+});
+test('the handoff fragment has no finding-class evidence articles',()=>{
+ const html=renderServiceHandoff(handoffEntry());assert.doesNotMatch(html,/<article class="finding">/);assert.equal((html.match(/<article class="service-option">/g)||[]).length,4);
+});
